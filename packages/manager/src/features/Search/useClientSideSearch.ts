@@ -1,5 +1,6 @@
 import {
   useAllAccountStackScriptsQuery,
+  useAllDatabasesQuery,
   useAllDomainsQuery,
   useAllFirewallsQuery,
   useAllImagesQuery,
@@ -9,7 +10,6 @@ import {
 } from '@linode/queries';
 
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {

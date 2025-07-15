@@ -6,7 +6,6 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -25,6 +24,7 @@ import {
   getLinodeInterfaceRanges,
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
+import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import {
   ConfigInterfaceFirewallCell,
@@ -161,7 +161,6 @@ export const SubnetLinodeRow = (props: Props) => {
       >
         <TooltipIcon
           icon={<StyledWarningIcon />}
-          status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
           text={
             <Typography>
@@ -199,7 +198,7 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {'Reboot Needed'}
             <TooltipIcon
-              status="help"
+              status="info"
               sxTooltipIcon={{ paddingRight: 0 }}
               text={VPC_REBOOT_MESSAGE}
             />
@@ -238,35 +237,16 @@ export const SubnetLinodeRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell>
         {!isVPCLKEEnterpriseCluster && (
-          <>
-            {isRebootNeeded && (
-              <InlineMenuAction
-                actionText="Reboot"
-                disabled={isVPCLKEEnterpriseCluster}
-                onClick={() => {
-                  handlePowerActionsLinode(linode, 'Reboot', subnet);
-                }}
-              />
-            )}
-            {showPowerButton && (
-              <InlineMenuAction
-                actionText={isOffline ? 'Power On' : 'Power Off'}
-                disabled={isVPCLKEEnterpriseCluster}
-                onClick={() => {
-                  handlePowerActionsLinode(
-                    linode,
-                    isOffline ? 'Power On' : 'Power Off',
-                    subnet
-                  );
-                }}
-              />
-            )}
-            <InlineMenuAction
-              actionText="Unassign Linode"
-              disabled={isVPCLKEEnterpriseCluster}
-              onClick={() => handleUnassignLinode(linode, subnet)}
-            />
-          </>
+          <SubnetLinodeActionMenu
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isOffline={isOffline}
+            isRebootNeeded={isRebootNeeded}
+            isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+            linode={linode}
+            showPowerButton={showPowerButton}
+            subnet={subnet}
+          />
         )}
       </TableCell>
     </TableRow>
@@ -351,8 +331,8 @@ export const SubnetLinodeTableRowHead = (
       <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
     <Hidden smDown>
-      <TableCell>Firewalls</TableCell>
+      <TableCell sx={{ width: '18%' }}>Firewalls</TableCell>
     </Hidden>
-    <TableCell />
+    <TableCell sx={{ width: '10%' }} />
   </TableRow>
 );
