@@ -378,7 +378,7 @@ export const NodeBalancerSchema = object({
       if (!configs) {
         return true;
       }
-      const indexsOfConfigsWithNonUniquePort: number[] = [];
+      const indexesOfConfigsWithNonUniquePort: number[] = [];
 
       for (let i = 0; i < configs.length; i++) {
         const config = configs[i];
@@ -395,16 +395,16 @@ export const NodeBalancerSchema = object({
               index !== i,
           )
         ) {
-          indexsOfConfigsWithNonUniquePort.push(i);
+          indexesOfConfigsWithNonUniquePort.push(i);
         }
       }
 
-      if (indexsOfConfigsWithNonUniquePort.length === 0) {
+      if (indexesOfConfigsWithNonUniquePort.length === 0) {
         return true;
       }
 
       return new ValidationError(
-        indexsOfConfigsWithNonUniquePort.map(
+        indexesOfConfigsWithNonUniquePort.map(
           (configIndex) =>
             new ValidationError(
               `Port must be unique amongst ${getProtocolFamilyFromProtcol(configs[configIndex].protocol!) === 'tcp' ? 'TCP / HTTP / HTTPS' : 'UDP'} configurations.`,
