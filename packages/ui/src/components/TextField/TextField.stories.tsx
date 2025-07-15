@@ -81,6 +81,15 @@ export const Error: Story = {
   },
 };
 
+export const Disabled: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+    disabled: true,
+  },
+};
+
 export const Number: Story = {
   args: {
     label: 'Label for Number',
@@ -146,6 +155,7 @@ export const WithAdornment: Story = {
 
 export const WithCrossIcon: Story = {
   args: {
+    clearable: true,
     label: 'Label',
     noMarginTop: true,
     value: 'Input Text',

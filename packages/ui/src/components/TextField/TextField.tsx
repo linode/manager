@@ -35,6 +35,10 @@ interface BaseProps {
    */
   dataAttrs?: Record<string, any>;
   /**
+   * boolean value to disable the Text Field
+   */
+  disabled?: boolean;
+  /**
    * Applies editable styles
    * @default false
    */
@@ -159,6 +163,7 @@ export const TextField = (props: TextFieldProps) => {
     clearable = false,
     containerProps,
     dataAttrs,
+    disabled = false,
     editable,
     error,
     errorGroup,
@@ -398,6 +403,7 @@ export const TextField = (props: TextFieldProps) => {
           {...textFieldProps}
           {...dataAttrs}
           className={className}
+          disabled={disabled}
           error={!!error || !!errorText}
           fullWidth
           helperText={''}
@@ -428,7 +434,7 @@ export const TextField = (props: TextFieldProps) => {
                       <CircleProgress noPadding size="xs" />
                     </InputAdornment>
                   )}
-                  {clearable && _value && !textFieldProps.disabled && (
+                  {clearable && _value && !disabled && (
                     <InputAdornment
                       onClick={() => {
                         setValue('');
