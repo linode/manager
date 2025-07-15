@@ -17,7 +17,6 @@ import {
   Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -423,18 +422,13 @@ export const NodeBalancerConfigPanel = (
             </Grid>
           </Grid>
         )}
-
-        <Grid size={12}>
-          <Divider />
-        </Grid>
       </Grid>
+      <Divider spacingBottom={24} spacingTop={24} />
       <Grid container spacing={2}>
         <ActiveCheck errorMap={errorMap} {...props} />
         {protocol !== 'udp' && <PassiveCheck {...props} />}
-        <Grid size={12}>
-          <Divider />
-        </Grid>
       </Grid>
+      <Divider spacingBottom={24} spacingTop={24} />
       <Grid container spacing={2}>
         <Grid size={12}>
           <Typography data-qa-backend-ip-header variant="h2">
@@ -454,13 +448,8 @@ export const NodeBalancerConfigPanel = (
             <FormHelperText error>{errorMap.nodes}</FormHelperText>
           )}
         </Grid>
-        <Grid
-          size={12}
-          sx={{
-            paddingBottom: '24px',
-          }}
-        >
-          <Grid container spacing={2} sx={{ padding: 0 }}>
+        <Grid size={12}>
+          <Grid container spacing={2}>
             {nodes?.map((node, nodeIdx) => (
               <NodeBalancerConfigNode
                 configIdx={configIdx}
@@ -481,58 +470,41 @@ export const NodeBalancerConfigPanel = (
                 removeNode={removeNode}
               />
             ))}
-            <Grid size={12}>
-              <Button
-                buttonType="outlined"
-                disabled={disabled}
-                onClick={addNode}
-              >
-                Add a Node
-              </Button>
-            </Grid>
+            <Button buttonType="outlined" disabled={disabled} onClick={addNode}>
+              Add a Node
+            </Button>
           </Grid>
         </Grid>
       </Grid>
-      <React.Fragment>
-        <Grid size={12}>
-          <Divider />
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            alignItems: 'center',
-            justifyContent: 'flex-end',
+      <Divider spacingBottom={0} spacingTop={24} />
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <ActionsPanel
+          primaryButtonProps={
+            forEdit
+              ? {
+                  'data-testid': 'save-config',
+                  disabled,
+                  label: 'Save',
+                  loading: submitting,
+                  onClick: onSave,
+                }
+              : undefined
+          }
+          secondaryButtonProps={{
+            'data-testid': 'delete-config',
+            disabled,
+            label: 'Delete',
+            onClick: props.onDelete,
           }}
-        >
-          <StyledActionsPanel
-            primaryButtonProps={
-              forEdit
-                ? {
-                    'data-testid': 'save-config',
-                    disabled,
-                    label: 'Save',
-                    loading: submitting,
-                    onClick: onSave,
-                  }
-                : undefined
-            }
-            secondaryButtonProps={{
-              'data-testid': 'delete-config',
-              disabled,
-              label: 'Delete',
-              onClick: props.onDelete,
-            }}
-          />
-        </Grid>
-      </React.Fragment>
+        />
+      </Grid>
     </Grid>
   );
 };
-
-const StyledActionsPanel = styled(ActionsPanel, {
-  label: 'StyledActionsPanel',
-})(({ theme }) => ({
-  paddingBottom: 0,
-  paddingRight: `${theme.spacing()} !important`,
-}));
