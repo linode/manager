@@ -78,7 +78,7 @@ describe('Create Subnet Drawer', () => {
     expect(props.onClose).toHaveBeenCalled();
   });
 
-  it('should render the ipv6 cidr input if the VPC is DualStack', () => {
+  it('should render the ipv6 cidr input if the VPC is DualStack and vpcIpv6 feature flag is enabled', () => {
     queryMocks.useVPCQuery.mockReturnValue({
       data: vpcFactory.build({ ipv6: [{ range: '2600:3c03:e400:1000::/52' }] }),
     });
@@ -101,6 +101,9 @@ describe('Create Subnet Drawer', () => {
   });
 
   it('should not render the ipv6 cidr input if the VPC is not DualStack', () => {
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory.build(),
+    });
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['VPC Dual Stack'],
