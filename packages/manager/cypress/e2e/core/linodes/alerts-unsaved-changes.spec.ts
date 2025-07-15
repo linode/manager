@@ -1,7 +1,5 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
-// import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-// import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
@@ -164,44 +162,27 @@ describe('Edit to page should trigger modal appearance', () => {
                   );
                 cy.get('@alertToggle').click();
                 // click changes toggle to false
-                // cy.get('@alertToggle').should('have.attr', 'data-qa-toggle', 'false');
+                cy.get('@alertToggle').should(
+                  'have.attr',
+                  'data-qa-toggle',
+                  'false'
+                );
 
-                // // undo edit, toggle it back to true
-                // cy.get('@alertToggle').click();
-                // cy.get('@alertToggle').should('have.attr', 'data-qa-toggle', 'true');
+                // undo edit, toggle it back to true
+                cy.get('@alertToggle').click();
+                cy.get('@alertToggle').should(
+                  'have.attr',
+                  'data-qa-toggle',
+                  'true'
+                );
               });
           });
 
-        // navigate to another page
-        ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
-        // url does not change
-        cy.url().should('endWith', '/alerts');
-        ui.dialog
-          .findByTitle('Unsaved Changes')
-          .should('be.visible')
-          .within(() => {
-            // close modal, return to Alerts tab
-            ui.button
-              .findByTitle('Cancel')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
-        cy.url().should('endWith', '/alerts');
-        cy.get('[data-qa-alerts-panel]')
-          .first()
-          .should('be.visible')
-          .within(() => {
-            // edit to first toggle persists
-            ui.toggle
-              .find()
-              .should('be.visible')
-              .should('have.attr', 'data-qa-toggle', 'false');
-          });
+        // navigate to another tab
+        ui.tabList.findTabByTitle('Settings').should('be.visible').click();
+        // new page loads
+        cy.url().should('endWith', '/settings');
       });
     });
   });
 });
-// .
-// "Confirm" erases edits.
-// Saved edits to not trigger modal
