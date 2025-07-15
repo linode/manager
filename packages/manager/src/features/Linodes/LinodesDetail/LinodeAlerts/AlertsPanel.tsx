@@ -337,9 +337,9 @@ export const AlertsPanel = (props: Props) => {
         )}
       </Prompt>
 
-      {/* Save Alerts Confirmation Modal. This Confirmation Modal on "Save" appear
-      only when user already subscribed to Beta/ACLP Mode and making changes in the
-      Legacy mode Interface */}
+      {/* Save Legacy Alerts Confirmation Modal. This modal appears on "Save" only
+      when user already subscribed to Beta/ACLP Mode and makes changes in the
+      Legacy mode Interface. */}
       <AlertConfirmationDialog
         handleCancel={() => setIsDialogOpen(false)}
         handleConfirm={() => formik.handleSubmit()}
