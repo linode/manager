@@ -326,19 +326,11 @@ export const useIsAclpContextualViewEnabled = (
     };
   }
 
-  const region = regions?.find((region) => region.id === regionId);
-
-  if (!region) {
-    return {
-      isLoading,
-      isAlertEnabled: false,
-      isMetricEnabled: false,
-    };
-  }
+  const region = regions?.find(({ id }) => id === regionId);
 
   return {
-    isLoading,
-    isAlertEnabled: region.monitors?.alerts?.includes(serviceType) ?? false,
-    isMetricEnabled: region.monitors?.metrics?.includes(serviceType) ?? false,
+    isLoading: false,
+    isAlertEnabled: region?.monitors?.alerts?.includes(serviceType) ?? false,
+    isMetricEnabled: region?.monitors?.metrics?.includes(serviceType) ?? false,
   };
 };
