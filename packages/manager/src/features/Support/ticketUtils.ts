@@ -1,3 +1,5 @@
+import type { FileAttachment } from './index';
+
 export const OFFICIAL_USERNAMES = ['Linode', 'Linode Trust & Safety'];
 
 export const reshapeFiles = (files: FileList) => {
@@ -18,3 +20,10 @@ export const reshapeFiles = (files: FileList) => {
 
   return reshapedFiles;
 };
+
+export const updateFileAtIndex = (
+  files: FileAttachment[],
+  index: number,
+  updates: Partial<FileAttachment>
+): FileAttachment[] =>
+  files.map((file, i) => (i === index ? { ...file, ...updates } : file));
