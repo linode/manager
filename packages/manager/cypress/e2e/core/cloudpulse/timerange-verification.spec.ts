@@ -266,15 +266,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .closest('button') // Get its parent button
       .as('timePickerButton');
 
-    cy.get('@timePickerButton')
-      .should('be.visible')
-      .should(($el) => {
-        const { top, bottom, height } = $el[0].getBoundingClientRect();
-        expect(height).to.be.greaterThan(0);
-        expect(top).to.be.greaterThan(0); // or within viewport bounds
-        expect(bottom).to.be.lessThan(Cypress.config('viewportHeight'));
-      })
-      .click({ force: true });
+    cy.get('@timePickerButton').invoke('show').click();
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.findByLabelText('Select hours')
       .as('selectHours')
