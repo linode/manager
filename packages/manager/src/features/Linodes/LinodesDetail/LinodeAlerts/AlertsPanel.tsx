@@ -352,7 +352,7 @@ export const AlertsPanel = (props: Props) => {
             settings.
           </>
         }
-        primaryButtonLabel="Save"
+        primaryButtonLabel="Confirm"
         title="Are you sure you want to save Legacy Alerts?"
       />
       <Paper
