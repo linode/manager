@@ -1,4 +1,4 @@
-interface CloudNATIPAddress {
+export interface CloudNATIPAddress {
   address: string;
 }
 
@@ -26,3 +26,16 @@ export const VALID_PORT_SIZES = [
 ] as const;
 
 export type ValidPortSize = (typeof VALID_PORT_SIZES)[number];
+
+export interface PortRange {
+  end: number;
+  start: number;
+}
+
+export interface PortSet {
+  address: string;
+  ports: PortRange[];
+}
+
+export const validatePortSize = (size: number): boolean =>
+  VALID_PORT_SIZES.includes(size as (typeof VALID_PORT_SIZES)[number]);
