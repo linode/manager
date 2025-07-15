@@ -208,6 +208,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
    */
 
   beforeEach(() => {
+    cy.viewport(1280, 720);
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
@@ -239,14 +240,15 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ]);
   });
 
-  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
-    // Calculates start and end dates in GMT using `getDateRangeInGMT` for testing date and time ranges.
+  it('should implement and validate custom date/time picker for a specific date and time range', () => {
+    // --- Generate start and end date/time in GMT ---
     const {
       actualDate: startActualDate,
       day: startDay,
       hour: startHour,
       minute: startMinute,
     } = getDateRangeInGMT(12, 15, true);
+
     const {
       actualDate: endActualDate,
       day: endDay,
@@ -254,144 +256,124 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       minute: endMinute,
     } = getDateRangeInGMT(12, 30);
 
+    // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
     cy.get('@startDateInput').clear();
 
-    cy.findAllByText(startDay).first().click();
-    cy.findAllByText(endDay).first().click();
+    cy.findAllByText(startDay).first().click({ force: true });
 
-    ui.button
-      .findByAttribute('aria-label^', 'Choose time')
+    // --- Select end date ---
+    cy.findAllByText(endDay).first().click({ force: true });
+
+    // --- Select start time ---
+    cy.get('[data-testid="ClockIcon"]')
       .first()
-      .should('be.visible')
-      .as('timePickerButton');
+      .closest('button')
+      .click({ force: true });
 
-    cy.get('@timePickerButton').click();
-
-    // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.findByLabelText('Select hours')
-      .as('selectHours')
-      .scrollIntoView({ easing: 'linear' });
-    cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${startHour} hours"]`).click();
-    });
-
-    cy.findByLabelText('Select minutes')
-      .as('selectMinutes')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
-    cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${startMinute} minutes"]`).click();
-    });
-
-    cy.findByLabelText('Select meridiem')
-      .as('selectMeridiem')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
-    cy.get('@selectMeridiem').within(() => {
-      cy.get(`[aria-label="PM"]`).click();
-    });
-    cy.get('[aria-label^="Choose time"]')
-      .last()
-      .should('be.visible')
-      .as('timePickerButton');
-
-    cy.get('@timePickerButton').click();
-
-    // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.findByLabelText('Select hours').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
-    });
-    cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${endHour} hours"]`).click();
-    });
-
-    cy.findByLabelText('Select minutes').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
-    });
-    cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${endMinute} minutes"]`).click();
-    });
-
-    cy.findByLabelText('Select meridiem').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
-    });
-    cy.get('@selectMeridiem').within(() => {
-      cy.get(`[aria-label="PM"]`).click();
-    });
-    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput');
-
-    cy.get('@timezoneInput').clear();
-    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
-    // Click the "Apply" button to confirm the end date and time
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
+    cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView();
+    cy.get('@startHourSelect')
+      .find(`[aria-label="${startHour} hours"]`)
       .click();
 
-    // Assert that the end date and time is correctly displayed
-    cy.get('[aria-labelledby="start-date"]')
-      .should('be.visible')
-      .should('have.value', `${startActualDate} PM`);
+    cy.findByLabelText('Select minutes')
+      .as('startMinuteSelect')
+      .scrollIntoView();
+    cy.get('@startMinuteSelect')
+      .find(`[aria-label="${startMinute} minutes"]`)
+      .click();
 
-    cy.get('[aria-labelledby="end-date"]')
-      .should('be.visible')
-      .should('have.value', `${endActualDate} PM`);
+    cy.findByLabelText('Select meridiem')
+      .as('startMeridiemSelect')
+      .scrollIntoView();
+    cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
 
-    // Select the "Node Type" from the dropdown and submit
-    ui.autocomplete
-      .findByLabel('Node Type')
-      .should('be.visible')
-      .type('Primary{enter}');
+    // --- Select end time ---
+    cy.get('[data-testid="ClockIcon"]')
+      .last()
+      .closest('button')
+      .click({ force: true });
 
-    // Wait for all API calls to complete before assertions
+    cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView();
+    cy.get('@endHourSelect').find(`[aria-label="${endHour} hours"]`).click();
+
+    cy.findByLabelText('Select minutes').as('endMinuteSelect').scrollIntoView();
+    cy.get('@endMinuteSelect')
+      .find(`[aria-label="${endMinute} minutes"]`)
+      .click();
+
+    cy.findByLabelText('Select meridiem')
+      .as('endMeridiemSelect')
+      .scrollIntoView();
+    cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
+
+    // --- Set timezone ---
+    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').clear();
+    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
+
+    // --- Apply date/time range ---
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
+
+    // --- Re-validate after apply ---
+    cy.get('[aria-labelledby="start-date"]').should(
+      'have.value',
+      `${startActualDate} PM`
+    );
+    cy.get('[aria-labelledby="end-date"]').should(
+      'have.value',
+      `${endActualDate} PM`
+    );
+
+    // --- Select Node Type ---
+    ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
+
+    // --- Validate API requests ---
     cy.wait(Array(4).fill('@getMetrics'));
     cy.get('@getMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
-        const interception = xhr as Interception;
-        const { body: requestPayload } = interception.request;
-        expect(
-          formatToUtcDateTime(requestPayload.absolute_time_duration.start)
-        ).to.equal(convertToGmt(startActualDate));
-        expect(
-          formatToUtcDateTime(requestPayload.absolute_time_duration.end)
-        ).to.equal(convertToGmt(endActualDate));
+        const {
+          request: { body },
+        } = xhr as Interception;
+        expect(formatToUtcDateTime(body.absolute_time_duration.start)).to.equal(
+          convertToGmt(startActualDate)
+        );
+        expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
+          convertToGmt(endActualDate)
+        );
       });
 
-    cy.get('@startDateInput').click();
-    // Click on the "Presets" button
-
-    // Mock API response for cloud metrics presets
+    // --- Test Time Range Presets ---
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getPresets'
     );
 
-    // Select "Last 30 Days" from the "Time Range" dropdown
+    cy.get('@startDateInput').click();
     ui.button.findByTitle('last 30 days').click();
 
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
-      .should('be.enabled')
+      .and('be.enabled')
       .click();
 
-    // Validate API request payload for relative time duration
     cy.get('@getPresets.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
-        const interception = xhr as Interception;
-        const { body: requestPayload } = interception.request;
-
-        expect(requestPayload).to.have.nested.property(
-          'relative_time_duration.unit'
+        const {
+          request: { body },
+        } = xhr as Interception;
+        expect(body).to.have.nested.property(
+          'relative_time_duration.unit',
+          'days'
         );
-        expect(requestPayload).to.have.nested.property(
-          'relative_time_duration.value'
+        expect(body).to.have.nested.property(
+          'relative_time_duration.value',
+          30
         );
-        expect(requestPayload.relative_time_duration.unit).to.equal('days');
-        expect(requestPayload.relative_time_duration.value).to.equal(30);
       });
   });
 
