@@ -263,12 +263,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findAllByText(endDay).first().click({ force: true });
 
     // Clicks the button closest to the Clock Icon, bypassing any visible state with `force: true`.
-    // Get the input and alias it
-
-    cy.get('#start-time').first().as('selectHours');
-
-    // Then perform scoped actions using `within`
-    cy.get('@selectHours').click({ force: true });
     cy.get('[data-testid="ClockIcon"]')
       .first()
       .should('exist')
