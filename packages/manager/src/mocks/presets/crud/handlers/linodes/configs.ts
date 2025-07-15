@@ -4,15 +4,78 @@ import { http } from 'msw';
 
 import {
   makeNotFoundResponse,
+  makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../../../../indexedDB';
 
-import type { Interface } from '@linode/api-v4';
+import type { Config, Interface } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
-import type { APIErrorResponse } from 'src/mocks/utilities/response';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from 'src/mocks/utilities/response';
+
+export const getConfigs = () => [
+  http.get(
+    '*/v4*/linode/instances/:id/configs',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Config>>
+    > => {
+      const id = Number(params.id);
+      const linode = await mswDB.get('linodes', id);
+      const linodeConfigs = await mswDB.getAll('linodeConfigs');
+      const configInterfaces = await mswDB.getAll('configInterfaces');
+
+      if (!linode || !linodeConfigs || !configInterfaces) {
+        return makeNotFoundResponse();
+      }
+
+      const configs = linodeConfigs
+        .filter((configTuple) => configTuple[0] === id)
+        .map((configTuple) => {
+          const interfacesForConfig = configInterfaces
+            .filter((interfaceTuple) => interfaceTuple[0] === configTuple[1].id)
+            .map((interfaceTuple) => interfaceTuple[1]);
+          return { ...configTuple[1], interfaces: interfacesForConfig };
+        });
+
+      return makePaginatedResponse({
+        data: configs,
+        request,
+      });
+    }
+  ),
+
+  http.get(
+    '*/v4*/linode/instances/:id/configs/:configId',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | Config>> => {
+      const id = Number(params.id);
+      const linode = await mswDB.get('linodes', id);
+      const configId = Number(params.configId);
+      const linodeConfig = await mswDB.get('linodeConfigs', configId);
+      const configInterfaces = await mswDB.getAll('configInterfaces');
+
+      if (!linode || !linodeConfig || !configInterfaces) {
+        return makeNotFoundResponse();
+      }
+
+      const interfaces = configInterfaces
+        .filter((interfaceTuple) => interfaceTuple[0] === configId)
+        .map((interfaceTuple) => interfaceTuple[1]);
+
+      return makeResponse({
+        ...linodeConfig[1],
+        interfaces,
+      });
+    }
+  ),
+];
 
 export const appendConfigInterface = (mockState: MockState) => [
   http.post(
@@ -38,7 +101,7 @@ export const appendConfigInterface = (mockState: MockState) => [
 
       const newlyAddedConfigInterface = await mswDB.add(
         'configInterfaces',
-        [linode.id, configInterface],
+        [configId, configInterface],
         mockState
       );
 
@@ -101,7 +164,7 @@ export const appendConfigInterface = (mockState: MockState) => [
 
 export const deleteConfigInterface = (mockState: MockState) => [
   http.delete(
-    '*/v4*/linodes/instances/:id/configs/:configId/interfaces/:interfaceId',
+    '*/v4*/linode/instances/:id/configs/:configId/interfaces/:interfaceId',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const linodeId = Number(params.id);
       const configId = Number(params.configId);

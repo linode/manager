@@ -23,7 +23,6 @@ import {
 import { mswDB } from '../../../../indexedDB';
 
 import type {
-  Config,
   CreateLinodeInterfacePayload,
   Disk,
   Firewall,
@@ -43,7 +42,7 @@ import type {
 
 export const getLinodes = () => [
   http.get(
-    '*/v4/linode/instances',
+    '*/v4*/linode/instances',
     async ({
       request,
     }): Promise<
@@ -63,7 +62,7 @@ export const getLinodes = () => [
   ),
 
   http.get(
-    '*/v4/linode/instances/:id',
+    '*/v4*/linode/instances/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Linode>> => {
       const id = Number(params.id);
       const linode = await mswDB.get('linodes', id);
@@ -73,33 +72,6 @@ export const getLinodes = () => [
       }
 
       return makeResponse(linode);
-    }
-  ),
-
-  http.get(
-    '*/v4/linode/instances/:id/configs',
-    async ({
-      params,
-      request,
-    }): Promise<
-      StrictResponse<APIErrorResponse | APIPaginatedResponse<Config>>
-    > => {
-      const id = Number(params.id);
-      const linode = await mswDB.get('linodes', id);
-      const linodeConfigs = await mswDB.getAll('linodeConfigs');
-
-      if (!linode || !linodeConfigs) {
-        return makeNotFoundResponse();
-      }
-
-      const configs = linodeConfigs
-        .filter((configTuple) => configTuple[0] === id)
-        .map((configTuple) => configTuple[1]);
-
-      return makePaginatedResponse({
-        data: configs,
-        request,
-      });
     }
   ),
 ];
@@ -159,7 +131,7 @@ export const addFirewallDevice = async (inputs: {
 };
 
 export const createLinode = (mockState: MockState) => [
-  http.post('*/v4/linode/instances', async ({ request }) => {
+  http.post('*/v4*/linode/instances', async ({ request }) => {
     const payload = await request.clone().json();
     const payloadCopy = { ...payload };
 
