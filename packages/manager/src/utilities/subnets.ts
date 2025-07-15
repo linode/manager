@@ -12,12 +12,12 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'vpcRanges', label: 'IPv4 VPC Ranges' },
 ];
 
-interface SubnetIPv4PrefixOption {
+interface SubnetIPv6PrefixOption {
   label: string;
   value: string;
 }
 
-export const SUBNET_IPV6_PREFIX_LENGTHS: SubnetIPv4PrefixOption[] = [
+export const SUBNET_IPV6_PREFIX_LENGTHS: SubnetIPv6PrefixOption[] = [
   {
     label: '/52',
     value: '/52',
