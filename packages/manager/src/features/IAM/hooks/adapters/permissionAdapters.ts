@@ -3,17 +3,65 @@ import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
 
 import type { EntityBase } from '../usePermissions';
-import type { AccessType, Grants, PermissionType } from '@linode/api-v4';
+import type {
+  AccessType,
+  Grants,
+  GrantType,
+  PermissionType,
+  Profile,
+} from '@linode/api-v4';
+
+export type EntityPermissionMap = Record<number, PermissionMap>;
+
+export type PermissionMap = Record<PermissionType, boolean>;
+
+export const entityPermissionMapFrom = (
+  grants: Grants | undefined,
+  grantType: GrantType,
+  profile?: Profile
+): EntityPermissionMap => {
+  const entityPermissionsMap: EntityPermissionMap = {};
+  if (grants) {
+    grants[grantType]?.forEach((entity) => {
+      switch (grantType) {
+        case 'firewall':
+          // eslint-disable-next-line no-case-declarations
+          const firewallPermissionsMap = firewallGrantsToPermissions(
+            entity?.permissions,
+            profile?.restricted
+          ) as PermissionMap;
+          entityPermissionsMap[entity.id] = firewallPermissionsMap;
+          break;
+        case 'linode':
+          // eslint-disable-next-line no-case-declarations
+          const linodePermissionsMap = linodeGrantsToPermissions(
+            entity?.permissions,
+            profile?.restricted
+          ) as PermissionMap;
+          entityPermissionsMap[entity.id] = linodePermissionsMap;
+          break;
+      }
+    });
+  }
+  return entityPermissionsMap;
+};
 
 export const toEntityPermissionMap = (
-  allEntities?: EntityBase[],
-  entitiesPermissions?: (PermissionType[] | undefined)[]
-) => {
-  const entityPermissionsMap: Record<number, PermissionType[]> = {};
-  if (allEntities?.length && entitiesPermissions?.length) {
+  entities: EntityBase[] | undefined,
+  entitiesPermissions: (PermissionType[] | undefined)[] | undefined,
+  permissionsToCheck: PermissionType[],
+  isRestricted?: boolean
+): EntityPermissionMap => {
+  const entityPermissionsMap: EntityPermissionMap = {};
+  if (entities?.length && entitiesPermissions?.length) {
     entitiesPermissions?.forEach(
       (entityPermissions: PermissionType[], index: number) => {
-        entityPermissionsMap[allEntities[index].id] = entityPermissions;
+        const permissionMap = toPermissionMap(
+          permissionsToCheck,
+          entityPermissions,
+          isRestricted
+        );
+        entityPermissionsMap[entities[index].id] = permissionMap;
       }
     );
   }
@@ -24,14 +72,14 @@ export const toPermissionMap = (
   permissionsToCheck: PermissionType[],
   usersPermissions: PermissionType[],
   isRestricted?: boolean
-): Record<PermissionType, boolean> => {
+): PermissionMap => {
   const unrestricted = isRestricted === false; // explicit === false since the profile can be undefined
-  const usersPermissionMap = {} as Record<PermissionType, boolean>;
+  const usersPermissionMap = {} as PermissionMap;
   usersPermissions?.forEach(
     (permission) => (usersPermissionMap[permission] = true)
   );
 
-  const permissionMap = {} as Record<PermissionType, boolean>;
+  const permissionMap = {} as PermissionMap;
   permissionsToCheck?.forEach(
     (permission) =>
       (permissionMap[permission] =
@@ -48,15 +96,15 @@ export const fromGrants = (
   grants?: Grants,
   isRestricted?: boolean,
   entittyId?: number
-): Record<PermissionType, boolean> => {
-  let usersPermissionsMap = {} as Record<PermissionType, boolean>;
+): PermissionMap => {
+  let usersPermissionsMap = {} as PermissionMap;
 
   switch (accessType) {
     case 'account':
       usersPermissionsMap = accountGrantsToPermissions(
         grants?.global,
         isRestricted
-      ) as Record<PermissionType, boolean>;
+      ) as PermissionMap;
       break;
     case 'firewall':
       // eslint-disable-next-line no-case-declarations
@@ -64,7 +112,7 @@ export const fromGrants = (
       usersPermissionsMap = firewallGrantsToPermissions(
         firewall?.permissions,
         isRestricted
-      ) as Record<PermissionType, boolean>;
+      ) as PermissionMap;
       break;
     case 'linode':
       // eslint-disable-next-line no-case-declarations
@@ -72,13 +120,13 @@ export const fromGrants = (
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
         isRestricted
-      ) as Record<PermissionType, boolean>;
+      ) as PermissionMap;
       break;
     default:
       throw new Error(`Unknown access type: ${accessType}`);
   }
 
-  const permissionsMap = {} as Record<PermissionType, boolean>;
+  const permissionsMap = {} as PermissionMap;
   permissionsToCheck?.forEach(
     (permission) =>
       (permissionsMap[permission] = usersPermissionsMap[permission] ?? false)
