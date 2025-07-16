@@ -25,14 +25,6 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
-  };
-});
-
 const props = {
   onClose: vi.fn(),
   open: true,
@@ -87,12 +79,14 @@ describe('Create Subnet Drawer', () => {
         capabilities: ['VPC Dual Stack'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      vpcIpv6: true,
-    });
 
     renderWithThemeAndHookFormContext({
       component: <SubnetCreateDrawer {...props} />,
+      options: {
+        flags: {
+          vpcIpv6: true,
+        },
+      },
     });
 
     const ipv6input = screen.getByText('IPv6 Prefix Length');
@@ -109,12 +103,14 @@ describe('Create Subnet Drawer', () => {
         capabilities: ['VPC Dual Stack'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      vpcIpv6: true,
-    });
 
     renderWithThemeAndHookFormContext({
       component: <SubnetCreateDrawer {...props} />,
+      options: {
+        flags: {
+          vpcIpv6: true,
+        },
+      },
     });
 
     expect(screen.queryByText('IPv6 Prefix Length')).not.toBeInTheDocument();
