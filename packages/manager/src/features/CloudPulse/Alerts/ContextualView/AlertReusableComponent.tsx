@@ -16,10 +16,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
-import {
-  convertAlertsToTypeSet,
-  filterAlertsByStatusAndType,
-} from '../Utils/utils';
+import { convertAlertsToTypeSet, filterAlerts } from '../Utils/utils';
 import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type {
@@ -51,13 +48,25 @@ interface AlertReusableComponentProps {
   onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
+   * Region ID for the selected entity
+   */
+  regionId?: string;
+
+  /**
    * Service type of selected entity
    */
   serviceType: string;
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { entityId, entityName, onToggleAlert, serviceType } = props;
+  const {
+    entityId,
+    entityName,
+    onToggleAlert,
+    serviceType,
+    regionId,
+    isLegacyAlertAvailable,
+  } = props;
   const {
     data: alerts,
     error,
@@ -71,8 +80,8 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
 
   // Filter alerts based on status, search text & selected type
   const filteredAlerts = React.useMemo(
-    () => filterAlertsByStatusAndType(alerts, searchText, selectedType),
-    [alerts, searchText, selectedType]
+    () => filterAlerts({ alerts, searchText, selectedType, regionId }),
+    [alerts, regionId, searchText, selectedType]
   );
 
   const history = useHistory();
