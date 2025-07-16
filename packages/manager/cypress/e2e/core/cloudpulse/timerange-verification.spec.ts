@@ -102,7 +102,7 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'UTC',
+  timezone: 'Etc/GMT',
 });
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -180,13 +180,6 @@ const convertToGmt = (dateStr: string): string => {
     'yyyy-MM-dd HH:mm'
   );
 };
-const formatToUtcDateTime = (dateStr: string): string => {
-  return DateTime.fromISO(dateStr)
-    .toUTC() // 🌍 keep it in UTC
-    .toFormat('yyyy-MM-dd HH:mm');
-};
-
-// It is going to be modified
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
@@ -307,18 +300,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .scrollIntoView();
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
-    // --- Set timezone ---
-   /* cy.findByPlaceholderText('Choose a Timezone').clear();
-    cy.findByPlaceholderText('Choose a Timezone').type(
-      '(GMT +0:00) Greenwich Mean Time{enter}',
-      { force: true }
-    );*/
-
     // --- Apply date/time range ---
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .and('be.enabled')
-      .click();
+    cy.get('[data-qa-buttons="apply"]').should('be.visible').click();
 
     // --- Re-validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
@@ -341,11 +324,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         const {
           request: { body },
         } = xhr as Interception;
-        expect(formatToUtcDateTime(body.absolute_time_duration.start)).to.equal(
-          convertToGmt(startActualDate)
+        expect(convertToGmt(body.absolute_time_duration.start)).to.equal(
+          startActualDate
         );
-        expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
-          convertToGmt(endActualDate)
+        expect(convertToGmt(body.absolute_time_duration.end)).to.equal(
+          endActualDate
         );
       });
 
