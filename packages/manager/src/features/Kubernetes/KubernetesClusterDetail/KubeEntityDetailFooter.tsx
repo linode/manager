@@ -96,6 +96,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
       data-qa-kube-entity-footer
       direction="column"
       sx={{
+        flex: 1,
         paddingTop: theme.spacingFunction(8),
       }}
     >
@@ -206,7 +207,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
         sx={{
           marginLeft: 'auto',
-          marginTop: '8px',
+          marginTop: theme.spacingFunction(8),
         }}
       >
         <TagCell
