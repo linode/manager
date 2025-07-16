@@ -315,7 +315,7 @@ const databases = [
     });
 
     const planSizes = [4, 8, 16, 32, 64, 96, 128, 256];
-    const premiumPlans = planSizes.map((size) => {
+    const premiumTypes = planSizes.map((size) => {
       return databaseTypeFactory.build({
         class: 'premium',
         id: `premium-${size}`,
@@ -323,8 +323,6 @@ const databases = [
         memory: size * 1024,
       });
     });
-
-    const premiumTypes = [...premiumPlans];
 
     return HttpResponse.json(
       makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
