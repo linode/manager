@@ -236,6 +236,44 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it.only('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Select Node Type ---
     ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
+
+    const {
+      actualDate: startActualDate,
+      day: startDay,
+      hour: startHour,
+      minute: startMinute,
+    } = getDateRangeInGMT(12, 15, true);
+
+    const {
+      actualDate: endActualDate,
+      day: endDay,
+      hour: endHour,
+      minute: endMinute,
+    } = getDateRangeInGMT(12, 30);
+
+    // --- Select start date ---
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
+
+    cy.findAllByText(startDay).first().click({ force: true });
+
+    // --- Select end date ---
+    cy.findAllByText(endDay).first().click({ force: true });
+
+    // --- Select start time ---
+    cy.get('button[aria-label^="Choose time, selected time is"]')
+      .first()
+      .click({
+        force: true,
+      });
+    cy.log('Start Time Picker Clicked', startActualDate);
+    cy.log('Start Time Picker Clicked', startHour);
+    cy.log('Start Time Picker Clicked', startMinute);
+
+    cy.log('Start Time Picker Clicked', endActualDate);
+    cy.log('Start Time Picker Clicked', endHour);
+    cy.log('Start Time Picker Clicked', endMinute);
   });
 
   timeRanges.forEach((range) => {
