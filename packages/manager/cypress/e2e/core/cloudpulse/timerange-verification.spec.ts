@@ -254,12 +254,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startDateInput').click();
     cy.get('@startDateInput').clear();
 
-    cy.findAllByText(startDay).first().click({ force: true });
+    // --- Select start time ---
+
+    cy.contains('div', new RegExp(`^${startDay}$`)).click();
 
     // --- Select end date ---
-    cy.findAllByText(endDay).first().click({ force: true });
+    cy.contains('div', new RegExp(`^${endDay}$`)).click();
 
-    // --- Select start time ---
     cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
       .click({
@@ -301,8 +302,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Apply date/time range ---
-    cy.get('[data-qa-buttons="apply"]', { timeout: 15000 })      
-      .click({ force: true });
+    cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).click({
+      force: true,
+    });
 
     // --- Re-validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
