@@ -80,6 +80,7 @@ export interface LinodeHandlers {
 export interface LinodesLandingProps {
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
+  isLinodesGrantReadOnly: boolean;
   LandingHeader?: React.ReactElement<any>;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;

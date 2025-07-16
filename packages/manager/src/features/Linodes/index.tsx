@@ -115,6 +115,7 @@ export const LinodesLandingWrapper = React.memo(() => {
     <LinodesLanding
       filteredLinodesLoading={filteredLinodesLoading}
       handleRegionFilter={handleRegionFilter}
+      isLinodesGrantReadOnly={!permissions?.create_linode}
       linodesData={filteredLinodesData}
       linodesInTransition={linodesInTransition(events ?? [])}
       linodesRequestError={error ?? undefined}
