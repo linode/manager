@@ -280,11 +280,6 @@ export const AlertInformationActionTable = (
                             return null;
                           }
 
-                          // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
-                          if (!isEditMode && alert.scope !== 'entity') {
-                            return null;
-                          }
-
                           const status = enabledAlerts[alert.type]?.includes(
                             alert.id
                           );

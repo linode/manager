@@ -90,19 +90,20 @@ export const useContextualAlertsState = (
         user: [],
       };
 
-      if (entityId) {
-        alerts.forEach((alert) => {
-          const isAccountOrRegion =
-            alert.scope === 'region' || alert.scope === 'account';
-          const shouldInclude = entityId
-            ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-            : false;
+      alerts.forEach((alert) => {
+        const isAccountOrRegion =
+          alert.scope === 'region' || alert.scope === 'account';
 
-          if (shouldInclude) {
-            initialStates[alert.type]?.push(alert.id);
-          }
-        });
-      }
+        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        const shouldInclude = entityId
+          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
+          : isAccountOrRegion;
+
+        if (shouldInclude) {
+          initialStates[alert.type]?.push(alert.id);
+        }
+      });
+
       return initialStates;
     },
     []
