@@ -82,20 +82,22 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   return (
     <Paper>
       <Stack gap={3}>
-        <Box display="flex" justifyContent="space-between">
-          <Box alignItems="center" display="flex" gap={0.5}>
-            <Typography variant="h2">Alerts</Typography>
-            <BetaChip />
+        {entityId && (
+          <Box display="flex" justifyContent="space-between">
+            <Box alignItems="center" display="flex" gap={0.5}>
+              <Typography variant="h2">Alerts</Typography>
+              <BetaChip />
+            </Box>
+            <Button
+              buttonType="outlined"
+              data-qa-buttons="true"
+              data-testid="manage-alerts"
+              onClick={() => history.push('/alerts/definitions')}
+            >
+              Manage Alerts
+            </Button>
           </Box>
-          <Button
-            buttonType="outlined"
-            data-qa-buttons="true"
-            data-testid="manage-alerts"
-            onClick={() => history.push('/alerts/definitions')}
-          >
-            Manage Alerts
-          </Button>
-        </Box>
+        )}
         <Stack gap={2}>
           <Box display="flex" gap={2}>
             <DebouncedSearchTextField
