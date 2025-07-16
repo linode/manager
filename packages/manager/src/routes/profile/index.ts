@@ -21,7 +21,11 @@ const profileRoute = createRoute({
   component: ProfileRoute,
   getParentRoute: () => rootRoute,
   path: 'profile',
-}).lazy(() => import('./profileLazyRoutes').then((m) => m.ProfileLazyRoute));
+}).lazy(() =>
+  import('src/features/Profile/profileLazyRoute').then(
+    (m) => m.ProfileLazyRoute
+  )
+);
 
 const profileDisplaySettingsRoute = createRoute({
   getParentRoute: () => profileRoute,

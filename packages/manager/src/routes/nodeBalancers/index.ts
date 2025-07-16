@@ -13,16 +13,18 @@ const nodeBalancersIndexRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '/',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then(
-    (m) => m.nodeBalancersLandingLazyRoute
-  )
+  import(
+    'src/features/NodeBalancers/NodeBalancersLanding/nodeBalancersLandingLazyRoute'
+  ).then((m) => m.nodeBalancersLandingLazyRoute)
 );
 
 const nodeBalancersCreateRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: 'create',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerCreateLazyRoute)
+  import('src/features/NodeBalancers/nodeBalancersCreateLazyRoute').then(
+    (m) => m.nodeBalancerCreateLazyRoute
+  )
 );
 
 const nodeBalancerDetailRoute = createRoute({
@@ -37,65 +39,81 @@ const nodeBalancerDetailRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailSummaryRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/summary',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailConfigurationsRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/configurations',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailConfigurationRoute = createRoute({
   getParentRoute: () => nodeBalancerDetailConfigurationsRoute,
   path: '$configId',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailSettingsRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/settings',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailSettingsDeleteRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/settings/delete',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailSettingsAddFirewallRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/settings/add-firewall',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailSettingsUnassignFirewallRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/settings/unassign-firewall/$firewallId',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDeleteRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/delete',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then(
-    (m) => m.nodeBalancersLandingLazyRoute
-  )
+  import(
+    'src/features/NodeBalancers/NodeBalancersLanding/nodeBalancersLandingLazyRoute'
+  ).then((m) => m.nodeBalancersLandingLazyRoute)
 );
 
 export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([

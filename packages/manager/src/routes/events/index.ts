@@ -13,7 +13,9 @@ const eventsIndexRoute = createRoute({
   getParentRoute: () => eventsRoute,
   path: '/',
 }).lazy(() =>
-  import('./eventsLazyRoutes').then((m) => m.eventsLandingLazyRoute)
+  import('src/features/Events/eventsLandingLazyRoute').then(
+    (m) => m.eventsLandingLazyRoute
+  )
 );
 
 export const eventsRouteTree = eventsRoute.addChildren([eventsIndexRoute]);

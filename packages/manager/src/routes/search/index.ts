@@ -14,7 +14,9 @@ const searchLandingRoute = createRoute({
   getParentRoute: () => searchRoute,
   path: '/',
 }).lazy(() =>
-  import('./searchLazyRoutes').then((m) => m.searchLandingLazyRoute)
+  import('src/features/Search/searchLandingLazyRoute').then(
+    (m) => m.searchLandingLazyRoute
+  )
 );
 
 export const searchRouteTree = searchRoute.addChildren([searchLandingRoute]);

@@ -35,12 +35,20 @@ const iamIndexRoute = createRoute({
   },
   getParentRoute: () => iamRoute,
   path: '/',
-}).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
+}).lazy(() =>
+  import('src/features/IAM/iamLandingLazyRoute').then(
+    (m) => m.iamLandingLazyRoute
+  )
+);
 
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'users',
-}).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
+}).lazy(() =>
+  import('src/features/IAM/iamLandingLazyRoute').then(
+    (m) => m.iamLandingLazyRoute
+  )
+);
 
 const iamUsersCatchAllRoute = createRoute({
   getParentRoute: () => iamUsersRoute,
@@ -53,7 +61,11 @@ const iamUsersCatchAllRoute = createRoute({
 const iamRolesRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'roles',
-}).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
+}).lazy(() =>
+  import('src/features/IAM/iamLandingLazyRoute').then(
+    (m) => m.iamLandingLazyRoute
+  )
+);
 
 const iamRolesCatchAllRoute = createRoute({
   getParentRoute: () => iamRolesRoute,
@@ -67,7 +79,9 @@ const iamUserNameRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'users/$username',
 }).lazy(() =>
-  import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
+  import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
+    (m) => m.userDetailsLandingLazyRoute
+  )
 );
 
 const iamUserNameIndexRoute = createRoute({
@@ -80,21 +94,27 @@ const iamUserNameIndexRoute = createRoute({
     });
   },
 }).lazy(() =>
-  import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
+  import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
+    (m) => m.userDetailsLandingLazyRoute
+  )
 );
 
 const iamUserNameDetailsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'details',
 }).lazy(() =>
-  import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
+  import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
+    (m) => m.userDetailsLandingLazyRoute
+  )
 );
 
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
 }).lazy(() =>
-  import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
+  import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
+    (m) => m.userDetailsLandingLazyRoute
+  )
 );
 
 const iamUserNameEntitiesRoute = createRoute({
@@ -102,7 +122,9 @@ const iamUserNameEntitiesRoute = createRoute({
   path: 'entities',
   validateSearch: (search: IamEntitiesSearchParams) => search,
 }).lazy(() =>
-  import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
+  import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
+    (m) => m.userDetailsLandingLazyRoute
+  )
 );
 
 // Catch all route for user details page
