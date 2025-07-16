@@ -235,6 +235,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
   it.only('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Select Node Type ---
+    ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
 
     const {
       actualDate: startActualDate,
@@ -312,9 +313,15 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).click({
       force: true,
     });
-
-    ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
-
+    // ---validate after apply ---
+    cy.get('[aria-labelledby="start-date"]').should(
+      'have.value',
+      `${startActualDate} PM`
+    );
+    cy.get('[aria-labelledby="end-date"]').should(
+      'have.value',
+      `${endActualDate} PM`
+    );
   });
 
   timeRanges.forEach((range) => {
