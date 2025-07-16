@@ -34,7 +34,7 @@ const volumesIndexRoute = createRoute({
   path: '/',
   validateSearch: (search: VolumesSearchParams) => search,
 }).lazy(() =>
-  import('src/routes/volumes/volumesLazyRoutes').then(
+  import('src/features/Volumes/volumesLandingLazyRoute').then(
     (m) => m.volumesLandingLazyRoute
   )
 );
@@ -43,7 +43,9 @@ const volumesCreateRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: 'create',
 }).lazy(() =>
-  import('./volumesLazyRoutes').then((m) => m.volumeCreateLazyRoute)
+  import('src/features/Volumes/volumesCreateLazyRoute').then(
+    (m) => m.volumeCreateLazyRoute
+  )
 );
 
 type VolumeActionRouteParams<P = number | string> = {
@@ -74,7 +76,7 @@ const volumeActionRoute = createRoute({
   path: '$volumeId/$action',
   validateSearch: (search: VolumesSearchParams) => search,
 }).lazy(() =>
-  import('src/routes/volumes/volumesLazyRoutes').then(
+  import('src/features/Volumes/volumesLandingLazyRoute').then(
     (m) => m.volumesLandingLazyRoute
   )
 );
