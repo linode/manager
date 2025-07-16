@@ -234,13 +234,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it.only('should implement and validate custom date/time picker for a specific date and time range', () => {
-   
-
     // --- Select Node Type ---
     ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
-
-    
-      });
   });
 
   timeRanges.forEach((range) => {
