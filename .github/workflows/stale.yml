@@ -1,5 +1,8 @@
 name: 'Stale issue handler'
 
+permissions:
+  pull-requests: write
+
 on:
   workflow_dispatch: null
   schedule:
