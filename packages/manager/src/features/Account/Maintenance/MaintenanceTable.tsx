@@ -255,7 +255,7 @@ export const MaintenanceTable = ({ type }: Props) => {
                   className={classes.cell}
                   direction={order}
                   handleClick={handleOrderChange}
-                  label={getMaintenanceDateLabel(type)}
+                  label={getMaintenanceDateField(type)}
                 >
                   {getMaintenanceDateLabel(type)}
                 </TableSortCell>
