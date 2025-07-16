@@ -39,6 +39,11 @@ interface AlertReusableComponentProps {
   entityName?: string;
 
   /**
+   * Whether the legacy alert is available for the entity
+   */
+  isLegacyAlertAvailable?: boolean;
+
+  /**
    * Called when an alert is toggled on or off.
    * Only use in create flow.
    * @param payload enabled alerts ids
@@ -136,6 +141,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             onToggleAlert={onToggleAlert}
             orderByColumn="Alert Name"
             serviceType={serviceType}
+            showConfirmationDialog={isLegacyAlertAvailable}
           />
         </Stack>
       </Stack>
