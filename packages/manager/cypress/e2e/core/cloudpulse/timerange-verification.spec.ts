@@ -290,6 +290,29 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .as('startMeridiemSelect')
       .scrollIntoView();
     cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
+
+    // --- Select end time ---
+    cy.get('button[aria-label^="Choose time, selected time is"]').last().click({
+      force: true,
+    });
+
+    cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView();
+    cy.get('@endHourSelect').find(`[aria-label="${endHour} hours"]`).click();
+
+    cy.findByLabelText('Select minutes').as('endMinuteSelect').scrollIntoView();
+    cy.get('@endMinuteSelect')
+      .find(`[aria-label="${endMinute} minutes"]`)
+      .click();
+
+    cy.findByLabelText('Select meridiem')
+      .as('endMeridiemSelect')
+      .scrollIntoView();
+    cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
+
+    // --- Apply date/time range ---
+    cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).click({
+      force: true,
+    });
   });
 
   timeRanges.forEach((range) => {
