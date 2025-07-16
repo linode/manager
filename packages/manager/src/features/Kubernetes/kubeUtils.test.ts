@@ -367,6 +367,7 @@ describe('hooks', () => {
           enabled: true,
           ga: true,
           la: true,
+          postLa: true,
         },
       });
 
@@ -376,6 +377,7 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: false,
         isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
 
@@ -399,6 +401,32 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: false,
+      });
+    });
+
+    it('returns true for Post-LA feature enablement if the account has the capability + enabled Post-LA feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: ['Kubernetes Enterprise'],
+        },
+      });
+      queryMocks.useFlags.mockReturnValue({
+        lkeEnterprise: {
+          enabled: true,
+          ga: false,
+          la: true,
+          postLa: true,
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: false,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: true,
       });
     });
 
@@ -413,6 +441,7 @@ describe('hooks', () => {
           enabled: true,
           ga: true,
           la: true,
+          postLa: true,
         },
       });
 
@@ -422,6 +451,7 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: true,
       });
     });
   });
