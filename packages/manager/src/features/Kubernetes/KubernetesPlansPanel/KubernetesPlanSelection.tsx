@@ -122,7 +122,7 @@ export const KubernetesPlanSelection = (
     <Grid size={12}>
       <StyledInputOuter>
         {shouldShowConfigurePoolButton ? (
-          <Button
+          <StyledPrimaryActionButton
             aria-label={rowIsDisabled ? disabledPlanReasonCopy : undefined}
             buttonType="primary"
             disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
@@ -135,10 +135,9 @@ export const KubernetesPlanSelection = (
                   })
                 : null
             }
-            sx={{ minWidth: '85px' }}
           >
             Configure Pool
-          </Button>
+          </StyledPrimaryActionButton>
         ) : (
           <>
             <EnhancedNumberInput
@@ -214,7 +213,7 @@ export const KubernetesPlanSelection = (
           <TableCell>
             <StyledInputOuter>
               {shouldShowConfigurePoolButton ? (
-                <Button
+                <StyledPrimaryActionButton
                   aria-label={
                     rowIsDisabled ? disabledPlanReasonCopy : undefined
                   }
@@ -229,10 +228,10 @@ export const KubernetesPlanSelection = (
                         })
                       : null
                   }
-                  sx={{ marginLeft: '10px', minWidth: '85px' }}
+                  sx={{ marginLeft: '10px' }}
                 >
                   Configure Pool
-                </Button>
+                </StyledPrimaryActionButton>
               ) : (
                 <>
                   <EnhancedNumberInput
@@ -314,3 +313,12 @@ const StyledInputOuter = styled('div', { label: 'StyledInputOuter' })(
     },
   })
 );
+
+const StyledPrimaryActionButton = styled(Button, {
+  label: 'StyledPrimaryActionButton',
+})(({ theme }) => ({
+  minWidth: '85px',
+  [theme.breakpoints.between(960, 1110)]: {
+    margin: theme.spacingFunction(8),
+  },
+}));
