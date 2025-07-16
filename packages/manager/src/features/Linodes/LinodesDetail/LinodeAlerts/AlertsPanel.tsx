@@ -77,7 +77,6 @@ export const AlertsPanel = (props: Props) => {
   const formik = useFormik<Linode['alerts']>({
     enableReinitialize: true,
     initialValues,
-
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
