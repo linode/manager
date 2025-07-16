@@ -267,10 +267,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findAllByText(endDay).first().click({ force: true });
 
     // --- Select start time ---
-    cy.get('[data-testid="ClockIcon"]')
+    cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
-      .closest('button')
-      .click({ force: true });
+      .click({
+        force: true,
+      });
 
     cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView();
     cy.get('@startHourSelect')
@@ -290,10 +291,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Select end time ---
-    cy.get('[data-testid="ClockIcon"]')
-      .last()
-      .closest('button')
-      .click({ force: true });
+    cy.get('button[aria-label^="Choose time, selected time is"]').last().click({
+      force: true,
+    });
 
     cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView();
     cy.get('@endHourSelect').find(`[aria-label="${endHour} hours"]`).click();
