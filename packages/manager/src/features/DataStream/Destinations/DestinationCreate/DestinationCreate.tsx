@@ -5,7 +5,7 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
+import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import {
   destinationType,
@@ -15,7 +15,6 @@ import {
 import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 export const DestinationCreate = () => {
-  const { classes } = useStyles();
   const theme = useTheme();
 
   const landingHeaderProps = {
@@ -60,7 +59,6 @@ export const DestinationCreate = () => {
               name="destination_type"
               render={({ field }) => (
                 <Autocomplete
-                  className={classes.input}
                   disableClearable
                   disabled={true}
                   label="Destination Type"
@@ -68,9 +66,7 @@ export const DestinationCreate = () => {
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
-                  value={destinationTypeOptions.find(
-                    ({ value }) => value === field.value
-                  )}
+                  value={getDestinationTypeOption(field.value)}
                 />
               )}
               rules={{ required: true }}
@@ -81,7 +77,6 @@ export const DestinationCreate = () => {
               render={({ field }) => (
                 <TextField
                   aria-required
-                  className={classes.input}
                   label="Destination Name"
                   onChange={(value) => {
                     field.onChange(value);

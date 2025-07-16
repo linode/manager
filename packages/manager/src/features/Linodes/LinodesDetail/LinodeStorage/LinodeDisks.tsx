@@ -21,6 +21,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
@@ -41,6 +42,8 @@ export const LinodeDisks = () => {
   const { data: disks, error, isLoading } = useAllLinodeDisksQuery(id);
   const { data: linode } = useLinodeQuery(id);
   const { data: grants } = useGrants();
+
+  const { permissions } = usePermissions('linode', ['create_linode_disk'], id);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
@@ -140,7 +143,7 @@ export const LinodeDisks = () => {
           />
           <Button
             buttonType="primary"
-            disabled={readOnly || !hasFreeDiskSpace}
+            disabled={!permissions.create_linode_disk || !hasFreeDiskSpace}
             onClick={() => setIsCreateDrawerOpen(true)}
             tooltipAnalyticsEvent={() =>
               sendEvent({

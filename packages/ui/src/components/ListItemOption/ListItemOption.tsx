@@ -15,7 +15,7 @@ export interface ListItemOptionProps<T> {
   item: T & { id: number | string };
   maxHeight?: number;
   props: React.HTMLAttributes<HTMLLIElement>;
-  selected?: boolean;
+  selected: boolean;
 }
 
 export interface DisableItemOption {

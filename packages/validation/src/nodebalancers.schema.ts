@@ -1,6 +1,14 @@
-import { array, boolean, mixed, number, object, string } from 'yup';
+import {
+  array,
+  boolean,
+  mixed,
+  number,
+  object,
+  string,
+  ValidationError,
+} from 'yup';
 
-import { vpcsValidateIP } from './vpcs.schema';
+import { determineIPType, vpcsValidateIP } from './vpcs.schema';
 
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
@@ -44,7 +52,39 @@ export const nodeBalancerConfigNodeSchema = object({
   address: string()
     .typeError('IP address is required.')
     .required('IP address is required.')
-    .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING),
+    .test(
+      'IP validation',
+      'Must be a private IPv4 or a valid IPv6 address',
+      function (value) {
+        const type = determineIPType(value);
+        const isIPv4 = type === 'ipv4';
+        const isIPv6 = type === 'ipv6';
+
+        if (!isIPv4 && !isIPv6) {
+          // @TODO- NB Dual Stack Support(IPv6): Edit the error message to cover IPv6 addresses
+          return this.createError({
+            message: PRIVATE_IPV4_WARNING,
+          });
+        }
+
+        if (isIPv4) {
+          if (!PRIVATE_IPV4_REGEX.test(value)) {
+            return this.createError({
+              message: PRIVATE_IPV4_WARNING,
+            });
+          }
+          return true;
+        }
+
+        if (isIPv6) {
+          return true;
+        }
+
+        return this.createError({
+          message: 'Unexpected error during IP address validation',
+        });
+      },
+    ),
 
   subnet_id: number().when('vpcs', {
     is: (vpcs: (typeof createNodeBalancerVPCsSchema)[]) => vpcs !== undefined,
@@ -136,7 +176,12 @@ export const createNodeBalancerConfigSchema = object({
     .required('Port is required')
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
+  protocol: string<'http' | 'https' | 'tcp' | 'udp'>().oneOf([
+    'http',
+    'https',
+    'tcp',
+    'udp',
+  ]),
   ssl_key: string().when('protocol', {
     is: 'https',
     then: (schema) => schema.required('SSL key is required when using HTTPS.'),
@@ -300,6 +345,15 @@ const createNodeBalancerVPCsSchema = object().shape({
     }),
 });
 
+const getProtocolFamilyFromProtcol = (
+  protocol: 'http' | 'https' | 'tcp' | 'udp',
+): 'tcp' | 'udp' => {
+  if (protocol === 'udp') {
+    return 'udp';
+  }
+  return 'tcp';
+};
+
 export const NodeBalancerSchema = object({
   label: string()
     .required('Label is required.')
@@ -320,32 +374,45 @@ export const NodeBalancerSchema = object({
 
   configs: array()
     .of(createNodeBalancerConfigSchema)
-    /* @todo there must be an easier way */
-    .test('unique', 'Port must be unique.', function (value) {
-      if (!value) {
+    .test('unique', 'Port must be unique.', function (configs) {
+      if (!configs) {
         return true;
       }
-      const ports: number[] = [];
-      const configs = value.reduce((prev: number[], value, idx: number) => {
-        if (!value.port) {
-          return prev;
+      const indexesOfConfigsWithNonUniquePort: number[] = [];
+
+      for (let i = 0; i < configs.length; i++) {
+        const config = configs[i];
+        if (
+          configs.some(
+            (c, index) =>
+              c.port &&
+              c.protocol &&
+              config.protocol &&
+              config.port &&
+              c.port === config.port &&
+              getProtocolFamilyFromProtcol(c.protocol) ===
+                getProtocolFamilyFromProtcol(config.protocol) &&
+              index !== i,
+          )
+        ) {
+          indexesOfConfigsWithNonUniquePort.push(i);
         }
-        if (!ports.includes(value.port)) {
-          ports.push(value.port);
-          return prev;
-        }
-        return [...prev, idx];
-      }, []);
-      if (configs.length === 0) {
+      }
+
+      if (indexesOfConfigsWithNonUniquePort.length === 0) {
         return true;
-      } // No ports were duplicates
-      const configStrings = configs.map(
-        (config: number) => `configs[${config}].port`,
+      }
+
+      return new ValidationError(
+        indexesOfConfigsWithNonUniquePort.map(
+          (configIndex) =>
+            new ValidationError(
+              `Port must be unique amongst ${getProtocolFamilyFromProtcol(configs[configIndex].protocol!) === 'tcp' ? 'TCP / HTTP / HTTPS' : 'UDP'} configurations.`,
+              configs[configIndex].protocol,
+              `configs[${configIndex}].port`,
+            ),
+        ),
       );
-      throw this.createError({
-        path: configStrings.join('|'),
-        message: 'Port must be unique.',
-      });
     }),
 
   vpcs: array()

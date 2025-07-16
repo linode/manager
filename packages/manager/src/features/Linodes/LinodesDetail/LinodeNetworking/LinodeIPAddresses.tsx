@@ -23,9 +23,9 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
@@ -73,10 +73,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
-  const { hasPublicLinodeInterface, isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface,
-    linodeId: linodeID,
-  });
+  const { isUnreachablePublicIPv4, isUnreachablePublicIPv6, interfaceWithVPC } =
+    useDetermineUnreachableIPs({
+      isLinodeInterface,
+      linodeId: linodeID,
+    });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -128,7 +129,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     openRemoveIPRangeDialog,
   };
 
-  const ipDisplay = ipResponseToDisplayRows(ips);
+  const ipDisplay = ipResponseToDisplayRows({
+    isLinodeInterface,
+    interfaceWithVPC,
+    ipResponse: ips,
+  });
 
   const { sortedData, order, orderBy, handleOrderChange } = useOrderV2({
     data: ipDisplay,
@@ -249,11 +254,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             <LinodeIPAddressRow
               {...ipDisplay}
               {...handlers}
-              hasPublicLinodeInterface={hasPublicLinodeInterface}
               isLinodeInterface={isLinodeInterface}
-              isVPCOnlyLinode={
-                isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
-              }
+              isUnreachablePublicIPv4={isUnreachablePublicIPv4}
+              isUnreachablePublicIPv6={isUnreachablePublicIPv6}
               key={`${ipDisplay.address}-${ipDisplay.type}`}
               linodeId={linodeID}
               readOnly={isLinodesGrantReadOnly}

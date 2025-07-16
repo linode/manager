@@ -1,3 +1,4 @@
+import { useDatabaseEnginesQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
 import { GridLegacy, styled } from '@mui/material';
 import { Button } from 'akamai-cds-react-components';
@@ -8,7 +9,6 @@ import {
   hasPendingUpdates,
   upgradableVersions,
 } from 'src/features/Databases/utilities';
-import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
 
 import type { Engine, PendingUpdates } from '@linode/api-v4';
 
@@ -49,7 +49,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
         </Button>
         {hasUpdates && (
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={{
               padding: '0px 8px',
             }}

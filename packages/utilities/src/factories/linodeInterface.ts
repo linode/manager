@@ -29,9 +29,7 @@ export const upgradeLinodeInterfaceFactory =
 export const linodeInterfaceFactoryVlan =
   Factory.Sync.makeFactory<LinodeInterface>({
     created: '2025-03-19T03:58:04',
-    default_route: {
-      ipv4: true,
-    },
+    default_route: {}, // VLAN interfaces cannot be the default route
     id: Factory.each((i) => i),
     mac_address: 'a4:ac:39:b7:6e:42',
     public: null,
@@ -48,7 +46,7 @@ export const linodeInterfaceFactoryVPC =
   Factory.Sync.makeFactory<LinodeInterface>({
     created: '2025-03-19T03:58:04',
     default_route: {
-      ipv4: true,
+      ipv4: true, // Currently, VPC interfaces can only be the default route for IPv4, not IPv6
     },
     id: Factory.each((i) => i),
     mac_address: 'a4:ac:39:b7:6e:42',
@@ -94,6 +92,7 @@ export const linodeInterfaceFactoryPublic =
     created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
+      ipv6: true, // Currently, only public interfaces can be the default route for IPv6
     },
     id: Factory.each((i) => i),
     mac_address: 'a4:ac:39:b7:6e:42',
