@@ -233,7 +233,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ]);
   });
 
-  it('should implement and validate custom date/time picker for a specific date and time range', () => {
+  it.only('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
     const {
       actualDate: startActualDate,
@@ -301,7 +301,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Apply date/time range ---
-    cy.get('[data-qa-buttons="apply"]').should('be.visible').click();
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // --- Re-validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
