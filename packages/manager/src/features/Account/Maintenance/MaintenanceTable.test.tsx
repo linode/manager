@@ -95,4 +95,25 @@ describe('Maintenance Table', () => {
     // Check for custom empty state
     screen.getByText('No in progress maintenance.');
   });
+
+  it('should render tooltip icon next to status for upcoming maintenance', async () => {
+    server.use(
+      http.get('*/account/maintenance', () => {
+        const accountMaintenance = accountMaintenanceFactory.buildList(1, {
+          status: 'scheduled',
+        });
+        return HttpResponse.json(makeResourcePage(accountMaintenance));
+      })
+    );
+
+    await renderWithThemeAndRouter(<MaintenanceTable type="upcoming" />);
+
+    // Wait for loading to complete
+    await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
+
+    // The tooltip icon should be present with the correct data-testid
+    expect(
+      screen.getByTestId('maintenance-status-tooltip')
+    ).toBeInTheDocument();
+  });
 });

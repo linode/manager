@@ -1596,7 +1596,6 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         icon: {
           opacity: 1,
-          margin: 0,
         },
         root: {
           '&.Mui-active': {
@@ -1610,12 +1609,12 @@ export const lightTheme: ThemeOptions = {
           fontSize: Font.FontSize.Xs,
           svg: {
             height: '16px',
+            margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Text,
+              fill: Table.HeaderNested.Icon,
             },
             width: '16px',
           },
-          gap: spacingFunction(4),
         },
       },
     },

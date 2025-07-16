@@ -308,23 +308,29 @@ export const MaintenanceTable = ({ type }: Props) => {
                 className={classes.cell}
                 direction={order}
                 handleClick={handleOrderChange}
+                iconSlot={
+                  type === 'upcoming' && (
+                    <TooltipIcon
+                      dataTestId="maintenance-status-tooltip"
+                      status="info"
+                      sxTooltipIcon={{
+                        margin: 0,
+                        padding: 0,
+                      }}
+                      text={
+                        <>
+                          Scheduled status refers to an event that is planned to
+                          start at a certain time. <br />
+                          <br /> Pending status refers to an event that has yet
+                          to be completed or decided.
+                        </>
+                      }
+                    />
+                  )
+                }
                 label="status"
               >
                 Status
-                {type === 'upcoming' && (
-                  <TooltipIcon
-                    status="info"
-                    sxTooltipIcon={{ margin: 0, padding: 0 }}
-                    text={
-                      <>
-                        Scheduled status refers to an event that is planned to
-                        start at a certain time. <br />
-                        <br /> Pending status refers to an event that has yet to
-                        be completed or decided.
-                      </>
-                    }
-                  />
-                )}
               </TableSortCell>
             )}
             <Hidden lgDown>
