@@ -35,6 +35,25 @@ import type {
 } from 'src/mocks/utilities/response';
 
 export const getInterfaces = () => [
+  // todo: connect this to the DB eventually
+  http.get(
+    '*/v4*/linode/instances/:id/interfaces/settings',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | LinodeInterfaceSettings>> => {
+      const linodeId = Number(params.id);
+      const linode = await mswDB.get('linodes', linodeId);
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const linodeSettings = linodeInterfaceSettingsFactory.build();
+
+      return makeResponse(linodeSettings);
+    }
+  ),
+
   http.get(
     '*/v4*/linode/instances/:id/interfaces',
     async ({
@@ -79,26 +98,8 @@ export const getInterfaces = () => [
       return makeResponse(linodeInterface[1]);
     }
   ),
-
-  // todo: connect this to the DB eventually
-  http.get(
-    '*/v4*/linode/instances/:id/interfaces/settings',
-    async ({
-      params,
-    }): Promise<StrictResponse<APIErrorResponse | LinodeInterfaceSettings>> => {
-      const linodeId = Number(params.id);
-      const linode = await mswDB.get('linodes', linodeId);
-
-      if (!linode) {
-        return makeNotFoundResponse();
-      }
-
-      const linodeSettings = linodeInterfaceSettingsFactory.build();
-
-      return makeResponse(linodeSettings);
-    }
-  ),
 ];
+
 export const getLinodeInterfaceFirewalls = (mockState: MockState) => [
   http.get(
     '*/v4*/linode/instances/:id/interfaces/:interfaceId/firewalls',
@@ -113,12 +114,12 @@ export const getLinodeInterfaceFirewalls = (mockState: MockState) => [
       const linode = mockState.linodes.find(
         (stateLinode) => stateLinode.id === linodeId
       );
-      const linodeInterface = mockState.linodes.find(
-        (stateLinode) => stateLinode.id === interfaceId
+      const linodeInterface = mockState.linodeInterfaces.find(
+        (stateLinode) => stateLinode[1].id === interfaceId
       );
       const allFirewalls = await mswDB.getAll('firewalls');
 
-      if (!linode || !linodeInterface || !allFirewalls) {
+      if (!linode || !linodeInterface || allFirewalls === undefined) {
         return makeNotFoundResponse();
       }
 
