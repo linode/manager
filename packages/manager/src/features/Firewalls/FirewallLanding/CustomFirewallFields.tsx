@@ -70,8 +70,6 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
       'apply_linode_firewalls',
     ]);
 
-  console.log('permissableLinodes', permissableLinodes);
-
   const isRestrictedUser = profile?.restricted;
 
   // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
