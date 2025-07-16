@@ -314,10 +314,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       force: true,
     });
     // ---validate after apply ---
-    cy.get('[aria-labelledby="start-date"]').should(
-      'have.value',
-      `${startActualDate} PM`
-    );
+    cy.get('#start-date').should('have.value', `${startActualDate} PM`);
   });
 
   timeRanges.forEach((range) => {
