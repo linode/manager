@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -97,5 +97,12 @@ describe('Alert Resuable Component for contextual view', () => {
 
     const alert = alerts[alerts.length - 1];
     expect(getByText(alert.label)).toBeInTheDocument();
+  });
+
+  it('Should hide manage alerts button for undefined entityId', () => {
+    renderWithTheme(<AlertReusableComponent serviceType={serviceType} />);
+
+    const manageAlerts = screen.queryByTestId('manage-alerts');
+    expect(manageAlerts).not.toBeInTheDocument();
   });
 });
