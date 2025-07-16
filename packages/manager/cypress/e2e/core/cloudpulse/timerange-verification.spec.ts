@@ -254,11 +254,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
-    cy.get('@startDateInput').clear();
 
-    cy.findAllByText(startDay).first().click({ force: true });
-
-    // --- Select start time ---
+    cy.contains('div', /^1$/).click(); // --- Select start time ---
     cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
       .click({
@@ -266,20 +263,26 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       });
 
     cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView();
-    cy.get('@startHourSelect')
-      .find(`[aria-label="${startHour} hours"]`)
-      .click();
+
+    cy.get('@startHourSelect').within(() => {
+      cy.findByRole('option', { name: `${startHour} hours` }).click();
+    });
+
     cy.findByLabelText('Select minutes')
       .as('startMinuteSelect')
       .scrollIntoView();
-    cy.get('@startMinuteSelect')
-      .find(`[aria-label="${startMinute} minutes"]`)
-      .click();
+
+    cy.get('@startMinuteSelect').within(() => {
+      cy.findByRole('option', { name: `${startMinute} minutes` }).click();
+    });
 
     cy.findByLabelText('Select meridiem')
       .as('startMeridiemSelect')
       .scrollIntoView();
-    cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
+
+    cy.get('@startMeridiemSelect').within(() => {
+      cy.findByRole('option', { name: 'PM' }).click();
+    });
 
     cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).click({
       force: true,
@@ -295,33 +298,42 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // --- Select end time ---
 
     cy.get('[aria-labelledby="end-date"]').as('endDateInput');
+
+    // Interact with the calendar and time picker inside the date input container
     cy.get('@endDateInput').click();
-    cy.get('@endDateInput').clear();
 
-    cy.findAllByText(endDay).first().click({ force: true });
+    cy.contains('div', /^16$/).click();
 
-    cy.get('button[aria-label^="Choose time, selected time is"]').last().click({
-      force: true,
+    // Open the time picker (end time)
+    cy.get('button[aria-label^="Choose time, selected time is"]')
+      .last()
+      .click({ force: true });
+
+    // Select hour
+    cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView();
+    cy.get('@endHourSelect').within(() => {
+      cy.get(`[aria-label="${endHour} hours"]`).click();
     });
 
-    cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView();
-    cy.get('@endHourSelect').find(`[aria-label="${endHour} hours"]`).click();
-
+    // Select minute
     cy.findByLabelText('Select minutes').as('endMinuteSelect').scrollIntoView();
-    cy.get('@endMinuteSelect')
-      .find(`[aria-label="${endMinute} minutes"]`)
-      .click();
+    cy.get('@endMinuteSelect').within(() => {
+      cy.findByRole('option', { name: `${endMinute} minutes` }).click();
+    });
 
+    // Select meridiem (AM/PM)
     cy.findByLabelText('Select meridiem')
       .as('endMeridiemSelect')
       .scrollIntoView();
-    cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
+
+    cy.get('@endMeridiemSelect').within(() => {
+      cy.findByRole('option', { name: 'PM' }).click();
+    });
 
     // --- Apply date/time range ---
     cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).click({
       force: true,
     });
-    // ---validate after apply ---
     cy.get('[aria-labelledby="end-date"]').should(
       'have.value',
       `${endActualDate} PM`
