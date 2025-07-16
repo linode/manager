@@ -225,7 +225,12 @@ export const TextField = (props: TextFieldProps) => {
   };
 
   const { errorScrollClassName, errorTextId, helperTextId, validInputId } =
-    useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
+    useFieldIds({
+      errorGroup,
+      hasError: Boolean(errorText),
+      inputId: inputId ?? inputProps?.id ?? InputProps?.id,
+      label,
+    });
 
   const isControlled = value !== undefined;
 

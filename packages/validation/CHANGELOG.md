@@ -1,9 +1,21 @@
+## [2025-07-15] - v0.70.0
+
+
+### Upcoming Features:
+
+- Update validation schemas for the changes in endpoints /v4/nodebalancers & /v4/nodebalancers/configs/{configId}/nodes for NB Dual Stack Support ([#12421](https://github.com/linode/manager/pull/12421))
+- Add `regions` in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` ([#12435](https://github.com/linode/manager/pull/12435))
+
 ## [2025-07-01] - v0.69.0
 
 
 ### Added:
 
 - IAM RBAC: email validation ([#12395](https://github.com/linode/manager/pull/12395))
+
+### Fixed:
+
+- ACLP: update `scope` property in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` to optional and nullable ([#12441](https://github.com/linode/manager/pull/12441))
 
 ### Upcoming Features:
 
