@@ -154,6 +154,9 @@ export const createLinodeInterface = (mockState: MockState) => [
       if (payload.vpc) {
         linodeInterface = linodeInterfaceFactoryVPC.build({
           ...payload,
+          default_route: {
+            ipv4: true,
+          },
           created: DateTime.now().toISO(),
           updated: DateTime.now().toISO(),
         });
@@ -223,6 +226,10 @@ export const createLinodeInterface = (mockState: MockState) => [
       } else {
         linodeInterface = linodeInterfaceFactoryPublic.build({
           ...payload,
+          default_route: {
+            ipv4: true,
+            ipv6: true,
+          },
           created: DateTime.now().toISO(),
           updated: DateTime.now().toISO(),
         });
@@ -295,14 +302,17 @@ export const deleteLinodeInterface = (mockState: MockState) => [
 
         if (subnetFromDB && vpc) {
           // update VPC/subnet to remove interface
-          const updatedLinodeData = subnetFromDB[1].linodes.map((data) => {
-            return {
-              ...data,
-              interfaces: data.interfaces.filter(
-                (iface) => iface.id !== interfaceId && iface.config_id === null
-              ),
-            };
-          });
+          const updatedLinodeData = subnetFromDB[1].linodes
+            .map((data) => {
+              return {
+                ...data,
+                interfaces: data.interfaces.filter(
+                  (iface) =>
+                    iface.id !== interfaceId && iface.config_id === null
+                ),
+              };
+            })
+            .filter((linode) => linode.interfaces.length > 0);
 
           const updatedSubnet = {
             ...subnetFromDB[1],

@@ -194,15 +194,17 @@ export const deleteConfigInterface = (mockState: MockState) => [
 
         if (subnetFromDB && vpc) {
           // update VPC/subnet to remove interface
-          const updatedLinodeData = subnetFromDB[1].linodes.map((data) => {
-            return {
-              ...data,
-              interfaces: data.interfaces.filter(
-                (iface) =>
-                  iface.id !== interfaceId && iface.config_id === configId
-              ),
-            };
-          });
+          const updatedLinodeData = subnetFromDB[1].linodes
+            .map((data) => {
+              return {
+                ...data,
+                interfaces: data.interfaces.filter(
+                  (iface) =>
+                    iface.id !== interfaceId && iface.config_id === configId
+                ),
+              };
+            })
+            .filter((linode) => linode.interfaces.length > 0);
 
           const updatedSubnet = {
             ...subnetFromDB[1],
