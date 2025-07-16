@@ -254,8 +254,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
 
-    cy.contains('div', /^1$/).click(); // --- Select start time ---
+    cy.contains('div', /^1$/).click();
     cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
       .click({
@@ -298,9 +299,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // --- Select end time ---
 
     cy.get('[aria-labelledby="end-date"]').as('endDateInput');
-
-    // Interact with the calendar and time picker inside the date input container
     cy.get('@endDateInput').click();
+    cy.get('@endDateInput').clear();
 
     cy.contains('div', /^16$/).click();
 
