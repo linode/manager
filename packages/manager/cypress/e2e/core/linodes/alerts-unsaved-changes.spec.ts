@@ -1,95 +1,40 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
-import { mockGetAlertDefinition } from 'support/intercepts/cloudpulse';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
 
-import { alertFactory } from 'src/factories';
-
-// region enables beta alerts
-const mockRegion = regionFactory.build({
+const mockEnabledRegion = regionFactory.build({
   capabilities: ['Linodes'],
   monitors: {
     alerts: ['Linodes'],
   },
 });
-const mockLinodeBeta = linodeFactory.build({
-  id: randomNumber(),
-  label: randomLabel(),
-  region: mockRegion.id,
-  alerts: { system: [1, 2], user: [3] },
-});
-// const mockLinodeLegacy = linodeFactory.build({
-//   id: randomNumber(),
-//   label: randomLabel(),
-//   region: mockRegion.id,
-// });
-const mockLinodes = [
-  {
-    linode: mockLinodeBeta,
-    message: 'Linode w/ beta alerts',
-    isBeta: true,
+const mockDisabledRegion = regionFactory.build({
+  capabilities: ['Linodes'],
+  monitors: {
+    alerts: [],
   },
-  // ,{
-  //   linode: mockLinodeLegacy,
-  //   message: 'Linode w/ legacy alerts',
-  //   isBeta: false
-  // }
+});
+const mockRegions = [
+  { region: mockEnabledRegion, message: 'enabled region' },
+  { region: mockDisabledRegion, message: 'disabled region' },
 ];
+
 const MOCK_NUMERIC_TEST_VALUE = '101';
 
 describe('Edit to page should trigger modal appearance', () => {
-  // execute same set of tests for linode w/ beta alerts, then for linode w/ legacy alerts
-  mockLinodes.forEach(({ linode, message, isBeta }) => {
-    describe(`${message}: edit should trigger modal appearance`, () => {
+  mockRegions.forEach(({ region, message }) => {
+    describe(`Edit to ${message} should trigger modal appearance`, () => {
       beforeEach(() => {
-        mockAppendFeatureFlags({
-          aclpBetaServices: {
-            linode: {
-              alerts: true,
-              metrics: false,
-            },
-          },
-        }).as('getFeatureFlags');
-        const alertDefinitions = [
-          alertFactory.build({
-            id: 1,
-            description: randomLabel(),
-            label: randomLabel(),
-            service_type: 'linode',
-            severity: 1,
-            status: 'enabled',
-            type: 'system',
-          }),
-          alertFactory.build({
-            id: 2,
-
-            description: randomLabel(),
-            label: randomLabel(),
-            service_type: 'linode',
-            severity: 1,
-            status: 'enabled',
-            type: 'system',
-          }),
-          alertFactory.build({
-            id: 3,
-            description: randomLabel(),
-            label: randomLabel(),
-            service_type: 'linode',
-            severity: 1,
-            status: 'enabled',
-            type: 'user',
-          }),
-        ];
-        //  cy.wrap(alertDefinitions).as('alertDefinitions');
-        mockGetAlertDefinition('linode', alertDefinitions).as(
-          'getAlertDefinitions'
-        );
-        mockGetRegions([mockRegion]).as('getRegions');
-        mockGetLinodeDetails(linode.id, linode).as('getLinode');
-        cy.visitWithLogin(`/linodes/${linode.id}/alerts`);
+        const mockLinode = linodeFactory.build({
+          id: randomNumber(),
+          label: randomLabel(),
+          region: region.id,
+        });
+        mockGetRegions([region]).as('getRegions');
+        mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
         cy.wait(['@getRegions', '@getLinode']);
       });
 
@@ -97,28 +42,32 @@ describe('Edit to page should trigger modal appearance', () => {
         cy.get('[data-reach-tab-panels]')
           .should('be.visible')
           .within(() => {
-            if (isBeta) {
-              cy.wait(['@getAlertDefinitions']);
-            }
-            // cy.get('[data-qa-alerts-panel]')
-            //   .first()
-            //   .should('be.visible')
-            //   .within(() => {
-            ui.toggle
-              .find()
+            cy.get('[data-qa-alerts-panel]')
+              .first()
               .should('be.visible')
-              .should('have.attr', 'data-qa-toggle', 'true')
-              .should('be.enabled')
-              .click({ multiple: true });
-            // click changes toggle to false
-            ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
-            //     });
+              .within(() => {
+                // some toggles are F but first is T
+                ui.toggle
+                  .find()
+                  .first()
+                  .should('be.visible')
+                  .should('have.attr', 'data-qa-toggle', 'true')
+                  .should('be.enabled')
+                  .then((alertToggle) =>
+                    cy.wrap(alertToggle).as('alertToggle')
+                  );
+                cy.get('@alertToggle').click();
+                // click changes toggle to false
+                cy.get('@alertToggle').should(
+                  'have.attr',
+                  'data-qa-toggle',
+                  'false'
+                );
+              });
           });
 
         // navigate to another page
         ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
-        // url does not change
-        cy.url().should('endWith', '/alerts');
         ui.dialog
           .findByTitle('Unsaved Changes')
           .should('be.visible')
@@ -130,23 +79,28 @@ describe('Edit to page should trigger modal appearance', () => {
               .should('be.enabled')
               .click();
           });
+        // url does not change
         cy.url().should('endWith', '/alerts');
         cy.get('[data-reach-tab-panels]')
           .should('be.visible')
           .within(() => {
-            // cy.get('[data-qa-alerts-panel]')
-            //   .first()
-            //   .should('be.visible')
-            //   .within(() => {
-            // edit to first toggle persists
-            ui.toggle
-              .find()
+            cy.get('[data-qa-alerts-panel]')
+              .first()
               .should('be.visible')
-              .should('have.attr', 'data-qa-toggle', 'false');
+              .within(() => {
+                // edit to toggles persist
+                cy.get('@alertToggle')
+                  .should('be.visible')
+                  .should('have.attr', 'data-qa-toggle', 'false');
+              });
           });
+
+        // navigate to another tab also triggers modal
+        ui.tabList.findTabByTitle('Settings').click();
+        ui.dialog.findByTitle('Unsaved Changes').should('be.visible');
       });
 
-      xit('after edit to numeric input', () => {
+      it('after edit to numeric input', () => {
         cy.get('[data-reach-tab-panels]')
           .should('be.visible')
           .within(() => {
@@ -205,7 +159,7 @@ describe('Edit to page should trigger modal appearance', () => {
         cy.url().should('endWith', '/alerts');
       });
 
-      xit('reverted edits do not trigger modal', () => {
+      it('reverted edits do not trigger modal', () => {
         cy.get('[data-reach-tab-panels]')
           .should('be.visible')
           .within(() => {
