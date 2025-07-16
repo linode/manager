@@ -313,7 +313,8 @@ export const AlertInformationActionTable = (
                       buttonType="primary"
                       data-qa-buttons="true"
                       data-testid="save-alerts"
-                      disabled={!hasUnsavedChanges}
+                      disabled={!hasUnsavedChanges || isLoading}
+                      loading={isLoading}
                       onClick={() => {
                         if (showConfirmationDialog) {
                           setIsDialogOpen(true);
