@@ -11,10 +11,19 @@ import {
   useUserEntityPermissions,
 } from '@linode/queries';
 
-import { fromGrants, toPermissionMap } from './adapters/permissionAdapters';
+import { fromGrants, toEntityPermissionMap, toPermissionMap } from './adapters/permissionAdapters';
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 
-import type { EntityType } from '@linode/api-v4';
+import type {
+  AccountEntity,
+  APIError,
+  EntityType,
+  Filter,
+  Grants,
+  Params,
+  Profile,
+} from '@linode/api-v4';
+import type { UseQueryResult } from '@linode/queries';
 
 export const usePermissions = (
   accessType: AccessType,
@@ -57,19 +66,29 @@ export const usePermissions = (
   return { permissions: permissionMap } as const;
 };
 
-export const useQueryWithPermissions = (
-  query: any,
-  entityType: EntityType,
-  permissionsToCheck: PermissionType[]
-) => {
-  const { data: allEntities } = query();
-  const { data: profile } = useProfile();
-  const { isIAMEnabled } = useIsIAMEnabled();
-  const { data: grants } = useGrants(!isIAMEnabled);
-  let hasFilteredEntities = false;
+export type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
 
-  const entityPermissions: any = useQueries({
-    queries: (allEntities || []).map((entity: any) => ({
+export const useEntitiesPermissions = <T extends EntityBase>(
+  entities: T[] | undefined,
+  entityType: EntityType,
+  profile?: Profile,
+  enabled = true
+) => {
+  // return useQueries({
+  //   queries: (entities || []).map((entity: T) => ({
+  //     queryKey: [entityType, entity.id],
+  //     queryFn: () =>
+  //       getUserEntityPermissions(
+  //         profile?.username || '',
+  //         entityType,
+  //         entity.id
+  //       ),
+  //     enabled,
+  //   })),
+  // });
+
+  const queries = useQueries({
+    queries: (entities || []).map((entity: T) => ({
       queryKey: [entityType, entity.id],
       queryFn: () =>
         getUserEntityPermissions(
@@ -77,36 +96,72 @@ export const useQueryWithPermissions = (
           entityType,
           entity.id
         ),
-      enabled: isIAMEnabled,
+      enabled,
     })),
   });
 
-  const entities = isIAMEnabled
-    ? filterByEntityPermissions(
-        allEntities,
-        entityPermissions,
-        permissionsToCheck
-      )
-    : filterByGrants(
-        allEntities,
-        grants,
-        profile,
-        entityType,
-        permissionsToCheck
-      );
+  const isLoading = queries.some((query) => query.isLoading);
+  const isError = queries.some((query) => query.isError);
+  const data = queries.map((query) => query.data);
+
+  return { data, isLoading, isError };
+};
+
+export const useQueryWithPermissions = <T extends EntityBase>(
+  query: (
+    params?: Params,
+    filter?: Filter,
+    enabled?: boolean
+  ) => UseQueryResult<T[], APIError[]>,
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[]
+): { data: T[]; hasFiltered: boolean } => {
+  const { data: allEntities } = query();
+  const { data: profile } = useProfile();
+  const { isIAMEnabled } = useIsIAMEnabled();
+
+  const { data: entityPermissions } = useEntitiesPermissions<T>(
+    allEntities,
+    entityType,
+    profile,
+    isIAMEnabled
+  );
+
+  const entityPermissionsMap = toEntityPermissionMap(
+    allEntities,
+    entityPermissions
+  );
+
+  console.log('entityPermissionsMap', entityPermissionsMap);
+
+  const { data: grants } = useGrants(!isIAMEnabled);
+
+  // const entities: T[] | undefined = isIAMEnabled
+  //   ? filterByEntityPermissions<T>(
+  //       allEntities,
+  //       entityPermissions,
+  //       permissionsToCheck
+  //     )
+  //   : filterByGrants<T>(
+  //       allEntities,
+  //       entityType,
+  //       permissionsToCheck,
+  //       grants,
+  //       profile
+  //     );
 
   return {
-    data: entities || [],
-    hasFiltered: allEntities?.length !== entities?.length,
+    data: [],
+    hasFiltered: false
   } as const;
 };
 
-export const filterByEntityPermissions = (
-  allEntities: any[],
-  entityPermissions: any[],
+export const filterByEntityPermissions = <T extends EntityBase>(
+  allEntities: T[] | undefined,
+  entityPermissions: { data?: PermissionType[] }[],
   permissionsToCheck: PermissionType[]
-): any[] => {
-  return allEntities?.filter((_entity: any, index: number) => {
+): T[] | undefined => {
+  return allEntities?.filter((_entity: T, index: number) => {
     const permissions = entityPermissions[index]?.data;
     return permissionsToCheck.every((permission) =>
       permissions?.includes(permission)
@@ -114,14 +169,14 @@ export const filterByEntityPermissions = (
   });
 };
 
-export const filterByGrants = (
-  allEntities: any[],
-  grants: any,
-  profile: any,
+export const filterByGrants = <T extends EntityBase>(
+  allEntities: T[] | undefined,
   entityType: EntityType,
-  permissionsToCheck: PermissionType[]
-): any[] => {
-  return allEntities?.filter((entity: any) => {
+  permissionsToCheck: PermissionType[],
+  grants?: Grants,
+  profile?: Profile
+): T[] | undefined => {
+  return allEntities?.filter((entity: T) => {
     const permissionMap = fromGrants(
       entityType,
       permissionsToCheck,

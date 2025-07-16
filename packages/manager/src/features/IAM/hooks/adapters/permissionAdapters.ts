@@ -2,7 +2,23 @@ import { accountGrantsToPermissions } from './accountGrantsToPermissions';
 import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
 
+import type { EntityBase } from '../usePermissions';
 import type { AccessType, Grants, PermissionType } from '@linode/api-v4';
+
+export const toEntityPermissionMap = (
+  allEntities?: EntityBase[],
+  entitiesPermissions?: (PermissionType[] | undefined)[]
+) => {
+  const entityPermissionsMap: Record<number, PermissionType[]> = {};
+  if (allEntities?.length && entitiesPermissions?.length) {
+    entitiesPermissions?.forEach(
+      (entityPermissions: PermissionType[], index: number) => {
+        entityPermissionsMap[allEntities[index].id] = entityPermissions;
+      }
+    );
+  }
+  return entityPermissionsMap;
+};
 
 export const toPermissionMap = (
   permissionsToCheck: PermissionType[],
