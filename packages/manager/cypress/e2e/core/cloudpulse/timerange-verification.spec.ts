@@ -267,13 +267,29 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click({
         force: true,
       });
-    cy.log('Start Time Picker Clicked', startActualDate);
-    cy.log('Start Time Picker Clicked', startHour);
-    cy.log('Start Time Picker Clicked', startMinute);
+    console.log('Start Time Picker Clicked', startActualDate);
+    console.log('Start Time Picker Clicked', startHour);
+    console.log('Start Time Picker Clicked', startMinute);
 
-    cy.log('Start Time Picker Clicked', endActualDate);
-    cy.log('Start Time Picker Clicked', endHour);
-    cy.log('Start Time Picker Clicked', endMinute);
+    console.log('Start Time Picker Clicked', endActualDate);
+    console.log('Start Time Picker Clicked', endHour);
+    console.log('Start Time Picker Clicked', endMinute);
+
+    cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView();
+    cy.get('@startHourSelect')
+      .find(`[aria-label="${startHour} hours"]`)
+      .click();
+    cy.findByLabelText('Select minutes')
+      .as('startMinuteSelect')
+      .scrollIntoView();
+    cy.get('@startMinuteSelect')
+      .find(`[aria-label="${startMinute} minutes"]`)
+      .click();
+
+    cy.findByLabelText('Select meridiem')
+      .as('startMeridiemSelect')
+      .scrollIntoView();
+    cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
   });
 
   timeRanges.forEach((range) => {
