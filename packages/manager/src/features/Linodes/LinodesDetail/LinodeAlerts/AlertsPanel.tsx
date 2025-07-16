@@ -337,7 +337,7 @@ export const AlertsPanel = (props: Props) => {
         )}
       </Prompt>
 
-      {/* Save Legacy Alerts Confirmation Modal. This modal appears on "Save" only
+      {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
       when user already subscribed to Beta/ACLP Mode and makes changes in the
       Legacy mode Interface. */}
       <AlertConfirmationDialog
@@ -347,13 +347,12 @@ export const AlertsPanel = (props: Props) => {
         isOpen={isDialogOpen && isLinodeAclpSubscribed}
         message={
           <>
-            Are you sure you want to save Legacy Alerts? <b>Alerts(Beta)</b>{' '}
-            settings will be disabled and replaced by the original Legacy
-            settings.
+            Are you sure you want to save legacy Alerts? <b>Alerts(Beta)</b>{' '}
+            settings will be disabled and replaced by legacy Alerts settings.
           </>
         }
         primaryButtonLabel="Confirm"
-        title="Are you sure you want to save Legacy Alerts?"
+        title="Are you sure you want to save legacy Alerts?"
       />
       <Paper
         sx={(theme) =>
