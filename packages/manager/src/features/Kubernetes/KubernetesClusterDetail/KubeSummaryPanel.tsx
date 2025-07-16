@@ -7,7 +7,6 @@ import {
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Grid from '@mui/material/Grid';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -15,20 +14,15 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { TagCell } from 'src/components/TagCell/TagCell';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
-  useKubernetesClusterMutation,
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
-import {
-  getAPIErrorOrDefault,
-  getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { ClusterChips } from '../ClusterList/ClusterChips';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
@@ -86,26 +80,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const [resetKubeConfigDialogOpen, setResetKubeConfigDialogOpen] =
     React.useState(false);
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    cluster.id
-  );
-
-  const handleUpdateTags = React.useCallback(
-    (newTags: string[]) => {
-      return updateKubernetesCluster({
-        tags: newTags,
-      }).catch((e) =>
-        enqueueSnackbar(
-          getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
-          {
-            variant: 'error',
-          }
-        )
-      );
-    },
-    [updateKubernetesCluster, enqueueSnackbar]
-  );
-
   const handleResetKubeConfig = () => {
     return resetKubeConfig({ id: cluster.id }).then(() => {
       setResetKubeConfigDialogOpen(false);
@@ -158,51 +132,19 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
           </Stack>
         }
         footer={
-          <Grid
-            container
-            data-qa-kube-entity-footer
-            direction="column"
-            sx={{
-              flex: 1,
-              justifyContent: 'space-between',
-              paddingTop: '8px',
-            }}
-          >
-            <KubeEntityDetailFooter
-              aclData={aclData}
-              areClusterLinodesReadOnly={areClusterLinodesReadOnly}
-              clusterCreated={cluster.created}
-              clusterId={cluster.id}
-              clusterLabel={cluster.label}
-              clusterTags={cluster.tags}
-              clusterUpdated={cluster.updated}
-              isClusterReadOnly={isClusterReadOnly}
-              isLoadingKubernetesACL={isLoadingKubernetesACL}
-              setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
-              vpcId={cluster.vpc_id}
-            />
-            <Grid
-              size={{
-                lg: 12,
-                xs: 12,
-              }}
-              sx={{
-                marginLeft: 'auto',
-                marginTop: '8px',
-              }}
-            >
-              <TagCell
-                disabled={areClusterLinodesReadOnly}
-                entityLabel={cluster.label}
-                sx={{
-                  width: '100%',
-                }}
-                tags={cluster.tags}
-                updateTags={handleUpdateTags}
-                view="inline"
-              />
-            </Grid>
-          </Grid>
+          <KubeEntityDetailFooter
+            aclData={aclData}
+            areClusterLinodesReadOnly={areClusterLinodesReadOnly}
+            clusterCreated={cluster.created}
+            clusterId={cluster.id}
+            clusterLabel={cluster.label}
+            clusterTags={cluster.tags}
+            clusterUpdated={cluster.updated}
+            isClusterReadOnly={isClusterReadOnly}
+            isLoadingKubernetesACL={isLoadingKubernetesACL}
+            setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
+            vpcId={cluster.vpc_id}
+          />
         }
         header={
           <EntityHeader>
