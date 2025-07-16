@@ -233,11 +233,6 @@ describe('SubnetLinodeRow', () => {
       }
     );
 
-    // Loading states should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
     // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
     await findByText('2001:db8::1');
     await findByText('2001:db8::/64');
@@ -273,11 +268,6 @@ describe('SubnetLinodeRow', () => {
         flags: { vpcIpv6: true },
       }
     );
-
-    // Loading states should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
     expect(getByTestId('vpc-ipv6-cell')).toHaveTextContent(

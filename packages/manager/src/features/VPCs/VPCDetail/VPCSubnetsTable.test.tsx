@@ -17,19 +17,11 @@ import { VPCSubnetsTable } from './VPCSubnetsTable';
 beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
   useSubnetsQuery: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
-  };
-});
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
@@ -244,7 +236,8 @@ describe('VPC Subnets table', () => {
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
         vpcRegion=""
-      />
+      />,
+      { flags: { vpcIpv6: true } }
     );
 
     expect(screen.getByText('VPC IPv6')).toBeVisible();
