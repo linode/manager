@@ -259,8 +259,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findAllByText(startDay).first().click({ force: true });
 
     cy.get('[aria-labelledby="end-date"]').as('endDateInput');
-    cy.get('@endDateInput').click();
-    cy.get('@endDateInput').clear();
+    cy.get('@endDateInput').click({force:true});
+    cy.get('@endDateInput').clear({force:true});
 
     // --- Select end date ---
     cy.findAllByText(endDay).first().click({ force: true });
