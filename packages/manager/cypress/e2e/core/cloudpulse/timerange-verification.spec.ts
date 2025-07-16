@@ -258,26 +258,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.findAllByText(startDay).first().click({ force: true });
 
-    cy.get('[aria-labelledby="end-date"]').as('endDateInput');
-    cy.get('@endDateInput').click({force:true});
-    cy.get('@endDateInput').clear({force:true});
-
-    // --- Select end date ---
-    cy.findAllByText(endDay).first().click({ force: true });
-
     // --- Select start time ---
     cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
       .click({
         force: true,
       });
-    console.log('Start Time Picker Clicked', startActualDate);
-    console.log('Start Time Picker Clicked', startHour);
-    console.log('Start Time Picker Clicked', startMinute);
-
-    console.log('Start Time Picker Clicked', endActualDate);
-    console.log('Start Time Picker Clicked', endHour);
-    console.log('Start Time Picker Clicked', endMinute);
 
     cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView();
     cy.get('@startHourSelect')
@@ -295,7 +281,25 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .scrollIntoView();
     cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
 
+    cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).click({
+      force: true,
+    });
+
+    // ---validate after apply ---
+
+    cy.get('[aria-labelledby="start-date"]').should(
+      'have.value',
+      `${startActualDate} PM`
+    );
+
     // --- Select end time ---
+
+    cy.get('[aria-labelledby="end-date"]').as('endDateInput');
+    cy.get('@endDateInput').click();
+    cy.get('@endDateInput').clear();
+
+    cy.findAllByText(endDay).first().click({ force: true });
+
     cy.get('button[aria-label^="Choose time, selected time is"]').last().click({
       force: true,
     });
@@ -318,7 +322,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       force: true,
     });
     // ---validate after apply ---
-    cy.get('#start-date').should('have.value', `${startActualDate} PM`);
+    cy.get('[aria-labelledby="end-date"]').should(
+      'have.value',
+      `${endActualDate} PM`
+    );
   });
 
   timeRanges.forEach((range) => {
