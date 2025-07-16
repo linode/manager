@@ -145,7 +145,7 @@ export interface CreateKubeClusterPayload {
   control_plane?: ControlPlaneOptions;
   k8s_version?: string; // Will be caught by Yup if undefined
   label?: string; // Label will be assigned by the API if not provided
-  node_pools: CreateNodePoolData[];
+  node_pools: CreateNodePoolDataBeta[];
   region?: string; // Will be caught by Yup if undefined
   tier?: KubernetesTier; // For LKE-E: Will be assigned 'standard' by the API if not provided
 }

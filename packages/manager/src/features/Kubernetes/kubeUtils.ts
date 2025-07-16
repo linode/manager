@@ -273,6 +273,9 @@ export const useIsLkeEnterpriseEnabled = () => {
   const isLkeEnterprisePhase2FlagEnabled = Boolean(
     flags.lkeEnterprise?.enabled && flags.lkeEnterprise.phase2Mtc
   );
+  const isLkeEnterprisePostLAFlagEnabled = Boolean(
+    flags?.lkeEnterprise?.enabled && flags.lkeEnterprise.postLa
+  );
   const isLkeEnterpriseGAFlagEnabled = Boolean(
     flags.lkeEnterprise?.enabled && flags.lkeEnterprise.ga
   );
@@ -287,6 +290,12 @@ export const useIsLkeEnterpriseEnabled = () => {
     isLkeEnterprisePhase2FlagEnabled,
     account?.capabilities ?? []
   );
+  // For feature-flagged update strategy and firewall work
+  const isLkeEnterprisePostLAFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterprisePostLAFlagEnabled,
+    account?.capabilities ?? []
+  );
   const isLkeEnterpriseGAFeatureEnabled = isFeatureEnabledV2(
     'Kubernetes Enterprise',
     isLkeEnterpriseGAFlagEnabled,
@@ -299,6 +308,7 @@ export const useIsLkeEnterpriseEnabled = () => {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
     isLkeEnterprisePhase2FeatureEnabled,
+    isLkeEnterprisePostLAFeatureEnabled,
   };
 };
 

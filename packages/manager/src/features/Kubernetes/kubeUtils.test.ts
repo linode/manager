@@ -368,6 +368,7 @@ describe('hooks', () => {
           ga: true,
           la: true,
           phase2Mtc: true,
+          postLa: true,
         },
       });
 
@@ -378,6 +379,7 @@ describe('hooks', () => {
         isLkeEnterpriseLAFeatureEnabled: false,
         isLkeEnterpriseLAFlagEnabled: true,
         isLkeEnterprisePhase2FeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
 
@@ -393,6 +395,7 @@ describe('hooks', () => {
           ga: false,
           la: true,
           phase2Mtc: false,
+          postLa: false,
         },
       });
 
@@ -403,6 +406,7 @@ describe('hooks', () => {
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
         isLkeEnterprisePhase2FeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
 
@@ -418,6 +422,7 @@ describe('hooks', () => {
           ga: false,
           la: true,
           phase2Mtc: true,
+          postLa: false,
         },
       });
 
@@ -428,6 +433,34 @@ describe('hooks', () => {
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
         isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: false,
+      });
+    });
+
+    it('returns true for Post-LA feature enablement if the account has the capability + enabled Post-LA feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: ['Kubernetes Enterprise'],
+        },
+      });
+      queryMocks.useFlags.mockReturnValue({
+        lkeEnterprise: {
+          enabled: true,
+          ga: false,
+          la: true,
+          phase2Mtc: true,
+          postLa: false,
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: false,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
 
@@ -443,6 +476,7 @@ describe('hooks', () => {
           ga: true,
           la: true,
           phase2Mtc: true,
+          postLa: true,
         },
       });
 
@@ -453,6 +487,7 @@ describe('hooks', () => {
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
         isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: true,
       });
     });
   });

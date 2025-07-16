@@ -63,6 +63,7 @@ describe('Kubernetes cluster action menu', () => {
             ga: false,
             la: true,
             phase2Mtc: false,
+            postLa: false,
           },
         },
       }
@@ -88,6 +89,7 @@ describe('Kubernetes cluster action menu', () => {
             ga: false,
             la: true,
             phase2Mtc: false,
+            postLa: false,
           },
         },
       }
@@ -113,6 +115,7 @@ describe('Kubernetes cluster action menu', () => {
             ga: false,
             la: true,
             phase2Mtc: false,
+            postLa: false,
           },
         },
       }

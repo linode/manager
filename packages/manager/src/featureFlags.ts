@@ -74,6 +74,7 @@ interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
   phase2Mtc: boolean;
+  postLa: boolean;
 }
 
 interface CloudNatFlag extends BetaFeatureFlag {
