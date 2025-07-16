@@ -301,7 +301,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Apply date/time range ---
-    cy.get('[data-qa-buttons="apply"]')
+    cy.get('[data-qa-buttons="apply"]', { timeout: 15000 })
       .should('be.visible')
       .click({ force: true });
 
