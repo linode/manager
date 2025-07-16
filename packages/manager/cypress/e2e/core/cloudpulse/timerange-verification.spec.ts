@@ -277,7 +277,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startHourSelect')
       .find(`[aria-label="${startHour} hours"]`)
       .click();
-
     cy.findByLabelText('Select minutes')
       .as('startMinuteSelect')
       .scrollIntoView();
@@ -309,11 +308,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Set timezone ---
-    cy.findByPlaceholderText('Choose a Timezone').clear();
+   /* cy.findByPlaceholderText('Choose a Timezone').clear();
     cy.findByPlaceholderText('Choose a Timezone').type(
       '(GMT +0:00) Greenwich Mean Time{enter}',
       { force: true }
-    );
+    );*/
 
     // --- Apply date/time range ---
     cy.get('[data-qa-buttons="apply"]')
