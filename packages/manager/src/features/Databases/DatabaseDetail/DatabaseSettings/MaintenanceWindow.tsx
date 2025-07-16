@@ -1,3 +1,4 @@
+import { useDatabaseMutation } from '@linode/queries';
 import {
   Autocomplete,
   FormControl,
@@ -16,7 +17,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -265,7 +265,7 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                 />
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{
                     marginTop: '1.75rem',
                     padding: '0px 8px',

@@ -6,7 +6,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
 import { PathSample } from 'src/features/DataStream/Shared/PathSample';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -14,7 +13,6 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
   const { gecko2 } = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
   const { data: regions } = useRegionsQuery();
-  const { classes } = useStyles();
   const { control } = useFormContext();
 
   return (
@@ -25,7 +23,6 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
         render={({ field }) => (
           <TextField
             aria-required
-            className={classes.input}
             label="Host"
             onChange={(value) => {
               field.onChange(value);
@@ -42,7 +39,6 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
         render={({ field }) => (
           <TextField
             aria-required
-            className={classes.input}
             label="Bucket"
             onChange={(value) => {
               field.onChange(value);
@@ -104,16 +100,15 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
           render={({ field }) => (
             <TextField
               aria-required
-              className={classes.input}
               label="Log Path Prefix"
               onChange={(value) => field.onChange(value)}
               placeholder="Log Path Prefix..."
+              sx={{ width: 416 }}
               value={field.value}
             />
           )}
         />
         <PathSample
-          className={classes.input}
           value="text-cloud/logs/audit/02/26/2026" // TODO: Generate sample path value in DPS-33654
         />
       </Box>

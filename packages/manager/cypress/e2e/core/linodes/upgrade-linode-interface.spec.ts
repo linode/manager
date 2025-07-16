@@ -89,15 +89,14 @@ describe('upgrade to new Linode Interface flow', () => {
 
     cy.get('[data-testid="Configurations"]').should('be.visible').click();
 
-    cy.findByLabelText('List of Configurations')
+    cy.findByLabelText('List of Configurations').should('be.visible');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Linode Config ${mockConfig.label}`)
       .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Edit')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
+      .click();
+
+    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
     // Confirm absence of the interfaces section when editing an existing config.
     ui.dialog

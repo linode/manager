@@ -23,9 +23,9 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
@@ -43,8 +43,10 @@ import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 import type { IPTypes } from './types';
 import type {
+  Interface,
   IPAddress,
   IPRange,
+  LinodeInterface,
   LinodeIPsResponse,
   VPCIP,
 } from '@linode/api-v4';
@@ -79,10 +81,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
-  const { hasPublicLinodeInterface, isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface,
-    linodeId: linodeID,
-  });
+  const { isUnreachablePublicIPv4, isUnreachablePublicIPv6, interfaceWithVPC } =
+    useDetermineUnreachableIPs({
+      isLinodeInterface,
+      linodeId: linodeID,
+    });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -134,7 +137,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     openRemoveIPRangeDialog,
   };
 
-  const ipDisplay = ipResponseToDisplayRows(ips);
+  const ipDisplay = ipResponseToDisplayRows({
+    isLinodeInterface,
+    interfaceWithVPC,
+    ipResponse: ips,
+  });
 
   const { sortedData, order, orderBy, handleOrderChange } = useOrderV2({
     data: ipDisplay,
@@ -255,11 +262,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             <LinodeIPAddressRow
               {...ipDisplay}
               {...handlers}
-              hasPublicLinodeInterface={hasPublicLinodeInterface}
               isLinodeInterface={isLinodeInterface}
-              isVPCOnlyLinode={
-                isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
-              }
+              isUnreachablePublicIPv4={isUnreachablePublicIPv4}
+              isUnreachablePublicIPv6={isUnreachablePublicIPv6}
               key={`${ipDisplay.address}-${ipDisplay.type}`}
               linodeId={linodeID}
               readOnly={isLinodesGrantReadOnly}
@@ -345,17 +350,26 @@ export interface IPDisplay {
 }
 
 // Takes an IP Response object and returns high-level IP display rows.
-export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse
-): IPDisplay[] => {
+export const ipResponseToDisplayRows = (inputs: {
+  interfaceWithVPC?: Interface | LinodeInterface;
+  ipResponse?: LinodeIPsResponse;
+  isLinodeInterface: boolean;
+}): IPDisplay[] => {
+  const { ipResponse, isLinodeInterface, interfaceWithVPC } = inputs;
   if (!ipResponse) {
     return [];
   }
 
   const { ipv4, ipv6 } = ipResponse;
 
+  const vpcIPWithNat = ipv4.vpc.find((ip) => ip.nat_1_1);
   const ipDisplay = [
-    ...mapIPv4Display(ipv4.public, 'Public'),
+    ...createPublicIPv4Display({
+      publicIPv4s: ipv4.public,
+      isLinodeInterface,
+      interfaceWithVPC,
+      vpcIPWithNat,
+    }),
     ...mapIPv4Display(ipv4.private, 'Private'),
     ...mapIPv4Display(ipv4.reserved, 'Reserved'),
     ...mapIPv4Display(ipv4.shared, 'Shared'),
@@ -369,10 +383,6 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
-  if (ipv4.vpc.find((vpcIp) => vpcIp.nat_1_1)) {
-    ipDisplay.shift();
-  }
   ipDisplay.push(...createVPCIPv4Display(ipv4.vpc));
 
   // IPv6 ranges and pools to display in the networking table
@@ -414,6 +424,39 @@ type ipKey =
   | 'Reserved'
   | 'Shared'
   | 'SLAAC';
+
+const createPublicIPv4Display = (inputs: {
+  interfaceWithVPC: Interface | LinodeInterface | undefined;
+  isLinodeInterface: boolean;
+  publicIPv4s: IPAddress[];
+  vpcIPWithNat: undefined | VPCIP;
+}) => {
+  const { publicIPv4s, isLinodeInterface, vpcIPWithNat, interfaceWithVPC } =
+    inputs;
+  let ipsToDisplay = [...publicIPv4s];
+
+  if (vpcIPWithNat) {
+    if (isLinodeInterface) {
+      // for Linode Interfaces, the IPv4 nat_1_1 address is returned in both the ipv4.public and ipv4.vpc objects
+      // We filter it out from ipv4.public so that it is not displayed twice
+      ipsToDisplay = ipsToDisplay.filter(
+        (ip) => ip.address !== vpcIPWithNat.nat_1_1
+      );
+    }
+
+    if (
+      !isLinodeInterface ||
+      (interfaceWithVPC &&
+        'default_route' in interfaceWithVPC &&
+        interfaceWithVPC.default_route.ipv4)
+    )
+      // For legacy config profile interfaces, or cases where the vpcInterface is the default IPv4 route,
+      // we hide the public IP if there is a VPC IP with 1:1 NAT (implies VPC interface with 1:1 NAT)
+      ipsToDisplay.shift();
+  }
+
+  return mapIPv4Display(ipsToDisplay, 'Public');
+};
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));

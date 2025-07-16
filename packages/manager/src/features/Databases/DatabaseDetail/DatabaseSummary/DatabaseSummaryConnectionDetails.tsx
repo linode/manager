@@ -1,4 +1,5 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
+import { useDatabaseCredentialsQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -11,7 +12,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getReadOnlyHost, isDefaultDatabase } from '../../utilities';
@@ -129,7 +129,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         )}
         {isLegacy && (
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={sxTooltipIcon}
             text={privateHostCopy}
           />
@@ -137,7 +137,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         {!isLegacy && hasHost && (
           <TooltipIcon
             componentsProps={hostTooltipComponentProps}
-            status="help"
+            status="info"
             sxTooltipIcon={sxTooltipIcon}
             text={HOST_TOOLTIP_COPY}
           />
@@ -176,7 +176,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       {disableDownloadCACertificateBtn && (
         <span className={classes.tooltipIcon}>
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={sxTooltipIcon}
             text="Your Database Cluster is currently provisioning."
           />
@@ -229,7 +229,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
           {disableShowBtn && (
             <TooltipIcon
-              status="help"
+              status="info"
               sxTooltipIcon={sxTooltipIcon}
               text={
                 database.status === 'provisioning'
@@ -275,7 +275,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               {!isLegacy && (
                 <TooltipIcon
                   componentsProps={hostTooltipComponentProps}
-                  status="help"
+                  status="info"
                   sxTooltipIcon={sxTooltipIcon}
                   text={HOST_TOOLTIP_COPY}
                 />

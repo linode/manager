@@ -202,33 +202,54 @@ describe('resize linode', () => {
       // its disk.
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
 
-      // Power off the Linode to resize the disk
-      ui.button.findByTitle('Power Off').should('be.visible').click();
-
-      ui.dialog
-        .findByTitle(`Power Off Linode ${linode.label}?`)
-        .should('be.visible')
-        .then(() => {
-          ui.button
-            .findByTitle(`Power Off Linode`)
-            .should('be.visible')
+      // Check Linode status and power off if needed
+      cy.findByText('RUNNING').then(($runningStatus) => {
+        if ($runningStatus.length > 0) {
+          // Linode is running, need to power it off
+          ui.actionMenu
+            .findByTitle(`Action menu for Linode ${linode.label}`)
             .click();
-        });
 
-      // Wait for Linode to power off, then resize the disk to 50 GB.
-      cy.findByText('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+          ui.actionMenuItem
+            .findByTitle('Power Off')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          ui.dialog
+            .findByTitle(`Power Off Linode ${linode.label}?`)
+            .should('be.visible')
+            .within(() => {
+              ui.button
+                .findByTitle(`Power Off Linode`)
+                .should('be.visible')
+                .click();
+            });
+
+          // Wait for Linode to power off
+          cy.findByText('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
+            'be.visible'
+          );
+        }
+        // If Linode is already offline, continue with the test
+      });
+
       cy.findByText(diskName)
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          ui.button
-            .findByTitle('Resize')
+          ui.actionMenu
+            .findByTitle(`Action menu for Disk ${diskName}`)
             .should('be.visible')
             .should('be.enabled')
             .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Resize')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       ui.drawer
         .findByTitle(`Resize ${diskName}`)

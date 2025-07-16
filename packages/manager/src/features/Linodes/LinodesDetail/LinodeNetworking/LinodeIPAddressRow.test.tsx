@@ -15,7 +15,10 @@ import { LinodeIPAddressRow } from './LinodeIPAddressRow';
 import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
-const ipDisplay = ipResponseToDisplayRows(ips)[0];
+const ipDisplay = ipResponseToDisplayRows({
+  ipResponse: ips,
+  isLinodeInterface: false,
+})[0];
 const ipDisplayVPC = createVPCIPv4Display([vpcIPFactory.build()])[0];
 
 const handlers: IPAddressRowHandlers = {
@@ -32,7 +35,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -55,7 +58,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -76,7 +79,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={true}
+          isUnreachablePublicIPv4={true}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -108,7 +111,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -130,8 +133,11 @@ describe('LinodeIPAddressRow', () => {
 describe('ipResponseToDisplayRows', () => {
   it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
     const ipDisplays = ipResponseToDisplayRows({
-      ...ips,
-      ipv4: { ...ips.ipv4, vpc: [vpcIPFactory.build()] },
+      ipResponse: {
+        ...ips,
+        ipv4: { ...ips.ipv4, vpc: [vpcIPFactory.build()] },
+      },
+      isLinodeInterface: false,
     });
 
     expect(

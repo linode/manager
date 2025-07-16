@@ -1,7 +1,6 @@
-import { screen } from '@testing-library/react';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { AccessKeyLanding } from './AccessKeyLanding';
 
@@ -14,8 +13,10 @@ const props = {
 };
 
 describe('AccessKeyLanding', () => {
-  it('should render a table of access keys', () => {
-    renderWithTheme(<AccessKeyLanding {...props} />);
-    expect(screen.getByTestId('data-qa-access-key-table')).toBeInTheDocument();
+  it('should render a table of access keys', async () => {
+    const { getByTestId } = await renderWithThemeAndRouter(
+      <AccessKeyLanding {...props} />
+    );
+    expect(getByTestId('data-qa-access-key-table')).toBeInTheDocument();
   });
 });

@@ -111,6 +111,7 @@ export const notificationToast = {
     backgroundColor: NotificationToast.Informative.Background,
     borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
+    icon: NotificationToast.Informative.StatusIcon,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
@@ -127,6 +128,7 @@ export const notificationToast = {
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
     borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
+    icon: NotificationToast.Warning.StatusIcon,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
@@ -459,6 +461,9 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&[aria-disabled="true"]': {
+            '&[aria-describedby="button-tooltip"] svg': {
+              color: Alias.Content.Icon.Primary.Default,
+            },
             '& .MuiSvgIcon-root': {
               fill: Button.Primary.Disabled.Icon,
             },
@@ -656,9 +661,6 @@ export const darkTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          '&[class*="error"]': {
-            color: Select.Error.HintText,
-          },
           fontWeight: Font.FontWeight.Semibold,
           color: Color.Neutrals[40],
           lineHeight: 1.25,

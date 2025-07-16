@@ -1,6 +1,9 @@
 # Perform Static Application Security Testing (SAST) scanning on Cloud Manager.
 name: Security Scan
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:

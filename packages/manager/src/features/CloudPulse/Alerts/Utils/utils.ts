@@ -239,7 +239,7 @@ export const filterAlertsByStatusAndType = (
   return (
     alerts?.filter(({ label, status, type }) => {
       return (
-        status === 'enabled' &&
+        (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
         (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );
@@ -469,4 +469,19 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
       resources?.some(({ region }) => region === id)
     ) ?? []
   );
+};
+
+/*
+ * Converts seconds into a relevant format of minutes or hours to be displayed in the Autocomplete Options.
+ * @param seconds The seconds that need to be converted into minutes or hours.
+ * @returns A string representing the time in minutes or hours.
+ */
+export const convertSecondsToOptions = (seconds: number): string => {
+  const minutes = seconds / 60;
+  if (minutes < 60) {
+    return `${minutes} min`;
+  } else {
+    const hours = minutes / 60;
+    return `${hours} hr`;
+  }
 };

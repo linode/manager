@@ -1,3 +1,25 @@
+## [2025-07-15] - v0.9.0
+
+
+### Added:
+
+- `entitytransfers/` directory and migrated relevant query keys and hooks ([#12406](https://github.com/linode/manager/pull/12406))
+- Added `databases/` directory and migrated relevant query keys and hooks ([#12426](https://github.com/linode/manager/pull/12426))
+- `statusPage/` directory and migrated relevant query keys and hooks ([#12468](https://github.com/linode/manager/pull/12468))
+
+## [2025-07-01] - v0.8.0
+
+
+### Added:
+
+- Created `iam/` directory and migrated relevant query keys and hooks ([#12370](https://github.com/linode/manager/pull/12370))
+- Created `networktransfer/` directory and migrated relevant query keys and hooks ([#12381](https://github.com/linode/manager/pull/12381))
+
+### Upcoming Features:
+
+- Add `getAllMaintenancePolicies` query and `useAccountMaintenancePoliciesQuery` hook to fetch and manage VM Host Maintenance Policy data ([#12334](https://github.com/linode/manager/pull/12334))
+- Add CRUD CloudNAT queries ([#12379](https://github.com/linode/manager/pull/12379))
+
 ## [2025-06-17] - v0.7.0
 
 

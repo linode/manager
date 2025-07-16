@@ -80,7 +80,7 @@ export const LinodeBackups = () => {
       search: (prev) => ({
         ...prev,
         type: 'Backups',
-        backupID: backup.id.toString(),
+        backupID: backup.id,
         linodeID: linode?.id,
         typeID: linode?.type,
       }),

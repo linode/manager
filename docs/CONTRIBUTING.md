@@ -39,6 +39,7 @@ Feel free to open an issue to report a bug or request a feature.
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
       - Select the changeset category that matches the commit type in your PR title. (Where this isn't a 1:1 match: generally, a `feat` commit type falls under an `Added` change and `refactor` falls under `Tech Stories`.)
       - Write your changeset by following our [best practices](#writing-a-changeset).
+9. Automated tests and other CI checks will run automatically against the PR. It is the contributor's responsibility to ensure their changes pass the CI checks.
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
 
