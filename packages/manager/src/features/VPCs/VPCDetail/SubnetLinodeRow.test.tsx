@@ -4,7 +4,7 @@ import {
   linodeFactory,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -132,7 +132,8 @@ describe('SubnetLinodeRow', () => {
             subnet={subnetFactory1}
             subnetId={1}
             subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-          />
+          />,
+          { flags: { vpcIpv6: false } }
         )
       );
 
@@ -206,9 +207,11 @@ describe('SubnetLinodeRow', () => {
 
   it('should display the VPC IPv6 and Linode IPv6 Ranges when vpcIpv6 feature flag is enabled (config/legacy interface)', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const config = linodeConfigFactory.build({
       interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
     });
+    queryMocks.useLinodeInterfaceQuery.mockReturnValue({});
     queryMocks.useLinodeConfigQuery.mockReturnValue({
       data: config,
     });
@@ -216,21 +219,21 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getByTestId, findByText } = renderWithTheme(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
+          subnet={subnetFactory1}
           subnetId={1}
           subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-        />
-      ),
-      {
-        flags: { vpcIpv6: true },
-      }
+        />,
+        {
+          flags: { vpcIpv6: true },
+        }
+      )
     );
 
     // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
@@ -246,6 +249,7 @@ describe('SubnetLinodeRow', () => {
     queryMocks.useLinodeInterfaceQuery.mockReturnValue({
       data: vpcLinodeInterface,
     });
+    queryMocks.useLinodeConfigQuery.mockReturnValue({});
 
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
@@ -262,11 +266,11 @@ describe('SubnetLinodeRow', () => {
           subnetInterfaces={[
             { active: true, config_id: null, id: vpcLinodeInterface.id },
           ]}
-        />
-      ),
-      {
-        flags: { vpcIpv6: true },
-      }
+        />,
+        {
+          flags: { vpcIpv6: true },
+        }
+      )
     );
 
     // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
