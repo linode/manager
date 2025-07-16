@@ -256,10 +256,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // --- Select start time ---
 
-    cy.contains('div', new RegExp(`^${startDay}$`)).click();
+    cy.contains('div', new RegExp(`^${startDay}$`)).click({ force: true });
 
     // --- Select end date ---
-    cy.contains('div', new RegExp(`^${endDay}$`)).click();
+    cy.contains('div', new RegExp(`^${endDay}$`)).click({ force: true });
 
     cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
