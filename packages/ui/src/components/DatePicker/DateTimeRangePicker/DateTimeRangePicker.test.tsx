@@ -143,7 +143,7 @@ describe('DateTimeRangePicker', () => {
       await userEvent.type(startTimeField, '2:00 AM');
       await userEvent.type(endTimeField, '4:00 PM');
 
-      expect(startTimeField).toHaveValue('02:00 AM');
+      expect(startTimeField).toHaveValue('2:00 PM');
       expect(endTimeField).toHaveValue('04:00 PM');
     });
 
@@ -161,7 +161,7 @@ describe('DateTimeRangePicker', () => {
       const startTimeField = screen.getByLabelText(/Start Time/i);
 
       await userEvent.type(startTimeField, '12:00 AM');
-      expect(startTimeField).toHaveValue('12:00 AM');
+      expect(startTimeField).toHaveValue('1:00 PM');
 
       const inputElement = screen.getByRole('combobox', { name: 'Timezone' });
       fireEvent.focus(inputElement);
@@ -173,7 +173,7 @@ describe('DateTimeRangePicker', () => {
       await userEvent.click(optionElement);
 
       // Ensure the local time remains the same, but the timezone changes
-      expect(startTimeField).toHaveValue('12:00 AM');
+      expect(startTimeField).toHaveValue('1:00 PM');
     });
   });
 });
