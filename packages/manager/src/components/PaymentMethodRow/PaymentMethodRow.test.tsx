@@ -178,27 +178,38 @@ describe('Payment Method Row', () => {
   });
 
   it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
-    const paymentMethod = paymentMethodFactory.build({
-      type: 'credit_card',
-    });
+    const paymentMethods = [
+      paymentMethodFactory.build({
+        type: 'paypal',
+        data: { email: 'test@linode.com', paypal_id: '' },
+      }),
+      paymentMethodFactory.build({
+        type: 'credit_card',
+        data: { last_four: '1881' },
+      }),
+    ];
 
     /*
      * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
      * and is required for this test. We may want to consider decoupling these components in the future.
      */
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-        <BillingSummary
-          balance={0}
-          balanceUninvoiced={0}
-          paymentMethods={[paymentMethod]}
-        />
-        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
-      </PayPalScriptProvider>,
-      {
-        initialRoute: '/account/billing',
-      }
-    );
+    const { getByLabelText, getByTestId, getByText, getAllByTestId } =
+      renderWithTheme(
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+          <BillingSummary
+            balance={0}
+            balanceUninvoiced={0}
+            paymentMethods={paymentMethods}
+          />
+          <PaymentMethodRow
+            onDelete={vi.fn()}
+            paymentMethod={paymentMethods[1]}
+          />
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
+      );
 
     const actionMenu = getByLabelText('Action menu for card ending in 1881');
     await userEvent.click(actionMenu);
@@ -211,18 +222,18 @@ describe('Payment Method Row', () => {
       expect(getByTestId('drawer')).toBeVisible();
     });
 
-    expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+    expect(getByTestId('drawer-title')).toHaveTextContent('Make a Payment');
 
-    expect(getByTestId('selection-card')).toBeVisible();
-    expect(getByTestId('selection-card')).toHaveAttribute(
+    const expectedSelectionCard = getAllByTestId('selection-card')[1];
+
+    expect(expectedSelectionCard).toBeVisible();
+    expect(expectedSelectionCard).toHaveTextContent('1881');
+    expect(expectedSelectionCard).toHaveAttribute(
       'data-qa-selection-card-checked',
       'true'
     );
 
-    if (paymentMethod.type === 'credit_card') {
-      expect(getByTestId('selection-card')).toHaveTextContent(
-        paymentMethod.data.last_four!
-      );
-    }
+    // In the future, if we have access to the router's state,
+    // we can assert the search params.
   });
 });
