@@ -60,7 +60,7 @@ export const createCloudNAT = (mockState: MockState) => [
 
       const cloudNAT = cloudNATFactory.build({
         ...payload,
-        addresses: ['203.0.113.100'],
+        addresses: [{ address: '203.0.113.100' }],
       });
 
       await mswDB.add('cloudnats', cloudNAT, mockState);
