@@ -8,7 +8,7 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { assertLinodeAlertsEnabled } from 'support/util/linodes';
-import { randomLabel, randomNumber } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
 
 import { alertFactory } from 'src/factories';
 import {
@@ -18,6 +18,7 @@ import {
   ALERTS_LEGACY_MODE_BUTTON_TEXT,
 } from 'src/features/Linodes/constants';
 
+const MOCK_LINODE_ID = 2;
 const mockDisabledLegacyAlerts = {
   cpu: 0,
   io: 0,
@@ -47,13 +48,13 @@ const mockEnabledBetaAlerts = {
  * UI of Linode alerts tab based on beta and legacy alert values in linode.alerts. Dependent on region support for alerts
  * Legacy alerts = 0, Beta alerts = [] (empty arrays or no values at all) => legacy disabled for `beta` stage OR beta disabled for `ga` stage
  * Legacy alerts > 0, Beta alerts = [] (empty arrays or no values at all) => legacy enabled
- * Legacy alerts = 0, Beta alerts has values (either system, user, or both) => beta disabled
- * Legacy alerts > 0, Beta alerts has values (either system, user, or both) => beta disabled
+ * Legacy alerts = 0, Beta alerts has values (either system, user, or both) => beta enabled
+ * Legacy alerts > 0, Beta alerts has values (either system, user, or both) => beta enabled
  *
  * Note: Here, "disabled" means that all toggles are in the OFF state, but it's still editable (not read-only)
  */
 
-xdescribe('region enables alerts', function () {
+describe('region enables alerts', function () {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpBetaServices: {
@@ -81,16 +82,17 @@ xdescribe('region enables alerts', function () {
         severity: 1,
         status: 'enabled',
         type: 'system',
+        entity_ids: [MOCK_LINODE_ID.toString()],
       }),
       alertFactory.build({
         id: 2,
-
         description: randomLabel(),
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,
         status: 'enabled',
         type: 'system',
+        entity_ids: [MOCK_LINODE_ID.toString()],
       }),
       alertFactory.build({
         id: 3,
@@ -100,6 +102,7 @@ xdescribe('region enables alerts', function () {
         severity: 1,
         status: 'enabled',
         type: 'user',
+        entity_ids: [MOCK_LINODE_ID.toString()],
       }),
     ];
     cy.wrap(alertDefinitions).as('alertDefinitions');
@@ -108,9 +111,9 @@ xdescribe('region enables alerts', function () {
     );
   });
 
-  it('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
+  xit('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
+      id: MOCK_LINODE_ID,
       label: randomLabel(),
       region: this.mockEnabledRegion.id,
       alerts: {
@@ -169,9 +172,9 @@ xdescribe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta disabled', function () {
+  it('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
+      id: MOCK_LINODE_ID,
       label: randomLabel(),
       region: this.mockEnabledRegion.id,
       alerts: {
@@ -252,9 +255,9 @@ xdescribe('region enables alerts', function () {
     // });
   });
 
-  it('Legacy alerts = 0, Beta alerts > 0, => beta disabled', function () {
+  it('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
+      id: 2,
       label: randomLabel(),
       region: this.mockEnabledRegion.id,
       alerts: {
@@ -319,9 +322,9 @@ xdescribe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts > 0, => beta disabled. can downgrade to legacy enabled', function () {
+  it('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
+      id: MOCK_LINODE_ID,
       label: randomLabel(),
       region: this.mockEnabledRegion.id,
       alerts: {
@@ -417,7 +420,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
 
   it('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
+      id: MOCK_LINODE_ID,
       label: randomLabel(),
       region: this.mockDisabledRegion.id,
       alerts: {
@@ -453,7 +456,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
 
   it('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
+      id: MOCK_LINODE_ID,
       label: randomLabel(),
       region: this.mockDisabledRegion.id,
       alerts: { ...mockEnabledLegacyAlerts },

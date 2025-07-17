@@ -356,14 +356,14 @@ export const assertLinodeAlertsEnabled = (alertDefinitions: Alert[]) => {
         cy.get('td')
           .eq(0)
           .within(() => {
-            // each alert's toggle should be editable
+            // each alert's toggle should be enabled/on/true and editable
             ui.toggle
               .find()
-              .should('have.attr', 'data-qa-toggle', 'false')
+              .should('have.attr', 'data-qa-toggle', 'true')
               .should('be.visible')
               .should('be.enabled')
               .click();
-            ui.toggle.find().should('have.attr', 'data-qa-toggle', 'true');
+            ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
           });
         cy.get('td')
           .eq(1)
