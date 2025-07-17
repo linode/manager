@@ -12,23 +12,11 @@ import BillingSummary from './BillingSummary';
 const accountBalanceText = 'account-balance-text';
 const accountBalanceValue = 'account-balance-value';
 
-const queryMocks = vi.hoisted(() => ({
-  useMatch: vi.fn().mockReturnValue({}),
-}));
-
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useMatch: queryMocks.useMatch,
   };
 });
 

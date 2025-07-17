@@ -11,25 +11,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
-const navigate = vi.fn();
-const queryMocks = vi.hoisted(() => ({
-  useNavigate: vi.fn(() => navigate),
-  useMatch: vi.fn().mockReturnValue({}),
-  useSearch: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useNavigate: queryMocks.useNavigate,
-    useMatch: queryMocks.useMatch,
-    useSearch: queryMocks.useSearch,
-  };
-});
-
 vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
@@ -194,27 +177,28 @@ describe('Payment Method Row', () => {
     expect(makeDefaultPaymentMethod).toBeCalledTimes(1);
   });
 
-  it('Opens "Make a Payment" drawer if "Make a Payment" action is clicked', async () => {
-    const paymentMethod = paymentMethodFactory.build();
+  it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
+    const paymentMethod = paymentMethodFactory.build({
+      type: 'credit_card',
+    });
 
     /*
      * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
      * and is required for this test. We may want to consider decoupling these components in the future.
      */
-    const { getByLabelText, getByTestId, getByText, rerender } =
-      renderWithTheme(
-        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-          <BillingSummary
-            balance={0}
-            balanceUninvoiced={0}
-            paymentMethods={[paymentMethod]}
-          />
-          <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
-        </PayPalScriptProvider>,
-        {
-          initialRoute: '/account/billing',
-        }
-      );
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <BillingSummary
+          balance={0}
+          balanceUninvoiced={0}
+          paymentMethods={[paymentMethod]}
+        />
+        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
+    );
 
     const actionMenu = getByLabelText('Action menu for card ending in 1881');
     await userEvent.click(actionMenu);
@@ -223,42 +207,22 @@ describe('Payment Method Row', () => {
     expect(makePaymentButton).toBeVisible();
     await userEvent.click(makePaymentButton);
 
-    queryMocks.useSearch.mockReturnValue({
-      paymentMethod,
-      action: 'make-payment',
-    });
-
-    rerender(
-      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-        <BillingSummary
-          balance={0}
-          balanceUninvoiced={0}
-          paymentMethods={[paymentMethod]}
-        />
-        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
-      </PayPalScriptProvider>
-    );
-
-    const callArg = navigate.mock.calls[0][0];
-    expect(callArg.search()).toEqual({
-      action: 'make-payment',
-      paymentMethod: {
-        created: '2021-05-21T14:27:51',
-        data: {
-          card_type: 'Visa',
-          expiry: '12/2022',
-          last_four: '1881',
-        },
-        id: 9,
-        is_default: false,
-        type: 'credit_card',
-      },
-    });
-    expect(callArg.to).toBe('/account/billing');
-
     await waitFor(() => {
       expect(getByTestId('drawer')).toBeVisible();
-      expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
     });
+
+    expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+
+    expect(getByTestId('selection-card')).toBeVisible();
+    expect(getByTestId('selection-card')).toHaveAttribute(
+      'data-qa-selection-card-checked',
+      'true'
+    );
+
+    if (paymentMethod.type === 'credit_card') {
+      expect(getByTestId('selection-card')).toHaveTextContent(
+        paymentMethod.data.last_four!
+      );
+    }
   });
 });
