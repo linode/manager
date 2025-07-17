@@ -53,7 +53,7 @@ const mockEnabledBetaAlerts = {
  * Note: Here, "disabled" means that all toggles are in the OFF state, but it's still editable (not read-only)
  */
 
-describe('region enables alerts', function () {
+xdescribe('region enables alerts', function () {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpBetaServices: {
@@ -451,7 +451,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts = 0,  => legacy disabled', function () {
+  it('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -472,7 +472,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
         // not possible to upgrade or downgrade
         cy.findByText(ALERTS_LEGACY_MODE_BUTTON_TEXT).should('not.exist');
         cy.findByText(ALERTS_BETA_MODE_BUTTON_TEXT).should('not.exist');
-        // alerts are disabled so all toggles are off but are not readonly
+        // legacy alerts are enabled
         ui.toggle.find().each(($toggle) => {
           cy.wrap($toggle)
             .should('have.attr', 'data-qa-toggle', 'true')

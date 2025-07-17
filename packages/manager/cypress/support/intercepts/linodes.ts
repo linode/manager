@@ -788,6 +788,5 @@ export const mockGetLinodeStats = (
  * @returns Cypress chainable.
  */
 export const mockUpdateLinode = (linodeId: number): Cypress.Chainable<null> => {
-  console.log('intercepting mockUpdateLinode');
   return cy.intercept('PUT', apiMatcher(`linode/instances/${linodeId}`));
 };
