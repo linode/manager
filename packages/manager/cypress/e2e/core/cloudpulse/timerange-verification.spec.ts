@@ -235,7 +235,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   const cleanText = (string: string) =>
     string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
-  it.skip('should implement and validate custom date/time picker for a specific date and time range', () => {
+  it('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
     const {
       actualDate: startActualDate,
@@ -253,12 +253,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
+    cy.get('@startDateInput').click();
+    cy.get('[role="dialog"]').within(() => {
+      cy.findAllByText(startDay).first().click({ force: true });
+      cy.findAllByText(endDay).first().click({ force: true });
     });
-    cy.get('@startDateInput').click({ force: true });
-    cy.get('@startDateInput').clear({ force: true });
 
     cy.findAllByText(cleanText(startDay.toString())).first().as('dayElement');
 
@@ -280,9 +279,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .first()
       .click({ force: true });
 
-    cy.findByLabelText('Select hours')
-      .as('startHourSelect')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
     cy.get('@startHourSelect')
       .find(`[aria-label="${startHour} hours"]`)
       .click();
@@ -303,14 +303,16 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       force: true,
     });
 
-    cy.findByLabelText('Select hours')
-      .as('endHourSelect')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
     cy.get('@endHourSelect').find(`[aria-label="${endHour} hours"]`).click();
 
-    cy.findByLabelText('Select minutes')
-      .as('endMinuteSelect')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.findByLabelText('Select minutes').as('endMinuteSelect').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
     cy.get('@endMinuteSelect')
       .find(`[aria-label="${endMinute} minutes"]`)
       .click();

@@ -23,14 +23,11 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
         md: 6,
         xs: 12,
       }}
-      sx={{ padding: 1 }}
     >
-      <Grid container spacing={2}>
-        <Grid size={12}>
-          <Typography data-qa-passive-checks-header variant="h2">
-            Passive Checks
-          </Typography>
-        </Grid>
+      <Grid container spacing={1}>
+        <Typography data-qa-passive-checks-header variant="h2">
+          Passive Checks
+        </Typography>
         <Grid size={12}>
           <FormControlLabel
             control={
