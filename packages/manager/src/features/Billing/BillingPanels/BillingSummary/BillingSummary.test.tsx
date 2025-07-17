@@ -41,7 +41,10 @@ describe('BillingSummary', () => {
     await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/no balance/i);
     within(screen.getByTestId(accountBalanceValue)).getByText('$0.00');
@@ -55,7 +58,10 @@ describe('BillingSummary', () => {
           balanceUninvoiced={5}
           paymentMethods={[]}
         />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/credit/i);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
@@ -69,7 +75,10 @@ describe('BillingSummary', () => {
           balanceUninvoiced={5}
           paymentMethods={[]}
         />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/Balance/i);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
@@ -79,7 +88,10 @@ describe('BillingSummary', () => {
     const { rerender } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     expect(screen.queryByText('Promotions')).not.toBeInTheDocument();
     rerender(
@@ -91,7 +103,10 @@ describe('BillingSummary', () => {
             paymentMethods={[]}
             promotions={promoFactory.buildList(1)}
           />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       )
     );
     expect(screen.getByText('Promotions'));
@@ -111,7 +126,10 @@ describe('BillingSummary', () => {
             summary: 'MY_PROMO_CODE',
           })}
         />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     const getByTextWithMarkup = withMarkup(screen.getByText);
     screen.getByText('MY_PROMO_CODE');
@@ -131,7 +149,10 @@ describe('BillingSummary', () => {
         balanceUninvoiced={5}
         paymentMethods={[]}
         promotions={promotions}
-      />
+      />,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     expect(screen.queryByText('Applies to: All')).not.toBeInTheDocument();
     expect(screen.getByText('Applies to: Linodes'));
@@ -141,35 +162,26 @@ describe('BillingSummary', () => {
     await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
   });
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', async () => {
-    const { getByTestId, getByText, rerender } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     const paymentButton = getByText('Make a payment', { exact: false });
     await userEvent.click(paymentButton);
-    queryMocks.useMatch.mockReturnValue({
-      routeId: '/account/billing/make-payment',
-    });
-
-    rerender(
-      wrapWithThemeAndRouter(
-        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-          <BillingSummary
-            balance={5}
-            balanceUninvoiced={5}
-            paymentMethods={[]}
-          />
-        </PayPalScriptProvider>
-      )
-    );
 
     expect(getByTestId('drawer')).toBeVisible();
     expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');

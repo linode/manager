@@ -7,7 +7,10 @@ import { BillingDetail } from './BillingDetail';
 describe('Account Landing', () => {
   it('should render', async () => {
     const { findByTestId, findByText } = await renderWithThemeAndRouter(
-      <BillingDetail />
+      <BillingDetail />,
+      {
+        initialRoute: '/account/billing',
+      }
     );
     await findByTestId('billing-detail');
     await findByText('Account Balance');

@@ -223,11 +223,9 @@ describe('Payment Method Row', () => {
     expect(makePaymentButton).toBeVisible();
     await userEvent.click(makePaymentButton);
 
-    queryMocks.useMatch.mockReturnValue({
-      routeId: '/account/billing/make-payment',
-    });
     queryMocks.useSearch.mockReturnValue({
-      paymentMethod: paymentMethod,
+      paymentMethod,
+      action: 'make-payment',
     });
 
     rerender(
@@ -241,22 +239,22 @@ describe('Payment Method Row', () => {
       </PayPalScriptProvider>
     );
 
-    expect(navigate).toHaveBeenCalledWith({
-      search: {
-        paymentMethod: {
-          created: '2021-05-21T14:27:51',
-          data: {
-            card_type: 'Visa',
-            expiry: '12/2022',
-            last_four: '1881',
-          },
-          id: 9,
-          is_default: false,
-          type: 'credit_card',
+    const callArg = navigate.mock.calls[0][0];
+    expect(callArg.search()).toEqual({
+      action: 'make-payment',
+      paymentMethod: {
+        created: '2021-05-21T14:27:51',
+        data: {
+          card_type: 'Visa',
+          expiry: '12/2022',
+          last_four: '1881',
         },
+        id: 9,
+        is_default: false,
+        type: 'credit_card',
       },
-      to: '/account/billing/make-payment',
     });
+    expect(callArg.to).toBe('/account/billing');
 
     await waitFor(() => {
       expect(getByTestId('drawer')).toBeVisible();

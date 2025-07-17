@@ -1,4 +1,5 @@
 import { Outlet } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -10,6 +11,9 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
 export const Profile = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       to: `/profile/display`,
@@ -44,6 +48,11 @@ export const Profile = () => {
       title: 'My Settings',
     },
   ]);
+
+  // Default redirect to the display tab
+  if (location.pathname === '/profile') {
+    navigate({ to: '/profile/display' });
+  }
 
   return (
     <React.Fragment>

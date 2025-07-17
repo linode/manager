@@ -16,7 +16,7 @@ import PaymentInformation from './PaymentInformation';
 const ADD_PAYMENT_METHOD_BUTTON_ID = 'payment-info-add-payment-method';
 
 vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
@@ -26,7 +26,7 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 const queryMocks = vi.hoisted(() => ({
   useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
-  useMatch: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -42,7 +42,7 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useMatch: queryMocks.useMatch,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -74,7 +74,10 @@ describe('Payment Info Panel', () => {
     const { getByLabelText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} loading={true} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     expect(getByLabelText('Content is loading')).toBeVisible();
@@ -85,7 +88,10 @@ describe('Payment Info Panel', () => {
       await renderWithThemeAndRouter(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} loading={false} />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       );
 
     expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toBeInTheDocument();
@@ -114,14 +120,17 @@ describe('Payment Info Panel', () => {
     const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);
 
     fireEvent.click(addPaymentMethodButton);
-    queryMocks.useMatch.mockReturnValue({
-      routeId: '/account/billing/add-payment-method',
+    queryMocks.useSearch.mockReturnValue({
+      action: 'add-payment-method',
     });
     rerender(
       wrapWithThemeAndRouter(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       )
     );
     expect(getByTestId('drawer')).toBeVisible();
@@ -131,7 +140,10 @@ describe('Payment Info Panel', () => {
     const { getByTestId } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     paymentMethods.forEach((paymentMethod) => {
@@ -145,7 +157,10 @@ describe('Payment Info Panel', () => {
     const { getByTestId, queryByTestId } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} isAkamaiCustomer={true} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     paymentMethods.forEach((paymentMethod) => {
@@ -171,7 +186,10 @@ describe('Payment Info Panel', () => {
             {...props}
             profile={queryMocks.useProfile().data}
           />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       );
 
       expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toHaveAttribute(
@@ -199,7 +217,10 @@ describe('Payment Info Panel', () => {
       const { getByTestId } = await renderWithThemeAndRouter(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       );
 
       const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);
