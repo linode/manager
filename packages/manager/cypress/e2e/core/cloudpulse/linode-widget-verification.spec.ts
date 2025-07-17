@@ -189,7 +189,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .findByTitle(dashboardName)
       .should('be.visible')
       .click();
-
     // Select a time duration from the autocomplete input.
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
