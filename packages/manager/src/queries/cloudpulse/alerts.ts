@@ -36,7 +36,8 @@ export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
       const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
       const oldAlerts = queryClient.getQueryData<Alert[]>(allAlertsKey);
 
-      if (oldAlerts && oldAlerts.length > 0) {
+      // Use cached alerts list if available to avoid refetching from API.
+      if (oldAlerts) {
         queryClient.setQueryData<Alert[]>(allAlertsKey, [
           ...oldAlerts,
           newAlert,
