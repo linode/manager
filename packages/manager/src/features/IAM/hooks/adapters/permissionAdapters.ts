@@ -15,6 +15,7 @@ export type EntityPermissionMap = Record<number, PermissionMap>;
 
 export type PermissionMap = Record<PermissionType, boolean>;
 
+/** Convert entities and the permissions associated with the entity from grants */
 export const entityPermissionMapFrom = (
   grants: Grants | undefined,
   grantType: GrantType,
@@ -46,50 +47,7 @@ export const entityPermissionMapFrom = (
   return entityPermissionsMap;
 };
 
-export const toEntityPermissionMap = (
-  entities: EntityBase[] | undefined,
-  entitiesPermissions: (PermissionType[] | undefined)[] | undefined,
-  permissionsToCheck: PermissionType[],
-  isRestricted?: boolean
-): EntityPermissionMap => {
-  const entityPermissionsMap: EntityPermissionMap = {};
-  if (entities?.length && entitiesPermissions?.length) {
-    entitiesPermissions?.forEach(
-      (entityPermissions: PermissionType[], index: number) => {
-        const permissionMap = toPermissionMap(
-          permissionsToCheck,
-          entityPermissions,
-          isRestricted
-        );
-        entityPermissionsMap[entities[index].id] = permissionMap;
-      }
-    );
-  }
-  return entityPermissionsMap;
-};
-
-export const toPermissionMap = (
-  permissionsToCheck: PermissionType[],
-  usersPermissions: PermissionType[],
-  isRestricted?: boolean
-): PermissionMap => {
-  const unrestricted = isRestricted === false; // explicit === false since the profile can be undefined
-  const usersPermissionMap = {} as PermissionMap;
-  usersPermissions?.forEach(
-    (permission) => (usersPermissionMap[permission] = true)
-  );
-
-  const permissionMap = {} as PermissionMap;
-  permissionsToCheck?.forEach(
-    (permission) =>
-      (permissionMap[permission] =
-        (unrestricted || usersPermissionMap[permission]) ?? false)
-  );
-
-  return permissionMap;
-};
-
-/** Map the existing Grant model to the new IAM RBAC model. */
+/** Convert the existing Grant model to the new IAM RBAC model. */
 export const fromGrants = (
   accessType: AccessType,
   permissionsToCheck: PermissionType[],
@@ -133,4 +91,49 @@ export const fromGrants = (
   );
 
   return permissionsMap;
+};
+
+/** Combines a list of entities and the permissions associated with the entity */
+export const toEntityPermissionMap = (
+  entities: EntityBase[] | undefined,
+  entitiesPermissions: (PermissionType[] | undefined)[] | undefined,
+  permissionsToCheck: PermissionType[],
+  isRestricted?: boolean
+): EntityPermissionMap => {
+  const entityPermissionsMap: EntityPermissionMap = {};
+  if (entities?.length && entitiesPermissions?.length) {
+    entitiesPermissions?.forEach(
+      (entityPermissions: PermissionType[], index: number) => {
+        const permissionMap = toPermissionMap(
+          permissionsToCheck,
+          entityPermissions,
+          isRestricted
+        );
+        entityPermissionsMap[entities[index].id] = permissionMap;
+      }
+    );
+  }
+  return entityPermissionsMap;
+};
+
+/** Combines the permissions a user wants to check with the permissions returned from the backend */
+export const toPermissionMap = (
+  permissionsToCheck: PermissionType[],
+  usersPermissions: PermissionType[],
+  isRestricted?: boolean
+): PermissionMap => {
+  const unrestricted = isRestricted === false; // explicit === false since the profile can be undefined
+  const usersPermissionMap = {} as PermissionMap;
+  usersPermissions?.forEach(
+    (permission) => (usersPermissionMap[permission] = true)
+  );
+
+  const permissionMap = {} as PermissionMap;
+  permissionsToCheck?.forEach(
+    (permission) =>
+      (permissionMap[permission] =
+        (unrestricted || usersPermissionMap[permission]) ?? false)
+  );
+
+  return permissionMap;
 };
