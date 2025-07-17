@@ -251,21 +251,36 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').scrollIntoView();
+    cy.get('@startDateInput').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
     cy.get('@startDateInput').click({ force: true });
     cy.get('@startDateInput').clear({ force: true });
 
-    cy.findAllByText(startDay).first().click({ force: true });
+    cy.findAllByText(startDay).first().as('dayElement');
+
+    cy.get('@dayElement').scrollIntoView({ duration: 500, easing: 'linear' });
+
+    cy.get('@dayElement').click({ force: true });
 
     // --- Select end date ---
-    cy.findAllByText(endDay).first().click({ force: true });
+    cy.findAllByText(endDay).first().as('endDayElement');
+
+    cy.get('@endDayElement').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@endDayElement').click({ force: true });
 
     // --- Select start time ---
     cy.get('button[aria-label^="Choose time, selected time is"]')
       .first()
       .click({ force: true });
 
-    cy.findByLabelText('Select hours').as('startHourSelect').scrollIntoView();
+    cy.findByLabelText('Select hours')
+      .as('startHourSelect')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
     cy.get('@startHourSelect')
       .find(`[aria-label="${startHour} hours"]`)
       .click();
@@ -286,10 +301,14 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       force: true,
     });
 
-    cy.findByLabelText('Select hours').as('endHourSelect').scrollIntoView();
+    cy.findByLabelText('Select hours')
+      .as('endHourSelect')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
     cy.get('@endHourSelect').find(`[aria-label="${endHour} hours"]`).click();
 
-    cy.findByLabelText('Select minutes').as('endMinuteSelect').scrollIntoView();
+    cy.findByLabelText('Select minutes')
+      .as('endMinuteSelect')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
     cy.get('@endMinuteSelect')
       .find(`[aria-label="${endMinute} minutes"]`)
       .click();
@@ -300,9 +319,14 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput');
-    cy.get('@timezoneInput').scrollIntoView();
-
-    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
+    cy.get('@timezoneInput').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@timezoneInput').click({ force: true });
+    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}', {
+      force: true,
+    });
 
     // --- Apply date/time range ---
     cy.get('[data-qa-buttons="apply"]', { timeout: 15000 }).as('applyButton');
@@ -320,7 +344,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     );
 
     // --- Select Node Type ---
-    ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
+    ui.autocomplete.findByLabel('Node Type').type('Primary{enter}', {
+      force: true,
+    });
 
     // --- Validate API requests ---
     cy.wait(Array(4).fill('@getMetrics'));
