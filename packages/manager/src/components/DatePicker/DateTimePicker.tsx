@@ -287,11 +287,7 @@ export const DateTimePicker = ({
         <Divider />
         <Box display="flex" justifyContent="flex-end">
           <ActionsPanel
-            primaryButtonProps={{
-              label: 'Apply',
-              onClick: handleApply,
-              sx: { position: 'relative' },
-            }}
+            primaryButtonProps={{ label: 'Apply', onClick: handleApply }}
             secondaryButtonProps={{
               buttonType: 'outlined',
               label: 'Cancel',
@@ -300,7 +296,6 @@ export const DateTimePicker = ({
             sx={(theme: Theme) => ({
               marginBottom: theme.spacing(1),
               marginRight: theme.spacing(2),
-              position: 'relative',
             })}
           />
         </Box>

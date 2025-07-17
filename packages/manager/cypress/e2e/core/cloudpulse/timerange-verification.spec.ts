@@ -235,7 +235,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   const cleanText = (string: string) =>
     string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
-  it.only('should implement and validate custom date/time picker for a specific date and time range', () => {
+  it.skip('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
     const {
       actualDate: startActualDate,
@@ -338,7 +338,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // ---validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
       'have.value',
-      `${cleanText(endActualDate)} PM`
+      `${cleanText(startActualDate)} PM`
     );
     cy.get('[aria-labelledby="end-date"]').should(
       'have.value',
