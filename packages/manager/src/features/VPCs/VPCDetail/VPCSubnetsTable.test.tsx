@@ -8,7 +8,7 @@ import {
 } from 'src/factories/subnets';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
@@ -61,7 +61,7 @@ describe('VPC Subnets table', () => {
     });
 
     const { getByLabelText, getByPlaceholderText, getByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
           vpcId={1}
@@ -108,7 +108,7 @@ describe('VPC Subnets table', () => {
     });
 
     const { getByLabelText, getByPlaceholderText, getByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
           vpcId={1}
@@ -152,7 +152,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={2}
@@ -176,7 +176,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
@@ -204,7 +204,7 @@ describe('VPC Subnets table', () => {
         },
       });
 
-      const { getByLabelText, findByText } = await renderWithThemeAndRouter(
+      const { getByLabelText, findByText } = renderWithTheme(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
           vpcId={3}
@@ -224,7 +224,7 @@ describe('VPC Subnets table', () => {
   );
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    const { getByRole } = await renderWithThemeAndRouter(
+    const { getByRole } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={true}
         vpcId={3}

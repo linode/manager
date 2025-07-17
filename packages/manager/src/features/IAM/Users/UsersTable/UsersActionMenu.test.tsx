@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UsersActionMenu } from './UsersActionMenu';
 
@@ -38,7 +38,7 @@ describe('UsersActionMenu', () => {
       data: profileFactory.build({ username: 'current_user' }),
     });
 
-    renderWithThemeAndRouter(
+    renderWithTheme(
       <UsersActionMenu
         isProxyUser={true}
         onDelete={mockOnDelete}
@@ -74,7 +74,7 @@ describe('UsersActionMenu', () => {
       data: profileFactory.build({ username: 'current_user' }),
     });
 
-    renderWithThemeAndRouter(
+    renderWithTheme(
       <UsersActionMenu
         isProxyUser={false}
         onDelete={mockOnDelete}
@@ -126,7 +126,7 @@ describe('UsersActionMenu', () => {
       data: profileFactory.build({ username: 'current_user' }),
     });
 
-    renderWithThemeAndRouter(
+    renderWithTheme(
       <UsersActionMenu
         isProxyUser={false}
         onDelete={mockOnDelete}

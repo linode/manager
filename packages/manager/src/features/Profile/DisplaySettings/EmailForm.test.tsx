@@ -4,13 +4,13 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EmailForm } from './EmailForm';
 
 describe('EmailForm', () => {
   it('renders a label and input', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <EmailForm />
     );
 
@@ -23,7 +23,7 @@ describe('EmailForm', () => {
 
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
 
-    const { findByDisplayValue } = await renderWithThemeAndRouter(
+    const { findByDisplayValue } = renderWithTheme(
       <EmailForm />
     );
 
@@ -37,7 +37,7 @@ describe('EmailForm', () => {
 
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
 
-    const { getByLabelText } = await renderWithThemeAndRouter(<EmailForm />);
+    const { getByLabelText } = renderWithTheme(<EmailForm />);
 
     await waitFor(() => {
       expect(getByLabelText('Email')).toBeDisabled();
@@ -52,7 +52,7 @@ describe('EmailForm', () => {
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
 
     const { findByDisplayValue, getByLabelText, getByText } =
-      await renderWithThemeAndRouter(<EmailForm />);
+      renderWithTheme(<EmailForm />);
 
     await findByDisplayValue(profile.email);
 

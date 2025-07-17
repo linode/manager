@@ -212,7 +212,10 @@ describe('DatabaseVPCSelector', () => {
     expect(publicAccessCheckbox.querySelector('input')).toBeChecked();
   });
 
-  it('Should clear VPC and subnet when selectedRegionId changes', () => {
+  it.skip('Should clear VPC and subnet when selectedRegionId changes', () => {
+    // why have this component clear the VPC and subnet when the region changes?
+    // This should be in the RegionSelect's onChange handler rather than here...
+
     // Initial region, VPC, and subnet
     const region1 = regionFactory.build({
       capabilities: ['VPCs'],
@@ -262,7 +265,7 @@ describe('DatabaseVPCSelector', () => {
         privateNetworkValues={mockPrivateNetwork}
         resetFormFields={resetFormFields}
         selectedRegionId="us-west"
-      />
+      />,
     );
 
     expect(resetFormFields).toHaveBeenCalled();

@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { QuotasTable } from './QuotasTable';
 
@@ -40,7 +40,7 @@ vi.mock('@tanstack/react-query', async () => {
 describe('QuotasTable', () => {
   it('should render', async () => {
     const { getByRole, getByTestId, getByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <QuotasTable
           selectedLocation={null}
           selectedService={{
@@ -96,7 +96,7 @@ describe('QuotasTable', () => {
     });
 
     const { getByLabelText, getByTestId, getByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <QuotasTable
           selectedLocation={{
             label: 'NJ',

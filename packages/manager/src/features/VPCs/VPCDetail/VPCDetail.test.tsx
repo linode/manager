@@ -6,7 +6,7 @@ import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
@@ -74,7 +74,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getByText } = renderWithTheme(<VPCDetail />);
 
     // there is 1 subnet with 5 linodes
     expect(getByText('Subnets')).toBeVisible();
@@ -106,7 +106,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCDetail />, {
+    const { getByText } = renderWithTheme(<VPCDetail />, {
       flags: { nodebalancerVpc: true },
     });
 
@@ -137,7 +137,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getByText } = renderWithTheme(<VPCDetail />);
 
     expect(getByText('Description')).toBeVisible();
     expect(getByText(vpcFactory1.description)).toBeVisible();
@@ -148,7 +148,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory.build(),
     });
 
-    const { queryByText } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { queryByText } = renderWithTheme(<VPCDetail />);
 
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
@@ -169,7 +169,7 @@ describe('VPC Detail Summary section', () => {
       },
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getByTestId } = renderWithTheme(<VPCDetail />);
 
     const readMoreButton = getByTestId('show-description-button');
     expect(readMoreButton.innerHTML).toBe('Read More');
@@ -187,7 +187,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByRole, getByText } = await renderWithThemeAndRouter(
+    const { getByRole, getByText } = renderWithTheme(
       <VPCDetail />
     );
 

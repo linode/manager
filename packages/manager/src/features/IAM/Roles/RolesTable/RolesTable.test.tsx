@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RolesTable } from './RolesTable';
 
@@ -44,7 +44,7 @@ beforeEach(() => {
 
 describe('RolesTable', () => {
   it('renders no roles when roles array is empty', async () => {
-    const { getByText, getByTestId } = await renderWithThemeAndRouter(
+    const { getByText, getByTestId } = renderWithTheme(
       <RolesTable roles={[]} />
     );
 
@@ -54,7 +54,7 @@ describe('RolesTable', () => {
 
   it('renders roles correctly when roles array is provided', async () => {
     const { getByText, getByTestId, getAllByRole } =
-      await renderWithThemeAndRouter(<RolesTable roles={mockRoles} />);
+      renderWithTheme(<RolesTable roles={mockRoles} />);
 
     expect(getByTestId('roles-table')).toBeInTheDocument();
     expect(getAllByRole('combobox').length).toEqual(1);
@@ -62,7 +62,7 @@ describe('RolesTable', () => {
   });
 
   it('filters roles to warranted results based on search input', async () => {
-    await renderWithThemeAndRouter(<RolesTable roles={mockRoles} />);
+    renderWithTheme(<RolesTable roles={mockRoles} />);
     const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
     fireEvent.change(searchInput, { target: { value: 'Account' } });
 
@@ -77,7 +77,7 @@ describe('RolesTable', () => {
   });
 
   it('filters roles to no results based on search input if warranted', async () => {
-    await renderWithThemeAndRouter(<RolesTable roles={mockRoles} />);
+    renderWithTheme(<RolesTable roles={mockRoles} />);
 
     const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
     fireEvent.change(searchInput, {

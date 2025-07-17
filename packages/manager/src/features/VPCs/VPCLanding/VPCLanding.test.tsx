@@ -4,7 +4,7 @@ import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
@@ -37,7 +37,7 @@ describe('VPC Landing Table', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCLanding />);
+    const { getByText } = renderWithTheme(<VPCLanding />);
 
     // Static text and table column headers
     expect(getByText('Label')).toBeVisible();
@@ -59,7 +59,7 @@ describe('VPC Landing Table', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCLanding />, {
+    const { getByText } = renderWithTheme(<VPCLanding />, {
       flags: { nodebalancerVpc: true },
     });
 
@@ -81,7 +81,7 @@ describe('VPC Landing Table', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCLanding />);
+    const { getByText } = renderWithTheme(<VPCLanding />);
 
     expect(
       getByText('Create a private and isolated network')
@@ -93,7 +93,7 @@ describe('VPC Landing Table', () => {
       isLoading: true,
     });
 
-    const { findByTestId } = await renderWithThemeAndRouter(<VPCLanding />);
+    const { findByTestId } = renderWithTheme(<VPCLanding />);
 
     const loading = await findByTestId('circle-progress');
     expect(loading).toBeInTheDocument();

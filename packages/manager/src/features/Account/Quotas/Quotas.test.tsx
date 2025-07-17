@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Quotas } from './Quotas';
 
@@ -49,7 +49,7 @@ describe('Quotas', () => {
   });
 
   it('renders the component with initial state', async () => {
-    const { getByText } = await renderWithThemeAndRouter(<Quotas />, {
+    const { getByText } = renderWithTheme(<Quotas />, {
       queryClient,
     });
 
@@ -72,7 +72,7 @@ describe('Quotas', () => {
       service: 'object-storage',
     });
 
-    const { getByPlaceholderText, getByRole } = await renderWithThemeAndRouter(
+    const { getByPlaceholderText, getByRole } = renderWithTheme(
       <Quotas />,
       {
         queryClient,
@@ -111,7 +111,7 @@ describe('Quotas', () => {
       service: 'object-storage',
     });
 
-    const { getByPlaceholderText } = await renderWithThemeAndRouter(
+    const { getByPlaceholderText } = renderWithTheme(
       <Quotas />,
       {
         queryClient,

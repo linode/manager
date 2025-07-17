@@ -2,7 +2,7 @@ import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { SessionExpirationDialog } from 'src/features/Account/SwitchAccounts/SessionExpirationDialog';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const mockParentChildAuthentication = {
   createToken: vi.fn(),
@@ -42,7 +42,7 @@ vi.mock('react-router-dom', async () => {
 describe('SessionExpirationDialog', () => {
   it('renders correctly when isOpen is true', async () => {
     const onCloseMock = vi.fn();
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
     );
 
@@ -51,7 +51,7 @@ describe('SessionExpirationDialog', () => {
 
   it('tests the Continue Working button when is clicked', async () => {
     const onCloseMock = vi.fn();
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
     );
 
@@ -70,7 +70,7 @@ describe('SessionExpirationDialog', () => {
 
     window.location = { ...realLocation, reload: mockReload };
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />
     );
 
