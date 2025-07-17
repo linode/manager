@@ -8,7 +8,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { CloudNAT } from '@linode/api-v4';
+import type { CloudNAT, CloudNATIPAddress } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -106,6 +106,113 @@ export const deleteCloudNAT = (mockState: MockState) => [
       }
 
       await mswDB.delete('cloudnats', id, mockState);
+
+      return makeResponse({});
+    }
+  ),
+];
+
+export const getCloudNATAddresses = () => [
+  http.get(
+    '*/v4/networking/cloudnats/:id/addresses',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<CloudNATIPAddress>>
+    > => {
+      const id = Number(params.id);
+      const cloudNAT = await mswDB.get('cloudnats', id);
+
+      if (!cloudNAT) {
+        return makeNotFoundResponse();
+      }
+
+      return makePaginatedResponse({
+        data: cloudNAT.addresses || [],
+        request,
+      });
+    }
+  ),
+];
+
+export const getCloudNATAddress = () => [
+  http.get(
+    '*/v4/networking/cloudnats/:id/addresses/:address',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | CloudNATIPAddress>> => {
+      const id = Number(params.id);
+      const address = String(params.address);
+      const cloudNAT = await mswDB.get('cloudnats', id);
+
+      if (!cloudNAT) {
+        return makeNotFoundResponse();
+      }
+
+      const cloudNATAddress = cloudNAT.addresses.find(
+        (addr) => addr.address === address
+      );
+
+      if (!cloudNATAddress) {
+        return makeNotFoundResponse();
+      }
+
+      return makeResponse(cloudNATAddress);
+    }
+  ),
+];
+
+export const assignCloudNATAddress = (mockState: MockState) => [
+  http.post(
+    '*/v4/networking/cloudnats/:id/addresses',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | CloudNATIPAddress>> => {
+      const id = Number(params.id);
+      const cloudNAT = await mswDB.get('cloudnats', id);
+
+      if (!cloudNAT) {
+        return makeNotFoundResponse();
+      }
+
+      const body = await request.clone().json();
+      const newAddress =
+        body.address === 'auto'
+          ? { address: `203.0.113.${100 + cloudNAT.addresses.length}` }
+          : { address: body.address };
+
+      cloudNAT.addresses.push(newAddress);
+      await mswDB.update('cloudnats', id, cloudNAT, mockState);
+
+      return makeResponse(newAddress);
+    }
+  ),
+];
+
+export const deleteCloudNATAddress = (mockState: MockState) => [
+  http.delete(
+    '*/v4/networking/cloudnats/:id/addresses/:address',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      const id = Number(params.id);
+      const address = String(params.address);
+      const cloudNAT = await mswDB.get('cloudnats', id);
+
+      if (!cloudNAT) {
+        return makeNotFoundResponse();
+      }
+
+      const addressIndex = cloudNAT.addresses.findIndex(
+        (addr) => addr.address === address
+      );
+
+      if (addressIndex === -1) {
+        return makeNotFoundResponse();
+      }
+
+      cloudNAT.addresses.splice(addressIndex, 1);
+      await mswDB.update('cloudnats', id, cloudNAT, mockState);
 
       return makeResponse({});
     }
