@@ -4,26 +4,25 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
 
-const mockEnabledRegion = regionFactory.build({
-  capabilities: ['Linodes'],
-  monitors: {
-    alerts: ['Linodes'],
-  },
-});
-const mockDisabledRegion = regionFactory.build({
-  capabilities: ['Linodes'],
-  monitors: {
-    alerts: [],
-  },
-});
-const mockRegions = [
-  { region: mockEnabledRegion, message: 'enabled region' },
-  { region: mockDisabledRegion, message: 'disabled region' },
-];
-
 const MOCK_NUMERIC_TEST_VALUE = '101';
 
 describe('Edit to page should trigger modal appearance', () => {
+  const mockEnabledRegion = regionFactory.build({
+    capabilities: ['Linodes'],
+    monitors: {
+      alerts: ['Linodes'],
+    },
+  });
+  const mockDisabledRegion = regionFactory.build({
+    capabilities: ['Linodes'],
+    monitors: {
+      alerts: [],
+    },
+  });
+  const mockRegions = [
+    { region: mockEnabledRegion, message: 'enabled region' },
+    { region: mockDisabledRegion, message: 'disabled region' },
+  ];
   mockRegions.forEach(({ region, message }) => {
     describe(`Edit to ${message} should trigger modal appearance`, () => {
       beforeEach(() => {
@@ -31,6 +30,14 @@ describe('Edit to page should trigger modal appearance', () => {
           id: randomNumber(),
           label: randomLabel(),
           region: region.id,
+          // alert toggle will be enabled/on/true if value > 0
+          alerts: {
+            cpu: 180,
+            io: 10000,
+            network_in: 10,
+            network_out: 10,
+            transfer_quota: 80,
+          },
         });
         mockGetRegions([region]).as('getRegions');
         mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
@@ -42,27 +49,19 @@ describe('Edit to page should trigger modal appearance', () => {
         cy.get('[data-reach-tab-panels]')
           .should('be.visible')
           .within(() => {
+            // find first toggle
             cy.get('[data-qa-alerts-panel]')
               .first()
               .should('be.visible')
               .within(() => {
-                // some toggles are F but first is T
                 ui.toggle
                   .find()
-                  .first()
                   .should('be.visible')
                   .should('have.attr', 'data-qa-toggle', 'true')
                   .should('be.enabled')
-                  .then((alertToggle) =>
-                    cy.wrap(alertToggle).as('alertToggle')
-                  );
-                cy.get('@alertToggle').click();
+                  .click();
                 // click changes toggle to false
-                cy.get('@alertToggle').should(
-                  'have.attr',
-                  'data-qa-toggle',
-                  'false'
-                );
+                ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
               });
           });
 
@@ -88,8 +87,9 @@ describe('Edit to page should trigger modal appearance', () => {
               .first()
               .should('be.visible')
               .within(() => {
-                // edit to toggles persist
-                cy.get('@alertToggle')
+                // edit to toggle persists
+                ui.toggle
+                  .find()
                   .should('be.visible')
                   .should('have.attr', 'data-qa-toggle', 'false');
               });
@@ -172,24 +172,13 @@ describe('Edit to page should trigger modal appearance', () => {
                   .should('be.visible')
                   .should('be.enabled')
                   .should('have.attr', 'data-qa-toggle', 'true')
-                  .then((alertToggle) =>
-                    cy.wrap(alertToggle).as('alertToggle')
-                  );
-                cy.get('@alertToggle').click();
+                  .click();
                 // click changes toggle to false
-                cy.get('@alertToggle').should(
-                  'have.attr',
-                  'data-qa-toggle',
-                  'false'
-                );
+                ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
 
                 // undo edit, toggle it back to true
-                cy.get('@alertToggle').click();
-                cy.get('@alertToggle').should(
-                  'have.attr',
-                  'data-qa-toggle',
-                  'true'
-                );
+                ui.toggle.find().click();
+                ui.toggle.find().should('have.attr', 'data-qa-toggle', 'true');
               });
           });
 
