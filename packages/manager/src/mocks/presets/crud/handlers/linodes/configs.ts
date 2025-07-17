@@ -1,5 +1,4 @@
 import { linodeConfigInterfaceFactory } from '@linode/utilities';
-import { DateTime } from 'luxon';
 import { http } from 'msw';
 
 import {
@@ -9,6 +8,7 @@ import {
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../../../../indexedDB';
+import { addInterfaceToSubnet, removeInterfaceFromSubnet } from './utils';
 
 import type { Config, Interface } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -106,55 +106,15 @@ export const appendConfigInterface = (mockState: MockState) => [
       );
 
       if (interfacePayload.purpose === 'vpc') {
-        // Update corresponding VPC when creating a VPC interface
-        const subnetFromDB = await mswDB.get(
-          'subnets',
-          configInterface.subnet_id ?? -1
-        );
-        const vpc = await mswDB.get(
-          'vpcs',
-          configInterface.vpc_id ?? subnetFromDB?.[0] ?? -1
-        );
-
-        if (subnetFromDB && vpc) {
-          // update VPC/subnet to include this new interface
-          const updatedSubnet = {
-            ...subnetFromDB[1],
-            linodes: [
-              ...subnetFromDB[1].linodes,
-              {
-                id: linode.id,
-                interfaces: [
-                  {
-                    active: true,
-                    config_id: configId,
-                    id: newlyAddedConfigInterface[1].id,
-                  },
-                ],
-              },
-            ],
-            updated: DateTime.now().toISO(),
-          };
-
-          const updatedVPC = {
-            ...vpc,
-            subnets: vpc.subnets.map((subnet) => {
-              if (subnet.id === subnetFromDB[1].id) {
-                return updatedSubnet;
-              }
-
-              return subnet;
-            }),
-          };
-
-          await mswDB.update(
-            'subnets',
-            subnetFromDB[1].id,
-            [vpc.id, updatedSubnet],
-            mockState
-          );
-          await mswDB.update('vpcs', vpc.id, updatedVPC, mockState);
-        }
+        await addInterfaceToSubnet({
+          mockState,
+          interfaceId: newlyAddedConfigInterface[1].id,
+          isLinodeInterface: false,
+          linodeId: linode.id,
+          configId,
+          vpcId: configInterface.vpc_id,
+          subnetId: configInterface.subnet_id,
+        });
       }
 
       return makeResponse(newlyAddedConfigInterface[1]);
@@ -183,54 +143,14 @@ export const deleteConfigInterface = (mockState: MockState) => [
       // if the config interface is part of a VPC, we must update the VPC as well
       const configInterface = configInterfaceTuple[1];
       if (configInterface.purpose === 'vpc' && configInterface.subnet_id) {
-        const subnetFromDB = await mswDB.get(
-          'subnets',
-          configInterface.subnet_id
-        );
-        const vpc = await mswDB.get(
-          'vpcs',
-          configInterface.vpc_id ?? subnetFromDB?.[0] ?? -1
-        );
-
-        if (subnetFromDB && vpc) {
-          // update VPC/subnet to remove interface
-          const updatedLinodeData = subnetFromDB[1].linodes
-            .map((data) => {
-              return {
-                ...data,
-                interfaces: data.interfaces.filter(
-                  (iface) =>
-                    iface.id !== interfaceId && iface.config_id === configId
-                ),
-              };
-            })
-            .filter((linode) => linode.interfaces.length > 0);
-
-          const updatedSubnet = {
-            ...subnetFromDB[1],
-            linodes: updatedLinodeData,
-            updated: DateTime.now().toISO(),
-          };
-
-          const updatedVPC = {
-            ...vpc,
-            subnets: vpc.subnets.map((subnet) => {
-              if (subnet.id === subnetFromDB[1].id) {
-                return updatedSubnet;
-              }
-
-              return subnet;
-            }),
-          };
-
-          await mswDB.update(
-            'subnets',
-            subnetFromDB[1].id,
-            [vpc.id, updatedSubnet],
-            mockState
-          );
-          await mswDB.update('vpcs', vpc.id, updatedVPC, mockState);
-        }
+        await removeInterfaceFromSubnet({
+          mockState,
+          configId,
+          interfaceId: configInterface.id,
+          isLinodeInterface: false,
+          subnetId: configInterface.subnet_id,
+          vpcId: configInterface.vpc_id,
+        });
       }
 
       await mswDB.delete('configInterfaces', interfaceId, mockState);

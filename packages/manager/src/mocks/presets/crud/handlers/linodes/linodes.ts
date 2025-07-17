@@ -21,6 +21,7 @@ import {
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../../../../indexedDB';
+import { addInterfaceToSubnet } from './utils';
 
 import type {
   CreateLinodeInterfacePayload,
@@ -178,80 +179,39 @@ export const createLinode = (mockState: MockState) => [
           (iface: CreateLinodeInterfacePayload) => iface.vpc
         );
 
-        const subnetFromDB = await mswDB.get(
-          'subnets',
-          vpcIfacePayload.vpc.subnet_id ?? -1
-        );
-        const vpc = await mswDB.get(
-          'vpcs',
-          vpcIfacePayload.vpc.vpc_id ?? subnetFromDB?.[0] ?? -1
+        const vpcInterface = linodeInterfaceFactoryVPC.build({
+          ...vpcIfacePayload,
+          default_route: {
+            ipv4: true,
+          },
+          created: DateTime.now().toISO(),
+          updated: DateTime.now().toISO(),
+        });
+
+        const createdVPCInterface = await mswDB.add(
+          'linodeInterfaces',
+          [linode.id, vpcInterface],
+          mockState
         );
 
-        if (subnetFromDB && vpc) {
-          const vpcInterface = linodeInterfaceFactoryVPC.build({
-            ...vpcIfacePayload,
-            default_route: {
-              ipv4: true,
-            },
-            created: DateTime.now().toISO(),
-            updated: DateTime.now().toISO(),
+        await addInterfaceToSubnet({
+          mockState,
+          interfaceId: createdVPCInterface[1].id,
+          linodeId: linode.id,
+          isLinodeInterface: true,
+          vpcId: vpcIfacePayload.vpc.vpc_id,
+          subnetId: vpcIfacePayload.vpc.subnet_id,
+        });
+
+        // if firewall given in interface payload, add a device
+        if (vpcIfacePayload.firewall_id) {
+          await addFirewallDevice({
+            entityId: vpcInterface.id,
+            entityLabel: linode.label,
+            firewallId: vpcIfacePayload.firewall_id,
+            interfaceType: 'linode_interface',
+            mockState,
           });
-
-          const createdVPCInterface = await mswDB.add(
-            'linodeInterfaces',
-            [linode.id, vpcInterface],
-            mockState
-          );
-
-          // update VPC/subnet to include this new interface
-          const updatedSubnet = {
-            ...subnetFromDB[1],
-            linodes: [
-              ...subnetFromDB[1].linodes,
-              {
-                id: linode.id,
-                interfaces: [
-                  {
-                    active: true,
-                    config_id: null,
-                    // ensure interface ID in subnet matches interface ID in DB
-                    id: createdVPCInterface[1].id,
-                  },
-                ],
-              },
-            ],
-            updated: DateTime.now().toISO(),
-          };
-
-          const updatedVPC = {
-            ...vpc,
-            subnets: vpc.subnets.map((subnet) => {
-              if (subnet.id === subnetFromDB[1].id) {
-                return updatedSubnet;
-              }
-
-              return subnet;
-            }),
-          };
-
-          await mswDB.update(
-            'subnets',
-            subnetFromDB[1].id,
-            [vpc.id, updatedSubnet],
-            mockState
-          );
-          await mswDB.update('vpcs', vpc.id, updatedVPC, mockState);
-
-          // if firewall given in interface payload, add a device
-          if (vpcIfacePayload.firewall_id) {
-            await addFirewallDevice({
-              entityId: vpcInterface.id,
-              entityLabel: linode.label,
-              firewallId: vpcIfacePayload.firewall_id,
-              interfaceType: 'linode_interface',
-              mockState,
-            });
-          }
         }
       }
 
