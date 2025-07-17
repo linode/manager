@@ -45,10 +45,12 @@ const mockEnabledBetaAlerts = {
 
 /*
  * UI of Linode alerts tab based on beta and legacy alert values in linode.alerts. Dependent on region support for alerts
- * Legacy alerts = 0, Beta alerts = [],  => legacy disabled
- * Legacy alerts > 0, Beta alerts = [], => legacy enabled
- * Legacy alerts = 0, Beta alerts > 0,  => beta disabled
- * Legacy alerts > 0, Beta alerts > 0,  => beta disabled
+ * Legacy alerts = 0, Beta alerts = [] (empty arrays or no values at all) => legacy disabled for `beta` stage OR beta disabled for `ga` stage
+ * Legacy alerts > 0, Beta alerts = [] (empty arrays or no values at all) => legacy enabled
+ * Legacy alerts = 0, Beta alerts has values (either system, user, or both) => beta disabled
+ * Legacy alerts > 0, Beta alerts has values (either system, user, or both) => beta disabled
+ *
+ * Note: Here, "disabled" means that all toggles are in the OFF state, but it's still editable (not read-only)
  */
 
 describe('region enables alerts', function () {
