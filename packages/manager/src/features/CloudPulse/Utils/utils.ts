@@ -21,6 +21,7 @@ import type {
   Capabilities,
   CloudPulseAlertsPayload,
   Dashboard,
+  MonitoringCapabilities,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -32,15 +33,19 @@ import type {
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
 
-interface AclpContextualViewProps {
+interface AclpSupportedRegionProps {
+  /**
+   * The capability to check ('Linodes', 'NodeBalancers', etc)
+   */
   capability: Capabilities;
+  /**
+   * Region ID to check
+   */
   regionId: string;
-}
-
-interface AclpContextualViewEnabled {
-  isAlertEnabled: boolean;
-  isLoading: boolean;
-  isMetricEnabled: boolean;
+  /**
+   * The type of monitoring capability to check
+   */
+  type: keyof MonitoringCapabilities;
 }
 
 /**
@@ -308,29 +313,17 @@ export const arePortsValid = (ports: string): string | undefined => {
 };
 
 /**
- * Checks if the ACLP Contextual View is enabled for the given region and service type.
+ * Checks if the regionId and capability are supported for under aclp or not.
  * @param props Contains regionId and serviceType to check against the regions data.
- * @returns An object indicating whether alerts and metrics are enabled, along with the loading state.
+ * @returns boolean indicating whether the region & capability is supported or not.
  */
-export const useIsAclpContextualViewEnabled = (
-  props: AclpContextualViewProps
-): AclpContextualViewEnabled => {
-  const { regionId, capability } = props;
-  const { isLoading, data: regions } = useRegionsQuery();
-
-  if (isLoading) {
-    return {
-      isLoading,
-      isAlertEnabled: false,
-      isMetricEnabled: false,
-    };
-  }
+export const useIsAclpSupportedRegion = (
+  props: AclpSupportedRegionProps
+): boolean => {
+  const { regionId, capability, type } = props;
+  const { data: regions } = useRegionsQuery();
 
   const region = regions?.find(({ id }) => id === regionId);
 
-  return {
-    isLoading: false,
-    isAlertEnabled: region?.monitors?.alerts?.includes(capability) ?? false,
-    isMetricEnabled: region?.monitors?.metrics?.includes(capability) ?? false,
-  };
+  return region?.monitors?.[type]?.includes(capability) ?? false;
 };
