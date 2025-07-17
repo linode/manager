@@ -11,10 +11,7 @@ import { DatabaseCreate } from 'src/features/Databases/DatabaseCreate/DatabaseCr
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 
@@ -56,10 +53,12 @@ describe('database summary section', () => {
       })
     );
 
-    const { getByTestId, findAllByText, findByText } =
-      await renderWithThemeAndRouter(<DatabaseCreate />, {
+    const { getByTestId, findAllByText, findByText } = renderWithTheme(
+      <DatabaseCreate />,
+      {
         flags,
-      });
+      }
+    );
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     // Simulate Region Selection
@@ -100,7 +99,7 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
@@ -124,7 +123,7 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,

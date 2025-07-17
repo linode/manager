@@ -7,7 +7,7 @@ import * as React from 'react';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
@@ -39,7 +39,7 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 
 describe('Payment Method Row', () => {
   it('Displays "Default" chip if payment method is set as default', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -52,7 +52,7 @@ describe('Payment Method Row', () => {
   });
 
   it('Does not display "Default" chip if payment method is not set as default', async () => {
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -88,7 +88,7 @@ describe('Payment Method Row', () => {
       type: 'google_pay',
     });
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
+    const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -117,7 +117,7 @@ describe('Payment Method Row', () => {
       type: 'paypal',
     });
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
+    const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -130,7 +130,7 @@ describe('Payment Method Row', () => {
   });
 
   it('Disables "Make Default" and "Delete" actions if payment method is set as default', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -150,7 +150,7 @@ describe('Payment Method Row', () => {
   it('Calls `onDelete` callback when "Delete" action is clicked', async () => {
     const mockFunction = vi.fn();
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={mockFunction}
@@ -178,7 +178,7 @@ describe('Payment Method Row', () => {
       is_default: false,
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
       </PayPalScriptProvider>
@@ -202,7 +202,7 @@ describe('Payment Method Row', () => {
      * and is required for this test. We may want to consider decoupling these components in the future.
      */
     const { getByLabelText, getByTestId, getByText, rerender } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <BillingSummary
             balance={0}
