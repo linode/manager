@@ -21,7 +21,7 @@ import {
   createSubnetSchemaWithIPv6,
 } from '@linode/validation';
 import * as React from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -91,9 +91,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   } = useForm<CreateSubnetPayload>({
     mode: 'onBlur',
     resolver: yupResolver(
-      isDualStackEnabled && isDualStackVPC
-        ? createSubnetSchemaWithIPv6
-        : createSubnetSchemaIPv4
+      shouldDisplayIPv6 ? createSubnetSchemaWithIPv6 : createSubnetSchemaIPv4
     ),
     values: {
       ipv4: recommendedIPv4,
@@ -107,11 +105,6 @@ export const SubnetCreateDrawer = (props: Props) => {
   const numberOfAvailableIPv4Linodes = numberOfAvailableIPv4IPs
     ? numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
     : 0;
-
-  const { append, fields, remove } = useFieldArray({
-    control,
-    name: 'ipv6',
-  });
 
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {
@@ -191,37 +184,31 @@ export const SubnetCreateDrawer = (props: Props) => {
           {shouldDisplayIPv6 && (
             <Controller
               control={control}
-              name="ipv6"
-              render={() => {
-                return (
-                  <Select
-                    label="IPv6 Prefix Length"
-                    onChange={(_, selectedOption) => {
-                      remove(0);
-                      append({
-                        range: selectedOption.value,
-                      });
-                    }}
-                    options={SUBNET_IPV6_PREFIX_LENGTHS}
-                    sx={{
-                      width: 140,
-                    }}
-                    value={SUBNET_IPV6_PREFIX_LENGTHS.find(
-                      (option) => option.value === fields[0].range
-                    )}
-                  />
-                );
-              }}
-            />
-          )}
-          {shouldDisplayIPv6 && (
-            <FormHelperText>
-              Number of Linodes:{' '}
-              {Math.min(
-                numberOfAvailableIPv4Linodes,
-                calculateAvailableIPv6Linodes(fields[0].range)
+              name="ipv6.0.range"
+              render={({ field, fieldState }) => (
+                <Select
+                  errorText={fieldState.error?.message}
+                  helperText={
+                    <>
+                      Number of Linodes:{' '}
+                      {Math.min(
+                        numberOfAvailableIPv4Linodes,
+                        calculateAvailableIPv6Linodes(field.value)
+                      )}
+                    </>
+                  }
+                  label="IPv6 Prefix Length"
+                  onChange={(_, option) => field.onChange(option.value)}
+                  options={SUBNET_IPV6_PREFIX_LENGTHS}
+                  sx={{
+                    width: 140,
+                  }}
+                  value={SUBNET_IPV6_PREFIX_LENGTHS.find(
+                    (option) => option.value === field.value
+                  )}
+                />
               )}
-            </FormHelperText>
+            />
           )}
         </Stack>
         <ActionsPanel

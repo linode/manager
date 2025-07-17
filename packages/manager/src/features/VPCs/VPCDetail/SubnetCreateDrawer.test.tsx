@@ -12,7 +12,6 @@ import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
-  useFlags: vi.fn().mockReturnValue({}),
   useVPCQuery: vi.fn().mockReturnValue({}),
 }));
 
