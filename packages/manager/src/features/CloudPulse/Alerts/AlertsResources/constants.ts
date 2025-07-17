@@ -1,9 +1,13 @@
+import React from 'react';
+
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsTagFilter } from './AlertsTagsFilter';
+import { TextWithExtraInfo } from './TextWithExtraInfo';
 
 import type { AlertInstance } from './DisplayAlertResources';
+import type { TextWithInfoProp } from './TextWithExtraInfo';
 import type {
   AlertAdditionalFilterKey,
   ServiceColumns,
@@ -67,7 +71,10 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
     {
-      accessor: ({ tags }) => tags?.join(',') ?? '',
+      accessor: ({ tags }) =>
+        React.createElement<Required<TextWithInfoProp>>(TextWithExtraInfo, {
+          values: tags ?? [],
+        }),
       label: 'Tags',
       sortingKey: 'tags',
     },
