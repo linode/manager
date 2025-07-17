@@ -25,8 +25,8 @@ import {
   getRestrictedResourceText,
   useVMHostMaintenanceEnabled,
 } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import {
   sendLinodeCreateFormInputEvent,
@@ -115,9 +115,7 @@ export const LinodeCreate = () => {
 
   const currentTabIndex = getTabIndex(params.type);
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
@@ -238,7 +236,7 @@ export const LinodeCreate = () => {
               <Tab>Backups</Tab>
               <Tab>Clone Linode</Tab>
             </TabList>
-            {isLinodeCreateRestricted && (
+            {!permissions.create_linode && (
               <Notice
                 sx={{ marginBottom: 2 }}
                 text={getRestrictedResourceText({

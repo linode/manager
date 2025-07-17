@@ -1,9 +1,4 @@
-import {
-  grantsFactory,
-  profileFactory,
-  regionFactory,
-  sshKeyFactory,
-} from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
@@ -20,17 +15,69 @@ import { Security } from './Security';
 
 import type { LinodeCreateFormValues } from './utilities';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn().mockReturnValue({ type: undefined }),
+  useLocation: vi.fn().mockReturnValue({
+    search: '',
+  }),
+  useSearch: vi.fn().mockReturnValue({}),
+
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_linode: false,
+      create_profile_ssh_key: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useLocation: queryMocks.useLocation,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('Security', () => {
   // TODO: Unskip once M3-8559 is addressed.
-  it.skip('should render a root password input', async () => {
-    const { findByLabelText } = renderWithThemeAndHookFormContext({
+  it('should disable the root password input if the user does not have create_linode permission', async () => {
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: <Security />,
     });
 
-    const rootPasswordInput = await findByLabelText('Root Password');
+    await waitFor(() => {
+      const rootPasswordInput = getByLabelText('Root Password');
 
-    expect(rootPasswordInput).toBeVisible();
-    expect(rootPasswordInput).toBeEnabled();
+      expect(rootPasswordInput).toBeVisible();
+      expect(rootPasswordInput).toBeDisabled();
+    });
+  });
+
+  it('should enable the root password input if the user does has create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+        create_profile_ssh_key: false,
+      },
+    });
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: <Security />,
+    });
+
+    await waitFor(() => {
+      const rootPasswordInput = getByLabelText('Root Password');
+
+      expect(rootPasswordInput).toBeVisible();
+      expect(rootPasswordInput).toBeEnabled();
+    });
   });
 
   it('should render a SSH Keys heading', async () => {
@@ -45,7 +92,25 @@ describe('Security', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('should render an "Add An SSH Key" button', async () => {
+  it('should disable an "Add An SSH Key" button if the user does not have create_profile_ssh_key permission', async () => {
+    const component = wrapWithFormContext({
+      component: <Security />,
+    });
+    const { getByText } = await renderWithThemeAndRouter(component);
+
+    const addSSHKeyButton = getByText('Add an SSH Key');
+
+    expect(addSSHKeyButton).toBeVisible();
+    expect(addSSHKeyButton).toBeDisabled();
+  });
+
+  it('should enable an "Add An SSH Key" button if the user has create_profile_ssh_key permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+        create_profile_ssh_key: true,
+      },
+    });
     const component = wrapWithFormContext({
       component: <Security />,
     });
@@ -55,64 +120,6 @@ describe('Security', () => {
 
     expect(addSSHKeyButton).toBeVisible();
     expect(addSSHKeyButton).toBeEnabled();
-  });
-
-  // TODO: Unskip once M3-8559 is addressed.
-  it.skip('should disable the password input if the user does not have permission to create linodes', async () => {
-    server.use(
-      http.get('*/v4/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/v4/profile/sshkeys', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      }),
-      http.get('*/v4/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { add_linodes: false } })
-        );
-      })
-    );
-
-    const { findByLabelText } = renderWithThemeAndHookFormContext({
-      component: <Security />,
-    });
-
-    const rootPasswordInput = await findByLabelText('Root Password');
-
-    await waitFor(() => {
-      expect(rootPasswordInput).toBeDisabled();
-    });
-  });
-
-  // Skipping due to test flake
-  it.skip('should disable ssh key selection if the user does not have permission to create linodes', async () => {
-    const sshKeys = sshKeyFactory.buildList(3);
-    server.use(
-      http.get('*/v4/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/v4/profile/sshkeys', () => {
-        return HttpResponse.json(makeResourcePage(sshKeys));
-      }),
-      http.get('*/v4/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { add_linodes: false } })
-        );
-      })
-    );
-
-    const { findByText, getByRole } = renderWithThemeAndHookFormContext({
-      component: <Security />,
-    });
-
-    // Make sure the restricted user's SSH keys are loaded
-    for (const sshKey of sshKeys) {
-      expect(await findByText(sshKey.label, { exact: false })).toBeVisible();
-    }
-
-    await waitFor(() => {
-      expect(getByRole('checkbox')).toBeDisabled();
-    });
   });
 
   it('should show Linode disk encryption if the flag is on and the account has the capability', async () => {

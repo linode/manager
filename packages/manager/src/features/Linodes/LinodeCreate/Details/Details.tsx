@@ -3,8 +3,8 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { useLinodeCreateQueryParams } from '../utilities';
 import { PlacementGroupPanel } from './PlacementGroupPanel';
@@ -17,9 +17,7 @@ export const Details = () => {
 
   const { params } = useLinodeCreateQueryParams();
 
-  const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>
@@ -29,7 +27,7 @@ export const Details = () => {
         name="label"
         render={({ field, fieldState }) => (
           <TextField
-            disabled={isCreateLinodeRestricted}
+            disabled={!permissions.create_linode}
             errorText={fieldState.error?.message}
             label="Linode Label"
             onBlur={field.onBlur}
@@ -44,7 +42,7 @@ export const Details = () => {
           name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              disabled={isCreateLinodeRestricted}
+              disabled={!permissions.create_linode}
               onChange={(item) => field.onChange(item.map((i) => i.value))}
               tagError={fieldState.error?.message}
               value={

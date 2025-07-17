@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { UserDataHeading } from './UserDataHeading';
 
@@ -43,9 +43,7 @@ export const UserData = () => {
     [regions, regionId]
   );
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   if (!region?.capabilities.includes('Metadata')) {
     return null;
@@ -78,7 +76,7 @@ export const UserData = () => {
         name="metadata.user_data"
         render={({ field, fieldState }) => (
           <TextField
-            disabled={isLinodeCreateRestricted}
+            disabled={!permissions.create_linode}
             errorText={fieldState.error?.message}
             expand
             label="User Data"
