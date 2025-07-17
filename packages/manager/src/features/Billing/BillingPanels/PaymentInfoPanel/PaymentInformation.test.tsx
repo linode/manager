@@ -1,6 +1,6 @@
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
@@ -22,7 +22,6 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 const queryMocks = vi.hoisted(() => ({
   useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
-  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -31,14 +30,6 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useGrants: queryMocks.useGrants,
     useProfile: queryMocks.useProfile,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -101,7 +92,7 @@ describe('Payment Info Panel', () => {
   });
 
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', async () => {
-    const { getByTestId, rerender } = renderWithTheme(
+    const { getByTestId, findByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
       </PayPalScriptProvider>,
@@ -112,16 +103,9 @@ describe('Payment Info Panel', () => {
 
     const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);
 
-    await fireEvent.click(addPaymentMethodButton);
-    queryMocks.useSearch.mockReturnValue({
-      action: 'add-payment-method',
-    });
-    rerender(
-      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-        <PaymentInformation {...props} />
-      </PayPalScriptProvider>
-    );
-    expect(getByTestId('drawer')).toBeVisible();
+    await userEvent.click(addPaymentMethodButton);
+
+    expect(await findByTestId('drawer')).toBeVisible();
   });
 
   it('Lists all payment methods for Linode customers', async () => {
