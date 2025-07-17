@@ -33,9 +33,16 @@ export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
     mutationFn: (data) => createAlertDefinition(data, serviceType),
     onSuccess: async (newAlert) => {
-      await queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.all._def,
-      });
+      const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
+      const oldAlerts = queryClient.getQueryData<Alert[]>(allAlertsKey);
+
+      // Use cached alerts list if available to avoid refetching from API.
+      if (oldAlerts) {
+        queryClient.setQueryData<Alert[]>(allAlertsKey, [
+          ...oldAlerts,
+          newAlert,
+        ]);
+      }
 
       queryClient.setQueryData(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(
