@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserDataHeading } from './UserDataHeading';
 
@@ -31,7 +31,7 @@ describe('UserDataHeading', () => {
       type: 'Clone Linode',
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<UserDataHeading />, {
+    const { getByText } = renderWithTheme(<UserDataHeading />, {
       initialRoute: '/linodes/create',
     });
 
@@ -47,7 +47,7 @@ describe('UserDataHeading', () => {
       type: 'Backups',
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<UserDataHeading />, {
+    const { getByText } = renderWithTheme(<UserDataHeading />, {
       initialRoute: '/linodes/create',
     });
 

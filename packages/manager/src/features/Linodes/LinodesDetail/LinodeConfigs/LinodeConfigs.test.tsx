@@ -4,7 +4,7 @@ import 'src/mocks/testServer';
 
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import LinodeConfigs from './LinodeConfigs';
 
@@ -59,7 +59,7 @@ describe('LinodeConfigs', () => {
       data: linodeFactory.build,
     });
 
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeConfigs />);
+    const { queryByText } = renderWithTheme(<LinodeConfigs />);
 
     expect(queryByText('Network Interfaces')).toBeVisible();
   });
@@ -75,13 +75,13 @@ describe('LinodeConfigs', () => {
       linodeInterfaces: { enabled: true },
     });
 
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeConfigs />);
+    const { queryByText } = renderWithTheme(<LinodeConfigs />);
 
     expect(queryByText('Network Interfaces')).not.toBeInTheDocument();
   });
 
   it('should disable "Add Configuration" button if the user does not have permissions', async () => {
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeConfigs />);
+    const { queryByText } = renderWithTheme(<LinodeConfigs />);
 
     const addConfigBtn = queryByText('Add Configuration');
     expect(addConfigBtn).toBeInTheDocument();
@@ -96,7 +96,7 @@ describe('LinodeConfigs', () => {
         create_linode_config_profile: true,
       },
     });
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeConfigs />);
+    const { queryByText } = renderWithTheme(<LinodeConfigs />);
 
     const addConfigBtn = queryByText('Add Configuration');
     expect(addConfigBtn).toBeInTheDocument();

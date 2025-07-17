@@ -4,7 +4,7 @@ import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
@@ -89,7 +89,7 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('should render', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <ChangeRoleDrawer {...props} mode="change-role" />
     );
 
@@ -98,7 +98,7 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('renders the correct text for account_access roles', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <ChangeRoleDrawer {...props} mode="change-role" />
     );
 
@@ -109,7 +109,7 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('renders the correct text for entity_access roles', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <ChangeRoleDrawer
         {...props}
         mode="change-role"
@@ -149,7 +149,7 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <ChangeRoleDrawer {...props} mode="change-role" />
     );
 
