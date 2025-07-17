@@ -68,7 +68,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   const { data: vpc } = useVPCQuery(
     vpcId ?? -1,
-    isLkeEnterprisePhase2FeatureEnabled
+    isLkeEnterprisePhase2FeatureEnabled && Boolean(vpcId)
   );
 
   const { mutateAsync: updateKubernetesCluster } =
