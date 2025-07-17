@@ -338,7 +338,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // ---validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
       'have.value',
-      `${cleanText(startActualDate)} PM`
+      `${cleanText(endActualDate)} PM`
     );
     cy.get('[aria-labelledby="end-date"]').should(
       'have.value',
