@@ -35,13 +35,14 @@ const LinodeAlerts = () => {
 
   return (
     <Box>
-      {aclpBetaServices?.linode?.alerts && (
-        <AclpPreferenceToggle
-          isAlertsBetaMode={isAclpAlertsBetaEditFlow}
-          onAlertsModeChange={setIsAclpAlertsBetaEditFlow}
-          type="alerts"
-        />
-      )}
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle
+            isAlertsBetaMode={isAclpAlertsBetaEditFlow}
+            onAlertsModeChange={setIsAclpAlertsBetaEditFlow}
+            type="alerts"
+          />
+        )}
       {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
       isAclpAlertsBetaEditFlow ? (
