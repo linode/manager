@@ -256,16 +256,17 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
-    cy.get('@startDateInput').clear();
-
-    cy.findAllByText(startDay).first().click();
-    cy.findAllByText(endDay).first().click();
-
+    cy.get('[role="dialog"]').within(() => {
+      cy.findAllByText(startDay).first().click();
+      cy.findAllByText(endDay).first().click();
+    });
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
       .should('be.visible')
       .as('timePickerButton');
+
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
     cy.get('@timePickerButton').click();
 
@@ -273,16 +274,38 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findByLabelText('Select hours')
       .as('selectHours')
       .scrollIntoView({ easing: 'linear' });
+
     cy.get('@selectHours').within(() => {
       cy.get(`[aria-label="${startHour} hours"]`).click();
     });
 
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .first()
+      .should('be.visible')
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
+
+    cy.get('@timePickerButton').click();
+
     cy.findByLabelText('Select minutes')
       .as('selectMinutes')
       .scrollIntoView({ duration: 500, easing: 'linear' });
+
     cy.get('@selectMinutes').within(() => {
       cy.get(`[aria-label="${startMinute} minutes"]`).click();
     });
+
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .first()
+      .should('be.visible')
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
+
+    cy.get('@timePickerButton').click();
 
     cy.findByLabelText('Select meridiem')
       .as('selectMeridiem')
@@ -306,6 +329,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       cy.get(`[aria-label="${endHour} hours"]`).click();
     });
 
+    cy.get('[aria-label^="Choose time"]')
+      .last()
+      .should('be.visible')
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').click();
+
     cy.findByLabelText('Select minutes').scrollIntoView({
       duration: 500,
       easing: 'linear',
@@ -313,6 +343,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@selectMinutes').within(() => {
       cy.get(`[aria-label="${endMinute} minutes"]`).click();
     });
+
+    cy.get('[aria-label^="Choose time"]')
+      .last()
+      .should('be.visible')
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').click();
 
     cy.findByLabelText('Select meridiem').scrollIntoView({
       duration: 500,
