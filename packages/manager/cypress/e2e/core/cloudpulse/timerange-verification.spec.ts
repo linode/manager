@@ -285,12 +285,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     });
 
     cy.findByLabelText('Select meridiem')
-      .as('selectMeridiem')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
-    cy.get('@selectMeridiem').within(() => {
-      cy.get(`[aria-label="PM"]`).click();
-    });
-    cy.get('[aria-label^="Choose time"]')
+      .as('startMeridiemSelect')
+      .scrollIntoView();
+    cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
+
+    // --- Select end time ---
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
       .last()
       .should('be.visible')
       .as('timePickerButton');
