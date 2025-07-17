@@ -1,7 +1,7 @@
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ContactInformation } from './ContactInformation';
 
@@ -45,7 +45,7 @@ describe('Edit Contact Information', () => {
       }),
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <ContactInformation {...props} profile={queryMocks.useProfile().data} />
     );
 
@@ -71,7 +71,7 @@ describe('Edit Contact Information', () => {
       }),
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <ContactInformation {...props} />
     );
 

@@ -2,7 +2,7 @@ import { backupFactory, linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeBackups } from './LinodeBackups';
 
@@ -55,7 +55,7 @@ describe('LinodeBackups', () => {
       })
     );
 
-    const { findByText, getByText } = await renderWithThemeAndRouter(
+    const { findByText, getByText } = renderWithTheme(
       <LinodeBackups />
     );
 
@@ -81,7 +81,7 @@ describe('LinodeBackups', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(<LinodeBackups />);
+    const { findByText } = renderWithTheme(<LinodeBackups />);
 
     await findByText('Enable Backups');
   });
