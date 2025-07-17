@@ -1,5 +1,5 @@
 import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
@@ -7,6 +7,7 @@ import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
 import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
+import { HistoryDialog } from './LinodeInterfacesHistory/HistoryDialog';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 
 export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { interfaceId } = useParams({
     strict: false,
   });
@@ -54,6 +56,22 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
     });
   };
 
+  const onShowHistory = () => {
+    navigate({
+      to: '/linodes/$linodeId/networking/history',
+      params: { linodeId },
+      search: {
+        delete: undefined,
+        migrate: undefined,
+        rebuild: undefined,
+        rescue: undefined,
+        resize: undefined,
+        selectedImageId: undefined,
+        upgrade: undefined,
+      },
+    });
+  };
+
   return (
     <Box>
       <Paper
@@ -68,7 +86,13 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       >
         <Typography variant="h3">Network Interfaces</Typography>
         <Stack direction="row" spacing={1}>
-          <Button onClick={() => setIsSettingsDrawerOpen(true)}>
+          <Button buttonType="secondary" onClick={onShowHistory}>
+            Interface History
+          </Button>
+          <Button
+            buttonType="outlined"
+            onClick={() => setIsSettingsDrawerOpen(true)}
+          >
             Interface Settings
           </Button>
           <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
@@ -103,6 +127,19 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
           })
         }
         open={Boolean(interfaceId)}
+      />
+      <HistoryDialog
+        linodeId={linodeId}
+        onClose={() =>
+          navigate({
+            to: '/linodes/$linodeId/networking',
+            params: { linodeId },
+            search: () => {
+              return {};
+            },
+          })
+        }
+        open={location.pathname.includes('networking/history')}
       />
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}
