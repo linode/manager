@@ -41,7 +41,7 @@ interface AclpSupportedRegionProps {
   /**
    * Region ID to check
    */
-  regionId: string;
+  regionId?: string;
   /**
    * The type of monitoring capability to check
    */
@@ -321,6 +321,7 @@ export const useIsAclpSupportedRegion = (
   props: AclpSupportedRegionProps
 ): boolean => {
   const { regionId, capability, type } = props;
+
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find(({ id }) => id === regionId);
