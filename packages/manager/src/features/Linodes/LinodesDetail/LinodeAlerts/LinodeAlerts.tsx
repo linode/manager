@@ -1,5 +1,7 @@
-import { useLinodeQuery } from '@linode/queries';
+import { useLinodeQuery, useRegionsQuery } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { Box } from '@linode/ui';
+import { isAclpSupportedRegion } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -10,40 +12,39 @@ import { useFlags } from 'src/hooks/useFlags';
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { AlertsPanel } from './AlertsPanel';
 
-interface Props {
-  isAclpAlertsSupportedRegionLinode: boolean;
-  isAlertsBetaMode: boolean;
-  onAlertsModeChange: (isBeta: boolean) => void;
-}
-
-const LinodeAlerts = (props: Props) => {
-  const {
-    onAlertsModeChange,
-    isAlertsBetaMode,
-    isAclpAlertsSupportedRegionLinode,
-  } = props;
+const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { aclpBetaServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
+  const { data: regions } = useRegionsQuery();
 
   const { permissions } = usePermissions('linode', ['update_linode'], id);
 
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    regions,
+    type: 'alerts',
+  });
+
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linode?.id, 'beta');
+  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
+    React.useState<boolean>(isLinodeAclpSubscribed);
+
   return (
     <Box>
-      {aclpBetaServices?.linode?.alerts &&
-        isAclpAlertsSupportedRegionLinode && (
-          <AclpPreferenceToggle
-            isAlertsBetaMode={isAlertsBetaMode}
-            onAlertsModeChange={onAlertsModeChange}
-            type="alerts"
-          />
-        )}
-
+      {aclpBetaServices?.linode?.alerts && (
+        <AclpPreferenceToggle
+          isAlertsBetaMode={isAclpAlertsBetaEditFlow}
+          onAlertsModeChange={setIsAclpAlertsBetaEditFlow}
+          type="alerts"
+        />
+      )}
       {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
-      isAlertsBetaMode ? (
+      isAclpAlertsBetaEditFlow ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId.toString()}
