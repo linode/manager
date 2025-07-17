@@ -316,7 +316,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Select end time ---
-    cy.get('[data-testid="ClockIcon"]')
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
       .last()
       .should('be.visible')
       .as('timePickerButton');
