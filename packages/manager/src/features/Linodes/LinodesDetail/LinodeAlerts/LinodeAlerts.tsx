@@ -1,4 +1,3 @@
-
 import { useLinodeQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
