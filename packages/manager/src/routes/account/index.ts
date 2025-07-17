@@ -3,12 +3,11 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
 
-import type { PaymentMethod } from '@linode/api-v4';
 interface AccountBillingSearch {
   action?: 'add-payment-method' | 'edit' | 'make-payment';
   contactDrawerOpen?: boolean;
   focusEmail?: boolean;
-  paymentMethod?: PaymentMethod;
+  paymentMethodId?: number;
 }
 
 const accountRoute = createRoute({

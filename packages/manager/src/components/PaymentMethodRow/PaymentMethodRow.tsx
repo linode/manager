@@ -64,7 +64,7 @@ export const PaymentMethodRow = (props: Props) => {
           search: (prev) => ({
             ...prev,
             action: 'make-payment',
-            paymentMethod,
+            paymentMethodId: paymentMethod.id,
           }),
         });
       },

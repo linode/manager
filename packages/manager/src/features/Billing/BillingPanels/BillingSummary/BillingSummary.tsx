@@ -54,10 +54,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   const navigate = useNavigate();
-  const search = useSearch({
-    from: '/account/billing',
-  });
-  const { paymentMethod } = search;
+  const search = useSearch({ from: '/account/billing' });
+  const { paymentMethodId } = search;
 
   const makePaymentRouteMatch = search.action === 'make-payment';
 
@@ -90,13 +88,17 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       return;
     }
 
-    const selectedPaymentMethod =
-      paymentMethod ??
-      paymentMethods?.find((payment) => payment.is_default) ??
-      undefined;
+    const selectedPaymentMethod = paymentMethodId
+      ? paymentMethods?.find((payment) => payment.id === paymentMethodId)
+      : (paymentMethods?.find((payment) => payment.is_default) ?? undefined);
 
     openPaymentDrawer(selectedPaymentMethod);
-  }, [paymentMethods, openPaymentDrawer, makePaymentRouteMatch, paymentMethod]);
+  }, [
+    paymentMethods,
+    openPaymentDrawer,
+    makePaymentRouteMatch,
+    paymentMethodId,
+  ]);
 
   //
   // Account Balance logic
