@@ -232,6 +232,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       '@fetchDatabases',
     ]);
   });
+  const cleanText = (string: string) =>
+    string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
   it.only('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
@@ -258,14 +260,14 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startDateInput').click({ force: true });
     cy.get('@startDateInput').clear({ force: true });
 
-    cy.findAllByText(startDay).first().as('dayElement');
+    cy.findAllByText(cleanText(startDay.toString())).first().as('dayElement');
 
     cy.get('@dayElement').scrollIntoView({ duration: 500, easing: 'linear' });
 
     cy.get('@dayElement').click({ force: true });
 
     // --- Select end date ---
-    cy.findAllByText(endDay).first().as('endDayElement');
+    cy.findAllByText(cleanText(endDay.toString())).first().as('endDayElement');
 
     cy.get('@endDayElement').scrollIntoView({
       duration: 500,
@@ -336,11 +338,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // ---validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
       'have.value',
-      `${startActualDate} PM`
+      `${cleanText(startActualDate)} PM`
     );
     cy.get('[aria-labelledby="end-date"]').should(
       'have.value',
-      `${endActualDate} PM`
+      `${cleanText(endActualDate)} PM`
     );
 
     // --- Select Node Type ---
