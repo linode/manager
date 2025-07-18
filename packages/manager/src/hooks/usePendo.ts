@@ -84,8 +84,11 @@ export const usePendo = () => {
       ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
     );
 
-  // This URL uses a Pendo-configured CNAME (M3-8742).
-  const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
+  // Retrieve our self-hosted Pendo agent script (M3-9347).
+  const PENDO_SCRIPT =
+    appRoot === 'https://cloud.linode.com'
+      ? '/pendo/pendo.js'
+      : '/pendo/pendo-staging.js';
 
   React.useEffect(() => {
     if (PENDO_API_KEY && hasConsentEnabled) {
@@ -120,7 +123,7 @@ export const usePendo = () => {
       });
 
       // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
-      loadScript(PENDO_URL, {
+      loadScript(PENDO_SCRIPT, {
         location: 'head',
       }).then(() => {
         try {
@@ -175,5 +178,5 @@ export const usePendo = () => {
         }
       });
     }
-  }, [PENDO_URL, accountId, hasConsentEnabled, visitorId]);
+  }, [PENDO_SCRIPT, accountId, hasConsentEnabled, visitorId]);
 };
