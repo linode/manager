@@ -124,10 +124,14 @@ export const Region = React.memo(() => {
       setValue('metadata.user_data', null);
     }
 
-    if (
-      values.maintenance_policy &&
-      !region.capabilities.includes('Maintenance Policy')
-    ) {
+    // Handle maintenance policy based on region capabilities
+    if (region.capabilities.includes('Maintenance Policy')) {
+      // If the region supports maintenance policy, set it to the default value
+      // or keep the current value if it's already set
+      if (!values.maintenance_policy) {
+        setValue('maintenance_policy', 'linode/migrate');
+      }
+    } else {
       // Clear maintenance_policy if the selected region doesn't support it
       setValue('maintenance_policy', undefined);
     }
