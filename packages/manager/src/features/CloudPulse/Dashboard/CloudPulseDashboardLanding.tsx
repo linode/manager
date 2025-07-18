@@ -8,7 +8,6 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
-import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
@@ -33,9 +32,9 @@ export const CloudPulseDashboardLanding = () => {
     label: {},
   });
 
-  const [timeDuration, setTimeDuration] = React.useState<DateTimeWithPreset>(
-    defaultTimeDuration()
-  );
+  const [timeDuration, setTimeDuration] = React.useState<
+    DateTimeWithPreset | undefined
+  >();
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 

@@ -15,7 +15,6 @@ import { TimePicker } from '../TimePicker';
 import { TimeZoneSelect } from '../TimeZoneSelect';
 
 import type { SxProps } from '@mui/material/styles';
-
 export interface DateTimeRangePickerProps {
   /** Properties for the end date field */
   endDateProps?: {
@@ -100,7 +99,7 @@ export const DateTimeRangePicker = ({
     startDateProps?.value ?? null,
   );
   const [selectedPreset, setSelectedPreset] = useState<null | string>(
-    presetsProps?.defaultValue ?? null,
+    presetsProps?.defaultValue ?? 'reset',
   );
   const [endDate, setEndDate] = useState<DateTime | null>(
     endDateProps?.value ?? null,
@@ -153,12 +152,31 @@ export const DateTimeRangePicker = ({
     }
     setTimeZone(newTimeZone);
 
-    setStartDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
-    );
-    setEndDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
-    );
+    // keep date time same irrespective of timezone change
+    if (selectedPreset === 'last month' || selectedPreset === 'reset') {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      // change only end date based on the timezone
+    } else if (selectedPreset === 'this month') {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: false }) : null,
+      );
+      // change both the values based on the timezone
+    } else {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: false }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: false }) : null,
+      );
+    }
   };
 
   const validateDates = (
@@ -271,6 +289,7 @@ export const DateTimeRangePicker = ({
               <Presets
                 onPresetSelect={handlePresetSelect}
                 selectedPreset={selectedPreset}
+                timeZone={timeZone}
               />
             )}
             <Box>
@@ -343,10 +362,14 @@ export const DateTimeRangePicker = ({
           </Box>
           <Divider spacingBottom={0} spacingTop={0} />
           <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
-            <Button buttonType="outlined" onClick={handleClose}>
+            <Button buttonType="outlined" data-qa-buttons onClick={handleClose}>
               Cancel
             </Button>
-            <Button buttonType="primary" onClick={handleApply}>
+            <Button
+              buttonType="primary"
+              data-qa-buttons="apply"
+              onClick={handleApply}
+            >
               Apply
             </Button>
           </Box>
