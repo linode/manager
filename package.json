@@ -5,12 +5,11 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "concurrently": "9.1.0",
-    "husky": "^9.1.6",
-    "typescript": "^5.7.3",
-    "vitest": "^3.1.2",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.11",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "@vitest/ui": "^3.1.2",
-    "lint-staged": "^15.4.3",
+    "concurrently": "9.1.0",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-cypress": "^4.2.1",
@@ -23,11 +22,13 @@
     "eslint-plugin-sonarjs": "^3.0.2",
     "eslint-plugin-testing-library": "^7.1.1",
     "eslint-plugin-xss": "^0.1.12",
+    "happy-dom": "^18.0.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.4.3",
     "prettier": "~3.5.3",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.29.0",
-    "@typescript-eslint/eslint-plugin": "^8.29.0",
-    "@typescript-eslint/parser": "^8.29.0",
-    "@linode/eslint-plugin-cloud-manager": "^0.0.11"
+    "vitest": "^3.1.2"
   },
   "scripts": {
     "lint:all": "pnpm -r --parallel lint",

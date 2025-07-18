@@ -38,7 +38,7 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
-    environment: 'jsdom',
+    environment: 'happy-dom',
     globals: true,
     pool: 'forks',
     setupFiles: './src/testSetup.ts',

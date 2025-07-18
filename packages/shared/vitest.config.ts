@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [svgr({ exportAsDefault: true })],
 
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: './testSetup.ts',
   },
 });

@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [svgr({ exportAsDefault: true })],
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: './testSetup.ts',
   },
 });
