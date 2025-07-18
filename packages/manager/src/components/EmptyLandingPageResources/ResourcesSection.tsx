@@ -170,7 +170,6 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             </ResourcesLinksSubSection>
           </ResourcesLinksSection>
         }
-        showTransferDisplay={showTransferDisplay}
         subtitle={subtitle}
         title={title}
       >

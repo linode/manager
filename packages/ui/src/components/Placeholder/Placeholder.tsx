@@ -55,10 +55,6 @@ export interface PlaceholderProps {
    */
   renderAsSecondary?: boolean;
   /**
-   *If true, switches grid styles for PlaceholderRoot component to accommodate TransferDisplay section
-   */
-  showTransferDisplay?: boolean;
-  /**
    * Subtitle text to display
    */
   subtitle?: string;
@@ -81,10 +77,8 @@ export const Placeholder = (props: PlaceholderProps) => {
     subtitle,
     title,
   } = props;
-
   const theme = useTheme();
   const hasSubtitle = subtitle !== undefined;
-
   /**
    * TODO: We should use these styles to create a Styled component THEN
    * pass that into the Placeholder component
@@ -119,6 +113,7 @@ export const Placeholder = (props: PlaceholderProps) => {
     <PlaceholderRoot
       className={props.className}
       data-qa-placeholder-container={dataQAPlaceholder || true}
+      {...props}
     >
       <StyledIconWrapper isEntity={isEntity}>
         {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
@@ -253,7 +248,7 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
     },
     display: 'grid',
     gridTemplateAreas:
-      props.showTransferDisplay && props.linksSection === undefined
+      props.linksSection === undefined
         ? `
         ". . . . . icon icon . . . . ."
         ". . . . . . . . . . . ."
@@ -284,18 +279,13 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
       `,
     gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
     gridTemplateRows:
-      props.showTransferDisplay && props.linksSection === undefined
+      props.linksSection === undefined
         ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 15px max-content 40px'
-        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 24px max-content 15px max-content 64px min-content',
+        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 24px max-content 15px max-content 64px',
     justifyItems: 'center',
-
-    padding: props.showTransferDisplay
-      ? `${theme.spacingFunction(32)} 0`
-      : `${theme.spacingFunction(16)} 0`,
+    padding: `${theme.spacingFunction(16)} 0`,
     [theme.breakpoints.up('md')]: {
-      padding: props.showTransferDisplay
-        ? `${theme.spacingFunction(64)} 0 ${theme.spacingFunction(64)}`
-        : `${theme.spacingFunction(64)} 0`,
+      padding: `${theme.spacingFunction(64)} 0`,
     },
   }),
 );
