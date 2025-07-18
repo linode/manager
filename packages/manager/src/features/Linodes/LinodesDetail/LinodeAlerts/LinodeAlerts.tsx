@@ -1,5 +1,4 @@
 import { useLinodeQuery, useRegionsQuery } from '@linode/queries';
-import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { Box } from '@linode/ui';
 import { isAclpSupportedRegion } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
@@ -10,11 +9,13 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
+import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { AlertsPanel } from './AlertsPanel';
 
 const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
+  const { isAlertsBetaMode } = useLinodeDetailContext();
 
   const { aclpBetaServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
@@ -29,23 +30,19 @@ const LinodeAlerts = () => {
     type: 'alerts',
   });
 
-  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linode?.id, 'beta');
-  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
-    React.useState<boolean>(isLinodeAclpSubscribed);
-
   return (
     <Box>
       {aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode && (
           <AclpPreferenceToggle
-            isAlertsBetaMode={isAclpAlertsBetaEditFlow}
-            onAlertsModeChange={setIsAclpAlertsBetaEditFlow}
+            isAlertsBetaMode={isAlertsBetaMode.get}
+            onAlertsModeChange={isAlertsBetaMode.set}
             type="alerts"
           />
         )}
       {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
-      isAclpAlertsBetaEditFlow ? (
+      isAlertsBetaMode.get ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId.toString()}
