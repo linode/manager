@@ -19,6 +19,7 @@ interface Props {
 
 export const LinodeDiskActionMenu = (props: Props) => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const {
     disk,
@@ -33,7 +34,8 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const { permissions } = usePermissions(
     'linode',
     ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
-    linodeId
+    linodeId,
+    isOpen
   );
 
   const poweredOnTooltip =
@@ -95,6 +97,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Disk ${disk.label}`}
+      onOpen={() => setIsOpen(true)}
     />
   );
 };

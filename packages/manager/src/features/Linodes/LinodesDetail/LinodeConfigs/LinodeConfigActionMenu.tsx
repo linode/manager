@@ -18,12 +18,14 @@ interface Props {
 
 export const ConfigActionMenu = (props: Props) => {
   const { config, linodeId, onBoot, onDelete, onEdit } = props;
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   const { permissions } = usePermissions(
     'linode',
     ['reboot_linode', 'update_linode', 'clone_linode', 'delete_linode'],
-    linodeId
+    linodeId,
+    isOpen
   );
 
   const tooltip = !permissions.delete_linode
@@ -66,6 +68,7 @@ export const ConfigActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Linode Config ${props.label}`}
+      onOpen={() => setIsOpen(true)}
     />
   );
 };
