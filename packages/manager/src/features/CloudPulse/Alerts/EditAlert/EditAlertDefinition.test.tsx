@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { alertFactory, notificationChannelFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { EditAlertDefinition } from './EditAlertDefinition';
@@ -53,7 +53,7 @@ describe('EditAlertDefinition component', () => {
     'renders the components of the form',
     async () => {
       const { findByPlaceholderText, getByLabelText, getByText } =
-        await renderWithThemeAndRouter(
+        renderWithTheme(
           <EditAlertDefinition
             alertDetails={alertDetails}
             serviceType="linode"
@@ -90,7 +90,7 @@ describe('EditAlertDefinition component', () => {
       });
       const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
       const { getByPlaceholderText, getByText } =
-        await renderWithThemeAndRouter(
+        renderWithTheme(
           <EditAlertDefinition
             alertDetails={alertDetails}
             serviceType="linode"

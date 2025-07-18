@@ -5,10 +5,7 @@ import React from 'react';
 
 import { accountUserFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  renderWithTheme,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserEmailPanel } from './UserEmailPanel';
 
@@ -95,7 +92,7 @@ describe('UserEmailPanel', () => {
       username: 'user-1',
     });
 
-    await renderWithThemeAndRouter(<UserEmailPanel user={user} />);
+    renderWithTheme(<UserEmailPanel user={user} />);
 
     const emailInput = screen.getByLabelText('Email');
 

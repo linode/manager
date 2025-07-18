@@ -74,7 +74,12 @@ export const LinodeEntityDetail = (props: Props) => {
     linodeId: linode.id,
   });
 
-  const { permissions } = usePermissions('linode', ['update_linode']);
+  const { permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linode.id
+  );
+
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
