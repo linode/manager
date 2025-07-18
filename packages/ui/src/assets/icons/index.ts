@@ -10,6 +10,7 @@ export { default as ChevronDownIcon } from './chevron-down.svg';
 export { default as ChevronUpIcon } from './chevron-up.svg';
 export { default as CloseIcon } from './close.svg';
 export { default as DeleteIcon } from './delete.svg';
+export { default as ComputeIcon } from './entityIcons/compute.svg';
 export { default as ErrorOutlinedIcon } from './error-outlined.svg';
 export { default as ErrorIcon } from './error.svg';
 export { default as InfoOutlinedIcon } from './info-outlined.svg';

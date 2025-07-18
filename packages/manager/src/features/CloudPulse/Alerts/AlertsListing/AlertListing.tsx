@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Notice,
+  Placeholder,
   SelectedIcon,
   Stack,
   StyledListItem,
@@ -14,7 +15,6 @@ import * as React from 'react';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { SupportLink } from 'src/components/SupportLink';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';

@@ -1,10 +1,9 @@
-import { Typography } from '@linode/ui';
+import { Placeholder, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { Currency } from 'src/components/Currency';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
