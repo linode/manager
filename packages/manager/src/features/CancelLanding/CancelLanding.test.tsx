@@ -1,7 +1,8 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { CancelLanding } from './CancelLanding';
 
@@ -18,14 +19,14 @@ describe('CancelLanding', () => {
   });
 
   it('renders the body when there is a survey_link in the state', () => {
-    const { queryByTestId } = render(
-      wrapWithTheme(<CancelLanding />, {
-        MemoryRouter: {
-          initialEntries: [
-            { pathname: '/cancel', state: { survey_link: 'linode.com' } },
-          ],
-        },
-      })
+    const { queryByTestId } = renderWithTheme(
+      <MemoryRouter
+        initialEntries={[
+          { pathname: '/cancel', state: { survey_link: 'https://linode.com' } },
+        ]}
+      >
+        <CancelLanding />
+      </MemoryRouter>
     );
     expect(queryByTestId('body')).toBeInTheDocument();
   });
@@ -39,12 +40,14 @@ describe('CancelLanding', () => {
     window.location = { ...realLocation, assign: mockAssign };
 
     const survey_link = 'https://linode.com';
-    const { getByTestId } = render(
-      wrapWithTheme(<CancelLanding />, {
-        MemoryRouter: {
-          initialEntries: [{ pathname: '/cancel', state: { survey_link } }],
-        },
-      })
+    const { getByTestId } = renderWithTheme(
+      // Use a custom MemoryRouter here because the renderWithTheme MemoryRouter option does not support state.
+      // This will likely need to be updated when CancelLanding uses TanStack router fully.
+      <MemoryRouter
+        initialEntries={[{ pathname: '/cancel', state: { survey_link } }]}
+      >
+        <CancelLanding />
+      </MemoryRouter>
     );
     const button = getByTestId('survey-button');
     fireEvent.click(button);

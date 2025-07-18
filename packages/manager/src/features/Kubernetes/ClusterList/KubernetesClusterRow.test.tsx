@@ -5,7 +5,7 @@ import { kubernetesClusterFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithTableBody,
   wrapWithTheme,
 } from 'src/utilities/testHelpers';
@@ -24,7 +24,7 @@ const props: Props = {
 
 describe('ClusterRow component', () => {
   it('should render', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       wrapWithTheme(wrapWithTableBody(<KubernetesClusterRow {...props} />))
     );
 
@@ -42,7 +42,7 @@ describe('ClusterRow component', () => {
       })
     );
 
-    const { findByText, getByText } = await renderWithThemeAndRouter(
+    const { findByText, getByText } = renderWithTheme(
       wrapWithTableBody(<KubernetesClusterRow {...props} />)
     );
 
@@ -51,17 +51,16 @@ describe('ClusterRow component', () => {
   });
 
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', async () => {
-    const { getByTestId, queryByTestId, rerender } =
-      await renderWithThemeAndRouter(
-        wrapWithTableBody(
-          <KubernetesClusterRow
-            {...props}
-            cluster={kubernetesClusterFactory.build({
-              control_plane: { high_availability: true },
-            })}
-          />
-        )
-      );
+    const { getByTestId, queryByTestId, rerender } = renderWithTheme(
+      wrapWithTableBody(
+        <KubernetesClusterRow
+          {...props}
+          cluster={kubernetesClusterFactory.build({
+            control_plane: { high_availability: true },
+          })}
+        />
+      )
+    );
 
     getByTestId('ha-chip');
 

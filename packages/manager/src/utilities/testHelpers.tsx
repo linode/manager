@@ -8,23 +8,21 @@ import {
   createRouter,
   RouterProvider,
 } from '@tanstack/react-router';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
-import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import type { MemoryRouterProps } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { setupInterceptors } from 'src/request';
-import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
 
 import { mergeDeepRight } from './mergeDeepRight';
@@ -33,10 +31,9 @@ import type { QueryClient } from '@tanstack/react-query';
 // TODO: Tanstack Router - replace AnyRouter once migration is complete.
 import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
-import type { FormikConfig, FormikValues } from 'formik';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
-import type { ApplicationState, ApplicationStore } from 'src/store';
+import type { ApplicationState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
@@ -74,9 +71,11 @@ export const resizeScreenSize = (width: number) => {
 interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
+  initialRoute?: string;
   MemoryRouter?: MemoryRouterProps;
   queryClient?: QueryClient;
-  routePath?: string;
+  router?: AnyRouter;
+  routeTree?: AnyRootRoute;
   theme?: 'dark' | 'light';
 }
 /**
@@ -90,7 +89,7 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore, queryClient: passedQueryClient, routePath } = options;
+  const { customStore, queryClient: passedQueryClient } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
@@ -100,97 +99,18 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
 
   const uiToRender = ui.children ?? ui;
 
-  return (
-    <Provider store={storeToPass}>
-      <QueryClientProvider client={passedQueryClient || queryClient}>
-        <LinodeThemeWrapper theme={options.theme}>
-          <LDProvider
-            clientSideID={''}
-            deferInitialization
-            flags={options.flags ?? {}}
-            options={{ bootstrap: options.flags }}
-          >
-            <CssBaseline enableColorScheme />
-            <SnackbarProvider>
-              {/**
-               * TODO Tanstack Router - remove amy routing  routing wrapWithTheme
-               */}
-              <MemoryRouter {...options.MemoryRouter}>
-                {routePath ? (
-                  <Route path={routePath}>{uiToRender}</Route>
-                ) : (
-                  uiToRender
-                )}
-              </MemoryRouter>
-            </SnackbarProvider>
-          </LDProvider>
-        </LinodeThemeWrapper>
-      </QueryClientProvider>
-    </Provider>
-  );
-};
-
-interface OptionsWithRouter
-  extends Omit<Options, 'MemoryRouter' | 'routePath'> {
-  initialRoute?: string;
-  router?: AnyRouter;
-  routeTree?: AnyRootRoute;
-}
-
-/**
- * We don't always need to use the router in our tests. When we do, due to the async nature of TanStack Router, we need to use this helper function.
- * The reason we use this instead of extending renderWithTheme is because of having to make all tests async.
- * It seems unnecessary to refactor all tests to async when we don't need to access the router at all.
- *
- * In order to use this, you must await the result of the function.
- *
- * @example
- * const { getByText, router } = await renderWithThemeAndRouter(
- *   <Component />, {
- *     initialRoute: '/route',
- *   }
- * );
- *
- * // Assert the initial route
- * expect(router.state.location.pathname).toBe('/route');
- *
- * // from here, you can use the router to navigate
- * await waitFor(() =>
- *   router.navigate({
- *    params: { betaId: beta.id },
- *    to: '/path/to/something',
- *  })
- * );
- *
- * // And assert
- * expect(router.state.location.pathname).toBe('/path/to/something');
- *
- * // and test the UI
- * getByText('Some text');
- */
-export const wrapWithThemeAndRouter = (
-  ui: React.ReactNode,
-  options: OptionsWithRouter = {}
-) => {
-  const {
-    customStore,
-    initialRoute = '/',
-    queryClient: passedQueryClient,
-  } = options;
-  const queryClient = passedQueryClient ?? queryClientFactory();
-  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
-
-  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
-
   const rootRoute = createRootRoute({});
   const indexRoute = createRoute({
-    component: () => ui,
+    component: () => uiToRender,
     getParentRoute: () => rootRoute,
-    path: initialRoute,
+    path: options.initialRoute ?? '/',
   });
+
   const router: AnyRouter = createRouter({
     history: createMemoryHistory({
-      initialEntries: [initialRoute],
+      initialEntries: (options.MemoryRouter?.initialEntries as string[]) ?? [
+        options.initialRoute ?? '/',
+      ],
     }),
     routeTree: rootRoute.addChildren([indexRoute]),
   });
@@ -207,63 +127,15 @@ export const wrapWithThemeAndRouter = (
           >
             <CssBaseline enableColorScheme />
             <SnackbarProvider>
-              <BrowserRouter>
+              <MemoryRouter {...options.MemoryRouter}>
                 <RouterProvider router={router} />
-              </BrowserRouter>
+              </MemoryRouter>
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>
       </QueryClientProvider>
     </Provider>
   );
-};
-
-export const renderWithThemeAndRouter = async (
-  ui: React.ReactNode,
-  options: OptionsWithRouter = {}
-): Promise<RenderResult & { router: AnyRouter }> => {
-  const router = createRouter({
-    history: createMemoryHistory({
-      initialEntries: [options.initialRoute || '/'],
-    }),
-    routeTree: options.routeTree || migrationRouteTree,
-  });
-
-  const utils: RenderResult = render(
-    wrapWithThemeAndRouter(ui, { ...options, router })
-  );
-
-  // Wait for the router to be ready
-  await waitFor(() => expect(router.state.status).toBe('idle'));
-
-  return {
-    ...utils,
-    rerender: (ui) =>
-      utils.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
-    router,
-  };
-};
-
-/**
- * Wraps children with just the Redux Store. This is
- * useful for testing React hooks that need to access
- * the Redux store.
- * @example
- * ```ts
- * const { result } = renderHook(() => useOrder(defaultOrder), {
- *   wrapper: wrapWithStore,
- * });
- * ```
- * @param param {object} contains children to render
- * @returns {JSX.Element} wrapped component with Redux available for use
- */
-export const wrapWithStore = (props: {
-  children: React.ReactNode;
-  queryClient?: QueryClient;
-  store?: ApplicationStore;
-}) => {
-  const store = props.store ?? storeFactory();
-  return <Provider store={store}>{props.children}</Provider>;
 };
 
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting
@@ -288,21 +160,6 @@ export const renderWithTheme = (
     rerender: (ui) => utils.rerender(wrapWithTheme(ui, options)),
   };
 };
-
-/**
- * Renders the given UI component within both the Formik and renderWithTheme.
- *
- * @param {React.ReactElement} ui - The React component that you want to render. This component
- *                                  typically will be a part of or a whole form.
- * @param {FormikConfig<T>} configObj - Formik configuration object which includes all the necessary
- *                                      configurations for the Formik context such as initialValues,
- *                                      validationSchema, and onSubmit.
- */
-
-export const renderWithThemeAndFormik = <T extends FormikValues>(
-  ui: React.ReactElement<any>,
-  configObj: FormikConfig<T>
-) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
 interface UseFormPropsWithChildren<T extends FieldValues>
   extends UseFormProps<T> {
