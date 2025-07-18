@@ -10,9 +10,9 @@ import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { AlertTableRow } from './AlertTableRow';
 
 import type { Item } from '../constants';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
-const mockServices: Item<string, AlertServiceType>[] = [
+const mockServices: Item<string, CloudPulseServiceType>[] = [
   {
     label: 'Linode',
     value: 'linode',

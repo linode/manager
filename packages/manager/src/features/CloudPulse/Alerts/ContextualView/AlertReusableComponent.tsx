@@ -23,6 +23,7 @@ import { AlertInformationActionTable } from './AlertInformationActionTable';
 import type {
   AlertDefinitionType,
   CloudPulseAlertsPayload,
+  CloudPulseServiceType,
 } from '@linode/api-v4';
 
 interface AlertReusableComponentProps {
@@ -55,7 +56,7 @@ interface AlertReusableComponentProps {
   /**
    * Service type of selected entity
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {

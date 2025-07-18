@@ -28,7 +28,7 @@ import type {
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
-  dashboard?: Dashboard | undefined;
+  dashboard: Dashboard;
   duration: DateTimeWithPreset;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
@@ -79,7 +79,7 @@ export const RenderWidgets = React.memo(
         errorLabel: 'Error occurred while loading data.',
         isJweTokenFetching: false,
         resources: [],
-        serviceType: dashboard?.service_type ?? '',
+        serviceType: dashboard.service_type,
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
         widget: { ...widget, time_granularity: autoIntervalOption },

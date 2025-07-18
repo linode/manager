@@ -2,9 +2,9 @@ import {
   type Alert,
   type AlertDefinitionMetricCriteria,
   type AlertDefinitionType,
-  type AlertServiceType,
   type APIError,
   capabilityServiceTypeMapping,
+  type CloudPulseServiceType,
   type EditAlertPayloadWithService,
   type NotificationChannel,
   type Region,
@@ -124,7 +124,7 @@ interface FilterRegionProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface SupportedRegionsProps {
@@ -139,7 +139,7 @@ interface SupportedRegionsProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface FilterAlertsProps {
@@ -167,7 +167,7 @@ interface FilterAlertsProps {
  * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
-  serviceType: string,
+  serviceType: CloudPulseServiceType,
   serviceTypeList: ServiceTypesList | undefined
 ) => {
   if (!serviceTypeList) {
@@ -316,7 +316,7 @@ export const convertAlertDefinitionValues = (
     trigger_conditions,
     scope,
   }: Alert,
-  serviceType: AlertServiceType
+  serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
   return {
     scope,
@@ -549,7 +549,7 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
 export const filterRegionByServiceType = (
   type: keyof MonitoringCapabilities,
   regions?: Region[],
-  serviceType?: null | string
+  serviceType?: CloudPulseServiceType | null
 ): Region[] => {
   if (!serviceType || !regions) return regions ?? [];
   const capability = capabilityServiceTypeMapping[serviceType];
