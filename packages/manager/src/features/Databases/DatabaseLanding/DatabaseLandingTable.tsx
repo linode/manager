@@ -1,14 +1,15 @@
 import { Hidden } from '@linode/ui';
+import { Pagination } from 'akamai-cds-react-components/Pagination';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
 import AddAccessControlDrawer from 'src/features/Databases/DatabaseDetail/AddAccessControlDrawer';
 import DatabaseSettingsDeleteClusterDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
@@ -48,6 +49,8 @@ const DatabaseLandingTable = ({
 
   const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
   const pagination = usePagination(1, preferenceKey, dbPlatformType);
+  const PAGE_SIZES = [25, 50, 75, 100];
+  const MIN_PAGE_SIZE = 25;
 
   const [selectedDatabase, setSelectedDatabase] =
     React.useState<DatabaseInstance>({} as DatabaseInstance);
@@ -89,97 +92,96 @@ const DatabaseLandingTable = ({
   return (
     <>
       <Table
-        aria-label={`List of ${
-          isNewDatabase ? 'New' : 'Legacy'
-        } Database Clusters`}
-        sx={{ marginTop: '10px' }}
+        aria-label={`List of ${isNewDatabase ? 'New' : 'Legacy'} Database Clusters`}
+        style={{
+          border: '1px solid #d6d6dd',
+          marginTop: '10px',
+        }}
       >
         <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
+          <TableRow headerborder>
+            <TableHeaderCell
+              sort={() =>
+                handleOrderChange('label', order === 'asc' ? 'desc' : 'asc')
+              }
+              sortable
+              sorted={orderBy === 'label' ? order : undefined}
+              style={{ maxWidth: 375 }}
             >
               Cluster Label
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
+            </TableHeaderCell>
+            <TableHeaderCell
+              sort={() =>
+                handleOrderChange('status', order === 'asc' ? 'desc' : 'asc')
+              }
+              sortable
+              sorted={orderBy === 'status' ? order : undefined}
             >
               Status
-            </TableSortCell>
+            </TableHeaderCell>
             {isNewDatabase && (
-              <TableSortCell
-                active={orderBy === 'plan'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="plan"
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('plan', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'plan' ? order : undefined}
               >
                 Plan
-              </TableSortCell>
+              </TableHeaderCell>
             )}
             <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'cluster_size'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="cluster_size"
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange(
+                    'cluster_size',
+                    order === 'asc' ? 'desc' : 'asc'
+                  )
+                }
+                sortable
+                sorted={orderBy === 'cluster_size' ? order : undefined}
               >
                 {isNewDatabase ? 'Nodes' : 'Configuration'}
-              </TableSortCell>
+              </TableHeaderCell>
             </Hidden>
-            <TableSortCell
-              active={orderBy === 'engine'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="engine"
+            <TableHeaderCell
+              sort={() =>
+                handleOrderChange('engine', order === 'asc' ? 'desc' : 'asc')
+              }
+              sortable
+              sorted={orderBy === 'engine' ? order : undefined}
             >
               Engine
-            </TableSortCell>
+            </TableHeaderCell>
             <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'region'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="region"
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('region', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'region' ? order : undefined}
               >
                 Region
-              </TableSortCell>
+              </TableHeaderCell>
             </Hidden>
             <Hidden lgDown>
-              <TableSortCell
-                active={orderBy === 'created'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="created"
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('created', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'created' ? order : undefined}
               >
                 Created
-              </TableSortCell>
+              </TableHeaderCell>
             </Hidden>
-            {isDatabasesV2GA && isNewDatabase && <TableCell />}
+            {isDatabasesV2GA && isNewDatabase && (
+              <TableHeaderCell style={{ maxWidth: 40 }} />
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((database: DatabaseInstance) => (
-            <DatabaseRow
-              database={database}
-              events={events}
-              handlers={{
-                handleDelete: () => handleDelete(database),
-                handleManageAccessControls: () =>
-                  handleManageAccessControls(database),
-                handleResetPassword: () => handleResetPassword(database),
-                handleSuspend: () => handleSuspend(database),
-              }}
-              isNewDatabase={isNewDatabase}
-              key={database.id}
-            />
-          ))}
-          {data?.length === 0 && (
+          {data?.length === 0 ? (
             <TableRowEmpty
               colSpan={8}
               message={
@@ -188,17 +190,45 @@ const DatabaseLandingTable = ({
                   : ''
               }
             />
+          ) : (
+            data?.map((database: DatabaseInstance) => (
+              <DatabaseRow
+                database={database}
+                events={events}
+                handlers={{
+                  handleDelete: () => handleDelete(database),
+                  handleManageAccessControls: () =>
+                    handleManageAccessControls(database),
+                  handleResetPassword: () => handleResetPassword(database),
+                  handleSuspend: () => handleSuspend(database),
+                }}
+                isNewDatabase={isNewDatabase}
+                key={database.id}
+              />
+            ))
           )}
         </TableBody>
       </Table>
-      <PaginationFooter
-        count={results || 0}
-        eventCategory="Databases Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+      {(results || 0) > MIN_PAGE_SIZE && (
+        <Pagination
+          count={results || 0}
+          onPageChange={(e: CustomEvent<number>) =>
+            pagination.handlePageChange(Number(e.detail))
+          }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          pageSizes={PAGE_SIZES}
+          style={{
+            borderLeft: '1px solid #d6d6dd',
+            borderRight: '1px solid #d6d6dd',
+            borderTop: 0,
+          }}
+        />
+      )}
+
       {isNewDatabase && (
         <>
           <DatabaseLogo />

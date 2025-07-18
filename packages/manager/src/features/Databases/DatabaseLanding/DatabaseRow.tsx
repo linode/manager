@@ -3,14 +3,12 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { Chip } from '@linode/ui';
-import { Hidden } from '@linode/ui';
+import { Chip, Hidden, styled } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
+import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
@@ -35,6 +33,26 @@ interface Props {
   handlers?: ActionHandlers;
   isNewDatabase?: boolean;
 }
+
+const DatabaseActionMenuStyledWrapper = styled(TableCell, {
+  label: 'DatabaseActionMenuStyledWrapper',
+})({
+  justifyContent: 'flex-end',
+  display: 'flex',
+  alignItems: 'center',
+  maxWidth: 40,
+  '& button': {
+    padding: 0,
+    color:
+      'var(--token-alias-content-icon-primary-default, light-dark(#3d3d42, #ffffff))',
+    backgroundColor: 'transparent',
+  },
+  '& button:hover': {
+    backgroundColor:
+      'color: var(--token-alias-content-icon-primary-hover, light-dark(#009cde, #96cff0))',
+    color: '#009cde',
+  },
+});
 
 export const DatabaseRow = ({
   database,
@@ -80,13 +98,18 @@ export const DatabaseRow = ({
         <Chip
           label="HA"
           size="small"
-          sx={(theme) => ({ borderColor: theme.color.green, mx: 2 })}
+          sx={(theme) => ({ borderColor: theme.color.green, mx: 0, my: 0 })}
           variant="outlined"
         />
       </>
     );
   return (
-    <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
+    <TableRow
+      data-qa-database-cluster-id={id}
+      hoverable
+      key={`database-row-${id}`}
+      zebra
+    >
       <TableCell>
         {isDatabasesV2GA && isLinkInactive ? (
           label
@@ -94,7 +117,7 @@ export const DatabaseRow = ({
           <Link to={`/databases/${engine}/${id}`}>{label}</Link>
         )}
       </TableCell>
-      <TableCell statusCell>
+      <TableCell>
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
       {isNewDatabase && <TableCell>{formattedPlan}</TableCell>}
@@ -123,7 +146,7 @@ export const DatabaseRow = ({
         </TableCell>
       </Hidden>
       {isDatabasesV2GA && isNewDatabase && (
-        <TableCell actionCell>
+        <DatabaseActionMenuStyledWrapper>
           <DatabaseActionMenu
             databaseEngine={engine}
             databaseId={id}
@@ -131,7 +154,7 @@ export const DatabaseRow = ({
             databaseStatus={status}
             handlers={handlers!}
           />
-        </TableCell>
+        </DatabaseActionMenuStyledWrapper>
       )}
     </TableRow>
   );
