@@ -4,7 +4,7 @@ import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import LinodeAlerts from './LinodeAlerts';
 
@@ -38,7 +38,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('LinodeAlerts', () => {
   it('should render component', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeAlerts
         isAclpAlertsSupportedRegionLinode={true}
         isAlertsBetaMode={false}
@@ -53,7 +53,7 @@ describe('LinodeAlerts', () => {
   });
 
   it('should disable "Save" button if the user does not have update_linode permission', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <LinodeAlerts
         isAclpAlertsSupportedRegionLinode={true}
         isAlertsBetaMode={false}
@@ -72,7 +72,7 @@ describe('LinodeAlerts', () => {
         update_linode: true,
       },
     });
-    const { getByTestId, getAllByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId, getAllByTestId } = renderWithTheme(
       <LinodeAlerts
         isAclpAlertsSupportedRegionLinode={true}
         isAlertsBetaMode={false}

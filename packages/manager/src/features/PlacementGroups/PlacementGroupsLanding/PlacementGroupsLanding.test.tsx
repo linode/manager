@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
@@ -33,7 +33,7 @@ describe('PlacementGroupsLanding', () => {
       isLoading: true,
     });
 
-    const { getByRole } = await renderWithThemeAndRouter(
+    const { getByRole } = renderWithTheme(
       <PlacementGroupsLanding />,
       {
         initialRoute: '/placement-groups',
@@ -48,7 +48,7 @@ describe('PlacementGroupsLanding', () => {
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsLanding />,
       {
         initialRoute: '/placement-groups',
@@ -70,7 +70,7 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsLanding />,
       {
         initialRoute: '/placement-groups',
@@ -96,7 +96,7 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsLanding />,
       {
         initialRoute: '/placement-groups',
@@ -115,7 +115,7 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsLanding />,
       {
         initialRoute: '/placement-groups',
@@ -133,7 +133,7 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsLanding />,
       {
         initialRoute: '/placement-groups',
