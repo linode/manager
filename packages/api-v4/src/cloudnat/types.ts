@@ -1,4 +1,4 @@
-interface CloudNATIPAddress {
+export interface CloudNATIPAddress {
   address: string;
 }
 
