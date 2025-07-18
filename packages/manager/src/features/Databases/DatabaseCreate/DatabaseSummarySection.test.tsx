@@ -13,7 +13,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
@@ -57,7 +57,7 @@ describe('database summary section', () => {
     );
 
     const { getByTestId, findAllByText, findByText } =
-      await renderWithThemeAndRouter(<DatabaseCreate />, {
+      renderWithTheme(<DatabaseCreate />, {
         flags,
       });
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -100,7 +100,7 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
@@ -124,7 +124,7 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
