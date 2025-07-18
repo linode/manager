@@ -257,7 +257,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
