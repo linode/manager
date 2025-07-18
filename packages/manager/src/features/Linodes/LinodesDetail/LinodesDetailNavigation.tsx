@@ -8,7 +8,12 @@ import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
-import { Outlet, useParams } from '@tanstack/react-router';
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
@@ -21,8 +26,12 @@ import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { LinodesDetailContext } from './LinodesDetailContext';
+
 const LinodesDetailNavigation = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
+  const location = useLocation();
+  const navigate = useNavigate();
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
   const { aclpBetaServices } = useFlags();
@@ -107,6 +116,10 @@ const LinodesDetailNavigation = () => {
     },
   ]);
 
+  if (location.pathname === `/linodes/${linodeId}`) {
+    navigate({ to: '/linodes/$linodeId/metrics', params: { linodeId } });
+  }
+
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
   }
@@ -116,7 +129,7 @@ const LinodesDetailNavigation = () => {
   }
 
   return (
-    <>
+    <LinodesDetailContext.Provider value={{ isBareMetalInstance }}>
       <DocumentTitleSegment
         segment={`${linode?.label} - ${tabs[tabIndex]?.title} - Detail View`}
       />
@@ -141,32 +154,12 @@ const LinodesDetailNavigation = () => {
           <TanStackTabLinkList tabs={tabs} />
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              {/* {isBareMetalInstance ? null : (
-                <>
-                  <SafeTabPanel
-                    index={getTabIndex('/linodes/$linodeId/storage')}
-                  >
-                    <LinodeStorage />
-                  </SafeTabPanel>
-                  <SafeTabPanel
-                    index={getTabIndex('/linodes/$linodeId/configurations')}
-                  >
-                    <LinodeConfigurations />
-                  </SafeTabPanel>
-
-                  <SafeTabPanel
-                    index={getTabIndex('/linodes/$linodeId/backup')}
-                  >
-                    <LinodeBackup />
-                  </SafeTabPanel>
-                </>
-              )} */}
               <Outlet />
             </TabPanels>
           </React.Suspense>
         </Tabs>
       </div>
-    </>
+    </LinodesDetailContext.Provider>
   );
 };
 
