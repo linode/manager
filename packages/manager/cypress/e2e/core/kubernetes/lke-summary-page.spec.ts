@@ -147,7 +147,7 @@ describe('LKE summary page', () => {
         enabled: false,
       },
     });
-    const tagsExisting: string[] = buildTags(5);
+    const tagsExisting: string[] = buildTags(10);
 
     const tagNew = randomLabel();
     const mockCluster = kubernetesClusterFactory.build({
@@ -272,7 +272,9 @@ describe('LKE summary page', () => {
         enabled: false,
       },
     });
-    const tagsExisting = buildTags(2);
+    const tagsExisting = buildTags(10);
+    const updatedTagsExisting = tagsExisting.shift();
+
     const mockCluster = kubernetesClusterFactory.build({
       control_plane: mockACL,
       k8s_version: latestKubernetesVersion,
@@ -281,7 +283,7 @@ describe('LKE summary page', () => {
 
     const mockClusterUpdated = {
       ...mockCluster,
-      tags: [tagsExisting[1]],
+      tags: updatedTagsExisting ? [updatedTagsExisting] : [],
     };
 
     mockGetCluster(mockCluster).as('getCluster');
@@ -324,7 +326,7 @@ describe('LKE summary page', () => {
             cy.wait('@updateCluster').then((xhr) => {
               const data = xhr.response?.body;
               if (data) {
-                expect(data.tags).to.deep.equal([tagsExisting[1]]);
+                expect(data.tags).to.deep.equal([updatedTagsExisting]);
               }
             });
           });
