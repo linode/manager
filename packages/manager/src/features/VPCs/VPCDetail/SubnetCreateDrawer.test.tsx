@@ -88,6 +88,10 @@ describe('Create Subnet Drawer', () => {
       },
     });
 
+    const ipv4Input = screen.getByText('Subnet IPv4 Address Range');
+    expect(ipv4Input).toBeVisible();
+    expect(ipv4Input).toBeEnabled();
+
     const ipv6input = screen.getByText('IPv6 Prefix Length');
     expect(ipv6input).toBeVisible();
     expect(ipv6input).toBeEnabled();

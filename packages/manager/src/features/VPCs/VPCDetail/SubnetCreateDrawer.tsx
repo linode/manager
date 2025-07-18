@@ -164,7 +164,11 @@ export const SubnetCreateDrawer = (props: Props) => {
                 aria-label="Enter an IPv4"
                 disabled={userCannotAddSubnet}
                 errorText={fieldState.error?.message}
-                label="Subnet IP Address Range"
+                label={
+                  shouldDisplayIPv6
+                    ? 'Subnet IPv4 Address Range'
+                    : 'Subnet IP Address Range'
+                }
                 onBlur={field.onBlur}
                 onChange={field.onChange}
                 value={field.value}
