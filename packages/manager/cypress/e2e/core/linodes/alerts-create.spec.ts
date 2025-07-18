@@ -357,7 +357,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       });
   });
 
-  it('Creation fails for region where alerts disabled', function () {
+  it('alerts not present for region where alerts disabled', function () {
     const createLinodeErrorMsg = 'region is not valid';
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
@@ -386,6 +386,8 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       });
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
     cy.get('[id="root-password"]').type(randomString(12));
+    // no alerts panel
+    cy.get('[data-qa-panel="Alerts"]').should('not.exist');
     cy.scrollTo('bottom');
     ui.button
       .findByTitle('Create Linode')
