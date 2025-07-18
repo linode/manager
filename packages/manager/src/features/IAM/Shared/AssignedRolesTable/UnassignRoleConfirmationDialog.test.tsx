@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
@@ -69,7 +69,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('should render', async () => {
-    const { getAllByRole, getByText } = await renderWithThemeAndRouter(
+    const { getAllByRole, getByText } = renderWithTheme(
       <UnassignRoleConfirmationDialog {...props} />
     );
 
@@ -90,7 +90,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('calls the corresponding functions when buttons are clicked', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <UnassignRoleConfirmationDialog {...props} />
     );
 
@@ -121,7 +121,7 @@ describe('UnassignRoleConfirmationDialog', () => {
       data: accountRolesFactory.build(),
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <UnassignRoleConfirmationDialog {...props} />
     );
 
