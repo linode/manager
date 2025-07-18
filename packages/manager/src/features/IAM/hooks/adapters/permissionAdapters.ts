@@ -53,7 +53,7 @@ export const fromGrants = (
   permissionsToCheck: PermissionType[],
   grants?: Grants,
   isRestricted?: boolean,
-  entittyId?: number
+  entityId?: number
 ): PermissionMap => {
   let usersPermissionsMap = {} as PermissionMap;
 
@@ -66,7 +66,7 @@ export const fromGrants = (
       break;
     case 'firewall':
       // eslint-disable-next-line no-case-declarations
-      const firewall = grants?.firewall.find((f) => f.id === entittyId);
+      const firewall = grants?.firewall.find((f) => f.id === entityId);
       usersPermissionsMap = firewallGrantsToPermissions(
         firewall?.permissions,
         isRestricted
@@ -74,7 +74,7 @@ export const fromGrants = (
       break;
     case 'linode':
       // eslint-disable-next-line no-case-declarations
-      const linode = grants?.linode.find((f) => f.id === entittyId);
+      const linode = grants?.linode.find((f) => f.id === entityId);
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
         isRestricted
