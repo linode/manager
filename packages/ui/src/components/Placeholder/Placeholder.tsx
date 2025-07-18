@@ -283,7 +283,7 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
         ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 15px max-content 40px'
         : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 24px max-content 15px max-content 64px',
     justifyItems: 'center',
-    padding: `${theme.spacingFunction(16)} 0`,
+    padding: `${theme.spacingFunction(32)} 0`,
     [theme.breakpoints.up('md')]: {
       padding: `${theme.spacingFunction(64)} 0`,
     },
