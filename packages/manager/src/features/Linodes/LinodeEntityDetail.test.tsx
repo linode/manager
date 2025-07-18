@@ -19,7 +19,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -101,7 +101,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { queryByTestId } = await renderWithThemeAndRouter(
+    const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
 
@@ -125,7 +125,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
 
@@ -141,7 +141,7 @@ describe('Linode Entity Detail', () => {
   });
 
   it('should not display the LKE section if the linode is not associated with an LKE cluster', async () => {
-    const { queryByTestId } = await renderWithThemeAndRouter(
+    const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
 
@@ -166,7 +166,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={10} linode={mockLKELinode} />
     );
 
@@ -187,7 +187,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -211,7 +211,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { queryByTestId } = await renderWithThemeAndRouter(
+    const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -239,7 +239,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -272,7 +272,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByText, queryByTestId } = renderWithTheme(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -320,7 +320,7 @@ describe('Linode Entity Detail', () => {
       )
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -342,7 +342,7 @@ describe('Linode Entity Detail', () => {
 
   it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', async () => {
     // situation where isDiskEncryptionFeatureEnabled === false
-    const { queryByTestId } = await renderWithThemeAndRouter(
+    const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
@@ -357,7 +357,7 @@ describe('Linode Entity Detail', () => {
       };
     });
 
-    const { queryByTestId } = await renderWithThemeAndRouter(
+    const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
@@ -372,7 +372,7 @@ describe('Linode Entity Detail', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
     const addTagBtn = getByText('Add a tag');
@@ -387,7 +387,7 @@ describe('Linode Entity Detail', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
     const addTagBtn = getByText('Add a tag');

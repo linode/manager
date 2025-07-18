@@ -13,14 +13,18 @@ const betaLandingRoute = createRoute({
   getParentRoute: () => betasRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/Betas/BetasLanding').then((m) => m.betasLandingLazyRoute)
+  import('src/features/Betas/betasLandingLazyRoute').then(
+    (m) => m.betasLandingLazyRoute
+  )
 );
 
 const betaSignupRoute = createRoute({
   getParentRoute: () => betasRoute,
   path: 'signup/$betaId',
 }).lazy(() =>
-  import('src/features/Betas/BetaSignup').then((m) => m.betaSignupLazyRoute)
+  import('src/features/Betas/betaSignupLazyRoute').then(
+    (m) => m.betaSignupLazyRoute
+  )
 );
 
 export const betaRouteTree = betasRoute.addChildren([

@@ -7,7 +7,7 @@ import {
   notificationChannelFactory,
   serviceTypesFactory,
 } from 'src/factories/';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertDetail } from './AlertDetail';
 
@@ -114,7 +114,7 @@ describe('AlertDetail component tests', () => {
       isFetching: false,
     });
 
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <AlertDetail />,
       {
         initialRoute: '/alerts/definitions/detail/linode/1',
@@ -140,7 +140,7 @@ describe('AlertDetail component tests', () => {
       isLoading: true,
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(<AlertDetail />, {
+    const { getByTestId } = renderWithTheme(<AlertDetail />, {
       initialRoute: '/alerts/definitions/detail/linode/1',
     });
 
@@ -151,7 +151,7 @@ describe('AlertDetail component tests', () => {
   });
 
   it('should render the component successfully with alert details overview', async () => {
-    const { getByText } = await renderWithThemeAndRouter(<AlertDetail />, {
+    const { getByText } = renderWithTheme(<AlertDetail />, {
       initialRoute: '/alerts/definitions/detail/linode/1',
     });
     // validate overview is present with its couple of properties (values will be validated in its own components test)
@@ -173,7 +173,7 @@ describe('AlertDetail component tests', () => {
       isLoadiing: false,
     });
 
-    await renderWithThemeAndRouter(<AlertDetail />, {
+    renderWithTheme(<AlertDetail />, {
       initialRoute: '/alerts/definitions/detail/linode/1',
     });
 

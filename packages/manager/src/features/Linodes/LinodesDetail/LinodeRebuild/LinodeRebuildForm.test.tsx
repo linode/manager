@@ -2,7 +2,7 @@ import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeRebuildForm } from './LinodeRebuildForm';
 
@@ -10,7 +10,7 @@ describe('LinodeRebuildForm', () => {
   it('renders a notice reccomending users add user data when the Linode already uses user data', async () => {
     const linode = linodeFactory.build({ has_user_data: true });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeRebuildForm linode={linode} onSuccess={vi.fn()} />
     );
 
@@ -25,7 +25,7 @@ describe('LinodeRebuildForm', () => {
     const linode = linodeFactory.build({ has_user_data: false });
 
     const { getByText, getByLabelText, queryByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <LinodeRebuildForm linode={linode} onSuccess={vi.fn()} />
       );
 
