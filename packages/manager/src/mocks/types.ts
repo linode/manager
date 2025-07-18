@@ -18,6 +18,7 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  Stream,
   Subnet,
   SupportReply,
   SupportTicket,
@@ -117,6 +118,7 @@ export interface MockPresetExtra extends MockPresetBase {
 export type MockPresetCrudGroup = {
   id:
     | 'CloudNATs'
+    | 'DataStream'
     | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
@@ -131,6 +133,7 @@ export type MockPresetCrudGroup = {
 };
 export type MockPresetCrudId =
   | 'cloudnats:crud'
+  | 'datastream:crud'
   | 'domains:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
@@ -173,6 +176,7 @@ export interface MockState {
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];
   regions: Region[];
+  streams: Stream[];
   subnets: [number, Subnet][];
   supportReplies: SupportReply[];
   supportTickets: SupportTicket[];

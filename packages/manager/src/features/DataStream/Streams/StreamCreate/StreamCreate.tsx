@@ -1,19 +1,28 @@
+import { destinationType, streamType } from '@linode/api-v4';
+import { useCreateStreamMutation } from '@linode/queries';
 import { Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
+import { omit } from 'ramda';
 import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { destinationType } from 'src/features/DataStream/Shared/types';
+import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateClusters } from './StreamCreateClusters';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import { type CreateStreamForm, streamType } from './types';
+
+import type { CreateStreamPayload } from '@linode/api-v4';
+import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 export const StreamCreate = () => {
+  const { mutateAsync: createStream } = useCreateStreamMutation();
+  const navigate = useNavigate();
+
   const form = useForm<CreateStreamForm>({
     defaultValues: {
       type: streamType.AuditLogs,
@@ -46,14 +55,36 @@ export const StreamCreate = () => {
     title: 'Create Stream',
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    const { label, type, destinations, details } = form.getValues();
+    const payload: CreateStreamPayload = {
+      label,
+      type,
+      destinations,
+    };
+    if (type === streamType.LKEAuditLogs && details) {
+      if (details.is_auto_add_all_clusters_enabled) {
+        payload['details'] = omit(['cluster_ids'], details);
+      } else {
+        payload['details'] = omit(
+          ['is_auto_add_all_clusters_enabled'],
+          details
+        );
+      }
+    }
+
+    createStream(payload).then(() => {
+      sendCreateStreamEvent('Stream Create Page');
+      navigate({ to: '/datastream/streams' }); // @TODO navigate to created stream when view implemented
+    });
+  };
 
   return (
     <>
       <DocumentTitleSegment segment="Create Stream" />
       <LandingHeader {...landingHeaderProps} />
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <Grid container spacing={2}>
             <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
               <Stack spacing={2}>
@@ -65,7 +96,7 @@ export const StreamCreate = () => {
               </Stack>
             </Grid>
             <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
-              <StreamCreateCheckoutBar />
+              <StreamCreateCheckoutBar createStream={handleSubmit(onSubmit)} />
             </Grid>
           </Grid>
         </form>

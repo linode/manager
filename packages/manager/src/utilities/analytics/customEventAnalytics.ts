@@ -471,3 +471,15 @@ export const sendSupportTicketExitEvent = (label: 'Cancel' | 'Close') => {
     label: `Click:${label}`,
   });
 };
+
+// StreamCreate.tsx
+export const sendCreateStreamEvent = (
+  eventLabel: string,
+  eventAction?: string
+): void => {
+  sendEvent({
+    action: eventAction || 'Create Stream',
+    category: 'Create Stream',
+    label: eventLabel,
+  });
+};
