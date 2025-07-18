@@ -173,6 +173,15 @@ export const LinodeVolumeCreateForm = (props: Props) => {
     'Block Storage Encryption'
   );
 
+  React.useEffect(() => {
+    if (
+      isBlockStorageEncryptionFeatureEnabled &&
+      regionSupportsBlockStorageEncryption
+    ) {
+      toggleVolumeEncryptionEnabled(values.encryption);
+    }
+  }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       {isVolumesGrantReadOnly && (
