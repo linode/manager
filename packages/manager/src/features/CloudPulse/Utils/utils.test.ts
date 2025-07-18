@@ -54,7 +54,7 @@ describe('arePortsValid', () => {
   });
 });
 
-describe('validate useIsAclpSupported function', () => {
+describe('validate useIsAclpSupportedRegion function', () => {
   // - Mocked 'monitors' data used here may differ from the actual /regions API response.
   const mockRegions = [
     regionFactory.build({
@@ -108,60 +108,6 @@ describe('validate useIsAclpSupported function', () => {
     });
   });
 
-  it('should return false if regions is undefined for the alerts monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-ord',
-        type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
-  it('should return false if selectedRegion is not in regions for the alerts monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-west',
-        type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
-  it('should return true if Linodes is requested in supported regions (us-iad, us-east) for the alerts monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-iad',
-        type: 'alerts',
-      })
-    ).toBe(true);
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-east',
-        type: 'alerts',
-      })
-    ).toBe(true);
-  });
-
-  it('should return false if Linodes is requested in unsupported regions (us-ord, ca-central) for the alerts monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-ord',
-        type: 'alerts',
-      })
-    ).toBe(false);
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'ca-central',
-        type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
   it('should return false if alerts list is empty for the alerts monitoring type', () => {
     expect(
       useIsAclpSupportedRegion({
@@ -179,39 +125,12 @@ describe('validate useIsAclpSupported function', () => {
     ).toBe(false);
   });
 
-  it('should return false if monitors is undefined for the alerts monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'in-maa',
-        type: 'alerts',
-      })
-    ).toBe(false);
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Managed Databases',
-        regionId: 'in-maa',
-        type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
   it('should return false if capability is not supported by alerts monitoring type for the selectedRegion', () => {
     expect(
       useIsAclpSupportedRegion({
         capability: 'Linodes',
         regionId: 'us-ord',
         type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
-  it('should return false if regions is undefined for the metrics monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-ord',
-        type: 'metrics',
       })
     ).toBe(false);
   });
@@ -226,7 +145,7 @@ describe('validate useIsAclpSupported function', () => {
     ).toBe(false);
   });
 
-  it('should return true if Linodes is requested in supported region (us-iad, us-east) for the metrics monitoring type', () => {
+  it('should return true if Linodes is requested in supported region (us-iad, us-east) for the metrics and alert monitoring type', () => {
     expect(
       useIsAclpSupportedRegion({
         capability: 'Linodes',
@@ -240,6 +159,21 @@ describe('validate useIsAclpSupported function', () => {
         regionId: 'us-east',
 
         type: 'metrics',
+      })
+    ).toBe(true);
+
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-iad',
+        type: 'alerts',
+      })
+    ).toBe(true);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-east',
+        type: 'alerts',
       })
     ).toBe(true);
   });
@@ -261,7 +195,7 @@ describe('validate useIsAclpSupported function', () => {
     ).toBe(false);
   });
 
-  it('should return false if metrics list is empty for the metrics monitoring type', () => {
+  it('should return false if metrics and alerts list is empty for the metrics monitoring type', () => {
     expect(
       useIsAclpSupportedRegion({
         capability: 'Linodes',
@@ -274,11 +208,26 @@ describe('validate useIsAclpSupported function', () => {
         capability: 'Managed Databases',
         regionId: 'ca-central',
         type: 'metrics',
+      })
+    ).toBe(false);
+
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-ord',
+        type: 'alerts',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'alerts',
       })
     ).toBe(false);
   });
 
-  it('should return false if monitors is undefined for the metrics monitoring type', () => {
+  it('should return false if monitors and alerts is undefined for the metrics monitoring type', () => {
     expect(
       useIsAclpSupportedRegion({
         capability: 'Linodes',
@@ -292,6 +241,20 @@ describe('validate useIsAclpSupported function', () => {
         regionId: 'in-maa',
 
         type: 'metrics',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'in-maa',
+        type: 'alerts',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Managed Databases',
+        regionId: 'in-maa',
+        type: 'alerts',
       })
     ).toBe(false);
   });
