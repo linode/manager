@@ -4,10 +4,10 @@ import type { JSX } from 'react';
 
 import { ComputeIcon } from '../../assets';
 import { fadeIn } from '../../foundations';
-import { Button, type ButtonProps } from '../Button';
+import { Button } from '../Button';
+import { type ButtonProps } from '../Button';
 import { H1Header } from '../H1Header';
 import { Typography } from '../Typography';
-
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
 }
