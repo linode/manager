@@ -9,7 +9,6 @@ type Story = StoryObj<typeof Placeholder>;
 export const Default: Story = {
   args: {
     additionalCopy: 'This is some additional text',
-    showTransferDisplay: false,
     subtitle: 'Placeholder subtitle',
     title: 'Placeholder title',
   },
