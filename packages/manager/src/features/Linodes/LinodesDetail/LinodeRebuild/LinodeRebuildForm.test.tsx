@@ -24,10 +24,9 @@ describe('LinodeRebuildForm', () => {
   it('disables the "reuse existing user data" checkbox if the Linode does not have existing user data', async () => {
     const linode = linodeFactory.build({ has_user_data: false });
 
-    const { getByText, getByLabelText, queryByText } =
-      renderWithTheme(
-        <LinodeRebuildForm linode={linode} onSuccess={vi.fn()} />
-      );
+    const { getByText, getByLabelText, queryByText } = renderWithTheme(
+      <LinodeRebuildForm linode={linode} onSuccess={vi.fn()} />
+    );
 
     // Open the "Add User Data" accordion
     await userEvent.click(getByText('Add User Data'));
