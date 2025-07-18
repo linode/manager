@@ -111,7 +111,7 @@ describe('region enables alerts', function () {
     );
   });
 
-  xit('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
+  it('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -223,7 +223,7 @@ describe('region enables alerts', function () {
             cy.contains(ALERTS_BETA_MODE_BANNER_TEXT);
           });
         cy.wait(['@getAlertDefinitions']);
-        // toggles in table are off but can be turned on
+        // toggles in table are on but can be turned off
         assertLinodeAlertsEnabled(this.alertDefinitions);
 
         mockUpdateLinode(mockLinode.id).as('updateLinode');
@@ -234,7 +234,7 @@ describe('region enables alerts', function () {
           .click();
       });
 
-    // TODO: this test passes but modal behavior will change when properly implemented in api (M3-10195)
+    // TODO: this test passes but modal behavior may change when properly implemented in api (M3-10195)
     // ui.dialog
     //   .findByTitle('Save Alerts?')
     //   .should('be.visible')
@@ -247,10 +247,10 @@ describe('region enables alerts', function () {
     //   // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
     //   const edits = xhr.request.body;
     //   expect(JSON.stringify(edits.system)).to.equal(
-    //     JSON.stringify(mockEnabledBetaAlerts.system)
+    //     JSON.stringify([])
     //   );
     //   expect(JSON.stringify(edits.user)).to.equal(
-    //     JSON.stringify(mockEnabledBetaAlerts.user)
+    //     JSON.stringify([])
     //   );
     // });
   });
@@ -387,13 +387,23 @@ describe('region enables alerts', function () {
           .should('be.enabled')
           .click();
       });
-    // TODO: this test passes but modal behavior will change when properly implemented in api (M3-10195)
-    // cy.wait('@updateLinode').then((xhr) => {
-    //   // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
-    //   const actual = xhr.request.body;
-    //   const expected = { alerts: mockDisabledLegacyAlerts };
-    //   expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+    // TODO: this test passes but modal behavior may change when properly implemented in api (M3-10195)
+    // ui.dialog
+    // .findByTitle('Are you sure you want to save legacy Alerts?')
+    // .should('be.visible')
+    // .within(() => {
+    //   ui.button.findByTitle('Confirm').should('be.visible')
+    //   .click();
     // });
+    // TODO: this test passes but modal behavior will change when properly implemented in api (M3-10195)
+    // TODO: this test passes but modal behavior may change when properly implemented in api (M3-10195)
+    // ui.dialog
+    //   .findByTitle('Save Alerts?')
+    //   .should('be.visible')
+    //   .within(() => {
+    //     ui.button.findByTitle('Save').should('be.visible')
+    //     .click();
+    //   });
   });
 });
 
