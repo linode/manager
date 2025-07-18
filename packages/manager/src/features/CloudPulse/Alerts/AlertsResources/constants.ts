@@ -1,8 +1,13 @@
+import React from 'react';
+
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertsTagFilter } from './AlertsTagsFilter';
+import { TextWithExtraInfo } from './TextWithExtraInfo';
 
 import type { AlertInstance } from './DisplayAlertResources';
+import type { TextWithInfoProp } from './TextWithExtraInfo';
 import type {
   AlertAdditionalFilterKey,
   ServiceColumns,
@@ -54,6 +59,26 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
   ],
+  nodebalancer: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+    {
+      accessor: ({ tags }) =>
+        React.createElement<Required<TextWithInfoProp>>(TextWithExtraInfo, {
+          values: tags ?? [],
+        }),
+      label: 'Tags',
+      sortingKey: 'tags',
+    },
+  ],
 };
 
 export const serviceToFiltersMap: Record<
@@ -66,6 +91,10 @@ export const serviceToFiltersMap: Record<
     { component: AlertsRegionFilter, filterKey: 'region' },
   ],
   linode: [{ component: AlertsRegionFilter, filterKey: 'region' }],
+  nodebalancer: [
+    { component: AlertsRegionFilter, filterKey: 'region' },
+    { component: AlertsTagFilter, filterKey: 'tags' },
+  ],
 };
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.
