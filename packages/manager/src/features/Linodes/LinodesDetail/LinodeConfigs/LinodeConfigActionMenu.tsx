@@ -22,16 +22,11 @@ export const ConfigActionMenu = (props: Props) => {
 
   const { permissions } = usePermissions(
     'linode',
-    [
-      'reboot_linode',
-      'update_linode_config_profile',
-      'clone_linode',
-      'delete_linode_config_profile',
-    ],
+    ['reboot_linode', 'update_linode', 'clone_linode', 'delete_linode'],
     linodeId
   );
 
-  const tooltip = !permissions.delete_linode_config_profile
+  const tooltip = !permissions.delete_linode
     ? "You don't have permission to perform this action"
     : undefined;
 
@@ -42,7 +37,7 @@ export const ConfigActionMenu = (props: Props) => {
       title: 'Boot',
     },
     {
-      disabled: !permissions.update_linode_config_profile,
+      disabled: !permissions.update_linode,
       onClick: onEdit,
       title: 'Edit',
     },
@@ -60,7 +55,7 @@ export const ConfigActionMenu = (props: Props) => {
       title: 'Clone',
     },
     {
-      disabled: !permissions.delete_linode_config_profile,
+      disabled: !permissions.delete_linode,
       onClick: onDelete,
       title: 'Delete',
       tooltip,
