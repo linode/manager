@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
 
@@ -16,7 +16,7 @@ describe('VPC Delete Dialog', () => {
   };
 
   it('renders a VPC delete dialog correctly', async () => {
-    const view = await renderWithThemeAndRouter(<VPCDeleteDialog {...props} />);
+    const view = renderWithTheme(<VPCDeleteDialog {...props} />);
     const vpcTitle = view.getByText('Delete VPC vpc-1');
     expect(vpcTitle).toBeVisible();
 
@@ -28,7 +28,7 @@ describe('VPC Delete Dialog', () => {
   });
 
   it('closes the VPC delete dialog as expected', async () => {
-    const view = await renderWithThemeAndRouter(<VPCDeleteDialog {...props} />);
+    const view = renderWithTheme(<VPCDeleteDialog {...props} />);
     const cancelButton = view.getByText('Cancel');
     expect(cancelButton).toBeVisible();
     await userEvent.click(cancelButton);
