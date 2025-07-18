@@ -11,7 +11,7 @@ import type {
   AlertFilterType,
   AlertResourceFiltersProps,
 } from '../AlertsResources/types';
-import type { AlertServiceType, Region } from '@linode/api-v4';
+import type { CloudPulseServiceType, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 interface FilterResourceProps {
@@ -144,7 +144,7 @@ export const getRegionOptions = (
  */
 export const getSupportedRegionIds = (
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[] | undefined,
-  serviceType: AlertServiceType | undefined
+  serviceType: CloudPulseServiceType | undefined
 ): string[] | undefined => {
   const resourceTypeFlag = aclpResourceTypeMap?.find(
     (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType

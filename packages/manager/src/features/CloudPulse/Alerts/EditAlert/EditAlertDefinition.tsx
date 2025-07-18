@@ -37,8 +37,8 @@ import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../Cre
 import type {
   Alert,
   AlertDefinitionScope,
-  AlertServiceType,
   APIError,
+  CloudPulseServiceType,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
 
@@ -50,7 +50,7 @@ export interface EditAlertProps {
   /**
    * The type of service associated with the alert
    */
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
 }
 
 export const EditAlertDefinition = (props: EditAlertProps) => {

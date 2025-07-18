@@ -9,11 +9,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { REGION_GROUP_INFO_MESSAGE } from '../constants';
 import { AlertRegions } from './AlertRegions';
 
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const regions = regionFactory.buildList(6);
-const serviceType: AlertServiceType = 'dbaas';
+const serviceType: CloudPulseServiceType = 'dbaas';
 
 const flags: Partial<Flags> = {
   aclpResourceTypeMap: [

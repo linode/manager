@@ -82,8 +82,8 @@ const mockRegions = [
     capabilities: ['Managed Databases'],
   }),
 ];
-const { metrics, resource, serviceType } = widgetDetails.linode;
-
+const { metrics, resource } = widgetDetails.linode;
+const serviceType = 'linode';
 const mockLinode = linodeFactory.buildList(10).map((linode, index) => ({
   ...linode,
   label: `${resource}-${index + 1}`,

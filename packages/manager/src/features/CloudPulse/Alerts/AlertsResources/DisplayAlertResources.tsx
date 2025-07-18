@@ -16,7 +16,7 @@ import { AlertMaxSelectionText } from '../Utils/AlertMaxSelectionText';
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface AlertInstance {
@@ -88,7 +88,7 @@ export interface DisplayAlertResourceProp {
   /**
    * The service type associated with the alert
    */
-  serviceType?: AlertServiceType;
+  serviceType?: CloudPulseServiceType;
 }
 
 export const DisplayAlertResources = React.memo(

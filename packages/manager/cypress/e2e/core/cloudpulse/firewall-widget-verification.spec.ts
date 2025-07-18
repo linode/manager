@@ -50,7 +50,9 @@ const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
-  aclpBetaServices: { firewall: { alerts: true, metrics: true } },
+  aclpBetaServices: {
+    firewall: { alerts: true, metrics: true },
+  },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'firewall',
@@ -59,9 +61,8 @@ const flags: Partial<Flags> = {
     },
   ],
 };
-const { dashboardName, id, metrics, firewalls, serviceType } =
-  widgetDetails.firewall;
-
+const { dashboardName, id, metrics, firewalls } = widgetDetails.firewall;
+const serviceType = 'firewall';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,

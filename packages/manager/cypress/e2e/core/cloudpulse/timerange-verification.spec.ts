@@ -66,8 +66,8 @@ const flags: Partial<Flags> = {
   ],
 };
 
-const { dashboardName, engine, id, metrics, serviceType } = widgetDetails.dbaas;
-
+const { dashboardName, engine, id, metrics } = widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,

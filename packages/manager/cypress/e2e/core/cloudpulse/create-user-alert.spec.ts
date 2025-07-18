@@ -77,7 +77,8 @@ const mockRegions = [
     capabilities: ['Managed Databases'],
   }),
 ];
-const { metrics, serviceType } = widgetDetails.dbaas;
+const { metrics } = widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const regionList = ['us-ord', 'us-east'];
 
 const databaseMock = regionList.map((region) =>

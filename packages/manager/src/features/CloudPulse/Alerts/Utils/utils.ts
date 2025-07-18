@@ -11,8 +11,8 @@ import type {
   Alert,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
-  AlertServiceType,
   APIError,
+  CloudPulseServiceType,
   EditAlertPayloadWithService,
   NotificationChannel,
   Region,
@@ -82,7 +82,7 @@ export interface AlertValidationSchemaProps {
   /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
-  serviceTypeObj: null | string;
+  serviceTypeObj: CloudPulseServiceType | null;
 }
 interface HandleMultipleErrorProps<T extends FieldValues> {
   /**
@@ -154,7 +154,7 @@ interface FilterRegionProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface SupportedRegionsProps {
@@ -173,7 +173,7 @@ interface SupportedRegionsProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 /**
@@ -182,7 +182,7 @@ interface SupportedRegionsProps {
  * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
-  serviceType: string,
+  serviceType: CloudPulseServiceType,
   serviceTypeList: ServiceTypesList | undefined
 ) => {
   if (!serviceTypeList) {
@@ -335,7 +335,7 @@ export const convertAlertDefinitionValues = (
     scope,
     regions,
   }: Alert,
-  serviceType: AlertServiceType
+  serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
   return {
     scope,

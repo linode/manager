@@ -111,7 +111,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(resources) && !isDashboardLoading && !isDashboardApiError
   );
 
-  if (isDashboardApiError) {
+  if (isDashboardApiError || !dashboard) {
     return renderErrorState('Failed to fetch the dashboard details.');
   }
 

@@ -8,6 +8,7 @@ import {
 } from './AlertResourceUtils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 describe('getRegionsIdLabelMap', () => {
   it('should return a proper map for given regions', () => {
@@ -212,7 +213,7 @@ describe('getFilteredResources', () => {
 });
 
 describe('getSupportedRegionIds', () => {
-  const mockResourceTypeMap = [
+  const mockResourceTypeMap: CloudPulseResourceTypeMapFlag[] = [
     {
       dimensionKey: 'LINODE_ID',
       serviceType: 'linode',
@@ -228,7 +229,7 @@ describe('getSupportedRegionIds', () => {
     expect(result.length).toBe(4);
   });
   it('should return undefined if no supported region ids are defined in resource type map for the given service type', () => {
-    const mockResourceTypeMap = [
+    const mockResourceTypeMap: CloudPulseResourceTypeMapFlag[] = [
       {
         dimensionKey: 'LINODE_ID',
         serviceType: 'linode',
@@ -241,7 +242,7 @@ describe('getSupportedRegionIds', () => {
 });
 
 describe('getSupportedRegionIds', () => {
-  const mockResourceTypeMap = [
+  const mockResourceTypeMap: CloudPulseResourceTypeMapFlag[] = [
     {
       dimensionKey: 'LINODE_ID',
       serviceType: 'linode',
@@ -257,7 +258,7 @@ describe('getSupportedRegionIds', () => {
     expect(result.length).toBe(4);
   });
   it('should return undefined if no supported region ids are defined in resource type map for the given service type', () => {
-    const mockResourceTypeMap = [
+    const mockResourceTypeMap: CloudPulseResourceTypeMapFlag[] = [
       {
         dimensionKey: 'LINODE_ID',
         serviceType: 'linode',

@@ -22,7 +22,10 @@ import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import type {
+  CloudPulseAlertsPayload,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -67,7 +70,7 @@ export interface AlertInformationActionTableProps {
   /**
    * Service type of the selected entity
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 export interface TableColumnHeader {

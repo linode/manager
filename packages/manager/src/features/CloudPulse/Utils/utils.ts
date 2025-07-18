@@ -26,6 +26,7 @@ import type {
   APIError,
   Capabilities,
   CloudPulseAlertsPayload,
+  CloudPulseServiceType,
   Dashboard,
   ResourcePage,
   Service,
@@ -212,7 +213,7 @@ export const seriesDataFormatter = (
  */
 export const formattedServiceTypes = (
   rawServiceTypes: ServiceTypesList | undefined
-): string[] => {
+): CloudPulseServiceType[] => {
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
@@ -227,7 +228,7 @@ export const formattedServiceTypes = (
  */
 export const getAllDashboards = (
   queryResults: UseQueryResult<ResourcePage<Dashboard>, APIError[]>[],
-  serviceTypes: string[]
+  serviceTypes: CloudPulseServiceType[]
 ) => {
   let error = '';
   let isLoading = false;

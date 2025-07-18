@@ -32,8 +32,8 @@ import {
 import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
-const { dashboardName, id, metrics, serviceType } = widgetDetails.dbaas;
-
+const { dashboardName, id, metrics } = widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,

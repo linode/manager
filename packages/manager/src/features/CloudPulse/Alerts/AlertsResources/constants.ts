@@ -9,7 +9,7 @@ import type {
   ServiceColumns,
   ServiceFilterConfig,
 } from './types';
-import type { AlertServiceType, DatabaseTypeClass } from '@linode/api-v4';
+import type { CloudPulseServiceType, DatabaseTypeClass } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
@@ -82,7 +82,7 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
 };
 
 export const serviceToFiltersMap: Record<
-  '' | AlertServiceType,
+  '' | CloudPulseServiceType,
   ServiceFilterConfig[]
 > = {
   '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // Default to only region for better user experience in create alert flow
@@ -119,7 +119,7 @@ export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
 };
 
 export const getSearchPlaceholderText = (
-  serviceType: AlertServiceType | undefined
+  serviceType: CloudPulseServiceType | undefined
 ): string => {
   const filters = serviceToFiltersMap[serviceType ?? ''] ?? [];
 

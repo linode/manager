@@ -7,7 +7,6 @@ import {
   regionFactory,
 } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
-import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateAlertDefinition,
@@ -92,7 +91,7 @@ const mockRegions = [
     capabilities: ['NodeBalancers'],
   }),
 ];
-const { serviceType } = widgetDetails.nodebalancer;
+const serviceType = 'nodebalancer';
 const regionList = ['us-ord', 'us-east'];
 
 const databaseMock = regionList.map((region) =>
