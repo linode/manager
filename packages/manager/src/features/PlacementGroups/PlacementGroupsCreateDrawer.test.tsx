@@ -68,6 +68,7 @@ describe('PlacementGroupsCreateDrawer', () => {
         {...commonProps}
       />,
       {
+        initialRoute: '/linodes/create',
         MemoryRouter: {
           initialEntries: ['/linodes/create'],
         },

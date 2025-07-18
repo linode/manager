@@ -16,7 +16,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
@@ -48,7 +48,7 @@ describe('Database Table Row', () => {
   it('should render a database row', async () => {
     const database = databaseInstanceFactory.build();
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
@@ -63,7 +63,7 @@ describe('Database Table Row', () => {
       created: DateTime.local().minus({ days: 1 }).toISO(),
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
@@ -92,7 +92,7 @@ describe('Database Table', () => {
     );
 
     const { getAllByText, getByTestId, queryAllByText } =
-      await renderWithThemeAndRouter(<DatabaseLanding />);
+      renderWithTheme(<DatabaseLanding />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -125,7 +125,7 @@ describe('Database Table', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: true, enabled: true } },
@@ -161,7 +161,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: true, enabled: true } },
@@ -199,7 +199,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: true, enabled: true } },
@@ -226,7 +226,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: false, enabled: false } },
@@ -275,7 +275,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: true, enabled: true } },
@@ -301,7 +301,7 @@ describe('Database Landing', () => {
   it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { container, getByTestId } = await renderWithThemeAndRouter(
+    const { container, getByTestId } = renderWithTheme(
       <DatabaseLanding />
     );
 
@@ -319,7 +319,7 @@ describe('Database Landing', () => {
   it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
 
-    const { container, getByTestId } = await renderWithThemeAndRouter(
+    const { container, getByTestId } = renderWithTheme(
       <DatabaseLanding />
     );
 
@@ -345,7 +345,7 @@ describe('Database Landing', () => {
       })
     );
 
-    const { getByLabelText, getByTestId } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: false, enabled: true } },
@@ -377,7 +377,7 @@ describe('Database Landing', () => {
     );
 
     const { getByLabelText, getByTestId, getByText } =
-      await renderWithThemeAndRouter(<DatabaseLanding />, {
+      renderWithTheme(<DatabaseLanding />, {
         flags: { dbaasV2: { beta: false, enabled: true } },
       });
 
