@@ -53,12 +53,9 @@ describe('Edit Alert Landing tests', () => {
       isFetching: true, // simulate loading
     });
 
-    const { getByTestId } = renderWithTheme(
-      <EditAlertLanding />,
-      {
-        initialRoute: '/alerts/definitions/edit/linode/1',
-      }
-    );
+    const { getByTestId } = renderWithTheme(<EditAlertLanding />, {
+      initialRoute: '/alerts/definitions/edit/linode/1',
+    });
 
     expect(getByTestId('circle-progress')).toBeInTheDocument();
   });

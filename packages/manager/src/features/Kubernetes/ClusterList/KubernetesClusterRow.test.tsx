@@ -51,17 +51,16 @@ describe('ClusterRow component', () => {
   });
 
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', async () => {
-    const { getByTestId, queryByTestId, rerender } =
-      renderWithTheme(
-        wrapWithTableBody(
-          <KubernetesClusterRow
-            {...props}
-            cluster={kubernetesClusterFactory.build({
-              control_plane: { high_availability: true },
-            })}
-          />
-        )
-      );
+    const { getByTestId, queryByTestId, rerender } = renderWithTheme(
+      wrapWithTableBody(
+        <KubernetesClusterRow
+          {...props}
+          cluster={kubernetesClusterFactory.build({
+            control_plane: { high_availability: true },
+          })}
+        />
+      )
+    );
 
     getByTestId('ha-chip');
 

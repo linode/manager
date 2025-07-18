@@ -57,9 +57,7 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(
-      <BillingActivityPanel />
-    );
+    const { getByText } = renderWithTheme(<BillingActivityPanel />);
     await waitFor(() => {
       getByText('Billing & Payment History');
       getByText('Description');
@@ -81,8 +79,9 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by item type', async () => {
-    const { getByLabelText, queryByTestId, queryByText } =
-      renderWithTheme(<BillingActivityPanel />);
+    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
+      <BillingActivityPanel />
+    );
 
     const transactionTypeSelect = getByLabelText('Transaction Types');
 
@@ -104,8 +103,9 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by transaction date', async () => {
-    const { getByLabelText, queryByTestId, queryByText } =
-      renderWithTheme(<BillingActivityPanel />);
+    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
+      <BillingActivityPanel />
+    );
 
     await waitFor(() => {
       const transactionDateSelect = getByLabelText('Transaction Dates');
@@ -118,9 +118,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByLabelText } = renderWithTheme(
-      <BillingActivityPanel />
-    );
+    const { getByLabelText } = renderWithTheme(<BillingActivityPanel />);
     const transactionTypeSelect = getByLabelText('Transaction Types');
     expect(transactionTypeSelect).toHaveValue('All Transaction Types');
     const transactionDateSelect = getByLabelText('Transaction Dates');

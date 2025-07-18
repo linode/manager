@@ -55,9 +55,7 @@ describe('LinodeBackups', () => {
       })
     );
 
-    const { findByText, getByText } = renderWithTheme(
-      <LinodeBackups />
-    );
+    const { findByText, getByText } = renderWithTheme(<LinodeBackups />);
 
     // Verify an automated backup renders
     await findByText('current-snapshot');

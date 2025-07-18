@@ -6,9 +6,9 @@ import { BillingDetail } from './BillingDetail';
 
 describe('Account Landing', () => {
   it('should render', async () => {
-    const { findByTestId, findByText } = renderWithTheme(
-      <BillingDetail />
-    );
+    const { findByTestId, findByText } = renderWithTheme(<BillingDetail />, {
+      initialRoute: '/account/billing',
+    });
     await findByTestId('billing-detail');
     await findByText('Account Balance');
     await findByText('Promotions');

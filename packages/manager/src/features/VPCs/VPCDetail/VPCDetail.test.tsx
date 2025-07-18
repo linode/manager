@@ -4,10 +4,7 @@ import * as React from 'react';
 
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
 
@@ -187,9 +184,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByRole, getByText } = renderWithTheme(
-      <VPCDetail />
-    );
+    const { getByRole, getByText } = renderWithTheme(<VPCDetail />);
 
     expect(
       getByText(

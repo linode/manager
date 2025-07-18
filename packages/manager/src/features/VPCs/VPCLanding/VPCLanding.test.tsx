@@ -2,10 +2,7 @@ import * as React from 'react';
 
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
 

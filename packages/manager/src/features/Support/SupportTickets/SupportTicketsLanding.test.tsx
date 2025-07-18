@@ -19,9 +19,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('Support Tickets Landing', async () => {
-  const { getByText } = renderWithTheme(
-    <SupportTicketsLanding />
-  );
+  const { getByText } = renderWithTheme(<SupportTicketsLanding />);
 
   it('should render a header', () => {
     getByText('Tickets');

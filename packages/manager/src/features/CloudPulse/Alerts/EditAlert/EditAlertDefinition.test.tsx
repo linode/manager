@@ -87,13 +87,9 @@ describe('EditAlertDefinition component', () => {
         to: '/alerts/definitions/edit/linode/1',
       });
       const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
-      const { getByPlaceholderText, getByText } =
-        renderWithTheme(
-          <EditAlertDefinition
-            alertDetails={alertDetails}
-            serviceType="linode"
-          />
-        );
+      const { getByPlaceholderText, getByText } = renderWithTheme(
+        <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
+      );
       const descriptionValue = 'Updated Description';
       const nameValue = 'Updated Label';
       const nameInput = getByPlaceholderText('Enter a Name');

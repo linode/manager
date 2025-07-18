@@ -35,9 +35,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('PlacementGroupsDetail', () => {
   it('renders a error page', async () => {
-    const { getByText } = renderWithTheme(
-      <PlacementGroupsDetail />
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsDetail />);
 
     expect(getByText('Not Found')).toBeInTheDocument();
   });
@@ -66,9 +64,7 @@ describe('PlacementGroupsDetail', () => {
       ],
     });
 
-    const { getByRole } = renderWithTheme(
-      <PlacementGroupsDetail />
-    );
+    const { getByRole } = renderWithTheme(<PlacementGroupsDetail />);
 
     expect(getByRole('progressbar')).toBeInTheDocument();
   });
@@ -90,9 +86,7 @@ describe('PlacementGroupsDetail', () => {
       results: 0,
     });
 
-    const { getByText } = renderWithTheme(
-      <PlacementGroupsDetail />
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsDetail />);
 
     expect(getByText(/my first pg/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();

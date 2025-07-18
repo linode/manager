@@ -32,10 +32,12 @@ describe('NodeBalancerConfigurations', () => {
       })
     );
 
-    const { getByLabelText, getByTestId, getByText } =
-      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <NodeBalancerConfigurationsWrapper />,
+      {
         initialRoute: '/nodebalancers/$id/configurations',
-      });
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -86,10 +88,12 @@ describe('NodeBalancerConfigurations', () => {
       })
     );
 
-    const { getByTestId, getByText, queryByLabelText } =
-      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
+    const { getByTestId, getByText, queryByLabelText } = renderWithTheme(
+      <NodeBalancerConfigurationsWrapper />,
+      {
         initialRoute: '/nodebalancers/$id/configurations',
-      });
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -111,10 +115,12 @@ describe('NodeBalancerConfigurations', () => {
       })
     );
 
-    const { getByTestId, getByText, queryByLabelText } =
-      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
+    const { getByTestId, getByText, queryByLabelText } = renderWithTheme(
+      <NodeBalancerConfigurationsWrapper />,
+      {
         initialRoute: '/nodebalancers/$id/configurations',
-      });
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -143,10 +149,12 @@ describe('NodeBalancerConfigurations', () => {
       })
     );
 
-    const { getByLabelText, getByTestId, getByText } =
-      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <NodeBalancerConfigurationsWrapper />,
+      {
         initialRoute: '/nodebalancers/$id/configurations',
-      });
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 

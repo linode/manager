@@ -170,9 +170,7 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { container } = renderWithTheme(
-      <DatabaseBackups disabled={false} />
-    );
+    const { container } = renderWithTheme(<DatabaseBackups disabled={false} />);
 
     await waitFor(() => {
       expect(

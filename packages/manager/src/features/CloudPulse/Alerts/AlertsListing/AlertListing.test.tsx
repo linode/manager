@@ -101,8 +101,9 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByTestId, getByText, queryByText } =
-      renderWithTheme(<AlertListing />);
+    const { getByRole, getByTestId, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const serviceFilter = getByTestId('alert-service-filter');
     expect(getByText(linodeAlert.label)).toBeVisible();
     expect(getByText(dbaasAlert.label)).toBeVisible();
@@ -134,8 +135,9 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByTestId, getByText, queryByText } =
-      renderWithTheme(<AlertListing />);
+    const { getByRole, getByTestId, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const statusFilter = getByTestId('alert-status-filter');
     expect(getByText(enabledAlert.label)).toBeVisible();
     expect(getByText(disabledAlert.label)).toBeVisible();
@@ -168,8 +170,9 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByPlaceholderText, getByText, queryByText } =
-      renderWithTheme(<AlertListing />);
+    const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const searchInput = getByPlaceholderText('Search for Alerts');
     await userEvent.type(searchInput, 'alert1');
 
