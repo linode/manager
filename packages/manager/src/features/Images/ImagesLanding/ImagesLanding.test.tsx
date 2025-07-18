@@ -8,7 +8,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
@@ -58,7 +58,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+    const { getAllByText, queryByTestId } = renderWithTheme(
       <ImagesLanding />
     );
 
@@ -94,7 +94,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByText, queryByTestId } = renderWithTheme(
       <ImagesLanding />
     );
 
@@ -119,7 +119,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByText, queryByTestId } = renderWithTheme(
       <ImagesLanding />
     );
     const loadingElement = queryByTestId(loadingTestId);
@@ -137,7 +137,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByText, queryByTestId } = renderWithTheme(
       <ImagesLanding />
     );
 
@@ -170,7 +170,7 @@ describe('Images Landing Table', () => {
       getByText,
       queryByTestId,
       rerender,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+    } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -213,7 +213,7 @@ describe('Images Landing Table', () => {
       getByText,
       queryByTestId,
       rerender,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+    } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -253,7 +253,7 @@ describe('Images Landing Table', () => {
     );
 
     const { getAllByLabelText, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(<ImagesLanding />);
+      renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -291,7 +291,7 @@ describe('Images Landing Table', () => {
       getByText,
       queryByTestId,
       rerender,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+    } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -338,7 +338,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByText, queryByTestId } = renderWithTheme(
       <ImagesLanding />
     );
 
@@ -392,7 +392,7 @@ describe('Images Landing Table', () => {
     );
 
     const { findAllByLabelText, getAllByLabelText, queryByTestId } =
-      await renderWithThemeAndRouter(<ImagesLanding />);
+      renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
