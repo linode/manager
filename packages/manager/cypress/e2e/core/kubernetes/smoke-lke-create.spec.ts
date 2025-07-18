@@ -1,6 +1,7 @@
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory, kubernetesClusterFactory } from '@src/factories';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateCluster } from 'support/intercepts/lke';
 import {
   mockGetProfile,
@@ -58,6 +59,13 @@ const minimumNodeNotice =
   'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
 
 describe('LKE Create Cluster', () => {
+  beforeEach(() => {
+    // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
+    mockAppendFeatureFlags({
+      lkeEnterprise: { enabled: true, la: true, postLa: false },
+    }).as('getFeatureFlags');
+  });
+
   it('Simple Page Check', () => {
     const mockCluster = kubernetesClusterFactory.build({
       id: randomNumber(10000, 99999),

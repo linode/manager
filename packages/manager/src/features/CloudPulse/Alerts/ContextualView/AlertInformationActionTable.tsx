@@ -71,6 +71,11 @@ export interface AlertInformationActionTableProps {
    * Service type of the selected entity
    */
   serviceType: CloudPulseServiceType;
+
+  /**
+   * Flag to determine if confirmation dialog should be displayed
+   */
+  showConfirmationDialog?: boolean;
 }
 
 export interface TableColumnHeader {
@@ -116,6 +121,7 @@ export const AlertInformationActionTable = (
     orderByColumn,
     serviceType,
     onToggleAlert,
+    showConfirmationDialog,
   } = props;
 
   const alertsTableRef = React.useRef<HTMLTableElement>(null);
@@ -277,11 +283,6 @@ export const AlertInformationActionTable = (
                             return null;
                           }
 
-                          // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
-                          if (!isEditMode && alert.scope !== 'entity') {
-                            return null;
-                          }
-
                           const status = enabledAlerts[alert.type]?.includes(
                             alert.id
                           );
@@ -315,13 +316,14 @@ export const AlertInformationActionTable = (
                       buttonType="primary"
                       data-qa-buttons="true"
                       data-testid="save-alerts"
-                      disabled={!hasUnsavedChanges}
+                      disabled={!hasUnsavedChanges || isLoading}
+                      loading={isLoading}
                       onClick={() => {
-                        window.scrollTo({
-                          behavior: 'instant',
-                          top: 0,
-                        });
-                        setIsDialogOpen(true);
+                        if (showConfirmationDialog) {
+                          setIsDialogOpen(true);
+                        } else {
+                          handleConfirm(enabledAlerts);
+                        }
                       }}
                     >
                       Save
