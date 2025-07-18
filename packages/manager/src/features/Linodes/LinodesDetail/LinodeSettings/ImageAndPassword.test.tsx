@@ -4,7 +4,7 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithFormContext,
 } from 'src/utilities/testHelpers';
 
@@ -28,7 +28,7 @@ describe('ImageAndPassword', () => {
     const component = wrapWithFormContext({
       component: <ImageAndPassword {...props} />,
     });
-    const { getByRole } = await renderWithThemeAndRouter(component);
+    const { getByRole } = renderWithTheme(component);
 
     expect(getByRole('combobox')).toBeVisible();
     expect(getByRole('combobox')).toBeEnabled();
@@ -38,7 +38,7 @@ describe('ImageAndPassword', () => {
     const component = wrapWithFormContext({
       component: <ImageAndPassword {...props} passwordError={errorMessage} />,
     });
-    const { findByText } = await renderWithThemeAndRouter(component);
+    const { findByText } = renderWithTheme(component);
 
     const passwordError = await findByText(errorMessage, undefined, {
       timeout: 2500,
@@ -49,7 +49,7 @@ describe('ImageAndPassword', () => {
     const component = wrapWithFormContext({
       component: <ImageAndPassword {...props} />,
     });
-    const { getByText } = await renderWithThemeAndRouter(component);
+    const { getByText } = renderWithTheme(component);
 
     expect(getByText('SSH Keys', { selector: 'h2' })).toBeVisible();
   });
@@ -66,7 +66,7 @@ describe('ImageAndPassword', () => {
     const component = wrapWithFormContext({
       component: <ImageAndPassword {...props} />,
     });
-    const { findByText } = await renderWithThemeAndRouter(component);
+    const { findByText } = renderWithTheme(component);
 
     for (const user of users) {
       const username = await findByText(user.username);
