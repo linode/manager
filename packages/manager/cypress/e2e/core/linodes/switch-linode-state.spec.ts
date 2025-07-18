@@ -82,7 +82,13 @@ describe('switch linode state', () => {
       );
       cy.findByText(linode.label).should('be.visible');
 
-      cy.findByText('Power Off').should('be.visible').click();
+      ui.actionMenu
+        .findByTitle(`Action menu for Linode ${linode.label}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem.findByTitle('Power Off').should('be.visible').click();
+
       ui.dialog
         .findByTitle(`Power Off Linode ${linode.label}?`)
         .should('be.visible')
@@ -161,7 +167,13 @@ describe('switch linode state', () => {
         );
         cy.findByText(linode.label).should('be.visible');
 
-        cy.findByText('Power On').should('be.visible').click();
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode ${linode.label}`)
+          .should('be.visible')
+          .click();
+
+        ui.actionMenuItem.findByTitle('Power On').should('be.visible').click();
+
         ui.dialog
           .findByTitle(`Power On Linode ${linode.label}?`)
           .should('be.visible')
@@ -247,7 +259,13 @@ describe('switch linode state', () => {
       );
       cy.findByText(linode.label).should('be.visible');
 
-      cy.findByText('Reboot').should('be.visible').click();
+      ui.actionMenu
+        .findByTitle(`Action menu for Linode ${linode.label}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem.findByTitle('Reboot').should('be.visible').click();
+
       ui.dialog
         .findByTitle(`Reboot Linode ${linode.label}?`)
         .should('be.visible')

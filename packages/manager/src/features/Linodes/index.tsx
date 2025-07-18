@@ -13,6 +13,7 @@ import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { storage } from 'src/utilities/storage';
 
 import { PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER } from '../Account/Maintenance/utilities';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { regionFilterOptions } from './LinodesLanding/RegionTypeFilter';
 import { statusToPriority } from './LinodesLanding/utils';
 import { linodesInTransition } from './transitions';
@@ -45,6 +46,7 @@ export const LinodesLandingWrapper = React.memo(() => {
     flags.gecko2?.la
   );
 
+  const { permissions } = usePermissions('account', ['create_linode']);
   const [regionFilter, setRegionFilter] = React.useState<RegionFilter>(
     storage.regionFilter.get() ?? regionFilterOptions[0].value
   );
@@ -119,6 +121,7 @@ export const LinodesLandingWrapper = React.memo(() => {
       linodesRequestLoading={allLinodesLoading}
       navigate={navigate}
       orderBy={orderBy}
+      permissions={permissions}
       regionFilter={regionFilter}
       search={search}
       someLinodesHaveScheduledMaintenance={Boolean(
