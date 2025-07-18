@@ -32,12 +32,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const { permissions } = usePermissions(
     'linode',
-    [
-      'update_linode_disk',
-      'resize_linode_disk',
-      'delete_linode_disk',
-      'clone_linode',
-    ],
+    ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
     linodeId
   );
 
@@ -53,12 +48,12 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      disabled: !permissions.update_linode_disk,
+      disabled: !permissions.update_linode,
       onClick: onRename,
       title: 'Rename',
     },
     {
-      disabled: !permissions.resize_linode_disk || linodeStatus !== 'offline',
+      disabled: !permissions.resize_linode || linodeStatus !== 'offline',
       onClick: onResize,
       title: 'Resize',
       tooltip: poweredOnTooltip,
@@ -89,7 +84,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
       title: 'Clone',
     },
     {
-      disabled: !permissions.delete_linode_disk || linodeStatus !== 'offline',
+      disabled: !permissions.delete_linode || linodeStatus !== 'offline',
       onClick: onDelete,
       title: 'Delete',
       tooltip: poweredOnTooltip,
