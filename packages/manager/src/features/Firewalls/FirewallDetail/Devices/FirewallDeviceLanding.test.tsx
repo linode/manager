@@ -18,6 +18,11 @@ const queryMocks = vi.hoisted(() => ({
   }),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_firewall_device: false,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -38,6 +43,10 @@ vi.mock('src/hooks/useOrderV2', async () => {
     useOrderV2: queryMocks.useOrderV2,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 const baseProps = (
   type: FirewallDeviceEntityType
@@ -86,7 +95,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
         expect(table).toBeInTheDocument();
       });
 
-      if (prop.disabled) {
+      if (prop.disabled && serviceName !== 'Linode') {
         it(`should contain a disabled Add ${serviceName} button`, () => {
           const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
@@ -105,7 +114,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
       }
 
-      if (!prop.disabled) {
+      if (!prop.disabled && serviceName !== 'Linode') {
         it(`should contain an enabled Add ${serviceName} button`, () => {
           const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
@@ -134,6 +143,43 @@ services.forEach((service: FirewallDeviceEntityType) => {
               to: `/firewalls/$id/${service}s/add`,
             });
           });
+        });
+      }
+
+      if (serviceName === 'Linode') {
+        it('should disable "Add Linodes to Firewall" button if the user does not have create_firewall_device permission', async () => {
+          queryMocks.userPermissions.mockReturnValue({
+            permissions: {
+              create_firewall_device: false,
+            },
+          });
+
+          const { getByTestId } = await renderWithThemeAndRouter(
+            <FirewallDeviceLanding {...prop} />,
+            {
+              initialRoute: `/firewalls/1/linodes`,
+            }
+          );
+          const addButton = getByTestId('add-device-button');
+          expect(addButton).toBeInTheDocument();
+          expect(addButton).toBeDisabled();
+        });
+        it('should enable "Add Linodes to Firewall" button if the user has create_firewall_device permission', async () => {
+          queryMocks.userPermissions.mockReturnValue({
+            permissions: {
+              create_firewall_device: true,
+            },
+          });
+
+          const { getByTestId } = await renderWithThemeAndRouter(
+            <FirewallDeviceLanding {...prop} />,
+            {
+              initialRoute: `/firewalls/1/linodes`,
+            }
+          );
+          const addButton = getByTestId('add-device-button');
+          expect(addButton).toBeInTheDocument();
+          expect(addButton).toBeEnabled();
         });
       }
     });
