@@ -18,9 +18,7 @@ describe('Maintenance Table Row', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(
-      <OAuthClients />
-    );
+    const { getByTestId, getByText } = renderWithTheme(<OAuthClients />);
 
     await waitForElementToBeRemoved(getByTestId('table-row-loading'));
 
