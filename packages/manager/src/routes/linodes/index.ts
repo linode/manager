@@ -111,7 +111,11 @@ const linodesDetailAnalyticsRoute = createRoute({
 const linodesDetailNetworkingRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'networking',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeNetworking/liondeNetworkingLazyRoute'
+  ).then((m) => m.linodeNetworkingLazyRoute)
+);
 
 const linodesDetailNetworkingInterfacesRoute = createRoute({
   getParentRoute: () => linodesDetailNetworkingRoute,
@@ -129,37 +133,65 @@ const linodesDetailNetworkingInterfacesDetailRoute = createRoute({
 const linodesDetailStorageRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'storage',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeStorage/linodeStorageLazyRoute'
+  ).then((m) => m.linodeStorageLazyRoute)
+);
 
 const linodesDetailConfigurationsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'configurations',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeConfigs/linodeConfigsLazyRoute'
+  ).then((m) => m.linodeConfigsLazyRoute)
+);
 
 const linodesDetailBackupsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'backup',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeBackup/linodeBackupsLazyRoute'
+  ).then((m) => m.linodeBackupsLazyRoute)
+);
 
 const linodesDetailActivityRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'activity',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeActivity/linodeActivityLazyRoute'
+  ).then((m) => m.linodeActivityLazyRoute)
+);
 
 const linodesDetailSettingsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'settings',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeSettings/linodeSettingsLazyRoute'
+  ).then((m) => m.linodeSettingsLazyRoute)
+);
 
 const linodesDetailAlertsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'alerts',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeAlerts/linodeAlertsLazyRoute'
+  ).then((m) => m.linodeAlertsLazyRoute)
+);
 
 const linodesDetailMetricsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'metrics',
-});
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodeMetrics/linodeMetricsLazyRoute'
+  ).then((m) => m.linodeMetricsLazyRoute)
+);
 
 const linodesDetailUpgradeInterfacesRoute = createRoute({
   getParentRoute: () => linodesDetailConfigurationsRoute,

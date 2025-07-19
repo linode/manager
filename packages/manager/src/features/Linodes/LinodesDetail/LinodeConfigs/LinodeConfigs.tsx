@@ -24,6 +24,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
@@ -47,6 +48,7 @@ export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT = (
 const LinodeConfigs = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { isBareMetalInstance } = useLinodeDetailContext();
 
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
 
@@ -139,6 +141,10 @@ const LinodeConfigs = () => {
     setSelectedConfigId(undefined);
     setIsLinodeConfigDialogOpen(true);
   };
+
+  if (isBareMetalInstance) {
+    return null;
+  }
 
   return (
     <>
