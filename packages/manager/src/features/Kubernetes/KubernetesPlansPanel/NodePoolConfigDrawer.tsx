@@ -5,6 +5,7 @@ import * as React from 'react';
 import {
   Controller,
   FormProvider,
+  useFieldArray,
   useForm,
   useFormContext,
   useWatch,
@@ -47,9 +48,12 @@ export const NodePoolConfigDrawer = (props: Props) => {
   const { onClose, open, selectedTier, planId, poolIndex, mode } = props;
 
   // Use the node pool state from the main create flow from.
-  const { control: parentFormControl, setValue: parentFormSetValue } =
-    useFormContext();
+  const { control: parentFormControl } = useFormContext();
   const _nodePools: CreateNodePoolDataBeta[] = useWatch({
+    control: parentFormControl,
+    name: 'nodePools',
+  });
+  const { append, update } = useFieldArray({
     control: parentFormControl,
     name: 'nodePools',
   });
@@ -82,26 +86,26 @@ export const NodePoolConfigDrawer = (props: Props) => {
 
     // If we're in edit mode, set the existing config values on the pool.
     if (!isAddMode && poolIndex !== undefined) {
-      setValue('nodeCount', _nodePools[poolIndex].count);
-      setValue('updateStrategy', _nodePools[poolIndex].update_strategy);
+      setValue('nodeCount', _nodePools[poolIndex]?.count);
+      setValue('updateStrategy', _nodePools[poolIndex]?.update_strategy);
     }
   }, [planId, open, selectedTier, setValue, isAddMode, poolIndex, _nodePools]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
-      if (isAddMode) {
-        parentFormSetValue('nodePools', [
-          ..._nodePools,
-          {
-            count: values.nodeCount,
-            type: planId,
-            update_strategy: values.updateStrategy,
-          },
-        ]);
+      // If there's a pool index, the drawer is in edit mode. Else, it's in add mode.
+      if (poolIndex) {
+        update(poolIndex, {
+          ..._nodePools[poolIndex],
+          count: values.nodeCount,
+          update_strategy: values.updateStrategy,
+        });
       } else {
-        // eslint-disable-next-line sonarjs/todo-tag
-        // TODO - M3-10295: We're in edit mode, so find the existing pool in _nodePools based on
-        // selected pool index and set the updated node count/update strategy values.
+        append({
+          count: values.nodeCount,
+          type: planId,
+          update_strategy: values.updateStrategy,
+        });
       }
       onClose();
       form.reset();
