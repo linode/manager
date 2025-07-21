@@ -125,7 +125,7 @@ export const AlertInformationActionTable = (
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const isEditMode = !!entityId;
-  const isCreateMode = !!onToggleAlert;
+  const isCreateMode = !isEditMode;
 
   const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
     useContextualAlertsState(alerts, entityId);
@@ -271,11 +271,6 @@ export const AlertInformationActionTable = (
                         />
                         {paginatedAndOrderedAlerts?.map((alert) => {
                           if (!(isEditMode || isCreateMode)) {
-                            return null;
-                          }
-
-                          // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
-                          if (!isEditMode && alert.scope !== 'entity') {
                             return null;
                           }
 

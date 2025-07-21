@@ -9,7 +9,7 @@ import {
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
   convertSecondsToOptions,
-  filterAlertsByStatusAndType,
+  filterAlerts,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
@@ -51,13 +51,15 @@ it('test convertSecondsToOptions method', () => {
   expect(convertSecondsToOptions(900)).toEqual('15 min');
 });
 
-it('test filterAlertsByStatusAndType method', () => {
-  const alerts = alertFactory.buildList(12, { created_by: 'system' });
-  expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);
-  expect(filterAlertsByStatusAndType(alerts, '', 'user')).toHaveLength(0);
-  expect(filterAlertsByStatusAndType(alerts, 'Alert-1', 'system')).toHaveLength(
-    4
-  );
+it('test filterAlerts method', () => {
+  const alerts = alertFactory.buildList(12, {
+    created_by: 'system',
+    regions: ['us-east'],
+  });
+  expect(filterAlerts(alerts, '', 'system', 'us-east')).toHaveLength(12);
+  expect(filterAlerts(alerts, '', 'user', 'us-east')).toHaveLength(0);
+  expect(filterAlerts(alerts, 'Alert-1', 'system', 'us-east')).toHaveLength(4);
+  expect(filterAlerts(alerts, '', 'system', 'us-west')).toHaveLength(0);
 });
 
 it('test convertAlertsToTypeSet method', () => {

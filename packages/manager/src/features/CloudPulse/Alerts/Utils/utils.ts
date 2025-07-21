@@ -280,19 +280,23 @@ export const getChipLabels = (
  * @param alerts list of alerts to be filtered
  * @param searchText text to be searched in alert name
  * @param selectedType selecte alert type
- * @returns list of filtered alerts based on searchText & selectedType
+ * @param region region of the entity
+ * @returns list of filtered alerts based on searchText, selectedType, and region
  */
-export const filterAlertsByStatusAndType = (
+export const filterAlerts = (
   alerts: Alert[] | undefined,
   searchText: string,
-  selectedType: string | undefined
+  selectedType: string | undefined,
+  region: string | undefined
 ): Alert[] => {
   return (
-    alerts?.filter(({ label, status, type }) => {
+    alerts?.filter(({ label, status, type, regions }) => {
       return (
         (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
-        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+        (!searchText ||
+          label.toLowerCase().includes(searchText.toLowerCase())) &&
+        (!region || !regions || regions.includes(region))
       );
     }) ?? []
   );

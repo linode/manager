@@ -16,10 +16,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
-import {
-  convertAlertsToTypeSet,
-  filterAlertsByStatusAndType,
-} from '../Utils/utils';
+import { convertAlertsToTypeSet, filterAlerts } from '../Utils/utils';
 import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type {
@@ -40,10 +37,14 @@ interface AlertReusableComponentProps {
 
   /**
    * Called when an alert is toggled on or off.
-   * Only use in create flow.
    * @param payload enabled alerts ids
    */
   onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+
+  /**
+   * Region of the entity being created/edited
+   */
+  region?: string;
 
   /**
    * Service type of selected entity
@@ -52,7 +53,7 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { entityId, entityName, onToggleAlert, serviceType } = props;
+  const { entityId, entityName, onToggleAlert, region, serviceType } = props;
   const {
     data: alerts,
     error,
@@ -64,16 +65,17 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
-  // Filter alerts based on status, search text & selected type
+  // Filter alerts based on status, search text, selected type, and region
   const filteredAlerts = React.useMemo(
-    () => filterAlertsByStatusAndType(alerts, searchText, selectedType),
-    [alerts, searchText, selectedType]
+    () => filterAlerts(alerts, searchText, selectedType, region),
+    [alerts, searchText, selectedType, region]
   );
 
   const history = useHistory();
 
   // Filter unique alert types from alerts list
   const types = convertAlertsToTypeSet(alerts);
+  const editMode = !!entityId;
 
   if (isLoading) {
     return <CircleProgress />;
@@ -82,20 +84,22 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   return (
     <Paper>
       <Stack gap={3}>
-        <Box display="flex" justifyContent="space-between">
-          <Box alignItems="center" display="flex" gap={0.5}>
-            <Typography variant="h2">Alerts</Typography>
-            <BetaChip />
+        {editMode && (
+          <Box display="flex" justifyContent="space-between">
+            <Box alignItems="center" display="flex" gap={0.5}>
+              <Typography variant="h2">Alerts</Typography>
+              <BetaChip />
+            </Box>
+            <Button
+              buttonType="outlined"
+              data-qa-buttons="true"
+              data-testid="manage-alerts"
+              onClick={() => history.push('/alerts/definitions')}
+            >
+              Manage Alerts
+            </Button>
           </Box>
-          <Button
-            buttonType="outlined"
-            data-qa-buttons="true"
-            data-testid="manage-alerts"
-            onClick={() => history.push('/alerts/definitions')}
-          >
-            Manage Alerts
-          </Button>
-        </Box>
+        )}
         <Stack gap={2}>
           <Box display="flex" gap={2}>
             <DebouncedSearchTextField
