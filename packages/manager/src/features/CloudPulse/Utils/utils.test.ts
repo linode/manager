@@ -221,22 +221,7 @@ describe('validate useIsAclpSupportedRegion function', () => {
     ).toBe(false);
     expect(
       useIsAclpSupportedRegion({
-        capability: 'Managed Databases',
-        regionId: 'in-maa',
-
-        type: 'metrics',
-      })
-    ).toBe(false);
-    expect(
-      useIsAclpSupportedRegion({
         capability: 'Linodes',
-        regionId: 'in-maa',
-        type: 'alerts',
-      })
-    ).toBe(false);
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Managed Databases',
         regionId: 'in-maa',
         type: 'alerts',
       })

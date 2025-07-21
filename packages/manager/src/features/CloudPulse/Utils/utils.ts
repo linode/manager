@@ -41,7 +41,7 @@ interface AclpSupportedRegionProps {
   /**
    * Region ID to check
    */
-  regionId?: string;
+  regionId: string | undefined;
   /**
    * The type of monitoring capability to check
    */
@@ -313,9 +313,9 @@ export const arePortsValid = (ports: string): string | undefined => {
 };
 
 /**
- * Checks if the regionId and capability are supported for under aclp or not.
- * @param props Contains regionId and serviceType to check against the regions data.
- * @returns boolean indicating whether the region & capability is supported or not.
+ * Checks if the selected region is ACLP-supported for the given capability and type.
+ * @param props Contains regionId, capability and type to check against the regions data.
+ * @returns boolean indicating if the selected region is ACLP-supported for the given capability and type.
  */
 export const useIsAclpSupportedRegion = (
   props: AclpSupportedRegionProps
