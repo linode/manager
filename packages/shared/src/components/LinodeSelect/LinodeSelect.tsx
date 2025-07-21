@@ -99,11 +99,12 @@ export const LinodeSelect = (
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const linodes = optionsFilter
+  let linodes = options || data;
+  linodes = optionsFilter
     ? options
       ? options.filter(optionsFilter)
       : data?.filter(optionsFilter)
-    : data;
+    : linodes;
 
   React.useEffect(() => {
     /** We want to clear the input value when the value prop changes to null.
