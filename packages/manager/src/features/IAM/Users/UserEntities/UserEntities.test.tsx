@@ -125,7 +125,7 @@ describe('UserEntities', () => {
 
     await userEvent.click(actionMenuButton);
     expect(screen.getByText('Change Role')).toBeVisible();
-    expect(screen.getByText('Remove')).toBeVisible();
+    expect(screen.getByText('Remove Assignment')).toBeVisible();
   });
 
   it('should show error state when api fails', () => {
