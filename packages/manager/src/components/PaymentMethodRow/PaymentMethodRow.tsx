@@ -61,7 +61,9 @@ export const PaymentMethodRow = (props: Props) => {
       onClick: () => {
         navigate({
           to: '/account/billing/make-payment',
-          search: { paymentMethod },
+          search: {
+            paymentMethodId: paymentMethod.id,
+          },
         });
       },
       title: 'Make a Payment',
