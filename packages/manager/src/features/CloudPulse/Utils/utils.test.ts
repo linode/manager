@@ -19,7 +19,7 @@ import {
   arePortsValid,
   areValidInterfaceIds,
   isValidPort,
-  useIsAclpContextualViewEnabled,
+  useIsAclpSupportedRegion,
   validationFunction,
 } from './utils';
 
@@ -104,8 +104,41 @@ describe('validationFunction', () => {
   });
 });
 
-describe('validate useIsAclpContextualViewEnabled function', () => {
-  const queryMocks = vitest.hoisted(() => ({
+describe('validate useIsAclpSupportedRegion function', () => {
+  // - Mocked 'monitors' data used here may differ from the actual /regions API response.
+  const mockRegions = [
+    regionFactory.build({
+      country: 'us',
+      id: 'us-iad',
+      label: 'Washington, DC',
+      monitors: {
+        alerts: ['Linodes'],
+        metrics: ['Linodes'],
+      },
+    }),
+    regionFactory.build({
+      country: 'us',
+      id: 'us-east',
+      label: 'Newark, NJ',
+      monitors: {
+        alerts: ['Linodes'],
+        metrics: ['Linodes'],
+      },
+    }),
+    regionFactory.build({
+      country: 'ca',
+      id: 'ca-central',
+      label: 'Toronto',
+      monitors: { alerts: [], metrics: [] },
+    }),
+    regionFactory.build({
+      country: 'in',
+      id: 'in-maa',
+      label: 'Chennai',
+    }),
+  ];
+
+  const queryMocks = vi.hoisted(() => ({
     useRegionsQuery: vi.fn(),
   }));
 
@@ -117,60 +150,125 @@ describe('validate useIsAclpContextualViewEnabled function', () => {
       useRegionsQuery: queryMocks.useRegionsQuery,
     };
   });
-  const region = 'us-east';
 
-  const capability: Capabilities = 'Linodes';
-
-  it('should return false for alert and true for metrics', () => {
+  beforeEach(() => {
     queryMocks.useRegionsQuery.mockReturnValue({
       isLoading: false,
-      data: [
-        regionFactory.build({
-          id: region,
-          monitors: { alerts: [], metrics: ['Linodes'] },
-        }),
-      ],
+      data: mockRegions,
     });
-    const { isAlertEnabled, isMetricEnabled } = useIsAclpContextualViewEnabled({
-      regionId: region,
-      capability,
-    });
-
-    expect(isAlertEnabled).toBe(false);
-    expect(isMetricEnabled).toBe(true);
   });
 
-  it('should return true for alert and false for metrics', () => {
-    queryMocks.useRegionsQuery.mockReturnValue({
-      isLoading: false,
-      data: [
-        regionFactory.build({
-          id: region,
-          monitors: { metrics: [], alerts: ['Linodes'] },
-        }),
-      ],
-    });
-    const { isAlertEnabled, isMetricEnabled } = useIsAclpContextualViewEnabled({
-      regionId: region,
-      capability,
-    });
+  it('should return true if Linodes is requested in supported region (us-iad, us-east) for the metrics and alert monitoring type', () => {
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-iad',
+        type: 'metrics',
+      })
+    ).toBe(true);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-east',
+        type: 'metrics',
+      })
+    ).toBe(true);
 
-    expect(isMetricEnabled).toBe(false);
-    expect(isAlertEnabled).toBe(true);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-iad',
+        type: 'alerts',
+      })
+    ).toBe(true);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-east',
+        type: 'alerts',
+      })
+    ).toBe(true);
   });
 
-  it('should return true for loading state', () => {
-    queryMocks.useRegionsQuery.mockReturnValue({
-      isLoading: true,
-    });
-    const { isLoading, isAlertEnabled, isMetricEnabled } =
-      useIsAclpContextualViewEnabled({
-        regionId: region,
-        capability,
-      });
+  it('should return false if Linodes is requested in unsupported regions (us-ord, ca-central) for the metrics monitoring type', () => {
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'us-ord',
+        type: 'metrics',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'metrics',
+      })
+    ).toBe(false);
+  });
 
-    expect(isMetricEnabled).toBe(false);
-    expect(isAlertEnabled).toBe(false);
-    expect(isLoading).toBe(true);
+  it('should return false if both metrics and alerts list are empty', () => {
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'metrics',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'alerts',
+      })
+    ).toBe(false);
+  });
+
+  it('should return false if monitors property is undefined for the metrics or alerts monitoring type', () => {
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'in-maa',
+        type: 'metrics',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'in-maa',
+        type: 'alerts',
+      })
+    ).toBe(false);
+  });
+
+  it('should return false if the capability is not supported by the monitoring types for the selectedRegion', () => {
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'metrics',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Managed Databases',
+        regionId: 'us-iad',
+        type: 'metrics',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'alerts',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Managed Databases',
+        regionId: 'us-iad',
+        type: 'alerts',
+      })
+    ).toBe(false);
   });
 });
