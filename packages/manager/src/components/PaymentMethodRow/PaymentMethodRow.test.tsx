@@ -243,17 +243,7 @@ describe('Payment Method Row', () => {
 
     expect(navigate).toHaveBeenCalledWith({
       search: {
-        paymentMethod: {
-          created: '2021-05-21T14:27:51',
-          data: {
-            card_type: 'Visa',
-            expiry: '12/2022',
-            last_four: '1881',
-          },
-          id: 9,
-          is_default: false,
-          type: 'credit_card',
-        },
+        paymentMethodId: 9,
       },
       to: '/account/billing/make-payment',
     });
