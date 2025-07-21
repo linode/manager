@@ -124,7 +124,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpBetaServices: AclpBetaServices;
+  aclpBetaServices: Partial<AclpBetaServices>;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
@@ -314,9 +314,9 @@ export interface AclpAlertServiceTypeConfig {
   // This can be extended to have supportedRegions, supportedFilters and other tags
 }
 
-export interface AclpBetaServices {
-  [serviceType: string]: {
+export type AclpBetaServices = {
+  [serviceType in CloudPulseServiceType]: {
     alerts: boolean;
     metrics: boolean;
   };
-}
+};
