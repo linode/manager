@@ -53,8 +53,9 @@ describe('RolesTable', () => {
   });
 
   it('renders roles correctly when roles array is provided', async () => {
-    const { getByText, getByTestId, getAllByRole } =
-      renderWithTheme(<RolesTable roles={mockRoles} />);
+    const { getByText, getByTestId, getAllByRole } = renderWithTheme(
+      <RolesTable roles={mockRoles} />
+    );
 
     expect(getByTestId('roles-table')).toBeInTheDocument();
     expect(getAllByRole('combobox').length).toEqual(1);

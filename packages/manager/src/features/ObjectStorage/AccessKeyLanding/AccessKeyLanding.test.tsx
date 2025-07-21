@@ -14,9 +14,7 @@ const props = {
 
 describe('AccessKeyLanding', () => {
   it('should render a table of access keys', async () => {
-    const { getByTestId } = renderWithTheme(
-      <AccessKeyLanding {...props} />
-    );
+    const { getByTestId } = renderWithTheme(<AccessKeyLanding {...props} />);
     expect(getByTestId('data-qa-access-key-table')).toBeInTheDocument();
   });
 });

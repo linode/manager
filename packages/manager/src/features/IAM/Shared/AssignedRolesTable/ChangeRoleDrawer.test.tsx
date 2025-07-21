@@ -89,18 +89,14 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('should render', async () => {
-    renderWithTheme(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
   });
 
   it('renders the correct text for account_access roles', async () => {
-    renderWithTheme(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Check that the correct text is displayed for account_access
     expect(
@@ -149,9 +145,7 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    renderWithTheme(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     const autocomplete = screen.getByRole('combobox');
 

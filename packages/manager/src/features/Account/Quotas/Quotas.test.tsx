@@ -72,12 +72,9 @@ describe('Quotas', () => {
       service: 'object-storage',
     });
 
-    const { getByPlaceholderText, getByRole } = renderWithTheme(
-      <Quotas />,
-      {
-        queryClient,
-      }
-    );
+    const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
+      queryClient,
+    });
 
     const endpointSelect = getByPlaceholderText(
       'Select an Object Storage S3 endpoint'
@@ -111,12 +108,9 @@ describe('Quotas', () => {
       service: 'object-storage',
     });
 
-    const { getByPlaceholderText } = renderWithTheme(
-      <Quotas />,
-      {
-        queryClient,
-      }
-    );
+    const { getByPlaceholderText } = renderWithTheme(<Quotas />, {
+      queryClient,
+    });
 
     expect(getByPlaceholderText('Loading S3 endpoints...')).toBeInTheDocument();
   });

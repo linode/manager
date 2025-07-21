@@ -60,8 +60,9 @@ beforeEach(() => {
 
 describe('AlertDefinition Create', () => {
   it('should render input components', async () => {
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      renderWithTheme(<CreateAlertDefinition />);
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <CreateAlertDefinition />
+    );
 
     expect(getByText('1. General Information')).toBeVisible();
     expect(getByLabelText('Name')).toBeVisible();
@@ -85,9 +86,7 @@ describe('AlertDefinition Create', () => {
   });
 
   it('should be able to enter a value in the textbox', async () => {
-    const { getByLabelText } = renderWithTheme(
-      <CreateAlertDefinition />
-    );
+    const { getByLabelText } = renderWithTheme(<CreateAlertDefinition />);
     const input = getByLabelText('Name');
 
     await userEvent.type(input, 'text');
@@ -118,9 +117,7 @@ describe('AlertDefinition Create', () => {
     'should render client side validation errors for threshold and trigger occurences text field',
     async () => {
       const user = userEvent.setup();
-      const container = renderWithTheme(
-        <CreateAlertDefinition />
-      );
+      const container = renderWithTheme(<CreateAlertDefinition />);
 
       const serviceTypeInput =
         container.getByPlaceholderText('Select a Service');

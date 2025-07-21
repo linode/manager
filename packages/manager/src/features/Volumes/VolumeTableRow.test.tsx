@@ -5,10 +5,7 @@ import * as React from 'react';
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  renderWithTheme,
-  wrapWithTableBody,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { VolumeTableRow } from './VolumeTableRow';
 
@@ -39,12 +36,11 @@ const handlers: ActionHandlers = {
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", async () => {
-    const { getByLabelText, getByTestId, getByText } =
-      renderWithTheme(
-        wrapWithTableBody(
-          <VolumeTableRow handlers={handlers} volume={attachedVolume} />
-        )
-      );
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <VolumeTableRow handlers={handlers} volume={attachedVolume} />
+      )
+    );
 
     // Check row for basic values
     expect(getByText(attachedVolume.label));

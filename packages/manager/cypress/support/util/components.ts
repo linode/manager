@@ -53,12 +53,7 @@ export const componentTests = (
   } = {}
 ) => {
   const mountCommand = (jsx: React.ReactNode, flags?: Flags) =>
-    cy.mountWithTheme(
-      jsx,
-      defaultTheme,
-      flags,
-      options.routeTree
-    );
+    cy.mountWithTheme(jsx, defaultTheme, flags, options.routeTree);
   describe(`${componentName} component tests`, () => {
     callback(mountCommand);
   });
@@ -85,12 +80,7 @@ export const visualTests = (
   describe('Visual tests', () => {
     componentThemes.forEach((themeName: ThemeName) => {
       const mountCommand = (jsx: React.ReactNode, flags?: any) =>
-        cy.mountWithTheme(
-          jsx,
-          themeName,
-          flags,
-          options.routeTree
-        );
+        cy.mountWithTheme(jsx, themeName, flags, options.routeTree);
       describe(`${capitalize(themeName)} theme`, () => {
         callback(mountCommand);
       });

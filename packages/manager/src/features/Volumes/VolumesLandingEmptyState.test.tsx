@@ -24,9 +24,7 @@ describe('VolumesLandingEmptyState', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(
-      <VolumesLandingEmptyState />
-    );
+    const { getByText } = renderWithTheme(<VolumesLandingEmptyState />);
 
     await waitFor(() => {
       const createVolumeButton = getByText('Create Volume').closest('button');

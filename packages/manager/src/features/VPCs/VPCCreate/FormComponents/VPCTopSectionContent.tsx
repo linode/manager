@@ -157,7 +157,7 @@ export const VPCTopSectionContent = (props: Props) => {
               <SelectionCard
                 checked={!isDualStackSelected}
                 gridSize={{
-                  md: 3,
+                  md: isDrawer ? 12 : 3,
                   sm: 12,
                   xs: 12,
                 }}
@@ -188,7 +188,7 @@ export const VPCTopSectionContent = (props: Props) => {
               <SelectionCard
                 checked={isDualStackSelected}
                 gridSize={{
-                  md: 3,
+                  md: isDrawer ? 12 : 3,
                   sm: 12,
                   xs: 12,
                 }}

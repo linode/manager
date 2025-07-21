@@ -14,9 +14,7 @@ const props: SupportTicketDialogProps = {
 
 describe('Support Ticket Drawer', () => {
   it('should render', async () => {
-    const { getByText } = renderWithTheme(
-      <SupportTicketDialog {...props} />
-    );
+    const { getByText } = renderWithTheme(<SupportTicketDialog {...props} />);
     expect(getByText('Open a Support Ticket'));
   });
 });

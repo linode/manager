@@ -26,9 +26,7 @@ describe('Kubernetes Landing', () => {
 
     const loadingTestId = 'circle-progress';
 
-    const { container, getByTestId } = renderWithTheme(
-      <KubernetesLanding />
-    );
+    const { container, getByTestId } = renderWithTheme(<KubernetesLanding />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -45,9 +43,7 @@ describe('Kubernetes Landing', () => {
 
     const loadingTestId = 'circle-progress';
 
-    const { container, getByTestId } = renderWithTheme(
-      <KubernetesLanding />
-    );
+    const { container, getByTestId } = renderWithTheme(<KubernetesLanding />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

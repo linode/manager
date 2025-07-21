@@ -46,7 +46,6 @@ export const vpcsValidateIP = ({
   value,
   shouldHaveIPMask,
   mustBeIPMask,
-  isIPv6Subnet,
   checkIPv6PrefixLengthIs64,
 }: {
   checkIPv6PrefixLengthIs64?: boolean;
@@ -107,12 +106,6 @@ export const vpcsValidateIP = ({
         return mask === '64';
       }
 
-      // VPC subnets must be assigned an IPv6 prefix of 52-62
-      const invalidVPCIPv6SubnetPrefix = +mask < 52 || +mask > 62;
-      if (isIPv6Subnet && invalidVPCIPv6SubnetPrefix) {
-        return false;
-      }
-
       if (shouldHaveIPMask) {
         ipaddr.IPv6.parseCIDR(value);
       } else {
@@ -164,12 +157,9 @@ const VPCIPv6SubnetSchema = object({
       'Must be the prefix length (52-62) of the IP, e.g. /52',
       (value) => {
         if (value && value !== 'auto' && value.length > 0) {
-          vpcsValidateIP({
-            value,
-            shouldHaveIPMask: true,
-            mustBeIPMask: false,
-            isIPv6Subnet: true,
-          });
+          const [, mask] = value.split('/');
+          // VPC subnets must be assigned an IPv6 prefix of 52-62
+          return +mask >= 52 && +mask <= 62;
         }
       },
     ),

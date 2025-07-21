@@ -24,9 +24,7 @@ describe('ImagesLandingEmptyState', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(
-      <ImagesLandingEmptyState />
-    );
+    const { getByText } = renderWithTheme(<ImagesLandingEmptyState />);
 
     await waitFor(() => {
       const createImageButton = getByText('Create Image').closest('button');

@@ -3,10 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeDiskFactory } from 'src/factories';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
@@ -160,10 +157,9 @@ describe('LinodeDiskActionMenu', () => {
   });
 
   it('should disable Resize and Delete when the Linode is running', async () => {
-    const { getAllByLabelText, getByLabelText } =
-      renderWithTheme(
-        <LinodeDiskActionMenu {...defaultProps} />
-      );
+    const { getAllByLabelText, getByLabelText } = renderWithTheme(
+      <LinodeDiskActionMenu {...defaultProps} />
+    );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Disk ${defaultProps.disk.label}`

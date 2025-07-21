@@ -70,12 +70,9 @@ describe('DatabaseNetworkingUnassignVPCDialog Component', () => {
       isLoading: false,
       reset: vi.fn(),
     });
-    renderWithTheme(
-      <DatabaseNetworkingUnassignVPCDialog {...mockProps} />,
-      {
-        initialRoute: `/databases/${mockProps.databaseEngine}/${mockProps.databaseId}/networking`,
-      }
-    );
+    renderWithTheme(<DatabaseNetworkingUnassignVPCDialog {...mockProps} />, {
+      initialRoute: `/databases/${mockProps.databaseEngine}/${mockProps.databaseId}/networking`,
+    });
 
     const unassignButton = screen.getByTestId(unassignButtonTestId);
     await userEvent.click(unassignButton);

@@ -76,9 +76,7 @@ describe('LinodeFirewalls', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
     const addFirewallBtn = getByText('Add Firewall');
     expect(addFirewallBtn).toBeInTheDocument();
     expect(addFirewallBtn).toBeEnabled();
@@ -92,9 +90,7 @@ describe('LinodeFirewalls', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
     const addFirewallBtn = getByText('Add Firewall');
     expect(addFirewallBtn).toBeInTheDocument();
     expect(addFirewallBtn).toBeDisabled();
@@ -114,9 +110,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     const loadingTestId = 'table-row-loading';
     await waitForElementToBeRemoved(() => screen.queryByTestId(loadingTestId));
@@ -140,9 +134,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     const loadingTestId = 'table-row-loading';
     await waitForElementToBeRemoved(screen.queryByTestId(loadingTestId));

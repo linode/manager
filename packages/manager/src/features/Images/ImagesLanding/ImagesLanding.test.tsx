@@ -6,10 +6,7 @@ import * as React from 'react';
 import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
 
@@ -58,9 +55,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByText, queryByTestId } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const { getAllByText, queryByTestId } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -94,9 +89,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const { getByText, queryByTestId } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -119,9 +112,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const { getByText, queryByTestId } = renderWithTheme(<ImagesLanding />);
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
       await waitForElementToBeRemoved(loadingElement);
@@ -137,9 +128,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const { getByText, queryByTestId } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -252,8 +241,9 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByText, queryByTestId } =
-      renderWithTheme(<ImagesLanding />);
+    const { getAllByLabelText, getByText, queryByTestId } = renderWithTheme(
+      <ImagesLanding />
+    );
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -338,9 +328,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const { getByText, queryByTestId } = renderWithTheme(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
