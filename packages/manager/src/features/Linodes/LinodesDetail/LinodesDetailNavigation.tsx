@@ -1,12 +1,6 @@
-import {
-  useLinodeQuery,
-  usePreferences,
-  useRegionsQuery,
-  useTypeQuery,
-} from '@linode/queries';
+import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
 import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
-import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import {
   Outlet,
@@ -22,6 +16,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
@@ -44,19 +39,15 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
-  const { data: regions } = useRegionsQuery();
-
-  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpMetricsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
-    regions,
     type: 'metrics',
   });
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
-    regions,
     type: 'alerts',
   });
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
