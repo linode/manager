@@ -55,9 +55,11 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
-  const { paymentMethod } = useSearch({
+  const search = useSearch({
     strict: false,
   });
+
+  const { paymentMethodId } = search;
 
   const routeForMakePayment = '/account/billing/make-payment';
   const makePaymentRouteMatch = match?.routeId === routeForMakePayment;
@@ -91,13 +93,17 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       return;
     }
 
-    const selectedPaymentMethod =
-      paymentMethod ??
-      paymentMethods?.find((payment) => payment.is_default) ??
-      undefined;
+    const selectedPaymentMethod = paymentMethodId
+      ? paymentMethods?.find((payment) => payment.id === paymentMethodId)
+      : (paymentMethods?.find((payment) => payment.is_default) ?? undefined);
 
     openPaymentDrawer(selectedPaymentMethod);
-  }, [paymentMethods, openPaymentDrawer, makePaymentRouteMatch, paymentMethod]);
+  }, [
+    paymentMethods,
+    openPaymentDrawer,
+    makePaymentRouteMatch,
+    paymentMethodId,
+  ]);
 
   //
   // Account Balance logic
