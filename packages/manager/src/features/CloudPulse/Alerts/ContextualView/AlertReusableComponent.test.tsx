@@ -120,7 +120,7 @@ describe('Alert Resuable Component for contextual view', () => {
 
   it('Should show header for edit mode', async () => {
     renderWithTheme(component);
-    await userEvent.click(screen.getByText('Manage Alerts'));
+    expect(screen.getByText('Manage Alerts')).toBeVisible();
     expect(screen.getByText('Alerts')).toBeVisible();
   });
 
@@ -133,13 +133,7 @@ describe('Alert Resuable Component for contextual view', () => {
       />
     );
     renderWithTheme(componentWithoutEntityData);
-    expect(screen.queryByText('Alerts')).not.toBeInTheDocument();
-  });
-
-  it('Should hide manage alerts button for undefined entityId', () => {
-    renderWithTheme(<AlertReusableComponent serviceType={serviceType} />);
-
-    const manageAlerts = screen.queryByTestId('manage-alerts');
-    expect(manageAlerts).not.toBeInTheDocument();
+    expect(screen.queryByText('Manage Alerts')).toBeNull();
+    expect(screen.queryByText('Alerts')).toBeNull();
   });
 });
