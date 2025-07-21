@@ -2,10 +2,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import {
-  mockMatchMedia,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseCreate } from './DatabaseCreate';
 
@@ -34,12 +31,9 @@ describe('database node selector', () => {
   });
 
   it('should render 2 nodes for shared tab', async () => {
-    const { getAllByRole, getByTestId } = renderWithTheme(
-      <DatabaseCreate />,
-      {
-        flags,
-      }
-    );
+    const { getAllByRole, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      flags,
+    });
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
