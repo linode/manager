@@ -3,10 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeDiskFactory } from 'src/factories';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
@@ -50,7 +47,7 @@ describe('LinodeDiskActionMenu', () => {
   beforeEach(() => mockMatchMedia());
 
   it('should contain all basic actions when the Linode is running', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -74,7 +71,7 @@ describe('LinodeDiskActionMenu', () => {
   });
 
   it('should hide inline actions for sm screens', async () => {
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -84,7 +81,7 @@ describe('LinodeDiskActionMenu', () => {
   });
 
   it('should allow performing actions', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
     );
 
@@ -106,7 +103,7 @@ describe('LinodeDiskActionMenu', () => {
       linodeId: defaultProps.linodeId,
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -139,7 +136,7 @@ describe('LinodeDiskActionMenu', () => {
       linodeId: defaultProps.linodeId,
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -160,10 +157,9 @@ describe('LinodeDiskActionMenu', () => {
   });
 
   it('should disable Resize and Delete when the Linode is running', async () => {
-    const { getAllByLabelText, getByLabelText } =
-      await renderWithThemeAndRouter(
-        <LinodeDiskActionMenu {...defaultProps} />
-      );
+    const { getAllByLabelText, getByLabelText } = renderWithTheme(
+      <LinodeDiskActionMenu {...defaultProps} />
+    );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Disk ${defaultProps.disk.label}`
@@ -181,7 +177,7 @@ describe('LinodeDiskActionMenu', () => {
   it('should disable Create Disk Image when the disk is a swap image', async () => {
     const disk = linodeDiskFactory.build({ filesystem: 'swap' });
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
+    const { getByLabelText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} disk={disk} />
     );
 
@@ -209,7 +205,7 @@ describe('LinodeDiskActionMenu', () => {
       },
     });
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
+    const { getByLabelText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -242,7 +238,7 @@ describe('LinodeDiskActionMenu', () => {
       },
     });
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
+    const { getByLabelText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
     );
 

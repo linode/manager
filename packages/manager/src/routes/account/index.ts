@@ -1,35 +1,23 @@
-import { createRoute, redirect } from '@tanstack/react-router';
+import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
 
-import type { PaymentMethod } from '@linode/api-v4';
-
 interface AccountBillingSearch {
+  action?: 'add-payment-method' | 'edit' | 'make-payment';
   contactDrawerOpen?: boolean;
   focusEmail?: boolean;
-}
-
-interface AccountBillingMakePaymentSearch {
-  paymentMethod?: PaymentMethod;
+  paymentMethodId?: number;
 }
 
 const accountRoute = createRoute({
   component: AccountRoute,
   getParentRoute: () => rootRoute,
   path: 'account',
-});
-
-const accountIndexRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: '/',
-  beforeLoad: () => {
-    throw redirect({
-      to: '/account/billing',
-    });
-  },
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Account/accountLandingLazyRoute').then(
+    (m) => m.accountLandingLazyRoute
+  )
 );
 
 const accountBillingRoute = createRoute({
@@ -37,86 +25,90 @@ const accountBillingRoute = createRoute({
   path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Billing/billingDetailLazyRoute').then(
+    (m) => m.billingDetailLazyRoute
+  )
 );
 
 const accountUsersRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/users',
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Users/usersLandingLazyRoute').then(
+    (m) => m.usersLandingLazyRoute
+  )
 );
 
 const accountQuotasRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/quotas',
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Account/Quotas/quotasLazyRoute').then(
+    (m) => m.quotasLazyRoute
+  )
 );
 
 const accountLoginHistoryRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/login-history',
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Account/accountLoginsLazyRoute').then(
+    (m) => m.accountLoginsLazyRoute
+  )
 );
 
 const accountServiceTransfersRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/service-transfers',
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import(
+    'src/features/EntityTransfers/EntityTransfersLanding/entityTransferLandingLazyRoute'
+  ).then((m) => m.entityTransferLandingLazyRoute)
 );
 
 const accountMaintenanceRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/maintenance',
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Account/Maintenance/maintenanceLandingLazyRoute').then(
+    (m) => m.maintenanceLandingLazyRoute
+  )
 );
 
 const accountSettingsRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/settings',
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Account/globalSettingsLazyRoute').then(
+    (m) => m.globalSettingsLazyRoute
+  )
 );
 
 const accountUsersUsernameRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: 'users/$username',
-}).lazy(() => import('./accountLazyRoutes').then((m) => m.userDetailLazyRoute));
+  getParentRoute: () => rootRoute,
+  path: 'account/users/$username',
+}).lazy(() =>
+  import('src/features/Users/userDetailLazyRoute').then(
+    (m) => m.userDetailLazyRoute
+  )
+);
 
 const accountUsersUsernameProfileRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'profile',
-}).lazy(() => import('./accountLazyRoutes').then((m) => m.userDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/Users/userDetailLazyRoute').then(
+    (m) => m.userDetailLazyRoute
+  )
+);
 
 const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'permissions',
-}).lazy(() => import('./accountLazyRoutes').then((m) => m.userDetailLazyRoute));
-
-const accountBillingMakePaymentRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: 'billing/make-payment',
-  validateSearch: (search: AccountBillingMakePaymentSearch) => search,
 }).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
-);
-
-const accountBillingPaymentMethodsRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: 'billing/add-payment-method',
-}).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
-);
-
-const accountBillingEditRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: 'billing/edit',
-}).lazy(() =>
-  import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
+  import('src/features/Users/userDetailLazyRoute').then(
+    (m) => m.userDetailLazyRoute
+  )
 );
 
 const accountInvoicesInvoiceIdRoute = createRoute({
@@ -141,7 +133,6 @@ const accountEntityTransfersCreateRoute = createRoute({
 );
 
 export const accountRouteTree = accountRoute.addChildren([
-  accountIndexRoute,
   accountUsersRoute,
   accountQuotasRoute,
   accountLoginHistoryRoute,
@@ -153,9 +144,6 @@ export const accountRouteTree = accountRoute.addChildren([
     accountUsersUsernamePermissionsRoute,
   ]),
   accountBillingRoute,
-  accountBillingMakePaymentRoute,
-  accountBillingPaymentMethodsRoute,
-  accountBillingEditRoute,
   accountInvoicesInvoiceIdRoute,
   accountEntityTransfersCreateRoute,
 ]);
