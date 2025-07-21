@@ -188,10 +188,9 @@ describe('Security', () => {
       component: <Security />,
       useFormOptions: { defaultValues: { region: region.id } },
     });
-    const { findByLabelText, getByLabelText } = renderWithTheme(
-      component,
-      { flags: { linodeDiskEncryption: true } }
-    );
+    const { findByLabelText, getByLabelText } = renderWithTheme(component, {
+      flags: { linodeDiskEncryption: true },
+    });
 
     await findByLabelText(
       'Distributed Compute Instances are encrypted. This setting can not be changed.'

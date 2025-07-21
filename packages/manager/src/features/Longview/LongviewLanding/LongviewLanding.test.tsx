@@ -105,17 +105,13 @@ describe('Longview clients list view', () => {
   });
 
   it('should have an Add Client button', async () => {
-    const { findByText } = renderWithTheme(
-      <LongviewLanding {...props} />
-    );
+    const { findByText } = renderWithTheme(<LongviewLanding {...props} />);
     const addButton = await findByText('Add Client');
     expect(addButton).toBeInTheDocument();
   });
 
   it('should attempt to add a new client when the Add Client button is clicked', async () => {
-    const { getByText } = renderWithTheme(
-      <LongviewLanding {...props} />
-    );
+    const { getByText } = renderWithTheme(<LongviewLanding {...props} />);
     const button = getByText('Add Client');
     fireEvent.click(button);
     await waitFor(() =>

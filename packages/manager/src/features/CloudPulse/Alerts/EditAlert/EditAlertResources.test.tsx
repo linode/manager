@@ -92,10 +92,9 @@ beforeEach(() => {
 
 describe('EditAlertResources component tests', () => {
   it('Edit alert resources happy path', async () => {
-    const { getByPlaceholderText, getByTestId } =
-      renderWithTheme(
-        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
-      );
+    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
+    );
 
     expect(
       getByPlaceholderText('Search for a Region or Entity')
