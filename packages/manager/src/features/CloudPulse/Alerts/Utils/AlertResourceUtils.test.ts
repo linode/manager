@@ -212,59 +212,18 @@ describe('getFilteredResources', () => {
 });
 
 describe('getSupportedRegionIds', () => {
-  const mockResourceTypeMap = [
-    {
-      dimensionKey: 'LINODE_ID',
-      serviceType: 'linode',
-      supportedRegionIds: 'us-east,us-west,us-central,us-southeast',
+  const regions = regionFactory.buildList(4, {
+    monitors: {
+      alerts: ['Linodes'],
     },
-  ];
+  });
 
   it('should return supported region ids', () => {
-    const result = getSupportedRegionIds(
-      mockResourceTypeMap,
-      'linode'
-    ) as string[];
+    const result = getSupportedRegionIds(regions, 'linode') as string[];
     expect(result.length).toBe(4);
   });
-  it('should return undefined if no supported region ids are defined in resource type map for the given service type', () => {
-    const mockResourceTypeMap = [
-      {
-        dimensionKey: 'LINODE_ID',
-        serviceType: 'linode',
-      },
-    ];
-
-    const result = getSupportedRegionIds(mockResourceTypeMap, 'linode');
-    expect(result).toBeUndefined();
-  });
-});
-
-describe('getSupportedRegionIds', () => {
-  const mockResourceTypeMap = [
-    {
-      dimensionKey: 'LINODE_ID',
-      serviceType: 'linode',
-      supportedRegionIds: 'us-east,us-west,us-central,us-southeast',
-    },
-  ];
-
-  it('should return supported region ids', () => {
-    const result = getSupportedRegionIds(
-      mockResourceTypeMap,
-      'linode'
-    ) as string[];
-    expect(result.length).toBe(4);
-  });
-  it('should return undefined if no supported region ids are defined in resource type map for the given service type', () => {
-    const mockResourceTypeMap = [
-      {
-        dimensionKey: 'LINODE_ID',
-        serviceType: 'linode',
-      },
-    ];
-
-    const result = getSupportedRegionIds(mockResourceTypeMap, 'linode');
-    expect(result).toBeUndefined();
+  it('should return empty list if regions list empty', () => {
+    const result = getSupportedRegionIds([], 'linode');
+    expect(result).toHaveLength(0);
   });
 });

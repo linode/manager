@@ -586,10 +586,10 @@ export const filterRegionByServiceType = (
   }
   return regions.filter((region) => {
     if (mode === 'metric') {
-      return region.monitors?.metrics.includes(capability);
+      return region.monitors?.metrics?.includes(capability);
     }
 
-    return region.monitors?.alerts.includes(capability);
+    return region.monitors?.alerts?.includes(capability);
   });
 };
 
