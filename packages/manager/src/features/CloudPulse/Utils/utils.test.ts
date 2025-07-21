@@ -23,8 +23,6 @@ import {
   validationFunction,
 } from './utils';
 
-import type { Capabilities } from '@linode/api-v4';
-
 describe('isValidPort', () => {
   it('should return valid for empty string and valid ports', () => {
     expect(isValidPort('')).toBe(undefined);
