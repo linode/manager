@@ -45,10 +45,7 @@ export const Security = () => {
     selectedRegion?.id ?? ''
   );
 
-  const { permissions } = usePermissions('account', [
-    'create_linode',
-    'create_profile_ssh_key',
-  ]);
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>
@@ -89,7 +86,7 @@ export const Security = () => {
         render={({ field }) => (
           <UserSSHKeyPanel
             authorizedUsers={field.value ?? []}
-            disabled={!permissions.create_profile_ssh_key}
+            disabled={!permissions.create_linode}
             setAuthorizedUsers={field.onChange}
           />
         )}

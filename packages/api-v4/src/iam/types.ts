@@ -74,7 +74,6 @@ export type AccountAdmin =
   | 'acknowledge_account_agreement'
   | 'cancel_account'
   | 'cancel_service_transfer'
-  | 'create_profile_ssh_key'
   | 'create_service_transfer'
   | 'create_user'
   | 'delete_user'

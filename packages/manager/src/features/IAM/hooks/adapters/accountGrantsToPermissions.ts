@@ -24,7 +24,6 @@ export const accountGrantsToPermissions = (
     cancel_account: unrestricted || globalGrants?.cancel_account,
     cancel_service_transfer: unrestricted,
     create_service_transfer: unrestricted,
-    create_profile_ssh_key: unrestricted || globalGrants?.add_linodes,
     create_user: unrestricted,
     delete_user: unrestricted, // TODO: verify mapping as this is not in the API
     enable_managed: unrestricted,

@@ -26,7 +26,6 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     permissions: {
       create_linode: false,
-      create_profile_ssh_key: false,
     },
   })),
 }));
@@ -65,7 +64,6 @@ describe('Security', () => {
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
         create_linode: true,
-        create_profile_ssh_key: false,
       },
     });
     const { getByLabelText } = renderWithThemeAndHookFormContext({
@@ -92,7 +90,12 @@ describe('Security', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('should disable an "Add An SSH Key" button if the user does not have create_profile_ssh_key permission', async () => {
+  it('should disable an "Add An SSH Key" button if the user does not have create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: false,
+      },
+    });
     const component = wrapWithFormContext({
       component: <Security />,
     });
@@ -104,11 +107,10 @@ describe('Security', () => {
     expect(addSSHKeyButton).toBeDisabled();
   });
 
-  it('should enable an "Add An SSH Key" button if the user has create_profile_ssh_key permission', async () => {
+  it('should enable an "Add An SSH Key" button if the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
         create_linode: true,
-        create_profile_ssh_key: true,
       },
     });
     const component = wrapWithFormContext({
