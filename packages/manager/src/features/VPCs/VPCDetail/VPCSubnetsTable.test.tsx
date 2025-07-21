@@ -6,10 +6,7 @@ import {
   subnetAssignedLinodeDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
@@ -60,14 +57,13 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      renderWithTheme(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={1}
-          vpcRegion=""
-        />
-      );
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />
+    );
 
     expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
     expect(getByText('Subnet')).toBeVisible();
@@ -107,17 +103,16 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      renderWithTheme(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={1}
-          vpcRegion=""
-        />,
-        {
-          flags: { nodebalancerVpc: true },
-        }
-      );
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />,
+      {
+        flags: { nodebalancerVpc: true },
+      }
+    );
 
     expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
     expect(getByText('Subnet')).toBeVisible();
