@@ -41,7 +41,6 @@ export const TimePicker = ({
   const fallbackId = React.useId();
   const validInputId = label ? convertToKebabCase(label) : fallbackId;
   const errorTextId = `${validInputId}-error-text`;
-
   const handleChange = (newTime: DateTime | null) => {
     if (newTime?.isValid) {
       onChange(newTime);
@@ -62,6 +61,7 @@ export const TimePicker = ({
         </InputLabel>
         <MuiTimePicker
           ampm={format === 'hh:mm a'} // Toggle 12-hour or 24-hour format
+          key={value?.toISO() || ''}
           onChange={handleChange}
           slotProps={{
             actionBar: {
@@ -90,6 +90,7 @@ export const TimePicker = ({
                 },
               }),
             },
+
             textField: {
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),

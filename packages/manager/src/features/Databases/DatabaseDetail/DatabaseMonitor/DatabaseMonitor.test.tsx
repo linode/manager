@@ -1,4 +1,5 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
 
 import { databaseFactory } from 'src/factories';
@@ -13,19 +14,20 @@ beforeAll(() => mockMatchMedia());
 describe('database monitor', () => {
   const database = databaseFactory.build({ id: 12 });
   it('should render a loading state', async () => {
-    const { getByTestId } = renderWithTheme(
-      <DatabaseMonitor database={database} />
-    );
+    renderWithTheme(<DatabaseMonitor database={database} />);
+
+    const loadingElement = screen.getByTestId(loadingTestId);
     // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    expect(loadingElement).toBeInTheDocument();
   });
 
   it('should render CloudPulseDashboardWithFilters', async () => {
-    const { getByTestId } = renderWithTheme(
-      <DatabaseMonitor database={database} />
-    );
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    expect(getByTestId('preset-select')).toBeInTheDocument();
+    renderWithTheme(<DatabaseMonitor database={database} />);
+    const loadingElement = screen.getByTestId(loadingTestId);
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
+
+    const startDate = screen.getByText('Start Date');
+    expect(startDate).toBeInTheDocument();
   });
 });
