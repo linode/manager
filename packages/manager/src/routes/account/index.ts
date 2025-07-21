@@ -3,15 +3,13 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
 
-import type { PaymentMethod } from '@linode/api-v4';
-
 interface AccountBillingSearch {
   contactDrawerOpen?: boolean;
   focusEmail?: boolean;
 }
 
 interface AccountBillingMakePaymentSearch {
-  paymentMethod?: PaymentMethod;
+  paymentMethodId?: number;
 }
 
 const accountRoute = createRoute({
