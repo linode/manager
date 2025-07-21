@@ -86,6 +86,18 @@ export interface DateTimeRangePickerProps {
   };
 }
 
+type TimeZoneStrategy = {
+  keepEndTime: boolean;
+  keepStartTime: boolean;
+};
+
+const strategies: Record<string, TimeZoneStrategy> = {
+  'last month': { keepStartTime: true, keepEndTime: true },
+  reset: { keepStartTime: true, keepEndTime: true },
+  'this month': { keepStartTime: true, keepEndTime: false },
+  default: { keepStartTime: false, keepEndTime: false },
+};
+
 export const DateTimeRangePicker = ({
   endDateProps,
   format,
@@ -99,7 +111,7 @@ export const DateTimeRangePicker = ({
     startDateProps?.value ?? null,
   );
   const [selectedPreset, setSelectedPreset] = useState<null | string>(
-    presetsProps?.defaultValue ?? null,
+    presetsProps?.defaultValue ?? 'reset',
   );
   const [endDate, setEndDate] = useState<DateTime | null>(
     endDateProps?.value ?? null,
@@ -146,17 +158,24 @@ export const DateTimeRangePicker = ({
     handleClose();
   };
 
+  const getTimeZoneStrategy = (preset: null | string): TimeZoneStrategy => {
+    return strategies[preset ?? 'default'] || strategies.default;
+  };
+
   const handleTimeZoneChange = (newTimeZone: string) => {
     if (!newTimeZone) {
       return;
     }
     setTimeZone(newTimeZone);
 
+    const { keepEndTime, keepStartTime } = getTimeZoneStrategy(selectedPreset);
+
     setStartDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: keepStartTime }) : null,
     );
+
     setEndDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: keepEndTime }) : null,
     );
   };
 

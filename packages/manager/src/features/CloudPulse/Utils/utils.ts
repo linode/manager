@@ -39,8 +39,8 @@ import type {
 } from 'src/features/Longview/request.types';
 
 interface AclpContextualViewProps {
+  capability: Capabilities;
   regionId: string;
-  serviceType: Capabilities;
 }
 
 interface AclpContextualViewEnabled {
@@ -90,19 +90,20 @@ export const useContextualAlertsState = (
         user: [],
       };
 
-      if (entityId) {
-        alerts.forEach((alert) => {
-          const isAccountOrRegion =
-            alert.scope === 'region' || alert.scope === 'account';
-          const shouldInclude = entityId
-            ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-            : false;
+      alerts.forEach((alert) => {
+        const isAccountOrRegion =
+          alert.scope === 'region' || alert.scope === 'account';
 
-          if (shouldInclude) {
-            initialStates[alert.type]?.push(alert.id);
-          }
-        });
-      }
+        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        const shouldInclude = entityId
+          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
+          : isAccountOrRegion;
+
+        if (shouldInclude) {
+          initialStates[alert.type]?.push(alert.id);
+        }
+      });
+
       return initialStates;
     },
     []
@@ -366,7 +367,7 @@ export const validationFunction: Record<
 export const useIsAclpContextualViewEnabled = (
   props: AclpContextualViewProps
 ): AclpContextualViewEnabled => {
-  const { regionId, serviceType } = props;
+  const { regionId, capability } = props;
   const { isLoading, data: regions } = useRegionsQuery();
 
   if (isLoading) {
@@ -381,7 +382,7 @@ export const useIsAclpContextualViewEnabled = (
 
   return {
     isLoading: false,
-    isAlertEnabled: region?.monitors?.alerts?.includes(serviceType) ?? false,
-    isMetricEnabled: region?.monitors?.metrics?.includes(serviceType) ?? false,
+    isAlertEnabled: region?.monitors?.alerts?.includes(capability) ?? false,
+    isMetricEnabled: region?.monitors?.metrics?.includes(capability) ?? false,
   };
 };

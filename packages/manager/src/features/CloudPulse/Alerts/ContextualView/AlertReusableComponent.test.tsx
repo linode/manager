@@ -1,5 +1,4 @@
-import { waitFor } from '@testing-library/react';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -61,7 +60,7 @@ const component = (
     entityId={entityId}
     entityName={entityName}
     onToggleAlert={onToggleAlert}
-    region={region}
+    regionId={region}
     serviceType={serviceType}
   />
 );
@@ -129,11 +128,18 @@ describe('Alert Resuable Component for contextual view', () => {
     const componentWithoutEntityData = (
       <AlertReusableComponent
         onToggleAlert={onToggleAlert}
-        region={region}
+        regionId={region}
         serviceType={serviceType}
       />
     );
     renderWithTheme(componentWithoutEntityData);
     expect(screen.queryByText('Alerts')).not.toBeInTheDocument();
+  });
+
+  it('Should hide manage alerts button for undefined entityId', () => {
+    renderWithTheme(<AlertReusableComponent serviceType={serviceType} />);
+
+    const manageAlerts = screen.queryByTestId('manage-alerts');
+    expect(manageAlerts).not.toBeInTheDocument();
   });
 });

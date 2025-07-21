@@ -36,15 +36,20 @@ interface AlertReusableComponentProps {
   entityName?: string;
 
   /**
+   * Whether the legacy alert is available for the entity
+   */
+  isLegacyAlertAvailable?: boolean;
+
+  /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
    */
   onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
-   * Region of the entity being created/edited
+   * Region ID for the selected entity
    */
-  region?: string;
+  regionId?: string;
 
   /**
    * Service type of selected entity
@@ -53,7 +58,14 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { entityId, entityName, onToggleAlert, region, serviceType } = props;
+  const {
+    entityId,
+    entityName,
+    onToggleAlert,
+    serviceType,
+    regionId,
+    isLegacyAlertAvailable,
+  } = props;
   const {
     data: alerts,
     error,
@@ -67,15 +79,14 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
 
   // Filter alerts based on status, search text, selected type, and region
   const filteredAlerts = React.useMemo(
-    () => filterAlerts(alerts, searchText, selectedType, region),
-    [alerts, searchText, selectedType, region]
+    () => filterAlerts({ alerts, searchText, selectedType, regionId }),
+    [alerts, regionId, searchText, selectedType]
   );
 
   const history = useHistory();
 
   // Filter unique alert types from alerts list
   const types = convertAlertsToTypeSet(alerts);
-  const editMode = !!entityId;
 
   if (isLoading) {
     return <CircleProgress />;
@@ -84,7 +95,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   return (
     <Paper>
       <Stack gap={3}>
-        {editMode && (
+        {entityId && (
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
@@ -138,6 +149,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             onToggleAlert={onToggleAlert}
             orderByColumn="Alert Name"
             serviceType={serviceType}
+            showConfirmationDialog={isLegacyAlertAvailable}
           />
         </Stack>
       </Stack>

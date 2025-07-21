@@ -28,7 +28,7 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
-        height={PRIMARY_NAV_TOGGLE_HEIGHT}
+        height={areNavItemsOverflowing ? PRIMARY_NAV_TOGGLE_HEIGHT : '56px'}
         justifyContent={isCollapsed ? 'center' : 'flex-end'}
         left={-1}
         position="fixed"
