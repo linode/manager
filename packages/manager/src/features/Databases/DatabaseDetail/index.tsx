@@ -217,40 +217,6 @@ export const DatabaseDetail = () => {
         )}
 
         <TabPanels>
-          {/* {isMonitorEnabled ? (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/metrics')}
-            >
-              <DatabaseMonitor database={database} />
-            </SafeTabPanel>
-          ) : null} */}
-          {/* {isVPCEnabled ? (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/networking')}
-            >
-              <DatabaseNetworking
-                database={database}
-                disabled={isDatabasesGrantReadOnly}
-              />
-            </SafeTabPanel>
-          ) : null} */}
-          {/* {flags.databaseResize ? (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/resize')}
-            >
-              <DatabaseResize
-                database={database}
-                disabled={isDatabasesGrantReadOnly}
-              />
-            </SafeTabPanel>
-          ) : null} */}
-          {/* {isAdvancedConfigEnabled && (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/configs')}
-            >
-              <DatabaseAdvancedConfiguration database={database} />
-            </SafeTabPanel>
-          )} */}
           <Outlet />
         </TabPanels>
       </Tabs>
