@@ -1,3 +1,15 @@
+import {
+  type Alert,
+  type AlertDefinitionMetricCriteria,
+  type AlertDefinitionType,
+  type AlertServiceType,
+  type APIError,
+  capabilityServiceTypeMapping,
+  type EditAlertPayloadWithService,
+  type NotificationChannel,
+  type Region,
+  type ServiceTypesList,
+} from '@linode/api-v4';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
@@ -6,22 +18,8 @@ import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type {
-  Alert,
-  AlertDefinitionMetricCriteria,
-  AlertDefinitionType,
-  AlertServiceType,
-  APIError,
-  EditAlertPayloadWithService,
-  NotificationChannel,
-  Region,
-  ServiceTypesList,
-} from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type {
-  AclpAlertServiceTypeConfig,
-  CloudPulseResourceTypeMapFlag,
-} from 'src/featureFlags';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -109,10 +107,6 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
 }
 
 interface SupportedRegionsProps {
-  /**
-   * The resource type map flag
-   */
-  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[];
   /**
    * The list of regions
    */
@@ -464,30 +458,39 @@ export const handleMultipleError = <T extends FieldValues>(
  * @returns The filtered regions based on the supported and resources
  */
 export const getSupportedRegions = (props: SupportedRegionsProps) => {
-  const { aclpResourceTypeMap, serviceType, regions, resources } = props;
-  const resourceTypeFlag = aclpResourceTypeMap?.find(
-    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
-  );
-  let supportedRegions = regions;
-  if (
-    resourceTypeFlag?.supportedRegionIds !== null &&
-    resourceTypeFlag?.supportedRegionIds !== undefined
-  ) {
-    const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
-      .split(',')
-      .map((regionId: string) => regionId.trim());
+  const { serviceType, regions, resources } = props;
 
-    supportedRegions =
-      supportedRegions?.filter(({ id }) =>
-        supportedRegionsIdList.includes(id)
-      ) ?? [];
-  }
+  const supportedRegions = filterRegionByServiceType(
+    'alert',
+    regions,
+    serviceType
+  );
 
   return (
     supportedRegions?.filter(({ id }) =>
       resources?.some(({ region }) => region === id)
     ) ?? []
   );
+};
+
+export const filterRegionByServiceType = (
+  mode: 'alert' | 'metric',
+  regions?: Region[],
+  serviceType?: null | string
+): Region[] => {
+  if (!serviceType || !regions) return regions ?? [];
+  const capability = capabilityServiceTypeMapping[serviceType];
+
+  if (!capability) {
+    return [];
+  }
+  return regions.filter((region) => {
+    if (mode === 'metric') {
+      return region.monitors?.metrics.includes(capability);
+    }
+
+    return region.monitors?.alerts.includes(capability);
+  });
 };
 
 /*
