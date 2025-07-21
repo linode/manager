@@ -228,19 +228,34 @@ describe('validate useIsAclpSupportedRegion function', () => {
     ).toBe(false);
   });
 
-  it('should return false if the capability is not supported by the metrics monitoring type for the selectedRegion', () => {
+  it('should return false if the capability is not supported by the monitoring types for the selectedRegion', () => {
     expect(
       useIsAclpSupportedRegion({
         capability: 'Linodes',
-        regionId: 'us-ord',
+        regionId: 'ca-central',
         type: 'metrics',
       })
     ).toBe(false);
     expect(
       useIsAclpSupportedRegion({
         capability: 'Managed Databases',
-        regionId: 'us-ord',
+        regionId: 'us-iad',
         type: 'metrics',
+      })
+    ).toBe(false);
+    
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Linodes',
+        regionId: 'ca-central',
+        type: 'alerts',
+      })
+    ).toBe(false);
+    expect(
+      useIsAclpSupportedRegion({
+        capability: 'Managed Databases',
+        regionId: 'us-iad',
+        type: 'alerts',
       })
     ).toBe(false);
   });
