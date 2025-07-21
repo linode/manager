@@ -172,6 +172,7 @@ export const IPTransfer = (props: Props) => {
             ...firstLinode.ipv4,
             ...linodeIPv6Ranges,
           ];
+          swapState['selectedLinodeID'] = firstLinode.id;
           break;
         /** When switching back to none, reset the ipState. */
 
