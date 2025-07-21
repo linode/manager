@@ -27,6 +27,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
+import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { BackupsPlaceholder } from './BackupsPlaceholder';
 import { BackupTableRow } from './BackupTableRow';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
@@ -41,6 +42,7 @@ export const LinodeBackups = () => {
   const id = Number(linodeId);
 
   const navigate = useNavigate();
+  const { isBareMetalInstance } = useLinodeDetailContext();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -107,6 +109,10 @@ export const LinodeBackups = () => {
         linodeIsInDistributedRegion={linodeIsInDistributedRegion}
       />
     );
+  }
+
+  if (isBareMetalInstance) {
+    return null;
   }
 
   if (error) {
