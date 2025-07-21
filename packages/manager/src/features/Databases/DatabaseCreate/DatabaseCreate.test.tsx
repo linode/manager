@@ -273,7 +273,7 @@ describe('Database Create', () => {
     );
 
     const { getAllByRole, queryByTestId, getByLabelText, getByText } =
-      await renderWithThemeAndRouter(<DatabaseCreate />, {
+      await renderWithTheme(<DatabaseCreate />, {
         initialRoute: '/databases/create',
       });
 
@@ -344,7 +344,7 @@ describe('Database Create', () => {
     });
 
     const { getAllByRole, queryByTestId, getByLabelText, getByText } =
-      await renderWithThemeAndRouter(<DatabaseCreate />, {
+      await renderWithTheme(<DatabaseCreate />, {
         initialRoute: '/databases/create',
       });
 
