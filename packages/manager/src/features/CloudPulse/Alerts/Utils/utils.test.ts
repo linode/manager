@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { act, renderHook } from '@testing-library/react';
 
 import { alertFactory, serviceTypesFactory } from 'src/factories';
@@ -10,6 +11,7 @@ import {
   convertSecondsToMinutes,
   convertSecondsToOptions,
   filterAlertsByStatusAndType,
+  filterRegionByServiceType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
@@ -364,5 +366,61 @@ describe('useContextualAlertsState', () => {
     });
 
     expect(result.current.hasUnsavedChanges).toBe(true);
+  });
+});
+
+describe('filterRegionByServiceType', () => {
+  const regions = [
+    regionFactory.build({
+      monitors: {
+        alerts: ['Linodes'],
+        metrics: ['Managed Databases'],
+      },
+    }),
+    ...regionFactory.buildList(3, {
+      monitors: {
+        metrics: [],
+        alerts: [],
+      },
+    }),
+    ...regionFactory.buildList(3, {
+      monitors: {
+        alerts: ['Linodes', 'Managed Databases'],
+        metrics: [],
+      },
+    }),
+    regionFactory.build({
+      monitors: undefined,
+    }),
+  ];
+
+  it('should return empty list for linode metrics', () => {
+    const result = filterRegionByServiceType('metric', regions, 'linode');
+
+    expect(result).toHaveLength(0);
+  });
+
+  it('should return 4 regions for linode alerts', () => {
+    expect(filterRegionByServiceType('alert', regions, 'linode')).toHaveLength(
+      4
+    );
+  });
+
+  it('should return 1 region for dbaas metrics', () => {
+    expect(filterRegionByServiceType('metric', regions, 'dbaas')).toHaveLength(
+      1
+    );
+  });
+
+  it('should return 3 regions for dbaas alerts', () => {
+    expect(filterRegionByServiceType('alert', regions, 'dbaas')).toHaveLength(
+      3
+    );
+  });
+
+  it('should return no regions for unknown service type', () => {
+    const result = filterRegionByServiceType('alert', regions, 'unknown');
+
+    expect(result).toHaveLength(0);
   });
 });
