@@ -114,12 +114,9 @@ describe('AlertDetail component tests', () => {
       isFetching: false,
     });
 
-    const { getByTestId, getByText } = renderWithTheme(
-      <AlertDetail />,
-      {
-        initialRoute: '/alerts/definitions/detail/linode/1',
-      }
-    );
+    const { getByTestId, getByText } = renderWithTheme(<AlertDetail />, {
+      initialRoute: '/alerts/definitions/detail/linode/1',
+    });
 
     // Assert error message is displayed
     expect(
