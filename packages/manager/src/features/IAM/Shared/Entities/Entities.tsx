@@ -113,6 +113,9 @@ export const Entities = ({
             textWrap: 'auto',
             height: 'auto',
           },
+          '& .MuiAutocomplete-tag': {
+            wordBreak: 'break-all',
+          },
         }}
         value={value || []}
       />
