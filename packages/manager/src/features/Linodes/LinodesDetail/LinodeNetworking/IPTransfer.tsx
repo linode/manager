@@ -248,6 +248,7 @@ export const IPTransfer = (props: Props) => {
     return (
       <Grid
         container
+        data-testid="ip-row"
         key={state.sourceIP}
         size={12}
         spacing={2}
@@ -372,6 +373,7 @@ export const IPTransfer = (props: Props) => {
           noMarginTop
           onChange={onSelectedIPChange(sourceIP)}
           options={IPList}
+          placeholder="Select IP Address"
           textFieldProps={{
             dataAttrs: {
               'data-qa-swap-ip-action-menu': true,
