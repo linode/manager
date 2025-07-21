@@ -4,13 +4,13 @@ import {
   getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
+  getFirewalls,
   getJWEToken,
   getMetricDefinitionsByServiceType,
   getNodeBalancers,
 } from '@linode/api-v4';
 import {
   databaseQueries,
-  firewallQueries,
   getAllLinodesRequest,
   volumeQueries,
 } from '@linode/queries';
@@ -115,7 +115,13 @@ export const queryFactory = createQueryKeys(key, {
       case 'dbaas':
         return databaseQueries.databases._ctx.all(params, filters);
       case 'firewall':
-        return firewallQueries.firewalls._ctx.all(params, filters);
+        return {
+          queryFn: async () => {
+            const response = await getFirewalls(params, filters);
+            return response.data;
+          },
+          queryKey: ['firewalls', params, filters],
+        };
 
       case 'linode':
         return {
