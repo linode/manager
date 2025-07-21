@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
@@ -9,6 +9,7 @@ import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 import type { Props } from './NodePoolSummaryItem';
 
 const props: Props = {
+  poolIndex: 0,
   nodeCount: 3,
   onRemove: vi.fn(),
   poolType: extendedTypes[1],
@@ -23,9 +24,9 @@ describe('Node Pool Summary Item', () => {
     getByText(/1 CPU, 50 GB Storage/i);
   });
 
-  it('should call its onRemove handler when the trash can is clicked', () => {
+  it('should call its onRemove handler when the trash can is clicked', async () => {
     const { getByTestId } = renderWithTheme(<NodePoolSummaryItem {...props} />);
-    fireEvent.click(getByTestId('remove-pool-button'));
+    await userEvent.click(getByTestId('remove-pool-button'));
     expect(props.onRemove).toHaveBeenCalledTimes(1);
   });
 

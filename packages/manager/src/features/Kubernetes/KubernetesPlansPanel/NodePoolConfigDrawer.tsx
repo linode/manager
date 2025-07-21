@@ -34,6 +34,7 @@ export interface Props {
   onClose: () => void;
   open: boolean;
   planId: string | undefined;
+  poolIndex?: number;
   selectedTier: KubernetesTier;
 }
 
@@ -43,7 +44,7 @@ interface VersionUpdateFormFields {
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const { onClose, open, selectedTier, planId, mode } = props;
+  const { onClose, open, selectedTier, planId, poolIndex, mode } = props;
 
   // Use the node pool state from the main create flow from.
   const { control: parentFormControl, setValue: parentFormSetValue } =
@@ -79,9 +80,12 @@ export const NodePoolConfigDrawer = (props: Props) => {
       selectedTier === 'enterprise' ? 'on_recycle' : undefined
     );
 
-    // eslint-disable-next-line sonarjs/todo-tag
-    // TODO - M3-10295: If the plan has been added to the cluster, set the existing node count for editing.
-  }, [planId, open, selectedTier, setValue]);
+    // If we're in edit mode, set the existing config values on the pool.
+    if (!isAddMode && poolIndex !== undefined) {
+      setValue('nodeCount', _nodePools[poolIndex].count);
+      setValue('updateStrategy', _nodePools[poolIndex].update_strategy);
+    }
+  }, [planId, open, selectedTier, setValue, isAddMode, poolIndex, _nodePools]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {

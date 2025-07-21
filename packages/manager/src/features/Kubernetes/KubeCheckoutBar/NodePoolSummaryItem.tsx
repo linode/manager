@@ -1,29 +1,52 @@
-import { Box, CloseIcon, IconButton, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  CloseIcon,
+  IconButton,
+  Stack,
+  StyledLinkButton,
+  Typography,
+} from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from 'src/features/Kubernetes/constants';
 
+import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
+
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
 import type { KubernetesTier } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
   clusterTier?: KubernetesTier;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   nodeCount: number;
   onRemove: () => void;
+  poolIndex: number;
   poolType: ExtendedType | null;
   price?: null | number; // Can be undefined until a Region is selected.
   updateNodeCount: (count: number) => void;
 }
 
 export const NodePoolSummaryItem = React.memo((props: Props) => {
-  const { nodeCount, onRemove, poolType, price, updateNodeCount, clusterTier } =
-    props;
+  const {
+    handleConfigurePool,
+    nodeCount,
+    onRemove,
+    poolIndex,
+    poolType,
+    price,
+    updateNodeCount,
+    clusterTier,
+  } = props;
+
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   // This should never happen but TS wants us to account for the situation
   // where we fail to match a selected type against our types list.
@@ -54,16 +77,18 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
           <CloseIcon />
         </IconButton>
       </Stack>
-      <EnhancedNumberInput
-        max={
-          clusterTier === 'enterprise'
-            ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-            : MAX_NODES_PER_POOL_STANDARD_TIER
-        }
-        min={1}
-        setValue={updateNodeCount}
-        value={nodeCount}
-      />
+      {!isLkeEnterprisePostLAFeatureEnabled && (
+        <EnhancedNumberInput
+          max={
+            clusterTier === 'enterprise'
+              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+              : MAX_NODES_PER_POOL_STANDARD_TIER
+          }
+          min={1}
+          setValue={updateNodeCount}
+          value={nodeCount}
+        />
+      )}
       <Box pt={0.5}>
         {price ? (
           <DisplayPrice
@@ -74,6 +99,22 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
           />
         ) : undefined}
       </Box>
+      {isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool && (
+        <StyledLinkButtonBox>
+          <StyledLinkButton
+            onClick={() =>
+              handleConfigurePool({
+                drawerMode: 'edit',
+                isOpen: true,
+                planLabel: poolType.id,
+                poolIndex,
+              })
+            }
+          >
+            Edit Configuration
+          </StyledLinkButton>
+        </StyledLinkButtonBox>
+      )}
     </Stack>
   );
 });
