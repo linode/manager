@@ -131,7 +131,7 @@ export const AlertInformationActionTable = (
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const isEditMode = !!entityId;
-  const isCreateMode = !!onToggleAlert;
+  const isCreateMode = !isEditMode;
 
   const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
     useContextualAlertsState(alerts, entityId);
