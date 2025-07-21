@@ -81,10 +81,10 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   ],
 };
 
-export const serviceToFiltersMap: Record<
-  '' | CloudPulseServiceType,
-  ServiceFilterConfig[]
-> = {
+export const serviceToFiltersMap: Partial<
+  Record<Partial<CloudPulseServiceType>, ServiceFilterConfig[]>
+> &
+  Record<'', ServiceFilterConfig[]> = {
   '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // Default to only region for better user experience in create alert flow
   dbaas: [
     { component: AlertsEngineTypeFilter, filterKey: 'engineType' },

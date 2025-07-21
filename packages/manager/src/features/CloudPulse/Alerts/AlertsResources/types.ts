@@ -36,10 +36,11 @@ export interface EngineType {
  * The value is an array of ColumnConfig objects defining the table structure for that service type.
  * @template T - The type of data displayed in the table columns.
  */
-export type ServiceColumns<T> = Record<
-  '' | CloudPulseServiceType,
-  ColumnConfig<T>[]
->;
+
+export type ServiceColumns<T> = Partial<
+  Record<CloudPulseServiceType, ColumnConfig<T>[]>
+> &
+  Record<'', ColumnConfig<T>[]>;
 
 /**
  * Defines the available filter keys that can be used to filter alerts.
