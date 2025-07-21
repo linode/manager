@@ -72,12 +72,10 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
         xs: 12,
       }}
     >
-      <Grid container spacing={1} sx={{ padding: 1 }}>
-        <Grid size={12}>
-          <Typography data-qa-active-checks-header variant="h2">
-            Active Health Checks
-          </Typography>
-        </Grid>
+      <Grid container spacing={1}>
+        <Typography data-qa-active-checks-header variant="h2">
+          Active Health Checks
+        </Typography>
         <Grid size={12}>
           <Autocomplete
             autoHighlight
