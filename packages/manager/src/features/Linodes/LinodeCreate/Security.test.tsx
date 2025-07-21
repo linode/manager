@@ -99,7 +99,7 @@ describe('Security', () => {
     const component = wrapWithFormContext({
       component: <Security />,
     });
-    const { getByText } = await renderWithThemeAndRouter(component);
+    const { getByText } = renderWithTheme(component);
 
     const addSSHKeyButton = getByText('Add an SSH Key');
 
