@@ -31,11 +31,9 @@ const flags: Partial<Flags> = {
   aclpResourceTypeMap: [
     {
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-west, us-east, ,',
     },
     {
       serviceType: 'linode',
-      supportedRegionIds: 'us-lax, us-mia',
     },
   ] as CloudPulseResourceTypeMapFlag[],
 };
@@ -45,21 +43,37 @@ const allRegions: Region[] = [
     capabilities: [capabilityServiceTypeMapping['linode']],
     id: 'us-lax',
     label: 'US, Los Angeles, CA',
+    monitors: {
+      metrics: ['Linodes'],
+      alerts: [],
+    },
   }),
   regionFactory.build({
     capabilities: [capabilityServiceTypeMapping['linode']],
     id: 'us-mia',
     label: 'US, Miami, FL',
+    monitors: {
+      metrics: ['Linodes'],
+      alerts: [],
+    },
   }),
   regionFactory.build({
     capabilities: [capabilityServiceTypeMapping['dbaas']],
     id: 'us-west',
     label: 'US, Fremont, CA',
+    monitors: {
+      metrics: ['Managed Databases'],
+      alerts: [],
+    },
   }),
   regionFactory.build({
     capabilities: [capabilityServiceTypeMapping['dbaas']],
     id: 'us-east',
     label: 'US, Newark, NJ',
+    monitors: {
+      metrics: ['Managed Databases'],
+      alerts: [],
+    },
   }),
   regionFactory.build({
     capabilities: [capabilityServiceTypeMapping['dbaas']],
