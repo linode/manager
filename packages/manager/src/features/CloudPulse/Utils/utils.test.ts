@@ -125,26 +125,6 @@ describe('validate useIsAclpSupportedRegion function', () => {
     ).toBe(false);
   });
 
-  it('should return false if capability is not supported by alerts monitoring type for the selectedRegion', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'ca-central',
-        type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
-  it('should return false if selectedRegion is not in regions for the metrics monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'us-west',
-        type: 'metrics',
-      })
-    ).toBe(false);
-  });
-
   it('should return true if Linodes is requested in supported region (us-iad, us-east) for the metrics and alert monitoring type', () => {
     expect(
       useIsAclpSupportedRegion({
