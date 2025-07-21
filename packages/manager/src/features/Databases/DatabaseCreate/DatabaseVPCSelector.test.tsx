@@ -265,7 +265,7 @@ describe('DatabaseVPCSelector', () => {
         privateNetworkValues={mockPrivateNetwork}
         resetFormFields={resetFormFields}
         selectedRegionId="us-west"
-      />,
+      />
     );
 
     expect(resetFormFields).toHaveBeenCalled();

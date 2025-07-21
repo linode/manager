@@ -9,9 +9,7 @@ describe('UsernamePanel', () => {
   it("initializes the form with the user's username", async () => {
     const user = accountUserFactory.build();
 
-    const { getByLabelText } = renderWithTheme(
-      <UsernamePanel user={user} />
-    );
+    const { getByLabelText } = renderWithTheme(<UsernamePanel user={user} />);
 
     const usernameTextField = getByLabelText('Username');
 

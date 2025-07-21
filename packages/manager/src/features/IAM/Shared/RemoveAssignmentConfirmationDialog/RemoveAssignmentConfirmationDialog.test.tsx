@@ -67,9 +67,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('should render', async () => {
-    renderWithTheme(
-      <RemoveAssignmentConfirmationDialog {...props} />
-    );
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const headerText = screen.getByText(
       'Remove the Test entity from the firewall_admin role assignment?'
@@ -92,9 +90,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('calls onClose when the cancel button is clicked', async () => {
-    renderWithTheme(
-      <RemoveAssignmentConfirmationDialog {...props} />
-    );
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const cancelButton = screen.getByText('Cancel');
     expect(cancelButton).toBeVisible();
@@ -121,9 +117,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       data: accountRolesFactory.build(),
     });
 
-    renderWithTheme(
-      <RemoveAssignmentConfirmationDialog {...props} />
-    );
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const removeButton = screen.getByText('Remove');
     expect(removeButton).toBeVisible();

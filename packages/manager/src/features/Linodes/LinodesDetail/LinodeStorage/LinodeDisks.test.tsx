@@ -73,9 +73,7 @@ describe('LinodeDisks', () => {
       error: null,
     });
 
-    const { findByText, getByText } = renderWithTheme(
-      <LinodeDisks />
-    );
+    const { findByText, getByText } = renderWithTheme(<LinodeDisks />);
 
     // Verify heading renders
     expect(getByText('Disks')).toBeVisible();
