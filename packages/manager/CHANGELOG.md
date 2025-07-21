@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- resort to payment id for edit billing flow ([#12525](https://github.com/linode/manager/pull/12525))
+- Resort to payment id for edit billing flow ([#12525](https://github.com/linode/manager/pull/12525))
 
 ## [2025-07-16] - v1.146.1
 
