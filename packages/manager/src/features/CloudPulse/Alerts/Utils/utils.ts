@@ -299,8 +299,8 @@ export const getChipLabels = (
  * @param alerts list of alerts to be filtered
  * @param searchText text to be searched in alert name
  * @param selectedType selecte alert type
- * @param region region of the entity
- * @returns list of filtered alerts based on searchText, selectedType, and region
+ * @param regionId regionId of the entity
+ * @returns list of filtered alerts based on searchText, selectedType, and regionId
  */
 export const filterAlerts = (props: FilterAlertsProps): Alert[] => {
   const { alerts, regionId, searchText, selectedType } = props;

@@ -77,7 +77,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
-  // Filter alerts based on status, search text, selected type, and region
+  // Filter alerts based on status, search text, selected type, and regionId
   const filteredAlerts = React.useMemo(
     () => filterAlerts({ alerts, searchText, selectedType, regionId }),
     [alerts, regionId, searchText, selectedType]
