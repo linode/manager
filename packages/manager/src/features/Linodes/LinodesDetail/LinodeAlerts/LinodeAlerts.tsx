@@ -1,10 +1,10 @@
-import { useLinodeQuery, useRegionsQuery } from '@linode/queries';
+import { useLinodeQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
-import { isAclpSupportedRegion } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -19,14 +19,12 @@ const LinodeAlerts = () => {
 
   const { aclpBetaServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
-  const { data: regions } = useRegionsQuery();
 
   const { permissions } = usePermissions('linode', ['update_linode'], id);
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
-    regions,
     type: 'alerts',
   });
 

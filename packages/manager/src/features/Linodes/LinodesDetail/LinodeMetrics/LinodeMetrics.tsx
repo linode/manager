@@ -1,14 +1,10 @@
-import {
-  useLinodeQuery,
-  usePreferences,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useLinodeQuery, usePreferences } from '@linode/queries';
 import { Box } from '@linode/ui';
-import { isAclpSupportedRegion } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
@@ -17,12 +13,10 @@ import LinodeSummary from './LinodeSummary/LinodeSummary';
 const LinodeMetrics = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const { data: linode } = useLinodeQuery(linodeId);
-  const { data: regions } = useRegionsQuery();
 
-  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpMetricsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
-    regions,
     type: 'metrics',
   });
 
