@@ -2,7 +2,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { volumeFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumesActionMenu } from './VolumesActionMenu';
 
@@ -28,7 +28,7 @@ const props: Props = {
 
 describe('Volume action menu', () => {
   it('should include basic Volume actions', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VolumesActionMenu {...props} />
     );
 
@@ -44,10 +44,9 @@ describe('Volume action menu', () => {
   });
 
   it('should include Attach if the Volume is not attached', async () => {
-    const { getByLabelText, getByText, queryByText } =
-      await renderWithThemeAndRouter(
-        <VolumesActionMenu {...props} isVolumesLanding={true} />
-      );
+    const { getByLabelText, getByText, queryByText } = renderWithTheme(
+      <VolumesActionMenu {...props} isVolumesLanding={true} />
+    );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Volume ${volume.label}`
@@ -65,10 +64,9 @@ describe('Volume action menu', () => {
       linode_label: 'linode-2',
     });
 
-    const { getByLabelText, getByText, queryByText } =
-      await renderWithThemeAndRouter(
-        <VolumesActionMenu {...props} volume={attachedVolune} />
-      );
+    const { getByLabelText, getByText, queryByText } = renderWithTheme(
+      <VolumesActionMenu {...props} volume={attachedVolune} />
+    );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Volume ${attachedVolune.label}`
@@ -81,7 +79,7 @@ describe('Volume action menu', () => {
   });
 
   it('should include Delete', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VolumesActionMenu {...props} />
     );
 
