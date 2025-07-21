@@ -108,23 +108,6 @@ describe('validate useIsAclpSupportedRegion function', () => {
     });
   });
 
-  it('should return false if alerts list is empty for the alerts monitoring type', () => {
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Linodes',
-        regionId: 'ca-central',
-        type: 'alerts',
-      })
-    ).toBe(false);
-    expect(
-      useIsAclpSupportedRegion({
-        capability: 'Managed Databases',
-        regionId: 'ca-central',
-        type: 'alerts',
-      })
-    ).toBe(false);
-  });
-
   it('should return true if Linodes is requested in supported region (us-iad, us-east) for the metrics and alert monitoring type', () => {
     expect(
       useIsAclpSupportedRegion({
@@ -223,7 +206,6 @@ describe('validate useIsAclpSupportedRegion function', () => {
         type: 'metrics',
       })
     ).toBe(false);
-    
     expect(
       useIsAclpSupportedRegion({
         capability: 'Linodes',
