@@ -84,8 +84,13 @@ export const ContactInformation = React.memo((props: Props) => {
 
   const handleEditDrawerOpen = () => {
     navigate({
-      to: '/account/billing/edit',
-      search: { contactDrawerOpen: true, focusEmail: false },
+      to: '/account/billing',
+      search: (prev) => ({
+        ...prev,
+        action: 'edit',
+        contactDrawerOpen: true,
+        focusEmail: false,
+      }),
     });
   };
 

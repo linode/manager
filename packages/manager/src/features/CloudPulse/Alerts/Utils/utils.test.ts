@@ -10,7 +10,7 @@ import {
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
   convertSecondsToOptions,
-  filterAlertsByStatusAndType,
+  filterAlerts,
   filterRegionByServiceType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
@@ -53,13 +53,32 @@ it('test convertSecondsToOptions method', () => {
   expect(convertSecondsToOptions(900)).toEqual('15 min');
 });
 
-it('test filterAlertsByStatusAndType method', () => {
-  const alerts = alertFactory.buildList(12, { created_by: 'system' });
-  expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);
-  expect(filterAlertsByStatusAndType(alerts, '', 'user')).toHaveLength(0);
-  expect(filterAlertsByStatusAndType(alerts, 'Alert-1', 'system')).toHaveLength(
-    4
-  );
+it('test filterAlerts method', () => {
+  const alerts = [
+    ...alertFactory.buildList(12, { created_by: 'system' }),
+    alertFactory.build({
+      label: 'Alert-14',
+      scope: 'region',
+      regions: ['us-east'],
+    }),
+  ];
+  expect(
+    filterAlerts({ alerts, searchText: '', selectedType: 'system' })
+  ).toHaveLength(12);
+  expect(
+    filterAlerts({ alerts, searchText: '', selectedType: 'user' })
+  ).toHaveLength(0);
+  expect(
+    filterAlerts({ alerts, searchText: 'Alert-1', selectedType: 'system' })
+  ).toHaveLength(4);
+  expect(
+    filterAlerts({
+      alerts,
+      searchText: '',
+      selectedType: 'system',
+      regionId: 'us-east',
+    })
+  ).toHaveLength(13);
 });
 
 it('test convertAlertsToTypeSet method', () => {
