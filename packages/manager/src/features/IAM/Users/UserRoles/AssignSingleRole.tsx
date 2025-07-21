@@ -120,6 +120,7 @@ export const AssignSingleRole = ({
       >
         <Button
           disabled={roles.length === 1}
+          disableRipple
           onClick={() => onRemove(index)}
           sx={{ paddingRight: 0 }}
         >

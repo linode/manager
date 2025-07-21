@@ -27,6 +27,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
@@ -80,6 +81,12 @@ export const FirewallDetail = () => {
     firewallId,
     profile,
     grants
+  );
+
+  const { permissions } = usePermissions(
+    'firewall',
+    ['update_firewall_rules'],
+    firewallId
   );
 
   const { data: allDevices } = useAllFirewallDevicesQuery(firewallId);
@@ -230,7 +237,7 @@ export const FirewallDetail = () => {
           <TabPanels>
             <SafeTabPanel index={0}>
               <FirewallRulesLanding
-                disabled={!userCanModifyFirewall}
+                disabled={!permissions.update_firewall_rules}
                 firewallID={firewallId}
                 rules={firewall.rules}
               />

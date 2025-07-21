@@ -12,7 +12,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   getShadowRootElement,
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
@@ -60,7 +60,7 @@ describe('database resize', () => {
   });
 
   it('should render a loading state', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseResize database={database} />
     );
     // Should render a loading state
@@ -68,7 +68,7 @@ describe('database resize', () => {
   });
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseResize database={database} />
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe('database resize', () => {
     };
 
     it('resize button should be disabled when no input is provided in the form', async () => {
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <DatabaseResize database={database} />
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -108,7 +108,7 @@ describe('database resize', () => {
         pathname: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
       } as any;
 
-      const { getByRole, getByTestId } = await renderWithThemeAndRouter(
+      const { getByRole, getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -133,7 +133,7 @@ describe('database resize', () => {
     });
 
     it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} disabled={true} />
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -190,7 +190,7 @@ describe('database resize', () => {
     });
 
     it('should render set node section', async () => {
-      const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      const { getByTestId, getByText } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -205,7 +205,7 @@ describe('database resize', () => {
     });
 
     it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -229,7 +229,7 @@ describe('database resize', () => {
     });
 
     it('should preselect cluster size in Set Number of Nodes', async () => {
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -246,7 +246,7 @@ describe('database resize', () => {
         platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -275,7 +275,7 @@ describe('database resize', () => {
         platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -358,7 +358,7 @@ describe('database resize', () => {
         },
       };
 
-      const { getByRole, getByTestId } = await renderWithThemeAndRouter(
+      const { getByRole, getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -441,7 +441,7 @@ describe('database resize', () => {
         })
       );
 
-      const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      const { getByTestId, getByText } = renderWithTheme(
         <DatabaseResize database={database} />
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
