@@ -114,7 +114,7 @@ it('test checkIfFilterNeededInMetricsCall method', () => {
   result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('node_type', 'linode'); // xyz service type
+  result = checkIfFilterNeededInMetricsCall('node_type', 'linode');
   expect(result).toEqual(false);
 });
 
