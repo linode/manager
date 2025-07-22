@@ -11,7 +11,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { VLANAvailabilityNotice } from '../Networking/VLANAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
@@ -23,9 +23,7 @@ export const VLAN = () => {
 
   const { params } = useLinodeCreateQueryParams();
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const [imageId, regionId] = useWatch({ control, name: ['image', 'region'] });
 
@@ -39,7 +37,7 @@ export const VLAN = () => {
   const disabled =
     !imageId ||
     isCreatingFromBackup ||
-    isLinodeCreateRestricted ||
+    !permissions.create_linode ||
     !regionSupportsVLANs;
 
   return (
