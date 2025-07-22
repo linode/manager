@@ -27,7 +27,6 @@ export * from './getUserTimezone';
 export * from './grants';
 export * from './groupByTags';
 export * from './initWindows';
-export * from './isAclpSupportedRegion';
 export * from './isNilOrEmpty';
 export * from './isNumber';
 export * from './isToday';
