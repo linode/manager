@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -18,7 +17,6 @@ import {
 } from './LinodeEntityDetail.styles';
 
 interface FooterProps {
-  isLinodesGrantReadOnly: boolean;
   linodeCreated: string;
   linodeId: number;
   linodeLabel: string;
@@ -33,7 +31,6 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
 
   const {
-    isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
     linodeLabel,
@@ -42,10 +39,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeTags,
   } = props;
 
-  const isReadOnlyAccountAccess = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'account_access',
-    permittedGrantLevel: 'read_write',
-  });
+  const isRestricted = profile?.restricted ?? false;
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
@@ -148,7 +142,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
-          disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
+          disabled={isRestricted}
           entityLabel={linodeLabel}
           sx={{
             width: '100%',

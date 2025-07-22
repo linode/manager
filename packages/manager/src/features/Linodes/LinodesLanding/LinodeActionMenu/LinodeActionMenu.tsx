@@ -99,9 +99,12 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: handlePowerAction,
       title: isLinodeRunning ? 'Power Off' : 'Power On',
       tooltipAction: 'modify',
-      tooltipText: !permissions.shutdown_linode
-        ? NO_PERMISSION_TOOLTIP_TEXT
-        : undefined,
+      tooltipText: !['offline', 'running'].includes(linodeStatus)
+        ? LINODE_STATUS_NOT_RUNNING_TOOLTIP_TEXT
+        : (!isLinodeRunning && !permissions.boot_linode) ||
+            (isLinodeRunning && !permissions.shutdown_linode)
+          ? NO_PERMISSION_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: true,

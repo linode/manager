@@ -1,5 +1,5 @@
 import { linodeBackupsFactory, regionFactory } from '@linode/utilities';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -102,6 +102,28 @@ describe('LinodeActionMenu', () => {
 
       expect(queryByText('Power On')).toBeVisible();
       expect(queryByText('Power Off')).toBeNull();
+    });
+
+    it('should disable Power On when the Linode is rebooting', async () => {
+      const { getByLabelText, queryByText } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeStatus="rebooting" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Linode ${props.linodeLabel}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const powerOnItem = queryByText('Power On')?.closest('li');
+      expect(powerOnItem).toHaveAttribute('aria-disabled', 'true');
+
+      const tooltipButton = within(powerOnItem!).getByRole('button');
+
+      expect(tooltipButton).toHaveAttribute(
+        'aria-label',
+        'This action is unavailable while your Linode is offline.'
+      );
     });
 
     it('should allow a reboot if the Linode is running', async () => {
