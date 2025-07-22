@@ -129,7 +129,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const theme = useTheme();
 
-  // Validate launchDarkly region ids with the ids from regionOptions prop
   const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds

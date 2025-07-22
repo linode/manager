@@ -138,9 +138,11 @@ export const getRegionOptions = (
 };
 
 /**
- * @param aclpResourceTypeMap The launch darkly flag where supported region ids are listed
- * @param serviceType The service type associated with the alerts
- * @returns Array of supported regions associated with the resource ids of the alert
+ * Filters regions based on service type and returns their IDs.
+ * @param regions List of regions to filter
+ * @param serviceType The alert service type to filter regions by
+ * @returns An array of region IDs that support the specified alert service type,
+ *                                 or undefined if no regions are provided
  */
 export const getSupportedRegionIds = (
   regions?: Region[],
