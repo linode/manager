@@ -19,6 +19,7 @@ import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect
 import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
+import type { MonitoringCapabilities } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
@@ -562,7 +563,7 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
   const { serviceType, regions, resources } = props;
 
   const supportedRegions = filterRegionByServiceType(
-    'alert',
+    'alerts',
     regions,
     serviceType
   );
@@ -574,8 +575,15 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
   );
 };
 
+/**
+ * Filters regions based on service type and capability type
+ * @param type The monitoring capability type to filter by (e.g., 'alerts', 'metrics')
+ * @param regions The list of regions to filter
+ * @param serviceType The service type to filter regions by
+ * @returns Array of regions that support the specified service type and monitoring type
+ */
 export const filterRegionByServiceType = (
-  mode: 'alert' | 'metric',
+  type: keyof MonitoringCapabilities,
   regions?: Region[],
   serviceType?: null | string
 ): Region[] => {
@@ -586,11 +594,7 @@ export const filterRegionByServiceType = (
     return [];
   }
   return regions.filter((region) => {
-    if (mode === 'metric') {
-      return region.monitors?.metrics?.includes(capability);
-    }
-
-    return region.monitors?.alerts?.includes(capability);
+    return region.monitors?.[type]?.includes(capability);
   });
 };
 
