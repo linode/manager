@@ -1,5 +1,6 @@
 import { useSpecificTypes } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import { isNumber, pluralize } from '@linode/utilities';
 import { Box, FormLabel } from '@mui/material';
 import * as React from 'react';
 import {
@@ -13,6 +14,8 @@ import {
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { extendType } from 'src/utilities/extendType';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import {
   DEFAULT_PLAN_COUNT,
@@ -25,6 +28,7 @@ import type {
   CreateNodePoolDataBeta,
   KubernetesTier,
   NodePoolUpdateStrategy,
+  Region,
 } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
@@ -36,6 +40,7 @@ export interface Props {
   open: boolean;
   planId: string | undefined;
   poolIndex?: number;
+  selectedRegion: Region | undefined;
   selectedTier: KubernetesTier;
 }
 
@@ -45,7 +50,15 @@ interface VersionUpdateFormFields {
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const { onClose, open, selectedTier, planId, poolIndex, mode } = props;
+  const {
+    onClose,
+    open,
+    selectedRegion,
+    selectedTier,
+    planId,
+    poolIndex,
+    mode,
+  } = props;
 
   // Use the node pool state from the main create flow from.
   const { control: parentFormControl } = useFormContext();
@@ -66,6 +79,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
       },
       shouldUnregister: true, // For conditionally defined fields (e.g. updateStrategy)
     });
+  const nodeCountWatcher = useWatch({ control, name: 'nodeCount' });
+  const updatedCount = nodeCountWatcher ?? form.getValues('nodeCount');
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);
   const planType = typesQuery[0]?.data
@@ -73,6 +88,11 @@ export const NodePoolConfigDrawer = (props: Props) => {
     : undefined;
 
   const isAddMode = mode === 'add';
+
+  const pricePerNode = getLinodeRegionPrice(
+    planType,
+    selectedRegion?.toString()
+  )?.monthly;
 
   React.useEffect(() => {
     if (!planId || !selectedTier) {
@@ -160,12 +180,27 @@ export const NodePoolConfigDrawer = (props: Props) => {
                       ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
                       : MAX_NODES_PER_POOL_STANDARD_TIER
                   }
+                  min={1}
                   setValue={field.onChange}
                   value={field.value}
                 />
               )}
             />
+            {isNumber(pricePerNode) && (
+              <Typography marginTop={3}>
+                {/* Renders total pool price/month for N nodes at price per node/month. */}
+                <strong>
+                  {`$${renderMonthlyPriceToCorrectDecimalPlace(
+                    updatedCount * pricePerNode
+                  )}/month`}{' '}
+                </strong>
+                ({pluralize('node', 'nodes', updatedCount)} at $
+                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+                /month each)
+              </Typography>
+            )}
           </Box>
+
           {selectedTier === 'enterprise' && <NodePoolConfigOptions />}
           <ActionsPanel
             primaryButtonProps={{

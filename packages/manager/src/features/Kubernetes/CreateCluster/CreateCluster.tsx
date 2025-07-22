@@ -658,6 +658,7 @@ export const CreateCluster = () => {
         open={isNodePoolConfigDrawerOpen}
         planId={selectedType}
         poolIndex={selectedPoolIndex}
+        selectedRegion={selectedRegion}
         selectedTier={selectedTier}
       />
     </FormProvider>
