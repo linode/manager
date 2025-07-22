@@ -27,6 +27,7 @@ import type {
   Capabilities,
   CloudPulseAlertsPayload,
   Dashboard,
+  MonitoringCapabilities,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -38,15 +39,19 @@ import type {
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
 
-interface AclpContextualViewProps {
+interface AclpSupportedRegionProps {
+  /**
+   * The capability to check ('Linodes', 'NodeBalancers', etc)
+   */
   capability: Capabilities;
-  regionId: string;
-}
-
-interface AclpContextualViewEnabled {
-  isAlertEnabled: boolean;
-  isLoading: boolean;
-  isMetricEnabled: boolean;
+  /**
+   * Region ID to check
+   */
+  regionId: string | undefined;
+  /**
+   * The type of monitoring capability to check
+   */
+  type: keyof MonitoringCapabilities;
 }
 
 /**
@@ -90,19 +95,20 @@ export const useContextualAlertsState = (
         user: [],
       };
 
-      if (entityId) {
-        alerts.forEach((alert) => {
-          const isAccountOrRegion =
-            alert.scope === 'region' || alert.scope === 'account';
-          const shouldInclude = entityId
-            ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-            : false;
+      alerts.forEach((alert) => {
+        const isAccountOrRegion =
+          alert.scope === 'region' || alert.scope === 'account';
 
-          if (shouldInclude) {
-            initialStates[alert.type]?.push(alert.id);
-          }
-        });
-      }
+        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        const shouldInclude = entityId
+          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
+          : isAccountOrRegion;
+
+        if (shouldInclude) {
+          initialStates[alert.type]?.push(alert.id);
+        }
+      });
+
       return initialStates;
     },
     []
@@ -359,29 +365,18 @@ export const validationFunction: Record<
 };
 
 /**
- * Checks if the ACLP Contextual View is enabled for the given region and service type.
- * @param props Contains regionId and serviceType to check against the regions data.
- * @returns An object indicating whether alerts and metrics are enabled, along with the loading state.
+ * Checks if the selected region is ACLP-supported for the given capability and type.
+ * @param props Contains regionId, capability and type to check against the regions data.
+ * @returns boolean indicating if the selected region is ACLP-supported for the given capability and type.
  */
-export const useIsAclpContextualViewEnabled = (
-  props: AclpContextualViewProps
-): AclpContextualViewEnabled => {
-  const { regionId, capability } = props;
-  const { isLoading, data: regions } = useRegionsQuery();
+export const useIsAclpSupportedRegion = (
+  props: AclpSupportedRegionProps
+): boolean => {
+  const { regionId, capability, type } = props;
 
-  if (isLoading) {
-    return {
-      isLoading,
-      isAlertEnabled: false,
-      isMetricEnabled: false,
-    };
-  }
+  const { data: regions } = useRegionsQuery();
 
   const region = regions?.find(({ id }) => id === regionId);
 
-  return {
-    isLoading: false,
-    isAlertEnabled: region?.monitors?.alerts?.includes(capability) ?? false,
-    isMetricEnabled: region?.monitors?.metrics?.includes(capability) ?? false,
-  };
+  return region?.monitors?.[type]?.includes(capability) ?? false;
 };

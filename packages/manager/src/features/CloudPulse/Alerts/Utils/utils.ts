@@ -176,6 +176,25 @@ interface SupportedRegionsProps {
   serviceType: AlertServiceType | null;
 }
 
+interface FilterAlertsProps {
+  /**
+   * The list of alerts to be filtered
+   */
+  alerts: Alert[] | undefined;
+  /**
+   * The region ID to filter the alerts
+   */
+  regionId?: string;
+  /**
+   * The search text to filter the alerts
+   */
+  searchText: string;
+  /**
+   * The selected alert type to filter the alerts
+   */
+  selectedType: AlertDefinitionType | undefined;
+}
+
 /**
  * @param serviceType Service type for which the label needs to be displayed
  * @param serviceTypeList List of available service types in Cloud Pulse
@@ -282,17 +301,16 @@ export const getChipLabels = (
  * @param selectedType selecte alert type
  * @returns list of filtered alerts based on searchText & selectedType
  */
-export const filterAlertsByStatusAndType = (
-  alerts: Alert[] | undefined,
-  searchText: string,
-  selectedType: string | undefined
-): Alert[] => {
+export const filterAlerts = (props: FilterAlertsProps): Alert[] => {
+  const { alerts, regionId, searchText, selectedType } = props;
   return (
-    alerts?.filter(({ label, status, type }) => {
+    alerts?.filter(({ label, status, type, scope, regions }) => {
       return (
         (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
-        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+        (!searchText ||
+          label.toLowerCase().includes(searchText.toLowerCase())) &&
+        (scope !== 'region' || (regionId && regions?.includes(regionId)))
       );
     }) ?? []
   );

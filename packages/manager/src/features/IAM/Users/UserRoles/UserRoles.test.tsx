@@ -6,7 +6,7 @@ import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
@@ -73,7 +73,7 @@ describe('UserRoles', () => {
       }),
     });
 
-    renderWithThemeAndRouter(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
     expect(screen.getByText('This list is empty')).toBeVisible();
     expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
@@ -98,7 +98,7 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithThemeAndRouter(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
     expect(
       screen.getByText('View and manage roles assigned to the user.')
@@ -130,7 +130,7 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithThemeAndRouter(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
     expect(screen.getByText('firewall_admin')).toBeVisible();
   });
@@ -157,7 +157,7 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithThemeAndRouter(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
     expect(screen.getByText('account_admin')).toBeVisible();
     expect(screen.queryByText('firewall_admin')).not.toBeInTheDocument();
@@ -175,7 +175,7 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithThemeAndRouter(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -198,7 +198,7 @@ describe('UserRoles', () => {
       status: 'error',
     });
 
-    renderWithThemeAndRouter(<UserRoles />);
+    renderWithTheme(<UserRoles />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });
