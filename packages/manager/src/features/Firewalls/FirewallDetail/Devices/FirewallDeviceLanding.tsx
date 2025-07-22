@@ -85,7 +85,7 @@ export const FirewallDeviceLanding = React.memo(
     return (
       // TODO: Matching old behavior. Do we want separate messages for when the user can't create or remove devices?
       <>
-        {isCreateDeviceDisabled && isRemoveDeviceDisabled ? (
+        {permissions && isCreateDeviceDisabled && isRemoveDeviceDisabled ? (
           <Notice
             text={
               "You don't have permissions to modify this Firewall. Please contact an account administrator for details."

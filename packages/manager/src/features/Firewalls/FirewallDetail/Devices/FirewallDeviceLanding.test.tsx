@@ -18,7 +18,7 @@ const queryMocks = vi.hoisted(() => ({
   }),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
-  userPermissions: vi.fn(() => ({
+  usePermissions: vi.fn(() => ({
     permissions: {
       create_firewall_device: false,
     },
@@ -45,7 +45,7 @@ vi.mock('src/hooks/useOrderV2', async () => {
 });
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
+  usePermissions: queryMocks.usePermissions,
 }));
 
 const baseProps = (
@@ -96,7 +96,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
 
       if (serviceName !== 'Linode') {
         it(`should contain a disabled Add ${serviceName} button`, () => {
-          queryMocks.userPermissions.mockReturnValue({
+          queryMocks.usePermissions.mockReturnValue({
             permissions: {
               create_firewall_device: false,
             },
@@ -120,7 +120,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
 
       if (serviceName !== 'Linode') {
         it(`should contain an enabled Add ${serviceName} button`, () => {
-          queryMocks.userPermissions.mockReturnValue({
+          queryMocks.usePermissions.mockReturnValue({
             permissions: {
               create_firewall_device: true,
             },
@@ -134,7 +134,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
 
         it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, async () => {
-          queryMocks.userPermissions.mockReturnValue({
+          queryMocks.usePermissions.mockReturnValue({
             permissions: {
               create_firewall_device: true,
             },
@@ -162,13 +162,13 @@ services.forEach((service: FirewallDeviceEntityType) => {
 
       if (serviceName === 'Linode') {
         it('should disable "Add Linodes to Firewall" button if the user does not have create_firewall_device permission', async () => {
-          queryMocks.userPermissions.mockReturnValue({
+          queryMocks.usePermissions.mockReturnValue({
             permissions: {
               create_firewall_device: false,
             },
           });
 
-          const { getByTestId } = await renderWithThemeAndRouter(
+          const { getByTestId } = await renderWithTheme(
             <FirewallDeviceLanding {...prop} />,
             {
               initialRoute: `/firewalls/1/linodes`,
@@ -179,13 +179,13 @@ services.forEach((service: FirewallDeviceEntityType) => {
           expect(addButton).toBeDisabled();
         });
         it('should enable "Add Linodes to Firewall" button if the user has create_firewall_device permission', async () => {
-          queryMocks.userPermissions.mockReturnValue({
+          queryMocks.usePermissions.mockReturnValue({
             permissions: {
               create_firewall_device: true,
             },
           });
 
-          const { getByTestId } = await renderWithThemeAndRouter(
+          const { getByTestId } = await renderWithTheme(
             <FirewallDeviceLanding {...prop} />,
             {
               initialRoute: `/firewalls/1/linodes`,
