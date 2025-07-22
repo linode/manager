@@ -1,4 +1,4 @@
-import { useAccount } from '@linode/queries';
+import { useAccount, useRegionsQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import React from 'react';
 
@@ -24,8 +24,10 @@ import { compareArrays } from './FilterBuilder';
 import type {
   Alert,
   APIError,
+  Capabilities,
   CloudPulseAlertsPayload,
   Dashboard,
+  MonitoringCapabilities,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -36,6 +38,21 @@ import type {
   StatWithDummyPoint,
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
+
+interface AclpSupportedRegionProps {
+  /**
+   * The capability to check ('Linodes', 'NodeBalancers', etc)
+   */
+  capability: Capabilities;
+  /**
+   * Region ID to check
+   */
+  regionId: string | undefined;
+  /**
+   * The type of monitoring capability to check
+   */
+  type: keyof MonitoringCapabilities;
+}
 
 /**
  *
@@ -344,4 +361,21 @@ export const validationFunction: Record<
 > = {
   [PORT]: arePortsValid,
   [INTERFACE_ID]: areValidInterfaceIds,
+};
+
+/**
+ * Checks if the selected region is ACLP-supported for the given capability and type.
+ * @param props Contains regionId, capability and type to check against the regions data.
+ * @returns boolean indicating if the selected region is ACLP-supported for the given capability and type.
+ */
+export const useIsAclpSupportedRegion = (
+  props: AclpSupportedRegionProps
+): boolean => {
+  const { regionId, capability, type } = props;
+
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find(({ id }) => id === regionId);
+
+  return region?.monitors?.[type]?.includes(capability) ?? false;
 };

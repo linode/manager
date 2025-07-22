@@ -4,10 +4,7 @@ import React from 'react';
 import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  renderWithTheme,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseBackups } from './DatabaseBackups';
 
@@ -155,7 +152,7 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(<DatabaseBackups />);
+    const { findByText } = renderWithTheme(<DatabaseBackups />);
 
     const restoreButton = (await findByText('Restore')).closest('button');
 
@@ -173,9 +170,7 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { container } = await renderWithThemeAndRouter(
-      <DatabaseBackups disabled={false} />
-    );
+    const { container } = renderWithTheme(<DatabaseBackups disabled={false} />);
 
     await waitFor(() => {
       expect(
@@ -195,7 +190,7 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       <DatabaseBackups disabled={false} />,
       {
         initialRoute: '/databases/$engine/$databaseId/backups',

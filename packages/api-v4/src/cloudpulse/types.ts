@@ -61,6 +61,7 @@ export interface DateTimeWithPreset {
   end: string;
   preset?: string;
   start: string;
+  timeZone?: string;
 }
 
 export interface Widgets {

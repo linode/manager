@@ -272,12 +272,14 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     cy.url().should('endWith', '/placement-groups');
-    cy.findByText(mockPlacementGroup.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText('Non-compliant').should('be.visible');
-      });
+    cy.findByRole('table', { name: 'List of Placement Groups' }).within(() => {
+      cy.findByText(mockPlacementGroup.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Non-compliant').should('be.visible');
+        });
+    });
   });
 
   /**

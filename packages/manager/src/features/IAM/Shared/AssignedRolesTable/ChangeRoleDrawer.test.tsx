@@ -4,7 +4,7 @@ import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
@@ -89,18 +89,14 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('should render', async () => {
-    await renderWithThemeAndRouter(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
   });
 
   it('renders the correct text for account_access roles', async () => {
-    await renderWithThemeAndRouter(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Check that the correct text is displayed for account_access
     expect(
@@ -109,7 +105,7 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('renders the correct text for entity_access roles', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <ChangeRoleDrawer
         {...props}
         mode="change-role"
@@ -149,9 +145,7 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    await renderWithThemeAndRouter(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     const autocomplete = screen.getByRole('combobox');
 

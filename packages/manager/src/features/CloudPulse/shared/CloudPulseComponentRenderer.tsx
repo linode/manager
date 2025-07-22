@@ -4,31 +4,31 @@ import type { MemoExoticComponent } from 'react';
 import NullComponent from 'src/components/NullComponent';
 
 import { CloudPulseCustomSelect } from './CloudPulseCustomSelect';
+import { CloudPulseDateTimeRangePicker } from './CloudPulseDateTimeRangePicker';
 import { CloudPulseNodeTypeFilter } from './CloudPulseNodeTypeFilter';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
 import { CloudPulseTextFilter } from './CloudPulseTextFilter';
-import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
 
 import type { CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
+import type { CloudPulseDateTimeRangePickerProps } from './CloudPulseDateTimeRangePicker';
 import type { CloudPulseNodeTypeFilterProps } from './CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { CloudPulseResourcesSelectProps } from './CloudPulseResourcesSelect';
 import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
 import type { CloudPulseTextFilterProps } from './CloudPulseTextFilter';
-import type { CloudPulseTimeRangeSelectProps } from './CloudPulseTimeRangeSelect';
 
 export interface CloudPulseComponentRendererProps {
   componentKey: string;
   componentProps:
     | CloudPulseCustomSelectProps
+    | CloudPulseDateTimeRangePickerProps
     | CloudPulseNodeTypeFilterProps
     | CloudPulseRegionSelectProps
     | CloudPulseResourcesSelectProps
     | CloudPulseTagsSelectProps
-    | CloudPulseTextFilterProps
-    | CloudPulseTimeRangeSelectProps;
+    | CloudPulseTextFilterProps;
   key: string;
 }
 
@@ -36,12 +36,12 @@ const Components: {
   [key: string]: MemoExoticComponent<
     React.ComponentType<
       | CloudPulseCustomSelectProps
+      | CloudPulseDateTimeRangePickerProps
       | CloudPulseNodeTypeFilterProps
       | CloudPulseRegionSelectProps
       | CloudPulseResourcesSelectProps
       | CloudPulseTagsSelectProps
       | CloudPulseTextFilterProps
-      | CloudPulseTimeRangeSelectProps
     >
   >;
 } = {
@@ -50,7 +50,7 @@ const Components: {
   node_type: CloudPulseNodeTypeFilter,
   port: CloudPulseTextFilter,
   region: CloudPulseRegionSelect,
-  relative_time_duration: CloudPulseTimeRangeSelect,
+  relative_time_duration: CloudPulseDateTimeRangePicker,
   resource_id: CloudPulseResourcesSelect,
   tags: CloudPulseTagsSelect,
 };
