@@ -81,7 +81,7 @@ export const PlacementGroupsCreateDrawer = (
     useFormValidateOnChange();
 
   const location = useLocation();
-  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const isFromPlacementGroup = location.pathname.includes('/placement-groups');
   const queryParams = getQueryParamsFromQueryString(location.search);
 
   const handleRegionSelect = (region: Region['id']) => {
@@ -116,7 +116,7 @@ export const PlacementGroupsCreateDrawer = (
       if (onPlacementGroupCreate) {
         onPlacementGroupCreate(response);
         // Fire analytics form submit upon successful PG creation from Linode Create flow.
-        if (isFromLinodeCreate) {
+        if (!isFromPlacementGroup) {
           sendLinodeCreateFormStepEvent({
             createType: (queryParams.type as LinodeCreateType) ?? 'OS',
             headerName: 'Create Placement Group',
@@ -199,7 +199,7 @@ export const PlacementGroupsCreateDrawer = (
 
   return (
     <>
-      {!isFromLinodeCreate && (
+      {isFromPlacementGroup && (
         <DocumentTitleSegment
           segment={`${open ? 'Create a Placement Group' : 'Placement Groups'}`}
         />
@@ -236,7 +236,7 @@ export const PlacementGroupsCreateDrawer = (
                 </List>
               </Notice>
             )}
-            {selectedRegion && isFromLinodeCreate && (
+            {selectedRegion && !isFromPlacementGroup && (
               <DescriptionList
                 items={[
                   {
