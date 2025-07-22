@@ -90,6 +90,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 type FormValues = {
   nodePools: KubeNodePoolResponseBeta[];
+  vpcId: null | number;
 };
 
 export interface NodePoolConfigDrawerHandlerParams {
@@ -146,6 +147,7 @@ export const CreateCluster = () => {
   const { control, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],
+      vpcId: null,
     },
   });
   const nodePools = useWatch({ control, name: 'nodePools' });
@@ -555,7 +557,9 @@ export const CreateCluster = () => {
                 />
               </Box>
             )}
-            {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
+            {selectedTier === 'enterprise' && (
+              <ClusterNetworkingPanel selectedRegionId={selectedRegion?.id} />
+            )}
             <>
               <Divider
                 sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
