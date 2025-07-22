@@ -19,13 +19,16 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import {
+  linodesCreateTypesMap,
+  useGetLinodeCreateType,
+} from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
-import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { getGeneratedLinodeLabel } from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 import { SelectLinodeCard } from './SelectLinodeCard';
@@ -78,8 +81,10 @@ export const LinodeSelectTable = (props: Props) => {
 
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
+  const createPath = linodesCreateTypesMap.get(createType) ?? 'os';
+
   const pagination = usePaginationV2({
-    currentRoute: '/linodes/create',
+    currentRoute: `/linodes/create/${createPath}`,
     initialPage: 1,
     preferenceKey: 'linode-clone-select-table',
   });
@@ -90,7 +95,7 @@ export const LinodeSelectTable = (props: Props) => {
         order: 'asc',
         orderBy: 'label',
       },
-      from: '/linodes/create',
+      from: `/linodes/create/${createPath}`,
     },
     preferenceKey: 'linode-clone-select-table',
   });

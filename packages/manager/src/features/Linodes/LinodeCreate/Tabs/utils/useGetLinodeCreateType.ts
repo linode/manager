@@ -2,20 +2,27 @@ import { useMatch } from '@tanstack/react-router';
 
 import type { LinodeCreateType } from '@linode/utilities';
 
-export const linodesCreateTypesMap = new Map<LinodeCreateType, string>([
+type LinodeCreatePathSegments =
+  | 'backups'
+  | 'clone'
+  | 'images'
+  | 'marketplace'
+  | 'os'
+  | 'stackscripts';
+
+export const linodesCreateTypesMap = new Map<
+  LinodeCreateType,
+  LinodeCreatePathSegments
+>([
   ['Backups', 'backups'],
   ['Clone Linode', 'clone'],
   ['Images', 'images'],
-  ['One-Click', 'one-click'],
+  ['One-Click', 'marketplace'],
   ['OS', 'os'],
   ['StackScripts', 'stackscripts'],
 ]);
 
 export const linodesCreateTypes = Array.from(linodesCreateTypesMap.keys());
-
-export const linodesCreateTypesMapReverse = new Map<string, string>(
-  linodesCreateTypes.map((type) => [linodesCreateTypesMap.get(type)!, type])
-);
 
 export const useGetLinodeCreateType = () => {
   const match = useMatch({

@@ -143,7 +143,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
         navigate({
-          to: '/linodes/create',
+          to: '/linodes/create/clone',
           search: buildQueryStringForLinodeClone(
             linodeId,
             linodeRegion,

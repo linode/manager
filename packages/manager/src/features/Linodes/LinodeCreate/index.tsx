@@ -136,6 +136,18 @@ export const LinodeCreate = () => {
     },
   ]);
 
+  const onTabChange = (index: number) => {
+    handleTabChange(index);
+
+    if (index !== tabIndex) {
+      // Get the default values for the new tab and reset the form
+      defaultValues(linodeCreateType, search, queryClient, {
+        isLinodeInterfacesEnabled,
+        isVMHostMaintenanceEnabled,
+      }).then(form.reset);
+    }
+  };
+
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
@@ -229,7 +241,7 @@ export const LinodeCreate = () => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <LinodeCreateError />
         <Stack gap={3}>
-          <Tabs index={tabIndex} onChange={handleTabChange}>
+          <Tabs index={tabIndex} onChange={onTabChange}>
             <TanStackTabLinkList tabs={tabs} />
             {!permissions.create_linode && (
               <Notice

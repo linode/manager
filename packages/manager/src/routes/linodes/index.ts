@@ -3,7 +3,6 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
 
-// import type { LinodeCreateType } from '@linode/utilities';
 import type { StackScriptTabType } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
 
 interface LinodeDetailSearchParams {
@@ -23,7 +22,6 @@ export interface LinodeCreateSearchParams {
   linodeID?: number;
   stackScriptID?: number;
   subtype?: StackScriptTabType;
-  // type?: LinodeCreateType;
 }
 
 export const linodesRoute = createRoute({
