@@ -8,14 +8,11 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
   CircleProgress,
-  CloseIcon,
   Drawer,
   ErrorState,
-  IconButton,
-  InputAdornment,
   Notice,
   Paper,
-  TextField,
+  Stack,
   Typography,
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
@@ -23,12 +20,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
-import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
@@ -110,7 +105,6 @@ export const ImagesLanding = () => {
   });
   const search = useSearch({ from: '/images' });
   const { query } = search;
-  const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
@@ -367,25 +361,21 @@ export const ImagesLanding = () => {
   };
 
   const handleDeployNewLinode = (imageId: string) => {
-    history.push({
-      pathname: `/linodes/create/`,
-      search: `?type=Images&imageID=${imageId}`,
-    });
-  };
-
-  const resetSearch = () => {
     navigate({
-      search: (prev) => ({ ...prev, query: undefined }),
-      to: '/images',
+      to: '/linodes/create',
+      search: {
+        type: 'Images',
+        imageID: imageId,
+      },
     });
   };
 
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSearch = (query: string) => {
     navigate({
       search: (prev) => ({
         ...prev,
         page: undefined,
-        query: e.target.value || undefined,
+        query: query || undefined,
       }),
       to: '/images',
     });
@@ -420,7 +410,7 @@ export const ImagesLanding = () => {
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
   return (
-    <React.Fragment>
+    <Stack spacing={2}>
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
@@ -439,35 +429,15 @@ export const ImagesLanding = () => {
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
-        spacingBottom={16}
         title="Images"
       />
-      <TextField
-        containerProps={{ mb: 3 }}
+      <DebouncedSearchTextField
+        clearable
         errorText={searchParseError?.message}
         hideLabel
-        InputProps={{
-          endAdornment: query && (
-            <InputAdornment position="end">
-              {isFetching && <CircleProgress noPadding size="xs" />}
-              <IconButton
-                aria-label="Clear"
-                data-testid="clear-images-search"
-                onClick={resetSearch}
-                size="small"
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
+        isSearching={isFetching}
         label="Search"
-        onChange={debounce(400, (e) => {
-          onSearch(e);
-        })}
+        onSearch={onSearch}
         placeholder="Search Images"
         value={query ?? ''}
       />
@@ -700,7 +670,7 @@ export const ImagesLanding = () => {
             : 'Are you sure you want to delete this Image?'}
         </Typography>
       </ConfirmationDialog>
-    </React.Fragment>
+    </Stack>
   );
 };
 
