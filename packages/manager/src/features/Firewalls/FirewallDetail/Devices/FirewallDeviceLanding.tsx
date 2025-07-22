@@ -16,7 +16,6 @@ import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceLandingProps {
-  disabled: boolean;
   firewallId: number;
   firewallLabel: string;
   type: FirewallDeviceEntityType;
@@ -24,7 +23,7 @@ export interface FirewallDeviceLandingProps {
 
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
-    const { disabled, firewallId, firewallLabel, type } = props;
+    const { firewallId, firewallLabel, type } = props;
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
@@ -66,10 +65,8 @@ export const FirewallDeviceLanding = React.memo(
     );
 
     const formattedType = formattedTypes[type];
-    const isCreateDeviceDisabled =
-      type === 'linode' ? !permissions.create_firewall_device : disabled;
-    const isRemoveDeviceDisabled =
-      type === 'linode' ? !permissions.delete_firewall_device : disabled;
+    const isCreateDeviceDisabled = !permissions.create_firewall_device;
+    const isRemoveDeviceDisabled = !permissions.delete_firewall_device;
 
     // If the user initiates a history -/+ to a /remove route and the device is not found,
     // push navigation to the appropriate /linodes or /nodebalancers route.
@@ -86,8 +83,9 @@ export const FirewallDeviceLanding = React.memo(
     }, [device, location.pathname, firewallId, type, navigate]);
 
     return (
+      // TODO: Matching old behavior. Do we want separate messages for when the user can't create or remove devices?
       <>
-        {disabled ? (
+        {isCreateDeviceDisabled && isRemoveDeviceDisabled ? (
           <Notice
             text={
               "You don't have permissions to modify this Firewall. Please contact an account administrator for details."

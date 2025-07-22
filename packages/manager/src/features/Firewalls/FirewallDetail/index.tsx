@@ -27,7 +27,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
@@ -84,21 +83,6 @@ export const FirewallDetail = () => {
   );
 
   const { data: allDevices } = useAllFirewallDevicesQuery(firewallId);
-  const { permissions } = usePermissions(
-    'firewall',
-    [
-      'list_firewall_devices',
-      'create_firewall_device',
-      'delete_firewall_device',
-      'view_firewall_device',
-    ],
-    firewallId
-  );
-
-  const userCanModifyFirewallLinodes =
-    permissions.create_firewall_device ||
-    permissions.delete_firewall_device ||
-    permissions.view_firewall_device;
 
   const { linodeCount, nodebalancerCount } = allDevices?.reduce(
     (acc, device) => {
@@ -135,9 +119,7 @@ export const FirewallDetail = () => {
       to: `/firewalls/$id/rules`,
     },
     {
-      title: permissions.list_firewall_devices
-        ? `Linodes (${linodeCount})`
-        : 'Linodes',
+      title: `Linodes (${linodeCount})`,
       to: `/firewalls/$id/linodes`,
     },
     {
@@ -254,20 +236,14 @@ export const FirewallDetail = () => {
               />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              {!permissions.list_firewall_devices ? (
-                <ErrorState errorText="Unauthorized" />
-              ) : (
-                <FirewallDeviceLanding
-                  disabled={!userCanModifyFirewallLinodes}
-                  firewallId={firewallId}
-                  firewallLabel={firewall.label}
-                  type="linode"
-                />
-              )}
+              <FirewallDeviceLanding
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="linode"
+              />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="nodebalancer"
