@@ -1,4 +1,9 @@
-import { useAllFirewallsQuery, useGrants, useProfile } from '@linode/queries';
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
@@ -14,6 +19,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -59,12 +65,12 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   const { data: firewalls } = useAllFirewallsQuery(open);
   const { data: profile } = useProfile();
 
-  const isRestrictedUser = profile?.restricted;
+  const { data: permissableLinodes, hasFiltered: hasFilteredLinodes } =
+    useQueryWithPermissions<Linode>(useAllLinodesQuery, 'linode', [
+      'apply_linode_firewalls',
+    ]);
 
-  // If a user is restricted, they can not add a read-only Linode to a firewall.
-  const readOnlyLinodeIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
-    : [];
+  const isRestrictedUser = profile?.restricted;
 
   // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
   const readOnlyNodebalancerIds = isRestrictedUser
@@ -72,7 +78,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
     : [];
 
   const deviceSelectGuidance =
-    readOnlyLinodeIds.length > 0 || readOnlyNodebalancerIds.length > 0
+    hasFilteredLinodes || readOnlyNodebalancerIds.length > 0
       ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
       : undefined;
 
@@ -89,7 +95,6 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
 
   const linodeOptionsFilter = (linode: Linode) => {
     return (
-      !readOnlyLinodeIds.includes(linode.id) &&
       !assignedLinodes?.some((service) => service.id === linode.id) &&
       linode.interface_generation !== 'linode'
     );
@@ -222,6 +227,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
+            options={permissableLinodes ?? []}
             optionsFilter={linodeOptionsFilter}
             value={field.value ?? null}
           />
