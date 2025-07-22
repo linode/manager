@@ -6,6 +6,7 @@ import { vpcFactory } from 'src/factories';
 import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseNetworking } from './DatabaseNetworking';
 
 // Hoist query mocks
@@ -38,10 +39,6 @@ describe('DatabaseNetworking Component', () => {
     platform: 'rdbms-default',
     private_network: null,
   });
-  const mockProps = {
-    database: mockDatabase,
-    disabled: false,
-  };
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -52,7 +49,13 @@ describe('DatabaseNetworking Component', () => {
   });
 
   it('Should render both the Manage Access and Manage Networking sections when all VPCs query response is successful', () => {
-    renderWithTheme(<DatabaseNetworking {...mockProps} />);
+    renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockDatabase, engine: 'mysql', isVPCEnabled: true }}
+      >
+        <DatabaseNetworking />
+      </DatabaseDetailContext.Provider>
+    );
     const headings = screen.getAllByRole('heading');
     expect(headings[0].textContent).toBe('Manage Access');
     expect(headings[1].textContent).toBe('Manage Networking');

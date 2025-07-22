@@ -5,15 +5,10 @@ import * as React from 'react';
 import ClusterConfiguration from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';
 
-import type { Database } from '@linode/api-v4/lib/databases/types';
+import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 
-interface Props {
-  database: Database;
-  disabled?: boolean;
-}
-
-export const DatabaseSummary: React.FC<Props> = (props) => {
-  const { database } = props;
+export const DatabaseSummary = () => {
+  const { database } = useDatabaseDetailContext();
 
   return (
     <Paper>

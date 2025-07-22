@@ -15,11 +15,14 @@ import {
   renderWithTheme,
 } from 'src/utilities/testHelpers';
 
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseResize } from './DatabaseResize';
 import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
 
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
+const engine = 'mysql';
+const isResizeEnabled = true;
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
@@ -61,7 +64,11 @@ describe('database resize', () => {
 
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseResize database={database} />
+      <DatabaseDetailContext.Provider
+        value={{ database, engine, isResizeEnabled }}
+      >
+        <DatabaseResize />
+      </DatabaseDetailContext.Provider>
     );
     // Should render a loading state
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -69,7 +76,11 @@ describe('database resize', () => {
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseResize database={database} />
+      <DatabaseDetailContext.Provider
+        value={{ database, engine, isResizeEnabled }}
+      >
+        <DatabaseResize />
+      </DatabaseDetailContext.Provider>
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -90,7 +101,11 @@ describe('database resize', () => {
 
     it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={database} />
+        <DatabaseDetailContext.Provider
+          value={{ database, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -109,7 +124,11 @@ describe('database resize', () => {
       } as any;
 
       const { getByRole, getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
 
@@ -134,7 +153,11 @@ describe('database resize', () => {
 
     it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} disabled={true} />
+        <DatabaseDetailContext.Provider
+          value={{ database, engine, disabled: true, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -191,7 +214,11 @@ describe('database resize', () => {
 
     it('should render set node section', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
 
@@ -206,7 +233,11 @@ describe('database resize', () => {
 
     it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -230,7 +261,11 @@ describe('database resize', () => {
 
     it('should preselect cluster size in Set Number of Nodes', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -247,7 +282,11 @@ describe('database resize', () => {
         type: 'g6-nanode-1',
       });
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -276,7 +315,11 @@ describe('database resize', () => {
         type: 'g6-nanode-1',
       });
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -359,7 +402,11 @@ describe('database resize', () => {
       };
 
       const { getByRole, getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -442,7 +489,11 @@ describe('database resize', () => {
       );
 
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseResize database={database} />
+        <DatabaseDetailContext.Provider
+          value={{ database, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
