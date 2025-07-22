@@ -44,10 +44,11 @@ export const LinodeBackups = () => {
   const { permissions } = usePermissions(
     'linode',
     [
-      'create_linode_backup_snapshot',
       'cancel_linode_backups',
+      'create_linode',
+      'create_linode_backup_snapshot',
       'enable_linode_backups',
-      'restore_linode_backup',
+      'update_linode',
     ],
     linodeId
   );
@@ -148,34 +149,34 @@ export const LinodeBackups = () => {
                 {backups?.automatic.map((backup: LinodeBackup, idx: number) => (
                   <BackupTableRow
                     backup={backup}
-                    disabled={!permissions.restore_linode_backup}
                     handleDeploy={() => handleDeploy(backup)}
                     handleRestore={() => onRestoreBackup(backup)}
                     key={idx}
+                    permissions={permissions}
                   />
                 ))}
                 {Boolean(backups?.snapshot.current) && (
                   <BackupTableRow
                     backup={backups!.snapshot.current!}
-                    disabled={!permissions.restore_linode_backup}
                     handleDeploy={() =>
                       handleDeploy(backups!.snapshot.current!)
                     }
                     handleRestore={() =>
                       onRestoreBackup(backups!.snapshot.current!)
                     }
+                    permissions={permissions}
                   />
                 )}
                 {Boolean(backups?.snapshot.in_progress) && (
                   <BackupTableRow
                     backup={backups!.snapshot.in_progress!}
-                    disabled={!permissions.restore_linode_backup}
                     handleDeploy={() =>
                       handleDeploy(backups!.snapshot.in_progress!)
                     }
                     handleRestore={() =>
                       onRestoreBackup(backups!.snapshot.in_progress!)
                     }
+                    permissions={permissions}
                   />
                 )}
               </>
