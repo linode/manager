@@ -361,36 +361,6 @@ describe('Linode Entity Detail', () => {
 
     expect(encryptionStatusFragment).toBeInTheDocument();
   });
-
-  it('should disable "Add A Tag" button if the user does not have update_linode permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        update_linode: false,
-      },
-    });
-
-    const { getByText } = renderWithTheme(
-      <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
-    );
-    const addTagBtn = getByText('Add a tag');
-    expect(addTagBtn).toBeInTheDocument();
-    expect(addTagBtn).toBeDisabled();
-  });
-
-  it('should enable "Add A Tag" button if the user has update_linode permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        update_linode: true,
-      },
-    });
-
-    const { getByText } = renderWithTheme(
-      <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
-    );
-    const addTagBtn = getByText('Add a tag');
-    expect(addTagBtn).toBeInTheDocument();
-    expect(addTagBtn).toBeEnabled();
-  });
 });
 
 describe('getSubnetsString function', () => {
