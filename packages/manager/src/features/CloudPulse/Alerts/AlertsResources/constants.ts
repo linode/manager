@@ -105,7 +105,7 @@ export const getSearchPlaceholderText = (
   );
 
   if (hasRegionFilter) {
-    return 'Search for an Entity or Region';
+    return 'Search for a Region or Entity';
   }
 
   return 'Search for an Entity';
