@@ -43,7 +43,6 @@ interface AlertReusableComponentProps {
 
   /**
    * Called when an alert is toggled on or off.
-   * Only use in create flow.
    * @param payload enabled alerts ids
    */
   onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
@@ -79,7 +78,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
-  // Filter alerts based on status, search text & selected type
+  // Filter alerts based on status, search text, selected type, and regionId
   const filteredAlerts = React.useMemo(
     () => filterAlerts({ alerts, searchText, selectedType, regionId }),
     [alerts, regionId, searchText, selectedType]

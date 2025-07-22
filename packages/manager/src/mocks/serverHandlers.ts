@@ -2689,6 +2689,7 @@ export const handlers = [
           ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
             type: 'user',
+            regions: ['us-ord'],
             scope: 'account',
           }),
           ...alertFactory.buildList(6, {
