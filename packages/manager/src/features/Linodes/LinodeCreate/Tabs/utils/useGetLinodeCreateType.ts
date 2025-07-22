@@ -1,6 +1,7 @@
-import { useMatch } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 
 import type { LinodeCreateType } from '@linode/utilities';
+import type { LinkProps } from '@tanstack/react-router';
 
 type LinodeCreatePathSegments =
   | 'backups'
@@ -25,11 +26,9 @@ export const linodesCreateTypesMap = new Map<
 export const linodesCreateTypes = Array.from(linodesCreateTypesMap.keys());
 
 export const useGetLinodeCreateType = () => {
-  const match = useMatch({
-    strict: false,
-  });
+  const { pathname } = useLocation() as { pathname: LinkProps['to'] };
 
-  switch (match.routeId) {
+  switch (pathname) {
     case '/linodes/create/backups':
       return 'Backups';
     case '/linodes/create/clone':
@@ -43,6 +42,6 @@ export const useGetLinodeCreateType = () => {
     case '/linodes/create/stackscripts':
       return 'StackScripts';
     default:
-      return 'Backups';
+      return 'OS';
   }
 };

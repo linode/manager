@@ -8,7 +8,12 @@ import {
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
-import { Outlet, useNavigate, useSearch } from '@tanstack/react-router';
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -68,6 +73,7 @@ import type {
 } from './utilities';
 
 export const LinodeCreate = () => {
+  const location = useLocation();
   const search = useSearch({
     from: '/linodes/create',
   });
@@ -159,9 +165,9 @@ export const LinodeCreate = () => {
       const linode =
         linodeCreateType === 'Clone Linode'
           ? await cloneLinode({
-            sourceLinodeId: values.linode?.id ?? -1,
-            ...payload,
-          })
+              sourceLinodeId: values.linode?.id ?? -1,
+              ...payload,
+            })
           : await createLinode(payload);
 
       navigate({
@@ -222,10 +228,19 @@ export const LinodeCreate = () => {
     return <CircleProgress />;
   }
 
+  if (location.pathname === '/linodes/create') {
+    navigate({
+      to: '/linodes/create/os',
+    });
+  }
+
   return (
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
+        breadcrumbProps={{
+          labelTitle: linodeCreateType,
+        }}
         docsLabel="Getting Started"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() =>
