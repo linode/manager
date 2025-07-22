@@ -88,9 +88,7 @@ describe('NodeTable', () => {
   });
 
   it('includes the Pool ID', async () => {
-    const { getByText } = renderWithTheme(
-      <NodeTable {...props} />
-    );
+    const { getByText } = renderWithTheme(<NodeTable {...props} />);
     getByText('Pool ID 1');
   });
 
@@ -102,9 +100,7 @@ describe('NodeTable', () => {
       nodes: [],
     };
 
-    const { findByText } = renderWithTheme(
-      <NodeTable {...clusterProps} />
-    );
+    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
 
     expect(
       await findByText(
@@ -119,9 +115,7 @@ describe('NodeTable', () => {
 
   it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', async () => {
     // situation where isDiskEncryptionFeatureEnabled === false
-    const { queryByTestId } = renderWithTheme(
-      <NodeTable {...props} />
-    );
+    const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
     expect(encryptionStatusFragment).not.toBeInTheDocument();
@@ -134,9 +128,7 @@ describe('NodeTable', () => {
       };
     });
 
-    const { queryByTestId } = renderWithTheme(
-      <NodeTable {...props} />
-    );
+    const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
     expect(encryptionStatusFragment).toBeInTheDocument();

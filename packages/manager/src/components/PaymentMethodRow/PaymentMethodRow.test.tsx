@@ -11,25 +11,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
-const navigate = vi.fn();
-const queryMocks = vi.hoisted(() => ({
-  useNavigate: vi.fn(() => navigate),
-  useMatch: vi.fn().mockReturnValue({}),
-  useSearch: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useNavigate: queryMocks.useNavigate,
-    useMatch: queryMocks.useMatch,
-    useSearch: queryMocks.useSearch,
-  };
-});
-
 vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
@@ -194,22 +177,34 @@ describe('Payment Method Row', () => {
     expect(makeDefaultPaymentMethod).toBeCalledTimes(1);
   });
 
-  it('Opens "Make a Payment" drawer if "Make a Payment" action is clicked', async () => {
-    const paymentMethod = paymentMethodFactory.build();
+  it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
+    const paymentMethods = [
+      paymentMethodFactory.build({
+        type: 'paypal',
+        data: { email: 'test@linode.com', paypal_id: '' },
+      }),
+      paymentMethodFactory.build({
+        type: 'credit_card',
+        data: { last_four: '1881' },
+      }),
+    ];
 
     /*
      * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
      * and is required for this test. We may want to consider decoupling these components in the future.
      */
-    const { getByLabelText, getByTestId, getByText, rerender } =
+    const { getByLabelText, getByTestId, getByText, getAllByTestId } =
       renderWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <BillingSummary
             balance={0}
             balanceUninvoiced={0}
-            paymentMethods={[paymentMethod]}
+            paymentMethods={paymentMethods}
           />
-          <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
+          <PaymentMethodRow
+            onDelete={vi.fn()}
+            paymentMethod={paymentMethods[1]}
+          />
         </PayPalScriptProvider>,
         {
           initialRoute: '/account/billing',
@@ -223,44 +218,22 @@ describe('Payment Method Row', () => {
     expect(makePaymentButton).toBeVisible();
     await userEvent.click(makePaymentButton);
 
-    queryMocks.useMatch.mockReturnValue({
-      routeId: '/account/billing/make-payment',
-    });
-    queryMocks.useSearch.mockReturnValue({
-      paymentMethod: paymentMethod,
-    });
-
-    rerender(
-      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-        <BillingSummary
-          balance={0}
-          balanceUninvoiced={0}
-          paymentMethods={[paymentMethod]}
-        />
-        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
-      </PayPalScriptProvider>
-    );
-
-    expect(navigate).toHaveBeenCalledWith({
-      search: {
-        paymentMethod: {
-          created: '2021-05-21T14:27:51',
-          data: {
-            card_type: 'Visa',
-            expiry: '12/2022',
-            last_four: '1881',
-          },
-          id: 9,
-          is_default: false,
-          type: 'credit_card',
-        },
-      },
-      to: '/account/billing/make-payment',
-    });
-
     await waitFor(() => {
       expect(getByTestId('drawer')).toBeVisible();
-      expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
     });
+
+    expect(getByTestId('drawer-title')).toHaveTextContent('Make a Payment');
+
+    const expectedSelectionCard = getAllByTestId('selection-card')[1];
+
+    expect(expectedSelectionCard).toBeVisible();
+    expect(expectedSelectionCard).toHaveTextContent('1881');
+    expect(expectedSelectionCard).toHaveAttribute(
+      'data-qa-selection-card-checked',
+      'true'
+    );
+
+    // In the future, if we have access to the router's state,
+    // we can assert the search params.
   });
 });
