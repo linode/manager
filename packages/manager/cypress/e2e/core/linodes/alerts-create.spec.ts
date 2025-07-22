@@ -11,6 +11,12 @@ import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 
 import { accountSettingsFactory, alertFactory } from 'src/factories';
+import {
+  ALERTS_BETA_MODE_BANNER_TEXT,
+  ALERTS_BETA_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+} from 'src/features/Linodes/constants';
 
 describe('Create flow when beta alerts enabled by region and feature flag', function () {
   beforeEach(() => {
@@ -205,7 +211,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           // switch to beta
           // alerts are off/false but enabled, can switch to on/true
           ui.button
-            .findByTitle('Try Alerts (Beta)')
+            .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -354,9 +360,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       cy.get('[data-testid="notice-info"]')
         .should('be.visible')
         .within(() => {
-          cy.contains(
-            'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.'
-          );
+          cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
         });
     });
     // legacy alert form, inputs are ON but readonly
@@ -374,7 +378,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
 
     // upgrade from legacy alerts to beta alerts
     ui.button
-      .findByTitle('Try Alerts (Beta)')
+      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -385,13 +389,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(
-              'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.'
-            );
+            cy.contains(ALERTS_BETA_MODE_BANNER_TEXT);
           });
         // possible to downgrade from ACLP alerts to legacy alerts
         ui.button
-          .findByTitle('Switch to legacy Alerts')
+          .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled');
       });
