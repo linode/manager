@@ -105,7 +105,6 @@ export const CloudPulseRegionSelect = React.memo(
       regions, // Function to call on change
     ]);
 
-    // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
       return filterRegionByServiceType('metrics', regions, serviceType);
     }, [regions, serviceType]);
