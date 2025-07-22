@@ -172,6 +172,7 @@ export const IPTransfer = (props: Props) => {
             ...firstLinode.ipv4,
             ...linodeIPv6Ranges,
           ];
+          swapState['selectedLinodeID'] = firstLinode.id;
           break;
         /** When switching back to none, reset the ipState. */
 
@@ -247,6 +248,7 @@ export const IPTransfer = (props: Props) => {
     return (
       <Grid
         container
+        data-testid="ip-row"
         key={state.sourceIP}
         size={12}
         spacing={2}
@@ -371,6 +373,7 @@ export const IPTransfer = (props: Props) => {
           noMarginTop
           onChange={onSelectedIPChange(sourceIP)}
           options={IPList}
+          placeholder="Select IP Address"
           textFieldProps={{
             dataAttrs: {
               'data-qa-swap-ip-action-menu': true,

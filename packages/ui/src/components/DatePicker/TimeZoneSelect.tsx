@@ -49,6 +49,7 @@ export const TimeZoneSelect = ({
   return (
     <Autocomplete
       autoHighlight
+      data-qa-autocomplete="timezone-select"
       disabled={disabled}
       errorText={errorText}
       keepSearchEnabledOnMobile

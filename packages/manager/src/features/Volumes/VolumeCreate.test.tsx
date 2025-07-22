@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumeCreate } from './VolumeCreate';
 
@@ -21,7 +21,7 @@ describe('VolumeCreate', () => {
       })
     );
 
-    const { queryByText } = await renderWithThemeAndRouter(<VolumeCreate />, {
+    const { queryByText } = renderWithTheme(<VolumeCreate />, {
       flags: { blockStorageEncryption: false },
     });
 
@@ -35,7 +35,7 @@ describe('VolumeCreate', () => {
       })
     );
 
-    const { queryByText } = await renderWithThemeAndRouter(<VolumeCreate />, {
+    const { queryByText } = renderWithTheme(<VolumeCreate />, {
       flags: { blockStorageEncryption: true },
     });
 
@@ -51,7 +51,7 @@ describe('VolumeCreate', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(<VolumeCreate />, {
+    const { findByText } = renderWithTheme(<VolumeCreate />, {
       flags: { blockStorageEncryption: true },
     });
 
