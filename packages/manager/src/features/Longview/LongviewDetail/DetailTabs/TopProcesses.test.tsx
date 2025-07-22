@@ -21,16 +21,12 @@ describe('Top Processes', () => {
     });
 
     it('renders the title', async () => {
-      const { getByText } = renderWithTheme(
-        <TopProcesses {...props} />
-      );
+      const { getByText } = renderWithTheme(<TopProcesses {...props} />);
       getByText('Top Processes');
     });
 
     it('renders the View Details link', async () => {
-      const { queryByText } = renderWithTheme(
-        <TopProcesses {...props} />
-      );
+      const { queryByText } = renderWithTheme(<TopProcesses {...props} />);
       expect(queryByText('View Details')).toBeDefined();
     });
 
