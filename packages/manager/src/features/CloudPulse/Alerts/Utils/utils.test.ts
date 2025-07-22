@@ -395,31 +395,31 @@ describe('filterRegionByServiceType', () => {
   ];
 
   it('should return empty list for linode metrics', () => {
-    const result = filterRegionByServiceType('metric', regions, 'linode');
+    const result = filterRegionByServiceType('metrics', regions, 'linode');
 
     expect(result).toHaveLength(0);
   });
 
   it('should return 4 regions for linode alerts', () => {
-    expect(filterRegionByServiceType('alert', regions, 'linode')).toHaveLength(
+    expect(filterRegionByServiceType('alerts', regions, 'linode')).toHaveLength(
       4
     );
   });
 
   it('should return 1 region for dbaas metrics', () => {
-    expect(filterRegionByServiceType('metric', regions, 'dbaas')).toHaveLength(
+    expect(filterRegionByServiceType('metrics', regions, 'dbaas')).toHaveLength(
       1
     );
   });
 
   it('should return 3 regions for dbaas alerts', () => {
-    expect(filterRegionByServiceType('alert', regions, 'dbaas')).toHaveLength(
+    expect(filterRegionByServiceType('alerts', regions, 'dbaas')).toHaveLength(
       3
     );
   });
 
   it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alert', regions, 'unknown');
+    const result = filterRegionByServiceType('alerts', regions, 'unknown');
 
     expect(result).toHaveLength(0);
   });

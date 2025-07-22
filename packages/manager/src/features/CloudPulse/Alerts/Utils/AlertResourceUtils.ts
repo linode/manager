@@ -146,7 +146,7 @@ export const getSupportedRegionIds = (
   regions?: Region[],
   serviceType?: AlertServiceType
 ): string[] | undefined => {
-  return filterRegionByServiceType('alert', regions, serviceType).map(
+  return filterRegionByServiceType('alerts', regions, serviceType).map(
     ({ id }) => id
   );
 };
