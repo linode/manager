@@ -8,7 +8,7 @@ import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -31,9 +31,7 @@ export const Images = () => {
   });
   const queryClient = useQueryClient();
 
-  const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const regionId = useWatch({ control, name: 'region' });
 
@@ -91,7 +89,7 @@ export const Images = () => {
         <Typography variant="h2">Choose an Image</Typography>
         <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>
           <ImageSelect
-            disabled={isCreateLinodeRestricted}
+            disabled={!permissions.create_linode}
             errorText={fieldState.error?.message}
             onBlur={field.onBlur}
             onChange={onChange}

@@ -22,14 +22,18 @@ const managedIndexRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: '/',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedSummaryRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'summary',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedMonitorsRoute = createRoute({
@@ -37,14 +41,18 @@ const managedMonitorsRoute = createRoute({
   path: 'monitors',
   validateSearch: (search: ManagedSearchParams) => search,
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedMonitorsAddRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: '/monitors/add',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedMonitorsIssuesRoute = createRoute({
@@ -59,7 +67,9 @@ const managedMonitorsIssuesRoute = createRoute({
   },
   path: '/monitors/$monitorId/issues',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedMonitorsEditRoute = createRoute({
@@ -74,7 +84,9 @@ const managedMonitorsEditRoute = createRoute({
   },
   path: '/monitors/$monitorId/edit',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedMonitorsDeleteRoute = createRoute({
@@ -89,14 +101,18 @@ const managedMonitorsDeleteRoute = createRoute({
   },
   path: '/monitors/$monitorId/delete',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedSSHAccessRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'ssh-access',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedSSHAccessEditRoute = createRoute({
@@ -111,21 +127,27 @@ const managedSSHAccessEditRoute = createRoute({
   },
   path: 'ssh-access/$linodeId/edit',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedCredentialsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'credentials',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedCredentialsAddRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'credentials/add',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedCredentialsEditRoute = createRoute({
@@ -140,7 +162,9 @@ const managedCredentialsEditRoute = createRoute({
   },
   path: 'credentials/$credentialId/edit',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedCredentialsDeleteRoute = createRoute({
@@ -155,21 +179,27 @@ const managedCredentialsDeleteRoute = createRoute({
   },
   path: 'credentials/$credentialId/delete',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedContactsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'contacts',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedContactsAddRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'contacts/add',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedContactsEditRoute = createRoute({
@@ -184,7 +214,9 @@ const managedContactsEditRoute = createRoute({
   },
   path: 'contacts/$contactId/edit',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 const managedContactsDeleteRoute = createRoute({
@@ -199,7 +231,9 @@ const managedContactsDeleteRoute = createRoute({
   },
   path: 'contacts/$contactId/delete',
 }).lazy(() =>
-  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+  import('src/features/Managed/managedLandingLazyRoute').then(
+    (m) => m.managedLandingLazyRoute
+  )
 );
 
 export const managedRouteTree = managedRoute.addChildren([

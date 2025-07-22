@@ -1,5 +1,8 @@
 name: Coverage Badge
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
