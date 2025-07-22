@@ -54,7 +54,6 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 const baseProps = (
   type: FirewallDeviceEntityType
 ): FirewallDeviceLandingProps => ({
-  disabled: false,
   firewallId: 1,
   firewallLabel: 'test',
   type,
@@ -98,8 +97,13 @@ services.forEach((service: FirewallDeviceEntityType) => {
         expect(table).toBeInTheDocument();
       });
 
-      if (prop.disabled && serviceName !== 'Linode') {
+      if (serviceName !== 'Linode') {
         it(`should contain a disabled Add ${serviceName} button`, () => {
+          queryMocks.userPermissions.mockReturnValue({
+            permissions: {
+              create_firewall_device: false,
+            },
+          });
           const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
           );
@@ -117,8 +121,13 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
       }
 
-      if (!prop.disabled && serviceName !== 'Linode') {
+      if (serviceName !== 'Linode') {
         it(`should contain an enabled Add ${serviceName} button`, () => {
+          queryMocks.userPermissions.mockReturnValue({
+            permissions: {
+              create_firewall_device: true,
+            },
+          });
           const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
           );
@@ -128,6 +137,11 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
 
         it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, async () => {
+          queryMocks.userPermissions.mockReturnValue({
+            permissions: {
+              create_firewall_device: true,
+            },
+          });
           const mockNavigate = vi.fn();
           queryMocks.useNavigate.mockReturnValue(mockNavigate);
 
