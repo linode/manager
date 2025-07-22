@@ -71,9 +71,7 @@ describe('Edit Contact Information', () => {
       }),
     });
 
-    const { getByTestId } = renderWithTheme(
-      <ContactInformation {...props} />
-    );
+    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',

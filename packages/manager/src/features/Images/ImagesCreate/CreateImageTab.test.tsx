@@ -24,9 +24,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('CreateImageTab', () => {
   it('should render fields, titles, and buttons in their default state', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
-      <CreateImageTab />
-    );
+    const { getByLabelText, getByText } = renderWithTheme(<CreateImageTab />);
 
     expect(getByText('Select Linode & Disk')).toBeVisible();
 
@@ -69,9 +67,7 @@ describe('CreateImageTab', () => {
       selectedLinode: linode.id,
     });
 
-    const { getByLabelText } = renderWithTheme(
-      <CreateImageTab />
-    );
+    const { getByLabelText } = renderWithTheme(<CreateImageTab />);
 
     await waitFor(() => {
       expect(getByLabelText('Linode')).toHaveValue(linode.label);
@@ -157,9 +153,7 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const { findByText, getByLabelText } = renderWithTheme(
-      <CreateImageTab />
-    );
+    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -196,8 +190,9 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const { findByText, getByLabelText, queryByText } =
-      renderWithTheme(<CreateImageTab />);
+    const { findByText, getByLabelText, queryByText } = renderWithTheme(
+      <CreateImageTab />
+    );
 
     const linodeSelect = getByLabelText('Linode');
 
