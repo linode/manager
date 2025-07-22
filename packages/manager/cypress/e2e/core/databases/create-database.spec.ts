@@ -237,7 +237,7 @@ describe('create a database cluster, mocked data', () => {
 
         cy.findByText(databaseMock.label)
           .should('be.visible')
-          .closest('tr')
+          .closest('cds-table-row')
           .within(() => {
             cy.findByText(`${configuration.engine} v${configuration.version}`, {
               exact: false,
@@ -258,7 +258,7 @@ describe('create a database cluster, mocked data', () => {
 
         cy.findByText(databaseMock.label)
           .should('be.visible')
-          .closest('tr')
+          .closest('cds-table-row')
           .within(() => {
             cy.findByText('Active').should('be.visible');
           });
