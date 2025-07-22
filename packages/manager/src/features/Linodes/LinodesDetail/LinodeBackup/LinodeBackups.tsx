@@ -47,10 +47,8 @@ export const LinodeBackups = () => {
     'linode',
     [
       'cancel_linode_backups',
-      'create_linode',
       'create_linode_backup_snapshot',
       'enable_linode_backups',
-      'update_linode',
     ],
     linodeId
   );
@@ -158,7 +156,7 @@ export const LinodeBackups = () => {
                     handleDeploy={() => handleDeploy(backup)}
                     handleRestore={() => onRestoreBackup(backup)}
                     key={idx}
-                    permissions={permissions}
+                    linodeId={id}
                   />
                 ))}
                 {Boolean(backups?.snapshot.current) && (
@@ -170,7 +168,7 @@ export const LinodeBackups = () => {
                     handleRestore={() =>
                       onRestoreBackup(backups!.snapshot.current!)
                     }
-                    permissions={permissions}
+                    linodeId={id}
                   />
                 )}
                 {Boolean(backups?.snapshot.in_progress) && (
@@ -182,7 +180,7 @@ export const LinodeBackups = () => {
                     handleRestore={() =>
                       onRestoreBackup(backups!.snapshot.in_progress!)
                     }
-                    permissions={permissions}
+                    linodeId={id}
                   />
                 )}
               </>

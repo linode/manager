@@ -1,29 +1,40 @@
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import type { LinodeBackup, PermissionType } from '@linode/api-v4/lib/linodes';
+import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   backup: LinodeBackup;
+  linodeId: number;
   onDeploy: () => void;
   onRestore: () => void;
-  permissions: Record<PermissionType, boolean>;
 }
 
 export const LinodeBackupActionMenu = (props: Props) => {
-  const { backup, onDeploy, onRestore, permissions } = props;
+  const { backup, linodeId, onDeploy, onRestore } = props;
+
+  const { permissions: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+  const { permissions: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
+
   const disabledPropsForRestore = {
-    disabled: !permissions.update_linode,
-    tooltip: !permissions.update_linode
+    disabled: !linodePermissions.update_linode,
+    tooltip: !linodePermissions.update_linode
       ? "You don't have permission to deploy from this Linode\u{2019}s backups"
       : undefined,
   };
 
   const disabledPropsForDeployNew = {
-    disabled: !permissions.create_linode,
-    tooltip: !permissions.create_linode
+    disabled: !accountPermissions.create_linode,
+    tooltip: !accountPermissions.create_linode
       ? "You don't have permission to deploy from this Linode\u{2019}s backups"
       : undefined,
   };

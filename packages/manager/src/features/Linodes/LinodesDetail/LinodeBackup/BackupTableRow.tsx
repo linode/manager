@@ -10,14 +10,14 @@ import { parseAPIDate } from 'src/utilities/date';
 
 import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
 
-import type { LinodeBackup, PermissionType } from '@linode/api-v4/lib/linodes';
+import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 interface Props {
   backup: LinodeBackup;
   handleDeploy: () => void;
   handleRestore: () => void;
-  permissions: Record<PermissionType, boolean>;
+  linodeId: number;
 }
 
 const typeMap = {
@@ -46,7 +46,7 @@ const statusIconMap: Record<LinodeBackup['status'], Status> = {
 };
 
 export const BackupTableRow = (props: Props) => {
-  const { backup, handleDeploy, handleRestore, permissions } = props;
+  const { backup, handleDeploy, handleRestore, linodeId } = props;
 
   return (
     <TableRow data-qa-backup key={backup.id}>
@@ -84,9 +84,9 @@ export const BackupTableRow = (props: Props) => {
       <TableCell actionCell>
         <LinodeBackupActionMenu
           backup={backup}
+          linodeId={linodeId}
           onDeploy={handleDeploy}
           onRestore={handleRestore}
-          permissions={permissions}
         />
       </TableCell>
     </TableRow>
