@@ -54,7 +54,6 @@ export interface AlertInformationActionTableProps {
 
   /**
    * Called when an alert is toggled on or off.
-   * Only use in create flow.
    * @param payload enabled alerts ids
    */
   onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
@@ -101,7 +100,6 @@ export interface AlertRowPropsOptions {
 
   /**
    * Callback function to handle alert toggle
-   * Only use in create flow.
    */
   onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 }
@@ -131,7 +129,7 @@ export const AlertInformationActionTable = (
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const isEditMode = !!entityId;
-  const isCreateMode = !!onToggleAlert;
+  const isCreateMode = !isEditMode;
 
   const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
     useContextualAlertsState(alerts, entityId);
@@ -190,7 +188,7 @@ export const AlertInformationActionTable = (
           alertIds.push(alert.id);
         }
 
-        // Only call onToggleAlert in create flow
+        // Call onToggleAlert with the enabled alerts in both create and edit flow
         if (onToggleAlert) {
           onToggleAlert(newPayload);
         }
