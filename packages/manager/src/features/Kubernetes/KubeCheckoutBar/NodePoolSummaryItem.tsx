@@ -76,9 +76,11 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
             GB Storage
           </Typography>
           <Typography>
-            {UPDATE_STRATEGY_OPTIONS.find(
-              (option) => option.value === thisPool.update_strategy
-            )?.label ?? ''}
+            {isLkeEnterprisePostLAFeatureEnabled && thisPool
+              ? UPDATE_STRATEGY_OPTIONS.find(
+                  (option) => option.value === thisPool?.update_strategy
+                )?.label
+              : ''}
           </Typography>
         </Stack>
         <IconButton
