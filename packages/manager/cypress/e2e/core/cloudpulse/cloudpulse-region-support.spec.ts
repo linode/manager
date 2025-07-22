@@ -93,13 +93,11 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          // supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          // supportedRegionIds: 'us-ord',
         },
       ],
     };
