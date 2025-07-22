@@ -410,7 +410,7 @@ export const ImagesLanding = () => {
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
   return (
-    <Stack spacing={2}>
+    <>
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
@@ -429,248 +429,251 @@ export const ImagesLanding = () => {
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
+        spacingBottom={16}
         title="Images"
       />
-      <DebouncedSearchTextField
-        clearable
-        errorText={searchParseError?.message}
-        hideLabel
-        isSearching={isFetching}
-        label="Search"
-        onSearch={onSearch}
-        placeholder="Search Images"
-        value={query ?? ''}
-      />
-      <Paper className={classes.imageTable}>
-        <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Custom Images</Typography>
-          <Typography className={classes.imageTableSubheader}>
-            These are{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
-              encrypted
-            </Link>{' '}
-            images you manually uploaded or captured from an existing compute
-            instance disk. You can deploy an image to a compute instance in any
-            region.
-          </Typography>
-        </div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableSortCell
-                active={manualImagesOrderBy === 'label'}
-                direction={manualImagesOrder}
-                handleClick={handleManualImagesOrderChange}
-                label="label"
-              >
-                Image
-              </TableSortCell>
-              <Hidden smDown>
-                <TableCell>Status</TableCell>
-              </Hidden>
-              <Hidden smDown>
-                <TableCell>Replicated in</TableCell>
-              </Hidden>
-              <TableSortCell
-                active={manualImagesOrderBy === 'size'}
-                direction={manualImagesOrder}
-                handleClick={handleManualImagesOrderChange}
-                label="size"
-              >
-                Original Image
-              </TableSortCell>
-              <Hidden mdDown>
-                <TableCell>All Replicas</TableCell>
-              </Hidden>
-              <Hidden mdDown>
+      <Stack spacing={3}>
+        <DebouncedSearchTextField
+          clearable
+          errorText={searchParseError?.message}
+          hideLabel
+          isSearching={isFetching}
+          label="Search"
+          onSearch={onSearch}
+          placeholder="Search Images"
+          value={query ?? ''}
+        />
+        <Paper className={classes.imageTable}>
+          <div className={classes.imageTableHeader}>
+            <Typography variant="h3">Custom Images</Typography>
+            <Typography className={classes.imageTableSubheader}>
+              These are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+                encrypted
+              </Link>{' '}
+              images you manually uploaded or captured from an existing compute
+              instance disk. You can deploy an image to a compute instance in
+              any region.
+            </Typography>
+          </div>
+          <Table>
+            <TableHead>
+              <TableRow>
                 <TableSortCell
-                  active={manualImagesOrderBy === 'created'}
+                  active={manualImagesOrderBy === 'label'}
                   direction={manualImagesOrder}
                   handleClick={handleManualImagesOrderChange}
-                  label="created"
+                  label="label"
                 >
-                  Created
+                  Image
                 </TableSortCell>
-              </Hidden>
-              <Hidden mdDown>
-                <TableCell>Image ID</TableCell>
-              </Hidden>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {manualImages?.results === 0 && (
-              <TableRowEmpty
-                colSpan={9}
-                message={`No Custom Images to display.`}
-              />
-            )}
-            {manualImagesError && query && (
-              <TableRowError
-                colSpan={9}
-                message={manualImagesError[0].reason}
-              />
-            )}
-            {manualImages?.data.map((manualImage) => (
-              <ImageRow
-                event={manualImagesEvents[manualImage.id]}
-                handlers={handlers}
-                image={manualImage}
-                key={manualImage.id}
-              />
-            ))}
-          </TableBody>
-        </Table>
-        <PaginationFooter
-          count={manualImages?.results ?? 0}
-          eventCategory="Custom Images Table"
-          handlePageChange={paginationForManualImages.handlePageChange}
-          handleSizeChange={paginationForManualImages.handlePageSizeChange}
-          page={paginationForManualImages.page}
-          pageSize={paginationForManualImages.pageSize}
-        />
-      </Paper>
-      <Paper className={classes.imageTable}>
-        <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Recovery Images</Typography>
-          <Typography className={classes.imageTableSubheader}>
-            These are images we automatically capture when Linode disks are
-            deleted. They will be deleted after the indicated expiration date.
-          </Typography>
-        </div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'label'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="label"
-              >
-                Image
-              </TableSortCell>
-              <Hidden smDown>
-                <TableCell>Status</TableCell>
-              </Hidden>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'size'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="size"
-              >
-                Size
-              </TableSortCell>
-              <Hidden smDown>
+                <Hidden smDown>
+                  <TableCell>Status</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Replicated in</TableCell>
+                </Hidden>
                 <TableSortCell
-                  active={automaticImagesOrderBy === 'created'}
+                  active={manualImagesOrderBy === 'size'}
+                  direction={manualImagesOrder}
+                  handleClick={handleManualImagesOrderChange}
+                  label="size"
+                >
+                  Original Image
+                </TableSortCell>
+                <Hidden mdDown>
+                  <TableCell>All Replicas</TableCell>
+                </Hidden>
+                <Hidden mdDown>
+                  <TableSortCell
+                    active={manualImagesOrderBy === 'created'}
+                    direction={manualImagesOrder}
+                    handleClick={handleManualImagesOrderChange}
+                    label="created"
+                  >
+                    Created
+                  </TableSortCell>
+                </Hidden>
+                <Hidden mdDown>
+                  <TableCell>Image ID</TableCell>
+                </Hidden>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {manualImages?.results === 0 && (
+                <TableRowEmpty
+                  colSpan={9}
+                  message={`No Custom Images to display.`}
+                />
+              )}
+              {manualImagesError && query && (
+                <TableRowError
+                  colSpan={9}
+                  message={manualImagesError[0].reason}
+                />
+              )}
+              {manualImages?.data.map((manualImage) => (
+                <ImageRow
+                  event={manualImagesEvents[manualImage.id]}
+                  handlers={handlers}
+                  image={manualImage}
+                  key={manualImage.id}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={manualImages?.results ?? 0}
+            eventCategory="Custom Images Table"
+            handlePageChange={paginationForManualImages.handlePageChange}
+            handleSizeChange={paginationForManualImages.handlePageSizeChange}
+            page={paginationForManualImages.page}
+            pageSize={paginationForManualImages.pageSize}
+          />
+        </Paper>
+        <Paper className={classes.imageTable}>
+          <div className={classes.imageTableHeader}>
+            <Typography variant="h3">Recovery Images</Typography>
+            <Typography className={classes.imageTableSubheader}>
+              These are images we automatically capture when Linode disks are
+              deleted. They will be deleted after the indicated expiration date.
+            </Typography>
+          </div>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={automaticImagesOrderBy === 'label'}
                   direction={automaticImagesOrder}
                   handleClick={handleAutomaticImagesOrderChange}
-                  label="created"
+                  label="label"
                 >
-                  Created
+                  Image
                 </TableSortCell>
-              </Hidden>
-              <Hidden smDown>
-                <TableCell>Expires</TableCell>
-              </Hidden>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {automaticImages?.results === 0 && (
-              <TableRowEmpty
-                colSpan={6}
-                message={`No Recovery Images to display.`}
-              />
-            )}
-            {automaticImagesError && query && (
-              <TableRowError
-                colSpan={9}
-                message={automaticImagesError[0].reason}
-              />
-            )}
-            {automaticImages?.data.map((automaticImage) => (
-              <ImageRow
-                event={automaticImagesEvents[automaticImage.id]}
-                handlers={handlers}
-                image={automaticImage}
-                key={automaticImage.id}
-              />
-            ))}
-          </TableBody>
-        </Table>
-        <PaginationFooter
-          count={automaticImages?.results ?? 0}
-          eventCategory="Recovery Images Table"
-          handlePageChange={paginationForAutomaticImages.handlePageChange}
-          handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
-          page={paginationForAutomaticImages.page}
-          pageSize={paginationForAutomaticImages.pageSize}
-        />
-      </Paper>
-      <EditImageDrawer
-        image={selectedImage}
-        imageError={selectedImageError}
-        isFetching={isFetchingSelectedImage}
-        onClose={handleCloseDialog}
-        open={action === 'edit'}
-      />
-      <RebuildImageDrawer
-        image={selectedImage}
-        imageError={selectedImageError}
-        isFetching={isFetchingSelectedImage}
-        onClose={handleCloseDialog}
-        open={action === 'rebuild'}
-      />
-      <Drawer
-        error={selectedImageError}
-        isFetching={isFetchingSelectedImage}
-        onClose={handleCloseDialog}
-        open={action === 'manage-replicas'}
-        title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
-      >
-        <ManageImageReplicasForm
-          image={selectedImage}
-          onClose={handleCloseDialog}
-        />
-      </Drawer>
-      <ConfirmationDialog
-        actions={
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label:
-                dialogStatus === 'cancel' ? 'Cancel Upload' : 'Delete Image',
-              loading: dialogState.submitting,
-              onClick: () => handleDeleteImage(selectedImage!),
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: dialogStatus === 'cancel' ? 'Keep Image' : 'Cancel',
-              onClick: handleCloseDialog,
-            }}
+                <Hidden smDown>
+                  <TableCell>Status</TableCell>
+                </Hidden>
+                <TableSortCell
+                  active={automaticImagesOrderBy === 'size'}
+                  direction={automaticImagesOrder}
+                  handleClick={handleAutomaticImagesOrderChange}
+                  label="size"
+                >
+                  Size
+                </TableSortCell>
+                <Hidden smDown>
+                  <TableSortCell
+                    active={automaticImagesOrderBy === 'created'}
+                    direction={automaticImagesOrder}
+                    handleClick={handleAutomaticImagesOrderChange}
+                    label="created"
+                  >
+                    Created
+                  </TableSortCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Expires</TableCell>
+                </Hidden>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {automaticImages?.results === 0 && (
+                <TableRowEmpty
+                  colSpan={6}
+                  message={`No Recovery Images to display.`}
+                />
+              )}
+              {automaticImagesError && query && (
+                <TableRowError
+                  colSpan={9}
+                  message={automaticImagesError[0].reason}
+                />
+              )}
+              {automaticImages?.data.map((automaticImage) => (
+                <ImageRow
+                  event={automaticImagesEvents[automaticImage.id]}
+                  handlers={handlers}
+                  image={automaticImage}
+                  key={automaticImage.id}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={automaticImages?.results ?? 0}
+            eventCategory="Recovery Images Table"
+            handlePageChange={paginationForAutomaticImages.handlePageChange}
+            handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
+            page={paginationForAutomaticImages.page}
+            pageSize={paginationForAutomaticImages.pageSize}
           />
-        }
-        entityError={selectedImageError}
-        isFetching={isFetchingSelectedImage}
-        onClose={handleCloseDialog}
-        open={action === 'delete'}
-        title={
-          dialogStatus === 'cancel'
-            ? 'Cancel Upload'
-            : `Delete Image ${selectedImage?.label}`
-        }
-      >
-        {dialogState.error && (
-          <Notice text={dialogState.error} variant="error" />
-        )}
-        <Typography>
-          {dialogStatus === 'cancel'
-            ? 'Are you sure you want to cancel this Image upload?'
-            : 'Are you sure you want to delete this Image?'}
-        </Typography>
-      </ConfirmationDialog>
-    </Stack>
+        </Paper>
+        <EditImageDrawer
+          image={selectedImage}
+          imageError={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={action === 'edit'}
+        />
+        <RebuildImageDrawer
+          image={selectedImage}
+          imageError={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={action === 'rebuild'}
+        />
+        <Drawer
+          error={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={action === 'manage-replicas'}
+          title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
+        >
+          <ManageImageReplicasForm
+            image={selectedImage}
+            onClose={handleCloseDialog}
+          />
+        </Drawer>
+        <ConfirmationDialog
+          actions={
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                label:
+                  dialogStatus === 'cancel' ? 'Cancel Upload' : 'Delete Image',
+                loading: dialogState.submitting,
+                onClick: () => handleDeleteImage(selectedImage!),
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'cancel',
+                label: dialogStatus === 'cancel' ? 'Keep Image' : 'Cancel',
+                onClick: handleCloseDialog,
+              }}
+            />
+          }
+          entityError={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={action === 'delete'}
+          title={
+            dialogStatus === 'cancel'
+              ? 'Cancel Upload'
+              : `Delete Image ${selectedImage?.label}`
+          }
+        >
+          {dialogState.error && (
+            <Notice text={dialogState.error} variant="error" />
+          )}
+          <Typography>
+            {dialogStatus === 'cancel'
+              ? 'Are you sure you want to cancel this Image upload?'
+              : 'Are you sure you want to delete this Image?'}
+          </Typography>
+        </ConfirmationDialog>
+      </Stack>
+    </>
   );
 };
 
