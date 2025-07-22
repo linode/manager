@@ -90,7 +90,9 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
           <CloseIcon />
         </IconButton>
       </Stack>
-      {!isLkeEnterprisePostLAFeatureEnabled ? (
+      {isLkeEnterprisePostLAFeatureEnabled ? (
+        pluralize('Node', 'Nodes', nodeCount)
+      ) : (
         <EnhancedNumberInput
           max={
             clusterTier === 'enterprise'
@@ -101,8 +103,6 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
           setValue={updateNodeCount}
           value={nodeCount}
         />
-      ) : (
-        pluralize('Node', 'Nodes', nodeCount)
       )}
       <Box pt={0.5}>
         {price ? (
