@@ -21,6 +21,7 @@ import {
   DEFAULT_PLAN_COUNT,
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
+  nodeWarning,
 } from '../constants';
 import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
@@ -79,20 +80,24 @@ export const NodePoolConfigDrawer = (props: Props) => {
       },
       shouldUnregister: true, // For conditionally defined fields (e.g. updateStrategy)
     });
-  const nodeCountWatcher = useWatch({ control, name: 'nodeCount' });
-  const updatedCount = nodeCountWatcher ?? form.getValues('nodeCount');
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);
   const planType = typesQuery[0]?.data
     ? extendType(typesQuery[0].data)
     : undefined;
 
-  const isAddMode = mode === 'add';
-
+  // Keep track of the node count to display an accurate price.
+  const nodeCountWatcher = useWatch({ control, name: 'nodeCount' });
+  const updatedCount = nodeCountWatcher ?? form.getValues('nodeCount');
   const pricePerNode = getLinodeRegionPrice(
     planType,
     selectedRegion?.toString()
   )?.monthly;
+
+  const isAddMode = mode === 'add';
+
+  // Show a warning if any of the pools have fewer than 3 nodes
+  const shouldShowWarning = updatedCount < 3;
 
   React.useEffect(() => {
     if (!planId || !selectedTier) {
@@ -114,7 +119,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
       // If there's a pool index, the drawer is in edit mode. Else, it's in add mode.
-      if (poolIndex) {
+      if (poolIndex !== undefined) {
         update(poolIndex, {
           ..._nodePools[poolIndex],
           count: values.nodeCount,
@@ -154,6 +159,9 @@ export const NodePoolConfigDrawer = (props: Props) => {
           variant="error"
         />
       ) : null}
+      {shouldShowWarning && (
+        <Notice spacingTop={16} text={nodeWarning} variant="warning" />
+      )}
       <FormProvider
         control={control}
         formState={formState}
