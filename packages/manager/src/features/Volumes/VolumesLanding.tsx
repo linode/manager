@@ -173,6 +173,7 @@ export const VolumesLanding = () => {
         title="Volumes"
       />
       <DebouncedSearchTextField
+        clearable
         errorText={searchError?.message}
         hideLabel
         isSearching={isFetching}
