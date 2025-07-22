@@ -111,7 +111,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(resources) && !isDashboardLoading && !isDashboardApiError
   );
 
-  if (isDashboardApiError || !dashboard) {
+  if (isDashboardApiError) {
     return renderErrorState('Failed to fetch the dashboard details.');
   }
 
@@ -129,6 +129,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return <CircleProgress />;
+  }
+
+  if (!dashboard) {
+    return renderPlaceHolder(
+      'No visualizations are available at this moment. Create Dashboards to list here.'
+    );
   }
 
   return (
@@ -159,3 +165,6 @@ const renderErrorState = (errorMessage: string) => {
     </GridLegacy>
   );
 };
+function renderPlaceHolder(arg0: string) {
+  throw new Error('Function not implemented.');
+}

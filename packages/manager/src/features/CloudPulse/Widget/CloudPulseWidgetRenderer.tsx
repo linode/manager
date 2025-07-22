@@ -117,7 +117,7 @@ export const RenderWidgets = React.memo(
       }
     };
 
-    if (!dashboard || !dashboard.widgets?.length) {
+    if (!dashboard.widgets?.length) {
       return renderPlaceHolder(
         'No visualizations are available at this moment. Create Dashboards to list here.'
       );
