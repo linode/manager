@@ -4,6 +4,7 @@ import { Box, Notice, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -24,10 +25,8 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
-import {
-  getGeneratedLinodeLabel,
-  useLinodeCreateQueryParams,
-} from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { getGeneratedLinodeLabel } from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 import { SelectLinodeCard } from './SelectLinodeCard';
 
@@ -46,6 +45,9 @@ interface Props {
 
 export const LinodeSelectTable = (props: Props) => {
   const { enablePowerOff } = props;
+  const search = useSearch({
+    from: '/linodes/create',
+  });
 
   const matchesMdUp = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
@@ -68,10 +70,10 @@ export const LinodeSelectTable = (props: Props) => {
     }
   );
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const [query, setQuery] = useState(
-    params.linodeID ? `id = ${params.linodeID}` : ''
+    search.linodeID ? `id = ${search.linodeID}` : ''
   );
 
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
@@ -123,7 +125,7 @@ export const LinodeSelectTable = (props: Props) => {
         'label',
         await getGeneratedLinodeLabel({
           queryClient,
-          tab: params.type,
+          tab: createType,
           values: getValues(),
         })
       );

@@ -25,11 +25,9 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { getDisabledRegions } from './Region.utils';
+import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 import { TwoStepRegion } from './TwoStepRegion';
-import {
-  getGeneratedLinodeLabel,
-  useLinodeCreateQueryParams,
-} from './utilities';
+import { getGeneratedLinodeLabel } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -41,7 +39,7 @@ export const Region = React.memo(() => {
   const flags = useFlags();
   const queryClient = useQueryClient();
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const {
     control,
@@ -82,7 +80,7 @@ export const Region = React.memo(() => {
   );
 
   const showTwoStepRegion =
-    isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
+    isGeckoLAEnabled && isDistributedRegionSupported(createType ?? 'OS');
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -163,7 +161,7 @@ export const Region = React.memo(() => {
       // Auto-generate the Linode label because the region is included in the generated label
       const label = await getGeneratedLinodeLabel({
         queryClient,
-        tab: params.type ?? 'OS',
+        tab: createType ?? 'OS',
         values: { ...values, region: region.id },
       });
 
@@ -172,17 +170,17 @@ export const Region = React.memo(() => {
 
     // Begin tracking the Linode Create form.
     sendLinodeCreateFormStartEvent({
-      createType: params.type ?? 'OS',
+      createType: createType ?? 'OS',
     });
   };
 
   const showCrossDataCenterCloneWarning =
-    params.type === 'Clone Linode' &&
+    createType === 'Clone Linode' &&
     selectedLinode &&
     selectedLinode.region !== field.value;
 
   const showClonePriceWarning =
-    params.type === 'Clone Linode' &&
+    createType === 'Clone Linode' &&
     isLinodeTypeDifferentPriceInSelectedRegion({
       regionA: selectedLinode?.region,
       regionB: field.value,
@@ -190,8 +188,7 @@ export const Region = React.memo(() => {
     });
 
   const hideDistributedRegions =
-    !flags.gecko2?.enabled ||
-    !isDistributedRegionSupported(params.type ?? 'OS');
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(createType ?? 'OS');
 
   const disabledRegions = getDisabledRegions({
     regions: regions ?? [],
@@ -207,9 +204,7 @@ export const Region = React.memo(() => {
         onChange={onChange}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
+          hideDistributedRegions && createType !== 'Images' ? 'core' : undefined
         }
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}
@@ -226,7 +221,7 @@ export const Region = React.memo(() => {
           label={DOCS_LINK_LABEL_DC_PRICING}
           onClick={() =>
             sendLinodeCreateFormInputEvent({
-              createType: params.type ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Region',
               interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
@@ -253,9 +248,7 @@ export const Region = React.memo(() => {
         onChange={(e, region) => onChange(region)}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
+          hideDistributedRegions && createType !== 'Images' ? 'core' : undefined
         }
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}

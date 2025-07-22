@@ -3,7 +3,7 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
 
-import type { LinodeCreateType } from '@linode/utilities';
+// import type { LinodeCreateType } from '@linode/utilities';
 import type { StackScriptTabType } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
 
 interface LinodeDetailSearchParams {
@@ -23,7 +23,7 @@ export interface LinodeCreateSearchParams {
   linodeID?: number;
   stackScriptID?: number;
   subtype?: StackScriptTabType;
-  type?: LinodeCreateType;
+  // type?: LinodeCreateType;
 }
 
 export const linodesRoute = createRoute({
@@ -49,6 +49,60 @@ const linodesCreateRoute = createRoute({
   import('src/features/Linodes/LinodeCreate/linodeCreateLazyRoute').then(
     (m) => m.linodeCreateLazyRoute
   )
+);
+
+const linodesCreateOperatingSystemsRoute = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: 'os',
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodeCreate/Tabs/operatingSystemsLazyRoute'
+  ).then((m) => m.operatingSystemsLazyRoute)
+);
+
+const linodesCreateStackScriptsRoute = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: 'stackscripts',
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodeCreate/Tabs/StackScripts/stackScriptsLazyRoute'
+  ).then((m) => m.stackScriptsLazyRoute)
+);
+
+const linodesCreateMarketplaceRoute = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: 'marketplace',
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodeCreate/Tabs/Marketplace/marketPlaceLazyRoute'
+  ).then((m) => m.marketPlaceLazyRoute)
+);
+
+const linodesCreateImagesRoute = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: 'images',
+}).lazy(() =>
+  import('src/features/Linodes/LinodeCreate/Tabs/imagesLazyRoutes').then(
+    (m) => m.imagesLazyRoute
+  )
+);
+
+const linodesCreateCloneRoute = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: 'clone',
+}).lazy(() =>
+  import('src/features/Linodes/LinodeCreate/Tabs/Clone/cloneLazyRoute').then(
+    (m) => m.cloneLazyRoute
+  )
+);
+
+const linodesCreateBackupsRoute = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: 'backups',
+}).lazy(() =>
+  import(
+    'src/features/Linodes/LinodeCreate/Tabs/Backups/backupsLazyRoute'
+  ).then((m) => m.backupsLazyRoute)
 );
 
 const linodesDetailRoute = createRoute({
@@ -201,6 +255,12 @@ const linodesDetailUpgradeInterfacesRoute = createRoute({
 export const linodesRouteTree = linodesRoute.addChildren([
   linodesIndexRoute,
   linodesCreateRoute,
+  linodesCreateOperatingSystemsRoute,
+  linodesCreateStackScriptsRoute,
+  linodesCreateMarketplaceRoute,
+  linodesCreateImagesRoute,
+  linodesCreateCloneRoute,
+  linodesCreateBackupsRoute,
   linodesDetailRoute.addChildren([
     linodesDetailCloneRoute.addChildren([
       linodesDetailCloneConfigsRoute,
