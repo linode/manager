@@ -1,6 +1,7 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
+  Divider,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -25,7 +26,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
 
   const [isUsingOwnVpc, setIsUsingOwnVpc] = useState(false);
 
-  const { control } = useFormContext();
+  const { control, setValue, resetField } = useFormContext();
   const [selectedVPCId] = useWatch({
     control,
     name: ['vpc_id', 'subnet_id'],
@@ -45,15 +46,27 @@ export const ClusterNetworkingPanel = (props: Props) => {
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
 
   return isLkeEnterprisePhase2FeatureEnabled ? (
-    <>
+    <Stack divider={<Divider />} spacing={4}>
       <Stack>
-        <Typography variant="h3">IP Version</Typography>
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+          })}
+        >
+          IP Version
+        </Typography>
         <Typography marginTop={1}>
           TODO - M3-10203: LKE-E Dual Stack Support
         </Typography>
       </Stack>
       <Stack marginTop={3}>
-        <Typography variant="h3">VPC</Typography>
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+          })}
+        >
+          VPC
+        </Typography>
         <Typography marginTop={1}>
           Allow for private communications within and across clusters in the
           same data center.
@@ -81,7 +94,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
         </RadioGroup>
 
         {isUsingOwnVpc && (
-          <Stack>
+          <Stack spacing={2}>
             <Controller
               control={control}
               name="vpc_id"
@@ -101,9 +114,19 @@ export const ClusterNetworkingPanel = (props: Props) => {
                   onBlur={field.onBlur}
                   onChange={(e, vpc) => {
                     field.onChange(vpc?.id ?? null);
+                    if (vpc && vpc.subnets.length === 1) {
+                      // If the user selects a VPC and the VPC only has one subnet,
+                      // preselect that subnet for the user.
+                      setValue('subnet_id', vpc.subnets[0].id, {
+                        shouldValidate: true,
+                      });
+                    } else {
+                      // Otherwise, just clear the selected subnet.
+                      resetField('subnet_id');
+                    }
                   }}
                   options={vpcs ?? []}
-                  placeholder="None"
+                  placeholder="Select a VPC"
                   textFieldProps={{
                     tooltipText: REGION_CAVEAT_HELPER_TEXT,
                   }}
@@ -111,10 +134,34 @@ export const ClusterNetworkingPanel = (props: Props) => {
                 />
               )}
             />
+            <Controller
+              control={control}
+              name="subnet_id"
+              render={({ field, fieldState }) => (
+                <Autocomplete
+                  disabled={!selectedVPC}
+                  errorText={fieldState.error?.message}
+                  getOptionLabel={(subnet) =>
+                    `${subnet.label} (${subnet.ipv4})`
+                  }
+                  label="Subnet"
+                  loading={isLoading}
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
+                  options={selectedVPC?.subnets ?? []}
+                  placeholder="Select a Subnet"
+                  value={
+                    selectedVPC?.subnets.find((s) => s.id === field.value) ??
+                    null
+                  }
+                />
+              )}
+            />
           </Stack>
         )}
       </Stack>
-    </>
+    </Stack>
   ) : (
     <Stack>
       <Typography variant="h3">VPC & Firewall</Typography>
