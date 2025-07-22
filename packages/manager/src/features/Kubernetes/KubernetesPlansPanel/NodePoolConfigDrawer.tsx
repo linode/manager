@@ -88,7 +88,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
 
   // Keep track of the node count to display an accurate price.
   const nodeCountWatcher = useWatch({ control, name: 'nodeCount' });
-  const updatedCount = nodeCountWatcher ?? form.getValues('nodeCount');
+  const updatedCount =
+    nodeCountWatcher ?? form.getValues('nodeCount') ?? DEFAULT_PLAN_COUNT;
   const pricePerNode = getLinodeRegionPrice(
     planType,
     selectedRegion?.toString()
