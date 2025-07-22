@@ -6,6 +6,7 @@ import { databaseFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as utils from '../../utilities';
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseSummary } from './DatabaseSummary';
 
 import type { Database } from '@linode/api-v4';
@@ -47,7 +48,9 @@ describe('Database Summary', () => {
     }) as Database;
 
     const { queryAllByText } = renderWithTheme(
-      <DatabaseSummary database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine: 'mysql' }}>
+        <DatabaseSummary />
+      </DatabaseDetailContext.Provider>
     );
 
     await waitFor(() => {
