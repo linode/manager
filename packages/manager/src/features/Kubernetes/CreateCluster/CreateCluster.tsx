@@ -96,6 +96,7 @@ export interface NodePoolConfigDrawerHandlerParams {
   drawerMode: NodePoolConfigDrawerMode;
   isOpen: boolean;
   planLabel?: string;
+  poolIndex?: number;
 }
 
 export const CreateCluster = () => {
@@ -138,6 +139,7 @@ export const CreateCluster = () => {
   const [nodePoolConfigDrawerMode, setNodePoolConfigDrawerMode] =
     React.useState<NodePoolConfigDrawerMode>('add');
   const [selectedType, setSelectedType] = React.useState<string>();
+  const [selectedPoolIndex, setSelectedPoolIndex] = React.useState<number>();
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
@@ -249,10 +251,12 @@ export const CreateCluster = () => {
     drawerMode,
     isOpen,
     planLabel,
+    poolIndex,
   }: NodePoolConfigDrawerHandlerParams) => {
     setNodePoolConfigDrawerMode(drawerMode);
     setIsNodePoolConfigDrawerOpen(isOpen);
     setSelectedType(planLabel);
+    setSelectedPoolIndex(poolIndex);
   };
 
   const createCluster = async () => {
@@ -623,6 +627,7 @@ export const CreateCluster = () => {
                 ? lkeEnterpriseType?.price.monthly
                 : undefined
             }
+            handleConfigurePool={handleOpenNodePoolConfigDrawer}
             hasAgreed={hasAgreed}
             highAvailability={highAvailability}
             highAvailabilityPrice={
@@ -652,6 +657,8 @@ export const CreateCluster = () => {
         onClose={() => setIsNodePoolConfigDrawerOpen(false)}
         open={isNodePoolConfigDrawerOpen}
         planId={selectedType}
+        poolIndex={selectedPoolIndex}
+        selectedRegion={selectedRegion}
         selectedTier={selectedTier}
       />
     </FormProvider>

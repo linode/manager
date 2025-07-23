@@ -2,7 +2,10 @@ import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { typeFactory } from 'src/factories';
-import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import {
+  nodePoolBetaFactory,
+  nodePoolFactory,
+} from 'src/factories/kubernetesCluster';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -41,6 +44,11 @@ describe('KubeCheckoutBar', () => {
   it('should render helper text and disable create button until a region has been selected', async () => {
     const { findByText, getByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} region={undefined} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     await findByText(LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE);
@@ -53,6 +61,11 @@ describe('KubeCheckoutBar', () => {
   it('should render a section for each pool', async () => {
     const { queryAllByTestId } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     expect(queryAllByTestId('node-pool-summary')).toHaveLength(pools.length);
@@ -61,6 +74,11 @@ describe('KubeCheckoutBar', () => {
   it('should not show a warning if all pools have 3 nodes or more', () => {
     const { queryAllByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
     expect(queryAllByText(/minimum of 3 nodes/i)).toHaveLength(0);
   });
@@ -68,6 +86,11 @@ describe('KubeCheckoutBar', () => {
   it('should render additional pricing text and link', async () => {
     const { findByText, getByRole } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
     expect(
       await findByText(
@@ -87,6 +110,11 @@ describe('KubeCheckoutBar', () => {
     const poolsWithSmallNode = [...pools, nodePoolFactory.build({ count: 2 })];
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} pools={poolsWithSmallNode} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     await findByText(/minimum of 3 nodes/i);
@@ -95,6 +123,11 @@ describe('KubeCheckoutBar', () => {
   it('should display the total price of the cluster without High Availability', async () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 10 per linode
@@ -104,6 +137,11 @@ describe('KubeCheckoutBar', () => {
   it('should display the total price of the cluster with High Availability', async () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} highAvailability />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 10 per linode + 60 per month per cluster for HA
@@ -113,6 +151,11 @@ describe('KubeCheckoutBar', () => {
   it('should display the DC-Specific total price of the cluster for a region with a price increase without HA selection', async () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} region="id-cgk" />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + 72 per month per cluster for HA
@@ -129,6 +172,11 @@ describe('KubeCheckoutBar', () => {
           region="id-cgk"
         />
       ),
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + 72 per month per cluster for HA
@@ -145,6 +193,11 @@ describe('KubeCheckoutBar', () => {
           region="id-cgk"
         />
       ),
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + UNKNOWN_PRICE
@@ -155,6 +208,11 @@ describe('KubeCheckoutBar', () => {
   it('should display the total price of the cluster with LKE Enterprise', async () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} enterprisePrice={300} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 10 per linode + 300 per month for enterprise (HA included)
@@ -171,6 +229,11 @@ describe('KubeCheckoutBar', () => {
           highAvailabilityPrice="60"
         />
       ),
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
     });
 
     // 5 node pools * 3 linodes per pool * 10 per linode + 300 per month for enterprise (HA included)
