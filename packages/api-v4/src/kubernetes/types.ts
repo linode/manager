@@ -147,5 +147,7 @@ export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   node_pools: CreateNodePoolDataBeta[];
   region?: string; // Will be caught by Yup if undefined
+  subnet_id?: number; // For LKE-E
   tier?: KubernetesTier; // For LKE-E: Will be assigned 'standard' by the API if not provided
+  vpc_id?: number; // For LKE-E
 }

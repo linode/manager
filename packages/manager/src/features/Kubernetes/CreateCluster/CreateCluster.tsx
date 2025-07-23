@@ -90,7 +90,8 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 type FormValues = {
   nodePools: KubeNodePoolResponseBeta[];
-  vpcId: null | number;
+  subnet_id?: number;
+  vpc_id?: number;
 };
 
 export interface NodePoolConfigDrawerHandlerParams {
@@ -147,7 +148,6 @@ export const CreateCluster = () => {
   const { control, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],
-      vpcId: null,
     },
   });
   const nodePools = useWatch({ control, name: 'nodePools' });
@@ -229,8 +229,11 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesClusterBeta } =
     useCreateKubernetesClusterBetaMutation();
 
-  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
-    useIsLkeEnterpriseEnabled();
+  const {
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+    isLkeEnterprisePhase2FeatureEnabled,
+  } = useIsLkeEnterpriseEnabled();
 
   const {
     isLoadingVersions,
@@ -273,6 +276,9 @@ export const CreateCluster = () => {
     const node_pools = nodePools.map(
       pick(['type', 'count', 'update_strategy'])
     ) as CreateNodePoolDataBeta[];
+
+    const vpcId = form.getValues('vpc_id');
+    const subnetId = form.getValues('subnet_id');
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
@@ -320,6 +326,14 @@ export const CreateCluster = () => {
 
     if (isLkeEnterpriseLAFeatureEnabled) {
       payload = { ...payload, tier: selectedTier };
+    }
+
+    if (isLkeEnterprisePhase2FeatureEnabled && vpcId && subnetId) {
+      payload = {
+        ...payload,
+        vpc_id: vpcId,
+        subnet_id: subnetId,
+      };
     }
 
     const createClusterFn = isUsingBetaEndpoint

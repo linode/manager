@@ -85,6 +85,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
             label="Automatically generate a VPC for this cluster"
             value="no"
           />
+          {/* TODO: Add form validation for VPC and Subnet fields if user has made this selection */}
           <FormControlLabel
             checked={isUsingOwnVpc}
             control={<Radio />}
