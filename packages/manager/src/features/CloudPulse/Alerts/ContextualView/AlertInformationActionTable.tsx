@@ -140,6 +140,13 @@ export const AlertInformationActionTable = (
     entityId ?? ''
   );
 
+  // To send initial state of alerts through toggle handler function
+  React.useEffect(() => {
+    if (onToggleAlert) {
+      onToggleAlert(enabledAlerts);
+    }
+  }, []);
+
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
