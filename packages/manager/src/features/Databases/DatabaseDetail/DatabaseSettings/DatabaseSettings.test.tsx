@@ -8,6 +8,7 @@ import {
 } from 'src/utilities/testHelpers';
 
 import * as utils from '../../utilities';
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import DatabaseSettings from './DatabaseSettings';
 
 beforeAll(() => mockMatchMedia());
@@ -46,6 +47,8 @@ const v2GA = () => ({
   isUserNewBeta: false,
 });
 
+const engine = 'mysql';
+
 const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
 spy.mockReturnValue(v2GA());
 
@@ -53,13 +56,19 @@ describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build({ platform: 'rdbms-default' });
   it('Should exist and be renderable', async () => {
     expect(DatabaseSettings).toBeDefined();
-    renderWithTheme(<DatabaseSettings database={database} />);
+    renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
+    );
   });
 
   it('should render a Paper component with headers for Manage Access, Resetting the Root password, and Deleting the Cluster', async () => {
     spy.mockReturnValue(v2GA());
     const { container, getAllByRole } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).not.toBeNull();
@@ -76,7 +85,11 @@ describe('DatabaseSettings Component', () => {
       platform: 'rdbms-default',
     });
     const { getAllByRole } = renderWithTheme(
-      <DatabaseSettings database={defaultDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{ database: defaultDatabase, engine }}
+      >
+        <DatabaseSettings />,
+      </DatabaseDetailContext.Provider>,
       { flags: { databaseVpc: true } }
     );
     const headings = getAllByRole('heading');
@@ -89,7 +102,11 @@ describe('DatabaseSettings Component', () => {
       platform: 'rdbms-legacy',
     });
     const { getAllByRole } = renderWithTheme(
-      <DatabaseSettings database={legacyDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{ database: legacyDatabase, engine }}
+      >
+        <DatabaseSettings />,
+      </DatabaseDetailContext.Provider>,
       { flags: { databaseVpc: true } }
     );
     const headings = getAllByRole('heading');
@@ -101,7 +118,11 @@ describe('DatabaseSettings Component', () => {
     ['enable', false],
   ])('should %s buttons when disabled is %s', async (_, isDisabled) => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseSettings database={database} disabled={isDisabled} />
+      <DatabaseDetailContext.Provider
+        value={{ database, engine, disabled: isDisabled }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const resetPasswordButtonHost = getByTestId(
@@ -137,7 +158,9 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -157,7 +180,9 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -177,7 +202,9 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -197,7 +224,9 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -217,7 +246,9 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -232,7 +263,9 @@ describe('DatabaseSettings Component', () => {
       platform: 'rdbms-legacy',
     });
     const { getByRole, queryByText } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
     const radioInput = getByRole('radiogroup');
     expect(radioInput).toHaveTextContent('Monthly');
@@ -245,7 +278,9 @@ describe('DatabaseSettings Component', () => {
       platform: 'rdbms-default',
     });
     const { queryByText } = renderWithTheme(
-      <DatabaseSettings database={database} />
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     expect(queryByText('Monthly')).toBeNull();
@@ -275,7 +310,11 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { container, getAllByRole } = renderWithTheme(
-      <DatabaseSettings database={mockNewDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{ database: mockNewDatabase, engine }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>,
       { flags }
     );
     const paper = container.querySelector('.MuiPaper-root');
@@ -311,7 +350,11 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DatabaseSettings database={mockNewDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{ database: mockNewDatabase, engine }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>,
       { flags }
     );
 
@@ -349,7 +392,11 @@ describe('DatabaseSettings Component', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DatabaseSettings database={mockNewDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{ database: mockNewDatabase, engine }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>,
       { flags }
     );
 
