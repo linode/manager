@@ -173,7 +173,7 @@ export const renderWithTheme = (ui: React.ReactNode, options: Options = {}) => {
   return {
     ...utils,
     rerender: (ui: React.ReactNode) =>
-      utils.rerender(wrapWithTheme(ui, { ...options, router })),
+      utils.rerender(wrapWithTheme(ui, options)),
     router,
   };
 };
