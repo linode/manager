@@ -10,7 +10,7 @@ import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
 
@@ -45,11 +45,11 @@ export const SelectLinodeCard = ({
     Boolean(linode?.image)
   );
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linode?.id,
-  });
+  const { permissions } = usePermissions(
+    'linode',
+    ['shutdown_linode', 'clone_linode'],
+    linode.id
+  );
 
   const iconStatus = getLinodeIconStatus(linode?.status);
   const shouldShowPowerButton =
@@ -77,7 +77,11 @@ export const SelectLinodeCard = ({
           {getFormattedStatus(linode.status)}
         </Stack>
         {shouldShowPowerButton && (
-          <Button buttonType="outlined" onClick={handlePowerOff}>
+          <Button
+            buttonType="outlined"
+            disabled={!permissions.shutdown_linode}
+            onClick={handlePowerOff}
+          >
             Power Off
           </Button>
         )}
@@ -88,7 +92,7 @@ export const SelectLinodeCard = ({
   return (
     <SelectionCard
       checked={selected}
-      disabled={isLinodesGrantReadOnly || disabled}
+      disabled={!permissions.clone_linode || disabled}
       heading={linode.label}
       key={`selection-card-${linode.id}`}
       onClick={handleSelection}

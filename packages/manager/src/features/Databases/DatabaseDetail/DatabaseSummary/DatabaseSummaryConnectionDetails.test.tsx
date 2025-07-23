@@ -107,6 +107,11 @@ describe('DatabaseSummaryConnectionDetails', () => {
 
     const database = databaseFactory.build({
       platform: 'rdbms-default',
+      private_network: {
+        public_access: true,
+        subnet_id: 1,
+        vpc_id: 123,
+      },
     }) as Database;
 
     const { queryAllByText } = renderWithTheme(
@@ -125,6 +130,11 @@ describe('DatabaseSummaryConnectionDetails', () => {
 
     const database = databaseFactory.build({
       platform: 'rdbms-default',
+      private_network: {
+        public_access: false,
+        subnet_id: 1,
+        vpc_id: 123,
+      },
     }) as Database;
 
     const { queryAllByText } = renderWithTheme(
@@ -144,8 +154,6 @@ describe('DatabaseSummaryConnectionDetails', () => {
     const database = databaseFactory.build({
       platform: 'rdbms-default',
     }) as Database;
-
-    database.private_network = null;
 
     const { queryAllByText } = renderWithTheme(
       <DatabaseSummaryConnectionDetails database={database} />,

@@ -2,9 +2,14 @@ import { useAccount, useProfile } from '@linode/queries';
 import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
 
-import { ADOBE_ANALYTICS_URL, PENDO_API_KEY } from 'src/constants';
+import { PENDO_API_KEY } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getAppRoot } from 'src/OAuth/constants';
+import {
+  checkOptanonConsent,
+  getCookie,
+  ONE_TRUST_COOKIE_CATEGORIES,
+} from 'src/utilities/analytics/utils';
 
 declare global {
   interface Window {
@@ -12,14 +17,14 @@ declare global {
   }
 }
 
+const appRoot = getAppRoot();
+
 /**
  * This function prevents address ID collisions leading to muddled data between environments. Account and visitor IDs must be unique per API-key.
  * See: https://support.pendo.io/hc/en-us/articles/360031862352-Pendo-in-multiple-environments-for-development-and-testing
  * @returns Unique ID for the environment; else, undefined if missing values.
  */
 const getUniquePendoId = (id: string | undefined) => {
-  const appRoot = getAppRoot();
-
   const isProdEnv = appRoot === 'https://cloud.linode.com';
 
   if (!id || !appRoot) {
@@ -69,8 +74,24 @@ export const usePendo = () => {
   const accountId = getUniquePendoId(account?.euuid);
   const visitorId = getUniquePendoId(profile?.uid.toString());
 
+  const optanonCookie = getCookie('OptanonConsent');
+  // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
+  // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
+  const hasConsentEnabled =
+    appRoot.includes('localhost') ||
+    checkOptanonConsent(
+      optanonCookie,
+      ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
+    );
+
+  // Retrieve our self-hosted Pendo agent script (M3-9347).
+  const PENDO_SCRIPT =
+    appRoot === 'https://cloud.linode.com'
+      ? '/pendo/pendo.js'
+      : '/pendo/pendo-staging.js';
+
   React.useEffect(() => {
-    if (PENDO_API_KEY && ADOBE_ANALYTICS_URL) {
+    if (PENDO_API_KEY && hasConsentEnabled) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
@@ -101,8 +122,8 @@ export const usePendo = () => {
         })(methodNames[index]);
       });
 
-      // Ensure the Adobe Launch script is loaded, then initialize Pendo with metadata
-      loadScript(ADOBE_ANALYTICS_URL, {
+      // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
+      loadScript(PENDO_SCRIPT, {
         location: 'head',
       }).then(() => {
         try {
@@ -157,5 +178,5 @@ export const usePendo = () => {
         }
       });
     }
-  }, [accountId, visitorId]);
+  }, [PENDO_SCRIPT, accountId, hasConsentEnabled, visitorId]);
 };

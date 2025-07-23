@@ -9,8 +9,8 @@ import { LinkButton } from 'src/components/LinkButton';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
@@ -36,9 +36,10 @@ export const Firewall = () => {
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', [
+    'create_linode',
+    'create_firewall',
+  ]);
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
     createType: params.type ?? 'OS',
@@ -85,7 +86,7 @@ export const Firewall = () => {
           )}
         <Stack spacing={1.5}>
           <FirewallSelect
-            disabled={isLinodeCreateRestricted}
+            disabled={!permissions.create_linode}
             errorText={fieldState.error?.message}
             label="Assign Firewall"
             onBlur={field.onBlur}
@@ -112,7 +113,7 @@ export const Firewall = () => {
           />
           <Box>
             <LinkButton
-              isDisabled={isLinodeCreateRestricted}
+              isDisabled={!permissions.create_firewall}
               onClick={() => {
                 setIsDrawerOpen(true);
                 sendLinodeCreateFormInputEvent({

@@ -12,6 +12,19 @@ import {
 
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      shutdown_linode: false,
+      clone_linode: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('LinodeSelectTableRow', () => {
   it('should render a Radio that is labeled by the Linode label', () => {
     const linode = linodeFactory.build();
@@ -54,6 +67,12 @@ describe('LinodeSelectTableRow', () => {
   });
 
   it('should should call onSelect when a radio is selected', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        shutdown_linode: false,
+        clone_linode: true,
+      },
+    });
     const linode = linodeFactory.build();
 
     const onSelect = vi.fn();
@@ -140,8 +159,31 @@ describe('LinodeSelectTableRow', () => {
     await findByText(type.label);
   });
 
-  it('should render a power off button if the Linode is powered on, a onPowerOff function is passed, and the row is selected', async () => {
+  it('should render a disabled power off button if the Linode is powered on, a onPowerOff function is passed, and the row is selected, but user does not have shutdown_linode permission', async () => {
     const linode = linodeFactory.build({ status: 'running' });
+
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow
+          linode={linode}
+          onPowerOff={vi.fn()}
+          onSelect={vi.fn()}
+          selected
+        />
+      ),
+    });
+
+    expect(getByText('Power Off')).toBeDisabled();
+  });
+
+  it('should render an enabled power off button if the Linode is powered on, a onPowerOff function is passed, and the row is selected, if user has shutdown_linode permission', async () => {
+    const linode = linodeFactory.build({ status: 'running' });
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        shutdown_linode: true,
+        clone_linode: true,
+      },
+    });
 
     const { getByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(

@@ -21,6 +21,7 @@ import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/Datab
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 
+import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGrid,
   StyledPlansPanel,
@@ -30,7 +31,6 @@ import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
 
 import type {
   ClusterSize,
-  Database,
   DatabaseClusterSizeObject,
   DatabasePriceObject,
   DatabaseType,
@@ -39,12 +39,9 @@ import type {
 } from '@linode/api-v4';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
-interface Props {
-  database: Database;
-  disabled?: boolean;
-}
-
-export const DatabaseResize = ({ database, disabled = false }: Props) => {
+export const DatabaseResize = () => {
+  const { database, disabled, isResizeEnabled, engine } =
+    useDatabaseDetailContext();
   const navigate = useNavigate();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState<
@@ -264,6 +261,17 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     }
     setSelectedTab(index);
   };
+
+  if (!isResizeEnabled) {
+    navigate({
+      to: `/databases/$engine/$databaseId/summary`,
+      params: {
+        engine,
+        databaseId: database.id,
+      },
+    });
+    return null;
+  }
 
   if (typesLoading) {
     return <CircleProgress />;

@@ -1,22 +1,24 @@
-import { usePreferences } from '@linode/queries';
+import { useLinodeQuery, usePreferences } from '@linode/queries';
 import { Box } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import LinodeSummary from './LinodeSummary/LinodeSummary';
 
-interface Props {
-  isAclpMetricsSupportedRegionLinode: boolean;
-  linodeCreated: string;
-  linodeId: number;
-}
+const LinodeMetrics = () => {
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
+  const { data: linode } = useLinodeQuery(linodeId);
 
-const LinodeMetrics = (props: Props) => {
-  const { linodeCreated, linodeId, isAclpMetricsSupportedRegionLinode } = props;
+  const isAclpMetricsSupportedRegionLinode = useIsAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    type: 'metrics',
+  });
 
   const { aclpBetaServices } = useFlags();
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
@@ -30,7 +32,6 @@ const LinodeMetrics = (props: Props) => {
         isAclpMetricsSupportedRegionLinode && (
           <AclpPreferenceToggle type="metrics" />
         )}
-
       {aclpBetaServices?.linode?.metrics &&
       isAclpMetricsSupportedRegionLinode &&
       isAclpMetricsPreferenceBeta ? (
@@ -41,16 +42,10 @@ const LinodeMetrics = (props: Props) => {
         />
       ) : (
         // Legacy Metrics View
-        <LinodeSummary linodeCreated={linodeCreated} />
+        <LinodeSummary linodeCreated={linode?.created ?? ''} />
       )}
     </Box>
   );
 };
 
 export default LinodeMetrics;
-
-export const linodeMetricsLazyRoute = createLazyRoute(
-  '/linodes/$linodeId/metrics'
-)({
-  component: LinodeMetrics,
-});

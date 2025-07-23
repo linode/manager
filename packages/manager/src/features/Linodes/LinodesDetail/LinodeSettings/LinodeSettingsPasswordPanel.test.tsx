@@ -18,7 +18,6 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     permissions: {
       password_reset_linode: false,
-      reset_linode_disk_root_password: false,
     },
   })),
   useTypeQuery: vi.fn().mockReturnValue({
@@ -75,7 +74,6 @@ describe('LinodeSettingsPasswordPanel', () => {
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
         password_reset_linode: true,
-        reset_linode_disk_root_password: false,
       },
     });
 
@@ -88,9 +86,15 @@ describe('LinodeSettingsPasswordPanel', () => {
     expect(saveLabelBtn).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should disable "Save" button for Reset Root Password if the user does not have reset_linode_disk_root_password permission for a normal instance', async () => {
+  it('should disable "Save" button for Reset Root Password if the user does not have password_reset_linode permission for a normal instance', async () => {
     queryMocks.useTypeQuery.mockReturnValue({
       data: standard,
+    });
+
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        password_reset_linode: false,
+      },
     });
 
     const { getByTestId, getByPlaceholderText } = renderWithTheme(
@@ -106,7 +110,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     expect(selectDisk).toBeDisabled();
   });
 
-  it('should disable "Save" button for Reset Root Password if the user has reset_linode_disk_root_password permission for a normal instance, but linode is running', async () => {
+  it('should disable "Save" button for Reset Root Password if the user has password_reset_linode permission for a normal instance, but linode is running', async () => {
     queryMocks.useTypeQuery.mockReturnValue({
       data: standard,
     });
@@ -118,7 +122,6 @@ describe('LinodeSettingsPasswordPanel', () => {
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
         password_reset_linode: false,
-        reset_linode_disk_root_password: true,
       },
     });
 
@@ -132,7 +135,7 @@ describe('LinodeSettingsPasswordPanel', () => {
 
     const selectDisk = getByPlaceholderText('Select a Disk');
     expect(selectDisk).toBeInTheDocument();
-    expect(selectDisk).toBeEnabled();
+    expect(selectDisk).toBeDisabled();
   });
 
   it('should enable "Save" button for Reset Root Password if the user has password_reset_linode permission for a bare metal instance, and linode is offline', async () => {
@@ -147,7 +150,6 @@ describe('LinodeSettingsPasswordPanel', () => {
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
         password_reset_linode: true,
-        reset_linode_disk_root_password: false,
       },
     });
 
@@ -160,7 +162,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     expect(saveLabelBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should enable "Save" button for Reset Root Password if the user has reset_linode_disk_root_password permission for a normal instance, and linode is offline', async () => {
+  it('should enable "Save" button for Reset Root Password if the user has password_reset_linode permission for a normal instance, and linode is offline', async () => {
     queryMocks.useTypeQuery.mockReturnValue({
       data: standard,
     });
@@ -171,8 +173,7 @@ describe('LinodeSettingsPasswordPanel', () => {
 
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
-        password_reset_linode: false,
-        reset_linode_disk_root_password: true,
+        password_reset_linode: true,
       },
     });
 

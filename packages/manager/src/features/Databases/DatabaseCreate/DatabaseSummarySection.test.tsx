@@ -13,6 +13,8 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
+import { DatabaseDetailContext } from '../DatabaseDetail/DatabaseDetailContext';
+
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
@@ -100,7 +102,15 @@ describe('database summary section', () => {
       type: 'g6-nanode-1',
     });
     const { getByTestId } = renderWithTheme(
-      <DatabaseResize database={mockDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{
+          database: mockDatabase,
+          engine: 'mysql',
+          isResizeEnabled: true,
+        }}
+      >
+        <DatabaseResize />
+      </DatabaseDetailContext.Provider>,
       {
         flags,
       }
@@ -124,7 +134,15 @@ describe('database summary section', () => {
       type: 'g6-nanode-1',
     });
     const { getByTestId } = renderWithTheme(
-      <DatabaseResize database={mockDatabase} />,
+      <DatabaseDetailContext.Provider
+        value={{
+          database: mockDatabase,
+          engine: 'mysql',
+          isResizeEnabled: true,
+        }}
+      >
+        <DatabaseResize />
+      </DatabaseDetailContext.Provider>,
       {
         flags,
       }
