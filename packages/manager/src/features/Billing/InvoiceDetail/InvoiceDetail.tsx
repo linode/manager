@@ -115,10 +115,6 @@ export const InvoiceDetail = () => {
     { key: 'total', label: 'Total (USD)' },
   ];
 
-  const sxDownloadButton = {
-    whiteSpace: 'nowrap',
-  };
-
   return (
     <>
       <DocumentTitleSegment segment="Invoice | Account & Billing" />
@@ -129,14 +125,14 @@ export const InvoiceDetail = () => {
             data-qa-invoice-header
             direction="row"
             flexWrap="wrap"
+            gap={1}
             justifyContent="space-between"
-            spacing={1}
           >
             <Stack direction="row" flexWrap="nowrap" spacing={1}>
               <Link
                 accessibleAriaLabel="Back to Billing"
                 data-qa-back-to-billing
-                to={`/account/billing`}
+                to="/account/billing"
               >
                 <IconButton
                   component="span"
@@ -173,7 +169,7 @@ export const InvoiceDetail = () => {
                 alignItems="center"
                 direction="row"
                 flexWrap="wrap"
-                spacing={1}
+                gap={1}
               >
                 <DownloadCSV
                   csvRef={csvRef}
@@ -181,12 +177,10 @@ export const InvoiceDetail = () => {
                   filename={`invoice-${invoice.date}.csv`}
                   headers={csvHeaders}
                   onClick={() => csvRef.current.link.click()}
-                  sx={{ ...sxDownloadButton, marginRight: '8px' }}
                 />
                 <Button
                   buttonType="secondary"
                   onClick={() => printInvoicePDF(account, invoice, items)}
-                  sx={sxDownloadButton}
                 >
                   Download PDF
                 </Button>
