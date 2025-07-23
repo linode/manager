@@ -30,7 +30,7 @@ import { mergeDeepRight } from './mergeDeepRight';
 import type { QueryClient } from '@tanstack/react-query';
 // TODO: Tanstack Router - replace AnyRouter once migration is complete.
 import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
-import type { MatcherFunction, RenderResult } from '@testing-library/react';
+import type { MatcherFunction } from '@testing-library/react';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
 import type { ApplicationState } from 'src/store';
@@ -106,14 +106,16 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
     path: options.initialRoute ?? '/',
   });
 
-  const router: AnyRouter = createRouter({
-    history: createMemoryHistory({
-      initialEntries: (options.MemoryRouter?.initialEntries as string[]) ?? [
-        options.initialRoute ?? '/',
-      ],
-    }),
-    routeTree: rootRoute.addChildren([indexRoute]),
-  });
+  const router: AnyRouter =
+    options.router ??
+    createRouter({
+      history: createMemoryHistory({
+        initialEntries: (options.MemoryRouter?.initialEntries as string[]) ?? [
+          options.initialRoute ?? '/',
+        ],
+      }),
+      routeTree: rootRoute.addChildren([indexRoute]),
+    });
 
   return (
     <Provider store={storeToPass}>
@@ -150,14 +152,29 @@ export const wrapWithTableBody = (ui: any, options: Options = {}) =>
     options
   );
 
-export const renderWithTheme = (
-  ui: React.ReactNode,
-  options: Options = {}
-): RenderResult => {
-  const utils = render(wrapWithTheme(ui, options));
+export const renderWithTheme = (ui: React.ReactNode, options: Options = {}) => {
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => ui,
+    getParentRoute: () => rootRoute,
+    path: options.initialRoute ?? '/',
+  });
+
+  const router: AnyRouter = createRouter({
+    history: createMemoryHistory({
+      initialEntries: (options.MemoryRouter?.initialEntries as string[]) ?? [
+        options.initialRoute ?? '/',
+      ],
+    }),
+    routeTree: rootRoute.addChildren([indexRoute]),
+  });
+
+  const utils = render(wrapWithTheme(ui, { ...options, router }));
   return {
     ...utils,
-    rerender: (ui) => utils.rerender(wrapWithTheme(ui, options)),
+    rerender: (ui: React.ReactNode) =>
+      utils.rerender(wrapWithTheme(ui, { ...options, router })),
+    router,
   };
 };
 
