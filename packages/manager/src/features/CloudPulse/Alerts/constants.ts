@@ -100,6 +100,10 @@ export const dimensionOperatorOptions: Item<
     label: 'Starts with',
     value: 'startswith',
   },
+  {
+    label: 'In',
+    value: 'in',
+  },
 ];
 
 export const textFieldOperators = ['endswith', 'startswith'];
@@ -153,6 +157,7 @@ export const dimensionOperatorTypeMap: Record<
   eq: 'equals',
   neq: 'not equals',
   startswith: 'starts with',
+  in: 'in',
 };
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
@@ -199,3 +204,12 @@ export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
 export type AlertFormMode = 'create' | 'edit' | 'view';
 
 export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
+
+export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
+  'Trailing comma is not allowed.';
+
+export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
+
+export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
+
+export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
