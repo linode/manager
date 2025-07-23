@@ -86,7 +86,7 @@ interface ClientCertificateDetails {
 type AuthenticationType = 'basic' | 'none';
 
 interface Authentication {
-  details: AuthenticationDetails;
+  details?: AuthenticationDetails;
   type: AuthenticationType;
 }
 

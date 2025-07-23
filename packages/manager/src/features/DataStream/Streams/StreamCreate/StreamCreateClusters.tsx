@@ -17,7 +17,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { clusters } from 'src/features/DataStream/Streams/StreamCreate/StreamCreateClustersData';
 
-import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 // TODO: remove type after fetching the clusters will be done
 export type Cluster = {
@@ -30,7 +30,8 @@ export type Cluster = {
 type OrderByKeys = 'label' | 'logGeneration' | 'region';
 
 export const StreamCreateClusters = () => {
-  const { control, setValue } = useFormContext<CreateStreamForm>();
+  const { control, setValue, formState } =
+    useFormContext<CreateStreamAndDestinationForm>();
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
@@ -42,7 +43,7 @@ export const StreamCreateClusters = () => {
 
   const isAutoAddAllClustersEnabled = useWatch({
     control,
-    name: 'details.is_auto_add_all_clusters_enabled',
+    name: 'stream.details.is_auto_add_all_clusters_enabled',
   });
   const previousIsAutoAddAllClustersEnabled = usePrevious(
     isAutoAddAllClustersEnabled
@@ -51,7 +52,7 @@ export const StreamCreateClusters = () => {
   useEffect(() => {
     if (isAutoAddAllClustersEnabled !== previousIsAutoAddAllClustersEnabled) {
       setValue(
-        'details.cluster_ids',
+        'stream.details.cluster_ids',
         isAutoAddAllClustersEnabled ? idsWithLogGenerationEnabled : []
       );
     }
@@ -72,7 +73,10 @@ export const StreamCreateClusters = () => {
   };
 
   const getTableContent = (
-    field: ControllerRenderProps<CreateStreamForm, 'details.cluster_ids'>
+    field: ControllerRenderProps<
+      CreateStreamAndDestinationForm,
+      'stream.details.cluster_ids'
+    >
   ) => {
     const selectedIds = field.value || [];
 
@@ -178,6 +182,7 @@ export const StreamCreateClusters = () => {
                       aria-label={`Toggle ${label} cluster`}
                       checked={selectedIds.includes(id)}
                       disabled={isAutoAddAllClustersEnabled || !logGeneration}
+                      onBlur={field.onBlur}
                       onChange={() => toggleCluster(id)}
                     />
                   </TableCell>
@@ -216,10 +221,11 @@ export const StreamCreateClusters = () => {
         newly configured clusters.
       </Notice>
       <Controller
-        name={'details.is_auto_add_all_clusters_enabled'}
+        name={'stream.details.is_auto_add_all_clusters_enabled'}
         render={({ field }) => (
           <Checkbox
             checked={field.value}
+            onBlur={field.onBlur}
             onChange={(_, checked) => field.onChange(checked)}
             sxFormLabel={{ ml: -1 }}
             text="Automatically include all existing and recently configured clusters."
@@ -245,10 +251,17 @@ export const StreamCreateClusters = () => {
         <Table data-testid="clusters-table">
           <Controller
             control={control}
-            name="details.cluster_ids"
+            name="stream.details.cluster_ids"
             render={({ field }) => getTableContent(field)}
           />
         </Table>
+        {!isAutoAddAllClustersEnabled &&
+          formState.errors.stream?.details?.cluster_ids?.message && (
+            <Notice
+              text={formState.errors.stream?.details?.cluster_ids?.message}
+              variant="error"
+            />
+          )}
       </Box>
     </Paper>
   );
