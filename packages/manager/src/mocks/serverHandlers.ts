@@ -2730,6 +2730,7 @@ export const handlers = [
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
             type: 'user',
             scope: 'region',
+            regions: ['us-east'],
           }),
         ],
       });
