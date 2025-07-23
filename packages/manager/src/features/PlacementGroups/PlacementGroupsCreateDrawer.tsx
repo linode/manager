@@ -16,16 +16,15 @@ import {
   Typography,
 } from '@linode/ui';
 import {
-  getQueryParamsFromQueryString,
   scrollErrorIntoView,
   useFormValidateOnChange,
 } from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
+import { useLocation } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'react-router-dom';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -81,8 +80,7 @@ export const PlacementGroupsCreateDrawer = (
     useFormValidateOnChange();
 
   const location = useLocation();
-  const isFromPlacementGroup = location.pathname.includes('/placement-groups');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
 
   const handleRegionSelect = (region: Region['id']) => {
     setFieldValue('region', region);
@@ -116,9 +114,9 @@ export const PlacementGroupsCreateDrawer = (
       if (onPlacementGroupCreate) {
         onPlacementGroupCreate(response);
         // Fire analytics form submit upon successful PG creation from Linode Create flow.
-        if (!isFromPlacementGroup) {
+        if (isFromLinodeCreate) {
           sendLinodeCreateFormStepEvent({
-            createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+            createType: (location.search.type as LinodeCreateType) ?? 'OS',
             headerName: 'Create Placement Group',
             interaction: 'click',
             label: 'Create Placement Group',
@@ -199,7 +197,7 @@ export const PlacementGroupsCreateDrawer = (
 
   return (
     <>
-      {isFromPlacementGroup && (
+      {!isFromLinodeCreate && (
         <DocumentTitleSegment
           segment={`${open ? 'Create a Placement Group' : 'Placement Groups'}`}
         />
@@ -236,7 +234,7 @@ export const PlacementGroupsCreateDrawer = (
                 </List>
               </Notice>
             )}
-            {selectedRegion && !isFromPlacementGroup && (
+            {selectedRegion && isFromLinodeCreate && (
               <DescriptionList
                 items={[
                   {
