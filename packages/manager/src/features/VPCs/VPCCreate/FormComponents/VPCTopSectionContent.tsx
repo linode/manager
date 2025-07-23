@@ -17,7 +17,12 @@ import {
 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
@@ -60,10 +65,18 @@ export const VPCTopSectionContent = (props: Props) => {
     control,
     formState: { errors },
   } = useFormContext<CreateVPCPayload>();
+
   const { append, fields, remove } = useFieldArray({
     control,
     name: 'ipv6',
   });
+
+  const { update } = useFieldArray({
+    control,
+    name: 'subnets',
+  });
+
+  const subnets = useWatch({ control, name: 'subnets' });
 
   const isDualStackSelected = fields.some((f) => f.range);
 
@@ -164,6 +177,12 @@ export const VPCTopSectionContent = (props: Props) => {
                 heading="IPv4"
                 onClick={() => {
                   remove(0);
+                  subnets?.forEach((subnet, idx) =>
+                    update(idx, {
+                      ...subnet,
+                      ipv6: undefined,
+                    })
+                  );
                 }}
                 renderIcon={() => <Radio checked={!isDualStackSelected} />}
                 renderVariant={() => (
@@ -199,6 +218,12 @@ export const VPCTopSectionContent = (props: Props) => {
                       range: '/52',
                     });
                   }
+                  subnets?.forEach((subnet, idx) =>
+                    update(idx, {
+                      ...subnet,
+                      ipv6: subnet.ipv6 ?? [{ range: '/56' }],
+                    })
+                  );
                 }}
                 renderIcon={() => <Radio checked={isDualStackSelected} />}
                 renderVariant={() => (
