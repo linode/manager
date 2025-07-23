@@ -49,13 +49,13 @@ describe('account login redirect', () => {
    */
   it('should redirect the user to the page they were on if the redirect param is present and valid', () => {
     cy.visitWithLogin('/linodes/create/images');
-    cy.url().should('contain', '/linodes/create');
+    cy.url().should('contain', '/linodes/create/images');
 
     cy.clearLocalStorage(tokenLocalStorageKey);
     cy.reload();
     cy.url().should(
       'contain',
-      'returnTo%253D%252Flinodes%252Fcreate%253Ftype%253DImages'
+      'returnTo%253D%252Flinodes%252Fcreate%252Fimages'
     );
     cy.url().then((url) => {
       // We need to decode the URL twice to get the original redirect URL.
