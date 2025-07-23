@@ -15,9 +15,8 @@ import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
-import { MainContent } from './MainContent';
 import { useEventsPoller } from './queries/events/events';
-// import { Router } from './Router';
+import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 export const App = withDocumentTitleProvider(
@@ -45,11 +44,7 @@ export const App = withDocumentTitleProvider(
         </div>
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
-        {/**
-         * Eventually we will have the <Router /> here in place of <MainContent />
-         * <Router />
-         */}
-        <MainContent />
+        <Router />
         <GlobalListeners />
       </ErrorBoundaryFallback>
     );
