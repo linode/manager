@@ -389,9 +389,7 @@ describe('filterRegionByServiceType', () => {
         metrics: [],
       },
     }),
-    regionFactory.build({
-      monitors: undefined,
-    }),
+    regionFactory.build(),
   ];
 
   it('should return empty list for linode metrics', () => {
