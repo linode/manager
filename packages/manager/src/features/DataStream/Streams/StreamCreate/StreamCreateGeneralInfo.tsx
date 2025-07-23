@@ -1,8 +1,9 @@
+import { streamType } from '@linode/api-v4';
 import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { type CreateStreamForm, streamType } from './types';
+import { type CreateStreamForm } from './types';
 
 export const StreamCreateGeneralInfo = () => {
   const { control } = useFormContext<CreateStreamForm>();
