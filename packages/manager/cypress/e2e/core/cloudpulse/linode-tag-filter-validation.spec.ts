@@ -39,13 +39,11 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: 'us-ord',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: '',
     },
   ],
 };
@@ -101,6 +99,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Linodes'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    metrics: ['Linodes'],
+    alerts: [],
+  },
 });
 
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({

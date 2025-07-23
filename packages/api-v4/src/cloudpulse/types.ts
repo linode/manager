@@ -368,7 +368,7 @@ export interface DeleteAlertPayload {
 }
 
 export const capabilityServiceTypeMapping: Record<
-  MetricsServiceType,
+  AlertServiceType | MetricsServiceType | string,
   AccountCapability
 > = {
   linode: 'Linodes',
