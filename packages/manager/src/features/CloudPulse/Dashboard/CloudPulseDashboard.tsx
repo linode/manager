@@ -10,7 +10,10 @@ import {
 } from 'src/queries/cloudpulse/services';
 
 import { useAclpPreference } from '../Utils/UserPreference';
-import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
+import {
+  renderPlaceHolder,
+  RenderWidgets,
+} from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
@@ -165,6 +168,3 @@ const renderErrorState = (errorMessage: string) => {
     </GridLegacy>
   );
 };
-function renderPlaceHolder(arg0: string) {
-  throw new Error('Function not implemented.');
-}

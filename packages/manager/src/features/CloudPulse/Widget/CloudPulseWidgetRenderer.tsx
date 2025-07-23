@@ -40,7 +40,7 @@ interface WidgetProps {
   savePref?: boolean;
 }
 
-const renderPlaceHolder = (subtitle: string) => {
+export const renderPlaceHolder = (subtitle: string) => {
   return (
     <GridLegacy item xs>
       <Paper>
