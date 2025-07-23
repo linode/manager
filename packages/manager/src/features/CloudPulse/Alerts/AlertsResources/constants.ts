@@ -59,6 +59,13 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
   ],
+  firewall: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+  ],
   nodebalancer: [
     {
       accessor: ({ label }) => label,
@@ -91,6 +98,7 @@ export const serviceToFiltersMap: Record<
     { component: AlertsRegionFilter, filterKey: 'region' },
   ],
   linode: [{ component: AlertsRegionFilter, filterKey: 'region' }],
+  firewall: [],
   nodebalancer: [
     { component: AlertsRegionFilter, filterKey: 'region' },
     { component: AlertsTagFilter, filterKey: 'tags' },
@@ -114,4 +122,20 @@ export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
   nanode: 'nanode',
   premium: 'premium',
   standard: 'standard',
+};
+
+export const getSearchPlaceholderText = (
+  serviceType: AlertServiceType | undefined
+): string => {
+  const filters = serviceToFiltersMap[serviceType ?? ''] ?? [];
+
+  const hasRegionFilter = filters.some(
+    ({ filterKey }) => filterKey === 'region'
+  );
+
+  if (hasRegionFilter) {
+    return 'Search for a Region or Entity';
+  }
+
+  return 'Search for an Entity';
 };
