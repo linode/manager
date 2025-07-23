@@ -8,11 +8,11 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { StreamCreateDelivery } from 'src/features/DataStream/Streams/StreamCreate/Delivery/StreamCreateDelivery';
 import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateClusters } from './StreamCreateClusters';
-import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
 
 import type { CreateStreamPayload } from '@linode/api-v4';
