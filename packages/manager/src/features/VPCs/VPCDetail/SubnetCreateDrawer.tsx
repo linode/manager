@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  useAccount,
   useCreateSubnetMutation,
   useGrants,
   useProfile,
@@ -15,7 +14,6 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import {
   createSubnetSchemaIPv4,
   createSubnetSchemaWithIPv6,
@@ -23,7 +21,7 @@ import {
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useFlags } from 'src/hooks/useFlags';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   calculateAvailableIPv4sRFC1918,
   calculateAvailableIPv6Linodes,
@@ -44,11 +42,9 @@ interface Props {
 export const SubnetCreateDrawer = (props: Props) => {
   const { onClose, open, vpcId } = props;
 
-  const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: vpc } = useVPCQuery(vpcId, open);
-  const flags = useFlags();
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
 
@@ -63,23 +59,7 @@ export const SubnetCreateDrawer = (props: Props) => {
     reset: resetRequest,
   } = useCreateSubnetMutation(vpcId);
 
-  const isDualStackVPC = Boolean(vpc?.ipv6);
-
-  const isDualStackEnabled = isFeatureEnabledV2(
-    'VPC Dual Stack',
-    Boolean(flags.vpcIpv6),
-    account?.capabilities ?? []
-  );
-
-  const shouldDisplayIPv6 = isDualStackEnabled && isDualStackVPC;
-
-  const recommendedIPv6 = shouldDisplayIPv6
-    ? [
-        {
-          range: '/56',
-        },
-      ]
-    : undefined;
+  const { shouldDisplayIPv6, recommendedIPv6 } = useVPCDualStack(vpc?.ipv6);
 
   const {
     control,
