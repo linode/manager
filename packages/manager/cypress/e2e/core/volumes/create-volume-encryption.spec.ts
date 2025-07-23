@@ -15,6 +15,7 @@ import { mockGetVolume, mockGetVolumes } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
+import { checkboxTestId } from 'src/components/Encryption/constants';
 import {
   accountFactory,
   linodeDiskFactory,
@@ -107,15 +108,18 @@ describe('Volume creation with Block Storage Encryption', () => {
           cy.findByText(mockLinodeWithoutCapability.label).click();
         });
 
-        // Confirm that reboot notice is absent before clicking the "Encrypt Volume" checkbox.
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
+        // Confirm that "Encrypt Volume" checkbox is checked
+        cy.findByTestId(checkboxTestId)
+          .should('be.visible')
+          .and('be.enabled')
+          .within(() => {
+            cy.get('input').should('be.checked');
+          });
 
-        cy.findByText('Encrypt Volume').should('be.visible').click();
-
-        // Confirm that reboot notice appears after clicking the "Encrypt Volume" checkbox,
-        // and that Volume create submit button remains disabled.
+        // Confirm that reboot notice appears under the selected Linode
         cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
 
+        // Confirm that "Create Volume" button remains disabled.
         ui.button
           .findByTitle('Create Volume')
           .scrollIntoView()
@@ -188,14 +192,20 @@ describe('Volume creation with Block Storage Encryption', () => {
           .within(() => {
             cy.findByLabelText('Create and Attach Volume').should('be.checked');
 
-            // Confirm that reboot notice is absent before encryption is selected.
-            cy.findByLabelText('Encrypt Volume').should('not.be.checked');
-            cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
+            // Confirm that "Encrypt Volume" checkbox is checked
+            cy.findByTestId(checkboxTestId).scrollIntoView();
+            cy.findByTestId(checkboxTestId)
+              .should('be.visible')
+              .and('be.enabled')
+              .within(() => {
+                cy.get('input').should('be.checked');
+              });
 
-            // Click the "Encrypt Volume" checkbox and confirm that notice appears.
-            cy.findByText('Encrypt Volume').should('be.visible').click();
-
+            // Confirm that reboot notice appears under the selected Linode
+            cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).scrollIntoView();
             cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
+
+            // Confirm that "Create Volume" button remains disabled.
             ui.button
               .findByTitle('Create Volume')
               .scrollIntoView()
@@ -249,12 +259,18 @@ describe('Volume creation with Block Storage Encryption', () => {
           cy.findByText(mockLinodeWithCapability.label).click();
         });
 
-        cy.findByText('Encrypt Volume').should('be.visible').click();
+        // Confirm that "Encrypt Volume" checkbox is checked
+        cy.findByTestId(checkboxTestId)
+          .should('be.visible')
+          .and('be.enabled')
+          .within(() => {
+            cy.get('input').should('be.checked');
+          });
 
-        // Confirm that reboot notice is absent after checking "Encrypt Volume",
-        // and the "Create Volume" button is enabled.
+        // Confirm that reboot notice is absent
         cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
 
+        // Confirm that "Create Volume" button is enabled.
         ui.button.findByTitle('Create Volume').should('be.enabled');
       });
 
@@ -315,14 +331,19 @@ describe('Volume creation with Block Storage Encryption', () => {
           .within(() => {
             cy.findByLabelText('Create and Attach Volume').should('be.checked');
 
-            // Confirm that reboot notice is absent before encryption is selected.
-            cy.findByLabelText('Encrypt Volume').should('not.be.checked');
+            // Confirm that "Encrypt Volume" checkbox is checked
+            cy.findByTestId(checkboxTestId).scrollIntoView();
+            cy.findByTestId(checkboxTestId)
+              .should('be.visible')
+              .and('be.enabled')
+              .within(() => {
+                cy.get('input').should('be.checked');
+              });
+
+            // Confirm that reboot notice is absent
             cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
 
-            // Click the "Encrypt Volume" checkbox and confirm that notice appears.
-            cy.findByText('Encrypt Volume').should('be.visible').click();
-
-            cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
+            // Confirm that "Create Volume" button is enabled.
             ui.button.findByTitle('Create Volume').should('be.enabled');
           });
       });
