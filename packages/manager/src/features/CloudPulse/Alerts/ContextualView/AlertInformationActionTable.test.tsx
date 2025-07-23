@@ -69,7 +69,9 @@ describe('Alert Listing Reusable Table for contextual view', () => {
   });
 
   it('Should show confirm dialog on save button click when changes are made', async () => {
-    renderWithTheme(<AlertInformationActionTable {...props} />);
+    renderWithTheme(
+      <AlertInformationActionTable {...props} showConfirmationDialog />
+    );
 
     // First toggle an alert to make changes
     const alert = alerts[0];
@@ -84,6 +86,24 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     // Click save and verify dialog appears
     await userEvent.click(saveButton);
     expect(screen.getByTestId('confirmation-dialog')).toBeVisible();
+  });
+
+  it('Should hide confirm dialog on save button click when changes are made', async () => {
+    renderWithTheme(<AlertInformationActionTable {...props} />);
+
+    // First toggle an alert to make changes
+    const alert = alerts[0];
+    const row = await screen.findByTestId(alert.id);
+    const toggle = await within(row).findByRole('checkbox');
+    await userEvent.click(toggle);
+
+    // Now the save button should be enabled
+    const saveButton = screen.getByTestId('save-alerts');
+    expect(saveButton).not.toBeDisabled();
+
+    // Click save and verify dialog appears
+    await userEvent.click(saveButton);
+    expect(screen.queryByTestId('confirmation-dialog')).not.toBeInTheDocument();
   });
 
   it('Should have save button in disabled form when no changes are made', () => {
