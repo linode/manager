@@ -43,7 +43,6 @@ export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
           newAlert,
         ]);
       }
-
       queryClient.setQueryData(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(
           newAlert.service_type,

@@ -12,23 +12,26 @@ import {
   Typography,
 } from '@linode/ui';
 import { useEditableLabelState } from '@linode/utilities';
-import { useParams } from '@tanstack/react-router';
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { DatabaseDetailContext } from 'src/features/Databases/DatabaseDetail/DatabaseDetailContext';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useTabs } from 'src/hooks/useTabs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { DatabaseAdvancedConfiguration } from './DatabaseAdvancedConfiguration/DatabaseAdvancedConfiguration';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -70,6 +73,8 @@ const DatabaseAlert = React.lazy(() =>
 
 export const DatabaseDetail = () => {
   const flags = useFlags();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { databaseId, engine } = useParams({
     from: '/databases/$engine/$databaseId',
@@ -130,7 +135,6 @@ export const DatabaseDetail = () => {
       to: settingsTabPath,
       title: 'Settings',
     },
-
     {
       to: `/databases/$engine/$databaseId/configs`,
       title: 'Advanced Configuration',
@@ -152,6 +156,16 @@ export const DatabaseDetail = () => {
         }
       />
     );
+  }
+
+  if (location.pathname === `/databases/${engine}/${databaseId}`) {
+    navigate({
+      to: `/databases/$engine/$databaseId/summary`,
+      params: {
+        engine,
+        databaseId,
+      },
+    });
   }
 
   if (isLoading || isTypesLoading) {
@@ -184,7 +198,17 @@ export const DatabaseDetail = () => {
   const onSettingsTab = tabIndex === getTabIndex(settingsTabPath);
 
   return (
-    <>
+    <DatabaseDetailContext.Provider
+      value={{
+        database,
+        disabled: isDatabasesGrantReadOnly,
+        engine,
+        isMonitorEnabled,
+        isVPCEnabled,
+        isResizeEnabled: flags.databaseResize,
+        isAdvancedConfigEnabled,
+      }}
+    >
       <DocumentTitleSegment
         segment={`${database?.label} - ${
           tabs[tabIndex]?.title ?? 'Detail View'
@@ -235,71 +259,10 @@ export const DatabaseDetail = () => {
         )}
 
         <TabPanels>
-          <SafeTabPanel
-            index={getTabIndex('/databases/$engine/$databaseId/summary')}
-          >
-            <DatabaseSummary
-              database={database}
-              disabled={isDatabasesGrantReadOnly}
-            />
-          </SafeTabPanel>
-          {isMonitorEnabled ? (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/metrics')}
-            >
-              <DatabaseMonitor database={database} />
-            </SafeTabPanel>
-          ) : null}
-          {isVPCEnabled ? (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/networking')}
-            >
-              <DatabaseNetworking
-                database={database}
-                disabled={isDatabasesGrantReadOnly}
-              />
-            </SafeTabPanel>
-          ) : null}
-          <SafeTabPanel
-            index={getTabIndex('/databases/$engine/$databaseId/backups')}
-          >
-            <DatabaseBackups disabled={isDatabasesGrantReadOnly} />
-          </SafeTabPanel>
-          {flags.databaseResize ? (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/resize')}
-            >
-              <DatabaseResize
-                database={database}
-                disabled={isDatabasesGrantReadOnly}
-              />
-            </SafeTabPanel>
-          ) : null}
-          <SafeTabPanel index={getTabIndex(settingsTabPath)}>
-            <DatabaseSettings
-              database={database}
-              disabled={isDatabasesGrantReadOnly}
-            />
-          </SafeTabPanel>
-          {isAdvancedConfigEnabled && (
-            <SafeTabPanel
-              index={getTabIndex('/databases/$engine/$databaseId/configs')}
-            >
-              <DatabaseAdvancedConfiguration database={database} />
-            </SafeTabPanel>
-          )}
-          <SafeTabPanel
-            index={getTabIndex('/databases/$engine/$databaseId/alerts')}
-          >
-            <DatabaseAlert
-              entityId={String(database.id)}
-              entityName={database.label}
-              serviceType="dbaas"
-            />
-          </SafeTabPanel>
+          <Outlet />
         </TabPanels>
       </Tabs>
       {isDefault && <DatabaseLogo />}
-    </>
+    </DatabaseDetailContext.Provider>
   );
 };

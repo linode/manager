@@ -7,8 +7,8 @@ import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/Ge
 import { LinkButton } from 'src/components/LinkButton';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 
 import type { LinodeCreateFormValues } from '../utilities';
@@ -40,9 +40,10 @@ export const InterfaceFirewall = ({ index }: Props) => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', [
+    'create_linode',
+    'create_firewall',
+  ]);
 
   return (
     <Stack spacing={2}>
@@ -66,7 +67,7 @@ export const InterfaceFirewall = ({ index }: Props) => {
           />
         )}
         <FirewallSelect
-          disabled={isLinodeCreateRestricted}
+          disabled={!permissions.create_linode}
           errorText={fieldState.error?.message}
           label={`${labelMap[interfaceType ?? 'public']} Interface Firewall`}
           onBlur={field.onBlur}
@@ -76,7 +77,7 @@ export const InterfaceFirewall = ({ index }: Props) => {
         />
         <Box>
           <LinkButton
-            isDisabled={isLinodeCreateRestricted}
+            isDisabled={!permissions.create_firewall}
             onClick={() => setIsDrawerOpen(true)}
           >
             Create Firewall
