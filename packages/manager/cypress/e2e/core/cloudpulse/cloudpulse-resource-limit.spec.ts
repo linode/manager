@@ -47,14 +47,8 @@ import {
 import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
-const {
-  clusterName,
-  dashboardName,
-  engine,
-  id,
-  metrics,
-  serviceType,
-} = widgetDetails.dbaas;
+const { clusterName, dashboardName, engine, id, metrics, serviceType } =
+  widgetDetails.dbaas;
 
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
@@ -63,13 +57,11 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: '',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 1,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
     },
   ],
 };
@@ -93,6 +85,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    metrics: ['Managed Databases'],
+    alerts: [],
+  },
 });
 const databaseMock: Database = databaseFactory.build({
   cluster_size: 1,
@@ -219,13 +215,11 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: 'us-ord',
         },
       ],
     };

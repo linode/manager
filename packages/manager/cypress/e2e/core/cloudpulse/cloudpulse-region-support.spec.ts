@@ -53,6 +53,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    metrics: ['Managed Databases'],
+    alerts: [],
+  },
 });
 
 const extendedMockRegion = regionFactory.build({
@@ -77,7 +81,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
-    mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
   });
@@ -90,16 +93,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: 'us-ord',
         },
       ],
     };
+    mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
@@ -216,16 +218,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: '',
         },
       ],
     };
+    mockGetRegions([extendedMockRegion]).as('fetchRegion');
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
@@ -277,16 +278,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: 'junk',
         },
       ],
     };
+    mockGetRegions([{ ...mockRegion, monitors: undefined }]).as('fetchRegion');
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
@@ -346,18 +346,16 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: 'us-east',
         },
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    mockGetRegions([mockRegion]).as('fetchRegion');
+    mockGetRegions([{ ...mockRegion, monitors: undefined }]).as('fetchRegion');
 
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
@@ -410,17 +408,17 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           dimensionKey: 'LINODE_ID',
           maxResourceSelections: 10,
           serviceType: 'linode',
-          supportedRegionIds: '',
         },
         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: 'in-west,  us-ord  ',
         },
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
+    mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
+
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 

@@ -5,7 +5,6 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -128,14 +127,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isLoading: isRegionsLoading,
   } = useRegionsQuery();
 
-  const flags = useFlags();
   const theme = useTheme();
 
-  // Validate launchDarkly region ids with the ids from regionOptions prop
-  const supportedRegionIds = getSupportedRegionIds(
-    flags.aclpResourceTypeMap,
-    serviceType
-  );
+  const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds
       ? {
