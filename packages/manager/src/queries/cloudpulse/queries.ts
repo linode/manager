@@ -6,12 +6,12 @@ import {
   getDashboards,
   getJWEToken,
   getMetricDefinitionsByServiceType,
-  getNodeBalancers,
 } from '@linode/api-v4';
 import {
   databaseQueries,
   firewallQueries,
   getAllLinodesRequest,
+  nodebalancerQueries,
   volumeQueries,
 } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -123,14 +123,7 @@ export const queryFactory = createQueryKeys(key, {
         };
 
       case 'nodebalancer':
-        return {
-          queryFn: async () => {
-            const response = await getNodeBalancers(params, filters);
-            return response.data;
-          },
-          queryKey: ['nodebalancers', params, filters],
-        };
-
+        return nodebalancerQueries.nodebalancers._ctx.all(params, filters);
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
 
