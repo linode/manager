@@ -23,9 +23,7 @@ import type {
   AccountEntity,
   APIError,
   EntityType,
-  Filter,
   GrantType,
-  Params,
   Profile,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
@@ -92,31 +90,37 @@ export const useEntitiesPermissions = <T extends EntityBase>(
     })),
   });
 
-  const isLoading = queries.some((query) => query.isLoading);
-  const isError = queries.some((query) => query.isError);
   const data = queries.map((query) => query.data);
+  const error = queries.map((query) => query.error);
+  const isError = queries.some((query) => query.isError);
+  const isLoading = queries.some((query) => query.isLoading);
 
-  return { data, isLoading, isError };
+  return { data, error, isError, isLoading };
+};
+
+export type QueryWithPermissionsResult<T> = {
+  data: T[];
+  error: APIError[] | null;
+  hasFiltered: boolean;
+  isError: boolean;
+  isLoading: boolean;
 };
 
 export const useQueryWithPermissions = <T extends EntityBase>(
-  query: (
-    params?: Params,
-    filter?: Filter,
-    enabled?: boolean
-  ) => UseQueryResult<T[], APIError[]>,
+  useQueryResult: UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
   permissionsToCheck: PermissionType[]
-): { data: T[]; hasFiltered: boolean } => {
-  const { data: allEntities } = query();
+): QueryWithPermissionsResult<T> => {
+  const {
+    data: allEntities,
+    error: allEntitiesError,
+    isLoading: areEntitiesLoading,
+    isError: isEntitiesError,
+  } = useQueryResult;
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
-  const { data: entityPermissions } = useEntitiesPermissions<T>(
-    allEntities,
-    entityType,
-    profile,
-    isIAMEnabled
-  );
+  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
+    useEntitiesPermissions<T>(allEntities, entityType, profile, isIAMEnabled);
   const { data: grants } = useGrants(!isIAMEnabled);
 
   const entityPermissionsMap = isIAMEnabled
@@ -138,6 +142,9 @@ export const useQueryWithPermissions = <T extends EntityBase>(
 
   return {
     data: entities || [],
+    error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
+    isError: isEntitiesError,
+    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
   } as const;
 };
