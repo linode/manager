@@ -6,7 +6,6 @@ import '@fontsource/nunito-sans/700.css';
 import '@fontsource/nunito-sans/800.css';
 import '@fontsource/nunito-sans/400-italic.css';
 import {
-  // useAccountSettings,
   useMutatePreferences,
   usePreferences,
   useProfile,
@@ -15,9 +14,8 @@ import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
-import { Outlet, RouterProvider } from '@tanstack/react-router';
+import { Outlet, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { Redirect } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { MainContentBanner } from 'src/components/MainContentBanner';
@@ -44,11 +42,15 @@ import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
+import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { migrationRouter } from './routes';
+import { useNewRelic } from './hooks/useNewRelic';
+import { usePendo } from './hooks/usePendo';
+import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
+import { useEventsPoller } from './queries/events/events';
+import { router } from './routes';
 
 import type { Theme } from '@mui/material/styles';
-import type { AnyRouter } from '@tanstack/react-router';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -113,6 +115,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const Root = () => {
+  const navigate = useNavigate();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const { classes, cx } = useStyles();
   const { data: isDesktopSidebarOpenPreference } = usePreferences(
@@ -144,16 +147,13 @@ export const Root = () => {
   const { data: profile } = useProfile();
   const username = profile?.username || '';
 
-  // const { data: accountSettings } = useAccountSettings();
-  // const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-
   const isNarrowViewport = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(960)
   );
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
 
-  migrationRouter.update({
+  router.update({
     context: {
       globalErrors,
       queryClient,
@@ -168,15 +168,7 @@ export const Root = () => {
    * So in this case, we'll show something more user-friendly
    */
   if (globalErrors.account_unactivated) {
-    return (
-      <>
-        <Redirect to="/account-activation" />
-        <RouterProvider
-          context={{ queryClient }}
-          router={migrationRouter as AnyRouter}
-        />
-      </>
-    );
+    navigate({ to: '/account-activation' });
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
@@ -283,10 +275,20 @@ export const Root = () => {
                   <Footer />
                 </div>
               </Box>
+              <GlobalListeners />
             </NotificationProvider>
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>
     </div>
   );
+};
+
+const GlobalListeners = () => {
+  useEventsPoller();
+  useAdobeAnalytics();
+  usePendo();
+  useNewRelic();
+  useSessionExpiryToast();
+  return null;
 };

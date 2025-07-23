@@ -10,12 +10,7 @@ import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryF
 
 import { SplashScreen } from './components/SplashScreen';
 import { GoTo } from './GoTo';
-import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
-import { useNewRelic } from './hooks/useNewRelic';
-import { usePendo } from './hooks/usePendo';
-import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
-import { useEventsPoller } from './queries/events/events';
 import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
@@ -45,17 +40,7 @@ export const App = withDocumentTitleProvider(
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
         <Router />
-        <GlobalListeners />
       </ErrorBoundaryFallback>
     );
   })
 );
-
-const GlobalListeners = () => {
-  useEventsPoller();
-  useAdobeAnalytics();
-  usePendo();
-  useNewRelic();
-  useSessionExpiryToast();
-  return null;
-};

@@ -4,7 +4,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
@@ -62,38 +61,16 @@ const Main = () => {
         <LinodeThemeWrapper>
           <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
-            <Router>
-              <Snackbar
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                autoHideDuration={4000}
-                hideIconVariant={false}
-                maxSnack={3}
-              >
-                <React.Suspense fallback={<SplashScreen />}>
-                  <Switch>
-                    <Route
-                      component={OAuthCallback}
-                      exact
-                      path="/oauth/callback"
-                    />
-                    <Route
-                      component={LoginAsCustomerCallback}
-                      exact
-                      path="/admin/callback"
-                    />
-                    <Route component={Logout} exact path="/logout" />
-                    <Route component={CancelLanding} exact path="/cancel" />
-                    <Route component={Logout} exact path="/logout" />
-                    <Route component={CancelLanding} exact path="/cancel" />
-                    <Route
-                      component={Lish}
-                      path="/linodes/:linodeId/lish/:type"
-                    />
-                    <Route component={App} />
-                  </Switch>
-                </React.Suspense>
-              </Snackbar>
-            </Router>
+            <Snackbar
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              autoHideDuration={4000}
+              hideIconVariant={false}
+              maxSnack={3}
+            >
+              <React.Suspense fallback={<SplashScreen />}>
+                <App />
+              </React.Suspense>
+            </Snackbar>
           </React.Suspense>
         </LinodeThemeWrapper>
       </QueryClientProvider>
