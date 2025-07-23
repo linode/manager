@@ -1,8 +1,8 @@
+import { destinationType } from '@linode/api-v4';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { destinationType } from 'src/features/DataStream/Shared/types';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamCreateDelivery } from './StreamCreateDelivery';
