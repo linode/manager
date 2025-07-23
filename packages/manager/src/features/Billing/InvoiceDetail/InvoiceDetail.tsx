@@ -128,43 +128,53 @@ export const InvoiceDetail = () => {
             alignItems="center"
             data-qa-invoice-header
             direction="row"
-            spacing={2}
+            flexWrap="wrap"
+            justifyContent="space-between"
+            spacing={1}
           >
-            <Link
-              accessibleAriaLabel="Back to Billing"
-              data-qa-back-to-billing
-              to={`/account/billing`}
-            >
-              <IconButton
-                component="span"
-                disableFocusRipple
-                role="none"
-                size="large"
-                sx={{
-                  padding: 0,
-                }}
-                tabIndex={-1}
+            <Stack direction="row" flexWrap="nowrap" spacing={1}>
+              <Link
+                accessibleAriaLabel="Back to Billing"
+                data-qa-back-to-billing
+                to={`/account/billing`}
               >
-                <KeyboardArrowLeft
+                <IconButton
+                  component="span"
+                  disableFocusRipple
+                  role="none"
+                  size="large"
                   sx={{
-                    height: 34,
-                    width: 34,
+                    padding: 0,
                   }}
+                  tabIndex={-1}
+                >
+                  <KeyboardArrowLeft
+                    sx={{
+                      height: 34,
+                      width: 34,
+                    }}
+                  />
+                </IconButton>
+              </Link>
+              <Box>
+                <LandingHeader
+                  breadcrumbProps={{
+                    crumbOverrides: [{ label: 'Billing Info', position: 1 }],
+                    firstAndLastOnly: true,
+                    labelTitle: `Invoice #${invoiceId}`,
+                    pathname: location.pathname,
+                  }}
+                  spacingBottom={0}
                 />
-              </IconButton>
-            </Link>
-            {invoice && (
-              <LandingHeader
-                breadcrumbProps={{
-                  crumbOverrides: [{ label: 'Billing Info', position: 1 }],
-                  firstAndLastOnly: true,
-                  labelTitle: `Invoice #${invoice.id}`,
-                  pathname: location.pathname,
-                }}
-              />
-            )}
+              </Box>
+            </Stack>
             {account && invoice && items && (
-              <>
+              <Stack
+                alignItems="center"
+                direction="row"
+                flexWrap="wrap"
+                spacing={1}
+              >
                 <DownloadCSV
                   csvRef={csvRef}
                   data={items}
@@ -180,20 +190,20 @@ export const InvoiceDetail = () => {
                 >
                   Download PDF
                 </Button>
-              </>
-            )}
-            {invoice && (
-              <Typography
-                data-qa-total={invoice.total}
-                sx={{ whiteSpace: 'nowrap' }}
-                variant="h2"
-              >
-                Total:{' '}
-                <Currency
-                  quantity={invoice.total}
-                  wrapInParentheses={invoice.total < 0}
-                />
-              </Typography>
+                {invoice && (
+                  <Typography
+                    data-qa-total={invoice.total}
+                    sx={{ whiteSpace: 'nowrap' }}
+                    variant="h2"
+                  >
+                    Total:{' '}
+                    <Currency
+                      quantity={invoice.total}
+                      wrapInParentheses={invoice.total < 0}
+                    />
+                  </Typography>
+                )}
+              </Stack>
             )}
           </Stack>
           {pdfGenerationError && (
