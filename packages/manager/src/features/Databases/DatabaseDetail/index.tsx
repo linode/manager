@@ -35,42 +35,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
-const DatabaseSummary = React.lazy(() =>
-  import('./DatabaseSummary/DatabaseSummary').then((module) => ({
-    default: module.DatabaseSummary,
-  }))
-);
-const DatabaseBackups = React.lazy(() =>
-  import('./DatabaseBackups/DatabaseBackups').then((module) => ({
-    default: module.DatabaseBackups,
-  }))
-);
-const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
-const DatabaseResize = React.lazy(() =>
-  import('./DatabaseResize/DatabaseResize').then((module) => ({
-    default: module.DatabaseResize,
-  }))
-);
-const DatabaseMonitor = React.lazy(() =>
-  import('./DatabaseMonitor/DatabaseMonitor').then((module) => ({
-    default: module.DatabaseMonitor,
-  }))
-);
-
-const DatabaseNetworking = React.lazy(() =>
-  import('./DatabaseNetworking/DatabaseNetworking').then((module) => ({
-    default: module.DatabaseNetworking,
-  }))
-);
-
-const DatabaseAlert = React.lazy(() =>
-  import('../../CloudPulse/Alerts/ContextualView/AlertReusableComponent').then(
-    (module) => ({
-      default: module.AlertReusableComponent,
-    })
-  )
-);
-
 export const DatabaseDetail = () => {
   const flags = useFlags();
   const navigate = useNavigate();
