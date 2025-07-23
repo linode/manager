@@ -7,10 +7,7 @@ import {
   subnetAssignedLinodeDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
@@ -63,14 +60,13 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={1}
-          vpcRegion=""
-        />
-      );
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />
+    );
 
     expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
     expect(getByText('Subnet')).toBeVisible();
@@ -110,17 +106,16 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={1}
-          vpcRegion=""
-        />,
-        {
-          flags: { nodebalancerVpc: true },
-        }
-      );
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />,
+      {
+        flags: { nodebalancerVpc: true },
+      }
+    );
 
     expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
     expect(getByText('Subnet')).toBeVisible();
@@ -155,7 +150,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={2}
@@ -181,7 +176,7 @@ describe('VPC Subnets table', () => {
 
     // @TODO VPC IPv6: Remove this flag mock once VPC IPv6 is fully rolled out, and update
     // the assertion to expect the IPv6 columns are present
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
@@ -199,11 +194,11 @@ describe('VPC Subnets table', () => {
     getByText('Firewalls');
 
     expect(screen.queryByText('VPC IPv6')).not.toBeInTheDocument();
-    expect(screen.queryByText('VPC IPv6 Ranges')).not.toBeInTheDocument();
+    expect(screen.queryByText('Linode IPv6 Ranges')).not.toBeInTheDocument();
   });
 
   // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
-  it('renders VPC IPv6 and VPC IPv6 Range columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
+  it('renders VPC IPv6 and Linode IPv6 Range columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
     const subnet = subnetFactory.build({
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
@@ -214,7 +209,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
@@ -231,7 +226,7 @@ describe('VPC Subnets table', () => {
     const expandTableButton = screen.getAllByRole('button')[3];
     await userEvent.click(expandTableButton);
 
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
@@ -240,11 +235,11 @@ describe('VPC Subnets table', () => {
       { flags: { vpcIpv6: true } }
     );
 
-    expect(screen.getByText('VPC IPv6')).toBeVisible();
-    expect(screen.getByText('Linode IPv6 Ranges')).toBeVisible();
     expect(screen.getByText('Linode')).toBeVisible();
     expect(screen.getByText('Status')).toBeVisible();
     expect(screen.getByText('VPC IPv4')).toBeVisible();
+    expect(screen.getByText('VPC IPv6')).toBeVisible();
+    expect(screen.getByText('Linode IPv6 Ranges')).toBeVisible();
     expect(screen.getByText('Firewalls')).toBeVisible();
   });
 
@@ -259,7 +254,7 @@ describe('VPC Subnets table', () => {
         },
       });
 
-      const { getByLabelText, findByText } = await renderWithThemeAndRouter(
+      const { getByLabelText, findByText } = renderWithTheme(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
           vpcId={3}
@@ -279,7 +274,7 @@ describe('VPC Subnets table', () => {
   );
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    const { getByRole } = await renderWithThemeAndRouter(
+    const { getByRole } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={true}
         vpcId={3}

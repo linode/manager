@@ -46,7 +46,9 @@ const imagesIndexRoute = createRoute({
   path: '/',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
-  import('./imagesLazyRoutes').then((m) => m.imagesLandingLazyRoute)
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
 );
 
 const imageActionRoute = createRoute({
@@ -72,13 +74,19 @@ const imageActionRoute = createRoute({
   path: '$imageId/$action',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
-  import('./imagesLazyRoutes').then((m) => m.imagesLandingLazyRoute)
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
 );
 
 const imagesCreateRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: 'create',
-}).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
+}).lazy(() =>
+  import('src/features/Images/ImagesCreate/imagesCreateLazyRoute').then(
+    (m) => m.imageCreateLazyRoute
+  )
+);
 
 const imagesCreateIndexRoute = createRoute({
   beforeLoad: () => {
@@ -94,13 +102,21 @@ const imagesCreateDiskRoute = createRoute({
   getParentRoute: () => imagesCreateRoute,
   path: 'disk',
   validateSearch: (search: ImageCreateDiskSearchParams) => search,
-}).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
+}).lazy(() =>
+  import('src/features/Images/ImagesCreate/imagesCreateLazyRoute').then(
+    (m) => m.imageCreateLazyRoute
+  )
+);
 
 const imagesCreateUploadRoute = createRoute({
   getParentRoute: () => imagesCreateRoute,
   path: 'upload',
   validateSearch: (search: ImageCreateUploadSearchParams) => search,
-}).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
+}).lazy(() =>
+  import('src/features/Images/ImagesCreate/imagesCreateLazyRoute').then(
+    (m) => m.imageCreateLazyRoute
+  )
+);
 
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),

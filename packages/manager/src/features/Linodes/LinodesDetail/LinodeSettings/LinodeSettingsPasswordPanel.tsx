@@ -30,7 +30,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
 
   const { permissions } = usePermissions(
     'linode',
-    ['password_reset_linode', 'reset_linode_disk_root_password'],
+    ['password_reset_linode'],
     linodeId
   );
 
@@ -64,10 +64,6 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   } = useLinodeDiskChangePasswordMutation(linodeId, selectedDiskId ?? -1);
 
   const isBareMetalInstance = type?.class === 'metal';
-
-  const isReadOnly = isBareMetalInstance
-    ? !permissions.password_reset_linode
-    : !permissions.reset_linode_disk_root_password;
 
   const isLoading = isBareMetalInstance
     ? isLinodePasswordLoading
@@ -108,7 +104,8 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     <StyledActionsPanel
       primaryButtonProps={{
         'data-testid': 'password - save',
-        disabled: isReadOnly || linode?.status !== 'offline',
+        disabled:
+          !permissions.password_reset_linode || linode?.status !== 'offline',
         label: 'Save',
         loading: isLoading,
         onClick: onSubmit,
@@ -131,7 +128,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
         {!isBareMetalInstance ? (
           <Select
             data-qa-select-linode
-            disabled={isReadOnly}
+            disabled={!permissions.password_reset_linode}
             errorText={disksError?.[0].reason}
             label="Disk"
             loading={disksLoading}
@@ -149,9 +146,9 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
           <PasswordInput
             autoComplete="new-password"
             data-qa-password-input
-            disabled={isReadOnly}
+            disabled={!permissions.password_reset_linode}
             disabledReason={
-              isReadOnly
+              !permissions.password_reset_linode
                 ? "You don't have permissions to modify this Linode"
                 : undefined
             }
