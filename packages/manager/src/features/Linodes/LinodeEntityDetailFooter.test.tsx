@@ -1,4 +1,3 @@
-import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -15,23 +14,17 @@ const props = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useProfile: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    permissions: { update_account: false },
+  })),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useProfile: queryMocks.useProfile,
-  };
-});
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 describe('LinodeEntityDetailFooter', () => {
-  it('should disable "Add a tag" button if the user is restricted', async () => {
-    queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ restricted: true }),
-    });
-
+  it('should disable "Add a tag" button if the user does not have update_account permission', async () => {
     const { getByRole } = renderWithTheme(
       <LinodeEntityDetailFooter {...props} />
     );
@@ -42,9 +35,9 @@ describe('LinodeEntityDetailFooter', () => {
     expect(addTagBtn).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should enable "Add a tag" button if the user is not restricted', async () => {
-    queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ restricted: false }),
+  it('should enable "Add a tag" button if the user has update_account permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: { update_account: true },
     });
 
     const { getByRole } = renderWithTheme(

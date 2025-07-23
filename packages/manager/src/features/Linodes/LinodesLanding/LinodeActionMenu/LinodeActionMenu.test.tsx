@@ -105,7 +105,7 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should disable Power On when the Linode is rebooting', async () => {
-      const { getByLabelText, queryByText } = renderWithTheme(
+      const { getByLabelText, queryByTestId } = renderWithTheme(
         <LinodeActionMenu {...props} linodeStatus="rebooting" />
       );
 
@@ -115,7 +115,7 @@ describe('LinodeActionMenu', () => {
 
       await userEvent.click(actionMenuButton);
 
-      const powerOnItem = queryByText('Power On')?.closest('li');
+      const powerOnItem = queryByTestId('Power On');
       expect(powerOnItem).toHaveAttribute('aria-disabled', 'true');
 
       const tooltipButton = within(powerOnItem!).getByRole('button');
@@ -136,7 +136,7 @@ describe('LinodeActionMenu', () => {
       // TODO: Should check for "read_only" permissions too
       renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
       await userEvent.click(screen.getByLabelText(/^Action menu for/));
-      expect(screen.queryByText('Reboot')?.closest('li')).toHaveAttribute(
+      expect(screen.queryByTestId('Reboot')).toHaveAttribute(
         'aria-disabled',
         'true'
       );
@@ -245,7 +245,7 @@ describe('LinodeActionMenu', () => {
 
     for (const action of actions) {
       expect(getByText(action)).toBeVisible();
-      expect(screen.queryByText(action)?.closest('li')).toHaveAttribute(
+      expect(screen.queryByTestId(action)).toHaveAttribute(
         'aria-disabled',
         'true'
       );

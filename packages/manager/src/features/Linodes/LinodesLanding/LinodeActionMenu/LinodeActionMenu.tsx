@@ -88,6 +88,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const isMTCLinode = Boolean(linodeType && isMTCPlan(linodeType));
   const isLinodeRunning = linodeStatus === 'running';
 
+  const isStatusNotEligible = !['offline', 'running'].includes(linodeStatus);
+  const lacksBootPermission = !isLinodeRunning && !permissions.boot_linode;
+  const lacksShutdownPermission =
+    isLinodeRunning && !permissions.shutdown_linode;
+
   const actionConfigs: ActionConfig[] = [
     {
       condition: true,
@@ -99,10 +104,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: handlePowerAction,
       title: isLinodeRunning ? 'Power Off' : 'Power On',
       tooltipAction: 'modify',
-      tooltipText: !['offline', 'running'].includes(linodeStatus)
+      tooltipText: isStatusNotEligible
         ? LINODE_STATUS_NOT_RUNNING_TOOLTIP_TEXT
-        : (!isLinodeRunning && !permissions.boot_linode) ||
-            (isLinodeRunning && !permissions.shutdown_linode)
+        : lacksBootPermission || lacksShutdownPermission
           ? NO_PERMISSION_TOOLTIP_TEXT
           : undefined,
     },

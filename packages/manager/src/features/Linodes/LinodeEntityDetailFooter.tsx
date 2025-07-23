@@ -8,6 +8,7 @@ import { TagCell } from 'src/components/TagCell/TagCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import {
   StyledBox,
   StyledLabelBox,
@@ -39,7 +40,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeTags,
   } = props;
 
-  const isRestricted = profile?.restricted ?? false;
+  const { permissions } = usePermissions('account', ['update_account']);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
@@ -142,7 +143,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
-          disabled={isRestricted}
+          disabled={!permissions.update_account}
           entityLabel={linodeLabel}
           sx={{
             width: '100%',
