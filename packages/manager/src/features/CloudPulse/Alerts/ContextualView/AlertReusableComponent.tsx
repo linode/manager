@@ -96,7 +96,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   }
 
   return (
-    <Paper>
+    <Paper sx={{ p: entityId ? undefined : 0 }}>
       <Stack gap={3}>
         {entityId && (
           <Box display="flex" justifyContent="space-between">
