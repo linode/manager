@@ -104,7 +104,10 @@ export type QueryWithPermissionsResult<T> = {
   hasFiltered: boolean;
   isError: boolean;
   isLoading: boolean;
-};
+} & Omit<
+  UseQueryResult<T[], APIError[]>,
+  'data' | 'error' | 'isError' | 'isLoading'
+>;
 
 export const useQueryWithPermissions = <T extends EntityBase>(
   useQueryResult: UseQueryResult<T[], APIError[]>,
@@ -116,6 +119,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     error: allEntitiesError,
     isLoading: areEntitiesLoading,
     isError: isEntitiesError,
+    ...restQueryResult
   } = useQueryResult;
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
@@ -146,5 +150,6 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     hasFiltered: allEntities?.length !== entities?.length,
     isError: isEntitiesError,
     isLoading: areEntitiesLoading || areEntityPermissionsLoading,
+    ...restQueryResult,
   } as const;
 };
