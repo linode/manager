@@ -63,6 +63,7 @@ export const AlertConfirmationDialog = React.memo(
           disabled: isLoading,
           label: 'Cancel',
           onClick: handleCancel,
+          buttonType: 'outlined',
         }}
       />
     );
