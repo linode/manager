@@ -13,6 +13,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
@@ -83,6 +84,8 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     [alerts, regionId, searchText, selectedType]
   );
 
+  const { aclpBetaServices } = useFlags();
+
   const history = useHistory();
 
   // Filter unique alert types from alerts list
@@ -99,7 +102,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
-              <BetaChip />
+              {aclpBetaServices?.[serviceType]?.alerts && <BetaChip />}
             </Box>
             <Button
               buttonType="outlined"
