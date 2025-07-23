@@ -38,13 +38,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('LinodeAlerts', () => {
   it('should render component', async () => {
-    const { getByText } = renderWithTheme(
-      <LinodeAlerts
-        isAclpAlertsSupportedRegionLinode={true}
-        isAlertsBetaMode={false}
-        onAlertsModeChange={() => {}}
-      />
-    );
+    const { getByText } = renderWithTheme(<LinodeAlerts />);
 
     expect(getByText('Alerts')).toBeVisible();
     expect(getByText('CPU Usage')).toBeVisible();
@@ -53,13 +47,7 @@ describe('LinodeAlerts', () => {
   });
 
   it('should disable "Save" button if the user does not have update_linode permission', async () => {
-    const { getByTestId } = renderWithTheme(
-      <LinodeAlerts
-        isAclpAlertsSupportedRegionLinode={true}
-        isAlertsBetaMode={false}
-        onAlertsModeChange={() => {}}
-      />
-    );
+    const { getByTestId } = renderWithTheme(<LinodeAlerts />);
 
     const saveBtn = getByTestId('alerts-save');
     expect(saveBtn).toBeInTheDocument();
@@ -72,13 +60,7 @@ describe('LinodeAlerts', () => {
         update_linode: true,
       },
     });
-    const { getByTestId, getAllByTestId } = renderWithTheme(
-      <LinodeAlerts
-        isAclpAlertsSupportedRegionLinode={true}
-        isAlertsBetaMode={false}
-        onAlertsModeChange={() => {}}
-      />
-    );
+    const { getByTestId, getAllByTestId } = renderWithTheme(<LinodeAlerts />);
 
     const inputCPU = getAllByTestId('textfield-input')[0];
     expect(inputCPU).toBeInTheDocument();

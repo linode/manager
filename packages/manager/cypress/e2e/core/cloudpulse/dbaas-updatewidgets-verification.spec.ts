@@ -43,6 +43,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    metrics: ['Managed Databases'],
+    alerts: [],
+  },
 });
 
 const flags: Partial<Flags> = {
@@ -52,7 +56,6 @@ const flags: Partial<Flags> = {
       dimensionKey: 'entity_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
     },
   ],
 };

@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 /**
  * @file Integration Tests for contextual view of Entity Listing.
@@ -9,6 +10,7 @@ import {
   mockGetAlertDefinition,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
@@ -92,16 +94,21 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: 'us-ord',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
     },
   ],
 };
+
+const mockRegion = [
+  regionFactory.build({
+    id: 'us-ord',
+    monitors: { metrics: [], alerts: ['Linodes', 'Managed Databases'] },
+  }),
+];
 const alerts = alertConfigs.flatMap((config) => {
   // Create the alert
   return alertFactory.build({
@@ -199,6 +206,7 @@ describe('update linode label', () => {
       mockDeleteEntityFromAlert(serviceType, '100', 4).as(
         'deleteEntityToAlert'
       );
+      mockGetRegions(mockRegion);
 
       // Visit the database alerts page
       cy.visitWithLogin(`/linodes/${linode.id}/alerts`);
