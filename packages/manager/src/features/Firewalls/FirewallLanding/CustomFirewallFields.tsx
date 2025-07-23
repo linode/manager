@@ -64,6 +64,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   const { data: grants } = useGrants();
   const { data: firewalls } = useAllFirewallsQuery(open);
   const { data: profile } = useProfile();
+
   const { data: permissableLinodes, hasFiltered: hasFilteredLinodes } =
     useQueryWithPermissions<Linode>(useAllLinodesQuery(), 'linode', [
       'apply_linode_firewalls',
