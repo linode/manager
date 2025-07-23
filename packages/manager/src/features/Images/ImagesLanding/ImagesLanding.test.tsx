@@ -10,9 +10,11 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
 
+const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({ action: undefined, imageId: undefined }),
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
+  useNavigate: vi.fn(() => navigate),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -21,6 +23,7 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -256,9 +259,11 @@ describe('Images Landing Table', () => {
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Deploy to New Linode'));
 
-    expect(mockHistory.push).toBeCalledWith({
-      pathname: '/linodes/create/',
-      search: `?type=Images&imageID=${images[0].id}`,
+    expect(navigate).toBeCalledWith({
+      to: '/linodes/create/images',
+      search: {
+        imageID: images[0].id,
+      },
     });
   });
 

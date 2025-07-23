@@ -23,8 +23,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -110,7 +108,6 @@ export const ImagesLanding = () => {
   });
   const search = useSearch({ from: '/images' });
   const { query } = search;
-  const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
@@ -367,9 +364,11 @@ export const ImagesLanding = () => {
   };
 
   const handleDeployNewLinode = (imageId: string) => {
-    history.push({
-      pathname: `/linodes/create/`,
-      search: `?type=Images&imageID=${imageId}`,
+    navigate({
+      to: '/linodes/create/images',
+      search: {
+        imageID: imageId,
+      },
     });
   };
 

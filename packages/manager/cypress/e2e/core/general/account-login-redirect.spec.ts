@@ -48,7 +48,7 @@ describe('account login redirect', () => {
    * This test validates that the encoded redirect param is valid and can be properly decoded when the user is redirected to our application.
    */
   it('should redirect the user to the page they were on if the redirect param is present and valid', () => {
-    cy.visitWithLogin('/linodes/create?type=Images');
+    cy.visitWithLogin('/linodes/create/images');
     cy.url().should('contain', '/linodes/create');
 
     cy.clearLocalStorage(tokenLocalStorageKey);
@@ -63,7 +63,7 @@ describe('account login redirect', () => {
       const decodedOnce = decodeURIComponent(url);
       const decodedTwice = decodeURIComponent(decodedOnce);
 
-      expect(decodedTwice).to.contain('/linodes/create?type=Images');
+      expect(decodedTwice).to.contain('/linodes/create/images');
     });
   });
 });

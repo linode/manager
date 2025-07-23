@@ -52,7 +52,7 @@ interface Props {
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
   const search = useSearch({
-    from: '/linodes/create/stackscripts',
+    strict: false,
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,8 +66,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         orderBy: 'deployments_total',
       },
       from: location.pathname.includes('/linodes/create')
-        ? '/linodes/create'
-        : '/linodes/$linodeId',
+        ? '/linodes/create/stackscripts'
+        : location.pathname === '/linodes'
+          ? '/linodes'
+          : '/linodes/$linodeId',
     },
     preferenceKey: 'linode-clone-stackscripts',
   });
