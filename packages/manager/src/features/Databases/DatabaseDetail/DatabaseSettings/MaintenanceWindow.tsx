@@ -1,15 +1,17 @@
 import { useDatabaseMutation } from '@linode/queries';
 import {
   Autocomplete,
+  Box,
   FormControl,
   FormControlLabel,
+  InputLabel,
   Notice,
   Radio,
   RadioGroup,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { Button } from 'akamai-cds-react-components';
+import { Button, Select } from 'akamai-cds-react-components';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -197,89 +199,98 @@ export const MaintenanceWindow = (props: Props) => {
           </Typography>
           <div>
             <FormControl className={classes.formControlDropdown}>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={disabled}
-                errorText={touched.day_of_week ? errors.day_of_week : undefined}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                label="Day of Week"
-                noMarginTop
-                onChange={(_, day) => {
-                  setFormTouched(true);
-                  setFieldValue('day_of_week', day.value);
-                  weekSelectionModifier(day.label, weekSelectionMap);
-                  // If week_of_month is not null (i.e., the user has selected a value for "Repeats on" already),
-                  // refresh the field value so that the selected option displays the chosen day.
-                  if (values.week_of_month) {
-                    setFieldValue('week_of_month', values.week_of_month);
+              <InputLabel
+                data-qa-dropdown-label="day-of-week-select"
+                data-qa-textfield-label="Day of Week"
+                sx={{
+                  marginBottom: '8px',
+                  transform: 'none',
+                }}
+              >
+                Day of Week
+              </InputLabel>
+              <Box data-qa-autocomplete="Day of Week" sx={{ width: '125px' }}>
+                <Select
+                  autocomplete
+                  id="dayOfWeek"
+                  items={daySelectionMap}
+                  onChange={(e: CustomEvent) => {
+                    const day: { label: string; value: number } = e.detail;
+                    setFormTouched(true);
+                    setFieldValue('day_of_week', day.value);
+                    weekSelectionModifier(day.label, weekSelectionMap);
+                    // If week_of_month is not null (i.e., the user has selected a value for "Repeats on" already),
+                    // refresh the field value so that the selected option displays the chosen day.
+                    if (values.week_of_month) {
+                      setFieldValue('week_of_month', values.week_of_month);
+                    }
+                  }}
+                  placeholder="Choose a day"
+                  selected={daySelectionMap.find(
+                    (thisOption) => thisOption.value === values.day_of_week
+                  )}
+                  valueFn={(day: { label: string; value: number }) =>
+                    `${day.label}`
                   }
-                }}
-                options={daySelectionMap}
-                placeholder="Choose a day"
-                renderOption={(props, option) => (
-                  <li {...props}>{option.label}</li>
-                )}
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-weekday-select': true,
-                  },
-                }}
-                value={daySelectionMap.find(
-                  (thisOption) => thisOption.value === values.day_of_week
-                )}
-              />
+                />
+              </Box>
             </FormControl>
             <FormControl className={classes.formControlDropdown}>
-              <div style={{ alignItems: 'center', display: 'flex' }}>
-                <Autocomplete
-                  autoHighlight
-                  defaultValue={hourSelectionMap.find(
-                    (option) => option.value === 20
-                  )}
-                  disableClearable
-                  disabled={disabled}
-                  errorText={
-                    touched.hour_of_day ? errors.hour_of_day : undefined
-                  }
-                  label="Time"
-                  noMarginTop
-                  onChange={(_, hour) => {
-                    setFormTouched(true);
-                    setFieldValue('hour_of_day', hour?.value);
+              <Box data-qa-autocomplete="Time">
+                <Box>
+                  <InputLabel
+                    data-qa-dropdown-label="time-select"
+                    data-qa-textfield-label="Time"
+                    htmlFor="time"
+                    sx={{
+                      marginBottom: '8px',
+                      transform: 'none',
+                    }}
+                  >
+                    Time
+                  </InputLabel>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
                   }}
-                  options={hourSelectionMap}
-                  placeholder="Choose a time"
-                  renderOption={(props, option) => (
-                    <li {...props}>{option.label}</li>
-                  )}
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-time-select': true,
-                    },
-                  }}
-                  value={hourSelectionMap.find(
-                    (thisOption) => thisOption.value === values.hour_of_day
-                  )}
-                />
-                <TooltipIcon
-                  status="info"
-                  sxTooltipIcon={{
-                    marginTop: '1.75rem',
-                    padding: '0px 8px',
-                  }}
-                  text={
-                    <Typography>
-                      UTC is {utcOffsetText(utcOffsetInHours)} hours compared to
-                      your local timezone. Click{' '}
-                      <Link to="/profile/display">here</Link> to view or change
-                      your timezone settings.
-                    </Typography>
-                  }
-                />
-              </div>
+                >
+                  <Box sx={{ width: '120px' }}>
+                    <Select
+                      autocomplete
+                      disabled={disabled}
+                      id="time"
+                      items={hourSelectionMap}
+                      onChange={(e: CustomEvent) => {
+                        const hour: { label: string; value: number } = e.detail;
+                        setFormTouched(true);
+                        setFieldValue('hour_of_day', hour?.value);
+                      }}
+                      placeholder="Choose a time"
+                      selected={hourSelectionMap.find(
+                        (thisOption) => thisOption.value === values.hour_of_day
+                      )}
+                      valueFn={(time: { label: string; value: number }) =>
+                        `${time.label}`
+                      }
+                    />
+                  </Box>
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{
+                      padding: '0px 8px',
+                    }}
+                    text={
+                      <Typography>
+                        UTC is {utcOffsetText(utcOffsetInHours)} hours compared
+                        to your local timezone. Click{' '}
+                        <Link to="/profile/display">here</Link> to view or
+                        change your timezone settings.
+                      </Typography>
+                    }
+                  />
+                </Box>
+              </Box>
             </FormControl>
           </div>
           {isLegacy && (
