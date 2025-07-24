@@ -1,5 +1,5 @@
 import { useAccountSettings } from '@linode/queries';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -12,11 +12,14 @@ import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { router } from './routes';
 
 export const Router = () => {
+  const queryClient = useQueryClient();
+  const globalErrors = useGlobalErrors();
+  
+  // These hooks may trigger API calls, but they'll be blocked by the request interceptor
   const { data: accountSettings } = useAccountSettings();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
-  const globalErrors = useGlobalErrors();
 
   // Update the router's context
   router.update({
@@ -26,7 +29,7 @@ export const Router = () => {
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
-      queryClient: new QueryClient(),
+      queryClient,
     },
   });
 

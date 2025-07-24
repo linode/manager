@@ -13,7 +13,6 @@ import {
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useQueryClient } from '@tanstack/react-query';
 import { Outlet, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -48,7 +47,6 @@ import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
 import { useEventsPoller } from './queries/events/events';
-import { router } from './routes';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -122,7 +120,6 @@ export const Root = () => {
     (preferences) => preferences?.desktop_sidebar_open
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
-  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -152,13 +149,6 @@ export const Root = () => {
   );
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
-
-  router.update({
-    context: {
-      globalErrors,
-      queryClient,
-    },
-  });
 
   /**
    * this is the case where the user has successfully completed signup
