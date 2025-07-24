@@ -416,6 +416,26 @@ export const deleteSubnet = (mockState: MockState) => [
         ),
       };
 
+      // delete associated interfaces
+      const deleteConfigIfacePromises = [];
+      const deleteLinodeIfacePromises = [];
+
+      for (const linode of subnetFromDB[1].linodes) {
+        for (const iface of linode.interfaces) {
+          if (iface.config_id) {
+            deleteConfigIfacePromises.push(
+              mswDB.delete('configInterfaces', iface.id, mockState)
+            );
+          } else {
+            deleteLinodeIfacePromises.push(
+              mswDB.delete('linodeInterfaces', iface.id, mockState)
+            );
+          }
+        }
+      }
+
+      await Promise.all(deleteConfigIfacePromises);
+      await Promise.all(deleteLinodeIfacePromises);
       await mswDB.delete('subnets', subnetId, mockState);
       await mswDB.update('vpcs', vpcId, updatedVPC, mockState);
 
