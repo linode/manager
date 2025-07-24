@@ -10,6 +10,10 @@
 
 - Update CreateKubeClusterPayload interface to support LKE-E node_pool fields ([#12449](https://github.com/linode/manager/pull/12449))
 
+### Removed:
+
+- Unnecessary in-progress event.status type during earlier development ([#12512](https://github.com/linode/manager/pull/12512))
+
 ### Upcoming Features:
 
 - CloudPulse: Update service type in `types.ts` ([#12508](https://github.com/linode/manager/pull/12508))
