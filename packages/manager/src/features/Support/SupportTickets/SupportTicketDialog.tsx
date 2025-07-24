@@ -12,12 +12,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
-import { useLocation as useLocationTanstack } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation as useLocationRouterDom } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -140,11 +138,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const locationRouterDom = useLocationRouterDom<any>();
-  const locationTanstack = useLocationTanstack();
-  const locationTanstackState = locationTanstack.state as SupportState;
-  const stateParams =
-    locationRouterDom.state ?? locationTanstackState.supportTicketFormFields;
+  const location = useLocation();
+  const locationState = location.state as SupportState;
+  const stateParams = locationState?.supportTicketFormFields;
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string =
