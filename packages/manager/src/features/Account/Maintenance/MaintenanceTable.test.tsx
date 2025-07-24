@@ -12,7 +12,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
@@ -26,7 +26,7 @@ const loadingTestId = 'table-row-loading';
 describe('Maintenance Table Row', () => {
   const maintenance = accountMaintenanceFactory.build();
   it('should render the maintenance event', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = await renderWithTheme(
       wrapWithTableBody(
         <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
@@ -36,7 +36,7 @@ describe('Maintenance Table Row', () => {
   });
 
   it('should render a relative time', async () => {
-    await renderWithThemeAndRouter(
+    await renderWithTheme(
       wrapWithTableBody(
         <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
@@ -59,7 +59,7 @@ describe('Maintenance Table', () => {
         return HttpResponse.json(makeResourcePage(accountMaintenance));
       })
     );
-    await renderWithThemeAndRouter(<MaintenanceTable type="in progress" />);
+    await renderWithTheme(<MaintenanceTable type="in progress" />);
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    await renderWithThemeAndRouter(<MaintenanceTable type="in progress" />);
+    await renderWithTheme(<MaintenanceTable type="in progress" />);
 
     screen.getByText('Download CSV');
   });
@@ -88,7 +88,7 @@ describe('Maintenance Table', () => {
       })
     );
 
-    await renderWithThemeAndRouter(<MaintenanceTable type="in progress" />);
+    await renderWithTheme(<MaintenanceTable type="in progress" />);
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 
@@ -106,7 +106,7 @@ describe('Maintenance Table', () => {
       })
     );
 
-    await renderWithThemeAndRouter(<MaintenanceTable type="upcoming" />);
+    await renderWithTheme(<MaintenanceTable type="upcoming" />);
 
     // Wait for loading to complete
     await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
