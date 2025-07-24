@@ -1,8 +1,9 @@
-import { Autocomplete, Box, Paper, TextField, Typography } from '@linode/ui';
+import { streamType } from '@linode/api-v4';
+import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { type CreateStreamForm, streamType } from './types';
+import { type CreateStreamForm } from './types';
 
 export const StreamCreateGeneralInfo = () => {
   const { control } = useFormContext<CreateStreamForm>();
@@ -13,8 +14,8 @@ export const StreamCreateGeneralInfo = () => {
       label: 'Audit Logs',
     },
     {
-      value: streamType.ErrorLogs,
-      label: 'Error Logs',
+      value: streamType.LKEAuditLogs,
+      label: 'Kubernetes Audit Logs',
     },
   ];
 
@@ -37,26 +38,22 @@ export const StreamCreateGeneralInfo = () => {
         )}
         rules={{ required: true }}
       />
-      <Box alignItems="flex-end" display="flex">
-        <Controller
-          control={control}
-          name="type"
-          render={({ field }) => (
-            <Autocomplete
-              disableClearable
-              label="Stream Type"
-              onChange={(_, { value }) => {
-                field.onChange(value);
-              }}
-              options={streamTypeOptions}
-              value={streamTypeOptions.find(
-                ({ value }) => value === field.value
-              )}
-            />
-          )}
-          rules={{ required: true }}
-        />
-      </Box>
+      <Controller
+        control={control}
+        name="type"
+        render={({ field }) => (
+          <Autocomplete
+            disableClearable
+            label="Stream Type"
+            onChange={(_, { value }) => {
+              field.onChange(value);
+            }}
+            options={streamTypeOptions}
+            value={streamTypeOptions.find(({ value }) => value === field.value)}
+          />
+        )}
+        rules={{ required: true }}
+      />
     </Paper>
   );
 };

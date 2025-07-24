@@ -9,7 +9,7 @@ import {
 import React, { useMemo } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -23,9 +23,7 @@ export const PrivateIP = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
 
@@ -43,7 +41,7 @@ export const PrivateIP = () => {
       control={
         <Checkbox sx={(theme) => ({ mt: `-${theme.tokens.spacing.S8}` })} />
       }
-      disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
+      disabled={isDistributedRegionSelected || !permissions.create_linode}
       label={
         <Stack spacing={1} sx={{ pl: 2 }}>
           <Typography component="span" variant="h3">

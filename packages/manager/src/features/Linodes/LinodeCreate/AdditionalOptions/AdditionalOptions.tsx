@@ -1,10 +1,9 @@
-import { useRegionsQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
-import { isAclpSupportedRegion } from '@linode/utilities';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Alerts } from './Alerts';
@@ -22,17 +21,15 @@ export const AdditionalOptions = ({
   isAlertsBetaMode,
 }: AdditionalOptionProps) => {
   const { aclpBetaServices } = useFlags();
-  const { data: regions } = useRegionsQuery();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const selectedRegionId = useWatch<CreateLinodeRequest, 'region'>({
     name: 'region',
   });
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: selectedRegionId,
-    regions,
     type: 'alerts',
   });
 
