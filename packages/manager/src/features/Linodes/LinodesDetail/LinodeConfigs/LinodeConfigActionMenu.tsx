@@ -18,20 +18,17 @@ interface Props {
 
 export const ConfigActionMenu = (props: Props) => {
   const { config, linodeId, onBoot, onDelete, onEdit } = props;
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   const { permissions } = usePermissions(
     'linode',
-    [
-      'reboot_linode',
-      'update_linode_config_profile',
-      'clone_linode',
-      'delete_linode_config_profile',
-    ],
-    linodeId
+    ['reboot_linode', 'update_linode', 'clone_linode', 'delete_linode'],
+    linodeId,
+    isOpen
   );
 
-  const tooltip = !permissions.delete_linode_config_profile
+  const tooltip = !permissions.delete_linode
     ? "You don't have permission to perform this action"
     : undefined;
 
@@ -42,7 +39,7 @@ export const ConfigActionMenu = (props: Props) => {
       title: 'Boot',
     },
     {
-      disabled: !permissions.update_linode_config_profile,
+      disabled: !permissions.update_linode,
       onClick: onEdit,
       title: 'Edit',
     },
@@ -60,7 +57,7 @@ export const ConfigActionMenu = (props: Props) => {
       title: 'Clone',
     },
     {
-      disabled: !permissions.delete_linode_config_profile,
+      disabled: !permissions.delete_linode,
       onClick: onDelete,
       title: 'Delete',
       tooltip,
@@ -71,6 +68,7 @@ export const ConfigActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Linode Config ${props.label}`}
+      onOpen={() => setIsOpen(true)}
     />
   );
 };

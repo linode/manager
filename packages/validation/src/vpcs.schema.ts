@@ -46,7 +46,6 @@ export const vpcsValidateIP = ({
   value,
   shouldHaveIPMask,
   mustBeIPMask,
-  isIPv6Subnet,
   checkIPv6PrefixLengthIs64,
 }: {
   checkIPv6PrefixLengthIs64?: boolean;
@@ -107,18 +106,6 @@ export const vpcsValidateIP = ({
         return mask === '64';
       }
 
-      // VPCs must be assigned an IPv6 prefix of /52, /48, or /44
-      const invalidVPCIPv6Prefix = !['44', '48', '52'].includes(mask);
-      if (!isIPv6Subnet && invalidVPCIPv6Prefix) {
-        return false;
-      }
-
-      // VPC subnets must be assigned an IPv6 prefix of 52-62
-      const invalidVPCIPv6SubnetPrefix = +mask < 52 || +mask > 62;
-      if (isIPv6Subnet && invalidVPCIPv6SubnetPrefix) {
-        return false;
-      }
-
       if (shouldHaveIPMask) {
         ipaddr.IPv6.parseCIDR(value);
       } else {
@@ -151,38 +138,31 @@ export const updateVPCSchema = object({
 const VPCIPv6Schema = object({
   range: string()
     .optional()
-    .test({
-      name: 'IPv6 prefix length',
-      message: 'Must be the prefix length 52, 48, or 44 of the IP, e.g. /52',
-      test: (value) => {
+    .test(
+      'IPv6 prefix length',
+      'Must be the prefix length 52, 48, or 44 of the IP, e.g. /52',
+      (value) => {
         if (value && value.length > 0) {
-          vpcsValidateIP({
-            value,
-            shouldHaveIPMask: true,
-            mustBeIPMask: false,
-          });
+          return ['/44', '/48', '/52'].includes(value);
         }
       },
-    }),
+    ),
 });
 
 const VPCIPv6SubnetSchema = object({
   range: string()
     .required()
-    .test({
-      name: 'IPv6 prefix length',
-      message: 'Must be the prefix length (52-62) of the IP, e.g. /52',
-      test: (value) => {
+    .test(
+      'IPv6 prefix length',
+      'Must be the prefix length (52-62) of the IP, e.g. /52',
+      (value) => {
         if (value && value !== 'auto' && value.length > 0) {
-          vpcsValidateIP({
-            value,
-            shouldHaveIPMask: true,
-            mustBeIPMask: false,
-            isIPv6Subnet: true,
-          });
+          const [, mask] = value.split('/');
+          // VPC subnets must be assigned an IPv6 prefix of 52-62
+          return +mask >= 52 && +mask <= 62;
         }
       },
-    }),
+    ),
 });
 
 // @TODO VPC IPv6: Delete this when IPv6 is in GA

@@ -21,9 +21,9 @@ const placementGroupsLandingRoute = createRoute({
   path: '/placement-groups',
   validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
-  import('./placementGroupsLazyRoutes').then(
-    (m) => m.placementGroupsLandingLazyRoute
-  )
+  import(
+    'src/features/PlacementGroups/PlacementGroupsLanding/placemenGroupsLandingLazyRoute'
+  ).then((m) => m.placementGroupsLandingLazyRoute)
 );
 
 const placementGroupsDetailRoute = createRoute({
@@ -34,9 +34,9 @@ const placementGroupsDetailRoute = createRoute({
   path: 'placement-groups/$id',
   validateSearch: (search: PlacementGroupLinodesSearchParams) => search,
 }).lazy(() =>
-  import('./placementGroupsLazyRoutes').then(
-    (m) => m.placementGroupsDetailLazyRoute
-  )
+  import(
+    'src/features/PlacementGroups/PlacementGroupsDetail/placementGroupDetailLazyRoute'
+  ).then((m) => m.placementGroupsDetailLazyRoute)
 );
 
 export const placementGroupsRouteTree = placementGroupsLandingRoute.addChildren(

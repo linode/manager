@@ -15,6 +15,7 @@ const props = (type: FirewallDeviceEntityType): FirewallDeviceTableProps => ({
   disabled: false,
   firewallId: 1,
   handleRemoveDevice: vi.fn(),
+  searchText: '',
   type,
 });
 

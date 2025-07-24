@@ -5,9 +5,18 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
+import { PORTS_HELPER_TEXT } from 'src/features/CloudPulse/Utils/constants';
+
+import {
+  dimensionOperatorOptions,
+  PORT_HELPER_TEXT,
+  PORT_PLACEHOLDER_TEXT,
+  PORTS_PLACEHOLDER_TEXT,
+  textFieldOperators,
+} from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
+import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
 
@@ -72,6 +81,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     name: `${name}.operator`,
   });
 
+  const dimensionValueWatcher = useWatch({ control, name: `${name}.value` });
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -88,9 +98,62 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     }
     return [];
   };
-  const isTextField = dimensionOperatorWatcher
-    ? textFieldOperators.includes(dimensionOperatorWatcher)
-    : false;
+  const isValueMultiple =
+    valueOptions().length > 0 && dimensionOperatorWatcher === 'in';
+
+  const isTextField =
+    !valueOptions().length ||
+    (dimensionOperatorWatcher
+      ? textFieldOperators.includes(dimensionOperatorWatcher)
+      : false);
+
+  const valuePlaceholder = `${isTextField ? 'Enter' : 'Select'} a Value`;
+
+  const portsPlaceholderText =
+    dimensionFieldWatcher === 'port'
+      ? dimensionOperatorWatcher === 'in'
+        ? PORTS_PLACEHOLDER_TEXT
+        : PORT_PLACEHOLDER_TEXT
+      : valuePlaceholder;
+
+  const portsHelperText =
+    dimensionFieldWatcher === 'port'
+      ? dimensionOperatorWatcher === 'in'
+        ? PORTS_HELPER_TEXT
+        : PORT_HELPER_TEXT
+      : undefined;
+
+  const resolveSelectedValues = (
+    options: Item<string, string>[],
+    value: null | string
+  ): Item<string, string> | Item<string, string>[] | null => {
+    if (!value) return isValueMultiple ? [] : null;
+
+    if (isValueMultiple) {
+      const splitValues = value.split(',');
+      return options.filter((option) => splitValues.includes(option.value));
+    }
+
+    return options.find((option) => option.value === value) ?? null;
+  };
+
+  const handleValueChange = (
+    selected: Item<string, string> | Item<string, string>[] | null,
+    operation: string
+  ): string => {
+    if (operation !== 'selectOption') return '';
+
+    if (isValueMultiple && Array.isArray(selected)) {
+      return selected.map((item) => item.value).join(',');
+    }
+
+    if (!isValueMultiple && selected && !Array.isArray(selected)) {
+      return selected.value;
+    }
+
+    return '';
+  };
+
   return (
     <GridLegacy
       container
@@ -172,11 +235,20 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   data-testid="value"
                   disabled={!dimensionFieldWatcher}
                   errorText={fieldState.error?.message}
+                  helperText={!fieldState.error ? portsHelperText : undefined}
                   label="Value"
+                  max={65535}
+                  min={1}
                   onBlur={field.onBlur}
                   onChange={(event) => field.onChange(event.target.value)}
-                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
-                  sx={{ flex: 1, maxWidth: '256px' }}
+                  placeholder={portsPlaceholderText}
+                  sx={{ flex: 1, width: '256px' }}
+                  type={
+                    dimensionFieldWatcher === 'port' &&
+                    dimensionOperatorWatcher !== 'in'
+                      ? 'number'
+                      : 'text'
+                  }
                   value={field.value ?? ''}
                 />
               ) : (
@@ -189,24 +261,22 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                     value.value === option.value
                   }
                   label="Value"
+                  limitTags={1}
+                  multiple={isValueMultiple}
                   onBlur={field.onBlur}
-                  onChange={(
-                    _,
-                    selected: { label: string; value: string },
-                    operation
-                  ) => {
-                    field.onChange(
-                      operation === 'selectOption' ? selected.value : null
-                    );
+                  onChange={(_, selected, operation) => {
+                    field.onChange(handleValueChange(selected, operation));
                   }}
                   options={valueOptions()}
-                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
-                  sx={{ flex: 1 }}
-                  value={
-                    valueOptions().find(
-                      (option) => option.value === field.value
-                    ) ?? null
+                  placeholder={
+                    dimensionValueWatcher &&
+                    (!Array.isArray(dimensionValueWatcher) ||
+                      dimensionValueWatcher.length)
+                      ? ''
+                      : valuePlaceholder
                   }
+                  sx={{ flex: 1 }}
+                  value={resolveSelectedValues(valueOptions(), field.value)}
                 />
               )
             }

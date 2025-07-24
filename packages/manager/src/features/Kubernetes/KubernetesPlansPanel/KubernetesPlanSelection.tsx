@@ -22,12 +22,16 @@ import {
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
+import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
+
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
 import type { KubernetesTier, PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
@@ -48,6 +52,7 @@ export const KubernetesPlanSelection = (
     idx,
     onAdd,
     onSelect,
+    handleConfigurePool,
     plan,
     selectedId,
     selectedRegionId,
@@ -74,6 +79,12 @@ export const KubernetesPlanSelection = (
     plan,
     selectedRegionId
   );
+
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  // Show the Configure Pool button in the Create flow plans table, but not in the Add Node Pool drawer flow.
+  const shouldShowConfigurePoolButton =
+    isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
@@ -110,25 +121,48 @@ export const KubernetesPlanSelection = (
   const renderVariant = () => (
     <Grid size={12}>
       <StyledInputOuter>
-        <EnhancedNumberInput
-          disabled={rowIsDisabled}
-          max={
-            selectedTier === 'enterprise'
-              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-              : MAX_NODES_PER_POOL_STANDARD_TIER
-          }
-          setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
-          value={count}
-        />
-        {onAdd && (
-          <Button
+        {shouldShowConfigurePoolButton ? (
+          <StyledPrimaryActionButton
+            aria-label={rowIsDisabled ? disabledPlanReasonCopy : undefined}
             buttonType="primary"
-            disabled={count < 1 || rowIsDisabled}
-            onClick={() => onAdd(plan.id, count)}
-            sx={{ marginLeft: '10px', minWidth: '85px' }}
+            disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
+            onClick={() =>
+              handleConfigurePool
+                ? handleConfigurePool({
+                    drawerMode: 'add',
+                    isOpen: true,
+                    planLabel: plan.id,
+                  })
+                : null
+            }
           >
-            Add
-          </Button>
+            Configure Pool
+          </StyledPrimaryActionButton>
+        ) : (
+          <>
+            <EnhancedNumberInput
+              disabled={rowIsDisabled}
+              max={
+                selectedTier === 'enterprise'
+                  ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                  : MAX_NODES_PER_POOL_STANDARD_TIER
+              }
+              setValue={(newCount: number) =>
+                updatePlanCount(plan.id, newCount)
+              }
+              value={count}
+            />
+            {onAdd && (
+              <Button
+                buttonType="primary"
+                disabled={count < 1 || rowIsDisabled}
+                onClick={() => onAdd(plan.id, count)}
+                sx={{ marginLeft: '10px', minWidth: '85px' }}
+              >
+                Add
+              </Button>
+            )}
+          </>
         )}
       </StyledInputOuter>
     </Grid>
@@ -178,42 +212,68 @@ export const KubernetesPlanSelection = (
           </TableCell>
           <TableCell>
             <StyledInputOuter>
-              <EnhancedNumberInput
-                disabled={
-                  // When on the add pool flow, we only want the current input to be active,
-                  // unless we've just landed on the form, all the inputs are empty,
-                  // or there was a pricing data error.
-                  (!onAdd && Boolean(selectedId) && plan.id !== selectedId) ||
-                  rowIsDisabled ||
-                  typeof price?.hourly !== 'number'
-                }
-                inputLabel={`edit-quantity-${plan.id}`}
-                max={
-                  selectedTier === 'enterprise'
-                    ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-                    : MAX_NODES_PER_POOL_STANDARD_TIER
-                }
-                setValue={(newCount: number) =>
-                  updatePlanCount(plan.id, newCount)
-                }
-                value={count}
-              />
-              {onAdd && (
-                <Button
+              {shouldShowConfigurePoolButton ? (
+                <StyledPrimaryActionButton
                   aria-label={
                     rowIsDisabled ? disabledPlanReasonCopy : undefined
                   }
                   buttonType="primary"
-                  disabled={
-                    count < 1 ||
-                    rowIsDisabled ||
-                    typeof price?.hourly !== 'number'
+                  disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
+                  onClick={() =>
+                    handleConfigurePool
+                      ? handleConfigurePool({
+                          drawerMode: 'add',
+                          isOpen: true,
+                          planLabel: plan.id,
+                        })
+                      : null
                   }
-                  onClick={() => onAdd(plan.id, count)}
-                  sx={{ marginLeft: '10px', minWidth: '85px' }}
+                  sx={{ marginLeft: '10px' }}
                 >
-                  Add
-                </Button>
+                  Configure Pool
+                </StyledPrimaryActionButton>
+              ) : (
+                <>
+                  <EnhancedNumberInput
+                    disabled={
+                      // When on the add pool flow, we only want the current input to be active,
+                      // unless we've just landed on the form, all the inputs are empty,
+                      // or there was a pricing data error.
+                      (!onAdd &&
+                        Boolean(selectedId) &&
+                        plan.id !== selectedId) ||
+                      rowIsDisabled ||
+                      typeof price?.hourly !== 'number'
+                    }
+                    inputLabel={`edit-quantity-${plan.id}`}
+                    max={
+                      selectedTier === 'enterprise'
+                        ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                        : MAX_NODES_PER_POOL_STANDARD_TIER
+                    }
+                    setValue={(newCount: number) =>
+                      updatePlanCount(plan.id, newCount)
+                    }
+                    value={count}
+                  />
+                  {onAdd && (
+                    <Button
+                      aria-label={
+                        rowIsDisabled ? disabledPlanReasonCopy : undefined
+                      }
+                      buttonType="primary"
+                      disabled={
+                        count < 1 ||
+                        rowIsDisabled ||
+                        typeof price?.hourly !== 'number'
+                      }
+                      onClick={() => onAdd(plan.id, count)}
+                      sx={{ marginLeft: '10px', minWidth: '85px' }}
+                    >
+                      Add
+                    </Button>
+                  )}
+                </>
               )}
             </StyledInputOuter>
           </TableCell>
@@ -253,3 +313,12 @@ const StyledInputOuter = styled('div', { label: 'StyledInputOuter' })(
     },
   })
 );
+
+const StyledPrimaryActionButton = styled(Button, {
+  label: 'StyledPrimaryActionButton',
+})(({ theme }) => ({
+  minWidth: '85px',
+  [theme.breakpoints.between(960, 1110)]: {
+    margin: theme.spacingFunction(8),
+  },
+}));

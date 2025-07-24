@@ -120,6 +120,7 @@ export const createVPC = (mockState: MockState) => [
             ...subnetPayload,
             created: DateTime.now().toISO(),
             linodes: [],
+            nodebalancers: [],
             updated: DateTime.now().toISO(),
           });
           vpcSubnets.push(subnet);

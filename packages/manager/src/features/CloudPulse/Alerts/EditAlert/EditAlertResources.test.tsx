@@ -6,7 +6,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditAlertResources } from './EditAlertResources';
 
@@ -92,10 +92,9 @@ beforeEach(() => {
 
 describe('EditAlertResources component tests', () => {
   it('Edit alert resources happy path', async () => {
-    const { getByPlaceholderText, getByTestId } =
-      await renderWithThemeAndRouter(
-        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
-      );
+    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
+    );
 
     expect(
       getByPlaceholderText('Search for a Region or Entity')
@@ -107,7 +106,7 @@ describe('EditAlertResources component tests', () => {
   it('Edit alert resources successful edit', async () => {
     const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
 
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
     );
 
@@ -166,7 +165,7 @@ describe('EditAlertResources component tests', () => {
     history.push = push;
     history.push('/alerts/definitions/edit/linode/1');
 
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
         <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
       </Router>

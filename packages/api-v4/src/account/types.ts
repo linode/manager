@@ -86,6 +86,8 @@ export const accountCapabilities = [
   'Support Ticket Severity',
   'Vlans',
   'VPCs',
+  'VPC Dual Stack',
+  'VPC IPv6 Large Prefixes',
 ] as const;
 
 export type AccountCapability = (typeof accountCapabilities)[number];
@@ -487,6 +489,7 @@ export const EventActionKeys = [
   'user_ssh_key_delete',
   'user_ssh_key_update',
   'user_update',
+  'stream_create',
   'volume_attach',
   'volume_clone',
   'volume_create',
@@ -507,7 +510,6 @@ export type EventStatus =
   | 'canceled'
   | 'failed'
   | 'finished'
-  | 'in-progress'
   | 'notification'
   | 'scheduled'
   | 'started';

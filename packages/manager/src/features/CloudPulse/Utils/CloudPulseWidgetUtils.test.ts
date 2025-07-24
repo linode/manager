@@ -217,11 +217,11 @@ it('test mapResourceIdToName method', () => {
 });
 
 describe('getTimeDurationFromPreset method', () => {
-  it('should return correct time duration for 24hours preset', () => {
-    const result = getTimeDurationFromPreset('24hours');
+  it('should return correct time duration for Last Day preset', () => {
+    const result = getTimeDurationFromPreset('last day');
     expect(result).toStrictEqual({
-      unit: 'hr',
-      value: 24,
+      unit: 'days',
+      value: 1,
     });
   });
 

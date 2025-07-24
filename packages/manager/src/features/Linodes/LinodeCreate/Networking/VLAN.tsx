@@ -4,7 +4,7 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { VLANSelect } from 'src/components/VLANSelect';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
 
@@ -17,9 +17,7 @@ interface Props {
 export const VLAN = ({ index }: Props) => {
   const { control } = useFormContext<LinodeCreateFormValues>();
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const regionId = useWatch({ control, name: 'region' });
 
@@ -37,7 +35,7 @@ export const VLAN = ({ index }: Props) => {
           name={`linodeInterfaces.${index}.vlan.vlan_label`}
           render={({ field, fieldState }) => (
             <VLANSelect
-              disabled={isLinodeCreateRestricted || !regionSupportsVLANs}
+              disabled={!permissions.create_linode || !regionSupportsVLANs}
               errorText={fieldState.error?.message}
               filter={{ region: regionId }}
               helperText={
@@ -58,7 +56,7 @@ export const VLAN = ({ index }: Props) => {
           render={({ field, fieldState }) => (
             <TextField
               containerProps={{ maxWidth: 335 }}
-              disabled={isLinodeCreateRestricted || !regionSupportsVLANs}
+              disabled={!permissions.create_linode || !regionSupportsVLANs}
               errorText={fieldState.error?.message}
               label="IPAM Address"
               noMarginTop

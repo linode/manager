@@ -24,13 +24,20 @@ export interface FirewallDeviceTableProps {
   disabled: boolean;
   firewallId: number;
   handleRemoveDevice: (device: FirewallDevice) => void;
+  searchText: string;
   type: FirewallDeviceEntityType;
 }
 
 export const FirewallDeviceTable = React.memo(
   (props: FirewallDeviceTableProps) => {
-    const { deviceType, disabled, firewallId, handleRemoveDevice, type } =
-      props;
+    const {
+      deviceType,
+      disabled,
+      firewallId,
+      searchText,
+      handleRemoveDevice,
+      type,
+    } = props;
 
     const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
@@ -39,6 +46,7 @@ export const FirewallDeviceTable = React.memo(
       error,
       isLoading,
     } = useAllFirewallDevicesQuery(firewallId);
+
     const devices =
       allDevices?.filter((device) =>
         type === 'linode' && isLinodeInterfacesEnabled
@@ -46,7 +54,15 @@ export const FirewallDeviceTable = React.memo(
           : device.entity.type === type
       ) || [];
 
-    const devicesWithEntityLabels = devices.map((device) => {
+    const filteredDevices = devices.filter((device) => {
+      if (!searchText) return true;
+      return (
+        device.entity.label?.toLowerCase().includes(searchText) ||
+        device.entity.parent_entity?.label?.toLowerCase().includes(searchText)
+      );
+    });
+
+    const devicesWithEntityLabels = filteredDevices.map((device) => {
       // Linode Interface devices don't have a label, so we need to use their parent entity's label for sorting purposes
       if (
         device.entity.type === 'linode_interface' &&

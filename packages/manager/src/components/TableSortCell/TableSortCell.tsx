@@ -12,6 +12,7 @@ export interface TableSortCellProps extends _TableCellProps {
   active: boolean;
   direction: 'asc' | 'desc';
   handleClick: (key: string, order?: 'asc' | 'desc') => void;
+  iconSlot?: React.ReactNode;
   isLoading?: boolean;
   label: string;
   noWrap?: boolean;
@@ -24,6 +25,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
     direction,
     // eslint-disable-next-line
     handleClick,
+    iconSlot,
     isLoading,
     label,
     noWrap,
@@ -72,6 +74,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
         {children}
         {!active && <Sort />}
       </TableSortLabel>
+      {iconSlot}
       {isLoading && <CircleProgress size="sm" />}
     </TableCell>
   );

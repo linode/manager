@@ -6,7 +6,7 @@ import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedRolesTable } from './AssignedRolesTable';
 
@@ -66,7 +66,7 @@ describe('AssignedRolesTable', () => {
       data: {},
     });
 
-    await renderWithThemeAndRouter(<AssignedRolesTable />);
+    renderWithTheme(<AssignedRolesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -84,7 +84,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedRolesTable />);
+    renderWithTheme(<AssignedRolesTable />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -112,7 +112,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedRolesTable />);
+    renderWithTheme(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -135,7 +135,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedRolesTable />);
+    renderWithTheme(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'account_linode_admin');
@@ -158,7 +158,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedRolesTable />);
+    renderWithTheme(<AssignedRolesTable />);
 
     const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
     await userEvent.type(autocomplete, 'Firewall Roles');

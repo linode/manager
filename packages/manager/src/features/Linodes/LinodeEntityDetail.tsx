@@ -149,7 +149,6 @@ export const LinodeEntityDetail = (props: Props) => {
         }
         footer={
           <LinodeEntityDetailFooter
-            isLinodesGrantReadOnly={!permissions.update_linode}
             linodeCreated={linode.created}
             linodeId={linode.id}
             linodeLabel={linode.label}

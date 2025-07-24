@@ -2,7 +2,7 @@ import { linodeFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetail } from './PlacementGroupsDetail';
 
@@ -35,9 +35,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('PlacementGroupsDetail', () => {
   it('renders a error page', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsDetail />);
 
     expect(getByText('Not Found')).toBeInTheDocument();
   });
@@ -66,9 +64,7 @@ describe('PlacementGroupsDetail', () => {
       ],
     });
 
-    const { getByRole } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />
-    );
+    const { getByRole } = renderWithTheme(<PlacementGroupsDetail />);
 
     expect(getByRole('progressbar')).toBeInTheDocument();
   });
@@ -90,9 +86,7 @@ describe('PlacementGroupsDetail', () => {
       results: 0,
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsDetail />);
 
     expect(getByText(/my first pg/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();

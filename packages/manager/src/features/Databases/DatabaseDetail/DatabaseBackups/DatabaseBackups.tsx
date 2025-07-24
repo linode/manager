@@ -32,12 +32,9 @@ import {
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
 
+import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import DatabaseBackupsDialog from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';
-
-interface Props {
-  disabled?: boolean;
-}
 
 export interface TimeOption {
   label: string;
@@ -73,9 +70,9 @@ const TIME_OPTIONS: TimeOption[] = [
 
 export type VersionOption = 'dateTime' | 'newest';
 
-export const DatabaseBackups = (props: Props) => {
+export const DatabaseBackups = () => {
   const { classes } = useStyles();
-  const { disabled } = props;
+  const { disabled } = useDatabaseDetailContext();
   const { databaseId, engine } = useParams({
     from: '/databases/$engine/$databaseId',
   });

@@ -1,5 +1,9 @@
 name: Run Tests On Push/Schedule
 concurrency: UI_TESTS
+
+permissions:
+  contents: read
+
 env:
   USER_1: ${{ secrets.USER_1 }}
   USER_2: ${{ secrets.USER_2 }}

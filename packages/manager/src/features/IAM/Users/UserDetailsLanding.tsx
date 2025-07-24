@@ -1,32 +1,13 @@
-import { useParams } from '@tanstack/react-router';
+import { Outlet, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
 import { IAM_DOCS_LINK, IAM_LABEL } from '../Shared/constants';
-
-const UserDetails = React.lazy(() =>
-  import('./UserDetails/UserProfile').then((module) => ({
-    default: module.UserProfile,
-  }))
-);
-
-const UserRoles = React.lazy(() =>
-  import('./UserRoles/UserRoles').then((module) => ({
-    default: module.UserRoles,
-  }))
-);
-
-const UserEntities = React.lazy(() =>
-  import('./UserEntities/UserEntities').then((module) => ({
-    default: module.UserEntities,
-  }))
-);
 
 export const UserDetailsLanding = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
@@ -68,15 +49,7 @@ export const UserDetailsLanding = () => {
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <TabPanels>
-          <SafeTabPanel index={0}>
-            <UserDetails />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <UserRoles />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <UserEntities />
-          </SafeTabPanel>
+          <Outlet />
         </TabPanels>
       </Tabs>
     </>

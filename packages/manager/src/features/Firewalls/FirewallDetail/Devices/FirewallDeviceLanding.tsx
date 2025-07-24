@@ -141,6 +141,7 @@ export const FirewallDeviceLanding = React.memo(
                   : '/firewalls/$id/nodebalancers/remove',
             });
           }}
+          searchText={searchText.trim().toLowerCase()}
           type={type}
         />
         {type === 'linode' ? (

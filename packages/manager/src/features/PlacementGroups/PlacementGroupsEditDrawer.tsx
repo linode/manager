@@ -150,6 +150,7 @@ export const PlacementGroupsEditDrawer = (
             <Stack spacing={1}>
               <TextField
                 aria-label="Label for the Placement Group"
+                clearable
                 disabled={!placementGroup || disableEditButton || false}
                 errorText={errors.label}
                 inputProps={{
@@ -159,6 +160,11 @@ export const PlacementGroupsEditDrawer = (
                 name="label"
                 onBlur={handleBlur}
                 onChange={handleChange}
+                onClear={() => {
+                  handleChange({
+                    target: { name: 'label', value: '' },
+                  } as React.ChangeEvent<HTMLInputElement>);
+                }}
                 value={values.label}
               />
               <ActionsPanel
