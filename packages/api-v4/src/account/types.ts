@@ -510,7 +510,6 @@ export type EventStatus =
   | 'canceled'
   | 'failed'
   | 'finished'
-  | 'in-progress'
   | 'notification'
   | 'scheduled'
   | 'started';
