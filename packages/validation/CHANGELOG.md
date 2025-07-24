@@ -1,3 +1,15 @@
+## [2025-07-29] - v0.71.0
+
+
+### Changed:
+
+- Update `VPCIPv6Schema` and `VPCIPv6SubnetSchema` ([#12309](https://github.com/linode/manager/pull/12309))
+- Update `NodeBalancerSchema` port uniqueness logic to allow TCP and UDP configurations on the same port ([#12502](https://github.com/linode/manager/pull/12502))
+
+### Upcoming Features:
+
+- Update IPv6 Subnet validation ([#12382](https://github.com/linode/manager/pull/12382))
+
 ## [2025-07-15] - v0.70.0
 
 
