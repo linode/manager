@@ -16,6 +16,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
 import type {
   CreateNodePoolData,
   KubernetesTier,
@@ -31,6 +32,7 @@ interface Props {
   currentPlanHeading?: string;
   error?: string;
   getTypeCount: (planId: string) => number;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasSelectedRegion: boolean;
   header?: string;
   isAPLEnabled?: boolean;
@@ -61,6 +63,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     onAdd,
+    handleConfigurePool,
     onSelect,
     notice,
     regionsData,
@@ -137,6 +140,7 @@ export const KubernetesPlansPanel = (props: Props) => {
               <KubernetesPlanContainer
                 allDisabledPlans={allDisabledPlans}
                 getTypeCount={getTypeCount}
+                handleConfigurePool={handleConfigurePool}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}

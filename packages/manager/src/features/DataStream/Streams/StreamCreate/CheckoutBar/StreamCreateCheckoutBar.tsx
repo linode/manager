@@ -9,7 +9,12 @@ import { StyledHeader } from 'src/features/DataStream/Streams/StreamCreate/Check
 
 import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
-export const StreamCreateCheckoutBar = () => {
+export interface Props {
+  createStream: () => void;
+}
+
+export const StreamCreateCheckoutBar = (props: Props) => {
+  const { createStream } = props;
   const { control } = useFormContext<CreateStreamForm>();
   const destinationType = useWatch({ control, name: 'destination_type' });
   const formValues = useWatch({
@@ -22,14 +27,13 @@ export const StreamCreateCheckoutBar = () => {
     ],
   });
   const price = getPrice(formValues);
-  const onDeploy = () => {};
 
   return (
     <CheckoutBar
       calculatedPrice={price}
-      disabled={true}
+      disabled={false}
       heading="Stream Summary"
-      onDeploy={onDeploy}
+      onDeploy={createStream}
       priceSelectionText="Select Cluster and define a Destination to view pricing and create a stream."
       submitText="Create Stream"
     >

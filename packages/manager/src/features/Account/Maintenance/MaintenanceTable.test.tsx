@@ -26,7 +26,7 @@ const loadingTestId = 'table-row-loading';
 describe('Maintenance Table Row', () => {
   const maintenance = accountMaintenanceFactory.build();
   it('should render the maintenance event', async () => {
-    const { getByText } = await renderWithTheme(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(
         <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
@@ -36,7 +36,7 @@ describe('Maintenance Table Row', () => {
   });
 
   it('should render a relative time', async () => {
-    await renderWithTheme(
+    renderWithTheme(
       wrapWithTableBody(
         <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
@@ -59,7 +59,7 @@ describe('Maintenance Table', () => {
         return HttpResponse.json(makeResourcePage(accountMaintenance));
       })
     );
-    await renderWithTheme(<MaintenanceTable type="in progress" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    await renderWithTheme(<MaintenanceTable type="in progress" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     screen.getByText('Download CSV');
   });
@@ -88,7 +88,7 @@ describe('Maintenance Table', () => {
       })
     );
 
-    await renderWithTheme(<MaintenanceTable type="in progress" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 

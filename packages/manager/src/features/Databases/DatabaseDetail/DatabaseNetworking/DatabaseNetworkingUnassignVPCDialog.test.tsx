@@ -5,7 +5,7 @@ import { describe, it } from 'vitest';
 
 import { subnetFactory, vpcFactory } from 'src/factories';
 import { databaseFactory } from 'src/factories/databases';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';
 
@@ -70,12 +70,9 @@ describe('DatabaseNetworkingUnassignVPCDialog Component', () => {
       isLoading: false,
       reset: vi.fn(),
     });
-    await renderWithThemeAndRouter(
-      <DatabaseNetworkingUnassignVPCDialog {...mockProps} />,
-      {
-        initialRoute: `/databases/${mockProps.databaseEngine}/${mockProps.databaseId}/networking`,
-      }
-    );
+    renderWithTheme(<DatabaseNetworkingUnassignVPCDialog {...mockProps} />, {
+      initialRoute: `/databases/${mockProps.databaseEngine}/${mockProps.databaseId}/networking`,
+    });
 
     const unassignButton = screen.getByTestId(unassignButtonTestId);
     await userEvent.click(unassignButton);

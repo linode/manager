@@ -74,7 +74,12 @@ export const LinodeEntityDetail = (props: Props) => {
     linodeId: linode.id,
   });
 
-  const { permissions } = usePermissions('linode', ['update_linode']);
+  const { permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linode.id
+  );
+
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
@@ -144,7 +149,6 @@ export const LinodeEntityDetail = (props: Props) => {
         }
         footer={
           <LinodeEntityDetailFooter
-            isLinodesGrantReadOnly={!permissions.update_linode}
             linodeCreated={linode.created}
             linodeId={linode.id}
             linodeLabel={linode.label}

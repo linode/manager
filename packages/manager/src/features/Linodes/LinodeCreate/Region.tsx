@@ -12,8 +12,8 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStartEvent,
@@ -72,9 +72,7 @@ export const Region = React.memo(() => {
     Boolean(selectedLinode?.type)
   );
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const { data: regions } = useRegionsQuery();
 
@@ -207,7 +205,7 @@ export const Region = React.memo(() => {
   if (showTwoStepRegion) {
     return (
       <TwoStepRegion
-        disabled={isLinodeCreateRestricted}
+        disabled={!permissions.create_linode}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={onChange}
@@ -252,7 +250,7 @@ export const Region = React.memo(() => {
       <RegionSelect
         currentCapability="Linodes"
         disableClearable
-        disabled={isLinodeCreateRestricted}
+        disabled={!permissions.create_linode}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         isGeckoLAEnabled={isGeckoLAEnabled}
