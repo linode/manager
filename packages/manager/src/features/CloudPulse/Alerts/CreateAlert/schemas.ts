@@ -1,29 +1,156 @@
 import {
   createAlertDefinitionSchema,
+  dimensionFilters,
   metricCriteria,
   triggerConditionValidation,
 } from '@linode/validation';
 import { array, mixed, number, object, string } from 'yup';
 
+import {
+  PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  PORTS_ERROR_MESSAGE,
+  PORTS_HELPER_TEXT,
+  PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZERO_ERROR_MESSAGE,
+  PORTS_LIMIT_ERROR_MESSAGE,
+  PORTS_RANGE_ERROR_MESSAGE,
+} from '../../Utils/constants';
+import { PORTS_TRAILING_COMMA_ERROR_MESSAGE } from '../constants';
+
 import type { AlertSeverityType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
-export const dimensionFiltersSchema = object({
-  dimension_label: string()
-    .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNull', fieldErrorMessage, (value) => value !== null),
-  operator: string()
-    .oneOf(['eq', 'neq', 'startswith', 'endswith'])
-    .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNull', fieldErrorMessage, (value) => value !== null),
-  value: string()
-    .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNull', fieldErrorMessage, (value) => value !== null),
-});
+const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
+const LEADING_ZERO_PORT_REGEX = /^0\d+/;
+
+// Validation schema for a single input port
+const singlePortSchema = string().test(
+  'validate-single-port',
+  PORTS_ERROR_MESSAGE,
+  function (value) {
+    if (!value || typeof value !== 'string') {
+      return this.createError({ message: fieldErrorMessage });
+    }
+
+    if (LEADING_ZERO_PORT_REGEX.test(value)) {
+      return this.createError({
+        message: PORTS_LEADING_ZERO_ERROR_MESSAGE,
+      });
+    }
+
+    if (!DECIMAL_PORT_REGEX.test(value)) {
+      return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
+    }
+    const num = Number(value);
+    if (!Number.isInteger(num) || num < 1 || num > 65535) {
+      return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
+    }
+
+    return true;
+  }
+);
+
+// Validation schema for a multiple comma-separated ports
+const commaSeparatedPortListSchema = string().test(
+  'validate-port-list',
+  PORTS_HELPER_TEXT,
+  function (value) {
+    if (!value || typeof value !== 'string') {
+      return this.createError({ message: fieldErrorMessage });
+    }
+
+    if (value.includes(' ')) {
+      return this.createError({ message: PORTS_ERROR_MESSAGE });
+    }
+
+    if (value.trim().endsWith(',')) {
+      return this.createError({ message: PORTS_TRAILING_COMMA_ERROR_MESSAGE });
+    }
+
+    if (value.trim().startsWith(',')) {
+      return this.createError({ message: PORTS_LEADING_COMMA_ERROR_MESSAGE });
+    }
+
+    if (value.includes('.')) {
+      return this.createError({ message: PORTS_HELPER_TEXT });
+    }
+
+    const rawSegments = value.split(',');
+
+    // Check for empty segments (consecutive commas, or commas with just spaces)
+    if (rawSegments.some((segment) => segment.trim() === '')) {
+      return this.createError({
+        message: PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+      });
+    }
+
+    const ports = rawSegments.map((p) => p.trim());
+
+    if (ports.length > 15) {
+      return this.createError({
+        message: PORTS_LIMIT_ERROR_MESSAGE,
+      });
+    }
+    for (const port of ports) {
+      const trimmedPort = port.trim();
+
+      if (LEADING_ZERO_PORT_REGEX.test(trimmedPort)) {
+        return this.createError({
+          message: PORTS_LEADING_ZERO_ERROR_MESSAGE,
+        });
+      }
+      if (!DECIMAL_PORT_REGEX.test(trimmedPort)) {
+        return this.createError({ message: PORTS_HELPER_TEXT });
+      }
+
+      const num = Number(trimmedPort);
+      if (!Number.isInteger(num) || num < 1 || num > 65535) {
+        return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
+      }
+    }
+
+    return true;
+  }
+);
+
+export const dimensionFiltersSchema = dimensionFilters.concat(
+  object({
+    dimension_label: string()
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
+    operator: string()
+      .oneOf(['eq', 'neq', 'startswith', 'endswith', 'in'])
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
+    value: string()
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null)
+      .when(
+        ['dimension_label', 'operator'],
+        ([dimensionLabel, operator], schema) => {
+          if (dimensionLabel === 'port' && operator === 'in') {
+            return commaSeparatedPortListSchema
+              .required(fieldErrorMessage)
+              .nullable()
+              .test('nonNull', fieldErrorMessage, (value) => value !== null);
+          }
+
+          if (dimensionLabel === 'port' && operator !== 'in') {
+            return singlePortSchema
+              .required(fieldErrorMessage)
+              .nullable()
+              .test('nonNull', fieldErrorMessage, (value) => value !== null);
+          }
+
+          return schema;
+        }
+      ),
+  })
+);
 
 export const metricCriteriaSchema = metricCriteria.concat(
   object({
@@ -71,7 +198,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
         .min(1, 'At least one metric criteria is required.'),
     }).required(),
     serviceType: string()
-      .oneOf(['linode', 'dbaas'])
+      .oneOf(['linode', 'dbaas', 'firewall', 'nodebalancer'])
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
