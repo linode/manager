@@ -105,12 +105,15 @@ export interface SupportTicketDialogProps {
 
 export interface SupportTicketFormFields {
   description: string;
+  entity: EntityForTicketDetails;
   entityId: string;
   entityInputValue: string;
   entityType: EntityType;
+  formPayloadValues: FormPayloadValues;
   selectedSeverity: TicketSeverity | undefined;
   summary: string;
   ticketType: TicketType;
+  title: string;
 }
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -143,15 +146,15 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const stateParams = locationState?.supportTicketFormFields;
 
   // Collect prefilled data from props or Link parameters.
-  const _prefilledDescription: string =
+  const _prefilledDescription: string | undefined =
     prefilledDescription ?? stateParams?.description ?? undefined;
-  const _prefilledEntity: EntityForTicketDetails =
+  const _prefilledEntity: EntityForTicketDetails | undefined =
     prefilledEntity ?? stateParams?.entity ?? undefined;
-  const _prefilledTitle: string =
+  const _prefilledTitle: string | undefined =
     prefilledTitle ?? stateParams?.title ?? undefined;
-  const prefilledFormPayloadValues: FormPayloadValues =
+  const prefilledFormPayloadValues: FormPayloadValues | undefined =
     stateParams?.formPayloadValues ?? undefined;
-  const _prefilledTicketType: TicketType =
+  const _prefilledTicketType: TicketType | undefined =
     prefilledTicketType ?? stateParams?.ticketType ?? undefined;
 
   // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
