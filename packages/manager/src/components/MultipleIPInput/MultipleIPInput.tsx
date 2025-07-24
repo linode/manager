@@ -283,7 +283,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
             {/** Don't show the button for the first input since it won't do anything, unless this component is
              * used in DBaaS or for Linode VPC interfaces
              */}
-            <Grid size={1}>
+            <Grid display={'flex'} justifyContent={'center'} size={1}>
               {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
                 <IconButton
                   aria-disabled={disabled}
@@ -291,6 +291,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
                   data-testid="button"
                   disabled={disabled}
                   onClick={() => removeInput(idx)}
+                  sx={{ marginTop: `0 !important` }}
                 >
                   <CloseIcon data-testid={`delete-ip-${idx}`} />
                 </IconButton>
