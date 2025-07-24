@@ -13,37 +13,9 @@ import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import './index.css';
+import { App } from './App';
 import { ENABLE_DEV_TOOLS } from './constants';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-
-const Lish = React.lazy(() => import('src/features/Lish'));
-
-const App = React.lazy(() =>
-  import('./App').then((module) => ({
-    default: module.App,
-  }))
-);
-
-const CancelLanding = React.lazy(() =>
-  import('src/features/CancelLanding/CancelLanding').then((module) => ({
-    default: module.CancelLanding,
-  }))
-);
-
-const Logout = React.lazy(() =>
-  import('./OAuth/Logout').then((module) => ({
-    default: module.Logout,
-  }))
-);
-
-const LoginAsCustomerCallback = React.lazy(() =>
-  import('src/OAuth/LoginAsCustomerCallback').then((module) => ({
-    default: module.LoginAsCustomerCallback,
-  }))
-);
-const OAuthCallback = React.lazy(() =>
-  import('src/OAuth/OAuthCallback').then((m) => ({ default: m.OAuthCallback }))
-);
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();

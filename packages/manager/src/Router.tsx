@@ -31,7 +31,7 @@ export const Router = () => {
   });
 
   return (
-    <ErrorBoundaryFallback useTanStackRouterBoundary={true}>
+    <ErrorBoundaryFallback>
       <RouterProvider router={router} />
     </ErrorBoundaryFallback>
   );

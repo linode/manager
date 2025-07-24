@@ -4,8 +4,8 @@ import {
   usePreferences,
 } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -364,12 +364,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       const filteredLinks = group.links.filter((link) => !link.hide);
 
       return filteredLinks.some((link) =>
-        linkIsActive(
-          link.href,
-          location.search,
-          location.pathname,
-          link.activeLinks
-        )
+        linkIsActive(location.pathname, link.href, link.activeLinks)
       );
     });
 
@@ -433,12 +428,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
           const PrimaryLinks = filteredLinks.map((link) => {
             const isActiveLink = Boolean(
-              linkIsActive(
-                link.href,
-                location.search,
-                location.pathname,
-                link.activeLinks
-              )
+              linkIsActive(location.pathname, link.href, link.activeLinks)
             );
 
             if (isActiveLink) {

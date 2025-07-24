@@ -4,12 +4,12 @@ import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
 export const linkIsActive = (
-  href: string,
-  locationSearch: string,
   locationPathname: string,
+  href: string,
   activeLinks: Array<string> = []
 ) => {
-  const currentlyOnOneClickTab = locationSearch.match(/one-click/gi);
+  const currentlyOnOneClickTab =
+    locationPathname === 'linodes/create/marketplace';
   const isOneClickTab = href.match(/one-click/gi);
 
   /**

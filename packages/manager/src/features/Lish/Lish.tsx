@@ -87,7 +87,7 @@ export const ParsePotentialLishErrorString = (
   return null;
 };
 
-const Lish = () => {
+export const Lish = () => {
   const history = useHistory();
 
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
