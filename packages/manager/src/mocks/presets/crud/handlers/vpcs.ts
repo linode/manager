@@ -4,6 +4,7 @@ import { http } from 'msw';
 import { subnetFactory, vpcFactory, vpcIPFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
+  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -237,6 +238,15 @@ export const deleteVPC = (mockState: MockState) => [
         return makeNotFoundResponse();
       }
 
+      if (
+        vpc.subnets.some(
+          (subnet) =>
+            subnet.linodes.length > 0 || subnet.nodebalancers.length > 0
+        )
+      ) {
+        return makeErrorResponse('Cannot delete a VPC with resources attached');
+      }
+
       const vpcsIPs = await mswDB.getAll('vpcsIps');
       const deleteVPCsIPsPromises = [];
 
@@ -409,6 +419,15 @@ export const deleteSubnet = (mockState: MockState) => [
         return makeNotFoundResponse();
       }
 
+      if (
+        subnetFromDB[1].linodes.length > 0 ||
+        subnetFromDB[1].nodebalancers.length > 0
+      ) {
+        return makeErrorResponse(
+          'Cannot delete a subnet with resources associated with it'
+        );
+      }
+
       const updatedVPC = {
         ...vpc,
         subnets: vpc.subnets.filter(
@@ -416,26 +435,6 @@ export const deleteSubnet = (mockState: MockState) => [
         ),
       };
 
-      // delete associated interfaces
-      const deleteConfigIfacePromises = [];
-      const deleteLinodeIfacePromises = [];
-
-      for (const linode of subnetFromDB[1].linodes) {
-        for (const iface of linode.interfaces) {
-          if (iface.config_id) {
-            deleteConfigIfacePromises.push(
-              mswDB.delete('configInterfaces', iface.id, mockState)
-            );
-          } else {
-            deleteLinodeIfacePromises.push(
-              mswDB.delete('linodeInterfaces', iface.id, mockState)
-            );
-          }
-        }
-      }
-
-      await Promise.all(deleteConfigIfacePromises);
-      await Promise.all(deleteLinodeIfacePromises);
       await mswDB.delete('subnets', subnetId, mockState);
       await mswDB.update('vpcs', vpcId, updatedVPC, mockState);
 
