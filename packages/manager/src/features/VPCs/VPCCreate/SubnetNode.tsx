@@ -92,15 +92,10 @@ export const SubnetNode = (props: Props) => {
               render={({ field, fieldState }) => (
                 <Select
                   errorText={fieldState.error?.message}
-                  helperText={
-                    <>
-                      Number of Linodes:{' '}
-                      {Math.min(
-                        numberOfAvailableIPv4Linodes,
-                        calculateAvailableIPv6Linodes(field.value)
-                      )}
-                    </>
-                  }
+                  helperText={`Number of Linodes: ${Math.min(
+                    numberOfAvailableIPv4Linodes,
+                    calculateAvailableIPv6Linodes(field.value)
+                  )}`}
                   label="IPv6 Prefix Length"
                   onChange={(_, option) => field.onChange(option.value)}
                   options={SUBNET_IPV6_PREFIX_LENGTHS}
