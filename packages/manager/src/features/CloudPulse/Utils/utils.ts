@@ -6,6 +6,12 @@ import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
+  INTERFACE_ID,
+  INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  INTERFACE_IDS_ERROR_MESSAGE,
+  INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
+  INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
+  PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
@@ -89,19 +95,20 @@ export const useContextualAlertsState = (
         user: [],
       };
 
-      if (entityId) {
-        alerts.forEach((alert) => {
-          const isAccountOrRegion =
-            alert.scope === 'region' || alert.scope === 'account';
-          const shouldInclude = entityId
-            ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-            : false;
+      alerts.forEach((alert) => {
+        const isAccountOrRegion =
+          alert.scope === 'region' || alert.scope === 'account';
 
-          if (shouldInclude) {
-            initialStates[alert.type]?.push(alert.id);
-          }
-        });
-      }
+        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        const shouldInclude = entityId
+          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
+          : isAccountOrRegion;
+
+        if (shouldInclude) {
+          initialStates[alert.type]?.push(alert.id);
+        }
+      });
+
       return initialStates;
     },
     []
@@ -310,6 +317,51 @@ export const arePortsValid = (ports: string): string | undefined => {
   }
 
   return undefined;
+};
+
+/**
+ * @param interfaceIds
+ * @returns error message string
+ * @description Validates a comma-separated list of interface ids and sets the error message
+ */
+export const areValidInterfaceIds = (
+  interfaceIds: string
+): string | undefined => {
+  if (interfaceIds === '') {
+    return undefined;
+  }
+
+  if (interfaceIds.startsWith(',')) {
+    return INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE;
+  }
+
+  if (interfaceIds.includes(',,')) {
+    return INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE;
+  }
+  if (!/^[\d,]+$/.test(interfaceIds)) {
+    return INTERFACE_IDS_ERROR_MESSAGE;
+  }
+
+  const interfaceIdList = interfaceIds.split(',');
+  const interfaceIdLimitCount = interfaceIdList.length;
+
+  if (interfaceIdLimitCount > 15) {
+    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
+  }
+
+  return undefined;
+};
+
+/**
+ * @param filterKey
+ * @returns validation function for the filter key
+ */
+export const validationFunction: Record<
+  string,
+  (value: string) => string | undefined
+> = {
+  [PORT]: arePortsValid,
+  [INTERFACE_ID]: areValidInterfaceIds,
 };
 
 /**
