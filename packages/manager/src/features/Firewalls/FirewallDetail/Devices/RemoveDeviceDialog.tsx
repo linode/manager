@@ -52,11 +52,22 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const deviceDialog = formattedTypes[deviceType ?? 'linode'];
 
-  const { permissions } = usePermissions(
+  const { permissions: firewallPermissions } = usePermissions(
     'firewall',
     ['delete_firewall_device'],
+    firewallId
+  );
+
+  const { permissions: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
     device?.entity.id
   );
+
+  const deleteDisabled =
+    !firewallPermissions.delete_firewall_device ||
+    !linodePermissions.update_linode;
+
   const onDelete = async () => {
     if (!device) {
       return;
@@ -126,7 +137,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
             label: primaryButtonText,
             loading: isPending,
             onClick: onDelete,
-            disabled: !permissions.delete_firewall_device,
+            disabled: deleteDisabled,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
