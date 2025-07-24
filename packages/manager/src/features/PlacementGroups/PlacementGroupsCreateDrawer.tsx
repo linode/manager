@@ -24,7 +24,6 @@ import { useLocation } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
