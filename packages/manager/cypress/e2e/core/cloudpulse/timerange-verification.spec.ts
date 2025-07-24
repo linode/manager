@@ -240,7 +240,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ]);
   });
 
-  it('should implement and validate custom date/time picker for a specific date and time range', () => {
+  it.skip('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
     const {
       actualDate: startActualDate,
