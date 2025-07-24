@@ -21,6 +21,7 @@ import {
 import { useFlags } from 'src/hooks/useFlags';
 
 import AccessControls from '../AccessControls';
+import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
 import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
@@ -28,15 +29,8 @@ import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPassword
 import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
 import MaintenanceWindow from './MaintenanceWindow';
 
-import type { Database } from '@linode/api-v4/lib/databases/types';
-
-interface Props {
-  database: Database;
-  disabled?: boolean;
-}
-
-export const DatabaseSettings: React.FC<Props> = (props) => {
-  const { database, disabled } = props;
+export const DatabaseSettings = () => {
+  const { database, disabled } = useDatabaseDetailContext();
   const { data: profile } = useProfile();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
   const flags = useFlags();

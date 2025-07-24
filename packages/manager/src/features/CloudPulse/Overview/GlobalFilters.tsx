@@ -48,8 +48,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       }
       handleTimeDurationChange({
         ...timeDuration,
-        end: convertToGmt(timeDuration.end),
-        start: convertToGmt(timeDuration.start),
+        end: convertToGmt(timeDuration.end, timeDuration.timeZone),
+        start: convertToGmt(timeDuration.start, timeDuration.timeZone),
       });
     },
     []

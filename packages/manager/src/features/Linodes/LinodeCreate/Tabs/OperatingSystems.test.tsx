@@ -8,6 +8,11 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_linode: false,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -19,6 +24,10 @@ vi.mock('@tanstack/react-router', async () => {
     useParams: queryMocks.useParams,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 describe('OperatingSystems', () => {
   beforeEach(() => {
@@ -46,5 +55,30 @@ describe('OperatingSystems', () => {
 
     expect(getByLabelText('Linux Distribution')).toBeVisible();
     expect(getByPlaceholderText('Choose a Linux distribution')).toBeVisible();
+  });
+
+  it('should disable "ImageSelect" component if the user does not have create_linode permission', async () => {
+    const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
+      component: <OperatingSystems />,
+    });
+
+    const imageSelect = getByPlaceholderText('Choose a Linux distribution');
+    expect(imageSelect).toBeInTheDocument();
+    expect(imageSelect).toBeDisabled();
+  });
+
+  it('should enable "ImageSelect" component if the user does has create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+      },
+    });
+    const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
+      component: <OperatingSystems />,
+    });
+
+    const imageSelect = getByPlaceholderText('Choose a Linux distribution');
+    expect(imageSelect).toBeInTheDocument();
+    expect(imageSelect).toBeEnabled();
   });
 });

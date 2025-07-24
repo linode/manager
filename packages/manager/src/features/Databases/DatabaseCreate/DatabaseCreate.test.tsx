@@ -1,3 +1,4 @@
+import { regionAvailabilityFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -8,7 +9,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   getShadowRootElement,
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { DatabaseCreate } from './DatabaseCreate';
@@ -17,6 +18,7 @@ const loadingTestId = 'circle-progress';
 
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
+  useRegionAvailabilityQuery: vi.fn().mockReturnValue({ data: [] }),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -24,19 +26,33 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
+    useRegionAvailabilityQuery: queryMocks.useRegionAvailabilityQuery,
   };
+});
+
+const standardTypes = [
+  databaseTypeFactory.build({
+    class: 'nanode',
+    id: 'g6-nanode-1',
+    label: `Nanode 1 GB`,
+    memory: 1024,
+  }),
+  ...databaseTypeFactory.buildList(7, { class: 'standard' }),
+];
+const dedicatedTypes = databaseTypeFactory.buildList(7, {
+  class: 'dedicated',
 });
 
 beforeAll(() => mockMatchMedia());
 
 describe('Database Create', () => {
   it('should render loading state', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(<DatabaseCreate />);
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
   });
 
   it('should render inputs', async () => {
-    const { getAllByTestId, getAllByText } = await renderWithThemeAndRouter(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <DatabaseCreate />
     );
     await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
@@ -51,7 +67,7 @@ describe('Database Create', () => {
   });
 
   it('should render VPC content when feature flag is present', async () => {
-    const { getAllByTestId, getAllByText } = await renderWithThemeAndRouter(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <DatabaseCreate />,
       {
         flags: { databaseVpc: true },
@@ -62,18 +78,6 @@ describe('Database Create', () => {
   });
 
   it('should display the correct node price and disable 3 nodes for 1 GB plans', async () => {
-    const standardTypes = [
-      databaseTypeFactory.build({
-        class: 'nanode',
-        id: 'g6-nanode-1',
-        label: `Nanode 1 GB`,
-        memory: 1024,
-      }),
-      ...databaseTypeFactory.buildList(7, { class: 'standard' }),
-    ];
-    const dedicatedTypes = databaseTypeFactory.buildList(7, {
-      class: 'dedicated',
-    });
     server.use(
       http.get('*/databases/types', () => {
         return HttpResponse.json(
@@ -83,7 +87,7 @@ describe('Database Create', () => {
     );
 
     const { getAllByText, getByTestId, getByLabelText, getByText } =
-      await renderWithThemeAndRouter(<DatabaseCreate />);
+      renderWithTheme(<DatabaseCreate />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -118,7 +122,7 @@ describe('Database Create', () => {
       getByTestId,
       getByLabelText,
       getByText,
-    } = await renderWithThemeAndRouter(<DatabaseCreate />);
+    } = renderWithTheme(<DatabaseCreate />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -144,7 +148,7 @@ describe('Database Create', () => {
   it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { getByTestId } = await renderWithThemeAndRouter(<DatabaseCreate />);
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -167,7 +171,7 @@ describe('Database Create', () => {
       findAllByTestId,
       findByPlaceholderText,
       getByTestId,
-    } = await renderWithThemeAndRouter(<DatabaseCreate />);
+    } = renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -193,7 +197,7 @@ describe('Database Create', () => {
   it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
 
-    const { getByTestId } = await renderWithThemeAndRouter(<DatabaseCreate />);
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -216,7 +220,7 @@ describe('Database Create', () => {
       findAllByTestId,
       findByPlaceholderText,
       getByTestId,
-    } = await renderWithThemeAndRouter(<DatabaseCreate />);
+    } = renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -237,5 +241,132 @@ describe('Database Create', () => {
     radioButtons.forEach((radioButton: HTMLElement) => {
       expect(radioButton).toBeEnabled();
     });
+  });
+
+  it('should clear plan selection when region is changed to one that does not support that class of plan', async () => {
+    const planSizes = [4, 8, 16, 32];
+    const premiumPlans = planSizes.map((size) => {
+      return databaseTypeFactory.build({
+        class: 'premium',
+        id: `premium-${size}`,
+        label: `DBaaS - Premium ${size} GB`,
+        memory: size * 1024,
+      });
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        const account = accountFactory.build({
+          capabilities: ['Managed Databases'],
+        });
+        return HttpResponse.json(account);
+      }),
+      http.get('*/databases/types', () => {
+        return HttpResponse.json(
+          makeResourcePage([
+            ...standardTypes,
+            ...dedicatedTypes,
+            ...premiumPlans,
+          ])
+        );
+      })
+    );
+
+    const { getAllByRole, queryByTestId, getByLabelText, getByText } =
+      await renderWithTheme(<DatabaseCreate />, {
+        initialRoute: '/databases/create',
+      });
+
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
+
+    // Make region selection and switch to region that supports premium plans
+    const regionSelect = getByLabelText('Region');
+    await userEvent.click(regionSelect);
+    await userEvent.click(getByText('US, Washington, DC (us-iad)'));
+
+    // Switch to premium plans tab and make premium plan selection
+    const premiumPlansTab = getAllByRole('tab')[2];
+    await userEvent.click(premiumPlansTab);
+
+    const premiumPlanRadioBtn = getAllByRole('radio')[3]; // Selected plan is "Premium 32 GB"
+    await userEvent.click(premiumPlanRadioBtn);
+    expect(premiumPlanRadioBtn).toBeChecked();
+
+    // Confirm that radio selection is cleared after change to a region that does not support premium plans
+    await userEvent.click(regionSelect);
+
+    // Switch to region that does not support premium plans and confirm that plan selection is cleared
+    await userEvent.click(getByText('AU, Sydney (ap-southeast)'));
+    expect(premiumPlanRadioBtn).not.toBeChecked();
+    expect(premiumPlanRadioBtn).toBeDisabled();
+  });
+
+  it('should clear plan selection when region is changed to one where that plan has limited availability', async () => {
+    const planSizes = [4, 8, 16, 32];
+    const premiumPlans = planSizes.map((size) => {
+      return databaseTypeFactory.build({
+        class: 'premium',
+        id: `premium-${size}`,
+        label: `DBaaS - Premium ${size} GB`,
+        memory: size * 1024,
+      });
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        const account = accountFactory.build({
+          capabilities: ['Managed Databases'],
+        });
+        return HttpResponse.json(account);
+      }),
+      http.get('*/databases/types', () => {
+        return HttpResponse.json(
+          makeResourcePage([
+            ...standardTypes,
+            ...dedicatedTypes,
+            ...premiumPlans,
+          ])
+        );
+      })
+    );
+
+    const availabilities = [
+      regionAvailabilityFactory.build({
+        plan: 'premium-32',
+        region: 'us-ord',
+        available: false,
+      }),
+    ];
+
+    // Mock response from region availability query to simulate limited availability for premium-32 plan in us-ord region (Chicago)
+    queryMocks.useRegionAvailabilityQuery.mockReturnValue({
+      data: availabilities,
+    });
+
+    const { getAllByRole, queryByTestId, getByLabelText, getByText } =
+      await renderWithTheme(<DatabaseCreate />, {
+        initialRoute: '/databases/create',
+      });
+
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
+
+    // Make region selection
+    const regionSelect = getByLabelText('Region');
+    await userEvent.click(regionSelect);
+
+    // Switch to region that supports premium plans and switch to premium plans tab.
+    await userEvent.click(getByText('US, Washington, DC (us-iad)'));
+    const premiumPlansTab = getAllByRole('tab')[2];
+    await userEvent.click(premiumPlansTab);
+
+    // Make premium plan selection
+    const premiumPlanRadioBtn = getAllByRole('radio')[3]; // Selected plan is "Premium 32 GB"
+    await userEvent.click(premiumPlanRadioBtn);
+    expect(premiumPlanRadioBtn).toBeChecked();
+
+    // Switch to region that also support premium plans, but has limited availability for the selected plan.
+    await userEvent.click(regionSelect);
+    await userEvent.click(getByText('US, Chicago, IL (us-ord)'));
+    expect(premiumPlanRadioBtn).not.toBeChecked();
   });
 });
