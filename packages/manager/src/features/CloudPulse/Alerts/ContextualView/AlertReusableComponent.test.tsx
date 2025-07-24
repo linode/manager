@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -24,8 +24,18 @@ vi.mock('src/queries/cloudpulse/alerts', async () => {
 const serviceType = 'linode';
 const entityId = '123';
 const entityName = 'test-instance';
+const region = 'us-ord';
+const onToggleAlert = vi.fn();
 const alerts = [
-  ...alertFactory.buildList(3, { service_type: serviceType }),
+  ...alertFactory.buildList(3, {
+    service_type: serviceType,
+    regions: ['us-ord'],
+  }),
+  alertFactory.build({
+    label: 'test-alert',
+    service_type: serviceType,
+    regions: ['us-ord'],
+  }),
   ...alertFactory.buildList(7, {
     entity_ids: [entityId],
     service_type: serviceType,
@@ -33,6 +43,7 @@ const alerts = [
   ...alertFactory.buildList(1, {
     entity_ids: [entityId],
     service_type: serviceType,
+    regions: ['us-ord'],
     status: 'enabled',
     type: 'system',
   }),
@@ -48,6 +59,8 @@ const component = (
   <AlertReusableComponent
     entityId={entityId}
     entityName={entityName}
+    onToggleAlert={onToggleAlert}
+    regionId={region}
     serviceType={serviceType}
   />
 );
@@ -97,5 +110,25 @@ describe('Alert Resuable Component for contextual view', () => {
 
     const alert = alerts[alerts.length - 1];
     expect(getByText(alert.label)).toBeInTheDocument();
+  });
+
+  it('Should hide manage alerts button for undefined entityId', () => {
+    renderWithTheme(<AlertReusableComponent serviceType={serviceType} />);
+
+    const manageAlerts = screen.queryByTestId('manage-alerts');
+    expect(manageAlerts).not.toBeInTheDocument();
+    expect(screen.queryByText('Alerts')).not.toBeInTheDocument();
+  });
+
+  it('Should filter alerts based on region', async () => {
+    renderWithTheme(component);
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText('test-alert')).toBeVisible();
+  });
+
+  it('Should show header for edit mode', async () => {
+    renderWithTheme(component);
+    await userEvent.click(screen.getByText('Manage Alerts'));
+    expect(screen.getByText('Alerts')).toBeVisible();
   });
 });

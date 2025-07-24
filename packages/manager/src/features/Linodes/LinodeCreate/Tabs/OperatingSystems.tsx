@@ -5,7 +5,7 @@ import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -34,9 +34,7 @@ export const OperatingSystems = () => {
 
   const { data: region } = useRegionQuery(regionId);
 
-  const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
@@ -57,7 +55,7 @@ export const OperatingSystems = () => {
       <Paper>
         <Typography variant="h2">Choose an OS</Typography>
         <ImageSelect
-          disabled={isCreateLinodeRestricted}
+          disabled={!permissions.create_linode}
           errorText={fieldState.error?.message}
           label="Linux Distribution"
           onBlur={field.onBlur}
