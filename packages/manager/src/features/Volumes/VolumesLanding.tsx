@@ -15,6 +15,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -75,7 +76,7 @@ export const VolumesLanding = () => {
   const { filter: searchFilter, error: searchError } = getAPIFilterFromQuery(
     search?.query,
     {
-      searchableFieldsWithoutOperator: ['label'],
+      searchableFieldsWithoutOperator: ['label', 'tags'],
     }
   );
 
@@ -133,11 +134,13 @@ export const VolumesLanding = () => {
     });
   };
 
+  const numberOfColumns = isBlockStorageEncryptionFeatureEnabled ? 7 : 6;
+
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (error) {
+  if (error && !search?.query) {
     return (
       <ErrorState
         errorText={
@@ -218,9 +221,15 @@ export const VolumesLanding = () => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {search?.query && error && (
+            <TableRowError
+              colSpan={numberOfColumns}
+              message={error[0].reason}
+            />
+          )}
           {volumes?.data.length === 0 && (
             <TableRowEmpty
-              colSpan={isBlockStorageEncryptionFeatureEnabled ? 7 : 6}
+              colSpan={numberOfColumns}
               message="No volume found"
             />
           )}
