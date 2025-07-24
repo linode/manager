@@ -135,6 +135,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePremium: boolean;
   databaseResize: boolean;
   databases: boolean;
   databaseVpc: boolean;

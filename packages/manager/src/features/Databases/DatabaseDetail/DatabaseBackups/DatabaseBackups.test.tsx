@@ -6,6 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseBackups } from './DatabaseBackups';
 
 const queryMocks = vi.hoisted(() => ({
@@ -88,7 +89,13 @@ describe.skip('Database Backups (Legacy)', () => {
       })
     );
 
-    const { findAllByText } = renderWithTheme(<DatabaseBackups disabled />);
+    const { findAllByText } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockDatabase, engine: 'mysql' }}
+      >
+        <DatabaseBackups />
+      </DatabaseDetailContext.Provider>
+    );
 
     const buttonSpans = await findAllByText('Restore');
 
@@ -117,7 +124,11 @@ describe.skip('Database Backups (Legacy)', () => {
     );
 
     const { findAllByText } = renderWithTheme(
-      <DatabaseBackups disabled={false} />
+      <DatabaseDetailContext.Provider
+        value={{ database: mockDatabase, engine: 'mysql' }}
+      >
+        <DatabaseBackups />
+      </DatabaseDetailContext.Provider>
     );
 
     const buttonSpans = await findAllByText('Restore');
@@ -170,7 +181,13 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { container } = renderWithTheme(<DatabaseBackups disabled={false} />);
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockDatabase, engine: 'mysql' }}
+      >
+        <DatabaseBackups />
+      </DatabaseDetailContext.Provider>
+    );
 
     await waitFor(() => {
       expect(
@@ -191,7 +208,11 @@ describe('Database Backups (v2)', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <DatabaseBackups disabled={false} />,
+      <DatabaseDetailContext.Provider
+        value={{ database: mockDatabase, engine: 'mysql' }}
+      >
+        <DatabaseBackups />
+      </DatabaseDetailContext.Provider>,
       {
         initialRoute: '/databases/$engine/$databaseId/backups',
       }

@@ -1,10 +1,7 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-const updateStrategyOptions = [
-  { label: 'On Recycle Updates', value: 'on_recycle' },
-  { label: 'Rolling Updates', value: 'rolling_update' },
-];
+import { UPDATE_STRATEGY_OPTIONS } from './constants';
 
 interface Props {
   onChange: (value: string | undefined) => void;
@@ -18,9 +15,9 @@ export const NodePoolUpdateStrategySelect = (props: Props) => {
       disableClearable
       label="Node Pool Update Strategy"
       onChange={(e, updateStrategy) => onChange(updateStrategy?.value)}
-      options={updateStrategyOptions}
+      options={UPDATE_STRATEGY_OPTIONS}
       placeholder="Select an Update Strategy"
-      value={updateStrategyOptions.find((option) => option.value === value)}
+      value={UPDATE_STRATEGY_OPTIONS.find((option) => option.value === value)}
     />
   );
 };
