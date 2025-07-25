@@ -523,7 +523,6 @@ export const TextField = (props: TextFieldProps) => {
               wordBreak: 'keep-all',
             }),
             alignItems: 'center',
-            color: theme.tokens.component.TextField.Error.HintText,
             display: 'flex',
             left: 5,
             top: 42,
