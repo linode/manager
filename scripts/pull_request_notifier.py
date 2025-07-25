@@ -111,15 +111,10 @@ messages = [
 > Reviewers, your input is appreciated 🙌
 """]
 
-email = [
-    'nagrawal@akamai.com',
-    'ankitaan@akamai.com',
-    'vmangalr@akamai.com',
-    'santos@akamai.com',
-]
 
 def send_message():
     BOT_TOKEN = os.getenv('BOT_TOKEN')
+    ROOM_ID = os.getenv('ROOM_ID')
     URL = os.getenv('url')
     TITLE = os.getenv('title')
     AUTHOR = os.getenv('author')
@@ -130,11 +125,11 @@ def send_message():
         'Content-Type': 'application/json'
     }
     data = {        
+        'roomId': ROOM_ID,
         'markdown': getRandomMessage().format(TITLE=TITLE, AUTHOR=AUTHOR, URL=URL),
     }
-    for mailId in email:
-        data['toPersonEmail'] = mailId
-        requests.post(url, headers=headers, json=data)
+
+    requests.post(url, headers=headers, json=data)
 
 def getRandomMessage():
 
