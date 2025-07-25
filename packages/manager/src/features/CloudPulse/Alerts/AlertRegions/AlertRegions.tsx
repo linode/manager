@@ -4,7 +4,6 @@ import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { type AlertFormMode } from '../constants';
@@ -39,7 +38,6 @@ interface AlertRegionsProps {
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const { serviceType, handleChange, value = [], errorText, mode } = props;
-  const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
 
@@ -92,9 +90,8 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
         serviceType,
         resources,
         regions,
-        aclpResourceTypeMap,
       }),
-    [aclpResourceTypeMap, regions, resources, serviceType]
+    [regions, resources, serviceType]
   );
 
   if (isRegionsLoading || isResourcesLoading) {
