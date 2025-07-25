@@ -1,6 +1,6 @@
-import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
-import React, { type JSX } from 'react';
+import type { JSX } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { SelectedIcon } from '../Autocomplete';
 import { Box } from '../Box';
@@ -39,18 +39,44 @@ export const ListItemOption = <T,>({
   props,
   selected,
 }: ListItemOptionProps<T>) => {
-  const { className, onClick, ...rest } = props;
+  const { onClick, ...rest } = props;
   const isItemOptionDisabled = Boolean(disabledOptions);
   const itemOptionDisabledReason = disabledOptions?.reason;
 
+  // Used to control the Tooltip
+  const [isFocused, setIsFocused] = useState(false);
+  const listItemRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (!listItemRef.current) {
+      // Ensure ref is established
+      return;
+    }
+    if (!isItemOptionDisabled) {
+      // We don't need to setup the mutation observer for options that are enabled. They won't have a tooltip
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      const className = listItemRef.current?.className;
+      const hasFocusedClass = className?.includes('Mui-focused') ?? false;
+      if (hasFocusedClass) {
+        setIsFocused(true);
+      } else if (!hasFocusedClass) {
+        setIsFocused(false);
+      }
+    });
+
+    observer.observe(listItemRef.current, { attributeFilter: ['class'] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isItemOptionDisabled]);
+
   return (
     <Tooltip
-      disableFocusListener={!isItemOptionDisabled}
-      disableHoverListener={!isItemOptionDisabled}
-      disableTouchListener={!isItemOptionDisabled}
-      enterDelay={200}
-      enterNextDelay={200}
-      enterTouchDelay={200}
+      open={isFocused}
       PopperProps={{
         sx: {
           '& .MuiTooltip-tooltip': {
@@ -64,18 +90,8 @@ export const ListItemOption = <T,>({
           : ''
       }
     >
-      <StyledDisabledItem
+      <ListItem
         {...rest}
-        aria-disabled={undefined}
-        className={
-          isItemOptionDisabled ? `${className} Mui-disabled` : className
-        }
-        componentsProps={{
-          root: {
-            'data-qa-option': item.id,
-            'data-testid': item.id,
-          } as ListItemComponentsPropsOverrides,
-        }}
         data-qa-disabled-item={isItemOptionDisabled}
         onClick={(e) =>
           isItemOptionDisabled
@@ -84,33 +100,31 @@ export const ListItemOption = <T,>({
               ? onClick(e)
               : null
         }
-        style={{
+        ref={listItemRef}
+        slotProps={{
+          root: {
+            'data-qa-option': item.id,
+            'data-testid': item.id,
+          } as ListItemComponentsPropsOverrides,
+        }}
+        sx={{
           display: 'flex',
           justifyContent: 'space-between',
           maxHeight,
+          gap: 1,
+          ...(isItemOptionDisabled && {
+            cursor: 'not-allowed !important',
+            pointerEvents: 'unset !important' as 'unset',
+          }),
         }}
       >
         {children}
         {isItemOptionDisabled && (
           <Box sx={visuallyHidden}>{itemOptionDisabledReason}</Box>
         )}
-        {selected && <SelectedIcon style={{ marginLeft: 8 }} visible />}
-      </StyledDisabledItem>
+        <Box flexGrow={1} />
+        {selected && <SelectedIcon visible />}
+      </ListItem>
     </Tooltip>
   );
 };
-
-export const StyledDisabledItem = styled(ListItem, {
-  label: 'StyledDisabledItem',
-})(() => ({
-  '&.Mui-disabled': {
-    cursor: 'not-allowed',
-  },
-  '&.MuiAutocomplete-option': {
-    minHeight: 'auto !important',
-    padding: '8px 10px !important',
-  },
-  '&.MuiListItem-root[aria-disabled="true"]:active': {
-    pointerEvents: 'none !important',
-  },
-}));
