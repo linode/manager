@@ -5,7 +5,11 @@ import { CloudPulseAvailableViews } from './models';
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dashboard,
+  DateTimeWithPreset,
+} from '@linode/api-v4';
 
 /**
  * This interface is used to get method parameters for this utility
@@ -98,7 +102,7 @@ export const checkMandatoryFiltersSelected = (
  */
 export const checkIfFilterNeededInMetricsCall = (
   filterKey: string,
-  serviceType: string
+  serviceType: CloudPulseServiceType
 ): boolean => {
   const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
 

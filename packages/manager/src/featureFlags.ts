@@ -1,5 +1,8 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { AlertServiceType, TPAProvider } from '@linode/api-v4/lib/profile';
+import type {
+  CloudPulseServiceType,
+  TPAProvider,
+} from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
@@ -85,7 +88,8 @@ interface CloudNatFlag extends BetaFeatureFlag {
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
+  supportedRegionIds?: string;
 }
 
 interface GpuV2 {
@@ -121,7 +125,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpBetaServices: AclpBetaServices;
+  aclpBetaServices: Partial<AclpBetaServices>;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
@@ -308,13 +312,13 @@ export interface APIMaintenance {
 
 export interface AclpAlertServiceTypeConfig {
   maxResourceSelectionCount: number;
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
   // This can be extended to have supportedRegions, supportedFilters and other tags
 }
 
-export interface AclpBetaServices {
-  [serviceType: string]: {
+export type AclpBetaServices = {
+  [serviceType in CloudPulseServiceType]: {
     alerts: boolean;
     metrics: boolean;
   };
-}
+};

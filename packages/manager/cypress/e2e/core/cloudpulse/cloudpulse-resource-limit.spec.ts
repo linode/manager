@@ -47,9 +47,8 @@ import {
 import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
-const { clusterName, dashboardName, engine, id, metrics, serviceType } =
-  widgetDetails.dbaas;
-
+const { clusterName, dashboardName, engine, id, metrics } = widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [

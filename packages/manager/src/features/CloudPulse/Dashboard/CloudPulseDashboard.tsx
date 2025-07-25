@@ -10,7 +10,10 @@ import {
 } from 'src/queries/cloudpulse/services';
 
 import { useAclpPreference } from '../Utils/UserPreference';
-import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
+import {
+  renderPlaceHolder,
+  RenderWidgets,
+} from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
@@ -129,6 +132,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return <CircleProgress />;
+  }
+
+  if (!dashboard) {
+    return renderPlaceHolder(
+      'No visualizations are available at this moment. Create Dashboards to list here.'
+    );
   }
 
   return (
