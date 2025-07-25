@@ -1,4 +1,8 @@
-import { configFactory, linodeConfigInterfaceFactory } from '@linode/utilities';
+import {
+  configFactory,
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
@@ -46,6 +50,8 @@ export const getConfigs = () => [
           return { ...configTuple[1], interfaces: interfacesForConfig };
         });
 
+      console.log('i need help 1', configInterfaces, configs);
+
       return makePaginatedResponse({
         data: configs,
         request,
@@ -65,6 +71,8 @@ export const getConfigs = () => [
       if (!linode || !linodeConfig || !configInterfaces) {
         return makeNotFoundResponse();
       }
+
+      console.log('i need help 2', configInterfaces);
 
       const interfaces = configInterfaces
         .filter((interfaceTuple) => interfaceTuple[0] === configId)
@@ -110,12 +118,16 @@ export const createConfig = (mockState: MockState) => [
 
       // add interfaces as needed
       for (const ifacePayload of payload.interfaces ?? []) {
+        const iface =
+          ifacePayload.purpose === 'vpc'
+            ? linodeConfigInterfaceFactoryWithVPC.build({
+                ...ifacePayload,
+              })
+            : linodeConfigInterfaceFactory.build({
+                purpose: ifacePayload.purpose,
+              });
         addInterfacePromises.push(
-          mswDB.add(
-            'configInterfaces',
-            [ifacePayload.id, ifacePayload],
-            mockState
-          )
+          mswDB.add('configInterfaces', [config[1].id, iface], mockState)
         );
       }
 
@@ -165,6 +177,18 @@ export const deleteConfig = (mockState: MockState) => [
         deleteInterfacePromises.push(
           mswDB.delete('configInterfaces', iface[1].id, mockState)
         );
+        if (iface[1].purpose === 'vpc') {
+          deleteInterfacePromises.push(
+            removeInterfaceFromSubnet({
+              mockState,
+              interfaceId: iface[1].id,
+              isLinodeInterface: false,
+              configId,
+              vpcId: iface[1].vpc_id,
+              subnetId: iface[1].subnet_id ?? -1,
+            })
+          );
+        }
       }
 
       await Promise.all(deleteInterfacePromises);
@@ -210,17 +234,21 @@ export const updateConfig = (mockState: MockState) => [
             mswDB.update(
               'configInterfaces',
               ifacePayload.id,
-              [ifacePayload.id, ifacePayload],
+              [configId, ifacePayload],
               mockState
             )
           );
         } else {
+          const iface =
+            ifacePayload.purpose === 'vpc'
+              ? linodeConfigInterfaceFactoryWithVPC.build({
+                  ...ifacePayload,
+                })
+              : linodeConfigInterfaceFactory.build({
+                  purpose: ifacePayload.purpose,
+                });
           addInterfacePromises.push(
-            mswDB.add(
-              'configInterfaces',
-              [ifacePayload.id, ifacePayload],
-              mockState
-            )
+            mswDB.add('configInterfaces', [configId, iface], mockState)
           );
         }
       }
@@ -258,7 +286,7 @@ export const updateConfig = (mockState: MockState) => [
       await mswDB.update(
         'linodeConfigs',
         configId,
-        [configId, updatedConfig],
+        [linodeId, updatedConfig],
         mockState
       );
 
