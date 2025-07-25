@@ -1,5 +1,6 @@
 import { visuallyHidden } from '@mui/utils';
-import React from 'react';
+import type { JSX } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { SelectedIcon } from '../Autocomplete';
 import { Box } from '../Box';
@@ -42,11 +43,40 @@ export const ListItemOption = <T,>({
   const isItemOptionDisabled = Boolean(disabledOptions);
   const itemOptionDisabledReason = disabledOptions?.reason;
 
+  // Used to control the Tooltip
+  const [isFocused, setIsFocused] = useState(false);
+  const listItemRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (!listItemRef.current) {
+      // Ensure ref is established
+      return;
+    }
+    if (!isItemOptionDisabled) {
+      // We don't need to setup the mutation observer for options that are enabled. They won't have a tooltip
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      const className = listItemRef.current?.className;
+      const hasFocusedClass = className?.includes('Mui-focused') ?? false;
+      if (hasFocusedClass) {
+        setIsFocused(true);
+      } else if (!hasFocusedClass) {
+        setIsFocused(false);
+      }
+    });
+
+    observer.observe(listItemRef.current, { attributeFilter: ['class'] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isItemOptionDisabled]);
+
   return (
     <Tooltip
-      enterDelay={200}
-      enterNextDelay={200}
-      enterTouchDelay={200}
+      open={isFocused}
       PopperProps={{
         sx: {
           '& .MuiTooltip-tooltip': {
@@ -70,6 +100,7 @@ export const ListItemOption = <T,>({
               ? onClick(e)
               : null
         }
+        ref={listItemRef}
         slotProps={{
           root: {
             'data-qa-option': item.id,
