@@ -97,14 +97,12 @@ export const dimensionOperatorOptions: Item<
     value: 'startswith',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'In',
     value: 'in',
   },
 ];
+
+export const textFieldOperators = ['endswith', 'startswith'];
 
 export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
   { label: 'Account', value: 'account' },
@@ -164,6 +162,7 @@ export const dimensionOperatorTypeMap: Record<
   in: 'in',
   neq: 'not equals',
   startswith: 'starts with',
+  in: 'in',
 };
 
 export const alertStatuses: Record<AlertStatusType, string> = {

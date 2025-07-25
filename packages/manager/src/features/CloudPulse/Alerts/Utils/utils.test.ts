@@ -316,73 +316,59 @@ describe('useContextualAlertsState', () => {
   });
 });
 
-describe('useContextualAlertsState', () => {
-  it('should return empty initial state when no entityId provided', () => {
-    const alerts = alertFactory.buildList(3);
-    const { result } = renderHook(() => useContextualAlertsState(alerts));
-    expect(result.current.initialState).toEqual({ system: [], user: [] });
+describe('filterRegionByServiceType', () => {
+  const regions = [
+    regionFactory.build({
+      monitors: {
+        alerts: ['Linodes'],
+        metrics: ['Managed Databases'],
+      },
+    }),
+    ...regionFactory.buildList(3, {
+      monitors: {
+        metrics: [],
+        alerts: [],
+      },
+    }),
+    ...regionFactory.buildList(3, {
+      monitors: {
+        alerts: ['Linodes', 'Managed Databases'],
+        metrics: [],
+      },
+    }),
+    regionFactory.build({
+      monitors: undefined,
+    }),
+  ];
+
+  it('should return empty list for linode metrics', () => {
+    const result = filterRegionByServiceType('metrics', regions, 'linode');
+
+    expect(result).toHaveLength(0);
   });
 
-  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
-    const entityId = '123';
-    const alerts = [
-      alertFactory.build({
-        id: 1,
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 2,
-        label: 'alert2',
-        type: 'user',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 3,
-        label: 'alert3',
-        type: 'system',
-        entity_ids: ['456'],
-        scope: 'region',
-      }),
-    ];
-
-    const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
+  it('should return 4 regions for linode alerts', () => {
+    expect(filterRegionByServiceType('alerts', regions, 'linode')).toHaveLength(
+      4
     );
-
-    expect(result.current.initialState.system).toContain(1);
-    expect(result.current.initialState.system).toContain(3);
-    expect(result.current.initialState.user).toContain(2);
   });
 
-  it('should detect unsaved changes when alerts are modified', () => {
-    const entityId = '123';
-    const alerts = [
-      alertFactory.build({
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-    ];
-
-    const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
+  it('should return 1 region for dbaas metrics', () => {
+    expect(filterRegionByServiceType('metrics', regions, 'dbaas')).toHaveLength(
+      1
     );
+  });
 
-    expect(result.current.hasUnsavedChanges).toBe(false);
+  it('should return 3 regions for dbaas alerts', () => {
+    expect(filterRegionByServiceType('alerts', regions, 'dbaas')).toHaveLength(
+      3
+    );
+  });
 
-    act(() => {
-      result.current.setEnabledAlerts((prev) => ({
-        ...prev,
-        system: [...(prev.system ?? []), 999],
-      }));
-    });
+  it('should return no regions for unknown service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'unknown');
 
-    expect(result.current.hasUnsavedChanges).toBe(true);
+    expect(result).toHaveLength(0);
   });
 });
 
@@ -433,8 +419,8 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for firewall service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'firewall');
+  it('should return no regions for unknown service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'unknown');
 
     expect(result).toHaveLength(0);
   });
