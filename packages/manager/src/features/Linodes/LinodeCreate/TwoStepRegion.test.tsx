@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -114,5 +115,28 @@ describe('TwoStepRegion', () => {
     expect(geographicalAreaSelect).toHaveAttribute('value', 'All');
     expect(regionSelect).toHaveAttribute('placeholder', 'Select a Region');
     expect(regionSelect).toBeEnabled();
+  });
+
+  it('should persist the selected Geographical Area when switching between the Core and Distributed tabs', async () => {
+    renderWithThemeAndHookFormContext({
+      component: <TwoStepRegion onChange={vi.fn()} />,
+    });
+
+    const [coreTab, distributedTab] = screen.getAllByRole('tab');
+    await userEvent.click(distributedTab);
+
+    const geographicalAreaSelect = screen.getAllByRole('combobox')[0];
+    // Open the dropdown
+    await userEvent.click(geographicalAreaSelect);
+
+    const lastMonthOption = screen.getByText('North America');
+    await userEvent.click(lastMonthOption);
+    expect(geographicalAreaSelect).toHaveAttribute('value', 'North America');
+
+    // Geographical area selection should persist after switching tabs
+    await userEvent.click(coreTab);
+    await userEvent.click(distributedTab);
+    const geographicalAreaSelect2 = screen.getAllByRole('combobox')[0];
+    expect(geographicalAreaSelect2).toHaveAttribute('value', 'North America');
   });
 });
