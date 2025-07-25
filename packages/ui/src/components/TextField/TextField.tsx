@@ -512,8 +512,9 @@ export const TextField = (props: TextFieldProps) => {
       {errorText && (
         <FormHelperText
           data-qa-textfield-error-text={label}
+          error
           role="alert"
-          sx={(theme) => ({
+          sx={{
             ...((editable || hasAbsoluteError) && {
               position: 'absolute',
             }),
@@ -527,7 +528,7 @@ export const TextField = (props: TextFieldProps) => {
             left: 5,
             top: 42,
             width: '100%',
-          })}
+          }}
         >
           {errorText}
         </FormHelperText>
