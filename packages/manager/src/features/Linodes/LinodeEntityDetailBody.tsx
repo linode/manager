@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Typography } from '@linode/ui';
+import { Box, Stack, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -24,9 +24,9 @@ import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
   StyledCopyTooltip,
-  StyledIPv4Box,
-  StyledIPv4Item,
-  StyledIPv4Label,
+  StyledIPBox,
+  StyledIPItem,
+  StyledIPLabel,
   StyledLabelBox,
   StyledListItem,
   StyledVPCBox,
@@ -347,59 +347,87 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               alignItems: 'center',
               margin: 0,
               padding: '0 0 8px 0',
-              [theme.breakpoints.down('md')]: {
+              [theme.breakpoints.down('lg')]: {
                 alignItems: 'start',
                 display: 'flex',
                 flexDirection: 'column',
               },
             }}
           >
-            <StyledVPCBox>
-              <StyledListItem sx={{ paddingLeft: 0 }}>
-                <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
-                <Link
-                  data-testid="assigned-vpc-label"
-                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
-                >
-                  {vpcLinodeIsAssignedTo.label}
-                </Link>
-              </StyledListItem>
-            </StyledVPCBox>
-            <StyledVPCBox>
-              <StyledListItem sx={{ ...sxLastListItem }}>
-                <StyledLabelBox component="span" data-testid="subnets-string">
-                  Subnet:
-                </StyledLabelBox>{' '}
-                {getSubnetsString(linodeAssociatedSubnets ?? [])}
-              </StyledListItem>
-            </StyledVPCBox>
-            {vpcIPv4 && (
-              <StyledIPv4Box>
-                <StyledIPv4Label data-testid="vpc-ipv4">
-                  VPC IPv4
-                </StyledIPv4Label>
-                <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  <CopyTooltip copyableText text={vpcIPv4} />
-                  <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
-                    <StyledCopyTooltip text={vpcIPv4} />
-                  </Box>
-                </StyledIPv4Item>
-              </StyledIPv4Box>
-            )}
-            {flags.vpcIpv6 &&
-              vpcIPv6 && ( // @TODO VPC IPv6: remove flag check once VPC IPv6 is fully rolled out
-                <StyledIPv4Box>
-                  <StyledIPv4Label data-testid="vpc-ipv6">
-                    VPC IPv6
-                  </StyledIPv4Label>
-                  <StyledIPv4Item component="span" data-testid="vpc-ipv6">
-                    <CopyTooltip copyableText text={vpcIPv6} />
+            <Stack
+              direction="row"
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  alignItems: 'start',
+                  display: 'flex',
+                  flexDirection: 'column',
+                },
+              }}
+            >
+              <StyledVPCBox>
+                <StyledListItem sx={{ paddingLeft: 0 }}>
+                  <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
+                  <Link
+                    data-testid="assigned-vpc-label"
+                    to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+                  >
+                    {vpcLinodeIsAssignedTo.label}
+                  </Link>
+                </StyledListItem>
+              </StyledVPCBox>
+              <StyledVPCBox>
+                <StyledListItem sx={{ ...sxLastListItem }}>
+                  <StyledLabelBox component="span" data-testid="subnets-string">
+                    Subnet:
+                  </StyledLabelBox>{' '}
+                  {getSubnetsString(linodeAssociatedSubnets ?? [])}
+                </StyledListItem>
+              </StyledVPCBox>
+            </Stack>
+            <Stack
+              direction="row"
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  alignItems: 'start',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  '& > div:first-child': {
+                    marginBottom: theme.spacingFunction(2),
+                  },
+                },
+                [theme.breakpoints.down(1275)]: {
+                  '& > div:first-child': {
+                    marginLeft: theme.spacingFunction(0),
+                  },
+                },
+              }}
+            >
+              {vpcIPv4 && (
+                <StyledIPBox>
+                  <StyledIPLabel data-testid="vpc-ipv4">VPC IPv4</StyledIPLabel>
+                  <StyledIPItem component="span" data-testid="vpc-ipv4">
+                    <CopyTooltip copyableText text={vpcIPv4} />
                     <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
-                      <StyledCopyTooltip text={vpcIPv6} />
+                      <StyledCopyTooltip text={vpcIPv4} />
                     </Box>
-                  </StyledIPv4Item>
-                </StyledIPv4Box>
+                  </StyledIPItem>
+                </StyledIPBox>
               )}
+              {flags.vpcIpv6 &&
+                vpcIPv6 && ( // @TODO VPC IPv6: remove flag check once VPC IPv6 is fully rolled out
+                  <StyledIPBox>
+                    <StyledIPLabel data-testid="vpc-ipv6">
+                      VPC IPv6
+                    </StyledIPLabel>
+                    <StyledIPItem component="span" data-testid="vpc-ipv6">
+                      <CopyTooltip copyableText text={vpcIPv6} />
+                      <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                        <StyledCopyTooltip text={vpcIPv6} />
+                      </Box>
+                    </StyledIPItem>
+                  </StyledIPBox>
+                )}
+            </Stack>
           </Grid>
         </Grid>
       )}
