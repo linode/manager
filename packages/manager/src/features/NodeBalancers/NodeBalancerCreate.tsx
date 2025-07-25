@@ -678,6 +678,7 @@ const NodeBalancerCreate = () => {
             <RegionSelect
               currentCapability="NodeBalancers"
               disableClearable
+              disabled={isRestricted}
               errorText={hasErrorFor('region')}
               isGeckoLAEnabled={isGeckoLAEnabled}
               noMarginTop

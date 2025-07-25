@@ -96,14 +96,11 @@ export const SubnetNode = (props: Props) => {
 };
 
 const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
-  '& :hover, & :focus': {
-    backgroundColor: theme.color.grey2,
-  },
   '& > span': {
     padding: 2,
   },
   color: theme.textColors.tableHeader,
-  marginTop: theme.spacing(6),
+  marginTop: 52,
   minHeight: 'auto',
   minWidth: 'auto',
   padding: 0,
