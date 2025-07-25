@@ -2,13 +2,13 @@
 
 
 ### Changed:
+
 - Textfield styles and color to match ADS ([#12496](https://github.com/linode/manager/pull/12496))
 - Add qa-ids to `DateTimeRangePicker.tsx` and `TimeZoneSelect.tsx` files, update `Presets.tsx` to calculate date according to selected timezone  ([#12497](https://github.com/linode/manager/pull/12497))
 - Use gap for TableSortLabel spacing of text and icons ([#12512](https://github.com/linode/manager/pull/12512))
 
 ### Fixed:
 
-- Color code for error text in `<FormHelperText/>` in light theme ([#12498](https://github.com/linode/manager/pull/12498))
 - `TextField` not respecting `inputProps.id` and `InputProps.id` ([#12502](https://github.com/linode/manager/pull/12502))
 
 
