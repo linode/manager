@@ -223,6 +223,8 @@ export const createKubernetesCluster = (mockState: MockState) => [
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
         tier: payload.tier,
+        vpc_id: payload.vpc_id,
+        subnet_id: payload.subnet_id,
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
