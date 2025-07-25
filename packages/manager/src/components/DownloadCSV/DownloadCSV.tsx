@@ -63,6 +63,7 @@ export const DownloadCSV = ({
         filename={filename}
         headers={headers}
         ref={csvRef}
+        style={{ display: 'none' }}
         tabIndex={-1}
       />
       {renderButton}

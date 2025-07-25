@@ -6,7 +6,7 @@ import {
   alertFactory,
   alertRulesFactory,
 } from 'src/factories/cloudpulse/alerts';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertListing } from './AlertListing';
 import {
@@ -56,7 +56,7 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    await renderWithThemeAndRouter(<AlertListing />);
+    renderWithTheme(<AlertListing />);
     expect(screen.getByText('Alert Name')).toBeVisible();
     expect(screen.getByText('Service')).toBeVisible();
     expect(screen.getByText('Status')).toBeVisible();
@@ -78,7 +78,7 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<AlertListing />);
+    const { getByText } = renderWithTheme(<AlertListing />);
     expect(getByText(mockResponse[0].label)).toBeVisible();
     expect(getByText(mockResponse[1].label)).toBeVisible();
     expect(getByText(mockResponse[2].label)).toBeVisible();
@@ -101,8 +101,9 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByTestId, getByText, queryByText } =
-      await renderWithThemeAndRouter(<AlertListing />);
+    const { getByRole, getByTestId, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const serviceFilter = getByTestId('alert-service-filter');
     expect(getByText(linodeAlert.label)).toBeVisible();
     expect(getByText(dbaasAlert.label)).toBeVisible();
@@ -134,8 +135,9 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByTestId, getByText, queryByText } =
-      await renderWithThemeAndRouter(<AlertListing />);
+    const { getByRole, getByTestId, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const statusFilter = getByTestId('alert-status-filter');
     expect(getByText(enabledAlert.label)).toBeVisible();
     expect(getByText(disabledAlert.label)).toBeVisible();
@@ -168,8 +170,9 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByPlaceholderText, getByText, queryByText } =
-      await renderWithThemeAndRouter(<AlertListing />);
+    const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const searchInput = getByPlaceholderText('Search for Alerts');
     await userEvent.type(searchInput, 'alert1');
 
@@ -190,7 +193,7 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    await renderWithThemeAndRouter(<AlertListing />);
+    renderWithTheme(<AlertListing />);
 
     expect(screen.getByText(alertLimitMessage)).toBeVisible();
     const createButton = screen.getByRole('button', { name: 'Create Alert' });
@@ -218,7 +221,7 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    await renderWithThemeAndRouter(<AlertListing />);
+    renderWithTheme(<AlertListing />);
 
     expect(screen.getByText(metricLimitMessage)).toBeVisible();
     const createButton = screen.getByRole('button', { name: 'Create Alert' });
@@ -240,7 +243,7 @@ describe('Alert Listing', () => {
       isLoading: false,
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(<AlertListing />);
+    const { getByTestId } = renderWithTheme(<AlertListing />);
 
     const element = getByTestId('notice-error').textContent;
     expect(element).toEqual(
@@ -254,7 +257,7 @@ describe('Alert Listing', () => {
       isLoading: true,
     });
 
-    await renderWithThemeAndRouter(<AlertListing />);
+    renderWithTheme(<AlertListing />);
 
     const createButton = screen.getByRole('button', { name: 'Create Alert' });
     expect(createButton).toBeDisabled();

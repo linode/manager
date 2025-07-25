@@ -155,14 +155,18 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
       )}
       <Hidden lgDown>
         <TableCell>
-          {isTruncated ? (
-            <Tooltip title={<Markdown textOrMarkdown={reason} />}>
-              <div>
-                <Markdown textOrMarkdown={truncatedReason} />
-              </div>
-            </Tooltip>
+          {reason ? (
+            isTruncated ? (
+              <Tooltip title={<Markdown textOrMarkdown={reason} />}>
+                <div>
+                  <Markdown textOrMarkdown={truncatedReason} />
+                </div>
+              </Tooltip>
+            ) : (
+              <Markdown textOrMarkdown={truncatedReason} />
+            )
           ) : (
-            <Markdown textOrMarkdown={truncatedReason} />
+            '—'
           )}
         </TableCell>
       </Hidden>

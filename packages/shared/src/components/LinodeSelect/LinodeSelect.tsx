@@ -99,7 +99,8 @@ export const LinodeSelect = (
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const linodes = optionsFilter ? data?.filter(optionsFilter) : data;
+  let linodes = options || data;
+  linodes = optionsFilter ? linodes?.filter(optionsFilter) : linodes;
 
   React.useEffect(() => {
     /** We want to clear the input value when the value prop changes to null.
@@ -143,7 +144,7 @@ export const LinodeSelect = (
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
       onInputChange={(_, value) => setInputValue(value)}
-      options={options || (linodes ?? [])}
+      options={linodes ?? []}
       placeholder={
         placeholder
           ? placeholder

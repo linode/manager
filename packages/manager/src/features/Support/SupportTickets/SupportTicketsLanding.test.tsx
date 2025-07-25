@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SupportTicketsLanding } from './SupportTicketsLanding';
 
@@ -19,9 +19,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('Support Tickets Landing', async () => {
-  const { getByText } = await renderWithThemeAndRouter(
-    <SupportTicketsLanding />
-  );
+  const { getByText } = renderWithTheme(<SupportTicketsLanding />);
 
   it('should render a header', () => {
     getByText('Tickets');

@@ -6,7 +6,7 @@ import React from 'react';
 import { imageFactory, linodeDiskFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateImageTab } from './CreateImageTab';
 
@@ -24,9 +24,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('CreateImageTab', () => {
   it('should render fields, titles, and buttons in their default state', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
-      <CreateImageTab />
-    );
+    const { getByLabelText, getByText } = renderWithTheme(<CreateImageTab />);
 
     expect(getByText('Select Linode & Disk')).toBeVisible();
 
@@ -69,9 +67,7 @@ describe('CreateImageTab', () => {
       selectedLinode: linode.id,
     });
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
-      <CreateImageTab />
-    );
+    const { getByLabelText } = renderWithTheme(<CreateImageTab />);
 
     await waitFor(() => {
       expect(getByLabelText('Linode')).toHaveValue(linode.label);
@@ -84,7 +80,7 @@ describe('CreateImageTab', () => {
       selectedDisk: undefined,
       selectedLinode: undefined,
     });
-    const { getByText } = await renderWithThemeAndRouter(<CreateImageTab />);
+    const { getByText } = renderWithTheme(<CreateImageTab />);
 
     const submitButton = getByText('Create Image').closest('button');
 
@@ -111,7 +107,7 @@ describe('CreateImageTab', () => {
     );
 
     const { findByText, getByLabelText, getByText, queryByText } =
-      await renderWithThemeAndRouter(<CreateImageTab />);
+      renderWithTheme(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -157,9 +153,7 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const { findByText, getByLabelText } = await renderWithThemeAndRouter(
-      <CreateImageTab />
-    );
+    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -196,8 +190,9 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const { findByText, getByLabelText, queryByText } =
-      await renderWithThemeAndRouter(<CreateImageTab />);
+    const { findByText, getByLabelText, queryByText } = renderWithTheme(
+      <CreateImageTab />
+    );
 
     const linodeSelect = getByLabelText('Linode');
 

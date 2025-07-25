@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditAlertLanding } from './EditAlertLanding';
 
@@ -37,7 +37,7 @@ describe('Edit Alert Landing tests', () => {
       isFetching: false,
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<EditAlertLanding />, {
+    const { getByText } = renderWithTheme(<EditAlertLanding />, {
       initialRoute: '/alerts/definitions/edit/linode/1',
     });
 
@@ -53,12 +53,9 @@ describe('Edit Alert Landing tests', () => {
       isFetching: true, // simulate loading
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
-      <EditAlertLanding />,
-      {
-        initialRoute: '/alerts/definitions/edit/linode/1',
-      }
-    );
+    const { getByTestId } = renderWithTheme(<EditAlertLanding />, {
+      initialRoute: '/alerts/definitions/edit/linode/1',
+    });
 
     expect(getByTestId('circle-progress')).toBeInTheDocument();
   });
@@ -70,7 +67,7 @@ describe('Edit Alert Landing tests', () => {
       isFetching: false,
     });
 
-    const { getByText } = await renderWithThemeAndRouter(<EditAlertLanding />, {
+    const { getByText } = renderWithTheme(<EditAlertLanding />, {
       initialRoute: '/alerts/definitions/edit/linode/1',
     });
 

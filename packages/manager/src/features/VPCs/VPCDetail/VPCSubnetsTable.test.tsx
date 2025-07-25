@@ -6,10 +6,7 @@ import {
   subnetAssignedLinodeDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
@@ -60,14 +57,13 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={1}
-          vpcRegion=""
-        />
-      );
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />
+    );
 
     expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
     expect(getByText('Subnet')).toBeVisible();
@@ -107,17 +103,16 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByPlaceholderText, getByText } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={1}
-          vpcRegion=""
-        />,
-        {
-          flags: { nodebalancerVpc: true },
-        }
-      );
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />,
+      {
+        flags: { nodebalancerVpc: true },
+      }
+    );
 
     expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
     expect(getByText('Subnet')).toBeVisible();
@@ -152,7 +147,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={2}
@@ -176,7 +171,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
@@ -204,7 +199,7 @@ describe('VPC Subnets table', () => {
         },
       });
 
-      const { getByLabelText, findByText } = await renderWithThemeAndRouter(
+      const { getByLabelText, findByText } = renderWithTheme(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
           vpcId={3}
@@ -224,7 +219,7 @@ describe('VPC Subnets table', () => {
   );
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    const { getByRole } = await renderWithThemeAndRouter(
+    const { getByRole } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={true}
         vpcId={3}

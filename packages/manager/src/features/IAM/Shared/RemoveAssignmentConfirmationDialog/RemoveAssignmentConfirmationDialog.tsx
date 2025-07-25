@@ -6,7 +6,7 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import { deleteUserEntity } from '../utilities';
+import { deleteUserEntity, getErrorMessage } from '../utilities';
 
 import type { EntitiesRole } from '../types';
 
@@ -78,7 +78,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
           style={{ padding: 0 }}
         />
       }
-      error={error?.[0].reason}
+      error={getErrorMessage(error)}
       onClose={onClose}
       open={open}
       title={`Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`}

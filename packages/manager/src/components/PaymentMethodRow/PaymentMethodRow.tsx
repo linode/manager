@@ -60,10 +60,12 @@ export const PaymentMethodRow = (props: Props) => {
       disabled: isRestrictedUser,
       onClick: () => {
         navigate({
-          to: '/account/billing/make-payment',
-          search: {
+          to: '/account/billing',
+          search: (prev) => ({
+            ...prev,
+            action: 'make-payment',
             paymentMethodId: paymentMethod.id,
-          },
+          }),
         });
       },
       title: 'Make a Payment',

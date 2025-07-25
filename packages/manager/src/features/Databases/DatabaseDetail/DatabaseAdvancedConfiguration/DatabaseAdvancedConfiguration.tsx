@@ -1,11 +1,13 @@
 import { Box, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'akamai-cds-react-components';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
 
 import { ADVANCED_CONFIG_LEARN_MORE_LINK } from '../../constants';
+import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGridContainer,
   StyledLabelTypography,
@@ -14,18 +16,25 @@ import { StyledConfigValue } from './DatabaseAdvancedConfiguration.style';
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 import { formatConfigValue } from './utilities';
 
-import type { Database } from '@linode/api-v4';
-
-interface Props {
-  database: Database;
-  disabled?: boolean;
-}
-
-export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
+export const DatabaseAdvancedConfiguration = () => {
+  const navigate = useNavigate();
+  const { database, isAdvancedConfigEnabled, engine } =
+    useDatabaseDetailContext();
   const [advancedConfigurationDrawerOpen, setAdvancedConfigurationDrawerOpen] =
     React.useState<boolean>(false);
 
   const engineConfigs = database.engine_config;
+
+  if (!isAdvancedConfigEnabled) {
+    navigate({
+      to: `/databases/$engine/$databaseId/summary`,
+      params: {
+        engine,
+        databaseId: database.id,
+      },
+    });
+    return null;
+  }
 
   return (
     <Paper sx={{ marginTop: 2, pb: 5 }}>

@@ -66,7 +66,7 @@ describe('DateRangePicker', () => {
 
   it('should call onApply when the Apply button is clicked', async () => {
     // Mock current date for consistent results
-    const mockDate = DateTime.fromISO('2025-02-04T14:11:14.933-06:00');
+    const mockDate = DateTime.fromISO('2025-02-04T14:11:14.933');
 
     // Mock the `DateTime.now()` function globally
     vi.spyOn(DateTime, 'now').mockReturnValue(mockDate as DateTime<true>);

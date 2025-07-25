@@ -1,3 +1,4 @@
+import { streamType } from '@linode/api-v4';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -5,7 +6,6 @@ import React from 'react';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import { streamType } from './types';
 
 describe('StreamCreateGeneralInfo', () => {
   it('should render Name input and allow to type text', async () => {
@@ -39,12 +39,14 @@ describe('StreamCreateGeneralInfo', () => {
     // Open the dropdown
     await userEvent.click(streamTypesAutocomplete);
 
-    // Select the "Error Logs" option
-    const errorLogs = await screen.findByText('Error Logs');
-    await userEvent.click(errorLogs);
+    // Select the "Kubernetes Audit Logs" option
+    const kubernetesAuditLogs = await screen.findByText(
+      'Kubernetes Audit Logs'
+    );
+    await userEvent.click(kubernetesAuditLogs);
 
     await waitFor(() => {
-      expect(streamTypesAutocomplete).toHaveValue('Error Logs');
+      expect(streamTypesAutocomplete).toHaveValue('Kubernetes Audit Logs');
     });
   });
 });

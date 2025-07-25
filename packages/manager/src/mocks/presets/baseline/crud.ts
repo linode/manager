@@ -1,3 +1,4 @@
+import { datastreamCrudPreset } from 'src/mocks/presets/crud/datastream';
 import {
   getEvents,
   updateEvents,
@@ -22,6 +23,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
   handlers: [
     ...cloudNATCrudPreset.handlers,
     ...domainCrudPreset.handlers,
+    ...datastreamCrudPreset.handlers,
     ...firewallCrudPreset.handlers,
     ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,

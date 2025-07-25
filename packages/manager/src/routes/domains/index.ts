@@ -31,21 +31,27 @@ const domainsIndexRoute = createRoute({
   path: '/',
   validateSearch: (search: DomainsSearchParams) => search,
 }).lazy(() =>
-  import('./domainsLazyRoutes').then((m) => m.domainsLandingLazyRoute)
+  import('src/features/Domains/domainsLandingLazyRoute').then(
+    (m) => m.domainsLandingLazyRoute
+  )
 );
 
 const domainCreateRoute = createRoute({
   getParentRoute: () => domainsRoute,
   path: 'create',
 }).lazy(() =>
-  import('./domainsLazyRoutes').then((m) => m.createDomainLazyRoute)
+  import('src/features/Domains/CreateDomain/createDomainLazyRoute').then(
+    (m) => m.createDomainLazyRoute
+  )
 );
 
 const domainImportRoute = createRoute({
   getParentRoute: () => domainsRoute,
   path: 'import',
 }).lazy(() =>
-  import('./domainsLazyRoutes').then((m) => m.domainsLandingLazyRoute)
+  import('src/features/Domains/domainsLandingLazyRoute').then(
+    (m) => m.domainsLandingLazyRoute
+  )
 );
 
 const domainDetailRoute = createRoute({
@@ -55,7 +61,9 @@ const domainDetailRoute = createRoute({
   }),
   path: '$domainId',
 }).lazy(() =>
-  import('./domainsLazyRoutes').then((m) => m.domainDetailLazyRoute)
+  import('src/features/Domains/DomainDetail/domainDetailLazyRoute').then(
+    (m) => m.domainDetailLazyRoute
+  )
 );
 
 type DomainActionRouteParams<P = number | string> = {
@@ -86,7 +94,9 @@ const domainActionRoute = createRoute({
   path: '$domainId/$action',
   validateSearch: (search: DomainsSearchParams) => search,
 }).lazy(() =>
-  import('./domainsLazyRoutes').then((m) => m.domainsLandingLazyRoute)
+  import('src/features/Domains/domainsLandingLazyRoute').then(
+    (m) => m.domainsLandingLazyRoute
+  )
 );
 
 export const domainsRouteTree = domainsRoute.addChildren([

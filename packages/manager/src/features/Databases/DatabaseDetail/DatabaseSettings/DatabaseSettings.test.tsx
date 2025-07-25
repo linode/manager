@@ -4,10 +4,11 @@ import { databaseFactory } from 'src/factories/databases';
 import {
   getShadowRootElement,
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import * as utils from '../../utilities';
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import DatabaseSettings from './DatabaseSettings';
 
 beforeAll(() => mockMatchMedia());
@@ -46,6 +47,8 @@ const v2GA = () => ({
   isUserNewBeta: false,
 });
 
+const engine = 'mysql';
+
 const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
 spy.mockReturnValue(v2GA());
 
@@ -53,13 +56,19 @@ describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build({ platform: 'rdbms-default' });
   it('Should exist and be renderable', async () => {
     expect(DatabaseSettings).toBeDefined();
-    await renderWithThemeAndRouter(<DatabaseSettings database={database} />);
+    renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
+    );
   });
 
   it('should render a Paper component with headers for Manage Access, Resetting the Root password, and Deleting the Cluster', async () => {
     spy.mockReturnValue(v2GA());
-    const { container, getAllByRole } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { container, getAllByRole } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).not.toBeNull();
@@ -75,8 +84,12 @@ describe('DatabaseSettings Component', () => {
     const defaultDatabase = databaseFactory.build({
       platform: 'rdbms-default',
     });
-    const { getAllByRole } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={defaultDatabase} />,
+    const { getAllByRole } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: defaultDatabase, engine }}
+      >
+        <DatabaseSettings />,
+      </DatabaseDetailContext.Provider>,
       { flags: { databaseVpc: true } }
     );
     const headings = getAllByRole('heading');
@@ -88,8 +101,12 @@ describe('DatabaseSettings Component', () => {
     const legacyDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',
     });
-    const { getAllByRole } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={legacyDatabase} />,
+    const { getAllByRole } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: legacyDatabase, engine }}
+      >
+        <DatabaseSettings />,
+      </DatabaseDetailContext.Provider>,
       { flags: { databaseVpc: true } }
     );
     const headings = getAllByRole('heading');
@@ -100,8 +117,12 @@ describe('DatabaseSettings Component', () => {
     ['disable', true],
     ['enable', false],
   ])('should %s buttons when disabled is %s', async (_, isDisabled) => {
-    const { getByTestId } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} disabled={isDisabled} />
+    const { getByTestId } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database, engine, disabled: isDisabled }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const resetPasswordButtonHost = getByTestId(
@@ -136,8 +157,10 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -156,8 +179,10 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -176,8 +201,10 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -196,8 +223,10 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -216,8 +245,10 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     const maintenance = container.querySelector(
@@ -231,8 +262,10 @@ describe('DatabaseSettings Component', () => {
     const database = databaseFactory.build({
       platform: 'rdbms-legacy',
     });
-    const { getByRole, queryByText } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { getByRole, queryByText } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
     const radioInput = getByRole('radiogroup');
     expect(radioInput).toHaveTextContent('Monthly');
@@ -244,8 +277,10 @@ describe('DatabaseSettings Component', () => {
     const database = databaseFactory.build({
       platform: 'rdbms-default',
     });
-    const { queryByText } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={database} />
+    const { queryByText } = renderWithTheme(
+      <DatabaseDetailContext.Provider value={{ database, engine }}>
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>
     );
 
     expect(queryByText('Monthly')).toBeNull();
@@ -274,8 +309,12 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { container, getAllByRole } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={mockNewDatabase} />,
+    const { container, getAllByRole } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockNewDatabase, engine }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>,
       { flags }
     );
     const paper = container.querySelector('.MuiPaper-root');
@@ -310,8 +349,12 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={mockNewDatabase} />,
+    const { getByTestId } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockNewDatabase, engine }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>,
       { flags }
     );
 
@@ -348,8 +391,12 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
-      <DatabaseSettings database={mockNewDatabase} />,
+    const { getByTestId } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockNewDatabase, engine }}
+      >
+        <DatabaseSettings />
+      </DatabaseDetailContext.Provider>,
       { flags }
     );
 

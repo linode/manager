@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
@@ -32,38 +33,43 @@ import {
 import { nodeWarning } from '../constants';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
   enterprisePrice?: number;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   regionsData: Region[];
-  removePool: (poolIdx: number) => void;
   submitting: boolean;
   toggleHasAgreed: () => void;
-  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
 export const KubeCheckoutBar = (props: Props) => {
   const {
     createCluster,
     enterprisePrice,
+    handleConfigurePool,
     hasAgreed,
     highAvailability,
     highAvailabilityPrice,
     pools,
     region,
     regionsData,
-    removePool,
     submitting,
     toggleHasAgreed,
-    updatePool,
   } = props;
+
+  const { control } = useFormContext();
+  const { update, remove } = useFieldArray({
+    control,
+    name: 'nodePools',
+  });
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
@@ -150,9 +156,11 @@ export const KubeCheckoutBar = (props: Props) => {
         {pools.map((thisPool, idx) => (
           <NodePoolSummaryItem
             clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
+            handleConfigurePool={handleConfigurePool}
             key={idx}
             nodeCount={thisPool.count}
-            onRemove={() => removePool(idx)}
+            onRemove={() => remove(idx)}
+            poolIndex={idx}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
@@ -167,7 +175,7 @@ export const KubeCheckoutBar = (props: Props) => {
                 : undefined
             }
             updateNodeCount={(updatedCount: number) =>
-              updatePool(idx, { ...thisPool, count: updatedCount })
+              update(idx, { ...thisPool, count: updatedCount })
             }
           />
         ))}

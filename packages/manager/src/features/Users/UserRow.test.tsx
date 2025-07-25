@@ -5,7 +5,7 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
@@ -19,7 +19,7 @@ describe('UserRow', () => {
   it('renders a username and email', async () => {
     const user = accountUserFactory.build();
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
@@ -30,7 +30,7 @@ describe('UserRow', () => {
   it('renders "Full" if the user is unrestricted', async () => {
     const user = accountUserFactory.build({ restricted: false });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
@@ -40,7 +40,7 @@ describe('UserRow', () => {
   it('renders "Limited" if the user is restricted', async () => {
     const user = accountUserFactory.build({ restricted: true });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
@@ -64,7 +64,7 @@ describe('UserRow', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
     expect(await findByText('Enabled')).toBeVisible();
@@ -87,7 +87,7 @@ describe('UserRow', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
     expect(await findByText('Disabled')).toBeVisible();
@@ -112,7 +112,7 @@ describe('UserRow', () => {
       })
     );
 
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
     expect(queryByText('Enabled')).not.toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('UserRow', () => {
       })
     );
 
-    const { findByText, queryByText } = await renderWithThemeAndRouter(
+    const { findByText, queryByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />)
     );
 
@@ -153,7 +153,7 @@ describe('UserRow', () => {
   it('renders "Never" if last_login is null', async () => {
     const user = accountUserFactory.build({ last_login: null });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
@@ -174,7 +174,7 @@ describe('UserRow', () => {
       },
     });
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
@@ -197,7 +197,7 @@ describe('UserRow', () => {
       },
     });
 
-    const { findByText, getByText } = await renderWithThemeAndRouter(
+    const { findByText, getByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 

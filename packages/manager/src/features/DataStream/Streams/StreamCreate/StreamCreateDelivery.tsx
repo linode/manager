@@ -1,3 +1,4 @@
+import { destinationType } from '@linode/api-v4';
 import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -7,10 +8,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
-import {
-  destinationType,
-  destinationTypeOptions,
-} from 'src/features/DataStream/Shared/types';
+import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
 import { type CreateStreamForm } from './types';
 
@@ -22,7 +20,7 @@ type DestinationName = {
 
 export const StreamCreateDelivery = () => {
   const theme = useTheme();
-  const { control } = useFormContext<CreateStreamForm>();
+  const { control, setValue } = useFormContext<CreateStreamForm>();
 
   const [showDestinationForm, setShowDestinationForm] =
     React.useState<boolean>(false);
@@ -100,6 +98,7 @@ export const StreamCreateDelivery = () => {
             label="Destination Name"
             onChange={(_, newValue) => {
               field.onChange(newValue?.label || newValue);
+              setValue('destinations', [newValue?.id as number]);
               setShowDestinationForm(!!newValue?.create);
             }}
             options={destinationNameOptions}

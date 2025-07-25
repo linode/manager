@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
@@ -22,7 +22,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('PlacementGroupsLinodes', () => {
   it('renders an error state if placement groups are undefined', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsLinodes
         isLinodeReadOnly={false}
         placementGroup={undefined}
@@ -45,7 +45,7 @@ describe('PlacementGroupsLinodes', () => {
       ],
     });
 
-    const { getByPlaceholderText, getByRole } = await renderWithThemeAndRouter(
+    const { getByPlaceholderText, getByRole } = renderWithTheme(
       <PlacementGroupsLinodes
         isLinodeReadOnly={false}
         placementGroup={placementGroup}

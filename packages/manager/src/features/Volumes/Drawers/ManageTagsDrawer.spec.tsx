@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { accountFactory, volumeFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ManageTagsDrawer } from './ManageTagsDrawer';
 
@@ -21,7 +21,7 @@ describe('ManageTagsDrawer', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <ManageTagsDrawer onClose={vi.fn} open={true} volume={volume} />
     );
 
@@ -39,7 +39,7 @@ describe('ManageTagsDrawer', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <ManageTagsDrawer onClose={vi.fn} open={true} volume={volume} />
     );
 

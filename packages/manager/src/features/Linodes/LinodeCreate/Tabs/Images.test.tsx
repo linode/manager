@@ -8,6 +8,11 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_linode: false,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -19,6 +24,10 @@ vi.mock('@tanstack/react-router', async () => {
     useParams: queryMocks.useParams,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 describe('Images', () => {
   beforeEach(() => {
@@ -38,7 +47,7 @@ describe('Images', () => {
     expect(header.tagName).toBe('H2');
   });
 
-  it('renders an image select', () => {
+  it('renders a disabled image select, if user does not have create_linode permission', () => {
     const { getByLabelText, getByPlaceholderText } =
       renderWithThemeAndHookFormContext({
         component: <Images />,
@@ -46,5 +55,22 @@ describe('Images', () => {
 
     expect(getByLabelText('Images')).toBeVisible();
     expect(getByPlaceholderText('Choose an image')).toBeVisible();
+    expect(getByPlaceholderText('Choose an image')).toBeDisabled();
+  });
+
+  it('renders an enables image select, if user has create_linode permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+      },
+    });
+    const { getByLabelText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext({
+        component: <Images />,
+      });
+
+    expect(getByLabelText('Images')).toBeVisible();
+    expect(getByPlaceholderText('Choose an image')).toBeVisible();
+    expect(getByPlaceholderText('Choose an image')).toBeEnabled();
   });
 });

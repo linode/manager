@@ -219,13 +219,9 @@ export const AccessSelect = React.memo((props: Props) => {
           name="cors_enabled"
           render={({ field }) => (
             <FormControlLabel
-              control={
-                <Toggle
-                  checked={field.value}
-                  disabled={bucketAccessIsFetching || objectAccessIsFetching}
-                  onChange={field.onChange}
-                />
-              }
+              checked={field.value}
+              control={<Toggle />}
+              disabled={bucketAccessIsFetching || objectAccessIsFetching}
               label={
                 bucketAccessIsFetching || objectAccessIsFetching
                   ? 'Loading access...'
@@ -233,7 +229,8 @@ export const AccessSelect = React.memo((props: Props) => {
                     ? 'CORS Enabled'
                     : 'CORS Disabled'
               }
-              style={{ display: 'block', marginTop: 16 }}
+              onChange={field.onChange}
+              style={{ marginTop: 16 }}
             />
           )}
         />

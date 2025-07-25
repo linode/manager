@@ -16,35 +16,45 @@ const dataStreamLandingRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: '/',
 }).lazy(() =>
-  import('./dataStreamLazyRoutes').then((m) => m.dataStreamLandingLazyRoute)
+  import('src/features/DataStream/dataStreamLandingLazyRoute').then(
+    (m) => m.dataStreamLandingLazyRoute
+  )
 );
 
 const streamsRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'streams',
 }).lazy(() =>
-  import('./dataStreamLazyRoutes').then((m) => m.dataStreamLandingLazyRoute)
+  import('src/features/DataStream/dataStreamLandingLazyRoute').then(
+    (m) => m.dataStreamLandingLazyRoute
+  )
 );
 
 const streamsCreateRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'streams/create',
 }).lazy(() =>
-  import('./dataStreamLazyRoutes').then((m) => m.streamCreateLazyRoute)
+  import(
+    'src/features/DataStream/Streams/StreamCreate/streamCreateLazyRoute'
+  ).then((m) => m.streamCreateLazyRoute)
 );
 
 const destinationsRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'destinations',
 }).lazy(() =>
-  import('./dataStreamLazyRoutes').then((m) => m.dataStreamLandingLazyRoute)
+  import('src/features/DataStream/dataStreamLandingLazyRoute').then(
+    (m) => m.dataStreamLandingLazyRoute
+  )
 );
 
 const destinationsCreateRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'destinations/create',
 }).lazy(() =>
-  import('./dataStreamLazyRoutes').then((m) => m.destinationCreateLazyRoute)
+  import(
+    'src/features/DataStream/Destinations/DestinationCreate/destinationCreateLazyRoute'
+  ).then((m) => m.destinationCreateLazyRoute)
 );
 
 export const dataStreamRouteTree = dataStreamRoute.addChildren([

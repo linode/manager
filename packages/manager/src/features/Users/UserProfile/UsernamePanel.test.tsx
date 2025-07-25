@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UsernamePanel } from './UsernamePanel';
 
@@ -9,9 +9,7 @@ describe('UsernamePanel', () => {
   it("initializes the form with the user's username", async () => {
     const user = accountUserFactory.build();
 
-    const { getByLabelText } = await renderWithThemeAndRouter(
-      <UsernamePanel user={user} />
-    );
+    const { getByLabelText } = renderWithTheme(<UsernamePanel user={user} />);
 
     const usernameTextField = getByLabelText('Username');
 
@@ -24,7 +22,7 @@ describe('UsernamePanel', () => {
       username: 'proxy-user-1',
     });
 
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       <UsernamePanel user={user} />
     );
 

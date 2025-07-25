@@ -40,10 +40,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
   }),
   nodebalancers: {
     contextQueries: {
-      all: {
-        queryFn: getAllNodeBalancers,
-        queryKey: null,
-      },
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllNodeBalancers(params, filter),
+        queryKey: [params, filter],
+      }),
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
           getNodeBalancers(

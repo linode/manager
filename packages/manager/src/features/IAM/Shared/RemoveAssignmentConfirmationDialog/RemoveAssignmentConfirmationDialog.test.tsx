@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
@@ -67,9 +67,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('should render', async () => {
-    await renderWithThemeAndRouter(
-      <RemoveAssignmentConfirmationDialog {...props} />
-    );
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const headerText = screen.getByText(
       'Remove the Test entity from the firewall_admin role assignment?'
@@ -92,9 +90,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('calls onClose when the cancel button is clicked', async () => {
-    await renderWithThemeAndRouter(
-      <RemoveAssignmentConfirmationDialog {...props} />
-    );
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const cancelButton = screen.getByText('Cancel');
     expect(cancelButton).toBeVisible();
@@ -121,9 +117,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       data: accountRolesFactory.build(),
     });
 
-    await renderWithThemeAndRouter(
-      <RemoveAssignmentConfirmationDialog {...props} />
-    );
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const removeButton = screen.getByText('Remove');
     expect(removeButton).toBeVisible();

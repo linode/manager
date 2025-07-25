@@ -1,6 +1,6 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
-import { RESOURCE_ID } from './constants';
+import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
@@ -198,10 +198,78 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   serviceType: 'nodebalancer',
 };
 
+export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['firewall'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Firewalls',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Firewalls',
+        priority: 1,
+      },
+      name: 'Firewalls',
+    },
+    {
+      configuration: {
+        filterKey: 'interface_type',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        isMultiSelect: true,
+        name: 'Interface Types',
+        isOptional: true,
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        options: [
+          {
+            id: 'vpc',
+            label: 'VPC',
+          },
+          {
+            id: 'public',
+            label: 'Public',
+          },
+        ],
+        placeholder: 'Select Interface Types',
+        priority: 3,
+        type: CloudPulseSelectTypes.static,
+      },
+      name: 'Interface Types',
+    },
+    {
+      configuration: {
+        filterKey: 'interface_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        isOptional: true,
+        name: 'Interface IDs',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        placeholder: INTERFACE_IDS_PLACEHOLDER_TEXT,
+        priority: 2,
+      },
+      name: 'Interface IDs',
+    },
+  ],
+  serviceType: 'firewall',
+};
+
 export const FILTER_CONFIG: Readonly<
   Map<string, CloudPulseServiceTypeFilterMap>
 > = new Map([
   ['dbaas', DBAAS_CONFIG],
+  ['firewall', FIREWALL_CONFIG],
   ['linode', LINODE_CONFIG],
   ['nodebalancer', NODEBALANCER_CONFIG],
 ]);

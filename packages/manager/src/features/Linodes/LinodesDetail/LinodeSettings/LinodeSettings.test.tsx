@@ -2,7 +2,7 @@ import 'src/mocks/testServer';
 
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import LinodeSettings from './LinodeSettings';
 
@@ -45,9 +45,7 @@ describe('LinodeSettings', () => {
   });
 
   it('should disable "Save" button for Linode Label if the user does not have update_linode permission', async () => {
-    const { queryByText, queryByTestId } = await renderWithThemeAndRouter(
-      <LinodeSettings />
-    );
+    const { queryByText, queryByTestId } = renderWithTheme(<LinodeSettings />);
 
     expect(queryByText('Linode Label')).toBeVisible();
 
@@ -61,9 +59,7 @@ describe('LinodeSettings', () => {
       vmHostMaintenance: { enabled: true },
     });
 
-    const { queryByText, queryByTestId } = await renderWithThemeAndRouter(
-      <LinodeSettings />
-    );
+    const { queryByText, queryByTestId } = renderWithTheme(<LinodeSettings />);
 
     expect(queryByText('Maintenance Policy')).toBeVisible();
 
@@ -73,9 +69,7 @@ describe('LinodeSettings', () => {
     expect(saveLabelBtn).toHaveAttribute('aria-disabled', 'true');
   });
   it('should disable "Save" button for Shutdown Watchdog if the user does not have update_linode permission', async () => {
-    const { queryByText, getByTestId } = await renderWithThemeAndRouter(
-      <LinodeSettings />
-    );
+    const { queryByText, getByTestId } = renderWithTheme(<LinodeSettings />);
 
     expect(queryByText('Shutdown Watchdog')).toBeVisible();
 
@@ -85,7 +79,7 @@ describe('LinodeSettings', () => {
     expect(saveLabelBtn).toHaveAttribute('aria-disabled', 'true');
   });
   it('should disable "Save" button for Delete Linode if the user does not have delete_linode permission', async () => {
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeSettings />);
+    const { queryByText } = renderWithTheme(<LinodeSettings />);
 
     expect(queryByText('Delete Linode')).toBeVisible();
 
@@ -102,8 +96,9 @@ describe('LinodeSettings', () => {
         delete_linode: true,
       },
     });
-    const { queryByText, getByLabelText, getByTestId } =
-      await renderWithThemeAndRouter(<LinodeSettings />);
+    const { queryByText, getByLabelText, getByTestId } = renderWithTheme(
+      <LinodeSettings />
+    );
 
     const saveLabelBtn = getByLabelText('Label');
     expect(saveLabelBtn).toBeInTheDocument();

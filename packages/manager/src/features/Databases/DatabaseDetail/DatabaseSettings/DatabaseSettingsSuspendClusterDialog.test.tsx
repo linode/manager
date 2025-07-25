@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
 
@@ -22,7 +22,7 @@ const props: SuspendDialogProps = {
 
 describe('DatabaseSettingsSuspendClusterDialog', () => {
   it('renders the dialog with text', async () => {
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
     expect(getByText(`Suspend ${mockLabel} cluster?`)).toBeVisible();
@@ -31,7 +31,7 @@ describe('DatabaseSettingsSuspendClusterDialog', () => {
   });
 
   it('should initialize with unchecked checkbox and disabled submit button', async () => {
-    const { getByRole, getByText } = await renderWithThemeAndRouter(
+    const { getByRole, getByText } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
     const confirmationCheckbox = getByRole('checkbox') as HTMLInputElement;
@@ -41,7 +41,7 @@ describe('DatabaseSettingsSuspendClusterDialog', () => {
   });
 
   it('should enable submit button when checkbox is checked', async () => {
-    const { getByRole, getByText } = await renderWithThemeAndRouter(
+    const { getByRole, getByText } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
     const confirmationCheckbox = getByRole('checkbox') as HTMLInputElement;
@@ -57,7 +57,7 @@ describe('DatabaseSettingsSuspendClusterDialog', () => {
         return HttpResponse.json({});
       })
     );
-    const { getByText, getByRole } = await renderWithThemeAndRouter(
+    const { getByText, getByRole } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
     const confirmationCheckbox = getByRole('checkbox') as HTMLInputElement;
@@ -73,7 +73,7 @@ describe('DatabaseSettingsSuspendClusterDialog', () => {
   });
 
   it('closes the confirmaton dialog if the X button is clicked', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
 

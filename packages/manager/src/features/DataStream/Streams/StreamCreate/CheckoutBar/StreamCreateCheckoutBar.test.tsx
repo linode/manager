@@ -1,13 +1,12 @@
+import { destinationType, streamType } from '@linode/api-v4';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { describe, expect } from 'vitest';
 
-import { destinationType } from 'src/features/DataStream/Shared/types';
 import { StreamCreateCheckoutBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateGeneralInfo } from 'src/features/DataStream/Streams/StreamCreate/StreamCreateGeneralInfo';
-import { streamType } from 'src/features/DataStream/Streams/StreamCreate/types';
 import {
   renderWithTheme,
   renderWithThemeAndHookFormContext,
@@ -15,10 +14,11 @@ import {
 
 describe('StreamCreateCheckoutBar', () => {
   const getDeliveryPriceContext = () => screen.getByText(/\/unit/i).textContent;
+  const createStream = () => {};
 
   const renderComponent = () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamCreateCheckoutBar />,
+      component: <StreamCreateCheckoutBar createStream={createStream} />,
       useFormOptions: {
         defaultValues: {
           destination_type: destinationType.LinodeObjectStorage,
@@ -27,11 +27,11 @@ describe('StreamCreateCheckoutBar', () => {
     });
   };
 
-  it('should render checkout bar with disabled checkout button', async () => {
+  it('should render checkout bar with enabled checkout button', async () => {
     renderComponent();
     const submitButton = screen.getByText('Create Stream');
 
-    expect(submitButton).toBeDisabled();
+    expect(submitButton).toBeEnabled();
   });
 
   it('should render Delivery summary with destination type and price', () => {
@@ -56,7 +56,7 @@ describe('StreamCreateCheckoutBar', () => {
       <FormProvider {...methods}>
         <form>
           <StreamCreateGeneralInfo />
-          <StreamCreateCheckoutBar />
+          <StreamCreateCheckoutBar createStream={createStream} />
         </form>
       </FormProvider>
     );
@@ -80,8 +80,10 @@ describe('StreamCreateCheckoutBar', () => {
 
     // change form type value
     await userEvent.click(streamTypesAutocomplete);
-    const errorLogs = await screen.findByText('Error Logs');
-    await userEvent.click(errorLogs);
+    const kubernetesAuditLogs = await screen.findByText(
+      'Kubernetes Audit Logs'
+    );
+    await userEvent.click(kubernetesAuditLogs);
 
     expect(getDeliveryPriceContext()).not.toEqual(initialPrice);
   });

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserSSHKeyPanel } from './UserSSHKeyPanel';
 
@@ -25,7 +25,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage([]), { status: 403 });
         })
       );
-      const { queryByTestId } = await renderWithThemeAndRouter(
+      const { queryByTestId } = renderWithTheme(
         <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />
       );
       await waitFor(() => {
@@ -49,7 +49,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage([]), { status: 403 });
         })
       );
-      const { getByText } = await renderWithThemeAndRouter(
+      const { getByText } = renderWithTheme(
         <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />
       );
       await waitFor(() => {
@@ -72,7 +72,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage(users));
         })
       );
-      const { getByText } = await renderWithThemeAndRouter(
+      const { getByText } = renderWithTheme(
         <UserSSHKeyPanel authorizedUsers={[]} setAuthorizedUsers={vi.fn()} />
       );
       await waitFor(() => {
@@ -100,7 +100,7 @@ describe('UserSSHKeyPanel', () => {
         setAuthorizedUsers: vi.fn(),
       };
 
-      const { getByRole, getByText } = await renderWithThemeAndRouter(
+      const { getByRole, getByText } = renderWithTheme(
         <UserSSHKeyPanel {...props} />
       );
       await waitFor(() => {

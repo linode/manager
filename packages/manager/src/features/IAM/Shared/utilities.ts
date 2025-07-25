@@ -523,7 +523,8 @@ export const mergeAssignedRolesIntoExistingRoles = (
 
 export const getErrorMessage = (error: APIError[] | null) => {
   const isLastAccountAdmin = error?.some(
-    (err) => err.field === 'Removing last account admin'
+    (err) =>
+      err.reason === 'Must have at least one user with account_admin role'
   );
 
   const errorMessage = isLastAccountAdmin

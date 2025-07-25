@@ -143,6 +143,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             isClusterReadOnly={isClusterReadOnly}
             isLoadingKubernetesACL={isLoadingKubernetesACL}
             setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
+            vpcId={cluster.vpc_id}
           />
         }
         header={

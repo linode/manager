@@ -8,6 +8,7 @@ interface Props {
   centerCheckbox?: boolean;
   checked: boolean;
   className?: string;
+  disabled?: boolean;
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export const EUAgreementCheckbox = (props: Props) => {
-  const { centerCheckbox, checked, className, onChange } = props;
+  const { centerCheckbox, checked, className, onChange, disabled } = props;
   const theme = useTheme();
 
   const checkboxStyle = centerCheckbox
@@ -40,6 +41,7 @@ export const EUAgreementCheckbox = (props: Props) => {
     >
       <Checkbox
         checked={checked}
+        disabled={disabled}
         id="gdpr-checkbox"
         onChange={onChange}
         sx={checkboxStyle}

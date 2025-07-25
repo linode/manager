@@ -1,4 +1,5 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { parseCsv } from 'support/util/csv';
 
 import { accountMaintenanceFactory } from 'src/factories';
@@ -22,12 +23,20 @@ describe('Maintenance', () => {
         cy.log(`Failed to delete file: ${filePatterns}`);
       }
     });
+
+    // TODO When the Host & VM Maintenance feature rolls out, we want to enable the feature flag and update the test.
+    mockAppendFeatureFlags({
+      vmHostMaintenance: {
+        enabled: false,
+      },
+    }).as('getFeatureFlags');
   });
 
   it('table empty when no maintenance', () => {
     mockGetMaintenance([], []).as('getMaintenance');
 
     cy.visitWithLogin('/linodes');
+    cy.wait('@getFeatureFlags');
     // user can navigate to account maintenance page via user menu.
     cy.findByTestId('nav-group-profile').click();
     cy.findByTestId('menu-item-Maintenance')
@@ -68,7 +77,7 @@ describe('Maintenance', () => {
 
     cy.visitWithLogin('/account/maintenance');
 
-    cy.wait('@getMaintenance');
+    cy.wait(['@getFeatureFlags', '@getMaintenance']);
 
     cy.contains('No pending maintenance').should('not.exist');
     cy.contains('No completed maintenance').should('not.exist');

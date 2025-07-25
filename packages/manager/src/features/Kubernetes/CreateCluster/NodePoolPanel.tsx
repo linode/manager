@@ -1,6 +1,7 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { extendType } from 'src/utilities/extendType';
@@ -8,23 +9,18 @@ import { extendType } from 'src/utilities/extendType';
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+  DEFAULT_PLAN_COUNT,
 } from '../constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
-import type {
-  KubeNodePoolResponse,
-  KubernetesTier,
-  LinodeTypeClass,
-  Region,
-} from '@linode/api-v4';
+import type { NodePoolConfigDrawerHandlerParams } from './CreateCluster';
+import type { KubernetesTier, LinodeTypeClass, Region } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
-const DEFAULT_PLAN_COUNT = 3;
-
 export interface NodePoolPanelProps {
-  addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   apiError?: string;
+  handleConfigurePool: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasSelectedRegion: boolean;
   isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
@@ -57,12 +53,12 @@ const RenderLoadingOrContent = (props: NodePoolPanelProps) => {
 
 const Panel = (props: NodePoolPanelProps) => {
   const {
-    addNodePool,
     apiError,
     hasSelectedRegion,
     isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
+    handleConfigurePool,
     regionsData,
     selectedRegionId,
     selectedTier,
@@ -79,10 +75,8 @@ const Panel = (props: NodePoolPanelProps) => {
   const extendedTypes = types.map(extendType);
 
   const addPool = (selectedPlanType: string, nodeCount: number) => {
-    addNodePool({
+    append({
       count: nodeCount,
-      // eslint-disable-next-line sonarjs/pseudo-random
-      id: Math.random(),
       type: selectedPlanType,
     });
   };
@@ -91,6 +85,12 @@ const Panel = (props: NodePoolPanelProps) => {
     setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
     setSelectedType(planId);
   };
+
+  const { control } = useFormContext();
+  const { append } = useFieldArray({
+    control,
+    name: 'nodePools',
+  });
 
   const getPlansPanelCopy = () => {
     return selectedTier === 'enterprise'
@@ -107,13 +107,14 @@ const Panel = (props: NodePoolPanelProps) => {
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
+          handleConfigurePool={handleConfigurePool}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
           isAPLEnabled={isAPLEnabled}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
-          onAdd={addPool}
+          onAdd={addPool} // Once LKE-E Post-LA work goes to prod, we can remove this prop.
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes

@@ -1,12 +1,13 @@
 import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
-import { formatStorageUnits, isAclpSupportedRegion } from '@linode/utilities';
+import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { TextTooltip } from 'src/components/TextTooltip';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
@@ -70,10 +71,9 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
 
   const { aclpBetaServices } = useFlags();
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId,
-    regions,
     type: 'alerts',
   });
 

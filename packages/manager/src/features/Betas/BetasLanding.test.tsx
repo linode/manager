@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BetasLanding } from './BetasLanding';
 
@@ -10,13 +10,13 @@ describe('BetasLanding', () => {
   });
 
   it('should have the page title of Betas', async () => {
-    const { getByText } = await renderWithThemeAndRouter(<BetasLanding />);
+    const { getByText } = renderWithTheme(<BetasLanding />);
     const pageTitle = getByText('Betas', { selector: 'h1' });
     expect(pageTitle).not.toBeNull();
   });
 
   it('should have a paper for enrolled, active, and expired betas', async () => {
-    const { getByText } = await renderWithThemeAndRouter(<BetasLanding />);
+    const { getByText } = renderWithTheme(<BetasLanding />);
     const enrolledPageHeader = getByText('Currently Enrolled Betas', {
       selector: 'h2',
     });

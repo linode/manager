@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
@@ -33,12 +33,9 @@ describe('PlacementGroupsLanding', () => {
       isLoading: true,
     });
 
-    const { getByRole } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />,
-      {
-        initialRoute: '/placement-groups',
-      }
-    );
+    const { getByRole } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByRole('progressbar')).toBeInTheDocument();
   });
@@ -48,12 +45,9 @@ describe('PlacementGroupsLanding', () => {
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />,
-      {
-        initialRoute: '/placement-groups',
-      }
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(/not found/i)).toBeInTheDocument();
   });
@@ -70,12 +64,9 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />,
-      {
-        initialRoute: '/placement-groups',
-      }
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(/create placement group/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
@@ -96,12 +87,9 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />,
-      {
-        initialRoute: '/placement-groups',
-      }
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(/group 1/i)).toBeInTheDocument();
     expect(getByText(/group 2/i)).toBeInTheDocument();
@@ -115,12 +103,9 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />,
-      {
-        initialRoute: '/placement-groups',
-      }
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(headers.description)).toBeInTheDocument();
   });
@@ -133,12 +118,9 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />,
-      {
-        initialRoute: '/placement-groups',
-      }
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText('Getting Started Guides')).toBeInTheDocument();
   });

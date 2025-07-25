@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SupportTicketDialog } from './SupportTicketDialog';
 
@@ -14,9 +14,7 @@ const props: SupportTicketDialogProps = {
 
 describe('Support Ticket Drawer', () => {
   it('should render', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
-      <SupportTicketDialog {...props} />
-    );
+    const { getByText } = renderWithTheme(<SupportTicketDialog {...props} />);
     expect(getByText('Open a Support Ticket'));
   });
 });
