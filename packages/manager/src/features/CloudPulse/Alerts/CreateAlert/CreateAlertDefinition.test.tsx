@@ -6,6 +6,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAlertDefinition } from './CreateAlertDefinition';
 
+import type { AclpServices } from 'src/featureFlags';
+
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
@@ -21,6 +23,11 @@ const queryMocks = vi.hoisted(() => ({
   useGetCloudPulseMetricDefinitionsByServiceType: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
+  useFlags: vi.fn(),
+}));
+
+vi.mock('src/hooks/useFlags', () => ({
+  useFlags: queryMocks.useFlags,
 }));
 
 vi.mock('src/queries/cloudpulse/services', async () => {
@@ -32,6 +39,17 @@ vi.mock('src/queries/cloudpulse/services', async () => {
     useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
+
+const aclpServicesFlag: AclpServices = {
+  linode: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+  dbaas: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+};
 
 beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
@@ -51,14 +69,22 @@ beforeEach(() => {
     isFetching: false,
   });
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-    data: { data: [{ label: 'Linode', service_type: 'linode' }] },
+    data: {
+      data: [
+        { label: 'Linode', service_type: 'linode' },
+        { label: 'Databases', service_type: 'dbaas' },
+      ],
+    },
     isError: false,
     isLoading: false,
     status: 'success',
   });
+  queryMocks.useFlags.mockReturnValue({
+    aclpServices: aclpServicesFlag,
+  });
 });
 
-describe('AlertDefinition Create', () => {
+describe('AlertDefinition Create', async () => {
   it('should render input components', async () => {
     const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
       <CreateAlertDefinition />
@@ -196,5 +222,58 @@ describe('AlertDefinition Create', () => {
     expect(
       await container.findByText('Description must be 100 characters or less.')
     ).toBeVisible();
+  });
+
+  it('should render the service types based on the aclp services flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+        dbaas: {
+          alerts: { enabled: false, beta: true },
+          metrics: { enabled: false, beta: true },
+        },
+      },
+    });
+
+    renderWithTheme(<CreateAlertDefinition />);
+    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
+    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
+  });
+
+  it('should return all service types when aclpServices flag is undefined', async () => {
+    queryMocks.useFlags.mockReturnValue({});
+    renderWithTheme(<CreateAlertDefinition />);
+    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
+    expect(screen.getByRole('option', { name: 'Databases' })).toBeVisible();
+  });
+
+  it('should not return service types that are missing in the flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+
+    renderWithTheme(<CreateAlertDefinition />);
+    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
+    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
   });
 });

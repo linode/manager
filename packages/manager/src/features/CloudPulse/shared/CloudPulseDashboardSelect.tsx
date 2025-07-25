@@ -5,7 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
+import { getAllDashboards, getEnabledServiceTypes } from '../Utils/utils';
 
 import type {
   CloudPulseServiceType,
@@ -52,11 +52,18 @@ export const CloudPulseDashboardSelect = React.memo(
       isLoading: serviceTypesLoading,
     } = useCloudPulseServiceTypes(true);
 
-    const { aclpBetaServices } = useFlags();
-    const serviceTypes: CloudPulseServiceType[] =
-      formattedServiceTypes(serviceTypesList);
-    const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
-      serviceTypesList?.data.map((item) => [item.service_type, item.label])
+    const { aclpBetaServices, aclpServices } = useFlags();
+
+    // Get formatted enabled service types based on the LD flag
+    const serviceTypes: CloudPulseServiceType[] = getEnabledServiceTypes(
+      serviceTypesList,
+      aclpServices
+    );
+
+    const serviceTypeMap: Map<string, string> = new Map(
+      (serviceTypesList?.data || [])
+        .filter((item) => item?.service_type !== undefined)
+        .map((item) => [item.service_type, item.label ?? ''])
     );
 
     const {

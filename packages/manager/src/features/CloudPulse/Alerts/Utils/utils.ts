@@ -21,7 +21,10 @@ import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChip
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type { MonitoringCapabilities } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  AclpServices,
+} from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -575,4 +578,22 @@ export const convertSecondsToOptions = (seconds: number): string => {
     const hours = minutes / 60;
     return `${hours} hr`;
   }
+};
+
+/**
+ * Filters alerts based on the enabled services
+ * @param allAlerts list of all alerts
+ * @param aclpServices list of services with their statuses
+ * @returns list of alerts from enabled services
+ */
+export const alertsFromEnabledServices = (
+  allAlerts: Alert[] | undefined,
+  aclpServices: AclpServices | undefined
+) => {
+  // If aclpServices is undefined, return all alerts, else return the alerts that are enabled and are present in the flag
+  return allAlerts?.filter(
+    (alert) =>
+      !aclpServices ||
+      (aclpServices?.[alert.service_type]?.alerts?.enabled ?? false)
+  );
 };
