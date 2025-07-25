@@ -1,14 +1,16 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { nodePoolBetaFactory } from 'src/factories/kubernetesCluster';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
 import type { Props } from './NodePoolSummaryItem';
 
 const props: Props = {
+  poolIndex: 0,
   nodeCount: 3,
   onRemove: vi.fn(),
   poolType: extendedTypes[1],
@@ -18,19 +20,40 @@ const props: Props = {
 
 describe('Node Pool Summary Item', () => {
   it("should render the label of its pool's plan", () => {
-    const { getByText } = renderWithTheme(<NodePoolSummaryItem {...props} />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <NodePoolSummaryItem {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
+    });
     getByText(/Linode 2 GB Plan/i);
     getByText(/1 CPU, 50 GB Storage/i);
   });
 
-  it('should call its onRemove handler when the trash can is clicked', () => {
-    const { getByTestId } = renderWithTheme(<NodePoolSummaryItem {...props} />);
-    fireEvent.click(getByTestId('remove-pool-button'));
+  it('should call its onRemove handler when the trash can is clicked', async () => {
+    const { getByTestId } = renderWithThemeAndHookFormContext({
+      component: <NodePoolSummaryItem {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
+    });
+    await userEvent.click(getByTestId('remove-pool-button'));
     expect(props.onRemove).toHaveBeenCalledTimes(1);
   });
 
   it("should display its pool's price", () => {
-    const { getByText } = renderWithTheme(<NodePoolSummaryItem {...props} />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <NodePoolSummaryItem {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolBetaFactory.build()],
+        },
+      },
+    });
     getByText('$1,000.00');
   });
 });
