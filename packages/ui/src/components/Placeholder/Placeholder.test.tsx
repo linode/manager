@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { describe, expect, it } from 'vitest';
 
-import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { ComputeIcon } from '../../assets';
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { Placeholder } from './Placeholder';
 
 describe('Placeholder', () => {
   it('renders a placeholder with a title', () => {
     const { container, getByTestId, getByText } = renderWithTheme(
-      <Placeholder title="This is a title" />
+      <Placeholder title="This is a title" />,
     );
 
     const title = getByText('This is a title');
@@ -19,7 +19,7 @@ describe('Placeholder', () => {
 
   it('displays the given icon and changes the heading style', () => {
     const { container, getByTestId } = renderWithTheme(
-      <Placeholder icon={ComputeIcon} title="title" />
+      <Placeholder icon={ComputeIcon} title="title" />,
     );
 
     const icon = getByTestId('placeholder-icon');
@@ -31,16 +31,14 @@ describe('Placeholder', () => {
     const { getByText } = renderWithTheme(
       <Placeholder
         additionalCopy="additional copy"
-        showTransferDisplay
         subtitle="subtitle"
         title="title"
-      />
+      />,
     );
 
     getByText('title');
     getByText('additional copy');
     getByText('subtitle');
-    getByText('Loading transfer data...');
   });
 
   it('displays children, links and buttons', () => {
@@ -51,7 +49,7 @@ describe('Placeholder', () => {
         title="title"
       >
         This is a child element
-      </Placeholder>
+      </Placeholder>,
     );
 
     getByText('Pretend this is a link');

@@ -1,8 +1,7 @@
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { CircleProgress, ErrorState, Placeholder } from '@linode/ui';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { DiskGraph } from './DiskGraph';

@@ -1,8 +1,8 @@
+import { Placeholder } from '@linode/ui';
 import { GridLegacy, Paper } from '@mui/material';
 import React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 export const CloudPulseErrorPlaceholder = React.memo(
   (props: { errorMessage: string }) => {

@@ -1,14 +1,14 @@
-import { Button, fadeIn, H1Header, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
+import { ComputeIcon } from '../../assets';
+import { fadeIn } from '../../foundations';
+import { Button } from '../Button';
+import { H1Header } from '../H1Header';
+import { Typography } from '../Typography';
 
-import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
-
-import type { ButtonProps } from '@linode/ui';
-
+import type { ButtonProps } from '../Button';
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
 }
@@ -56,10 +56,6 @@ export interface PlaceholderProps {
    */
   renderAsSecondary?: boolean;
   /**
-   * If true, displays transfer display
-   */
-  showTransferDisplay?: boolean;
-  /**
    * Subtitle text to display
    */
   subtitle?: string;
@@ -79,14 +75,11 @@ export const Placeholder = (props: PlaceholderProps) => {
     isEntity,
     linksSection,
     renderAsSecondary,
-    showTransferDisplay,
     subtitle,
     title,
   } = props;
-
   const theme = useTheme();
   const hasSubtitle = subtitle !== undefined;
-
   /**
    * TODO: We should use these styles to create a Styled component THEN
    * pass that into the Placeholder component
@@ -118,83 +111,79 @@ export const Placeholder = (props: PlaceholderProps) => {
   };
 
   return (
-    <>
-      <PlaceholderRoot
-        className={props.className}
-        data-qa-placeholder-container={dataQAPlaceholder || true}
-      >
-        <StyledIconWrapper isEntity={isEntity}>
-          {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
-        </StyledIconWrapper>
+    <PlaceholderRoot
+      className={props.className}
+      data-qa-placeholder-container={dataQAPlaceholder || true}
+      {...props}
+    >
+      <StyledIconWrapper isEntity={isEntity}>
+        {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
+      </StyledIconWrapper>
 
-        <H1Header
-          data-qa-placeholder-title
-          renderAsSecondary={renderAsSecondary}
+      <H1Header
+        data-qa-placeholder-title
+        renderAsSecondary={renderAsSecondary}
+        sx={{
+          gridArea: 'title',
+          textAlign: 'center',
+        }}
+        title={title}
+      />
+      {hasSubtitle ? (
+        <Typography
           sx={{
-            gridArea: 'title',
+            color: theme.palette.text.primary,
+            gridArea: 'subtitle',
             textAlign: 'center',
           }}
-          title={title}
-        />
-        {hasSubtitle ? (
-          <Typography
-            sx={{
-              color: theme.palette.text.primary,
-              gridArea: 'subtitle',
-              textAlign: 'center',
-            }}
-            variant="h2"
-          >
-            {subtitle}
-          </Typography>
-        ) : null}
+          variant="h2"
+        >
+          {subtitle}
+        </Typography>
+      ) : null}
 
-        <StyledCopy descriptionMaxWidth={descriptionMaxWidth}>
-          {typeof props.children === 'string' ? (
-            <Typography variant="subtitle1">{props.children}</Typography>
+      <StyledCopy descriptionMaxWidth={descriptionMaxWidth}>
+        {typeof props.children === 'string' ? (
+          <Typography variant="subtitle1">{props.children}</Typography>
+        ) : (
+          props.children
+        )}
+      </StyledCopy>
+      <StyledButtonWrapper>
+        {buttonProps &&
+          buttonProps.map((thisButton, index) => (
+            <Button
+              buttonType="primary"
+              {...thisButton}
+              data-qa-placeholder-button
+              data-testid="placeholder-button"
+              key={index}
+            />
+          ))}
+      </StyledButtonWrapper>
+      {additionalCopy ? (
+        <StyledCopy
+          descriptionMaxWidth={descriptionMaxWidth}
+          sx={{ gridArea: 'additionalCopy' }}
+        >
+          {typeof additionalCopy === 'string' ? (
+            <Typography variant="subtitle1">{additionalCopy}</Typography>
           ) : (
-            props.children
+            additionalCopy
           )}
         </StyledCopy>
-        <StyledButtonWrapper>
-          {buttonProps &&
-            buttonProps.map((thisButton, index) => (
-              <Button
-                buttonType="primary"
-                {...thisButton}
-                data-qa-placeholder-button
-                data-testid="placeholder-button"
-                key={index}
-              />
-            ))}
-        </StyledButtonWrapper>
-        {additionalCopy ? (
-          <StyledCopy
-            descriptionMaxWidth={descriptionMaxWidth}
-            sx={{ gridArea: 'additionalCopy' }}
-          >
-            {typeof additionalCopy === 'string' ? (
-              <Typography variant="subtitle1">{additionalCopy}</Typography>
-            ) : (
-              additionalCopy
-            )}
-          </StyledCopy>
-        ) : null}
-        {linksSection !== undefined ? (
-          <StyledLinksSection showTransferDisplay={showTransferDisplay}>
-            {linksSection}
-          </StyledLinksSection>
-        ) : null}
-      </PlaceholderRoot>
-      {showTransferDisplay ? <TransferDisplay spacingTop={0} /> : null}
-    </>
+      ) : null}
+      {linksSection !== undefined ? (
+        <StyledLinksSection>{linksSection}</StyledLinksSection>
+      ) : null}
+    </PlaceholderRoot>
   );
 };
 
 const StyledIconWrapper = styled('div')<Pick<PlaceholderProps, 'isEntity'>>(
   ({ theme, ...props }) => ({
     gridArea: 'icon',
-    padding: theme.spacing(2),
+    padding: theme.spacingFunction(16),
     ...(props.isEntity && {
       alignItems: 'center',
       backgroundColor: theme.bg.bgPaper,
@@ -203,21 +192,19 @@ const StyledIconWrapper = styled('div')<Pick<PlaceholderProps, 'isEntity'>>(
       display: 'flex',
       justifyContent: 'center',
     }),
-  })
+  }),
 );
 
 const StyledButtonWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(2),
+  gap: theme.spacingFunction(16),
   gridArea: 'button',
   [theme.breakpoints.down('xs')]: {
     flexDirection: 'column',
   },
 }));
 
-const StyledLinksSection = styled('div')<
-  Pick<PlaceholderProps, 'showTransferDisplay'>
->(({ theme, ...props }) => ({
+const StyledLinksSection = styled('div')(({ theme }) => ({
   borderTop: `1px solid ${
     theme.name === 'light'
       ? theme.tokens.color.Neutrals[20]
@@ -226,17 +213,15 @@ const StyledLinksSection = styled('div')<
   gridArea: 'links',
   paddingTop: '38px',
 
-  ...(props.showTransferDisplay && {
-    borderBottom: `1px solid ${
-      theme.name === 'light'
-        ? theme.tokens.color.Neutrals[20]
-        : theme.tokens.color.Neutrals[100]
-    }`,
-    paddingBottom: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      paddingBottom: theme.spacing(4),
-    },
-  }),
+  borderBottom: `1px solid ${
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[20]
+      : theme.tokens.color.Neutrals[100]
+  }`,
+  paddingBottom: theme.spacingFunction(16),
+  [theme.breakpoints.up('md')]: {
+    paddingBottom: theme.spacingFunction(32),
+  },
 }));
 
 const StyledCopy = styled('div', {
@@ -264,7 +249,7 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
     },
     display: 'grid',
     gridTemplateAreas:
-      props.showTransferDisplay && props.linksSection === undefined
+      props.linksSection === undefined
         ? `
         ". . . . . icon icon . . . . ."
         ". . . . . . . . . . . ."
@@ -295,18 +280,13 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
       `,
     gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
     gridTemplateRows:
-      props.showTransferDisplay && props.linksSection === undefined
+      props.linksSection === undefined
         ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 15px max-content 40px'
-        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 24px max-content 15px max-content 64px min-content',
+        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 24px max-content 15px max-content 64px',
     justifyItems: 'center',
-
-    padding: props.showTransferDisplay
-      ? `${theme.spacing(4)} 0`
-      : `${theme.spacing(2)} 0`,
+    padding: `${theme.spacingFunction(32)} 0`,
     [theme.breakpoints.up('md')]: {
-      padding: props.showTransferDisplay
-        ? `${theme.spacing(8)} 0 ${theme.spacing(4)}`
-        : `${theme.spacing(8)} 0`,
+      padding: `${theme.spacingFunction(64)} 0`,
     },
-  })
+  }),
 );

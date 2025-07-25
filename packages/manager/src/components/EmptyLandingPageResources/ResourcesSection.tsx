@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Placeholder, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import type { JSX } from 'react';
 
@@ -9,13 +9,14 @@ import { ResourceLinks } from 'src/components/EmptyLandingPageResources/Resource
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
+import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 
 import type {
   LinkAnalyticsEvent,
@@ -115,65 +116,67 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
   const { description, logo, subtitle, title } = headers;
 
   return (
-    <Placeholder
-      additionalCopy={additionalCopy}
-      buttonProps={buttonProps}
-      dataQAPlaceholder="resources-section"
-      descriptionMaxWidth={descriptionMaxWidth}
-      icon={icon}
-      isEntity
-      linksSection={
-        <ResourcesLinksSection wide={wide}>
-          <ResourcesLinksSubSection
-            icon={<DocsIcon />}
-            MoreLink={(props) => (
-              <ResourcesMoreLink
-                onClick={getLinkOnClick(
-                  linkAnalyticsEvent,
-                  gettingStartedGuidesData.moreInfo.text
-                )}
-                to={gettingStartedGuidesData.moreInfo.to}
-                {...props}
-              >
-                {gettingStartedGuidesData.moreInfo.text}
-                <span style={{ left: 2, position: 'relative', top: 4 }}>
-                  <PointerIcon />
-                </span>
-              </ResourcesMoreLink>
-            )}
-            title={gettingStartedGuidesData.title}
-          >
-            {GuideLinks(gettingStartedGuidesData, linkAnalyticsEvent)}
-          </ResourcesLinksSubSection>
-          {CustomResource && <CustomResource />}
-          <ResourcesLinksSubSection
-            icon={<YoutubeIcon />}
-            MoreLink={(props) => (
-              <ResourcesMoreLink
-                external
-                onClick={getLinkOnClick(
-                  linkAnalyticsEvent,
-                  youtubeMoreLinkLabel
-                )}
-                to={youtubeChannelLink}
-                {...props}
-              >
-                {youtubeMoreLinkText}
-              </ResourcesMoreLink>
-            )}
-            title={youtubeLinkData?.title || ''}
-          >
-            {youtubeLinkData &&
-              YoutubeLinks(youtubeLinkData, linkAnalyticsEvent)}
-          </ResourcesLinksSubSection>
-        </ResourcesLinksSection>
-      }
-      showTransferDisplay={showTransferDisplay}
-      subtitle={subtitle}
-      title={title}
-    >
-      {logo}
-      <Typography variant="subtitle1">{description}</Typography>
-    </Placeholder>
+    <Stack>
+      <Placeholder
+        additionalCopy={additionalCopy}
+        buttonProps={buttonProps}
+        dataQAPlaceholder="resources-section"
+        descriptionMaxWidth={descriptionMaxWidth}
+        icon={icon}
+        isEntity
+        linksSection={
+          <ResourcesLinksSection wide={wide}>
+            <ResourcesLinksSubSection
+              icon={<DocsIcon />}
+              MoreLink={(props) => (
+                <ResourcesMoreLink
+                  onClick={getLinkOnClick(
+                    linkAnalyticsEvent,
+                    gettingStartedGuidesData.moreInfo.text
+                  )}
+                  to={gettingStartedGuidesData.moreInfo.to}
+                  {...props}
+                >
+                  {gettingStartedGuidesData.moreInfo.text}
+                  <span style={{ left: 2, position: 'relative', top: 4 }}>
+                    <PointerIcon />
+                  </span>
+                </ResourcesMoreLink>
+              )}
+              title={gettingStartedGuidesData.title}
+            >
+              {GuideLinks(gettingStartedGuidesData, linkAnalyticsEvent)}
+            </ResourcesLinksSubSection>
+            {CustomResource && <CustomResource />}
+            <ResourcesLinksSubSection
+              icon={<YoutubeIcon />}
+              MoreLink={(props) => (
+                <ResourcesMoreLink
+                  external
+                  onClick={getLinkOnClick(
+                    linkAnalyticsEvent,
+                    youtubeMoreLinkLabel
+                  )}
+                  to={youtubeChannelLink}
+                  {...props}
+                >
+                  {youtubeMoreLinkText}
+                </ResourcesMoreLink>
+              )}
+              title={youtubeLinkData?.title || ''}
+            >
+              {youtubeLinkData &&
+                YoutubeLinks(youtubeLinkData, linkAnalyticsEvent)}
+            </ResourcesLinksSubSection>
+          </ResourcesLinksSection>
+        }
+        subtitle={subtitle}
+        title={title}
+      >
+        {logo}
+        <Typography variant="subtitle1">{description}</Typography>
+      </Placeholder>
+      {showTransferDisplay && <TransferDisplay />}
+    </Stack>
   );
 };

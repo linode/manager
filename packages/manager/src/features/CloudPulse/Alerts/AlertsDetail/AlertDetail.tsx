@@ -4,6 +4,7 @@ import {
   CircleProgress,
   ErrorState,
   Notice,
+  Placeholder,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -14,7 +15,6 @@ import React from 'react';
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { SupportLink } from 'src/components/SupportLink';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
