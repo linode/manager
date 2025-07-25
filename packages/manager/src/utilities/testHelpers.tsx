@@ -208,10 +208,10 @@ export const wrapWithFormContext = <T extends FieldValues>(
 };
 
 export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
-  options: RenderWithThemeAndHookFormOptions<T> & Options
+  options: RenderWithThemeAndHookFormOptions<T>
 ) => {
   return renderWithTheme(
-    <FormContextWrapper {...options.useFormOptions} {...options}>
+    <FormContextWrapper {...options.useFormOptions}>
       {options.component}
     </FormContextWrapper>,
     options.options
