@@ -53,6 +53,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Upcoming Features:
 
+- ACLP: Update AlertReusableComponent based on the latest mockup ([#12549](https://github.com/linode/manager/pull/12549))
 - Add Networking IP Stack section to VPC Create page ([#12309](https://github.com/linode/manager/pull/12309))
 - Add IPv6 Prefix Length field to Create Subnet drawer ([#12382](https://github.com/linode/manager/pull/12382))
 - Add 'Configure Pool' button and drawer to LKE Create flow plans table ([#12449](https://github.com/linode/manager/pull/12449))
