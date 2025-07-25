@@ -44,8 +44,8 @@ import {
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
 import {
+  getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
-  getLinodeInterfaceRanges,
   getVPCInterfacePayload,
   transformLinodeInterfaceErrorsToFormikErrors,
 } from '../utils';
@@ -376,7 +376,7 @@ export const SubnetAssignLinodesDrawer = (
           : '',
         vpcRanges: newInterface?.current
           ? 'vpc' in newInterface.current
-            ? getLinodeInterfaceRanges(newInterface.current)
+            ? getLinodeInterfaceIPv4Ranges(newInterface.current)
             : newInterface.current?.ip_ranges
           : [],
       };
