@@ -8,20 +8,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AlertRegions } from './AlertRegions';
 
 import type { AlertServiceType } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
-const regions = regionFactory.buildList(6);
+const regions = regionFactory.buildList(6, {
+  monitors: { alerts: ['Managed Databases'] },
+});
 const serviceType: AlertServiceType = 'dbaas';
-
-const flags: Partial<Flags> = {
-  aclpResourceTypeMap: [
-    {
-      serviceType,
-      supportedRegionIds: regions.map(({ id }) => id).join(','),
-      dimensionKey: 'region',
-    },
-  ],
-};
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn(),
@@ -65,7 +56,7 @@ const component = (
 );
 describe('Alert Regions', () => {
   it('Should render the filters and notices ', () => {
-    renderWithTheme(component, { flags });
+    renderWithTheme(component);
 
     const regionSearch = screen.getByTestId('region-search');
     const showSelectedOnly = screen.getByTestId('show-selected-only');
