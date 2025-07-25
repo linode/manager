@@ -4,6 +4,7 @@ import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
 
 import type { StackScriptTabType } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
+import type { linodesCreateTypes } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 
 interface LinodeDetailSearchParams {
   delete?: boolean;
@@ -42,7 +43,64 @@ const linodesIndexRoute = createRoute({
 const linodesCreateRoute = createRoute({
   getParentRoute: () => linodesRoute,
   path: 'create',
-  validateSearch: (search: LinodeCreateSearchParams) => search,
+  validateSearch: (
+    search: LinodeCreateSearchParams & {
+      type?: string;
+    }
+  ) => search,
+}).lazy(() =>
+  import('src/features/Linodes/LinodeCreate/linodeCreateLazyRoute').then(
+    (m) => m.linodeCreateLazyRoute
+  )
+);
+
+// This route provides backwards compatibility for the old routes with "type" parameter
+// It redirects to the correct tab based on the type parameter, removes the type parameter, and passes the rest of the search params to the new route
+// ex: /linodes/create?type=StackScripts&order=asc&orderBy=label will redirect to /linodes/create/stackscripts?order=asc&orderBy=label
+const linodesCreateRouteRedirect = createRoute({
+  getParentRoute: () => linodesCreateRoute,
+  path: '/',
+  validateSearch: (
+    search: LinodeCreateSearchParams & {
+      type?: (typeof linodesCreateTypes)[number];
+    }
+  ) => search,
+  beforeLoad: ({ search }) => {
+    const { type, ...restOfSearch } = search;
+
+    switch (type) {
+      case 'Backups':
+        throw redirect({
+          to: '/linodes/create/backups',
+          search: restOfSearch,
+        });
+      case 'Clone Linode':
+        throw redirect({
+          to: '/linodes/create/clone',
+          search: restOfSearch,
+        });
+      case 'Images':
+        throw redirect({
+          to: '/linodes/create/images',
+          search: restOfSearch,
+        });
+      case 'One-Click':
+        throw redirect({
+          to: '/linodes/create/marketplace',
+          search: restOfSearch,
+        });
+      case 'StackScripts':
+        throw redirect({
+          to: '/linodes/create/stackscripts',
+          search: restOfSearch,
+        });
+      default:
+        throw redirect({
+          to: '/linodes/create/os',
+          search: restOfSearch,
+        });
+    }
+  },
 }).lazy(() =>
   import('src/features/Linodes/LinodeCreate/linodeCreateLazyRoute').then(
     (m) => m.linodeCreateLazyRoute
@@ -259,6 +317,7 @@ export const linodesRouteTree = linodesRoute.addChildren([
   linodesCreateImagesRoute,
   linodesCreateCloneRoute,
   linodesCreateBackupsRoute,
+  linodesCreateRouteRedirect,
   linodesDetailRoute.addChildren([
     linodesDetailCloneRoute.addChildren([
       linodesDetailCloneConfigsRoute,
