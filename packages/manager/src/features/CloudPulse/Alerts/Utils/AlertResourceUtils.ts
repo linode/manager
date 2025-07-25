@@ -2,6 +2,7 @@ import {
   alertAdditionalFilterKeyMap,
   applicableAdditionalFilterKeys,
 } from '../AlertsResources/constants';
+import { filterRegionByServiceType } from './utils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
@@ -12,7 +13,6 @@ import type {
   AlertResourceFiltersProps,
 } from '../AlertsResources/types';
 import type { AlertServiceType, Region } from '@linode/api-v4';
-import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 interface FilterResourceProps {
   /**
@@ -138,28 +138,19 @@ export const getRegionOptions = (
 };
 
 /**
- * @param aclpResourceTypeMap The launch darkly flag where supported region ids are listed
- * @param serviceType The service type associated with the alerts
- * @returns Array of supported regions associated with the resource ids of the alert
+ * Filters regions based on service type and returns their IDs.
+ * @param regions List of regions to filter
+ * @param serviceType The alert service type to filter regions by
+ * @returns An array of region IDs that support the specified alert service type,
+ *                                 or undefined if no regions are provided
  */
 export const getSupportedRegionIds = (
-  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[] | undefined,
-  serviceType: AlertServiceType | undefined
+  regions?: Region[],
+  serviceType?: AlertServiceType
 ): string[] | undefined => {
-  const resourceTypeFlag = aclpResourceTypeMap?.find(
-    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
+  return filterRegionByServiceType('alerts', regions, serviceType).map(
+    ({ id }) => id
   );
-
-  if (
-    resourceTypeFlag?.supportedRegionIds === null ||
-    resourceTypeFlag?.supportedRegionIds === undefined
-  ) {
-    return undefined;
-  }
-
-  return resourceTypeFlag.supportedRegionIds
-    .split(',')
-    .map((regionId: string) => regionId.trim());
 };
 
 /**
