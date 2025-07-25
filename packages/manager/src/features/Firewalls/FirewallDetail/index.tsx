@@ -2,9 +2,7 @@ import {
   useAllFirewallDevicesQuery,
   useFirewallQuery,
   useFirewallSettingsQuery,
-  useGrants,
   useMutateFirewall,
-  useProfile,
 } from '@linode/queries';
 import {
   Chip,
@@ -38,7 +36,6 @@ import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
   getFirewallDefaultEntities,
 } from '../components/FirewallSelectOption.utils';
-import { checkIfUserCanModifyFirewall } from '../shared';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -56,8 +53,7 @@ export const FirewallDetail = () => {
   const { id } = useParams({
     strict: false,
   });
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
@@ -76,12 +72,6 @@ export const FirewallDetail = () => {
   const defaultEntities =
     firewallSettings &&
     getFirewallDefaultEntities(firewallId, firewallSettings);
-
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallId,
-    profile,
-    grants
-  );
 
   const { permissions } = usePermissions(
     'firewall',
@@ -244,7 +234,6 @@ export const FirewallDetail = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="linode"
@@ -252,7 +241,6 @@ export const FirewallDetail = () => {
             </SafeTabPanel>
             <SafeTabPanel index={2}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="nodebalancer"
