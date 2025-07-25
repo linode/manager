@@ -585,7 +585,7 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
 export const filterRegionByServiceType = (
   type: keyof MonitoringCapabilities,
   regions?: Region[],
-  serviceType?: null | string
+  serviceType?: CloudPulseServiceType | null
 ): Region[] => {
   if (!serviceType || !regions) return regions ?? [];
   const capability = capabilityServiceTypeMapping[serviceType];

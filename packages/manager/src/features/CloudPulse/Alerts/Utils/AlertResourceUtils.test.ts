@@ -8,7 +8,6 @@ import {
 } from './AlertResourceUtils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
-import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 describe('getRegionsIdLabelMap', () => {
   it('should return a proper map for given regions', () => {
