@@ -32,8 +32,8 @@ import { GroupedAlertsTable } from './GroupedAlertsTable';
 import type { Item } from '../constants';
 import type {
   Alert,
-  AlertServiceType,
   APIError,
+  CloudPulseServiceType,
   DeleteAlertPayload,
 } from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
@@ -62,7 +62,7 @@ export interface AlertsListTableProps {
   /**
    * The list of services to display in the table
    */
-  services: Item<string, AlertServiceType>[];
+  services: Item<string, CloudPulseServiceType>[];
   /**
    * The callback to toggle the alerts grouped by tag
    */

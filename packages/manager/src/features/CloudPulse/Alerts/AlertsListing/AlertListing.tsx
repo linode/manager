@@ -33,7 +33,11 @@ import {
 } from './constants';
 
 import type { Item } from '../constants';
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertStatusType,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 const searchAndSelectSx = {
   lg: '250px',
@@ -76,7 +80,7 @@ export const AlertListing = () => {
 
   const getServicesList = React.useMemo((): Item<
     string,
-    AlertServiceType
+    CloudPulseServiceType
   >[] => {
     return serviceOptions && serviceOptions.data.length > 0
       ? serviceOptions.data
@@ -87,7 +91,7 @@ export const AlertListing = () => {
           )
           .map((service) => ({
             label: service.label,
-            value: service.service_type as AlertServiceType,
+            value: service.service_type,
           }))
       : [];
   }, [aclpServices, serviceOptions]);
@@ -95,7 +99,7 @@ export const AlertListing = () => {
   const [searchText, setSearchText] = React.useState<string>('');
 
   const [serviceFilters, setServiceFilters] = React.useState<
-    Item<string, AlertServiceType>[]
+    Item<string, CloudPulseServiceType>[]
   >([]);
   const [statusFilters, setStatusFilters] = React.useState<
     Item<string, AlertStatusType>[]

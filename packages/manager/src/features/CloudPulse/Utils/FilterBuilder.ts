@@ -27,6 +27,7 @@ import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWid
 import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
+  CloudPulseServiceType,
   Dashboard,
   DateTimeWithPreset,
   Filter,
@@ -474,7 +475,7 @@ export const getMetricsCallCustomFilters = (
   selectedFilters: {
     [key: string]: FilterValueType;
   },
-  serviceType?: string
+  serviceType?: CloudPulseServiceType
 ): CloudPulseMetricsAdditionalFilters[] => {
   const serviceTypeConfig = serviceType
     ? FILTER_CONFIG.get(serviceType)
@@ -501,7 +502,7 @@ export const getMetricsCallCustomFilters = (
  * @returns The list of filters for the metric API call, based the additional custom select components
  */
 export const constructAdditionalRequestFilters = (
-  additionalFilters: CloudPulseMetricsAdditionalFilters[],
+  additionalFilters: CloudPulseMetricsAdditionalFilters[]
 ): Filters[] => {
   const filters: Filters[] = [];
   for (const filter of additionalFilters) {

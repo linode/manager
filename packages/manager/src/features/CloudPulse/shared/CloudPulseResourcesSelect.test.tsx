@@ -73,7 +73,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
-        resourceType={'us-east'}
+        resourceType="linode"
       />
     );
 

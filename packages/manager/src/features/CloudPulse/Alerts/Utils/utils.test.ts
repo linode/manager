@@ -37,8 +37,6 @@ it('test getServiceTypeLabel method', () => {
       service.label
     );
   });
-  expect(getServiceTypeLabel('test', { data: services })).toBe('test');
-  expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
 
 it('test convertSecondsToMinutes method', () => {
@@ -149,7 +147,7 @@ describe('getSchemaWithEntityIdValidation', () => {
   it('should return baseSchema if maxSelectionCount is undefined', () => {
     const schema = getSchemaWithEntityIdValidation({
       ...props,
-      serviceTypeObj: 'unknown',
+      serviceTypeObj: 'firewall',
     });
     expect(schema).toBe(baseSchema);
   });
@@ -440,8 +438,8 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for firewall service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
   });

@@ -7,7 +7,11 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { getAllDashboards, getEnabledServiceTypes } from '../Utils/utils';
 
-import type { Dashboard, FilterValue } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dashboard,
+  FilterValue,
+} from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
   /**
@@ -51,12 +55,13 @@ export const CloudPulseDashboardSelect = React.memo(
     const { aclpBetaServices, aclpServices } = useFlags();
 
     // Get formatted enabled service types based on the LD flag
-    const serviceTypes: string[] = getEnabledServiceTypes(
+    const serviceTypes: CloudPulseServiceType[] =
+      getEnabledServiceTypes(
       serviceTypesList,
       aclpServices
     );
 
-    const serviceTypeMap: Map<string, string> = new Map(
+    const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
       (serviceTypesList?.data || [])
         .filter((item) => item?.service_type !== undefined)
         .map((item) => [item.service_type, item.label ?? ''])
@@ -134,8 +139,10 @@ export const CloudPulseDashboardSelect = React.memo(
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.get(params.group) || params.group}{' '}
-              {aclpBetaServices?.[params.group]?.metrics && <BetaChip />}
+              {serviceTypeMap.get(params.group as CloudPulseServiceType) ||
+                params.group}{' '}
+              {aclpBetaServices?.[params.group as CloudPulseServiceType]
+                ?.metrics && <BetaChip />}
             </Typography>
             {params.children}
           </Box>

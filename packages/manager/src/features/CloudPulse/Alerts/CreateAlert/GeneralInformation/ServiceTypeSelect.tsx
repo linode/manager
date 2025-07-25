@@ -14,7 +14,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface CloudPulseServiceSelectProps {
   /**
@@ -29,7 +29,10 @@ interface CloudPulseServiceSelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType | null>;
+  name: FieldPathByValue<
+    CreateAlertDefinitionForm,
+    CloudPulseServiceType | null
+  >;
 }
 
 export const CloudPulseServiceSelect = (
@@ -45,7 +48,7 @@ export const CloudPulseServiceSelect = (
   const { aclpBetaServices, aclpServices } = useFlags();
   const getServicesList = React.useMemo((): Item<
     string,
-    AlertServiceType
+    CloudPulseServiceType
   >[] => {
     // If aclpServices is undefined, return all service types, else return the service types that are enabled and are present in the flag
     return serviceOptions?.data?.length
@@ -57,7 +60,7 @@ export const CloudPulseServiceSelect = (
           )
           .map((service) => ({
             label: service.label,
-            value: service.service_type as AlertServiceType,
+            value: service.service_type as CloudPulseServiceType,
           }))
       : [];
   }, [aclpServices, serviceOptions]);
@@ -80,7 +83,7 @@ export const CloudPulseServiceSelect = (
           onBlur={field.onBlur}
           onChange={(
             _,
-            selected: { label: string; value: AlertServiceType },
+            selected: { label: string; value: CloudPulseServiceType },
             reason
           ) => {
             if (selected) {
