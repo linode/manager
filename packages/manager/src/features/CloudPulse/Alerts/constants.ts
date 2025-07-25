@@ -97,14 +97,12 @@ export const dimensionOperatorOptions: Item<
     value: 'startswith',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'In',
     value: 'in',
   },
 ];
+
+export const textFieldOperators = ['endswith', 'startswith'];
 
 export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
   { label: 'Account', value: 'account' },
@@ -117,8 +115,6 @@ export const entityGroupMap: Record<AlertDefinitionScope, string> = {
   region: 'Region',
   entity: 'Entity',
 };
-
-export const textFieldOperators = ['endswith', 'startswith'];
 
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',

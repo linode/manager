@@ -1,4 +1,3 @@
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
@@ -12,8 +11,14 @@ import {
   linkAnalyticsEvent,
 } from './StreamsLandingEmptyStateData';
 
-export const StreamsLandingEmptyState = () => {
-  const navigate = useNavigate();
+interface StreamsEmptyLandingStateProps {
+  navigateToCreate: () => void;
+}
+
+export const StreamsLandingEmptyState = (
+  props: StreamsEmptyLandingStateProps
+) => {
+  const { navigateToCreate } = props;
 
   return (
     <>
@@ -28,7 +33,7 @@ export const StreamsLandingEmptyState = () => {
                 category: linkAnalyticsEvent.category,
                 label: 'Create Stream',
               });
-              navigate({ to: '/datastream/streams/create' });
+              navigateToCreate();
             },
           },
         ]}

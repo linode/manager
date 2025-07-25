@@ -1,9 +1,13 @@
+import React from 'react';
+
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsTagFilter } from './AlertsTagsFilter';
+import { TextWithExtraInfo } from './TextWithExtraInfo';
 
 import type { AlertInstance } from './DisplayAlertResources';
+import type { TextWithInfoProp } from './TextWithExtraInfo';
 import type {
   AlertAdditionalFilterKey,
   ServiceColumns,
@@ -55,6 +59,13 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
   ],
+  firewall: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+  ],
   nodebalancer: [
     {
       accessor: ({ label }) => label,
@@ -67,16 +78,12 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
     {
-      accessor: ({ tags }) => tags?.join(',') ?? '',
+      accessor: ({ tags }) =>
+        React.createElement<Required<TextWithInfoProp>>(TextWithExtraInfo, {
+          values: tags ?? [],
+        }),
       label: 'Tags',
       sortingKey: 'tags',
-    },
-  ],
-  firewall: [
-    {
-      accessor: ({ label }) => label,
-      label: 'Entity',
-      sortingKey: 'label',
     },
   ],
 };
@@ -123,7 +130,9 @@ export const getSearchPlaceholderText = (
 ): string => {
   const filters = serviceToFiltersMap[serviceType ?? ''] ?? [];
 
-  const hasRegionFilter = filters.some((f) => f.filterKey === 'region');
+  const hasRegionFilter = filters.some(
+    ({ filterKey }) => filterKey === 'region'
+  );
 
   if (hasRegionFilter) {
     return 'Search for a Region or Entity';

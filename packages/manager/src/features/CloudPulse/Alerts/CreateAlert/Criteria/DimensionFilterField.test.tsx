@@ -235,6 +235,7 @@ describe('Dimension filter field component', () => {
       valueLabel
     );
   });
+
   it('should allow multiple value selection for "in" operator and store as comma-separated string', async () => {
     const mockOnFilterDelete = vi.fn();
 
@@ -336,7 +337,7 @@ describe('Dimension filter field component', () => {
     await user.click(dataFieldInput);
     await user.click(
       await screen.findByRole('option', {
-        name: dimensionFieldMockData[0].label, // "CPU name"
+        name: dimensionFieldMockData[0].label,
       })
     );
 
@@ -358,7 +359,6 @@ describe('Dimension filter field component', () => {
 
     await user.click(operatorInput);
     await user.click(screen.getByRole('option', { name: 'In' }));
-
     expect(within(valueContainer).getByRole('textbox')).toBeInTheDocument();
   });
 });
