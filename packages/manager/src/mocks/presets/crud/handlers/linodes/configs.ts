@@ -206,8 +206,9 @@ export const updateConfig = (mockState: MockState) => [
       const linode = await mswDB.get('linodes', linodeId);
       const configId = Number(params.configId);
       const configFromDB = await mswDB.get('linodeConfigs', configId);
+      const configInterfaces = await mswDB.getAll('configInterfaces');
 
-      if (!linode || !configFromDB) {
+      if (!linode || !configFromDB || !configInterfaces) {
         return makeNotFoundResponse();
       }
 
@@ -221,11 +222,12 @@ export const updateConfig = (mockState: MockState) => [
 
       const updateInterfacePromises = [];
       const addInterfacePromises = [];
-      const deleteInterfacePromises = [];
+      const _updatedIfaceIds: number[] = [];
 
       // update / add interfaces as needed
       for (const ifacePayload of updatedConfig.interfaces ?? []) {
         if (ifacePayload.id) {
+          _updatedIfaceIds.push(ifacePayload.id);
           updateInterfacePromises.push(
             mswDB.update(
               'configInterfaces',
@@ -249,36 +251,51 @@ export const updateConfig = (mockState: MockState) => [
         }
       }
 
-      // delete interfaces as needed
-      for (const existingIface of config.interfaces ?? []) {
-        if (
-          !updatedConfig.interfaces?.some(
-            (iface) => iface.id === existingIface.id
-          )
-        ) {
-          deleteInterfacePromises.push(
-            mswDB.delete('configInterfaces', existingIface.id, mockState)
-          );
-        }
-      }
-
       await Promise.all(updateInterfacePromises);
-      await Promise.all(deleteInterfacePromises);
-      const ifaceChanges = await Promise.all(addInterfacePromises);
-      for (const ifaceChange of ifaceChanges) {
-        if (ifaceChange[1].purpose === 'vpc') {
+      const addedInterfaces = await Promise.all(addInterfacePromises);
+      for (const addedInterface of addedInterfaces) {
+        if (addedInterface[1].purpose === 'vpc') {
           await addInterfaceToSubnet({
             mockState,
-            interfaceId: ifaceChange[1].id,
+            interfaceId: addedInterface[1].id,
             isLinodeInterface: false,
             linodeId: linode.id,
             configId,
-            vpcId: ifaceChange[1].vpc_id,
-            subnetId: ifaceChange[1].subnet_id,
+            vpcId: addedInterface[1].vpc_id,
+            subnetId: addedInterface[1].subnet_id,
           });
         }
       }
 
+      const deleteInterfacePromises = [];
+      const updatedIfaceIds = [
+        ..._updatedIfaceIds,
+        ...addedInterfaces.map((iface) => iface[1].id),
+      ];
+      const oldInterfaces = configInterfaces.filter(
+        (interfaceTuple) => interfaceTuple[0] === configId
+      );
+
+      for (const _iface of oldInterfaces) {
+        if (!updatedIfaceIds.some((id) => id === _iface[1].id)) {
+          deleteInterfacePromises.push(
+            mswDB.delete('configInterfaces', _iface[1].id, mockState)
+          );
+          if (_iface[1].purpose === 'vpc')
+            deleteInterfacePromises.push(
+              await removeInterfaceFromSubnet({
+                mockState,
+                configId,
+                interfaceId: _iface[1].id,
+                isLinodeInterface: false,
+                subnetId: _iface[1].subnet_id ?? -1,
+                vpcId: _iface[1].vpc_id,
+              })
+            );
+        }
+      }
+
+      await Promise.all(deleteInterfacePromises);
       await mswDB.update(
         'linodeConfigs',
         configId,
