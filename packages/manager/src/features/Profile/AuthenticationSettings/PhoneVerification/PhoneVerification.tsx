@@ -323,7 +323,7 @@ export const PhoneVerification = ({
                 />
               </StyledInputContainer>
               {sendPhoneVerificationCodeError ? (
-                <StyledFormHelperText role="alert">
+                <StyledFormHelperText error role="alert">
                   {sendPhoneVerificationCodeError[0].reason}
                 </StyledFormHelperText>
               ) : null}
