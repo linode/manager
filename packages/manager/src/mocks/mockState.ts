@@ -24,6 +24,7 @@ export const getStateSeederGroups = (
 export const emptyStore: MockState = {
   cloudnats: [],
   configInterfaces: [],
+  destinations: [],
   domainRecords: [],
   domains: [],
   eventQueue: [],
