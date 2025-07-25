@@ -160,7 +160,7 @@ export const LinodeSelect = (
             : 'Select a Linode'
       }
       PopperComponent={CustomPopper}
-      renderOption={(linode, props, { selected }) => (
+      renderOption={(props, linode, { selected }) => (
         <LinodeOption
           disabledReason={disabledLinodes?.[linode.id]}
           key={linode.id}
