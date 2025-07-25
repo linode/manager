@@ -4,6 +4,80 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-07-29] - v1.147.0
+
+
+### Added:
+
+- Quotas informational banner ([#12531](https://github.com/linode/manager/pull/12531))
+
+### Changed:
+
+- Volume encryption to be enabled by default ([#12491](https://github.com/linode/manager/pull/12491))
+- ACLP: update `CloudPulseDateTimeRangePicker` to use `DateTimeRangePicker` from ui package ([#12497](https://github.com/linode/manager/pull/12497))
+
+### Fixed:
+
+- Side navigation gap for slightly taller screen ([#12496](https://github.com/linode/manager/pull/12496))
+- Uneven spacing and margin on NodeBalancer configurations ([#12502](https://github.com/linode/manager/pull/12502))
+- Bug in ACLP-Alerting list form by refetching alert list instead of setting old query data ([#12514](https://github.com/linode/manager/pull/12514))
+- Issue with CloudPulse Database filter retention ([#12515](https://github.com/linode/manager/pull/12515))
+- Firewall Device Search ([#12526](https://github.com/linode/manager/pull/12526))
+- Swap IPv4 Addresses amongst linodes in the same region ([#12541](https://github.com/linode/manager/pull/12541))
+- Misaligned Object Storage Bucket CORS toggle ([#12543](https://github.com/linode/manager/pull/12543))
+- Document title of Linode create page ([#12547](https://github.com/linode/manager/pull/12547))
+- Header alignment on invoice details page ([#12565](https://github.com/linode/manager/pull/12565))
+
+### Tech Stories:
+
+- Remove ramda from Support ([#12483](https://github.com/linode/manager/pull/12483))
+- Address phishing vulnerability via content spoofing on account users page ([#12487](https://github.com/linode/manager/pull/12487))
+- Specify permissions for GitHub Actions workflows ([#12501](https://github.com/linode/manager/pull/12501))
+- Add MSW crud support for assigning Linodes to a VPC ([#12503](https://github.com/linode/manager/pull/12503))
+- Improve new routing lazy loading patterns ([#12506](https://github.com/linode/manager/pull/12506))
+- Improve Tabs Lazy Loading - Profile + Account ([#12532](https://github.com/linode/manager/pull/12532))
+- Improve Tabs Lazy Loading - Linodes ([#12536](https://github.com/linode/manager/pull/12536))
+- Self-host the Pendo Standards agent in the manager repo ([#12539](https://github.com/linode/manager/pull/12539))
+- Improve Tabs Lazy Loading - IAM + DBaaS ([#12546](https://github.com/linode/manager/pull/12546))
+- Add package resolution for `form-data` ([#12566](https://github.com/linode/manager/pull/12566))
+- Add package resolution for `eslint/plugin-kit` ([#12567](https://github.com/linode/manager/pull/12567))
+- ACLP: Add `useIsAclpSupportedRegion` utility method ([#12517](https://github.com/linode/manager/pull/12517))
+
+### Tests:
+
+- Add Cypress test for Linode alerts tab based on region and user preference ([#12442](https://github.com/linode/manager/pull/12442))
+- Fix Community StackScripts Cypress test flake ([#12470](https://github.com/linode/manager/pull/12470))
+- Fix Cypress test failures following feature flag flip ([#12499](https://github.com/linode/manager/pull/12499))
+- Add Cypress test for unsaved changes modal for legacy alerts ([#12527](https://github.com/linode/manager/pull/12527))
+- Fix Linode rebuild test failures ([#12530](https://github.com/linode/manager/pull/12530))
+
+### Upcoming Features:
+
+- Add Networking IP Stack section to VPC Create page ([#12309](https://github.com/linode/manager/pull/12309))
+- Add IPv6 Prefix Length field to Create Subnet drawer ([#12382](https://github.com/linode/manager/pull/12382))
+- Add 'Configure Pool' button and drawer to LKE Create flow plans table ([#12449](https://github.com/linode/manager/pull/12449))
+- Add behavior to clear invalid plan selections in the database create flow when the region is changed ([#12469](https://github.com/linode/manager/pull/12469))
+- Prevent Linode Interface VPC nat_1_1 address from showing up twice ([#12473](https://github.com/linode/manager/pull/12473))
+- Unhide public IPv4 address when public Linode interface is default route ([#12473](https://github.com/linode/manager/pull/12473))
+- Create Stream: change Data Set section to Clusters section, fix minor style issues, update types ([#12477](https://github.com/linode/manager/pull/12477))
+- Add `CloudPulseVPCSubnet` component ([#12489](https://github.com/linode/manager/pull/12489))
+- CloudPulse: Add filters for new service - `firewall` at `FilterConfig.ts` in metrics, make text filter reusable at `CloudPulseTextFilter.tsx` ([#12508](https://github.com/linode/manager/pull/12508))
+- ACLP-Alerting: Nodebalancer onboarding for Alerting service ([#12510](https://github.com/linode/manager/pull/12510))
+- Link VPC in LKE cluster entity details footer for LKE-E Phase 2 ([#12513](https://github.com/linode/manager/pull/12513))
+- Add save legacy alerts confirmation modal ([#12516](https://github.com/linode/manager/pull/12516))
+- Implement the new RBAC permission hook in Linode Create flow ([#12522](https://github.com/linode/manager/pull/12522))
+- Add streams list for datastream page and GET, POST mock handlers for streams requests ([#12524](https://github.com/linode/manager/pull/12524))
+- IAM RBAC: Integrate a new hook to fetch permissions for a list of entities  ([#12529](https://github.com/linode/manager/pull/12529))
+- Implement the new RBAC permission hook in Firewalls Rules flow ([#12534](https://github.com/linode/manager/pull/12534))
+- IAM RBAC permission hook: update checks for sub-entities in Linodes Storage, Configuration, and Settings tabs ([#12535](https://github.com/linode/manager/pull/12535))
+- IAM RBAC: fix error message and styles issues ([#12542](https://github.com/linode/manager/pull/12542))
+- IAM RBAC: add Linodes Backups permissions check ([#12504](https://github.com/linode/manager/pull/12504))
+- IAM RBAC: Add the missing permission checks for linode, update the tooltip ([#12548](https://github.com/linode/manager/pull/12548))
+- ACLP-Alerting: Firewall onboarding for Alerting service ([#12550](https://github.com/linode/manager/pull/12550))
+- Edit node pool configuration in LKE cluster create flow ([#12552](https://github.com/linode/manager/pull/12552))
+- IAM RBAC: fix error message for the one account_admin in the account ([#12556](https://github.com/linode/manager/pull/12556))
+- Show GPU warning notice conditionally based on policy type - display for "migrate" policy but hide for "power-off-on" policy ([#12512](https://github.com/linode/manager/pull/12512))
+
 ## [2025-07-21] - v1.146.2
 
 ### Fixed:

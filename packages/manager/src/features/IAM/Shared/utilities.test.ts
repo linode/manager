@@ -836,12 +836,9 @@ describe('getErrorMessage', () => {
     const errors = [
       {
         reason: 'Request made to janus is invalid',
-        field: 'Bad janus request',
       },
       {
-        reason:
-          'Can not remove account admin access from the last account admin on the account',
-        field: 'Removing last account admin',
+        reason: 'Must have at least one user with account_admin role',
       },
     ];
     const result = getErrorMessage(errors);
