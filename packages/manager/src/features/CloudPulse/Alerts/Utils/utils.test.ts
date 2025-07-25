@@ -433,8 +433,8 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for firewall service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
   });
