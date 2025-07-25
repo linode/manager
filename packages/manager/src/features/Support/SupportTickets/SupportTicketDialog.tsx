@@ -105,15 +105,15 @@ export interface SupportTicketDialogProps {
 
 export interface SupportTicketFormFields {
   description: string;
-  entity: EntityForTicketDetails;
+  entity?: EntityForTicketDetails;
   entityId: string;
   entityInputValue: string;
   entityType: EntityType;
-  formPayloadValues: FormPayloadValues;
+  formPayloadValues?: FormPayloadValues;
   selectedSeverity: TicketSeverity | undefined;
   summary: string;
   ticketType: TicketType;
-  title: string;
+  title?: string;
 }
 
 export const entitiesToItems = (type: string, entities: any) => {

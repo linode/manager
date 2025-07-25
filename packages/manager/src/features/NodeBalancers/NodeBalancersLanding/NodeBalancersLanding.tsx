@@ -15,7 +15,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useOrder } from 'src/hooks/useOrder';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
@@ -35,13 +35,16 @@ export const NodeBalancersLanding = () => {
     globalGrantType: 'add_nodebalancers',
   });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/nodebalancers',
     },
-    preferenceKey
-  );
+    preferenceKey,
+  });
 
   const filter = {
     ['+order']: order,

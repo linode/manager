@@ -51,7 +51,15 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
   /**
    * Optional prop to pass a onClick handler to the link.
    */
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /**
+   * Optional prop to pass a sx style to the link.
+   */
+  style?: React.CSSProperties;
+  /**
+   * Optional prop to pass a title to the link.
+   */
+  title?: string;
   /**
    * The destination URL. Can be a relative path for internal navigation or an absolute URL for external links.
    */
@@ -90,6 +98,8 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       forceCopyColor,
       hideIcon,
       onClick,
+      style,
+      title,
       to,
     } = props;
     const { classes, cx } = useStyles();
@@ -137,7 +147,9 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
         onClick={onClick}
         ref={ref}
         rel="noopener noreferrer"
+        style={style}
         target="_blank"
+        title={title}
       >
         {resolvedChildren}
         {external && !hideIcon && (
@@ -163,6 +175,8 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           className
         )}
         ref={ref}
+        style={style}
+        title={title}
         {...(to && !shouldOpenInNewTab ? { to: to as _LinkProps['to'] } : {})}
       />
     );

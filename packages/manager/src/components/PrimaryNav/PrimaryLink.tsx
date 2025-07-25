@@ -17,7 +17,7 @@ export interface PrimaryLink extends BaseNavLink {
   activeLinks?: Array<string>;
   betaChipClassName?: string;
   isBeta?: boolean;
-  onClick?: (e: React.ChangeEvent<HTMLAnchorElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 interface PrimaryLinkProps extends PrimaryLink {
@@ -41,7 +41,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
 
   return (
     <StyledActiveLink
-      onClick={(e: React.ChangeEvent<any>) => {
+      onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
         closeMenu();
         if (onClick) {
           onClick(e);
