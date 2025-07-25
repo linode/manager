@@ -50,8 +50,6 @@ export const getConfigs = () => [
           return { ...configTuple[1], interfaces: interfacesForConfig };
         });
 
-      console.log('i need help 1', configInterfaces, configs);
-
       return makePaginatedResponse({
         data: configs,
         request,
@@ -71,8 +69,6 @@ export const getConfigs = () => [
       if (!linode || !linodeConfig || !configInterfaces) {
         return makeNotFoundResponse();
       }
-
-      console.log('i need help 2', configInterfaces);
 
       const interfaces = configInterfaces
         .filter((interfaceTuple) => interfaceTuple[0] === configId)
