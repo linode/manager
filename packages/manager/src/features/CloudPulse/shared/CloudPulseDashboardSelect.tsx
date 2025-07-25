@@ -5,7 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
+import { getAllDashboards, getEnabledServiceTypes } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
@@ -48,8 +48,14 @@ export const CloudPulseDashboardSelect = React.memo(
       isLoading: serviceTypesLoading,
     } = useCloudPulseServiceTypes(true);
 
-    const { aclpBetaServices } = useFlags();
-    const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
+    const { aclpBetaServices, aclpServices } = useFlags();
+
+    // Get formatted enabled service types based on the LD flag
+    const serviceTypes: string[] = getEnabledServiceTypes(
+      serviceTypesList,
+      aclpServices
+    );
+
     const serviceTypeMap: Map<string, string> = new Map(
       (serviceTypesList?.data || [])
         .filter((item) => item?.service_type !== undefined)

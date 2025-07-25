@@ -42,18 +42,25 @@ export const CloudPulseServiceSelect = (
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
-  const { aclpBetaServices } = useFlags();
+  const { aclpBetaServices, aclpServices } = useFlags();
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
   >[] => {
+    // If aclpServices is undefined, return all service types, else return the service types that are enabled and are present in the flag
     return serviceOptions?.data?.length
-      ? serviceOptions.data.map((service) => ({
-          label: service.label,
-          value: service.service_type as AlertServiceType,
-        }))
+      ? serviceOptions.data
+          .filter(
+            (service) =>
+              !aclpServices ||
+              (aclpServices?.[service.service_type]?.alerts?.enabled ?? false)
+          )
+          .map((service) => ({
+            label: service.label,
+            value: service.service_type as AlertServiceType,
+          }))
       : [];
-  }, [serviceOptions]);
+  }, [aclpServices, serviceOptions]);
 
   return (
     <Controller
