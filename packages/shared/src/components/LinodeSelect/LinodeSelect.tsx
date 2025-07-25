@@ -3,6 +3,8 @@ import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
 import { mapIdsToDevices } from '@linode/utilities';
 import React from 'react';
 
+import { LinodeOption } from './LinodeOption';
+
 import type { APIError, Filter, Linode } from '@linode/api-v4';
 import type { SxProps, Theme } from '@linode/ui';
 
@@ -16,6 +18,8 @@ interface LinodeSelectProps {
   clearable?: boolean;
   /** Disable editing the input value. */
   disabled?: boolean;
+  /** Map of Linode IDs to be disabled with a reason. */
+  disabledLinodes?: Record<number, string>;
   /** Hint displayed with error styling. */
   errorText?: string;
   /** Filter sent to the API when retrieving account Linodes. */
@@ -76,6 +80,7 @@ export const LinodeSelect = (
     checkIsOptionEqualToValue,
     clearable = true,
     disabled,
+    disabledLinodes,
     errorText,
     filter,
     getOptionDisabled,
@@ -121,7 +126,9 @@ export const LinodeSelect = (
       disabled={disabled}
       disablePortal={true}
       errorText={error?.[0].reason ?? errorText}
-      getOptionDisabled={getOptionDisabled}
+      getOptionDisabled={(linode) =>
+        !!disabledLinodes?.[linode.id] || getOptionDisabled?.(linode) || false
+      }
       helperText={helperText}
       id={id}
       inputValue={inputValue}
@@ -153,6 +160,15 @@ export const LinodeSelect = (
             : 'Select a Linode'
       }
       PopperComponent={CustomPopper}
+      renderOption={(linode, props, { selected }) => (
+        <LinodeOption
+          disabledReason={disabledLinodes?.[linode.id]}
+          key={linode.id}
+          linode={linode}
+          props={props}
+          selected={selected}
+        />
+      )}
       slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
       value={
