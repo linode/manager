@@ -26,7 +26,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
 
   const [isUsingOwnVpc, setIsUsingOwnVpc] = useState(false);
 
-  const { control, setValue, resetField } = useFormContext();
+  const { control, resetField } = useFormContext();
   const [selectedVPCId] = useWatch({
     control,
     name: ['vpc_id', 'subnet_id'],
@@ -115,16 +115,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
                   onBlur={field.onBlur}
                   onChange={(e, vpc) => {
                     field.onChange(vpc?.id ?? null);
-                    if (vpc && vpc.subnets.length === 1) {
-                      // If the user selects a VPC and the VPC only has one subnet,
-                      // preselect that subnet for the user.
-                      setValue('subnet_id', vpc.subnets[0].id, {
-                        shouldValidate: true,
-                      });
-                    } else {
-                      // Otherwise, just clear the selected subnet.
-                      resetField('subnet_id');
-                    }
+                    resetField('subnet_id');
                   }}
                   options={vpcs ?? []}
                   placeholder="Select a VPC"
