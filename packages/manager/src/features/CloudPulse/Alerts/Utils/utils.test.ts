@@ -336,62 +336,6 @@ describe('filterRegionByServiceType', () => {
         metrics: [],
       },
     }),
-    regionFactory.build({
-      monitors: undefined,
-    }),
-  ];
-
-  it('should return empty list for linode metrics', () => {
-    const result = filterRegionByServiceType('metrics', regions, 'linode');
-
-    expect(result).toHaveLength(0);
-  });
-
-  it('should return 4 regions for linode alerts', () => {
-    expect(filterRegionByServiceType('alerts', regions, 'linode')).toHaveLength(
-      4
-    );
-  });
-
-  it('should return 1 region for dbaas metrics', () => {
-    expect(filterRegionByServiceType('metrics', regions, 'dbaas')).toHaveLength(
-      1
-    );
-  });
-
-  it('should return 3 regions for dbaas alerts', () => {
-    expect(filterRegionByServiceType('alerts', regions, 'dbaas')).toHaveLength(
-      3
-    );
-  });
-
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
-
-    expect(result).toHaveLength(0);
-  });
-});
-
-describe('filterRegionByServiceType', () => {
-  const regions = [
-    regionFactory.build({
-      monitors: {
-        alerts: ['Linodes'],
-        metrics: ['Managed Databases'],
-      },
-    }),
-    ...regionFactory.buildList(3, {
-      monitors: {
-        metrics: [],
-        alerts: [],
-      },
-    }),
-    ...regionFactory.buildList(3, {
-      monitors: {
-        alerts: ['Linodes', 'Managed Databases'],
-        metrics: [],
-      },
-    }),
     regionFactory.build(),
   ];
 
@@ -419,8 +363,8 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for firewall service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
   });

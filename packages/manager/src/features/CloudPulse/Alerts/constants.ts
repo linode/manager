@@ -116,8 +116,6 @@ export const entityGroupMap: Record<AlertDefinitionScope, string> = {
   entity: 'Entity',
 };
 
-export const textFieldOperators = ['endswith', 'startswith'];
-
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
@@ -162,7 +160,6 @@ export const dimensionOperatorTypeMap: Record<
   in: 'in',
   neq: 'not equals',
   startswith: 'starts with',
-  in: 'in',
 };
 
 export const alertStatuses: Record<AlertStatusType, string> = {
