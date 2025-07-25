@@ -78,6 +78,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Edit node pool configuration in LKE cluster create flow ([#12552](https://github.com/linode/manager/pull/12552))
 - IAM RBAC: fix error message for the one account_admin in the account ([#12556](https://github.com/linode/manager/pull/12556))
 - Show GPU warning notice conditionally based on policy type - display for "migrate" policy but hide for "power-off-on" policy ([#12512](https://github.com/linode/manager/pull/12512))
+- IAM RBAC: Implement the new RBAC permission hook in Firewall Linodes tab ([#12500](https://github.com/linode/manager/pull/12500))
+
 
 ## [2025-07-21] - v1.146.2
 
