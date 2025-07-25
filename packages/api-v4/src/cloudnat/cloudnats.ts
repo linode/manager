@@ -12,6 +12,7 @@ import Request, {
 import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CloudNAT,
+  CloudNATIPAddress,
   CreateCloudNATPayload,
   UpdateCloudNATPayload,
 } from './types';
@@ -49,3 +50,45 @@ export const deleteCloudNAT = (id: number) =>
     setURL(`${API_ROOT}/networking/cloudnats/${id}`),
     setMethod('DELETE'),
   );
+
+export const assignCloudNATAddress = (
+  cloudNATId: number,
+  address: { address: string },
+) => {
+  return Request<CloudNATIPAddress>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/networking/cloudnats/${cloudNATId}/addresses`),
+    setData(address),
+  );
+};
+
+export const getCloudNATAddresses = (
+  cloudNATId: number,
+  params?: Params,
+  filter?: Filter,
+) => {
+  return Request<Page<CloudNATIPAddress>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+    setURL(`${API_ROOT}/networking/cloudnats/${cloudNATId}/addresses`),
+  );
+};
+
+export const getCloudNATAddress = (cloudNATId: number, address: string) => {
+  return Request<CloudNATIPAddress>(
+    setMethod('GET'),
+    setURL(
+      `${API_ROOT}/networking/cloudnats/${cloudNATId}/addresses/${address}`,
+    ),
+  );
+};
+
+export const deleteCloudNATAddress = (cloudNATId: number, address: string) => {
+  return Request<{}>(
+    setMethod('DELETE'),
+    setURL(
+      `${API_ROOT}/networking/cloudnats/${cloudNATId}/addresses/${address}`,
+    ),
+  );
+};
