@@ -60,19 +60,16 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: 'us-ord',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: '',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'nodebalancer',
-      supportedRegionIds: 'us-east',
     },
   ],
 };
@@ -104,6 +101,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['NodeBalancers'],
   id: 'us-east',
   label: 'Newark, NJ, USA',
+  monitors: {
+    metrics: ['NodeBalancers'],
+    alerts: [],
+  },
 });
 
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({

@@ -10,20 +10,11 @@ import { REGION_GROUP_INFO_MESSAGE } from '../constants';
 import { AlertRegions } from './AlertRegions';
 
 import type { CloudPulseServiceType } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
-const regions = regionFactory.buildList(6);
+const regions = regionFactory.buildList(6, {
+  monitors: { alerts: ['Managed Databases'] },
+});
 const serviceType: CloudPulseServiceType = 'dbaas';
-
-const flags: Partial<Flags> = {
-  aclpResourceTypeMap: [
-    {
-      serviceType,
-      supportedRegionIds: regions.map(({ id }) => id).join(','),
-      dimensionKey: 'region',
-    },
-  ],
-};
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn(),
@@ -67,7 +58,7 @@ const component = (
 );
 describe('Alert Regions', () => {
   it('Should render the filters and notices ', () => {
-    renderWithTheme(component, { flags });
+    renderWithTheme(component);
     const text = screen.getByText(REGION_GROUP_INFO_MESSAGE);
 
     const regionSearch = screen.getByTestId('region-search');
@@ -79,7 +70,7 @@ describe('Alert Regions', () => {
   });
 
   it('should select all regions when the select all checkbox is checked', async () => {
-    renderWithTheme(component, { flags });
+    renderWithTheme(component);
 
     const selectAllCheckbox = within(
       screen.getByTestId('select-all-checkbox')
@@ -94,7 +85,7 @@ describe('Alert Regions', () => {
   });
 
   it('should show only header on click of show selected only', async () => {
-    renderWithTheme(component, { flags });
+    renderWithTheme(component);
 
     const checkbox = within(screen.getByTestId('show-selected-only')).getByRole(
       'checkbox'

@@ -58,13 +58,13 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: 'us-ord,us-east',
+      // supportedRegionIds: 'us-ord,us-east',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord,us-east',
+      // supportedRegionIds: 'us-ord,us-east',
     },
   ],
 };
@@ -75,11 +75,19 @@ const mockRegions = [
     id: 'us-ord',
     label: 'Chicago, IL',
     capabilities: ['Managed Databases'],
+    monitors: {
+      alerts: ['Linodes', 'Managed Databases'],
+      metrics: [],
+    },
   }),
   regionFactory.build({
     id: 'us-east',
     label: 'New York, NY',
     capabilities: ['Managed Databases'],
+    monitors: {
+      alerts: ['Linodes', 'Managed Databases'],
+      metrics: [],
+    },
   }),
 ];
 const { metrics, resource } = widgetDetails.linode;

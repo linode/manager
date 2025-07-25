@@ -63,13 +63,11 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: '',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
     },
   ],
 };
@@ -117,6 +115,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    metrics: ['Managed Databases'],
+    alerts: [],
+  },
 });
 
 const extendedMockRegion = regionFactory.build({

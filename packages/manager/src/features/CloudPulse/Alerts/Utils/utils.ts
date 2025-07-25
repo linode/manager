@@ -1,3 +1,15 @@
+import {
+  type Alert,
+  type AlertDefinitionMetricCriteria,
+  type AlertDefinitionType,
+  type APIError,
+  capabilityServiceTypeMapping,
+  type CloudPulseServiceType,
+  type EditAlertPayloadWithService,
+  type NotificationChannel,
+  type Region,
+  type ServiceTypesList,
+} from '@linode/api-v4';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
@@ -7,22 +19,9 @@ import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect
 import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type {
-  Alert,
-  AlertDefinitionMetricCriteria,
-  AlertDefinitionType,
-  APIError,
-  CloudPulseServiceType,
-  EditAlertPayloadWithService,
-  NotificationChannel,
-  Region,
-  ServiceTypesList,
-} from '@linode/api-v4';
+import type { MonitoringCapabilities } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type {
-  AclpAlertServiceTypeConfig,
-  CloudPulseResourceTypeMapFlag,
-} from 'src/featureFlags';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -136,10 +135,6 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
 
 interface FilterRegionProps {
   /**
-   * The resource type map flag
-   */
-  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[];
-  /**
    * The list of regions
    */
   regions?: Region[];
@@ -158,10 +153,6 @@ interface FilterRegionProps {
 }
 
 interface SupportedRegionsProps {
-  /**
-   * The resource type map flag
-   */
-  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[];
   /**
    * The list of regions
    */
@@ -524,16 +515,9 @@ export const handleMultipleError = <T extends FieldValues>(
  * @returns The filtered regions based on the selected regions and resources
  */
 export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
-  const {
-    aclpResourceTypeMap,
-    regions,
-    resources,
-    selectedRegions,
-    serviceType,
-  } = props;
+  const { regions, resources, selectedRegions, serviceType } = props;
 
   const supportedRegionsFromResources = getSupportedRegions({
-    aclpResourceTypeMap,
     regions,
     resources,
     serviceType,
@@ -576,30 +560,42 @@ export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
  * @returns The filtered regions based on the supported and resources
  */
 export const getSupportedRegions = (props: SupportedRegionsProps) => {
-  const { aclpResourceTypeMap, serviceType, regions, resources } = props;
-  const resourceTypeFlag = aclpResourceTypeMap?.find(
-    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
-  );
-  let supportedRegions = regions;
-  if (
-    resourceTypeFlag?.supportedRegionIds !== null &&
-    resourceTypeFlag?.supportedRegionIds !== undefined
-  ) {
-    const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
-      .split(',')
-      .map((regionId: string) => regionId.trim());
+  const { serviceType, regions, resources } = props;
 
-    supportedRegions =
-      supportedRegions?.filter(({ id }) =>
-        supportedRegionsIdList.includes(id)
-      ) ?? [];
-  }
+  const supportedRegions = filterRegionByServiceType(
+    'alerts',
+    regions,
+    serviceType
+  );
 
   return (
     supportedRegions?.filter(({ id }) =>
       resources?.some(({ region }) => region === id)
     ) ?? []
   );
+};
+
+/**
+ * Filters regions based on service type and capability type
+ * @param type The monitoring capability type to filter by (e.g., 'alerts', 'metrics')
+ * @param regions The list of regions to filter
+ * @param serviceType The service type to filter regions by
+ * @returns Array of regions that support the specified service type and monitoring type
+ */
+export const filterRegionByServiceType = (
+  type: keyof MonitoringCapabilities,
+  regions?: Region[],
+  serviceType?: null | string
+): Region[] => {
+  if (!serviceType || !regions) return regions ?? [];
+  const capability = capabilityServiceTypeMapping[serviceType];
+
+  if (!capability) {
+    return [];
+  }
+  return regions.filter((region) => {
+    return region.monitors?.[type]?.includes(capability);
+  });
 };
 
 /*
