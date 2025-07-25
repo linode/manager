@@ -10,7 +10,7 @@ import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtil
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
-import { type CreateStreamForm } from './types';
+import { type CreateStreamAndDestinationForm } from './types';
 
 type DestinationName = {
   create?: boolean;
@@ -18,9 +18,19 @@ type DestinationName = {
   label: string;
 };
 
+const controlPaths = {
+  accessKeyId: 'destination.details.access_key_id',
+  accessKeySecret: 'destination.details.access_key_secret',
+  bucketName: 'destination.details.bucket_name',
+  host: 'destination.details.host',
+  path: 'destination.details.path',
+  region: 'destination.details.region',
+};
+
 export const StreamCreateDelivery = () => {
   const theme = useTheme();
-  const { control, setValue } = useFormContext<CreateStreamForm>();
+  const { control, setValue } =
+    useFormContext<CreateStreamAndDestinationForm>();
 
   const [showDestinationForm, setShowDestinationForm] =
     React.useState<boolean>(false);
@@ -38,7 +48,7 @@ export const StreamCreateDelivery = () => {
 
   const selectedDestinationType = useWatch({
     control,
-    name: 'destination_type',
+    name: 'destination.type',
   });
 
   const destinationNameFilterOptions = createFilterOptions<DestinationName>();
@@ -58,12 +68,14 @@ export const StreamCreateDelivery = () => {
       </Typography>
       <Controller
         control={control}
-        name="destination_type"
-        render={({ field }) => (
+        name="destination.type"
+        render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
             disabled={true}
+            errorText={fieldState.error?.message}
             label="Destination Type"
+            onBlur={field.onBlur}
             onChange={(_, { value }) => {
               field.onChange(value);
             }}
@@ -71,13 +83,13 @@ export const StreamCreateDelivery = () => {
             value={getDestinationTypeOption(field.value)}
           />
         )}
-        rules={{ required: true }}
       />
       <Controller
         control={control}
-        name="destination_label"
-        render={({ field }) => (
+        name="destination.label"
+        render={({ field, fieldState }) => (
           <Autocomplete
+            errorText={fieldState.error?.message}
             filterOptions={(options, params) => {
               const filtered = destinationNameFilterOptions(options, params);
               const { inputValue } = params;
@@ -96,9 +108,10 @@ export const StreamCreateDelivery = () => {
             }}
             getOptionLabel={(option) => option.label}
             label="Destination Name"
+            onBlur={field.onBlur}
             onChange={(_, newValue) => {
               field.onChange(newValue?.label || newValue);
-              setValue('destinations', [newValue?.id as number]);
+              setValue('stream.destinations', [newValue?.id as number]);
               setShowDestinationForm(!!newValue?.create);
             }}
             options={destinationNameOptions}
@@ -120,11 +133,12 @@ export const StreamCreateDelivery = () => {
             value={field.value ? { label: field.value } : null}
           />
         )}
-        rules={{ required: true }}
       />
       {showDestinationForm &&
         selectedDestinationType === destinationType.LinodeObjectStorage && (
-          <DestinationLinodeObjectStorageDetailsForm />
+          <DestinationLinodeObjectStorageDetailsForm
+            controlPaths={controlPaths}
+          />
         )}
     </Paper>
   );
