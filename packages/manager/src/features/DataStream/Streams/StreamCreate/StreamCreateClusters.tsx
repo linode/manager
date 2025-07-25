@@ -6,7 +6,6 @@ import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -202,14 +201,7 @@ export const StreamCreateClusters = () => {
 
   return (
     <Paper>
-      <Box display="flex" justifyContent="space-between">
-        <Typography variant="h2">Clusters</Typography>
-        <DocsLink
-          // TODO: Change the link when proper documentation is ready
-          href="https://techdocs.akamai.com/cloud-computing/docs"
-          label="Docs"
-        />
-      </Box>
+      <Typography variant="h2">Clusters</Typography>
       <Notice sx={{ mt: 2 }} variant="info">
         Disabling this option allows you to manually define which clusters will
         be included in the stream. Stream will not be updated automatically with
