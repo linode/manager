@@ -11,20 +11,20 @@ export const getStackScriptUrl = (
     case currentUser:
       // My StackScripts
       // @todo: handle account stackscripts
-      type = 'StackScripts';
+      type = 'stackscripts';
       subtype = 'Account';
       break;
     case 'linode':
       // This is a Marketplace App
-      type = 'One-Click';
+      type = 'marketplace';
       subtype = 'One-Click%20Apps';
       break;
     default:
       // Community StackScripts
-      type = 'StackScripts';
+      type = 'stackscripts';
       subtype = 'Community';
   }
-  return `/linodes/create?type=${type}&subtype=${subtype}&stackScriptID=${id}`;
+  return `/linodes/create/${type}?subtype=${subtype}&stackScriptID=${id}`;
 };
 
 export const canUserModifyAccountStackScript = (
