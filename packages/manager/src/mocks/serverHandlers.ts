@@ -3171,6 +3171,7 @@ export const handlers = [
             metric: {
               entity_id: '123',
               metric_name: 'average_cpu_usage',
+              linode_id: '1',
               node_id: 'primary-1',
             },
             values: [

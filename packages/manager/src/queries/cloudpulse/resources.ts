@@ -16,6 +16,18 @@ export const useResourcesQuery = (
     enabled,
     select: (resources) => {
       return resources.map((resource) => {
+        const entities: Record<string, string> = {};
+
+        // handle separately for firewall resource type
+        if (resourceType === 'firewall') {
+          resource.entities?.forEach(
+            (entity: { id: number; label: string; type: string }) => {
+              if (entity.type === 'linode') {
+                entities[String(entity.id)] = entity.label;
+              }
+            }
+          );
+        }
         return {
           engineType: resource.engine,
           id: String(resource.id),
@@ -23,6 +35,7 @@ export const useResourcesQuery = (
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
           tags: resource.tags,
+          entities,
         };
       });
     },
