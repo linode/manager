@@ -201,7 +201,12 @@ export const ALERT_SCOPE_TOOLTIP_TEXT =
 export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
   'Indicates whether the alert applies to all entities in the account, entities in specific regions, or just this entity.';
 
+export const REGION_GROUP_INFO_MESSAGE =
+  'This alert applies to all entities associated with selected regions, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
+
 export type AlertFormMode = 'create' | 'edit' | 'view';
+
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 

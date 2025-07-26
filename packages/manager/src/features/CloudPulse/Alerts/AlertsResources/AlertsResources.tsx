@@ -18,8 +18,8 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
-import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import {
   databaseTypeClassMap,
   getSearchPlaceholderText,
@@ -454,11 +454,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           resources &&
           resources.length > 0 && (
             <GridLegacy item xs={12}>
-              <AlertsResourcesNotice
+              <AlertSelectedInfoNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
-                selectedResources={selectedResources.length}
-                totalResources={resources?.length ?? 0}
+                property="entities"
+                selectedCount={selectedResources.length}
+                totalCount={resources?.length ?? 0}
               />
             </GridLegacy>
           )}
