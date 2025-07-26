@@ -7,6 +7,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
@@ -18,10 +19,6 @@ interface Props {
    * Whether the user is a child user.
    */
   isChildUser?: boolean | undefined;
-  /**
-   * Whether the user is a restricted user.
-   */
-  isRestrictedUser?: boolean | undefined;
   /**
    * Function called when the delete button in the Action Menu is pressed.
    */
@@ -38,13 +35,18 @@ interface Props {
  */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { isRestrictedUser, onDelete, paymentMethod } = props;
+  const { onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const { mutateAsync: makePaymentMethodDefault } =
     useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
+
+  const { permissions } = usePermissions('account', [
+    'make_billing_payment',
+    'update_account',
+  ]);
 
   const makeDefault = () => {
     makePaymentMethodDefault().catch((errors) =>
@@ -57,7 +59,7 @@ export const PaymentMethodRow = (props: Props) => {
 
   const actions: Action[] = [
     {
-      disabled: isRestrictedUser,
+      disabled: !permissions.make_billing_payment,
       onClick: () => {
         navigate({
           to: '/account/billing',
@@ -71,7 +73,7 @@ export const PaymentMethodRow = (props: Props) => {
       title: 'Make a Payment',
     },
     {
-      disabled: isRestrictedUser || paymentMethod.is_default,
+      disabled: !permissions.update_account || paymentMethod.is_default,
       onClick: makeDefault,
       title: 'Make Default',
       tooltip: paymentMethod.is_default
@@ -79,7 +81,7 @@ export const PaymentMethodRow = (props: Props) => {
         : undefined,
     },
     {
-      disabled: isRestrictedUser || paymentMethod.is_default,
+      disabled: !permissions.update_account || paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default

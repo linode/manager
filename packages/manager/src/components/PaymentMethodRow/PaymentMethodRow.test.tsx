@@ -11,6 +11,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      make_billing_payment: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
@@ -175,6 +187,51 @@ describe('Payment Method Row', () => {
     await userEvent.click(makeDefaultButton);
 
     expect(makeDefaultPaymentMethod).toBeCalledTimes(1);
+  });
+
+  it('should disable "Make a Payment" button if the user does not have make_billing_payment permissions', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <PaymentMethodRow
+          onDelete={vi.fn()}
+          paymentMethod={paymentMethodFactory.build({ is_default: true })}
+        />
+      </PayPalScriptProvider>
+    );
+
+    const actionMenu = getByLabelText('Action menu for card ending in 1881');
+    await userEvent.click(actionMenu);
+
+    const makePaymentButton = getByText('Make a Payment');
+    expect(makePaymentButton).toBeVisible();
+    expect(
+      makePaymentButton.closest('li')?.getAttribute('aria-disabled')
+    ).toEqual('true');
+  });
+
+  it('should enable "Make a Payment" button if the user has make_billing_payment permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        make_billing_payment: true,
+      },
+    });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <PaymentMethodRow
+          onDelete={vi.fn()}
+          paymentMethod={paymentMethodFactory.build({ is_default: true })}
+        />
+      </PayPalScriptProvider>
+    );
+
+    const actionMenu = getByLabelText('Action menu for card ending in 1881');
+    await userEvent.click(actionMenu);
+
+    const makePaymentButton = getByText('Make a Payment');
+    expect(makePaymentButton).toBeVisible();
+    expect(
+      makePaymentButton.closest('li')?.getAttribute('aria-disabled')
+    ).not.toEqual('true');
   });
 
   it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
