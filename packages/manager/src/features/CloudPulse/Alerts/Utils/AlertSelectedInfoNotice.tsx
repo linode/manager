@@ -6,7 +6,7 @@ import { AlertMaxSelectionText } from './AlertMaxSelectionText';
 
 import type { SelectDeselectAll } from '../constants';
 
-interface AlertSelectedInforNoticeProps {
+interface AlertSelectedInfoNoticeProps {
   /**
    * Callback to handle selection changes (select all or deselect all).
    */
@@ -34,7 +34,7 @@ interface AlertSelectedInforNoticeProps {
 }
 
 export const AlertSelectedInfoNotice = React.memo(
-  (props: AlertSelectedInforNoticeProps) => {
+  (props: AlertSelectedInfoNoticeProps) => {
     const {
       handleSelectionChange,
       maxSelectionCount,
