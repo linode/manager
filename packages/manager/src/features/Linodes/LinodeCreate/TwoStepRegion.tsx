@@ -140,6 +140,9 @@ export const TwoStepRegion = (props: CombinedProps) => {
                 }
               }}
               options={GEOGRAPHICAL_AREA_OPTIONS}
+              value={GEOGRAPHICAL_AREA_OPTIONS.find(
+                (option) => option.value === regionFilter
+              )}
             />
             <RegionSelect
               currentCapability="Linodes"
