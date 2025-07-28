@@ -6,11 +6,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2025-07-29] - v1.147.0
 
-
-### Added:
-
-- Quotas informational banner ([#12531](https://github.com/linode/manager/pull/12531))
-
 ### Changed:
 
 - Volume encryption to be enabled by default ([#12491](https://github.com/linode/manager/pull/12491))
