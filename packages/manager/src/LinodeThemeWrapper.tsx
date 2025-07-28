@@ -14,12 +14,16 @@ interface Props {
 export const LinodeThemeWrapper = (props: Props) => {
   const { children, theme: themeOverride } = props;
   const { colorMode } = useColorMode();
+  const currentTheme = themeOverride ?? colorMode;
+
+  // Expose theme to DOM for Pendo guide styling
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  }, [currentTheme]);
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themes[themeOverride ?? colorMode]}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={themes[currentTheme]}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
