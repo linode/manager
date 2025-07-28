@@ -35,6 +35,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
+  // TODO - UIE-8999 - this query must be included with the useQueryWithPermissions hook
   const {
     data: linodes,
     error: linodeError,

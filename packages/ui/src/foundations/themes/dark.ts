@@ -205,11 +205,11 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
-  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
-    {
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
       background: Table.Row.Background.Hover,
     },
+  },
 };
 
 const MuiTableZebraStyles = {

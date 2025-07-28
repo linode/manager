@@ -1,4 +1,5 @@
 import { useLinodeQuery } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { Box } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -27,6 +28,7 @@ const LinodeAlerts = () => {
     regionId: linode?.region,
     type: 'alerts',
   });
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(id, 'beta');
 
   return (
     <Box>
@@ -45,6 +47,7 @@ const LinodeAlerts = () => {
         <AlertReusableComponent
           entityId={linodeId.toString()}
           entityName={linode?.label ?? ''}
+          isLegacyAlertAvailable={!isLinodeAclpSubscribed}
           serviceType="linode"
         />
       ) : (

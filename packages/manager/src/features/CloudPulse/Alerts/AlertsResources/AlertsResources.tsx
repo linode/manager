@@ -5,7 +5,6 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -21,7 +20,11 @@ import {
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
+import {
+  databaseTypeClassMap,
+  getSearchPlaceholderText,
+  serviceToFiltersMap,
+} from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -125,14 +128,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isLoading: isRegionsLoading,
   } = useRegionsQuery();
 
-  const flags = useFlags();
   const theme = useTheme();
 
-  // Validate launchDarkly region ids with the ids from regionOptions prop
-  const supportedRegionIds = getSupportedRegionIds(
-    flags.aclpResourceTypeMap,
-    serviceType
-  );
+  const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds
       ? {
@@ -382,9 +380,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <DebouncedSearchTextField
               clearable
               hideLabel
-              label="Search for a Region or Entity"
+              label={getSearchPlaceholderText(serviceType)}
               onSearch={handleSearchTextChange}
-              placeholder="Search for a Region or Entity"
+              placeholder={getSearchPlaceholderText(serviceType)}
               sx={{
                 maxHeight: '34px',
               }}

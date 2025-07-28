@@ -47,11 +47,26 @@ const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 // Create mock data
 const mockAccount = accountFactory.build();
-const mockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
-});
+const mockRegions = [
+  regionFactory.build({
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    capabilities: ['Managed Databases'],
+    monitors: {
+      alerts: ['Managed Databases'],
+      metrics: [],
+    },
+  }),
+  regionFactory.build({
+    id: 'us-east',
+    label: 'New York, NY',
+    capabilities: ['Managed Databases'],
+    monitors: {
+      alerts: ['Managed Databases'],
+      metrics: [],
+    },
+  }),
+];
 const { metrics, serviceType } = widgetDetails.dbaas;
 const databaseMock = databaseFactory.buildList(10, {
   cluster_size: 3,
@@ -164,7 +179,7 @@ describe('Create Alert', () => {
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);
-    mockGetRegions([mockRegion]);
+    mockGetRegions(mockRegions);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetDatabases(databaseMock);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');

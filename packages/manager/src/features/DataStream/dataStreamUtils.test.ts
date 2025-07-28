@@ -1,10 +1,8 @@
+import { destinationType } from '@linode/api-v4';
 import { expect } from 'vitest';
 
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
-import {
-  destinationType,
-  destinationTypeOptions,
-} from 'src/features/DataStream/Shared/types';
+import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
 describe('dataStream utils functions', () => {
   describe('getDestinationTypeOption ', () => {

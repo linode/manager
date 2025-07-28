@@ -21,9 +21,9 @@ export const MaintenancePolicy = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
   const flags = useFlags();
 
-  const [selectedRegion, selectedType] = useWatch({
+  const [selectedRegion, selectedType, maintenancePolicy] = useWatch({
     control,
-    name: ['region', 'type'],
+    name: ['region', 'type', 'maintenance_policy'],
   });
 
   const { data: region } = useRegionQuery(selectedRegion);
@@ -52,9 +52,11 @@ export const MaintenancePolicy = () => {
         },
       }}
     >
-      {regionSupportsMaintenancePolicy && isGPUPlan && (
-        <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>
-      )}
+      {regionSupportsMaintenancePolicy &&
+        isGPUPlan &&
+        maintenancePolicy === 'linode/migrate' && (
+          <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>
+        )}
       <Controller
         control={control}
         name="maintenance_policy"
@@ -65,7 +67,7 @@ export const MaintenancePolicy = () => {
             onChange={(policy) => field.onChange(policy.slug)}
             textFieldProps={{
               helperText: !region
-                ? 'Select a region to see available maintenance policies.'
+                ? 'Select a region to choose a maintenance policy.'
                 : selectedRegion && !regionSupportsMaintenancePolicy
                   ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
                   : undefined,

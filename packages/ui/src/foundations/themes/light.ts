@@ -245,8 +245,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+      background: Table.Row.Background.Hover,
+    },
   },
 };
 
@@ -1608,7 +1610,7 @@ export const lightTheme: ThemeOptions = {
             height: '16px',
             margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Text,
+              fill: Table.HeaderNested.Icon,
             },
             width: '16px',
           },

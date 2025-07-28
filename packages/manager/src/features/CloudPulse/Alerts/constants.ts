@@ -100,6 +100,10 @@ export const dimensionOperatorOptions: Item<
     label: 'Starts with',
     value: 'startswith',
   },
+  {
+    label: 'In',
+    value: 'in',
+  },
 ];
 
 export const textFieldOperators = ['endswith', 'startswith'];
@@ -153,6 +157,7 @@ export const dimensionOperatorTypeMap: Record<
   eq: 'equals',
   neq: 'not equals',
   startswith: 'starts with',
+  in: 'in',
 };
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
@@ -190,12 +195,21 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
 
-export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
-  'Indicates whether the alert applies to all Linodes in the account, Linodes in specific regions, or just this Linode (entity).';
-
 export const ALERT_SCOPE_TOOLTIP_TEXT =
   'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
+
+export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
+  'Indicates whether the alert applies to all entities in the account, entities in specific regions, or just this entity.';
 
 export type AlertFormMode = 'create' | 'edit' | 'view';
 
 export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
+
+export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
+  'Trailing comma is not allowed.';
+
+export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
+
+export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
+
+export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';

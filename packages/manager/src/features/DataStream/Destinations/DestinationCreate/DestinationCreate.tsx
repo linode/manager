@@ -1,3 +1,4 @@
+import { destinationType } from '@linode/api-v4';
 import { Autocomplete, Box, Button, Paper, TextField } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -7,10 +8,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
-import {
-  destinationType,
-  destinationTypeOptions,
-} from 'src/features/DataStream/Shared/types';
+import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
 import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 

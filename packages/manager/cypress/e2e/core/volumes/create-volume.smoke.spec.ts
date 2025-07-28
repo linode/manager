@@ -19,6 +19,7 @@ import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { checkboxTestId } from 'src/components/Encryption/constants';
 import {
   PRICES_RELOAD_ERROR_NOTICE_TEXT,
   UNKNOWN_PRICE,
@@ -137,6 +138,7 @@ describe('volumes', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockRegion.id,
+      capabilities: ['Block Storage Encryption'],
     });
     const newVolume = volumeFactory.build({
       label: randomLabel(),
@@ -328,6 +330,8 @@ describe('volumes', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Create and Attach Volume').should('be.visible').click();
+
+        cy.findByTestId(checkboxTestId).scrollIntoView();
 
         // Confirm that unknown pricing placeholder text displays, create button is disabled, and error tooltip displays.
         cy.contains(`$${UNKNOWN_PRICE}/mo`).should('be.visible');
