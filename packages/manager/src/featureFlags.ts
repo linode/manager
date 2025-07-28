@@ -129,7 +129,7 @@ export interface Flags {
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
-  aclpServices: AclpServices;
+  aclpServices: Partial<AclpServices>;
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
@@ -324,9 +324,9 @@ interface AclpServiceStatus {
   enabled: boolean;
 }
 
-export interface AclpServices {
-  [serviceType: string]: {
+export type AclpServices = {
+  [serviceType in CloudPulseServiceType]: {
     alerts: AclpServiceStatus;
     metrics: AclpServiceStatus;
   };
-}
+};
