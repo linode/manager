@@ -70,7 +70,7 @@ const serviceTypes = [
   },
 ];
 
-describe('Alert Listing', async () => {
+describe('Alert Listing - Core Functionality', async () => {
   it('should render the alert landing table with items', async () => {
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: mockResponse,
@@ -273,6 +273,21 @@ describe('Alert Listing', async () => {
     );
   });
 
+  it('should disable the create button when the alerts are loading', async () => {
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: null,
+      isError: false,
+      isLoading: true,
+    });
+
+    renderWithTheme(<AlertListing />);
+
+    const createButton = screen.getByRole('button', { name: 'Create Alert' });
+    expect(createButton).toBeDisabled();
+  });
+});
+
+describe('Alert Listing - Feature Flag Management', async () => {
   it('should render the alerts from the enabled services', async () => {
     queryMocks.useFlags.mockReturnValue({
       aclpServices: aclpServicesFlag,
@@ -384,19 +399,6 @@ describe('Alert Listing', async () => {
     expect(screen.queryByText(mockResponse[0].label)).not.toBeInTheDocument();
     expect(screen.queryByText(mockResponse[1].label)).not.toBeInTheDocument();
     expect(screen.queryByText(mockResponse[2].label)).not.toBeInTheDocument();
-  });
-
-  it('should disable the create button when the alerts are loading', async () => {
-    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-      data: null,
-      isError: false,
-      isLoading: true,
-    });
-
-    renderWithTheme(<AlertListing />);
-
-    const createButton = screen.getByRole('button', { name: 'Create Alert' });
-    expect(createButton).toBeDisabled();
   });
 
   it('should render the service types based on the enabled services from the aclp services flag', async () => {
