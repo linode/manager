@@ -117,7 +117,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       data: [placementGroupFactory.build({ region: 'us-west' })],
     });
     const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
-    const { getByPlaceholderText, getByText } = renderWithTheme(
+    const { getByPlaceholderText, getByText, getByRole } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
@@ -130,12 +130,14 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
     });
 
+    const tooltip = getByRole('tooltip');
+
     await waitFor(() => {
-      expect(
-        getByText(
-          'You’ve reached the limit of placement groups you can create in this region.'
-        )
-      ).toBeInTheDocument();
+      expect(tooltip.textContent).toContain(
+        'You’ve reached the limit of placement groups you can create in this region.'
+      );
     });
+
+    expect(tooltip).toBeVisible();
   });
 });
