@@ -67,6 +67,13 @@ const preferenceConfig: Record<
   },
 };
 
+/**
+ * - For Alerts, the toggle uses local state, not preferences. We do this because each Linode should manage its own alert mode individually.
+ *   - Create Linode: Toggle defaults to false (legacy mode). It's a simple UI toggle with no persistence.
+ *   - Edit Linode: Toggle defaults based on useIsLinodeAclpSubscribed (true if the Linode is already subscribed to ACLP). Still local state - not saved to preferences.
+ *
+ * - For Metrics, we use account-level preferences, since it's a global setting shared across all Linodes.
+ */
 export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
   const { isAlertsBetaMode, onAlertsModeChange, type } = props;
 
