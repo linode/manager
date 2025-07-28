@@ -374,7 +374,7 @@ describe('Create Alert', () => {
           ...(value === 'region' ? { regions: regionList } : {}),
         });
         const services = serviceTypesFactory.build({
-          service_type: serviceType,
+          service_type: 'firewall',
           label: serviceType,
           alert: serviceAlertFactory.build({
             evaluation_period_seconds: [300],
