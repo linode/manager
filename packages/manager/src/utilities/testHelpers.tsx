@@ -16,8 +16,6 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import type { MemoryRouterProps } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -71,8 +69,8 @@ export const resizeScreenSize = (width: number) => {
 interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
+  initialEntries?: string[];
   initialRoute?: string;
-  MemoryRouter?: MemoryRouterProps;
   queryClient?: QueryClient;
   router?: AnyRouter;
   routeTree?: AnyRootRoute;
@@ -110,9 +108,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
     options.router ??
     createRouter({
       history: createMemoryHistory({
-        initialEntries: (options.MemoryRouter?.initialEntries as string[]) ?? [
-          options.initialRoute ?? '/',
-        ],
+        initialEntries: options.initialEntries ?? [options.initialRoute ?? '/'],
       }),
       routeTree: rootRoute.addChildren([indexRoute]),
     });
@@ -129,9 +125,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
           >
             <CssBaseline enableColorScheme />
             <SnackbarProvider>
-              <MemoryRouter {...options.MemoryRouter}>
-                <RouterProvider router={router} />
-              </MemoryRouter>
+              <RouterProvider router={router} />
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>
@@ -162,7 +156,7 @@ export const renderWithTheme = (ui: React.ReactNode, options: Options = {}) => {
 
   const router: AnyRouter = createRouter({
     history: createMemoryHistory({
-      initialEntries: (options.MemoryRouter?.initialEntries as string[]) ?? [
+      initialEntries: (options.initialEntries as string[]) ?? [
         options.initialRoute ?? '/',
       ],
     }),

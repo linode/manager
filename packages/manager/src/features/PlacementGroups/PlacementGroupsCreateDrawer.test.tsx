@@ -69,9 +69,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       />,
       {
         initialRoute: '/linodes/create',
-        MemoryRouter: {
-          initialEntries: ['/linodes/create'],
-        },
+        initialEntries: ['/linodes/create'],
       }
     );
 

@@ -1,7 +1,6 @@
 import { userEvent } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { accountFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -48,11 +47,7 @@ describe('CreateMenu', () => {
     const history = createMemoryHistory();
 
     // Render the component with the Router and history
-    const { getByText } = renderWithTheme(
-      <Router history={history}>
-        <CreateMenu />
-      </Router>
-    );
+    const { getByText } = renderWithTheme(<CreateMenu />);
 
     const createButton = getByText('Create');
     await userEvent.click(createButton);

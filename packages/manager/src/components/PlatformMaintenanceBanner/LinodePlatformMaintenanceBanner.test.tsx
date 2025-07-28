@@ -21,14 +21,6 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: queryMocks.useLocation,
-  };
-});
-
 beforeEach(() => {
   vi.stubEnv('TZ', 'UTC');
   queryMocks.useLocation.mockReturnValue({ pathname: '/linodes' });

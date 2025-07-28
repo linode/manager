@@ -30,15 +30,6 @@ afterAll(() => {
   window.location = realLocation;
 });
 
-// Mock useHistory
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
-
 describe('SessionExpirationDialog', () => {
   it('renders correctly when isOpen is true', async () => {
     const onCloseMock = vi.fn();

@@ -3,14 +3,16 @@ import React from 'react';
 import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
+import type { LinkProps } from '@tanstack/react-router';
+
 export const linkIsActive = (
   locationPathname: string,
-  href: string,
-  activeLinks: Array<string> = []
+  to: LinkProps['to'],
+  activeLinks: Array<LinkProps['to']> = []
 ) => {
   const currentlyOnOneClickTab =
     locationPathname === 'linodes/create/marketplace';
-  const isOneClickTab = href.match(/one-click/gi);
+  const isOneClickTab = to?.match(/one-click/gi);
 
   /**
    * mark as active if the tab is "one click"
@@ -20,7 +22,7 @@ export const linkIsActive = (
     return isOneClickTab;
   }
 
-  return isPathOneOf([href, ...activeLinks], locationPathname);
+  return isPathOneOf([to, ...activeLinks], locationPathname);
 };
 
 /**

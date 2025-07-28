@@ -75,14 +75,6 @@ const mockHistory = {
   replace: vi.fn(),
 };
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
-
 describe('Alert Resuable Component for contextual view', () => {
   it('Should go to alerts definition page on clicking manage alerts button', async () => {
     const { getByTestId } = renderWithTheme(component);

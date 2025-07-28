@@ -5,17 +5,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
-const mockHistory = {
-  push: vi.fn(),
-  replace: vi.fn(),
-};
-
-// Used to mock query params
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
+const mockNavigate = vi.fn();
+vi.hoisted(() => {
+  const actual = vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useHistory: vi.fn(() => mockHistory),
+    useNavigate: () => mockNavigate,
   };
 });
 
@@ -71,8 +66,12 @@ describe('VerificationDetailsBanner', () => {
     fireEvent.click(getByTestId('confirmButton'));
 
     // Ensure that history.push is called with the correct arguments
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      '/profile/auth?focusSecurityQuestions=true&focusTel=false'
-    );
+    expect(mockNavigate).toHaveBeenCalledWith({
+      to: '/profile/auth',
+      search: {
+        focusSecurityQuestions: true,
+        focusTel: false,
+      },
+    });
   });
 });

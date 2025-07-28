@@ -1,5 +1,11 @@
-import type { RouteProps } from 'react-router-dom';
-import { matchPath } from 'react-router-dom';
+import { matchByPath } from '@tanstack/react-router';
+
+import type { LinkProps } from '@tanstack/react-router';
+
+interface RouteProps {
+  caseSensitive?: boolean;
+  fuzzy?: boolean;
+}
 
 /**
  *
@@ -8,11 +14,20 @@ import { matchPath } from 'react-router-dom';
  * @param matchPath arguments.
  */
 export const isPathOneOf = (
-  paths: string[],
+  paths: LinkProps['to'][],
   pathname: string,
   props?: RouteProps
 ): boolean => {
   return paths.reduce((result, path) => {
-    return result || Boolean(matchPath(pathname, { ...props, path }));
+    return (
+      result ||
+      Boolean(
+        matchByPath(path ?? '', pathname, {
+          to: path,
+          caseSensitive: props?.caseSensitive,
+          fuzzy: props?.fuzzy,
+        })
+      )
+    );
   }, false);
 };

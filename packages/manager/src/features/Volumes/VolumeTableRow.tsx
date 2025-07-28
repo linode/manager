@@ -2,9 +2,8 @@ import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { Box, Chip, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
@@ -49,7 +48,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
     volume,
   } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { data: regions } = useRegionsQuery();
   const { data: notifications } = useNotificationsQuery();
@@ -95,7 +94,13 @@ export const VolumeTableRow = React.memo((props: Props) => {
     if (volume.linode_id !== null) {
       // If the volume is attached to a Linode, we force the user
       // to upgrade all of the Linode's volumes at once from the Linode details page
-      history.push(`/linodes/${volume.linode_id}/storage?upgrade=true`);
+      navigate({
+        to: '/linodes/$linodeId/storage',
+        params: {
+          linodeId: volume.linode_id,
+        },
+        search: { upgrade: true },
+      });
     } else {
       handlers.handleUpgrade();
     }

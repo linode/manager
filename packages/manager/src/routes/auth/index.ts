@@ -7,10 +7,15 @@ import { OAuthCallback } from 'src/OAuth/OAuthCallback';
 
 import { rootRoute } from '../root';
 
+interface CancelLandingSearch {
+  survey_link?: string;
+}
+
 const cancelLandingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'cancel',
   component: CancelLanding,
+  validateSearch: (search: CancelLandingSearch) => search,
 });
 
 const logoutRoute = createRoute({

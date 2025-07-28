@@ -1,7 +1,5 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { MemoryRouter } from 'react-router-dom';
 
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -11,22 +9,11 @@ const mockHistory = {
   replace: vi.fn(),
 };
 
-// Mock useHistory
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
-
 describe('SwitchAccountSessionDialog', () => {
   it('renders correctly when isOpen is true', () => {
     const onCloseMock = vi.fn();
     const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+      <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
     );
 
     expect(getByText('Session expired')).toBeInTheDocument();
@@ -42,9 +29,7 @@ describe('SwitchAccountSessionDialog', () => {
   it('calls onClose when close button is clicked', () => {
     const onCloseMock = vi.fn();
     const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+      <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
     );
 
     fireEvent.click(getByText('Close'));
@@ -53,9 +38,7 @@ describe('SwitchAccountSessionDialog', () => {
 
   it('calls history.push("/logout") when Log in button is clicked', () => {
     const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SwitchAccountSessionDialog isOpen={true} onClose={vi.fn()} />
-      </MemoryRouter>
+      <SwitchAccountSessionDialog isOpen={true} onClose={vi.fn()} />
     );
 
     fireEvent.click(getByText('Log in'));
