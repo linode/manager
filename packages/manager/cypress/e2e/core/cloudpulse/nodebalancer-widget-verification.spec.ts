@@ -329,6 +329,8 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     });
   });
   it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
+    // validate the widget level granularity selection and its metrics
+
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -386,6 +388,7 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     });
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
+    // mock the API call for refreshing metrics
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
