@@ -11,21 +11,17 @@ import {
   Typography,
 } from '@linode/ui';
 import { Radio, RadioGroup } from '@linode/ui';
-import {
-  getQueryParamsFromQueryString,
-  isFeatureEnabledV2,
-} from '@linode/utilities';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'react-router-dom';
 
 import { Code } from 'src/components/Code/Code';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
@@ -34,8 +30,6 @@ import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { CreateVPCPayload } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
-import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {
   disabled?: boolean;
@@ -45,16 +39,13 @@ interface Props {
 
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, isDrawer, regions } = props;
-  const location = useLocation();
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
+  const createType = useGetLinodeCreateType();
 
   const {
     control,
@@ -88,7 +79,7 @@ export const VPCTopSectionContent = (props: Props) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Create VPC',
               interaction: 'click',
               label: 'Learn more',
