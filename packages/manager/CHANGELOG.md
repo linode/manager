@@ -29,8 +29,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Header alignment on invoice details page ([#12565](https://github.com/linode/manager/pull/12565))
 - ACLP: Error in ACLP edit alert PUT request due to `scope` in payload ([#12588](https://github.com/linode/manager/pull/12588))
 
-###
-
 ### Tech Stories:
 
 - Remove ramda from Support ([#12483](https://github.com/linode/manager/pull/12483))
