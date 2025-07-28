@@ -13,15 +13,10 @@ import { FormLabel } from 'src/components/FormLabel';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
-import type { KubernetesStackType } from '@linode/api-v4';
-
 export const ClusterNetworkingPanel = () => {
   const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { control } = useFormContext();
-
-  const [selectedStackType, setSelectedStackType] =
-    React.useState<KubernetesStackType>();
 
   return isLkeEnterprisePhase2FeatureEnabled ? (
     <>
@@ -29,26 +24,19 @@ export const ClusterNetworkingPanel = () => {
         <Controller
           control={control}
           name="stack_type"
-          render={() => (
+          render={({ field }) => (
             <RadioGroup
-              onChange={(e, value: KubernetesStackType) => {
-                setSelectedStackType(value);
-              }}
-              value={selectedStackType}
+              {...field}
+              onChange={(e) => field.onChange(e.target.value)}
+              value={field.value ?? null}
             >
               <FormLabel>IP Version</FormLabel>
-              <>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="IPv4"
-                  value="ipv4"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="IPv4 + IPv6"
-                  value="ipv4-ipv6"
-                />
-              </>
+              <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
+              <FormControlLabel
+                control={<Radio />}
+                label="IPv4 + IPv6"
+                value="ipv4-ipv6"
+              />
             </RadioGroup>
           )}
         />
