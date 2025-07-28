@@ -35,6 +35,7 @@ const props: Props = {
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,
+  poolVersion: undefined,
   regionSupportsDiskEncryption: false,
   statusFilter: 'all',
   tags: [],

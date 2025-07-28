@@ -288,17 +288,19 @@ export const NodeTable = React.memo((props: Props) => {
               spacing={2}
             >
               <Typography sx={{ textWrap: 'nowrap' }}>
-                Pool ID {poolId}
+                <b>Pool ID</b> {poolId}
               </Typography>
+              {clusterTier === 'enterprise' && poolVersion && (
+                <Typography>
+                  <b>Version</b> {poolVersion}
+                </Typography>
+              )}
               {isDiskEncryptionFeatureEnabled && (
                 <EncryptedStatus
                   encryptionStatus={encryptionStatus}
                   regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                   tooltipText={undefined}
                 />
-              )}
-              {clusterTier === 'enterprise' && poolVersion && (
-                <Typography>Version {poolVersion}</Typography>
               )}
             </Stack>
             <TagCell
