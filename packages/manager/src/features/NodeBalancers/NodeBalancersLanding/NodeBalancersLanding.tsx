@@ -16,7 +16,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
@@ -30,7 +30,11 @@ export const NodeBalancersLanding = () => {
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
   const params = useParams({ strict: false });
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    currentRoute: '/nodebalancers',
+    initialPage: 1,
+    preferenceKey,
+  });
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
   });
