@@ -73,6 +73,7 @@ interface AclpFlag {
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
+  phase2Mtc: boolean;
   postLa: boolean;
 }
 
@@ -85,7 +86,6 @@ export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
   serviceType: string;
-  supportedRegionIds?: string;
 }
 
 interface GpuV2 {
@@ -134,6 +134,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePremium: boolean;
   databaseResize: boolean;
   databases: boolean;
   databaseVpc: boolean;

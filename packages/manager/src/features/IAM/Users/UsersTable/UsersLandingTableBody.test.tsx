@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 
@@ -12,7 +12,7 @@ const numCols = 3;
 
 describe('UsersLandingTableBody', () => {
   it('renders loading state', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <table>
         <tbody>
           <UsersLandingTableBody
@@ -37,7 +37,7 @@ describe('UsersLandingTableBody', () => {
   it('renders error state', async () => {
     const error: APIError[] = [{ reason: 'Something went wrong' }];
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <table>
         <tbody>
           <UsersLandingTableBody
@@ -56,7 +56,7 @@ describe('UsersLandingTableBody', () => {
   });
 
   it('renders empty state', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <table>
         <tbody>
           <UsersLandingTableBody
@@ -77,7 +77,7 @@ describe('UsersLandingTableBody', () => {
   it('renders user rows', async () => {
     const users = accountUserFactory.buildList(3);
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <table>
         <tbody>
           <UsersLandingTableBody

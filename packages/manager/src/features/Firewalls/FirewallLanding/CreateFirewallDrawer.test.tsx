@@ -12,10 +12,16 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     permissions: { create_firewall: true },
   })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 const props = {
