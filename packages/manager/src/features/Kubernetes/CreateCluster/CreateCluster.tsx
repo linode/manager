@@ -340,7 +340,7 @@ export const CreateCluster = () => {
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
 
-    if (selectedTier === 'enterprise') {
+    if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
       // Trigger the React Hook Form validation for BYO VPC selection.
       trigger();
     }
