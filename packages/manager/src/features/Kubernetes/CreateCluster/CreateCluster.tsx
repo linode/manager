@@ -91,7 +91,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 type FormValues = {
   nodePools: KubeNodePoolResponseBeta[];
-  stackType: KubernetesStackType | null;
+  stack_type: KubernetesStackType | null;
 };
 
 export interface NodePoolConfigDrawerHandlerParams {
@@ -154,7 +154,7 @@ export const CreateCluster = () => {
   const { control, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],
-      stackType: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
+      stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
     },
     shouldUnregister: true,
   });
@@ -279,7 +279,7 @@ export const CreateCluster = () => {
       pick(['type', 'count', 'update_strategy'])
     ) as CreateNodePoolDataBeta[];
 
-    const stack_type = form.getValues('stackType');
+    const stackType = form.getValues('stack_type');
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
@@ -329,8 +329,8 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    if (isLkeEnterprisePhase2FeatureEnabled && stack_type) {
-      payload = { ...payload, stack_type };
+    if (isLkeEnterprisePhase2FeatureEnabled && stackType) {
+      payload = { ...payload, stack_type: stackType };
     }
 
     const createClusterFn = isUsingBetaEndpoint
