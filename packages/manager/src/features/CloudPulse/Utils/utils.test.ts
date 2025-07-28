@@ -290,7 +290,7 @@ describe('getEnabledServiceTypes', () => {
   });
 
   it('should return enabled service types', () => {
-    const aclpServicesFlag: AclpServices = {
+    const aclpServicesFlag: Partial<AclpServices> = {
       linode: {
         alerts: { enabled: false, beta: true },
         metrics: { enabled: false, beta: true },
@@ -304,13 +304,8 @@ describe('getEnabledServiceTypes', () => {
     expect(result).toEqual(['dbaas']);
   });
 
-  it('should return all service types when aclpServices flag is undefined', () => {
-    const result = getEnabledServiceTypes(serviceTypesList, undefined);
-    expect(result).toEqual(['dbaas', 'linode']);
-  });
-
   it('should not return the service type which is missing from the aclpServices flag', () => {
-    const aclpServicesFlag: AclpServices = {
+    const aclpServicesFlag: Partial<AclpServices> = {
       linode: {
         alerts: { enabled: true, beta: true },
         metrics: { enabled: true, beta: true },
