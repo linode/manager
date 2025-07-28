@@ -9,6 +9,7 @@
 ### Changed:
 
 - Update CreateKubeClusterPayload interface to support LKE-E node_pool fields ([#12449](https://github.com/linode/manager/pull/12449))
+- ACLP: `scope` parameter as option for EditAlertDefinitionPayload type ([#12588](https://github.com/linode/manager/pull/12588))
 
 ### Removed:
 
