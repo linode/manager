@@ -322,7 +322,7 @@ export type AclpBetaServices = {
     alerts: boolean;
     metrics: boolean;
   };
-}
+};
 
 interface AclpServiceStatus {
   // Whether the service is in beta
