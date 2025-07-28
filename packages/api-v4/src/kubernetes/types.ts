@@ -49,19 +49,32 @@ export interface KubernetesCluster {
 export interface KubeNodePoolResponse {
   autoscaler: AutoscaleSettings;
   count: number;
-  disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out
+  disk_encryption: EncryptionStatus;
+  /**
+   * The ID of the Firewall applied to all Nodes in the pool.
+   *
+   * @note Only returned for LKE Enterprise clusters.
+   */
+  firewall_id?: number;
   id: number;
+  /**
+   * The version of the Node Pool.
+   *
+   * @note Only returned for LKE Enterprise clusters.
+   */
+  k8s_version?: string;
   labels: Label;
   nodes: PoolNodeResponse[];
   tags: string[];
   taints: Taint[];
   type: string;
-}
-
-export interface KubeNodePoolResponseBeta extends KubeNodePoolResponse {
-  firewall_id: number;
-  k8s_version: string;
-  update_strategy: NodePoolUpdateStrategy;
+  /**
+   * Controls how updates are rolled out to nodes in the pool.
+   *
+   * @note Only returned for LKE Enterprise clusters.
+   * @default on_recycle
+   */
+  update_strategy?: NodePoolUpdateStrategy;
 }
 
 export interface PoolNodeResponse {
@@ -71,13 +84,16 @@ export interface PoolNodeResponse {
 }
 
 export interface CreateNodePoolData {
+  /**
+   * The number of nodes that should exist in the pool.
+   */
   count: number;
-  type: string;
-}
-
-export interface CreateNodePoolDataBeta extends CreateNodePoolData {
+  /**
+   * The ID o
+   */
   firewall_id?: number;
   k8s_version?: string;
+  type: string;
   update_strategy?: NodePoolUpdateStrategy;
 }
 
@@ -145,7 +161,7 @@ export interface CreateKubeClusterPayload {
   control_plane?: ControlPlaneOptions;
   k8s_version?: string; // Will be caught by Yup if undefined
   label?: string; // Label will be assigned by the API if not provided
-  node_pools: CreateNodePoolDataBeta[];
+  node_pools: CreateNodePoolData[];
   region?: string; // Will be caught by Yup if undefined
   tier?: KubernetesTier; // For LKE-E: Will be assigned 'standard' by the API if not provided
 }

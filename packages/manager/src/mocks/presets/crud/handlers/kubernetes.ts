@@ -10,7 +10,6 @@ import {
   kubernetesEnterpriseTierVersionFactory,
   kubernetesStandardTierVersionFactory,
   kubernetesVersionFactory,
-  nodePoolBetaFactory,
   nodePoolFactory,
 } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
@@ -24,7 +23,6 @@ import { mswDB } from '../../../indexedDB';
 
 import type {
   KubeNodePoolResponse,
-  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -453,7 +451,7 @@ export const getKubernetesVersions = () => [
 export interface MockKubeNodePoolResponse extends KubeNodePoolResponse {
   clusterId: number;
 }
-export interface MockKubeNodePoolBetaResponse extends KubeNodePoolResponseBeta {
+export interface MockKubeNodePoolBetaResponse extends KubeNodePoolResponse {
   clusterId: number;
 }
 
@@ -503,7 +501,7 @@ export const createKubernetesNodePools = (mockState: MockState) => [
       }
 
       const nodePool: MockKubeNodePoolBetaResponse = {
-        ...nodePoolBetaFactory.build({
+        ...nodePoolFactory.build({
           nodes: kubeLinodeFactory.buildList(payload.count),
           ...payload,
         }),

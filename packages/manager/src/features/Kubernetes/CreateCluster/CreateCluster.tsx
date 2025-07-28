@@ -80,17 +80,16 @@ import { NodePoolPanel } from './NodePoolPanel';
 import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type {
   CreateKubeClusterPayload,
-  CreateNodePoolDataBeta,
-  KubeNodePoolResponseBeta,
+  CreateNodePoolData,
   KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-type FormValues = {
-  nodePools: KubeNodePoolResponseBeta[];
-};
+export interface CreateClusterFormValues {
+  nodePools: CreateNodePoolData[];
+}
 
 export interface NodePoolConfigDrawerHandlerParams {
   drawerMode: NodePoolConfigDrawerMode;
@@ -143,7 +142,7 @@ export const CreateCluster = () => {
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, ...form } = useForm<FormValues>({
+  const { control, ...form } = useForm<CreateClusterFormValues>({
     defaultValues: {
       nodePools: [],
     },
@@ -270,7 +269,7 @@ export const CreateCluster = () => {
 
     const node_pools = nodePools.map(
       pick(['type', 'count', 'update_strategy'])
-    ) as CreateNodePoolDataBeta[];
+    ) as CreateNodePoolData[];
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
