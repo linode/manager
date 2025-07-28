@@ -1,5 +1,12 @@
 import { useAllLinodesQuery, useProfile } from '@linode/queries';
-import { Box, ErrorState, TooltipIcon, Typography } from '@linode/ui';
+import {
+  Box,
+  Divider,
+  ErrorState,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { DateTime, Interval } from 'luxon';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -24,17 +31,12 @@ import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NodeRow as _NodeRow } from './NodeRow';
-import {
-  StyledNotEncryptedBox,
-  StyledPoolInfoBox,
-  StyledTableFooter,
-  StyledTypography,
-  StyledVerticalDivider,
-} from './NodeTable.styles';
+import { NodePoolTableFooter } from './NodeTable.styles';
 
 import type { StatusFilter } from './NodePoolsDisplay';
 import type { NodeRow } from './NodeRow';
 import type {
+  KubeNodePoolResponse,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
@@ -45,11 +47,12 @@ export interface Props {
   clusterCreated: string;
   clusterId: number;
   clusterTier: KubernetesTier;
-  encryptionStatus: EncryptionStatus | undefined;
+  encryptionStatus: EncryptionStatus;
   isLkeClusterRestricted: boolean;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  poolVersion: KubeNodePoolResponse['k8s_version'];
   regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
@@ -63,6 +66,7 @@ export const NodeTable = React.memo((props: Props) => {
     clusterCreated,
     clusterId,
     clusterTier,
+    poolVersion,
     encryptionStatus,
     nodes,
     openRecycleNodeDialog,
@@ -270,36 +274,39 @@ export const NodeTable = React.memo((props: Props) => {
              **/
             sx={{ position: 'relative' }}
           />
-          <StyledTableFooter>
-            <StyledPoolInfoBox>
-              {isDiskEncryptionFeatureEnabled &&
-              encryptionStatus !== undefined ? (
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                >
-                  <Typography sx={{ textWrap: 'nowrap' }}>
-                    Pool ID {poolId}
-                  </Typography>
-                  <StyledVerticalDivider />
-                  <EncryptedStatus
-                    encryptionStatus={encryptionStatus}
-                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-                    tooltipText={undefined}
-                  />
-                </Box>
-              ) : (
-                <Typography>Pool ID {poolId}</Typography>
+          <NodePoolTableFooter>
+            <Stack
+              alignItems="center"
+              direction="row"
+              divider={
+                <Divider
+                  flexItem
+                  orientation="vertical"
+                  sx={{ borderWidth: 1 }}
+                />
+              }
+              spacing={2}
+            >
+              <Typography sx={{ textWrap: 'nowrap' }}>
+                Pool ID {poolId}
+              </Typography>
+              {isDiskEncryptionFeatureEnabled && (
+                <EncryptedStatus
+                  encryptionStatus={encryptionStatus}
+                  regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+                  tooltipText={undefined}
+                />
               )}
-            </StyledPoolInfoBox>
+              <Typography>Version {poolVersion}</Typography>
+            </Stack>
             <TagCell
               disabled={isLkeClusterRestricted}
+              sx={{ marginLeft: 'auto' }}
               tags={tags}
               updateTags={updateTags}
               view="inline"
             />
-          </StyledTableFooter>
+          </NodePoolTableFooter>
         </>
       )}
     </Paginate>
@@ -336,20 +343,22 @@ export const EncryptedStatus = ({
   regionSupportsDiskEncryption: boolean;
   tooltipText: string | undefined;
 }) => {
-  return encryptionStatus === 'enabled' ? (
-    <>
-      <Lock />
-      <StyledTypography>Encrypted</StyledTypography>
-    </>
-  ) : encryptionStatus === 'disabled' ? (
-    <>
+  if (encryptionStatus === 'enabled') {
+    return (
+      <Stack alignItems="center" direction="row" spacing={1}>
+        <Lock />
+        <Typography>Encrypted</Typography>
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack alignItems="center" direction="row" spacing={1}>
       <Unlock />
-      <StyledNotEncryptedBox>
-        <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
-        {regionSupportsDiskEncryption && tooltipText ? (
-          <TooltipIcon status="info" text={tooltipText} />
-        ) : null}
-      </StyledNotEncryptedBox>
-    </>
-  ) : null;
+      <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
+      {regionSupportsDiskEncryption && tooltipText && (
+        <TooltipIcon status="info" text={tooltipText} />
+      )}
+    </Stack>
+  );
 };
