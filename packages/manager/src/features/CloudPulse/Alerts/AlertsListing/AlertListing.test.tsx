@@ -34,6 +34,9 @@ const aclpServicesFlag: AclpServices = {
   },
 };
 
+const linodeLabel = 'Linode beta';
+const databasesLabel = 'Databases beta';
+
 vi.mock('src/queries/cloudpulse/alerts', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/alerts');
   return {
@@ -134,11 +137,11 @@ describe('Alert Listing - Core Functionality', () => {
       within(serviceFilter).getByRole('button', { name: 'Open' })
     );
     await waitFor(() => {
-      getByRole('option', { name: 'Databases' });
-      getByRole('option', { name: 'Linode' });
+      getByRole('option', { name: databasesLabel });
+      getByRole('option', { name: linodeLabel });
     });
     await act(async () => {
-      await userEvent.click(getByRole('option', { name: 'Databases' }));
+      await userEvent.click(getByRole('option', { name: databasesLabel }));
     });
 
     await waitFor(() => {
@@ -430,8 +433,8 @@ describe('Alert Listing - Feature Flag Management', () => {
       within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
     );
 
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
-    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
   });
 
   it('should return all service types when aclpServices flag is undefined', async () => {
@@ -457,7 +460,7 @@ describe('Alert Listing - Feature Flag Management', () => {
     await userEvent.click(
       within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
     );
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
   });
 });

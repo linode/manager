@@ -18,7 +18,7 @@ const LinodeAlerts = () => {
   const id = Number(linodeId);
   const { isAlertsBetaMode } = useLinodeDetailContext();
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
 
   const { data: permissions } = usePermissions('linode', ['update_linode'], id);
@@ -32,7 +32,7 @@ const LinodeAlerts = () => {
 
   return (
     <Box>
-      {aclpBetaServices?.linode?.alerts &&
+      {aclpServices?.linode?.alerts?.beta &&
         isAclpAlertsSupportedRegionLinode && (
           <AclpPreferenceToggle
             isAlertsBetaMode={isAlertsBetaMode.get}
@@ -40,7 +40,7 @@ const LinodeAlerts = () => {
             type="alerts"
           />
         )}
-      {aclpBetaServices?.linode?.alerts &&
+      {aclpServices?.linode?.alerts?.beta &&
       isAclpAlertsSupportedRegionLinode &&
       isAlertsBetaMode.get ? (
         // Beta ACLP Alerts View

@@ -41,9 +41,15 @@ const mockProfile = profileFactory.build({
 });
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
-  aclpBetaServices: {
-    dbaas: { metrics: true, alerts: true },
-    linode: { metrics: true, alerts: true },
+  aclpServices: {
+    dbaas: {
+      metrics: { beta: true, enabled: true },
+      alerts: { beta: true, enabled: true },
+    },
+    linode: {
+      metrics: { beta: true, enabled: true },
+      alerts: { beta: true, enabled: true },
+    },
   },
 };
 const mockAccount = accountFactory.build();

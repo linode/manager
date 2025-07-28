@@ -51,6 +51,9 @@ const aclpServicesFlag: AclpServices = {
   },
 };
 
+const linodeLabel = 'Linode beta';
+const databasesLabel = 'Databases beta';
+
 beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
   queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
@@ -243,8 +246,8 @@ describe('AlertDefinition Create', () => {
     await userEvent.click(
       within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
     );
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
-    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
   });
 
   it('should return all service types when aclpServices flag is undefined', async () => {
@@ -273,7 +276,7 @@ describe('AlertDefinition Create', () => {
     await userEvent.click(
       within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
     );
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
   });
 });

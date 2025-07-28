@@ -50,6 +50,9 @@ const aclpServicesFlag: AclpServices = {
   },
 };
 
+const linodeLabel = 'Linode beta';
+const databasesLabel = 'Databases beta';
+
 queryMocks.useCloudPulseServiceTypes.mockReturnValue({
   data: mockResponse,
   isError: true,
@@ -81,14 +84,14 @@ describe('ServiceTypeSelect component tests', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
       await screen.findByRole('option', {
-        name: 'Linode',
+        name: linodeLabel,
       })
-    ).toBeInTheDocument();
+    ).toBeVisible();
     expect(
       screen.getByRole('option', {
-        name: 'Databases',
+        name: databasesLabel,
       })
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('should be able to select a service type', async () => {
@@ -99,7 +102,7 @@ describe('ServiceTypeSelect component tests', () => {
     });
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await userEvent.click(
-      await screen.findByRole('option', { name: 'Linode' })
+      await screen.findByRole('option', { name: linodeLabel })
     );
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Linode');
   });
@@ -150,8 +153,8 @@ describe('ServiceTypeSelect component tests', () => {
     await userEvent.click(
       within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
     );
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
-    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
   });
 
   it('should return all service types when aclpServices flag is undefined', async () => {
@@ -203,7 +206,7 @@ describe('ServiceTypeSelect component tests', () => {
     await userEvent.click(
       within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
     );
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
   });
 });

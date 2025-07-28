@@ -59,7 +59,7 @@ export const AlertListing = () => {
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
 
-  const { aclpBetaServices, aclpServices, aclpAlerting } = useFlags();
+  const { aclpServices, aclpAlerting } = useFlags();
 
   // Filter alerts based on the enabled services from the LD flag
   const alerts = alertsFromEnabledServices(allAlerts, aclpServices);
@@ -264,7 +264,7 @@ export const AlertListing = () => {
               return (
                 <ListItem {...rest} data-qa-option key={key}>
                   <Box flexGrow={1}>{option.label}</Box>{' '}
-                  {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
+                  {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                   <SelectedIcon visible={selected} />
                 </ListItem>
               );
