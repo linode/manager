@@ -7,29 +7,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { TwoStepRegion } from './TwoStepRegion';
 
-const queryMocks = vi.hoisted(() => ({
-  useNavigate: vi.fn(),
-  useParams: vi.fn(),
-  useSearch: vi.fn(),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useNavigate: queryMocks.useNavigate,
-    useSearch: queryMocks.useSearch,
-    useParams: queryMocks.useParams,
-  };
-});
-
 describe('TwoStepRegion', () => {
-  beforeEach(() => {
-    queryMocks.useNavigate.mockReturnValue(vi.fn());
-    queryMocks.useSearch.mockReturnValue({});
-    queryMocks.useParams.mockReturnValue({});
-  });
-
   it('should render a heading and docs link', () => {
     renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
@@ -88,7 +66,7 @@ describe('TwoStepRegion', () => {
       component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
-    const [, distributedTab] = screen.getAllByRole('tab');
+    const distributedTab = screen.getByRole('tab', { name: 'Distributed' });
     await userEvent.click(distributedTab);
 
     const regionSelect = screen.getByPlaceholderText('Select a Region');
@@ -123,7 +101,7 @@ describe('TwoStepRegion', () => {
     const [coreTab, distributedTab] = screen.getAllByRole('tab');
     await userEvent.click(distributedTab);
 
-    const geographicalAreaSelect = screen.getAllByRole('combobox')[0];
+    const geographicalAreaSelect = screen.getByLabelText('Geographical Area');
     // Open the dropdown
     await userEvent.click(geographicalAreaSelect);
 
@@ -134,7 +112,7 @@ describe('TwoStepRegion', () => {
     // Geographical area selection should persist after switching tabs
     await userEvent.click(coreTab);
     await userEvent.click(distributedTab);
-    const geographicalAreaSelect2 = screen.getAllByRole('combobox')[0];
+    const geographicalAreaSelect2 = screen.getByLabelText('Geographical Area');
     expect(geographicalAreaSelect2).toHaveAttribute('value', 'North America');
   });
 });
