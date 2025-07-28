@@ -13,6 +13,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
@@ -78,11 +79,13 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
-  // Filter alerts based on status, search text, selected type, and regionId
+  // Filter alerts based on status, search text, selected type, and region
   const filteredAlerts = React.useMemo(
     () => filterAlerts({ alerts, searchText, selectedType, regionId }),
     [alerts, regionId, searchText, selectedType]
   );
+
+  const { aclpBetaServices } = useFlags();
 
   const history = useHistory();
 
@@ -94,13 +97,13 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   }
 
   return (
-    <Paper>
+    <Paper sx={{ p: entityId ? undefined : 0 }}>
       <Stack gap={3}>
         {entityId && (
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
-              <BetaChip />
+              {aclpBetaServices?.[serviceType]?.alerts && <BetaChip />}
             </Box>
             <Button
               buttonType="outlined"

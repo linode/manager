@@ -89,7 +89,6 @@ export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
   serviceType: CloudPulseServiceType;
-  supportedRegionIds?: string;
 }
 
 interface GpuV2 {

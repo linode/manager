@@ -122,17 +122,16 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
         ? PORTS_HELPER_TEXT
         : PORT_HELPER_TEXT
       : undefined;
+
   const resolveSelectedValues = (
     options: Item<string, string>[],
-    value: null | string,
-    isMultiple: boolean
+    value: null | string
   ): Item<string, string> | Item<string, string>[] | null => {
-    if (!value) return isMultiple ? [] : null;
+    if (!value) return isValueMultiple ? [] : null;
 
-    if (isMultiple) {
-      return options.filter((option) =>
-        value.split(',').includes(option.value)
-      );
+    if (isValueMultiple) {
+      const splitValues = value.split(',');
+      return options.filter((option) => splitValues.includes(option.value));
     }
 
     return options.find((option) => option.value === value) ?? null;
@@ -140,16 +139,15 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
 
   const handleValueChange = (
     selected: Item<string, string> | Item<string, string>[] | null,
-    operation: string,
-    isMultiple: boolean
+    operation: string
   ): string => {
     if (operation !== 'selectOption') return '';
 
-    if (isMultiple && Array.isArray(selected)) {
+    if (isValueMultiple && Array.isArray(selected)) {
       return selected.map((item) => item.value).join(',');
     }
 
-    if (!isMultiple && selected && !Array.isArray(selected)) {
+    if (!isValueMultiple && selected && !Array.isArray(selected)) {
       return selected.value;
     }
 
@@ -267,9 +265,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   multiple={isValueMultiple}
                   onBlur={field.onBlur}
                   onChange={(_, selected, operation) => {
-                    field.onChange(
-                      handleValueChange(selected, operation, isValueMultiple)
-                    );
+                    field.onChange(handleValueChange(selected, operation));
                   }}
                   options={valueOptions()}
                   placeholder={
@@ -280,11 +276,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                       : valuePlaceholder
                   }
                   sx={{ flex: 1 }}
-                  value={resolveSelectedValues(
-                    valueOptions(),
-                    field.value,
-                    isValueMultiple
-                  )}
+                  value={resolveSelectedValues(valueOptions(), field.value)}
                 />
               )
             }
