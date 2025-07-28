@@ -6,12 +6,18 @@ import React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { type AlertFormMode } from '../constants';
+import {
+  type AlertFormMode,
+  REGION_GROUP_INFO_MESSAGE,
+  type SelectDeselectAll,
+} from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
-import { getSupportedRegions } from '../Utils/utils';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
+import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { AlertServiceType, Filter, Region } from '@linode/api-v4';
+import type { AlertRegion } from './DisplayAlertRegions';
+import type { AlertServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
   /**
@@ -40,9 +46,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const { serviceType, handleChange, value = [], errorText, mode } = props;
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
-
-  // Todo: State variable will be added when checkbox functionality implemented
-  const [, setSelectedRegions] = React.useState<string[]>(value);
+  const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
 
   const resourceFilterMap: Record<string, Filter> = {
@@ -84,26 +88,49 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     [handleChange]
   );
 
-  const filteredRegionsWithStatus: Region[] = React.useMemo(
+  const filteredRegionsWithStatus: AlertRegion[] = React.useMemo(
     () =>
-      getSupportedRegions({
+      getFilteredRegions({
         serviceType,
+        selectedRegions,
         resources,
         regions,
       }),
-    [regions, resources, serviceType]
+    [regions, resources, selectedRegions, serviceType]
+  );
+
+  const handleSelectAll = React.useCallback(
+    (action: SelectDeselectAll) => {
+      let regionIds: string[] = [];
+      if (action === 'Select All') {
+        regionIds = filteredRegionsWithStatus?.map((region) => region.id) ?? [];
+      }
+
+      setSelectedRegions(regionIds);
+      if (handleChange) {
+        handleChange(regionIds);
+      }
+    },
+    [filteredRegionsWithStatus, handleChange]
   );
 
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
   const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
-    ({ label }) => label.toLowerCase().includes(searchText.toLowerCase())
+    ({ label, checked }) =>
+      label.toLowerCase().includes(searchText.toLowerCase()) &&
+      ((mode && checked) || !mode)
   );
 
   return (
     <Stack gap={2}>
       {mode === 'view' && <Typography variant="h2">Regions</Typography>}
+
+      <AlertListNoticeMessages
+        errorMessage={REGION_GROUP_INFO_MESSAGE}
+        variant="info"
+      />
 
       <Box display="flex" gap={2}>
         <DebouncedSearchTextField
@@ -139,8 +166,25 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
         <AlertListNoticeMessages errorMessage={errorText} variant="error" />
       )}
 
+      {mode !== 'view' && (
+        <AlertSelectedInfoNotice
+          handleSelectionChange={handleSelectAll}
+          property="regions"
+          selectedCount={selectedRegions.length}
+          totalCount={filteredRegionsWithStatus.length}
+        />
+      )}
       <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
         handleSelectionChange={handleSelectionChange}
+        isAllSelected={
+          filteredRegionsWithStatus.length > 0 &&
+          selectedRegions.length === filteredRegionsWithStatus.length
+        }
+        isSomeSelected={
+          selectedRegions.length > 0 &&
+          selectedRegions.length !== filteredRegionsWithStatus.length
+        }
         mode={mode}
         regions={filteredRegionsBySearchText}
         showSelected={showSelected}

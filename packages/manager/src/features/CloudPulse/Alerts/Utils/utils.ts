@@ -16,6 +16,7 @@ import { array, object, string } from 'yup';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type { MonitoringCapabilities } from '@linode/api-v4';
@@ -105,6 +106,25 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
    * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
    */
   singleLineErrorSeparator: string;
+}
+
+interface FilterRegionProps {
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The selected region ids
+   */
+  selectedRegions: string[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: AlertServiceType | null;
 }
 
 interface SupportedRegionsProps {
@@ -451,6 +471,51 @@ export const handleMultipleError = <T extends FieldValues>(
 
     setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
   }
+};
+
+/**
+ *
+ * @param props The props required to filter the regions
+ * @returns The filtered regions based on the selected regions and resources
+ */
+export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
+  const { regions, resources, selectedRegions, serviceType } = props;
+
+  const supportedRegionsFromResources = getSupportedRegions({
+    regions,
+    resources,
+    serviceType,
+  });
+
+  // map region to its resources count
+  const regionToResourceCount =
+    resources?.reduce(
+      (previous, { region }) => {
+        if (!region) return previous;
+        return {
+          ...previous,
+          [region]: (previous[region] ?? 0) + 1,
+        };
+      },
+      {} as { [region: string]: number }
+    ) ?? {};
+
+  return supportedRegionsFromResources.map(({ label, id }) => {
+    const data = { label, id };
+
+    if (selectedRegions.includes(id)) {
+      return {
+        ...data,
+        checked: true,
+        count: regionToResourceCount[id] ?? 0,
+      };
+    }
+    return {
+      ...data,
+      checked: false,
+      count: regionToResourceCount[id] ?? 0,
+    };
+  });
 };
 
 /**
