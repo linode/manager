@@ -320,7 +320,7 @@ const getSubnetLinodeIPCellString = (
 
     return (
       <span key={interfaceData.id}>
-        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? 'None'}
+        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? '—'}
       </span>
     );
   }
@@ -337,7 +337,7 @@ const getIPLinkForConfigInterface = (
         <span key={configInterface.id}>
           {ipType === 'ipv4'
             ? configInterface.ipv4?.vpc
-            : (configInterface.ipv6?.slaac[0]?.address ?? 'None')}
+            : (configInterface.ipv6?.slaac[0]?.address ?? '—')}
         </span>
       )}
     </>
@@ -381,15 +381,27 @@ const getIPRangesCellContents = (
         .map((rangeObj) => rangeObj.range)
         .filter((range) => range !== undefined) ?? [];
 
-    return determineNoneSingleOrMultipleWithChip(ipv6Ranges);
+    const noneSingleOrMultipleWithChipIPV6 =
+      determineNoneSingleOrMultipleWithChip(ipv6Ranges);
+
+    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
+    return noneSingleOrMultipleWithChipIPV6 === 'None'
+      ? '—'
+      : noneSingleOrMultipleWithChipIPV6;
   } else {
     const linodeInterfaceVPCRanges =
       ipType === 'ipv4'
         ? getLinodeInterfaceIPv4Ranges(interfaceData)
         : getLinodeInterfaceIPv6Ranges(interfaceData);
-    return determineNoneSingleOrMultipleWithChip(
+
+    const noneSingleOrMultipleWithChip = determineNoneSingleOrMultipleWithChip(
       linodeInterfaceVPCRanges ?? []
     );
+
+    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
+    return ipType === 'ipv6' && noneSingleOrMultipleWithChip === 'None'
+      ? '—'
+      : noneSingleOrMultipleWithChip;
   }
 };
 
