@@ -27,6 +27,8 @@ import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
+import type { CloudPulseServiceType } from '@linode/api-v4';
+
 export interface AlertRouteParams {
   /**
    * The id of the alert for which the data needs to be shown
@@ -47,7 +49,7 @@ export const AlertDetail = () => {
     data: alertDetails,
     isError,
     isLoading,
-  } = useAlertDefinitionQuery(alertId, serviceType);
+  } = useAlertDefinitionQuery(alertId, serviceType as CloudPulseServiceType);
 
   const { crumbOverrides, pathname } = React.useMemo(() => {
     const overrides = [

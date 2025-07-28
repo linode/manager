@@ -114,7 +114,7 @@ it('test checkIfFilterNeededInMetricsCall method', () => {
   result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('node_type', 'xyz'); // xyz service type
+  result = checkIfFilterNeededInMetricsCall('node_type', 'linode');
   expect(result).toEqual(false);
 });
 
@@ -133,9 +133,9 @@ it('test checkIfFilterBuilderNeeded method', () => {
 
   result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
-    service_type: '',
+    service_type: 'firewall',
   });
-  expect(result).toBe(false); // should be false for empty / undefined case
+  expect(result).toBe(true); // should be false for empty / undefined case
 
   result = checkIfFilterBuilderNeeded(undefined);
 

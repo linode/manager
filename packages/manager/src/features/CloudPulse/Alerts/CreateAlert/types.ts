@@ -1,9 +1,9 @@
 import type {
   AlertDefinitionScope,
   AlertDefinitionType,
-  AlertServiceType,
   AlertSeverityType,
   ChannelType,
+  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   DimensionFilter,
   DimensionFilterOperatorType,
@@ -24,7 +24,7 @@ export interface CreateAlertDefinitionForm
     rules: MetricCriteriaForm[];
   };
   scope?: AlertDefinitionScope | null;
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
   severity: AlertSeverityType | null;
   trigger_conditions: TriggerConditionForm;
   type: AlertDefinitionType | null;

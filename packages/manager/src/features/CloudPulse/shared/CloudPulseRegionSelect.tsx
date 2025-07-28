@@ -68,7 +68,7 @@ export const CloudPulseRegionSelect = React.memo(
       flags.gecko2?.la
     );
 
-    const serviceType: string | undefined = selectedDashboard?.service_type;
+    const serviceType = selectedDashboard?.service_type;
     const capability = serviceType
       ? FILTER_CONFIG.get(serviceType)?.capability
       : undefined;

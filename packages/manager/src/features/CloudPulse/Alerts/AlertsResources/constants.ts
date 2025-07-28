@@ -1,15 +1,19 @@
+import React from 'react';
+
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsTagFilter } from './AlertsTagsFilter';
+import { TextWithExtraInfo } from './TextWithExtraInfo';
 
 import type { AlertInstance } from './DisplayAlertResources';
+import type { TextWithInfoProp } from './TextWithExtraInfo';
 import type {
   AlertAdditionalFilterKey,
   ServiceColumns,
   ServiceFilterConfig,
 } from './types';
-import type { AlertServiceType, DatabaseTypeClass } from '@linode/api-v4';
+import type { CloudPulseServiceType, DatabaseTypeClass } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
@@ -55,6 +59,13 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
   ],
+  firewall: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+  ],
   nodebalancer: [
     {
       accessor: ({ label }) => label,
@@ -67,24 +78,20 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
     {
-      accessor: ({ tags }) => tags?.join(',') ?? '',
+      accessor: ({ tags }) =>
+        React.createElement<Required<TextWithInfoProp>>(TextWithExtraInfo, {
+          values: tags ?? [],
+        }),
       label: 'Tags',
       sortingKey: 'tags',
     },
   ],
-  firewall: [
-    {
-      accessor: ({ label }) => label,
-      label: 'Entity',
-      sortingKey: 'label',
-    },
-  ],
 };
 
-export const serviceToFiltersMap: Record<
-  '' | AlertServiceType,
-  ServiceFilterConfig[]
-> = {
+export const serviceToFiltersMap: Partial<
+  Record<Partial<CloudPulseServiceType>, ServiceFilterConfig[]>
+> &
+  Record<'', ServiceFilterConfig[]> = {
   '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // Default to only region for better user experience in create alert flow
   dbaas: [
     { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
@@ -119,11 +126,13 @@ export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
 };
 
 export const getSearchPlaceholderText = (
-  serviceType: AlertServiceType | undefined
+  serviceType: CloudPulseServiceType | undefined
 ): string => {
   const filters = serviceToFiltersMap[serviceType ?? ''] ?? [];
 
-  const hasRegionFilter = filters.some((f) => f.filterKey === 'region');
+  const hasRegionFilter = filters.some(
+    ({ filterKey }) => filterKey === 'region'
+  );
 
   if (hasRegionFilter) {
     return 'Search for a Region or Entity';

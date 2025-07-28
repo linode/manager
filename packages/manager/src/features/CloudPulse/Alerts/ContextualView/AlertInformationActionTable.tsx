@@ -22,7 +22,10 @@ import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import type {
+  CloudPulseAlertsPayload,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -66,7 +69,7 @@ export interface AlertInformationActionTableProps {
   /**
    * Service type of the selected entity
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * Flag to determine if confirmation dialog should be displayed
@@ -111,7 +114,6 @@ export const AlertInformationActionTable = (
     alerts,
     columns,
     entityId,
-    entityName,
     error,
     orderByColumn,
     serviceType,
@@ -138,6 +140,13 @@ export const AlertInformationActionTable = (
     serviceType,
     entityId ?? ''
   );
+
+  // To send initial state of alerts through toggle handler function
+  React.useEffect(() => {
+    if (onToggleAlert) {
+      onToggleAlert(enabledAlerts);
+    }
+  }, []);
 
   const handleCancel = () => {
     setIsDialogOpen(false);
@@ -337,13 +346,12 @@ export const AlertInformationActionTable = (
         isOpen={isDialogOpen}
         message={
           <>
-            Are you sure you want to save these settings for {entityName}? All
-            legacy alert settings will be disabled and replaced by the new{' '}
-            <b>Alerts(Beta)</b> settings.
+            Are you sure you want to save (Beta) Alerts? <b>Legacy</b> settings
+            will be disabled and replaced by (Beta) Alerts settings.
           </>
         }
-        primaryButtonLabel="Save"
-        title="Save Alerts?"
+        primaryButtonLabel="Confirm"
+        title="Are you sure you want to save (Beta) Alerts? "
       />
     </>
   );

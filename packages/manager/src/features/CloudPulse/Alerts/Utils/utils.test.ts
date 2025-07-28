@@ -33,8 +33,6 @@ it('test getServiceTypeLabel method', () => {
       service.label
     );
   });
-  expect(getServiceTypeLabel('test', { data: services })).toBe('test');
-  expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
 
 it('test convertSecondsToMinutes method', () => {
@@ -144,7 +142,7 @@ describe('getSchemaWithEntityIdValidation', () => {
   it('should return baseSchema if maxSelectionCount is undefined', () => {
     const schema = getSchemaWithEntityIdValidation({
       ...props,
-      serviceTypeObj: 'unknown',
+      serviceTypeObj: 'firewall',
     });
     expect(schema).toBe(baseSchema);
   });
@@ -318,76 +316,6 @@ describe('useContextualAlertsState', () => {
   });
 });
 
-describe('useContextualAlertsState', () => {
-  it('should return empty initial state when no entityId provided', () => {
-    const alerts = alertFactory.buildList(3);
-    const { result } = renderHook(() => useContextualAlertsState(alerts));
-    expect(result.current.initialState).toEqual({ system: [], user: [] });
-  });
-
-  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
-    const entityId = '123';
-    const alerts = [
-      alertFactory.build({
-        id: 1,
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 2,
-        label: 'alert2',
-        type: 'user',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 3,
-        label: 'alert3',
-        type: 'system',
-        entity_ids: ['456'],
-        scope: 'region',
-      }),
-    ];
-
-    const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
-    );
-
-    expect(result.current.initialState.system).toContain(1);
-    expect(result.current.initialState.system).toContain(3);
-    expect(result.current.initialState.user).toContain(2);
-  });
-
-  it('should detect unsaved changes when alerts are modified', () => {
-    const entityId = '123';
-    const alerts = [
-      alertFactory.build({
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-    ];
-
-    const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
-    );
-
-    expect(result.current.hasUnsavedChanges).toBe(false);
-
-    act(() => {
-      result.current.setEnabledAlerts((prev) => ({
-        ...prev,
-        system: [...(prev.system ?? []), 999],
-      }));
-    });
-
-    expect(result.current.hasUnsavedChanges).toBe(true);
-  });
-});
-
 describe('filterRegionByServiceType', () => {
   const regions = [
     regionFactory.build({
@@ -435,8 +363,8 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for firewall service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
   });

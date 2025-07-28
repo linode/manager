@@ -4,6 +4,7 @@ import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -266,7 +267,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const FILTER_CONFIG: Readonly<
-  Map<string, CloudPulseServiceTypeFilterMap>
+  Map<CloudPulseServiceType, CloudPulseServiceTypeFilterMap>
 > = new Map([
   ['dbaas', DBAAS_CONFIG],
   ['firewall', FIREWALL_CONFIG],

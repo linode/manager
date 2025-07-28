@@ -44,7 +44,7 @@ export const queryFactory = createQueryKeys(key, {
           getAlertDefinitionByServiceTypeAndId(serviceType, alertId),
         queryKey: [alertId, serviceType],
       }),
-      alertsByServiceType: (serviceType) => ({
+      alertsByServiceType: (serviceType: string) => ({
         queryFn: () => getAllertsByServiceTypeRequest(serviceType),
         queryKey: [serviceType],
       }),
@@ -124,7 +124,6 @@ export const queryFactory = createQueryKeys(key, {
 
       case 'nodebalancer':
         return nodebalancerQueries.nodebalancers._ctx.all(params, filters);
-
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
 
