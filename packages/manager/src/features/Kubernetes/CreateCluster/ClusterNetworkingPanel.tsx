@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
@@ -17,16 +17,18 @@ import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
 interface Props {
   selectedRegionId: string | undefined;
+  subnetErrorText: string | undefined;
+  vpcErrorText: string | undefined;
 }
 
 export const ClusterNetworkingPanel = (props: Props) => {
-  const { selectedRegionId } = props;
+  const { selectedRegionId, vpcErrorText, subnetErrorText } = props;
+
+  const [isUsingOwnVpc, setIsUsingOwnVpc] = React.useState(false);
 
   const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const [isUsingOwnVpc, setIsUsingOwnVpc] = useState(false);
-
-  const { control, resetField } = useFormContext();
+  const { control, resetField, clearErrors } = useFormContext();
   const [selectedVPCId] = useWatch({
     control,
     name: ['vpc_id', 'subnet_id'],
@@ -76,6 +78,10 @@ export const ClusterNetworkingPanel = (props: Props) => {
           data-testid="isUsingOwnVpc"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setIsUsingOwnVpc(e.target.value === 'yes');
+
+            if (!isUsingOwnVpc) {
+              clearErrors(['vpc_id', 'subnet_id']);
+            }
           }}
           value={isUsingOwnVpc}
         >
@@ -85,7 +91,6 @@ export const ClusterNetworkingPanel = (props: Props) => {
             label="Automatically generate a VPC for this cluster"
             value="no"
           />
-          {/* TODO: Add form validation for VPC and Subnet fields if user has made this selection */}
           <FormControlLabel
             checked={isUsingOwnVpc}
             control={<Radio />}
@@ -102,7 +107,11 @@ export const ClusterNetworkingPanel = (props: Props) => {
               render={({ field, fieldState }) => (
                 <Autocomplete
                   disabled={!regionSupportsVPCs}
-                  errorText={error?.[0].reason ?? fieldState.error?.message}
+                  errorText={
+                    error?.[0].reason ??
+                    vpcErrorText ??
+                    fieldState.error?.message
+                  }
                   helperText={
                     !selectedRegionId
                       ? 'Select a region to see available VPCs.'
@@ -128,7 +137,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
               rules={{
                 validate: (value) => {
                   if (isUsingOwnVpc && !value) {
-                    return 'You must either select a VPC or choose automatic VPC generation.';
+                    return 'You must either select a VPC or select automatic VPC generation.';
                   }
                   return true;
                 },
@@ -140,7 +149,11 @@ export const ClusterNetworkingPanel = (props: Props) => {
               render={({ field, fieldState }) => (
                 <Autocomplete
                   disabled={!selectedVPC}
-                  errorText={fieldState.error?.message}
+                  errorText={
+                    error?.[0].reason ??
+                    subnetErrorText ??
+                    fieldState.error?.message
+                  }
                   getOptionLabel={(subnet) =>
                     `${subnet.label} (${subnet.ipv4})`
                   }

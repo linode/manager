@@ -145,7 +145,7 @@ export const CreateCluster = () => {
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, ...form } = useForm<FormValues>({
+  const { control, trigger, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],
     },
@@ -340,6 +340,11 @@ export const CreateCluster = () => {
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
 
+    if (selectedTier === 'enterprise') {
+      // Trigger the React Hook Form validation for BYO VPC selection.
+      trigger();
+    }
+
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
       try {
@@ -395,6 +400,8 @@ export const CreateCluster = () => {
       'k8s_version',
       'versionLoad',
       'control_plane',
+      'vpc_id',
+      'subnet_id',
     ],
     errors
   );
@@ -420,7 +427,7 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} {...form}>
+    <FormProvider control={control} trigger={trigger} {...form}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
@@ -572,7 +579,11 @@ export const CreateCluster = () => {
               </Box>
             )}
             {selectedTier === 'enterprise' && (
-              <ClusterNetworkingPanel selectedRegionId={selectedRegion?.id} />
+              <ClusterNetworkingPanel
+                selectedRegionId={selectedRegion?.id}
+                subnetErrorText={errorMap.subnet_id}
+                vpcErrorText={errorMap.vpc_id}
+              />
             )}
             <>
               <Divider
