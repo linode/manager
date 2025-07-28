@@ -1,4 +1,4 @@
-import { Notice, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -25,10 +25,6 @@ export const LinodeCLIPanel = ({
   title,
 }: LinodeCLIPanelProps) => {
   const { params } = useLinodeCreateQueryParams();
-
-  // @TODO - Linode Interfaces
-  // DX support (CLI, integrations, sdks) for Linode Interfaces is not yet available. Remove this when it is.
-  const showDXCodeSnippets = payLoad.interface_generation !== 'linode';
 
   const linodeCLIAction = params.type;
 
@@ -68,17 +64,7 @@ export const LinodeCLIPanel = ({
         </Link>
         .
       </Typography>
-      {!showDXCodeSnippets && (
-        <Notice
-          spacingTop={16}
-          text="Linode CLI support to create Linodes using Linode Interfaces is
-              coming soon."
-          variant="info"
-        />
-      )}
-      {showDXCodeSnippets && (
-        <CodeBlock analyticsLabel={title} code={cliCommand} language={'bash'} />
-      )}
+      <CodeBlock analyticsLabel={title} code={cliCommand} language={'bash'} />
     </SafeTabPanel>
   );
 };
