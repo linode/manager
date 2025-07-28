@@ -99,6 +99,9 @@ const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
   '& > span': {
     padding: 2,
   },
+  height: 20,
+  width: 20,
+  borderRadius: '50%',
   color: theme.textColors.tableHeader,
   marginTop: 52,
   minHeight: 'auto',
