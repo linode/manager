@@ -125,6 +125,14 @@ export const ClusterNetworkingPanel = (props: Props) => {
                   value={selectedVPC ?? null}
                 />
               )}
+              rules={{
+                validate: (value) => {
+                  if (isUsingOwnVpc && !value) {
+                    return 'You must either select a VPC or choose automatic VPC generation.';
+                  }
+                  return true;
+                },
+              }}
             />
             <Controller
               control={control}
@@ -142,7 +150,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
                   onBlur={field.onBlur}
                   onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
                   options={selectedVPC?.subnets ?? []}
-                  placeholder="Select a Subnet"
+                  placeholder="None"
                   value={
                     selectedVPC?.subnets.find((s) => s.id === field.value) ??
                     null
