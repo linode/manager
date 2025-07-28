@@ -84,7 +84,7 @@ beforeEach(() => {
   });
 });
 
-describe('AlertDefinition Create', async () => {
+describe('AlertDefinition Create', () => {
   it('should render input components', async () => {
     const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
       <CreateAlertDefinition />

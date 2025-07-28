@@ -70,7 +70,7 @@ const serviceTypes = [
   },
 ];
 
-describe('Alert Listing - Core Functionality', async () => {
+describe('Alert Listing - Core Functionality', () => {
   it('should render the alert landing table with items', async () => {
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: mockResponse,
@@ -287,7 +287,7 @@ describe('Alert Listing - Core Functionality', async () => {
   });
 });
 
-describe('Alert Listing - Feature Flag Management', async () => {
+describe('Alert Listing - Feature Flag Management', () => {
   it('should render the alerts from the enabled services', async () => {
     queryMocks.useFlags.mockReturnValue({
       aclpServices: aclpServicesFlag,
