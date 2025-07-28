@@ -420,14 +420,14 @@ export const SubnetLinodeTableRowHead = (
       </TableCell>
     </Hidden>
     {vpcIPv6FeatureFlag && (
-      <Hidden smDown>
-        <TableCell>VPC IPv6</TableCell>
-      </Hidden>
-    )}
-    {vpcIPv6FeatureFlag && (
-      <Hidden smDown>
-        <TableCell>Linode IPv6 Ranges</TableCell>
-      </Hidden>
+      <>
+        <Hidden smDown>
+          <TableCell>VPC IPv6</TableCell>
+        </Hidden>
+        <Hidden smDown>
+          <TableCell>Linode IPv6 Ranges</TableCell>
+        </Hidden>
+      </>
     )}
     <Hidden smDown>
       <TableCell sx={{ width: '18%' }}>Firewalls</TableCell>
