@@ -661,6 +661,9 @@ export const darkTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
+          '&[class*="error"]': {
+            color: Select.Error.Border,
+          },
           fontWeight: Font.FontWeight.Semibold,
           color: Color.Neutrals[40],
           lineHeight: 1.25,
