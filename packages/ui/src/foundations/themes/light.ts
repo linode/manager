@@ -245,8 +245,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+      background: Table.Row.Background.Hover,
+    },
   },
 };
 
@@ -931,6 +933,9 @@ export const lightTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
+          '&[class*="error"]': {
+            color: Select.Error.Border,
+          },
           fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
           maxWidth: 416,
