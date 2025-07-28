@@ -29,6 +29,12 @@ export const useStyles = makeStyles<void, 'iconContainer'>()(
     root: {
       alignItems: 'baseline',
       color: theme.textColors.linkActiveLight,
+      '&:hover': {
+        color: theme.textColors.linkHover,
+        '& svg': {
+          color: theme.textColors.linkHover,
+        },
+      },
     },
   })
 );
