@@ -13,9 +13,8 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import { getLinodePrice } from './utilities';
-
-import type { LinodeCreateFormValues } from '../utilities';
+import { getLinodeTypeMapMarketplace, type LinodeCreateFormValues } from '../utilities';
+import { getLinodePrice, parseClusterData } from './utilities';
 
 interface SummaryProps {
   isAlertsBetaMode?: boolean;
@@ -27,6 +26,24 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { control } = useFormContext<LinodeCreateFormValues>();
+
+  const [stackscriptData] = useWatch({
+    control,
+    name: ['stackscript_data'],
+  });  
+  
+  const rawClusterData = parseClusterData(stackscriptData);
+  const clusterData = rawClusterData.map(cluster => {
+    const { data } = useTypeQuery(
+      getLinodeTypeMapMarketplace[cluster.typeId ?? ''] ?? '',
+      Boolean(cluster.typeId)
+    );
+  
+    return {
+      ...cluster,
+      typeData: data,
+    };
+  });
 
   const [
     label,
@@ -83,7 +100,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
-  const price = getLinodePrice({ clusterSize, regionId, type });
+  const price = getLinodePrice({ clusterSize, regionId, type, clusterData });
 
   const hasVPC = isLinodeInterfacesEnabled
     ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
