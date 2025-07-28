@@ -22,6 +22,10 @@ interface Props extends CheckboxProps {
    */
   size?: 'medium' | 'small';
   /**
+   * Styles applied to the `Checkbox`.
+   */
+  sxCheckbox?: SxProps<Theme>;
+  /**
    * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
    */
   sxFormLabel?: SxProps<Theme>;
@@ -51,7 +55,7 @@ interface Props extends CheckboxProps {
  * - If the user clicks the Back button, any changes made to checkboxes should be discarded and the original settings reinstated.
  */
 export const Checkbox = (props: Props) => {
-  const { sxFormLabel, text, toolTipText, ...rest } = props;
+  const { sxCheckbox, sxFormLabel, text, toolTipText, ...rest } = props;
 
   const BaseCheckbox = (
     <StyledCheckbox
@@ -60,6 +64,7 @@ export const Checkbox = (props: Props) => {
       data-qa-checked={props.checked}
       icon={<CheckboxIcon />}
       indeterminateIcon={<CheckboxIndeterminateIcon />}
+      sx={sxCheckbox}
       {...rest}
     />
   );
