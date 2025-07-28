@@ -55,8 +55,7 @@ export const CloudPulseServiceSelect = (
       ? serviceOptions.data
           .filter(
             (service) =>
-              !aclpServices ||
-              (aclpServices?.[service.service_type]?.alerts?.enabled ?? false)
+              aclpServices?.[service.service_type]?.alerts?.enabled ?? false
           )
           .map((service) => ({
             label: service.label,

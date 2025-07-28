@@ -431,7 +431,7 @@ describe('alertsFromEnabledServices', () => {
     ...alertFactory.buildList(3, { service_type: 'dbaas' }),
     ...alertFactory.buildList(3, { service_type: 'linode' }),
   ];
-  const aclpServicesFlag: AclpServices = {
+  const aclpServicesFlag: Partial<AclpServices> = {
     linode: {
       alerts: { enabled: true, beta: true },
       metrics: { enabled: true, beta: true },
@@ -450,11 +450,6 @@ describe('alertsFromEnabledServices', () => {
   it('should return alerts from enabled services', () => {
     const result = alertsFromEnabledServices(allAlerts, aclpServicesFlag);
     expect(result).toHaveLength(3);
-  });
-
-  it('should return all alerts when aclpServices flag is undefined', () => {
-    const result = alertsFromEnabledServices(allAlerts, undefined);
-    expect(result).toHaveLength(6);
   });
 
   it('should not return alerts from services that are missing in the flag', () => {

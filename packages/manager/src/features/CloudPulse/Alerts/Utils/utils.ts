@@ -588,12 +588,10 @@ export const convertSecondsToOptions = (seconds: number): string => {
  */
 export const alertsFromEnabledServices = (
   allAlerts: Alert[] | undefined,
-  aclpServices: AclpServices | undefined
+  aclpServices: Partial<AclpServices> | undefined
 ) => {
   // If aclpServices is undefined, return all alerts, else return the alerts that are enabled and are present in the flag
   return allAlerts?.filter(
-    (alert) =>
-      !aclpServices ||
-      (aclpServices?.[alert.service_type]?.alerts?.enabled ?? false)
+    (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
   );
 };

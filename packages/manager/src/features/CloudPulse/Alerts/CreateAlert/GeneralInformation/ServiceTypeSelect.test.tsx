@@ -39,7 +39,7 @@ const mockResponse = {
   ],
 };
 
-const aclpServicesFlag: AclpServices = {
+const aclpServicesFlag: Partial<AclpServices> = {
   linode: {
     alerts: { enabled: true, beta: true },
     metrics: { enabled: true, beta: true },
@@ -155,29 +155,6 @@ describe('ServiceTypeSelect component tests', () => {
     );
     expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
-  });
-
-  it('should return all service types when aclpServices flag is undefined', async () => {
-    queryMocks.useFlags.mockReturnValue({});
-
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    renderWithThemeAndHookFormContext({
-      component: (
-        <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
-      ),
-    });
-    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
-    await userEvent.click(
-      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
-    );
-    expect(screen.getByRole('option', { name: 'Linode' })).toBeVisible();
-    expect(screen.getByRole('option', { name: 'Databases' })).toBeVisible();
   });
 
   it('should not return service types that are missing in the flag', async () => {

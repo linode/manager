@@ -23,7 +23,7 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn(),
 }));
 
-const aclpServicesFlag: AclpServices = {
+const aclpServicesFlag: Partial<AclpServices> = {
   linode: {
     alerts: { enabled: true, beta: true },
     metrics: { enabled: true, beta: true },
@@ -351,29 +351,6 @@ describe('Alert Listing - Feature Flag Management', () => {
     expect(screen.queryByText(mockResponse[2].label)).not.toBeInTheDocument();
   });
 
-  it('should render all the alerts when the aclpServices flag is undefined', async () => {
-    queryMocks.useFlags.mockReturnValue({});
-
-    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: { data: serviceTypes },
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    renderWithTheme(<AlertListing />);
-    expect(screen.getByText(mockResponse[0].label)).toBeVisible();
-    expect(screen.getByText(mockResponse[1].label)).toBeVisible();
-    expect(screen.getByText(mockResponse[2].label)).toBeVisible();
-  });
-
   it('should not render the alerts from the services which are missing in the flag', async () => {
     queryMocks.useFlags.mockReturnValue({
       aclpServices: {
@@ -435,15 +412,6 @@ describe('Alert Listing - Feature Flag Management', () => {
 
     expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
-  });
-
-  it('should return all service types when aclpServices flag is undefined', async () => {
-    queryMocks.useFlags.mockReturnValue({});
-    renderWithTheme(<AlertListing />);
-    const serviceFilterDropdown = screen.getByTestId('alert-service-filter');
-    await userEvent.click(
-      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
-    );
   });
 
   it('should not return service types that are missing in the flag', async () => {
