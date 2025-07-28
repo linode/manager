@@ -297,7 +297,9 @@ export const NodeTable = React.memo((props: Props) => {
                   tooltipText={undefined}
                 />
               )}
-              <Typography>Version {poolVersion}</Typography>
+              {clusterTier === 'enterprise' && poolVersion && (
+                <Typography>Version {poolVersion}</Typography>
+              )}
             </Stack>
             <TagCell
               disabled={isLkeClusterRestricted}
