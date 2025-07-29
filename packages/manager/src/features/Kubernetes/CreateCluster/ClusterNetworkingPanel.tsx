@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { FormLabel } from 'src/components/FormLabel';
 import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
@@ -48,19 +49,26 @@ export const ClusterNetworkingPanel = (props: Props) => {
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
 
   return isLkeEnterprisePhase2FeatureEnabled ? (
-    <Stack divider={<Divider />} spacing={4}>
-      <Stack>
-        <Typography
-          sx={(theme) => ({
-            font: theme.tokens.alias.Typography.Label.Bold.S,
-          })}
-        >
-          IP Version
-        </Typography>
-        <Typography marginTop={1}>
-          TODO - M3-10203: LKE-E Dual Stack Support
-        </Typography>
-      </Stack>
+    <Stack divider={<Divider />} spacing={3}>
+      <Controller
+        control={control}
+        name="stack_type"
+        render={({ field }) => (
+          <RadioGroup
+            {...field}
+            onChange={(e) => field.onChange(e.target.value)}
+            value={field.value ?? null}
+          >
+            <FormLabel>IP Version</FormLabel>
+            <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
+            <FormControlLabel
+              control={<Radio />}
+              label="IPv4 + IPv6"
+              value="ipv4-ipv6"
+            />
+          </RadioGroup>
+        )}
+      />
       <Stack marginTop={3}>
         <Typography
           sx={(theme) => ({

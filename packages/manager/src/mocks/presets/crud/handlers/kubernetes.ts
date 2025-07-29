@@ -225,6 +225,7 @@ export const createKubernetesCluster = (mockState: MockState) => [
         tier: payload.tier,
         vpc_id: payload.vpc_id,
         subnet_id: payload.subnet_id,
+        stack_type: payload.stack_type,
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
