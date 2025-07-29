@@ -18,6 +18,7 @@ import { NodeTable } from './NodeTable';
 import type { StatusFilter } from './NodePoolsDisplay';
 import type {
   AutoscaleSettings,
+  KubernetesStackType,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
@@ -28,6 +29,7 @@ interface Props {
   autoscaler: AutoscaleSettings;
   clusterCreated: string;
   clusterId: number;
+  clusterStackType: KubernetesStackType | undefined;
   clusterTier: KubernetesTier;
   count: number;
   encryptionStatus: EncryptionStatus | undefined;
@@ -54,6 +56,7 @@ export const NodePool = (props: Props) => {
     autoscaler,
     clusterCreated,
     clusterId,
+    clusterStackType,
     clusterTier,
     count,
     encryptionStatus,
@@ -235,6 +238,7 @@ export const NodePool = (props: Props) => {
       <NodeTable
         clusterCreated={clusterCreated}
         clusterId={clusterId}
+        clusterStackType={clusterStackType}
         clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
         isLkeClusterRestricted={isLkeClusterRestricted}

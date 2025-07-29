@@ -36,6 +36,7 @@ import {
 import type { StatusFilter } from './NodePoolsDisplay';
 import type { NodeRow } from './NodeRow';
 import type {
+  KubernetesStackType,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
@@ -45,6 +46,7 @@ import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 export interface Props {
   clusterCreated: string;
   clusterId: number;
+  clusterStackType: KubernetesStackType | undefined;
   clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus | undefined;
   isLkeClusterRestricted: boolean;
@@ -63,6 +65,7 @@ export const NodeTable = React.memo((props: Props) => {
   const {
     clusterCreated,
     clusterId,
+    clusterStackType,
     clusterTier,
     encryptionStatus,
     nodes,
@@ -118,9 +121,19 @@ export const NodeTable = React.memo((props: Props) => {
       })
     : null;
 
-  const numColumns = isLkeEnterprisePhase2FeatureEnabled ? 6 : 4;
-  const shouldShowVpcIpAddressColumns =
-    isLkeEnterprisePhase2FeatureEnabled && clusterTier === 'enterprise';
+  const shouldShowVpcDualStackIPAddressColumns =
+    isLkeEnterprisePhase2FeatureEnabled &&
+    clusterTier === 'enterprise' &&
+    clusterStackType === 'ipv4-ipv6';
+  const shouldShowVpcSingleStackIPAddressColumn =
+    isLkeEnterprisePhase2FeatureEnabled &&
+    clusterTier === 'enterprise' &&
+    clusterStackType === 'ipv4';
+  const numColumns = shouldShowVpcDualStackIPAddressColumns
+    ? 6
+    : shouldShowVpcSingleStackIPAddressColumn
+      ? 5
+      : 4;
 
   // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
@@ -205,10 +218,11 @@ export const NodeTable = React.memo((props: Props) => {
                 >
                   Public IPv4
                 </TableSortCell>
-                {isLkeEnterprisePhase2FeatureEnabled && (
+                {(shouldShowVpcSingleStackIPAddressColumn ||
+                  shouldShowVpcDualStackIPAddressColumns) && (
                   <TableCell>VPC IPv4</TableCell>
                 )}
-                {isLkeEnterprisePhase2FeatureEnabled && (
+                {shouldShowVpcDualStackIPAddressColumns && (
                   <TableCell>VPC IPv6</TableCell>
                 )}
                 <TableCell />
@@ -263,12 +277,13 @@ export const NodeTable = React.memo((props: Props) => {
                         openRecycleNodeDialog={openRecycleNodeDialog}
                         typeLabel={typeLabel}
                         vpcIpv4={
-                          shouldShowVpcIpAddressColumns
+                          shouldShowVpcSingleStackIPAddressColumn ||
+                          shouldShowVpcDualStackIPAddressColumns
                             ? eachRow.vpcIpv4
                             : undefined
                         }
                         vpcIpv6={
-                          shouldShowVpcIpAddressColumns
+                          shouldShowVpcDualStackIPAddressColumns
                             ? eachRow.vpcIpv6
                             : undefined
                         }
