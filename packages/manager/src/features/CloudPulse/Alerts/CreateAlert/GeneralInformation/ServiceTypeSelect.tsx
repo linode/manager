@@ -50,7 +50,7 @@ export const CloudPulseServiceSelect = (
     string,
     CloudPulseServiceType
   >[] => {
-    // If aclpServices is undefined, return all service types, else return the service types that are enabled and are present in the flag
+    // Return only the service types that are enabled in the aclpServices flag
     return serviceOptions?.data?.length
       ? serviceOptions.data
           .filter(

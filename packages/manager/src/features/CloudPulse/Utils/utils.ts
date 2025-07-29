@@ -226,7 +226,7 @@ export const getEnabledServiceTypes = (
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
-  // If aclpServices is undefined, return all service types, else return the service types that are enabled and are present in the flag
+  // Return the service types that are enabled in the aclpServices flag
   return rawServiceTypes.data
     .filter(
       (obj: Service) =>
