@@ -24,6 +24,7 @@ import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
+import { alertsFromEnabledServices } from '../Utils/utils';
 import { AlertsListTable } from './AlertListTable';
 import {
   alertLimitMessage,
@@ -54,13 +55,18 @@ interface AlertsLimitErrorMessageProps {
 
 export const AlertListing = () => {
   const navigate = useNavigate();
-  const { data: alerts, error, isLoading } = useAllAlertDefinitionsQuery();
+  const { data: allAlerts, error, isLoading } = useAllAlertDefinitionsQuery();
   const {
     data: serviceOptions,
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-  const { aclpBetaServices } = useFlags();
+
+  const { aclpServices } = useFlags();
+
+  // Filter alerts based on the enabled services from the LD flag
+  const alerts = alertsFromEnabledServices(allAlerts, aclpServices);
+
   const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
   const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
 
@@ -77,12 +83,17 @@ export const AlertListing = () => {
     CloudPulseServiceType
   >[] => {
     return serviceOptions && serviceOptions.data.length > 0
-      ? serviceOptions.data.map((service) => ({
-          label: service.label,
-          value: service.service_type,
-        }))
+      ? serviceOptions.data
+          .filter(
+            (service) =>
+              aclpServices?.[service.service_type]?.alerts?.enabled ?? false
+          )
+          .map((service) => ({
+            label: service.label,
+            value: service.service_type,
+          }))
       : [];
-  }, [serviceOptions]);
+  }, [aclpServices, serviceOptions]);
 
   const [searchText, setSearchText] = React.useState<string>('');
 
@@ -255,7 +266,7 @@ export const AlertListing = () => {
               return (
                 <ListItem {...rest} data-qa-option key={key}>
                   <Box flexGrow={1}>{option.label}</Box>{' '}
-                  {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
+                  {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                   <SelectedIcon visible={selected} />
                 </ListItem>
               );
