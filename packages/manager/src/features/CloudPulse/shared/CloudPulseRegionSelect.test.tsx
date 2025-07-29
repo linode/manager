@@ -176,7 +176,7 @@ describe('CloudPulseRegionSelect', () => {
     expect(errorMessage).not.toBeNull();
   });
 
-  it('should render a Region Select component with capability specific and launchDarkly based supported regions', async () => {
+  it('should render a Region Select component with capability specific', async () => {
     const user = userEvent.setup();
 
     // resources are present only in us-west, no other regions like us-east here should be listed
@@ -191,13 +191,15 @@ describe('CloudPulseRegionSelect', () => {
     renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
-        selectedDashboard={dashboardFactory.build({ service_type: 'dbaas' })}
-      />,
-      { flags }
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'dbaas',
+          id: 1,
+        })}
+      />
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported via launchDarkly
+    // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported
     const usWestRegion = screen.getByRole('option', {
       name: 'US, Fremont, CA (us-west)',
     });
