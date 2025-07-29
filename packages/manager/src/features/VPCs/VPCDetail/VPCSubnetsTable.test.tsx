@@ -194,11 +194,11 @@ describe('VPC Subnets table', () => {
     getByText('Firewalls');
 
     expect(screen.queryByText('VPC IPv6')).not.toBeInTheDocument();
-    expect(screen.queryByText('Linode IPv6 Ranges')).not.toBeInTheDocument();
+    expect(screen.queryByText('VPC IPv6 Ranges')).not.toBeInTheDocument();
   });
 
   // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
-  it('renders VPC IPv6 and Linode IPv6 Range columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
+  it('renders VPC IPv6 and VPC IPv6 Ranges columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
     const subnet = subnetFactory.build({
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
@@ -239,7 +239,7 @@ describe('VPC Subnets table', () => {
     expect(screen.getByText('Status')).toBeVisible();
     expect(screen.getByText('VPC IPv4')).toBeVisible();
     expect(screen.getByText('VPC IPv6')).toBeVisible();
-    expect(screen.getByText('Linode IPv6 Ranges')).toBeVisible();
+    expect(screen.getByText('VPC IPv6 Ranges')).toBeVisible();
     expect(screen.getByText('Firewalls')).toBeVisible();
   });
 
