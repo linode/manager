@@ -221,6 +221,7 @@ export const createKubernetesCluster = (mockState: MockState) => [
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
         tier: payload.tier,
+        stack_type: payload.stack_type,
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
