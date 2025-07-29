@@ -266,10 +266,10 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const FILTER_CONFIG: Readonly<
-  Map<string, CloudPulseServiceTypeFilterMap>
+  Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
-  ['dbaas', DBAAS_CONFIG],
-  ['firewall', FIREWALL_CONFIG],
-  ['linode', LINODE_CONFIG],
-  ['nodebalancer', NODEBALANCER_CONFIG],
+  [1, DBAAS_CONFIG],
+  [2, LINODE_CONFIG],
+  [3, FIREWALL_CONFIG],
+  [4, NODEBALANCER_CONFIG],
 ]);
