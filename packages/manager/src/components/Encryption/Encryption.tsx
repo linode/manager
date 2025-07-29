@@ -61,7 +61,7 @@ export const Encryption = (props: EncryptionProps) => {
           data-testid={checkboxTestId}
           disabled={disabled}
           onChange={(e, checked) => onChange(checked)}
-          sxCheckbox={sx}
+          sx={sx}
           sxFormLabel={{ marginLeft: '0px' }}
           text={`Encrypt ${entityType ?? 'Disk'}`}
           toolTipText={disabled ? disabledReason : ''}
