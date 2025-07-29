@@ -23,6 +23,7 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodeRow as _NodeRow } from './NodeRow';
 import {
   StyledNotEncryptedBox,
@@ -79,6 +80,7 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
+  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -115,6 +117,10 @@ export const NodeTable = React.memo((props: Props) => {
         return row.instanceStatus === statusFilter;
       })
     : null;
+
+  const numColumns = isLkeEnterprisePhase2FeatureEnabled ? 6 : 4;
+  const shouldShowVpcIpAddressColumns =
+    isLkeEnterprisePhase2FeatureEnabled && clusterTier === 'enterprise';
 
   // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
@@ -197,8 +203,14 @@ export const NodeTable = React.memo((props: Props) => {
                     width: '35%',
                   })}
                 >
-                  IP Address
+                  Public IPv4
                 </TableSortCell>
+                {isLkeEnterprisePhase2FeatureEnabled && (
+                  <TableCell>VPC IPv4</TableCell>
+                )}
+                {isLkeEnterprisePhase2FeatureEnabled && (
+                  <TableCell>VPC IPv6</TableCell>
+                )}
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -206,7 +218,7 @@ export const NodeTable = React.memo((props: Props) => {
               {rowData.length === 0 &&
                 isEnterpriseClusterWithin20MinsOfCreation() && (
                   <TableRow>
-                    <TableCell colSpan={4}>
+                    <TableCell colSpan={numColumns}>
                       <ErrorState
                         compact
                         CustomIcon={EmptyStateCloud}
@@ -234,7 +246,7 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableContentWrapper
                   length={paginatedAndOrderedData.length}
                   loading={isLoading}
-                  loadingProps={{ columns: 4 }}
+                  loadingProps={{ columns: numColumns }}
                 >
                   {paginatedAndOrderedData.map((eachRow) => {
                     return (
@@ -250,6 +262,16 @@ export const NodeTable = React.memo((props: Props) => {
                         nodeStatus={eachRow.nodeStatus}
                         openRecycleNodeDialog={openRecycleNodeDialog}
                         typeLabel={typeLabel}
+                        vpcIpv4={
+                          shouldShowVpcIpAddressColumns
+                            ? eachRow.vpcIpv4
+                            : undefined
+                        }
+                        vpcIpv6={
+                          shouldShowVpcIpAddressColumns
+                            ? eachRow.vpcIpv6
+                            : undefined
+                        }
                       />
                     );
                   })}

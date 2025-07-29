@@ -22,6 +22,8 @@ export interface NodeRow {
   label?: string;
   nodeId: string;
   nodeStatus: string;
+  vpcIpv4?: string;
+  vpcIpv6?: string;
 }
 
 interface NodeRowProps extends NodeRow {
@@ -43,6 +45,8 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     nodeStatus,
     openRecycleNodeDialog,
     typeLabel,
+    vpcIpv4,
+    vpcIpv6,
   } = props;
 
   const { data: events } = useInProgressEvents();
@@ -122,6 +126,8 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </Box>
         ) : null}
       </TableCell>
+      {vpcIpv4 && <TableCell>{vpcIpv4}</TableCell>}
+      {vpcIpv6 && <TableCell>{vpcIpv6}</TableCell>}
       <TableCell actionCell>
         <NodeActionMenu
           instanceLabel={label}
