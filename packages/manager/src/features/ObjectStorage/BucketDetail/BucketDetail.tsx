@@ -30,6 +30,7 @@ import {
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 
+import { QuotasInfoNotice } from '../QuotasInfoNotice';
 import { deleteObject as _deleteObject } from '../requests';
 import {
   displayName,
@@ -356,6 +357,7 @@ export const BucketDetail = () => {
     <>
       <DocumentTitleSegment segment={`${bucketName} | Bucket`} />
       <BucketBreadcrumb bucketName={bucketName} prefix={prefix} />
+      <QuotasInfoNotice action="adding objects" />
       <ObjectUploader
         bucketName={bucketName}
         clusterId={clusterId}
