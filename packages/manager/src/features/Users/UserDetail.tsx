@@ -3,6 +3,9 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
+import { useEffect } from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -11,6 +14,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { useIsIAMEnabled } from '../IAM/hooks/useIsIAMEnabled';
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';
 
@@ -20,11 +24,19 @@ export const UserDetail = () => {
   });
 
   const location = useLocation();
-
+  const history = useHistory();
   const { data: profile } = useProfile();
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
 
   const queryClient = useQueryClient();
+  const { isIAMEnabled } = useIsIAMEnabled();
+  useEffect(() => {
+    if (isIAMEnabled) {
+      history.replace({
+        pathname: `/iam/users/${username}`,
+      });
+    }
+  }, [isIAMEnabled, username]);
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
@@ -74,6 +86,7 @@ export const UserDetail = () => {
             <UserPermissions
               accountUsername={profile?.username}
               currentUsername={user?.username}
+              isIAMEnabled={isIAMEnabled}
               queryClient={queryClient}
             />
           </SafeTabPanel>
