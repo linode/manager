@@ -1,9 +1,13 @@
 import { useAllLinodesQuery } from '@linode/queries';
-import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
+import {
+  Autocomplete,
+  CloseIcon,
+  CustomPopper,
+  ListItemOption,
+  Typography,
+} from '@linode/ui';
 import { mapIdsToDevices } from '@linode/utilities';
 import React from 'react';
-
-import { LinodeOption } from './LinodeOption';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';
 import type { SxProps, Theme } from '@linode/ui';
@@ -160,15 +164,24 @@ export const LinodeSelect = (
             : 'Select a Linode'
       }
       PopperComponent={CustomPopper}
-      renderOption={(props, linode, { selected }) => (
-        <LinodeOption
-          disabledReason={disabledLinodes?.[linode.id]}
-          key={linode.id}
-          linode={linode}
-          props={props}
-          selected={selected}
-        />
-      )}
+      renderOption={(props, linode, { selected }) => {
+        const { key, ...restProps } = props; // Avoids passing `key` via props, which triggers React console warnings.
+        return (
+          <ListItemOption
+            disabledOptions={
+              disabledLinodes?.[linode.id]
+                ? { reason: disabledLinodes[linode.id] }
+                : undefined
+            }
+            item={linode}
+            key={key}
+            props={restProps}
+            selected={selected}
+          >
+            <Typography>{linode.label}</Typography>
+          </ListItemOption>
+        );
+      }}
       slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
       value={
