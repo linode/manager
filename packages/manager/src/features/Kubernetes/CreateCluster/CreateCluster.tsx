@@ -82,6 +82,7 @@ import type {
   CreateKubeClusterPayload,
   CreateNodePoolDataBeta,
   KubeNodePoolResponseBeta,
+  KubernetesStackType,
   KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
@@ -90,6 +91,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 type FormValues = {
   nodePools: KubeNodePoolResponseBeta[];
+  stack_type: KubernetesStackType | null;
 };
 
 export interface NodePoolConfigDrawerHandlerParams {
@@ -141,12 +143,20 @@ export const CreateCluster = () => {
   const [selectedType, setSelectedType] = React.useState<string>();
   const [selectedPoolIndex, setSelectedPoolIndex] = React.useState<number>();
 
+  const {
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+    isLkeEnterprisePhase2FeatureEnabled,
+  } = useIsLkeEnterpriseEnabled();
+
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
   const { control, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],
+      stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
     },
+    shouldUnregister: true,
   });
   const nodePools = useWatch({ control, name: 'nodePools' });
   const { update } = useFieldArray({
@@ -227,9 +237,6 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesClusterBeta } =
     useCreateKubernetesClusterBetaMutation();
 
-  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
-    useIsLkeEnterpriseEnabled();
-
   const {
     isLoadingVersions,
     versions: versionData,
@@ -271,6 +278,8 @@ export const CreateCluster = () => {
     const node_pools = nodePools.map(
       pick(['type', 'count', 'update_strategy'])
     ) as CreateNodePoolDataBeta[];
+
+    const stackType = form.getValues('stack_type');
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
@@ -318,6 +327,10 @@ export const CreateCluster = () => {
 
     if (isLkeEnterpriseLAFeatureEnabled) {
       payload = { ...payload, tier: selectedTier };
+    }
+
+    if (isLkeEnterprisePhase2FeatureEnabled && stackType) {
+      payload = { ...payload, stack_type: stackType };
     }
 
     const createClusterFn = isUsingBetaEndpoint
