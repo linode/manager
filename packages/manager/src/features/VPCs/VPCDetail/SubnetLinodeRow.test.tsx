@@ -111,7 +111,7 @@ describe('SubnetLinodeRow', () => {
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
     // @TODO VPC IPv6: This assertion assumes the VPC IPv6 feature flag is off. Once the feature is fully rolled out, update the checks to ensure the
-    // VPC IPv6 and Linode IPv6 Ranges cells are displayed/populated.
+    // VPC IPv6 and VPC IPv6 Ranges cells are displayed/populated.
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const config = linodeConfigFactory.build({
@@ -145,7 +145,7 @@ describe('SubnetLinodeRow', () => {
 
     expect(getByText('10.0.0.0')).toBeVisible();
 
-    // VPC IPv6 and Linode IPv6 Ranges columns not present, so contents of those cells should not be in the document
+    // VPC IPv6 and VPC IPv6 Ranges columns not present, so contents of those cells should not be in the document
     expect(queryByText('2001:db8::1')).toBeNull();
     expect(queryByText('2001:db8::/64')).toBeNull();
 
@@ -205,7 +205,7 @@ describe('SubnetLinodeRow', () => {
     expect(firewall).toBeVisible();
   });
 
-  it('should display the VPC IPv6 and Linode IPv6 Ranges when vpcIpv6 feature flag is enabled (config/legacy interface)', async () => {
+  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled (config/legacy interface)', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const config = linodeConfigFactory.build({
@@ -236,12 +236,12 @@ describe('SubnetLinodeRow', () => {
       )
     );
 
-    // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
+    // VPC IPv6 and VPC IPv6 Ranges columns present, so contents of those cells should be populated
     await findByText('2001:db8::1');
     await findByText('2001:db8::/64');
   });
 
-  it('should display the VPC IPv6 and Linode IPv6 Ranges when vpcIpv6 feature flag is enabled (Linode Interface)', async () => {
+  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled (Linode Interface)', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const vpcLinodeInterface = linodeInterfaceFactoryVPC.build({
       id: 1,
@@ -273,7 +273,7 @@ describe('SubnetLinodeRow', () => {
       )
     );
 
-    // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
+    // VPC IPv6 and VPC IPv6 Ranges columns present, so contents of those cells should be populated
     expect(getByTestId('vpc-ipv6-cell')).toHaveTextContent(
       '2600:3c03::f03c:91ff:fe0a:109a'
     );
