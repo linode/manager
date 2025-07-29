@@ -53,14 +53,14 @@ export interface KubeNodePoolResponse {
   /**
    * The ID of the Firewall applied to all Nodes in the pool.
    *
-   * @note Only returned for LKE Enterprise clusters.
+   * @note Only returned for LKE Enterprise clusters
    */
   firewall_id?: number;
   id: number;
   /**
    * The version of the Node Pool.
    *
-   * @note Only returned for LKE Enterprise clusters.
+   * @note Only returned for LKE Enterprise clusters
    */
   k8s_version?: string;
   labels: Label;
@@ -71,7 +71,7 @@ export interface KubeNodePoolResponse {
   /**
    * Controls how updates are rolled out to nodes in the pool.
    *
-   * @note Only returned for LKE Enterprise clusters.
+   * @note Only returned for LKE Enterprise clusters
    * @default on_recycle
    */
   update_strategy?: NodePoolUpdateStrategy;
@@ -85,31 +85,50 @@ export interface PoolNodeResponse {
 
 export interface CreateNodePoolData {
   /**
+   * When enabled, the number of nodes automatically scales within the defined minimum and maximum values.
+   */
+  autoscaler?: AutoscaleSettings;
+  /**
    * The number of nodes that should exist in the pool.
    */
   count: number;
   /**
-   * The ID o
+   * The ID of a Firewall to apply to all nodes in the pool.
+   *
+   * @note Only supported on LKE Enterprise clusters
    */
   firewall_id?: number;
+  /**
+   * The LKE version that the node pool should use.
+   *
+   * @note Only supported on LKE Enterprise clusters
+   * @note This field may be required when creating a Node Pool on a LKE Enterprise cluster
+   */
   k8s_version?: string;
+  /**
+   * Key-value pairs added as labels to nodes in the node pool.
+   */
+  labels?: Label;
+  tags?: string[];
+  /**
+   * Kubernetes taints to add to node pool nodes.
+   */
+  taints?: Taint[];
+  /**
+   * The Linode Type for all of the nodes in the Node Pool.
+   */
   type: string;
+  /**
+   * Determines when the worker nodes within this node pool upgrade to the latest selected
+   * Kubernetes version, after the cluster has been upgraded.
+   *
+   * @note Only supported on LKE Enterprise clusters
+   * @default on_recycle
+   */
   update_strategy?: NodePoolUpdateStrategy;
 }
 
-export interface UpdateNodePoolData {
-  autoscaler: AutoscaleSettings;
-  count: number;
-  labels: Label;
-  tags: string[];
-  taints: Taint[];
-}
-
-export interface UpdateNodePoolDataBeta extends UpdateNodePoolData {
-  firewall_id?: number;
-  k8s_version?: string;
-  update_strategy?: NodePoolUpdateStrategy;
-}
+export type UpdateNodePoolData = Partial<CreateNodePoolData>;
 
 export interface AutoscaleSettings {
   enabled: boolean;

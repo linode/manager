@@ -14,7 +14,6 @@ import type {
   CreateNodePoolData,
   KubeNodePoolResponse,
   UpdateNodePoolData,
-  UpdateNodePoolDataBeta,
 } from './types';
 
 /**
@@ -79,26 +78,6 @@ export const updateNodePool = (
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID,
-      )}/pools/${encodeURIComponent(nodePoolID)}`,
-    ),
-    setData(data, nodePoolSchema),
-  );
-
-/**
- * updateNodePoolBeta
- *
- * Change the type, count, upgrade_strategy, or k8_version of a node pool
- */
-export const updateNodePoolBeta = (
-  clusterID: number,
-  nodePoolID: number,
-  data: Partial<UpdateNodePoolDataBeta>,
-) =>
-  Request<KubeNodePoolResponse>(
-    setMethod('PUT'),
-    setURL(
-      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
         clusterID,
       )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
