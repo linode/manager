@@ -12,8 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -299,42 +297,34 @@ export const AlertsPanel = (props: Props) => {
 
   return (
     <>
-      {/* Use Prompt for now until Link is coupled with Tanstack router */}
-      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
-        {({ handleCancel, handleConfirm, isModalOpen }) => (
-          <ConfirmationDialog
-            actions={() => (
-              <ActionsPanel
-                primaryButtonProps={{
-                  label: 'Confirm',
-                  onClick: () => {
-                    handleProceedNavigation();
-                    handleConfirm();
-                  },
-                }}
-                secondaryButtonProps={{
-                  buttonType: 'outlined',
-                  label: 'Cancel',
-                  onClick: () => {
-                    handleCancelNavigation();
-                    handleCancel();
-                  },
-                }}
-              />
-            )}
-            onClose={() => {
-              handleCancelNavigation();
-              handleCancel();
+      <ConfirmationDialog
+        actions={() => (
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Confirm',
+              onClick: () => {
+                handleProceedNavigation();
+              },
             }}
-            open={status === 'blocked' || isModalOpen}
-            title="Unsaved Changes"
-          >
-            <Typography variant="body1">
-              Are you sure you want to leave the page? You have unsaved changes.
-            </Typography>
-          </ConfirmationDialog>
+            secondaryButtonProps={{
+              buttonType: 'outlined',
+              label: 'Cancel',
+              onClick: () => {
+                handleCancelNavigation();
+              },
+            }}
+          />
         )}
-      </Prompt>
+        onClose={() => {
+          handleCancelNavigation();
+        }}
+        open={status === 'blocked'}
+        title="Unsaved Changes"
+      >
+        <Typography variant="body1">
+          Are you sure you want to leave the page? You have unsaved changes.
+        </Typography>
+      </ConfirmationDialog>
 
       {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
       when user already subscribed to Beta/ACLP Mode and makes changes in the

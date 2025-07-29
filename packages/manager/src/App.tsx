@@ -9,7 +9,6 @@ import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.cont
 import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 
 import { SplashScreen } from './components/SplashScreen';
-import { GoTo } from './GoTo';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
@@ -17,8 +16,10 @@ import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
     // Skip all initialization if we're on any authentication callback - just let the router handle it
-    const isAuthCallback = window.location.pathname === '/oauth/callback' || window.location.pathname === '/admin/callback';
-    
+    const isAuthCallback =
+      window.location.pathname === '/oauth/callback' ||
+      window.location.pathname === '/admin/callback';
+
     if (isAuthCallback) {
       return (
         <ErrorBoundaryFallback>
@@ -48,7 +49,6 @@ export const App = withDocumentTitleProvider(
             Opens an external site in a new window
           </span>
         </div>
-        <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
         <Router />
       </ErrorBoundaryFallback>

@@ -41,6 +41,7 @@ import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
+import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useNewRelic } from './hooks/useNewRelic';
@@ -180,6 +181,7 @@ export const Root = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
+              <GoTo />
               <MainContentBanner />
               <TopMenu
                 desktopMenuToggle={desktopMenuToggle}

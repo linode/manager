@@ -1,8 +1,8 @@
 import { useLinodeLishQuery, useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -88,9 +88,11 @@ export const ParsePotentialLishErrorString = (
 };
 
 export const Lish = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
+  const { linodeId, type } = useParams({
+    strict: false,
+  });
   const id = Number(linodeId);
 
   const {
@@ -141,7 +143,9 @@ export const Lish = () => {
   ].filter(Boolean) as Tab[];
 
   const navToURL = (index: number) => {
-    history.replace(`/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`);
+    navigate({
+      to: `/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`,
+    });
   };
 
   const refreshToken = async () => {
