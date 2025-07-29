@@ -4,10 +4,19 @@ import React from 'react';
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-const mockHistory = {
-  push: vi.fn(),
-  replace: vi.fn(),
-};
+const mockNavigate = vi.fn();
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => mockNavigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 describe('SwitchAccountSessionDialog', () => {
   it('renders correctly when isOpen is true', () => {
@@ -42,6 +51,8 @@ describe('SwitchAccountSessionDialog', () => {
     );
 
     fireEvent.click(getByText('Log in'));
-    expect(mockHistory.push).toHaveBeenCalledWith('/logout');
+    expect(mockNavigate).toHaveBeenCalledWith({
+      to: '/logout',
+    });
   });
 });

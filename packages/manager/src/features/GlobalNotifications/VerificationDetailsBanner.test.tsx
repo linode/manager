@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -6,11 +6,16 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
 const mockNavigate = vi.fn();
-vi.hoisted(() => {
-  const actual = vi.importActual('@tanstack/react-router');
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => mockNavigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useNavigate: () => mockNavigate,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -54,7 +59,7 @@ describe('VerificationDetailsBanner', () => {
     expect(getByTestId('confirmButton')).toBeInTheDocument();
   });
 
-  it('triggers history push on button click', () => {
+  it('triggers a navigation on button click', async () => {
     const { getByTestId } = renderWithTheme(
       <VerificationDetailsBanner
         hasSecurityQuestions={false}
@@ -63,9 +68,9 @@ describe('VerificationDetailsBanner', () => {
     );
 
     // Trigger button click
-    fireEvent.click(getByTestId('confirmButton'));
+    await userEvent.click(getByTestId('confirmButton'));
 
-    // Ensure that history.push is called with the correct arguments
+    // Ensure that navigation is called with the correct arguments
     expect(mockNavigate).toHaveBeenCalledWith({
       to: '/profile/auth',
       search: {

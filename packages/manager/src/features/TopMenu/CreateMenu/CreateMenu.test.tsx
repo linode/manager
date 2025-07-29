@@ -1,5 +1,4 @@
 import { userEvent } from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import React from 'react';
 
 import { accountFactory } from 'src/factories';
@@ -43,11 +42,7 @@ describe('CreateMenu', () => {
   });
 
   it('navigates to Linode create page on Linode menu item click', async () => {
-    // Create a mock history object
-    const history = createMemoryHistory();
-
-    // Render the component with the Router and history
-    const { getByText } = renderWithTheme(<CreateMenu />);
+    const { getByText, router } = renderWithTheme(<CreateMenu />);
 
     const createButton = getByText('Create');
     await userEvent.click(createButton);
@@ -56,7 +51,7 @@ describe('CreateMenu', () => {
     await userEvent.click(menuItem);
 
     // Assert that the history's location has changed to the expected URL
-    expect(history.location.pathname).toBe('/linodes/create');
+    expect(router.state.location.pathname).toBe('/linodes/create');
   });
 
   it('does not render hidden menu items', async () => {

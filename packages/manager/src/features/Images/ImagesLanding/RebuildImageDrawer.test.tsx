@@ -19,11 +19,16 @@ const props = {
 };
 
 const mockNavigate = vi.fn();
-vi.hoisted(() => {
-  const actual = vi.importActual('@tanstack/react-router');
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => mockNavigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useNavigate: () => mockNavigate,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -54,8 +59,9 @@ describe('RebuildImageDrawer', () => {
     await userEvent.click(getByText('Rebuild Linode'));
 
     expect(mockNavigate).toBeCalledWith({
-      to: '/linodes/1/rebuild',
-      search: { selectedImageId: 'private%2F1' },
+      to: '/linodes/$linodeId',
+      params: { linodeId: 1 },
+      search: { selectedImageId: 'private/1', rebuild: true },
     });
   });
 });

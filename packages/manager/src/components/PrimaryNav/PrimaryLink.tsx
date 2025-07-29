@@ -15,7 +15,6 @@ export interface BaseNavLink {
 }
 
 export interface PrimaryLink extends BaseNavLink {
-  activeLinks?: Array<LinkProps['to']>;
   betaChipClassName?: string;
   isBeta?: boolean;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;

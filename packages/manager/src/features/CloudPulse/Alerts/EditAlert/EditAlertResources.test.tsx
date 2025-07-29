@@ -158,14 +158,11 @@ describe('EditAlertResources component tests', () => {
       reset: vi.fn(),
     });
 
-    navigate({
-      to: '/alerts/definitions/edit/linode/1',
-    });
-
     const { getByTestId, getByText } = renderWithTheme(
       <EditAlertResources alertDetails={alertDetails} serviceType="linode" />,
       {
         initialEntries: ['/alerts/definitions/edit/linode/1'],
+        initialRoute: '/alerts/definitions/edit/linode/1',
       }
     );
 

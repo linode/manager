@@ -121,30 +121,19 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Compute />,
           links: [
             {
-              activeLinks: [
-                '/managed',
-                '/managed/summary',
-                '/managed/monitors',
-                '/managed/ssh-access',
-                '/managed/credentials',
-                '/managed/contacts',
-              ],
               display: 'Managed',
               hide: !isManaged,
               to: '/managed',
             },
             {
-              activeLinks: ['/linodes', '/linodes/create'],
               display: 'Linodes',
               to: '/linodes',
             },
             {
-              activeLinks: ['/images/create/disk', '/images/create/upload'],
               display: 'Images',
               to: '/images',
             },
             {
-              activeLinks: ['/kubernetes/create'],
               display: 'Kubernetes',
               to: '/kubernetes/clusters',
             },
@@ -170,10 +159,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Storage />,
           links: [
             {
-              activeLinks: [
-                '/object-storage/buckets',
-                '/object-storage/access-keys',
-              ],
               display: 'Object Storage',
               to: '/object-storage/buckets',
             },
@@ -361,7 +346,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       const filteredLinks = group.links.filter((link) => !link.hide);
 
       return filteredLinks.some((link) =>
-        linkIsActive(location.pathname, link.to, link.activeLinks)
+        linkIsActive(location.pathname, link.to)
       );
     });
 
@@ -425,7 +410,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
           const PrimaryLinks = filteredLinks.map((link) => {
             const isActiveLink = Boolean(
-              linkIsActive(location.pathname, link.to, link.activeLinks)
+              linkIsActive(location.pathname, link.to)
             );
 
             if (isActiveLink) {
