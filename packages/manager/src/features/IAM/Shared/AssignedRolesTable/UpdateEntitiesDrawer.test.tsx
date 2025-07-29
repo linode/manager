@@ -4,7 +4,7 @@ import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
@@ -91,7 +91,7 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should render correctly', async () => {
-    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
+    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the title renders
     expect(screen.getByText('Update List of Entities')).toBeVisible();
@@ -106,7 +106,7 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should prefill the form with assigned entities', async () => {
-    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
+    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the prefilled entities
     expect(screen.getByText('Linode 1')).toBeVisible();
@@ -129,7 +129,7 @@ describe('UpdateEntitiesDrawer', () => {
       },
     });
 
-    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
+    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     const autocomplete = screen.getByRole('combobox');
 
@@ -175,7 +175,7 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should close the drawer when cancel is clicked', async () => {
-    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
+    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     // Click the cancel button
     const cancelButton = screen.getByTestId('cancel');

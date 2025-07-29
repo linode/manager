@@ -30,6 +30,7 @@ import { chooseRegion } from 'support/util/regions';
 import { depaginate } from './paginate';
 
 import type {
+  Alert,
   Config,
   CreateLinodeRequest,
   InterfacePayload,
@@ -337,4 +338,52 @@ export const assertNewLinodeInterfacesIsAvailable = (
   cy.findByText(legacyInterfacesDescriptionText2).should(expectedBehavior);
   cy.findByText(networkConnectionSectionText).should(expectedBehavior);
   cy.findByText(networkConnectionDescriptionText).should(expectedBehavior);
+};
+
+/**
+ * Validates the table cell contents against the alerts provided
+ *
+ * @param linodeInterfacesEnabled - Indicator if Linode Interfaces feature is enabled.
+ */
+export const assertLinodeAlertsEnabled = (alertDefinitions: Alert[]) => {
+  cy.get('table[data-testid="alert-table"]')
+    .should('be.visible')
+    .get('tbody > tr')
+    .should('have.length', 3)
+    .each((row, index) => {
+      // match alert definitions to table cell contents
+      cy.wrap(row).within(() => {
+        cy.get('td')
+          .eq(0)
+          .within(() => {
+            // each alert's toggle should be enabled/on/true and editable
+            ui.toggle
+              .find()
+              .should('have.attr', 'data-qa-toggle', 'true')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+            ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
+          });
+        cy.get('td')
+          .eq(1)
+          .within(() => {
+            cy.findByText(alertDefinitions[index].label).should('be.visible');
+          });
+        cy.get('td')
+          .eq(2)
+          .within(() => {
+            const rule = alertDefinitions[index].rule_criteria.rules[0];
+            const str = `${rule.label} = ${rule.threshold} ${rule.unit}`;
+            cy.findByText(str).should('be.visible');
+          });
+        cy.get('td')
+          .eq(3)
+          .within(() => {
+            cy.findByText(alertDefinitions[index].type, {
+              exact: false,
+            }).should('be.visible');
+          });
+      });
+    });
 };

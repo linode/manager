@@ -183,7 +183,7 @@ export const AssignedEntitiesTable = () => {
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
-                  title: 'Remove',
+                  title: 'Remove Assignment',
                 },
               ];
 

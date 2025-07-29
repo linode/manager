@@ -136,7 +136,7 @@ describe('clone linode', () => {
       cy.wait('@cloneLinode').then((xhr) => {
         const newLinodeId = xhr.response?.body?.id;
         assert.equal(xhr.response?.statusCode, 200);
-        cy.url().should('endWith', `linodes/${newLinodeId}`);
+        cy.url().should('endWith', `linodes/${newLinodeId}/metrics`);
       });
 
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
@@ -318,7 +318,7 @@ describe('clone linode', () => {
     cy.wait('@cloneLinode').then((xhr) => {
       const newLinodeId = xhr.response?.body?.id;
       assert.equal(xhr.response?.statusCode, 200);
-      cy.url().should('endWith', `linodes/${newLinodeId}`);
+      cy.url().should('endWith', `linodes/${newLinodeId}/metrics`);
     });
 
     cy.wait(['@getLinodeVolumes', '@getLinodeConfigs']);

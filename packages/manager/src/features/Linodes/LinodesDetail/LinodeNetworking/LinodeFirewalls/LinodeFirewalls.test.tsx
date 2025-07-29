@@ -8,11 +8,7 @@ import * as React from 'react';
 import { firewallFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeFirewalls } from './LinodeFirewalls';
 
@@ -80,9 +76,7 @@ describe('LinodeFirewalls', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
     const addFirewallBtn = getByText('Add Firewall');
     expect(addFirewallBtn).toBeInTheDocument();
     expect(addFirewallBtn).toBeEnabled();
@@ -96,9 +90,7 @@ describe('LinodeFirewalls', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
     const addFirewallBtn = getByText('Add Firewall');
     expect(addFirewallBtn).toBeInTheDocument();
     expect(addFirewallBtn).toBeDisabled();
@@ -118,9 +110,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     const loadingTestId = 'table-row-loading';
     await waitForElementToBeRemoved(() => screen.queryByTestId(loadingTestId));
@@ -144,9 +134,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
-      <LinodeFirewalls linodeID={1} />
-    );
+    const { getByText } = renderWithTheme(<LinodeFirewalls linodeID={1} />);
 
     const loadingTestId = 'table-row-loading';
     await waitForElementToBeRemoved(screen.queryByTestId(loadingTestId));

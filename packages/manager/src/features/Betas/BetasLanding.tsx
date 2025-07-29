@@ -1,7 +1,6 @@
 import { useAccountBetasQuery, useBetasQuery } from '@linode/queries';
 import { Stack } from '@linode/ui';
 import { categorizeBetasByStatus } from '@linode/utilities';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -74,7 +73,3 @@ export const BetasLanding = () => {
     </>
   );
 };
-
-export const betasLandingLazyRoute = createLazyRoute('/betas')({
-  component: BetasLanding,
-});

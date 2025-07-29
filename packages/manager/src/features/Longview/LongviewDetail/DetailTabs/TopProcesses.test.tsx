@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { longviewTopProcessesFactory } from 'src/factories/longviewTopProcesses';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { extendTopProcesses, TopProcesses } from './TopProcesses';
 
@@ -21,16 +21,12 @@ describe('Top Processes', () => {
     });
 
     it('renders the title', async () => {
-      const { getByText } = await renderWithThemeAndRouter(
-        <TopProcesses {...props} />
-      );
+      const { getByText } = renderWithTheme(<TopProcesses {...props} />);
       getByText('Top Processes');
     });
 
     it('renders the View Details link', async () => {
-      const { queryByText } = await renderWithThemeAndRouter(
-        <TopProcesses {...props} />
-      );
+      const { queryByText } = renderWithTheme(<TopProcesses {...props} />);
       expect(queryByText('View Details')).toBeDefined();
     });
 
@@ -40,7 +36,7 @@ describe('Top Processes', () => {
       // fewer than seven processes so the test is valid.
       expect(Object.keys(data.Processes || {}).length).toBeLessThan(7);
 
-      const { getByText } = await renderWithThemeAndRouter(
+      const { getByText } = renderWithTheme(
         <TopProcesses {...props} topProcessesData={data} />
       );
       Object.keys(data.Processes || {}).forEach((processName) => {
@@ -49,7 +45,7 @@ describe('Top Processes', () => {
     });
 
     it('renders loading state', async () => {
-      const { getAllByTestId } = await renderWithThemeAndRouter(
+      const { getAllByTestId } = renderWithTheme(
         <TopProcesses
           clientID={1}
           topProcessesData={{ Processes: {} }}
@@ -60,7 +56,7 @@ describe('Top Processes', () => {
     });
 
     it('renders error state', async () => {
-      const { getByText } = await renderWithThemeAndRouter(
+      const { getByText } = renderWithTheme(
         <TopProcesses
           {...props}
           topProcessesData={{ Processes: {} }}

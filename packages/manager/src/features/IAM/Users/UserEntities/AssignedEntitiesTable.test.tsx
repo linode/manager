@@ -5,7 +5,7 @@ import React from 'react';
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedEntitiesTable } from '../../Users/UserEntities/AssignedEntitiesTable';
 
@@ -64,7 +64,7 @@ describe('AssignedEntitiesTable', () => {
       data: {},
     });
 
-    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
+    renderWithTheme(<AssignedEntitiesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -78,7 +78,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
+    renderWithTheme(<AssignedEntitiesTable />);
 
     expect(screen.getByText('no_devices')).toBeVisible();
     expect(screen.getByText('Firewall')).toBeVisible();
@@ -91,7 +91,7 @@ describe('AssignedEntitiesTable', () => {
 
     await userEvent.click(actionMenuButton);
     expect(screen.getByText('Change Role')).toBeVisible();
-    expect(screen.getByText('Remove')).toBeVisible();
+    expect(screen.getByText('Remove Assignment')).toBeVisible();
   });
 
   it('should display empty state when no roles match filters', async () => {
@@ -103,7 +103,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
+    renderWithTheme(<AssignedEntitiesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -122,7 +122,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
+    renderWithTheme(<AssignedEntitiesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'no_devices');
@@ -141,7 +141,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
+    renderWithTheme(<AssignedEntitiesTable />);
 
     const autocomplete = screen.getByPlaceholderText('All Entities');
     await userEvent.type(autocomplete, 'Firewalls');

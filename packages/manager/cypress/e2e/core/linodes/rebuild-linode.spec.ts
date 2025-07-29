@@ -1,4 +1,4 @@
-import { createStackScript } from '@linode/api-v4/lib';
+import { createStackScript, getImages } from '@linode/api-v4/lib';
 import {
   createLinodeRequestFactory,
   linodeFactory,
@@ -7,6 +7,7 @@ import {
 import { imageFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
 import {
   interceptRebuildLinode,
@@ -14,7 +15,10 @@ import {
   mockRebuildLinode,
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
-import { mockGetRegions } from 'support/intercepts/regions';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
 import {
   interceptGetStackScript,
   interceptGetStackScripts,
@@ -22,10 +26,28 @@ import {
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import type { CreateLinodeRequest, Linode } from '@linode/api-v4';
+import type { CreateLinodeRequest, Image, Linode } from '@linode/api-v4';
+
+/**
+ * Get the latest image with name
+ *
+ * @param imageName - The latest image that is required.
+ *
+ * @returns Promise that resolves when required image is fetched.
+ */
+const getLatestImage = async (imageName: string) => {
+  const allPublicImages = await depaginate((page) =>
+    getImages({ page }, { is_public: true })
+  );
+  return allPublicImages
+    .sort((a, b) => (a.id > b.id ? 1 : b.id > a.id ? -1 : 0))
+    .reverse()
+    .find((image) => image.vendor === imageName && image.deprecated === false);
+};
 
 /**
  * Creates a Linode and StackScript.
@@ -102,18 +124,60 @@ const submitRebuild = () => {
     .click();
 };
 
+/**
+ * Submits the rebuild dialog with retry logic.
+ */
+const submitRebuildWithRetry = (maxRetries = 3, attempt = 0) => {
+  submitRebuild();
+
+  cy.wait('@linodeRebuild').then((xhr) => {
+    // Check for error in the form
+    // If error exists, retry submission
+    console.log(`Rebuild request status: ${JSON.stringify(xhr.response)}`);
+    const resStatus = xhr.response?.statusCode;
+    const resBody = xhr.response?.body;
+    if (resStatus !== 200 && JSON.stringify(resBody).includes('Linode busy')) {
+      if (attempt < maxRetries) {
+        console.log(`Retrying rebuild submission: attempt ${attempt + 1}`);
+        // Delay to avoid rapid retries
+        const delayInMilliseconds = randInt(100, 1000);
+        cy.wait(delayInMilliseconds);
+        submitRebuildWithRetry(maxRetries, attempt + 1);
+      } else {
+        console.error('Max retries reached. Stopping further attempts.');
+      }
+    }
+  });
+};
+
+const randInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
 // Error message that is displayed when desired password is not strong enough.
 // eslint-disable-next-line sonarjs/no-hardcoded-passwords
 const passwordComplexityError = 'Password does not meet strength requirement.';
 
 authenticate();
 describe('rebuild linode', () => {
-  // TODO M3-9872 - Dynamically retrieve most recent Alpine Image label.
-  const image = 'Alpine 3.20';
+  let alpineImageId: string = 'alpineImageId';
+  let alpineImageLabel: string = 'Alpine';
+  let almaLinuxImageLabel: string = 'AlmaLinux';
   const rootPassword = randomString(16);
 
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'stackscripts', 'images']);
+
+    // Dynamically retrieve most recent Alpine Image label.
+    getLatestImage(alpineImageLabel).then((value: Image) => {
+      alpineImageId = value.id;
+      alpineImageLabel = value.label;
+    });
+
+    // Dynamically retrieve most recent Alma Image label.
+    getLatestImage(almaLinuxImageLabel).then((value: Image) => {
+      almaLinuxImageLabel = value.label;
+    });
   });
 
   /*
@@ -127,7 +191,7 @@ describe('rebuild linode', () => {
 
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: chooseRegion().id,
+      region: chooseRegion({ capabilities: ['Linodes', 'Vlans'] }).id,
     });
 
     cy.defer(
@@ -150,26 +214,28 @@ describe('rebuild linode', () => {
           .should('have.value', 'Image');
 
         ui.autocomplete.findByLabel('Image').should('be.visible').click();
-        ui.autocompletePopper.findByTitle(image).should('be.visible').click();
+        ui.autocompletePopper
+          .findByTitle(alpineImageLabel)
+          .should('be.visible')
+          .click();
 
         // Type to confirm.
         cy.findByLabelText('Linode Label').type(linode.label);
 
-        // checkPasswordComplexity(rootPassword);
+        // Verify the password complexity functionality.
         assertPasswordComplexity(weakPassword, 'Weak');
-        submitRebuild();
+        submitRebuildWithRetry();
         cy.findByText(passwordComplexityError).should('be.visible');
 
         assertPasswordComplexity(fairPassword, 'Fair');
-        submitRebuild();
+        submitRebuildWithRetry();
         cy.findByText(passwordComplexityError).should('be.visible');
 
         assertPasswordComplexity(rootPassword, 'Good');
-        submitRebuild();
+        submitRebuildWithRetry();
         cy.findByText(passwordComplexityError).should('not.exist');
       });
 
-      cy.wait('@linodeRebuild');
       cy.contains('REBUILDING').should('be.visible');
     });
   });
@@ -181,12 +247,12 @@ describe('rebuild linode', () => {
     cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
-    // TODO M3-9872 - Dynamically retrieve latest AlmaLinux version's label.
-    const image = 'AlmaLinux 9';
 
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: chooseRegion().id,
+      region: chooseRegion({
+        capabilities: ['Linodes', 'Vlans', 'StackScripts'],
+      }).id,
     });
 
     cy.defer(
@@ -225,17 +291,19 @@ describe('rebuild linode', () => {
         cy.wait('@getStackScript');
 
         ui.autocomplete.findByLabel('Image').should('be.visible').click();
-        ui.autocompletePopper.findByTitle(image).should('be.visible').click();
+        ui.autocompletePopper
+          .findByTitle(almaLinuxImageLabel)
+          .should('be.visible')
+          .click();
 
         cy.findByLabelText('Linode Label')
           .should('be.visible')
           .type(linode.label);
 
         assertPasswordComplexity(rootPassword, 'Good');
-        submitRebuild();
+        submitRebuildWithRetry();
       });
 
-      cy.wait('@linodeRebuild');
       cy.contains('REBUILDING').should('be.visible');
     });
   });
@@ -245,13 +313,11 @@ describe('rebuild linode', () => {
    */
   it('rebuilds a linode from Account StackScript', () => {
     cy.tag('method:e2e');
-    // TODO M3-9872 - Dynamically retrieve most recent Alpine Image label.
-    const image = 'Alpine 3.20';
-    const region = chooseRegion().id;
+    const region = chooseRegion({ capabilities: ['Linodes', 'Vlans'] }).id;
 
     // Create a StackScript to rebuild a Linode.
     const linodeRequest = createLinodeRequestFactory.build({
-      image: 'linode/alpine3.20',
+      image: alpineImageId,
       label: randomLabel(),
       region,
       root_pass: randomString(16),
@@ -261,7 +327,7 @@ describe('rebuild linode', () => {
       deployments_active: 0,
       deployments_total: 0,
       description: randomString(),
-      images: ['linode/alpine3.20'],
+      images: [alpineImageId],
       is_public: false,
       label: randomLabel(),
       logo_url: '',
@@ -301,17 +367,19 @@ describe('rebuild linode', () => {
         cy.get(`[id="stackscript-${stackScript.id}"]`).click();
 
         ui.autocomplete.findByLabel('Image').should('be.visible').click();
-        ui.autocompletePopper.findByTitle(image).should('be.visible').click();
+        ui.autocompletePopper
+          .findByTitle(alpineImageLabel)
+          .should('be.visible')
+          .click();
 
         cy.findByLabelText('Linode Label')
           .should('be.visible')
           .type(linode.label);
 
         assertPasswordComplexity(rootPassword, 'Good');
-        submitRebuild();
+        submitRebuildWithRetry();
       });
 
-      cy.wait('@linodeRebuild');
       cy.contains('REBUILDING').should('be.visible');
     });
   });
@@ -339,8 +407,11 @@ describe('rebuild linode', () => {
         .findByLabel('Image')
         .should('be.visible')
         .click()
-        .type(image);
-      ui.autocompletePopper.findByTitle(image).should('be.visible').click();
+        .type(alpineImageLabel);
+      ui.autocompletePopper
+        .findByTitle(alpineImageLabel)
+        .should('be.visible')
+        .click();
 
       assertPasswordComplexity(rootPassword, 'Good');
 
@@ -421,5 +492,65 @@ describe('rebuild linode', () => {
     });
 
     ui.toast.assertMessage('Linode rebuild started.');
+  });
+
+  /*
+   * - Confirms that Linode can be rebuilt when the GECKO is enabled.
+   */
+  it('can rebuild a linode with the GECKO is enabled', () => {
+    cy.tag('method:e2e');
+    const linodeCreatePayload = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: chooseRegion({ capabilities: ['Linodes', 'Vlans'] }).id,
+    });
+
+    mockAppendFeatureFlags({
+      gecko2: {
+        enabled: true,
+        la: true,
+      },
+    }).as('getFeatureFlags');
+    mockGetRegionAvailability(linodeCreatePayload.region, []).as(
+      'getRegionAvailability'
+    );
+
+    cy.defer(
+      () => createTestLinode(linodeCreatePayload),
+      'creating Linode'
+    ).then((linode: Linode) => {
+      interceptRebuildLinode(linode.id).as('linodeRebuild');
+
+      cy.visitWithLogin(`/linodes/${linode.id}`);
+      cy.wait(['@getFeatureFlags']);
+      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
+
+      openRebuildDialog(linode.label);
+      findRebuildDialog(linode.label).within(() => {
+        // "From Image" should be selected by default; no need to change the value.
+        ui.autocomplete
+          .findByLabel('Rebuild From')
+          .should('be.visible')
+          .should('have.value', 'Image');
+
+        console.log(`alpineImageLabel2: ${alpineImageLabel}`);
+
+        ui.autocomplete.findByLabel('Image').should('be.visible').click();
+        ui.autocompletePopper
+          .findByTitle(alpineImageLabel)
+          .should('be.visible')
+          .click();
+
+        // Type to confirm.
+        cy.findByLabelText('Linode Label').type(linode.label);
+
+        assertPasswordComplexity(rootPassword, 'Good');
+        submitRebuildWithRetry();
+        cy.findByText(passwordComplexityError).should('not.exist');
+      });
+
+      cy.contains('REBUILDING').should('be.visible');
+    });
   });
 });

@@ -2,9 +2,7 @@ import {
   useAllFirewallDevicesQuery,
   useFirewallQuery,
   useFirewallSettingsQuery,
-  useGrants,
   useMutateFirewall,
-  useProfile,
 } from '@linode/queries';
 import {
   Chip,
@@ -27,6 +25,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
@@ -37,7 +36,6 @@ import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
   getFirewallDefaultEntities,
 } from '../components/FirewallSelectOption.utils';
-import { checkIfUserCanModifyFirewall } from '../shared';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -55,8 +53,7 @@ export const FirewallDetail = () => {
   const { id } = useParams({
     strict: false,
   });
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
@@ -76,10 +73,10 @@ export const FirewallDetail = () => {
     firewallSettings &&
     getFirewallDefaultEntities(firewallId, firewallSettings);
 
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallId,
-    profile,
-    grants
+  const { permissions } = usePermissions(
+    'firewall',
+    ['update_firewall_rules'],
+    firewallId
   );
 
   const { data: allDevices } = useAllFirewallDevicesQuery(firewallId);
@@ -230,14 +227,13 @@ export const FirewallDetail = () => {
           <TabPanels>
             <SafeTabPanel index={0}>
               <FirewallRulesLanding
-                disabled={!userCanModifyFirewall}
+                disabled={!permissions.update_firewall_rules}
                 firewallID={firewallId}
                 rules={firewall.rules}
               />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="linode"
@@ -245,7 +241,6 @@ export const FirewallDetail = () => {
             </SafeTabPanel>
             <SafeTabPanel index={2}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="nodebalancer"

@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
 import React, { type JSX } from 'react';
 
+import { CloseIcon } from '../../assets';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { FormHelperText } from '../FormHelperText';
@@ -22,6 +23,10 @@ interface BaseProps {
    */
   className?: string;
   /**
+   * If true, shows a clear (X) icon when there is a value
+   */
+  clearable?: boolean;
+  /**
    * Props applied to the root element
    */
   containerProps?: BoxProps;
@@ -29,6 +34,10 @@ interface BaseProps {
    * Data attributes are applied to the underlying TextField component for testing purposes
    */
   dataAttrs?: Record<string, any>;
+  /**
+   * boolean value to disable the Text Field
+   */
+  disabled?: boolean;
   /**
    * Applies editable styles
    * @default false
@@ -90,6 +99,10 @@ interface BaseProps {
    */
   noMarginTop?: boolean;
   /**
+   * Clear the input value
+   */
+  onClear?: () => void;
+  /**
    * Adds `(optional)` to the Label
    * @default false
    */
@@ -147,8 +160,10 @@ export const TextField = (props: TextFieldProps) => {
     SelectProps,
     children,
     className,
+    clearable = false,
     containerProps,
     dataAttrs,
+    disabled = false,
     editable,
     error,
     errorGroup,
@@ -171,6 +186,7 @@ export const TextField = (props: TextFieldProps) => {
     noMarginTop,
     onBlur,
     onChange,
+    onClear,
     optional,
     required,
     slotProps,
@@ -209,7 +225,12 @@ export const TextField = (props: TextFieldProps) => {
   };
 
   const { errorScrollClassName, errorTextId, helperTextId, validInputId } =
-    useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
+    useFieldIds({
+      errorGroup,
+      hasError: Boolean(errorText),
+      inputId: inputId ?? inputProps?.id ?? InputProps?.id,
+      label,
+    });
 
   const isControlled = value !== undefined;
 
@@ -387,6 +408,7 @@ export const TextField = (props: TextFieldProps) => {
           {...textFieldProps}
           {...dataAttrs}
           className={className}
+          disabled={disabled}
           error={!!error || !!errorText}
           fullWidth
           helperText={''}
@@ -410,10 +432,26 @@ export const TextField = (props: TextFieldProps) => {
             input: {
               className,
               disableUnderline: true,
-              endAdornment: loading && (
-                <InputAdornment position="end">
-                  <CircleProgress noPadding size="xs" />
-                </InputAdornment>
+              endAdornment: (
+                <>
+                  {loading && (
+                    <InputAdornment position="end">
+                      <CircleProgress noPadding size="xs" />
+                    </InputAdornment>
+                  )}
+                  {clearable && _value && !disabled && (
+                    <InputAdornment
+                      onClick={() => {
+                        setValue('');
+                        onClear?.();
+                      }}
+                      position="end"
+                      sx={{ cursor: 'pointer' }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </InputAdornment>
+                  )}
+                </>
               ),
               sx: {
                 ...(expand && {
@@ -462,7 +500,7 @@ export const TextField = (props: TextFieldProps) => {
             sxTooltipIcon={{
               height: '34px',
               margin: '0px 0px 0px 4px',
-              padding: '17px',
+              padding: '8px',
               width: '34px',
             }}
             text={tooltipText}
@@ -475,7 +513,7 @@ export const TextField = (props: TextFieldProps) => {
         <FormHelperText
           data-qa-textfield-error-text={label}
           role="alert"
-          sx={{
+          sx={(theme) => ({
             ...((editable || hasAbsoluteError) && {
               position: 'absolute',
             }),
@@ -484,12 +522,12 @@ export const TextField = (props: TextFieldProps) => {
               wordBreak: 'keep-all',
             }),
             alignItems: 'center',
-            color: theme.palette.error.dark,
+            color: theme.tokens.component.TextField.Error.HintText,
             display: 'flex',
             left: 5,
             top: 42,
             width: '100%',
-          }}
+          })}
         >
           {errorText}
         </FormHelperText>

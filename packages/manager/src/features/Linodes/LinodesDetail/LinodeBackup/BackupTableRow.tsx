@@ -15,9 +15,9 @@ import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 interface Props {
   backup: LinodeBackup;
-  disabled: boolean;
   handleDeploy: () => void;
   handleRestore: () => void;
+  linodeId: number;
 }
 
 const typeMap = {
@@ -46,7 +46,7 @@ const statusIconMap: Record<LinodeBackup['status'], Status> = {
 };
 
 export const BackupTableRow = (props: Props) => {
-  const { backup, disabled, handleDeploy, handleRestore } = props;
+  const { backup, handleDeploy, handleRestore, linodeId } = props;
 
   return (
     <TableRow data-qa-backup key={backup.id}>
@@ -84,7 +84,7 @@ export const BackupTableRow = (props: Props) => {
       <TableCell actionCell>
         <LinodeBackupActionMenu
           backup={backup}
-          disabled={disabled}
+          linodeId={linodeId}
           onDeploy={handleDeploy}
           onRestore={handleRestore}
         />

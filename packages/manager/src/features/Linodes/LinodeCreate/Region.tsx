@@ -12,8 +12,8 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStartEvent,
@@ -72,9 +72,7 @@ export const Region = React.memo(() => {
     Boolean(selectedLinode?.type)
   );
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const { data: regions } = useRegionsQuery();
 
@@ -124,10 +122,14 @@ export const Region = React.memo(() => {
       setValue('metadata.user_data', null);
     }
 
-    if (
-      values.maintenance_policy &&
-      !region.capabilities.includes('Maintenance Policy')
-    ) {
+    // Handle maintenance policy based on region capabilities
+    if (region.capabilities.includes('Maintenance Policy')) {
+      // If the region supports maintenance policy, set it to the default value
+      // or keep the current value if it's already set
+      if (!values.maintenance_policy) {
+        setValue('maintenance_policy', 'linode/migrate');
+      }
+    } else {
       // Clear maintenance_policy if the selected region doesn't support it
       setValue('maintenance_policy', undefined);
     }
@@ -203,7 +205,7 @@ export const Region = React.memo(() => {
   if (showTwoStepRegion) {
     return (
       <TwoStepRegion
-        disabled={isLinodeCreateRestricted}
+        disabled={!permissions.create_linode}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={onChange}
@@ -248,7 +250,7 @@ export const Region = React.memo(() => {
       <RegionSelect
         currentCapability="Linodes"
         disableClearable
-        disabled={isLinodeCreateRestricted}
+        disabled={!permissions.create_linode}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         isGeckoLAEnabled={isGeckoLAEnabled}

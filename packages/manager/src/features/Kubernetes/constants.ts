@@ -42,3 +42,10 @@ export const MAX_NODES_PER_POOL_STANDARD_TIER = 100;
 
 export const ADD_NODE_POOLS_DESCRIPTION = `Add groups of Linodes to your cluster. You can have a maximum of ${MAX_NODES_PER_POOL_STANDARD_TIER} Linodes per node pool and a maximum of 250 Linodes per cluster.`;
 export const ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION = `Add groups of Linodes to your cluster. You can have a maximum of ${MAX_NODES_PER_POOL_ENTERPRISE_TIER} Linodes per node pool.`;
+
+export const DEFAULT_PLAN_COUNT = 3;
+
+export const UPDATE_STRATEGY_OPTIONS = [
+  { label: 'On Recycle Updates', value: 'on_recycle' },
+  { label: 'Rolling Updates', value: 'rolling_update' },
+];

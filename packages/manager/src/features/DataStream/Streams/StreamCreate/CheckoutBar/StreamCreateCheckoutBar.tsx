@@ -6,33 +6,35 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { displayPrice } from 'src/components/DisplayPrice';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { StyledHeader } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar.styles';
-import { eventType } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
-export const StreamCreateCheckoutBar = () => {
+export interface Props {
+  createStream: () => void;
+}
+
+export const StreamCreateCheckoutBar = (props: Props) => {
+  const { createStream } = props;
   const { control } = useFormContext<CreateStreamForm>();
   const destinationType = useWatch({ control, name: 'destination_type' });
   const formValues = useWatch({
     control,
     name: [
-      eventType.Authentication,
-      eventType.Authorization,
-      eventType.Configuration,
       'status',
       'type',
+      'details.cluster_ids',
+      'details.is_auto_add_all_clusters_enabled',
     ],
   });
   const price = getPrice(formValues);
-  const onDeploy = () => {};
 
   return (
     <CheckoutBar
       calculatedPrice={price}
-      disabled={true}
+      disabled={false}
       heading="Stream Summary"
-      onDeploy={onDeploy}
-      priceSelectionText="Select Data Set and define a Destination to view pricing and create a stream."
+      onDeploy={createStream}
+      priceSelectionText="Select Cluster and define a Destination to view pricing and create a stream."
       submitText="Create Stream"
     >
       <>

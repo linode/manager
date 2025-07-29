@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { longviewProcessFactory } from 'src/factories/longviewProcess';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { extendData } from './ProcessesLanding';
 import { ProcessesTable } from './ProcessesTable';
@@ -21,7 +21,7 @@ describe('ProcessTable', () => {
   const extendedData = extendData(longviewProcessFactory.build());
 
   it('renders all columns for each row', async () => {
-    const { getAllByTestId, getAllByText } = await renderWithThemeAndRouter(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <ProcessesTable {...props} processesData={extendedData} />
     );
     extendedData.forEach((row) => {
@@ -35,14 +35,14 @@ describe('ProcessTable', () => {
   });
 
   it('renders loading state', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <ProcessesTable {...props} processesLoading={true} />
     );
     getByTestId('table-row-loading');
   });
 
   it('renders error state', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <ProcessesTable {...props} error="Error!" />
     );
     getByText('Error!');

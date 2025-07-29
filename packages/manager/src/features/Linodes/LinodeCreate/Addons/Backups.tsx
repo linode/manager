@@ -16,7 +16,7 @@ import { useController, useFormContext, useWatch } from 'react-hook-form';
 import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { Link } from 'src/components/Link';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { getBackupsEnabledValue } from './utilities';
@@ -35,9 +35,7 @@ export const Backups = () => {
     name: ['region', 'type', 'disk_encryption'],
   });
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   const { data: type } = useTypeQuery(typeId, Boolean(typeId));
   const { data: regions } = useRegionsQuery();
@@ -73,7 +71,7 @@ export const Backups = () => {
       data-testid="backups"
       disabled={
         isDistributedRegionSelected ||
-        isLinodeCreateRestricted ||
+        !permissions.create_linode ||
         isAccountBackupsEnabled
       }
       label={

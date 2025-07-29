@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RolesLanding } from './Roles';
 
@@ -39,7 +39,7 @@ describe('RolesLanding', () => {
       isLoading: true,
     });
 
-    await renderWithThemeAndRouter(<RolesLanding />);
+    renderWithTheme(<RolesLanding />);
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
@@ -51,7 +51,7 @@ describe('RolesLanding', () => {
       isLoading: false,
     });
 
-    await renderWithThemeAndRouter(<RolesLanding />);
+    renderWithTheme(<RolesLanding />);
     // RolesTable has a textbox at the top
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });

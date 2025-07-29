@@ -62,7 +62,7 @@ import { SIZE_FIELD_WIDTH } from './constants';
 import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
 import { SizeField } from './Drawers/VolumeDrawer/SizeField';
 
-import type { APIError, VolumeEncryption } from '@linode/api-v4';
+import type { APIError, Region, VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
 
@@ -148,8 +148,19 @@ export const VolumeCreate = () => {
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
+  // Block Storage Encryption flags
   const { isBlockStorageEncryptionFeatureEnabled } =
     useIsBlockStorageEncryptionFeatureEnabled();
+
+  const linodeSupportsBlockStorageEncryption = (linode: Linode) =>
+    linode?.capabilities?.includes('Block Storage Encryption');
+
+  const regionSupportsBlockStorageEncryption = (region: string | undefined) =>
+    doesRegionSupportFeature(
+      region ?? '',
+      regions ?? [],
+      'Block Storage Encryption'
+    );
 
   const regionsWithBlockStorage =
     regions
@@ -204,7 +215,7 @@ export const VolumeCreate = () => {
       // Otherwise, set it to `enabled` if the checkbox is checked, or `disabled` if it is not
       const blockStorageEncryptionPayloadValue =
         !isBlockStorageEncryptionFeatureEnabled ||
-        !regionSupportsBlockStorageEncryption
+        !regionSupportsBlockStorageEncryption(region)
           ? undefined
           : encryption;
 
@@ -262,10 +273,6 @@ export const VolumeCreate = () => {
     isBlockStorageEncryptionFeatureEnabled && linode_id !== null
   );
 
-  const linodeSupportsBlockStorageEncryption = Boolean(
-    linode?.capabilities?.includes('Block Storage Encryption')
-  );
-
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
@@ -283,6 +290,13 @@ export const VolumeCreate = () => {
       isInvalidPrice
   );
 
+  const handleRegionChange = (region: null | Region) => {
+    setFieldValue('region', region?.id ?? null);
+    setFieldValue('linode_id', null);
+
+    setEncryptionBasedOnRegion(region?.id);
+  };
+
   const handleLinodeChange = (linode: Linode | null) => {
     if (linode !== null) {
       setFieldValue('linode_id', linode.id);
@@ -291,13 +305,17 @@ export const VolumeCreate = () => {
       setFieldValue('linode_id', null);
       setFieldValue('config_id', null);
     }
+
+    setEncryptionBasedOnRegion(linode?.region);
   };
 
-  const regionSupportsBlockStorageEncryption = doesRegionSupportFeature(
-    values.region ?? '',
-    regions ?? [],
-    'Block Storage Encryption'
-  );
+  const setEncryptionBasedOnRegion = (region: string | undefined) => {
+    if (regionSupportsBlockStorageEncryption(region)) {
+      setFieldValue('encryption', 'enabled');
+    } else {
+      setFieldValue('encryption', 'disabled');
+    }
+  };
 
   const toggleVolumeEncryptionEnabled = (
     encryption: undefined | VolumeEncryption
@@ -312,7 +330,8 @@ export const VolumeCreate = () => {
   const shouldDisplayClientLibraryCopy =
     isBlockStorageEncryptionFeatureEnabled &&
     linode_id !== null &&
-    !linodeSupportsBlockStorageEncryption;
+    linode &&
+    !linodeSupportsBlockStorageEncryption(linode);
 
   return (
     <>
@@ -405,10 +424,7 @@ export const VolumeCreate = () => {
                 isGeckoLAEnabled={isGeckoLAEnabled}
                 label="Region"
                 onBlur={handleBlur}
-                onChange={(e, region) => {
-                  setFieldValue('region', region?.id ?? null);
-                  setFieldValue('linode_id', null);
-                }}
+                onChange={(e, region) => handleRegionChange(region)}
                 regions={regions ?? []}
                 value={values.region}
                 width={400}
@@ -513,7 +529,9 @@ export const VolumeCreate = () => {
               <Box>
                 <Encryption
                   descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
-                  disabled={!regionSupportsBlockStorageEncryption}
+                  disabled={
+                    !regionSupportsBlockStorageEncryption(values.region)
+                  }
                   disabledReason={
                     values.region
                       ? BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
@@ -545,7 +563,8 @@ export const VolumeCreate = () => {
                 disabled ||
                 (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
                   linode_id !== null &&
-                  !linodeSupportsBlockStorageEncryption &&
+                  linode &&
+                  !linodeSupportsBlockStorageEncryption(linode) &&
                   values.encryption === 'enabled')
               }
               loading={isSubmitting}
