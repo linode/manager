@@ -1,4 +1,4 @@
-interface VPCIPv6 {
+export interface VPCIPv6 {
   range?: string;
 }
 
