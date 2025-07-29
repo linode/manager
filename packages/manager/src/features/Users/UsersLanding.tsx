@@ -14,14 +14,15 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { useIsIAMEnabled } from '../IAM/hooks/useIsIAMEnabled';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
+import { UsersLandingRedirectInfo } from './UsersLandingRedirectInfo';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
-
 export const UsersLanding = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -74,6 +75,8 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
+  const { isIAMEnabled } = useIsIAMEnabled();
+
   // Since this query is disabled for restricted users, use isInitialLoading.
   const {
     data: proxyUser,
@@ -112,103 +115,109 @@ export const UsersLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
-      {showProxyUserTable && (
-        <Typography
-          sx={(theme) => ({
-            marginBottom: theme.spacing(2),
-            marginTop: theme.spacing(3),
-            textTransform: 'capitalize',
-            [theme.breakpoints.down('md')]: {
-              marginLeft: theme.spacing(1),
-            },
-          })}
-          variant="h3"
-        >
-          {PARENT_USER} Settings
-        </Typography>
-      )}
-      {showProxyUserTable && (
-        <Table aria-label="List of Parent Users">
-          <UsersLandingProxyTableHead order={order} />
-          <TableBody>
-            <UsersLandingTableBody
-              error={proxyUserError}
-              isLoading={isLoadingProxyUser}
-              numCols={proxyNumCols}
-              onDelete={handleDelete}
-              users={proxyUser?.data}
-            />
-          </TableBody>
-        </Table>
-      )}
-      <Box
-        sx={(theme) => ({
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: showProxyUserTable ? 'space-between' : 'flex-end',
-          marginBottom: theme.spacing(2),
-          marginTop: theme.spacing(3),
-        })}
-      >
-        {showProxyUserTable && (
-          <Typography
+      {isIAMEnabled ? (
+        <UsersLandingRedirectInfo />
+      ) : (
+        <>
+          {showProxyUserTable && (
+            <Typography
+              sx={(theme) => ({
+                marginBottom: theme.spacing(2),
+                marginTop: theme.spacing(3),
+                textTransform: 'capitalize',
+                [theme.breakpoints.down('md')]: {
+                  marginLeft: theme.spacing(1),
+                },
+              })}
+              variant="h3"
+            >
+              {PARENT_USER} Settings
+            </Typography>
+          )}
+          {showProxyUserTable && (
+            <Table aria-label="List of Parent Users">
+              <UsersLandingProxyTableHead order={order} />
+              <TableBody>
+                <UsersLandingTableBody
+                  error={proxyUserError}
+                  isLoading={isLoadingProxyUser}
+                  numCols={proxyNumCols}
+                  onDelete={handleDelete}
+                  users={proxyUser?.data}
+                />
+              </TableBody>
+            </Table>
+          )}
+          <Box
             sx={(theme) => ({
-              [theme.breakpoints.down('md')]: {
-                marginLeft: theme.spacing(1),
-              },
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: showProxyUserTable ? 'space-between' : 'flex-end',
+              marginBottom: theme.spacing(2),
+              marginTop: theme.spacing(3),
             })}
-            variant="h3"
           >
-            User Settings
-          </Typography>
-        )}
-        <Button
-          buttonType="primary"
-          disabled={isRestrictedUser}
-          onClick={() => setIsCreateDrawerOpen(true)}
-          tooltipText={
-            isRestrictedUser
-              ? 'You cannot create other users as a restricted user.'
-              : undefined
-          }
-        >
-          Add a User
-        </Button>
-      </Box>
-      <Table aria-label="List of Users">
-        <UsersLandingTableHead
-          order={order}
-          showChildAccountAccessCol={showChildAccountAccessCol}
-        />
-        <TableBody>
-          <UsersLandingTableBody
-            error={error}
-            isLoading={isInitialLoading}
-            numCols={numCols}
-            onDelete={handleDelete}
-            users={users?.data}
+            {showProxyUserTable && (
+              <Typography
+                sx={(theme) => ({
+                  [theme.breakpoints.down('md')]: {
+                    marginLeft: theme.spacing(1),
+                  },
+                })}
+                variant="h3"
+              >
+                User Settings
+              </Typography>
+            )}
+            <Button
+              buttonType="primary"
+              disabled={isRestrictedUser}
+              onClick={() => setIsCreateDrawerOpen(true)}
+              tooltipText={
+                isRestrictedUser
+                  ? 'You cannot create other users as a restricted user.'
+                  : undefined
+              }
+            >
+              Add a User
+            </Button>
+          </Box>
+          <Table aria-label="List of Users">
+            <UsersLandingTableHead
+              order={order}
+              showChildAccountAccessCol={showChildAccountAccessCol}
+            />
+            <TableBody>
+              <UsersLandingTableBody
+                error={error}
+                isLoading={isInitialLoading}
+                numCols={numCols}
+                onDelete={handleDelete}
+                users={users?.data}
+              />
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={users?.results || 0}
+            eventCategory="users landing"
+            handlePageChange={pagination.handlePageChange}
+            handleSizeChange={pagination.handlePageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
           />
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={users?.results || 0}
-        eventCategory="users landing"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
-      <CreateUserDrawer
-        navigate={navigate}
-        onClose={() => setIsCreateDrawerOpen(false)}
-        open={isCreateDrawerOpen}
-        refetch={refetch}
-      />
-      <UserDeleteConfirmationDialog
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
-        username={selectedUsername}
-      />
+          <CreateUserDrawer
+            navigate={navigate}
+            onClose={() => setIsCreateDrawerOpen(false)}
+            open={isCreateDrawerOpen}
+            refetch={refetch}
+          />
+          <UserDeleteConfirmationDialog
+            onClose={() => setIsDeleteDialogOpen(false)}
+            open={isDeleteDialogOpen}
+            username={selectedUsername}
+          />
+        </>
+      )}
     </React.Fragment>
   );
 };
