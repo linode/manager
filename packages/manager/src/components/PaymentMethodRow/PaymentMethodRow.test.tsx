@@ -15,6 +15,7 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     permissions: {
       make_billing_payment: false,
+      update_account: false,
     },
   })),
 }));
@@ -144,7 +145,12 @@ describe('Payment Method Row', () => {
 
   it('Calls `onDelete` callback when "Delete" action is clicked', async () => {
     const mockFunction = vi.fn();
-
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        make_billing_payment: false,
+        update_account: true,
+      },
+    });
     const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
@@ -165,6 +171,12 @@ describe('Payment Method Row', () => {
   });
 
   it('Makes payment method default when "Make Default" action is clicked', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        make_billing_payment: true,
+        update_account: true,
+      },
+    });
     const paymentMethod = paymentMethodFactory.build({
       data: {
         card_type: 'Visa',
@@ -190,6 +202,12 @@ describe('Payment Method Row', () => {
   });
 
   it('should disable "Make a Payment" button if the user does not have make_billing_payment permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        make_billing_payment: false,
+        update_account: false,
+      },
+    });
     const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
@@ -213,6 +231,7 @@ describe('Payment Method Row', () => {
     queryMocks.userPermissions.mockReturnValue({
       permissions: {
         make_billing_payment: true,
+        update_account: false,
       },
     });
     const { getByLabelText, getByText } = renderWithTheme(
