@@ -73,6 +73,8 @@ interface AclpFlag {
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
+  phase2Mtc: boolean;
+  postLa: boolean;
 }
 
 interface CloudNatFlag extends BetaFeatureFlag {
@@ -133,6 +135,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePremium: boolean;
   databaseResize: boolean;
   databases: boolean;
   databaseVpc: boolean;

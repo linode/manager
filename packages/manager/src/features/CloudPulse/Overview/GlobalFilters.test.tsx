@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -8,9 +9,8 @@ const mockHandleAnyFilterChange = vi.fn();
 const mockHandleDashboardChange = vi.fn();
 const mockHandleTimeDurationChange = vi.fn();
 const mockHandleToggleAppliedFilter = vi.fn();
-const timeRangeSelectId = 'preset-select';
 const setup = () => {
-  return renderWithTheme(
+  renderWithTheme(
     <GlobalFilters
       handleAnyFilterChange={mockHandleAnyFilterChange}
       handleDashboardChange={mockHandleDashboardChange}
@@ -21,25 +21,23 @@ const setup = () => {
 };
 describe('Global filters component test', () => {
   it('Should render refresh button', () => {
-    const { getByTestId } = setup();
-    expect(getByTestId('global-refresh')).toBeInTheDocument();
+    setup();
+    const globalRefreshButton = screen.getByTestId('global-refresh');
+    expect(globalRefreshButton).toBeInTheDocument();
   });
 
   it('Should show dashboard selectcomponent', () => {
-    const { getByTestId } = setup();
+    setup();
 
-    expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
+    const dashboardSelect = screen.getByTestId('cloudpulse-dashboard-select');
+    expect(dashboardSelect).toBeInTheDocument();
   });
 
   it('Should have time range select with default value', () => {
-    const screen = setup();
+    setup();
 
-    const timeRangeSelect = screen.getByTestId(timeRangeSelectId);
+    const timeRangeSelect = screen.getByText('Start Date');
 
     expect(timeRangeSelect).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('combobox', { name: 'Time Range' })
-    ).toHaveAttribute('value', 'Last 30 Minutes');
   });
 });

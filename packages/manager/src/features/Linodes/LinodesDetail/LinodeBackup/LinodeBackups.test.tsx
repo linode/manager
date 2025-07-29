@@ -2,7 +2,7 @@ import { backupFactory, linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeBackups } from './LinodeBackups';
 
@@ -10,6 +10,15 @@ import type { LinodeBackupsResponse } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      list_linode_backups: true,
+      create_linode_backup_snapshot: true,
+      cancel_linode_backups: true,
+      enable_linode_backups: true,
+      restore_linode_backup: true,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -20,6 +29,10 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('LinodeBackups', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -27,7 +40,7 @@ describe('LinodeBackups', () => {
     });
   });
 
-  it('renders a list of different types of backups if backups are enabled', async () => {
+  it('renders a list of different types of backups if backups are enabled and the user has permission', async () => {
     server.use(
       http.get('*/linode/instances/1', () => {
         return HttpResponse.json(
@@ -55,9 +68,7 @@ describe('LinodeBackups', () => {
       })
     );
 
-    const { findByText, getByText } = await renderWithThemeAndRouter(
-      <LinodeBackups />
-    );
+    const { findByText, getByText } = renderWithTheme(<LinodeBackups />);
 
     // Verify an automated backup renders
     await findByText('current-snapshot');
@@ -81,7 +92,7 @@ describe('LinodeBackups', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(<LinodeBackups />);
+    const { findByText } = renderWithTheme(<LinodeBackups />);
 
     await findByText('Enable Backups');
   });

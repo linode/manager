@@ -1,11 +1,8 @@
 import {
-  grantsFactory,
   linodeFactory,
   linodeTypeFactory,
-  profileFactory,
   regionFactory,
 } from '@linode/utilities';
-import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -23,6 +20,11 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_linode: false,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -35,6 +37,10 @@ vi.mock('@tanstack/react-router', async () => {
     useParams: queryMocks.useParams,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 describe('Region', () => {
   beforeEach(() => {
@@ -59,39 +65,29 @@ describe('Region', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('should render a Region Select', () => {
+  it('should disable the region select is the user does not have create_linode permission', async () => {
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
       component: <Region />,
     });
 
     const select = getByPlaceholderText('Select a Region');
-
-    expect(select).toBeVisible();
-    expect(select).toBeEnabled();
+    expect(select).toBeInTheDocument();
+    expect(select).toBeDisabled();
   });
 
-  it('should disable the region select is the user does not have permission to create Linodes', async () => {
-    const profile = profileFactory.build({ restricted: true });
-    const grants = grantsFactory.build({ global: { add_linodes: false } });
-
-    server.use(
-      http.get('*/v4/profile/grants', () => {
-        return HttpResponse.json(grants);
-      }),
-      http.get('*/v4/profile', () => {
-        return HttpResponse.json(profile);
-      })
-    );
-
+  it('should enable the region select is the user has create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+      },
+    });
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
       component: <Region />,
     });
 
     const select = getByPlaceholderText('Select a Region');
-
-    await waitFor(() => {
-      expect(select).toBeDisabled();
-    });
+    expect(select).toBeInTheDocument();
+    expect(select).toBeEnabled();
   });
 
   it('should render regions returned by the API', async () => {

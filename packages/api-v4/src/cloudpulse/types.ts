@@ -3,12 +3,17 @@ import type { AccountCapability } from 'src/account';
 export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
-export type AlertServiceType = 'dbaas' | 'linode';
-export type MetricsServiceType = 'dbaas' | 'linode' | 'nodebalancer';
+export type AlertServiceType = 'dbaas' | 'firewall' | 'linode' | 'nodebalancer';
+export type MetricsServiceType =
+  | 'dbaas'
+  | 'firewall'
+  | 'linode'
+  | 'nodebalancer';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
   | 'eq'
+  | 'in'
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
@@ -57,6 +62,7 @@ export interface DateTimeWithPreset {
   end: string;
   preset?: string;
   start: string;
+  timeZone?: string;
 }
 
 export interface Widgets {
@@ -333,7 +339,7 @@ export interface EditAlertDefinitionPayload {
   rule_criteria?: {
     rules: MetricCriteria[];
   };
-  scope: AlertDefinitionScope;
+  scope?: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
@@ -358,6 +364,16 @@ export interface DeleteAlertPayload {
   serviceType: string;
 }
 
+export const capabilityServiceTypeMapping: Record<
+  MetricsServiceType,
+  AccountCapability
+> = {
+  linode: 'Linodes',
+  dbaas: 'Managed Databases',
+  nodebalancer: 'NodeBalancers',
+  firewall: 'Cloud Firewall',
+};
+
 /**
  * Represents the payload for CloudPulse alerts, included only when the ACLP beta mode is enabled.
  *
@@ -377,11 +393,3 @@ export interface CloudPulseAlertsPayload {
    */
   user?: number[];
 }
-export const capabilityServiceTypeMapping: Record<
-  MetricsServiceType,
-  AccountCapability
-> = {
-  linode: 'Linodes',
-  dbaas: 'Managed Databases',
-  nodebalancer: 'NodeBalancers',
-};
