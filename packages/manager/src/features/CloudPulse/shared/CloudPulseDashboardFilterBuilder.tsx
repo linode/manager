@@ -1,5 +1,11 @@
-import { Button, ErrorState, Typography } from '@linode/ui';
-import { GridLegacy, useTheme } from '@mui/material';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  InputAdornment,
+  Typography,
+} from '@linode/ui';
+import { Grid, GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
@@ -451,21 +457,34 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             <Typography variant="h3">Filters</Typography>
           </Button>
         </GridLegacy>
-        <GridLegacy
-          columnSpacing={theme.spacing(2)}
-          container
-          item
-          sx={{
-            display: showFilter ? 'flex' : 'none',
-            maxHeight: theme.spacing(23),
-            overflow: 'auto',
-            pr: { sm: 0, xs: 2 },
-            rowGap: theme.spacing(2),
-          }}
-          xs={12}
-        >
-          <RenderFilters />
-        </GridLegacy>
+        {shouldDisableFilters ? (
+          <GridLegacy
+            alignItems="center"
+            container
+            display="flex"
+            justifyContent="center"
+          >
+            <GridLegacy item>
+              <CircleProgress size="md" />
+            </GridLegacy>
+          </GridLegacy>
+        ) : (
+          <GridLegacy
+            columnSpacing={theme.spacing(2)}
+            container
+            item
+            sx={{
+              display: showFilter ? 'flex' : 'none',
+              maxHeight: theme.spacing(23),
+              overflow: 'auto',
+              pr: { sm: 0, xs: 2 },
+              rowGap: theme.spacing(2),
+            }}
+            xs={12}
+          >
+            <RenderFilters />
+          </GridLegacy>
+        )}
       </GridLegacy>
     );
   },
