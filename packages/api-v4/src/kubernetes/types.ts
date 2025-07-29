@@ -58,7 +58,7 @@ export interface KubeNodePoolResponse {
   firewall_id?: number;
   id: number;
   /**
-   * The version of the Node Pool.
+   * The LKE version of the Node Pool.
    *
    * @note Only returned for LKE Enterprise clusters
    */
@@ -69,10 +69,10 @@ export interface KubeNodePoolResponse {
   taints: Taint[];
   type: string;
   /**
-   * Controls how updates are rolled out to nodes in the pool.
+   * Determines when the worker nodes within this node pool upgrade to the latest selected
+   * Kubernetes version, after the cluster has been upgraded.
    *
    * @note Only returned for LKE Enterprise clusters
-   * @default on_recycle
    */
   update_strategy?: NodePoolUpdateStrategy;
 }
