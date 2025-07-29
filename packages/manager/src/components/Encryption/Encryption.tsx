@@ -16,7 +16,7 @@ export interface EncryptionProps {
   isEncryptEntityChecked: boolean;
   notices?: string[];
   onChange: (checked: boolean) => void;
-  sx?: SxProps<Theme>;
+  sxCheckbox?: SxProps<Theme>;
 }
 
 export const Encryption = (props: EncryptionProps) => {
@@ -29,7 +29,7 @@ export const Encryption = (props: EncryptionProps) => {
     isEncryptEntityChecked,
     notices,
     onChange,
-    sx,
+    sxCheckbox,
   } = props;
 
   return (
@@ -61,7 +61,7 @@ export const Encryption = (props: EncryptionProps) => {
           data-testid={checkboxTestId}
           disabled={disabled}
           onChange={(e, checked) => onChange(checked)}
-          sx={sx}
+          sx={sxCheckbox}
           sxFormLabel={{ marginLeft: '0px' }}
           text={`Encrypt ${entityType ?? 'Disk'}`}
           toolTipText={disabled ? disabledReason : ''}

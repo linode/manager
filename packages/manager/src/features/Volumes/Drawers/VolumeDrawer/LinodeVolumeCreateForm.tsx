@@ -286,7 +286,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
                 : []
             }
             onChange={() => toggleVolumeEncryptionEnabled(values.encryption)}
-            sx={{ paddingLeft: '0px' }}
+            sxCheckbox={{ paddingLeft: '0px' }}
           />
         </Box>
       )}

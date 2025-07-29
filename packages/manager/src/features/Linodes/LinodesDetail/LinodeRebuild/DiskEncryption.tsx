@@ -63,7 +63,7 @@ export const DiskEncryption = (props: Props) => {
           onChange={(checked) =>
             field.onChange(checked ? 'enabled' : 'disabled')
           }
-          sx={{ paddingLeft: '0px' }}
+          sxCheckbox={{ paddingLeft: '0px' }}
         />
       )}
     />
