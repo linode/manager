@@ -5,6 +5,7 @@ import {
 } from '@linode/api-v4/lib/object-storage';
 import { useAccountSettings } from '@linode/queries';
 import { useErrors, useOpenClose } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -53,6 +54,7 @@ export const AccessKeyLanding = (props: Props) => {
     openAccessDrawer,
   } = props;
 
+  const navigate = useNavigate();
   const pagination = usePagination(1);
 
   const { data, error, isLoading, refetch } = useObjectStorageAccessKeys({
@@ -83,6 +85,24 @@ export const AccessKeyLanding = (props: Props) => {
   const revokeKeysDialog = useOpenClose();
 
   const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
+
+  // Redirect to base access keys route if current page has no data
+  React.useEffect(() => {
+    const currentPage = Number(pagination.page);
+
+    // Only redirect if we have data, no results, and we're not on page 1
+    if (
+      !isLoading &&
+      data &&
+      (data.results === 0 || data.data.length === 0) &&
+      currentPage > 1
+    ) {
+      navigate({
+        to: '/object-storage/access-keys',
+        search: { page: undefined, pageSize: undefined },
+      });
+    }
+  }, [data, isLoading, pagination.page, navigate]);
 
   const handleCreateKey = (
     values: CreateObjectStorageKeyPayload,
