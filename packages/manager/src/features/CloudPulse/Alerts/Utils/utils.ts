@@ -603,50 +603,6 @@ export const filterRegionByServiceType = (
   });
 };
 
-// export const filterUsingXfilter = (
-//   data?: CloudPulseResources[],
-//   dependentFilters?: {
-//     [key: string]: FilterValueType;
-//   }
-// ): CloudPulseResources[] | undefined => {
-//   if (!dependentFilters || !data) {
-//     return data;
-//   }
-
-//   const dependentKeys: string[] = Object.keys(dependentFilters);
-//   const resourceValueKeys: string[] = Object.keys(data);
-//   const result: CloudPulseResources[] = [];
-
-//   for (const resource of data) {
-//     for (const dependentKey of dependentKeys) {
-//       const value = dependentFilters[dependentKey];
-//       const dependentDataKey = resourceValueKeys.find(
-//         (key) => dependentKey === key
-//       );
-//       const resourceValue = dependentDataKey
-//         ? resource[dependentDataKey as keyof CloudPulseResources]
-//         : undefined;
-
-//       if (resourceValue) {
-//         let isPresent: boolean = false;
-//         if (Array.isArray(resourceValue) && Array.isArray(value)) {
-//           isPresent = value.some((val) => resourceValue.includes(String(val)));
-//         } else if (Array.isArray(resourceValue) && !Array.isArray(value)) {
-//           isPresent = resourceValue.includes(String(value));
-//         } else {
-//           isPresent = resourceValue === value;
-//         }
-
-//         if (isPresent) {
-//           result.push(resource);
-//         }
-//       }
-//     }
-//   }
-
-//   return result;
-// };
-
 export const filterUsingXfilter = (
   data?: CloudPulseResources[],
   dependentFilters?: {
