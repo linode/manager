@@ -119,6 +119,7 @@ export const LinodeRow = (props: Props) => {
         )}
         {isInProgress && (
           <TooltipIcon
+            ariaLabel="Maintenance in progress"
             className="ui-TooltipIcon ui-TooltipIcon-isActive"
             icon={statusTooltipIcons.active}
             sx={{ tooltip: { maxWidth: 300 } }}
@@ -133,6 +134,11 @@ export const LinodeRow = (props: Props) => {
         )}
         {isPendingOrScheduled && (
           <TooltipIcon
+            ariaLabel={
+              maintenance?.status === 'pending'
+                ? 'Maintenance pending'
+                : 'Maintenance scheduled'
+            }
             className="ui-TooltipIcon"
             icon={
               maintenance.status === 'pending'

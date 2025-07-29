@@ -34,6 +34,10 @@ export interface TooltipIconBaseProps
     'children' | 'disableInteractive' | 'leaveDelay' | 'title'
   > {
   /**
+   * The aria-label for the tooltip icon
+   */
+  ariaLabel?: string;
+  /**
    * An optional className that does absolutely nothing
    */
   className?: string;
@@ -102,6 +106,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     icon,
     status,
     sxTooltipIcon,
+    ariaLabel,
     text,
     tooltipAnalyticsEvent,
     tooltipPosition,
@@ -175,6 +180,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       width={width}
     >
       <IconButton
+        aria-label={ariaLabel}
         className={className}
         data-qa-help-button
         onClick={(e) => {
