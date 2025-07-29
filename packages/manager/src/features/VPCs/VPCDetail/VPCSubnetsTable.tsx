@@ -316,7 +316,7 @@ export const VPCSubnetsTable = (props: Props) => {
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
           {flags.vpcIpv6 && (
-            <TableCell>{subnet.ipv6?.[0]?.range ?? 'None'}</TableCell>
+            <TableCell>{subnet.ipv6?.[0]?.range ?? '—'}</TableCell>
           )}
           <Hidden smDown>
             <TableCell>
