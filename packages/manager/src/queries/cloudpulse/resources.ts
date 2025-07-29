@@ -32,6 +32,7 @@ export const useResourcesQuery = (
           regions: resource.regions ? resource.regions : [],
           tags: resource.tags,
           entities,
+          clusterSize: resource.cluster_size,
         };
       });
     },

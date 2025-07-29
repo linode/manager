@@ -69,6 +69,11 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * selected resource ids
    */
   resource_ids?: number[];
+
+  /**
+   * Property to disable filters
+   */
+  shouldDisableFilters: boolean;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -80,6 +85,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isServiceAnalyticsIntegration,
       preferences,
       resource_ids,
+      shouldDisableFilters,
     } = props;
 
     const [, setDependentFilters] = React.useState<{
@@ -261,6 +267,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              shouldDisable: shouldDisableFilters,
             },
             handleTagsChange
           );
@@ -272,6 +279,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               dependentFilters: dependentFilterReference.current,
+              shouldDisable: shouldDisableFilters,
             },
             handleRegionChange
           );
@@ -283,6 +291,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              shouldDisable: shouldDisableFilters,
             },
             handleResourceChange
           );
@@ -301,6 +310,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 : (
                     dependentFilterReference.current[RESOURCE_ID] as string[]
                   )?.map((id: string) => Number(id)),
+              shouldDisable: shouldDisableFilters,
             },
             handleNodeTypeChange
           );
@@ -317,6 +327,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: resource_ids?.length
                 ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
+              shouldDisable: shouldDisableFilters,
             },
             handleTextFilterChange
           );
@@ -330,6 +341,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              shouldDisable: shouldDisableFilters,
             },
             handleCustomSelectChange
           );
@@ -345,6 +357,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
         preferences,
+        shouldDisableFilters,
       ]
     );
 
@@ -466,6 +479,7 @@ function compareProps(
   return (
     oldProps.dashboard?.id === newProps.dashboard?.id &&
     oldProps.preferences?.[DASHBOARD_ID] ===
-      newProps.preferences?.[DASHBOARD_ID]
+      newProps.preferences?.[DASHBOARD_ID] &&
+    oldProps.shouldDisableFilters === newProps.shouldDisableFilters
   );
 }

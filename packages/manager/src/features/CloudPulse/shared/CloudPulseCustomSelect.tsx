@@ -165,7 +165,7 @@ export const CloudPulseCustomSelect = React.memo(
     });
 
     React.useEffect(() => {
-      if (!selectedResource) {
+      if (!selectedResource && !disabled) {
         setResource(
           getInitialDefaultSelections({
             defaultValue,

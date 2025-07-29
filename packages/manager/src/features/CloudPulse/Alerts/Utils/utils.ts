@@ -11,16 +11,21 @@ import {
   type ServiceTypesList,
 } from '@linode/api-v4';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
-import { array, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
+
+import { isParentTokenValid } from 'src/features/Account/SwitchAccounts/utils';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
+import type { FilterValueType } from '../../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type { MonitoringCapabilities } from '@linode/api-v4';
+import type { Filter, MonitoringCapabilities, Params } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { UseQueryResult } from '@tanstack/react-query';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
@@ -596,6 +601,98 @@ export const filterRegionByServiceType = (
   return regions.filter((region) => {
     return region.monitors?.[type]?.includes(capability);
   });
+};
+
+// export const filterUsingXfilter = (
+//   data?: CloudPulseResources[],
+//   dependentFilters?: {
+//     [key: string]: FilterValueType;
+//   }
+// ): CloudPulseResources[] | undefined => {
+//   if (!dependentFilters || !data) {
+//     return data;
+//   }
+
+//   const dependentKeys: string[] = Object.keys(dependentFilters);
+//   const resourceValueKeys: string[] = Object.keys(data);
+//   const result: CloudPulseResources[] = [];
+
+//   for (const resource of data) {
+//     for (const dependentKey of dependentKeys) {
+//       const value = dependentFilters[dependentKey];
+//       const dependentDataKey = resourceValueKeys.find(
+//         (key) => dependentKey === key
+//       );
+//       const resourceValue = dependentDataKey
+//         ? resource[dependentDataKey as keyof CloudPulseResources]
+//         : undefined;
+
+//       if (resourceValue) {
+//         let isPresent: boolean = false;
+//         if (Array.isArray(resourceValue) && Array.isArray(value)) {
+//           isPresent = value.some((val) => resourceValue.includes(String(val)));
+//         } else if (Array.isArray(resourceValue) && !Array.isArray(value)) {
+//           isPresent = resourceValue.includes(String(value));
+//         } else {
+//           isPresent = resourceValue === value;
+//         }
+
+//         if (isPresent) {
+//           result.push(resource);
+//         }
+//       }
+//     }
+//   }
+
+//   return result;
+// };
+
+export const filterUsingXfilter = (
+  data?: CloudPulseResources[],
+  dependentFilters?: {
+    [key: string]: FilterValueType;
+  }
+): CloudPulseResources[] | undefined => {
+  if (!dependentFilters || !data) {
+    return data;
+  }
+
+  return data.filter((resource) => {
+    return Object.entries(dependentFilters).every(([key, filterValue]) => {
+      const resourceValue = resource[key as keyof CloudPulseResources];
+
+      if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
+        return filterValue.some((val) => resourceValue.includes(String(val)));
+      } else if (Array.isArray(resourceValue)) {
+        return resourceValue.includes(String(filterValue));
+      } else {
+        return resourceValue === filterValue;
+      }
+    });
+  });
+};
+
+export const useFilteredResources = (
+  enabled = false,
+  resourceType: string | undefined,
+  params?: Params,
+  filters?: Filter,
+  dependentFilters?: {
+    [key: string]: FilterValueType;
+  }
+): UseQueryResult<CloudPulseResources[]> => {
+  const { data: resources, ...rest } = useResourcesQuery(
+    enabled,
+    resourceType,
+    params,
+    filters
+  );
+
+  const filteredResources = filterUsingXfilter(resources, dependentFilters);
+
+  return { ...rest, data: filteredResources } as UseQueryResult<
+    CloudPulseResources[]
+  >;
 };
 
 /*

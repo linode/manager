@@ -6,12 +6,13 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { filterRegionByServiceType } from '../Alerts/Utils/utils';
+import { filterUsingXfilter } from '../Alerts/Utils/utils';
 import { NO_REGION_MESSAGE } from '../Utils/constants';
 import { deepEqual } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
-import type { Dashboard, Filter, FilterValue, Region } from '@linode/api-v4';
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { Dashboard, Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -25,7 +26,9 @@ export interface CloudPulseRegionSelectProps {
   placeholder?: string;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
-  xFilter?: Filter;
+  xFilter?: {
+    [key: string]: FilterValueType;
+  };
 }
 
 export const CloudPulseRegionSelect = React.memo(
@@ -53,12 +56,11 @@ export const CloudPulseRegionSelect = React.memo(
       isError: isResourcesError,
       isLoading: isResourcesLoading,
     } = useResourcesQuery(
-      selectedDashboard !== undefined && Boolean(regions?.length),
+      !disabled && selectedDashboard !== undefined && Boolean(regions?.length),
       selectedDashboard?.service_type,
       {},
       {
         ...(resourceFilterMap[selectedDashboard?.service_type ?? ''] ?? {}),
-        ...(xFilter ?? {}), // the usual xFilters
       }
     );
 
@@ -105,12 +107,14 @@ export const CloudPulseRegionSelect = React.memo(
       regions, // Function to call on change
     ]);
 
-    const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-      return filterRegionByServiceType('metrics', regions, serviceType);
-    }, [regions, serviceType]);
+    // const supportedRegions = React.useMemo<Region[] | undefined>(() => {
+    //   return filterRegionByServiceType('metrics', regions, serviceType);
+    // }, [regions, serviceType]);
 
-    const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
-      resources?.some(({ region }) => region === id)
+    const supportedRegionsFromResources = regions?.filter(({ id }) =>
+      filterUsingXfilter(resources, xFilter)?.some(
+        ({ region }) => region === id
+      )
     );
 
     return (
@@ -127,7 +131,7 @@ export const CloudPulseRegionSelect = React.memo(
         fullWidth
         isGeckoLAEnabled={isGeckoLAEnabled}
         label={label || 'Region'}
-        loading={isLoading || isResourcesLoading}
+        loading={!disabled && isLoading}
         noMarginTop
         noOptionsText={
           NO_REGION_MESSAGE[selectedDashboard?.service_type ?? ''] ??

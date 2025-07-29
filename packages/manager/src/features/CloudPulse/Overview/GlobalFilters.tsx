@@ -4,6 +4,7 @@ import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/refresh.svg';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
@@ -14,7 +15,7 @@ import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { AclpConfig, Dashboard, DateTimeWithPreset } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, DateTimeWithPreset, Filter } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -88,6 +89,21 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange(REFRESH, Date.now(), []);
   }, []);
 
+  const resourceFilterMap: Record<string, Filter> = {
+    dbaas: {
+      platform: 'rdbms-default',
+    },
+  };
+
+  const {isLoading,
+  } = useResourcesQuery(
+    selectedDashboard !== undefined,
+    selectedDashboard?.service_type ?? '',
+    {},
+
+    resourceFilterMap[selectedDashboard?.service_type ?? ''] ?? {}
+  );
+
   return (
     <GridLegacy container>
       <GridLegacy item xs={12}>
@@ -152,6 +168,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           handleToggleAppliedFilter={handleToggleAppliedFilter}
           isServiceAnalyticsIntegration={false}
           preferences={preferences}
+          shouldDisableFilters={isLoading}
         />
       )}
     </GridLegacy>

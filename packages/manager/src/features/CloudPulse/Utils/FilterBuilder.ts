@@ -44,6 +44,7 @@ interface CloudPulseFilterProperties {
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
   resource_ids?: number[] | undefined;
+  shouldDisable?: boolean;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -116,6 +117,7 @@ export const getRegionProperties = (
     preferences,
     dependentFilters,
     config,
+    shouldDisable,
   } = props;
   return {
     defaultValue: preferences?.[REGION],
@@ -124,12 +126,14 @@ export const getRegionProperties = (
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
-    disabled: shouldDisableFilterByFilterKey(
-      filterKey,
-      dependentFilters ?? {},
-      dashboard
-    ),
-    xFilter: buildXFilter(config, dependentFilters ?? {}),
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard
+      ),
+    xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
   };
 };
 
@@ -157,21 +161,24 @@ export const getResourcesProperties = (
     dependentFilters,
     isServiceAnalyticsIntegration,
     preferences,
+    shouldDisable,
   } = props;
   return {
     defaultValue: preferences?.[RESOURCES],
-    disabled: shouldDisableFilterByFilterKey(
-      filterKey,
-      dependentFilters ?? {},
-      dashboard,
-      preferences
-    ),
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard,
+        preferences
+      ),
     handleResourcesSelection: handleResourceChange,
     label,
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    xFilter: buildXFilter(config, dependentFilters ?? {}),
+    xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
   };
 };
 
@@ -190,15 +197,18 @@ export const getNodeTypeProperties = (
     isServiceAnalyticsIntegration,
     preferences,
     resource_ids,
+    shouldDisable,
   } = props;
   return {
     database_ids: resource_ids,
     defaultValue: preferences?.[NODE_TYPE],
-    disabled: shouldDisableFilterByFilterKey(
-      filterKey,
-      dependentFilters ?? {},
-      dashboard
-    ),
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard
+      ),
     handleNodeTypeChange,
     label,
     placeholder,
@@ -239,6 +249,7 @@ export const getCustomSelectProperties = (
     dependentFilters,
     isServiceAnalyticsIntegration,
     preferences,
+    shouldDisable,
   } = props;
   return {
     apiResponseIdField: apiIdField,
@@ -249,11 +260,13 @@ export const getCustomSelectProperties = (
       dashboard
     ),
     defaultValue: preferences?.[filterKey],
-    disabled: shouldDisableFilterByFilterKey(
-      filterKey,
-      dependentFilters ?? {},
-      dashboard
-    ),
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard
+      ),
     filterKey,
     filterType,
     isOptional,
@@ -324,14 +337,17 @@ export const getTextFilterProperties = (
     isServiceAnalyticsIntegration,
     preferences,
     dependentFilters,
+    shouldDisable,
   } = props;
 
   return {
-    disabled: shouldDisableFilterByFilterKey(
-      props.config.configuration.filterKey,
-      dependentFilters ?? {},
-      dashboard
-    ),
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        props.config.configuration.filterKey,
+        dependentFilters ?? {},
+        dashboard
+      ),
     defaultValue: preferences?.[props.config.configuration.filterKey],
     handleTextFilterChange,
     label,
@@ -349,32 +365,29 @@ export const getTextFilterProperties = (
  * @param dependentFilters - the filters that are selected so far
  * @returns - a xFilter type of apiV4
  */
-export const buildXFilter = (
+export const filterBasedOnConfig = (
   config: CloudPulseServiceTypeFilters,
   dependentFilters: {
-    [key: string]: FilterValueType | TimeDuration;
+    [key: string]: FilterValueType;
   }
-): Filter => {
-  const filters: Filter[] = [];
-  let orCondition: Filter[] = [];
-
+): {
+  [key: string]: FilterValueType;
+} => {
   const { dependency } = config.configuration;
+  const filtered: {
+    [key: string]: FilterValueType;
+  } = {};
   if (dependency) {
     dependency.forEach((key) => {
       const value = dependentFilters[key];
       if (value !== undefined) {
-        if (Array.isArray(value)) {
-          orCondition = value.map((val) => ({ [key]: val }));
-        } else {
-          filters.push({ [key]: value });
-        }
+        filtered[key === 'engine' ? 'engineType' : key] = value;
       }
     });
+    return filtered;
   }
-  if (orCondition.length) {
-    return { '+and': filters, '+or': orCondition };
-  }
-  return { '+and': filters };
+
+  return {};
 };
 
 /**
