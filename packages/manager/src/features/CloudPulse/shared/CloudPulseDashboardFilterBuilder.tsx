@@ -1,11 +1,5 @@
-import {
-  Button,
-  CircleProgress,
-  ErrorState,
-  InputAdornment,
-  Typography,
-} from '@linode/ui';
-import { Grid, GridLegacy, useTheme } from '@mui/material';
+import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
