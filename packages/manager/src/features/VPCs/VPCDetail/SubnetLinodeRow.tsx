@@ -415,9 +415,7 @@ export const SubnetLinodeTableRowHead = (
       <TableCell>VPC IPv4</TableCell>
     </Hidden>
     <Hidden smDown>
-      <TableCell>
-        {`${vpcIPv6FeatureFlag ? 'Linode' : 'VPC'}`} IPv4 Ranges
-      </TableCell>
+      <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
     {vpcIPv6FeatureFlag && (
       <>
@@ -425,7 +423,7 @@ export const SubnetLinodeTableRowHead = (
           <TableCell>VPC IPv6</TableCell>
         </Hidden>
         <Hidden smDown>
-          <TableCell>Linode IPv6 Ranges</TableCell>
+          <TableCell>VPC IPv6 Ranges</TableCell>
         </Hidden>
       </>
     )}
