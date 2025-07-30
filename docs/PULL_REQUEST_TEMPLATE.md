@@ -9,6 +9,14 @@ List any change(s) relevant to the reviewer.
 - ...
 - ...
 
+### Scope 🚢
+
+ Upon production release, changes in this PR will be visible to:
+
+- [ ] All customers
+- [ ] Some customers (e.g. in Beta or Limited Availability)
+- [ ] No customers / Not applicable
+
 ## Target release date 🗓️
 
 Please specify a release date (and environment, if applicable) to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
@@ -78,7 +86,7 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 </details>
 
----
+<!-- This content will not appear in the rendered Markdown 
 
 ## Commit message and pull request title format standards
 
@@ -98,4 +106,4 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
----
+-->
