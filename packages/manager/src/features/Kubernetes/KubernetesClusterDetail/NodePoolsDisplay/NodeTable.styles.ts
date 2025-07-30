@@ -8,7 +8,8 @@ export const NodePoolTableFooter = styled(Box, {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  gap: theme.spacingFunction(8),
+  columnGap: theme.spacingFunction(32),
+  rowGap: theme.spacingFunction(8),
   paddingTop: theme.spacingFunction(8),
   paddingButtom: theme.spacingFunction(8),
   [theme.breakpoints.down('md')]: {
