@@ -1,6 +1,6 @@
 import { visuallyHidden } from '@mui/utils';
 import type { JSX } from 'react';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { SelectedIcon } from '../Autocomplete';
 import { Box } from '../Box';
@@ -40,56 +40,91 @@ export const ListItemOption = <T,>({
   selected,
 }: ListItemOptionProps<T>) => {
   const { onClick, ...rest } = props;
-  const isOptionDisabled = Boolean(disabledOptions);
-  const disabledReason = disabledOptions?.reason;
+  const isItemOptionDisabled = Boolean(disabledOptions);
+  const itemOptionDisabledReason = disabledOptions?.reason;
 
-  const Option = (
-    <ListItem
-      {...rest}
-      data-qa-disabled-item={isOptionDisabled}
-      onClick={(e) =>
-        isOptionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
+  // Used to control the Tooltip
+  const [isFocused, setIsFocused] = useState(false);
+  const listItemRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (!listItemRef.current) {
+      // Ensure ref is established
+      return;
+    }
+    if (!isItemOptionDisabled) {
+      // We don't need to setup the mutation observer for options that are enabled. They won't have a tooltip
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      const className = listItemRef.current?.className;
+      const hasFocusedClass = className?.includes('Mui-focused') ?? false;
+      if (hasFocusedClass) {
+        setIsFocused(true);
+      } else if (!hasFocusedClass) {
+        setIsFocused(false);
       }
-      slotProps={{
-        root: {
-          'data-qa-option': item.id,
-          'data-testid': item.id,
-        } as ListItemComponentsPropsOverrides,
-      }}
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        maxHeight,
-        gap: 1,
-        ...(isOptionDisabled && {
-          cursor: 'not-allowed !important',
-          pointerEvents: 'unset !important' as 'unset',
-        }),
-      }}
-    >
-      {children}
-      {isOptionDisabled && <Box sx={visuallyHidden}>{disabledReason}</Box>}
-      <Box flexGrow={1} />
-      {selected && <SelectedIcon visible />}
-    </ListItem>
-  );
+    });
 
-  if (isOptionDisabled && disabledReason) {
-    return (
-      <Tooltip
-        slotProps={{
-          tooltip: {
-            sx: {
-              minWidth: disabledOptions?.tooltipWidth ?? 215,
-            },
+    observer.observe(listItemRef.current, { attributeFilter: ['class'] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isItemOptionDisabled]);
+
+  return (
+    <Tooltip
+      open={isFocused}
+      PopperProps={{
+        sx: {
+          '& .MuiTooltip-tooltip': {
+            minWidth: disabledOptions?.tooltipWidth ?? 215,
           },
+        },
+      }}
+      title={
+        isItemOptionDisabled && itemOptionDisabledReason
+          ? itemOptionDisabledReason
+          : ''
+      }
+    >
+      <ListItem
+        {...rest}
+        data-qa-disabled-item={isItemOptionDisabled}
+        onClick={(e) =>
+          isItemOptionDisabled
+            ? e.preventDefault()
+            : onClick
+              ? onClick(e)
+              : null
+        }
+        ref={listItemRef}
+        slotProps={{
+          root: {
+            'data-qa-option': item.id,
+            'data-testid': item.id,
+          } as ListItemComponentsPropsOverrides,
         }}
-        title={disabledReason}
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          maxHeight,
+          gap: 1,
+          ...(isItemOptionDisabled && {
+            cursor: 'not-allowed !important',
+            pointerEvents: 'unset !important' as 'unset',
+          }),
+        }}
       >
-        {Option}
-      </Tooltip>
-    );
-  }
-
-  return Option;
+        {children}
+        {isItemOptionDisabled && (
+          <Box sx={visuallyHidden}>{itemOptionDisabledReason}</Box>
+        )}
+        <Box flexGrow={1} />
+        {selected && <SelectedIcon visible />}
+      </ListItem>
+    </Tooltip>
+  );
 };
