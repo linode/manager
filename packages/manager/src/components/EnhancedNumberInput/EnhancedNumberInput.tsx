@@ -27,6 +27,8 @@ const sxTextField = {
   maxWidth: 70,
 };
 
+const charsToPrevent = ['+', '-', '.', 'e', 'E'];
+
 interface EnhancedNumberInputProps {
   /** Disables the input and the +/- buttons */
   disabled?: boolean;
@@ -60,6 +62,8 @@ export const EnhancedNumberInput = React.memo(
       const parsedValue = +e.target.value;
       if (parsedValue >= min && parsedValue <= max) {
         setValue(+e.target.value);
+      } else {
+        setValue(min);
       }
     };
 
@@ -105,6 +109,11 @@ export const EnhancedNumberInput = React.memo(
           min={min}
           name="Quantity"
           onChange={onChange}
+          onKeyDown={(e) => {
+            if (charsToPrevent.includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
           sx={{
             ...sxTextField,
             '.MuiInputBase-input': sxTextFieldBase,
