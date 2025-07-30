@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { formattedTypes } from './constants';
 
@@ -50,6 +51,22 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const queryClient = useQueryClient();
 
   const deviceDialog = formattedTypes[deviceType ?? 'linode'];
+
+  const { permissions: firewallPermissions } = usePermissions(
+    'firewall',
+    ['delete_firewall_device'],
+    firewallId
+  );
+
+  const { permissions: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    device?.entity.id
+  );
+
+  const deleteDisabled =
+    !firewallPermissions.delete_firewall_device ||
+    !linodePermissions.update_linode;
 
   const onDelete = async () => {
     if (!device) {
@@ -120,6 +137,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
             label: primaryButtonText,
             loading: isPending,
             onClick: onDelete,
+            disabled: deleteDisabled,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
