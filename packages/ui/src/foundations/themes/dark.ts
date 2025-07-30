@@ -156,12 +156,12 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   '&:hover': {
-    color: Action.Primary.Hover,
+    color: Alias.Content.Text.Link.Hover,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: Action.Primary.Default,
+  color: Alias.Content.Text.Link.Default,
   cursor: 'pointer',
   font: 'inherit',
   padding: 0,
@@ -205,11 +205,11 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
-  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
-    {
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
       background: Table.Row.Background.Hover,
     },
+  },
 };
 
 const MuiTableZebraStyles = {
@@ -661,6 +661,9 @@ export const darkTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
+          '&[class*="error"]': {
+            color: Select.Error.Border,
+          },
           fontWeight: Font.FontWeight.Semibold,
           color: Color.Neutrals[40],
           lineHeight: 1.25,
