@@ -9,7 +9,7 @@ import { reportException } from 'src/exceptionReporting';
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
  */
 export const useAdobeAnalytics = () => {
-  const location = useLocation(); // Use TanStack Router's location
+  const location = useLocation();
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script

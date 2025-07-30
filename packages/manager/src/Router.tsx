@@ -14,8 +14,7 @@ import { router } from './routes';
 export const Router = () => {
   const queryClient = useQueryClient();
   const globalErrors = useGlobalErrors();
-  
-  // These hooks may trigger API calls, but they'll be blocked by the request interceptor
+
   const { data: accountSettings } = useAccountSettings();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();

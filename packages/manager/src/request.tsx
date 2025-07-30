@@ -135,10 +135,13 @@ export const isSuccessfulGETProfileResponse = (
 
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use(async (config) => {
-    // If we're on any authentication callback page, block API calls entirely - auth is still processing
-    if (window.location.pathname === '/oauth/callback' || window.location.pathname === '/admin/callback') {
-      // console.log('🚫 BLOCKING API CALL DURING AUTH CALLBACK - URL:', config.url);
-      throw new Error('API calls blocked during authentication callback processing');
+    if (
+      window.location.pathname === '/oauth/callback' ||
+      window.location.pathname === '/admin/callback'
+    ) {
+      throw new Error(
+        'API calls blocked during authentication callback processing'
+      );
     }
 
     const url = getURL(config);
@@ -149,7 +152,6 @@ export const setupInterceptors = (store: ApplicationStore) => {
     // setHeaders(), we don't want this overridden.
     const hasExplicitAuthToken = headers.hasAuthorization();
 
-    // Get the current authentication token - will end up being "Admin 1234" or "Bearer 1234"
     const token = ACCESS_TOKEN ?? storage.authentication.token.get() ?? null;
     const bearer = hasExplicitAuthToken ? headers.getAuthorization() : token;
 
