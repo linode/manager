@@ -15,11 +15,11 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 ## Preview 📷
 
-**Include a screenshot or screen recording of the change.**
+**Include a screenshot `<img src="" />` or video `<video src="" />` of the change.**
 
 :lock: Use the [Mask Sensitive Data](https://cloud.linode.com/profile/settings) setting for security.
 
-:bulb: Use `<video src="" />` tag when including recordings in table.
+:bulb: For changes requiring multiple steps to validate, prefer a video for clarity.
 
 | Before  | After   |
 | ------- | ------- |
