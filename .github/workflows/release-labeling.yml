@@ -60,14 +60,18 @@ jobs:
             FREEZE2_START_TS=$(date -d "$FREEZE_START_2" +%s)
             FREEZE2_END_TS=$(date -d "$FREEZE_END_2" +%s)
 
+            # Check if calculated release date falls during December freeze (Dec 2-15)
             if [ $RELEASE_TIMESTAMP -ge $FREEZE1_START_TS ] && [ $RELEASE_TIMESTAMP -le $FREEZE1_END_TS ]; then
+              # Skip freeze period: move to day after freeze ends, then find next Tuesday
               NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_1 + 1 day" +%Y-%m-%d)
               NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
               ITERATION=$((ITERATION + 1))
               continue
             fi
 
+            # Check if calculated release date falls during year-end freeze (Dec 30-Jan 6)
             if [ $RELEASE_TIMESTAMP -ge $FREEZE2_START_TS ] && [ $RELEASE_TIMESTAMP -le $FREEZE2_END_TS ]; then
+              # Skip freeze period: move to day after freeze ends, then find next Tuesday
               NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_2 + 1 day" +%Y-%m-%d)
               NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
               ITERATION=$((ITERATION + 1))
