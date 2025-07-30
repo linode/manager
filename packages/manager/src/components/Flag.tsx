@@ -10,39 +10,11 @@ const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
 };
 
-// Countries that need a css border in the Flag component
+// Countries that need a css border in the Flag component (countries that have DCs)
 const COUNTRIES_WITH_BORDERS = [
-  'jp', // japan
-  'cy', // cyprus
-  'dz', // algeria
-  'bh', // bahrain
-  'bg', // bulgaria
-  'cl', // chile
-  'hr', // croatia
-  'cz', // czech republic
-  'fi', // finland
-  'ge', // georgia
-  'ee', // estonia
   'id', // indonesia
-  'mt', // malta
-  'mg', // madagascar
-  'mx', // mexico
-  'mc', // monaco
-  'np', // nepal
-  'om', // oman
-  'pk', // pakistan
-  'pa', // panama
-  'pl', // poland
-  'qa', // qatar
-  'ru', // russia
-  'sm', // san marino
-  'rs', // serbia
+  'jp', // japan
   'sg', // singapore
-  'sk', // slovakia
-  'si', // slovenia
-  'kr', // south korea
-  'vg', // virgin islands
-  'uy', // uruguay
 ];
 
 interface Props extends BoxProps {
