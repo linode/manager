@@ -8,9 +8,9 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { StreamCreateSubmitBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateSubmitBar';
 import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateClusters } from './StreamCreateClusters';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
@@ -95,7 +95,7 @@ export const StreamCreate = () => {
               </Stack>
             </Grid>
             <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
-              <StreamCreateCheckoutBar createStream={handleSubmit(onSubmit)} />
+              <StreamCreateSubmitBar createStream={handleSubmit(onSubmit)} />
             </Grid>
           </Grid>
         </form>
