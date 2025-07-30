@@ -8,7 +8,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
 
-import { useLinodeCreateQueryParams } from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
@@ -24,13 +24,13 @@ export const LinodeCLIPanel = ({
   payLoad,
   title,
 }: LinodeCLIPanelProps) => {
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   // @TODO - Linode Interfaces
   // DX support (CLI, integrations, sdks) for Linode Interfaces is not yet available. Remove this when it is.
   const showDXCodeSnippets = payLoad.interface_generation !== 'linode';
 
-  const linodeCLIAction = params.type;
+  const linodeCLIAction = createType;
 
   const { getValues } = useFormContext<LinodeCreateFormValues>();
   const sourceLinodeID = getValues('linode.id');
