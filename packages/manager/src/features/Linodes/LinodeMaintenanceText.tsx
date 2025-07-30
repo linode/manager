@@ -15,7 +15,6 @@ export const LinodeMaintenanceText = ({
     <>
       This Linode&rsquo;s maintenance window {isOpened ? 'opened' : 'opens'} at{' '}
       <DateTimeDisplay
-        humanizeCutoff="never"
         sx={(theme) => ({
           color: theme.tokens.alias.Content.Text.Secondary.Default,
         })}
