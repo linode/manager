@@ -131,7 +131,7 @@ export const CloudPulseRegionSelect = React.memo(
         fullWidth
         isGeckoLAEnabled={isGeckoLAEnabled}
         label={label || 'Region'}
-        loading={!disabled && isLoading}
+        loading={!disabled && (isLoading || isResourcesLoading)}
         noMarginTop
         noOptionsText={
           NO_REGION_MESSAGE[selectedDashboard?.service_type ?? ''] ??

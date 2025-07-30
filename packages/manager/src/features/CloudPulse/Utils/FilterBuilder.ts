@@ -30,7 +30,6 @@ import type {
   CloudPulseServiceType,
   Dashboard,
   DateTimeWithPreset,
-  Filter,
   Filters,
   TimeDuration,
 } from '@linode/api-v4';

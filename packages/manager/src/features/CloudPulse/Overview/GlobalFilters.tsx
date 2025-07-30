@@ -15,7 +15,12 @@ import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { AclpConfig, Dashboard, DateTimeWithPreset, Filter } from '@linode/api-v4';
+import type {
+  AclpConfig,
+  Dashboard,
+  DateTimeWithPreset,
+  Filter,
+} from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -95,8 +100,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     },
   };
 
-  const {isLoading,
-  } = useResourcesQuery(
+  const { isLoading } = useResourcesQuery(
     selectedDashboard !== undefined,
     selectedDashboard?.service_type ?? '',
     {},

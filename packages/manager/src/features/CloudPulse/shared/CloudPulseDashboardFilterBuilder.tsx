@@ -73,7 +73,7 @@ export interface CloudPulseDashboardFilterBuilderProps {
   /**
    * Property to disable filters
    */
-  shouldDisableFilters: boolean;
+  shouldDisableFilters?: boolean;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -85,7 +85,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isServiceAnalyticsIntegration,
       preferences,
       resource_ids,
-      shouldDisableFilters,
+      shouldDisableFilters = false,
     } = props;
 
     const [, setDependentFilters] = React.useState<{

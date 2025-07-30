@@ -11,9 +11,8 @@ import {
   type ServiceTypesList,
 } from '@linode/api-v4';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
-import { array, boolean, object, string } from 'yup';
+import { array, object, string } from 'yup';
 
-import { isParentTokenValid } from 'src/features/Account/SwitchAccounts/utils';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';

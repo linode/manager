@@ -10,7 +10,6 @@ import {
   getTextFilterProperties,
 } from './FilterBuilder';
 import {
-  buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
   constructAdditionalRequestFilters,
   getCustomSelectProperties,
@@ -306,26 +305,6 @@ it('test getNodeTypeProperties with disabled true', () => {
     expect(savePreferences).toEqual(true);
     expect(disabled).toEqual(true);
     expect(label).toEqual(name);
-  }
-});
-
-it('test buildXfilter method', () => {
-  const resourceSelectionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Resources'
-  );
-
-  expect(resourceSelectionConfig).toBeDefined(); // fails if resources selection in not defined
-
-  if (resourceSelectionConfig) {
-    let result = buildXFilter(resourceSelectionConfig, {
-      region: 'us-east',
-    });
-
-    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
-
-    result = buildXFilter(resourceSelectionConfig, {});
-
-    expect(JSON.stringify(result)).toEqual('{"+and":[]}');
   }
 });
 
