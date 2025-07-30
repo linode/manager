@@ -740,13 +740,6 @@ export const getDoesEmployeeNeedToAssignFirewall = (
  * when a customer is choosing a plan type for a cluster group
  */
 
-//export const getLinodeTypeMapMarketplace: Record<string, string> = types.data.reduce(
-//  (acc: Record<string, string>, type) => {
-//    acc[type.label] = type.id;
-//    return acc;
-//  }, {}
-//);
-
 export const getLinodeTypeMapMarketplace = Object.fromEntries(
   types.data.map((type) => [type.label, type.id])
 );

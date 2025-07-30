@@ -39,35 +39,19 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
     let clusterTotalMonthlyPrice = 0;
     let clusterTotalHourlyPrice = 0;
 
-    //const clusterTotalMonthlyPrice = clusterData!.reduce((sum, item) => {
-    //  const price = getLinodeRegionPrice(item.typeData, regionId);
-    //  const sizeMultiplier = parseInt(item.size ?? '0', 10);
-    //  return sum + (price?.monthly ?? 0) * sizeMultiplier;
-    //}, 0);
-
+    // cluster monthly
     clusterData!.forEach((item) => {
       const price = getLinodeRegionPrice(item.typeData, regionId);
       const sizeMultiplier = parseInt(item.size ?? '0', 10);
       clusterTotalMonthlyPrice += (price?.monthly ?? 0) * sizeMultiplier;
     });
 
-    //const clusterTotalHourlyPrice = clusterData!.reduce((sum, item) => {
-    //  const price = getLinodeRegionPrice(item.typeData, regionId);
-    //  const sizeMultiplier = parseInt(item.size ?? '0', 10);
-    //  return sum + (price?.hourly ?? 0) * sizeMultiplier;
-    //}, 0);
-
+    // cluster hourly
     clusterData!.forEach((item) => {
       const price = getLinodeRegionPrice(item.typeData, regionId);
       const sizeMultiplier = parseInt(item.size ?? '0', 10);
       clusterTotalHourlyPrice += (price?.hourly ?? 0) * sizeMultiplier;
     });
-
-    //const totalClusterSize =
-    //  clusterData!.reduce((sum: number, item: any) => {
-    //    const sizeMultiplier = parseInt(item.size ?? '0', 10);
-    //    return sum + sizeMultiplier;
-    //  }, 0) + Number(clusterSize);
 
     // total cluster size
     clusterData!.forEach((item) => {
@@ -98,17 +82,19 @@ export type ClusterDataTypes = {
 export function parseClusterData(
   stackscriptData: Record<string, any> = {}
 ): ClusterDataTypes[] {
-  return Object.entries(stackscriptData).reduce((acc, [key, value]) => {
+  const result: ClusterDataTypes[] = [];
+
+  for (const [key, value] of Object.entries(stackscriptData)) {
     const match = key.match(/^(.+)_cluster_(size|type)$/);
-    if (!match) return acc;
+    if (!match) continue;
 
     const prefix = match[1];
     const kind = match[2];
 
-    let cluster = acc.find((c) => c.prefix === prefix);
+    let cluster = result.find((c) => c.prefix === prefix);
     if (!cluster) {
       cluster = { prefix };
-      acc.push(cluster);
+      result.push(cluster);
     }
 
     if (kind === 'size') {
@@ -116,9 +102,8 @@ export function parseClusterData(
     } else if (kind === 'type') {
       cluster.typeId = value as string;
     }
-
-    return acc;
-  }, [] as ClusterDataTypes[]);
+  }
+  return result;
 }
 
 export const fetchLinodeType = async (typeId: string): Promise<LinodeType> => {
