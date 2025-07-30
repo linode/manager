@@ -9,6 +9,10 @@ List any change(s) relevant to the reviewer.
 - ...
 - ...
 
+### Scope 🚢
+
+- [ ] Changes in this PR will be visible to customers in production upon release
+
 ## Target release date 🗓️
 
 Please specify a release date (and environment, if applicable) to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
