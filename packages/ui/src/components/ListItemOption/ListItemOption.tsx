@@ -40,8 +40,8 @@ export const ListItemOption = <T,>({
   selected,
 }: ListItemOptionProps<T>) => {
   const { onClick, ...rest } = props;
-  const isItemOptionDisabled = Boolean(disabledOptions);
-  const itemOptionDisabledReason = disabledOptions?.reason;
+  const isOptionDisabled = Boolean(disabledOptions);
+  const disabledReason = disabledOptions?.reason;
 
   // Used to control the Tooltip
   const [isFocused, setIsFocused] = useState(false);
@@ -52,7 +52,7 @@ export const ListItemOption = <T,>({
       // Ensure ref is established
       return;
     }
-    if (!isItemOptionDisabled) {
+    if (!isOptionDisabled) {
       // We don't need to setup the mutation observer for options that are enabled. They won't have a tooltip
       return;
     }
@@ -72,33 +72,29 @@ export const ListItemOption = <T,>({
     return () => {
       observer.disconnect();
     };
-  }, [isItemOptionDisabled]);
+  }, [isOptionDisabled]);
 
   return (
     <Tooltip
       open={isFocused}
-      PopperProps={{
-        sx: {
-          '& .MuiTooltip-tooltip': {
+      slotProps={{
+        popper: {
+          // Prevents the tooltop from showing outside of the Autocomplete's Poppover
+          disablePortal: true,
+        },
+        tooltip: {
+          sx: {
             minWidth: disabledOptions?.tooltipWidth ?? 215,
           },
         },
       }}
-      title={
-        isItemOptionDisabled && itemOptionDisabledReason
-          ? itemOptionDisabledReason
-          : ''
-      }
+      title={disabledReason}
     >
       <ListItem
         {...rest}
-        data-qa-disabled-item={isItemOptionDisabled}
+        data-qa-disabled-item={isOptionDisabled}
         onClick={(e) =>
-          isItemOptionDisabled
-            ? e.preventDefault()
-            : onClick
-              ? onClick(e)
-              : null
+          isOptionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
         }
         ref={listItemRef}
         slotProps={{
@@ -112,16 +108,14 @@ export const ListItemOption = <T,>({
           justifyContent: 'space-between',
           maxHeight,
           gap: 1,
-          ...(isItemOptionDisabled && {
+          ...(isOptionDisabled && {
             cursor: 'not-allowed !important',
             pointerEvents: 'unset !important' as 'unset',
           }),
         }}
       >
         {children}
-        {isItemOptionDisabled && (
-          <Box sx={visuallyHidden}>{itemOptionDisabledReason}</Box>
-        )}
+        {isOptionDisabled && <Box sx={visuallyHidden}>{disabledReason}</Box>}
         <Box flexGrow={1} />
         {selected && <SelectedIcon visible />}
       </ListItem>
