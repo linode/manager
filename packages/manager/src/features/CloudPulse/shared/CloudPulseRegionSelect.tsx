@@ -6,9 +6,8 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { filterUsingXfilter } from '../Alerts/Utils/utils';
 import { NO_REGION_MESSAGE } from '../Utils/constants';
-import { deepEqual } from '../Utils/FilterBuilder';
+import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -112,7 +111,7 @@ export const CloudPulseRegionSelect = React.memo(
     // }, [regions, serviceType]);
 
     const supportedRegionsFromResources = regions?.filter(({ id }) =>
-      filterUsingXfilter(resources, xFilter)?.some(
+      filterUsingDependentFilters(resources, xFilter)?.some(
         ({ region }) => region === id
       )
     );

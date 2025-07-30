@@ -5,8 +5,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { filterUsingXfilter } from '../Alerts/Utils/utils';
-import { deepEqual } from '../Utils/FilterBuilder';
+import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type {
@@ -89,7 +88,7 @@ export const CloudPulseResourcesSelect = React.memo(
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       // TODO: apply the filters here
-      const filteredResources = filterUsingXfilter(resources, xFilter);
+      const filteredResources = filterUsingDependentFilters(resources, xFilter);
       return filteredResources && filteredResources.length > 0
         ? filteredResources
         : [];

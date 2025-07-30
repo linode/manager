@@ -1,3 +1,5 @@
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
+
 import {
   NODE_TYPE,
   REGION,
@@ -30,9 +32,12 @@ import type {
   CloudPulseServiceType,
   Dashboard,
   DateTimeWithPreset,
+  Filter,
   Filters,
+  Params,
   TimeDuration,
 } from '@linode/api-v4';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -53,6 +58,32 @@ interface CloudPulseMandatoryFilterCheckProps {
   };
   timeDuration: DateTimeWithPreset | undefined;
 }
+
+interface CloudPulseResourceHookProps {
+  /*
+   * The dependent filters selected
+   */
+  dependentFilters?: {
+    [key: string]: FilterValueType;
+  };
+  /*
+   * The property that controls whether we need to enable or disable the hook
+   */
+  enabled?: boolean;
+  /*
+   * The filters that needs to be applied for the request
+   */
+  filters?: Filter;
+  /*
+   * The params that needs to be applied for the request
+   */
+  params?: Params;
+  /*
+   * The service type of the selected dashboard
+   */
+  resourceType: string | undefined;
+}
+
 /**
  * This function helps in building the properties needed for tags selection component
  *
@@ -645,4 +676,65 @@ export const getFilters = (
           CloudPulseAvailableViews.central
         )
   );
+};
+
+/**
+ * @param data The resources for which the filter needs to be applied
+ * @param dependentFilters The selected dependent filters that will be used to filter the resources
+ * @returns The filtered resources
+ */
+export const filterUsingDependentFilters = (
+  data?: CloudPulseResources[],
+  dependentFilters?: {
+    [key: string]: FilterValueType;
+  }
+): CloudPulseResources[] | undefined => {
+  if (!dependentFilters || !data) {
+    return data;
+  }
+
+  return data.filter((resource) => {
+    return Object.entries(dependentFilters).every(([key, filterValue]) => {
+      const resourceValue = resource[key as keyof CloudPulseResources];
+
+      if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
+        return filterValue.some((val) => resourceValue.includes(String(val)));
+      } else if (Array.isArray(resourceValue)) {
+        return resourceValue.includes(String(filterValue));
+      } else {
+        return resourceValue === filterValue;
+      }
+    });
+  });
+};
+
+/**
+ *
+ * @param enabled
+ * @param resourceType
+ * @param params
+ * @param filters
+ * @param dependentFilters
+ * @returns
+ */
+export const useFilteredResources = (
+  props: CloudPulseResourceHookProps
+): UseQueryResult<CloudPulseResources[]> => {
+  const { enabled, resourceType, params, filters, dependentFilters } = props;
+
+  const { data: resources, ...rest } = useResourcesQuery(
+    enabled,
+    resourceType,
+    params,
+    filters
+  );
+
+  const filteredResources = filterUsingDependentFilters(
+    resources,
+    dependentFilters
+  );
+
+  return { ...rest, data: filteredResources } as UseQueryResult<
+    CloudPulseResources[]
+  >;
 };
