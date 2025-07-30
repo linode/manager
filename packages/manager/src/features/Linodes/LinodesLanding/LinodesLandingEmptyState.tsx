@@ -9,7 +9,7 @@ import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResourc
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendEvent } from 'src/utilities/analytics/utils';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
@@ -26,9 +26,7 @@ const APPS_MORE_LINKS_TEXT = 'See all Marketplace apps';
 export const LinodesLandingEmptyState = () => {
   const navigate = useNavigate();
 
-  const isLinodesGrantReadOnly = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <React.Fragment>
@@ -37,7 +35,7 @@ export const LinodesLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create Linode',
-            disabled: isLinodesGrantReadOnly,
+            disabled: !permissions.create_linode,
             onClick: () => {
               navigate({ to: '/linodes/create' });
               sendEvent({
@@ -62,7 +60,7 @@ export const LinodesLandingEmptyState = () => {
                   linkAnalyticsEvent,
                   APPS_MORE_LINKS_TEXT
                 )}
-                to="/linodes/create?type=One-Click"
+                to="/linodes/create/marketplace"
                 {...props}
               >
                 {APPS_MORE_LINKS_TEXT}

@@ -171,19 +171,18 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   '&:disabled': {
-    color: Action.Primary.Disabled,
+    color: Alias.Content.Text.Link.Disabled,
     cursor: 'not-allowed',
   },
   '&:hover:not(:disabled)': {
     backgroundColor: 'transparent',
-    color: Action.Primary.Hover,
+    color: Alias.Content.Text.Link.Hover,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: Action.Primary.Default,
+  color: Alias.Content.Text.Link.Default,
   cursor: 'pointer',
-  font: 'inherit',
   minWidth: 0,
   padding: 0,
 };
@@ -245,8 +244,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+      background: Table.Row.Background.Hover,
+    },
   },
 };
 
@@ -931,6 +932,9 @@ export const lightTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
+          '&[class*="error"]': {
+            color: Select.Error.Border,
+          },
           fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
           maxWidth: 416,
@@ -1608,7 +1612,7 @@ export const lightTheme: ThemeOptions = {
             height: '16px',
             margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Text,
+              fill: Table.HeaderNested.Icon,
             },
             width: '16px',
           },

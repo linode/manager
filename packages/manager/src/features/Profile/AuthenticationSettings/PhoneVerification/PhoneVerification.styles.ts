@@ -98,14 +98,13 @@ export const StyledPhoneNumberInput = styled(TextField, {
 
 export const StyledFormHelperText = styled(FormHelperText, {
   label: 'StyledFormHelperText',
-})(({ theme }) => ({
+})({
   alignItems: 'center',
-  color: theme.color.red,
   display: 'flex',
   left: 5,
   top: 42,
   width: '100%',
-}));
+});
 
 export const StyledButtonContainer = styled(Box, {
   label: 'StyledButtonContainer',
