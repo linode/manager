@@ -1,9 +1,10 @@
 import { Autocomplete, Box, TextField } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
+
+import { transformDimensionValue } from 'src/features/CloudPulse/Alerts/Utils/utils';
 
 import {
   dimensionOperatorOptions,
@@ -15,7 +16,11 @@ import { ClearIconButton } from './ClearIconButton';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
-import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dimension,
+  DimensionFilterOperatorType,
+} from '@linode/api-v4';
 
 interface DimensionFilterFieldProps {
   /**
@@ -35,10 +40,20 @@ interface DimensionFilterFieldProps {
    * @returns void
    */
   onFilterDelete: () => void;
+  /**
+   * serviceType used by the api to fetch the metric definitions
+   */
+  serviceType: CloudPulseServiceType | null;
 }
 
 export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
-  const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
+  const {
+    dataFieldDisabled,
+    dimensionOptions,
+    name,
+    onFilterDelete,
+    serviceType,
+  } = props;
 
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
@@ -89,7 +104,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const valueOptions = () => {
     if (selectedDimension !== null && selectedDimension.values) {
       return selectedDimension.values.map((val) => ({
-        label: capitalize(val),
+        label: transformDimensionValue(
+          serviceType,
+          selectedDimension.dimension_label,
+          val
+        ),
         value: val,
       }));
     }

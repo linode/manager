@@ -16,6 +16,7 @@ import { DimensionFilters } from './DimensionFilter';
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
 import type {
+  CloudPulseServiceType,
   MetricAggregationType,
   MetricDefinition,
   MetricOperatorType,
@@ -44,6 +45,10 @@ interface MetricCriteriaProps {
    */
   onMetricDelete: () => void;
   /**
+   * serviceType used by the api to fetch the metric definitions
+   */
+  serviceType: CloudPulseServiceType | null;
+  /**
    * to control when to show the delete icon
    */
   showDeleteIcon: boolean;
@@ -55,6 +60,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     isMetricDefinitionLoading,
     name,
     onMetricDelete,
+    serviceType,
     showDeleteIcon,
   } = props;
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
@@ -298,6 +304,7 @@ export const Metric = (props: MetricCriteriaProps) => {
         dimensionOptions={selectedMetric?.dimensions ?? []}
         key={metricWatcher}
         name={`${name}.dimension_filters`}
+        serviceType={serviceType}
       />
     </Box>
   );

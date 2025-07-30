@@ -6,7 +6,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 import { DimensionFilterField } from './DimensionFilterField';
 
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
-import type { Dimension } from '@linode/api-v4';
+import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
 
 interface DimensionFilterProps {
   /**
@@ -20,10 +20,17 @@ interface DimensionFilterProps {
   /**
    * name used for the component to set in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, DimensionFilterForm[]>;
+  name: FieldPathByValue<
+    CreateAlertDefinitionForm,
+    DimensionFilterForm[]
+  >;
+  /**
+   * serviceType used by the api to fetch the metric definitions
+   */
+  serviceType: CloudPulseServiceType | null;
 }
 export const DimensionFilters = (props: DimensionFilterProps) => {
-  const { dataFieldDisabled, dimensionOptions, name } = props;
+  const { dataFieldDisabled, dimensionOptions, name, serviceType } = props;
   const { control } = useFormContext<CreateAlertDefinitionForm>();
 
   const { append, fields, remove } = useFieldArray({
@@ -48,6 +55,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
               key={field.id}
               name={`${name}.${index}`}
               onFilterDelete={() => remove(index)}
+              serviceType={serviceType}
             />
           ))}
       </Stack>
