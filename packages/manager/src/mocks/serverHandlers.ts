@@ -3242,6 +3242,7 @@ export const handlers = [
               entity_id: '789',
               metric_name: 'average_cpu_usage',
               node_id: 'primary-3',
+              node_type: 'primary',
             },
             values: [
               [1721854379, '0.3744841110560275'],

@@ -100,6 +100,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
                     key={field.id}
                     name={`rule_criteria.rules.${index}`}
                     onMetricDelete={() => remove(index)}
+                    serviceType={serviceType}
                     showDeleteIcon={fields.length > 1}
                   />
                 );
