@@ -73,7 +73,7 @@ interface AclpFlag {
    */
   beta: boolean;
   /**
-   * This property indicates whether to bypass account capabilities
+   * This property indicates whether to bypass account capabilities check or not
    */
   bypassAccountCapabilities?: boolean;
   /**
