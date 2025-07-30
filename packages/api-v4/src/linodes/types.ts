@@ -196,11 +196,11 @@ export interface IPv6SLAAC {
 }
 
 export interface ConfigInterfaceIPv6 {
-  is_public: boolean;
-  ranges: {
-    range?: string;
+  is_public?: boolean;
+  ranges?: {
+    range: string;
   }[];
-  slaac: IPv6SLAAC[];
+  slaac?: IPv6SLAAC[];
 }
 
 // The legacy interface type - for Configuration Profile Interfaces
