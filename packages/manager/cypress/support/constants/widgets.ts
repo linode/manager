@@ -100,7 +100,7 @@ export const widgetDetails = {
   },
   nodebalancer: {
     dashboardName: 'NodeBalancer Dashboard',
-    id: 4,
+    id: 3,
     metrics: [
       {
         expectedAggregation: 'max',

@@ -270,6 +270,6 @@ export const FILTER_CONFIG: Readonly<
 > = new Map([
   [1, DBAAS_CONFIG],
   [2, LINODE_CONFIG],
-  [3, FIREWALL_CONFIG],
-  [4, NODEBALANCER_CONFIG],
+  [3, NODEBALANCER_CONFIG],
+  [4, FIREWALL_CONFIG],
 ]);
