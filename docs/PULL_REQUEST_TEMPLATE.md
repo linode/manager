@@ -78,7 +78,7 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 </details>
 
----
+<!-- This content will not appear in the rendered Markdown 
 
 ## Commit message and pull request title format standards
 
@@ -98,4 +98,4 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
----
+-->
