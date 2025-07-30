@@ -418,6 +418,7 @@ export const baseConfig = [
       'src/features/IAM/**/*',
       'src/features/Images/**/*',
       'src/features/Kubernetes/**/*',
+      'src/features/Linodes/**/*',
       'src/features/Longview/**/*',
       'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',

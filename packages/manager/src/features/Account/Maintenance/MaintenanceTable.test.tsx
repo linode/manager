@@ -12,7 +12,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
@@ -26,9 +26,9 @@ const loadingTestId = 'table-row-loading';
 describe('Maintenance Table Row', () => {
   const maintenance = accountMaintenanceFactory.build();
   it('should render the maintenance event', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       wrapWithTableBody(
-        <MaintenanceTableRow maintenance={maintenance} tableType="scheduled" />
+        <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
     );
     getByText(maintenance.entity.label);
@@ -36,9 +36,9 @@ describe('Maintenance Table Row', () => {
   });
 
   it('should render a relative time', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       wrapWithTableBody(
-        <MaintenanceTableRow maintenance={maintenance} tableType="scheduled" />
+        <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
     );
     const { getByText } = within(screen.getByTestId('relative-date'));
@@ -59,7 +59,7 @@ describe('Maintenance Table', () => {
         return HttpResponse.json(makeResourcePage(accountMaintenance));
       })
     );
-    await renderWithThemeAndRouter(<MaintenanceTable type="in progress" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    await renderWithThemeAndRouter(<MaintenanceTable type="in progress" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     screen.getByText('Download CSV');
   });
@@ -88,11 +88,32 @@ describe('Maintenance Table', () => {
       })
     );
 
-    await renderWithThemeAndRouter(<MaintenanceTable type="in progress" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 
     // Check for custom empty state
     screen.getByText('No in progress maintenance.');
+  });
+
+  it('should render tooltip icon next to status for upcoming maintenance', async () => {
+    server.use(
+      http.get('*/account/maintenance', () => {
+        const accountMaintenance = accountMaintenanceFactory.buildList(1, {
+          status: 'scheduled',
+        });
+        return HttpResponse.json(makeResourcePage(accountMaintenance));
+      })
+    );
+
+    await renderWithTheme(<MaintenanceTable type="upcoming" />);
+
+    // Wait for loading to complete
+    await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
+
+    // The tooltip icon should be present with the correct data-testid
+    expect(
+      screen.getByTestId('maintenance-status-tooltip')
+    ).toBeInTheDocument();
   });
 });

@@ -7,22 +7,17 @@ import {
   subnetAssignedLinodeDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
-
-const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
+  useSubnetsQuery: vi.fn().mockReturnValue({}),
+  useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/hooks/useFlags', () => {
@@ -40,31 +35,40 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useSubnetsQuery: queryMocks.useSubnetsQuery,
+    useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
+  };
+});
+
+const loadingTestId = 'circle-progress';
+
 describe('VPC Subnets table', () => {
+  beforeEach(() => {
+    queryMocks.useFirewallSettingsQuery.mockReturnValue({
+      data: firewallSettingsFactory.build(),
+    });
+  });
+
   it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
     const subnet = subnetFactory.build({
+      id: 27,
       linodes: [
         subnetAssignedLinodeDataFactory.build({ id: 1 }),
         subnetAssignedLinodeDataFactory.build({ id: 2 }),
         subnetAssignedLinodeDataFactory.build({ id: 3 }),
       ],
     });
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
 
-    const {
-      getAllByRole,
-      getAllByText,
-      getByPlaceholderText,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={1}
@@ -72,56 +76,45 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
+    expect(getByText('Subnet')).toBeVisible();
+    expect(getByText(subnet.label)).toBeVisible();
+    expect(getByText('Subnet ID')).toBeVisible();
+    expect(getByText(subnet.id)).toBeVisible();
 
-    getByPlaceholderText('Filter Subnets by label or id');
-    getByText('Subnet');
-    getByText(subnet.label);
-    getByText('Subnet ID');
-    getAllByText(subnet.id);
+    expect(getByText('Subnet IP Range')).toBeVisible();
+    expect(getByText(subnet.ipv4!)).toBeVisible();
 
-    getByText('Subnet IP Range');
-    getByText(subnet.ipv4!);
+    expect(getByText('Linodes')).toBeVisible();
+    expect(getByText(subnet.linodes.length)).toBeVisible();
 
-    getByText('Linodes');
-    getByText(subnet.linodes.length);
-
-    const actionMenuButton = getAllByRole('button')[4];
+    const actionMenuButton = getByLabelText(
+      `Action menu for Subnet ${subnet.label}`
+    );
     await userEvent.click(actionMenuButton);
 
-    getByText('Assign Linodes');
-    getByText('Unassign Linodes');
-    getByText('Edit');
-    getByText('Delete');
+    expect(getByText('Assign Linodes')).toBeVisible();
+    expect(getByText('Unassign Linodes')).toBeVisible();
+    expect(getByText('Edit')).toBeVisible();
+    expect(getByText('Delete')).toBeVisible();
   });
 
   it('should display filter input, subnet label, id, ip range, number of resources, and action menu', async () => {
     const subnet = subnetFactory.build({
+      id: 39,
       linodes: [
         subnetAssignedLinodeDataFactory.build({ id: 1 }),
         subnetAssignedLinodeDataFactory.build({ id: 2 }),
         subnetAssignedLinodeDataFactory.build({ id: 3 }),
       ],
     });
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
 
-    const {
-      getAllByRole,
-      getAllByText,
-      getByPlaceholderText,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={1}
@@ -132,60 +125,50 @@ describe('VPC Subnets table', () => {
       }
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
+    expect(getByText('Subnet')).toBeVisible();
+    expect(getByText(subnet.label)).toBeVisible();
+    expect(getByText('Subnet ID')).toBeVisible();
+    expect(getByText(subnet.id)).toBeVisible();
 
-    getByPlaceholderText('Filter Subnets by label or id');
-    getByText('Subnet');
-    getByText(subnet.label);
-    getByText('Subnet ID');
-    getAllByText(subnet.id);
+    expect(getByText('Subnet IP Range')).toBeVisible();
+    expect(getByText(subnet.ipv4!)).toBeVisible();
 
-    getByText('Subnet IP Range');
-    getByText(subnet.ipv4!);
+    expect(getByText('Resources')).toBeVisible();
+    expect(
+      getByText(subnet.linodes.length + subnet.nodebalancers.length)
+    ).toBeVisible();
 
-    getByText('Resources');
-    getByText(subnet.linodes.length + subnet.nodebalancers.length);
-
-    const actionMenuButton = getAllByRole('button')[4];
+    const actionMenuButton = getByLabelText(
+      `Action menu for Subnet ${subnet.label}`
+    );
     await userEvent.click(actionMenuButton);
 
-    getByText('Assign Linodes');
-    getByText('Unassign Linodes');
-    getByText('Edit');
-    getByText('Delete');
+    expect(getByText('Assign Linodes')).toBeVisible();
+    expect(getByText('Unassign Linodes')).toBeVisible();
+    expect(getByText('Edit')).toBeVisible();
+    expect(getByText('Delete')).toBeVisible();
   });
 
   it('should display no linodes text if there are no linodes associated with the subnet', async () => {
     const subnet = subnetFactory.build({ linodes: [] });
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={2}
+        vpcRegion=""
+      />
     );
 
-    const { getAllByRole, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={2}
-          vpcRegion=""
-        />
-      );
-
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
-
-    const expandTableButton = getAllByRole('button')[3];
+    const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
-    getByText('No Linodes');
+    expect(getByText('No Linodes')).toBeVisible();
   });
 
   it('should show linode table head data when table is expanded', async () => {
@@ -196,29 +179,25 @@ describe('VPC Subnets table', () => {
     const subnet = subnetFactory.build({
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
+
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
+
+    // @TODO VPC IPv6: Remove this flag mock once VPC IPv6 is fully rolled out, and update
+    // the assertion to expect the IPv6 columns are present
+    const { getByLabelText, getByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={3}
+        vpcRegion=""
+      />,
+      { flags: { vpcIpv6: false } }
     );
-    const { getAllByRole, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={3}
-          vpcRegion=""
-        />
-      );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
-
-    const expandTableButton = getAllByRole('button')[3];
+    const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
 
     getByText('Linode');
@@ -231,27 +210,24 @@ describe('VPC Subnets table', () => {
   });
 
   // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
-  it('renders VPC IPv6 and VPC IPv6 Range columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
-    queryMocks.useFlags.mockReturnValue({ vpcIpv6: true });
-
+  it('renders VPC IPv6 and VPC IPv6 Ranges columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
     const subnet = subnetFactory.build({
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
 
-    await renderWithThemeAndRouter(
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
+
+    renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
         vpcRegion=""
-      />
+      />,
+      { flags: { vpcIpv6: true } }
     );
 
     const loadingState = screen.queryByTestId(loadingTestId);
@@ -262,32 +238,35 @@ describe('VPC Subnets table', () => {
     const expandTableButton = screen.getAllByRole('button')[3];
     await userEvent.click(expandTableButton);
 
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
         vpcRegion=""
-      />
+      />,
+      { flags: { vpcIpv6: true } }
     );
 
-    screen.getByText('VPC IPv6');
-    screen.getByText('Linode IPv6 Ranges');
+    expect(screen.getByText('Linode')).toBeVisible();
+    expect(screen.getByText('Status')).toBeVisible();
+    expect(screen.getByText('VPC IPv4')).toBeVisible();
+    expect(screen.getByText('VPC IPv6')).toBeVisible();
+    expect(screen.getByText('VPC IPv6 Ranges')).toBeVisible();
+    expect(screen.getByText('Firewalls')).toBeVisible();
   });
 
-  it('should show Nodebalancer table head data when table is expanded', async () => {
-    const subnet = subnetFactory.build();
+  it(
+    'should show Nodebalancer table head data when table is expanded',
+    async () => {
+      const subnet = subnetFactory.build();
 
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
+      queryMocks.useSubnetsQuery.mockReturnValue({
+        data: {
+          data: [subnet],
+        },
+      });
 
-    const { getAllByRole, findByText, queryByTestId } =
-      await renderWithThemeAndRouter(
+      const { getByLabelText, findByText } = renderWithTheme(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
           vpcId={3}
@@ -296,37 +275,24 @@ describe('VPC Subnets table', () => {
         { flags: { nodebalancerVpc: true } }
       );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+      const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
+      await userEvent.click(expandTableButton);
 
-    const expandTableButton = getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
-
-    await findByText('NodeBalancer');
-    await findByText('Backend Status');
-    await findByText('VPC IPv4 Range');
-  });
+      await findByText('NodeBalancer');
+      await findByText('Backend Status');
+      await findByText('VPC IPv4 Range');
+    },
+    { timeout: 15_000 }
+  );
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    server.use(
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
-    const { getByRole, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByRole } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={true}
         vpcId={3}
         vpcRegion=""
       />
     );
-
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
 
     const createButton = getByRole('button', {
       name: 'Create Subnet',

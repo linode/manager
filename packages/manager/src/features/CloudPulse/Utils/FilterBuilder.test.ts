@@ -1,9 +1,14 @@
+import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
 import { dashboardFactory } from 'src/factories';
-import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
+import {
+  deepEqual,
+  getFilters,
+  getTextFilterProperties,
+} from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -16,7 +21,6 @@ import {
   getTimeDurationProperties,
   shouldDisableFilterByFilterKey,
 } from './FilterBuilder';
-import { deepEqual, getFilters } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 
@@ -25,6 +29,10 @@ const mockDashboard = dashboardFactory.build();
 const linodeConfig = FILTER_CONFIG.get('linode');
 
 const dbaasConfig = FILTER_CONFIG.get('dbaas');
+
+const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancer');
+
+const firewallConfig = FILTER_CONFIG.get('firewall');
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
 
@@ -362,6 +370,54 @@ it('test getCustomSelectProperties method', () => {
   }
 });
 
+it('test getTextFilterProperties method for port', () => {
+  const portFilterConfig = nodeBalancerConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Ports'
+  );
+
+  expect(portFilterConfig).toBeDefined();
+
+  if (portFilterConfig) {
+    const { handleTextFilterChange, label, savePreferences } =
+      getTextFilterProperties(
+        {
+          config: portFilterConfig,
+          dashboard: dashboardFactory.build({ service_type: 'nodebalancer' }),
+          isServiceAnalyticsIntegration: false,
+        },
+        vi.fn()
+      );
+
+    expect(handleTextFilterChange).toBeDefined();
+    expect(label).toEqual(portFilterConfig.configuration.name);
+    expect(savePreferences).toEqual(true);
+  }
+});
+
+it('test getTextFilterProperties method for interface_id', () => {
+  const interfaceIdFilterConfig = firewallConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Interface IDs'
+  );
+
+  expect(interfaceIdFilterConfig).toBeDefined();
+
+  if (interfaceIdFilterConfig) {
+    const { handleTextFilterChange, label, savePreferences } =
+      getTextFilterProperties(
+        {
+          config: interfaceIdFilterConfig,
+          dashboard: dashboardFactory.build({ service_type: 'firewall' }),
+          isServiceAnalyticsIntegration: false,
+        },
+        vi.fn()
+      );
+
+    expect(handleTextFilterChange).toBeDefined();
+    expect(label).toEqual(interfaceIdFilterConfig.configuration.name);
+    expect(savePreferences).toEqual(true);
+  }
+});
+
 it('test getFiltersForMetricsCallFromCustomSelect method', () => {
   const result = getMetricsCallCustomFilters(
     {
@@ -383,6 +439,22 @@ it('test constructAdditionalRequestFilters method', () => {
       'linode'
     )
   );
+
+  expect(result).toBeDefined();
+  expect(result.length).toEqual(0);
+});
+
+it('test constructAdditionalRequestFilters method with empty filter value', () => {
+  const result = constructAdditionalRequestFilters([
+    {
+      filterKey: 'protocol',
+      filterValue: [],
+    },
+    {
+      filterKey: 'port',
+      filterValue: [],
+    },
+  ]);
 
   expect(result).toBeDefined();
   expect(result.length).toEqual(0);

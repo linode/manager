@@ -1,53 +1,58 @@
-import { useGrants, useLinodeQuery, usePreferences } from '@linode/queries';
+import { useLinodeQuery } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { Box } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
-import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
+import { useLinodeDetailContext } from '../LinodesDetailContext';
+import { AlertsPanel } from './AlertsPanel';
 
-interface Props {
-  isAclpAlertsSupportedRegionLinode: boolean;
-}
-
-const LinodeAlerts = (props: Props) => {
-  const { isAclpAlertsSupportedRegionLinode } = props;
-  const { linodeId } = useParams<{ linodeId: string }>();
+const LinodeAlerts = () => {
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
+  const { isAlertsBetaMode } = useLinodeDetailContext();
 
-  const flags = useFlags();
-  const { data: grants } = useGrants();
+  const { aclpBetaServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
 
-  const isReadOnly =
-    grants !== undefined &&
-    grants?.linode.find((grant) => grant.id === id)?.permissions ===
-      'read_only';
+  const { permissions } = usePermissions('linode', ['update_linode'], id);
+
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    type: 'alerts',
+  });
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(id, 'beta');
 
   return (
     <Box>
-      {flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode && (
-        <AclpPreferenceToggle type="alerts" />
-      )}
-
-      {flags.aclpBetaServices?.alerts &&
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle
+            isAlertsBetaMode={isAlertsBetaMode.get}
+            onAlertsModeChange={isAlertsBetaMode.set}
+            type="alerts"
+          />
+        )}
+      {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
-      isAclpAlertsPreferenceBeta ? (
+      isAlertsBetaMode.get ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
-          entityId={linodeId}
+          entityId={linodeId.toString()}
           entityName={linode?.label ?? ''}
+          isLegacyAlertAvailable={!isLinodeAclpSubscribed}
           serviceType="linode"
         />
       ) : (
         // Legacy Alerts View
-        <LinodeSettingsAlertsPanel isReadOnly={isReadOnly} linodeId={id} />
+        <AlertsPanel isReadOnly={!permissions.update_linode} linodeId={id} />
       )}
     </Box>
   );

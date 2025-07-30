@@ -1,22 +1,18 @@
-import { grantsFactory, profileFactory } from '@linode/utilities';
+import { profileFactory } from '@linode/utilities';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
-import {
-  renderWithThemeAndRouter,
-  wrapWithTheme,
-  wrapWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';
 
 const ADD_PAYMENT_METHOD_BUTTON_ID = 'payment-info-add-payment-method';
 
 vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
@@ -24,25 +20,21 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 });
 
 const queryMocks = vi.hoisted(() => ({
-  useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
-  useMatch: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    permissions: { update_account: false, make_billing_payment: false },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useGrants: queryMocks.useGrants,
     useProfile: queryMocks.useProfile,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useMatch: queryMocks.useMatch,
   };
 });
 
@@ -71,38 +63,44 @@ const props = {
 
 describe('Payment Info Panel', () => {
   it('Shows loading animation when loading', async () => {
-    const { getByLabelText } = await renderWithThemeAndRouter(
+    const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} loading={true} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     expect(getByLabelText('Content is loading')).toBeVisible();
   });
 
   it('Shows Add Payment button for Linode customers and hides it for Akamai customers', async () => {
-    const { getByTestId, queryByText, rerender } =
-      await renderWithThemeAndRouter(
-        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-          <PaymentInformation {...props} loading={false} />
-        </PayPalScriptProvider>
-      );
+    const { getByTestId, queryByText, rerender } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <PaymentInformation {...props} loading={false} />
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
+    );
 
     expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toBeInTheDocument();
 
     rerender(
-      wrapWithTheme(
-        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-          <PaymentInformation {...props} isAkamaiCustomer={true} />
-        </PayPalScriptProvider>
-      )
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <PaymentInformation {...props} isAkamaiCustomer={true} />
+      </PayPalScriptProvider>
     );
 
     expect(queryByText('Add Payment Method')).toBeNull();
   });
 
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', async () => {
-    const { getByTestId, rerender } = await renderWithThemeAndRouter(
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: { update_account: true, make_billing_payment: true },
+    });
+    const { getByTestId, findByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
       </PayPalScriptProvider>,
@@ -113,25 +111,19 @@ describe('Payment Info Panel', () => {
 
     const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);
 
-    fireEvent.click(addPaymentMethodButton);
-    queryMocks.useMatch.mockReturnValue({
-      routeId: '/account/billing/add-payment-method',
-    });
-    rerender(
-      wrapWithThemeAndRouter(
-        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-          <PaymentInformation {...props} />
-        </PayPalScriptProvider>
-      )
-    );
-    expect(getByTestId('drawer')).toBeVisible();
+    await userEvent.click(addPaymentMethodButton);
+
+    expect(await findByTestId('drawer')).toBeVisible();
   });
 
   it('Lists all payment methods for Linode customers', async () => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     paymentMethods.forEach((paymentMethod) => {
@@ -142,10 +134,13 @@ describe('Payment Info Panel', () => {
   });
 
   it('Hides payment methods and shows text for Akamai customers', async () => {
-    const { getByTestId, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId, queryByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} isAkamaiCustomer={true} />
-      </PayPalScriptProvider>
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
     );
 
     paymentMethods.forEach((paymentMethod) => {
@@ -165,13 +160,16 @@ describe('Payment Info Panel', () => {
         }),
       });
 
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation
             {...props}
             profile={queryMocks.useProfile().data}
           />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       );
 
       expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toHaveAttribute(
@@ -180,7 +178,7 @@ describe('Payment Info Panel', () => {
       );
     });
 
-    it('should be disabled for restricted users', async () => {
+    it('should be disabled if user does not have update_account permission', async () => {
       queryMocks.useProfile.mockReturnValue({
         data: profileFactory.build({
           restricted: true,
@@ -188,18 +186,17 @@ describe('Payment Info Panel', () => {
         }),
       });
 
-      queryMocks.useGrants.mockReturnValue({
-        data: grantsFactory.build({
-          global: {
-            account_access: 'read_only',
-          },
-        }),
+      queryMocks.userPermissions.mockReturnValue({
+        permissions: { update_account: false, make_billing_payment: false },
       });
 
-      const { getByTestId } = await renderWithThemeAndRouter(
+      const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} />
-        </PayPalScriptProvider>
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
       );
 
       const addPaymentMethodButton = getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID);

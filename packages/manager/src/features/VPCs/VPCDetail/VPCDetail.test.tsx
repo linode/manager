@@ -1,12 +1,10 @@
-import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
+import { regionFactory } from '@linode/utilities';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
 
@@ -15,7 +13,20 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useVPCQuery: vi.fn().mockReturnValue({}),
+  useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
+    useVPCQuery: queryMocks.useVPCQuery,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -30,8 +41,6 @@ vi.mock('@tanstack/react-router', async () => {
 
 beforeAll(() => mockMatchMedia());
 
-const loadingTestId = 'circle-progress';
-
 describe('VPC Detail Summary section', () => {
   beforeEach(() => {
     queryMocks.useLocation.mockReturnValue({
@@ -40,117 +49,103 @@ describe('VPC Detail Summary section', () => {
     queryMocks.useParams.mockReturnValue({
       vpcId: 1,
     });
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'us-east',
+          capabilities: ['VPCs'],
+          label: 'US, Newark, NJ',
+        }),
+      ],
+    });
   });
 
   it('should display number of subnets and linodes, region, id, creation and update dates', async () => {
-    const vpcFactory1 = vpcFactory.build({ id: 1, subnets: [] });
-    server.use(
-      http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json(vpcFactory1);
-      })
-    );
+    const vpcFactory1 = vpcFactory.build({
+      id: 23,
+      subnets: [subnetFactory.build()],
+      created: '2023-07-12T16:08:53',
+      updated: '2023-07-12T16:08:54',
+    });
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory1,
+    });
 
-    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
-      <VPCDetail />
-    );
+    const { getByText } = renderWithTheme(<VPCDetail />);
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    // there is 1 subnet with 5 linodes
+    expect(getByText('Subnets')).toBeVisible();
+    expect(getByText('1')).toBeVisible();
+    expect(getByText('Linodes')).toBeVisible();
+    expect(getByText('5')).toBeVisible();
 
-    getAllByText('Subnets');
-    getAllByText('Linodes');
-    getAllByText('0');
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('US, Newark, NJ')).toBeVisible();
 
-    getAllByText('Region');
-    getAllByText('US, Newark, NJ');
+    expect(getByText('VPC ID')).toBeVisible();
+    expect(getByText(vpcFactory1.id)).toBeVisible();
 
-    getAllByText('VPC ID');
-    getAllByText(vpcFactory1.id);
+    expect(getByText('Created')).toBeVisible();
+    expect(getByText(vpcFactory1.created)).toBeVisible();
 
-    getAllByText('Created');
-    getAllByText(vpcFactory1.created);
-
-    getAllByText('Updated');
-    getAllByText(vpcFactory1.updated);
+    expect(getByText('Updated')).toBeVisible();
+    expect(getByText(vpcFactory1.updated)).toBeVisible();
   });
 
   it('should display number of subnets and resources, region, id, creation and update dates', async () => {
-    const vpcFactory1 = vpcFactory.build({ id: 1, subnets: [] });
-    server.use(
-      http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json(vpcFactory1);
-      })
-    );
+    const vpcFactory1 = vpcFactory.build({
+      id: 42,
+      subnets: [subnetFactory.build()],
+      created: '2023-07-12T16:08:53',
+      updated: '2023-07-12T16:08:54',
+    });
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory1,
+    });
 
-    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
-      <VPCDetail />,
-      {
-        flags: { nodebalancerVpc: true },
-      }
-    );
+    const { getByText } = renderWithTheme(<VPCDetail />, {
+      flags: { nodebalancerVpc: true },
+    });
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    // there is 1 subnet with 8 resources (5 Linodes, 3 nbs)
+    expect(getByText('Subnets')).toBeVisible();
+    expect(getByText('1')).toBeVisible();
+    expect(getByText('Resources')).toBeVisible();
+    expect(getByText('8')).toBeVisible();
 
-    getAllByText('Subnets');
-    getAllByText('Resources');
-    getAllByText('0');
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('US, Newark, NJ')).toBeVisible();
 
-    getAllByText('Region');
-    getAllByText('US, Newark, NJ');
+    expect(getByText('VPC ID')).toBeVisible();
+    expect(getByText(vpcFactory1.id)).toBeVisible();
 
-    getAllByText('VPC ID');
-    getAllByText(vpcFactory1.id);
+    expect(getByText('Created')).toBeVisible();
+    expect(getByText(vpcFactory1.created)).toBeVisible();
 
-    getAllByText('Created');
-    getAllByText(vpcFactory1.created);
-
-    getAllByText('Updated');
-    getAllByText(vpcFactory1.updated);
+    expect(getByText('Updated')).toBeVisible();
+    expect(getByText(vpcFactory1.updated)).toBeVisible();
   });
 
   it('should display description if one is provided', async () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database.`,
     });
-    server.use(
-      http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json(vpcFactory1);
-      })
-    );
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory1,
+    });
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
-      <VPCDetail />
-    );
+    const { getByText } = renderWithTheme(<VPCDetail />);
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
-
-    getByText('Description');
-    getByText(vpcFactory1.description);
+    expect(getByText('Description')).toBeVisible();
+    expect(getByText(vpcFactory1.description)).toBeVisible();
   });
 
   it('should hide description if none is provided', async () => {
-    server.use(
-      http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json(vpcFactory.build());
-      })
-    );
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory.build(),
+    });
 
-    const { queryByTestId, queryByText } = await renderWithThemeAndRouter(
-      <VPCDetail />
-    );
-
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    const { queryByText } = renderWithTheme(<VPCDetail />);
 
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
@@ -159,25 +154,24 @@ describe('VPC Detail Summary section', () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver. VPC for webserver.`,
     });
-    server.use(
-      http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json(vpcFactory1);
-      })
-    );
 
-    const { getAllByRole, queryByTestId } = await renderWithThemeAndRouter(
-      <VPCDetail />
-    );
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory1,
+    });
+    queryMocks.useFirewallSettingsQuery.mockReturnValue({
+      data: {
+        default_firewall_ids: {
+          vpc_interface: 1,
+        },
+      },
+    });
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    const { getByTestId } = renderWithTheme(<VPCDetail />);
 
-    const readMoreButton = getAllByRole('button')[2];
+    const readMoreButton = getByTestId('show-description-button');
     expect(readMoreButton.innerHTML).toBe('Read More');
 
-    fireEvent.click(readMoreButton);
+    await userEvent.click(readMoreButton);
     expect(readMoreButton.innerHTML).toBe('Read Less');
   });
 
@@ -186,19 +180,11 @@ describe('VPC Detail Summary section', () => {
       description: `workload VPC for LKE Enterprise Cluster lke1234567.`,
       label: 'lke1234567',
     });
-    server.use(
-      http.get('*/vpcs/:vpcId', () => {
-        return HttpResponse.json(vpcFactory1);
-      })
-    );
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory1,
+    });
 
-    const { getByRole, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(<VPCDetail />);
-
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    const { getByRole, getByText } = renderWithTheme(<VPCDetail />);
 
     expect(
       getByText(

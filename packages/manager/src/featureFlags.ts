@@ -50,6 +50,11 @@ interface BaseFeatureFlag {
   enabled: boolean;
 }
 
+interface VMHostMaintenanceFlag extends BaseFeatureFlag {
+  beta: boolean;
+  new: boolean;
+}
+
 interface BetaFeatureFlag extends BaseFeatureFlag {
   beta: boolean;
 }
@@ -68,6 +73,8 @@ interface AclpFlag {
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
+  phase2Mtc: boolean;
+  postLa: boolean;
 }
 
 interface CloudNatFlag extends BetaFeatureFlag {
@@ -79,7 +86,6 @@ export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
   serviceType: string;
-  supportedRegionIds?: string;
 }
 
 interface GpuV2 {
@@ -102,12 +108,6 @@ interface AclpAlerting {
   alertDefinitions: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;
-}
-
-interface AclpBetaServices {
-  alerts: boolean;
-  dbaas: boolean;
-  metrics: boolean;
 }
 
 interface LimitsEvolution {
@@ -134,6 +134,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePremium: boolean;
   databaseResize: boolean;
   databases: boolean;
   databaseVpc: boolean;
@@ -153,6 +154,7 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc2025: boolean;
+  nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
@@ -170,7 +172,7 @@ export interface Flags {
   taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
   udp: boolean;
-  vmHostMaintenance: BetaFeatureFlag;
+  vmHostMaintenance: VMHostMaintenanceFlag;
   vpcIpv6: boolean;
 }
 
@@ -308,4 +310,11 @@ export interface AclpAlertServiceTypeConfig {
   maxResourceSelectionCount: number;
   serviceType: AlertServiceType;
   // This can be extended to have supportedRegions, supportedFilters and other tags
+}
+
+export interface AclpBetaServices {
+  [serviceType: string]: {
+    alerts: boolean;
+    metrics: boolean;
+  };
 }

@@ -5,9 +5,18 @@ import React, { type JSX } from 'react';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Skeleton } from 'src/components/Skeleton';
 
-import type { ManagerPreferences } from '@linode/utilities';
-
 export interface AclpPreferenceToggleType {
+  /**
+   * Alerts toggle state. Use only when type is `alerts`
+   */
+  isAlertsBetaMode?: boolean;
+  /**
+   * Handler for alerts toggle. Use only when type is `alerts`
+   */
+  onAlertsModeChange?: (isBeta: boolean) => void;
+  /**
+   * Toggle type: `alerts` or `metrics`
+   */
   type: 'alerts' | 'metrics';
 }
 
@@ -15,10 +24,6 @@ interface PreferenceConfigItem {
   getBannerText: (isBeta: boolean | undefined) => JSX.Element;
   getButtonText: (isBeta: boolean | undefined) => string;
   preferenceKey: string;
-  updateKey: keyof ManagerPreferences;
-  usePreferenceSelector: (
-    preferences: ManagerPreferences | undefined
-  ) => boolean | undefined;
 }
 
 const preferenceConfig: Record<
@@ -26,8 +31,6 @@ const preferenceConfig: Record<
   PreferenceConfigItem
 > = {
   metrics: {
-    usePreferenceSelector: (preferences) => preferences?.isAclpMetricsBeta,
-    updateKey: 'isAclpMetricsBeta',
     preferenceKey: 'metrics-preference',
     getButtonText: (isBeta) =>
       isBeta ? 'Switch to legacy Metrics' : 'Try the Metrics (Beta)',
@@ -46,40 +49,48 @@ const preferenceConfig: Record<
       ),
   },
   alerts: {
-    usePreferenceSelector: (preferences) => preferences?.isAclpAlertsBeta,
-    updateKey: 'isAclpAlertsBeta',
     preferenceKey: 'alerts-preference',
     getButtonText: (isBeta) =>
       isBeta ? 'Switch to legacy Alerts' : 'Try Alerts (Beta)',
     getBannerText: (isBeta) =>
       isBeta ? (
         <span>
-          Welcome to <strong>Alerts (Beta)</strong> with more options and
-          greater flexibility.
+          Welcome to <strong>Alerts (Beta)</strong>, designed for flexibility
+          with features like customizable alerts.
         </span>
       ) : (
         <span>
-          Try the new <strong>Alerts (Beta)</strong> for more options, including
-          customizable alerts. You can switch back to the current view at any
-          time.
+          Try the <strong>Alerts (Beta)</strong>, featuring new options like
+          customizable alerts. You can switch back to legacy Alerts at any time.
         </span>
       ),
   },
 };
 
-export const AclpPreferenceToggle = ({ type }: AclpPreferenceToggleType) => {
+/**
+ * - For Alerts, the toggle uses local state, not preferences. We do this because each Linode should manage its own alert mode individually.
+ *   - Create Linode: Toggle defaults to false (legacy mode). It's a simple UI toggle with no persistence.
+ *   - Edit Linode: Toggle defaults based on useIsLinodeAclpSubscribed (true if the Linode is already subscribed to ACLP). Still local state - not saved to preferences.
+ *
+ * - For Metrics, we use account-level preferences, since it's a global setting shared across all Linodes.
+ */
+export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
+  const { isAlertsBetaMode, onAlertsModeChange, type } = props;
+
   const config = preferenceConfig[type];
 
-  const { data: isBeta, isLoading } = usePreferences(
-    config.usePreferenceSelector
-  );
+  // -------------------- Metrics related logic ------------------------
+  const { data: isAclpMetricsBeta, isLoading: isAclpMetricsBetaLoading } =
+    usePreferences((preferences) => {
+      return preferences?.isAclpMetricsBeta;
+    }, type === 'metrics');
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  if (isLoading) {
+  if (isAclpMetricsBetaLoading) {
     return (
       <Skeleton
-        data-testid={`${type}-preference-skeleton`}
+        data-testid="metrics-preference-skeleton"
         height="90px"
         sx={(theme) => ({
           marginTop: `-${theme.tokens.spacing.S20}`,
@@ -87,17 +98,23 @@ export const AclpPreferenceToggle = ({ type }: AclpPreferenceToggleType) => {
       />
     );
   }
+  // -------------------------------------------------------------------
+
+  const isBeta = type === 'alerts' ? isAlertsBetaMode : isAclpMetricsBeta;
+  const handleBetaToggle = () => {
+    if (type === 'alerts' && onAlertsModeChange) {
+      onAlertsModeChange(!isBeta);
+    } else {
+      updatePreferences({ isAclpMetricsBeta: !isBeta });
+    }
+  };
 
   return (
     <DismissibleBanner
       actionButton={
         <Button
           buttonType="primary"
-          onClick={() =>
-            updatePreferences({
-              [config.updateKey]: !isBeta,
-            })
-          }
+          onClick={handleBetaToggle}
           sx={{ textTransform: 'none' }}
         >
           {config.getButtonText(isBeta)}

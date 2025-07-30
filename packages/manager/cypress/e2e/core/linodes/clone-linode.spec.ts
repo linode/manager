@@ -21,6 +21,7 @@ import {
   LINODE_CREATE_TIMEOUT,
 } from 'support/constants/linodes';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { interceptEvents } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCloneLinode,
@@ -46,7 +47,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion, extendRegion } from 'support/util/regions';
 
-import type { Linode } from '@linode/api-v4';
+import type { Event, Linode } from '@linode/api-v4';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -58,7 +59,7 @@ import type { Linode } from '@linode/api-v4';
 const getLinodeCloneUrl = (linode: Linode): string => {
   const regionQuery = `&regionID=${linode.region}`;
   const typeQuery = linode.type ? `&typeID=${linode.type}` : '';
-  return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
+  return `/linodes/create/clone?linodeID=${linode.id}${regionQuery}${typeQuery}`;
 };
 
 authenticate();
@@ -78,7 +79,7 @@ describe('clone linode', () => {
    */
   it('can clone a Linode from Linode details page', () => {
     cy.tag('method:e2e', 'purpose:dcTesting');
-    const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
+    const linodeRegion = chooseRegion({ capabilities: ['Linodes', 'Vlans'] });
     const linodePayload = createLinodeRequestFactory.build({
       booted: false,
       label: randomLabel(),
@@ -96,6 +97,7 @@ describe('clone linode', () => {
       createTestLinode(linodePayload, { securityMethod: 'vlan_no_internet' })
     ).then((linode: Linode) => {
       interceptCloneLinode(linode.id).as('cloneLinode');
+      interceptEvents().as('cloneEvents');
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for Linode to boot, then initiate clone flow.
@@ -134,13 +136,34 @@ describe('clone linode', () => {
       cy.wait('@cloneLinode').then((xhr) => {
         const newLinodeId = xhr.response?.body?.id;
         assert.equal(xhr.response?.statusCode, 200);
-        cy.url().should('endWith', `linodes/${newLinodeId}`);
+        cy.url().should('endWith', `linodes/${newLinodeId}/metrics`);
       });
 
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
-      ui.toast.assertMessage(
-        `Linode ${linode.label} has been cloned to ${newLinodeLabel}.`,
-        { timeout: LINODE_CLONE_TIMEOUT }
+
+      // Change the way to check the clone progress due to M3-9860
+      cy.wait('@cloneEvents').then((xhr) => {
+        const eventData: Event[] = xhr.response?.body?.data;
+        const cloneEvent = eventData.filter(
+          (event: Event) => event['action'] === 'linode_clone'
+        );
+        cy.get('[id="menu-button--notification-events-menu"]')
+          .should('be.visible')
+          .click();
+        cy.get(`[data-qa-event="${cloneEvent[0]['id']}"]`).should('be.visible');
+        cy.get('[data-testid="linear-progress"]').should('be.visible');
+        // The progress bar should disappear when the clone is done.
+        cy.get('[data-testid="linear-progress"]', {
+          timeout: LINODE_CLONE_TIMEOUT,
+        }).should('not.exist');
+      });
+
+      cy.visit('/linodes');
+      cy.findByText(newLinodeLabel, { timeout: LINODE_CLONE_TIMEOUT }).should(
+        'be.visible'
+      );
+      cy.findByText(linode.label, { timeout: LINODE_CLONE_TIMEOUT }).should(
+        'be.visible'
       );
     });
   });
@@ -228,7 +251,7 @@ describe('clone linode', () => {
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
-      cy.findByText('VLAN Attached').should('be.visible');
+      cy.findByText('VLAN').should('be.visible');
     });
 
     ui.button
@@ -295,7 +318,7 @@ describe('clone linode', () => {
     cy.wait('@cloneLinode').then((xhr) => {
       const newLinodeId = xhr.response?.body?.id;
       assert.equal(xhr.response?.statusCode, 200);
-      cy.url().should('endWith', `linodes/${newLinodeId}`);
+      cy.url().should('endWith', `linodes/${newLinodeId}/metrics`);
     });
 
     cy.wait(['@getLinodeVolumes', '@getLinodeConfigs']);

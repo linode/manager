@@ -14,7 +14,7 @@ import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -45,9 +45,7 @@ export const Security = () => {
     selectedRegion?.id ?? ''
   );
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>
@@ -67,7 +65,7 @@ export const Security = () => {
           render={({ field, fieldState }) => (
             <PasswordInput
               autoComplete="off"
-              disabled={isLinodeCreateRestricted}
+              disabled={!permissions.create_linode}
               errorText={fieldState.error?.message}
               id="linode-password"
               label="Root Password"
@@ -88,7 +86,7 @@ export const Security = () => {
         render={({ field }) => (
           <UserSSHKeyPanel
             authorizedUsers={field.value ?? []}
-            disabled={isLinodeCreateRestricted}
+            disabled={!permissions.create_linode}
             setAuthorizedUsers={field.onChange}
           />
         )}
@@ -119,6 +117,7 @@ export const Security = () => {
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
+                sxCheckbox={{ paddingLeft: '0px' }}
               />
             )}
           />

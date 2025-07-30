@@ -15,7 +15,6 @@ import { TimePicker } from '../TimePicker';
 import { TimeZoneSelect } from '../TimeZoneSelect';
 
 import type { SxProps } from '@mui/material/styles';
-
 export interface DateTimeRangePickerProps {
   /** Properties for the end date field */
   endDateProps?: {
@@ -48,6 +47,7 @@ export interface DateTimeRangePickerProps {
     endDate: null | string;
     selectedPreset: null | string;
     startDate: null | string;
+    timeZone: null | string;
   }) => void;
 
   /** Additional settings for the presets dropdown */
@@ -76,7 +76,27 @@ export interface DateTimeRangePickerProps {
 
   /** Any additional styles to apply to the root element */
   sx?: SxProps;
+
+  /** Properties for the time zone selector */
+  timeZoneProps?: {
+    /** Default value to be selected */
+    defaultValue?: string;
+    /** If true, disables the timezone selector */
+    disabled?: boolean;
+  };
 }
+
+type TimeZoneStrategy = {
+  keepEndTime: boolean;
+  keepStartTime: boolean;
+};
+
+const strategies: Record<string, TimeZoneStrategy> = {
+  'last month': { keepStartTime: true, keepEndTime: true },
+  reset: { keepStartTime: true, keepEndTime: true },
+  'this month': { keepStartTime: true, keepEndTime: false },
+  default: { keepStartTime: false, keepEndTime: false },
+};
 
 export const DateTimeRangePicker = ({
   endDateProps,
@@ -85,12 +105,13 @@ export const DateTimeRangePicker = ({
   presetsProps,
   startDateProps,
   sx,
+  timeZoneProps,
 }: DateTimeRangePickerProps) => {
   const [startDate, setStartDate] = useState<DateTime | null>(
     startDateProps?.value ?? null,
   );
   const [selectedPreset, setSelectedPreset] = useState<null | string>(
-    presetsProps?.defaultValue ?? null,
+    presetsProps?.defaultValue ?? 'reset',
   );
   const [endDate, setEndDate] = useState<DateTime | null>(
     endDateProps?.value ?? null,
@@ -103,7 +124,9 @@ export const DateTimeRangePicker = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
-  const [timeZone, setTimeZone] = useState<string>('UTC'); // Default timezone
+  const [timeZone, setTimeZone] = useState<string>(
+    timeZoneProps?.defaultValue ?? 'UTC',
+  ); // Default timezone
 
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
@@ -130,8 +153,13 @@ export const DateTimeRangePicker = ({
       endDate: endDate ? endDate.toISO() : null,
       selectedPreset,
       startDate: startDate ? startDate.toISO() : null,
+      timeZone,
     });
     handleClose();
+  };
+
+  const getTimeZoneStrategy = (preset: null | string): TimeZoneStrategy => {
+    return strategies[preset ?? 'default'] || strategies.default;
   };
 
   const handleTimeZoneChange = (newTimeZone: string) => {
@@ -140,11 +168,14 @@ export const DateTimeRangePicker = ({
     }
     setTimeZone(newTimeZone);
 
+    const { keepEndTime, keepStartTime } = getTimeZoneStrategy(selectedPreset);
+
     setStartDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: keepStartTime }) : null,
     );
+
     setEndDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: keepEndTime }) : null,
     );
   };
 
@@ -164,6 +195,8 @@ export const DateTimeRangePicker = ({
   };
 
   const handleDateSelection = (date: DateTime) => {
+    setSelectedPreset('reset'); // Reset preset selection on manual date selection
+
     if (focusedField === 'start') {
       setStartDate(date);
 
@@ -256,6 +289,7 @@ export const DateTimeRangePicker = ({
               <Presets
                 onPresetSelect={handlePresetSelect}
                 selectedPreset={selectedPreset}
+                timeZone={timeZone}
               />
             )}
             <Box>
@@ -318,6 +352,7 @@ export const DateTimeRangePicker = ({
                   value={endDate}
                 />
                 <TimeZoneSelect
+                  disabled={timeZoneProps?.disabled}
                   noMarginTop
                   onChange={handleTimeZoneChange}
                   value={timeZone}
@@ -327,10 +362,14 @@ export const DateTimeRangePicker = ({
           </Box>
           <Divider spacingBottom={0} spacingTop={0} />
           <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
-            <Button buttonType="outlined" onClick={handleClose}>
+            <Button buttonType="outlined" data-qa-buttons onClick={handleClose}>
               Cancel
             </Button>
-            <Button buttonType="primary" onClick={handleApply}>
+            <Button
+              buttonType="primary"
+              data-qa-buttons="apply"
+              onClick={handleApply}
+            >
               Apply
             </Button>
           </Box>

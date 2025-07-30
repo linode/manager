@@ -2,6 +2,7 @@ import { ui } from 'support/ui';
 
 const ADOBE_LAUNCH_URLS = [
   'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-92311d9d9637-development.min.js', // New dev Launch script
+  'https://assets.adobedtm.com/fcfd3580c848/795fdfec4a0e/launch-09b7ca9d43ad-development.min.js', // Existing dev Launch script
   'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-5bda4b7a1db9-staging.min.js', // New staging Launch script
   'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-9ea21650035a.min.js', // New prod Launch script
 ];
@@ -9,6 +10,18 @@ const ADOBE_LAUNCH_URLS = [
 describe('Script loading and user interaction test', () => {
   beforeEach(() => {
     cy.visitWithLogin('/');
+    // Allow Adobe analytics scripts to be loaded for this test only.
+    // By default, requests to Adobe Analytics URLs get blocked.
+    // See also `cypress/support/setup/block-analytics.ts`.
+    cy.intercept(
+      {
+        method: '*',
+        url: 'https://*.adobedtm.com/**/*',
+      },
+      (req) => {
+        req.continue();
+      }
+    );
   });
 
   it("checks if each environment's Adobe Launch script is loaded and the page is responsive to user interaction", () => {

@@ -5,7 +5,7 @@ import { getTotalAssignedRoles } from './utils';
 describe('getTotalAssignedRoles', () => {
   it('should return the correct total number of assigned roles', () => {
     const mockPermissions = userRolesFactory.build({
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 1,

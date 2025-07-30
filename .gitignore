@@ -10,8 +10,10 @@ lib
 
 # editor configuration
 .vscode
+.cursor
 .idea
 **/*.iml
+*.mdc
 
 # misc
 .DS_Store

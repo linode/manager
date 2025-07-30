@@ -4,7 +4,7 @@ import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
@@ -68,12 +68,12 @@ describe('ChangeRoleForEntityDrawer', () => {
   });
 
   it('should render', async () => {
-    await renderWithThemeAndRouter(<ChangeRoleForEntityDrawer {...props} />);
+    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
     expect(
-      screen.getByText('Select a role you want the entity to be attached to.')
+      screen.getByText(/Select a role you want the entity to be attached to/i)
     ).toBeVisible();
   });
 
@@ -95,7 +95,7 @@ describe('ChangeRoleForEntityDrawer', () => {
       data: accountRolesFactory.build(),
     });
 
-    await renderWithThemeAndRouter(<ChangeRoleForEntityDrawer {...props} />);
+    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
 
     const autocomplete = screen.getByRole('combobox');
 

@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { LinodeRebuildForm } from './LinodeRebuildForm';
 
 describe('LinodeRebuildForm', () => {
-  it('renders a notice reccomending users add user data when the Linode already uses user data', () => {
+  it('renders a notice reccomending users add user data when the Linode already uses user data', async () => {
     const linode = linodeFactory.build({ has_user_data: true });
 
     const { getByText } = renderWithTheme(

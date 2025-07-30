@@ -1,3 +1,4 @@
+import { useDatabaseMutation, useDatabaseTypesQuery } from '@linode/queries';
 import {
   Box,
   CircleProgress,
@@ -19,9 +20,8 @@ import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/Da
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
+import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGrid,
   StyledPlansPanel,
@@ -31,7 +31,6 @@ import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
 
 import type {
   ClusterSize,
-  Database,
   DatabaseClusterSizeObject,
   DatabasePriceObject,
   DatabaseType,
@@ -40,12 +39,9 @@ import type {
 } from '@linode/api-v4';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
-interface Props {
-  database: Database;
-  disabled?: boolean;
-}
-
-export const DatabaseResize = ({ database, disabled = false }: Props) => {
+export const DatabaseResize = () => {
+  const { database, disabled, isResizeEnabled, engine } =
+    useDatabaseDetailContext();
   const navigate = useNavigate();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState<
@@ -266,6 +262,17 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     setSelectedTab(index);
   };
 
+  if (!isResizeEnabled) {
+    navigate({
+      to: `/databases/$engine/$databaseId/summary`,
+      params: {
+        engine,
+        databaseId: database.id,
+      },
+    });
+    return null;
+  }
+
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -332,12 +339,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       </Paper>
       <StyledGrid>
         <StyledResizeButton
-          buttonType="primary"
+          data-testid="resize-database-button"
           disabled={shouldSubmitBeDisabled || disabled}
           onClick={() => {
             setIsResizeConfirmationDialogOpen(true);
           }}
           type="submit"
+          variant="primary"
         >
           Resize Database Cluster
         </StyledResizeButton>

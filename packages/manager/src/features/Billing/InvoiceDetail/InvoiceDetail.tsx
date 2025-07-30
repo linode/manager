@@ -1,9 +1,16 @@
 import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
 import { useAccount, useRegionsQuery } from '@linode/queries';
-import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  IconButton,
+  Notice,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { getAll } from '@linode/utilities';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useParams } from '@tanstack/react-router';
@@ -108,106 +115,81 @@ export const InvoiceDetail = () => {
     { key: 'total', label: 'Total (USD)' },
   ];
 
-  const sxGrid = {
-    alignItems: 'center',
-    display: 'flex',
-  };
-
-  const sxDownloadButton = {
-    whiteSpace: 'nowrap',
-  };
-
   return (
     <>
       <DocumentTitleSegment segment="Invoice | Account & Billing" />
-      <Paper
-        sx={{
-          padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
-        }}
-      >
-        <Grid
-          container
-          sx={{
-            rowGap: 2,
-          }}
-        >
-          <Grid size={12}>
-            <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
-              <Grid
-                size={{
-                  sm: 4,
-                  xs: 12,
-                }}
-                sx={sxGrid}
+      <Paper>
+        <Stack spacing={2}>
+          <Stack
+            alignItems="center"
+            data-qa-invoice-header
+            direction="row"
+            flexWrap="wrap"
+            gap={1}
+            justifyContent="space-between"
+          >
+            <Stack direction="row" flexWrap="nowrap" spacing={1}>
+              <Link
+                accessibleAriaLabel="Back to Billing"
+                data-qa-back-to-billing
+                to="/account/billing"
               >
-                <Link
-                  accessibleAriaLabel="Back to Billing"
-                  data-qa-back-to-billing
-                  to={`/account/billing`}
+                <IconButton
+                  component="span"
+                  disableFocusRipple
+                  role="none"
+                  size="large"
+                  sx={{
+                    padding: 0,
+                  }}
+                  tabIndex={-1}
                 >
-                  <IconButton
-                    component="span"
-                    disableFocusRipple
-                    role="none"
-                    size="large"
+                  <KeyboardArrowLeft
                     sx={{
-                      padding: 0,
-                    }}
-                    tabIndex={-1}
-                  >
-                    <KeyboardArrowLeft
-                      sx={{
-                        height: 34,
-                        width: 34,
-                      }}
-                    />
-                  </IconButton>
-                </Link>
-                {invoice && (
-                  <LandingHeader
-                    breadcrumbProps={{
-                      crumbOverrides: [{ label: 'Billing Info', position: 1 }],
-                      firstAndLastOnly: true,
-                      labelTitle: `Invoice #${invoice.id}`,
-                      pathname: location.pathname,
+                      height: 34,
+                      width: 34,
                     }}
                   />
-                )}
-              </Grid>
-              <Grid
-                data-qa-printable-invoice
-                size={{
-                  sm: 'grow',
-                }}
-                sx={{ ...sxGrid, justifyContent: 'flex-end' }}
+                </IconButton>
+              </Link>
+              <Box>
+                <LandingHeader
+                  breadcrumbProps={{
+                    crumbOverrides: [{ label: 'Billing Info', position: 1 }],
+                    firstAndLastOnly: true,
+                    labelTitle: `Invoice #${invoiceId}`,
+                    pathname: location.pathname,
+                  }}
+                  spacingBottom={0}
+                />
+              </Box>
+            </Stack>
+            {account && invoice && items && (
+              <Stack
+                alignItems="center"
+                direction="row"
+                flexWrap="wrap"
+                gap={1}
               >
-                {account && invoice && items && (
-                  <>
-                    <DownloadCSV
-                      csvRef={csvRef}
-                      data={items}
-                      filename={`invoice-${invoice.date}.csv`}
-                      headers={csvHeaders}
-                      onClick={() => csvRef.current.link.click()}
-                      sx={{ ...sxDownloadButton, marginRight: '8px' }}
-                    />
-                    <Button
-                      buttonType="secondary"
-                      onClick={() => printInvoicePDF(account, invoice, items)}
-                      sx={sxDownloadButton}
-                    >
-                      Download PDF
-                    </Button>
-                  </>
-                )}
-              </Grid>
-              <Grid
-                size={{
-                  sm: 'auto',
-                }}
-              >
+                <DownloadCSV
+                  csvRef={csvRef}
+                  data={items}
+                  filename={`invoice-${invoice.date}.csv`}
+                  headers={csvHeaders}
+                  onClick={() => csvRef.current.link.click()}
+                />
+                <Button
+                  buttonType="secondary"
+                  onClick={() => printInvoicePDF(account, invoice, items)}
+                >
+                  Download PDF
+                </Button>
                 {invoice && (
-                  <Typography data-qa-total={invoice.total} variant="h2">
+                  <Typography
+                    data-qa-total={invoice.total}
+                    sx={{ whiteSpace: 'nowrap' }}
+                    variant="h2"
+                  >
                     Total:{' '}
                     <Currency
                       quantity={invoice.total}
@@ -215,74 +197,69 @@ export const InvoiceDetail = () => {
                     />
                   </Typography>
                 )}
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid size={12}>
-            {pdfGenerationError && (
-              <Notice variant="error">Failed generating PDF.</Notice>
+              </Stack>
             )}
-            <InvoiceTable
-              errors={errors}
-              items={items}
-              loading={loading}
-              shouldShowRegion={shouldShowRegion}
-            />
-          </Grid>
-          <Grid size={12}>
-            {invoice && (
-              <Box
-                data-qa-invoice-summary
-                sx={{
-                  alignItems: 'flex-end',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: theme.spacing(2),
-                  padding: theme.spacing(1),
-                }}
-              >
-                <Typography variant="h2">
-                  Subtotal:{' '}
-                  <Currency
-                    quantity={invoice.subtotal}
-                    wrapInParentheses={invoice.subtotal < 0}
-                  />
-                </Typography>
-                {invoice.tax_summary.map((summary) => {
-                  return (
-                    <Typography key={summary.name} variant="h2">
-                      {summary.name === 'Standard'
-                        ? 'Standard Tax: '
-                        : `${summary.name}: `}
-                      <Currency quantity={summary.tax} />
-                    </Typography>
-                  );
-                })}
-                <Typography variant="h2">
-                  Tax Subtotal: <Currency quantity={invoice.tax} />
-                </Typography>
-                <Typography variant="h2">
-                  Total:{' '}
-                  <Currency
-                    quantity={invoice.total}
-                    wrapInParentheses={invoice.total < 0}
-                  />
-                </Typography>
-                <Typography>
-                  This invoice may include Linode Compute Instances that have
-                  been powered off as the data is maintained and resources are
-                  still reserved. If you no longer need powered-down Linodes,
-                  you can{' '}
-                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing">
-                    {' '}
-                    remove the service
-                  </Link>{' '}
-                  from your account.
-                </Typography>
-              </Box>
-            )}
-          </Grid>
-        </Grid>
+          </Stack>
+          {pdfGenerationError && (
+            <Notice variant="error">Failed generating PDF.</Notice>
+          )}
+          <InvoiceTable
+            errors={errors}
+            items={items}
+            loading={loading}
+            shouldShowRegion={shouldShowRegion}
+          />
+          {invoice && (
+            <Box
+              data-qa-invoice-summary
+              sx={{
+                alignItems: 'flex-end',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing(2),
+                padding: theme.spacing(1),
+              }}
+            >
+              <Typography variant="h2">
+                Subtotal:{' '}
+                <Currency
+                  quantity={invoice.subtotal}
+                  wrapInParentheses={invoice.subtotal < 0}
+                />
+              </Typography>
+              {invoice.tax_summary.map((summary) => {
+                return (
+                  <Typography key={summary.name} variant="h2">
+                    {summary.name === 'Standard'
+                      ? 'Standard Tax: '
+                      : `${summary.name}: `}
+                    <Currency quantity={summary.tax} />
+                  </Typography>
+                );
+              })}
+              <Typography variant="h2">
+                Tax Subtotal: <Currency quantity={invoice.tax} />
+              </Typography>
+              <Typography variant="h2">
+                Total:{' '}
+                <Currency
+                  quantity={invoice.total}
+                  wrapInParentheses={invoice.total < 0}
+                />
+              </Typography>
+              <Typography>
+                This invoice may include Linode Compute Instances that have been
+                powered off as the data is maintained and resources are still
+                reserved. If you no longer need powered-down Linodes, you can{' '}
+                <Link to="https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing">
+                  {' '}
+                  remove the service
+                </Link>{' '}
+                from your account.
+              </Typography>
+            </Box>
+          )}
+        </Stack>
       </Paper>
     </>
   );

@@ -3,7 +3,7 @@ import React from 'react';
 import { TanstackLink } from './TanstackLinks';
 
 import type { TanstackLinkComponentProps } from './TanstackLinks';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const AsButtonPrimary: StoryObj<TanstackLinkComponentProps> = {
   render: () => (
@@ -30,9 +30,6 @@ export const AsLink: StoryObj<TanstackLinkComponentProps> = {
 };
 
 const meta: Meta<TanstackLinkComponentProps> = {
-  parameters: {
-    tanStackRouter: true,
-  },
   title: 'Foundations/Link/Tanstack Link',
 };
 export default meta;

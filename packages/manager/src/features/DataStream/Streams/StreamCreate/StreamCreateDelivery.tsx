@@ -1,26 +1,15 @@
-import { useRegionsQuery } from '@linode/queries';
-import { useIsGeckoEnabled } from '@linode/shared';
-import {
-  Autocomplete,
-  Box,
-  Divider,
-  Paper,
-  TextField,
-  Typography,
-} from '@linode/ui';
+import { destinationType } from '@linode/api-v4';
+import { Autocomplete, Paper, Typography } from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { HideShowText } from 'src/components/PasswordInput/HideShowText';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
-import { PathSample } from 'src/features/DataStream/Shared/PathSample';
-import { useFlags } from 'src/hooks/useFlags';
+import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
+import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
+import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
-import { type CreateStreamForm, destinationType } from './types';
+import { type CreateStreamForm } from './types';
 
 type DestinationName = {
   create?: boolean;
@@ -29,26 +18,11 @@ type DestinationName = {
 };
 
 export const StreamCreateDelivery = () => {
-  const { gecko2 } = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
-  const { data: regions } = useRegionsQuery();
-  const { classes } = useStyles();
   const theme = useTheme();
-  const { control } = useFormContext<CreateStreamForm>();
+  const { control, setValue } = useFormContext<CreateStreamForm>();
 
   const [showDestinationForm, setShowDestinationForm] =
     React.useState<boolean>(false);
-
-  const destinationTypeOptions = [
-    {
-      value: destinationType.CustomHttps,
-      label: 'Custom HTTPS',
-    },
-    {
-      value: destinationType.LinodeObjectStorage,
-      label: 'Linode Object Storage',
-    },
-  ];
 
   const destinationNameOptions: DestinationName[] = [
     {
@@ -61,18 +35,16 @@ export const StreamCreateDelivery = () => {
     },
   ];
 
+  const selectedDestinationType = useWatch({
+    control,
+    name: 'destination_type',
+  });
+
   const destinationNameFilterOptions = createFilterOptions<DestinationName>();
 
   return (
     <Paper>
-      <Box display="flex" justifyContent="space-between">
-        <Typography variant="h2">Delivery</Typography>
-        <DocsLink
-          // TODO: Change the link when proper documentation is ready
-          href="https://techdocs.akamai.com/cloud-computing/docs"
-          label="Docs"
-        />
-      </Box>
+      <Typography variant="h2">Delivery</Typography>
       <Typography sx={{ mt: theme.spacingFunction(12) }}>
         Define a destination where you want this stream to send logs.
       </Typography>
@@ -81,7 +53,6 @@ export const StreamCreateDelivery = () => {
         name="destination_type"
         render={({ field }) => (
           <Autocomplete
-            className={classes.input}
             disableClearable
             disabled={true}
             label="Destination Type"
@@ -89,9 +60,7 @@ export const StreamCreateDelivery = () => {
               field.onChange(value);
             }}
             options={destinationTypeOptions}
-            value={destinationTypeOptions.find(
-              ({ value }) => value === field.value
-            )}
+            value={getDestinationTypeOption(field.value)}
           />
         )}
         rules={{ required: true }}
@@ -101,7 +70,6 @@ export const StreamCreateDelivery = () => {
         name="destination_label"
         render={({ field }) => (
           <Autocomplete
-            className={classes.input}
             filterOptions={(options, params) => {
               const filtered = destinationNameFilterOptions(options, params);
               const { inputValue } = params;
@@ -122,6 +90,7 @@ export const StreamCreateDelivery = () => {
             label="Destination Name"
             onChange={(_, newValue) => {
               field.onChange(newValue?.label || newValue);
+              setValue('destinations', [newValue?.id as number]);
               setShowDestinationForm(!!newValue?.create);
             }}
             options={destinationNameOptions}
@@ -145,108 +114,10 @@ export const StreamCreateDelivery = () => {
         )}
         rules={{ required: true }}
       />
-      {showDestinationForm && (
-        <>
-          <Controller
-            control={control}
-            name="host"
-            render={({ field }) => (
-              <TextField
-                aria-required
-                className={classes.input}
-                label="Host"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                placeholder="Host..."
-                value={field.value}
-              />
-            )}
-            rules={{ required: true }}
-          />
-          <Controller
-            control={control}
-            name="bucket_name"
-            render={({ field }) => (
-              <TextField
-                aria-required
-                className={classes.input}
-                label="Bucket"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                placeholder="Bucket..."
-                value={field.value}
-              />
-            )}
-            rules={{ required: true }}
-          />
-          <Controller
-            control={control}
-            name="region"
-            render={({ field }) => (
-              <RegionSelect
-                currentCapability="Object Storage"
-                disableClearable
-                isGeckoLAEnabled={isGeckoLAEnabled}
-                label="Region"
-                onChange={(_, region) => field.onChange(region.id)}
-                regionFilter="core"
-                regions={regions ?? []}
-                value={field.value}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="access_key_id"
-            render={({ field }) => (
-              <HideShowText
-                aria-required
-                label="Access Key ID"
-                onChange={(value) => field.onChange(value)}
-                placeholder="Access Key ID..."
-                value={field.value}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="access_key_secret"
-            render={({ field }) => (
-              <HideShowText
-                aria-required
-                label="Secret Access Key"
-                onChange={(value) => field.onChange(value)}
-                placeholder="Secret Access Key..."
-                value={field.value}
-              />
-            )}
-          />
-          <Divider sx={{ my: 3 }} />
-          <Typography variant="h2">Path</Typography>
-          <Box alignItems="end" display="flex" flexWrap="wrap" gap="16px">
-            <Controller
-              control={control}
-              name="path"
-              render={({ field }) => (
-                <TextField
-                  aria-required
-                  className={classes.input}
-                  label="Log Path Prefix"
-                  onChange={(value) => field.onChange(value)}
-                  placeholder="Log Path Prefix..."
-                  value={field.value}
-                />
-              )}
-            />
-            <PathSample
-              className={classes.input}
-              value="text-cloud/logs/audit/02/26/2026" // TODO: Generate sample path value in DPS-33654
-            />
-          </Box>
-        </>
-      )}
+      {showDestinationForm &&
+        selectedDestinationType === destinationType.LinodeObjectStorage && (
+          <DestinationLinodeObjectStorageDetailsForm />
+        )}
     </Paper>
   );
 };

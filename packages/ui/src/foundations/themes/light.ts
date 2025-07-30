@@ -117,6 +117,7 @@ export const notificationToast = {
     backgroundColor: NotificationToast.Informative.Background,
     borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
+    icon: NotificationToast.Informative.StatusIcon,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
@@ -133,6 +134,7 @@ export const notificationToast = {
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
     borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
+    icon: NotificationToast.Warning.StatusIcon,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
@@ -169,19 +171,18 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   '&:disabled': {
-    color: Action.Primary.Disabled,
+    color: Alias.Content.Text.Link.Disabled,
     cursor: 'not-allowed',
   },
   '&:hover:not(:disabled)': {
     backgroundColor: 'transparent',
-    color: Action.Primary.Hover,
+    color: Alias.Content.Text.Link.Hover,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: Action.Primary.Default,
+  color: Alias.Content.Text.Link.Default,
   cursor: 'pointer',
-  font: 'inherit',
   minWidth: 0,
   padding: 0,
 };
@@ -243,8 +244,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+      background: Table.Row.Background.Hover,
+    },
   },
 };
 
@@ -329,7 +332,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: Color.Brand[80],
+              color: Alias.Action.Primary.Default,
             },
           },
           backgroundColor: 'transparent',
@@ -625,6 +628,9 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&[aria-disabled="true"]': {
+            '&[aria-describedby="button-tooltip"] svg': {
+              color: Alias.Content.Icon.Secondary.Default,
+            },
             '& .MuiSvgIcon-root': {
               fill: Button.Primary.Disabled.Icon,
             },
@@ -648,6 +654,9 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          },
           '&:active': {
             color: `${Component.Checkbox.Empty.Active.Border} !important`,
           },
@@ -661,6 +670,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
             color: Component.Checkbox.Indeterminated.Default.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           // Unchecked & Disabled
           '&.Mui-disabled': {
@@ -677,6 +691,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           color: Component.Checkbox.Empty.Default.Border,
         },
@@ -913,8 +932,8 @@ export const lightTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          '&$error': {
-            color: Select.Error.HintText,
+          '&[class*="error"]': {
+            color: Select.Error.Border,
           },
           fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
@@ -962,6 +981,24 @@ export const lightTheme: ThemeOptions = {
           '&:hover': {
             backgroundColor: 'transparent',
             color: Content.Icon.Primary.Hover,
+          },
+          // TooltipIcon Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+              padding: `0 ${Spacing.S6}`,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
           },
         },
       },
@@ -1017,7 +1054,6 @@ export const lightTheme: ThemeOptions = {
           height: Spacing.S16,
           padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
           textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
         },
         inputMultiline: {
           minHeight: '100px',
@@ -1200,11 +1236,6 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         outlined: {
           border: `1px solid ${Color.Neutrals[30]}`,
-        },
-        root: {
-          '& .notice': {
-            width: 'fit-content',
-          },
         },
         rounded: {
           borderRadius: 0,
@@ -1581,7 +1612,7 @@ export const lightTheme: ThemeOptions = {
             height: '16px',
             margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Text,
+              fill: Table.HeaderNested.Icon,
             },
             width: '16px',
           },

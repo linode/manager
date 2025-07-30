@@ -1,10 +1,12 @@
 import type {
+  CloudNAT,
   Config,
   Domain,
   DomainRecord,
   Event,
   Firewall,
   FirewallDevice,
+  Interface,
   IPAddress,
   KubeNodePoolResponse,
   KubernetesCluster,
@@ -17,6 +19,7 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  Stream,
   Subnet,
   SupportReply,
   SupportTicket,
@@ -115,6 +118,8 @@ export interface MockPresetExtra extends MockPresetBase {
  */
 export type MockPresetCrudGroup = {
   id:
+    | 'CloudNATs'
+    | 'DataStream'
     | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
@@ -128,6 +133,8 @@ export type MockPresetCrudGroup = {
     | 'VPCs';
 };
 export type MockPresetCrudId =
+  | 'cloudnats:crud'
+  | 'datastream:crud'
   | 'domains:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
@@ -151,16 +158,18 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  cloudnats: CloudNAT[];
+  configInterfaces: [number, Interface][]; // number is Config ID
   domainRecords: DomainRecord[];
   domains: Domain[];
   eventQueue: Event[];
-  firewallDevices: [number, FirewallDevice][];
+  firewallDevices: [number, FirewallDevice][]; // number is Firewall ID
   firewalls: Firewall[];
   ipAddresses: IPAddress[];
   kubernetesClusters: KubernetesCluster[];
   kubernetesNodePools: KubeNodePoolResponse[];
-  linodeConfigs: [number, Config][];
-  linodeInterfaces: [number, LinodeInterface][];
+  linodeConfigs: [number, Config][]; // number is Linode ID
+  linodeInterfaces: [number, LinodeInterface][]; // number is Linode ID
   linodes: Linode[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];
@@ -169,7 +178,8 @@ export interface MockState {
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];
   regions: Region[];
-  subnets: [number, Subnet][];
+  streams: Stream[];
+  subnets: [number, Subnet][]; // number is VPC ID
   supportReplies: SupportReply[];
   supportTickets: SupportTicket[];
   volumes: Volume[];

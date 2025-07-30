@@ -1,34 +1,42 @@
-import { useRegionsQuery } from '@linode/queries';
-import { Paper, Typography } from '@linode/ui';
-import { isAclpSupportedRegion } from '@linode/utilities';
+import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { Alerts } from './Alerts/Alerts';
+import { Alerts } from './Alerts';
+import { MaintenancePolicy } from './MaintenancePolicy';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-export const AdditionalOptions = () => {
-  const flags = useFlags();
-  const { data: regions } = useRegionsQuery();
+interface AdditionalOptionProps {
+  isAlertsBetaMode: boolean;
+  onAlertsModeChange: (isBeta: boolean) => void;
+}
+
+export const AdditionalOptions = ({
+  onAlertsModeChange,
+  isAlertsBetaMode,
+}: AdditionalOptionProps) => {
+  const { aclpBetaServices } = useFlags();
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const selectedRegionId = useWatch<CreateLinodeRequest, 'region'>({
     name: 'region',
   });
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: selectedRegionId,
-    regions,
     type: 'alerts',
   });
 
   const showAlerts =
-    flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode;
+    aclpBetaServices?.linode?.alerts && isAclpAlertsSupportedRegionLinode;
 
-  const hideAdditionalOptions = !showAlerts;
+  const hideAdditionalOptions = !showAlerts && !isVMHostMaintenanceEnabled;
 
   if (hideAdditionalOptions) {
     return null;
@@ -42,7 +50,15 @@ export const AdditionalOptions = () => {
       >
         Additional Options
       </Typography>
-      <Alerts />
+      <Stack divider={<Divider />}>
+        {showAlerts && (
+          <Alerts
+            isAlertsBetaMode={isAlertsBetaMode}
+            onAlertsModeChange={onAlertsModeChange}
+          />
+        )}
+        {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
+      </Stack>
     </Paper>
   );
 };

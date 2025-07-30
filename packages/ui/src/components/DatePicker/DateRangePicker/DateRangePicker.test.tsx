@@ -66,14 +66,14 @@ describe('DateRangePicker', () => {
 
   it('should call onApply when the Apply button is clicked', async () => {
     // Mock current date for consistent results
-    const mockDate = DateTime.fromISO('2025-02-04T14:11:14.933-06:00');
+    const mockDate = DateTime.fromISO('2025-02-04T14:11:14.933');
 
     // Mock the `DateTime.now()` function globally
     vi.spyOn(DateTime, 'now').mockReturnValue(mockDate as DateTime<true>);
 
     renderWithTheme(<DateRangePicker {...defaultProps} />);
     await userEvent.click(screen.getByRole('textbox', { name: 'Start Date' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Last day' }));
+    await userEvent.click(screen.getByRole('button', { name: 'last day' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Normalize values before assertion (use toISODate() instead of toISO())
@@ -82,7 +82,7 @@ describe('DateRangePicker', () => {
 
     expect(defaultProps.onApply).toHaveBeenCalledWith({
       endDate: expectedEndDate,
-      selectedPreset: 'Last day',
+      selectedPreset: 'last day',
       startDate: expectedStartDate,
     });
 

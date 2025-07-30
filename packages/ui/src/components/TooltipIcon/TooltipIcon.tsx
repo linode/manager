@@ -1,13 +1,10 @@
 import styled from '@emotion/styled';
-import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import HelpOutline from '@mui/icons-material/HelpOutline';
-import InfoOutline from '@mui/icons-material/InfoOutlined';
-import WarningSolid from '@mui/icons-material/Warning';
-import { useTheme } from '@mui/material/styles';
+import { SvgIcon, useTheme } from '@mui/material';
 import * as React from 'react';
 import type { JSX } from 'react';
 
+import InfoOutlined from '../../assets/icons/info-outlined.svg';
+import WarningOutlined from '../../assets/icons/warning.svg';
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
 import { Tooltip, tooltipClasses } from '../Tooltip';
@@ -15,19 +12,23 @@ import { Tooltip, tooltipClasses } from '../Tooltip';
 import type { TooltipProps } from '../Tooltip';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-export type TooltipIconStatus =
-  | 'error'
-  | 'help'
-  | 'info'
-  | 'other'
-  | 'success'
-  | 'warning';
+export type TooltipIconStatus = 'info' | 'warning';
 
 interface EnhancedTooltipProps extends TooltipProps {
   width?: number;
 }
 
-export interface TooltipIconProps
+type TooltipIconWithStatus = {
+  icon?: never;
+  status: TooltipIconStatus;
+};
+
+type TooltipIconWithCustomIcon = {
+  icon: JSX.Element;
+  status?: never;
+};
+
+export interface TooltipIconBaseProps
   extends Omit<
     TooltipProps,
     'children' | 'disableInteractive' | 'leaveDelay' | 'title'
@@ -37,10 +38,9 @@ export interface TooltipIconProps
    */
   className?: string;
   /**
-   * Use this custom icon when `status` is `other`
-   * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
+   * An optional data-testid
    */
-  icon?: JSX.Element;
+  dataTestId?: string;
   /**
    * Size of the tooltip icon
    * @default small
@@ -51,10 +51,6 @@ export interface TooltipIconProps
    * @default false
    */
   leaveDelay?: number;
-  /**
-   * Sets the icon and color
-   */
-  status: TooltipIconStatus;
   /**
    * Pass specific styles to the Tooltip
    */
@@ -81,6 +77,9 @@ export interface TooltipIconProps
    */
   width?: number;
 }
+
+export type TooltipIconProps = TooltipIconBaseProps &
+  (TooltipIconWithCustomIcon | TooltipIconWithStatus);
 /**
  * ## Usage
  *
@@ -96,11 +95,12 @@ export const TooltipIcon = (props: TooltipIconProps) => {
   const theme = useTheme();
 
   const {
+    dataTestId,
+    className,
     classes,
-    icon,
     leaveDelay,
+    icon,
     status,
-    sx,
     sxTooltipIcon,
     text,
     tooltipAnalyticsEvent,
@@ -117,42 +117,41 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   let renderIcon: JSX.Element | null;
 
-  const sxRootStyle = {
-    '&&': {
-      fill: theme.tokens.component.Label.InfoIcon,
-      stroke: theme.tokens.component.Label.InfoIcon,
-      strokeWidth: 0,
+  const cdsIconProps = {
+    rootStyle: {
+      color: theme.tokens.alias.Content.Icon.Secondary.Default,
+      height: labelTooltipIconSize === 'small' ? 16 : 20,
+      width: labelTooltipIconSize === 'small' ? 16 : 20,
+      '&:hover': {
+        color: theme.tokens.alias.Content.Icon.Primary.Hover,
+      },
     },
-    '&:hover': {
-      color: theme.tokens.alias.Content.Icon.Primary.Hover,
-      fill: theme.tokens.alias.Content.Icon.Primary.Hover,
-      stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
-    },
-    height: labelTooltipIconSize === 'small' ? 16 : 20,
-    width: labelTooltipIconSize === 'small' ? 16 : 20,
+    viewBox: '0 0 20 20',
   };
 
   switch (status) {
-    case 'error':
-      renderIcon = <ErrorOutline style={{ color: theme.color.red }} />;
-      break;
-    case 'help':
-      renderIcon = <HelpOutline sx={sxRootStyle} />;
-      break;
     case 'info':
-      renderIcon = <InfoOutline sx={sxRootStyle} />;
-      break;
-    case 'other':
-      renderIcon = icon ?? null;
-      break;
-    case 'success':
-      renderIcon = <SuccessOutline style={{ color: theme.color.blue }} />;
+      renderIcon = (
+        <SvgIcon
+          component={InfoOutlined}
+          data-testid="tooltip-info-icon"
+          sx={cdsIconProps.rootStyle}
+          viewBox="0 0 24 24"
+        />
+      );
       break;
     case 'warning':
-      renderIcon = <WarningSolid style={{ color: theme.color.orange }} />;
+      renderIcon = (
+        <SvgIcon
+          component={WarningOutlined}
+          data-testid="tooltip-warning-icon"
+          sx={cdsIconProps.rootStyle}
+          viewBox={cdsIconProps.viewBox}
+        />
+      );
       break;
     default:
-      renderIcon = null;
+      renderIcon = icon ?? null;
   }
 
   return (
@@ -160,16 +159,23 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       classes={classes}
       componentsProps={props.componentsProps}
       data-qa-help-tooltip
+      data-testid={dataTestId}
       enterTouchDelay={0}
       leaveDelay={leaveDelay ? 3000 : undefined}
       leaveTouchDelay={5000}
       onOpen={handleOpenTooltip}
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
-      sx={sx}
+      sx={{
+        ...sxTooltipIcon,
+        '&:hover': {
+          color: theme.tokens.alias.Content.Icon.Primary.Hover,
+        },
+      }}
       title={text}
       width={width}
     >
       <IconButton
+        className={className}
         data-qa-help-button
         onClick={(e) => {
           // This prevents unwanted behavior when clicking a tooltip icon.
@@ -177,7 +183,9 @@ export const TooltipIcon = (props: TooltipIconProps) => {
           e.stopPropagation();
         }}
         size="large"
-        sx={sxTooltipIcon}
+        sx={{
+          ...sxTooltipIcon,
+        }}
       >
         {renderIcon}
       </IconButton>

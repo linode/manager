@@ -1,3 +1,40 @@
+## [2025-07-29] - v0.71.0
+
+
+### Changed:
+
+- Update `VPCIPv6Schema` and `VPCIPv6SubnetSchema` ([#12309](https://github.com/linode/manager/pull/12309))
+- Update `NodeBalancerSchema` port uniqueness logic to allow TCP and UDP configurations on the same port ([#12502](https://github.com/linode/manager/pull/12502))
+
+### Upcoming Features:
+
+- Update IPv6 Subnet validation ([#12382](https://github.com/linode/manager/pull/12382))
+
+## [2025-07-15] - v0.70.0
+
+
+### Upcoming Features:
+
+- Update validation schemas for the changes in endpoints /v4/nodebalancers & /v4/nodebalancers/configs/{configId}/nodes for NB Dual Stack Support ([#12421](https://github.com/linode/manager/pull/12421))
+- Add `regions` in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` ([#12435](https://github.com/linode/manager/pull/12435))
+
+## [2025-07-01] - v0.69.0
+
+
+### Added:
+
+- IAM RBAC: email validation ([#12395](https://github.com/linode/manager/pull/12395))
+
+### Fixed:
+
+- ACLP: update `scope` property in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` to optional and nullable ([#12441](https://github.com/linode/manager/pull/12441))
+
+### Upcoming Features:
+
+- Add `scope` in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` ([#12377](https://github.com/linode/manager/pull/12377))
+- Update maintenance policy validation to use string type ([#12417](https://github.com/linode/manager/pull/12417))
+- Add `createCloudNATSchema` and `updateCloudNATSchema`
+
 ## [2025-06-17] - v0.68.0
 
 

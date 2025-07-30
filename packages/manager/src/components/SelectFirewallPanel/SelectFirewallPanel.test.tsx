@@ -13,6 +13,22 @@ beforeAll(() => mockMatchMedia());
 
 const testId = 'select-firewall-panel';
 
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { delete_firewall: true, update_firewall: true },
+  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 describe('SelectFirewallPanel', () => {
   it('should render', async () => {
     const wrapper = renderWithTheme(

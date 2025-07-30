@@ -584,7 +584,7 @@ const NodeBalancerCreate = () => {
   }
 
   if (nodeBalancerFields.vpcs?.length) {
-    summaryItems.push({ title: 'VPC Assigned' });
+    summaryItems.push({ title: 'VPC' });
   }
 
   if (nodeBalancerFields.firewall_id) {
@@ -678,6 +678,7 @@ const NodeBalancerCreate = () => {
             <RegionSelect
               currentCapability="NodeBalancers"
               disableClearable
+              disabled={isRestricted}
               errorText={hasErrorFor('region')}
               isGeckoLAEnabled={isGeckoLAEnabled}
               noMarginTop

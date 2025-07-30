@@ -15,6 +15,7 @@ import {
   TooltipIcon,
 } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
@@ -30,12 +31,9 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
-import { useOrder } from 'src/hooks/useOrder';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 
-import {
-  getGeneratedLinodeLabel,
-  useLinodeCreateQueryParams,
-} from '../../utilities';
+import { getGeneratedLinodeLabel } from '../../utilities';
 import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
 import { getDefaultUDFData } from './UserDefinedFields/utilities';
@@ -53,12 +51,27 @@ interface Props {
 
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
+  const search = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const queryClient = useQueryClient();
 
-  const { handleOrderChange, order, orderBy } = useOrder({
-    order: 'desc',
-    orderBy: 'deployments_total',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'deployments_total',
+      },
+      from: location.pathname.includes('/linodes/create')
+        ? '/linodes/create/stackscripts'
+        : location.pathname === '/linodes'
+          ? '/linodes'
+          : '/linodes/$linodeId',
+    },
+    preferenceKey: 'linode-clone-stackscripts',
   });
 
   const {
@@ -77,12 +90,13 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const [selectedStackScriptId, setSelectedStackScriptId] = useState<number>();
 
-  const { params, updateParams } = useLinodeCreateQueryParams();
-
-  const hasPreselectedStackScript = Boolean(params.stackScriptID);
+  const hasPreselectedStackScript = Boolean(search.stackScriptID);
 
   const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
-    useStackScriptQuery(params.stackScriptID ?? -1, hasPreselectedStackScript);
+    useStackScriptQuery(
+      search.stackScriptID ? Number(search.stackScriptID) : -1,
+      hasPreselectedStackScript
+    );
 
   const filter =
     type === 'Community'
@@ -143,7 +157,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             onClick={() => {
               field.onChange(null);
               setValue('image', null);
-              updateParams({ stackScriptID: undefined });
+              navigate({
+                to: `/linodes/create/stackscripts`,
+                search: {
+                  stackScriptID: undefined,
+                },
+              });
             }}
           >
             Choose Another StackScript
@@ -167,7 +186,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
               {searchParseError && (
-                <TooltipIcon status="error" text={searchParseError.message} />
+                <TooltipIcon status="warning" text={searchParseError.message} />
               )}
               <IconButton
                 aria-label="Clear"

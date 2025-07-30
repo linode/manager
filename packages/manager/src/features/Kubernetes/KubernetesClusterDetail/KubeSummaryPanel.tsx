@@ -6,10 +6,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
@@ -143,6 +143,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             isClusterReadOnly={isClusterReadOnly}
             isLoadingKubernetesACL={isLoadingKubernetesACL}
             setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
+            vpcId={cluster.vpc_id}
           />
         }
         header={
@@ -181,14 +182,19 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 {isLkeEnterpriseLAFeatureEnabled &&
                 cluster.tier === 'enterprise' ? undefined : (
                   <StyledActionButton
-                    disabled={Boolean(dashboardError) || !dashboard}
-                    endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
+                    disabled={
+                      Boolean(dashboardError) || !dashboard || isClusterReadOnly
+                    }
+                    endIcon={<ExternalLinkIcon sx={{ height: '14px' }} />}
                     onClick={() => window.open(dashboard?.url, '_blank')}
                   >
                     Kubernetes Dashboard
                   </StyledActionButton>
                 )}
-                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
+                <StyledActionButton
+                  disabled={isClusterReadOnly}
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
                   Delete Cluster
                 </StyledActionButton>
               </Hidden>

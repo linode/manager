@@ -98,6 +98,7 @@ import {
   possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -118,12 +119,15 @@ import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
+import type { PathParams } from 'msw';
+
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { trustedDeviceFactory } from 'src/factories/devices';
+import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
@@ -138,6 +142,7 @@ import type {
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
+  Database,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
@@ -161,6 +166,37 @@ export const makeResourcePage = <T>(
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
 });
+
+const makeMockDatabase = (params: PathParams): Database => {
+  const isDefault = Number(params.id) % 2 !== 0;
+  const db: Record<string, boolean | number | string | undefined> = {
+    engine: params.engine as 'mysql',
+    id: Number(params.id),
+    label: `database-${params.id}`,
+    platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
+  };
+  if (!isDefault) {
+    db.replication_commit_type =
+      params.engine === 'postgresql' ? 'local' : undefined;
+
+    db.replication_type =
+      params.engine === 'mysql'
+        ? pickRandom(possibleMySQLReplicationTypes)
+        : undefined;
+
+    db.replication_type =
+      params.engine === 'postgresql'
+        ? pickRandom(possiblePostgresReplicationTypes)
+        : undefined;
+
+    db.ssl_connection = true;
+  }
+  const database = databaseFactory.build(db);
+  if (database.platform !== 'rdbms-default') {
+    delete database.private_network;
+  }
+  return database;
+};
 
 const statusPage = [
   http.get('*/api/v2/incidents*', () => {
@@ -277,8 +313,19 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
+
+    const planSizes = [4, 8, 16, 32, 64, 96, 128, 256];
+    const premiumTypes = planSizes.map((size) => {
+      return databaseTypeFactory.build({
+        class: 'premium',
+        id: `premium-${size}`,
+        label: `DBaaS - Premium ${size} GB`,
+        memory: size * 1024,
+      });
+    });
+
     return HttpResponse.json(
-      makeResourcePage([...standardTypes, ...dedicatedTypes])
+      makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
     );
   }),
 
@@ -294,28 +341,12 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
-    const isDefault = Number(params.id) % 2 !== 0;
-    const db: Record<string, boolean | number | string | undefined> = {
-      engine: params.engine as 'mysql',
-      id: Number(params.id),
-      label: `database-${params.id}`,
-      platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
-    };
-    if (!isDefault) {
-      db.replication_commit_type =
-        params.engine === 'postgresql' ? 'local' : undefined;
-      db.replication_type =
-        params.engine === 'mysql'
-          ? pickRandom(possibleMySQLReplicationTypes)
-          : params.engine === 'postgresql'
-            ? pickRandom(possiblePostgresReplicationTypes)
-            : (undefined as any);
-      db.ssl_connection = true;
-    }
-    const database = databaseFactory.build(db);
-    if (database.platform !== 'rdbms-default') {
-      delete database.private_network;
-    }
+    const database = makeMockDatabase(params);
+    return HttpResponse.json(database);
+  }),
+
+  http.put('*/databases/:engine/instances/:id', ({ params }) => {
+    const database = makeMockDatabase(params);
     return HttpResponse.json(database);
   }),
 
@@ -912,12 +943,14 @@ export const handlers = [
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
+          alerts: { user: [100, 101], system: [200] },
         }),
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
+          alerts: { user: [], system: [] },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -961,7 +994,7 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = firewallFactory.buildList(1);
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
@@ -1101,7 +1134,7 @@ export const handlers = [
     return HttpResponse.json(newFirewall);
   }),
   http.get('*/v4/nodebalancers', () => {
-    const nodeBalancers = nodeBalancerFactory.buildList(1);
+    const nodeBalancers = nodeBalancerFactory.buildList(3);
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -1470,7 +1503,7 @@ export const handlers = [
     return HttpResponse.json(volume);
   }),
   http.get('*/vlans', () => {
-    const vlans = VLANFactory.buildList(2);
+    const vlans = VLANFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(vlans));
   }),
   http.get('*/profile/preferences', () => {
@@ -2030,6 +2063,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2420,6 +2454,11 @@ export const handlers = [
         plan: 'g6-standard-7',
         region: selectedRegion,
       }),
+      regionAvailabilityFactory.build({
+        plan: 'premium-32',
+        region: selectedRegion,
+        available: false, // Mock for when a premium plan is not available or sold out in a region.
+      }),
       // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
       ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
@@ -2682,9 +2721,16 @@ export const handlers = [
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
           }),
-          ...alertFactory.buildList(5, {
+          ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
             type: 'user',
+            scope: 'account',
+          }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'region',
+            regions: ['us-east'],
           }),
         ],
       });
@@ -2800,10 +2846,27 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
         serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
+          alert: {
+            evaluation_period_seconds: [300],
+            polling_interval_seconds: [300],
+          },
+        }),
+        serviceTypesFactory.build({
+          label: 'Nodebalancers',
+          service_type: 'nodebalancer',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
+        serviceTypesFactory.build({
+          label: 'Firewalls',
+          service_type: 'firewall',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
       ],
     };
@@ -2820,10 +2883,16 @@ export const handlers = [
         ? serviceTypesFactory.build({
             label: 'Linodes',
             service_type: 'linode',
+            regions: 'us-iad,us-east',
+            alert: serviceAlertFactory.build({ scope: ['entity'] }),
           })
         : serviceTypesFactory.build({
             label: 'Databases',
             service_type: 'dbaas',
+            alert: serviceAlertFactory.build({
+              evaluation_period_seconds: [300],
+              polling_interval_seconds: [300],
+            }),
           });
 
     return HttpResponse.json(response, { status: 200 });
@@ -2867,6 +2936,26 @@ export const handlers = [
               y_label: 'system_cpu_utilization_ratio',
             }),
           ],
+        })
+      );
+    }
+
+    if (params.serviceType === 'nodebalancer') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 3,
+          label: 'Nodebalancer Dashboard',
+          service_type: 'nodebalancer',
+        })
+      );
+    }
+
+    if (params.serviceType === 'firewall') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 4,
+          label: 'Firewall Dashboard',
+          service_type: 'firewall',
         })
       );
     }
@@ -3006,8 +3095,17 @@ export const handlers = [
       label:
         params.id === '1'
           ? 'DBaaS Service I/O Statistics'
-          : 'Linode Service I/O Statistics',
-      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
+          : params.id === '3'
+            ? 'NodeBalancer Service I/O Statistics'
+            : 'Linode Service I/O Statistics',
+      service_type:
+        params.id === '1'
+          ? 'dbaas'
+          : params.id === '3'
+            ? 'nodebalancer'
+            : params.id === '4'
+              ? 'firewall'
+              : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [
@@ -3073,6 +3171,7 @@ export const handlers = [
             metric: {
               entity_id: '123',
               metric_name: 'average_cpu_usage',
+              linode_id: '1',
               node_id: 'primary-1',
             },
             values: [
@@ -3181,4 +3280,9 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...entities,
+  http.get('*/v4beta/maintenance/policies', () => {
+    return HttpResponse.json(
+      makeResourcePage(maintenancePolicyFactory.buildList(2))
+    );
+  }),
 ];

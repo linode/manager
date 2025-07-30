@@ -3,14 +3,14 @@ import { accountQueries } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -34,9 +34,9 @@ interface Props {
 
 const PaymentInformation = (props: Props) => {
   const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
+  const search = useSearch({ from: '/account/billing' });
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
   const [deleteDialogOpen, setDeleteDialogOpen] =
     React.useState<boolean>(false);
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
@@ -44,16 +44,13 @@ const PaymentInformation = (props: Props) => {
   const [deletePaymentMethodSelection, setDeletePaymentMethodSelection] =
     React.useState<PaymentMethod | undefined>();
   const queryClient = useQueryClient();
-  const addPaymentMethodRouteMatch =
-    match.routeId === '/account/billing/add-payment-method';
+  const addPaymentMethodRouteMatch = search.action === 'add-payment-method';
 
   const isChildUser = profile?.user_type === 'child';
 
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+  const { permissions } = usePermissions('account', ['update_account']);
+
+  const isReadOnly = !permissions.update_account || isChildUser;
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -114,7 +111,13 @@ const PaymentInformation = (props: Props) => {
               disableRipple
               disableTouchRipple
               onClick={() =>
-                navigate({ to: '/account/billing/add-payment-method' })
+                navigate({
+                  to: '/account/billing',
+                  search: (prev) => ({
+                    ...prev,
+                    action: 'add-payment-method',
+                  }),
+                })
               }
               tooltipText={getRestrictedResourceText({
                 includeContactInfo: false,
@@ -130,7 +133,6 @@ const PaymentInformation = (props: Props) => {
           <PaymentMethods
             error={error}
             isChildUser={isChildUser}
-            isRestrictedUser={isReadOnly}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}

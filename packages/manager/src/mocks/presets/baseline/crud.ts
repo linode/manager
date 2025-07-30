@@ -1,9 +1,11 @@
+import { datastreamCrudPreset } from 'src/mocks/presets/crud/datastream';
 import {
   getEvents,
   updateEvents,
 } from 'src/mocks/presets/crud/handlers/events';
 import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
+import { cloudNATCrudPreset } from '../crud/cloudnats';
 import { domainCrudPreset } from '../crud/domains';
 import { firewallCrudPreset } from '../crud/firewalls';
 import { kubernetesCrudPreset } from '../crud/kubernetes';
@@ -19,7 +21,9 @@ import type { MockPresetBaseline } from 'src/mocks/types';
 export const baselineCrudPreset: MockPresetBaseline = {
   group: { id: 'General' },
   handlers: [
+    ...cloudNATCrudPreset.handlers,
     ...domainCrudPreset.handlers,
+    ...datastreamCrudPreset.handlers,
     ...firewallCrudPreset.handlers,
     ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,

@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 const PasswordInput = React.lazy(() =>
@@ -20,13 +21,18 @@ const PasswordInput = React.lazy(() =>
 );
 
 interface Props {
-  isReadOnly?: boolean;
   linodeId: number;
 }
 
 export const LinodeSettingsPasswordPanel = (props: Props) => {
-  const { isReadOnly, linodeId } = props;
+  const { linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
+
+  const { permissions } = usePermissions(
+    'linode',
+    ['password_reset_linode'],
+    linodeId
+  );
 
   const {
     data: disks,
@@ -98,7 +104,8 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     <StyledActionsPanel
       primaryButtonProps={{
         'data-testid': 'password - save',
-        disabled: isReadOnly || linode?.status !== 'offline',
+        disabled:
+          !permissions.password_reset_linode || linode?.status !== 'offline',
         label: 'Save',
         loading: isLoading,
         onClick: onSubmit,
@@ -121,7 +128,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
         {!isBareMetalInstance ? (
           <Select
             data-qa-select-linode
-            disabled={isReadOnly}
+            disabled={!permissions.password_reset_linode}
             errorText={disksError?.[0].reason}
             label="Disk"
             loading={disksLoading}
@@ -139,9 +146,9 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
           <PasswordInput
             autoComplete="new-password"
             data-qa-password-input
-            disabled={isReadOnly}
+            disabled={!permissions.password_reset_linode}
             disabledReason={
-              isReadOnly
+              !permissions.password_reset_linode
                 ? "You don't have permissions to modify this Linode"
                 : undefined
             }

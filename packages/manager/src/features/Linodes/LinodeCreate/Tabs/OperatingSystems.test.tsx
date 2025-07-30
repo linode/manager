@@ -4,7 +4,38 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { OperatingSystems } from './OperatingSystems';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_linode: false,
+    },
+  })),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('OperatingSystems', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('renders a header', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <OperatingSystems />,
@@ -24,5 +55,30 @@ describe('OperatingSystems', () => {
 
     expect(getByLabelText('Linux Distribution')).toBeVisible();
     expect(getByPlaceholderText('Choose a Linux distribution')).toBeVisible();
+  });
+
+  it('should disable "ImageSelect" component if the user does not have create_linode permission', async () => {
+    const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
+      component: <OperatingSystems />,
+    });
+
+    const imageSelect = getByPlaceholderText('Choose a Linux distribution');
+    expect(imageSelect).toBeInTheDocument();
+    expect(imageSelect).toBeDisabled();
+  });
+
+  it('should enable "ImageSelect" component if the user does has create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+      },
+    });
+    const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
+      component: <OperatingSystems />,
+    });
+
+    const imageSelect = getByPlaceholderText('Choose a Linux distribution');
+    expect(imageSelect).toBeInTheDocument();
+    expect(imageSelect).toBeEnabled();
   });
 });

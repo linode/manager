@@ -53,13 +53,11 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: 'us-ord',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: '',
     },
   ],
 };
@@ -99,6 +97,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Linodes'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    alerts: [],
+    metrics: ['Linodes'],
+  },
 });
 
 const extendedMockRegion = regionFactory.build({
@@ -187,18 +189,18 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .findByTitle(dashboardName)
       .should('be.visible')
       .click();
-
     // Select a time duration from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type(timeDurationToSelect);
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
 
-    ui.autocompletePopper
-      .findByTitle(timeDurationToSelect)
+    ui.button.findByTitle('last day').click();
+
+    // Click the "Apply" button to confirm the end date and time
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
-
     ui.regionSelect.find().click();
 
     //  Select a region from the dropdown.
@@ -388,8 +390,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
           );
         }
         expect(metric[0].name).to.equal(metricData.name);
-        expect(timeRange).to.have.property('unit', 'hr');
-        expect(timeRange).to.have.property('value', 24);
+        expect(timeRange).to.have.property('unit', 'days');
+        expect(timeRange).to.have.property('value', 1);
       });
   });
 

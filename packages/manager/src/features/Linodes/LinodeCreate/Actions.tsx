@@ -3,7 +3,9 @@ import { scrollErrorIntoView } from '@linode/utilities';
 import React, { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -12,28 +14,45 @@ import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
   getDoesEmployeeNeedToAssignFirewall,
   getLinodeCreatePayload,
-  useLinodeCreateQueryParams,
 } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 
-export const Actions = () => {
-  const { params } = useLinodeCreateQueryParams();
+interface ActionProps {
+  isAlertsBetaMode?: boolean;
+}
+
+export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
+  const createType = useGetLinodeCreateType();
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { aclpBetaServices } = useFlags();
 
   const { formState, getValues, trigger, control } =
     useFormContext<LinodeCreateFormValues>();
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const [legacyFirewallId, linodeInterfaces, interfaceGeneration, linodeId] =
+    useWatch({
+      control,
+      name: [
+        'firewall_id',
+        'linodeInterfaces',
+        'interface_generation',
+        'linode.id',
+      ],
+    });
 
-  const [legacyFirewallId, linodeInterfaces, interfaceGeneration] = useWatch({
-    control,
-    name: ['firewall_id', 'linodeInterfaces', 'interface_generation'],
-  });
+  const { permissions } = usePermissions('linode', ['clone_linode'], linodeId);
+
+  const { permissions: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+
+  const isCloneMode = createType === 'Clone Linode';
+  const isDisabled = isCloneMode
+    ? !permissions.clone_linode
+    : !accountPermissions.create_linode;
 
   const userNeedsToAssignFirewall =
     'firewallOverride' in formState.errors &&
@@ -46,7 +65,7 @@ export const Actions = () => {
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
     sendLinodeCreateFormInputEvent({
-      createType: params.type ?? 'OS',
+      createType: createType ?? 'OS',
       interaction: 'click',
       label: 'View Code Snippets',
     });
@@ -65,7 +84,7 @@ export const Actions = () => {
       </Button>
       <Button
         buttonType="primary"
-        disabled={isLinodeCreateRestricted || userNeedsToAssignFirewall}
+        disabled={isDisabled || userNeedsToAssignFirewall}
         loading={formState.isSubmitting}
         type="submit"
       >
@@ -76,6 +95,8 @@ export const Actions = () => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
+          isAclpIntegration: aclpBetaServices?.linode?.alerts,
+          isAclpAlertsPreferenceBeta: isAlertsBetaMode,
         })}
       />
     </Box>

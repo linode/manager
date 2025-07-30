@@ -1,4 +1,5 @@
 import type {
+  AlertDefinitionScope,
   AlertServiceType,
   AlertSeverityType,
   ChannelType,
@@ -17,9 +18,11 @@ export interface CreateAlertDefinitionForm
     'rule_criteria' | 'severity' | 'trigger_conditions'
   > {
   entity_ids: string[];
+  regions?: string[];
   rule_criteria: {
     rules: MetricCriteriaForm[];
   };
+  scope?: AlertDefinitionScope | null;
   serviceType: AlertServiceType | null;
   severity: AlertSeverityType | null;
   trigger_conditions: TriggerConditionForm;

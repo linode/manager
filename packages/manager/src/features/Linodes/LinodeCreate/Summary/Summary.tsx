@@ -1,17 +1,13 @@
-import {
-  useImageQuery,
-  usePreferences,
-  useRegionsQuery,
-  useTypeQuery,
-} from '@linode/queries';
+import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
-import { formatStorageUnits, isAclpSupportedRegion } from '@linode/utilities';
+import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { TextTooltip } from 'src/components/TextTooltip';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
@@ -21,7 +17,11 @@ import { getLinodePrice } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
-export const Summary = () => {
+interface SummaryProps {
+  isAlertsBetaMode?: boolean;
+}
+
+export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -69,15 +69,11 @@ export const Summary = () => {
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
-  const flags = useFlags();
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
+  const { aclpBetaServices } = useFlags();
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId,
-    regions,
     type: 'alerts',
   });
 
@@ -103,9 +99,9 @@ export const Summary = () => {
       : firewallId;
 
   const hasBetaAclpAlertsAssigned =
-    flags.aclpBetaServices?.alerts &&
+    aclpBetaServices?.linode?.alerts &&
     isAclpAlertsSupportedRegionLinode &&
-    isAclpAlertsPreferenceBeta;
+    isAlertsBetaMode;
 
   const totalBetaAclpAlertsAssignedCount =
     (alerts?.system?.length ?? 0) + (alerts?.user?.length ?? 0);
@@ -155,7 +151,7 @@ export const Summary = () => {
     },
     {
       item: {
-        title: 'VLAN Attached',
+        title: 'VLAN',
       },
       show: hasVLAN,
     },
@@ -173,9 +169,17 @@ export const Summary = () => {
     },
     {
       item: {
-        title: 'VPC Assigned',
+        title: 'VPC',
       },
       show: hasVPC,
+    },
+    {
+      item: {
+        title: 'Public Internet',
+      },
+      show:
+        isLinodeInterfacesEnabled &&
+        linodeInterfaces?.some((i) => i.purpose === 'public'),
     },
     {
       item: {

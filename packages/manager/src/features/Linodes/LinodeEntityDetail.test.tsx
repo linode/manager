@@ -26,6 +26,18 @@ import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      update_linode: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 beforeAll(() => mockMatchMedia());
 
 describe('Linode Entity Detail', () => {
@@ -325,7 +337,7 @@ describe('Linode Entity Detail', () => {
     });
   });
 
-  it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', () => {
+  it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', async () => {
     // situation where isDiskEncryptionFeatureEnabled === false
     const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
@@ -335,7 +347,7 @@ describe('Linode Entity Detail', () => {
     expect(encryptionStatusFragment).not.toBeInTheDocument();
   });
 
-  it('should display the encryption status of the linode when Disk Encryption is enabled and the user has the account capability', () => {
+  it('should display the encryption status of the linode when Disk Encryption is enabled and the user has the account capability', async () => {
     mocks.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(() => {
       return {
         isDiskEncryptionFeatureEnabled: true,

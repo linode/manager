@@ -230,7 +230,13 @@ describe('Linode Config management', () => {
 
         // Confirm that config is listed as expected, then click "Edit".
         cy.contains(`${config.label} – ${kernel.label}`).should('be.visible');
-        cy.findByText('Edit').click();
+
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode Config ${config.label}`)
+          .should('be.visible')
+          .click();
+
+        ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
         // Enter a new IPAM address for eth1 (VLAN), then click "Save Changes"
         ui.dialog
@@ -290,12 +296,13 @@ describe('Linode Config management', () => {
         interceptRebootLinode(linode.id).as('rebootLinode');
 
         // Confirm that Linode config is listed, then click its "Boot" button.
-        cy.findByText(`${config.label} – ${kernel.label}`)
+        cy.findByText(`${config.label} – ${kernel.label}`).should('be.visible');
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode Config ${config.label}`)
           .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText('Boot').click();
-          });
+          .click();
+
+        ui.actionMenuItem.findByTitle('Boot').should('be.visible').click();
 
         // Proceed through boot confirmation dialog.
         ui.dialog
@@ -349,7 +356,7 @@ describe('Linode Config management', () => {
         'Waiting for 2 Linodes to be created'
       ).then(([sourceLinode, destLinode]: [Linode, Linode]) => {
         const kernel = findKernelById(kernels, 'linode/latest-64bit');
-        const sharedConfigLabel = 'cy-test-sharable-config';
+        const sharedConfigLabel = `${randomLabel()}-shareable`;
 
         cy.visitWithLogin(`/linodes/${sourceLinode.id}/configurations`);
 
@@ -664,13 +671,17 @@ describe('Linode Config management', () => {
 
       // Find configuration in list and click its "Edit" button.
       cy.findByLabelText('List of Configurations').within(() => {
-        cy.findByText(`${mockConfig.label} – ${mockKernel.label}`)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            ui.button.findByTitle('Edit').click();
-          });
+        cy.findByText(`${mockConfig.label} – ${mockKernel.label}`).should(
+          'be.visible'
+        );
       });
+
+      ui.actionMenu
+        .findByTitle(`Action menu for Linode Config ${mockConfig.label}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
       // Set up mocks for config update.
       mockGetVLANs(mockVLANs);
@@ -910,15 +921,18 @@ describe('Linode Config management', () => {
 
         cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
 
-        cy.findByLabelText('List of Configurations')
+        cy.findByLabelText('List of Configurations').should('be.visible');
+
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode Config ${mockConfig.label}`)
           .should('be.visible')
-          .within(() => {
-            ui.button
-              .findByTitle('Edit')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+          .click();
+
+        ui.actionMenuItem
+          .findByTitle('Edit')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
 
         // Confirm absence of the interfaces section when editing an existing config.
         ui.dialog

@@ -2,7 +2,7 @@ import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from '@linode/queries';
-import { Box, Paper, Typography } from '@linode/ui';
+import { Box, Paper, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useFormattedDate } from '@linode/utilities';
 import * as React from 'react';
@@ -26,10 +26,11 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 import {
   COMPLETED_MAINTENANCE_FILTER,
+  getMaintenanceDateField,
+  getMaintenanceDateLabel,
   IN_PROGRESS_MAINTENANCE_FILTER,
-  maintenanceDateColumnMap,
   PENDING_MAINTENANCE_FILTER,
-  SCHEDULED_MAINTENANCE_FILTER,
+  UPCOMING_MAINTENANCE_FILTER,
 } from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
@@ -58,8 +59,8 @@ const useStyles = makeStyles()(() => ({
 export type MaintenanceTableType =
   | 'completed'
   | 'in progress'
-  | 'pending' // TODO VM & Host Maintenance: Remove pending type after GA
-  | 'scheduled';
+  | 'pending'
+  | 'upcoming';
 
 interface Props {
   type: MaintenanceTableType;
@@ -95,7 +96,7 @@ export const MaintenanceTable = ({ type }: Props) => {
   const filters: Record<Props['type'], Filter> = {
     completed: COMPLETED_MAINTENANCE_FILTER,
     'in progress': IN_PROGRESS_MAINTENANCE_FILTER,
-    scheduled: SCHEDULED_MAINTENANCE_FILTER,
+    upcoming: UPCOMING_MAINTENANCE_FILTER,
     pending: PENDING_MAINTENANCE_FILTER,
   };
 
@@ -111,7 +112,11 @@ export const MaintenanceTable = ({ type }: Props) => {
     false
   );
 
-  const { data, error, isLoading } = useAccountMaintenanceQuery(
+  const {
+    data,
+    error,
+    isLoading = true,
+  } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -120,26 +125,50 @@ export const MaintenanceTable = ({ type }: Props) => {
   );
 
   const renderTableContent = () => {
+    const getColumnCount = () => {
+      if (type === 'in progress') {
+        // Entity, Label, Date, Type (hidden smDown), Reason (hidden lgDown)
+        return 5;
+      }
+
+      // For other types: Entity, Label, When (hidden mdDown), Date, Type (hidden smDown), Status, Reason (hidden lgDown)
+      return 7;
+    };
+
+    const columnCount = getColumnCount();
+
     if (isLoading) {
       return (
         <TableRowLoading
-          columns={7}
-          responsive={{
-            2: { smDown: true },
-            3: { xsDown: true },
-            5: { mdDown: true },
-          }}
+          columns={columnCount}
+          responsive={
+            type === 'in progress'
+              ? {
+                  3: { smDown: true }, // Hide Type column on small screens
+                  4: { lgDown: true }, // Hide Reason column on large screens
+                }
+              : {
+                  2: { mdDown: true }, // Hide When column on medium screens
+                  4: { smDown: true }, // Hide Type column on small screens
+                  6: { lgDown: true }, // Hide Reason column on large screens
+                }
+          }
           rows={1}
         />
       );
     }
 
     if (error) {
-      return <TableRowError colSpan={7} message={error[0].reason} />;
+      return <TableRowError colSpan={columnCount} message={error[0].reason} />;
     }
 
     if (data?.results === 0) {
-      return <TableRowEmpty colSpan={7} message={`No ${type} maintenance.`} />;
+      return (
+        <TableRowEmpty
+          colSpan={columnCount}
+          message={`No ${type} maintenance.`}
+        />
+      );
     }
 
     if (data) {
@@ -208,7 +237,7 @@ export const MaintenanceTable = ({ type }: Props) => {
                 >
                   Label
                 </TableCell>
-                {(type === 'scheduled' || type === 'completed') && (
+                {(type === 'upcoming' || type === 'completed') && (
                   <Hidden mdDown>
                     <TableSortCell
                       active={orderBy === 'when'}
@@ -222,13 +251,13 @@ export const MaintenanceTable = ({ type }: Props) => {
                   </Hidden>
                 )}
                 <TableSortCell
-                  active={orderBy === maintenanceDateColumnMap[type][0]}
+                  active={orderBy === getMaintenanceDateField(type)}
                   className={classes.cell}
                   direction={order}
                   handleClick={handleOrderChange}
-                  label={maintenanceDateColumnMap[type][0]}
+                  label={getMaintenanceDateField(type)}
                 >
-                  {maintenanceDateColumnMap[type][1]}
+                  {getMaintenanceDateLabel(type)}
                 </TableSortCell>
               </>
             )}
@@ -272,13 +301,33 @@ export const MaintenanceTable = ({ type }: Props) => {
               </TableSortCell>
             </Hidden>
             {(!flags.vmHostMaintenance?.enabled ||
-              type === 'scheduled' ||
+              type === 'upcoming' ||
               type === 'completed') && (
               <TableSortCell
                 active={orderBy === 'status'}
                 className={classes.cell}
                 direction={order}
                 handleClick={handleOrderChange}
+                iconSlot={
+                  type === 'upcoming' && (
+                    <TooltipIcon
+                      dataTestId="maintenance-status-tooltip"
+                      status="info"
+                      sxTooltipIcon={{
+                        margin: 0,
+                        padding: 0,
+                      }}
+                      text={
+                        <>
+                          Scheduled status refers to an event that is planned to
+                          start at a certain time. <br />
+                          <br /> Pending status refers to an event that has yet
+                          to be completed or decided.
+                        </>
+                      }
+                    />
+                  )
+                }
                 label="status"
               >
                 Status

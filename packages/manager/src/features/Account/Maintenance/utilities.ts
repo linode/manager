@@ -5,15 +5,19 @@ export const COMPLETED_MAINTENANCE_FILTER = Object.freeze({
 });
 
 export const IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
-  status: { '+or': ['in-progress', 'started'] },
+  status: { '+or': ['in_progress', 'started'] },
 });
 
-export const SCHEDULED_MAINTENANCE_FILTER = Object.freeze({
+export const UPCOMING_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['pending', 'scheduled'] },
 });
 
 export const PENDING_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['pending', 'started', 'scheduled'] },
+});
+
+export const PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
+  status: { '+or': ['pending', 'started', 'scheduled', 'in_progress'] },
 });
 
 export const PLATFORM_MAINTENANCE_TYPE =
@@ -30,6 +34,17 @@ export const maintenanceDateColumnMap: Record<
 > = {
   completed: ['complete_time', 'End Date'],
   'in progress': ['start_time', 'Start Date'],
-  scheduled: ['start_time', 'Start Date'],
+  upcoming: ['start_time', 'Start Date'],
   pending: ['when', 'Date'],
+};
+
+// Helper functions for better readability
+export const getMaintenanceDateField = (
+  type: MaintenanceTableType
+): 'complete_time' | 'start_time' | 'when' => {
+  return maintenanceDateColumnMap[type][0];
+};
+
+export const getMaintenanceDateLabel = (type: MaintenanceTableType): string => {
+  return maintenanceDateColumnMap[type][1];
 };

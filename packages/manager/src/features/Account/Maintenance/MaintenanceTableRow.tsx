@@ -19,7 +19,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { maintenanceDateColumnMap } from './utilities';
+import { getMaintenanceDateField } from './utilities';
 
 import type { MaintenanceTableType } from './MaintenanceTable';
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
@@ -74,6 +74,9 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const isTruncated = reason !== truncatedReason;
 
+  const dateField = getMaintenanceDateField(tableType);
+  const dateValue = props.maintenance[dateField];
+
   return (
     <TableRow key={entity.id}>
       <TableCell style={{ textTransform: 'capitalize' }}>
@@ -109,7 +112,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
       {flags.vmHostMaintenance?.enabled && (
         <>
-          {(tableType === 'scheduled' || tableType === 'completed') && (
+          {(tableType === 'upcoming' || tableType === 'completed') && (
             <Hidden mdDown>
               <TableCell data-testid="relative-date">
                 {parseAPIDate(when).toRelative()}
@@ -117,12 +120,9 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
             </Hidden>
           )}
           <TableCell noWrap>
-            {formatDate(
-              props.maintenance[maintenanceDateColumnMap[tableType][0]],
-              {
-                timezone: profile?.timezone,
-              }
-            )}
+            {dateValue
+              ? formatDate(dateValue, { timezone: profile?.timezone })
+              : '—'}
           </TableCell>
         </>
       )}
@@ -146,7 +146,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
         <TableCell noWrap>{getFormattedStatus(type)}</TableCell>
       </Hidden>
       {(!flags.vmHostMaintenance?.enabled ||
-        tableType === 'scheduled' ||
+        tableType === 'upcoming' ||
         tableType === 'completed') && (
         <TableCell statusCell>
           <StatusIcon status={statusIconMap[status] ?? 'other'} />
@@ -155,14 +155,18 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
       )}
       <Hidden lgDown>
         <TableCell>
-          {isTruncated ? (
-            <Tooltip title={<Markdown textOrMarkdown={reason} />}>
-              <div>
-                <Markdown textOrMarkdown={truncatedReason} />
-              </div>
-            </Tooltip>
+          {reason ? (
+            isTruncated ? (
+              <Tooltip title={<Markdown textOrMarkdown={reason} />}>
+                <div>
+                  <Markdown textOrMarkdown={truncatedReason} />
+                </div>
+              </Tooltip>
+            ) : (
+              <Markdown textOrMarkdown={truncatedReason} />
+            )
           ) : (
-            <Markdown textOrMarkdown={truncatedReason} />
+            '—'
           )}
         </TableCell>
       </Hidden>

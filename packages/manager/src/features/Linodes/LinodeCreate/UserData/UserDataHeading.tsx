@@ -3,12 +3,12 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
-import { useLinodeCreateQueryParams } from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 
 import type { LinodeCreateType } from '@linode/utilities';
 
 export const UserDataHeading = () => {
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const warningMessageMap: Record<LinodeCreateType, null | string> = {
     Backups:
@@ -21,14 +21,14 @@ export const UserDataHeading = () => {
     StackScripts: null,
   };
 
-  const warningMessage = params.type ? warningMessageMap[params.type] : null;
+  const warningMessage = createType ? warningMessageMap[createType] : null;
 
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={1}>
         <Typography variant="h2">Add User Data</Typography>
         <TooltipIcon
-          status="help"
+          status="info"
           sxTooltipIcon={{ p: 0 }}
           text={
             <>

@@ -5,11 +5,10 @@ import {
 } from '@linode/queries';
 import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -19,10 +18,13 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
@@ -45,12 +47,18 @@ export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT = (
 
 const LinodeConfigs = () => {
   const theme = useTheme();
-  const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const { isBareMetalInstance } = useLinodeDetailContext();
 
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
 
   const id = Number(linodeId);
+
+  const { permissions } = usePermissions(
+    'linode',
+    ['create_linode_config_profile'],
+    id
+  );
 
   const { data: linode } = useLinodeQuery(id);
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -88,7 +96,12 @@ const LinodeConfigs = () => {
     React.useState(false);
 
   const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
+    navigate({
+      to: `/linodes/$linodeId/configurations/upgrade-interfaces`,
+      params: {
+        linodeId: id,
+      },
+    });
   };
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
@@ -96,6 +109,18 @@ const LinodeConfigs = () => {
   const selectedConfig = configs?.find(
     (config) => config.id === selectedConfigId
   );
+
+  const { sortedData, order, orderBy, handleOrderChange } = useOrderV2({
+    data: configs,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/linodes/$linodeId/configurations',
+    },
+    preferenceKey: 'linode-configs',
+  });
 
   const onBoot = (configId: number) => {
     setSelectedConfigId(configId);
@@ -116,6 +141,10 @@ const LinodeConfigs = () => {
     setSelectedConfigId(undefined);
     setIsLinodeConfigDialogOpen(true);
   };
+
+  if (isBareMetalInstance) {
+    return null;
+  }
 
   return (
     <>
@@ -155,101 +184,99 @@ const LinodeConfigs = () => {
               Upgrade Interfaces
             </Button>
           )}
-        <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
+        <Button
+          buttonType="primary"
+          disabled={!permissions.create_linode_config_profile}
+          onClick={onCreate}
+        >
           Add Configuration
         </Button>
       </Box>
-      <OrderBy data={configs ?? []} order={'asc'} orderBy={'label'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData} scrollToRef={configsPanel}>
-            {({
-              count,
-              data: paginatedData,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => {
-              return (
-                <React.Fragment>
-                  <Table aria-label="List of Configurations">
-                    <TableHead>
-                      <TableRow>
-                        <TableSortCell
-                          active={orderBy === 'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          label={'label'}
-                          sx={{
-                            ...theme.applyTableHeaderStyles,
-                            width: '35%',
-                          }}
-                        >
-                          <strong>Configuration</strong>
-                        </TableSortCell>
-                        <TableCell
-                          sx={{
-                            font: theme.font.bold,
-                            width: isLegacyConfigInterface ? '25%' : '55%',
-                          }}
-                        >
-                          Disks
-                        </TableCell>
-                        {isLegacyConfigInterface && (
-                          <TableCell
-                            sx={{
-                              font: theme.font.bold,
-                              width: '30%',
-                            }}
-                          >
-                            Network Interfaces
-                          </TableCell>
-                        )}
-                        <TableCell sx={{ width: '10%' }} />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={error ?? undefined}
-                        length={paginatedData.length}
-                        loading={isLoading}
-                        loadingProps={{
-                          columns: 4,
+      <Paginate data={sortedData ?? []} scrollToRef={configsPanel}>
+        {({
+          count,
+          data: paginatedData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => {
+          return (
+            <React.Fragment>
+              <Table aria-label="List of Configurations">
+                <TableHead>
+                  <TableRow>
+                    <TableSortCell
+                      active={orderBy === 'label'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'label'}
+                      sx={{
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      }}
+                    >
+                      <strong>Configuration</strong>
+                    </TableSortCell>
+                    <TableCell
+                      sx={{
+                        font: theme.font.bold,
+                        width: isLegacyConfigInterface ? '25%' : '55%',
+                      }}
+                    >
+                      Disks
+                    </TableCell>
+                    {isLegacyConfigInterface && (
+                      <TableCell
+                        sx={{
+                          font: theme.font.bold,
+                          width: '30%',
                         }}
                       >
-                        {paginatedData.map((thisConfig) => {
-                          return (
-                            <ConfigRow
-                              config={thisConfig}
-                              key={`config-row-${thisConfig.id}`}
-                              linodeId={id}
-                              onBoot={() => onBoot(thisConfig.id)}
-                              onDelete={() => onDelete(thisConfig.id)}
-                              onEdit={() => onEdit(thisConfig.id)}
-                              readOnly={isReadOnly}
-                            />
-                          );
-                        })}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                  <PaginationFooter
-                    count={count}
-                    eventCategory="linode configs"
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                  />
-                </React.Fragment>
-              );
-            }}
-          </Paginate>
-        )}
-      </OrderBy>
+                        Network Interfaces
+                      </TableCell>
+                    )}
+                    <TableCell sx={{ width: '10%' }} />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableContentWrapper
+                    error={error ?? undefined}
+                    length={paginatedData.length}
+                    loading={isLoading}
+                    loadingProps={{
+                      columns: 4,
+                    }}
+                  >
+                    {paginatedData.map((thisConfig) => {
+                      return (
+                        <ConfigRow
+                          config={thisConfig}
+                          key={`config-row-${thisConfig.id}`}
+                          linodeId={id}
+                          onBoot={() => onBoot(thisConfig.id)}
+                          onDelete={() => onDelete(thisConfig.id)}
+                          onEdit={() => onEdit(thisConfig.id)}
+                        />
+                      );
+                    })}
+                  </TableContentWrapper>
+                </TableBody>
+              </Table>
+              <PaginationFooter
+                count={count}
+                eventCategory="linode configs"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </React.Fragment>
+          );
+        }}
+      </Paginate>
       <LinodeConfigDialog
         config={selectedConfig}
-        isReadOnly={isReadOnly}
         linodeId={id}
         onClose={() => setIsLinodeConfigDialogOpen(false)}
         open={isLinodeConfigDialogOpen}

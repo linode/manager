@@ -1,37 +1,43 @@
-import { Stack } from '@linode/ui';
+import { destinationType, streamType } from '@linode/api-v4';
+import { useCreateStreamMutation } from '@linode/queries';
+import { omitProps, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
+import { StreamCreateSubmitBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateSubmitBar';
+import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import { StreamCreateCheckoutBar } from './StreamCreateCheckoutBar';
-import { StreamCreateDataSet } from './StreamCreateDataSet';
+import { StreamCreateClusters } from './StreamCreateClusters';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import {
-  type CreateStreamForm,
-  destinationType,
-  eventType,
-  streamType,
-} from './types';
+
+import type { CreateStreamPayload } from '@linode/api-v4';
+import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 export const StreamCreate = () => {
-  const { classes } = useStyles();
+  const { mutateAsync: createStream } = useCreateStreamMutation();
+  const navigate = useNavigate();
+
   const form = useForm<CreateStreamForm>({
     defaultValues: {
       type: streamType.AuditLogs,
-      [eventType.Authorization]: false,
-      [eventType.Authentication]: false,
-      [eventType.Configuration]: false,
       destination_type: destinationType.LinodeObjectStorage,
       region: '',
+      details: {
+        is_auto_add_all_clusters_enabled: false,
+      },
     },
   });
 
-  const { handleSubmit } = form;
+  const { control, handleSubmit } = form;
+  const selectedStreamType = useWatch({
+    control,
+    name: 'type',
+  });
 
   const landingHeaderProps = {
     breadcrumbProps: {
@@ -39,6 +45,7 @@ export const StreamCreate = () => {
       crumbOverrides: [
         {
           label: 'DataStream',
+          linkTo: '/datastream/streams',
           position: 1,
         },
       ],
@@ -47,24 +54,47 @@ export const StreamCreate = () => {
     title: 'Create Stream',
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    const { label, type, destinations, details } = form.getValues();
+    const payload: CreateStreamPayload = {
+      label,
+      type,
+      destinations,
+    };
+    if (type === streamType.LKEAuditLogs && details) {
+      if (details.is_auto_add_all_clusters_enabled) {
+        payload['details'] = omitProps(details, ['cluster_ids']);
+      } else {
+        payload['details'] = omitProps(details, [
+          'is_auto_add_all_clusters_enabled',
+        ]);
+      }
+    }
+
+    createStream(payload).then(() => {
+      sendCreateStreamEvent('Stream Create Page');
+      navigate({ to: '/datastream/streams' });
+    });
+  };
 
   return (
     <>
       <DocumentTitleSegment segment="Create Stream" />
       <LandingHeader {...landingHeaderProps} />
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid className={classes.root} container>
-            <Grid className="mlMain">
+        <form>
+          <Grid container spacing={2}>
+            <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
               <Stack spacing={2}>
                 <StreamCreateGeneralInfo />
-                <StreamCreateDataSet />
+                {selectedStreamType === streamType.LKEAuditLogs && (
+                  <StreamCreateClusters />
+                )}
                 <StreamCreateDelivery />
               </Stack>
             </Grid>
-            <Grid className="mlSidebar">
-              <StreamCreateCheckoutBar />
+            <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
+              <StreamCreateSubmitBar createStream={handleSubmit(onSubmit)} />
             </Grid>
           </Grid>
         </form>

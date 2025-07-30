@@ -6,7 +6,6 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -27,6 +26,7 @@ import {
   getLinodeInterfacePrimaryIPv4,
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
+import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import {
   ConfigInterfaceFirewallCell,
@@ -165,7 +165,6 @@ export const SubnetLinodeRow = (props: Props) => {
       >
         <TooltipIcon
           icon={<StyledWarningIcon />}
-          status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
           text={
             <Typography>
@@ -203,7 +202,7 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {'Reboot Needed'}
             <TooltipIcon
-              status="help"
+              status="info"
               sxTooltipIcon={{ paddingRight: 0 }}
               text={VPC_REBOOT_MESSAGE}
             />
@@ -268,35 +267,16 @@ export const SubnetLinodeRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell noWrap>
         {!isVPCLKEEnterpriseCluster && (
-          <>
-            {isRebootNeeded && (
-              <InlineMenuAction
-                actionText="Reboot"
-                disabled={isVPCLKEEnterpriseCluster}
-                onClick={() => {
-                  handlePowerActionsLinode(linode, 'Reboot', subnet);
-                }}
-              />
-            )}
-            {showPowerButton && (
-              <InlineMenuAction
-                actionText={isOffline ? 'Power On' : 'Power Off'}
-                disabled={isVPCLKEEnterpriseCluster}
-                onClick={() => {
-                  handlePowerActionsLinode(
-                    linode,
-                    isOffline ? 'Power On' : 'Power Off',
-                    subnet
-                  );
-                }}
-              />
-            )}
-            <InlineMenuAction
-              actionText="Unassign Linode"
-              disabled={isVPCLKEEnterpriseCluster}
-              onClick={() => handleUnassignLinode(linode, subnet)}
-            />
-          </>
+          <SubnetLinodeActionMenu
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isOffline={isOffline}
+            isRebootNeeded={isRebootNeeded}
+            isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+            linode={linode}
+            showPowerButton={showPowerButton}
+            subnet={subnet}
+          />
         )}
       </TableCell>
     </TableRow>
@@ -340,7 +320,7 @@ const getSubnetLinodeIPCellString = (
 
     return (
       <span key={interfaceData.id}>
-        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? 'None'}
+        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? '—'}
       </span>
     );
   }
@@ -357,7 +337,7 @@ const getIPLinkForConfigInterface = (
         <span key={configInterface.id}>
           {ipType === 'ipv4'
             ? configInterface.ipv4?.vpc
-            : (configInterface.ipv6?.slaac[0]?.address ?? 'None')}
+            : (configInterface.ipv6?.slaac[0]?.address ?? '—')}
         </span>
       )}
     </>
@@ -401,15 +381,27 @@ const getIPRangesCellContents = (
         .map((rangeObj) => rangeObj.range)
         .filter((range) => range !== undefined) ?? [];
 
-    return determineNoneSingleOrMultipleWithChip(ipv6Ranges);
+    const noneSingleOrMultipleWithChipIPV6 =
+      determineNoneSingleOrMultipleWithChip(ipv6Ranges);
+
+    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
+    return noneSingleOrMultipleWithChipIPV6 === 'None'
+      ? '—'
+      : noneSingleOrMultipleWithChipIPV6;
   } else {
     const linodeInterfaceVPCRanges =
       ipType === 'ipv4'
         ? getLinodeInterfaceIPv4Ranges(interfaceData)
         : getLinodeInterfaceIPv6Ranges(interfaceData);
-    return determineNoneSingleOrMultipleWithChip(
+
+    const noneSingleOrMultipleWithChip = determineNoneSingleOrMultipleWithChip(
       linodeInterfaceVPCRanges ?? []
     );
+
+    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
+    return ipType === 'ipv6' && noneSingleOrMultipleWithChip === 'None'
+      ? '—'
+      : noneSingleOrMultipleWithChip;
   }
 };
 
@@ -423,23 +415,21 @@ export const SubnetLinodeTableRowHead = (
       <TableCell>VPC IPv4</TableCell>
     </Hidden>
     <Hidden smDown>
-      <TableCell>
-        {`${vpcIPv6FeatureFlag ? 'Linode' : 'VPC'}`} IPv4 Ranges
-      </TableCell>
+      <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
     {vpcIPv6FeatureFlag && (
-      <Hidden smDown>
-        <TableCell>VPC IPv6</TableCell>
-      </Hidden>
-    )}
-    {vpcIPv6FeatureFlag && (
-      <Hidden smDown>
-        <TableCell>Linode IPv6 Ranges</TableCell>
-      </Hidden>
+      <>
+        <Hidden smDown>
+          <TableCell>VPC IPv6</TableCell>
+        </Hidden>
+        <Hidden smDown>
+          <TableCell>VPC IPv6 Ranges</TableCell>
+        </Hidden>
+      </>
     )}
     <Hidden smDown>
-      <TableCell>Firewalls</TableCell>
+      <TableCell sx={{ width: '18%' }}>Firewalls</TableCell>
     </Hidden>
-    <TableCell />
+    <TableCell sx={{ width: '10%' }} />
   </TableRow>
 );

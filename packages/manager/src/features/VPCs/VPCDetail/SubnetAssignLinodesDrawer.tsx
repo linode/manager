@@ -542,7 +542,7 @@ export const SubnetAssignLinodesDrawer = (
                 }
                 sx={{ marginRight: 0 }}
               />
-              <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
             {!autoAssignVPCIPAddresses && (
               <TextField

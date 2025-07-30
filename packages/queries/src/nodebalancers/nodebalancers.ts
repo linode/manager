@@ -81,10 +81,6 @@ export const useNodebalancerDeleteMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteNodeBalancer(id),
     onSuccess() {
-      // Remove NodeBalancer queries for this specific NodeBalancer
-      queryClient.removeQueries({
-        queryKey: nodebalancerQueries.nodebalancer(id).queryKey,
-      });
       // Invalidate paginated stores
       queryClient.invalidateQueries({
         queryKey: nodebalancerQueries.nodebalancers.queryKey,
@@ -258,9 +254,13 @@ export const useAllNodeBalancerConfigsQuery = (id: number) =>
   });
 
 // Please don't use
-export const useAllNodeBalancersQuery = (enabled = true) =>
+export const useAllNodeBalancersQuery = (
+  enabled = true,
+  params: Params = {},
+  filter: Filter = {},
+) =>
   useQuery<NodeBalancer[], APIError[]>({
-    ...nodebalancerQueries.nodebalancers._ctx.all,
+    ...nodebalancerQueries.nodebalancers._ctx.all(params, filter),
     enabled,
   });
 

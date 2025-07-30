@@ -123,180 +123,176 @@ export const Metric = (props: MetricCriteriaProps) => {
         p: 2,
       })}
     >
-      <Box display="flex" flexDirection="column" gap={1}>
-        <Box display="flex" justifyContent="space-between">
-          <Typography variant="h3">Metric Threshold</Typography>
-          {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
-        </Box>
+      <Box display="flex" justifyContent="space-between">
+        <Typography variant="h3">Metric Threshold</Typography>
+        {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
+      </Box>
 
-        <GridLegacy container spacing={2}>
-          <GridLegacy item lg={3} md={4} sm={6} xs={12}>
+      <GridLegacy container spacing={2}>
+        <GridLegacy item lg={3} md={4} sm={6} xs={12}>
+          <Controller
+            control={control}
+            name={`${name}.metric`}
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                data-qa-metric-threshold={`${name}-data-field`}
+                data-testid="data-field"
+                disabled={!serviceWatcher}
+                errorText={
+                  fieldState.error?.message ??
+                  (isMetricDefinitionError ? 'Error in fetching the data.' : '')
+                }
+                label="Data Field"
+                loading={isMetricDefinitionLoading}
+                noMarginTop
+                onBlur={field.onBlur}
+                onChange={(
+                  _,
+                  newValue: {
+                    label: string;
+                    value: string;
+                  },
+                  reason
+                ) => {
+                  handleDataFieldChange(newValue, reason);
+                }}
+                options={metricOptions}
+                placeholder="Select a Data Field"
+                size="medium"
+                textFieldProps={{
+                  labelTooltipText:
+                    'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
+                }}
+                value={
+                  metricOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
+                }
+              />
+            )}
+          />
+        </GridLegacy>
+        <GridLegacy item lg={3} md={4} sm={6} xs={12}>
+          <Controller
+            control={control}
+            name={`${name}.aggregate_function`}
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                data-qa-metric-threshold={`${name}-aggregation-type`}
+                data-testid="aggregation-type"
+                disabled={aggOptions.length === 0}
+                errorText={fieldState.error?.message}
+                key={metricWatcher}
+                label="Aggregation Type"
+                noMarginTop
+                onBlur={field.onBlur}
+                onChange={(
+                  _,
+                  newValue: { label: string; value: MetricAggregationType },
+                  operation
+                ) => {
+                  field.onChange(
+                    operation === 'selectOption' ? newValue.value : null
+                  );
+                }}
+                options={aggOptions}
+                placeholder="Select an Aggregation Type"
+                sx={{ paddingTop: { sm: 0.5, xs: 0 } }}
+                value={
+                  aggOptions.find((option) => option.value === field.value) ??
+                  null
+                }
+              />
+            )}
+          />
+        </GridLegacy>
+        <GridLegacy item lg={3} md={4} sm={6} xs={12}>
+          <Controller
+            control={control}
+            name={`${name}.operator`}
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                data-qa-metric-threshold={`${name}-operator`}
+                data-testid="operator"
+                disabled={!metricWatcher}
+                errorText={fieldState.error?.message}
+                key={metricWatcher}
+                label="Operator"
+                noMarginTop
+                onBlur={field.onBlur}
+                onChange={(
+                  _,
+                  selected: { label: string; value: MetricOperatorType },
+                  operation
+                ) => {
+                  field.onChange(
+                    operation === 'selectOption' ? selected.value : null
+                  );
+                }}
+                options={metricOperatorOptions}
+                placeholder="Select an Operator"
+                sx={{ paddingTop: { sm: 0.5, xs: 0 } }}
+                value={
+                  field.value !== null
+                    ? metricOperatorOptions.find(
+                        (option) => option.value === field.value
+                      )
+                    : null
+                }
+              />
+            )}
+          />
+        </GridLegacy>
+        <GridLegacy item lg={3} md={2} sm={6} xs={12}>
+          <Box display="flex" gap={1}>
             <Controller
               control={control}
-              name={`${name}.metric`}
+              name={`${name}.threshold`}
               render={({ field, fieldState }) => (
-                <Autocomplete
-                  data-qa-metric-threshold={`${name}-data-field`}
-                  data-testid="data-field"
-                  disabled={!serviceWatcher}
-                  errorText={
-                    fieldState.error?.message ??
-                    (isMetricDefinitionError
-                      ? 'Error in fetching the data.'
-                      : '')
-                  }
-                  label="Data Field"
-                  loading={isMetricDefinitionLoading}
-                  noMarginTop
-                  onBlur={field.onBlur}
-                  onChange={(
-                    _,
-                    newValue: {
-                      label: string;
-                      value: string;
-                    },
-                    reason
-                  ) => {
-                    handleDataFieldChange(newValue, reason);
+                <TextField
+                  containerProps={{
+                    sx: { paddingTop: 0.5 },
                   }}
-                  options={metricOptions}
-                  placeholder="Select a Data Field"
-                  size="medium"
-                  textFieldProps={{
-                    labelTooltipText:
-                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
-                  }}
-                  value={
-                    metricOptions.find(
-                      (option) => option.value === field.value
-                    ) ?? null
-                  }
-                />
-              )}
-            />
-          </GridLegacy>
-          <GridLegacy item lg={3} md={4} sm={6} xs={12}>
-            <Controller
-              control={control}
-              name={`${name}.aggregate_function`}
-              render={({ field, fieldState }) => (
-                <Autocomplete
-                  data-qa-metric-threshold={`${name}-aggregation-type`}
-                  data-testid="aggregation-type"
-                  disabled={aggOptions.length === 0}
-                  errorText={fieldState.error?.message}
-                  key={metricWatcher}
-                  label="Aggregation Type"
-                  noMarginTop
-                  onBlur={field.onBlur}
-                  onChange={(
-                    _,
-                    newValue: { label: string; value: MetricAggregationType },
-                    operation
-                  ) => {
-                    field.onChange(
-                      operation === 'selectOption' ? newValue.value : null
-                    );
-                  }}
-                  options={aggOptions}
-                  placeholder="Select an Aggregation Type"
-                  sx={{ paddingTop: { sm: 1, xs: 0 } }}
-                  value={
-                    aggOptions.find((option) => option.value === field.value) ??
-                    null
-                  }
-                />
-              )}
-            />
-          </GridLegacy>
-          <GridLegacy item lg={3} md={4} sm={6} xs={12}>
-            <Controller
-              control={control}
-              name={`${name}.operator`}
-              render={({ field, fieldState }) => (
-                <Autocomplete
-                  data-qa-metric-threshold={`${name}-operator`}
-                  data-testid="operator"
+                  data-qa-metric-threshold={`${name}-threshold`}
+                  data-qa-threshold="threshold"
+                  data-testid="threshold"
                   disabled={!metricWatcher}
                   errorText={fieldState.error?.message}
-                  key={metricWatcher}
-                  label="Operator"
+                  label="Threshold"
+                  max={Number.MAX_SAFE_INTEGER}
+                  min={0}
+                  name={`${name}.threshold`}
                   noMarginTop
                   onBlur={field.onBlur}
-                  onChange={(
-                    _,
-                    selected: { label: string; value: MetricOperatorType },
-                    operation
-                  ) => {
-                    field.onChange(
-                      operation === 'selectOption' ? selected.value : null
-                    );
-                  }}
-                  options={metricOperatorOptions}
-                  placeholder="Select an Operator"
-                  sx={{ paddingTop: { sm: 1, xs: 0 } }}
-                  value={
-                    field.value !== null
-                      ? metricOperatorOptions.find(
-                          (option) => option.value === field.value
-                        )
-                      : null
+                  onChange={(e) => field.onChange(e.target.value)}
+                  onWheel={(event: React.SyntheticEvent<Element, Event>) =>
+                    event.target instanceof HTMLElement && event.target.blur()
                   }
+                  sx={{
+                    height: '34px',
+                  }}
+                  type="number"
+                  value={field.value ?? 0}
                 />
               )}
             />
-          </GridLegacy>
-          <GridLegacy item lg={3} md={2} sm={6} xs={12}>
-            <Box display="flex" gap={1}>
-              <Controller
-                control={control}
-                name={`${name}.threshold`}
-                render={({ field, fieldState }) => (
-                  <TextField
-                    containerProps={{
-                      sx: { paddingTop: 1 },
-                    }}
-                    data-qa-metric-threshold={`${name}-threshold`}
-                    data-qa-threshold="threshold"
-                    data-testid="threshold"
-                    disabled={!metricWatcher}
-                    errorText={fieldState.error?.message}
-                    label="Threshold"
-                    max={Number.MAX_SAFE_INTEGER}
-                    min={0}
-                    name={`${name}.threshold`}
-                    noMarginTop
-                    onBlur={field.onBlur}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    onWheel={(event: React.SyntheticEvent<Element, Event>) =>
-                      event.target instanceof HTMLElement && event.target.blur()
-                    }
-                    sx={{
-                      height: '34px',
-                    }}
-                    type="number"
-                    value={field.value ?? 0}
-                  />
-                )}
-              />
-              <Typography
-                sx={{
-                  alignItems: 'flex-end',
-                  display: 'flex',
-                  height: '56px',
-                  marginTop: { lg: '5px', md: '5px', sm: '5px' },
-                }}
-                variant="body1"
-              >
-                {/* There are discussions going on with the UX and within the team about the
-                 * units being outside of the TextField or inside as an adornments
-                 */}
-                {unit}
-              </Typography>
-            </Box>
-          </GridLegacy>
+            <Typography
+              sx={{
+                alignItems: 'flex-end',
+                display: 'flex',
+                height: '56px',
+                marginTop: { lg: '1px', md: '1px', sm: '1px' },
+              }}
+              variant="body1"
+            >
+              {/* There are discussions going on with the UX and within the team about the
+               * units being outside of the TextField or inside as an adornments
+               */}
+              {unit}
+            </Typography>
+          </Box>
         </GridLegacy>
-      </Box>
+      </GridLegacy>
       <DimensionFilters
         dataFieldDisabled={metricWatcher === null}
         dimensionOptions={selectedMetric?.dimensions ?? []}

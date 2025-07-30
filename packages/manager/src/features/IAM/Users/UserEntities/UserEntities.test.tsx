@@ -6,7 +6,7 @@ import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
@@ -74,7 +74,7 @@ describe('UserEntities', () => {
       }),
     });
 
-    await renderWithThemeAndRouter(<UserEntities />);
+    renderWithTheme(<UserEntities />);
     expect(screen.getByText('This list is empty')).toBeVisible();
 
     expect(screen.queryByText('Assign New Roles')).toBeNull();
@@ -89,7 +89,7 @@ describe('UserEntities', () => {
       }),
     });
 
-    await renderWithThemeAndRouter(<UserEntities />);
+    renderWithTheme(<UserEntities />);
 
     expect(screen.getByText('This list is empty')).toBeVisible();
 
@@ -111,7 +111,7 @@ describe('UserEntities', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    await renderWithThemeAndRouter(<UserEntities />);
+    renderWithTheme(<UserEntities />);
 
     expect(screen.queryByText('Assign New Roles')).toBeNull();
 
@@ -125,7 +125,7 @@ describe('UserEntities', () => {
 
     await userEvent.click(actionMenuButton);
     expect(screen.getByText('Change Role')).toBeVisible();
-    expect(screen.getByText('Remove')).toBeVisible();
+    expect(screen.getByText('Remove Assignment')).toBeVisible();
   });
 
   it('should show error state when api fails', () => {
@@ -136,7 +136,7 @@ describe('UserEntities', () => {
       status: 'error',
     });
 
-    renderWithThemeAndRouter(<UserEntities />);
+    renderWithTheme(<UserEntities />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });

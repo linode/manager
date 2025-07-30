@@ -1,60 +1,35 @@
-import {
-  useLinodeQuery,
-  usePreferences,
-  useRegionsQuery,
-  useTypeQuery,
-} from '@linode/queries';
+import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
-import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
-import * as React from 'react';
 import {
-  matchPath,
-  useHistory,
+  Outlet,
+  useLocation,
+  useNavigate,
   useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+} from '@tanstack/react-router';
+import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
+import { useTabs } from 'src/hooks/useTabs';
 
-const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
-const LinodeNetworking = React.lazy(() =>
-  import('./LinodeNetworking/LinodeNetworking').then((module) => ({
-    default: module.LinodeNetworking,
-  }))
-);
-const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
-const LinodeConfigurations = React.lazy(
-  () => import('./LinodeConfigs/LinodeConfigs')
-);
-const LinodeBackup = React.lazy(() => import('./LinodeBackup/LinodeBackups'));
-const LinodeActivity = React.lazy(
-  () => import('./LinodeActivity/LinodeActivity')
-);
-const LinodeAlerts = React.lazy(() => import('./LinodeAlerts/LinodeAlerts'));
-const LinodeSettings = React.lazy(
-  () => import('./LinodeSettings/LinodeSettings')
-);
+import { LinodesDetailContext } from './LinodesDetailContext';
 
 const LinodesDetailNavigation = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
+  const location = useLocation();
+  const navigate = useNavigate();
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
-  const { url } = useRouteMatch();
-  const history = useHistory();
-  const flags = useFlags();
-  const { data: aclpPreferences } = usePreferences((preferences) => ({
-    isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
-    isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
-  }));
+  const { aclpBetaServices } = useFlags();
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -64,91 +39,79 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
-  const { data: regions } = useRegionsQuery();
-
-  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpMetricsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
-    regions,
     type: 'metrics',
   });
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
-    regions,
     type: 'alerts',
   });
+  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsBeta
+  );
 
-  const tabs = [
+  // In Edit flow, default alert mode is based on Linode's ACLP subscription status
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linode?.id, 'beta');
+  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
+    React.useState<boolean>(isLinodeAclpSubscribed);
+
+  const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       chip:
-        flags.aclpBetaServices?.metrics &&
+        aclpBetaServices?.linode?.metrics &&
         isAclpMetricsSupportedRegionLinode &&
-        aclpPreferences?.isAclpMetricsPreferenceBeta ? (
+        isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
-      routeName: `${url}/metrics`,
+      to: '/linodes/$linodeId/metrics',
       title: 'Metrics',
     },
     {
-      routeName: `${url}/networking`,
+      to: '/linodes/$linodeId/networking',
       title: 'Network',
     },
     {
-      hidden: isBareMetalInstance,
-      routeName: `${url}/storage`,
+      hide: isBareMetalInstance,
+      to: '/linodes/$linodeId/storage',
       title: 'Storage',
     },
     {
-      hidden: isBareMetalInstance,
-      routeName: `${url}/configurations`,
+      hide: isBareMetalInstance,
+      to: '/linodes/$linodeId/configurations',
       title: 'Configurations',
     },
     {
-      hidden: isBareMetalInstance,
-      routeName: `${url}/backup`,
+      hide: isBareMetalInstance,
+      to: '/linodes/$linodeId/backup',
       title: 'Backups',
     },
     {
-      routeName: `${url}/activity`,
+      to: '/linodes/$linodeId/activity',
       title: 'Activity Feed',
     },
     {
       chip:
-        flags.aclpBetaServices?.alerts &&
+        aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode &&
-        aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+        isAclpAlertsBetaEditFlow ? (
           <BetaChip />
         ) : null,
-      routeName: `${url}/alerts`,
+      to: '/linodes/$linodeId/alerts',
       title: 'Alerts',
     },
     {
-      routeName: `${url}/settings`,
+      to: '/linodes/$linodeId/settings',
       title: 'Settings',
     },
-  ].filter((thisTab) => !thisTab.hidden);
+  ]);
 
-  const matches = (p: string) => {
-    return (
-      Boolean(matchPath(p, { path: location.pathname })) ||
-      location.pathname.includes(p)
-    );
-  };
-
-  const getIndex = () => {
-    return Math.max(
-      tabs.findIndex((tab) => matches(tab.routeName)),
-      0
-    );
-  };
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  let idx = 0;
+  if (location.pathname === `/linodes/${linodeId}`) {
+    navigate({ to: '/linodes/$linodeId/metrics', params: { linodeId } });
+  }
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -159,11 +122,17 @@ const LinodesDetailNavigation = () => {
   }
 
   return (
-    <>
+    <LinodesDetailContext.Provider
+      value={{
+        isBareMetalInstance,
+        isAlertsBetaMode: {
+          get: isAclpAlertsBetaEditFlow,
+          set: setIsAclpAlertsBetaEditFlow,
+        },
+      }}
+    >
       <DocumentTitleSegment
-        segment={`${linode?.label} - ${
-          tabs[getIndex()]?.title ?? 'Detail View'
-        }`}
+        segment={`${linode?.label} - ${tabs[tabIndex]?.title} - Detail View`}
       />
       <SMTPRestrictionText
         linode={linode}
@@ -182,54 +151,16 @@ const LinodesDetailNavigation = () => {
         }
       </SMTPRestrictionText>
       <div style={{ marginTop: 8 }}>
-        <Tabs index={getIndex()} onChange={navToURL}>
-          <TabLinkList tabs={tabs} />
+        <Tabs index={tabIndex} onChange={handleTabChange}>
+          <TanStackTabLinkList tabs={tabs} />
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              <SafeTabPanel index={idx++}>
-                <LinodeMetrics
-                  isAclpMetricsSupportedRegionLinode={
-                    isAclpMetricsSupportedRegionLinode
-                  }
-                  linodeCreated={linode?.created}
-                  linodeId={id}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
-              </SafeTabPanel>
-              {isBareMetalInstance ? null : (
-                <>
-                  <SafeTabPanel index={idx++}>
-                    <LinodeStorage />
-                  </SafeTabPanel>
-                  <SafeTabPanel index={idx++}>
-                    <LinodeConfigurations />
-                  </SafeTabPanel>
-
-                  <SafeTabPanel index={idx++}>
-                    <LinodeBackup />
-                  </SafeTabPanel>
-                </>
-              )}
-              <SafeTabPanel index={idx++}>
-                <LinodeActivity />
-              </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
-                <LinodeAlerts
-                  isAclpAlertsSupportedRegionLinode={
-                    isAclpAlertsSupportedRegionLinode
-                  }
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
-                <LinodeSettings />
-              </SafeTabPanel>
+              <Outlet />
             </TabPanels>
           </React.Suspense>
         </Tabs>
       </div>
-    </>
+    </LinodesDetailContext.Provider>
   );
 };
 

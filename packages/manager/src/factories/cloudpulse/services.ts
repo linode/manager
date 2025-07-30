@@ -1,15 +1,17 @@
+import { type Service } from '@linode/api-v4';
 import { Factory } from '@linode/utilities';
 
-import type { ServiceTypes } from '@linode/api-v4';
+import type { ServiceAlert } from '@linode/api-v4';
 
-export const serviceTypesFactory = Factory.Sync.makeFactory<ServiceTypes>({
+export const serviceAlertFactory = Factory.Sync.makeFactory<ServiceAlert>({
+  evaluation_period_seconds: [300, 900, 1800, 3600],
+  polling_interval_seconds: [300, 900, 1800, 3600],
+  scope: ['entity', 'region', 'account'],
+});
+
+export const serviceTypesFactory = Factory.Sync.makeFactory<Service>({
   label: Factory.each((i) => `Factory ServiceType-${i}`),
   service_type: Factory.each((i) => `Factory ServiceType-${i}`),
-  is_beta: false,
   regions: '*',
-  alert: {
-    polling_interval_seconds: [1, 5, 10, 15],
-    evaluation_periods_seconds: [5, 10, 15, 20],
-    scope: ['entity', 'region', 'account'],
-  },
+  alert: serviceAlertFactory.build(),
 });

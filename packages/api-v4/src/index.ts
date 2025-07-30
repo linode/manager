@@ -2,9 +2,13 @@ export * from './account';
 
 export * from './betas';
 
+export * from './cloudnat';
+
 export * from './cloudpulse';
 
 export * from './databases';
+
+export * from './datastream';
 
 export * from './domains';
 

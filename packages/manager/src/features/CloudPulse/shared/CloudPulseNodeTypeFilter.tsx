@@ -1,7 +1,6 @@
+import { useAllDatabasesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 
 import { PRIMARY_NODE } from '../Utils/constants';
 
@@ -116,6 +115,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
     };
 
     const availableOptions = getNodeTypeOptions(isClusterSizeGreaterThanOne);
+    const databaseIdsKey = database_ids?.sort().join(','); // sort and join database ids to create a unique key for the effect
 
     React.useEffect(() => {
       // when savePreferences is false, we retain the primary selection as default selected value
@@ -145,7 +145,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
         handleNodeTypeChange(undefined, []);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savePreferences, database_ids?.sort().join(',')]);
+    }, [savePreferences, isClusterSizeGreaterThanOne, databaseIdsKey]);
 
     return (
       <Autocomplete

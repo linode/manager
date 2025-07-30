@@ -9,6 +9,7 @@ import {
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { randomLabel } from 'support/util/random';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -38,11 +39,6 @@ const DISK_RESIZE_SIZE_MB = 768;
  */
 const deleteInUseDisk = (diskName: string) => {
   waitForProvision();
-
-  ui.actionMenu
-    .findByTitle(`Action menu for Disk ${diskName}`)
-    .should('be.visible')
-    .click();
 
   ui.actionMenuItem
     .findByTitle('Delete')
@@ -150,8 +146,13 @@ describe('linode storage tab', () => {
       ui.button.findByTitle('Add a Disk').should('be.disabled');
 
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
-        cy.contains('Resize').should('be.disabled');
+        ui.actionMenu
+          .findByTitle(`Action menu for Disk ${diskName}`)
+          .should('be.visible')
+          .click();
       });
+
+      ui.actionMenuItem.findByTitle('Resize').should('be.disabled');
 
       deleteInUseDisk(diskName);
 
@@ -165,7 +166,7 @@ describe('linode storage tab', () => {
    * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
    */
   it('delete disk', () => {
-    const diskName = 'cy-test-disk';
+    const diskName = randomLabel();
     cy.defer(() => createTestLinode({ image: null })).then((linode) => {
       interceptDeleteDisks(linode.id).as('deleteDisk');
       interceptAddDisks(linode.id).as('addDisk');
@@ -202,7 +203,7 @@ describe('linode storage tab', () => {
    * - Confirms that Cloud Manager UI automatically updates to reflect new disk.
    */
   it('add a disk', () => {
-    const diskName = 'cy-test-disk';
+    const diskName = randomLabel();
     cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
       interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
@@ -237,8 +238,13 @@ describe('linode storage tab', () => {
       });
 
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
-        cy.findByText('Resize').should('be.visible').click();
+        ui.actionMenu
+          .findByTitle(`Action menu for Disk ${diskName}`)
+          .should('be.visible')
+          .click();
       });
+
+      ui.actionMenuItem.findByTitle('Resize').should('be.visible').click();
 
       ui.drawer
         .findByTitle(`Resize ${diskName}`)

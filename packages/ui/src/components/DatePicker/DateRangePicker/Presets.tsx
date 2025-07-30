@@ -14,57 +14,83 @@ interface PresetsProps {
     presetLabel: null | string,
   ) => void;
   selectedPreset: null | string;
+  timeZone?: string;
 }
 
-export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
+export const Presets = ({
+  onPresetSelect,
+  selectedPreset,
+  timeZone = 'UTC',
+}: PresetsProps) => {
   const today = DateTime.now();
 
   const presets = [
     {
       getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ hours: 1 }),
+        endDate: today.setZone(timeZone),
+        startDate: today.minus({ minutes: 30 }).setZone(timeZone),
       }),
-      label: 'Last hour',
+      label: 'last 30 minutes',
     },
     {
       getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ days: 1 }),
+        endDate: today.setZone(timeZone),
+        startDate: today.minus({ hours: 1 }).setZone(timeZone),
       }),
-      label: 'Last day',
+      label: 'last hour',
     },
     {
       getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ days: 6 }),
+        endDate: today.setZone(timeZone),
+        startDate: today.minus({ hours: 12 }).setZone(timeZone),
       }),
-      label: 'Last 7 days',
+      label: 'last 12 hours',
     },
     {
       getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ days: 30 }),
+        endDate: today.setZone(timeZone),
+        startDate: today.minus({ days: 1 }).setZone(timeZone),
       }),
-      label: 'Last 30 days',
+      label: 'last day',
     },
     {
       getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ days: 60 }),
+        endDate: today.setZone(timeZone),
+        startDate: today.minus({ days: 6 }).setZone(timeZone),
       }),
-      label: 'Last 60 days',
+      label: 'last 7 days',
     },
     {
       getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ days: 90 }),
+        endDate: today.setZone(timeZone),
+        startDate: today.minus({ days: 30 }).setZone(timeZone),
       }),
-      label: 'Last 90 days',
+      label: 'last 30 days',
+    },
+    {
+      getRange: () => ({
+        endDate: today.setZone(timeZone),
+        startDate: today
+          .startOf('month')
+          .setZone(timeZone, { keepLocalTime: true }),
+      }),
+      label: 'this month',
+    },
+    {
+      getRange: () => {
+        const lastMonth = today
+          .minus({ months: 1 })
+          .setZone(timeZone, { keepLocalTime: true });
+        return {
+          startDate: lastMonth.startOf('month'),
+          endDate: lastMonth.endOf('month'),
+        };
+      },
+      label: 'last month',
     },
     {
       getRange: () => ({ endDate: null, startDate: null }),
-      label: 'Reset',
+      label: 'reset',
     },
   ];
 
@@ -92,6 +118,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
         const { endDate, startDate } = preset.getRange();
         return (
           <StyledActionButton
+            data-qa-preset={`${preset.label}`}
             key={preset.label}
             onClick={() => {
               onPresetSelect(startDate, endDate, preset.label);

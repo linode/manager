@@ -27,7 +27,7 @@ import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDraw
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
-import { useLinodeCreateQueryParams } from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -70,10 +70,10 @@ export const VPC = () => {
       ? 'Allow Linode to communicate in an isolated environment.'
       : 'Assign this Linode to an existing VPC.';
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const vpcFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: params.type ?? 'OS',
+    createType: createType ?? 'OS',
     headerName: 'VPC',
     interaction: 'click',
     label: 'VPC',
@@ -216,7 +216,7 @@ export const VPC = () => {
                                   in the VPC
                                 </Typography>
                                 <TooltipIcon
-                                  status="help"
+                                  status="info"
                                   text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                                 />
                               </Stack>

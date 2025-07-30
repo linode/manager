@@ -16,45 +16,45 @@ const cloudPulseAlertsIndexRoute = createRoute({
     throw redirect({ to: '/alerts/definitions' });
   },
 }).lazy(() =>
-  import('./cloudPulseAlertsLazyRoutes').then(
-    (m) => m.cloudPulseAlertsLandingLazyRoute
-  )
+  import(
+    'src/features/CloudPulse/Alerts/AlertsListing/cloudPulseAlertsLandingLazyRoute'
+  ).then((m) => m.cloudPulseAlertsLandingLazyRoute)
 );
 
 const cloudPulseAlertsDefinitionsRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: 'definitions',
 }).lazy(() =>
-  import('./cloudPulseAlertsLazyRoutes').then(
-    (m) => m.cloudPulseAlertsLandingLazyRoute
-  )
+  import(
+    'src/features/CloudPulse/Alerts/AlertsListing/cloudPulseAlertsLandingLazyRoute'
+  ).then((m) => m.cloudPulseAlertsLandingLazyRoute)
 );
 
 const cloudPulseAlertsCreateRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: 'definitions/create',
 }).lazy(() =>
-  import('./cloudPulseAlertsLazyRoutes').then(
-    (m) => m.cloudPulseAlertsCreateLazyRoute
-  )
+  import(
+    'src/features/CloudPulse/Alerts/CreateAlert/cloudPulseAlertsCreateLazyRoute'
+  ).then((m) => m.cloudPulseAlertsCreateLazyRoute)
 );
 
 const cloudPulseAlertsDefinitionsDetailRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: 'definitions/detail/$serviceType/$alertId',
 }).lazy(() =>
-  import('./cloudPulseAlertsLazyRoutes').then(
-    (m) => m.cloudPulseAlertsDefinitionsDetailLazyRoute
-  )
+  import(
+    'src/features/CloudPulse/Alerts/AlertsDetail/cloudPulseAlertsDefinitionsDetailLazyRoute'
+  ).then((m) => m.cloudPulseAlertsDefinitionsDetailLazyRoute)
 );
 
 const cloudPulseAlertsDefinitionsEditRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: 'definitions/edit/$serviceType/$alertId',
 }).lazy(() =>
-  import('./cloudPulseAlertsLazyRoutes').then(
-    (m) => m.cloudPulseAlertsDefinitionsEditLazyRoute
-  )
+  import(
+    'src/features/CloudPulse/Alerts/EditAlert/cloudPulseAlertsDefinitionsEditLazyRoute'
+  ).then((m) => m.cloudPulseAlertsDefinitionsEditLazyRoute)
 );
 
 const cloudPulseAlertsDefinitionsCatchAllRoute = createRoute({

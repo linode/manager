@@ -1,8 +1,4 @@
-import {
-  grantsFactory,
-  profileFactory,
-  regionFactory,
-} from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
@@ -15,7 +11,38 @@ import { Backups } from './Backups';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      create_linode: false,
+    },
+  })),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('Linode Create Backups Addon', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('should render a label and checkbox', () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: <Backups />,
@@ -23,8 +50,33 @@ describe('Linode Create Backups Addon', () => {
 
     const checkbox = getByLabelText('Backups', { exact: false });
 
-    expect(checkbox).toBeEnabled();
     expect(checkbox).not.toBeChecked();
+  });
+
+  it('should be disabled if the user does not have create_linode permission', async () => {
+    const { getByRole } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Backups />,
+      });
+
+    const checkbox = getByRole('checkbox');
+    expect(checkbox).toBeDisabled();
+  });
+
+  it('should be enabled if the user has create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        create_linode: true,
+      },
+    });
+
+    const { getByRole } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Backups />,
+      });
+
+    const checkbox = getByRole('checkbox');
+    expect(checkbox).toBeEnabled();
   });
 
   it('should get its value from the form context', () => {
@@ -42,7 +94,7 @@ describe('Linode Create Backups Addon', () => {
 
   it('should render special copy, be checked, and be disabled if account backups are enabled', async () => {
     server.use(
-      http.get('*/v4/account/settings', () => {
+      http.get('*/v4*/account/settings', () => {
         return HttpResponse.json(
           accountSettingsFactory.build({ backups_enabled: true })
         );
@@ -67,7 +119,7 @@ describe('Linode Create Backups Addon', () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
@@ -76,30 +128,6 @@ describe('Linode Create Backups Addon', () => {
       renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <Backups />,
         useFormOptions: { defaultValues: { region: region.id } },
-      });
-
-    const checkbox = getByRole('checkbox');
-
-    await waitFor(() => {
-      expect(checkbox).toBeDisabled();
-    });
-  });
-
-  it('should be disabled if the user does not have permission to create a linode', async () => {
-    server.use(
-      http.get('*/v4/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/v4/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { add_linodes: false } })
-        );
-      })
-    );
-
-    const { getByRole } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Backups />,
       });
 
     const checkbox = getByRole('checkbox');

@@ -13,6 +13,8 @@ export type Label = {
 
 export type NodePoolUpdateStrategy = 'on_recycle' | 'rolling_update';
 
+export type KubernetesStackType = 'ipv4' | 'ipv4-ipv6';
+
 export interface Taint {
   effect: KubernetesTaintEffect;
   key: string;
@@ -27,13 +29,28 @@ export interface KubernetesCluster {
   k8s_version: string;
   label: string;
   region: string;
+  /**
+   * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  stack_type?: KubernetesStackType;
   status: string; // @todo enum this
+  /**
+   * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  subnet_id?: number;
   tags: string[];
   /** Marked as 'optional' in this existing interface to prevent duplicated code for beta functionality, in line with the apl_enabled approach.
    * @todo LKE-E - Make this field required once LKE-E is in GA. tier defaults to 'standard' in the API.
    */
   tier?: KubernetesTier;
   updated: string;
+  /**
+   * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  vpc_id?: number;
 }
 
 export interface KubeNodePoolResponse {
@@ -135,7 +152,8 @@ export interface CreateKubeClusterPayload {
   control_plane?: ControlPlaneOptions;
   k8s_version?: string; // Will be caught by Yup if undefined
   label?: string; // Label will be assigned by the API if not provided
-  node_pools: CreateNodePoolData[];
+  node_pools: CreateNodePoolDataBeta[];
   region?: string; // Will be caught by Yup if undefined
+  stack_type?: KubernetesStackType; // For LKE-E; will default to 'ipv4'
   tier?: KubernetesTier; // For LKE-E: Will be assigned 'standard' by the API if not provided
 }

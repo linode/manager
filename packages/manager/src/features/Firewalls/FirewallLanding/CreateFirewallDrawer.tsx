@@ -10,17 +10,15 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'react-router-dom';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -30,7 +28,6 @@ import { TemplateFirewallFields } from './TemplateFirewallFields';
 
 import type { CreateFirewallFormValues } from './formUtilities';
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
-import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface CreateFirewallDrawerProps {
@@ -65,20 +62,15 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
 
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  const isFirewallCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_firewalls',
-  });
+  const { permissions } = usePermissions('account', ['create_firewall']);
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const location = useLocation();
+  const createType = useGetLinodeCreateType();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: queryParams.type ?? 'OS',
+    createType: createType ?? 'OS',
     headerName: createFirewallText,
     interaction: 'click',
     label: '',
@@ -151,7 +143,7 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
         title={createFirewallText}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          {isFirewallCreationRestricted && (
+          {!permissions.create_firewall && (
             <Notice
               text="You don't have permissions to create a new Firewall. Please contact an account administrator for details."
               variant="error"
@@ -186,13 +178,13 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
                   >
                     <FormControlLabel
                       control={<Radio />}
-                      disabled={isFirewallCreationRestricted}
+                      disabled={!permissions.create_firewall}
                       label="Custom Firewall"
                       value="custom"
                     />
                     <FormControlLabel
                       control={<Radio />}
-                      disabled={isFirewallCreationRestricted}
+                      disabled={!permissions.create_firewall}
                       label="From a Template"
                       value="template"
                     />
@@ -207,7 +199,7 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Label for your new Firewall"
-                disabled={isFirewallCreationRestricted}
+                disabled={!permissions.create_firewall}
                 errorText={fieldState.error?.message}
                 label="Label"
                 name="label"
@@ -220,7 +212,7 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
           />
           {createFirewallFrom === 'template' && isLinodeInterfacesEnabled ? (
             <TemplateFirewallFields
-              userCannotAddFirewall={isFirewallCreationRestricted}
+              userCannotAddFirewall={!permissions.create_firewall}
             />
           ) : (
             <CustomFirewallFields
@@ -228,13 +220,13 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
               firewallFormEventOptions={firewallFormEventOptions}
               isFromLinodeCreate={isFromLinodeCreate}
               open={open}
-              userCannotAddFirewall={isFirewallCreationRestricted}
+              userCannotAddFirewall={!permissions.create_firewall}
             />
           )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: isFirewallCreationRestricted,
+              disabled: !permissions.create_firewall,
               label: createFirewallText,
               loading: isSubmitting,
               onClick: handleSubmit(onSubmit),

@@ -1,16 +1,12 @@
-import {
-  useAccount,
-  useGrants,
-  useNotificationsQuery,
-  useProfile,
-} from '@linode/queries';
+import { useAccount, useGrants, useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import { useMatch, useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -33,9 +29,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const { data: notifications } = useNotificationsQuery();
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
 
-  const isRestrictedUser = profile?.restricted;
+  const { permissions } = usePermissions('account', ['create_promo_code']);
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
@@ -54,13 +49,10 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
-  const { paymentMethod } = useSearch({
-    strict: false,
-  });
+  const search = useSearch({ from: '/account/billing' });
+  const { paymentMethodId } = search;
 
-  const routeForMakePayment = '/account/billing/make-payment';
-  const makePaymentRouteMatch = match?.routeId === routeForMakePayment;
+  const makePaymentRouteMatch = search.action === 'make-payment';
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] =
     React.useState<boolean>(false);
@@ -91,13 +83,17 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       return;
     }
 
-    const selectedPaymentMethod =
-      paymentMethod ??
-      paymentMethods?.find((payment) => payment.is_default) ??
-      undefined;
+    const selectedPaymentMethod = paymentMethodId
+      ? paymentMethods?.find((payment) => payment.id === paymentMethodId)
+      : (paymentMethods?.find((payment) => payment.is_default) ?? undefined);
 
     openPaymentDrawer(selectedPaymentMethod);
-  }, [paymentMethods, openPaymentDrawer, makePaymentRouteMatch, paymentMethod]);
+  }, [
+    paymentMethods,
+    openPaymentDrawer,
+    makePaymentRouteMatch,
+    paymentMethodId,
+  ]);
 
   //
   // Account Balance logic
@@ -131,7 +127,15 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     balance > 0 ? (
       <Typography style={{ marginTop: 16 }}>
         <Button
-          onClick={() => navigate({ to: routeForMakePayment })}
+          onClick={() =>
+            navigate({
+              to: '/account/billing',
+              search: (prev) => ({
+                ...prev,
+                action: 'make-payment',
+              }),
+            })
+          }
           sx={{
             ...theme.applyLinkStyles,
             verticalAlign: 'initial',
@@ -145,7 +149,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const showAddPromoLink =
     balance <= 0 &&
-    !isRestrictedUser &&
+    permissions.create_promo_code &&
     isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 
@@ -241,7 +245,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
             <Box alignItems="center" display="flex">
               <Typography variant="h3">Accrued Charges</Typography>
               <TooltipIcon
-                status="help"
+                status="info"
                 sxTooltipIcon={{ padding: '0 8px' }}
                 text={accruedChargesHelperText}
               />

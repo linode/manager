@@ -24,7 +24,6 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   resolvers: resolverFactory.build(),
   site_type: 'core',
   status: 'ok',
-  monitors: { alerts: [], metrics: [] },
 });
 
 export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(

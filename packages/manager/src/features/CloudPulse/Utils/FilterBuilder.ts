@@ -21,6 +21,7 @@ import type {
   CloudPulseTags,
   CloudPulseTagsSelectProps,
 } from '../shared/CloudPulseTagsFilter';
+import type { CloudPulseTextFilterProps } from '../shared/CloudPulseTextFilter';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { CloudPulseServiceTypeFilters } from './models';
@@ -230,6 +231,7 @@ export const getCustomSelectProperties = (
     name: label,
     options,
     placeholder,
+    isOptional,
   } = props.config.configuration;
   const {
     dashboard,
@@ -253,6 +255,7 @@ export const getCustomSelectProperties = (
     ),
     filterKey,
     filterType,
+    isOptional,
     handleSelectionChange: handleCustomSelectChange,
     isMultiSelect,
     label,
@@ -293,6 +296,48 @@ export const getTimeDurationProperties = (
     label,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
+  };
+};
+
+/**
+ * This function helps in building the properties needed for port or interface_id selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters that has config of port or interface_id key
+ * @param handleTextFilterChange - the callback when we select new value
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences, else no need
+ * @returns CloudPulseTextFilterProps
+ */
+export const getTextFilterProperties = (
+  props: CloudPulseFilterProperties,
+  handleTextFilterChange: (
+    port: string,
+    label: string[],
+    filterKey: string,
+    savePref?: boolean
+  ) => void
+): CloudPulseTextFilterProps => {
+  const { name: label, placeholder, isOptional } = props.config.configuration;
+  const {
+    dashboard,
+    isServiceAnalyticsIntegration,
+    preferences,
+    dependentFilters,
+  } = props;
+
+  return {
+    disabled: shouldDisableFilterByFilterKey(
+      props.config.configuration.filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    defaultValue: preferences?.[props.config.configuration.filterKey],
+    handleTextFilterChange,
+    label,
+    placeholder,
+    optional: isOptional,
+    savePreferences: !isServiceAnalyticsIntegration,
+    filterKey: props.config.configuration.filterKey,
   };
 };
 
@@ -460,7 +505,10 @@ export const constructAdditionalRequestFilters = (
 ): Filters[] => {
   const filters: Filters[] = [];
   for (const filter of additionalFilters) {
-    if (filter) {
+    if (
+      filter &&
+      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0) // Check for empty array
+    ) {
       // push to the filters
       filters.push({
         dimension_label: filter.filterKey,
@@ -551,7 +599,7 @@ export const deepEqual = <T>(obj1: T, obj2: T): boolean => {
  * @param arr2 Array for comparison
  * @returns True if, both the arrays are equal, else false
  */
-const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
+export const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
   if (arr1.length !== arr2.length) {
     return false;
   }

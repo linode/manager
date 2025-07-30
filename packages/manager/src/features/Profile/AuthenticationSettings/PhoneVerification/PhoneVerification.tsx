@@ -307,7 +307,7 @@ export const PhoneVerification = ({
                   id="phone_number"
                   InputProps={{
                     startAdornment: selectedCountry ? (
-                      <InputAdornment position="end">
+                      <InputAdornment position="start">
                         {selectedCountry.dialingCode}
                       </InputAdornment>
                     ) : undefined,
@@ -323,7 +323,7 @@ export const PhoneVerification = ({
                 />
               </StyledInputContainer>
               {sendPhoneVerificationCodeError ? (
-                <StyledFormHelperText role="alert">
+                <StyledFormHelperText error role="alert">
                   {sendPhoneVerificationCodeError[0].reason}
                 </StyledFormHelperText>
               ) : null}

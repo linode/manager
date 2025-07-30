@@ -5,6 +5,8 @@ import type { JSX } from 'react';
 
 import { checkboxTestId, descriptionTestId, headerTestId } from './constants';
 
+import type { SxProps, Theme } from '@mui/material/styles';
+
 export interface EncryptionProps {
   descriptionCopy: JSX.Element | string;
   disabled?: boolean;
@@ -14,6 +16,7 @@ export interface EncryptionProps {
   isEncryptEntityChecked: boolean;
   notices?: string[];
   onChange: (checked: boolean) => void;
+  sxCheckbox?: SxProps<Theme>;
 }
 
 export const Encryption = (props: EncryptionProps) => {
@@ -26,6 +29,7 @@ export const Encryption = (props: EncryptionProps) => {
     isEncryptEntityChecked,
     notices,
     onChange,
+    sxCheckbox,
   } = props;
 
   return (
@@ -51,19 +55,14 @@ export const Encryption = (props: EncryptionProps) => {
           </List>
         </Notice>
       )}
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="row"
-        sx={{
-          marginLeft: '4px',
-        }}
-      >
+      <Box alignItems="center" display="flex" flexDirection="row">
         <Checkbox
           checked={isEncryptEntityChecked}
           data-testid={checkboxTestId}
           disabled={disabled}
           onChange={(e, checked) => onChange(checked)}
+          sx={sxCheckbox}
+          sxFormLabel={{ marginLeft: '0px' }}
           text={`Encrypt ${entityType ?? 'Disk'}`}
           toolTipText={disabled ? disabledReason : ''}
         />
