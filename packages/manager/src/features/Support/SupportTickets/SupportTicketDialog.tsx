@@ -49,7 +49,6 @@ import type {
   TicketSeverity,
 } from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-import type { SupportState } from 'src/routes/support';
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -116,6 +115,14 @@ export interface SupportTicketFormFields {
   title?: string;
 }
 
+export interface SupportTicketLocationState {
+  description?: SupportTicketDialogProps['prefilledDescription'];
+  entity?: SupportTicketDialogProps['prefilledEntity'];
+  formPayloadValues?: SupportTicketFormFields['formPayloadValues'];
+  ticketType?: SupportTicketDialogProps['prefilledTicketType'];
+  title?: SupportTicketDialogProps['prefilledTitle'];
+}
+
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
     return type === 'domain_id'
@@ -142,20 +149,19 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   } = props;
 
   const location = useLocation();
-  const locationState = location.state as SupportState;
-  const stateParams = locationState?.supportTicketFormFields;
+  const locationState = location.state as SupportTicketLocationState;
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string | undefined =
-    prefilledDescription ?? stateParams?.description ?? undefined;
+    prefilledDescription ?? locationState?.description ?? undefined;
   const _prefilledEntity: EntityForTicketDetails | undefined =
-    prefilledEntity ?? stateParams?.entity ?? undefined;
+    prefilledEntity ?? locationState?.entity ?? undefined;
   const _prefilledTitle: string | undefined =
-    prefilledTitle ?? stateParams?.title ?? undefined;
+    prefilledTitle ?? locationState?.title ?? undefined;
   const prefilledFormPayloadValues: FormPayloadValues | undefined =
-    stateParams?.formPayloadValues ?? undefined;
+    locationState?.formPayloadValues ?? undefined;
   const _prefilledTicketType: TicketType | undefined =
-    prefilledTicketType ?? stateParams?.ticketType ?? undefined;
+    prefilledTicketType ?? locationState?.ticketType ?? undefined;
 
   // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
   const newPrefilledTitle = _prefilledTitle
