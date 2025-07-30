@@ -227,7 +227,9 @@ describe('PrimaryNav', () => {
         enabled: true,
       },
       aclpAlerting: {
-        alertDefinitions: true,
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: false,
         notificationChannels: false,
         recentActivity: false,
       },
@@ -266,9 +268,11 @@ describe('PrimaryNav', () => {
         enabled: false,
       },
       aclpAlerting: {
-        alertDefinitions: true,
-        notificationChannels: true,
-        recentActivity: true,
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: false,
+        notificationChannels: false,
+        recentActivity: false,
       },
     };
 
@@ -304,6 +308,8 @@ describe('PrimaryNav', () => {
         enabled: true,
       },
       aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
         alertDefinitions: false,
         notificationChannels: false,
         recentActivity: false,
@@ -343,9 +349,11 @@ describe('PrimaryNav', () => {
         enabled: false,
       },
       aclpAlerting: {
-        alertDefinitions: true,
-        notificationChannels: true,
-        recentActivity: true,
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: false,
+        notificationChannels: false,
+        recentActivity: false,
       },
     };
 
@@ -377,6 +385,8 @@ describe('PrimaryNav', () => {
         enabled: true,
       },
       aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
         alertDefinitions: false,
         notificationChannels: false,
         recentActivity: false,

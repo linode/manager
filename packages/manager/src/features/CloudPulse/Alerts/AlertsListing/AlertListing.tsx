@@ -44,9 +44,6 @@ const searchAndSelectSx = {
   sm: '400px',
   xs: '300px',
 };
-// hardcoding the value is temporary solution until a solution from API side is confirmed.
-const maxAllowedAlerts = 100;
-const maxAllowedMetrics = 100;
 interface AlertsLimitErrorMessageProps {
   isAlertLimitReached: boolean;
   isMetricLimitReached: boolean;
@@ -60,15 +57,16 @@ export const AlertListing = () => {
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-  const { aclpBetaServices } = useFlags();
+  const { aclpBetaServices, aclpAlerting } = useFlags();
   const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
-  const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
+  const isAlertLimitReached =
+    userAlerts.length >= (aclpAlerting?.accountAlertLimit ?? 10);
 
   const isMetricLimitReached =
     userAlerts.reduce(
       (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
       0
-    ) >= maxAllowedMetrics;
+    ) >= (aclpAlerting?.accountMetricLimit ?? 10);
 
   const topRef = React.useRef<HTMLButtonElement>(null);
 
