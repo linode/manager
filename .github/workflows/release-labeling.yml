@@ -1,23 +1,13 @@
-name: Test Auto-label PR with next release date
+name: Auto-label PR with next release date
 
 permissions:
   pull-requests: write
 
 on:
-  workflow_dispatch:
-    inputs:
-      test_date:
-        description: "Override today's date for testing (YYYY-MM-DD)"
-        required: false
-        type: string
-      pr_number:
-        description: 'PR number to label (for testing)'
-        required: true
-        type: number
   pull_request:
     types: [opened]
     branches:
-      - develop  # Test on develop branch first
+      - develop
 
 jobs:
   add-release-label:
@@ -46,31 +36,18 @@ jobs:
           FREEZE_START_2="2025-12-30"
           FREEZE_END_2="2026-01-06"
 
-          TODAY="${{ github.event.inputs.test_date }}"
-          if [ -z "$TODAY" ]; then
-            TODAY=$(date +%Y-%m-%d)
-          fi
-
-          # DEBUG: Output initial values
-          echo "DEBUG: Today: $TODAY"
-          echo "DEBUG: Release start: $RELEASE_START"
-          echo "DEBUG: Freeze periods: $FREEZE_START_1 to $FREEZE_END_1, $FREEZE_START_2 to $FREEZE_END_2"
+          TODAY=$(date +%Y-%m-%d)
 
           # Calculate which release cycle we're in (releases every 14 days)
           DAYS_SINCE_START=$(( ($(date -d "$TODAY" +%s) - $(date -d "$RELEASE_START" +%s)) / 86400 ))
-          echo "DEBUG: Days since start: $DAYS_SINCE_START"
 
           if [ $DAYS_SINCE_START -lt 0 ]; then
             NEXT_RELEASE_DATE="$RELEASE_START"
-            echo "DEBUG: Using release start date (before first release)"
           else
             CYCLES_PASSED=$(( $DAYS_SINCE_START / 14 ))
             NEXT_CYCLE=$(( $CYCLES_PASSED + 1 ))
             NEXT_RELEASE_DATE=$(date -d "$RELEASE_START + $(( $NEXT_CYCLE * 14 )) days" +%Y-%m-%d)
-            echo "DEBUG: Cycles passed: $CYCLES_PASSED, Next cycle: $NEXT_CYCLE"
           fi
-
-          echo "DEBUG: Initial calculated date: $NEXT_RELEASE_DATE"
 
           # Skip freeze periods - if calculated date falls during freeze,
           # jump to first Tuesday after freeze ends
@@ -84,27 +61,21 @@ jobs:
             FREEZE2_END_TS=$(date -d "$FREEZE_END_2" +%s)
 
             if [ $RELEASE_TIMESTAMP -ge $FREEZE1_START_TS ] && [ $RELEASE_TIMESTAMP -le $FREEZE1_END_TS ]; then
-              echo "DEBUG: Date falls in freeze period 1, adjusting..."
               NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_1 + 1 day" +%Y-%m-%d)
               NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
-              echo "DEBUG: Adjusted to: $NEXT_RELEASE_DATE"
               ITERATION=$((ITERATION + 1))
               continue
             fi
 
             if [ $RELEASE_TIMESTAMP -ge $FREEZE2_START_TS ] && [ $RELEASE_TIMESTAMP -le $FREEZE2_END_TS ]; then
-              echo "DEBUG: Date falls in freeze period 2, adjusting..."
               NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_2 + 1 day" +%Y-%m-%d)
               NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
-              echo "DEBUG: Adjusted to: $NEXT_RELEASE_DATE"
               ITERATION=$((ITERATION + 1))
               continue
             fi
 
             break
           done
-
-          echo "DEBUG: Final iterations used: $ITERATION"
 
           if [ $ITERATION -eq $MAX_ITERATIONS ]; then
             echo "Error: Too many freeze period adjustments" >&2
@@ -116,10 +87,9 @@ jobs:
             exit 1
           fi
 
-          echo "DEBUG: Final release date: $NEXT_RELEASE_DATE"
           echo "date=$NEXT_RELEASE_DATE" >> $GITHUB_OUTPUT
 
-      - name: Add test release label to PR
+      - name: Add release label to PR
         uses: actions/github-script@v4
         with:
           script: |
@@ -130,22 +100,9 @@ jobs:
               throw new Error('Invalid date format received');
             }
 
-            # Get PR number from input or event
-            const prNumber = "${{ github.event.inputs.pr_number }}" || context.payload.pull_request.number;
-
-            console.log(`Adding test label: test-release:${nextReleaseDate} to PR #${prNumber}`);
-
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: prNumber,
-              labels: [`test-release:${nextReleaseDate}`]
-            });
-
-            // Also add a comment for easier verification
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              body: `🧪 **Test Release Labeling**: This PR would be included in release \`${nextReleaseDate}\``
+              issue_number: context.payload.pull_request.number,
+              labels: [`release:${nextReleaseDate}`]
             });
