@@ -1,0 +1,125 @@
+name: Test Auto-label PR with next release date
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - develop  # Test on develop branch first
+
+jobs:
+  add-release-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate next release date
+        id: calculate_date
+        run: |
+          # Function to adjust date to next Tuesday if needed
+          adjust_to_tuesday() {
+            local input_date="$1"
+            local day_of_week=$(date -d "$input_date" +%u)
+            if [ $day_of_week -ne 2 ]; then
+              local days_to_add=$(( (2 - $day_of_week + 7) % 7 ))
+              date -d "$input_date + $days_to_add days" +%Y-%m-%d
+            else
+              echo "$input_date"
+            fi
+          }
+
+          RELEASE_START="2025-08-12"
+
+          FREEZE_START_1="2025-12-02"
+          FREEZE_END_1="2025-12-15"
+          FREEZE_START_2="2025-12-30"
+          FREEZE_END_2="2026-01-06"
+
+          TODAY=$(date +%Y-%m-%d)
+
+          # DEBUG: Output initial values
+          echo "DEBUG: Today: $TODAY"
+          echo "DEBUG: Release start: $RELEASE_START"
+          echo "DEBUG: Freeze periods: $FREEZE_START_1 to $FREEZE_END_1, $FREEZE_START_2 to $FREEZE_END_2"
+
+          # Calculate which release cycle we're in (releases every 14 days)
+          DAYS_SINCE_START=$(( ($(date -d "$TODAY" +%s) - $(date -d "$RELEASE_START" +%s)) / 86400 ))
+          echo "DEBUG: Days since start: $DAYS_SINCE_START"
+
+          if [ $DAYS_SINCE_START -lt 0 ]; then
+            NEXT_RELEASE_DATE="$RELEASE_START"
+            echo "DEBUG: Using release start date (before first release)"
+          else
+            CYCLES_PASSED=$(( $DAYS_SINCE_START / 14 ))
+            NEXT_CYCLE=$(( $CYCLES_PASSED + 1 ))
+            NEXT_RELEASE_DATE=$(date -d "$RELEASE_START + $(( $NEXT_CYCLE * 14 )) days" +%Y-%m-%d)
+            echo "DEBUG: Cycles passed: $CYCLES_PASSED, Next cycle: $NEXT_CYCLE"
+          fi
+
+          echo "DEBUG: Initial calculated date: $NEXT_RELEASE_DATE"
+
+          # Skip freeze periods - if calculated date falls during freeze,
+          # jump to first Tuesday after freeze ends
+          MAX_ITERATIONS=3  # Safety guard - worst case is 2 freeze periods
+          ITERATION=0
+          while [ $ITERATION -lt $MAX_ITERATIONS ]; do
+            if [[ "$NEXT_RELEASE_DATE" >= "$FREEZE_START_1" && "$NEXT_RELEASE_DATE" <= "$FREEZE_END_1" ]]; then
+              echo "DEBUG: Date falls in freeze period 1, adjusting..."
+              NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_1 + 1 day" +%Y-%m-%d)
+              NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
+              echo "DEBUG: Adjusted to: $NEXT_RELEASE_DATE"
+              ITERATION=$((ITERATION + 1))
+              continue
+            fi
+
+            if [[ "$NEXT_RELEASE_DATE" >= "$FREEZE_START_2" && "$NEXT_RELEASE_DATE" <= "$FREEZE_END_2" ]]; then
+              echo "DEBUG: Date falls in freeze period 2, adjusting..."
+              NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_2 + 1 day" +%Y-%m-%d)
+              NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
+              echo "DEBUG: Adjusted to: $NEXT_RELEASE_DATE"
+              ITERATION=$((ITERATION + 1))
+              continue
+            fi
+
+            break
+          done
+
+          echo "DEBUG: Final iterations used: $ITERATION"
+
+          if [ $ITERATION -eq $MAX_ITERATIONS ]; then
+            echo "Error: Too many freeze period adjustments" >&2
+            exit 1
+          fi
+
+          if ! date -d "$NEXT_RELEASE_DATE" >/dev/null 2>&1; then
+            echo "Error: Invalid date calculated" >&2
+            exit 1
+          fi
+
+          echo "DEBUG: Final release date: $NEXT_RELEASE_DATE"
+          echo "date=$NEXT_RELEASE_DATE" >> $GITHUB_OUTPUT
+
+      - name: Add test release label to PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const nextReleaseDate = "${{ steps.calculate_date.outputs.date }}";
+
+            // Validate date format
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(nextReleaseDate)) {
+              throw new Error('Invalid date format received');
+            }
+
+            console.log(`Adding test label: test-release:${nextReleaseDate}`);
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: [`test-release:${nextReleaseDate}`]
+            });
+
+            // Also add a comment for easier verification
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `🧪 **Test Release Labeling**: This PR would be included in release \`${nextReleaseDate}\``
+            });
