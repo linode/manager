@@ -141,7 +141,7 @@ export const DateTimeRangePicker = ({
     endDate: endDateProps?.value ?? null,
     startDate: startDateProps?.value ?? null,
     selectedPreset: presetsProps?.defaultValue ?? null,
-    timeZone: timeZoneProps?.defaultValue ?? null,
+    timeZone: timeZoneProps?.defaultValue ?? 'UTC', // fallback to a string
   });
 
   const theme = useTheme();
