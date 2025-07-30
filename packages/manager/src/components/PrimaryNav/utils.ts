@@ -5,16 +5,13 @@ import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 import type { LinkProps } from '@tanstack/react-router';
 
 export const linkIsActive = (locationPathname: string, to: LinkProps['to']) => {
-  const currentlyOnOneClickTab =
-    locationPathname === 'linodes/create/marketplace';
-  const isOneClickTab = to?.match(/one-click/gi);
+  const marketPlacePath = '/linodes/create/marketplace';
+  const currentlyOnOneClickTab = locationPathname === marketPlacePath;
+  const isOneClickTab = to?.match(marketPlacePath);
 
-  /**
-   * mark as active if the tab is "one click"
-   * Other create tabs default back to Linodes active tabs
-   */
-  if (currentlyOnOneClickTab) {
-    return isOneClickTab;
+  // Special handling for marketplace tab
+  if (currentlyOnOneClickTab || isOneClickTab) {
+    return currentlyOnOneClickTab && isOneClickTab;
   }
 
   return to?.split('/')[1] === locationPathname.split('/')[1];
