@@ -121,6 +121,9 @@ export const createConfig = (mockState: MockState) => [
               })
             : linodeConfigInterfaceFactory.build({
                 purpose: ifacePayload.purpose,
+                label: ifacePayload.purpose === 'public' ? null : 'interface',
+                ipam_address:
+                  ifacePayload.purpose === 'public' ? null : '10.0.0.1/24',
               });
         addInterfacePromises.push(
           mswDB.add('configInterfaces', [config[1].id, iface], mockState)
