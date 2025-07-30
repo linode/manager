@@ -26,7 +26,6 @@ import { defaultState, storeFactory } from 'src/store';
 import { mergeDeepRight } from './mergeDeepRight';
 
 import type { QueryClient } from '@tanstack/react-query';
-// TODO: Tanstack Router - replace AnyRouter once migration is complete.
 import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction } from '@testing-library/react';
 import type { DeepPartial } from 'redux';
