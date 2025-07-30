@@ -1,11 +1,10 @@
 import { destinationType } from '@linode/api-v4';
-import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
+import { Autocomplete, Paper, Typography } from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
@@ -45,14 +44,7 @@ export const StreamCreateDelivery = () => {
 
   return (
     <Paper>
-      <Box display="flex" justifyContent="space-between">
-        <Typography variant="h2">Delivery</Typography>
-        <DocsLink
-          // TODO: Change the link when proper documentation is ready
-          href="https://techdocs.akamai.com/cloud-computing/docs"
-          label="Docs"
-        />
-      </Box>
+      <Typography variant="h2">Delivery</Typography>
       <Typography sx={{ mt: theme.spacingFunction(12) }}>
         Define a destination where you want this stream to send logs.
       </Typography>
