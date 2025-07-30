@@ -7,6 +7,8 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 
+import { usePermissions } from '../../hooks/usePermissions';
+
 import type { User } from '@linode/api-v4';
 
 interface Props {
@@ -20,6 +22,8 @@ export const UsernamePanel = ({ user }: Props) => {
   const isProxyUserProfile = user?.user_type === 'proxy';
 
   const { mutateAsync } = useUpdateUserMutation(user.username);
+
+  const { permissions } = usePermissions('account', ['update_user']);
 
   const {
     control,
@@ -47,9 +51,11 @@ export const UsernamePanel = ({ user }: Props) => {
     }
   };
 
-  const tooltipForDisabledUsernameField = isProxyUserProfile
-    ? RESTRICTED_FIELD_TOOLTIP
-    : undefined;
+  const tooltipForDisabledUsernameField = !permissions.update_user
+    ? 'Restricted users cannot update their username. Please contact an account administrator.'
+    : isProxyUserProfile
+      ? RESTRICTED_FIELD_TOOLTIP
+      : undefined;
 
   return (
     <Paper>
@@ -59,7 +65,7 @@ export const UsernamePanel = ({ user }: Props) => {
           name="username"
           render={({ field, fieldState }) => (
             <TextField
-              disabled={isProxyUserProfile}
+              disabled={tooltipForDisabledUsernameField !== undefined}
               errorText={fieldState.error?.message}
               label="Username"
               noMarginTop
