@@ -30,9 +30,9 @@ const linodeConfig = FILTER_CONFIG.get(2);
 
 const dbaasConfig = FILTER_CONFIG.get(1);
 
-const nodeBalancerConfig = FILTER_CONFIG.get(4);
+const nodeBalancerConfig = FILTER_CONFIG.get(3);
 
-const firewallConfig = FILTER_CONFIG.get(3);
+const firewallConfig = FILTER_CONFIG.get(4);
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas', id: 1 });
 

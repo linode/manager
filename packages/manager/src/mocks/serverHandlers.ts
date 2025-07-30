@@ -2947,7 +2947,7 @@ export const handlers = [
     if (params.serviceType === 'nodebalancer') {
       response.data.push(
         dashboardFactory.build({
-          id: 4,
+          id: 3,
           label: 'Nodebalancer Dashboard',
           service_type: 'nodebalancer',
         })
@@ -2957,7 +2957,7 @@ export const handlers = [
     if (params.serviceType === 'firewall') {
       response.data.push(
         dashboardFactory.build({
-          id: 3,
+          id: 4,
           label: 'Firewall Dashboard',
           service_type: 'firewall',
         })
@@ -3099,15 +3099,15 @@ export const handlers = [
       label:
         params.id === '1'
           ? 'DBaaS Service I/O Statistics'
-          : params.id === '4'
+          : params.id === '3'
             ? 'NodeBalancer Service I/O Statistics'
             : 'Linode Service I/O Statistics',
       service_type:
         params.id === '1'
           ? 'dbaas'
-          : params.id === '3'
+          : params.id === '4'
             ? 'firewall'
-            : params.id === '4'
+            : params.id === '3'
               ? 'nodebalancer'
               : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
