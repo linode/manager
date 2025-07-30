@@ -81,6 +81,8 @@ export const ListItemOption = <T,>({
       onClick={(e) =>
         isOptionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
       }
+      onMouseEnter={() => setIsFocused(true)}
+      onMouseLeave={() => setIsFocused(false)}
       ref={listItemRef}
       slotProps={{
         root: {
@@ -111,10 +113,6 @@ export const ListItemOption = <T,>({
       <Tooltip
         open={isFocused}
         slotProps={{
-          popper: {
-            // Prevents the tooltop from showing outside of the Autocomplete's Poppover
-            disablePortal: true,
-          },
           tooltip: {
             sx: {
               minWidth: disabledOptions?.tooltipWidth ?? 215,
