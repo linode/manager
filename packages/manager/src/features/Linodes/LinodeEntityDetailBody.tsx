@@ -404,7 +404,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             >
               {vpcIPv4 && (
                 <StyledIPBox>
-                  <StyledIPLabel data-testid="vpc-ipv4">VPC IPv4</StyledIPLabel>
+                  <StyledIPLabel data-testid="vpc-ipv4-label">
+                    VPC IPv4
+                  </StyledIPLabel>
                   <StyledIPItem component="span" data-testid="vpc-ipv4">
                     <CopyTooltip copyableText text={vpcIPv4} />
                     <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
@@ -416,7 +418,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               {flags.vpcIpv6 &&
                 vpcIPv6 && ( // @TODO VPC IPv6: remove flag check once VPC IPv6 is fully rolled out
                   <StyledIPBox>
-                    <StyledIPLabel data-testid="vpc-ipv6">
+                    <StyledIPLabel data-testid="vpc-ipv6-label">
                       VPC IPv6
                     </StyledIPLabel>
                     <StyledIPItem component="span" data-testid="vpc-ipv6">
