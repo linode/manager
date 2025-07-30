@@ -74,51 +74,59 @@ export const ListItemOption = <T,>({
     };
   }, [isOptionDisabled]);
 
-  return (
-    <Tooltip
-      open={isFocused}
+  const Option = (
+    <ListItem
+      {...rest}
+      data-qa-disabled-item={isOptionDisabled}
+      onClick={(e) =>
+        isOptionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
+      }
+      ref={listItemRef}
       slotProps={{
-        popper: {
-          // Prevents the tooltop from showing outside of the Autocomplete's Poppover
-          disablePortal: true,
-        },
-        tooltip: {
-          sx: {
-            minWidth: disabledOptions?.tooltipWidth ?? 215,
-          },
-        },
+        root: {
+          'data-qa-option': item.id,
+          'data-testid': item.id,
+        } as ListItemComponentsPropsOverrides,
       }}
-      title={disabledReason}
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        maxHeight,
+        gap: 1,
+        ...(isOptionDisabled && {
+          cursor: 'not-allowed !important',
+          pointerEvents: 'unset !important' as 'unset',
+        }),
+      }}
     >
-      <ListItem
-        {...rest}
-        data-qa-disabled-item={isOptionDisabled}
-        onClick={(e) =>
-          isOptionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
-        }
-        ref={listItemRef}
-        slotProps={{
-          root: {
-            'data-qa-option': item.id,
-            'data-testid': item.id,
-          } as ListItemComponentsPropsOverrides,
-        }}
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          maxHeight,
-          gap: 1,
-          ...(isOptionDisabled && {
-            cursor: 'not-allowed !important',
-            pointerEvents: 'unset !important' as 'unset',
-          }),
-        }}
-      >
-        {children}
-        {isOptionDisabled && <Box sx={visuallyHidden}>{disabledReason}</Box>}
-        <Box flexGrow={1} />
-        {selected && <SelectedIcon visible />}
-      </ListItem>
-    </Tooltip>
+      {children}
+      {isOptionDisabled && <Box sx={visuallyHidden}>{disabledReason}</Box>}
+      <Box flexGrow={1} />
+      {selected && <SelectedIcon visible />}
+    </ListItem>
   );
+
+  if (isOptionDisabled) {
+    return (
+      <Tooltip
+        open={isFocused}
+        slotProps={{
+          popper: {
+            // Prevents the tooltop from showing outside of the Autocomplete's Poppover
+            disablePortal: true,
+          },
+          tooltip: {
+            sx: {
+              minWidth: disabledOptions?.tooltipWidth ?? 215,
+            },
+          },
+        }}
+        title={disabledReason}
+      >
+        {Option}
+      </Tooltip>
+    );
+  }
+
+  return Option;
 };
