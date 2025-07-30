@@ -11,7 +11,11 @@ List any change(s) relevant to the reviewer.
 
 ### Scope 🚢
 
-- [ ] Changes in this PR will be visible to customers in production upon release
+ Upon production release, changes in this PR will be visible to:
+
+- [ ] All customers
+- [ ] Some customers (e.g. in Beta or Limited Availability)
+- [ ] No customers / Not applicable
 
 ## Target release date 🗓️
 
