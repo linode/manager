@@ -55,7 +55,7 @@ export const widgetDetails = {
   },
   linode: {
     dashboardName: 'Linode Dashboard',
-    id: 1,
+    id: 2,
     metrics: [
       {
         expectedAggregation: 'max',
@@ -100,7 +100,7 @@ export const widgetDetails = {
   },
   nodebalancer: {
     dashboardName: 'NodeBalancer Dashboard',
-    id: 1,
+    id: 4,
     metrics: [
       {
         expectedAggregation: 'max',
@@ -147,7 +147,7 @@ export const widgetDetails = {
   },
   firewall: {
     dashboardName: 'Firewall Dashboard',
-    id: 1,
+    id: 3,
     metrics: [
       {
         expectedAggregation: 'max',

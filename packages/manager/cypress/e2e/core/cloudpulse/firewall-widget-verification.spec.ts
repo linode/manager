@@ -65,6 +65,7 @@ const { dashboardName, id, metrics, firewalls } = widgetDetails.firewall;
 const serviceType = 'firewall';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
+  id,
   service_type: serviceType,
   widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
