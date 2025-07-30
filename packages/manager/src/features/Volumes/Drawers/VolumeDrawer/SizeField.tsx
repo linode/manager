@@ -105,14 +105,19 @@ export const SizeField = (props: Props) => {
         data-qa-size
         errorText={error}
         helperText={helperText}
-        InputProps={{
-          endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
-        }}
         label="Size"
         name={name}
         onBlur={onBlur}
         onChange={onChange}
         required
+        slotProps={{
+          htmlInput: {
+            min: 0,
+          },
+          input: {
+            endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
+          },
+        }}
         type="number"
         value={value}
         {...rest}
