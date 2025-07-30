@@ -15,10 +15,27 @@ import {
   metricLimitMessage,
 } from './constants';
 
+import type { AclpServices } from 'src/featureFlags';
+
 const queryMocks = vi.hoisted(() => ({
   useAllAlertDefinitionsQuery: vi.fn().mockReturnValue({}),
   useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
+  useFlags: vi.fn(),
 }));
+
+const aclpServicesFlag: Partial<AclpServices> = {
+  linode: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+  dbaas: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+};
+
+const linodeLabel = 'Linode beta';
+const databasesLabel = 'Databases beta';
 
 vi.mock('src/queries/cloudpulse/alerts', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/alerts');
@@ -36,6 +53,14 @@ vi.mock('src/queries/cloudpulse/services', async () => {
   };
 });
 
+vi.mock('src/hooks/useFlags', () => ({
+  useFlags: queryMocks.useFlags,
+}));
+
+queryMocks.useFlags.mockReturnValue({
+  aclpServices: aclpServicesFlag,
+});
+
 const mockResponse = alertFactory.buildList(3);
 const serviceTypes = [
   {
@@ -48,7 +73,7 @@ const serviceTypes = [
   },
 ];
 
-describe('Alert Listing', () => {
+describe('Alert Listing - Core Functionality', () => {
   it('should render the alert landing table with items', async () => {
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: mockResponse,
@@ -112,11 +137,11 @@ describe('Alert Listing', () => {
       within(serviceFilter).getByRole('button', { name: 'Open' })
     );
     await waitFor(() => {
-      getByRole('option', { name: 'Databases' });
-      getByRole('option', { name: 'Linode' });
+      getByRole('option', { name: databasesLabel });
+      getByRole('option', { name: linodeLabel });
     });
     await act(async () => {
-      await userEvent.click(getByRole('option', { name: 'Databases' }));
+      await userEvent.click(getByRole('option', { name: databasesLabel }));
     });
 
     await waitFor(() => {
@@ -250,6 +275,7 @@ describe('Alert Listing', () => {
       'Creation of 3 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
     );
   });
+
   it('should disable the create button when the alerts are loading', async () => {
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: null,
@@ -261,5 +287,148 @@ describe('Alert Listing', () => {
 
     const createButton = screen.getByRole('button', { name: 'Create Alert' });
     expect(createButton).toBeDisabled();
+  });
+});
+
+describe('Alert Listing - Feature Flag Management', () => {
+  it('should render the alerts from the enabled services', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: aclpServicesFlag,
+    });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: mockResponse,
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(<AlertListing />);
+
+    expect(screen.getByText(mockResponse[0].label)).toBeVisible();
+    expect(screen.getByText(mockResponse[1].label)).toBeVisible();
+    expect(screen.getByText(mockResponse[2].label)).toBeVisible();
+  });
+
+  it('should not render the alerts from the disabled services', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: false, beta: true },
+          metrics: { enabled: false, beta: true },
+        },
+        dbaas: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: mockResponse,
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(<AlertListing />);
+    expect(screen.queryByText(mockResponse[0].label)).not.toBeInTheDocument();
+    expect(screen.queryByText(mockResponse[1].label)).not.toBeInTheDocument();
+    expect(screen.queryByText(mockResponse[2].label)).not.toBeInTheDocument();
+  });
+
+  it('should not render the alerts from the services which are missing in the flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        dbaas: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: mockResponse,
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(<AlertListing />);
+    expect(screen.queryByText(mockResponse[0].label)).not.toBeInTheDocument();
+    expect(screen.queryByText(mockResponse[1].label)).not.toBeInTheDocument();
+    expect(screen.queryByText(mockResponse[2].label)).not.toBeInTheDocument();
+  });
+
+  it('should render the service types based on the enabled services from the aclp services flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+        dbaas: {
+          alerts: { enabled: false, beta: true },
+          metrics: { enabled: false, beta: true },
+        },
+      },
+    });
+
+    // Mock the service types query to return test data
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(<AlertListing />);
+
+    const serviceFilterDropdown = screen.getByTestId('alert-service-filter');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
+  });
+
+  it('should not return service types that are missing in the flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+    renderWithTheme(<AlertListing />);
+    const serviceFilterDropdown = screen.getByTestId('alert-service-filter');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
   });
 });

@@ -17,13 +17,17 @@ export const useResourcesQuery = (
     select: (resources) => {
       return resources.map((resource) => {
         const entities: Record<string, string> = {};
-        resource.entities?.forEach(
-          (entity: { id: number; label: string; type: string }) => {
-            if (entity.type === 'linode') {
-              entities[String(entity.id)] = entity.label;
+
+        // handle separately for firewall resource type
+        if (resourceType === 'firewall') {
+          resource.entities?.forEach(
+            (entity: { id: number; label: string; type: string }) => {
+              if (entity.type === 'linode') {
+                entities[String(entity.id)] = entity.label;
+              }
             }
-          }
-        );
+          );
+        }
         return {
           engineType: resource.engine,
           id: String(resource.id),

@@ -88,10 +88,10 @@ export const DateTimeField = ({
         />
         {errorText && (
           <FormHelperText
+            error
             id={errorTextId}
             role="alert"
             sx={{
-              color: (theme: Theme) => theme.palette.error.dark,
               marginTop: '4px',
             }}
           >

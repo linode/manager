@@ -50,8 +50,11 @@ const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
-  aclpBetaServices: {
-    firewall: { alerts: true, metrics: true },
+  aclpServices: {
+    firewall: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
   },
   aclpResourceTypeMap: [
     {
