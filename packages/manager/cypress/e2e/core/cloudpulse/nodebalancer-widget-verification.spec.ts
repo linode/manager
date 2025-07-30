@@ -54,7 +54,12 @@ const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
-  aclpBetaServices: { nodebalancer: { alerts: true, metrics: true } },
+  aclpServices: {
+    nodebalancer: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
+  },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
