@@ -4,11 +4,15 @@ import { styled } from '@mui/material/styles';
 export const NodePoolTableFooter = styled(Box, {
   label: 'NodePoolTableFooter',
 })(({ theme }) => ({
-  alignItems: 'center',
   display: 'flex',
-  flexWrap: 'wrap',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   gap: theme.spacingFunction(8),
   paddingTop: theme.spacingFunction(8),
   paddingButtom: theme.spacingFunction(8),
-  justifyContent: 'space-between',
+  [theme.breakpoints.down('md')]: {
+    alignItems: 'unset',
+    flexDirection: 'column',
+  },
 }));

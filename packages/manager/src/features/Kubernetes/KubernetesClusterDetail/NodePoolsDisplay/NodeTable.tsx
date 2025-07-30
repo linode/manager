@@ -275,37 +275,38 @@ export const NodeTable = React.memo((props: Props) => {
             sx={{ position: 'relative' }}
           />
           <NodePoolTableFooter>
-            <Stack
-              alignItems="center"
-              direction="row"
-              divider={
-                <Divider
-                  flexItem
-                  orientation="vertical"
-                  sx={{ borderWidth: 1 }}
-                />
-              }
-              spacing={2}
-            >
-              <Typography sx={{ textWrap: 'nowrap' }}>
-                <b>Pool ID</b> {poolId}
-              </Typography>
-              {clusterTier === 'enterprise' && poolVersion && (
-                <Typography>
-                  <b>Version</b> {poolVersion}
+            <Box>
+              <Stack
+                alignItems="center"
+                direction="row"
+                divider={
+                  <Divider
+                    flexItem
+                    orientation="vertical"
+                    sx={{ borderWidth: 1 }}
+                  />
+                }
+                spacing={2}
+              >
+                <Typography sx={{ textWrap: 'nowrap' }}>
+                  <b>Pool ID</b> {poolId}
                 </Typography>
-              )}
-              {isDiskEncryptionFeatureEnabled && (
-                <EncryptedStatus
-                  encryptionStatus={encryptionStatus}
-                  regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-                  tooltipText={undefined}
-                />
-              )}
-            </Stack>
+                {clusterTier === 'enterprise' && poolVersion && (
+                  <Typography sx={{ textWrap: 'nowrap' }}>
+                    <b>Version</b> {poolVersion}
+                  </Typography>
+                )}
+                {isDiskEncryptionFeatureEnabled && (
+                  <EncryptedStatus
+                    encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+                    tooltipText={undefined}
+                  />
+                )}
+              </Stack>
+            </Box>
             <TagCell
               disabled={isLkeClusterRestricted}
-              sx={{ marginLeft: 'auto' }}
               tags={tags}
               updateTags={updateTags}
               view="inline"
