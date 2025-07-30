@@ -117,6 +117,7 @@ export const Security = () => {
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
+                sxCheckbox={{ paddingLeft: '0px' }}
               />
             )}
           />
