@@ -35,23 +35,45 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
   }
 
   if (isCluster) {
-    const clusterTotalMonthlyPrice = clusterData!.reduce((sum, item) => {
+    let totalClusterSize = Number(clusterSize);
+    let clusterTotalMonthlyPrice = 0;
+    let clusterTotalHourlyPrice = 0;
+
+    //const clusterTotalMonthlyPrice = clusterData!.reduce((sum, item) => {
+    //  const price = getLinodeRegionPrice(item.typeData, regionId);
+    //  const sizeMultiplier = parseInt(item.size ?? '0', 10);
+    //  return sum + (price?.monthly ?? 0) * sizeMultiplier;
+    //}, 0);
+
+    clusterData!.forEach((item) => {
       const price = getLinodeRegionPrice(item.typeData, regionId);
       const sizeMultiplier = parseInt(item.size ?? '0', 10);
-      return sum + (price?.monthly ?? 0) * sizeMultiplier;
-    }, 0);
+      clusterTotalMonthlyPrice += (price?.monthly ?? 0) * sizeMultiplier;
+    });
 
-    const clusterTotalHourlyPrice = clusterData!.reduce((sum, item) => {
+    //const clusterTotalHourlyPrice = clusterData!.reduce((sum, item) => {
+    //  const price = getLinodeRegionPrice(item.typeData, regionId);
+    //  const sizeMultiplier = parseInt(item.size ?? '0', 10);
+    //  return sum + (price?.hourly ?? 0) * sizeMultiplier;
+    //}, 0);
+
+    clusterData!.forEach((item) => {
       const price = getLinodeRegionPrice(item.typeData, regionId);
       const sizeMultiplier = parseInt(item.size ?? '0', 10);
-      return sum + (price?.hourly ?? 0) * sizeMultiplier;
-    }, 0);
+      clusterTotalHourlyPrice += (price?.hourly ?? 0) * sizeMultiplier;
+    });
 
-    const totalClusterSize =
-      clusterData!.reduce((sum: number, item: any) => {
-        const sizeMultiplier = parseInt(item.size ?? '0', 10);
-        return sum + sizeMultiplier;
-      }, 0) + Number(clusterSize);
+    //const totalClusterSize =
+    //  clusterData!.reduce((sum: number, item: any) => {
+    //    const sizeMultiplier = parseInt(item.size ?? '0', 10);
+    //    return sum + sizeMultiplier;
+    //  }, 0) + Number(clusterSize);
+
+    // total cluster size
+    clusterData!.forEach((item) => {
+      const sizeMultiplier = parseInt(item.size ?? '0', 10);
+      totalClusterSize += sizeMultiplier;
+    });
 
     // this instance
     const totalMonthlyPrice = renderMonthlyPriceToCorrectDecimalPlace(
