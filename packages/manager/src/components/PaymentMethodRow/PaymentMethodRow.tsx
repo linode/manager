@@ -35,7 +35,7 @@ interface Props {
  */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { onDelete, paymentMethod } = props;
+  const { onDelete, paymentMethod, isChildUser } = props;
   const { is_default, type } = paymentMethod;
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ export const PaymentMethodRow = (props: Props) => {
 
   const actions: Action[] = [
     {
-      disabled: !permissions.make_billing_payment,
+      disabled: isChildUser || !permissions.make_billing_payment,
       onClick: () => {
         navigate({
           to: '/account/billing',
@@ -73,7 +73,8 @@ export const PaymentMethodRow = (props: Props) => {
       title: 'Make a Payment',
     },
     {
-      disabled: !permissions.update_account || paymentMethod.is_default,
+      disabled:
+        isChildUser || !permissions.update_account || paymentMethod.is_default,
       onClick: makeDefault,
       title: 'Make Default',
       tooltip: paymentMethod.is_default
@@ -81,7 +82,8 @@ export const PaymentMethodRow = (props: Props) => {
         : undefined,
     },
     {
-      disabled: !permissions.update_account || paymentMethod.is_default,
+      disabled:
+        isChildUser || !permissions.update_account || paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default
