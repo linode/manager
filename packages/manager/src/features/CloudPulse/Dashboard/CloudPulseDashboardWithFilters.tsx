@@ -37,7 +37,6 @@ export const CloudPulseDashboardWithFilters = React.memo(
     const { dashboardId, resource } = props;
     const { data: dashboard, isError } =
       useCloudPulseDashboardByIdQuery(dashboardId);
-
     const [filterData, setFilterData] = React.useState<FilterData>({
       id: {},
       label: {},
@@ -102,7 +101,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
       return <CircleProgress />;
     }
 
-    if (!FILTER_CONFIG.get(dashboard.id)) {
+    if (!FILTER_CONFIG.get(dashboardId)) {
       return (
         <ErrorState
           errorText={`No Filters Configured for Service Type - ${dashboard.service_type}`}
