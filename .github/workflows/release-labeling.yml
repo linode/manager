@@ -1,0 +1,110 @@
+name: Release Labeler
+
+permissions:
+  pull-requests: write
+  issues: write
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - develop
+
+jobs:
+  add-release-label:
+    name: Add Release Label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate next release date
+        id: calculate_date
+        run: |
+          # Function to adjust date to next Tuesday if needed
+          adjust_to_tuesday() {
+            local input_date="$1"
+            local day_of_week=$(date -d "$input_date" +%u)
+            if [ $day_of_week -ne 2 ]; then
+              local days_to_add=$(( (2 - $day_of_week + 7) % 7 ))
+              date -d "$input_date + $days_to_add days" +%Y-%m-%d
+            else
+              echo "$input_date"
+            fi
+          }
+
+          RELEASE_START="${{ vars.RELEASE_START_DATE || '2025-08-12' }}"
+
+          FREEZE_START_1="${{ vars.FREEZE_START_1 || '2025-12-02' }}"
+          FREEZE_END_1="${{ vars.FREEZE_END_1 || '2025-12-15' }}"
+          FREEZE_START_2="${{ vars.FREEZE_START_2 || '2025-12-30' }}"
+          FREEZE_END_2="${{ vars.FREEZE_END_2 || '2026-01-06' }}"
+
+          TODAY=$(date +%Y-%m-%d)
+
+          # Calculate which release cycle we're in (releases every 14 days)
+          DAYS_SINCE_START=$(( ($(date -d "$TODAY" +%s) - $(date -d "$RELEASE_START" +%s)) / 86400 ))
+
+          if [ $DAYS_SINCE_START -lt 0 ]; then
+            NEXT_RELEASE_DATE="$RELEASE_START"
+          else
+            CYCLES_PASSED=$(( $DAYS_SINCE_START / 14 ))
+            NEXT_CYCLE=$(( $CYCLES_PASSED + 1 ))
+            NEXT_RELEASE_DATE=$(date -d "$RELEASE_START + $(( $NEXT_CYCLE * 14 )) days" +%Y-%m-%d)
+          fi
+
+          # Skip freeze periods - if calculated date falls during freeze,
+          # jump to first Tuesday after freeze ends
+          MAX_ITERATIONS=3  # Safety guard - worst case is 2 freeze periods
+          ITERATION=0
+          while [ $ITERATION -lt $MAX_ITERATIONS ]; do
+            RELEASE_TIMESTAMP=$(date -d "$NEXT_RELEASE_DATE" +%s)
+            FREEZE1_START_TS=$(date -d "$FREEZE_START_1" +%s)
+            FREEZE1_END_TS=$(date -d "$FREEZE_END_1" +%s)
+            FREEZE2_START_TS=$(date -d "$FREEZE_START_2" +%s)
+            FREEZE2_END_TS=$(date -d "$FREEZE_END_2" +%s)
+
+            # Check if calculated release date falls during December freeze (Dec 2-15)
+            if [ $RELEASE_TIMESTAMP -ge $FREEZE1_START_TS ] && [ $RELEASE_TIMESTAMP -le $FREEZE1_END_TS ]; then
+              # Skip freeze period: move to day after freeze ends, then find next Tuesday
+              NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_1 + 1 day" +%Y-%m-%d)
+              NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
+              ITERATION=$((ITERATION + 1))
+              continue
+            fi
+
+            # Check if calculated release date falls during year-end freeze (Dec 30-Jan 6)
+            if [ $RELEASE_TIMESTAMP -ge $FREEZE2_START_TS ] && [ $RELEASE_TIMESTAMP -le $FREEZE2_END_TS ]; then
+              # Skip freeze period: move to day after freeze ends, then find next Tuesday
+              NEXT_RELEASE_DATE=$(date -d "$FREEZE_END_2 + 1 day" +%Y-%m-%d)
+              NEXT_RELEASE_DATE=$(adjust_to_tuesday "$NEXT_RELEASE_DATE")
+              ITERATION=$((ITERATION + 1))
+              continue
+            fi
+
+            break
+          done
+
+          if [ $ITERATION -eq $MAX_ITERATIONS ]; then
+            echo "Error: Too many freeze period adjustments" >&2
+            exit 1
+          fi
+
+          if ! date -d "$NEXT_RELEASE_DATE" >/dev/null 2>&1; then
+            echo "Error: Invalid date calculated" >&2
+            exit 1
+          fi
+
+          echo "date=$NEXT_RELEASE_DATE" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create and add release label to PR
+        run: |
+          LABEL_NAME="release:${{ steps.calculate_date.outputs.date }}"
+
+          # Create label if it doesn't exist (will fail silently if it already exists)
+          gh label create "$LABEL_NAME" --description "Release scheduled for ${{ steps.calculate_date.outputs.date }}" --color "0e8a16" || true
+
+          # Add label to PR
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "$LABEL_NAME"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
