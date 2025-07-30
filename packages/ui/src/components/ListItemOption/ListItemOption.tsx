@@ -81,8 +81,6 @@ export const ListItemOption = <T,>({
       onClick={(e) =>
         isOptionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
       }
-      onMouseEnter={() => setIsFocused(true)}
-      onMouseLeave={() => setIsFocused(false)}
       ref={listItemRef}
       slotProps={{
         root: {
