@@ -19,6 +19,11 @@ const queryMocks = vi.hoisted(() => ({
       restore_linode_backup: true,
     },
   })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -31,6 +36,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 describe('LinodeBackups', () => {
