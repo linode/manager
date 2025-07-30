@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       test_date:
-        description: 'Override today\'s date for testing (YYYY-MM-DD)'
+        description: "Override today's date for testing (YYYY-MM-DD)"
         required: false
         type: string
       pr_number:
