@@ -23,7 +23,7 @@ describe('OneClick Apps (OCA)', () => {
     cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
-    cy.visitWithLogin(`/linodes/create?type=One-Click`);
+    cy.visitWithLogin(`/linodes/create/marketplace`);
 
     cy.wait('@getStackScripts').then((xhr) => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
@@ -60,7 +60,7 @@ describe('OneClick Apps (OCA)', () => {
     cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
-    cy.visitWithLogin(`/linodes/create?type=One-Click`);
+    cy.visitWithLogin(`/linodes/create/marketplace`);
 
     cy.wait('@getStackScripts').then((xhr) => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
@@ -171,7 +171,7 @@ describe('OneClick Apps (OCA)', () => {
     mockGetStackScripts([stackscript]).as('getStackScripts');
     mockGetStackScript(stackscript.id, stackscript);
 
-    cy.visitWithLogin(`/linodes/create?type=One-Click`);
+    cy.visitWithLogin(`/linodes/create/marketplace`);
 
     cy.wait('@getStackScripts');
 
@@ -253,7 +253,7 @@ describe('OneClick Apps (OCA)', () => {
     cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
-    cy.visitWithLogin(`/linodes/create?type=One-Click`);
+    cy.visitWithLogin(`/linodes/create/marketplace`);
 
     cy.wait('@getStackScripts').then((xhr) => {
       // Check the content of the app list

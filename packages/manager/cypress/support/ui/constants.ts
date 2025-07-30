@@ -6,7 +6,7 @@ export const loadAppNoLogin = (path: string) => waitForAppLoad(path, false);
 export const routes = {
   account: '/account',
   createLinode: '/linodes/create',
-  createLinodeOCA: '/linodes/create?type=One-Click',
+  createLinodeOCA: '/linodes/create/marketplace',
   linodeLanding: '/linodes',
   profile: '/profile',
   support: '/support',
@@ -49,7 +49,7 @@ export const pages: Page[] = [
       },
     ],
     name: 'Linode/Create/OS',
-    url: `${routes.createLinode}?type=OS`,
+    url: `${routes.createLinode}/os`,
   },
   {
     assertIsLoaded: () => cy.findByText('Select App').should('be.visible'),
@@ -89,18 +89,18 @@ export const pages: Page[] = [
   {
     assertIsLoaded: () => cy.findByText('Choose an Image').should('be.visible'),
     name: 'Linode/Create/FromImages',
-    url: `${routes.createLinode}?type=Images`,
+    url: `${routes.createLinode}/images`,
   },
   {
     assertIsLoaded: () => cy.findByText('Select Backup').should('be.visible'),
     name: 'Linode/Create/FromBackup',
-    url: `${routes.createLinode}?type=Backups`,
+    url: `${routes.createLinode}/backups`,
   },
   {
     assertIsLoaded: () =>
       cy.findByText('Select Linode to Clone From').should('be.visible'),
     name: 'Linode/Create/Clone',
-    url: `${routes.createLinode}?type=Clone%20Linode`,
+    url: `${routes.createLinode}/clone`,
   },
   {
     assertIsLoaded: () => cy.findByText('My Profile').should('be.visible'),

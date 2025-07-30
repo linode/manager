@@ -60,7 +60,7 @@ export const LinodesLandingEmptyState = () => {
                   linkAnalyticsEvent,
                   APPS_MORE_LINKS_TEXT
                 )}
-                to="/linodes/create?type=One-Click"
+                to="/linodes/create/marketplace"
                 {...props}
               >
                 {APPS_MORE_LINKS_TEXT}

@@ -101,7 +101,7 @@ export const GoTo = React.memo(() => {
 
       {
         display: 'Marketplace',
-        href: '/linodes/create?type=One-Click',
+        href: '/linodes/create/marketplace',
       },
       {
         display: 'Account',
