@@ -56,6 +56,16 @@ export interface CloudPulseDashboardFilterBuilderProps {
   handleToggleAppliedFilter: (isVisible: boolean) => void;
 
   /**
+   * Is cluster Call
+   */
+  isResourceCallError?: boolean;
+
+  /**
+   * Property to disable filters
+   */
+  isResourceCallLoading?: boolean;
+
+  /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
    */
   isServiceAnalyticsIntegration: boolean;
@@ -69,11 +79,6 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * selected resource ids
    */
   resource_ids?: number[];
-
-  /**
-   * Property to disable filters
-   */
-  shouldDisableFilters?: boolean;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -85,7 +90,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isServiceAnalyticsIntegration,
       preferences,
       resource_ids,
-      shouldDisableFilters = false,
+      isResourceCallError = false,
+      isResourceCallLoading = false,
     } = props;
 
     const [, setDependentFilters] = React.useState<{
@@ -267,7 +273,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
-              shouldDisable: shouldDisableFilters,
+              shouldDisable: isResourceCallError || isResourceCallLoading,
             },
             handleTagsChange
           );
@@ -279,7 +285,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               dependentFilters: dependentFilterReference.current,
-              shouldDisable: shouldDisableFilters,
+              shouldDisable: isResourceCallError || isResourceCallLoading,
             },
             handleRegionChange
           );
@@ -291,7 +297,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
-              shouldDisable: shouldDisableFilters,
+              shouldDisable: isResourceCallError || isResourceCallLoading,
             },
             handleResourceChange
           );
@@ -310,7 +316,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 : (
                     dependentFilterReference.current[RESOURCE_ID] as string[]
                   )?.map((id: string) => Number(id)),
-              shouldDisable: shouldDisableFilters,
+              shouldDisable: isResourceCallError || isResourceCallLoading,
             },
             handleNodeTypeChange
           );
@@ -327,7 +333,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: resource_ids?.length
                 ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
-              shouldDisable: shouldDisableFilters,
+              shouldDisable: isResourceCallError || isResourceCallLoading,
             },
             handleTextFilterChange
           );
@@ -341,7 +347,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
-              shouldDisable: shouldDisableFilters,
+              shouldDisable: isResourceCallError || isResourceCallLoading,
             },
             handleCustomSelectChange
           );
@@ -357,7 +363,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
         preferences,
-        shouldDisableFilters,
+        isResourceCallError,
+        isResourceCallLoading,
       ]
     );
 
@@ -451,7 +458,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             <Typography variant="h3">Filters</Typography>
           </Button>
         </GridLegacy>
-        {shouldDisableFilters ? (
+        {isResourceCallLoading ? (
           <GridLegacy
             alignItems="center"
             container
@@ -493,6 +500,7 @@ function compareProps(
     oldProps.dashboard?.id === newProps.dashboard?.id &&
     oldProps.preferences?.[DASHBOARD_ID] ===
       newProps.preferences?.[DASHBOARD_ID] &&
-    oldProps.shouldDisableFilters === newProps.shouldDisableFilters
+    oldProps.isResourceCallLoading === newProps.isResourceCallLoading &&
+    oldProps.isResourceCallError === newProps.isResourceCallError
   );
 }

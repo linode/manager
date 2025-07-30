@@ -100,7 +100,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     },
   };
 
-  const { isLoading } = useResourcesQuery(
+  const { isLoading, isError } = useResourcesQuery(
     selectedDashboard !== undefined,
     selectedDashboard?.service_type ?? '',
     {},
@@ -170,9 +170,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           dashboard={selectedDashboard}
           emitFilterChange={emitFilterChange}
           handleToggleAppliedFilter={handleToggleAppliedFilter}
+          isResourceCallError={isError}
+          isResourceCallLoading={isLoading}
           isServiceAnalyticsIntegration={false}
           preferences={preferences}
-          shouldDisableFilters={isLoading}
         />
       )}
     </GridLegacy>
