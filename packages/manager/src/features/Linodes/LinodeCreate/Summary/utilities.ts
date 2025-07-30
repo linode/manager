@@ -1,3 +1,5 @@
+import { getType } from '@linode/api-v4/lib/linodes/types';
+
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
@@ -71,7 +73,9 @@ export type ClusterDataTypes = {
   typeId?: string;
 };
 
-export function parseClusterData(stackscriptData: Record<string, any> = {}): ClusterDataTypes[] {
+export function parseClusterData(
+  stackscriptData: Record<string, any> = {}
+): ClusterDataTypes[] {
   return Object.entries(stackscriptData).reduce((acc, [key, value]) => {
     const match = key.match(/^(.+)_cluster_(size|type)$/);
     if (!match) return acc;
@@ -79,7 +83,7 @@ export function parseClusterData(stackscriptData: Record<string, any> = {}): Clu
     const prefix = match[1];
     const kind = match[2];
 
-    let cluster = acc.find(c => c.prefix === prefix);
+    let cluster = acc.find((c) => c.prefix === prefix);
     if (!cluster) {
       cluster = { prefix };
       acc.push(cluster);
@@ -94,3 +98,7 @@ export function parseClusterData(stackscriptData: Record<string, any> = {}): Clu
     return acc;
   }, [] as ClusterDataTypes[]);
 }
+
+export const fetchLinodeType = async (typeId: string): Promise<LinodeType> => {
+  return await getType(typeId);
+};
