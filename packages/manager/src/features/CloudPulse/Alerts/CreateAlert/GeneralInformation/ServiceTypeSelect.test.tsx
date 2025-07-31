@@ -53,18 +53,19 @@ const aclpServicesFlag: Partial<AclpServices> = {
 const linodeLabel = 'Linode beta';
 const databasesLabel = 'Databases beta';
 
-queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-  data: mockResponse,
-  isError: true,
-  isLoading: false,
-  status: 'success',
-});
-
-queryMocks.useFlags.mockReturnValue({
-  aclpServices: aclpServicesFlag,
-});
-
 describe('ServiceTypeSelect component tests', () => {
+  beforeEach(() => {
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: mockResponse,
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: aclpServicesFlag,
+    });
+  });
+
   it('should render the Autocomplete component', () => {
     const { getAllByText, getByTestId } = renderWithThemeAndHookFormContext({
       component: (
@@ -137,13 +138,6 @@ describe('ServiceTypeSelect component tests', () => {
       },
     });
 
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
     renderWithThemeAndHookFormContext({
       component: (
         <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
@@ -167,13 +161,6 @@ describe('ServiceTypeSelect component tests', () => {
       },
     });
 
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
     renderWithThemeAndHookFormContext({
       component: (
         <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
@@ -185,5 +172,26 @@ describe('ServiceTypeSelect component tests', () => {
     );
     expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
+  });
+
+  it('should not return service types that are missing the alerts property in the flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+
+    renderWithThemeAndHookFormContext({
+      component: (
+        <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
+      ),
+    });
+    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.queryByRole('option', { name: 'Linode' })).toBeNull();
   });
 });
