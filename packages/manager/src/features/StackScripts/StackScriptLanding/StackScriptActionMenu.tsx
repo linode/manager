@@ -7,6 +7,8 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { SearchCancelContext } from './StackScriptLandingTable';
+
 import type { StackScript } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -26,6 +28,7 @@ export const StackScriptActionMenu = (props: Props) => {
   const { handlers, stackscript, type } = props;
 
   const navigate = useNavigate();
+  const searchCancel = React.useContext(SearchCancelContext);
 
   const isLargeScreen = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.up('md')
@@ -65,14 +68,18 @@ export const StackScriptActionMenu = (props: Props) => {
     {
       action: {
         disabled: isLinodeCreationRestricted,
-        onClick: () =>
+        onClick: () => {
+          // Cancel any pending search before navigating
+          searchCancel?.cancelPendingSearch();
+
           navigate({
             to: '/linodes/create/stackscripts',
             search: {
               subtype: type === 'account' ? 'Account' : 'Community',
               stackScriptID: stackscript.id,
             },
-          }),
+          });
+        },
         title: 'Deploy New Linode',
         tooltip: isLinodeCreationRestricted
           ? "You don't have permissions to add Linodes"

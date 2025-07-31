@@ -43,6 +43,10 @@ export interface DebouncedSearchProps extends TextFieldProps {
    */
   isSearching?: boolean;
   /**
+   * Optional ref to the debounced fn for external cancellation
+   */
+  onDebouncedRef?: (debouncedFn: { cancel: () => void }) => void;
+  /**
    * Function to perform when searching for query
    */
   onSearch: (query: string) => void;
@@ -68,6 +72,7 @@ export const DebouncedSearchTextField = React.memo(
       isSearching,
       label,
       onSearch,
+      onDebouncedRef,
       placeholder,
       value,
       ...restOfTextFieldProps
@@ -84,6 +89,10 @@ export const DebouncedSearchTextField = React.memo(
         }),
       [debounceTime, onSearch]
     );
+
+    React.useEffect(() => {
+      onDebouncedRef?.(debouncedOnChange);
+    }, [debouncedOnChange, onDebouncedRef]);
 
     // Synchronize the internal state with the prop value when the value prop changes.
     React.useEffect(() => {

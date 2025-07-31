@@ -48,12 +48,18 @@ interface Props {
   type: 'account' | 'community';
 }
 
+export const SearchCancelContext = React.createContext<null | {
+  cancelPendingSearch: () => void;
+}>(null);
+
 export const StackScriptLandingTable = (props: Props) => {
   const { type } = props;
   const navigate = useNavigate();
   const { id } = useParams({ strict: false });
   const { query } = useSearch({ from: '/stackscripts' });
   const match = useMatch({ strict: false });
+
+  const debouncedSearchRef = React.useRef<null | { cancel: () => void }>(null);
 
   const filter =
     type === 'community'
@@ -105,6 +111,17 @@ export const StackScriptLandingTable = (props: Props) => {
     '+order_by': orderBy,
   });
 
+  const handleDebouncedRef = React.useCallback(
+    (debouncedFn: { cancel: () => void }) => {
+      debouncedSearchRef.current = debouncedFn;
+    },
+    []
+  );
+
+  const cancelPendingSearch = React.useCallback(() => {
+    debouncedSearchRef.current?.cancel();
+  }, []);
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -129,158 +146,163 @@ export const StackScriptLandingTable = (props: Props) => {
   }
 
   return (
-    <Stack spacing={3}>
-      <DebouncedSearchTextField
-        clearable
-        hideLabel
-        inputSlotProps={
-          searchParseError
-            ? {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <TooltipIcon
-                      status="warning"
-                      sxTooltipIcon={{ p: 0.75 }}
-                      text={searchParseError.message}
-                    />
-                  </InputAdornment>
-                ),
-              }
-            : {}
-        }
-        isSearching={isFetching}
-        label="Search"
-        noMarginTop
-        onSearch={(value) => {
-          if (!value) {
-            navigate({
-              search: undefined,
-              to:
-                type === 'account'
-                  ? '/stackscripts/account'
-                  : '/stackscripts/community',
-            });
-          } else {
-            navigate({
-              search: { query: value },
-              to:
-                type === 'account'
-                  ? '/stackscripts/account'
-                  : '/stackscripts/community',
-            });
+    <SearchCancelContext.Provider value={{ cancelPendingSearch }}>
+      <Stack spacing={3}>
+        <DebouncedSearchTextField
+          clearable
+          hideLabel
+          inputSlotProps={
+            searchParseError
+              ? {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <TooltipIcon
+                        status="warning"
+                        sxTooltipIcon={{ p: 0.75 }}
+                        text={searchParseError.message}
+                      />
+                    </InputAdornment>
+                  ),
+                }
+              : {}
           }
-        }}
-        placeholder="Search by Label, Username, or Description"
-        tooltipText={<StackScriptSearchHelperText />}
-        tooltipWidth={300}
-        value={query ?? ''}
-      />
-      <Table aria-label="List of StackScripts">
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              StackScript
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'deployments_total'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="deployments_total"
-            >
-              Deploys
-            </TableSortCell>
-            <Hidden smDown>
+          isSearching={isFetching}
+          label="Search"
+          noMarginTop
+          onDebouncedRef={handleDebouncedRef}
+          onSearch={(value) => {
+            if (!value) {
+              navigate({
+                search: undefined,
+                to:
+                  type === 'account'
+                    ? '/stackscripts/account'
+                    : '/stackscripts/community',
+              });
+            } else {
+              navigate({
+                search: { query: value },
+                to:
+                  type === 'account'
+                    ? '/stackscripts/account'
+                    : '/stackscripts/community',
+              });
+            }
+          }}
+          placeholder="Search by Label, Username, or Description"
+          tooltipText={<StackScriptSearchHelperText />}
+          tooltipWidth={300}
+          value={query ?? ''}
+        />
+        <Table aria-label="List of StackScripts">
+          <TableHead>
+            <TableRow>
               <TableSortCell
-                active={orderBy === 'updated'}
+                active={orderBy === 'label'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="updated"
-                noWrap
+                label="label"
               >
-                Last Revision
+                StackScript
               </TableSortCell>
-            </Hidden>
-            <Hidden lgDown>
-              <TableCell>Compatible Images</TableCell>
-            </Hidden>
-            {type === 'account' && (
-              <Hidden lgDown>
-                <TableCell>Status</TableCell>
+              <TableSortCell
+                active={orderBy === 'deployments_total'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="deployments_total"
+              >
+                Deploys
+              </TableSortCell>
+              <Hidden smDown>
+                <TableSortCell
+                  active={orderBy === 'updated'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="updated"
+                  noWrap
+                >
+                  Last Revision
+                </TableSortCell>
               </Hidden>
+              <Hidden lgDown>
+                <TableCell>Compatible Images</TableCell>
+              </Hidden>
+              {type === 'account' && (
+                <Hidden lgDown>
+                  <TableCell>Status</TableCell>
+                </Hidden>
+              )}
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {stackscripts?.map((stackscript) => (
+              <StackScriptRow
+                handlers={{
+                  onDelete: () => {
+                    navigate({
+                      params: { id: stackscript.id },
+                      to: `/stackscripts/account/$id/delete`,
+                    });
+                  },
+                  onMakePublic: () => {
+                    navigate({
+                      params: { id: stackscript.id },
+                      to: `/stackscripts/account/$id/make-public`,
+                    });
+                  },
+                }}
+                key={stackscript.id}
+                stackscript={stackscript}
+                type={type}
+              />
+            ))}
+            {query && stackscripts?.length === 0 && (
+              <TableRowEmpty colSpan={6} />
             )}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {stackscripts?.map((stackscript) => (
-            <StackScriptRow
-              handlers={{
-                onDelete: () => {
-                  navigate({
-                    params: { id: stackscript.id },
-                    to: `/stackscripts/account/$id/delete`,
-                  });
-                },
-                onMakePublic: () => {
-                  navigate({
-                    params: { id: stackscript.id },
-                    to: `/stackscripts/account/$id/make-public`,
-                  });
-                },
-              }}
-              key={stackscript.id}
-              stackscript={stackscript}
-              type={type}
-            />
-          ))}
-          {query && stackscripts?.length === 0 && <TableRowEmpty colSpan={6} />}
-          {isFetchingNextPage && (
-            <TableRowLoading
-              columns={type === 'account' ? 6 : 5}
-              responsive={
-                type === 'account'
-                  ? {
-                      2: { smDown: true },
-                      3: { lgDown: true },
-                      4: { lgDown: true },
-                    }
-                  : {
-                      2: { smDown: true },
-                      3: { lgDown: true },
-                    }
-              }
-            />
-          )}
-        </TableBody>
-      </Table>
-      {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
-      <StackScriptMakePublicDialog
-        isFetching={isFetchingStackScript}
-        onClose={() => {
-          navigate({
-            to: `/stackscripts`,
-          });
-        }}
-        open={match.routeId === '/stackscripts/account/$id/make-public'}
-        stackscript={selectedStackScript}
-        stackscriptError={selectedStackScriptError}
-      />
-      <StackScriptDeleteDialog
-        isFetching={isFetchingStackScript}
-        onClose={() => {
-          navigate({
-            to: `/stackscripts`,
-          });
-        }}
-        open={match.routeId === '/stackscripts/account/$id/delete'}
-        stackscript={selectedStackScript}
-        stackscriptError={selectedStackScriptError}
-      />
-    </Stack>
+            {isFetchingNextPage && (
+              <TableRowLoading
+                columns={type === 'account' ? 6 : 5}
+                responsive={
+                  type === 'account'
+                    ? {
+                        2: { smDown: true },
+                        3: { lgDown: true },
+                        4: { lgDown: true },
+                      }
+                    : {
+                        2: { smDown: true },
+                        3: { lgDown: true },
+                      }
+                }
+              />
+            )}
+          </TableBody>
+        </Table>
+        {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
+        <StackScriptMakePublicDialog
+          isFetching={isFetchingStackScript}
+          onClose={() => {
+            navigate({
+              to: `/stackscripts`,
+            });
+          }}
+          open={match.routeId === '/stackscripts/account/$id/make-public'}
+          stackscript={selectedStackScript}
+          stackscriptError={selectedStackScriptError}
+        />
+        <StackScriptDeleteDialog
+          isFetching={isFetchingStackScript}
+          onClose={() => {
+            navigate({
+              to: `/stackscripts`,
+            });
+          }}
+          open={match.routeId === '/stackscripts/account/$id/delete'}
+          stackscript={selectedStackScript}
+          stackscriptError={selectedStackScriptError}
+        />
+      </Stack>
+    </SearchCancelContext.Provider>
   );
 };
