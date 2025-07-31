@@ -26,15 +26,13 @@ import {
   cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   memoryRulesFactory,
   notificationChannelFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
-
-import type { Flags } from 'src/featureFlags';
-
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
@@ -176,7 +174,7 @@ describe('Create Alert', () => {
    * - Confirms that the UI displays a success message after creating an alert.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);
