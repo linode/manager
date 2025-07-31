@@ -314,4 +314,14 @@ describe('getEnabledServiceTypes', () => {
     const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
     expect(result).not.toContain('dbaas');
   });
+
+  it('should not return the service type if the metrics property is not present in the aclpServices flag', () => {
+    const aclpServicesFlag: Partial<AclpServices> = {
+      linode: {
+        alerts: { enabled: true, beta: true },
+      },
+    };
+    const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
+    expect(result).not.toContain('linode');
+  });
 });

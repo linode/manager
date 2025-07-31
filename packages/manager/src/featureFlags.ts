@@ -326,7 +326,7 @@ export interface AclpAlertServiceTypeConfig {
 
 export type AclpServices = {
   [serviceType in CloudPulseServiceType]: {
-    alerts: AclpFlag;
-    metrics: AclpFlag;
+    alerts?: AclpFlag;
+    metrics?: AclpFlag;
   };
 };
