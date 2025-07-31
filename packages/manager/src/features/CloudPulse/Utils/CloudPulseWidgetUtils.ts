@@ -28,7 +28,7 @@ import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
-interface LabelNameOptionsProps {
+export interface LabelNameOptionsProps {
   /**
    * Boolean to check if metric name should be hidden
    */
@@ -114,7 +114,7 @@ interface MetricRequestProps {
   widget: Widgets;
 }
 
-interface DimensionNameProperties {
+export interface DimensionNameProperties {
   /**
    * Boolean to check if metric name should be hidden
    */
