@@ -88,18 +88,17 @@ describe('ClusterNetworkingPanel', () => {
   });
 
   it('shows VPC and Subnet fields when "Use an existing VPC" is selected', async () => {
-    const { getByLabelText, findByLabelText } =
-      renderWithThemeAndHookFormContext({
-        component: <ClusterNetworkingPanel {...props} />,
-        useFormOptions: {
-          defaultValues,
-        },
-      });
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: <ClusterNetworkingPanel {...props} />,
+      useFormOptions: {
+        defaultValues,
+      },
+    });
 
     await userEvent.click(getByLabelText('Use an existing VPC'));
 
     // Confirm VPC options display
-    expect(await findByLabelText('VPC')).toBeVisible();
-    expect(await findByLabelText('Subnet')).toBeVisible();
+    expect(getByLabelText('VPC')).toBeVisible();
+    expect(getByLabelText('Subnet')).toBeVisible();
   });
 });
