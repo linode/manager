@@ -278,15 +278,17 @@ export const NodeTable = React.memo((props: Props) => {
             <Box>
               <Stack
                 alignItems="center"
+                columnGap={{ sm: 2, xs: 1.5 }}
                 direction="row"
                 divider={
                   <Divider
                     flexItem
                     orientation="vertical"
-                    sx={{ borderWidth: 1 }}
+                    sx={{ borderWidth: 1, height: '20px' }}
                   />
                 }
-                spacing={2}
+                flexWrap={{ sm: 'unset', xs: 'wrap' }}
+                rowGap={1}
               >
                 <Typography sx={{ textWrap: 'nowrap' }}>
                   <b>Pool ID</b> {poolId}
