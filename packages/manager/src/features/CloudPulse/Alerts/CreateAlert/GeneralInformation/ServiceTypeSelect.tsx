@@ -101,8 +101,10 @@ export const CloudPulseServiceSelect = (
             const { key, ...rest } = props;
             return (
               <ListItem {...rest} data-qa-option key={key}>
-                <Box flexGrow={1}>{option.label}</Box>{' '}
-                {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
+                <Box flexGrow={1} gap={0.5}>
+                  {option.label}
+                  {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
+                </Box>
                 <SelectedIcon visible={selected} />
               </ListItem>
             );

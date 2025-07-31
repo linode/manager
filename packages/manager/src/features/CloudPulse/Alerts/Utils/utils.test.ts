@@ -461,4 +461,13 @@ describe('alertsFromEnabledServices', () => {
     });
     expect(result).toHaveLength(3);
   });
+
+  it('should not return alerts from services that are missing the alerts property in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(0);
+  });
 });
