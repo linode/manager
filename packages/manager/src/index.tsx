@@ -6,7 +6,6 @@ import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 
 import { CookieWarning } from 'src/components/CookieWarning';
-import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import 'src/exceptionReporting';
 import { SplashScreen } from 'src/components/SplashScreen';
 import { setupInterceptors } from 'src/request';
@@ -33,16 +32,9 @@ const Main = () => {
         <LinodeThemeWrapper>
           <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
-            <Snackbar
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-              autoHideDuration={4000}
-              hideIconVariant={false}
-              maxSnack={3}
-            >
-              <React.Suspense fallback={<SplashScreen />}>
-                <App />
-              </React.Suspense>
-            </Snackbar>
+            <React.Suspense fallback={<SplashScreen />}>
+              <App />
+            </React.Suspense>
           </React.Suspense>
         </LinodeThemeWrapper>
       </QueryClientProvider>
