@@ -2,7 +2,6 @@ name: Release Labeler
 
 permissions:
   pull-requests: write
-  issues: write
 
 on:
   pull_request:
@@ -138,9 +137,6 @@ jobs:
           fi
 
           echo "date=$NEXT_RELEASE_DATE" >> $GITHUB_OUTPUT
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Create and add release label to PR
         run: |
