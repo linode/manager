@@ -1,5 +1,4 @@
-import type { PlacementGroup } from '@linode/api-v4';
-import type { UserData } from '@linode/api-v4';
+import type { PlacementGroup, UserData } from '@linode/api-v4';
 
 // Credit: https://github.com/xxorax/node-shell-escape
 function escapeStringForCLI(s: string): string {
