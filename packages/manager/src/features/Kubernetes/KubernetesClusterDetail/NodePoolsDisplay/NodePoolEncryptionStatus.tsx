@@ -10,8 +10,11 @@ interface Props {
   encryptionStatus: EncryptionStatus;
 }
 
-export const NodePoolEncryptionStatus = (props: Props) => {
-  const isEncrypted = props.encryptionStatus === 'enabled';
+/**
+ * Displays the Disk Encryption status for a LKE Node Pool
+ */
+export const NodePoolEncryptionStatus = ({ encryptionStatus }: Props) => {
+  const isEncrypted = encryptionStatus === 'enabled';
 
   return (
     <Stack alignItems="center" direction="row" spacing={1}>

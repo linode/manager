@@ -10,6 +10,9 @@ interface Props {
   linodeId: number;
 }
 
+/**
+ * Displays the Disk Encryption status for a Linode
+ */
 export const LinodeEncryptionStauts = ({ linodeId }: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
   const { data: region } = useRegionQuery(linode?.region ?? '');
