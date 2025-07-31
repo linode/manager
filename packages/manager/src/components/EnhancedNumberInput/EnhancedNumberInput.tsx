@@ -63,7 +63,7 @@ export const EnhancedNumberInput = React.memo(
       if (parsedValue >= min && parsedValue <= max) {
         setValue(+e.target.value);
       } else {
-        setValue(min);
+        setValue(0);
       }
     };
 
