@@ -229,7 +229,7 @@ describe('PrimaryNav', () => {
       aclpAlerting: {
         accountAlertLimit: 10,
         accountMetricLimit: 10,
-        alertDefinitions: false,
+        alertDefinitions: true,
         notificationChannels: false,
         recentActivity: false,
       },
