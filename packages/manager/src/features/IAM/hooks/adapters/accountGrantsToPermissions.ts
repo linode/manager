@@ -20,7 +20,7 @@ export const accountGrantsToPermissions = (
   return {
     // AccountAdmin
     accept_service_transfer: unrestricted,
-    acknowledge_account_agreement: unrestricted,
+    acknowledge_account_agreement: hasWriteAccess,
     cancel_account: unrestricted || globalGrants?.cancel_account,
     cancel_service_transfer: unrestricted,
     create_service_transfer: unrestricted,
