@@ -1,9 +1,13 @@
 import { capitalize } from '@linode/utilities';
 
-import type { CloudPulseServiceType } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  TransformFunction,
+  TransformFunctionMap,
+} from '@linode/api-v4';
 
 // Default transform functions
-export const TRANSFORMS: Record<string, (value: string) => string> = {
+export const TRANSFORMS: TransformFunctionMap = {
   capitalize: (value: string) => capitalize(value),
   uppercase: (value: string) => value.toUpperCase(),
   lowercase: (value: string) => value.toLowerCase(),
@@ -11,7 +15,7 @@ export const TRANSFORMS: Record<string, (value: string) => string> = {
 
 // Service-specific dimension value transforms
 export const DIMENSION_TRANSFORM_CONFIG: Partial<
-  Record<CloudPulseServiceType, Record<string, (value: string) => string>>
+  Record<CloudPulseServiceType, Record<string, TransformFunction>>
 > = {
   linode: {
     operation: TRANSFORMS.capitalize,

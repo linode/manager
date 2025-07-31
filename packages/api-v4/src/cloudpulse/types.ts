@@ -396,3 +396,7 @@ export interface CloudPulseAlertsPayload {
    */
   user?: number[];
 }
+
+export type TransformKey = 'capitalize' | 'lowercase' | 'uppercase';
+export type TransformFunction = (value: string) => string;
+export type TransformFunctionMap = Record<TransformKey, TransformFunction>;
