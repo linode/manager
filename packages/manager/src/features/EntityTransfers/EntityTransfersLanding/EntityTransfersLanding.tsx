@@ -1,7 +1,7 @@
 import { TRANSFER_FILTERS, useEntityTransfersQuery } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -18,19 +18,24 @@ export const EntityTransfersLanding = () => {
     undefined
   );
 
-  const location = useLocation<{ transfer?: EntityTransfer }>();
-  const history = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleCloseSuccessDialog = () => {
     setSuccessDialogOpen(false);
     setTransfer(undefined);
-    history.replace({ state: undefined });
+    navigate({
+      to: '/account/service-transfers',
+      state: (prev) => ({ ...prev, transfer: undefined }),
+    });
   };
 
+  const locationState = location.state as { transfer?: EntityTransfer };
+
   React.useEffect(() => {
-    if (location.state?.transfer) {
+    if (locationState?.transfer) {
       setSuccessDialogOpen(true);
-      setTransfer(location.state.transfer);
+      setTransfer(locationState.transfer);
     }
   }, [location]);
 

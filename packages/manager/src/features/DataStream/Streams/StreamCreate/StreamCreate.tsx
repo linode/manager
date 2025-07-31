@@ -16,6 +16,7 @@ import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
 
 import type { CreateStreamPayload } from '@linode/api-v4';
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 export const StreamCreate = () => {
@@ -39,7 +40,7 @@ export const StreamCreate = () => {
     name: 'type',
   });
 
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream/streams/create',
       crumbOverrides: [

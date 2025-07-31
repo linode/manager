@@ -39,6 +39,7 @@ import type {
   APIError,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export interface EditAlertProps {
   /**
@@ -121,16 +122,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   });
   const definitionLanding = '/alerts/definitions';
 
-  const overrides = [
+  const overrides: CrumbOverridesProps[] = [
     {
       label: 'Definitions',
       linkTo: definitionLanding,
       position: 1,
-    },
-    {
-      label: 'Edit',
-      linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-      position: 2,
     },
   ];
 

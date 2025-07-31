@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -49,7 +48,6 @@ const props: LongviewClientsCombinedProps = {
   lvClientData: {},
   newClientLoading: false,
   updateLongviewClient: vi.fn(),
-  ...reactRouterProps,
 };
 
 describe('Utility Functions', () => {

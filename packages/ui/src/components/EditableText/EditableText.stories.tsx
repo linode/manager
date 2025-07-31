@@ -43,7 +43,7 @@ export const WithSuffix: Story = {
 };
 
 /**
- * Pretend this is `react-router-dom`'s Link component.
+ * Pretend this is `@tanstack/react-router`'s Link component.
  * This is just an example to show usage with `EditableText`
  */
 const Link = (

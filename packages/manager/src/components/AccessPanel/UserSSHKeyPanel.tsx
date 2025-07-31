@@ -13,7 +13,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
@@ -62,7 +62,11 @@ export const UserSSHKeyPanel = (props: Props) => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
 
-  const pagination = usePagination(1);
+  const pagination = usePaginationV2({
+    currentRoute: '/profile/keys',
+    initialPage: 1,
+    preferenceKey: 'ssh-keys-users-table',
+  });
 
   const { data: profile } = useProfile();
 

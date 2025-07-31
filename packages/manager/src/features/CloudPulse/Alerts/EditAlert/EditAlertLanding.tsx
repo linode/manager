@@ -13,16 +13,11 @@ import { EditAlertResources } from './EditAlertResources';
 import type { AlertServiceType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
-const overrides = [
+const overrides: CrumbOverridesProps[] = [
   {
     label: 'Definitions',
     linkTo: '/alerts/definitions',
     position: 1,
-  },
-  {
-    label: 'Edit',
-    linkTo: `/alerts/definitions/edit`,
-    position: 2,
   },
 ];
 

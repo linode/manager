@@ -80,9 +80,7 @@ export const SupportTicketDetail = () => {
           },
           crumbOverrides: [
             {
-              linkTo: {
-                pathname: `/support/tickets/${ticket.status}`,
-              },
+              linkTo: `/support/tickets/${ticket.status}`,
               position: 2,
             },
           ],

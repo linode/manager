@@ -98,7 +98,6 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
           </Stack>
         ) : (
           <Link
-            tabIndex={0}
             to={
               entity.type === 'linode'
                 ? `/${entity.type}s/${entity.id}`

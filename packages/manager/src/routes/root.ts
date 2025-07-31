@@ -1,7 +1,6 @@
 import {
   createRootRouteWithContext,
   ErrorComponent,
-  Outlet,
 } from '@tanstack/react-router';
 
 import { Root } from '../Root';
@@ -14,10 +13,5 @@ import type { RouterContext } from './types';
  */
 export const rootRoute = createRootRouteWithContext<RouterContext>()({
   component: Root,
-  errorComponent: ErrorComponent,
-});
-
-export const migrationRootRoute = createRootRouteWithContext<RouterContext>()({
-  component: Outlet,
   errorComponent: ErrorComponent,
 });

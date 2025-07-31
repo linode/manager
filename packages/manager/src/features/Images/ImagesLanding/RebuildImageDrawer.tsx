@@ -1,9 +1,8 @@
 import { LinodeSelect } from '@linode/shared';
 import { ActionsPanel, Divider, Drawer, Notice, Stack } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
@@ -23,7 +22,7 @@ interface Props {
 export const RebuildImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { permissionedLinodes: availableLinodes } =
     useImageAndLinodeGrantCheck();
 
@@ -41,11 +40,13 @@ export const RebuildImageDrawer = (props: Props) => {
 
     handleClose();
 
-    history.push({
-      pathname: `/linodes/${values.linodeId}/rebuild`,
-      search: new URLSearchParams({
+    navigate({
+      to: `/linodes/$linodeId`,
+      params: { linodeId: values.linodeId },
+      search: {
+        rebuild: true,
         [REBUILD_LINODE_IMAGE_PARAM_NAME]: image.id,
-      }).toString(),
+      },
     });
   });
 

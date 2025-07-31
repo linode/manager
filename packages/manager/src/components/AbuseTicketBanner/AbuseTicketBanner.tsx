@@ -1,9 +1,9 @@
 import { useNotificationsQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useLocation } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';

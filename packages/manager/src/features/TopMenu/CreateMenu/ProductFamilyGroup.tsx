@@ -38,7 +38,7 @@ export const ProductFamilyGroup = (props: ProductFamilyGroupProps) => {
               key={link.display}
               onClick={handleClose}
               tabIndex={0}
-              to={link.href}
+              to={link.to}
               {...link.attr}
             >
               <Stack>

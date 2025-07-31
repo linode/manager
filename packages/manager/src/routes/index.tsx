@@ -7,6 +7,12 @@ import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';
+import {
+  cancelLandingRoute,
+  loginAsCustomerCallbackRoute,
+  logoutRoute,
+  oauthCallbackRoute,
+} from './auth';
 import { betaRouteTree } from './betas';
 import { databasesRouteTree } from './databases';
 import { dataStreamRouteTree } from './datastream';
@@ -24,7 +30,7 @@ import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
-import { migrationRootRoute, rootRoute } from './root';
+import { rootRoute } from './root';
 import { searchRouteTree } from './search';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
@@ -43,6 +49,10 @@ const indexRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
+  cancelLandingRoute,
+  loginAsCustomerCallbackRoute,
+  logoutRoute,
+  oauthCallbackRoute,
   accountRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
@@ -74,6 +84,9 @@ export const router = createRouter({
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
+  defaultErrorComponent: ({ error, reset }) => (
+    <ErrorComponent error={error} eventId={error.name} resetError={reset} />
+  ),
   defaultPreload: 'intent',
   routeTree,
 });
@@ -84,48 +97,3 @@ declare module '@tanstack/react-router' {
     router: typeof router;
   }
 }
-
-/**
- * This is the router that is used to handle the migration to TanStack Router.
- * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
- * This is a temporary solution until we are ready to fully migrate to TanStack Router.
- * Eventually we will only use the router exported above.
- */
-export const migrationRouteTree = migrationRootRoute.addChildren([
-  accountRouteTree,
-  betaRouteTree,
-  cloudPulseAlertsRouteTree,
-  cloudPulseMetricsRouteTree,
-  databasesRouteTree,
-  domainsRouteTree,
-  dataStreamRouteTree,
-  eventsRouteTree,
-  firewallsRouteTree,
-  iamRouteTree,
-  imagesRouteTree,
-  kubernetesRouteTree,
-  linodesRouteTree,
-  longviewRouteTree,
-  managedRouteTree,
-  nodeBalancersRouteTree,
-  objectStorageRouteTree,
-  placementGroupsRouteTree,
-  profileRouteTree,
-  searchRouteTree,
-  stackScriptsRouteTree,
-  supportRouteTree,
-  volumesRouteTree,
-  vpcsRouteTree,
-]);
-export type MigrationRouteTree = typeof migrationRouteTree;
-export const migrationRouter = createRouter({
-  context: {
-    queryClient: new QueryClient(),
-  },
-  defaultNotFoundComponent: () => <NotFound />,
-  defaultPreload: 'intent',
-  defaultErrorComponent: ({ error, reset }) => (
-    <ErrorComponent error={error} eventId={error.name} resetError={reset} />
-  ),
-  routeTree: migrationRouteTree,
-});
