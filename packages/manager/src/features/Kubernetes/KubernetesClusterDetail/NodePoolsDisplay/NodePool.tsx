@@ -13,16 +13,17 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
+import { NodePoolFooter } from './NodePoolFooter';
 import { NodeTable } from './NodeTable';
 
 import type { StatusFilter } from './NodePoolsDisplay';
 import type {
   AutoscaleSettings,
+  EncryptionStatus,
   KubeNodePoolResponse,
   KubernetesTier,
   PoolNodeResponse,
-} from '@linode/api-v4/lib/kubernetes';
-import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
+} from '@linode/api-v4';
 
 interface Props {
   accordionExpanded: boolean;
@@ -44,7 +45,6 @@ interface Props {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
   poolVersion: KubeNodePoolResponse['k8s_version'];
-  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -71,7 +71,6 @@ export const NodePool = (props: Props) => {
     openRecycleNodeDialog,
     poolId,
     poolVersion,
-    regionSupportsDiskEncryption,
     statusFilter,
     tags,
     typeLabel,
@@ -237,18 +236,21 @@ export const NodePool = (props: Props) => {
     >
       <NodeTable
         clusterCreated={clusterCreated}
+        clusterTier={clusterTier}
+        isLkeClusterRestricted={isLkeClusterRestricted}
+        nodes={nodes}
+        openRecycleNodeDialog={openRecycleNodeDialog}
+        statusFilter={statusFilter}
+        typeLabel={typeLabel}
+      />
+      <NodePoolFooter
         clusterId={clusterId}
         clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
         isLkeClusterRestricted={isLkeClusterRestricted}
-        nodes={nodes}
-        openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}
         poolVersion={poolVersion}
-        regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-        statusFilter={statusFilter}
         tags={tags}
-        typeLabel={typeLabel}
       />
     </Accordion>
   );

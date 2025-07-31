@@ -8,16 +8,14 @@ import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
+import { LinodeEncryptionStauts } from './LinodeEncryptionStatus';
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
@@ -68,7 +66,6 @@ export interface BodyProps {
   interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
-  isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
   isUnreachablePublicIPv4: boolean;
   isUnreachablePublicIPv6: boolean;
   linodeCapabilities: LinodeCapabilities[];
@@ -79,7 +76,6 @@ export interface BodyProps {
   numCPUs: number;
   numVolumes: number;
   region: string;
-  regionSupportsDiskEncryption: boolean;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -93,7 +89,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     interfaceWithVPC,
     ipv4,
     ipv6,
-    isLKELinode,
     isUnreachablePublicIPv6,
     linodeCapabilities,
     linodeId,
@@ -103,7 +98,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numCPUs,
     numVolumes,
     region,
-    regionSupportsDiskEncryption,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -234,22 +228,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             </Grid>
             {isDiskEncryptionFeatureEnabled && encryptionStatus && (
               <Grid>
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                >
-                  <EncryptedStatus
-                    encryptionStatus={encryptionStatus}
-                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-                    tooltipText={
-                      isLKELinode
-                        ? undefined
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                    }
-                  />
-                </Box>
+                <LinodeEncryptionStauts linodeId={linodeId} />
               </Grid>
             )}
           </Grid>
