@@ -5,7 +5,7 @@ import {
   metricCriteria,
   triggerConditionValidation,
 } from '@linode/validation';
-import { array, mixed, number, object, string } from 'yup';
+import { array, lazy, mixed, number, object, string } from 'yup';
 
 import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -26,7 +26,7 @@ const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
 const LEADING_ZERO_PORT_REGEX = /^0\d+/;
 
 // Validation schema for a single input port
-const singlePortSchema = string().test(
+export const singlePortSchema = string().test(
   'validate-single-port',
   PORTS_ERROR_MESSAGE,
   function (value) {
@@ -53,7 +53,7 @@ const singlePortSchema = string().test(
 );
 
 // Validation schema for a multiple comma-separated ports
-const commaSeparatedPortListSchema = string().test(
+export const commaSeparatedPortListSchema = string().test(
   'validate-port-list',
   PORTS_HELPER_TEXT,
   function (value) {
@@ -115,6 +115,30 @@ const commaSeparatedPortListSchema = string().test(
   }
 );
 
+const baseValueSchema = string()
+  .required(fieldErrorMessage)
+  .nullable()
+  .test('nonNull', fieldErrorMessage, (value) => value !== null);
+
+interface GetValueSchemaParams {
+  dimensionLabel: string;
+  operator: string;
+}
+
+export const getDimensionFilterValueSchema = ({
+  dimensionLabel,
+  operator,
+}: GetValueSchemaParams) => {
+  if (dimensionLabel === 'port') {
+    const portSchema =
+      operator === 'in' ? commaSeparatedPortListSchema : singlePortSchema;
+
+    return baseValueSchema.concat(portSchema);
+  }
+
+  return baseValueSchema;
+};
+
 export const dimensionFiltersSchema = dimensionFilters.concat(
   object({
     dimension_label: string()
@@ -126,30 +150,13 @@ export const dimensionFiltersSchema = dimensionFilters.concat(
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    value: string()
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null)
-      .when(
-        ['dimension_label', 'operator'],
-        ([dimensionLabel, operator], schema) => {
-          if (dimensionLabel === 'port' && operator === 'in') {
-            return commaSeparatedPortListSchema
-              .required(fieldErrorMessage)
-              .nullable()
-              .test('nonNull', fieldErrorMessage, (value) => value !== null);
-          }
-
-          if (dimensionLabel === 'port' && operator !== 'in') {
-            return singlePortSchema
-              .required(fieldErrorMessage)
-              .nullable()
-              .test('nonNull', fieldErrorMessage, (value) => value !== null);
-          }
-
-          return schema;
-        }
-      ),
+    value: lazy((_, context) => {
+      const { dimension_label, operator } = context.parent;
+      return getDimensionFilterValueSchema({
+        dimensionLabel: dimension_label,
+        operator,
+      }).defined();
+    }),
   })
 );
 
