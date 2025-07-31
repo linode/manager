@@ -148,14 +148,62 @@ export interface ControlPlaneOptions {
 }
 
 export interface CreateKubeClusterPayload {
-  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
+  /**
+   * Whether the Akamai App Platform is installed during creation of the LKE cluster.
+   * @default false
+   */
+  apl_enabled?: boolean;
+  /**
+   * Defines settings for the Kubernetes control plane, including High Availability (HA) and an IP-based Access Control List (ACL).
+   */
   control_plane?: ControlPlaneOptions;
+  /**
+   * The desired Kubernetes version for this Kubernetes cluster in the format of <major>.<minor>.
+   * @note Caught by Yup if undefined.
+   */
   k8s_version?: string; // Will be caught by Yup if undefined
-  label?: string; // Label will be assigned by the API if not provided
+  /**
+   * The cluster's unique label for display purposes only.
+   * @note Will be assigned by the API if not provided.
+   */
+  label?: string;
+  /**
+   * Node pools in the cluster.
+   */
   node_pools: CreateNodePoolDataBeta[];
-  region?: string; // Will be caught by Yup if undefined
-  stack_type?: KubernetesStackType; // For LKE-E; will default to 'ipv4'
-  subnet_id?: number; // For LKE-E
-  tier?: KubernetesTier; // For LKE-E: Will be assigned 'standard' by the API if not provided
-  vpc_id?: number; // For LKE-E
+  /**
+   * The cluster's location.
+   * @note Will be caught by Yup if undefined.
+   */
+  region?: string;
+  /**
+   * The networking for the LKE-E cluster (single or dual stack).
+   *
+   * @note Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   * @default for LKE-E: 'ipv4'
+   */
+  stack_type?: KubernetesStackType;
+  /**
+   * The id of the specified VPC subnet associated with the LKE-E cluster.
+   *
+   * @note Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  subnet_id?: number;
+  /**
+   * The desired Kubernetes tier.
+   *
+   * @note Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   * @default standard
+   */
+  tier?: KubernetesTier;
+  /**
+   * The id of the specified VPC associated with the LKE-E cluster.
+   *
+   * @note Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  vpc_id?: number;
 }
