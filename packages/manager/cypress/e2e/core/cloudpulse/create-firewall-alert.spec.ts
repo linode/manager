@@ -58,7 +58,12 @@ export interface MetricDetails {
 
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
-  aclpBetaServices: { firewall: { alerts: true, metrics: true } },
+  aclpServices: {
+    firewall: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
+  },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'firewall',

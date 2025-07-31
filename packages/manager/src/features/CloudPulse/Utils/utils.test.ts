@@ -1,6 +1,8 @@
 import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
+import { serviceTypesFactory } from 'src/factories';
+
 import {
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -18,10 +20,13 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  getEnabledServiceTypes,
   isValidPort,
   useIsAclpSupportedRegion,
   validationFunction,
 } from './utils';
+
+import type { AclpServices } from 'src/featureFlags';
 
 describe('isValidPort', () => {
   it('should return valid for empty string and valid ports', () => {
@@ -268,5 +273,45 @@ describe('validate useIsAclpSupportedRegion function', () => {
         type: 'alerts',
       })
     ).toBe(false);
+  });
+});
+
+describe('getEnabledServiceTypes', () => {
+  const serviceTypesList = {
+    data: [
+      serviceTypesFactory.build({ service_type: 'dbaas' }),
+      serviceTypesFactory.build({ service_type: 'linode' }),
+    ],
+  };
+
+  it('should return empty list when no service types are provided', () => {
+    const result = getEnabledServiceTypes(undefined, undefined);
+    expect(result).toHaveLength(0);
+  });
+
+  it('should return enabled service types', () => {
+    const aclpServicesFlag: Partial<AclpServices> = {
+      linode: {
+        alerts: { enabled: false, beta: true },
+        metrics: { enabled: false, beta: true },
+      },
+      dbaas: {
+        alerts: { enabled: true, beta: true },
+        metrics: { enabled: true, beta: true },
+      },
+    };
+    const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
+    expect(result).toEqual(['dbaas']);
+  });
+
+  it('should not return the service type which is missing from the aclpServices flag', () => {
+    const aclpServicesFlag: Partial<AclpServices> = {
+      linode: {
+        alerts: { enabled: true, beta: true },
+        metrics: { enabled: true, beta: true },
+      },
+    };
+    const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
+    expect(result).not.toContain('dbaas');
   });
 });

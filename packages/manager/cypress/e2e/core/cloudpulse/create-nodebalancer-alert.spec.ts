@@ -55,7 +55,12 @@ export interface MetricDetails {
 
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
-  aclpBetaServices: { nodebalancer: { alerts: true, metrics: true } },
+  aclpServices: {
+    nodebalancer: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
+  },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'cluster_id',
