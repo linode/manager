@@ -26,9 +26,10 @@ import {
   volumeFactory,
 } from 'src/factories';
 
-import type { Linode, Notification } from '@linode/api-v4';
+import type { Notification } from '@linode/api-v4';
 
 describe('QEMU reboot upgrade notification', () => {
+  const NOTIFICATION_BANNER_TEXT = 'critical platform maintenance';
   const noticeMessageShort =
     'One or more Linodes need to be rebooted for critical platform maintenance.';
   const noticeMessage = `${noticeMessageShort} See which Linodes are scheduled for reboot on the Account Maintenance page.`;
@@ -51,22 +52,17 @@ describe('QEMU reboot upgrade notification', () => {
    * - Check that user gets notified and the notification is present in the notifications dropdown.
    * - Check that a maintenance help button is displayed near the status of impacted Linodes.
    */
-  it(`should display maintenance banner in 'Linnode' landing page when one or more Linodes get impacted.`, () => {
+  it(`should display maintenance banner in 'Linode' landing page when one or more Linodes get impacted.`, () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       restricted: false,
       username: 'mock-user',
     });
-    const mockLinodes = new Array(5)
-      .fill(null)
-      .map((item: null, index: number): Linode => {
-        return linodeFactory.build({
-          label: `Linode ${index}`,
-          region: chooseRegion({
-            capabilities: ['Linodes', 'Vlans'],
-          }).id,
-        });
-      });
+    const mockLinodes = linodeFactory.buildList(5, {
+      region: chooseRegion({
+        capabilities: ['Linodes', 'Vlans'],
+      }).id,
+    });
     const upcomingMaintenance = [
       accountMaintenanceFactory.build({
         status: 'scheduled',
@@ -104,9 +100,9 @@ describe('QEMU reboot upgrade notification', () => {
     });
 
     // Confirm that the notice is visible and contains the expected message
-    cy.get('[data-testid="notice-warning"]')
-      .first()
+    cy.findByText(NOTIFICATION_BANNER_TEXT, { exact: false })
       .should('be.visible')
+      .closest('[data-testid="notice-warning"]')
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
@@ -124,7 +120,7 @@ describe('QEMU reboot upgrade notification', () => {
    * - Check that the notice is visible and contains the expected message.
    * - Check that user gets notified and the notification is present in the notifications dropdown.
    */
-  it(`should display maintenance banner in 'Linnode Details' page when the Linode instance gets impacted.`, () => {
+  it(`should display maintenance banner in 'Linode Details' page when the Linode instance gets impacted.`, () => {
     const mockLinodeRegion = chooseRegion({
       capabilities: ['Linodes', 'Vlans'],
     });
@@ -177,9 +173,9 @@ describe('QEMU reboot upgrade notification', () => {
     cy.visitWithLogin(`/linodes/${mockLinode.id}`);
     cy.wait(['@getLinode', '@getNotifications']);
 
-    cy.get('[data-testid="notice-warning"]')
-      .first()
+    cy.findByText(NOTIFICATION_BANNER_TEXT, { exact: false })
       .should('be.visible')
+      .closest('[data-testid="notice-warning"]')
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
@@ -316,17 +312,17 @@ describe('QEMU reboot upgrade notification', () => {
       });
 
     // Confirm that the notice is visible and contains the expected message
-    cy.get('[data-testid="notice-warning"]')
-      .first()
+    cy.findByText(NOTIFICATION_BANNER_TEXT, { exact: false })
       .should('be.visible')
+      .closest('[data-testid="notice-warning"]')
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
           expect(noticeText).to.include(noticeMessageShort);
         });
       });
-    cy.get('[data-testid="notice-warning"]')
-      .last()
+    cy.findByText(' upcoming', { exact: false })
+      .closest('[data-testid="notice-warning"]')
       .should('be.visible')
       .within(() => {
         cy.get('p').then(($el) => {
