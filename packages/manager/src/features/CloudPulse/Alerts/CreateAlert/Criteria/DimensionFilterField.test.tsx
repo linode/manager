@@ -61,6 +61,7 @@ describe('Dimension filter field component', () => {
           dimensionOptions={dimensionFieldMockData}
           name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
           onFilterDelete={vi.fn()}
+          serviceType="linode"
         />
       ),
       useFormOptions: {
@@ -86,6 +87,7 @@ describe('Dimension filter field component', () => {
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
             onFilterDelete={vi.fn()}
+            serviceType="linode"
           />
         ),
         useFormOptions: {
@@ -130,6 +132,7 @@ describe('Dimension filter field component', () => {
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
             onFilterDelete={vi.fn()}
+            serviceType="linode"
           />
         ),
         useFormOptions: {
@@ -184,6 +187,7 @@ describe('Dimension filter field component', () => {
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
             onFilterDelete={vi.fn()}
+            serviceType="linode"
           />
         ),
         useFormOptions: {
@@ -246,6 +250,7 @@ describe('Dimension filter field component', () => {
           dimensionOptions={mockData[0].dimensions}
           name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
           onFilterDelete={mockOnFilterDelete}
+          serviceType="linode"
         />
       ),
       useFormOptions: {
@@ -317,6 +322,7 @@ describe('Dimension filter field component', () => {
           dimensionOptions={mockData[0].dimensions}
           name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
           onFilterDelete={vi.fn()}
+          serviceType="linode"
         />
       ),
       useFormOptions: {

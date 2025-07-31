@@ -57,6 +57,7 @@ describe('Metric component tests', () => {
           isMetricDefinitionLoading={false}
           name={`rule_criteria.rules.${0}`}
           onMetricDelete={vi.fn()}
+          serviceType="linode"
           showDeleteIcon={false}
         />
       ),
@@ -82,6 +83,7 @@ describe('Metric component tests', () => {
             isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
+            serviceType="linode"
             showDeleteIcon={false}
           />
         ),
@@ -125,6 +127,7 @@ describe('Metric component tests', () => {
             isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
+            serviceType="linode"
             showDeleteIcon={false}
           />
         ),
@@ -172,6 +175,7 @@ describe('Metric component tests', () => {
             isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
+            serviceType="linode"
             showDeleteIcon={false}
           />
         ),
@@ -214,6 +218,7 @@ describe('Metric component tests', () => {
             isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
+            serviceType="linode"
             showDeleteIcon={false}
           />
         ),
