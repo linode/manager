@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { StyledHeader } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar.styles';
 
-import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 type StreamCreateSidebarProps = {
   createStream: () => void;
@@ -14,8 +14,8 @@ type StreamCreateSidebarProps = {
 export const StreamCreateSubmitBar = (props: StreamCreateSidebarProps) => {
   const { createStream } = props;
 
-  const { control } = useFormContext<CreateStreamForm>();
-  const destinationType = useWatch({ control, name: 'destination_type' });
+  const { control } = useFormContext<CreateStreamAndDestinationForm>();
+  const destinationType = useWatch({ control, name: 'destination.type' });
 
   return (
     <Paper sx={{ position: 'sticky', top: 0 }}>

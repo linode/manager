@@ -9,7 +9,29 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { PathSample } from 'src/features/DataStream/Shared/PathSample';
 import { useFlags } from 'src/hooks/useFlags';
 
-export const DestinationLinodeObjectStorageDetailsForm = () => {
+interface DestinationLinodeObjectStorageDetailsFormProps {
+  controlPaths?: {
+    accessKeyId: string;
+    accessKeySecret: string;
+    bucketName: string;
+    host: string;
+    path: string;
+    region: string;
+  };
+}
+
+const defaultPaths = {
+  accessKeyId: 'details.access_key_id',
+  accessKeySecret: 'details.access_key_secret',
+  bucketName: 'details.bucket_name',
+  host: 'details.host',
+  path: 'details.path',
+  region: 'details.region',
+};
+
+export const DestinationLinodeObjectStorageDetailsForm = ({
+  controlPaths = defaultPaths,
+}: DestinationLinodeObjectStorageDetailsFormProps) => {
   const { gecko2 } = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
   const { data: regions } = useRegionsQuery();
@@ -19,11 +41,13 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
     <>
       <Controller
         control={control}
-        name="host"
-        render={({ field }) => (
+        name={controlPaths.host}
+        render={({ field, fieldState }) => (
           <TextField
             aria-required
+            errorText={fieldState.error?.message}
             label="Host"
+            onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
@@ -35,11 +59,13 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
       />
       <Controller
         control={control}
-        name="bucket_name"
-        render={({ field }) => (
+        name={controlPaths.bucketName}
+        render={({ field, fieldState }) => (
           <TextField
             aria-required
+            errorText={fieldState.error?.message}
             label="Bucket"
+            onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
@@ -51,13 +77,15 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
       />
       <Controller
         control={control}
-        name="region"
-        render={({ field }) => (
+        name={controlPaths.region}
+        render={({ field, fieldState }) => (
           <RegionSelect
             currentCapability="Object Storage"
             disableClearable
+            errorText={fieldState.error?.message}
             isGeckoLAEnabled={isGeckoLAEnabled}
             label="Region"
+            onBlur={field.onBlur}
             onChange={(_, region) => field.onChange(region.id)}
             regionFilter="core"
             regions={regions ?? []}
@@ -67,11 +95,13 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
       />
       <Controller
         control={control}
-        name="access_key_id"
-        render={({ field }) => (
+        name={controlPaths.accessKeyId}
+        render={({ field, fieldState }) => (
           <HideShowText
             aria-required
+            errorText={fieldState.error?.message}
             label="Access Key ID"
+            onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
             placeholder="Access Key ID..."
             value={field.value}
@@ -80,11 +110,13 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
       />
       <Controller
         control={control}
-        name="access_key_secret"
-        render={({ field }) => (
+        name={controlPaths.accessKeySecret}
+        render={({ field, fieldState }) => (
           <HideShowText
             aria-required
+            errorText={fieldState.error?.message}
             label="Secret Access Key"
+            onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
             placeholder="Secret Access Key..."
             value={field.value}
@@ -96,11 +128,13 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
       <Box alignItems="end" display="flex" flexWrap="wrap" gap="16px">
         <Controller
           control={control}
-          name="path"
-          render={({ field }) => (
+          name={controlPaths.path}
+          render={({ field, fieldState }) => (
             <TextField
               aria-required
+              errorText={fieldState.error?.message}
               label="Log Path Prefix"
+              onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
               placeholder="Log Path Prefix..."
               sx={{ width: 416 }}
