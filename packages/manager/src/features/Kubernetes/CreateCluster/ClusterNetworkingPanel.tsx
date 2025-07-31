@@ -32,7 +32,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
   const { control, resetField, clearErrors } = useFormContext();
   const [selectedVPCId] = useWatch({
     control,
-    name: ['vpc_id', 'subnet_id'],
+    name: ['vpc_id'],
   });
 
   const { data: region } = useRegionQuery(selectedRegionId ?? '');
