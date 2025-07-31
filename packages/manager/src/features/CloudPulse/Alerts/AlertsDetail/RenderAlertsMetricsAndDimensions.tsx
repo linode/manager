@@ -73,12 +73,17 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                 values={dimensionFilters.map(
                   ({
                     label: dimensionLabel,
+                    dimension_label: dimensionFilterKey,
                     operator: dimensionOperator,
                     value,
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    transformDimensionValue(serviceType, dimensionLabel, value),
+                    transformDimensionValue(
+                      serviceType,
+                      dimensionFilterKey,
+                      value
+                    ),
                   ]
                 )}
               />
