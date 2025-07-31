@@ -137,12 +137,18 @@ export const CloudPulseDashboardSelect = React.memo(
         placeholder={placeHolder}
         renderGroup={(params) => (
           <Box key={params.key}>
-            <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.get(params.group as CloudPulseServiceType) ||
-                params.group}{' '}
+            <Box display="flex">
+              <Typography
+                data-qa-id={params.group}
+                sx={{ marginLeft: '3.5%' }}
+                variant="h3"
+              >
+                {serviceTypeMap.get(params.group as CloudPulseServiceType) ||
+                  params.group}
+              </Typography>
               {aclpServices?.[params.group as CloudPulseServiceType]?.metrics
                 ?.beta && <BetaChip />}
-            </Typography>
+            </Box>
             {params.children}
           </Box>
         )}
