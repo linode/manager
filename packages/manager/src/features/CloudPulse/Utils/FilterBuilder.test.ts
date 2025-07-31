@@ -1,11 +1,17 @@
 import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
-import { dashboardFactory } from 'src/factories';
+import {
+  dashboardFactory,
+  databaseFactory,
+  databaseInstanceFactory,
+} from 'src/factories';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
   deepEqual,
+  filterBasedOnConfig,
+  filterUsingDependentFilters,
   getFilters,
   getTextFilterProperties,
 } from './FilterBuilder';
@@ -21,7 +27,10 @@ import {
   shouldDisableFilterByFilterKey,
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseSelectTypes } from './models';
+import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { CloudPulseServiceTypeFilters } from './models';
 
 const mockDashboard = dashboardFactory.build();
 
@@ -110,7 +119,7 @@ it('test getResourceSelectionProperties method', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(xFilter)).toEqual('{"region":"us-east"}');
     expect(label).toEqual(name);
   }
 });
@@ -142,7 +151,7 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(true);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(xFilter)).toEqual('{}');
     expect(label).toEqual(name);
   }
 });
@@ -187,20 +196,16 @@ it('test getNodeTypeProperties with disabled true', () => {
   expect(nodeTypeSelectionConfig).toBeDefined();
 
   if (nodeTypeSelectionConfig) {
-    const {
-      disabled,
-      handleNodeTypeChange,
-      label,
-      savePreferences,
-    } = getNodeTypeProperties(
-      {
-        config: nodeTypeSelectionConfig,
-        dashboard: dbaasDashboard,
-        dependentFilters: {},
-        isServiceAnalyticsIntegration: false,
-      },
-      vi.fn()
-    );
+    const { disabled, handleNodeTypeChange, label, savePreferences } =
+      getNodeTypeProperties(
+        {
+          config: nodeTypeSelectionConfig,
+          dashboard: dbaasDashboard,
+          dependentFilters: {},
+          isServiceAnalyticsIntegration: false,
+        },
+        vi.fn()
+      );
     const { name } = nodeTypeSelectionConfig.configuration;
     expect(handleNodeTypeChange).toBeDefined();
     expect(savePreferences).toEqual(true);
@@ -241,9 +246,9 @@ describe('shouldDisableFilterByFilterKey', () => {
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
-      { region: undefined,},
+      { region: undefined },
       mockDashboard,
-      { region: 'us-east'} // tags are defined in preferences which confirms that this optional filter was selected
+      { region: 'us-east' } // tags are defined in preferences which confirms that this optional filter was selected
     );
     expect(result).toEqual(true);
   });
@@ -544,4 +549,178 @@ it('should return the filters based on dashboard', () => {
   );
 
   expect(filters?.length).toBe(1);
+});
+
+describe('filterUsingDependentFilters', () => {
+  const mockData: CloudPulseResources[] = [
+    {
+      ...databaseInstanceFactory.build(),
+      region: 'us-east',
+      engineType: 'mysql',
+      id: '1',
+      tags: ['test'],
+    },
+    {
+      ...databaseInstanceFactory.build(),
+      region: 'us-west',
+      engineType: 'postgresql',
+      id: '2',
+      tags: ['test', 'test2'],
+    },
+  ];
+  it('should return the data passed if data or dependentFilters are undefined', () => {
+    expect(filterUsingDependentFilters(undefined, undefined)).toBeUndefined();
+    expect(filterUsingDependentFilters(mockData, undefined)).toBe(mockData);
+    expect(filterUsingDependentFilters(undefined, {})).toBeUndefined();
+  });
+
+  it('should filter based on a single key-value match', () => {
+    const filters = { engineType: 'mysql' };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[0]]);
+  });
+
+  it('should filter when both resource and filter value are arrays', () => {
+    const filters = { tags: ['test', 'test2'] };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[0], mockData[1]]);
+  });
+
+  it('should return empty array if no resource matches', () => {
+    const filters = { region: 'us-central' };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([]);
+  });
+
+  it('should apply multiple filters simultaneously', () => {
+    let filters = {
+      engineType: 'postgresql',
+      region: 'us-east',
+      tags: 'test',
+    };
+    let result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([]);
+
+    filters = {
+      engineType: 'postgresql',
+      region: 'us-east',
+      tags: 'test',
+    };
+
+    result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([]);
+
+    filters = {
+      engineType: 'postgresql',
+      region: 'us-west',
+      tags: 'test',
+    };
+
+    result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[1]]);
+  });
+});
+
+describe('filterBasedOnConfig', () => {
+  it('should return empty object if config has no dependencies', () => {
+    const config: CloudPulseServiceTypeFilters = {
+      configuration: {
+        dependency: [], // empty dependency
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Database Clusters',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Database Clusters',
+        priority: 3,
+      },
+      name: 'Resources',
+    };
+    const dependentFilters = { engine: 'mysql', region: 'us-east' };
+    const result = filterBasedOnConfig(config, dependentFilters);
+    expect(result).toEqual({});
+  });
+
+  it('should return filtered values based on dependency keys', () => {
+    const config: CloudPulseServiceTypeFilters = {
+      configuration: {
+        dependency: ['engine', 'status'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Database Clusters',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Database Clusters',
+        priority: 3,
+      },
+      name: 'Resources',
+    };
+    const dependentFilters = {
+      engine: 'mysql',
+      region: 'us-east',
+      status: 'running',
+    };
+    const result = filterBasedOnConfig(config, dependentFilters);
+    expect(result).toEqual({
+      engineType: 'mysql',
+      status: 'running',
+    });
+  });
+
+  it('should not include undefined keys even if listed in dependency', () => {
+    const config: CloudPulseServiceTypeFilters = {
+      configuration: {
+        dependency: ['engine', 'region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Database Clusters',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Database Clusters',
+        priority: 3,
+      },
+      name: 'Resources',
+    };
+    const dependentFilters = {
+      engine: 'mysql',
+      region: undefined,
+    };
+    const result = filterBasedOnConfig(config, dependentFilters);
+    expect(result).toEqual({
+      engineType: 'mysql',
+    });
+  });
+
+  it('should work with array values in filters', () => {
+    const config: CloudPulseServiceTypeFilters = {
+      configuration: {
+        dependency: ['engine', 'tags'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Database Clusters',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Database Clusters',
+        priority: 3,
+      },
+      name: 'Resources',
+    };
+    const dependentFilters = {
+      engine: 'mysql',
+      tags: ['db', 'prod'],
+    };
+    const result = filterBasedOnConfig(config, dependentFilters);
+    expect(result).toEqual({
+      engineType: 'mysql',
+      tags: ['db', 'prod'],
+    });
+  });
 });

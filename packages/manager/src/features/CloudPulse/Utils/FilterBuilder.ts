@@ -1,5 +1,3 @@
-import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-
 import {
   NODE_TYPE,
   REGION,
@@ -37,7 +35,6 @@ import type {
   Params,
   TimeDuration,
 } from '@linode/api-v4';
-import type { UseQueryResult } from '@tanstack/react-query';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -396,13 +393,17 @@ export const getTextFilterProperties = (
  * @returns - a xFilter type of apiV4
  */
 export const filterBasedOnConfig = (
-  config: CloudPulseServiceTypeFilters,
+  config: CloudPulseServiceTypeFilters | undefined,
   dependentFilters: {
     [key: string]: FilterValueType;
   }
 ): {
   [key: string]: FilterValueType;
 } => {
+  if (!config) {
+    return {};
+  }
+
   const { dependency } = config.configuration;
   const filtered: {
     [key: string]: FilterValueType;
@@ -706,35 +707,4 @@ export const filterUsingDependentFilters = (
       }
     });
   });
-};
-
-/**
- *
- * @param enabled
- * @param resourceType
- * @param params
- * @param filters
- * @param dependentFilters
- * @returns
- */
-export const useFilteredResources = (
-  props: CloudPulseResourceHookProps
-): UseQueryResult<CloudPulseResources[]> => {
-  const { enabled, resourceType, params, filters, dependentFilters } = props;
-
-  const { data: resources, ...rest } = useResourcesQuery(
-    enabled,
-    resourceType,
-    params,
-    filters
-  );
-
-  const filteredResources = filterUsingDependentFilters(
-    resources,
-    dependentFilters
-  );
-
-  return { ...rest, data: filteredResources } as UseQueryResult<
-    CloudPulseResources[]
-  >;
 };
