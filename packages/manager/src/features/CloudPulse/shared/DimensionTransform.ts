@@ -6,14 +6,13 @@ import type {
   TransformFunctionMap,
 } from '@linode/api-v4';
 
-// Default transform functions
+// Transform functions to transform the dimension value
 export const TRANSFORMS: TransformFunctionMap = {
   capitalize: (value: string) => capitalize(value),
   uppercase: (value: string) => value.toUpperCase(),
   lowercase: (value: string) => value.toLowerCase(),
 };
 
-// Service-specific dimension value transforms
 export const DIMENSION_TRANSFORM_CONFIG: Partial<
   Record<CloudPulseServiceType, Record<string, TransformFunction>>
 > = {
