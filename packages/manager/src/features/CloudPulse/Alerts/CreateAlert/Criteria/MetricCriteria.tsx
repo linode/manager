@@ -23,7 +23,10 @@ interface MetricCriteriaProps {
    * name used for the component to set formik field
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, MetricCriteriaForm[]>;
-
+  /**
+   * serviceType used by the api to fetch the metric definitions
+   */
+  serviceType: CloudPulseServiceType | null;
   /**
    * function used to pass the scrape interval value to the parent component
    * @param maxInterval number value that takes the maximum scrape interval from the list of selected metrics
