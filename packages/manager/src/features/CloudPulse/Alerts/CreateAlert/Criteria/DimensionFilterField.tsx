@@ -16,11 +16,7 @@ import { ClearIconButton } from './ClearIconButton';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
-import type {
-  CloudPulseServiceType,
-  Dimension,
-  DimensionFilterOperatorType,
-} from '@linode/api-v4';
+import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
 
 interface DimensionFilterFieldProps {
   /**
@@ -40,20 +36,10 @@ interface DimensionFilterFieldProps {
    * @returns void
    */
   onFilterDelete: () => void;
-  /**
-   * serviceType used by the api to fetch the metric definitions
-   */
-  serviceType: CloudPulseServiceType | null;
 }
 
 export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
-  const {
-    dataFieldDisabled,
-    dimensionOptions,
-    name,
-    onFilterDelete,
-    serviceType,
-  } = props;
+  const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
 
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
@@ -94,6 +80,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   });
 
   const dimensionValueWatcher = useWatch({ control, name: `${name}.value` });
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -105,7 +93,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     if (selectedDimension !== null && selectedDimension.values) {
       return selectedDimension.values.map((val) => ({
         label: transformDimensionValue(
-          serviceType,
+          serviceTypeWatcher,
           selectedDimension.dimension_label,
           val
         ),
