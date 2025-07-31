@@ -14,7 +14,7 @@ permissions:
 
 on:
   pull_request_target:
-    types: [opened]
+    types: [opened, ready_for_review]  # ready_for_review: run when draft PRs are marked ready
     branches:
       - develop
 
@@ -22,6 +22,7 @@ jobs:
   add-release-label:
     name: Add Release Label
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     steps:
       - name: Calculate next release date
         id: calculate_date
