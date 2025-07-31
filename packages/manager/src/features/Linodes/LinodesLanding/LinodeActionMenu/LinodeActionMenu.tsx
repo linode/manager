@@ -57,7 +57,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     [
       'shutdown_linode',

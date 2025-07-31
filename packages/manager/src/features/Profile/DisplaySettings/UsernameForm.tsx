@@ -22,7 +22,7 @@ export const UsernameForm = () => {
 
   const values = { username: profile?.username ?? '' };
 
-  const { permissions } = usePermissions('account', ['update_user']);
+  const { data: permissions } = usePermissions('account', ['update_user']);
 
   const {
     control,
