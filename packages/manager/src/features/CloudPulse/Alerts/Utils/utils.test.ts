@@ -15,6 +15,7 @@ import {
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
+  transformDimensionValue,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -418,5 +419,27 @@ describe('filterRegionByServiceType', () => {
     const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('transformDimensionValue', () => {
+  it('should apply service-specific transformations', () => {
+    expect(transformDimensionValue('linode', 'type', '')).toBe('');
+    expect(transformDimensionValue('linode', 'operation', 'read')).toBe('Read');
+    expect(transformDimensionValue('dbaas', 'node_type', 'primary')).toBe(
+      'Primary'
+    );
+    expect(
+      transformDimensionValue('firewall', 'interface_type', 'public')
+    ).toBe('Public');
+    expect(transformDimensionValue('nodebalancer', 'protocol', 'http')).toBe(
+      'HTTP'
+    );
+  });
+
+  it('should fallback to capitalize for unknown dimensions', () => {
+    expect(
+      transformDimensionValue('linode', 'unknown_dimension', 'test_value')
+    ).toBe('Test_value');
   });
 });
