@@ -89,9 +89,10 @@ export const CloudPulseResourcesSelect = React.memo(
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       // TODO: apply the filters here
       const filteredResources = filterUsingDependentFilters(resources, xFilter);
-      return filteredResources && filteredResources.length > 0
-        ? filteredResources
-        : [];
+      const sortedResources = filteredResources?.sort((a, b) =>
+        a.label.localeCompare(b.label)
+      );
+      return sortedResources?.length ? sortedResources : [];
     }, [resources, xFilter]);
 
     // Maximum resource selection limit is fetched from launchdarkly
