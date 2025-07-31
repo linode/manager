@@ -58,7 +58,6 @@ describe('DimensionFilterField', () => {
             dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
-            serviceType="linode"
           />
         ),
         useFormOptions: {
@@ -88,7 +87,6 @@ describe('DimensionFilterField', () => {
             dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
-            serviceType="linode"
           />
         ),
         useFormOptions: {
@@ -112,7 +110,6 @@ describe('DimensionFilterField', () => {
             dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
-            serviceType="linode"
           />
         ),
         useFormOptions: {
@@ -153,7 +150,6 @@ describe('DimensionFilterField', () => {
             dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
-            serviceType="linode"
           />
         ),
         useFormOptions: {
