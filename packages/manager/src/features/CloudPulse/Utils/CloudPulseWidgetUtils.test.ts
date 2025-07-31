@@ -9,6 +9,10 @@ import {
   mapResourceIdToName,
 } from './CloudPulseWidgetUtils';
 
+import type {
+  DimensionNameProperties,
+  LabelNameOptionsProps,
+} from './CloudPulseWidgetUtils';
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
@@ -60,7 +64,7 @@ describe('generateMaxUnit method', () => {
 });
 
 describe('getLabelName method', () => {
-  const baseProps = {
+  const baseProps: LabelNameOptionsProps = {
     label: 'CPU Usage',
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
@@ -74,7 +78,7 @@ describe('getLabelName method', () => {
   });
 
   it('returns entity_id when resource is not found in resources array', () => {
-    const props = {
+    const props: LabelNameOptionsProps = {
       ...baseProps,
       metric: { entity_id: '999' },
     };
@@ -83,7 +87,7 @@ describe('getLabelName method', () => {
   });
 
   it('returns empty string when entity_id is empty', () => {
-    const props = {
+    const props: LabelNameOptionsProps = {
       ...baseProps,
       metric: { entity_id: '' },
     };
@@ -116,6 +120,7 @@ it('test generateGraphData with metrics data', () => {
     resources: [{ id: '1', label: 'linode-1' }],
     status: 'success',
     unit: '%',
+    serviceType: 'linode',
   });
 
   expect(result.areas[0].dataKey).toBe('linode-1');
@@ -139,7 +144,8 @@ it('test generateGraphData with metrics data', () => {
 });
 
 describe('getDimensionName method', () => {
-  const baseProps = {
+  const baseProps: DimensionNameProperties = {
+    serviceType: 'linode',
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
   };
@@ -159,7 +165,7 @@ describe('getDimensionName method', () => {
   });
 
   it('returns value directly when key does not match entity_id', () => {
-    const props = {
+    const props: DimensionNameProperties = {
       ...baseProps,
       metric: { other_key: '123' },
     };
@@ -168,7 +174,7 @@ describe('getDimensionName method', () => {
   });
 
   it('joins multiple metric values with separator excluding metric_name when there is only one unique metric name', () => {
-    const props = {
+    const props: DimensionNameProperties = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
       hideMetricName: true,
@@ -178,7 +184,7 @@ describe('getDimensionName method', () => {
   });
 
   it('joins multiple metric values with separator including metric_name when there are multiple unique metric names', () => {
-    const props = {
+    const props: DimensionNameProperties = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
     };
@@ -187,7 +193,7 @@ describe('getDimensionName method', () => {
   });
 
   it('handles empty metric values by filtering them out', () => {
-    const props = {
+    const props: DimensionNameProperties = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: '', node_id: '' },
     };
@@ -196,12 +202,26 @@ describe('getDimensionName method', () => {
   });
 
   it('returns entity_id directly when resources array is empty', () => {
-    const props = {
+    const props: DimensionNameProperties = {
       ...baseProps,
       resources: [],
     };
     const result = getDimensionName(props);
     expect(result).toBe('123');
+  });
+
+  it('returns the transformed dimension name according to the service type', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      metric: {
+        entity_id: '123',
+        metric_name: 'test',
+        node_id: 'primary-1',
+        operation: 'read',
+      },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1 | test | primary-1 | Read');
   });
 });
 
