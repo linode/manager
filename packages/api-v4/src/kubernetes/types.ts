@@ -13,6 +13,8 @@ export type Label = {
 
 export type NodePoolUpdateStrategy = 'on_recycle' | 'rolling_update';
 
+export type KubernetesStackType = 'ipv4' | 'ipv4-ipv6';
+
 export interface Taint {
   effect: KubernetesTaintEffect;
   key: string;
@@ -27,6 +29,11 @@ export interface KubernetesCluster {
   k8s_version: string;
   label: string;
   region: string;
+  /**
+   * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  stack_type?: KubernetesStackType;
   status: string; // @todo enum this
   /**
    * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
@@ -147,5 +154,6 @@ export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   node_pools: CreateNodePoolDataBeta[];
   region?: string; // Will be caught by Yup if undefined
+  stack_type?: KubernetesStackType; // For LKE-E; will default to 'ipv4'
   tier?: KubernetesTier; // For LKE-E: Will be assigned 'standard' by the API if not provided
 }

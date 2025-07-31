@@ -697,6 +697,7 @@ describe('LKE Cluster Creation with ACL', () => {
 
   describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
+      mockGetKubernetesVersions([clusterVersion]).as('getLKEVersions');
       mockGetRegions([mockRegion]).as('getRegions');
       mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
       mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
@@ -731,7 +732,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getRegions', '@getLinodeTypes']);
+      cy.wait(['@getRegions', '@getLinodeTypes', '@getLKEVersions']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();

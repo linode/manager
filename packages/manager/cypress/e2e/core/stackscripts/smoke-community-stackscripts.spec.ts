@@ -307,7 +307,7 @@ describe('Community Stackscripts integration tests', () => {
           .click();
         cy.url().should(
           'endWith',
-          `linodes/create?type=StackScripts&subtype=Community&stackScriptID=${stackScriptId}`
+          `linodes/create/stackscripts?subtype=Community&stackScriptID=${stackScriptId}`
         );
       });
 
@@ -331,7 +331,7 @@ describe('Community Stackscripts integration tests', () => {
       .click();
     cy.url().should(
       'endWith',
-      `linodes/create?type=StackScripts&subtype=Community&stackScriptID=${stackScriptId}`
+      `linodes/create/stackscripts?subtype=Community&stackScriptID=${stackScriptId}`
     );
 
     // Input VPN information
