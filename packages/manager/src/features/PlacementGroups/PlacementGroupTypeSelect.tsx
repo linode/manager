@@ -1,4 +1,4 @@
-import { Autocomplete, ListItemOption, Typography } from '@linode/ui';
+import { Autocomplete, ListItem, Tooltip, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -23,38 +23,57 @@ export const PlacementGroupTypeSelect = (props: Props) => {
       )}
       disableClearable={true}
       disabled={disabledPlacementGroupCreateButton}
-      disabledItemsFocusable
       errorText={error}
-      getOptionDisabled={(option) => option.value === 'affinity:local'}
       label="Placement Group Type"
       onChange={(_, value) => {
         setFieldValue('placement_group_type', value?.value ?? '');
       }}
       options={placementGroupTypeOptions}
       placeholder="Select an Placement Group Type"
-      renderOption={(props, option, { selected }) => {
+      renderOption={(props, option) => {
         const { key, ...rest } = props;
-        const isDisabled = option.value === 'affinity:local';
-
-        const disabledReason = (
-          <Typography>
-            Currently, only Anti-affinity placement groups are supported.{' '}
-            <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
-          </Typography>
-        );
+        const isDisabledMenuItem = option.value === 'affinity:local';
 
         return (
-          <ListItemOption
-            disabledOptions={
-              isDisabled ? { reason: disabledReason } : undefined
-            }
-            item={{ ...option, id: option.value }}
+          <Tooltip
+            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
+            disableFocusListener={!isDisabledMenuItem}
+            disableHoverListener={!isDisabledMenuItem}
+            disableTouchListener={!isDisabledMenuItem}
+            enterDelay={200}
+            enterNextDelay={200}
+            enterTouchDelay={200}
             key={key}
-            props={rest}
-            selected={selected}
+            title={
+              isDisabledMenuItem ? (
+                <Typography>
+                  Currently, only Anti-affinity placement groups are supported.{' '}
+                  <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
+                </Typography>
+              ) : (
+                ''
+              )
+            }
           >
-            {option.label}
-          </ListItemOption>
+            <ListItem
+              {...rest}
+              className={
+                isDisabledMenuItem
+                  ? `${props.className} Mui-disabled`
+                  : props.className
+              }
+              component="li"
+              onClick={(e) =>
+                isDisabledMenuItem
+                  ? e.preventDefault()
+                  : props.onClick
+                    ? props.onClick(e)
+                    : null
+              }
+            >
+              {option.label}
+            </ListItem>
+          </Tooltip>
         );
       }}
       textFieldProps={{

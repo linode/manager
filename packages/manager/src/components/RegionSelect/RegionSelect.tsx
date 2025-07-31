@@ -105,11 +105,11 @@ export const RegionSelect = <
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
+        autoHighlight
         clearOnBlur
         data-testid="region-select"
         disableClearable={disableClearable}
         disabled={disabled}
-        disabledItemsFocusable
         errorText={errorText}
         filterOptions={filterOptions}
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
@@ -126,7 +126,7 @@ export const RegionSelect = <
         onChange={onChange}
         options={regionOptions}
         placeholder={placeholder ?? 'Select a Region'}
-        renderOption={(props, region, state) => {
+        renderOption={(props, region, { selected }) => {
           const { key, ...rest } = props;
 
           return (
@@ -136,7 +136,7 @@ export const RegionSelect = <
               item={region}
               key={`${region.id}-${key}`}
               props={rest}
-              selected={state.selected}
+              selected={selected}
             />
           );
         }}
