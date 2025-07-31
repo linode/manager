@@ -202,14 +202,14 @@ export const MaintenanceWindow = (props: Props) => {
               <InputLabel
                 data-qa-dropdown-label="day-of-week-select"
                 data-qa-textfield-label="Day of Week"
-                sx={{
-                  marginBottom: '8px',
+                sx={(theme) => ({
+                  marginBottom: theme.spacingFunction(8),
                   transform: 'none',
-                }}
+                })}
               >
                 Day of Week
               </InputLabel>
-              <Box data-qa-autocomplete="Day of Week" sx={{ width: '125px' }}>
+              <Box data-qa-autocomplete="Day of Week" sx={{ width: '160px' }}>
                 <Select
                   autocomplete
                   id="dayOfWeek"
@@ -242,10 +242,10 @@ export const MaintenanceWindow = (props: Props) => {
                     data-qa-dropdown-label="time-select"
                     data-qa-textfield-label="Time"
                     htmlFor="time"
-                    sx={{
-                      marginBottom: '8px',
+                    sx={(theme) => ({
+                      marginBottom: theme.spacingFunction(8),
                       transform: 'none',
-                    }}
+                    })}
                   >
                     Time
                   </InputLabel>
@@ -255,7 +255,7 @@ export const MaintenanceWindow = (props: Props) => {
                     display: 'flex',
                   }}
                 >
-                  <Box sx={{ width: '120px' }}>
+                  <Box sx={{ width: '160px' }}>
                     <Select
                       autocomplete
                       disabled={disabled}
