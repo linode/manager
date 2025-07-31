@@ -333,16 +333,13 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    if (isLkeEnterprisePhase2FeatureEnabled && vpcId && subnetId) {
+    if (isLkeEnterprisePhase2FeatureEnabled) {
       payload = {
         ...payload,
         vpc_id: vpcId,
         subnet_id: subnetId,
+        stack_type: stackType ?? undefined,
       };
-    }
-
-    if (isLkeEnterprisePhase2FeatureEnabled && stackType) {
-      payload = { ...payload, stack_type: stackType };
     }
 
     const createClusterFn = isUsingBetaEndpoint
@@ -567,7 +564,7 @@ export const CreateCluster = () => {
             )}
             <Divider
               sx={{
-                marginBottom: selectedTier === 'enterprise' ? 3 : 1,
+                marginBottom: selectedTier === 'enterprise' ? 2 : 1,
                 marginTop: showAPL ? 1 : 4,
               }}
             />

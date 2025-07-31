@@ -18,8 +18,8 @@ import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
 interface Props {
   selectedRegionId: string | undefined;
-  subnetErrorText: string | undefined;
-  vpcErrorText: string | undefined;
+  subnetErrorText?: string;
+  vpcErrorText?: string;
 }
 
 export const ClusterNetworkingPanel = (props: Props) => {
