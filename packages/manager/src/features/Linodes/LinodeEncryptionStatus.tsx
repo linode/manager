@@ -26,10 +26,8 @@ export const LinodeEncryptionStauts = ({ linodeId }: Props) => {
    * Linode is *not* associated with an LKE cluster *and* the Linode
    * is in a region that supports disk encryption.
    */
-  const tooltipText =
-    !linode?.lke_cluster_id && regionSupportsDiskEncryption
-      ? UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-      : null;
+  const userCanControlEncryption =
+    !linode?.lke_cluster_id && regionSupportsDiskEncryption;
 
   return (
     <Stack
@@ -42,7 +40,12 @@ export const LinodeEncryptionStauts = ({ linodeId }: Props) => {
       <Typography sx={{ whiteSpace: 'nowrap' }}>
         {isEncrypted ? 'Encrypted' : 'Not Encrypted'}
       </Typography>
-      {tooltipText && <TooltipIcon status="info" text={tooltipText} />}
+      {userCanControlEncryption && (
+        <TooltipIcon
+          status="info"
+          text={UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY}
+        />
+      )}
     </Stack>
   );
 };
