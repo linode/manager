@@ -1,9 +1,11 @@
 name: Release Labeler
 
 # Security note: This workflow uses pull_request_target to work with forked repositories.
+# When editing file, please read: https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
+
 # This is safe because:
 # 1. We do NOT checkout the repository (no untrusted code execution)
-# 2. We only use GitHub CLI commands to manage labels
+# 2. We only use GitHub CLI commands to manage labels, so we DO need write permissions
 # 3. We only read from GitHub context variables, not from PR content
 # 4. All date calculations are done with trusted shell commands
 
