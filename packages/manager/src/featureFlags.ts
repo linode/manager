@@ -117,6 +117,8 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 interface AclpAlerting {
+  accountAlertLimit: number;
+  accountMetricLimit: number;
   alertDefinitions: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;
