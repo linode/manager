@@ -30,9 +30,7 @@ import type {
   CloudPulseServiceType,
   Dashboard,
   DateTimeWithPreset,
-  Filter,
   Filters,
-  Params,
   TimeDuration,
 } from '@linode/api-v4';
 
@@ -54,31 +52,6 @@ interface CloudPulseMandatoryFilterCheckProps {
     [key: string]: FilterValueType;
   };
   timeDuration: DateTimeWithPreset | undefined;
-}
-
-interface CloudPulseResourceHookProps {
-  /*
-   * The dependent filters selected
-   */
-  dependentFilters?: {
-    [key: string]: FilterValueType;
-  };
-  /*
-   * The property that controls whether we need to enable or disable the hook
-   */
-  enabled?: boolean;
-  /*
-   * The filters that needs to be applied for the request
-   */
-  filters?: Filter;
-  /*
-   * The params that needs to be applied for the request
-   */
-  params?: Params;
-  /*
-   * The service type of the selected dashboard
-   */
-  resourceType: string | undefined;
 }
 
 /**
@@ -390,7 +363,7 @@ export const getTextFilterProperties = (
  *
  * @param config - any cloudpulse service type filter config
  * @param dependentFilters - the filters that are selected so far
- * @returns - a xFilter type of apiV4
+ * @returns - filtered dependencies based on the provided config
  */
 export const filterBasedOnConfig = (
   config: CloudPulseServiceTypeFilters | undefined,

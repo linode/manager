@@ -5,7 +5,6 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { PRIMARY_NODE } from '../Utils/constants';
 
-import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseNodeType {
@@ -105,10 +104,8 @@ export const CloudPulseNodeTypeFilter = React.memo(
       }
       // check if any cluster has a size greater than 1 for selected database ids
       return databaseClusters.some(
-        (cluster: CloudPulseResources) =>
-          database_ids.includes(Number(cluster.id)) &&
-          cluster.clusterSize &&
-          cluster.clusterSize > 1
+        ({ id, clusterSize }) =>
+          database_ids.includes(Number(id)) && clusterSize && clusterSize > 1
       );
     }, [databaseClusters, database_ids]);
 
@@ -168,7 +165,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
           option.id === value.id && option.label === value.label
         }
         label={label || 'Node Type'}
-        loading={!disabled && isLoading}
+        loading={isLoading}
         noMarginTop
         onChange={(_e, selectedNode) => handleNodeTypeSelection(selectedNode)}
         options={availableOptions}

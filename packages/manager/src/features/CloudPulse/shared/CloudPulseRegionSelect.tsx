@@ -6,12 +6,13 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { filterRegionByServiceType } from '../Alerts/Utils/utils';
 import { NO_REGION_MESSAGE } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { Dashboard, Filter, FilterValue } from '@linode/api-v4';
+import type { Dashboard, Filter, FilterValue, Region } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -106,11 +107,11 @@ export const CloudPulseRegionSelect = React.memo(
       regions, // Function to call on change
     ]);
 
-    // const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-    //   return filterRegionByServiceType('metrics', regions, serviceType);
-    // }, [regions, serviceType]);
+    const supportedRegions = React.useMemo<Region[] | undefined>(() => {
+      return filterRegionByServiceType('metrics', regions, serviceType);
+    }, [regions, serviceType]);
 
-    const supportedRegionsFromResources = regions?.filter(({ id }) =>
+    const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
       filterUsingDependentFilters(resources, xFilter)?.some(
         ({ region }) => region === id
       )

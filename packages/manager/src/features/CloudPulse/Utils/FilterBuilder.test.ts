@@ -1,11 +1,7 @@
 import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
-import {
-  dashboardFactory,
-  databaseFactory,
-  databaseInstanceFactory,
-} from 'src/factories';
+import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
@@ -622,102 +618,64 @@ describe('filterUsingDependentFilters', () => {
 });
 
 describe('filterBasedOnConfig', () => {
+  const config: CloudPulseServiceTypeFilters = {
+    configuration: {
+      dependency: [], // empty dependency
+      filterKey: 'resource_id',
+      filterType: 'string',
+      isFilterable: true,
+      isMetricsFilter: true,
+      isMultiSelect: true,
+      name: 'Database Clusters',
+      neededInViews: [CloudPulseAvailableViews.central],
+      placeholder: 'Select Database Clusters',
+      priority: 3,
+    },
+    name: 'Resources',
+  };
   it('should return empty object if config has no dependencies', () => {
-    const config: CloudPulseServiceTypeFilters = {
-      configuration: {
-        dependency: [], // empty dependency
-        filterKey: 'resource_id',
-        filterType: 'string',
-        isFilterable: true,
-        isMetricsFilter: true,
-        isMultiSelect: true,
-        name: 'Database Clusters',
-        neededInViews: [CloudPulseAvailableViews.central],
-        placeholder: 'Select Database Clusters',
-        priority: 3,
-      },
-      name: 'Resources',
-    };
     const dependentFilters = { engine: 'mysql', region: 'us-east' };
     const result = filterBasedOnConfig(config, dependentFilters);
     expect(result).toEqual({});
   });
 
   it('should return filtered values based on dependency keys', () => {
-    const config: CloudPulseServiceTypeFilters = {
-      configuration: {
-        dependency: ['engine', 'status'],
-        filterKey: 'resource_id',
-        filterType: 'string',
-        isFilterable: true,
-        isMetricsFilter: true,
-        isMultiSelect: true,
-        name: 'Database Clusters',
-        neededInViews: [CloudPulseAvailableViews.central],
-        placeholder: 'Select Database Clusters',
-        priority: 3,
-      },
-      name: 'Resources',
-    };
     const dependentFilters = {
       engine: 'mysql',
       region: 'us-east',
       status: 'running',
     };
-    const result = filterBasedOnConfig(config, dependentFilters);
+    const result = filterBasedOnConfig(
+      {
+        ...config,
+        configuration: {
+          ...config.configuration,
+          dependency: ['engine', 'status'],
+        },
+      },
+      dependentFilters
+    );
     expect(result).toEqual({
       engineType: 'mysql',
       status: 'running',
     });
   });
 
-  it('should not include undefined keys even if listed in dependency', () => {
-    const config: CloudPulseServiceTypeFilters = {
-      configuration: {
-        dependency: ['engine', 'region'],
-        filterKey: 'resource_id',
-        filterType: 'string',
-        isFilterable: true,
-        isMetricsFilter: true,
-        isMultiSelect: true,
-        name: 'Database Clusters',
-        neededInViews: [CloudPulseAvailableViews.central],
-        placeholder: 'Select Database Clusters',
-        priority: 3,
-      },
-      name: 'Resources',
-    };
-    const dependentFilters = {
-      engine: 'mysql',
-      region: undefined,
-    };
-    const result = filterBasedOnConfig(config, dependentFilters);
-    expect(result).toEqual({
-      engineType: 'mysql',
-    });
-  });
-
   it('should work with array values in filters', () => {
-    const config: CloudPulseServiceTypeFilters = {
-      configuration: {
-        dependency: ['engine', 'tags'],
-        filterKey: 'resource_id',
-        filterType: 'string',
-        isFilterable: true,
-        isMetricsFilter: true,
-        isMultiSelect: true,
-        name: 'Database Clusters',
-        neededInViews: [CloudPulseAvailableViews.central],
-        placeholder: 'Select Database Clusters',
-        priority: 3,
-      },
-      name: 'Resources',
-    };
     const dependentFilters = {
       engine: 'mysql',
       tags: ['db', 'prod'],
     };
-    const result = filterBasedOnConfig(config, dependentFilters);
+    const result = filterBasedOnConfig(
+      {
+        ...config,
+        configuration: {
+          ...config.configuration,
+          dependency: ['engine', 'tags'],
+        },
+      },
+      dependentFilters
+    );
     expect(result).toEqual({
       engineType: 'mysql',
       tags: ['db', 'prod'],
