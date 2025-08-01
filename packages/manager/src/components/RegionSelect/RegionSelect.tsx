@@ -105,6 +105,7 @@ export const RegionSelect = <
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
+        autoHighlight
         clearOnBlur
         data-testid="region-select"
         disableClearable={disableClearable}
