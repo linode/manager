@@ -2,6 +2,7 @@ import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
@@ -72,7 +73,7 @@ export const NodePoolFooter = (props: Props) => {
           rowGap={1}
         >
           <Typography sx={{ textWrap: 'nowrap' }}>
-            <b>Pool ID</b> {poolId}
+            <b>Pool ID</b> <CopyTooltip copyableText text={String(poolId)} />
           </Typography>
           {clusterTier === 'enterprise' && poolVersion && (
             <Typography sx={{ textWrap: 'nowrap' }}>
