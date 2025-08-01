@@ -63,11 +63,7 @@ export const NodePoolFooter = (props: Props) => {
           columnGap={{ sm: 2, xs: 1.5 }}
           direction="row"
           divider={
-            <Divider
-              flexItem
-              orientation="vertical"
-              sx={{ borderWidth: 1, height: '20px' }}
-            />
+            <Divider flexItem orientation="vertical" sx={{ height: '20px' }} />
           }
           flexWrap={{ sm: 'unset', xs: 'wrap' }}
           rowGap={1}
