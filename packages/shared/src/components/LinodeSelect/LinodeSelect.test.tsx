@@ -147,4 +147,31 @@ describe('LinodeSelect', () => {
       ).not.toBeInTheDocument();
     });
   });
+
+  test('should display disabled reason when a Linode is disabled', async () => {
+    const linode = linodeFactory.build({ id: 123, label: 'My Linode' });
+    const disabledReason = 'You do not have access to this Linode';
+
+    const screen = renderWithWrappers(
+      <LinodeSelect
+        disabledLinodes={{ 123: disabledReason }}
+        multiple={false}
+        onSelectionChange={vi.fn()}
+        options={[linode]}
+        value={null}
+      />,
+      [QueryClientWrapper(), ThemeWrapper()],
+    );
+
+    const input = screen.getByTestId(TEXTFIELD_ID);
+    await userEvent.click(input);
+
+    await waitFor(() => {
+      // Ensure the label is in the dropdown
+      expect(screen.getByText('My Linode')).toBeInTheDocument();
+
+      // Ensure the disabled reason is displayed
+      expect(screen.getByText(disabledReason)).toBeInTheDocument();
+    });
+  });
 });

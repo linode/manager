@@ -68,8 +68,17 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 }
 
 interface AclpFlag {
+  /**
+   * This property indicates whether the feature is in beta
+   */
   beta: boolean;
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
   bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether the feature is enabled
+   */
   enabled: boolean;
 }
 
@@ -315,16 +324,9 @@ export interface AclpAlertServiceTypeConfig {
   // This can be extended to have supportedRegions, supportedFilters and other tags
 }
 
-interface AclpServiceStatus {
-  // Whether the service is in beta
-  beta: boolean;
-  // Whether the service is enabled
-  enabled: boolean;
-}
-
 export type AclpServices = {
   [serviceType in CloudPulseServiceType]: {
-    alerts: AclpServiceStatus;
-    metrics: AclpServiceStatus;
+    alerts?: AclpFlag;
+    metrics?: AclpFlag;
   };
 };
