@@ -232,6 +232,11 @@ const linodesDetailNetworkingInterfacesRoute = createRoute({
   path: 'interfaces',
 });
 
+const linodesDetailNetworkingInterfacesHistoryRoute = createRoute({
+  getParentRoute: () => linodesDetailNetworkingRoute,
+  path: 'history',
+});
+
 const linodesDetailNetworkingInterfacesDetailRoute = createRoute({
   getParentRoute: () => linodesDetailNetworkingInterfacesRoute,
   path: '$interfaceId',
@@ -326,6 +331,7 @@ export const linodesRouteTree = linodesRoute.addChildren([
     linodesDetailAnalyticsRoute,
     linodesDetailNetworkingRoute.addChildren([
       linodesDetailNetworkingInterfacesRoute,
+      linodesDetailNetworkingInterfacesHistoryRoute,
       linodesDetailNetworkingInterfacesDetailRoute,
     ]),
     linodesDetailStorageRoute,
