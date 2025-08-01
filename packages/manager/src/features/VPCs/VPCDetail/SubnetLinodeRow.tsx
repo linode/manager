@@ -337,7 +337,7 @@ const getIPLinkForConfigInterface = (
         <span key={configInterface.id}>
           {ipType === 'ipv4'
             ? configInterface.ipv4?.vpc
-            : (configInterface.ipv6?.slaac[0]?.address ?? '—')}
+            : (configInterface.ipv6?.slaac![0]?.address ?? '—')}
         </span>
       )}
     </>
@@ -378,7 +378,7 @@ const getIPRangesCellContents = (
 
     const ipv6Ranges =
       interfaceData.ipv6?.ranges
-        .map((rangeObj) => rangeObj.range)
+        ?.map((rangeObj) => rangeObj.range)
         .filter((range) => range !== undefined) ?? [];
 
     const noneSingleOrMultipleWithChipIPV6 =
