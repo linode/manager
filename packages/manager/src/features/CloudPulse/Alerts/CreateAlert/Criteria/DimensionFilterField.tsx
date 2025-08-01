@@ -5,13 +5,10 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import { PORTS_HELPER_TEXT } from 'src/features/CloudPulse/Utils/constants';
-
 import {
   dimensionOperatorOptions,
-  PORT_HELPER_TEXT,
-  PORT_PLACEHOLDER_TEXT,
-  PORTS_PLACEHOLDER_TEXT,
+  HELPER_TEXT_MAP,
+  PLACEHOLDER_TEXT_MAP,
   textFieldOperators,
 } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
@@ -109,19 +106,18 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
 
   const valuePlaceholder = `${isTextField ? 'Enter' : 'Select'} a Value`;
 
-  const portsPlaceholderText =
-    dimensionFieldWatcher === 'port'
-      ? dimensionOperatorWatcher === 'in'
-        ? PORTS_PLACEHOLDER_TEXT
-        : PORT_PLACEHOLDER_TEXT
-      : valuePlaceholder;
+  const customPlaceholderDimension =
+    PLACEHOLDER_TEXT_MAP[dimensionFieldWatcher ?? ''];
+  const customPlaceholderText =
+    customPlaceholderDimension?.[
+      dimensionOperatorWatcher === 'in' ? 'in' : 'default'
+    ] ?? valuePlaceholder;
 
-  const portsHelperText =
-    dimensionFieldWatcher === 'port'
-      ? dimensionOperatorWatcher === 'in'
-        ? PORTS_HELPER_TEXT
-        : PORT_HELPER_TEXT
-      : undefined;
+  const customHelperDimension = HELPER_TEXT_MAP[dimensionFieldWatcher ?? ''];
+  const customHelperText =
+    customHelperDimension?.[
+      dimensionOperatorWatcher === 'in' ? 'in' : 'default'
+    ] ?? undefined;
 
   const resolveSelectedValues = (
     options: Item<string, string>[],
@@ -235,13 +231,13 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   data-testid="value"
                   disabled={!dimensionFieldWatcher}
                   errorText={fieldState.error?.message}
-                  helperText={!fieldState.error ? portsHelperText : undefined}
+                  helperText={!fieldState.error ? customHelperText : undefined}
                   label="Value"
                   max={65535}
                   min={1}
                   onBlur={field.onBlur}
                   onChange={(event) => field.onChange(event.target.value)}
-                  placeholder={portsPlaceholderText}
+                  placeholder={customPlaceholderText}
                   sx={{ flex: 1, width: '256px' }}
                   type={
                     dimensionFieldWatcher === 'port' &&

@@ -5,7 +5,7 @@ import {
   metricCriteria,
   triggerConditionValidation,
 } from '@linode/validation';
-import { array, mixed, number, object, string } from 'yup';
+import { array, lazy, mixed, number, object, string } from 'yup';
 
 import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -16,7 +16,14 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from '../../Utils/constants';
-import { PORTS_TRAILING_COMMA_ERROR_MESSAGE } from '../constants';
+import {
+  CONFIG_ERROR_MESSAGE,
+  CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  CONFIGS_ERROR_MESSAGE,
+  CONFIGS_HELPER_TEXT,
+  PORT_HELPER_TEXT,
+  PORTS_TRAILING_COMMA_ERROR_MESSAGE,
+} from '../constants';
 
 import type {
   AlertDefinitionScope,
@@ -28,11 +35,12 @@ const fieldErrorMessage = 'This field is required.';
 
 const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
 const LEADING_ZERO_PORT_REGEX = /^0\d+/;
+const CONFIG_NUMBER_REGEX = /^\d+$/;
 
 // Validation schema for a single input port
 const singlePortSchema = string().test(
   'validate-single-port',
-  PORTS_ERROR_MESSAGE,
+  PORT_HELPER_TEXT,
   function (value) {
     if (!value || typeof value !== 'string') {
       return this.createError({ message: fieldErrorMessage });
@@ -119,6 +127,100 @@ const commaSeparatedPortListSchema = string().test(
   }
 );
 
+const singleConfigSchema = string()
+  .max(100, 'Value must be 100 characters or less.')
+  .test(
+    'validate-single-config-schema',
+    CONFIG_ERROR_MESSAGE,
+    function (value) {
+      if (!value || typeof value !== 'string') {
+        return this.createError({ message: fieldErrorMessage });
+      }
+
+      if (!CONFIG_NUMBER_REGEX.test(value)) {
+        return this.createError({ message: CONFIG_ERROR_MESSAGE });
+      }
+      return true;
+    }
+  );
+
+const multipleConfigSchema = string()
+  .max(100, 'Value must be 100 characters or less.')
+  .test(
+    'validate-multi-config-schema',
+    CONFIGS_ERROR_MESSAGE,
+    function (value) {
+      if (!value || typeof value !== 'string') {
+        return this.createError({ message: fieldErrorMessage });
+      }
+      if (value.includes(' ')) {
+        return this.createError({ message: CONFIGS_ERROR_MESSAGE });
+      }
+
+      if (value.trim().endsWith(',')) {
+        return this.createError({
+          message: PORTS_TRAILING_COMMA_ERROR_MESSAGE,
+        });
+      }
+
+      if (value.trim().startsWith(',')) {
+        return this.createError({ message: PORTS_LEADING_COMMA_ERROR_MESSAGE });
+      }
+
+      if (value.trim().includes(',,')) {
+        return this.createError({
+          message: CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+        });
+      }
+      if (value.includes('.')) {
+        return this.createError({ message: CONFIGS_HELPER_TEXT });
+      }
+
+      const rawSegments = value.split(',');
+      // Check for empty segments
+      if (rawSegments.some((segment) => segment.trim() === '')) {
+        return this.createError({
+          message: CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+        });
+      }
+      for (const configId of rawSegments) {
+        const trimmedConfigId = configId.trim();
+
+        if (!CONFIG_NUMBER_REGEX.test(trimmedConfigId)) {
+          return this.createError({ message: CONFIG_ERROR_MESSAGE });
+        }
+      }
+      return true;
+    }
+  );
+
+const baseValueSchema = string()
+  .required(fieldErrorMessage)
+  .nullable()
+  .test('nonNull', fieldErrorMessage, (value) => value !== null);
+
+interface GetValueSchemaParams {
+  dimensionLabel: string;
+  operator: string;
+}
+
+export const getDimensionFilterValueSchema = ({
+  dimensionLabel,
+  operator,
+}: GetValueSchemaParams) => {
+  if (dimensionLabel === 'port') {
+    const portSchema =
+      operator === 'in' ? commaSeparatedPortListSchema : singlePortSchema;
+    return portSchema.concat(baseValueSchema);
+  }
+  if (dimensionLabel === 'config_id') {
+    const configIdSchema =
+      operator === 'in' ? multipleConfigSchema : singleConfigSchema;
+
+    return configIdSchema.concat(baseValueSchema);
+  }
+  return baseValueSchema;
+};
 export const dimensionFiltersSchema = dimensionFilters.concat(
   object({
     dimension_label: string()
@@ -130,33 +232,15 @@ export const dimensionFiltersSchema = dimensionFilters.concat(
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    value: string()
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null)
-      .when(
-        ['dimension_label', 'operator'],
-        ([dimensionLabel, operator], schema) => {
-          if (dimensionLabel === 'port' && operator === 'in') {
-            return commaSeparatedPortListSchema
-              .required(fieldErrorMessage)
-              .nullable()
-              .test('nonNull', fieldErrorMessage, (value) => value !== null);
-          }
-
-          if (dimensionLabel === 'port' && operator !== 'in') {
-            return singlePortSchema
-              .required(fieldErrorMessage)
-              .nullable()
-              .test('nonNull', fieldErrorMessage, (value) => value !== null);
-          }
-
-          return schema;
-        }
-      ),
+    value: lazy((_, context) => {
+      const { dimension_label, operator } = context.parent;
+      return getDimensionFilterValueSchema({
+        dimensionLabel: dimension_label,
+        operator,
+      }).defined();
+    }),
   })
 );
-
 export const metricCriteriaSchema = metricCriteria.concat(
   object({
     aggregate_function: string()
