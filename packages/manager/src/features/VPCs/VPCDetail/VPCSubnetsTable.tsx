@@ -28,6 +28,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -62,6 +63,8 @@ export const VPCSubnetsTable = (props: Props) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
+  const flags = useFlags();
+
   const navigate = useNavigate();
   const params = useParams({ strict: false });
   const location = useLocation();
@@ -86,7 +89,7 @@ export const VPCSubnetsTable = (props: Props) => {
   });
   const { query } = search;
 
-  const flags = useIsNodebalancerVPCEnabled();
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const pagination = usePaginationV2({
     currentRoute: VPC_DETAILS_ROUTE,
@@ -291,11 +294,14 @@ export const VPCSubnetsTable = (props: Props) => {
           Subnet ID
         </TableSortCell>
       </Hidden>
-      <TableCell sx={{ width: '18%' }}>Subnet IP Range</TableCell>
+      <TableCell sx={{ width: '18%' }}>
+        Subnet {flags.vpcIpv6 ? 'IPv4' : 'IP'} Range
+      </TableCell>
+      {flags.vpcIpv6 && <TableCell>Subnet IPv6 Range</TableCell>}
       <Hidden smDown>
         <TableCell
           sx={{ width: '10%' }}
-        >{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
+        >{`${isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
       </Hidden>
       <TableCell />
     </TableRow>
@@ -309,9 +315,12 @@ export const VPCSubnetsTable = (props: Props) => {
             <TableCell>{subnet.id}</TableCell>
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
+          {flags.vpcIpv6 && (
+            <TableCell>{subnet.ipv6?.[0]?.range ?? '—'}</TableCell>
+          )}
           <Hidden smDown>
             <TableCell>
-              {`${flags.isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
+              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
             </TableCell>
           </Hidden>
           <TableCell actionCell>
@@ -338,7 +347,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 color: theme.tokens.color.Neutrals.White,
               }}
             >
-              {SubnetLinodeTableRowHead}
+              {SubnetLinodeTableRowHead(flags.vpcIpv6)}
             </TableHead>
             <TableBody>
               {subnet.linodes.length > 0 ? (
@@ -355,31 +364,33 @@ export const VPCSubnetsTable = (props: Props) => {
                   />
                 ))
               ) : (
-                <TableRowEmpty colSpan={6} message="No Linodes" />
+                <TableRowEmpty
+                  colSpan={flags.vpcIpv6 ? 8 : 6}
+                  message="No Linodes"
+                />
               )}
             </TableBody>
           </Table>
-          {flags.isNodebalancerVPCEnabled &&
-            subnet.nodebalancers?.length > 0 && (
-              <Table aria-label="NodeBalancers" size="small" striped={false}>
-                <TableHead
-                  style={{
-                    color: theme.tokens.color.Neutrals.White,
-                  }}
-                >
-                  {SubnetNodebalancerTableRowHead}
-                </TableHead>
-                <TableBody>
-                  {subnet.nodebalancers.map((nb) => (
-                    <SubnetNodeBalancerRow
-                      ipv4={nb.ipv4_range}
-                      key={nb.id}
-                      nodeBalancerId={nb.id}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            )}
+          {isNodebalancerVPCEnabled && subnet.nodebalancers?.length > 0 && (
+            <Table aria-label="NodeBalancers" size="small" striped={false}>
+              <TableHead
+                style={{
+                  color: theme.tokens.color.Neutrals.White,
+                }}
+              >
+                {SubnetNodebalancerTableRowHead}
+              </TableHead>
+              <TableBody>
+                {subnet.nodebalancers.map((nb) => (
+                  <SubnetNodeBalancerRow
+                    ipv4={nb.ipv4_range}
+                    key={nb.id}
+                    nodeBalancerId={nb.id}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </>
       );
 
