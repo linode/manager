@@ -13,6 +13,10 @@ export const TRANSFORMS: TransformFunctionMap = {
   lowercase: (value: string) => value.toLowerCase(),
 };
 
+/**
+ * @description Configuration mapping service types to their dimension-specific transform functions.
+ * Defines how dimension values should be formatted/transformed for different CloudPulse services.
+ */
 export const DIMENSION_TRANSFORM_CONFIG: Partial<
   Record<CloudPulseServiceType, Record<string, TransformFunction>>
 > = {
