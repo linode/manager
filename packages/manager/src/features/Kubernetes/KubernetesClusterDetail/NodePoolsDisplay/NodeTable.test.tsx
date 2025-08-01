@@ -29,6 +29,7 @@ describe('NodeTable', () => {
   const props: Props = {
     clusterCreated: '2025-01-13T02:58:58',
     clusterId: 1,
+    clusterStackType: undefined,
     clusterTier: 'standard',
     encryptionStatus: 'enabled',
     isLkeClusterRestricted: false,

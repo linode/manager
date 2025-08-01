@@ -30,6 +30,7 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodeRow as _NodeRow } from './NodeRow';
 import { NodePoolTableFooter } from './NodeTable.styles';
 
@@ -37,6 +38,7 @@ import type { StatusFilter } from './NodePoolsDisplay';
 import type { NodeRow } from './NodeRow';
 import type {
   KubeNodePoolResponse,
+  KubernetesStackType,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
@@ -46,6 +48,7 @@ import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 export interface Props {
   clusterCreated: string;
   clusterId: number;
+  clusterStackType: KubernetesStackType | undefined;
   clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus;
   isLkeClusterRestricted: boolean;
@@ -65,6 +68,7 @@ export const NodeTable = React.memo((props: Props) => {
   const {
     clusterCreated,
     clusterId,
+    clusterStackType,
     clusterTier,
     poolVersion,
     encryptionStatus,
@@ -83,6 +87,7 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
+  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -119,6 +124,20 @@ export const NodeTable = React.memo((props: Props) => {
         return row.instanceStatus === statusFilter;
       })
     : null;
+
+  const shouldShowVpcDualStackIPAddressColumns =
+    isLkeEnterprisePhase2FeatureEnabled &&
+    clusterTier === 'enterprise' &&
+    clusterStackType === 'ipv4-ipv6';
+  const shouldShowVpcSingleStackIPAddressColumn =
+    isLkeEnterprisePhase2FeatureEnabled &&
+    clusterTier === 'enterprise' &&
+    clusterStackType === 'ipv4';
+  const numColumns = shouldShowVpcDualStackIPAddressColumns
+    ? 6
+    : shouldShowVpcSingleStackIPAddressColumn
+      ? 5
+      : 4;
 
   // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
@@ -201,8 +220,15 @@ export const NodeTable = React.memo((props: Props) => {
                     width: '35%',
                   })}
                 >
-                  IP Address
+                  Public IPv4
                 </TableSortCell>
+                {(shouldShowVpcSingleStackIPAddressColumn ||
+                  shouldShowVpcDualStackIPAddressColumns) && (
+                  <TableCell>VPC IPv4</TableCell>
+                )}
+                {shouldShowVpcDualStackIPAddressColumns && (
+                  <TableCell>VPC IPv6</TableCell>
+                )}
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -210,7 +236,7 @@ export const NodeTable = React.memo((props: Props) => {
               {rowData.length === 0 &&
                 isEnterpriseClusterWithin20MinsOfCreation() && (
                   <TableRow>
-                    <TableCell colSpan={4}>
+                    <TableCell colSpan={numColumns}>
                       <ErrorState
                         compact
                         CustomIcon={EmptyStateCloud}
@@ -238,7 +264,7 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableContentWrapper
                   length={paginatedAndOrderedData.length}
                   loading={isLoading}
-                  loadingProps={{ columns: 4 }}
+                  loadingProps={{ columns: numColumns }}
                 >
                   {paginatedAndOrderedData.map((eachRow) => {
                     return (
@@ -254,6 +280,17 @@ export const NodeTable = React.memo((props: Props) => {
                         nodeStatus={eachRow.nodeStatus}
                         openRecycleNodeDialog={openRecycleNodeDialog}
                         typeLabel={typeLabel}
+                        vpcIpv4={
+                          shouldShowVpcSingleStackIPAddressColumn ||
+                          shouldShowVpcDualStackIPAddressColumns
+                            ? eachRow.vpcIpv4
+                            : undefined
+                        }
+                        vpcIpv6={
+                          shouldShowVpcDualStackIPAddressColumns
+                            ? eachRow.vpcIpv6
+                            : undefined
+                        }
                       />
                     );
                   })}
