@@ -232,9 +232,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   it('should only display mocking region as Chicago and then supportedRegionIds is set to Junk', () => {
     mockGetRegions([{ ...mockRegion, monitors: undefined }]).as('fetchRegion');
-    mockAppendFeatureFlags(flagsFactory.build())
-      .as('getFeatureFlags')
-      .as('getFeatureFlags');
+    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 

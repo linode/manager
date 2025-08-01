@@ -57,7 +57,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
   })
 );
 const mockAccount = accountFactory.build();
-// Tests will be modified
+
 describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
   /*
    * - Mocks ACLP feature flags dynamically to simulate various flag combinations for Linode services.
@@ -122,7 +122,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       .click();
   });
 
-  it('should display "Linode" without a beta tag in the Service dropdown on the Metrics page when metrics.beta is disabled and the service is enabled', () => {
+  it('should display "Linode" without a beta tag in the Service dropdown on the Metrics page when metrics.beta is false and the service is enabled', () => {
     const mockflags = flagsFactory.build({
       aclpServices: {
         linode: {
@@ -160,7 +160,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       .click();
   });
 
-  it('should display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is enabled and the service is false', () => {
+  it('should display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is true and enabled is false', () => {
     // Mock the feature flags to disable metrics for Linode
 
     const mockflags = flagsFactory.build({
@@ -222,9 +222,8 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       });
   });
 
-  it('should display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is diabled and the service is false', () => {
+  it('should not display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is false and the service is not enabled', () => {
     // Mock the feature flags to disable metrics for Linode
-
     const mockflags = flagsFactory.build({
       aclpServices: {
         linode: {
@@ -255,7 +254,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       });
   });
 
-  it('should show no service options and exclude Linode when aclpServices flag is missing', () => {
+  it('should show no service options when aclpServices flag is missing', () => {
     // Mock the feature flags without linode under aclpServices
     const flags = {
       aclp: { beta: true, enabled: true },

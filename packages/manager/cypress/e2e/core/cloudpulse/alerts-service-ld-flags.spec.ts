@@ -42,7 +42,6 @@ const mockAccount = accountFactory.build();
 const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
 const NO_OPTIONS_TEXT = 'You have no options to choose from';
 
-// Tests will be modified
 describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
@@ -51,7 +50,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
     mockGetUserPreferences({});
   });
 
-  it('should show Linode with beta tag in Service dropdown on Alert page when alerts.beta is enabled', () => {
+  it('should show Linode with beta tag in Service dropdown on Alert page when alerts.beta is true', () => {
     mockAppendFeatureFlags(flagsFactory.build());
     cy.visitWithLogin(CREATE_ALERT_PAGE_URL);
     ui.autocomplete.findByLabel('Service').as('serviceInput');
@@ -70,7 +69,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
     cy.get('@serviceInput').should('be.visible').type('Linode');
     ui.autocompletePopper.findByTitle('Linode').should('be.visible').click();
   });
-  it('should show no options and exclude Linode beta in Service dropdown when alerts.beta is false', () => {
+  it('should exclude Linode beta in Service dropdown when alerts.beta is false', () => {
     // Mock feature flags with alerts beta disabled
     const mockflags = flagsFactory.build({
       aclpServices: {
