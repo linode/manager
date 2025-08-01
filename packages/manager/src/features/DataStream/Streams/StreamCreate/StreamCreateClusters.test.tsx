@@ -12,8 +12,9 @@ const renderComponentWithoutSelectedClusters = () => {
     component: <StreamCreateClusters />,
     useFormOptions: {
       defaultValues: {
-        stream: {
-          details: {},
+        details: {
+          cluster_ids: [],
+          is_auto_add_all_clusters_enabled: false,
         },
       },
     },
@@ -162,10 +163,8 @@ describe('StreamCreateClusters', () => {
         component: <StreamCreateClusters />,
         useFormOptions: {
           defaultValues: {
-            stream: {
-              details: {
-                cluster_ids: [3],
-              },
+            details: {
+              cluster_ids: [3],
             },
           },
         },

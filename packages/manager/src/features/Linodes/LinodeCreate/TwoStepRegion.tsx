@@ -16,7 +16,7 @@ import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAn
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 
-import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
+import { useLinodeCreateQueryParams } from './utilities';
 
 import type { Region as RegionType } from '@linode/api-v4';
 import type {
@@ -73,7 +73,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
     React.useState<RegionFilterValue>('distributed');
 
   const { data: regions } = useRegionsQuery();
-  const createType = useGetLinodeCreateType();
+  const { params } = useLinodeCreateQueryParams();
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
@@ -89,7 +89,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
           label={DOCS_LINK_LABEL_DC_PRICING}
           onClick={() =>
             sendLinodeCreateFormInputEvent({
-              createType: createType ?? 'OS',
+              createType: params.type ?? 'OS',
               headerName: 'Region',
               interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
@@ -140,9 +140,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
                 }
               }}
               options={GEOGRAPHICAL_AREA_OPTIONS}
-              value={GEOGRAPHICAL_AREA_OPTIONS.find(
-                (option) => option.value === regionFilter
-              )}
             />
             <RegionSelect
               currentCapability="Linodes"

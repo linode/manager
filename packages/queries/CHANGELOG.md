@@ -1,14 +1,3 @@
-## [2025-07-29] - v0.10.0
-
-
-### Changed:
-
-- Fetch all nodebalancers query to accept Params and Filter ([#12510](https://github.com/linode/manager/pull/12510))
-
-### Upcoming Features:
-
-- Add queries for streams endpoints (GET, POST) ([#12524](https://github.com/linode/manager/pull/12524))
-
 ## [2025-07-15] - v0.9.0
 
 

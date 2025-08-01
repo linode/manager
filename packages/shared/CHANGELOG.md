@@ -1,10 +1,3 @@
-## [2025-07-29] - v0.6.0
-
-
-### Fixed:
-
-- `LinodeSelect` not filtering by the `optionsFilter` when `options` was passed as props ([#12529](https://github.com/linode/manager/pull/12529))
-
 ## [2025-07-15] - v0.5.0
 
 

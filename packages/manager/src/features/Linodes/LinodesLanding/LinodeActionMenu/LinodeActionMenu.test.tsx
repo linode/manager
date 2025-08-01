@@ -167,6 +167,7 @@ describe('LinodeActionMenu', () => {
         []
       );
       expect(result).toMatchObject({
+        type: 'Clone Linode',
         linodeID: 1,
       });
     });

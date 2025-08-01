@@ -210,7 +210,6 @@ export const ImageSelect = (props: Props) => {
           rest.disableClearable ??
           (selectIfOnlyOneOption && options.length === 1 && !multiple)
         }
-        disabledItemsFocusable
         errorText={rest.errorText ?? error?.[0].reason}
         getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
         multiple={multiple}

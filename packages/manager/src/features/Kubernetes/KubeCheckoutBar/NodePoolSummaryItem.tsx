@@ -21,11 +21,8 @@ import {
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
-import type {
-  CreateClusterFormValues,
-  NodePoolConfigDrawerHandlerParams,
-} from '../CreateCluster/CreateCluster';
-import type { KubernetesTier } from '@linode/api-v4';
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
+import type { KubeNodePoolResponseBeta, KubernetesTier } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
@@ -53,8 +50,8 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
 
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const { control } = useFormContext<CreateClusterFormValues>();
-  const nodePoolsWatcher = useWatch({
+  const { control } = useFormContext();
+  const nodePoolsWatcher: KubeNodePoolResponseBeta[] = useWatch({
     control,
     name: 'nodePools',
   });

@@ -291,11 +291,6 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
                   data-testid="button"
                   disabled={disabled}
                   onClick={() => removeInput(idx)}
-                  sx={(theme) => ({
-                    height: 20,
-                    width: 20,
-                    marginTop: `${theme.spacingFunction(8)} !important`,
-                  })}
                 >
                   <CloseIcon data-testid={`delete-ip-${idx}`} />
                 </IconButton>

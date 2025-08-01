@@ -4,7 +4,6 @@ import { Box, Notice, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -19,17 +18,16 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  linodesCreateTypesMap,
-  useGetLinodeCreateType,
-} from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
-import { getGeneratedLinodeLabel } from '../utilities';
+import {
+  getGeneratedLinodeLabel,
+  useLinodeCreateQueryParams,
+} from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 import { SelectLinodeCard } from './SelectLinodeCard';
 
@@ -48,9 +46,6 @@ interface Props {
 
 export const LinodeSelectTable = (props: Props) => {
   const { enablePowerOff } = props;
-  const search = useSearch({
-    from: '/linodes/create',
-  });
 
   const matchesMdUp = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
@@ -73,18 +68,16 @@ export const LinodeSelectTable = (props: Props) => {
     }
   );
 
-  const createType = useGetLinodeCreateType();
+  const { params } = useLinodeCreateQueryParams();
 
   const [query, setQuery] = useState(
-    search.linodeID ? `id = ${search.linodeID}` : ''
+    params.linodeID ? `id = ${params.linodeID}` : ''
   );
 
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
-  const createPath = linodesCreateTypesMap.get(createType) ?? 'os';
-
   const pagination = usePaginationV2({
-    currentRoute: `/linodes/create/${createPath}`,
+    currentRoute: '/linodes/create',
     initialPage: 1,
     preferenceKey: 'linode-clone-select-table',
   });
@@ -95,7 +88,7 @@ export const LinodeSelectTable = (props: Props) => {
         order: 'asc',
         orderBy: 'label',
       },
-      from: `/linodes/create/${createPath}`,
+      from: '/linodes/create',
     },
     preferenceKey: 'linode-clone-select-table',
   });
@@ -130,7 +123,7 @@ export const LinodeSelectTable = (props: Props) => {
         'label',
         await getGeneratedLinodeLabel({
           queryClient,
-          tab: createType,
+          tab: params.type,
           values: getValues(),
         })
       );

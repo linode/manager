@@ -320,7 +320,6 @@ export const NodePoolsDisplay = (props: Props) => {
                 setIsRecycleNodeOpen(true);
               }}
               poolId={thisPool.id}
-              poolVersion={thisPool.k8s_version}
               regionSupportsDiskEncryption={regionSupportsDiskEncryption}
               statusFilter={statusFilter}
               tags={tags}

@@ -2,7 +2,10 @@ import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { typeFactory } from 'src/factories';
-import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import {
+  nodePoolBetaFactory,
+  nodePoolFactory,
+} from 'src/factories/kubernetesCluster';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -43,7 +46,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} region={undefined} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -60,7 +63,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -73,7 +76,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -85,7 +88,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -109,7 +112,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} pools={poolsWithSmallNode} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -122,7 +125,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -136,7 +139,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} highAvailability />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -150,7 +153,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} region="id-cgk" />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -171,7 +174,7 @@ describe('KubeCheckoutBar', () => {
       ),
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -192,7 +195,7 @@ describe('KubeCheckoutBar', () => {
       ),
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -207,7 +210,7 @@ describe('KubeCheckoutBar', () => {
       component: <KubeCheckoutBar {...props} enterprisePrice={300} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -228,7 +231,7 @@ describe('KubeCheckoutBar', () => {
       ),
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });

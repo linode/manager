@@ -24,8 +24,8 @@ import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
-  getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
 } from '../utils';
 import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
 
@@ -157,8 +157,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                       configId: null,
                       vpcIPv4:
                         getLinodeInterfacePrimaryIPv4(vpcLinodeInterface),
-                      vpcRanges:
-                        getLinodeInterfaceIPv4Ranges(vpcLinodeInterface),
+                      vpcRanges: getLinodeInterfaceRanges(vpcLinodeInterface),
                       interfaceId: vpcLinodeInterface.id,
                     };
                   }

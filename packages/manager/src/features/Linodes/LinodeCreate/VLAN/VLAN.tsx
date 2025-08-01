@@ -14,14 +14,14 @@ import { VLANSelect } from 'src/components/VLANSelect';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { VLANAvailabilityNotice } from '../Networking/VLANAvailabilityNotice';
-import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { useLinodeCreateQueryParams } from '../utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const VLAN = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
 
-  const createType = useGetLinodeCreateType();
+  const { params } = useLinodeCreateQueryParams();
 
   const { permissions } = usePermissions('account', ['create_linode']);
 
@@ -32,7 +32,7 @@ export const VLAN = () => {
   const regionSupportsVLANs =
     selectedRegion?.capabilities.includes('Vlans') ?? false;
 
-  const isCreatingFromBackup = createType === 'Backups';
+  const isCreatingFromBackup = params.type === 'Backups';
 
   const disabled =
     !imageId ||

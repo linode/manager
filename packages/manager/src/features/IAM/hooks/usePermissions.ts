@@ -23,7 +23,9 @@ import type {
   AccountEntity,
   APIError,
   EntityType,
+  Filter,
   GrantType,
+  Params,
   Profile,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
@@ -90,41 +92,31 @@ export const useEntitiesPermissions = <T extends EntityBase>(
     })),
   });
 
-  const data = queries.map((query) => query.data);
-  const error = queries.map((query) => query.error);
-  const isError = queries.some((query) => query.isError);
   const isLoading = queries.some((query) => query.isLoading);
+  const isError = queries.some((query) => query.isError);
+  const data = queries.map((query) => query.data);
 
-  return { data, error, isError, isLoading };
+  return { data, isLoading, isError };
 };
 
-export type QueryWithPermissionsResult<T> = {
-  data: T[];
-  error: APIError[] | null;
-  hasFiltered: boolean;
-  isError: boolean;
-  isLoading: boolean;
-} & Omit<
-  UseQueryResult<T[], APIError[]>,
-  'data' | 'error' | 'isError' | 'isLoading'
->;
-
 export const useQueryWithPermissions = <T extends EntityBase>(
-  useQueryResult: UseQueryResult<T[], APIError[]>,
+  query: (
+    params?: Params,
+    filter?: Filter,
+    enabled?: boolean
+  ) => UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
   permissionsToCheck: PermissionType[]
-): QueryWithPermissionsResult<T> => {
-  const {
-    data: allEntities,
-    error: allEntitiesError,
-    isLoading: areEntitiesLoading,
-    isError: isEntitiesError,
-    ...restQueryResult
-  } = useQueryResult;
+): { data: T[]; hasFiltered: boolean } => {
+  const { data: allEntities } = query();
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
-  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(allEntities, entityType, profile, isIAMEnabled);
+  const { data: entityPermissions } = useEntitiesPermissions<T>(
+    allEntities,
+    entityType,
+    profile,
+    isIAMEnabled
+  );
   const { data: grants } = useGrants(!isIAMEnabled);
 
   const entityPermissionsMap = isIAMEnabled
@@ -146,10 +138,6 @@ export const useQueryWithPermissions = <T extends EntityBase>(
 
   return {
     data: entities || [],
-    error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
-    isError: isEntitiesError,
-    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
-    ...restQueryResult,
   } as const;
 };

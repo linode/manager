@@ -71,7 +71,7 @@ describe('Create Linode with DC-specific pricing', () => {
 
     mockCreateLinode(mockLinode).as('linodeCreated');
 
-    cy.get('[data-qa-header="OS"]').should('have.text', 'OS');
+    cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
     ui.button.findByTitle('Create Linode').click();
 

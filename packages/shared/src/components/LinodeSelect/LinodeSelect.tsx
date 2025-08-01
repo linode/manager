@@ -1,11 +1,5 @@
 import { useAllLinodesQuery } from '@linode/queries';
-import {
-  Autocomplete,
-  CloseIcon,
-  CustomPopper,
-  ListItemOption,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
 import { mapIdsToDevices } from '@linode/utilities';
 import React from 'react';
 
@@ -22,8 +16,6 @@ interface LinodeSelectProps {
   clearable?: boolean;
   /** Disable editing the input value. */
   disabled?: boolean;
-  /** Map of Linode IDs to be disabled with a reason. */
-  disabledLinodes?: Record<number, string>;
   /** Hint displayed with error styling. */
   errorText?: string;
   /** Filter sent to the API when retrieving account Linodes. */
@@ -84,7 +76,6 @@ export const LinodeSelect = (
     checkIsOptionEqualToValue,
     clearable = true,
     disabled,
-    disabledLinodes,
     errorText,
     filter,
     getOptionDisabled,
@@ -130,9 +121,7 @@ export const LinodeSelect = (
       disabled={disabled}
       disablePortal={true}
       errorText={error?.[0].reason ?? errorText}
-      getOptionDisabled={(linode) =>
-        !!disabledLinodes?.[linode.id] || getOptionDisabled?.(linode) || false
-      }
+      getOptionDisabled={getOptionDisabled}
       helperText={helperText}
       id={id}
       inputValue={inputValue}
@@ -164,24 +153,6 @@ export const LinodeSelect = (
             : 'Select a Linode'
       }
       PopperComponent={CustomPopper}
-      renderOption={(props, linode, { selected }) => {
-        const { key, ...restProps } = props; // Avoids passing `key` via props, which triggers React console warnings.
-        return (
-          <ListItemOption
-            disabledOptions={
-              disabledLinodes?.[linode.id]
-                ? { reason: disabledLinodes[linode.id] }
-                : undefined
-            }
-            item={linode}
-            key={key}
-            props={restProps}
-            selected={selected}
-          >
-            <Typography>{linode.label}</Typography>
-          </ListItemOption>
-        );
-      }}
       slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
       value={

@@ -18,11 +18,6 @@ const queryMocks = vi.hoisted(() => ({
   }),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
-  usePermissions: vi.fn(() => ({
-    permissions: {
-      create_firewall_device: false,
-    },
-  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -44,13 +39,10 @@ vi.mock('src/hooks/useOrderV2', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.usePermissions,
-}));
-
 const baseProps = (
   type: FirewallDeviceEntityType
 ): FirewallDeviceLandingProps => ({
+  disabled: false,
   firewallId: 1,
   firewallLabel: 'test',
   type,
@@ -94,13 +86,8 @@ services.forEach((service: FirewallDeviceEntityType) => {
         expect(table).toBeInTheDocument();
       });
 
-      if (serviceName !== 'Linode') {
+      if (prop.disabled) {
         it(`should contain a disabled Add ${serviceName} button`, () => {
-          queryMocks.usePermissions.mockReturnValue({
-            permissions: {
-              create_firewall_device: false,
-            },
-          });
           const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
           );
@@ -118,13 +105,8 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
       }
 
-      if (serviceName !== 'Linode') {
+      if (!prop.disabled) {
         it(`should contain an enabled Add ${serviceName} button`, () => {
-          queryMocks.usePermissions.mockReturnValue({
-            permissions: {
-              create_firewall_device: true,
-            },
-          });
           const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />
           );
@@ -134,11 +116,6 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
 
         it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, async () => {
-          queryMocks.usePermissions.mockReturnValue({
-            permissions: {
-              create_firewall_device: true,
-            },
-          });
           const mockNavigate = vi.fn();
           queryMocks.useNavigate.mockReturnValue(mockNavigate);
 
@@ -157,43 +134,6 @@ services.forEach((service: FirewallDeviceEntityType) => {
               to: `/firewalls/$id/${service}s/add`,
             });
           });
-        });
-      }
-
-      if (serviceName === 'Linode') {
-        it('should disable "Add Linodes to Firewall" button if the user does not have create_firewall_device permission', async () => {
-          queryMocks.usePermissions.mockReturnValue({
-            permissions: {
-              create_firewall_device: false,
-            },
-          });
-
-          const { getByTestId } = await renderWithTheme(
-            <FirewallDeviceLanding {...prop} />,
-            {
-              initialRoute: `/firewalls/1/linodes`,
-            }
-          );
-          const addButton = getByTestId('add-device-button');
-          expect(addButton).toBeInTheDocument();
-          expect(addButton).toBeDisabled();
-        });
-        it('should enable "Add Linodes to Firewall" button if the user has create_firewall_device permission', async () => {
-          queryMocks.usePermissions.mockReturnValue({
-            permissions: {
-              create_firewall_device: true,
-            },
-          });
-
-          const { getByTestId } = await renderWithTheme(
-            <FirewallDeviceLanding {...prop} />,
-            {
-              initialRoute: `/firewalls/1/linodes`,
-            }
-          );
-          const addButton = getByTestId('add-device-button');
-          expect(addButton).toBeInTheDocument();
-          expect(addButton).toBeEnabled();
         });
       }
     });

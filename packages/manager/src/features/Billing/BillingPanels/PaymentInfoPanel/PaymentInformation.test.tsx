@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -20,20 +20,15 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 });
 
 const queryMocks = vi.hoisted(() => ({
+  useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
-  userPermissions: vi.fn(() => ({
-    permissions: { update_account: false, make_billing_payment: false },
-  })),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useGrants: queryMocks.useGrants,
     useProfile: queryMocks.useProfile,
   };
 });
@@ -97,9 +92,6 @@ describe('Payment Info Panel', () => {
   });
 
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_account: true, make_billing_payment: true },
-    });
     const { getByTestId, findByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
@@ -178,7 +170,7 @@ describe('Payment Info Panel', () => {
       );
     });
 
-    it('should be disabled if user does not have update_account permission', async () => {
+    it('should be disabled for restricted users', async () => {
       queryMocks.useProfile.mockReturnValue({
         data: profileFactory.build({
           restricted: true,
@@ -186,8 +178,12 @@ describe('Payment Info Panel', () => {
         }),
       });
 
-      queryMocks.userPermissions.mockReturnValue({
-        permissions: { update_account: false, make_billing_payment: false },
+      queryMocks.useGrants.mockReturnValue({
+        data: grantsFactory.build({
+          global: {
+            account_access: 'read_only',
+          },
+        }),
       });
 
       const { getByTestId } = renderWithTheme(

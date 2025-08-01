@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
@@ -16,6 +15,7 @@ import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceLandingProps {
+  disabled: boolean;
   firewallId: number;
   firewallLabel: string;
   type: FirewallDeviceEntityType;
@@ -23,15 +23,10 @@ export interface FirewallDeviceLandingProps {
 
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
-    const { firewallId, firewallLabel, type } = props;
+    const { disabled, firewallId, firewallLabel, type } = props;
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const { permissions } = usePermissions(
-      'firewall',
-      ['create_firewall_device', 'delete_firewall_device'],
-      firewallId
-    );
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
@@ -65,8 +60,6 @@ export const FirewallDeviceLanding = React.memo(
     );
 
     const formattedType = formattedTypes[type];
-    const isCreateDeviceDisabled = !permissions.create_firewall_device;
-    const isRemoveDeviceDisabled = !permissions.delete_firewall_device;
 
     // If the user initiates a history -/+ to a /remove route and the device is not found,
     // push navigation to the appropriate /linodes or /nodebalancers route.
@@ -83,9 +76,8 @@ export const FirewallDeviceLanding = React.memo(
     }, [device, location.pathname, firewallId, type, navigate]);
 
     return (
-      // TODO: Matching old behavior. Do we want separate messages for when the user can't create or remove devices?
       <>
-        {permissions && isCreateDeviceDisabled && isRemoveDeviceDisabled ? (
+        {disabled ? (
           <Notice
             text={
               "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
@@ -127,7 +119,7 @@ export const FirewallDeviceLanding = React.memo(
               <Button
                 buttonType="primary"
                 data-testid="add-device-button"
-                disabled={isCreateDeviceDisabled}
+                disabled={disabled}
                 onClick={handleOpen}
               >
                 Add {formattedType}s to Firewall
@@ -137,7 +129,7 @@ export const FirewallDeviceLanding = React.memo(
         </Grid>
         <FirewallDeviceTable
           deviceType={type}
-          disabled={isRemoveDeviceDisabled}
+          disabled={disabled}
           firewallId={firewallId}
           handleRemoveDevice={(device) => {
             setDevice(device);

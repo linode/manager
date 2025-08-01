@@ -79,9 +79,10 @@ export const LinodeBackups = () => {
 
   const handleDeploy = (backup: LinodeBackup) => {
     navigate({
-      to: '/linodes/create/backups',
+      to: '/linodes/create',
       search: (prev) => ({
         ...prev,
+        type: 'Backups',
         backupID: backup.id,
         linodeID: linode?.id,
         typeID: linode?.type,

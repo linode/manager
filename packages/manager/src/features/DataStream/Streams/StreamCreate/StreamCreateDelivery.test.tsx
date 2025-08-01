@@ -13,9 +13,7 @@ describe('StreamCreateDelivery', () => {
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination: {
-            type: destinationType.LinodeObjectStorage,
-          },
+          destination_type: destinationType.LinodeObjectStorage,
         },
       },
     });
@@ -32,9 +30,7 @@ describe('StreamCreateDelivery', () => {
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination: {
-            label: '',
-          },
+          destination_label: '',
         },
       },
     });
@@ -57,10 +53,8 @@ describe('StreamCreateDelivery', () => {
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination: {
-            label: '',
-            type: destinationType.LinodeObjectStorage,
-          },
+          destination_label: '',
+          destination_type: destinationType.LinodeObjectStorage,
         },
       },
     });

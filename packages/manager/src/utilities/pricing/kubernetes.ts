@@ -1,10 +1,6 @@
 import { getLinodeRegionPrice } from './linodes';
 
-import type {
-  CreateNodePoolData,
-  KubeNodePoolResponse,
-  Region,
-} from '@linode/api-v4/lib';
+import type { KubeNodePoolResponse, Region } from '@linode/api-v4/lib';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 interface MonthlyPriceOptions {
@@ -17,7 +13,7 @@ interface MonthlyPriceOptions {
 interface TotalClusterPriceOptions {
   enterprisePrice?: number;
   highAvailabilityPrice?: number;
-  pools: (CreateNodePoolData | KubeNodePoolResponse)[];
+  pools: KubeNodePoolResponse[];
   region: Region['id'] | undefined;
   types: ExtendedType[];
 }

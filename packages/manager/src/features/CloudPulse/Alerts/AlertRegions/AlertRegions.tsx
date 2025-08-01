@@ -18,6 +18,7 @@ import { DisplayAlertRegions } from './DisplayAlertRegions';
 
 import type { AlertRegion } from './DisplayAlertRegions';
 import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
+
 interface AlertRegionsProps {
   /**
    * Error message to be displayed when there is an error.

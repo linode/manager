@@ -1,6 +1,7 @@
 import { useMediaQuery } from '@mui/material';
-import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -25,7 +26,7 @@ interface Props {
 export const StackScriptActionMenu = (props: Props) => {
   const { handlers, stackscript, type } = props;
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const isLargeScreen = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.up('md')
@@ -52,11 +53,7 @@ export const StackScriptActionMenu = (props: Props) => {
   const actions: { action: Action; show: boolean }[] = [
     {
       action: {
-        onClick: () =>
-          navigate({
-            to: '/stackscripts/$id/edit',
-            params: { id: stackscript.id },
-          }),
+        onClick: () => history.push(`/stackscripts/${stackscript.id}/edit`),
         title: 'Edit',
         ...sharedActionOptions,
       },
@@ -66,13 +63,11 @@ export const StackScriptActionMenu = (props: Props) => {
       action: {
         disabled: isLinodeCreationRestricted,
         onClick: () =>
-          navigate({
-            to: '/linodes/create/stackscripts',
-            search: {
-              subtype: type === 'account' ? 'Account' : 'Community',
-              stackScriptID: stackscript.id,
-            },
-          }),
+          history.push(
+            type === 'account'
+              ? `/linodes/create?type=StackScripts&subtype=Account&stackScriptID=${stackscript.id}`
+              : `/linodes/create?type=StackScripts&subtype=Community&stackScriptID=${stackscript.id}`
+          ),
         title: 'Deploy New Linode',
         tooltip: isLinodeCreationRestricted
           ? "You don't have permissions to add Linodes"

@@ -1,8 +1,6 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { destinationType, streamType } from '@linode/api-v4';
 import { useCreateStreamMutation } from '@linode/queries';
 import { omitProps, Stack } from '@linode/ui';
-import { createStreamAndDestinationFormSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -10,44 +8,35 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { StreamCreateSubmitBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateSubmitBar';
 import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
+import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateClusters } from './StreamCreateClusters';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
 
 import type { CreateStreamPayload } from '@linode/api-v4';
-import type {
-  CreateStreamAndDestinationForm,
-  CreateStreamForm,
-} from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 export const StreamCreate = () => {
   const { mutateAsync: createStream } = useCreateStreamMutation();
   const navigate = useNavigate();
 
-  const form = useForm<CreateStreamAndDestinationForm>({
+  const form = useForm<CreateStreamForm>({
     defaultValues: {
-      stream: {
-        type: streamType.AuditLogs,
-        details: {},
-      },
-      destination: {
-        type: destinationType.LinodeObjectStorage,
-        details: {
-          region: '',
-        },
+      type: streamType.AuditLogs,
+      destination_type: destinationType.LinodeObjectStorage,
+      region: '',
+      details: {
+        is_auto_add_all_clusters_enabled: false,
       },
     },
-    mode: 'onBlur',
-    resolver: yupResolver(createStreamAndDestinationFormSchema),
   });
 
   const { control, handleSubmit } = form;
   const selectedStreamType = useWatch({
     control,
-    name: 'stream.type',
+    name: 'type',
   });
 
   const landingHeaderProps = {
@@ -66,27 +55,23 @@ export const StreamCreate = () => {
   };
 
   const onSubmit = () => {
-    const {
-      stream: { label, type, destinations, details },
-    } = form.getValues();
-    const payload: CreateStreamForm = {
+    const { label, type, destinations, details } = form.getValues();
+    const payload: CreateStreamPayload = {
       label,
       type,
       destinations,
-      details,
     };
-
     if (type === streamType.LKEAuditLogs && details) {
       if (details.is_auto_add_all_clusters_enabled) {
-        payload.details = omitProps(details, ['cluster_ids']);
+        payload['details'] = omitProps(details, ['cluster_ids']);
       } else {
-        payload.details = omitProps(details, [
+        payload['details'] = omitProps(details, [
           'is_auto_add_all_clusters_enabled',
         ]);
       }
     }
 
-    createStream(payload as CreateStreamPayload).then(() => {
+    createStream(payload).then(() => {
       sendCreateStreamEvent('Stream Create Page');
       navigate({ to: '/datastream/streams' });
     });
@@ -109,7 +94,7 @@ export const StreamCreate = () => {
               </Stack>
             </Grid>
             <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
-              <StreamCreateSubmitBar createStream={handleSubmit(onSubmit)} />
+              <StreamCreateCheckoutBar createStream={handleSubmit(onSubmit)} />
             </Grid>
           </Grid>
         </form>

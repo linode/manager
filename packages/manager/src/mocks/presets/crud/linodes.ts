@@ -23,11 +23,8 @@ import {
 
 import {
   appendConfigInterface,
-  createConfig,
-  deleteConfig,
   deleteConfigInterface,
   getConfigs,
-  updateConfig,
 } from './handlers/linodes/configs';
 
 import type { MockPresetCrud } from 'src/mocks/types';
@@ -56,9 +53,6 @@ export const linodeCrudPreset: MockPresetCrud = {
     getLinodeInterfaceFirewalls,
     appendConfigInterface,
     deleteConfigInterface,
-    updateConfig,
-    createConfig,
-    deleteConfig,
   ],
   id: 'linodes:crud',
   label: 'Linode CRUD',

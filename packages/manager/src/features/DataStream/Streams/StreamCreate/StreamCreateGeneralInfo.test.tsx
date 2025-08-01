@@ -27,9 +27,7 @@ describe('StreamCreateGeneralInfo', () => {
       component: <StreamCreateGeneralInfo />,
       useFormOptions: {
         defaultValues: {
-          stream: {
-            type: streamType.AuditLogs,
-          },
+          type: streamType.AuditLogs,
         },
       },
     });

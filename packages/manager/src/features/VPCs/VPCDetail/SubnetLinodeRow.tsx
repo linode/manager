@@ -11,7 +11,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { useInterfaceDataForLinode } from '../../../hooks/useInterfaceDataForLinode';
@@ -21,9 +20,8 @@ import {
 } from '../constants';
 import {
   hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
-  getLinodeInterfaceIPv4Ranges,
-  getLinodeInterfaceIPv6Ranges,
   getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
 import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
@@ -69,8 +67,6 @@ export const SubnetLinodeRow = (props: Props) => {
     subnetId,
     subnetInterfaces,
   } = props;
-
-  const flags = useFlags();
 
   const subnetInterfaceData =
     subnetInterfaces.find((interfaceData) => interfaceData.active) ??
@@ -190,7 +186,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   return (
     <TableRow>
-      <TableCell component="th" noWrap scope="row">
+      <TableCell component="th" scope="row">
         {labelCell}
       </TableCell>
       <TableCell statusCell>
@@ -212,49 +208,23 @@ export const SubnetLinodeRow = (props: Props) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell noWrap>
-          {getSubnetLinodeIPCellString({
+        <TableCell>
+          {getSubnetLinodeIPv4CellString(
             interfaceData,
-            ipType: 'ipv4',
-            loading: interfaceLoading,
-            error: interfaceError ?? undefined,
-          })}
+            interfaceLoading,
+            interfaceError ?? undefined
+          )}
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        <TableCell noWrap>
-          {getIPRangesCellContents({
+        <TableCell>
+          {getIPRangesCellContents(
             interfaceData,
-            ipType: 'ipv4',
-            loading: interfaceLoading,
-            error: interfaceError ?? undefined,
-          })}
+            interfaceLoading,
+            interfaceError ?? undefined
+          )}
         </TableCell>
       </Hidden>
-      {flags.vpcIpv6 && (
-        <>
-          <Hidden smDown>
-            <TableCell data-testid="vpc-ipv6-cell" noWrap>
-              {getSubnetLinodeIPCellString({
-                interfaceData,
-                ipType: 'ipv6',
-                loading: interfaceLoading,
-                error: interfaceError ?? undefined,
-              })}
-            </TableCell>
-          </Hidden>
-          <Hidden smDown>
-            <TableCell data-testid="linode-ipv6-ranges-cell" noWrap>
-              {getIPRangesCellContents({
-                interfaceData,
-                ipType: 'ipv6',
-                loading: interfaceLoading,
-                error: interfaceError ?? undefined,
-              })}
-            </TableCell>
-          </Hidden>
-        </>
-      )}
       <Hidden smDown>
         {isLinodeInterface ? (
           <LinodeInterfaceFirewallCell
@@ -265,7 +235,7 @@ export const SubnetLinodeRow = (props: Props) => {
           <ConfigInterfaceFirewallCell linodeId={linodeId} />
         )}
       </Hidden>
-      <TableCell actionCell noWrap>
+      <TableCell actionCell>
         {!isVPCLKEEnterpriseCluster && (
           <SubnetLinodeActionMenu
             handlePowerActionsLinode={handlePowerActionsLinode}
@@ -283,24 +253,17 @@ export const SubnetLinodeRow = (props: Props) => {
   );
 };
 
-type InterfaceDataTypes = Interface | LinodeInterface | undefined;
-interface IPCellStringInputs {
-  error?: APIError[];
-  interfaceData: InterfaceDataTypes;
-  ipType: 'ipv4' | 'ipv6';
-  loading: boolean;
-}
-
-const getSubnetLinodeIPCellString = (
-  ipCellStringInputs: IPCellStringInputs
+const getSubnetLinodeIPv4CellString = (
+  interfaceData: Interface | LinodeInterface | undefined,
+  loading: boolean,
+  error?: APIError[]
 ): JSX.Element | string => {
-  const { error, interfaceData, ipType, loading } = ipCellStringInputs;
   if (loading) {
     return 'Loading...';
   }
 
   if (error) {
-    return `Error retrieving VPC ${ipType === 'ipv4' ? 'IPv4s' : 'IPv6s'}`;
+    return 'Error retrieving VPC IPv4s';
   }
 
   if (!interfaceData) {
@@ -308,60 +271,37 @@ const getSubnetLinodeIPCellString = (
   }
 
   if ('purpose' in interfaceData) {
-    // presence of `purpose` property indicates it is a Config Profile/legacy interface
-    return ipType === 'ipv4'
-      ? getIPLinkForConfigInterface(interfaceData, 'ipv4')
-      : getIPLinkForConfigInterface(interfaceData, 'ipv6');
+    return getIPv4LinkForConfigInterface(interfaceData);
   } else {
-    if (ipType === 'ipv4') {
-      const primaryIPv4 = getLinodeInterfacePrimaryIPv4(interfaceData);
-      return <span key={interfaceData.id}>{primaryIPv4 ?? 'None'}</span>;
-    }
-
-    return (
-      <span key={interfaceData.id}>
-        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? '—'}
-      </span>
-    );
+    const primaryIPv4 = getLinodeInterfacePrimaryIPv4(interfaceData);
+    return <span key={interfaceData.id}>{primaryIPv4 ?? 'None'}</span>;
   }
 };
 
-const getIPLinkForConfigInterface = (
-  configInterface: Interface | undefined,
-  ipType: 'ipv4' | 'ipv6'
+const getIPv4LinkForConfigInterface = (
+  configInterface: Interface | undefined
 ): JSX.Element => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {configInterface && (
-        <span key={configInterface.id}>
-          {ipType === 'ipv4'
-            ? configInterface.ipv4?.vpc
-            : (configInterface.ipv6?.slaac[0]?.address ?? '—')}
-        </span>
+        <span key={configInterface.id}>{configInterface.ipv4?.vpc}</span>
       )}
     </>
   );
 };
 
-interface IPRangesCellStringInputs {
-  error?: APIError[];
-  interfaceData: InterfaceDataTypes;
-  ipType: 'ipv4' | 'ipv6';
-  loading: boolean;
-}
-
 const getIPRangesCellContents = (
-  ipRangesCellStringInputs: IPRangesCellStringInputs
+  interfaceData: Interface | LinodeInterface | undefined,
+  loading: boolean,
+  error?: APIError[]
 ): JSX.Element | string => {
-  const { error, interfaceData, ipType, loading } = ipRangesCellStringInputs;
-
   if (loading) {
     return 'Loading...';
   }
 
   if (error) {
-    return `Error retrieving VPC ${ipType === 'ipv4' ? 'IPv4' : 'IPv6'}s`;
+    return 'Error retrieving VPC IPv4s';
   }
 
   if (!interfaceData) {
@@ -369,45 +309,18 @@ const getIPRangesCellContents = (
   }
 
   if ('purpose' in interfaceData) {
-    // presence of `purpose` property indicates it is a Config Profile/legacy interface
-    if (ipType === 'ipv4') {
-      return determineNoneSingleOrMultipleWithChip(
-        interfaceData.ip_ranges ?? []
-      );
-    }
-
-    const ipv6Ranges =
-      interfaceData.ipv6?.ranges
-        .map((rangeObj) => rangeObj.range)
-        .filter((range) => range !== undefined) ?? [];
-
-    const noneSingleOrMultipleWithChipIPV6 =
-      determineNoneSingleOrMultipleWithChip(ipv6Ranges);
-
-    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
-    return noneSingleOrMultipleWithChipIPV6 === 'None'
-      ? '—'
-      : noneSingleOrMultipleWithChipIPV6;
+    return determineNoneSingleOrMultipleWithChip(
+      interfaceData?.ip_ranges ?? []
+    );
   } else {
-    const linodeInterfaceVPCRanges =
-      ipType === 'ipv4'
-        ? getLinodeInterfaceIPv4Ranges(interfaceData)
-        : getLinodeInterfaceIPv6Ranges(interfaceData);
-
-    const noneSingleOrMultipleWithChip = determineNoneSingleOrMultipleWithChip(
+    const linodeInterfaceVPCRanges = getLinodeInterfaceRanges(interfaceData);
+    return determineNoneSingleOrMultipleWithChip(
       linodeInterfaceVPCRanges ?? []
     );
-
-    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
-    return ipType === 'ipv6' && noneSingleOrMultipleWithChip === 'None'
-      ? '—'
-      : noneSingleOrMultipleWithChip;
   }
 };
 
 export const SubnetLinodeTableRowHead = (
-  vpcIPv6FeatureFlag: boolean = false
-) => (
   <TableRow>
     <TableCell sx={{ width: '24%' }}>Linode</TableCell>
     <TableCell sx={{ width: '14%' }}>Status</TableCell>
@@ -417,16 +330,6 @@ export const SubnetLinodeTableRowHead = (
     <Hidden smDown>
       <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
-    {vpcIPv6FeatureFlag && (
-      <>
-        <Hidden smDown>
-          <TableCell>VPC IPv6</TableCell>
-        </Hidden>
-        <Hidden smDown>
-          <TableCell>VPC IPv6 Ranges</TableCell>
-        </Hidden>
-      </>
-    )}
     <Hidden smDown>
       <TableCell sx={{ width: '18%' }}>Firewalls</TableCell>
     </Hidden>

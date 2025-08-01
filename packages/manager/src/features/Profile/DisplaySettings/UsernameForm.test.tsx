@@ -8,18 +8,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UsernameForm } from './UsernameForm';
 
-const queryMocks = vi.hoisted(() => ({
-  userPermissions: vi.fn(() => ({
-    permissions: {
-      update_user: false,
-    },
-  })),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
-}));
-
 describe('UsernameForm', () => {
   it('renders a label and input', () => {
     const { getByLabelText, getByText } = renderWithTheme(<UsernameForm />);
@@ -38,10 +26,16 @@ describe('UsernameForm', () => {
     await findByDisplayValue(profile.username);
   });
 
-  it('disables the input if the user doesn not have update_user permission', async () => {
+  it('disables the input if the user is restricted', async () => {
+    const profile = profileFactory.build({ restricted: true });
+
+    server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
+
     const { getByLabelText } = renderWithTheme(<UsernameForm />);
 
-    expect(getByLabelText('Username')).toBeDisabled();
+    await waitFor(() => {
+      expect(getByLabelText('Username')).toBeDisabled();
+    });
 
     expect(
       getByLabelText(
@@ -51,12 +45,6 @@ describe('UsernameForm', () => {
   });
 
   it('disables the input if the user is a proxy user', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        update_user: true,
-      },
-    });
-
     const profile = profileFactory.build({
       restricted: false,
       user_type: 'proxy',
@@ -73,16 +61,10 @@ describe('UsernameForm', () => {
     expect(getByLabelText('This field can’t be modified.')).toBeVisible();
   });
 
-  it('enables the save button when the user makes a change to the username and has update_user permission', async () => {
+  it('enables the save button when the user makes a change to the username', async () => {
     const profile = profileFactory.build({ username: 'my-linode-username' });
 
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
-
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        update_user: true,
-      },
-    });
 
     const { findByDisplayValue, getByLabelText, getByText } = renderWithTheme(
       <UsernameForm />

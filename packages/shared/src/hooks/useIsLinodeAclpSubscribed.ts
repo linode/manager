@@ -7,12 +7,14 @@ type AclpStage = 'beta' | 'ga';
  *
  * ### Cases:
  * - Legacy alerts = 0, Beta alerts = []
- *   - Show default Legacy UI (disabled) for Beta stage
- *   - Show default Beta UI (disabled) for GA stage
+ *   - Show default Legacy UI (disabled) for Beta
+ *   - Show default Beta UI (disabled) for GA
  * - Legacy alerts > 0, Beta alerts = []
  *   - Show default Legacy UI (enabled)
  * - Legacy alerts = 0, Beta alerts has values (either system, user, or both)
- *   - Show default Beta UI (enabled)
+ *   - Show default Beta UI
+ * - Legacy alerts > 0, Beta alerts has values (either system, user, or both)
+ *   - Show default Beta UI
  *
  * @param linodeId - The ID of the Linode
  * @param stage - The current ACLP stage: 'beta' or 'ga'

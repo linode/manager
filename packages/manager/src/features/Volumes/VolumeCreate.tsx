@@ -550,7 +550,6 @@ export const VolumeCreate = () => {
                   onChange={() =>
                     toggleVolumeEncryptionEnabled(values.encryption)
                   }
-                  sxCheckbox={{ paddingLeft: '0px' }}
                 />
               </Box>
             )}

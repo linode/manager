@@ -362,8 +362,9 @@ export const ImagesLanding = () => {
 
   const handleDeployNewLinode = (imageId: string) => {
     navigate({
-      to: '/linodes/create/images',
+      to: '/linodes/create',
       search: {
+        type: 'Images',
         imageID: imageId,
       },
     });

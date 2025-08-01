@@ -164,7 +164,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             {
               attr: { 'data-qa-one-click-nav-btn': true },
               display: 'Marketplace',
-              href: '/linodes/create/marketplace',
+              href: '/linodes/create?type=One-Click',
             },
           ],
           name: 'Compute',

@@ -25,8 +25,8 @@ import {
 } from '../constants';
 import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
-import type { CreateClusterFormValues } from '../CreateCluster/CreateCluster';
 import type {
+  CreateNodePoolDataBeta,
   KubernetesTier,
   NodePoolUpdateStrategy,
   Region,
@@ -62,8 +62,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
   } = props;
 
   // Use the node pool state from the main create flow from.
-  const { control: parentFormControl } = useFormContext<CreateClusterFormValues>();
-  const _nodePools = useWatch({
+  const { control: parentFormControl } = useFormContext();
+  const _nodePools: CreateNodePoolDataBeta[] = useWatch({
     control: parentFormControl,
     name: 'nodePools',
   });
@@ -126,7 +126,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
           count: values.nodeCount,
           update_strategy: values.updateStrategy,
         });
-      } else if (planId) {
+      } else {
         append({
           count: values.nodeCount,
           type: planId,

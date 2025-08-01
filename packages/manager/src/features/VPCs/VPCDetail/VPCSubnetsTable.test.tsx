@@ -1,4 +1,3 @@
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -35,8 +34,6 @@ vi.mock('@linode/queries', async () => {
     useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
   };
 });
-
-const loadingTestId = 'circle-progress';
 
 describe('VPC Subnets table', () => {
   beforeEach(() => {
@@ -174,73 +171,21 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    // @TODO VPC IPv6: Remove this flag mock once VPC IPv6 is fully rolled out, and update
-    // the assertion to expect the IPv6 columns are present
     const { getByLabelText, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
         vpcRegion=""
-      />,
-      { flags: { vpcIpv6: false } }
+      />
     );
 
     const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
 
-    getByText('Linode');
-    getByText('Status');
-    getByText('VPC IPv4');
-    getByText('Firewalls');
-
-    expect(screen.queryByText('VPC IPv6')).not.toBeInTheDocument();
-    expect(screen.queryByText('VPC IPv6 Ranges')).not.toBeInTheDocument();
-  });
-
-  // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
-  it('renders VPC IPv6 and VPC IPv6 Ranges columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
-    const subnet = subnetFactory.build({
-      linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
-    });
-
-    queryMocks.useSubnetsQuery.mockReturnValue({
-      data: {
-        data: [subnet],
-      },
-    });
-
-    renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={3}
-        vpcRegion=""
-      />,
-      { flags: { vpcIpv6: true } }
-    );
-
-    const loadingState = screen.queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
-
-    const expandTableButton = screen.getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
-
-    renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={3}
-        vpcRegion=""
-      />,
-      { flags: { vpcIpv6: true } }
-    );
-
-    expect(screen.getByText('Linode')).toBeVisible();
-    expect(screen.getByText('Status')).toBeVisible();
-    expect(screen.getByText('VPC IPv4')).toBeVisible();
-    expect(screen.getByText('VPC IPv6')).toBeVisible();
-    expect(screen.getByText('VPC IPv6 Ranges')).toBeVisible();
-    expect(screen.getByText('Firewalls')).toBeVisible();
+    expect(getByText('Linode')).toBeVisible();
+    expect(getByText('Status')).toBeVisible();
+    expect(getByText('VPC IPv4')).toBeVisible();
+    expect(getByText('Firewalls')).toBeVisible();
   });
 
   it(

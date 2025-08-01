@@ -156,12 +156,12 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   '&:hover': {
-    color: Alias.Content.Text.Link.Hover,
+    color: Action.Primary.Hover,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: Alias.Content.Text.Link.Default,
+  color: Action.Primary.Default,
   cursor: 'pointer',
   font: 'inherit',
   padding: 0,
@@ -490,70 +490,18 @@ export const darkTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          // Default styles
-          '& svg': {
-            backgroundColor: Component.Checkbox.Empty.Default.Background,
-            color: Component.Checkbox.Empty.Default.Border,
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
           },
-          // Hover state overrides
-          '&:hover': {
-            '& svg': {
-              backgroundColor: Component.Checkbox.Empty.Hover.Background,
-              color: Component.Checkbox.Empty.Hover.Border,
-            },
-          },
-          // Active state overrides
           '&:active': {
-            '& svg': {
-              backgroundColor: Component.Checkbox.Empty.Active.Background,
-              color: Component.Checkbox.Empty.Active.Border,
-            },
+            color: `${Component.Checkbox.Empty.Active.Border} !important`,
+          },
+          '&:hover': {
+            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
           },
           // Checked
           '&.Mui-checked': {
-            '& svg': {
-              backgroundColor: Component.Checkbox.Checked.Default.Background,
-              color: Component.Checkbox.Checked.Default.Background,
-              '& path': {
-                fill: Component.Checkbox.Checked.Default.Icon,
-              },
-            },
-            '&:hover': {
-              '& svg': {
-                backgroundColor: Component.Checkbox.Checked.Hover.Background,
-                color: Component.Checkbox.Checked.Hover.Background,
-                '& path': {
-                  fill: Component.Checkbox.Checked.Hover.Icon,
-                },
-              },
-            },
-            '&:active': {
-              '& svg': {
-                backgroundColor: Component.Checkbox.Checked.Active.Background,
-                color: Component.Checkbox.Checked.Active.Background,
-                '& path': {
-                  fill: Component.Checkbox.Checked.Active.Icon,
-                },
-              },
-            },
-          },
-          // Unchecked & Disabled
-          '&.Mui-disabled': {
-            '& svg': {
-              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
-              color: Component.Checkbox.Empty.Disabled.Border,
-            },
-            pointerEvents: 'none',
-          },
-          // Checked & Disabled
-          '&.Mui-checked.Mui-disabled': {
-            '& svg': {
-              backgroundColor: Component.Checkbox.Checked.Disabled.Background,
-              color: Component.Checkbox.Checked.Disabled.Background,
-              '& path': {
-                fill: Component.Checkbox.Checked.Disabled.Icon,
-              },
-            },
+            color: Component.Checkbox.Checked.Default.Background,
           },
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
@@ -564,6 +512,18 @@ export const darkTheme: ThemeOptions = {
               },
             },
           },
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+            },
+            color: Component.Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Component.Checkbox.Checked.Disabled.Background,
+          },
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
@@ -573,6 +533,7 @@ export const darkTheme: ThemeOptions = {
               },
             },
           },
+          color: Component.Checkbox.Empty.Default.Border,
         },
       },
     },

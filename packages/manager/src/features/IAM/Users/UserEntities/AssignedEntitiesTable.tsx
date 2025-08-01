@@ -125,16 +125,6 @@ export const AssignedEntitiesTable = () => {
     setSelectedRole(role);
   };
 
-  const handleRemoveAssignmentDialogClose = () => {
-    setIsRemoveAssignmentDialogOpen(false);
-    // If we just deleted the last one on a page, reset to the first page.
-    const removedLastOnPage =
-      filteredAndSortedRoles.length % pagination.pageSize === 1;
-    if (removedLastOnPage) {
-      pagination.handlePageChange(1);
-    }
-  };
-
   const filteredRoles = getFilteredRoles({
     entityType: entityType?.value as 'all' | EntityType,
     getSearchableFields,
@@ -313,7 +303,7 @@ export const AssignedEntitiesTable = () => {
         role={selectedRole}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => handleRemoveAssignmentDialogClose()}
+        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />

@@ -6,7 +6,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
-import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { useLinodeCreateQueryParams } from '../utilities';
 import { PlacementGroupPanel } from './PlacementGroupPanel';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -15,7 +15,7 @@ export const Details = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
-  const createType = useGetLinodeCreateType();
+  const { params } = useLinodeCreateQueryParams();
 
   const { permissions } = usePermissions('account', ['create_linode']);
 
@@ -36,7 +36,7 @@ export const Details = () => {
           />
         )}
       />
-      {createType !== 'Clone Linode' && (
+      {params.type !== 'Clone Linode' && (
         <Controller
           control={control}
           name="tags"

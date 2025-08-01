@@ -9,7 +9,7 @@ import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/cust
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { extendType } from 'src/utilities/extendType';
 
-import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
+import { useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -24,7 +24,7 @@ export const Plan = () => {
 
   const { data: regions } = useRegionsQuery();
   const { data: types } = useAllTypes();
-  const createType = useGetLinodeCreateType();
+  const { params } = useLinodeCreateQueryParams();
 
   const { permissions } = usePermissions('account', ['create_linode']);
 
@@ -39,7 +39,7 @@ export const Plan = () => {
           onClick={() => {
             sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
             sendLinodeCreateFormInputEvent({
-              createType: createType ?? 'OS',
+              createType: params.type ?? 'OS',
               headerName: 'Linode Plan',
               interaction: 'click',
               label: 'Choosing a Plan',

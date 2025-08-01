@@ -27,7 +27,7 @@ import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDraw
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
-import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -70,10 +70,10 @@ export const VPC = () => {
       ? 'Allow Linode to communicate in an isolated environment.'
       : 'Assign this Linode to an existing VPC.';
 
-  const createType = useGetLinodeCreateType();
+  const { params } = useLinodeCreateQueryParams();
 
   const vpcFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: createType ?? 'OS',
+    createType: params.type ?? 'OS',
     headerName: 'VPC',
     interaction: 'click',
     label: 'VPC',

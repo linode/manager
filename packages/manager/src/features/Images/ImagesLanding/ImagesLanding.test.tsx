@@ -195,9 +195,10 @@ describe('Images Landing Table', () => {
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Deploy to New Linode'));
 
-    expect(router.state.location.pathname).toBe('/linodes/create/images');
+    expect(router.state.location.pathname).toBe('/linodes/create');
 
     expect(router.state.location.search).toStrictEqual({
+      type: 'Images',
       imageID: image.id,
     });
   });
@@ -249,8 +250,8 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(<ImagesLanding />, {
-      initialRoute: '/images',
+    const { getByText, queryByTestId } = renderWithTheme(<ImagesLanding />, { 
+      initialRoute: '/images'
     });
 
     const loadingElement = queryByTestId(loadingTestId);

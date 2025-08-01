@@ -131,19 +131,6 @@ export const DateTimeRangePicker = ({
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Persist previous state values
-  const previousValues = useRef<{
-    endDate: DateTime | null;
-    selectedPreset: null | string;
-    startDate: DateTime | null;
-    timeZone: string;
-  }>({
-    endDate: endDateProps?.value ?? null,
-    startDate: startDateProps?.value ?? null,
-    selectedPreset: presetsProps?.defaultValue ?? null,
-    timeZone: timeZoneProps?.defaultValue ?? 'UTC', // fallback to a string
-  });
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -157,12 +144,6 @@ export const DateTimeRangePicker = ({
   };
 
   const handleClose = () => {
-    // Revert values
-    setStartDate(previousValues.current.startDate);
-    setEndDate(previousValues.current.endDate);
-    setTimeZone(previousValues.current.timeZone);
-    setSelectedPreset(previousValues.current.selectedPreset);
-
     setOpen(false);
     setAnchorEl(null);
   };
@@ -174,15 +155,6 @@ export const DateTimeRangePicker = ({
       startDate: startDate ? startDate.toISO() : null,
       timeZone,
     });
-
-    // Save current values
-    previousValues.current = {
-      startDate,
-      endDate,
-      timeZone,
-      selectedPreset,
-    };
-
     handleClose();
   };
 

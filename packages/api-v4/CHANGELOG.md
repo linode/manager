@@ -1,28 +1,3 @@
-## [2025-07-29] - v0.145.0
-
-
-### Added:
-
-- `VPC Dual Stack` and `VPC IPv6 Large Prefixes` to account capabilities ([#12309](https://github.com/linode/manager/pull/12309))
-- ACLP: `timeZone` property in `DateTimeWithPreset` interface ([#12497](https://github.com/linode/manager/pull/12497))
-
-### Changed:
-
-- Update CreateKubeClusterPayload interface to support LKE-E node_pool fields ([#12449](https://github.com/linode/manager/pull/12449))
-- ACLP: `scope` parameter as option for EditAlertDefinitionPayload type ([#12588](https://github.com/linode/manager/pull/12588))
-
-### Removed:
-
-- Unnecessary in-progress event.status type during earlier development ([#12512](https://github.com/linode/manager/pull/12512))
-
-### Upcoming Features:
-
-- CloudPulse: Update service type in `types.ts` ([#12508](https://github.com/linode/manager/pull/12508))
-- ACLP-Alerting: Add nodebalancer to AlertServiceType for Alerts onboarding  ([#12510](https://github.com/linode/manager/pull/12510))
-- Add vpc_id and subnet_id to KubernetesCluster payload type ([#12513](https://github.com/linode/manager/pull/12513))
-- Add API endpoints (GET, POST) for Streams ([#12524](https://github.com/linode/manager/pull/12524))
-- ACLP-Alerting: Add firewall to AlertServiceType for Alerts onboarding ([#12550](https://github.com/linode/manager/pull/12550))
-
 ## [2025-07-15] - v0.144.0
 
 

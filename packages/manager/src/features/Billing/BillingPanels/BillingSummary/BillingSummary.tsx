@@ -1,4 +1,9 @@
-import { useAccount, useGrants, useNotificationsQuery } from '@linode/queries';
+import {
+  useAccount,
+  useGrants,
+  useNotificationsQuery,
+  useProfile,
+} from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -6,7 +11,6 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -29,8 +33,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const { data: notifications } = useNotificationsQuery();
   const { data: account } = useAccount();
+  const { data: profile } = useProfile();
 
-  const { permissions } = usePermissions('account', ['create_promo_code']);
+  const isRestrictedUser = profile?.restricted;
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
@@ -149,7 +154,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const showAddPromoLink =
     balance <= 0 &&
-    permissions.create_promo_code &&
+    !isRestrictedUser &&
     isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 

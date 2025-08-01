@@ -13,6 +13,7 @@ export const buildQueryStringForLinodeClone = (
   const params: Record<string, number | string> = {
     linodeID: linodeId,
     regionID: linodeRegionId,
+    type: 'Clone Linode',
   };
 
   // If the type of this Linode is a valid (current) type, use it in the QS

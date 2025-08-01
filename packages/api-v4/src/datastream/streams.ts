@@ -1,5 +1,3 @@
-import { createStreamSchema } from '@linode/validation';
-
 import { BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -43,7 +41,7 @@ export const getStreams = (params?: Params, filter?: Filter) =>
  */
 export const createStream = (data: CreateStreamPayload) =>
   Request<Stream>(
-    setData(data, createStreamSchema),
+    setData(data), // @TODO (DPS-34044) add validation schema
     setURL(`${BETA_API_ROOT}/monitor/streams`),
     setMethod('POST'),
   );

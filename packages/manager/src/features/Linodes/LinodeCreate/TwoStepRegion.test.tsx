@@ -1,4 +1,3 @@
-import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -7,14 +6,36 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { TwoStepRegion } from './TwoStepRegion';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('TwoStepRegion', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('should render a heading and docs link', () => {
-    renderWithThemeAndHookFormContext({
+    const { getAllByText, getByText } = renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
-    const heading = screen.getAllByText('Region')[0];
-    const link = screen.getByText(DOCS_LINK_LABEL_DC_PRICING);
+    const heading = getAllByText('Region')[0];
+    const link = getByText(DOCS_LINK_LABEL_DC_PRICING);
 
     expect(heading).toBeVisible();
     expect(heading.tagName).toBe('H2');
@@ -25,36 +46,36 @@ describe('TwoStepRegion', () => {
   });
 
   it('should render two tabs, Core and Distributed', () => {
-    renderWithThemeAndHookFormContext({
+    const { getAllByRole } = renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
-    const [coreTab, distributedTab] = screen.getAllByRole('tab');
-
-    expect(coreTab).toHaveTextContent('Core');
-    expect(distributedTab).toHaveTextContent('Distributed');
+    const tabs = getAllByRole('tab');
+    expect(tabs[0]).toHaveTextContent('Core');
+    expect(tabs[1]).toHaveTextContent('Distributed');
   });
 
   it('should render a Region Select for the Core tab', () => {
-    renderWithThemeAndHookFormContext({
+    const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
-    const regionSelect = screen.getByPlaceholderText('Select a Region');
+    const select = getByPlaceholderText('Select a Region');
 
-    expect(regionSelect).toBeVisible();
-    expect(regionSelect).toBeEnabled();
+    expect(select).toBeVisible();
+    expect(select).toBeEnabled();
   });
 
   it('should only display core regions in the Core tab region select', async () => {
-    renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion onChange={vi.fn()} />,
-    });
+    const { getByPlaceholderText, getByRole } =
+      renderWithThemeAndHookFormContext({
+        component: <TwoStepRegion onChange={vi.fn()} />,
+      });
 
-    const regionSelect = screen.getByPlaceholderText('Select a Region');
-    await userEvent.click(regionSelect);
+    const select = getByPlaceholderText('Select a Region');
+    await userEvent.click(select);
 
-    const dropdown = screen.getByRole('listbox');
+    const dropdown = getByRole('listbox');
     expect(dropdown.innerHTML).toContain('US, Newark');
     expect(dropdown.innerHTML).not.toContain(
       'US, Gecko Distributed Region Test'
@@ -62,57 +83,36 @@ describe('TwoStepRegion', () => {
   });
 
   it('should only display distributed regions in the Distributed tab region select', async () => {
-    renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion onChange={vi.fn()} />,
-    });
+    const { getAllByRole, getByPlaceholderText, getByRole } =
+      renderWithThemeAndHookFormContext({
+        component: <TwoStepRegion onChange={vi.fn()} />,
+      });
 
-    const distributedTab = screen.getByRole('tab', { name: 'Distributed' });
-    await userEvent.click(distributedTab);
+    const tabs = getAllByRole('tab');
+    await userEvent.click(tabs[1]);
 
-    const regionSelect = screen.getByPlaceholderText('Select a Region');
-    await userEvent.click(regionSelect);
+    const select = getByPlaceholderText('Select a Region');
+    await userEvent.click(select);
 
-    const dropdown = screen.getByRole('listbox');
+    const dropdown = getByRole('listbox');
     expect(dropdown.innerHTML).toContain('US, Gecko Distributed Region Test');
     expect(dropdown.innerHTML).not.toContain('US, Newark');
   });
 
   it('should render a Geographical Area select with All pre-selected and a Region Select for the Distributed tab', async () => {
-    renderWithThemeAndHookFormContext({
+    const { getAllByRole } = renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
-    const [, distributedTab] = screen.getAllByRole('tab');
-    await userEvent.click(distributedTab);
+    const tabs = getAllByRole('tab');
+    await userEvent.click(tabs[1]);
 
-    const [geographicalAreaSelect, regionSelect] =
-      screen.getAllByRole('combobox');
+    const inputs = getAllByRole('combobox');
+    const geographicalAreaSelect = inputs[0];
+    const regionSelect = inputs[1];
 
     expect(geographicalAreaSelect).toHaveAttribute('value', 'All');
     expect(regionSelect).toHaveAttribute('placeholder', 'Select a Region');
     expect(regionSelect).toBeEnabled();
-  });
-
-  it('should persist the selected Geographical Area when switching between the Core and Distributed tabs', async () => {
-    renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion onChange={vi.fn()} />,
-    });
-
-    const [coreTab, distributedTab] = screen.getAllByRole('tab');
-    await userEvent.click(distributedTab);
-
-    const geographicalAreaSelect = screen.getByLabelText('Geographical Area');
-    // Open the dropdown
-    await userEvent.click(geographicalAreaSelect);
-
-    const lastMonthOption = screen.getByText('North America');
-    await userEvent.click(lastMonthOption);
-    expect(geographicalAreaSelect).toHaveAttribute('value', 'North America');
-
-    // Geographical area selection should persist after switching tabs
-    await userEvent.click(coreTab);
-    await userEvent.click(distributedTab);
-    const geographicalAreaSelect2 = screen.getByLabelText('Geographical Area');
-    expect(geographicalAreaSelect2).toHaveAttribute('value', 'North America');
   });
 });

@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { nodePoolBetaFactory } from 'src/factories/kubernetesCluster';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
@@ -24,7 +24,7 @@ describe('Node Pool Summary Item', () => {
       component: <NodePoolSummaryItem {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -37,7 +37,7 @@ describe('Node Pool Summary Item', () => {
       component: <NodePoolSummaryItem {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });
@@ -50,7 +50,7 @@ describe('Node Pool Summary Item', () => {
       component: <NodePoolSummaryItem {...props} />,
       useFormOptions: {
         defaultValues: {
-          nodePools: [nodePoolFactory.build()],
+          nodePools: [nodePoolBetaFactory.build()],
         },
       },
     });

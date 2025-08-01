@@ -1,14 +1,3 @@
-## [2025-07-29] - v0.6.0
-
-
-### Removed:
-
-- `isAclpSupportedRegion` helper method ([#12517](https://github.com/linode/manager/pull/12517))
-
-### Upcoming Features:
-
-- Add IPv6 Subnet support ([#12382](https://github.com/linode/manager/pull/12382))
-
 ## [2025-07-01] - v0.5.0
 
 

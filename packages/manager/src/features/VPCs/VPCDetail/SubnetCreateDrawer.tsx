@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAccount,
   useCreateSubnetMutation,
   useGrants,
   useProfile,
@@ -14,6 +15,7 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import {
   createSubnetSchemaIPv4,
   createSubnetSchemaWithIPv6,
@@ -21,7 +23,7 @@ import {
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   calculateAvailableIPv4sRFC1918,
   calculateAvailableIPv6Linodes,
@@ -42,9 +44,11 @@ interface Props {
 export const SubnetCreateDrawer = (props: Props) => {
   const { onClose, open, vpcId } = props;
 
+  const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: vpc } = useVPCQuery(vpcId, open);
+  const flags = useFlags();
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
 
@@ -59,7 +63,23 @@ export const SubnetCreateDrawer = (props: Props) => {
     reset: resetRequest,
   } = useCreateSubnetMutation(vpcId);
 
-  const { shouldDisplayIPv6, recommendedIPv6 } = useVPCDualStack(vpc?.ipv6);
+  const isDualStackVPC = Boolean(vpc?.ipv6);
+
+  const isDualStackEnabled = isFeatureEnabledV2(
+    'VPC Dual Stack',
+    Boolean(flags.vpcIpv6),
+    account?.capabilities ?? []
+  );
+
+  const shouldDisplayIPv6 = isDualStackEnabled && isDualStackVPC;
+
+  const recommendedIPv6 = shouldDisplayIPv6
+    ? [
+        {
+          range: '/56',
+        },
+      ]
+    : undefined;
 
   const {
     control,
@@ -172,10 +192,15 @@ export const SubnetCreateDrawer = (props: Props) => {
               render={({ field, fieldState }) => (
                 <Select
                   errorText={fieldState.error?.message}
-                  helperText={`Number of Linodes: ${Math.min(
-                    numberOfAvailableIPv4Linodes,
-                    calculateAvailableIPv6Linodes(field.value)
-                  )}`}
+                  helperText={
+                    <>
+                      Number of Linodes:{' '}
+                      {Math.min(
+                        numberOfAvailableIPv4Linodes,
+                        calculateAvailableIPv6Linodes(field.value)
+                      )}
+                    </>
+                  }
                   label="IPv6 Prefix Length"
                   onChange={(_, option) => field.onChange(option.value)}
                   options={SUBNET_IPV6_PREFIX_LENGTHS}

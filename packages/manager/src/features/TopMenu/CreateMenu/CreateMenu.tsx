@@ -88,7 +88,7 @@ export const CreateMenu = () => {
           attr: { 'data-qa-one-click-add-new': true },
           description: 'Deploy applications with ease',
           display: 'Marketplace',
-          href: '/linodes/create/marketplace',
+          href: '/linodes/create?type=One-Click',
         },
       ],
       name: 'Compute',

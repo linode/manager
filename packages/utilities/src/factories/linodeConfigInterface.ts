@@ -17,24 +17,15 @@ export const linodeConfigInterfaceFactoryWithVPC =
     active: false,
     id: Factory.each((i) => i),
     ip_ranges: ['192.0.2.0/24', '192.0.3.0/24'],
-    ipam_address: null,
+    ipam_address: '10.0.0.1/24',
     ipv4: {
       nat_1_1: 'some nat',
       vpc: '10.0.0.0',
     },
     ipv6: {
       is_public: false,
-      ranges: [
-        {
-          range: '2001:db8::/64',
-        },
-      ],
-      slaac: [
-        {
-          address: '2001:db8::1',
-          range: '2001:db8::/64',
-        },
-      ],
+      ranges: [],
+      slaac: [],
     },
     label: Factory.each((i) => `interface-${i}`),
     purpose: 'vpc',

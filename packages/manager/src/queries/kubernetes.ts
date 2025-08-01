@@ -2,6 +2,7 @@ import {
   createKubernetesCluster,
   createKubernetesClusterBeta,
   createNodePool,
+  createNodePoolBeta,
   deleteKubernetesCluster,
   deleteNodePool,
   getKubeConfig,
@@ -16,7 +17,7 @@ import {
   getKubernetesTypes,
   getKubernetesTypesBeta,
   getKubernetesVersions,
-  getNodePool,
+  getNodePoolBeta,
   getNodePools,
   recycleAllNodes,
   recycleClusterNodes,
@@ -25,6 +26,7 @@ import {
   updateKubernetesCluster,
   updateKubernetesClusterControlPlaneACL,
   updateNodePool,
+  updateNodePoolBeta,
 } from '@linode/api-v4';
 import { profileQueries, queryPresets } from '@linode/queries';
 import { getAll } from '@linode/utilities';
@@ -40,7 +42,9 @@ import {
 import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
+  CreateNodePoolDataBeta,
   KubeNodePoolResponse,
+  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -48,6 +52,7 @@ import type {
   KubernetesTieredVersion,
   KubernetesVersion,
   UpdateNodePoolData,
+  UpdateNodePoolDataBeta,
 } from '@linode/api-v4';
 import type {
   APIError,
@@ -133,7 +138,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       pools: {
         contextQueries: {
           pool: (poolId: number) => ({
-            queryFn: () => getNodePool(id, poolId),
+            queryFn: () => getNodePoolBeta(id, poolId),
             queryKey: [poolId],
           }),
         },
@@ -375,6 +380,26 @@ export const useCreateNodePoolMutation = (clusterId: number) => {
   });
 };
 
+/**
+ * Beta mutation to allow for the update of k8_version and update_strategy via beta endpoint
+ * TODO LKE-E: Remove this mutation once LKE-E is GA and /v4 endpoints are used
+ */
+export const useCreateNodePoolBetaMutation = (clusterId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    KubeNodePoolResponseBeta,
+    APIError[],
+    CreateNodePoolDataBeta
+  >({
+    mutationFn: (data) => createNodePoolBeta(clusterId, data),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+      });
+    },
+  });
+};
+
 export const useUpdateNodePoolMutation = (
   clusterId: number,
   poolId: number
@@ -386,6 +411,29 @@ export const useUpdateNodePoolMutation = (
     Partial<UpdateNodePoolData>
   >({
     mutationFn: (data) => updateNodePool(clusterId, poolId, data),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+      });
+    },
+  });
+};
+
+/**
+ * Beta mutation to allow for the update of k8_version and update_strategy via beta endpoint
+ * TODO LKE-E: Remove this mutation once LKE-E is GA and /v4 endpoints are used
+ */
+export const useUpdateNodePoolBetaMutation = (
+  clusterId: number,
+  poolId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    KubeNodePoolResponseBeta,
+    APIError[],
+    Partial<UpdateNodePoolDataBeta>
+  >({
+    mutationFn: (data) => updateNodePoolBeta(clusterId, poolId, data),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,

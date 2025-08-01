@@ -3,11 +3,10 @@ import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { type CreateStreamAndDestinationForm } from './types';
+import { type CreateStreamForm } from './types';
 
 export const StreamCreateGeneralInfo = () => {
-  const { control, setValue } =
-    useFormContext<CreateStreamAndDestinationForm>();
+  const { control } = useFormContext<CreateStreamForm>();
 
   const streamTypeOptions = [
     {
@@ -20,26 +19,16 @@ export const StreamCreateGeneralInfo = () => {
     },
   ];
 
-  const updateStreamDetails = (value: string) => {
-    if (value === streamType.LKEAuditLogs) {
-      setValue('stream.details.is_auto_add_all_clusters_enabled', false);
-    } else {
-      setValue('stream.details', {});
-    }
-  };
-
   return (
     <Paper>
       <Typography variant="h2">General Information</Typography>
       <Controller
         control={control}
-        name="stream.label"
-        render={({ field, fieldState }) => (
+        name="label"
+        render={({ field }) => (
           <TextField
             aria-required
-            errorText={fieldState.error?.message}
             label="Name"
-            onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
@@ -51,16 +40,13 @@ export const StreamCreateGeneralInfo = () => {
       />
       <Controller
         control={control}
-        name="stream.type"
-        render={({ field, fieldState }) => (
+        name="type"
+        render={({ field }) => (
           <Autocomplete
             disableClearable
-            errorText={fieldState.error?.message}
             label="Stream Type"
-            onBlur={field.onBlur}
             onChange={(_, { value }) => {
               field.onChange(value);
-              updateStreamDetails(value);
             }}
             options={streamTypeOptions}
             value={streamTypeOptions.find(({ value }) => value === field.value)}

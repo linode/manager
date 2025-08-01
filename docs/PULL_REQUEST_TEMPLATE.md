@@ -9,25 +9,17 @@ List any change(s) relevant to the reviewer.
 - ...
 - ...
 
-### Scope 🚢
-
- Upon production release, changes in this PR will be visible to:
-
-- [ ] All customers
-- [ ] Some customers (e.g. in Beta or Limited Availability)
-- [ ] No customers / Not applicable
-
 ## Target release date 🗓️
 
 Please specify a release date (and environment, if applicable) to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
 
 ## Preview 📷
 
-**Include a screenshot `<img src="" />` or video `<video src="" />` of the change.**
+**Include a screenshot or screen recording of the change.**
 
 :lock: Use the [Mask Sensitive Data](https://cloud.linode.com/profile/settings) setting for security.
 
-:bulb: For changes requiring multiple steps to validate, prefer a video for clarity.
+:bulb: Use `<video src="" />` tag when including recordings in table.
 
 | Before  | After   |
 | ------- | ------- |
@@ -89,7 +81,7 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 </details>
 
-<!-- This content will not appear in the rendered Markdown 
+---
 
 ## Commit message and pull request title format standards
 
@@ -109,4 +101,4 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
--->
+---
