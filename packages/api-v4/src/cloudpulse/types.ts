@@ -341,7 +341,7 @@ export interface EditAlertDefinitionPayload {
   rule_criteria?: {
     rules: MetricCriteria[];
   };
-  scope?: AlertDefinitionScope | null;
+  scope?: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
@@ -352,7 +352,7 @@ export interface EditAlertPayloadWithService
   extends EditAlertDefinitionPayload {
   alertId: number;
   serviceType: CloudPulseServiceType;
-  type: AlertDefinitionType | null;
+  type?: AlertDefinitionType | null;
 }
 
 export type AlertStatusUpdateType = 'Disable' | 'Enable';

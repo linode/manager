@@ -210,10 +210,11 @@ export const ALERT_SCOPE_TOOLTIP_TEXT =
 export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
   'Indicates whether the alert applies to all entities in the account, entities in specific regions, or just this entity.';
 
-export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
+export type AlertFormMode = 'create' | 'edit' | 'view';
+
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
-export type AlertFormMode = 'create' | 'edit' | 'view';
+export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 
 export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
   'Trailing comma is not allowed.';
