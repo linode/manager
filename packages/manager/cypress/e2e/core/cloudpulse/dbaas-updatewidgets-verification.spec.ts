@@ -233,12 +233,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     ui.regionSelect.find().click();
     ui.regionSelect
