@@ -7,7 +7,7 @@ import { FirewallRulesLanding } from './FirewallRulesLanding';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_firewall_rules: false,
     },
   })),
@@ -38,7 +38,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 const firewallRules = firewallRulesFactory.build();
 const getDisabledState = () =>
-  !queryMocks.userPermissions().permissions.update_firewall_rules;
+  !queryMocks.userPermissions().data.update_firewall_rules;
 
 describe('FirewallRuleTable', () => {
   it('should disable "Add AN Inbound Rule" button if the user does not have update_firewall_rules permission', () => {
@@ -117,7 +117,7 @@ describe('FirewallRuleTable', () => {
 
   it('should enable menu buttons if the user has update_firewall_rules permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_firewall_rules: true,
       },
     });
@@ -150,7 +150,7 @@ describe('FirewallRuleTable', () => {
 
   it('should enable "Add AN Inbound Rule" button if the user has update_firewall_rules permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_firewall_rules: true,
       },
     });
@@ -170,7 +170,7 @@ describe('FirewallRuleTable', () => {
 
   it('should enable "Add AN Outbound Rule" button if the user has update_firewall_rules permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_firewall_rules: true,
       },
     });

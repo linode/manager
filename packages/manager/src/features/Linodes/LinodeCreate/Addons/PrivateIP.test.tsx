@@ -12,7 +12,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -45,7 +45,7 @@ describe('Linode Create Private IP Add-on', () => {
 
   it('should be enabled if the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

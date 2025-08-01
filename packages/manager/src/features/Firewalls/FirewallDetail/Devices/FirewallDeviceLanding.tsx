@@ -27,7 +27,7 @@ export const FirewallDeviceLanding = React.memo(
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const { permissions } = usePermissions(
+    const { data: permissions } = usePermissions(
       'firewall',
       ['create_firewall_device', 'delete_firewall_device'],
       firewallId

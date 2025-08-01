@@ -13,7 +13,7 @@ import { PaymentMethodRow } from './PaymentMethodRow';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       make_billing_payment: false,
       update_account: false,
     },
@@ -146,7 +146,7 @@ describe('Payment Method Row', () => {
   it('Calls `onDelete` callback when "Delete" action is clicked', async () => {
     const mockFunction = vi.fn();
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         make_billing_payment: false,
         update_account: true,
       },
@@ -172,7 +172,7 @@ describe('Payment Method Row', () => {
 
   it('Makes payment method default when "Make Default" action is clicked', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         make_billing_payment: true,
         update_account: true,
       },
@@ -203,7 +203,7 @@ describe('Payment Method Row', () => {
 
   it('should disable "Make a Payment" button if the user does not have make_billing_payment permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         make_billing_payment: false,
         update_account: false,
       },
@@ -229,7 +229,7 @@ describe('Payment Method Row', () => {
 
   it('should enable "Make a Payment" button if the user has make_billing_payment permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         make_billing_payment: true,
         update_account: false,
       },

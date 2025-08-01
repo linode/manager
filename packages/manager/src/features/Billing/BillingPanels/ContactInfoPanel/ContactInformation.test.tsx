@@ -10,7 +10,7 @@ const EDIT_BUTTON_ID = 'edit-contact-info';
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
-    permissions: { update_account: false },
+    data: { update_account: false },
   })),
 }));
 
@@ -85,7 +85,7 @@ describe('Edit Contact Information', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_account: true },
+      data: { update_account: true },
     });
 
     const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
@@ -104,7 +104,7 @@ describe('Edit Contact Information', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_account: true },
+      data: { update_account: true },
     });
 
     const { getByTestId } = renderWithTheme(

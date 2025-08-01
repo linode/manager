@@ -6,7 +6,7 @@ import { AccountLanding } from './AccountLanding';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: { make_billing_payment: false },
+    data: { make_billing_payment: false },
   })),
 }));
 
@@ -26,7 +26,7 @@ describe('AccountLanding', () => {
 
   it('should enable "Make a Payment" button if the user has make_billing_payment permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { make_billing_payment: true },
+      data: { make_billing_payment: true },
     });
 
     const { getByRole } = renderWithTheme(<AccountLanding />);

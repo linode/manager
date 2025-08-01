@@ -8,7 +8,7 @@ import { UsernamePanel } from './UsernamePanel';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_user: false,
     },
   })),
@@ -45,7 +45,7 @@ describe('UsernamePanel', () => {
 
   it("does not allow the user to update a proxy user's username", async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_user: true,
       },
     });
@@ -78,7 +78,7 @@ describe('UsernamePanel', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_user: true,
       },
     });

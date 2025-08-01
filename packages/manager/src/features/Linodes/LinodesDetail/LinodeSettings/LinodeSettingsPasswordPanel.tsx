@@ -28,7 +28,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   const { linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['password_reset_linode'],
     linodeId
