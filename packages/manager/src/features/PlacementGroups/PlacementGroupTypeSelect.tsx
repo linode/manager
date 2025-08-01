@@ -1,4 +1,4 @@
-import { Autocomplete, ListItem, Tooltip, Typography } from '@linode/ui';
+import { Autocomplete, ListItemOption, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -23,57 +23,38 @@ export const PlacementGroupTypeSelect = (props: Props) => {
       )}
       disableClearable={true}
       disabled={disabledPlacementGroupCreateButton}
+      disabledItemsFocusable
       errorText={error}
+      getOptionDisabled={(option) => option.value === 'affinity:local'}
       label="Placement Group Type"
       onChange={(_, value) => {
         setFieldValue('placement_group_type', value?.value ?? '');
       }}
       options={placementGroupTypeOptions}
       placeholder="Select an Placement Group Type"
-      renderOption={(props, option) => {
+      renderOption={(props, option, { selected }) => {
         const { key, ...rest } = props;
-        const isDisabledMenuItem = option.value === 'affinity:local';
+        const isDisabled = option.value === 'affinity:local';
+
+        const disabledReason = (
+          <Typography>
+            Currently, only Anti-affinity placement groups are supported.{' '}
+            <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
+          </Typography>
+        );
 
         return (
-          <Tooltip
-            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
-            disableFocusListener={!isDisabledMenuItem}
-            disableHoverListener={!isDisabledMenuItem}
-            disableTouchListener={!isDisabledMenuItem}
-            enterDelay={200}
-            enterNextDelay={200}
-            enterTouchDelay={200}
-            key={key}
-            title={
-              isDisabledMenuItem ? (
-                <Typography>
-                  Currently, only Anti-affinity placement groups are supported.{' '}
-                  <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
-                </Typography>
-              ) : (
-                ''
-              )
+          <ListItemOption
+            disabledOptions={
+              isDisabled ? { reason: disabledReason } : undefined
             }
+            item={{ ...option, id: option.value }}
+            key={key}
+            props={rest}
+            selected={selected}
           >
-            <ListItem
-              {...rest}
-              className={
-                isDisabledMenuItem
-                  ? `${props.className} Mui-disabled`
-                  : props.className
-              }
-              component="li"
-              onClick={(e) =>
-                isDisabledMenuItem
-                  ? e.preventDefault()
-                  : props.onClick
-                    ? props.onClick(e)
-                    : null
-              }
-            >
-              {option.label}
-            </ListItem>
-          </Tooltip>
+            {option.label}
+          </ListItemOption>
         );
       }}
       textFieldProps={{
