@@ -323,13 +323,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   render() {
     const { loading } = this.state;
-    const { currentUsername, isIAMEnabled } = this.props;
+    const { currentUsername } = this.props;
 
-    // Redirect to IAM roles if IAM is enabled
-    if (loading && isIAMEnabled && currentUsername) {
-      window.location.replace(`/iam/users/${currentUsername}/roles`);
-      return null;
-    }
     return (
       <div ref={this.formContainerRef}>
         <DocumentTitleSegment segment={`${currentUsername} - Permissions`} />
