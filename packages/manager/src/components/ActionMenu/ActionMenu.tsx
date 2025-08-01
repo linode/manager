@@ -125,6 +125,12 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
         MenuListProps={{
           'aria-labelledby': buttonId,
         }}
+        onClick={(e) => {
+          // Prevents clicks on disabled MenuItems from propagating
+          if (stopClickPropagation) {
+            e.stopPropagation();
+          }
+        }}
         onClose={handleClose}
         open={open}
         slotProps={{
@@ -147,12 +153,12 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
             disabled={a.disabled}
             key={idx}
             onClick={(e) => {
+              if (stopClickPropagation) {
+                e.stopPropagation();
+              }
               if (!a.disabled) {
                 handleClose(e);
                 a.onClick();
-              }
-              if (stopClickPropagation) {
-                e.stopPropagation();
               }
             }}
             onMouseEnter={handleMouseEnter}

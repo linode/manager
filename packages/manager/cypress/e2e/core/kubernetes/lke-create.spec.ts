@@ -373,7 +373,7 @@ describe('LKE Cluster Creation', () => {
       cy.contains('Kubernetes API Endpoint').should('be.visible');
       cy.contains('linodelke.net:443').should('be.visible');
 
-      cy.findAllByText(nodePoolLabel, { selector: 'h2' })
+      cy.findAllByText(nodePoolLabel, { selector: 'h3' })
         .should('have.length', similarNodePoolCount)
         .first()
         .should('be.visible');
