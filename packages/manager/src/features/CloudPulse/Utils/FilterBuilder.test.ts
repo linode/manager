@@ -242,7 +242,7 @@ describe('shouldDisableFilterByFilterKey', () => {
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
-      { region: undefined },
+      { region: undefined,},
       mockDashboard,
       { region: 'us-east' } // tags are defined in preferences which confirms that this optional filter was selected
     );

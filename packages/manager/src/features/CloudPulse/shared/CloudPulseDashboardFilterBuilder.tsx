@@ -471,15 +471,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           </GridLegacy>
         ) : (
           <GridLegacy
-            columnSpacing={theme.spacing(2)}
+            columnSpacing={theme.spacingFunction(16)}
             container
             item
             sx={{
               display: showFilter ? 'flex' : 'none',
-              maxHeight: theme.spacing(23),
+              maxHeight: '184px',
               overflow: 'auto',
               pr: { sm: 0, xs: 2 },
-              rowGap: theme.spacing(2),
+              rowGap: theme.spacingFunction(16),
             }}
             xs={12}
           >
