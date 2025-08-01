@@ -10,7 +10,6 @@ import {
   kubernetesEnterpriseTierVersionFactory,
   kubernetesStandardTierVersionFactory,
   kubernetesVersionFactory,
-  nodePoolBetaFactory,
   nodePoolFactory,
 } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
@@ -24,7 +23,6 @@ import { mswDB } from '../../../indexedDB';
 
 import type {
   KubeNodePoolResponse,
-  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -41,7 +39,7 @@ import type {
 
 export const getKubernetesClusters = (mockState: MockState) => [
   http.get(
-    '*/v4/lke/clusters',
+    '*/v4*/lke/clusters',
     ({
       request,
     }): StrictResponse<
@@ -55,37 +53,7 @@ export const getKubernetesClusters = (mockState: MockState) => [
   ),
 
   http.get(
-    '*/v4beta/lke/clusters',
-    ({
-      request,
-    }): StrictResponse<
-      APIErrorResponse | APIPaginatedResponse<KubernetesCluster>
-    > => {
-      return makePaginatedResponse({
-        data: mockState.kubernetesClusters,
-        request,
-      });
-    }
-  ),
-
-  http.get(
-    '*/v4/lke/clusters/:id',
-    async ({
-      params,
-    }): Promise<StrictResponse<APIErrorResponse | KubernetesCluster>> => {
-      const id = Number(params.id);
-      const cluster = await mswDB.get('kubernetesClusters', id);
-
-      if (!cluster) {
-        return makeNotFoundResponse();
-      }
-
-      return makeResponse(cluster);
-    }
-  ),
-
-  http.get(
-    '*/v4beta/lke/clusters/:id',
+    '*/v4*/lke/clusters/:id',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | KubernetesCluster>> => {
@@ -223,6 +191,7 @@ export const createKubernetesCluster = (mockState: MockState) => [
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
         tier: payload.tier,
+        stack_type: payload.stack_type,
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
@@ -453,13 +422,13 @@ export const getKubernetesVersions = () => [
 export interface MockKubeNodePoolResponse extends KubeNodePoolResponse {
   clusterId: number;
 }
-export interface MockKubeNodePoolBetaResponse extends KubeNodePoolResponseBeta {
+export interface MockKubeNodePoolBetaResponse extends KubeNodePoolResponse {
   clusterId: number;
 }
 
 export const createKubernetesNodePools = (mockState: MockState) => [
   http.post(
-    '*/v4/lke/clusters/:id/pools',
+    '*/v4*/lke/clusters/:id/pools',
     async ({
       request,
       params,
@@ -486,39 +455,11 @@ export const createKubernetesNodePools = (mockState: MockState) => [
       return makeResponse(nodePool);
     }
   ),
-  http.post(
-    '*/v4beta/lke/clusters/:id/pools',
-    async ({
-      request,
-      params,
-    }): Promise<
-      StrictResponse<APIErrorResponse | MockKubeNodePoolBetaResponse>
-    > => {
-      const clusterId = Number(params.id);
-      const payload = await request.clone().json();
-      const clusters = await mswDB.getAll('kubernetesClusters');
-
-      if (!clusters) {
-        return makeNotFoundResponse();
-      }
-
-      const nodePool: MockKubeNodePoolBetaResponse = {
-        ...nodePoolBetaFactory.build({
-          nodes: kubeLinodeFactory.buildList(payload.count),
-          ...payload,
-        }),
-        clusterId,
-      };
-      await mswDB.add('kubernetesNodePools', nodePool, mockState);
-
-      return makeResponse(nodePool);
-    }
-  ),
 ];
 
 export const getKubernetesNodePools = () => [
   http.get(
-    '*/v4/lke/clusters/:id/pools',
+    '*/v4*/lke/clusters/:id/pools',
     async ({
       params,
       request,

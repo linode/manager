@@ -53,9 +53,8 @@ const StyledDocsLink = styled(Link, {
 })(({ theme }) => ({
   ...theme.applyLinkStyles,
   '& svg': {
-    marginRight: theme.spacing(),
+    marginRight: theme.spacingFunction(4),
     position: 'relative',
-    top: -2,
   },
   alignItems: 'center',
   display: 'flex',
