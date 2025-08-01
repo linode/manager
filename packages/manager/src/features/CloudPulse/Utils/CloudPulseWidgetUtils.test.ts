@@ -210,7 +210,7 @@ describe('getDimensionName method', () => {
     expect(result).toBe('123');
   });
 
-  it('returns the transformed dimension name according to the service type', () => {
+  it('returns the transformed dimension value according to the service type', () => {
     const props: DimensionNameProperties = {
       ...baseProps,
       metric: {
@@ -222,6 +222,15 @@ describe('getDimensionName method', () => {
     };
     const result = getDimensionName(props);
     expect(result).toBe('linode-1 | test | primary-1 | Read');
+  });
+
+  it('returns the actual value if dimension name is not found in the transform config', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1 | test | primary-1');
   });
 });
 
