@@ -62,6 +62,7 @@ import type { WithQueryClientProps } from 'src/containers/withQueryClient.contai
 interface Props {
   accountUsername?: string;
   currentUsername?: string;
+  isIAMEnabled?: boolean;
   queryClient: QueryClient;
 }
 
