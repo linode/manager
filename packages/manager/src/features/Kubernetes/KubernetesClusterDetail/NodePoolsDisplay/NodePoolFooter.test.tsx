@@ -60,8 +60,8 @@ describe('Node Pool Footer', () => {
       />
     );
 
-    expect(queryByText('Version')).toBeNull();
-    expect(queryByText('v1.31.8+lke5')).toBeNull();
+    expect(queryByText('Version')).not.toBeInTheDocument();
+    expect(queryByText('v1.31.8+lke5')).not.toBeInTheDocument();
   });
 
   it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', async () => {
@@ -89,13 +89,10 @@ describe('Node Pool Footer', () => {
       }
     );
 
-    const encryptedContext = await findAllByText('Encrypted');
+    const [icon, text] = await findAllByText('Encrypted');
 
-    // Two elements exist: A lock icon and the actual "Encrypted" text
-    expect(encryptedContext).toHaveLength(2);
-
-    // Verify the "Encrypted" text is visible
-    expect(encryptedContext[1]).toBeVisible();
+    expect(icon).toBeInTheDocument();
+    expect(text).toBeVisible();
   });
 
   it('shows "Not Encrypted" with an icon if the Node Pool is not encrypted, the feature flag is on, and the account has the capability', async () => {
@@ -114,12 +111,9 @@ describe('Node Pool Footer', () => {
       }
     );
 
-    const encryptedContext = await findAllByText('Not Encrypted');
+    const [icon, text] = await findAllByText('Not Encrypted');
 
-    // Two elements exist: A unlock icon and the actual "Not Encrypted" text
-    expect(encryptedContext).toHaveLength(2);
-
-    // Verify the "Encrypted" text is visible
-    expect(encryptedContext[1]).toBeVisible();
+    expect(icon).toBeInTheDocument();
+    expect(text).toBeVisible();
   });
 });
