@@ -152,7 +152,7 @@ export const CreateCluster = () => {
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, ...form } = useForm<CreateClusterFormValues>({
+  const { control, trigger, ...form } = useForm<CreateClusterFormValues>({
     defaultValues: {
       nodePools: [],
       stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
@@ -267,7 +267,7 @@ export const CreateCluster = () => {
     setSelectedPoolIndex(poolIndex);
   };
 
-  const createCluster = async (values: CreateClusterFormValues) => {
+  const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
       scrollErrorIntoViewV2(formContainerRef);
       return;
@@ -279,6 +279,10 @@ export const CreateCluster = () => {
     const node_pools = nodePools.map(
       pick(['type', 'count', 'update_strategy'])
     ) as CreateNodePoolData[];
+
+    const vpcId = form.getValues('vpc_id');
+    const subnetId = form.getValues('subnet_id');
+    const stackType = form.getValues('stack_type');
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
@@ -331,15 +335,20 @@ export const CreateCluster = () => {
     if (isLkeEnterprisePhase2FeatureEnabled) {
       payload = {
         ...payload,
-        vpc_id: values.vpc_id,
-        subnet_id: values.subnet_id,
-        stack_type: values.stack_type ?? undefined,
+        vpc_id: vpcId,
+        subnet_id: subnetId,
+        stack_type: stackType ?? undefined,
       };
     }
 
     const createClusterFn = isUsingBetaEndpoint
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
+
+    if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
+      // Trigger the React Hook Form validation for BYO VPC selection.
+      trigger();
+    }
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
@@ -370,11 +379,6 @@ export const CreateCluster = () => {
         }
       })
       .catch((err) => {
-        // For errors handled by RHF:
-        for (const error of err) {
-          form.setError(error.field ?? 'root', { message: error.reason });
-        }
-        // For errors not yet handled by RHF:
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
         setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
@@ -428,275 +432,269 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} {...form}>
-      <form onSubmit={form.handleSubmit(createCluster)}>
-        <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-        <LandingHeader
-          docsLabel="Docs"
-          docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
-          title="Create Cluster"
-        />
-        <Grid container ref={formContainerRef} spacing={2}>
-          <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
-            {generalError && (
-              <Notice variant="error">
-                <ErrorMessage
-                  entity={{ type: 'lkecluster_id' }}
-                  formPayloadValues={{
-                    node_pools: form.getValues('nodePools'),
-                  }}
-                  message={generalError}
-                />
-              </Notice>
-            )}
-            {isCreateClusterRestricted && (
-              <Notice
-                sx={{ marginBottom: 2 }}
-                text={getRestrictedResourceText({
-                  action: 'create',
-                  isSingular: false,
-                  resourceType: 'LKE Clusters',
-                })}
-                variant="error"
+    <FormProvider control={control} trigger={trigger} {...form}>
+      <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+      <LandingHeader
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
+        title="Create Cluster"
+      />
+      <Grid container ref={formContainerRef} spacing={2}>
+        <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
+          {generalError && (
+            <Notice variant="error">
+              <ErrorMessage
+                entity={{ type: 'lkecluster_id' }}
+                formPayloadValues={{ node_pools: form.getValues('nodePools') }}
+                message={generalError}
               />
-            )}
-            <Paper data-qa-label-header>
-              <TextField
-                data-qa-label-input
-                disabled={isCreateClusterRestricted}
-                errorText={errorMap.label}
-                label="Cluster Label"
-                noMarginTop
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
-                value={label || ''}
-              />
-              {isLkeEnterpriseLAFlagEnabled && (
-                <>
-                  <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
-                  <ClusterTierPanel
-                    handleClusterTierSelection={handleClusterTierSelection}
-                    isUserRestricted={isCreateClusterRestricted}
-                    selectedTier={selectedTier}
-                  />
-                </>
-              )}
-              <Divider sx={{ marginTop: 4 }} />
-              <StyledStackWithTabletBreakpoint>
-                <Stack>
-                  <RegionSelect
-                    currentCapability={
-                      isLkeEnterpriseLAFeatureEnabled &&
-                      selectedTier === 'enterprise'
-                        ? 'Kubernetes Enterprise'
-                        : 'Kubernetes'
-                    }
-                    disableClearable
-                    disabled={isCreateClusterRestricted}
-                    errorText={errorMap.region}
-                    isGeckoLAEnabled={isGeckoLAEnabled}
-                    onChange={(e, region) => setSelectedRegion(region)}
-                    regions={regionsData}
-                    textFieldProps={{
-                      helperText: <RegionHelperText mb={2} />,
-                      helperTextPosition: 'top',
-                    }}
-                    tooltipText={
-                      isLkeEnterpriseLAFeatureEnabled &&
-                      selectedTier === 'enterprise'
-                        ? 'Only regions that support LKE Enterprise clusters are listed.'
-                        : undefined
-                    }
-                    value={selectedRegion?.id}
-                  />
-                </Stack>
-                <StyledDocsLinkContainer
-                  sx={(theme) => ({ marginTop: theme.spacing(2) })}
-                >
-                  <DocsLink
-                    href="https://www.linode.com/pricing"
-                    label={DOCS_LINK_LABEL_DC_PRICING}
-                  />
-                </StyledDocsLinkContainer>
-              </StyledStackWithTabletBreakpoint>
-              <Divider sx={{ marginTop: 4 }} />
-              <StyledStackWithTabletBreakpoint>
-                <Stack>
-                  <Select
-                    disabled={isCreateClusterRestricted}
-                    errorText={errorMap.k8s_version}
-                    label="Kubernetes Version"
-                    loading={isLoadingVersions}
-                    onChange={(_, selected) => {
-                      setVersion(selected?.value);
-                    }}
-                    options={versions}
-                    placeholder={' '}
-                    sx={{ minWidth: 416 }}
-                    value={versions.find((v) => v.value === version) ?? null}
-                  />
-                </Stack>
-                <StyledDocsLinkContainer
-                  sx={(theme) => ({ marginTop: theme.spacing(2) })}
-                >
-                  <DocsLink
-                    href={CLUSTER_VERSIONS_DOCS_LINK}
-                    label="Kubernetes Versions"
-                  />
-                </StyledDocsLinkContainer>
-              </StyledStackWithTabletBreakpoint>
-              {showAPL && (
-                <>
-                  <Divider sx={{ marginTop: 4 }} />
-                  <StyledStackWithTabletBreakpoint>
-                    <Stack>
-                      <ApplicationPlatform
-                        isSectionDisabled={!isAPLSupported}
-                        setAPL={setAplEnabled}
-                        setHighAvailability={setHighAvailability}
-                      />
-                    </Stack>
-                  </StyledStackWithTabletBreakpoint>
-                </>
-              )}
-              <Divider
-                sx={{
-                  marginBottom: selectedTier === 'enterprise' ? 2 : 1,
-                  marginTop: showAPL ? 1 : 4,
-                }}
-              />
-              {selectedTier !== 'enterprise' && (
-                <Box data-testid="ha-control-plane">
-                  <HAControlPlane
-                    highAvailabilityPrice={
-                      isErrorKubernetesTypes || !highAvailabilityPrice
-                        ? UNKNOWN_PRICE
-                        : highAvailabilityPrice
-                    }
-                    isAPLEnabled={aplEnabled}
-                    isErrorKubernetesTypes={isErrorKubernetesTypes}
-                    isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-                    selectedRegionId={selectedRegion?.id}
-                    setHighAvailability={setHighAvailability}
-                  />
-                </Box>
-              )}
-              {selectedTier === 'enterprise' && (
-                <ClusterNetworkingPanel
-                  selectedRegionId={selectedRegion?.id}
-                  subnetErrorText={errorMap.subnet_id}
-                  vpcErrorText={errorMap.vpc_id}
-                />
-              )}
+            </Notice>
+          )}
+          {isCreateClusterRestricted && (
+            <Notice
+              sx={{ marginBottom: 2 }}
+              text={getRestrictedResourceText({
+                action: 'create',
+                isSingular: false,
+                resourceType: 'LKE Clusters',
+              })}
+              variant="error"
+            />
+          )}
+          <Paper data-qa-label-header>
+            <TextField
+              data-qa-label-input
+              disabled={isCreateClusterRestricted}
+              errorText={errorMap.label}
+              label="Cluster Label"
+              noMarginTop
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateLabel(e.target.value)
+              }
+              value={label || ''}
+            />
+            {isLkeEnterpriseLAFlagEnabled && (
               <>
-                <Divider
-                  sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
-                />
-                <ControlPlaneACLPane
-                  enableControlPlaneACL={controlPlaneACL}
-                  errorText={errorMap.control_plane}
-                  handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
-                    const validatedIPs = validateIPs(newIpV4Addr, {
-                      allowEmptyAddress: true,
-                      errorMessage: 'Must be a valid IPv4 address.',
-                    });
-                    setIPv4Addr(validatedIPs);
-                  }}
-                  handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
-                    const validatedIPs = validateIPs(newIpV6Addr, {
-                      allowEmptyAddress: true,
-                      errorMessage: 'Must be a valid IPv6 address.',
-                    });
-                    setIPv6Addr(validatedIPs);
-                  }}
-                  handleIsAcknowledgementChecked={(isChecked: boolean) => {
-                    setIsACLAcknowledgementChecked(isChecked);
-                    setIPv4Addr([stringToExtendedIP('')]);
-                    setIPv6Addr([stringToExtendedIP('')]);
-                  }}
-                  ipV4Addr={ipV4Addr}
-                  ipV6Addr={ipV6Addr}
-                  isAcknowledgementChecked={isACLAcknowledgementChecked}
+                <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
+                <ClusterTierPanel
+                  handleClusterTierSelection={handleClusterTierSelection}
+                  isUserRestricted={isCreateClusterRestricted}
                   selectedTier={selectedTier}
-                  setControlPlaneACL={setControlPlaneACL}
                 />
               </>
-
-              <Divider sx={{ marginBottom: 4 }} />
-              <NodePoolPanel
-                apiError={errorMap.node_pools}
-                handleConfigurePool={handleOpenNodePoolConfigDrawer}
-                hasSelectedRegion={hasSelectedRegion}
-                isAPLEnabled={aplEnabled}
-                isPlanPanelDisabled={isPlanPanelDisabled}
-                isSelectedRegionEligibleForPlan={
-                  isSelectedRegionEligibleForPlan
-                }
-                regionsData={regionsData}
+            )}
+            <Divider sx={{ marginTop: 4 }} />
+            <StyledStackWithTabletBreakpoint>
+              <Stack>
+                <RegionSelect
+                  currentCapability={
+                    isLkeEnterpriseLAFeatureEnabled &&
+                    selectedTier === 'enterprise'
+                      ? 'Kubernetes Enterprise'
+                      : 'Kubernetes'
+                  }
+                  disableClearable
+                  disabled={isCreateClusterRestricted}
+                  errorText={errorMap.region}
+                  isGeckoLAEnabled={isGeckoLAEnabled}
+                  onChange={(e, region) => setSelectedRegion(region)}
+                  regions={regionsData}
+                  textFieldProps={{
+                    helperText: <RegionHelperText mb={2} />,
+                    helperTextPosition: 'top',
+                  }}
+                  tooltipText={
+                    isLkeEnterpriseLAFeatureEnabled &&
+                    selectedTier === 'enterprise'
+                      ? 'Only regions that support LKE Enterprise clusters are listed.'
+                      : undefined
+                  }
+                  value={selectedRegion?.id}
+                />
+              </Stack>
+              <StyledDocsLinkContainer
+                sx={(theme) => ({ marginTop: theme.spacing(2) })}
+              >
+                <DocsLink
+                  href="https://www.linode.com/pricing"
+                  label={DOCS_LINK_LABEL_DC_PRICING}
+                />
+              </StyledDocsLinkContainer>
+            </StyledStackWithTabletBreakpoint>
+            <Divider sx={{ marginTop: 4 }} />
+            <StyledStackWithTabletBreakpoint>
+              <Stack>
+                <Select
+                  disabled={isCreateClusterRestricted}
+                  errorText={errorMap.k8s_version}
+                  label="Kubernetes Version"
+                  loading={isLoadingVersions}
+                  onChange={(_, selected) => {
+                    setVersion(selected?.value);
+                  }}
+                  options={versions}
+                  placeholder={' '}
+                  sx={{ minWidth: 416 }}
+                  value={versions.find((v) => v.value === version) ?? null}
+                />
+              </Stack>
+              <StyledDocsLinkContainer
+                sx={(theme) => ({ marginTop: theme.spacing(2) })}
+              >
+                <DocsLink
+                  href={CLUSTER_VERSIONS_DOCS_LINK}
+                  label="Kubernetes Versions"
+                />
+              </StyledDocsLinkContainer>
+            </StyledStackWithTabletBreakpoint>
+            {showAPL && (
+              <>
+                <Divider sx={{ marginTop: 4 }} />
+                <StyledStackWithTabletBreakpoint>
+                  <Stack>
+                    <ApplicationPlatform
+                      isSectionDisabled={!isAPLSupported}
+                      setAPL={setAplEnabled}
+                      setHighAvailability={setHighAvailability}
+                    />
+                  </Stack>
+                </StyledStackWithTabletBreakpoint>
+              </>
+            )}
+            <Divider
+              sx={{
+                marginBottom: selectedTier === 'enterprise' ? 2 : 1,
+                marginTop: showAPL ? 1 : 4,
+              }}
+            />
+            {selectedTier !== 'enterprise' && (
+              <Box data-testid="ha-control-plane">
+                <HAControlPlane
+                  highAvailabilityPrice={
+                    isErrorKubernetesTypes || !highAvailabilityPrice
+                      ? UNKNOWN_PRICE
+                      : highAvailabilityPrice
+                  }
+                  isAPLEnabled={aplEnabled}
+                  isErrorKubernetesTypes={isErrorKubernetesTypes}
+                  isLoadingKubernetesTypes={isLoadingKubernetesTypes}
+                  selectedRegionId={selectedRegion?.id}
+                  setHighAvailability={setHighAvailability}
+                />
+              </Box>
+            )}
+            {selectedTier === 'enterprise' && (
+              <ClusterNetworkingPanel
                 selectedRegionId={selectedRegion?.id}
-                selectedTier={selectedTier}
-                types={typesData || []}
-                typesError={
-                  typesError
-                    ? getAPIErrorOrDefault(
-                        typesError,
-                        'Error loading Linode type information.'
-                      )[0].reason
-                    : undefined
-                }
-                typesLoading={typesLoading}
+                subnetErrorText={errorMap.subnet_id}
+                vpcErrorText={errorMap.vpc_id}
               />
-            </Paper>
-          </Grid>
-          <Grid
-            data-testid="kube-checkout-bar"
-            size={{ lg: 3, md: 12, sm: 12, xs: 12 }}
-          >
-            <KubeCheckoutBar
-              createCluster={() => createCluster(form.getValues())}
-              enterprisePrice={
-                isLkeEnterpriseLAFeatureEnabled &&
-                selectedTier === 'enterprise' &&
-                lkeEnterpriseType?.price.monthly
-                  ? lkeEnterpriseType?.price.monthly
+            )}
+            <>
+              <Divider
+                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+              />
+              <ControlPlaneACLPane
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
+                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
+                  const validatedIPs = validateIPs(newIpV4Addr, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv4 address.',
+                  });
+                  setIPv4Addr(validatedIPs);
+                }}
+                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
+                  const validatedIPs = validateIPs(newIpV6Addr, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv6 address.',
+                  });
+                  setIPv6Addr(validatedIPs);
+                }}
+                handleIsAcknowledgementChecked={(isChecked: boolean) => {
+                  setIsACLAcknowledgementChecked(isChecked);
+                  setIPv4Addr([stringToExtendedIP('')]);
+                  setIPv6Addr([stringToExtendedIP('')]);
+                }}
+                ipV4Addr={ipV4Addr}
+                ipV6Addr={ipV6Addr}
+                isAcknowledgementChecked={isACLAcknowledgementChecked}
+                selectedTier={selectedTier}
+                setControlPlaneACL={setControlPlaneACL}
+              />
+            </>
+
+            <Divider sx={{ marginBottom: 4 }} />
+            <NodePoolPanel
+              apiError={errorMap.node_pools}
+              handleConfigurePool={handleOpenNodePoolConfigDrawer}
+              hasSelectedRegion={hasSelectedRegion}
+              isAPLEnabled={aplEnabled}
+              isPlanPanelDisabled={isPlanPanelDisabled}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+              regionsData={regionsData}
+              selectedRegionId={selectedRegion?.id}
+              selectedTier={selectedTier}
+              types={typesData || []}
+              typesError={
+                typesError
+                  ? getAPIErrorOrDefault(
+                      typesError,
+                      'Error loading Linode type information.'
+                    )[0].reason
                   : undefined
               }
-              handleConfigurePool={handleOpenNodePoolConfigDrawer}
-              hasAgreed={hasAgreed}
-              highAvailability={highAvailability}
-              highAvailabilityPrice={
-                isErrorKubernetesTypes || !highAvailabilityPrice
-                  ? UNKNOWN_PRICE
-                  : highAvailabilityPrice
-              }
-              pools={nodePools}
-              region={selectedRegion?.id}
-              regionsData={regionsData}
-              submitting={submitting}
-              toggleHasAgreed={toggleHasAgreed}
-              updateFor={[
-                hasAgreed,
-                highAvailability,
-                selectedRegion?.id,
-                nodePools,
-                submitting,
-                typesData,
-                createCluster,
-              ]}
+              typesLoading={typesLoading}
             />
-          </Grid>
+          </Paper>
         </Grid>
-        <NodePoolConfigDrawer
-          mode={nodePoolConfigDrawerMode}
-          onClose={() => setIsNodePoolConfigDrawerOpen(false)}
-          open={isNodePoolConfigDrawerOpen}
-          planId={selectedType}
-          poolIndex={selectedPoolIndex}
-          selectedRegion={selectedRegion}
-          selectedTier={selectedTier}
-        />
-      </form>
+        <Grid
+          data-testid="kube-checkout-bar"
+          size={{ lg: 3, md: 12, sm: 12, xs: 12 }}
+        >
+          <KubeCheckoutBar
+            createCluster={createCluster}
+            enterprisePrice={
+              isLkeEnterpriseLAFeatureEnabled &&
+              selectedTier === 'enterprise' &&
+              lkeEnterpriseType?.price.monthly
+                ? lkeEnterpriseType?.price.monthly
+                : undefined
+            }
+            handleConfigurePool={handleOpenNodePoolConfigDrawer}
+            hasAgreed={hasAgreed}
+            highAvailability={highAvailability}
+            highAvailabilityPrice={
+              isErrorKubernetesTypes || !highAvailabilityPrice
+                ? UNKNOWN_PRICE
+                : highAvailabilityPrice
+            }
+            pools={nodePools}
+            region={selectedRegion?.id}
+            regionsData={regionsData}
+            submitting={submitting}
+            toggleHasAgreed={toggleHasAgreed}
+            updateFor={[
+              hasAgreed,
+              highAvailability,
+              selectedRegion?.id,
+              nodePools,
+              submitting,
+              typesData,
+              createCluster,
+            ]}
+          />
+        </Grid>
+      </Grid>
+      <NodePoolConfigDrawer
+        mode={nodePoolConfigDrawerMode}
+        onClose={() => setIsNodePoolConfigDrawerOpen(false)}
+        open={isNodePoolConfigDrawerOpen}
+        planId={selectedType}
+        poolIndex={selectedPoolIndex}
+        selectedRegion={selectedRegion}
+        selectedTier={selectedTier}
+      />
     </FormProvider>
   );
 };
