@@ -25,30 +25,12 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
-
 const timeDurationToSelect = 'Last 24 Hours';
-
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
-
 const { clusterName, dashboardName, engine, id, metrics, nodeType } =
   widgetDetails.dbaas;
 const serviceType = 'dbaas';
@@ -116,7 +98,7 @@ const extendDatabaseMock: Database = databaseFactory.build({
 
 describe('Integration Tests for Applied Filters', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
