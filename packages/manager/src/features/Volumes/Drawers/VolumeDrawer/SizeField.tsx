@@ -113,6 +113,9 @@ export const SizeField = (props: Props) => {
         slotProps={{
           htmlInput: {
             min: 0,
+            onInvalid: (e: React.SyntheticEvent) => {
+              e.preventDefault();
+            },
           },
           input: {
             endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
