@@ -171,19 +171,18 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   '&:disabled': {
-    color: Action.Primary.Disabled,
+    color: Alias.Content.Text.Link.Disabled,
     cursor: 'not-allowed',
   },
   '&:hover:not(:disabled)': {
     backgroundColor: 'transparent',
-    color: Action.Primary.Hover,
+    color: Alias.Content.Text.Link.Hover,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: Action.Primary.Default,
+  color: Alias.Content.Text.Link.Default,
   cursor: 'pointer',
-  font: 'inherit',
   minWidth: 0,
   padding: 0,
 };
@@ -245,8 +244,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
+  '&:not(.disabled-row)': {
+    '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+      background: Table.Row.Background.Hover,
+    },
   },
 };
 
@@ -653,18 +654,70 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          '& svg path': {
-            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          // Default styles
+          '& svg': {
+            backgroundColor: Component.Checkbox.Empty.Default.Background,
+            color: Component.Checkbox.Empty.Default.Border,
           },
-          '&:active': {
-            color: `${Component.Checkbox.Empty.Active.Border} !important`,
-          },
+          // Hover state overrides
           '&:hover': {
-            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Hover.Background,
+              color: Component.Checkbox.Empty.Hover.Border,
+            },
           },
-          // Checked
+          // Active state overrides
+          '&:active': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Active.Background,
+              color: Component.Checkbox.Empty.Active.Border,
+            },
+          },
+          // Checked state
           '&.Mui-checked': {
-            color: Component.Checkbox.Checked.Default.Background,
+            '& svg': {
+              backgroundColor: Component.Checkbox.Checked.Default.Background,
+              color: Component.Checkbox.Checked.Default.Background,
+              '& path': {
+                fill: Component.Checkbox.Checked.Default.Icon,
+              },
+            },
+            '&:hover': {
+              '& svg': {
+                backgroundColor: Component.Checkbox.Checked.Hover.Background,
+                color: Component.Checkbox.Checked.Hover.Background,
+                '& path': {
+                  fill: Component.Checkbox.Checked.Hover.Icon,
+                },
+              },
+            },
+            '&:active': {
+              '& svg': {
+                backgroundColor: Component.Checkbox.Checked.Hover.Background,
+                color: Component.Checkbox.Checked.Active.Background,
+                '& path': {
+                  fill: Component.Checkbox.Checked.Active.Icon,
+                },
+              },
+            },
+          },
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+              color: Component.Checkbox.Empty.Disabled.Border,
+            },
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Checked.Disabled.Background,
+              color: Component.Checkbox.Checked.Disabled.Background,
+              '& path': {
+                fill: Component.Checkbox.Checked.Disabled.Icon,
+              },
+            },
           },
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
@@ -675,18 +728,6 @@ export const lightTheme: ThemeOptions = {
               },
             },
           },
-          // Unchecked & Disabled
-          '&.Mui-disabled': {
-            '& svg': {
-              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
-            },
-            color: Component.Checkbox.Empty.Disabled.Border,
-            pointerEvents: 'none',
-          },
-          // Checked & Disabled
-          '&.Mui-checked.Mui-disabled': {
-            color: Component.Checkbox.Checked.Disabled.Background,
-          },
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
@@ -696,7 +737,6 @@ export const lightTheme: ThemeOptions = {
               },
             },
           },
-          color: Component.Checkbox.Empty.Default.Border,
         },
       },
       defaultProps: {
@@ -931,6 +971,9 @@ export const lightTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
+          '&[class*="error"]': {
+            color: Select.Error.Border,
+          },
           fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
           maxWidth: 416,
@@ -1608,7 +1651,7 @@ export const lightTheme: ThemeOptions = {
             height: '16px',
             margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Text,
+              fill: Table.HeaderNested.Icon,
             },
             width: '16px',
           },

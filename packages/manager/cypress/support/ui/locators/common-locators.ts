@@ -29,7 +29,7 @@ export const topMenuCreateItemsLocator = {
   /** Top menu create dropdown items Linodes Link. */
   linodesLink: '[href="/linodes/create"]',
   /** Top menu create dropdown items Marketplace(One-Click) Link. */
-  marketplaceOneClickLink: '[href="/linodes/create?type=One-Click"]',
+  marketplaceOneClickLink: '[href="/linodes/create/marketplace"]',
   /** Top menu create dropdown items NodeBalancers Link. */
   nodeBalancersLink: '[href="/nodebalancers/create"]',
   /** Top menu create dropdown items Volumes Link. */
