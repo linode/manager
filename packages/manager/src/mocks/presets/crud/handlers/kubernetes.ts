@@ -228,26 +228,27 @@ export const createKubernetesCluster = (mockState: MockState) => [
         sequence: [{ status: 'notification' }],
       });
 
-      return makeResponse(cluster);
+      // return makeResponse(cluster);
       // Comment out the line above and uncomment below for mock error response.
-      // return makeResponse(
-      //   {
-      //     errors: [
-      //       {
-      //         reason: 'There is an error configuring this VPC.',
-      //         field: 'vpc_id',
-      //       },
-      //       {
-      //         reason: 'There is no /52 ipv6 subnet available inside the VPC.',
-      //         field: 'subnet_id',
-      //       },
-      //       {
-      //         reason: 'This is a general error.',
-      //       },
-      //     ],
-      //   },
-      //   400
-      // );
+      return makeResponse(
+        {
+          errors: [
+            {
+              reason: 'There is an error configuring this VPC.',
+              field: 'vpc_id',
+            },
+            {
+              reason: 'There is no /52 ipv6 subnet available inside the VPC.',
+              field: 'label',
+            },
+            {
+              reason: 'general erro',
+              // field: 'vpc_id',
+            },
+          ],
+        },
+        400
+      );
     }
   ),
 ];
