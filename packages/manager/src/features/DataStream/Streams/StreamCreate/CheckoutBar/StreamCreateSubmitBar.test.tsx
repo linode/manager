@@ -14,7 +14,7 @@ describe('StreamCreateSubmitBar', () => {
       component: <StreamCreateSubmitBar createStream={createStream} />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
