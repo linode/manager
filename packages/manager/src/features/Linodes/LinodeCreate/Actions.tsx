@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -13,7 +14,6 @@ import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
   getDoesEmployeeNeedToAssignFirewall,
   getLinodeCreatePayload,
-  useLinodeCreateQueryParams,
 } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
@@ -23,8 +23,7 @@ interface ActionProps {
 }
 
 export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
-  const { params } = useLinodeCreateQueryParams();
-
+  const createType = useGetLinodeCreateType();
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -50,7 +49,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
     'create_linode',
   ]);
 
-  const isCloneMode = params.type === 'Clone Linode';
+  const isCloneMode = createType === 'Clone Linode';
   const isDisabled = isCloneMode
     ? !permissions.clone_linode
     : !accountPermissions.create_linode;
@@ -66,7 +65,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
     sendLinodeCreateFormInputEvent({
-      createType: params.type ?? 'OS',
+      createType: createType ?? 'OS',
       interaction: 'click',
       label: 'View Code Snippets',
     });
