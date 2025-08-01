@@ -30,10 +30,16 @@ export const UserDetail = () => {
 
   const queryClient = useQueryClient();
   const { isIAMEnabled } = useIsIAMEnabled();
+
   useEffect(() => {
-    if (isIAMEnabled) {
+    if (isIAMEnabled && username) {
+      const isOnPermissions =
+        window.location.pathname === `/account/users/${username}/permissions`;
+
       history.replace({
-        pathname: `/iam/users/${username}`,
+        pathname: isOnPermissions
+          ? `/iam/users/${username}/roles`
+          : `/iam/users/${username}`,
       });
     }
   }, [isIAMEnabled, username]);
