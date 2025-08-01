@@ -32,6 +32,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
+import { StyledIPStack } from './LinodeEntityDetailBody.styles';
 import { LinodeEntityDetailRowConfigFirewall } from './LinodeEntityDetailRowConfigFirewall';
 import { LinodeEntityDetailRowInterfaceFirewall } from './LinodeEntityDetailRowInterfaceFirewall';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -384,24 +385,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 </StyledListItem>
               </StyledVPCBox>
             </Stack>
-            <Stack
-              direction="row"
-              sx={{
-                [theme.breakpoints.down('md')]: {
-                  alignItems: 'start',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  '& > div:first-child': {
-                    marginBottom: theme.spacingFunction(2),
-                  },
-                },
-                [theme.breakpoints.down(1275)]: {
-                  '& > div:first-child': {
-                    marginLeft: theme.spacingFunction(0),
-                  },
-                },
-              }}
-            >
+            <StyledIPStack direction="row">
               {vpcIPv4 && (
                 <StyledIPBox>
                   <StyledIPLabel data-testid="vpc-ipv4-label">
@@ -429,7 +413,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     </StyledIPItem>
                   </StyledIPBox>
                 )}
-            </Stack>
+            </StyledIPStack>
           </Grid>
         </Grid>
       )}
