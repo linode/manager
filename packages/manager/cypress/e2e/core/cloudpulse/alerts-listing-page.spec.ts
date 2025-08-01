@@ -15,7 +15,12 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory, alertRulesFactory } from 'src/factories';
+import {
+  accountFactory,
+  alertFactory,
+  alertRulesFactory,
+  flagsFactory,
+} from 'src/factories';
 import {
   alertLimitMessage,
   alertToolTipText,
@@ -33,33 +38,11 @@ import type {
   AlertStatusType,
   CloudPulseServiceType,
 } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 const alertDefinitionsUrl = '/alerts/definitions';
 
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpAlerting: {
-    accountAlertLimit: 10,
-    accountMetricLimit: 10,
-    alertDefinitions: true,
-    recentActivity: false,
-    notificationChannels: false,
-  },
-  aclpServices: {
-    dbaas: {
-      metrics: { beta: true, enabled: true },
-      alerts: { beta: true, enabled: true },
-    },
-    linode: {
-      metrics: { beta: true, enabled: true },
-      alerts: { beta: true, enabled: true },
-    },
-  },
-};
-
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
@@ -229,7 +212,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
    * - Ensures API calls return correct responses and status codes.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetCloudPulseServices(['linode', 'dbaas']);

@@ -26,6 +26,7 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
@@ -137,9 +138,7 @@ const databaseMock: Database = databaseFactory.build({
 // It needs to be fixed
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      aclp: { beta: true, enabled: true },
-    });
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboard(1, dashboard).as('getDashboard');
