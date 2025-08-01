@@ -366,7 +366,7 @@ export const DateTimeRangePicker = ({
               >
                 <TimePicker
                   label="Start Time"
-                  onChange={(newTime: DateTime) => {
+                  onChange={(newTime: DateTime | null) => {
                     if (newTime) {
                       setStartDate((prev) => {
                         const updatedVale =
@@ -383,7 +383,7 @@ export const DateTimeRangePicker = ({
                 />
                 <TimePicker
                   label="End Time"
-                  onChange={(newTime: DateTime) => {
+                  onChange={(newTime: DateTime | null) => {
                     if (newTime) {
                       setEndDate((prev) => {
                         const updatedValue =
