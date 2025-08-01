@@ -2189,8 +2189,13 @@ describe('LKE cluster updates', () => {
       // Confirm total price is listed in Kube Specs.
       cy.findByText('$14.40/month').should('be.visible');
 
+      ui.actionMenu
+        .findByTitle(`Action menu from Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Resize Pool" and increase size to 3 nodes.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Resize Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -2310,7 +2315,7 @@ describe('LKE cluster updates', () => {
       ]);
 
       // Assert that initial node pool is shown on the page.
-      cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+      cy.findByText(mockPlanType.formattedLabel, { selector: 'h3' }).should(
         'be.visible'
       );
 
@@ -2452,8 +2457,13 @@ describe('LKE cluster updates', () => {
       // Confirm total price is listed in Kube Specs.
       cy.findByText('$0.00/month').should('be.visible');
 
+      ui.actionMenu
+        .findByTitle(`Action menu from Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Resize Pool" and increase size to 4 nodes.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Resize Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -2564,7 +2574,7 @@ describe('LKE cluster updates', () => {
       ]);
 
       // Assert that initial node pool is shown on the page.
-      cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+      cy.findByText(mockPlanType.formattedLabel, { selector: 'h3' }).should(
         'be.visible'
       );
 
