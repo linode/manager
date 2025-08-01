@@ -111,6 +111,25 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
   singleLineErrorSeparator: string;
 }
 
+interface FilterRegionProps {
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The selected region ids
+   */
+  selectedRegions: string[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: CloudPulseServiceType | null;
+}
+
 interface HandleMultipleErrorProps<T extends FieldValues> {
   /**
    *  A mapping of API error field names to form field paths. Use this to redirect API errors
