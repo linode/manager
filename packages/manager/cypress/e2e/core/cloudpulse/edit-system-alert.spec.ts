@@ -98,10 +98,9 @@ describe('Integration Tests for Edit Alert', () => {
           .findByTitle(`Action menu for Alert ${label}`)
           .should('be.visible')
           .click();
+        // Select the "Edit" option from the action menu
+        ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
       });
-
-    // Select the "Edit" option from the action menu
-    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
     // Verify the URL ends with the expected details page path
     cy.url().should('endWith', `/edit/${service_type}/${id}`);

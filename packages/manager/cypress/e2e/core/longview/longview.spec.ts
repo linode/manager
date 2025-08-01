@@ -380,8 +380,8 @@ describe('longview', () => {
         .findByTitle(`Action menu for Longview Client ${client.label}`)
         .should('be.visible')
         .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     });
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
     // Confirms that Cloud Manager UI has delete warning message and can cancel deletion.
     ui.dialog
@@ -397,8 +397,8 @@ describe('longview', () => {
       ui.actionMenu
         .findByTitle(`Action menu for Longview Client ${client.label}`)
         .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     });
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog.findByTitle(`Delete ${client.label}?`).within(() => {
       ui.buttonGroup
