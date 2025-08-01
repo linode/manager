@@ -247,7 +247,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
-      .type('database-1{enter}');
+      .type('database-1 {enter}');
 
     ui.autocomplete.findByLabel('Database Clusters').click();
 
