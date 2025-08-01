@@ -1,4 +1,4 @@
-import { Accordion, Box, Divider, Stack, Typography } from '@linode/ui';
+import { Accordion, Box, Divider, Hidden, Stack, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import React from 'react';
 
@@ -80,17 +80,22 @@ export const NodePool = (props: Props) => {
           justifyContent="space-between"
           pr={1}
         >
-          <Stack alignItems="center" direction="row" spacing={1}>
-            <Typography variant="h2">{typeLabel}</Typography>
-            <Divider flexItem orientation="vertical" />
-            <Typography variant="h2">
+          <Stack
+            alignItems="center"
+            direction="row"
+            divider={<Divider flexItem orientation="vertical" />}
+            spacing={{ sm: 1.5, xs: 1 }}
+          >
+            <Typography variant="h3">{typeLabel}</Typography>
+            <Typography variant="h3">
               {pluralize('Node', 'Nodes', count)}
             </Typography>
           </Stack>
           <Stack alignItems="center" direction="row" spacing={1}>
             {autoscaler.enabled && (
               <Typography mx={1}>
-                (Min {autoscaler.min} / Max {autoscaler.max})
+                <Hidden mdDown>Autoscaling </Hidden>(Min {autoscaler.min} / Max{' '}
+                {autoscaler.max})
               </Typography>
             )}
             <ActionMenu
