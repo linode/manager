@@ -130,6 +130,50 @@ interface FilterRegionProps {
   serviceType: CloudPulseServiceType | null;
 }
 
+interface HandleMultipleErrorProps<T extends FieldValues> {
+  /**
+   *  A mapping of API error field names to form field paths. Use this to redirect API errors
+   *  to specific form fields. For example, if the API returns an error for "user.name" but
+   *  your form field is called "fullName", you would map "user" to "fullName".
+   */
+  errorFieldMap: Record<string, FieldPath<T>>;
+  /**
+   * List of errors returned from the API
+   */
+  errors: APIError[];
+  /**
+   * Separator for multiple errors on fields that are rendered explicitly. Ex : Usage in @AlertListNoticeMessages component
+   */
+  multiLineErrorSeparator: string;
+  /**
+   * React Hook Form's setError function to register errors with the form
+   */
+  setError: UseFormSetError<T>;
+  /**
+   * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+   */
+  singleLineErrorSeparator: string;
+}
+
+interface FilterRegionProps {
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The selected region ids
+   */
+  selectedRegions: string[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: CloudPulseServiceType | null;
+}
+
 interface SupportedRegionsProps {
   /**
    * The list of regions

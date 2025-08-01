@@ -74,13 +74,22 @@ const serviceTypes = [
 ];
 
 describe('Alert Listing - Core Functionality', () => {
-  it('should render the alert landing table with items', async () => {
+  beforeEach(() => {
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: mockResponse,
       isError: false,
       isLoading: false,
       status: 'success',
     });
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+  });
+
+  it('should render the alert landing table with items', async () => {
     renderWithTheme(<AlertListing />);
     expect(screen.getByText('Alert Name')).toBeVisible();
     expect(screen.getByText('Service')).toBeVisible();
@@ -96,13 +105,6 @@ describe('Alert Listing - Core Functionality', () => {
   });
 
   it('should render the alert row', async () => {
-    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
     const { getByText } = renderWithTheme(<AlertListing />);
     expect(getByText(mockResponse[0].label)).toBeVisible();
     expect(getByText(mockResponse[1].label)).toBeVisible();
@@ -114,13 +116,6 @@ describe('Alert Listing - Core Functionality', () => {
     const dbaasAlert = alertFactory.build({ service_type: 'dbaas' });
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: [linodeAlert, dbaasAlert],
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: { data: serviceTypes },
       isError: false,
       isLoading: false,
       status: 'success',
@@ -291,11 +286,7 @@ describe('Alert Listing - Core Functionality', () => {
 });
 
 describe('Alert Listing - Feature Flag Management', () => {
-  it('should render the alerts from the enabled services', async () => {
-    queryMocks.useFlags.mockReturnValue({
-      aclpServices: aclpServicesFlag,
-    });
-
+  beforeEach(() => {
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
       data: mockResponse,
       isError: false,
@@ -308,6 +299,12 @@ describe('Alert Listing - Feature Flag Management', () => {
       isError: false,
       isLoading: false,
       status: 'success',
+    });
+  });
+
+  it('should render the alerts from the enabled services', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: aclpServicesFlag,
     });
 
     renderWithTheme(<AlertListing />);
@@ -331,20 +328,6 @@ describe('Alert Listing - Feature Flag Management', () => {
       },
     });
 
-    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: { data: serviceTypes },
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
     renderWithTheme(<AlertListing />);
     expect(screen.queryByText(mockResponse[0].label)).not.toBeInTheDocument();
     expect(screen.queryByText(mockResponse[1].label)).not.toBeInTheDocument();
@@ -359,20 +342,6 @@ describe('Alert Listing - Feature Flag Management', () => {
           metrics: { enabled: true, beta: true },
         },
       },
-    });
-
-    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: { data: serviceTypes },
-      isError: false,
-      isLoading: false,
-      status: 'success',
     });
 
     renderWithTheme(<AlertListing />);
@@ -393,14 +362,6 @@ describe('Alert Listing - Feature Flag Management', () => {
           metrics: { enabled: false, beta: true },
         },
       },
-    });
-
-    // Mock the service types query to return test data
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: { data: serviceTypes },
-      isError: false,
-      isLoading: false,
-      status: 'success',
     });
 
     renderWithTheme(<AlertListing />);
@@ -430,5 +391,18 @@ describe('Alert Listing - Feature Flag Management', () => {
     );
     expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
     expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
+  });
+
+  it('should not return service types that are missing the alerts property in the flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+
+    renderWithTheme(<AlertListing />);
+    expect(screen.queryByRole('option', { name: 'Linode' })).toBeNull();
   });
 });

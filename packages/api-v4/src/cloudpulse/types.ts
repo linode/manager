@@ -352,7 +352,7 @@ export interface EditAlertPayloadWithService
   extends EditAlertDefinitionPayload {
   alertId: number;
   serviceType: CloudPulseServiceType;
-  type: AlertDefinitionType | null;
+  type?: AlertDefinitionType | null;
 }
 
 export type AlertStatusUpdateType = 'Disable' | 'Enable';
