@@ -24,7 +24,7 @@ const mockCustomGrants = () => {
   ];
 };
 
-export const customProfilePreset: MockPresetExtra = {
+export const customGrantsPreset: MockPresetExtra = {
   desc: 'Custom Grants',
   group: { id: 'Grants', type: 'grants' },
   handlers: [mockCustomGrants],
