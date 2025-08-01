@@ -231,34 +231,6 @@ export const DateTimeRangePicker = ({
     validateDates(startDate, endDate);
   };
 
-  const handleStartTimeChange = (newTime: DateTime) => {
-    if (newTime) {
-      setStartDate((prev) => {
-        const updatedVale =
-          prev?.set({
-            hour: newTime.hour,
-            minute: newTime.minute,
-          }) ?? newTime;
-        validateDates(updatedVale, endDate);
-        return updatedVale;
-      });
-    }
-  };
-
-  const handleEndTimeChange = (newTime: DateTime) => {
-    if (newTime) {
-      setEndDate((prev) => {
-        const updatedValue =
-          prev?.set({
-            hour: newTime.hour,
-            minute: newTime.minute,
-          }) ?? newTime;
-        validateDates(startDate, updatedValue);
-        return updatedValue;
-      });
-    }
-  };
-
   const handlePresetSelect = (
     selectedStartDate: DateTime | null,
     selectedEndDate: DateTime | null,
@@ -366,12 +338,36 @@ export const DateTimeRangePicker = ({
               >
                 <TimePicker
                   label="Start Time"
-                  onChange={(newTime) => handleStartTimeChange(newTime)}
+                  onChange={(newTime: DateTime) => {
+                    if (newTime) {
+                      setStartDate((prev) => {
+                        const updatedVale =
+                          prev?.set({
+                            hour: newTime.hour,
+                            minute: newTime.minute,
+                          }) ?? newTime;
+                        validateDates(updatedVale, endDate);
+                        return updatedVale;
+                      });
+                    }
+                  }}
                   value={startDate}
                 />
                 <TimePicker
                   label="End Time"
-                  onChange={(newTime) => handleEndTimeChange(newTime)}
+                  onChange={(newTime: DateTime) => {
+                    if (newTime) {
+                      setEndDate((prev) => {
+                        const updatedValue =
+                          prev?.set({
+                            hour: newTime.hour,
+                            minute: newTime.minute,
+                          }) ?? newTime;
+                        validateDates(startDate, updatedValue);
+                        return updatedValue;
+                      });
+                    }
+                  }}
                   value={endDate}
                 />
                 <TimeZoneSelect
