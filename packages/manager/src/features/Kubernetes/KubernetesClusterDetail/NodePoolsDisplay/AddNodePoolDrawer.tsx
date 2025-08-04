@@ -51,8 +51,8 @@ export const AddNodePoolDrawer = (props: Props) => {
     open,
   } = props;
 
-  const { data: regions } = useRegionsQuery();
-  const { data: types } = useAllTypes(open);
+  const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
+  const { data: types, isLoading: isTypesLoading } = useAllTypes(open);
 
   const {
     error,
@@ -85,6 +85,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     type && count && isNumber(pricePerNode) ? count * pricePerNode : undefined;
 
   const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
+  const shouldShowPricingInfo = type && count > 0;
 
   React.useEffect(() => {
     if (open) {
@@ -99,7 +100,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   }, [error]);
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    form.setValue('type', planId);
+    form.setValue('type', newCount === 0 ? '' : planId);
     form.setValue('count', newCount);
   };
 
@@ -133,10 +134,9 @@ export const AddNodePoolDrawer = (props: Props) => {
       : ADD_NODE_POOLS_DESCRIPTION;
   };
 
-  const shouldShowPricingInfo = type && count > 0;
-
   return (
     <Drawer
+      isFetching={isRegionsLoading || isTypesLoading}
       onClose={onClose}
       open={open}
       slotProps={{
