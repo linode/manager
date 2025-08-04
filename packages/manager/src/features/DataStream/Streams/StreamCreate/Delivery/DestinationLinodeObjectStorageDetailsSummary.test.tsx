@@ -25,6 +25,7 @@ describe('DestinationLinodeObjectStorageDetailsSummary', () => {
     const details = {
       bucket_name: 'test bucket',
       host: 'test host',
+      path: 'test/path',
       region: 'us-ord',
     } as LinodeObjectStorageDetails;
 
@@ -32,22 +33,14 @@ describe('DestinationLinodeObjectStorageDetailsSummary', () => {
       <DestinationLinodeObjectStorageDetailsSummary {...details} />
     );
 
-    expect(
-      within(screen.getByText('Host:').closest('div')!).getByText('test host')
-    ).toBeInTheDocument();
+    expect(screen.getByText('test host')).toBeVisible();
 
-    expect(
-      within(screen.getByText('Bucket:').closest('div')!).getByText(
-        'test bucket'
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByText('test bucket')).toBeVisible();
+
+    expect(screen.getByText('test/path')).toBeVisible();
 
     await waitFor(() => {
-      expect(
-        within(screen.getByText('Region:').closest('div')!).getByText(
-          'US, Chicago, IL'
-        )
-      ).toBeInTheDocument();
+      expect(screen.getByText('US, Chicago, IL')).toBeVisible();
     });
 
     expect(

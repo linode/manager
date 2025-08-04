@@ -8,7 +8,7 @@ import type { LinodeObjectStorageDetails } from '@linode/api-v4';
 export const DestinationLinodeObjectStorageDetailsSummary = (
   props: LinodeObjectStorageDetails
 ) => {
-  const { bucket_name, host, region } = props;
+  const { bucket_name, host, region, path } = props;
   const { data: regions } = useRegionsQuery();
 
   const regionValue = regions?.find(({ id }) => id === region)?.label || region;
@@ -20,6 +20,7 @@ export const DestinationLinodeObjectStorageDetailsSummary = (
       <DestinationDetail label="Region" value={regionValue} />
       <DestinationDetail label="Access Key ID" value="*****************" />
       <DestinationDetail label="Secret Access Key" value="*****************" />
+      <DestinationDetail label="Log path" value={path} />
     </>
   );
 };
