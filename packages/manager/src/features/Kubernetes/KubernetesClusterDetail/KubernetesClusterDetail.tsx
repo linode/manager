@@ -157,7 +157,6 @@ export const KubernetesClusterDetail = () => {
             clusterID={cluster.id}
             clusterLabel={cluster.label}
             clusterRegionId={cluster.region}
-            clusterStackType={cluster?.stack_type}
             clusterTier={cluster.tier ?? 'standard'}
             isLkeClusterRestricted={isClusterReadOnly}
             regionsData={regionsData || []}

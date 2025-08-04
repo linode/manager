@@ -15,7 +15,6 @@ const props: Props = {
   clusterTier: 'standard',
   isLkeClusterRestricted: false,
   regionsData: [],
-  clusterStackType: 'ipv4',
 };
 
 describe('NodeTable', () => {

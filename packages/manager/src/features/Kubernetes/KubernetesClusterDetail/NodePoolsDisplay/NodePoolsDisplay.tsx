@@ -30,11 +30,7 @@ import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
-import type {
-  KubernetesStackType,
-  KubernetesTier,
-  Region,
-} from '@linode/api-v4';
+import type { KubernetesTier, Region } from '@linode/api-v4';
 
 export type StatusFilter = 'all' | 'offline' | 'provisioning' | 'running';
 
@@ -69,7 +65,6 @@ export interface Props {
   clusterID: number;
   clusterLabel: string;
   clusterRegionId: string;
-  clusterStackType: KubernetesStackType | undefined;
   clusterTier: KubernetesTier;
   isLkeClusterRestricted: boolean;
   regionsData: Region[];
@@ -81,7 +76,6 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterID,
     clusterLabel,
     clusterRegionId,
-    clusterStackType,
     clusterTier,
     isLkeClusterRestricted,
     regionsData,
@@ -302,7 +296,6 @@ export const NodePoolsDisplay = (props: Props) => {
               autoscaler={thisPool.autoscaler}
               clusterCreated={clusterCreated}
               clusterId={clusterID}
-              clusterStackType={clusterStackType}
               clusterTier={clusterTier}
               count={count}
               encryptionStatus={disk_encryption}

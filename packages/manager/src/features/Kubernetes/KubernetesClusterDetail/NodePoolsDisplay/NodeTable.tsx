@@ -38,7 +38,6 @@ import { nodeToRow } from './utils';
 import type { StatusFilter } from './NodePoolsDisplay';
 import type {
   KubeNodePoolResponse,
-  KubernetesStackType,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
@@ -47,7 +46,6 @@ import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 export interface Props {
   clusterCreated: string;
   clusterId: number;
-  clusterStackType: KubernetesStackType | undefined;
   clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus;
   isLkeClusterRestricted: boolean;
