@@ -36,4 +36,16 @@ describe('AutoEnroll display component', () => {
     );
     expect(getByText('OMG! This is an error!')).toBeVisible();
   });
+
+  it('should disable toggle when user does not have permission', () => {
+    const { getByRole } = renderWithTheme(
+      <AutoEnroll
+        disabled={true}
+        enabled={false}
+        error="OMG! This is an error!"
+        toggle={vi.fn()}
+      />
+    );
+    expect(getByRole('checkbox')).toBeDisabled();
+  });
 });

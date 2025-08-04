@@ -15,7 +15,10 @@ import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
 
-export const ObjectStorageSettings = () => {
+interface Props {
+  hasPermission?: boolean;
+}
+export const ObjectStorageSettings = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: accountSettings, isLoading } = useAccountSettings();
 
@@ -63,6 +66,7 @@ export const ObjectStorageSettings = () => {
             <Box>
               <Button
                 buttonType="outlined"
+                disabled={!props.hasPermission}
                 onClick={() => setIsCancelDialogOpen(true)}
               >
                 Cancel Object Storage

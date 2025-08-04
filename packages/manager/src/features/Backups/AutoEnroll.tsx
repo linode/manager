@@ -11,13 +11,14 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 
 interface AutoEnrollProps {
+  disabled?: boolean;
   enabled: boolean;
   error?: string;
   toggle: () => void;
 }
 
 export const AutoEnroll = (props: AutoEnrollProps) => {
-  const { enabled, error, toggle } = props;
+  const { enabled, error, toggle, disabled } = props;
 
   return (
     <Paper
@@ -28,6 +29,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
       <FormControlLabel
         checked={enabled}
         control={<Toggle />}
+        disabled={disabled}
         label={
           <Stack spacing={0.5}>
             <Typography sx={(theme) => ({ font: theme.font.bold })}>

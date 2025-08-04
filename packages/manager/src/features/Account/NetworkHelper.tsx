@@ -2,11 +2,16 @@ import { FormControlLabel, Paper, Stack, Toggle, Typography } from '@linode/ui';
 import * as React from 'react';
 
 interface Props {
+  hasPermission?: boolean;
   networkHelperEnabled: boolean;
   onChange: () => void;
 }
 
-export const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
+export const NetworkHelper = ({
+  networkHelperEnabled,
+  onChange,
+  hasPermission,
+}: Props) => {
   return (
     <Paper>
       <Typography variant="h2">Network Helper</Typography>
@@ -21,6 +26,7 @@ export const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
               <Toggle
                 checked={networkHelperEnabled}
                 data-qa-toggle-network-helper
+                disabled={!hasPermission}
                 onChange={onChange}
               />
             }

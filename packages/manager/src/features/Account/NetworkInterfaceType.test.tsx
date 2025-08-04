@@ -30,4 +30,15 @@ describe('NetworkInterfaces', () => {
 
     await findByDisplayValue('Linode Interfaces Only');
   });
+
+  it('should disable "Save" button and the selectbox if the user does not have permission', () => {
+    const { getByText, getByLabelText } = renderWithTheme(
+      <NetworkInterfaceType hasPermission={false} />
+    );
+
+    expect(getByLabelText('Interfaces for new Linodes')).toHaveAttribute(
+      'disabled'
+    );
+    expect(getByText('Save')).toHaveAttribute('aria-disabled', 'true');
+  });
 });

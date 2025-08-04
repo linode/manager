@@ -50,4 +50,47 @@ describe('NetworkInterfaces', () => {
     expect(getByText('NodeBalancers Firewall')).toBeVisible();
     expect(getByText('Save')).toBeVisible();
   });
+
+  it('should disable Save button and all select boxes if the user does not have permissions', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Linode Interfaces'],
+    });
+
+    server.use(
+      http.get('*/v4/account', () => HttpResponse.json(account)),
+      http.get('*/v4beta/networking/firewalls/settings', () =>
+        HttpResponse.json(firewallSettingsFactory.build())
+      ),
+      http.get('*/v4beta/networking/firewalls', () =>
+        HttpResponse.json(makeResourcePage(firewallFactory.buildList(1)))
+      )
+    );
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <DefaultFirewalls hasPermission={false} />,
+      {
+        flags: { linodeInterfaces: { enabled: true } },
+      }
+    );
+
+    const configurationSelect = getByLabelText(
+      'Configuration Profile Interfaces Firewall'
+    );
+    expect(configurationSelect).toHaveAttribute('disabled');
+
+    const linodePublicSelect = getByLabelText(
+      'Linode Interfaces - Public Interface Firewall'
+    );
+    expect(linodePublicSelect).toHaveAttribute('disabled');
+
+    const linodeVPCSelect = getByLabelText(
+      'Linode Interfaces - VPC Interface Firewall'
+    );
+    expect(linodeVPCSelect).toHaveAttribute('disabled');
+
+    const nodeBalancerSelect = getByLabelText('NodeBalancers Firewall');
+    expect(nodeBalancerSelect).toHaveAttribute('disabled');
+
+    expect(getByText('Save')).toHaveAttribute('aria-disabled', 'true');
+  });
 });

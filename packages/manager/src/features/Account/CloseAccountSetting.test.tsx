@@ -26,7 +26,9 @@ vi.mock('@linode/queries', async () => {
 
 describe('Close Account Settings', () => {
   it('should render a heading and button', () => {
-    const { getAllByText } = renderWithTheme(<CloseAccountSetting />);
+    const { getAllByText } = renderWithTheme(
+      <CloseAccountSetting hasPermission={true} />
+    );
     expect(getAllByText('Close Account')).toHaveLength(2);
   });
 
@@ -35,7 +37,9 @@ describe('Close Account Settings', () => {
       data: profileFactory.build({ user_type: 'default' }),
     });
 
-    const { getByTestId } = renderWithTheme(<CloseAccountSetting />);
+    const { getByTestId } = renderWithTheme(
+      <CloseAccountSetting hasPermission={true} />
+    );
     const button = getByTestId('close-account-button');
     expect(button).toBeInTheDocument();
     expect(button).toBeEnabled();
@@ -48,7 +52,7 @@ describe('Close Account Settings', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <CloseAccountSetting />
+      <CloseAccountSetting hasPermission={true} />
     );
     const button = getByTestId('close-account-button');
     fireEvent.mouseOver(button);
@@ -69,7 +73,7 @@ describe('Close Account Settings', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <CloseAccountSetting />
+      <CloseAccountSetting hasPermission={true} />
     );
     const button = getByTestId('close-account-button');
     fireEvent.mouseOver(button);
@@ -90,7 +94,7 @@ describe('Close Account Settings', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <CloseAccountSetting />
+      <CloseAccountSetting hasPermission={true} />
     );
     const button = getByTestId('close-account-button');
     fireEvent.mouseOver(button);
@@ -103,5 +107,18 @@ describe('Close Account Settings', () => {
     expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should disable Close Account button if the user does not have close_account permissions', async () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'default' }),
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <CloseAccountSetting hasPermission={false} />
+    );
+    const button = getByTestId('close-account-button');
+    expect(button).toBeInTheDocument();
+    expect(button).toBeDisabled();
   });
 });

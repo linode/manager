@@ -19,16 +19,18 @@ import { SupportLink } from 'src/components/SupportLink';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
+  hasPermission?: boolean;
   isManaged: boolean;
 }
 
 interface ContentProps {
+  hasPermission?: boolean;
   isManaged: boolean;
   openConfirmationModal: () => void;
 }
 
 export const ManagedContent = (props: ContentProps) => {
-  const { isManaged, openConfirmationModal } = props;
+  const { isManaged, openConfirmationModal, hasPermission } = props;
 
   if (isManaged) {
     return (
@@ -49,7 +51,11 @@ export const ManagedContent = (props: ContentProps) => {
         <Link to="https://linode.com/managed">Learn more</Link>.
       </Typography>
       <Box>
-        <Button buttonType="outlined" onClick={openConfirmationModal}>
+        <Button
+          buttonType="outlined"
+          disabled={!hasPermission}
+          onClick={openConfirmationModal}
+        >
           Add Linode Managed
         </Button>
       </Box>
@@ -58,7 +64,7 @@ export const ManagedContent = (props: ContentProps) => {
 };
 
 export const EnableManaged = (props: Props) => {
-  const { isManaged } = props;
+  const { isManaged, hasPermission } = props;
   const queryClient = useQueryClient();
   const { data: linodes } = useLinodesQuery();
   const [isOpen, setOpen] = React.useState<boolean>(false);
@@ -94,6 +100,7 @@ export const EnableManaged = (props: Props) => {
         'data-testid': 'submit-managed-enrollment',
         label: 'Add Linode Managed',
         loading: isLoading,
+        disabled: !hasPermission,
         onClick: handleSubmit,
       }}
       secondaryButtonProps={{
@@ -111,6 +118,7 @@ export const EnableManaged = (props: Props) => {
           Linode Managed
         </Typography>
         <ManagedContent
+          hasPermission={hasPermission}
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />

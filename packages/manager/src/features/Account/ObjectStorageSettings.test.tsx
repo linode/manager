@@ -38,7 +38,9 @@ describe('ObjectStorageSettings', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<ObjectStorageSettings />);
+    const { findByText } = renderWithTheme(
+      <ObjectStorageSettings hasPermission={true} />
+    );
 
     const cancelButton = (await findByText('Cancel Object Storage')).closest(
       'button'
@@ -66,7 +68,7 @@ describe('ObjectStorageSettings', () => {
     );
 
     const { findByText, queryByText } = renderWithTheme(
-      <ObjectStorageSettings />
+      <ObjectStorageSettings hasPermission={true} />
     );
 
     const copy = await findByText('To get started with Object Storage', {
@@ -100,7 +102,7 @@ describe('ObjectStorageSettings', () => {
     );
 
     const { findByText, getByLabelText, getByTitle } = renderWithTheme(
-      <ObjectStorageSettings />
+      <ObjectStorageSettings hasPermission={true} />
     );
 
     const cancelButton = (await findByText('Cancel Object Storage')).closest(
@@ -137,5 +139,24 @@ describe('ObjectStorageSettings', () => {
     });
 
     expect(copy).toBeVisible();
+  });
+
+  it('should disable "Cancel Object Storage" button if the user does not have permission', async () => {
+    server.use(
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(
+          accountSettingsFactory.build({ object_storage: 'active' })
+        );
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      <ObjectStorageSettings hasPermission={false} />
+    );
+
+    const cancelButton = (await findByText('Cancel Object Storage')).closest(
+      'button'
+    );
+    expect(cancelButton).toBeDisabled();
   });
 });

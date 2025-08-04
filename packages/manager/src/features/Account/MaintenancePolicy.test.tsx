@@ -50,4 +50,16 @@ describe('MaintenancePolicy', () => {
       );
     });
   });
+
+  it('should disable "Save Maintenance Policy" button and the selectbox if the user does not have permission', () => {
+    const { getByText, getByLabelText } = renderWithTheme(
+      <MaintenancePolicy hasPermission={false} />
+    );
+
+    expect(getByLabelText('Maintenance Policy')).toHaveAttribute('disabled');
+    expect(getByText('Save Maintenance Policy')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
 });

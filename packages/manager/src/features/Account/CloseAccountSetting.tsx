@@ -9,7 +9,10 @@ import {
   PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from './constants';
 
-const CloseAccountSetting = () => {
+interface CloseAccountSettingProps {
+  hasPermission?: boolean;
+}
+export const CloseAccountSetting = (props: CloseAccountSettingProps) => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
@@ -40,9 +43,13 @@ const CloseAccountSetting = () => {
           <Button
             buttonType="outlined"
             data-testid="close-account-button"
-            disabled={isCloseAccountDisabled}
+            disabled={isCloseAccountDisabled || !props.hasPermission}
             onClick={() => setDialogOpen(true)}
-            tooltipText={closeAccountButtonTooltipText}
+            tooltipText={
+              !props.hasPermission
+                ? "You don't have permission to close this account."
+                : closeAccountButtonTooltipText
+            }
           >
             Close Account
           </Button>

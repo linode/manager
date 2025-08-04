@@ -34,8 +34,10 @@ const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting
       value: 'legacy_config_only',
     },
   ];
-
-export const NetworkInterfaceType = () => {
+interface NetworkInterfaceTypeProps {
+  hasPermission?: boolean;
+}
+export const NetworkInterfaceType = (props: NetworkInterfaceTypeProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
 
@@ -83,6 +85,7 @@ export const NetworkInterfaceType = () => {
             name="interfaces_for_new_linodes"
             render={({ field, fieldState }) => (
               <Select
+                disabled={!props.hasPermission}
                 errorText={fieldState.error?.message}
                 label="Interfaces for new Linodes"
                 onChange={(
@@ -102,7 +105,9 @@ export const NetworkInterfaceType = () => {
                   sx: {
                     width: '468px',
                   },
-                  tooltipText: optionsTooltipText,
+                  tooltipText: !props.hasPermission
+                    ? "You don't have permission to change this setting."
+                    : optionsTooltipText,
                   tooltipWidth: 410,
                 }}
                 value={accountSettingInterfaceOptions.find(
@@ -114,7 +119,7 @@ export const NetworkInterfaceType = () => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty}
+              disabled={!isDirty || !props.hasPermission}
               loading={isSubmitting}
               type="submit"
             >

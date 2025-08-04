@@ -32,6 +32,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
+  hasPermission?: boolean;
   isManagedCustomer: boolean;
   onChange: () => void;
   openBackupsDrawer: () => void;
@@ -44,6 +45,7 @@ const AutoBackups = (props: Props) => {
     isManagedCustomer,
     onChange,
     openBackupsDrawer,
+    hasPermission,
   } = props;
 
   const { classes } = useStyles();
@@ -77,7 +79,7 @@ const AutoBackups = (props: Props) => {
               <Toggle
                 checked={isManagedCustomer ? true : backups_enabled}
                 data-qa-toggle-auto-backup
-                disabled={!!isManagedCustomer}
+                disabled={!!isManagedCustomer || !hasPermission}
                 onChange={onChange}
               />
             }

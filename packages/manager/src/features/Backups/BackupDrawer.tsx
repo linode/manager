@@ -39,12 +39,13 @@ import {
 import type { EnableBackupsRejectedResult } from './utils';
 
 interface Props {
+  hasPermission?: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const BackupDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { onClose, open, hasPermission } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -171,6 +172,7 @@ all new Linodes will automatically be backed up.`
         {/* Don't show this if the setting is already active. */}
         {!accountSettings?.backups_enabled && (
           <AutoEnroll
+            disabled={!hasPermission}
             enabled={shouldEnableAutoEnroll}
             error={updateAccountSettingsError?.[0].reason}
             toggle={() => setShouldEnableAutoEnroll((prev) => !prev)}
@@ -191,6 +193,7 @@ all new Linodes will automatically be backed up.`
         <ActionsPanel
           primaryButtonProps={{
             label: 'Confirm',
+            disabled: !hasPermission,
             loading: isUpdatingAccountSettings || isEnablingBackups,
             onClick: handleSubmit,
           }}

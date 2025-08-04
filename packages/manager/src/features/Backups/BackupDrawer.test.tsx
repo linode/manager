@@ -159,4 +159,16 @@ describe('BackupDrawer', () => {
       }
     });
   });
+  it('should disable "Confirm" button and AutoEnroll checkbox if the user does not have permission', async () => {
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(1, { backups: { enabled: false } }),
+    });
+    const { findByText, getByRole } = renderWithTheme(
+      <BackupDrawer hasPermission={false} onClose={vi.fn()} open={true} />
+    );
+    const confirmButton = (await findByText('Confirm')).closest('button');
+    expect(confirmButton).toBeDisabled();
+
+    expect(getByRole('checkbox')).toBeDisabled();
+  });
 });

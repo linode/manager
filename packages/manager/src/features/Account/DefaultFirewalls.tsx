@@ -27,7 +27,10 @@ import type { UpdateFirewallSettings } from '@linode/api-v4';
 
 const DEFAULT_FIREWALL_PLACEHOLDER = 'None';
 
-export const DefaultFirewalls = () => {
+interface DefaultFirewallsProps {
+  hasPermission?: boolean;
+}
+export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
@@ -117,6 +120,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!props.hasPermission}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Configuration Profile Interfaces Firewall"
@@ -132,6 +136,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!props.hasPermission}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - Public Interface Firewall"
@@ -147,6 +152,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!props.hasPermission}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - VPC Interface Firewall"
@@ -165,6 +171,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!props.hasPermission}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="NodeBalancers Firewall"
@@ -179,7 +186,7 @@ export const DefaultFirewalls = () => {
         <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
           <Button
             buttonType="outlined"
-            disabled={!isDirty}
+            disabled={!isDirty || !props.hasPermission}
             loading={isSubmitting}
             type="submit"
           >

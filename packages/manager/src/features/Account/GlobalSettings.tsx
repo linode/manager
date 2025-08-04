@@ -12,6 +12,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BackupDrawer } from '../Backups';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
 import { DefaultFirewalls } from './DefaultFirewalls';
@@ -37,6 +38,13 @@ const GlobalSettings = () => {
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const { data: linodes } = useAllLinodesQuery();
+
+  const { permissions } = usePermissions('account', [
+    'update_account_settings',
+    'enable_managed',
+    'cancel_account',
+    'enable_linode_backups',
+  ]);
 
   const hasLinodesWithoutBackups =
     linodes?.some((linode) => !linode.backups.enabled) ?? false;
@@ -89,24 +97,44 @@ const GlobalSettings = () => {
     <div>
       <DocumentTitleSegment segment="Settings" />
       <Stack spacing={2}>
-        {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
-        {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
-        {isLinodeInterfacesEnabled && <DefaultFirewalls />}
+        {isVMHostMaintenanceEnabled && (
+          <MaintenancePolicy
+            hasPermission={permissions.update_account_settings}
+          />
+        )}
+        {isLinodeInterfacesEnabled && (
+          <NetworkInterfaceType
+            hasPermission={permissions.update_account_settings}
+          />
+        )}
+        {isLinodeInterfacesEnabled && (
+          <DefaultFirewalls
+            hasPermission={permissions.update_account_settings}
+          />
+        )}
         <AutoBackups
           backups_enabled={backups_enabled}
           hasLinodesWithoutBackups={hasLinodesWithoutBackups}
+          hasPermission={permissions.update_account_settings}
           isManagedCustomer={managed}
           onChange={toggleAutomaticBackups}
           openBackupsDrawer={() => setIsBackupsDrawerOpen(true)}
         />
         <NetworkHelper
+          hasPermission={permissions.update_account_settings}
           networkHelperEnabled={network_helper}
           onChange={toggleNetworkHelper}
         />
-        <ObjectStorageSettings />
-        <EnableManaged isManaged={managed} />
-        <CloseAccountSetting />
+        <ObjectStorageSettings
+          hasPermission={permissions.update_account_settings}
+        />
+        <EnableManaged
+          hasPermission={permissions.enable_managed}
+          isManaged={managed}
+        />
+        <CloseAccountSetting hasPermission={permissions.cancel_account} />
         <BackupDrawer
+          hasPermission={permissions.enable_linode_backups}
           onClose={() => setIsBackupsDrawerOpen(false)}
           open={isBackupsDrawerOpen}
         />

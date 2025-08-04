@@ -24,7 +24,10 @@ import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNo
 
 import type { MaintenancePolicyValues } from 'src/hooks/useUpcomingMaintenanceNotice.ts';
 
-export const MaintenancePolicy = () => {
+interface MaintenancePolicyProps {
+  hasPermission?: boolean;
+}
+export const MaintenancePolicy = (props: MaintenancePolicyProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
 
@@ -90,6 +93,7 @@ export const MaintenancePolicy = () => {
             name="maintenance_policy"
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
+                disabled={!props.hasPermission}
                 errorText={fieldState.error?.message}
                 hideDefaultChip
                 onChange={(policy) => field.onChange(policy.slug)}
@@ -100,7 +104,7 @@ export const MaintenancePolicy = () => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty}
+              disabled={!isDirty || !props.hasPermission}
               loading={isSubmitting}
               type="submit"
             >
