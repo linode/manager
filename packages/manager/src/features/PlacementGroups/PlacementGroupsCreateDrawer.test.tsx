@@ -1,4 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
@@ -111,29 +112,35 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should display an error message if the region has reached capacity', async () => {
+    /**
+     * Note: this unit test assumes regions are mocked from the MSW's serverHandles.ts
+     * and that us-west has special limits
+     */
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [placementGroupFactory.build({ region: 'us-west' })],
     });
     const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
-    const { getByPlaceholderText, getByText } = renderWithTheme(
+
+    const { findByText, getByPlaceholderText, getByRole } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     const regionSelect = getByPlaceholderText('Select a Region');
-    fireEvent.focus(regionSelect);
-    fireEvent.change(regionSelect, {
-      target: { value: regionWithoutCapacity },
-    });
-    await waitFor(() => {
-      expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
-    });
+
+    await userEvent.click(regionSelect);
+
+    const regionWithNoCapacityOption = await findByText(regionWithoutCapacity);
+
+    await userEvent.click(regionWithNoCapacityOption);
+
+    const tooltip = getByRole('tooltip');
 
     await waitFor(() => {
-      expect(
-        getByText(
-          'You’ve reached the limit of placement groups you can create in this region.'
-        )
-      ).toBeInTheDocument();
+      expect(tooltip.textContent).toContain(
+        'You’ve reached the limit of placement groups you can create in this region.'
+      );
     });
+
+    expect(tooltip).toBeVisible();
   });
 });
