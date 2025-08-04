@@ -1,4 +1,4 @@
-import { useSpecificTypes } from '@linode/queries';
+import { useRegionQuery, useSpecificTypes } from '@linode/queries';
 import {
   Box,
   Button,
@@ -30,7 +30,7 @@ import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
-import type { KubernetesTier, Region } from '@linode/api-v4';
+import type { KubernetesTier } from '@linode/api-v4';
 
 export type StatusFilter = 'all' | 'offline' | 'provisioning' | 'running';
 
@@ -67,7 +67,6 @@ export interface Props {
   clusterRegionId: string;
   clusterTier: KubernetesTier;
   isLkeClusterRestricted: boolean;
-  regionsData: Region[];
 }
 
 export const NodePoolsDisplay = (props: Props) => {
@@ -78,7 +77,6 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterRegionId,
     clusterTier,
     isLkeClusterRestricted,
-    regionsData,
   } = props;
 
   const {
@@ -86,6 +84,8 @@ export const NodePoolsDisplay = (props: Props) => {
     error: poolsError,
     isLoading,
   } = useAllKubernetesNodePoolQuery(clusterID, { refetchInterval: 15000 });
+
+  const { data: region } = useRegionQuery(clusterRegionId);
 
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
 
@@ -148,12 +148,8 @@ export const NodePoolsDisplay = (props: Props) => {
   } = useDefaultExpandedNodePools(clusterID, _pools);
 
   const regionSupportsDiskEncryption =
-    (regionsData
-      .find((regionDatum) => regionDatum.id === clusterRegionId)
-      ?.capabilities.includes('Disk Encryption') ||
-      regionsData
-        .find((regionDatum) => regionDatum.id === clusterRegionId)
-        ?.capabilities.includes('LA Disk Encryption')) ??
+    (region?.capabilities.includes('Disk Encryption') ||
+      region?.capabilities.includes('LA Disk Encryption')) ??
     false;
 
   if (isLoading || pools === undefined) {
@@ -341,7 +337,6 @@ export const NodePoolsDisplay = (props: Props) => {
         clusterTier={clusterTier}
         onClose={() => setAddDrawerOpen(false)}
         open={addDrawerOpen}
-        regionsData={regionsData}
       />
       <LabelAndTaintDrawer
         clusterId={clusterID}
