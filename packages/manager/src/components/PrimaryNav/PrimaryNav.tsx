@@ -275,6 +275,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Account',
+                hide: isIAMRbacPrimaryNavChangesEnabled,
                 href: '/account',
               },
               {
