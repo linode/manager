@@ -1,6 +1,8 @@
 import {
   type APIError,
   createStream,
+  getDestination,
+  getDestinations,
   getStream,
   getStreams,
 } from '@linode/api-v4';
@@ -11,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
   CreateStreamPayload,
+  Destination,
   Filter,
   Params,
   ResourcePage,
@@ -23,6 +26,17 @@ export const getAllDataStreams = (
 ) =>
   getAll<Stream>((params, filter) =>
     getStreams({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
+  )().then((data) => data.data);
+
+export const getAllDestinations = (
+  passedParams: Params = {},
+  passedFilter: Filter = {},
+) =>
+  getAll<Destination>((params, filter) =>
+    getDestinations(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
   )().then((data) => data.data);
 
 export const datastreamQueries = createQueryKeys('datastream', {
@@ -43,7 +57,23 @@ export const datastreamQueries = createQueryKeys('datastream', {
     },
     queryKey: null,
   },
-  // @TODO (DPS-34038) destinations
+  destination: (id: number) => ({
+    queryFn: () => getDestination(id),
+    queryKey: [id],
+  }),
+  destinations: {
+    contextQueries: {
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllDestinations(params, filter),
+        queryKey: [params, filter],
+      }),
+      paginated: (params: Params, filter: Filter) => ({
+        queryFn: () => getDestinations(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
 });
 
 export const useDataStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
@@ -74,3 +104,11 @@ export const useCreateStreamMutation = () => {
     },
   });
 };
+
+export const useAllDestinationsQuery = (
+  params: Params = {},
+  filter: Filter = {},
+) =>
+  useQuery<Destination[], APIError[]>({
+    ...datastreamQueries.destinations._ctx.all(params, filter),
+  });
