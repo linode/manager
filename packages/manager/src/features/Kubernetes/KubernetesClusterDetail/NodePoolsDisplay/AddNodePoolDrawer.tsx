@@ -1,5 +1,5 @@
 import { useAllTypes, useRegionsQuery } from '@linode/queries';
-import { Box, Button, Drawer, Notice, Typography } from '@linode/ui';
+import { Box, Button, Drawer, Notice, Stack, Typography } from '@linode/ui';
 import {
   isNumber,
   plansNoticesUtils,
@@ -7,9 +7,10 @@ import {
   scrollErrorIntoView,
 } from '@linode/utilities';
 import React from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
+// import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
@@ -24,6 +25,8 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
+import { NodePoolUpdateStrategySelect } from '../../NodePoolUpdateStrategySelect';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type {
@@ -51,6 +54,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     open,
   } = props;
 
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const { data: types, isLoading: isTypesLoading } = useAllTypes(open);
 
@@ -65,7 +69,11 @@ export const AddNodePoolDrawer = (props: Props) => {
     (t) => t.class !== 'nanode'
   );
 
-  const form = useForm<CreateNodePoolData>();
+  const form = useForm<CreateNodePoolData>({
+    defaultValues: {
+      update_strategy: clusterTier === 'enterprise' ? 'on_recycle' : undefined,
+    },
+  });
 
   const [type, count] = useWatch({
     control: form.control,
@@ -194,11 +202,43 @@ export const AddNodePoolDrawer = (props: Props) => {
             variant="error"
           />
         )}
+        {isLkeEnterprisePostLAFeatureEnabled &&
+          clusterTier === 'enterprise' && (
+            <Stack spacing={2}>
+              <Typography variant="h3">Configuration</Typography>
+              <Controller
+                control={form.control}
+                name="update_strategy"
+                render={({ field }) => (
+                  <NodePoolUpdateStrategySelect
+                    label="Update Strategy"
+                    noMarginTop
+                    onChange={field.onChange}
+                    value={field.value!}
+                  />
+                )}
+              />
+              {/* <Controller
+                control={form.control}
+                name="firewall_id"
+                render={({ field, fieldState }) => (
+                  <FirewallSelect
+                    errorText={fieldState.error?.message}
+                    onChange={(e, firewall) =>
+                      field.onChange(firewall?.id ?? null)
+                    }
+                    value={field.value ?? null}
+                  />
+                )}
+              /> */}
+            </Stack>
+          )}
         <Box
           alignItems="center"
           display="flex"
           flexDirection="row"
           justifyContent={shouldShowPricingInfo ? 'space-between' : 'flex-end'}
+          mt={3}
         >
           {shouldShowPricingInfo && (
             <Typography>
