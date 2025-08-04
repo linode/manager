@@ -369,7 +369,7 @@ export const DateTimeRangePicker = ({
                   onChange={(newTime: DateTime | null) => {
                     if (newTime) {
                       setStartDate((prev) => {
-                        const updatedVale =
+                        const updatedValue =
                           prev?.set({
                             hour: newTime.hour,
                             minute: newTime.minute,
