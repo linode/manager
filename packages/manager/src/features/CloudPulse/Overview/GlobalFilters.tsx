@@ -11,16 +11,16 @@ import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
-import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
+import {
+  DASHBOARD_ID,
+  REFRESH,
+  RESOURCE_FILTER_MAP,
+  TIME_DURATION,
+} from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type {
-  AclpConfig,
-  Dashboard,
-  DateTimeWithPreset,
-  Filter,
-} from '@linode/api-v4';
+import type { AclpConfig, Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -94,18 +94,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange(REFRESH, Date.now(), []);
   }, []);
 
-  const resourceFilterMap: Record<string, Filter> = {
-    dbaas: {
-      platform: 'rdbms-default',
-    },
-  };
-
   const { isLoading, isError } = useResourcesQuery(
     selectedDashboard !== undefined,
     selectedDashboard?.service_type ?? '',
     {},
 
-    resourceFilterMap[selectedDashboard?.service_type ?? ''] ?? {}
+    RESOURCE_FILTER_MAP[selectedDashboard?.service_type ?? ''] ?? {}
   );
 
   return (
@@ -170,8 +164,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           dashboard={selectedDashboard}
           emitFilterChange={emitFilterChange}
           handleToggleAppliedFilter={handleToggleAppliedFilter}
-          isResourceCallError={isError}
-          isResourceCallLoading={isLoading}
+          isError={isError}
+          isLoading={isLoading}
           isServiceAnalyticsIntegration={false}
           preferences={preferences}
         />

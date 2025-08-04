@@ -5,14 +5,11 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type {
-  CloudPulseServiceType,
-  Filter,
-  FilterValue,
-} from '@linode/api-v4';
+import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
   clusterSize?: number;
@@ -58,12 +55,6 @@ export const CloudPulseResourcesSelect = React.memo(
 
     const flags = useFlags();
 
-    const resourceFilterMap: Record<string, Filter> = {
-      dbaas: {
-        platform: 'rdbms-default',
-      },
-    };
-
     const {
       data: resources,
       isError,
@@ -73,7 +64,7 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       {},
 
-      resourceFilterMap[resourceType ?? ''] ?? {}
+      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {}
     );
 
     const [selectedResources, setSelectedResources] =

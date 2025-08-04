@@ -7,12 +7,12 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { filterRegionByServiceType } from '../Alerts/Utils/utils';
-import { NO_REGION_MESSAGE } from '../Utils/constants';
+import { NO_REGION_MESSAGE, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { Dashboard, Filter, FilterValue, Region } from '@linode/api-v4';
+import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -44,12 +44,6 @@ export const CloudPulseRegionSelect = React.memo(
       xFilter,
     } = props;
 
-    const resourceFilterMap: Record<string, Filter> = {
-      dbaas: {
-        platform: 'rdbms-default',
-      },
-    };
-
     const { data: regions, isError, isLoading } = useRegionsQuery();
     const {
       data: resources,
@@ -60,7 +54,7 @@ export const CloudPulseRegionSelect = React.memo(
       selectedDashboard?.service_type,
       {},
       {
-        ...(resourceFilterMap[selectedDashboard?.service_type ?? ''] ?? {}),
+        ...(RESOURCE_FILTER_MAP[selectedDashboard?.service_type ?? ''] ?? {}),
       }
     );
 
