@@ -1,5 +1,13 @@
 import { destinationType } from '@linode/api-v4';
-import { Autocomplete, Paper, Typography } from '@linode/ui';
+import { useAllDestinationsQuery } from '@linode/queries';
+import {
+  Autocomplete,
+  Box,
+  CircleProgress,
+  ErrorState,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -8,13 +16,19 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
+import { DestinationLinodeObjectStorageDetailsSummary } from 'src/features/DataStream/Streams/StreamCreate/Delivery/DestinationLinodeObjectStorageDetailsSummary';
 
-import { type CreateStreamAndDestinationForm } from './types';
+import type {
+  DestinationType,
+  LinodeObjectStorageDetails,
+} from '@linode/api-v4';
+import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 type DestinationName = {
   create?: boolean;
   id?: number;
   label: string;
+  type?: DestinationType;
 };
 
 const controlPaths = {
@@ -33,31 +47,32 @@ export const StreamCreateDelivery = () => {
 
   const [showDestinationForm, setShowDestinationForm] =
     React.useState<boolean>(false);
+  const [showExistingDestination, setShowExistingDestination] =
+    React.useState<boolean>(false);
 
-  const destinationNameOptions: DestinationName[] = [
-    {
-      id: 1,
-      label: 'Destination 1',
-    },
-    {
-      id: 2,
-      label: 'Destination 2',
-    },
-  ];
+  const { data: destinations, isLoading, error } = useAllDestinationsQuery();
+  const destinationNameOptions: DestinationName[] = (destinations || []).map(
+    ({ id, label, type }) => ({
+      id,
+      label,
+      type,
+    })
+  );
 
   const selectedDestinationType = useWatch({
     control,
     name: 'destination.type',
   });
 
+  const selectedDestinations = useWatch({
+    control,
+    name: 'stream.destinations',
+  });
+
   const destinationNameFilterOptions = createFilterOptions<DestinationName>();
 
-  return (
-    <Paper>
-      <Typography variant="h2">Delivery</Typography>
-      <Typography sx={{ mt: theme.spacingFunction(12) }}>
-        Define a destination where you want this stream to send logs.
-      </Typography>
+  const getDestinationForm = () => (
+    <>
       <Controller
         control={control}
         name="destination.type"
@@ -93,6 +108,7 @@ export const StreamCreateDelivery = () => {
                 filtered.push({
                   create: true,
                   label: inputValue,
+                  type: selectedDestinationType,
                 });
               }
 
@@ -102,11 +118,20 @@ export const StreamCreateDelivery = () => {
             label="Destination Name"
             onBlur={field.onBlur}
             onChange={(_, newValue) => {
+              const selectedExistingDestination = !!(
+                newValue?.label && newValue?.id
+              );
+              if (selectedExistingDestination) {
+                setValue('stream.destinations', [newValue?.id as number]);
+              }
               field.onChange(newValue?.label || newValue);
               setValue('stream.destinations', [newValue?.id as number]);
               setShowDestinationForm(!!newValue?.create);
+              setShowExistingDestination(selectedExistingDestination);
             }}
-            options={destinationNameOptions}
+            options={destinationNameOptions.filter(
+              ({ type }) => type === selectedDestinationType
+            )}
             placeholder="Create or Select Destination Name"
             renderOption={(props, option) => {
               const { key, ...optionProps } = props;
@@ -126,12 +151,43 @@ export const StreamCreateDelivery = () => {
           />
         )}
       />
-      {showDestinationForm &&
-        selectedDestinationType === destinationType.LinodeObjectStorage && (
-          <DestinationLinodeObjectStorageDetailsForm
-            controlPaths={controlPaths}
-          />
-        )}
+      {selectedDestinationType === destinationType.LinodeObjectStorage && (
+        <>
+          {showDestinationForm && (
+            <DestinationLinodeObjectStorageDetailsForm
+              controlPaths={controlPaths}
+            />
+          )}
+          {showExistingDestination && (
+            <DestinationLinodeObjectStorageDetailsSummary
+              {...(destinations?.find(
+                ({ id }) => id === selectedDestinations[0]
+              )?.details as LinodeObjectStorageDetails)}
+            />
+          )}
+        </>
+      )}
+    </>
+  );
+
+  return (
+    <Paper>
+      <Typography variant="h2">Delivery</Typography>
+      <Typography sx={{ mt: theme.spacingFunction(12) }}>
+        Define a destination where you want this stream to send logs.
+      </Typography>
+      {isLoading && (
+        <Box display="flex" justifyContent="center">
+          <CircleProgress size="md" />
+        </Box>
+      )}
+      {error && (
+        <ErrorState
+          compact
+          errorText="There was an error retrieving destinations. Please reload and try again."
+        />
+      )}
+      {!isLoading && !error && getDestinationForm()}
     </Paper>
   );
 };

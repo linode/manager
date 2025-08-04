@@ -44,11 +44,12 @@ export const destinationType = {
 export type DestinationType =
   (typeof destinationType)[keyof typeof destinationType];
 
-export interface Destination {
+export interface Destination extends AuditData {
   details: DestinationDetails;
   id: number;
   label: string;
   type: DestinationType;
+  version: string;
 }
 
 export type DestinationDetails =
