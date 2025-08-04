@@ -152,13 +152,14 @@ export const CreateCluster = () => {
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, trigger, ...form } = useForm<CreateClusterFormValues>({
-    defaultValues: {
-      nodePools: [],
-      stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
-    },
-    shouldUnregister: true,
-  });
+  const { control, trigger, formState, ...form } =
+    useForm<CreateClusterFormValues>({
+      defaultValues: {
+        nodePools: [],
+        stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
+      },
+      shouldUnregister: true,
+    });
   const nodePools = useWatch({ control, name: 'nodePools' });
   const { update } = useFieldArray({
     control,
@@ -345,9 +346,16 @@ export const CreateCluster = () => {
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
 
+    // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
       // Trigger the React Hook Form validation for BYO VPC selection.
       trigger();
+      // Don't submit the form while RHF errors persist.
+      if (!formState.isValid) {
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+        return;
+      }
     }
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
@@ -432,7 +440,12 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} trigger={trigger} {...form}>
+    <FormProvider
+      control={control}
+      formState={formState}
+      trigger={trigger}
+      {...form}
+    >
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
