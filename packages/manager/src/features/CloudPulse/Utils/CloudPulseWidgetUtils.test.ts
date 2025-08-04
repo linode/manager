@@ -78,7 +78,7 @@ describe('getLabelName method', () => {
   });
 
   it('returns entity_id when resource is not found in resources array', () => {
-    const props: LabelNameOptionsProps = {
+    const props = {
       ...baseProps,
       metric: { entity_id: '999' },
     };
@@ -87,7 +87,7 @@ describe('getLabelName method', () => {
   });
 
   it('returns empty string when entity_id is empty', () => {
-    const props: LabelNameOptionsProps = {
+    const props = {
       ...baseProps,
       metric: { entity_id: '' },
     };
@@ -165,7 +165,7 @@ describe('getDimensionName method', () => {
   });
 
   it('returns value directly when key does not match entity_id', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       metric: { other_key: '123' },
     };
@@ -174,7 +174,7 @@ describe('getDimensionName method', () => {
   });
 
   it('joins multiple metric values with separator excluding metric_name when there is only one unique metric name', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
       hideMetricName: true,
@@ -184,7 +184,7 @@ describe('getDimensionName method', () => {
   });
 
   it('joins multiple metric values with separator including metric_name when there are multiple unique metric names', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
     };
@@ -193,7 +193,7 @@ describe('getDimensionName method', () => {
   });
 
   it('handles empty metric values by filtering them out', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: '', node_id: '' },
     };
@@ -202,7 +202,7 @@ describe('getDimensionName method', () => {
   });
 
   it('returns entity_id directly when resources array is empty', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       resources: [],
     };
@@ -211,7 +211,7 @@ describe('getDimensionName method', () => {
   });
 
   it('returns the transformed dimension value according to the service type', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       metric: {
         entity_id: '123',
@@ -225,7 +225,7 @@ describe('getDimensionName method', () => {
   });
 
   it('returns the actual value if dimension name is not found in the transform config', () => {
-    const props: DimensionNameProperties = {
+    const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
     };

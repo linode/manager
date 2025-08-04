@@ -1,10 +1,7 @@
 import { capitalize } from '@linode/utilities';
 
-import type {
-  CloudPulseServiceType,
-  TransformFunction,
-  TransformFunctionMap,
-} from '@linode/api-v4';
+import type { TransformFunction, TransformFunctionMap } from './types';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 // Transform functions to transform the dimension value
 export const TRANSFORMS: TransformFunctionMap = {
