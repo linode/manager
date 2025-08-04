@@ -232,14 +232,14 @@ export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
 
 export const CONFIGS_HELPER_TEXT =
-  'Enter one or more Config IDs separated by commas.';
+  'Enter one or more configuration IDs separated by commas.';
 
 export const CONFIGS_ERROR_MESSAGE =
-  'Enter valid Config ID numbers as integers separated by commas.';
+  'Enter valid configuration ID numbers as integers separated by commas.';
 
-export const CONFIG_ERROR_MESSAGE = 'Enter a valid Config ID number.';
+export const CONFIG_ERROR_MESSAGE = 'Enter a valid configuration ID number.';
 export const CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
-  'Use a single comma to separate IDs.';
+  'Use a single comma to separate configuration IDs.';
 
 export const CONFIG_IDS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';

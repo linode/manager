@@ -137,7 +137,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     selected: Item<string, string> | Item<string, string>[] | null,
     operation: string
   ): string => {
-    if (operation !== 'selectOption') return '';
+    if (!['removeOption', 'selectOption'].includes(operation)) {
+      return '';
+    }
 
     if (isValueMultiple && Array.isArray(selected)) {
       return selected.map((item) => item.value).join(',');
@@ -150,6 +152,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     return '';
   };
 
+  const isCustomValueDimension =
+    dimensionFieldWatcher === 'port' || dimensionFieldWatcher === 'config_id';
   return (
     <GridLegacy
       container
@@ -207,6 +211,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 field.onChange(
                   operation === 'selectOption' ? newValue.value : null
                 );
+                setValue(`${name}.value`, null);
               }}
               options={dimensionOperatorOptions}
               placeholder="Select an Operator"
@@ -233,15 +238,18 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   errorText={fieldState.error?.message}
                   helperText={!fieldState.error ? customHelperText : undefined}
                   label="Value"
-                  max={65535}
-                  min={1}
+                  max={
+                    dimensionFieldWatcher === 'port'
+                      ? 65535
+                      : Number.MAX_SAFE_INTEGER
+                  }
+                  min={dimensionFieldWatcher === 'port' ? 1 : 0}
                   onBlur={field.onBlur}
                   onChange={(event) => field.onChange(event.target.value)}
                   placeholder={customPlaceholderText}
                   sx={{ flex: 1, width: '256px' }}
                   type={
-                    dimensionFieldWatcher === 'port' &&
-                    dimensionOperatorWatcher !== 'in'
+                    isCustomValueDimension && dimensionOperatorWatcher !== 'in'
                       ? 'number'
                       : 'text'
                   }

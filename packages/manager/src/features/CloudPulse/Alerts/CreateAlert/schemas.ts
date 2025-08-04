@@ -187,7 +187,7 @@ const multipleConfigSchema = string()
         const trimmedConfigId = configId.trim();
 
         if (!CONFIG_NUMBER_REGEX.test(trimmedConfigId)) {
-          return this.createError({ message: CONFIG_ERROR_MESSAGE });
+          return this.createError({ message: CONFIGS_ERROR_MESSAGE });
         }
       }
       return true;
