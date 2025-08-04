@@ -34,6 +34,7 @@ export const emptyStore: MockState = {
   kubernetesNodePools: [],
   linodeConfigs: [],
   linodeInterfaces: [],
+  linodeIps: [],
   linodes: [],
   nodeBalancerConfigNodes: [],
   nodeBalancerConfigs: [],
