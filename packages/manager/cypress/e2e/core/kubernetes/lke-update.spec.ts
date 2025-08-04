@@ -1014,7 +1014,7 @@ describe('LKE cluster updates', () => {
         );
 
         ui.button
-          .findByTitle('Add Pool')
+          .findByTitle('Add pool')
           .should('be.enabled')
           .should('be.visible')
           .click();
