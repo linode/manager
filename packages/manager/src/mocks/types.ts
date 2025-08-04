@@ -1,6 +1,7 @@
 import type {
   CloudNAT,
   Config,
+  Destination,
   Domain,
   DomainRecord,
   Event,
@@ -161,6 +162,7 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
 export interface MockState {
   cloudnats: CloudNAT[];
   configInterfaces: [number, Interface][]; // number is Config ID
+  destinations: Destination[];
   domainRecords: DomainRecord[];
   domains: Domain[];
   eventQueue: Event[];
