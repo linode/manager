@@ -256,7 +256,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             loading={form.formState.isSubmitting}
             type="submit"
           >
-            Add Pool
+            Add pool
           </Button>
         </Box>
       </form>
