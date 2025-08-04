@@ -103,7 +103,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const theme = useTheme();
 
-    const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> = React.useRef({});
+    const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> =
+      React.useRef({});
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
