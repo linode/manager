@@ -30,7 +30,10 @@ import {
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { type CloudPulseServiceTypeFilters } from '../Utils/models';
 
-import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type {
+  CloudPulseMetricsFilter,
+  FilterValueType,
+} from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -94,17 +97,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isLoading = false,
     } = props;
 
-    const [, setDependentFilters] = React.useState<{
-      [key: string]: FilterValueType;
-    }>({});
+    const [, setDependentFilters] = React.useState<CloudPulseMetricsFilter>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
 
     const theme = useTheme();
 
-    const dependentFilterReference: React.MutableRefObject<{
-      [key: string]: FilterValueType;
-    }> = React.useRef({});
+    const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> = React.useRef({});
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {

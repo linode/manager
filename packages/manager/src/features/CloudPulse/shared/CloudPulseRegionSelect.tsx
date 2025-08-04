@@ -11,7 +11,7 @@ import { NO_REGION_MESSAGE, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
-import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
@@ -26,9 +26,7 @@ export interface CloudPulseRegionSelectProps {
   placeholder?: string;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
-  xFilter?: {
-    [key: string]: FilterValueType;
-  };
+  xFilter?: CloudPulseMetricsFilter;
 }
 
 export const CloudPulseRegionSelect = React.memo(

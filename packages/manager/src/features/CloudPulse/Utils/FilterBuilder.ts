@@ -9,7 +9,10 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
-import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type {
+  CloudPulseMetricsFilter,
+  FilterValueType,
+} from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
@@ -37,9 +40,7 @@ import type {
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
   dashboard: Dashboard;
-  dependentFilters?: {
-    [key: string]: FilterValueType;
-  };
+  dependentFilters?: CloudPulseMetricsFilter;
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
   resource_ids?: number[] | undefined;
@@ -48,9 +49,7 @@ interface CloudPulseFilterProperties {
 
 interface CloudPulseMandatoryFilterCheckProps {
   dashboard: Dashboard;
-  filterValue: {
-    [key: string]: FilterValueType;
-  };
+  filterValue: CloudPulseMetricsFilter;
   timeDuration: DateTimeWithPreset | undefined;
 }
 
@@ -367,20 +366,14 @@ export const getTextFilterProperties = (
  */
 export const filterBasedOnConfig = (
   config: CloudPulseServiceTypeFilters | undefined,
-  dependentFilters: {
-    [key: string]: FilterValueType;
-  }
-): {
-  [key: string]: FilterValueType;
-} => {
+  dependentFilters: CloudPulseMetricsFilter
+): CloudPulseMetricsFilter => {
   if (!config) {
     return {};
   }
 
   const { dependency } = config.configuration;
-  const filtered: {
-    [key: string]: FilterValueType;
-  } = {};
+  const filtered: CloudPulseMetricsFilter = {};
   if (dependency) {
     dependency.forEach((key) => {
       const value = dependentFilters[key];
@@ -489,9 +482,7 @@ export const checkIfAllMandatoryFiltersAreSelected = (
  * @returns Constructs and returns the metrics call filters based on selected filters and service type
  */
 export const getMetricsCallCustomFilters = (
-  selectedFilters: {
-    [key: string]: FilterValueType;
-  },
+  selectedFilters: CloudPulseMetricsFilter,
   serviceType?: CloudPulseServiceType
 ): CloudPulseMetricsAdditionalFilters[] => {
   const serviceTypeConfig = serviceType
@@ -659,9 +650,7 @@ export const getFilters = (
  */
 export const filterUsingDependentFilters = (
   data?: CloudPulseResources[],
-  dependentFilters?: {
-    [key: string]: FilterValueType;
-  }
+  dependentFilters?: CloudPulseMetricsFilter
 ): CloudPulseResources[] | undefined => {
   if (!dependentFilters || !data) {
     return data;
