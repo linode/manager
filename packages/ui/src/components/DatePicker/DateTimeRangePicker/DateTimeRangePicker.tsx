@@ -163,11 +163,18 @@ export const DateTimeRangePicker = ({
     setTimeZone(previousValues.current.timeZone);
     setSelectedPreset(previousValues.current.selectedPreset);
 
+    // Clear errors
+    setStartDateError('');
+    setEndDateError('');
     setOpen(false);
     setAnchorEl(null);
   };
 
   const handleApply = () => {
+    if (startDateError || endDateError) {
+      return;
+    }
+
     onApply?.({
       endDate: endDate ? endDate.toISO() : null,
       selectedPreset,
@@ -213,9 +220,13 @@ export const DateTimeRangePicker = ({
   ) => {
     if (newStartDate && newEndDate && newStartDate > newEndDate) {
       setStartDateError(
-        'Start date must be earlier than or equal to end date.',
+        startDateProps?.errorMessage ??
+          'Start date must be earlier than or equal to end date.',
       );
-      setEndDateError('End date must be later than or equal to start date.');
+      setEndDateError(
+        endDateProps?.errorMessage ??
+          'End date must be later than or equal to start date.',
+      );
     } else {
       setStartDateError('');
       setEndDateError('');
@@ -302,7 +313,11 @@ export const DateTimeRangePicker = ({
           onClose={handleClose}
           open={open}
           role="dialog"
-          sx={{ boxShadow: 3, zIndex: 1300 }}
+          sx={(theme) => ({
+            boxShadow: 3,
+            zIndex: 1300,
+            mt: startDateError || endDateError ? theme.spacingFunction(24) : 0,
+          })}
           transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         >
           <Box
@@ -351,30 +366,34 @@ export const DateTimeRangePicker = ({
               >
                 <TimePicker
                   label="Start Time"
-                  onChange={(newTime) => {
+                  onChange={(newTime: DateTime | null) => {
                     if (newTime) {
-                      setStartDate(
-                        (prev) =>
+                      setStartDate((prev) => {
+                        const updatedValue =
                           prev?.set({
                             hour: newTime.hour,
                             minute: newTime.minute,
-                          }) ?? newTime,
-                      );
+                          }) ?? newTime;
+                        validateDates(updatedValue, endDate);
+                        return updatedValue;
+                      });
                     }
                   }}
                   value={startDate}
                 />
                 <TimePicker
                   label="End Time"
-                  onChange={(newTime) => {
+                  onChange={(newTime: DateTime | null) => {
                     if (newTime) {
-                      setEndDate(
-                        (prev) =>
+                      setEndDate((prev) => {
+                        const updatedValue =
                           prev?.set({
                             hour: newTime.hour,
                             minute: newTime.minute,
-                          }) ?? newTime,
-                      );
+                          }) ?? newTime;
+                        validateDates(startDate, updatedValue);
+                        return updatedValue;
+                      });
                     }
                   }}
                   value={endDate}
