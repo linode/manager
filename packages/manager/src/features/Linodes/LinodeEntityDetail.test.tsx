@@ -20,7 +20,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeEntityDetail } from './LinodeEntityDetail';
-import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
+import { getSubnetsString, getVPCIPv4 } from './utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
