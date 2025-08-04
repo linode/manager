@@ -1,8 +1,4 @@
-import type { PlacementGroup } from '@linode/api-v4';
-import type {
-  ConfigInterfaceIPv4,
-  UserData,
-} from '@linode/api-v4/lib/linodes/types';
+import type { PlacementGroup, UserData } from '@linode/api-v4';
 
 // Credit: https://github.com/xxorax/node-shell-escape
 function escapeStringForCLI(s: string): string {
@@ -21,47 +17,18 @@ const convertObjectToCLIArg = (data: null | {}) => {
   return `'${JSON.stringify(data).replace(':', ': ')}'`;
 };
 
-const parseObject = (key: string, value: {}) => {
-  // M3-7638: The Linode CLI does not currently accept interfaces.ipv4 as an object so we need to make them separate arguments
-  const parseIpv4Object = (_key: string, _value: ConfigInterfaceIPv4) => {
-    const ipv4ValueStrings = [];
-    if (_value.nat_1_1) {
-      ipv4ValueStrings.push(
-        `--${key}.${_key}.nat_1_1 ${JSON.stringify(_value.nat_1_1)}`
-      );
-    }
-    if (_value.vpc) {
-      ipv4ValueStrings.push(
-        `--${key}.${_key}.vpc ${JSON.stringify(_value.vpc)}`
-      );
-    }
-    return ipv4ValueStrings.join(' ');
-  };
-
-  const result = Object.entries(value)
-    .map(([_key, _value]) => {
-      if (_key === 'ipv4') {
-        return parseIpv4Object(_key, _value as ConfigInterfaceIPv4);
-      }
-      return `--${key}.${_key} ${JSON.stringify(_value)}`;
-    })
-    .filter((string) => string.length > 0)
-    .join(' ');
-  return result.padStart(result.length + 2);
-};
-
 const parseArray = (key: string, value: any[]) => {
   const results: string[] = [];
   if (key === 'interfaces') {
-    results.push(
-      value
-        .map((item) => {
-          // M3-7638: vpc_id is not a valid argument. The subnet_id will be used in the backend to implicitly determine the VPC ID
-          delete item.vpc_id;
-          return parseObject('interfaces', item);
-        })
-        .join('\\\n')
-    );
+    const json = value.map((item) => {
+      // M3-7638: vpc_id is not a valid argument. The subnet_id will be used in the backend to implicitly determine the VPC ID
+      delete item.vpc_id;
+      return Object.fromEntries(
+        Object.entries(item).filter(([_, value]) => value !== null)
+      );
+    });
+
+    results.push(`  --${key} ${escapeStringForCLI(JSON.stringify(json))}`);
   } else {
     value.forEach((item) => {
       results.push(`  --${key} ${escapeStringForCLI(item)}`);
@@ -118,7 +85,11 @@ export const generateCLICommand = (
   const dataForCLI = Object.entries(data).reduce(dataEntriesReduce, []);
 
   if (linodeCLIAction === 'Clone Linode') {
-    return `linode-cli linodes clone ${sourceLinodeID} \\\n${dataForCLI.join(
+    const cloneDataForCLI = dataForCLI.filter(
+      (entry) =>
+        !entry.includes('--firewall_id') && !entry.includes('--interfaces')
+    );
+    return `linode-cli linodes clone ${sourceLinodeID} \\\n${cloneDataForCLI.join(
       ' \\\n'
     )}`;
   }
