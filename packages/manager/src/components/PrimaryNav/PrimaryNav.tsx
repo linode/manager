@@ -262,6 +262,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               hide: !isIAMEnabled,
               href: '/iam',
               icon: <IAM />,
+              activeLinks: [
+                '/iam',
+                '/iam/users',
+                '/iam/users/$username/details',
+                '/iam/users/$username/roles',
+                '/iam/users/$username/entities',
+              ],
               isBeta: isIAMBeta,
             },
             {

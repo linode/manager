@@ -1,11 +1,9 @@
 import { useAccountUser, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { useLocation, useParams } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 import { useEffect } from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -24,7 +22,8 @@ export const UserDetail = () => {
   });
 
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
+
   const { data: profile } = useProfile();
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
 
@@ -36,10 +35,11 @@ export const UserDetail = () => {
       const isOnPermissions =
         window.location.pathname === `/account/users/${username}/permissions`;
 
-      history.replace({
-        pathname: isOnPermissions
+      navigate({
+        to: isOnPermissions
           ? `/iam/users/${username}/roles`
-          : `/iam/users/${username}`,
+          : `/iam/users/${username}/details`,
+        replace: true,
       });
     }
   }, [isIAMEnabled, username]);

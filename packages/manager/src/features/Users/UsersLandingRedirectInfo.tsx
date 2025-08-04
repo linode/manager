@@ -1,7 +1,6 @@
 import { Box, Button, Paper, Typography, useTheme } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
 
@@ -9,7 +8,7 @@ import type { Theme } from '@linode/ui';
 
 export const UsersLandingRedirectInfo = () => {
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <Paper
       sx={(theme: Theme) => ({
@@ -41,7 +40,10 @@ export const UsersLandingRedirectInfo = () => {
           menu or by clicking the button below.
         </Typography>
 
-        <Button buttonType="primary" onClick={() => history.push('/iam/users')}>
+        <Button
+          buttonType="primary"
+          onClick={() => navigate({ to: '/iam/users' })}
+        >
           Go to Identity and Access
         </Button>
       </Box>
