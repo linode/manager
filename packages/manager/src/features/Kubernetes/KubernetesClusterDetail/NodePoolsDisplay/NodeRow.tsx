@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { usePreferences } from '@linode/queries';
+import { useLinodeIPsQuery, usePreferences } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -13,7 +13,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 
 import { NodeActionMenu } from './NodeActionMenu';
 
-import type { APIError } from '@linode/api-v4';
+import type { APIError, VPCIP } from '@linode/api-v4';
 
 export interface NodeRow {
   instanceId?: number;
@@ -22,8 +22,7 @@ export interface NodeRow {
   label?: string;
   nodeId: string;
   nodeStatus: string;
-  vpcIpv4?: string;
-  vpcIpv6?: string;
+  shouldShowVpcIPAddressColumns: boolean;
 }
 
 interface NodeRowProps extends NodeRow {
@@ -45,13 +44,21 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     nodeStatus,
     openRecycleNodeDialog,
     typeLabel,
-    vpcIpv4,
-    vpcIpv6,
+    shouldShowVpcIPAddressColumns,
   } = props;
 
+  const { data: ips, error: ipsError } = useLinodeIPsQuery(
+    instanceId ?? -1,
+    Boolean(instanceId)
+  );
   const { data: events } = useInProgressEvents();
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
+  );
+
+  const vpcIpv4: VPCIP = ips?.ipv4.vpc.find((ip: VPCIP) => ip.address !== null);
+  const vpcIpv6: VPCIP = ips?.ipv6?.vpc?.find(
+    (ip: VPCIP) => ip.ipv6_addresses[0].slaac_address !== null
   );
 
   const recentEvent = events?.find(
@@ -78,7 +85,9 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
       ? 'Provisioning'
       : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
 
-  const displayIP = ip ?? '';
+  const displayPublicIPv4 = ip ?? '';
+  const displayVPCIPv4 = vpcIpv4?.address ?? '';
+  const displayVPCIPv6 = vpcIpv6?.ipv6_addresses[0].slaac_address ?? '';
 
   return (
     <TableRow data-qa-node-row={nodeId}>
@@ -114,20 +123,66 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           >
             Error retrieving IP
           </Typography>
-        ) : displayIP.length > 0 ? (
+        ) : displayPublicIPv4.length > 0 ? (
           <Box alignItems="center" display="flex" gap={0.5}>
             <CopyTooltip
               copyableText
               masked={Boolean(maskSensitiveDataPreference)}
               maskedTextLength="ipv4"
-              text={displayIP}
+              text={displayPublicIPv4}
             />
-            <StyledCopyTooltip text={displayIP} />
+            <StyledCopyTooltip text={displayPublicIPv4} />
           </Box>
         ) : null}
       </TableCell>
-      {vpcIpv4 && <TableCell>{vpcIpv4}</TableCell>}
-      {vpcIpv6 && <TableCell>{vpcIpv6}</TableCell>}
+      {shouldShowVpcIPAddressColumns && (
+        <TableCell noWrap>
+          {linodeError || ipsError ? (
+            <Typography
+              sx={(theme) => ({
+                color: theme.color.red,
+              })}
+            >
+              Error retrieving IP
+            </Typography>
+          ) : displayVPCIPv4.length > 0 ? (
+            <Box alignItems="center" display="flex" gap={0.5}>
+              <CopyTooltip
+                copyableText
+                masked={Boolean(maskSensitiveDataPreference)}
+                maskedTextLength="ipv4"
+                text={displayVPCIPv4}
+              />
+              <StyledCopyTooltip text={displayVPCIPv4} />
+            </Box>
+          ) : null}
+        </TableCell>
+      )}
+      {shouldShowVpcIPAddressColumns && (
+        <TableCell noWrap>
+          {linodeError || ipsError ? (
+            <Typography
+              sx={(theme) => ({
+                color: theme.color.red,
+              })}
+            >
+              Error retrieving IP
+            </Typography>
+          ) : displayVPCIPv6.length > 0 ? (
+            <Box alignItems="center" display="flex" gap={0.5}>
+              <CopyTooltip
+                copyableText
+                masked={Boolean(maskSensitiveDataPreference)}
+                maskedTextLength="ipv6"
+                text={displayVPCIPv6}
+              />
+              <StyledCopyTooltip text={displayVPCIPv6} />
+            </Box>
+          ) : (
+            '—'
+          )}
+        </TableCell>
+      )}
       <TableCell actionCell>
         <NodeActionMenu
           instanceLabel={label}
