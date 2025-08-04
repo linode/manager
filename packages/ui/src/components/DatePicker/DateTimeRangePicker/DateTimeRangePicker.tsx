@@ -374,8 +374,8 @@ export const DateTimeRangePicker = ({
                             hour: newTime.hour,
                             minute: newTime.minute,
                           }) ?? newTime;
-                        validateDates(updatedVale, endDate);
-                        return updatedVale;
+                        validateDates(updatedValue, endDate);
+                        return updatedValue;
                       });
                     }
                   }}
