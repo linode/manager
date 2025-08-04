@@ -30,6 +30,7 @@ import {
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
+  flagsFactory,
   memoryRulesFactory,
   notificationChannelFactory,
   serviceAlertFactory,
@@ -41,9 +42,6 @@ import {
   entityGroupingOptions,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
-
-import type { Flags } from 'src/featureFlags';
-
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
@@ -51,23 +49,6 @@ export interface MetricDetails {
   ruleIndex: number;
   threshold: string;
 }
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-      // supportedRegionIds: 'us-ord,us-east',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-      // supportedRegionIds: 'us-ord,us-east',
-    },
-  ],
-};
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegions = [
@@ -255,7 +236,7 @@ describe('Create Alert', () => {
         regions: 'us-ord,us-east',
       });
       mockGetCloudPulseServiceByType(serviceType, services);
-      mockAppendFeatureFlags(flags);
+      mockAppendFeatureFlags(flagsFactory.build());
       mockGetAccount(mockAccount);
       mockGetProfile(mockProfile);
       mockGetCloudPulseServices([serviceType]);
