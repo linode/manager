@@ -1,4 +1,4 @@
-import { Filter } from "@linode/api-v4";
+import type { Filter } from '@linode/api-v4';
 
 export const DASHBOARD_ID = 'dashboardId';
 
