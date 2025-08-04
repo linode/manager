@@ -32,9 +32,7 @@ const Main = () => {
         <LinodeThemeWrapper>
           <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
-            <React.Suspense fallback={<SplashScreen />}>
-              <App />
-            </React.Suspense>
+            <App />
           </React.Suspense>
         </LinodeThemeWrapper>
       </QueryClientProvider>
