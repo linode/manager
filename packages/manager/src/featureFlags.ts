@@ -117,6 +117,8 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 interface AclpAlerting {
+  accountAlertLimit: number;
+  accountMetricLimit: number;
   alertDefinitions: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;
@@ -326,7 +328,7 @@ export interface AclpAlertServiceTypeConfig {
 
 export type AclpServices = {
   [serviceType in CloudPulseServiceType]: {
-    alerts: AclpFlag;
-    metrics: AclpFlag;
+    alerts?: AclpFlag;
+    metrics?: AclpFlag;
   };
 };
