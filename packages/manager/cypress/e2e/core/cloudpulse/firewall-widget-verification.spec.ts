@@ -26,6 +26,7 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   firewallFactory,
+  flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
@@ -33,7 +34,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse, Filters } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -48,22 +48,6 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpServices: {
-    firewall: {
-      alerts: { beta: true, enabled: true },
-      metrics: { beta: true, enabled: true },
-    },
-  },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'firewall',
-      maxResourceSelections: 10,
-      serviceType: 'firewall',
-    },
-  ],
-};
 const { dashboardName, id, metrics, firewalls } = widgetDetails.firewall;
 const serviceType = 'firewall';
 const dashboard = dashboardFactory.build({
@@ -150,9 +134,8 @@ const mockFirewalls = firewallFactory.build({ label: firewalls });
 // Tests will be modified
 describe('Integration Tests for firewall Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
-
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');

@@ -31,6 +31,7 @@ import {
   egressPacketsAcceptedRulesFactory,
   egressPacketsDroppedRulesFactory,
   firewallFactory,
+  flagsFactory,
   ingressBytesAcceptedRulesFactory,
   ingressPacketsAcceptedRulesFactory,
   ingressPacketsDroppedRulesFactory,
@@ -46,8 +47,6 @@ import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/con
 import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Flags } from 'src/featureFlags';
-
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
@@ -55,23 +54,6 @@ export interface MetricDetails {
   ruleIndex: number;
   threshold: string;
 }
-
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpServices: {
-    firewall: {
-      alerts: { beta: true, enabled: true },
-      metrics: { beta: true, enabled: true },
-    },
-  },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'firewall',
-      maxResourceSelections: 10,
-      serviceType: 'firewall',
-    },
-  ],
-};
 // Create mock data
 const mockAccount = accountFactory.build();
 const { firewalls, serviceType } = widgetDetails.firewall;
@@ -324,7 +306,7 @@ describe('Create Alert', () => {
    * - Confirms that the UI displays a success message after creating an alert.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);
