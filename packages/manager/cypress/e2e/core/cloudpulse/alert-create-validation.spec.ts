@@ -25,15 +25,13 @@ import {
   cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   memoryRulesFactory,
   notificationChannelFactory,
   triggerConditionFactory,
 } from 'src/factories';
 
-import type { Flags } from 'src/featureFlags';
-
 // Step 1: Define mock data for the test.
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
@@ -116,7 +114,7 @@ describe('Create Alert - Error Messages Validation', () => {
    */
   it('should display error messages for missing mandatory fields and various UI validations', () => {
     // Step 3.1: Setup mock data and intercept API calls.
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices([serviceType]);
     mockGetRegions([mockRegion]);
