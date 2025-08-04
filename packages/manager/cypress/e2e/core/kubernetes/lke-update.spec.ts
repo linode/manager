@@ -57,1900 +57,1851 @@ import type { Label, Linode, PoolNodeResponse, Taint } from '@linode/api-v4';
 const mockNodePools = nodePoolFactory.buildList(2);
 
 describe('LKE cluster updates', () => {
-  beforeEach(() => {
-    // Mock the APL feature flag to be disabled.
-    mockAppendFeatureFlags({
-      apl: false,
-    });
-  });
-
-  /*
-   * - Confirms UI flow of upgrading a cluster to high availability control plane using mocked data.
-   * - Confirms that user is shown a warning and agrees to billing changes before upgrading.
-   * - Confirms that details page updates accordingly after upgrading to high availability.
-   */
-  it('can upgrade to high availability', () => {
-    const mockCluster = kubernetesClusterFactory.build({
-      control_plane: {
-        high_availability: false,
-      },
-      k8s_version: latestKubernetesVersion,
+  // TODO Add LKE update tests to cover flows when APL is enabled.
+  describe('APL disabled', () => {
+    beforeEach(() => {
+      // Mock the APL feature flag to be disabled.
+      mockAppendFeatureFlags({
+        apl: false,
+      });
     });
 
-    const mockClusterWithHA = {
-      ...mockCluster,
-      control_plane: {
-        high_availability: true,
-      },
-    };
-
-    const haUpgradeWarnings = [
-      'All nodes will be deleted and new nodes will be created to replace them.',
-      'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted.',
-      'This may take several minutes, as nodes will be replaced on a rolling basis.',
-    ];
-
-    const haUpgradeAgreement =
-      'I agree to the additional fee on my monthly bill and understand HA upgrade can only be reversed by deleting my cluster';
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockUpdateCluster(mockCluster.id, mockClusterWithHA).as('updateCluster');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
-
-    // Initiate high availability upgrade and agree to changes.
-    ui.button
-      .findByTitle('Upgrade to HA')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.dialog
-      .findByTitle('Upgrade to High Availability')
-      .should('be.visible')
-      .within(() => {
-        haUpgradeWarnings.forEach((warning: string) => {
-          cy.findByText(warning).should('be.visible');
-        });
-
-        cy.findByText(haUpgradeAgreement, { exact: false })
-          .should('be.visible')
-          .closest('label')
-          .click();
-
-        ui.button
-          .findByTitle('Upgrade to HA')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+    /*
+     * - Confirms UI flow of upgrading a cluster to high availability control plane using mocked data.
+     * - Confirms that user is shown a warning and agrees to billing changes before upgrading.
+     * - Confirms that details page updates accordingly after upgrading to high availability.
+     */
+    it('can upgrade to high availability', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        control_plane: {
+          high_availability: false,
+        },
+        k8s_version: latestKubernetesVersion,
       });
 
-    // Confirm toast message appears and HA Cluster chip is shown.
-    cy.wait('@updateCluster');
-    ui.toast.assertMessage('Enabled HA Control Plane');
-    cy.findByText('HA CLUSTER').should('be.visible');
-    cy.findByText('Upgrade to HA').should('not.exist');
-  });
-
-  /*
-   * - Confirms UI flow of upgrading Kubernetes version using mocked API requests.
-   * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
-   * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
-   */
-  it('can upgrade standard kubernetes version from the details page', () => {
-    const oldVersion = '1.25';
-    const newVersion = '1.26';
-
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: oldVersion,
-      tier: 'standard',
-    });
-
-    const mockClusterUpdated = {
-      ...mockCluster,
-      k8s_version: newVersion,
-    };
-
-    const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
-
-    const upgradeNotes = [
-      'This upgrades the control plane on your cluster',
-      'and ensures that any new worker nodes are created using the newer Kubernetes version.',
-      // Confirm that the old version and new version are both shown.
-      oldVersion,
-      newVersion,
-    ];
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
-
-    // Confirm that upgrade prompt is shown.
-    cy.findByText(upgradePrompt).should('be.visible');
-    ui.button
-      .findByTitle('Upgrade Version')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.dialog
-      .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-      )
-      .should('be.visible')
-      .within(() => {
-        upgradeNotes.forEach((note: string) => {
-          cy.findAllByText(note, { exact: false }).should('be.visible');
-        });
-
-        ui.button
-          .findByTitle('Upgrade Version')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Wait for API response and assert toast message is shown.
-    cy.wait('@updateCluster');
-
-    // Verify the banner goes away because the version update has happened
-    cy.findByText(upgradePrompt).should('not.exist');
-
-    mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
-
-    const stepTwoDialogTitle = 'Upgrade complete';
-
-    ui.dialog
-      .findByTitle(stepTwoDialogTitle)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(
-          'The cluster’s Kubernetes version has been updated successfully',
-          {
-            exact: false,
-          }
-        ).should('be.visible');
-
-        cy.findByText(
-          'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
-          { exact: false }
-        ).should('be.visible');
-
-        ui.button
-          .findByTitle('Recycle All Nodes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Verify clicking the "Recycle All Nodes" makes an API call
-    cy.wait('@recycleAllNodes');
-
-    // Verify the upgrade dialog closed
-    cy.findByText(stepTwoDialogTitle).should('not.exist');
-
-    // Verify the banner is still gone after the flow
-    cy.findByText(upgradePrompt).should('not.exist');
-
-    // Verify the version is correct after the update
-    cy.findByText(`Version ${newVersion}`);
-
-    ui.toast.findByMessage('Recycle started successfully.');
-  });
-
-  /*
-   * - Confirms UI flow of upgrading Kubernetes enterprise version using mocked API requests.
-   * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
-   * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
-   */
-  it('can upgrade enterprise kubernetes version from the details page', () => {
-    const oldVersion = '1.31.1+lke1';
-    const newVersion = '1.31.1+lke2';
-    const clusterRegion = extendRegion(
-      regionFactory.build({
-        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-        id: 'us-central',
-      })
-    );
-    mockGetRegions([clusterRegion]).as('getRegions');
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
-      })
-    ).as('getAccount');
-
-    // TODO LKE-E: Remove once feature is in GA
-    mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true },
-    });
-
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: oldVersion,
-      region: clusterRegion.id,
-      tier: 'enterprise',
-    });
-
-    const mockClusterUpdated = {
-      ...mockCluster,
-      k8s_version: newVersion,
-    };
-
-    const upgradePrompt =
-      'A new version of Kubernetes is available (1.31.1+lke2).';
-
-    const upgradeNotes = [
-      'This upgrades the control plane on your cluster',
-      'Worker nodes within each node pool can then be upgraded separately.',
-      // Confirm that the old version and new version are both shown.
-      oldVersion,
-      newVersion,
-    ];
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetTieredKubernetesVersions('enterprise', [
-      { id: newVersion, tier: 'enterprise' },
-      { id: oldVersion, tier: 'enterprise' },
-    ]).as('getTieredVersions');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getRegions',
-      '@getAccount',
-      '@getCluster',
-      '@getNodePools',
-      '@getTieredVersions',
-    ]);
-
-    // Confirm that upgrade prompt is shown.
-    cy.findByText(upgradePrompt).should('be.visible');
-    ui.button
-      .findByTitle('Upgrade Version')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.dialog
-      .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-      )
-      .should('be.visible')
-      .within(() => {
-        upgradeNotes.forEach((note: string) => {
-          cy.findAllByText(note, { exact: false }).should('be.visible');
-        });
-
-        ui.button
-          .findByTitle('Upgrade Version')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Wait for API response and assert toast message is shown.
-    cy.wait('@updateCluster');
-
-    // Verify the banner is still gone after the flow
-    cy.findByText(upgradePrompt).should('not.exist');
-
-    // Verify the second step in the banner is not shown for LKE-E.
-    const stepTwoDialogTitle = 'Upgrade complete';
-    cy.findByText(stepTwoDialogTitle).should('not.exist');
-
-    // Verify the version is correct after the update
-    cy.findByText(`Version ${newVersion}`);
-  });
-
-  /*
-   * - Confirms node, node pool, and cluster recycling UI flow using mocked API data.
-   * - Confirms that user is warned that recycling recreates nodes and may take a while.
-   */
-  it('can recycle nodes', () => {
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-    });
-
-    const mockKubeLinode = kubeLinodeFactory.build();
-
-    const mockNodePool = nodePoolFactory.build({
-      count: 1,
-      nodes: [mockKubeLinode],
-      type: 'g6-standard-1',
-    });
-
-    const mockLinode = linodeFactory.build({
-      id: mockKubeLinode.instance_id ?? undefined,
-      label: randomLabel(),
-    });
-
-    const recycleWarningSubstrings = [
-      'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted',
-      'using local storage for important data is not common or recommended',
-    ];
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    mockGetLinodes([mockLinode]).as('getLinodes');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
-
-    // Recycle individual node.
-    ui.button
-      .findByTitle('Recycle')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockRecycleNode(mockCluster.id, mockKubeLinode.id).as('recycleNode');
-    ui.dialog
-      .findByTitle(`Recycle ${mockKubeLinode.id}?`)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Delete and recreate this node.', {
-          exact: false,
-        }).should('be.visible');
-        recycleWarningSubstrings.forEach((warning: string) => {
-          cy.findByText(warning, { exact: false }).should('be.visible');
-        });
-
-        ui.button
-          .findByTitle('Recycle')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait('@recycleNode');
-    ui.toast.assertMessage('Node queued for recycling.');
-
-    ui.button
-      .findByTitle('Recycle Pool Nodes')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockRecycleNodePool(mockCluster.id, mockNodePool.id).as('recycleNodePool');
-    ui.dialog
-      .findByTitle('Recycle node pool?')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Delete and recreate all nodes in this node pool.', {
-          exact: false,
-        }).should('be.visible');
-        recycleWarningSubstrings.forEach((warning: string) => {
-          cy.findByText(warning, { exact: false }).should('be.visible');
-        });
-
-        ui.button
-          .findByTitle('Recycle Pool Nodes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait('@recycleNodePool');
-    ui.toast.assertMessage(
-      `Recycled all nodes in node pool ${mockNodePool.id}`
-    );
-
-    ui.button
-      .findByTitle('Recycle All Nodes')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
-    ui.dialog
-      .findByTitle('Recycle all nodes in cluster?')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Delete and recreate all nodes in this cluster.', {
-          exact: false,
-        }).should('be.visible');
-        recycleWarningSubstrings.forEach((warning: string) => {
-          cy.findByText(warning, { exact: false }).should('be.visible');
-        });
-
-        ui.button
-          .findByTitle('Recycle All Cluster Nodes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait('@recycleAllNodes');
-    ui.toast.assertMessage('All cluster nodes queued for recycling');
-  });
-
-  /*
-   * - Confirms UI flow when enabling and disabling node pool autoscaling using mocked API responses.
-   * - Confirms that errors are shown when attempting to autoscale using invalid values based on the cluster tier.
-   * - Confirms that UI updates to reflect node pool autoscale state.
-   */
-  it('can toggle autoscaling on a standard tier cluster', () => {
-    const autoscaleMin = 3;
-    const autoscaleMax = 10;
-    const minWarning =
-      'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.';
-    const maxWarning = 'Maximum must be between 1 and 100 nodes.';
-
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-      tier: 'standard',
-    });
-
-    const mockNodePool = nodePoolFactory.build({
-      count: 1,
-      nodes: kubeLinodeFactory.buildList(1),
-      type: 'g6-standard-1',
-    });
-
-    const mockNodePoolAutoscale = {
-      ...mockNodePool,
-      autoscaler: {
-        enabled: true,
-        max: autoscaleMax,
-        min: autoscaleMin,
-      },
-    };
-
-    const mockNodePoolDrawerTitle = 'Autoscale Pool: Linode 2 GB Plan';
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
-      })
-    ).as('getAccount');
-    // TODO LKE-E: Remove once feature is in GA
-    mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true },
-    });
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getVersions']);
-
-    // Click "Autoscale Pool", enable autoscaling, and set min and max values.
-    mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
-      'toggleAutoscale'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
-      'getNodePools'
-    );
-    ui.button
-      .findByTitle('Autoscale Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Autoscale').should('be.visible').click();
-
-        cy.findByLabelText('Min').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type(`${autoscaleMin}`);
-
-        // Min is 3; max is 1 - invalid
-        cy.findByText(minWarning).should('be.visible');
-
-        cy.findByLabelText('Max').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type('101');
-
-        // Min is 3 (valid); max is 101 (invalid)
-        cy.findByText(minWarning).should('not.exist');
-        // Confirm max can't go above the max limit
-        cy.findByLabelText('Max').should('have.value', 100);
-
-        cy.findByLabelText('Max').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type(`${autoscaleMax}`);
-
-        // Min is 3; max is 10 - both valid
-        cy.findByText(minWarning).should('not.exist');
-        cy.findByText(maxWarning).should('not.exist');
-
-        ui.button.findByTitle('Save Changes').should('be.visible').click();
-      });
-
-    // Wait for API response and confirm that UI updates to reflect autoscale.
-    cy.wait(['@toggleAutoscale', '@getNodePools']);
-    ui.toast.assertMessage(
-      `Autoscaling updated for Node Pool ${mockNodePool.id}.`
-    );
-    cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
-      'be.visible'
-    );
-
-    // Click "Autoscale Pool" again and disable autoscaling.
-    mockUpdateNodePool(mockCluster.id, mockNodePool).as('toggleAutoscale');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    ui.button
-      .findByTitle('Autoscale Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Autoscale').should('be.visible').click();
-
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Wait for API response and confirm that UI updates to reflect no autoscale.
-    cy.wait(['@toggleAutoscale', '@getNodePools']);
-    ui.toast.assertMessage(
-      `Autoscaling updated for Node Pool ${mockNodePool.id}.`
-    );
-    cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
-      'not.exist'
-    );
-  });
-
-  /*
-   * - Confirms UI flow when enabling and disabling node pool autoscaling using mocked API responses.
-   * - Confirms that errors are shown when attempting to autoscale using invalid values based on the cluster tier.
-   * - Confirms that UI updates to reflect node pool autoscale state.
-   */
-  it('can toggle autoscaling on an enterprise tier cluster', () => {
-    const autoscaleMin = 1;
-    const autoscaleMax = 499;
-
-    const minWarning =
-      'Minimum must be between 1 and 499 nodes and cannot be greater than Maximum.';
-    const maxWarning = 'Maximum must be between 1 and 500 nodes.';
-
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-      tier: 'enterprise',
-    });
-
-    const mockNodePool = nodePoolFactory.build({
-      count: 1,
-      nodes: kubeLinodeFactory.buildList(1),
-      type: 'g6-dedicated-4',
-    });
-
-    const mockNodePoolAutoscale = {
-      ...mockNodePool,
-      autoscaler: {
-        enabled: true,
-        max: autoscaleMax,
-        min: autoscaleMin,
-      },
-    };
-
-    const mockNodePoolDrawerTitle = 'Autoscale Pool: Dedicated 8 GB Plan';
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
-      })
-    ).as('getAccount');
-    // TODO LKE-E: Remove once feature is in GA
-    mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true },
-    });
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getVersions']);
-
-    // Click "Autoscale Pool", enable autoscaling, and set min and max values.
-    mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
-      'toggleAutoscale'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
-      'getNodePools'
-    );
-    ui.button
-      .findByTitle('Autoscale Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Autoscale').should('be.visible').click();
-
-        // Try to set min above the max
-        cy.findByLabelText('Min').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type(`${autoscaleMax + 1}`);
-        // Confirm min warning and disabled button
-        cy.findByText(minWarning).should('be.visible');
-        cy.findByLabelText('Max').should('have.value', autoscaleMax);
-        ui.button.findByTitle('Save Changes').should('be.disabled');
-
-        // Try to set min to 0
-        cy.findByLabelText('Min').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type(`${autoscaleMin - 1}`);
-        // Confirm min can't go below the min limit
-        cy.findByLabelText('Min').should('have.value', 1);
-
-        // Try to set max above max limit
-        cy.findByLabelText('Max').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type('501');
-        // Confirm max can't go above the max limit
-        cy.findByLabelText('Max').should('have.value', 500);
-
-        // Min is 1, max is 500 - both valid
-        cy.findByText(minWarning).should('not.exist');
-        cy.findByText(maxWarning).should('not.exist');
-        ui.button.findByTitle('Save Changes').should('be.visible').click();
-      });
-
-    // Wait for API response and confirm that UI updates to reflect autoscale.
-    cy.wait(['@toggleAutoscale', '@getNodePools']);
-    ui.toast.assertMessage(
-      `Autoscaling updated for Node Pool ${mockNodePool.id}.`
-    );
-    cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
-      'be.visible'
-    );
-  });
-
-  /*
-   * - Confirms node pool resize UI flow using mocked API responses.
-   * - Confirms that pool size can be increased and decreased.
-   * - Confirms that user is warned when decreasing node pool size.
-   * - Confirms that UI updates to reflect new node pool size.
-   */
-  it('can resize pools', () => {
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-    });
-
-    const mockNodePoolResized = nodePoolFactory.build({
-      count: 3,
-      nodes: kubeLinodeFactory.buildList(3),
-      type: 'g6-standard-1',
-    });
-
-    const mockNodePoolInitial = {
-      ...mockNodePoolResized,
-      count: 1,
-      nodes: [mockNodePoolResized.nodes[0]],
-    };
-
-    const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
-      (node: PoolNodeResponse): Linode => {
-        return linodeFactory.build({
-          id: node.instance_id ?? undefined,
-          ipv4: [randomIp()],
-        });
-      }
-    );
-
-    const mockNodePoolDrawerTitle = 'Resize Pool: Linode 2 GB Plan';
-
-    const decreaseSizeWarning =
-      'Resizing to fewer nodes will delete random nodes from the pool.';
-    const nodeSizeRecommendation =
-      'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePools'
-    );
-    mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
-
-    // Confirm that nodes are listed with correct details.
-    mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
-      cy.get(`tr[data-qa-node-row="${node.id}"]`)
-        .should('be.visible')
-        .within(() => {
-          const nodeLinode = mockLinodes.find(
-            (linode: Linode) => linode.id === node.instance_id
-          );
-          if (nodeLinode) {
-            cy.findByText(nodeLinode.label).should('be.visible');
-            cy.findByText(nodeLinode.ipv4[0]).should('be.visible');
-            ui.button
-              .findByTitle('Recycle')
-              .should('be.visible')
-              .should('be.enabled');
-          }
-        });
-    });
-
-    // Click "Resize Pool" and increase size to 3 nodes.
-    ui.button
-      .findByTitle('Resize Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
-      'resizeNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
-      'getNodePools'
-    );
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.disabled');
-
-        cy.findByText(
-          'Current price: $12/month (1 node at $12/month each)'
-        ).should('be.visible');
-        cy.findByText(
-          'Resized price: $12/month (1 node at $12/month each)'
-        ).should('be.visible');
-
-        cy.findByLabelText('Add 1')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.focused().click();
-
-        cy.findByLabelText('Edit Quantity').should('have.value', '3');
-        cy.findByText(
-          'Resized price: $36/month (3 nodes at $12/month each)'
-        ).should('be.visible');
-
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait(['@resizeNodePool', '@getNodePools']);
-
-    // Confirm that new nodes are listed with correct info.
-    mockLinodes.forEach((mockLinode: Linode) => {
-      cy.findByText(mockLinode.label)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByText(mockLinode.ipv4[0]).should('be.visible');
-        });
-    });
-
-    // Click "Resize Pool" and decrease size back to 1 node.
-    ui.button
-      .findByTitle('Resize Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockUpdateNodePool(mockCluster.id, mockNodePoolInitial).as(
-      'resizeNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePools'
-    );
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('Subtract 1')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.focused().click();
-
-        cy.findByText(decreaseSizeWarning).should('be.visible');
-        cy.findByText(nodeSizeRecommendation).should('be.visible');
-
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait(['@resizeNodePool', '@getNodePools']);
-    cy.get('[data-qa-node-row]').should('have.length', 1);
-  });
-
-  it.only('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
-    const cluster = kubernetesClusterFactory.build({
-      tier: 'enterprise',
-    });
-    const account = accountFactory.build({
-      capabilities: ['Kubernetes Enterprise']
-    });
-    const type = linodeTypeFactory.build({ class: 'dedicated', label: 'Fake Plan' });
-
-    mockAppendFeatureFlags({
-      lkeEnterprise: {
-        enabled: true,
-        postLa: true,
-      },
-    });
-
-    mockGetAccount(account).as('getAccount');
-    mockGetCluster(cluster).as('getCluster');
-    mockGetClusterPools(cluster.id, []).as('getNodePools');
-    mockGetLinodeTypes([type]).as('getTypes');
-
-    cy.visitWithLogin(`/kubernetes/clusters/${cluster.id}`);
-
-    cy.wait(['@getCluster', '@getNodePools', '@getAccount']);
-
-    ui.button
-      .findByTitle('Add a Node Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    cy.wait('@getTypes');
-
-    // Selet a plan
-    cy.get(`[data-qa-plan-row="${type.label}"]`).within(() => {
-      // Increment nodes 3 times
-      cy.findByLabelText('Add 1').should('be.enabled').click();
-      cy.findByLabelText('Add 1').should('be.enabled').click();
-      cy.findByLabelText('Add 1').should('be.enabled').click();
-    });
-
-    interceptCreateNodePool(cluster.id).as('createNodePool')
-
-    ui.drawer.findByTitle(`Add a Node Pool: ${cluster.label}`).within(() => {
-      cy.findByLabelText('Update Strategy')
-        .should('be.visible')
-        .should('be.enabled')
-        .should('have.value', 'On Recycle Updates') // Should default to "On Recycle"
-        .click(); // Open the Autocomplete
-
-      ui.autocompletePopper
-        .findByTitle('Rolling Updates') // Select "Rolling Updates"
+      const mockClusterWithHA = {
+        ...mockCluster,
+        control_plane: {
+          high_availability: true,
+        },
+      };
+
+      const haUpgradeWarnings = [
+        'All nodes will be deleted and new nodes will be created to replace them.',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted.',
+        'This may take several minutes, as nodes will be replaced on a rolling basis.',
+      ];
+
+      const haUpgradeAgreement =
+        'I agree to the additional fee on my monthly bill and understand HA upgrade can only be reversed by deleting my cluster';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockUpdateCluster(mockCluster.id, mockClusterWithHA).as('updateCluster');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // Initiate high availability upgrade and agree to changes.
+      ui.button
+        .findByTitle('Upgrade to HA')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
-      // Verify the field's value actually changed
-      cy.findByLabelText('Update Strategy').should(
-        'have.value',
-        'Rolling Updates'
+      ui.dialog
+        .findByTitle('Upgrade to High Availability')
+        .should('be.visible')
+        .within(() => {
+          haUpgradeWarnings.forEach((warning: string) => {
+            cy.findByText(warning).should('be.visible');
+          });
+
+          cy.findByText(haUpgradeAgreement, { exact: false })
+            .should('be.visible')
+            .closest('label')
+            .click();
+
+          ui.button
+            .findByTitle('Upgrade to HA')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm toast message appears and HA Cluster chip is shown.
+      cy.wait('@updateCluster');
+      ui.toast.assertMessage('Enabled HA Control Plane');
+      cy.findByText('HA CLUSTER').should('be.visible');
+      cy.findByText('Upgrade to HA').should('not.exist');
+    });
+
+    /*
+     * - Confirms UI flow of upgrading Kubernetes version using mocked API requests.
+     * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
+     * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
+     */
+    it('can upgrade standard kubernetes version from the details page', () => {
+      const oldVersion = '1.25';
+      const newVersion = '1.26';
+
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: oldVersion,
+        tier: 'standard',
+      });
+
+      const mockClusterUpdated = {
+        ...mockCluster,
+        k8s_version: newVersion,
+      };
+
+      const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
+
+      const upgradeNotes = [
+        'This upgrades the control plane on your cluster',
+        'and ensures that any new worker nodes are created using the newer Kubernetes version.',
+        // Confirm that the old version and new version are both shown.
+        oldVersion,
+        newVersion,
+      ];
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // Confirm that upgrade prompt is shown.
+      cy.findByText(upgradePrompt).should('be.visible');
+      ui.button
+        .findByTitle('Upgrade Version')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.dialog
+        .findByTitle(
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
+        )
+        .should('be.visible')
+        .within(() => {
+          upgradeNotes.forEach((note: string) => {
+            cy.findAllByText(note, { exact: false }).should('be.visible');
+          });
+
+          ui.button
+            .findByTitle('Upgrade Version')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API response and assert toast message is shown.
+      cy.wait('@updateCluster');
+
+      // Verify the banner goes away because the version update has happened
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
+
+      const stepTwoDialogTitle = 'Upgrade complete';
+
+      ui.dialog
+        .findByTitle(stepTwoDialogTitle)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
+
+          cy.findByText(
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
+            { exact: false }
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Recycle All Nodes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Verify clicking the "Recycle All Nodes" makes an API call
+      cy.wait('@recycleAllNodes');
+
+      // Verify the upgrade dialog closed
+      cy.findByText(stepTwoDialogTitle).should('not.exist');
+
+      // Verify the banner is still gone after the flow
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      // Verify the version is correct after the update
+      cy.findByText(`Version ${newVersion}`);
+
+      ui.toast.findByMessage('Recycle started successfully.');
+    });
+
+    /*
+     * - Confirms UI flow of upgrading Kubernetes enterprise version using mocked API requests.
+     * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
+     * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
+     */
+    it('can upgrade enterprise kubernetes version from the details page', () => {
+      const oldVersion = '1.31.1+lke1';
+      const newVersion = '1.31.1+lke2';
+      const clusterRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-central',
+        })
+      );
+      mockGetRegions([clusterRegion]).as('getRegions');
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
+      // TODO LKE-E: Remove once feature is in GA
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
+      });
+
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: oldVersion,
+        region: clusterRegion.id,
+        tier: 'enterprise',
+      });
+
+      const mockClusterUpdated = {
+        ...mockCluster,
+        k8s_version: newVersion,
+      };
+
+      const upgradePrompt =
+        'A new version of Kubernetes is available (1.31.1+lke2).';
+
+      const upgradeNotes = [
+        'This upgrades the control plane on your cluster',
+        'Worker nodes within each node pool can then be upgraded separately.',
+        // Confirm that the old version and new version are both shown.
+        oldVersion,
+        newVersion,
+      ];
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetTieredKubernetesVersions('enterprise', [
+        { id: newVersion, tier: 'enterprise' },
+        { id: oldVersion, tier: 'enterprise' },
+      ]).as('getTieredVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getRegions',
+        '@getAccount',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
+
+      // Confirm that upgrade prompt is shown.
+      cy.findByText(upgradePrompt).should('be.visible');
+      ui.button
+        .findByTitle('Upgrade Version')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.dialog
+        .findByTitle(
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
+        )
+        .should('be.visible')
+        .within(() => {
+          upgradeNotes.forEach((note: string) => {
+            cy.findAllByText(note, { exact: false }).should('be.visible');
+          });
+
+          ui.button
+            .findByTitle('Upgrade Version')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API response and assert toast message is shown.
+      cy.wait('@updateCluster');
+
+      // Verify the banner is still gone after the flow
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      // Verify the second step in the banner is not shown for LKE-E.
+      const stepTwoDialogTitle = 'Upgrade complete';
+      cy.findByText(stepTwoDialogTitle).should('not.exist');
+
+      // Verify the version is correct after the update
+      cy.findByText(`Version ${newVersion}`);
+    });
+
+    /*
+     * - Confirms node, node pool, and cluster recycling UI flow using mocked API data.
+     * - Confirms that user is warned that recycling recreates nodes and may take a while.
+     */
+    it('can recycle nodes', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+
+      const mockKubeLinode = kubeLinodeFactory.build();
+
+      const mockNodePool = nodePoolFactory.build({
+        count: 1,
+        nodes: [mockKubeLinode],
+        type: 'g6-standard-1',
+      });
+
+      const mockLinode = linodeFactory.build({
+        id: mockKubeLinode.instance_id ?? undefined,
+        label: randomLabel(),
+      });
+
+      const recycleWarningSubstrings = [
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted',
+        'using local storage for important data is not common or recommended',
+      ];
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetLinodes([mockLinode]).as('getLinodes');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
+
+      // Recycle individual node.
+      ui.button
+        .findByTitle('Recycle')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockRecycleNode(mockCluster.id, mockKubeLinode.id).as('recycleNode');
+      ui.dialog
+        .findByTitle(`Recycle ${mockKubeLinode.id}?`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Delete and recreate this node.', {
+            exact: false,
+          }).should('be.visible');
+          recycleWarningSubstrings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
+          });
+
+          ui.button
+            .findByTitle('Recycle')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@recycleNode');
+      ui.toast.assertMessage('Node queued for recycling.');
+
+      ui.button
+        .findByTitle('Recycle Pool Nodes')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockRecycleNodePool(mockCluster.id, mockNodePool.id).as(
+        'recycleNodePool'
+      );
+      ui.dialog
+        .findByTitle('Recycle node pool?')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Delete and recreate all nodes in this node pool.', {
+            exact: false,
+          }).should('be.visible');
+          recycleWarningSubstrings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
+          });
+
+          ui.button
+            .findByTitle('Recycle Pool Nodes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@recycleNodePool');
+      ui.toast.assertMessage(
+        `Recycled all nodes in node pool ${mockNodePool.id}`
       );
 
       ui.button
-        .findByTitle('Add Pool')
-        .should('be.enabled')
+        .findByTitle('Recycle All Nodes')
         .should('be.visible')
+        .should('be.enabled')
         .click();
-    });
 
-    cy.wait('@createNodePool').then((intercept) => {
-      const payload = intercept.request.body;
-      expect(payload.update_strategy).to.equal('rolling_update');
-      expect(payload.type).to.equal(type.id);
-    });
-  });
+      mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
+      ui.dialog
+        .findByTitle('Recycle all nodes in cluster?')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Delete and recreate all nodes in this cluster.', {
+            exact: false,
+          }).should('be.visible');
+          recycleWarningSubstrings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
+          });
 
-  /*
-   * - Confirms kubeconfig reset UI flow using mocked API responses.
-   * - Confirms that user is warned of repercussions before resetting config.
-   * - Confirms that toast appears confirming kubeconfig has reset.
-   */
-  it('can reset kubeconfig', () => {
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-    });
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockResetKubeconfig(mockCluster.id).as('resetKubeconfig');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    const resetWarnings = [
-      'This will delete and regenerate the cluster’s Kubeconfig file',
-      'You will no longer be able to access this cluster via your previous Kubeconfig file',
-      'This action cannot be undone',
-    ];
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
-
-    // Click "Reset" button, proceed through confirmation dialog.
-    cy.findByText('Reset').should('be.visible').click({ force: true });
-    ui.dialog
-      .findByTitle('Reset Cluster Kubeconfig?')
-      .should('be.visible')
-      .within(() => {
-        resetWarnings.forEach((warning: string) => {
-          cy.findByText(warning, { exact: false }).should('be.visible');
+          ui.button
+            .findByTitle('Recycle All Cluster Nodes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-        ui.button
-          .findByTitle('Reset Kubeconfig')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+      cy.wait('@recycleAllNodes');
+      ui.toast.assertMessage('All cluster nodes queued for recycling');
+    });
+
+    /*
+     * - Confirms UI flow when enabling and disabling node pool autoscaling using mocked API responses.
+     * - Confirms that errors are shown when attempting to autoscale using invalid values based on the cluster tier.
+     * - Confirms that UI updates to reflect node pool autoscale state.
+     */
+    it('can toggle autoscaling on a standard tier cluster', () => {
+      const autoscaleMin = 3;
+      const autoscaleMax = 10;
+      const minWarning =
+        'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.';
+      const maxWarning = 'Maximum must be between 1 and 100 nodes.';
+
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+        tier: 'standard',
       });
 
-    // Wait for API response and assert toast message appears.
-    cy.wait('@resetKubeconfig');
-    ui.toast.assertMessage('Successfully reset Kubeconfig');
-  });
+      const mockNodePool = nodePoolFactory.build({
+        count: 1,
+        nodes: kubeLinodeFactory.buildList(1),
+        type: 'g6-standard-1',
+      });
 
-  /*
-   * - Confirms UI flow when adding and deleting node pools.
-   * - Confirms that user cannot delete a node pool when there is only 1 pool.
-   * - Confirms that details page updates to reflect change when pools are added or deleted.
-   */
-  it('can add and delete node pools', () => {
-    const clusterRegion = extendRegion(
-      regionFactory.build({
-        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-        id: 'us-east',
-      })
-    );
-    mockGetRegions([clusterRegion]).as('getRegions');
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-      region: clusterRegion.id,
+      const mockNodePoolAutoscale = {
+        ...mockNodePool,
+        autoscaler: {
+          enabled: true,
+          max: autoscaleMax,
+          min: autoscaleMin,
+        },
+      };
+
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Linode 2 GB Plan';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+      // TODO LKE-E: Remove once feature is in GA
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
+      });
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getVersions']);
+
+      // Click "Autoscale Pool", enable autoscaling, and set min and max values.
+      mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
+        'toggleAutoscale'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
+        'getNodePools'
+      );
+      ui.button
+        .findByTitle('Autoscale Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Autoscale').should('be.visible').click();
+
+          cy.findByLabelText('Min').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMin}`);
+
+          // Min is 3; max is 1 - invalid
+          cy.findByText(minWarning).should('be.visible');
+
+          cy.findByLabelText('Max').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type('101');
+
+          // Min is 3 (valid); max is 101 (invalid)
+          cy.findByText(minWarning).should('not.exist');
+          // Confirm max can't go above the max limit
+          cy.findByLabelText('Max').should('have.value', 100);
+
+          cy.findByLabelText('Max').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMax}`);
+
+          // Min is 3; max is 10 - both valid
+          cy.findByText(minWarning).should('not.exist');
+          cy.findByText(maxWarning).should('not.exist');
+
+          ui.button.findByTitle('Save Changes').should('be.visible').click();
+        });
+
+      // Wait for API response and confirm that UI updates to reflect autoscale.
+      cy.wait(['@toggleAutoscale', '@getNodePools']);
+      ui.toast.assertMessage(
+        `Autoscaling updated for Node Pool ${mockNodePool.id}.`
+      );
+      cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
+        'be.visible'
+      );
+
+      // Click "Autoscale Pool" again and disable autoscaling.
+      mockUpdateNodePool(mockCluster.id, mockNodePool).as('toggleAutoscale');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      ui.button
+        .findByTitle('Autoscale Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Autoscale').should('be.visible').click();
+
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API response and confirm that UI updates to reflect no autoscale.
+      cy.wait(['@toggleAutoscale', '@getNodePools']);
+      ui.toast.assertMessage(
+        `Autoscaling updated for Node Pool ${mockNodePool.id}.`
+      );
+      cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
+        'not.exist'
+      );
     });
 
-    const mockNodePool = nodePoolFactory.build({
-      type: 'g6-dedicated-4',
+    /*
+     * - Confirms UI flow when enabling and disabling node pool autoscaling using mocked API responses.
+     * - Confirms that errors are shown when attempting to autoscale using invalid values based on the cluster tier.
+     * - Confirms that UI updates to reflect node pool autoscale state.
+     */
+    it('can toggle autoscaling on an enterprise tier cluster', () => {
+      const autoscaleMin = 1;
+      const autoscaleMax = 499;
+
+      const minWarning =
+        'Minimum must be between 1 and 499 nodes and cannot be greater than Maximum.';
+      const maxWarning = 'Maximum must be between 1 and 500 nodes.';
+
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+        tier: 'enterprise',
+      });
+
+      const mockNodePool = nodePoolFactory.build({
+        count: 1,
+        nodes: kubeLinodeFactory.buildList(1),
+        type: 'g6-dedicated-4',
+      });
+
+      const mockNodePoolAutoscale = {
+        ...mockNodePool,
+        autoscaler: {
+          enabled: true,
+          max: autoscaleMax,
+          min: autoscaleMin,
+        },
+      };
+
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Dedicated 8 GB Plan';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+      // TODO LKE-E: Remove once feature is in GA
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
+      });
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getVersions']);
+
+      // Click "Autoscale Pool", enable autoscaling, and set min and max values.
+      mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
+        'toggleAutoscale'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
+        'getNodePools'
+      );
+      ui.button
+        .findByTitle('Autoscale Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Autoscale').should('be.visible').click();
+
+          // Try to set min above the max
+          cy.findByLabelText('Min').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMax + 1}`);
+          // Confirm min warning and disabled button
+          cy.findByText(minWarning).should('be.visible');
+          cy.findByLabelText('Max').should('have.value', autoscaleMax);
+          ui.button.findByTitle('Save Changes').should('be.disabled');
+
+          // Try to set min to 0
+          cy.findByLabelText('Min').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMin - 1}`);
+          // Confirm min can't go below the min limit
+          cy.findByLabelText('Min').should('have.value', 1);
+
+          // Try to set max above max limit
+          cy.findByLabelText('Max').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type('501');
+          // Confirm max can't go above the max limit
+          cy.findByLabelText('Max').should('have.value', 500);
+
+          // Min is 1, max is 500 - both valid
+          cy.findByText(minWarning).should('not.exist');
+          cy.findByText(maxWarning).should('not.exist');
+          ui.button.findByTitle('Save Changes').should('be.visible').click();
+        });
+
+      // Wait for API response and confirm that UI updates to reflect autoscale.
+      cy.wait(['@toggleAutoscale', '@getNodePools']);
+      ui.toast.assertMessage(
+        `Autoscaling updated for Node Pool ${mockNodePool.id}.`
+      );
+      cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
+        'be.visible'
+      );
     });
 
-    const mockNewNodePool = nodePoolFactory.build({
-      type: 'g6-dedicated-2',
-    });
+    /*
+     * - Confirms node pool resize UI flow using mocked API responses.
+     * - Confirms that pool size can be increased and decreased.
+     * - Confirms that user is warned when decreasing node pool size.
+     * - Confirms that UI updates to reflect new node pool size.
+     */
+    it('can resize pools', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
 
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
-    mockDeleteNodePool(mockCluster.id, mockNewNodePool.id).as('deleteNodePool');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
+      const mockNodePoolResized = nodePoolFactory.build({
+        count: 3,
+        nodes: kubeLinodeFactory.buildList(3),
+        type: 'g6-standard-1',
+      });
 
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getRegions', '@getCluster', '@getNodePools', '@getVersions']);
+      const mockNodePoolInitial = {
+        ...mockNodePoolResized,
+        count: 1,
+        nodes: [mockNodePoolResized.nodes[0]],
+      };
 
-    // Assert that initial node pool is shown on the page.
-    cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+      const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
+        (node: PoolNodeResponse): Linode => {
+          return linodeFactory.build({
+            id: node.instance_id ?? undefined,
+            ipv4: [randomIp()],
+          });
+        }
+      );
 
-    // "Delete Pool" button should be disabled when only 1 node pool exists.
-    ui.button
-      .findByTitle('Delete Pool')
-      .should('be.visible')
-      .should('be.disabled');
+      const mockNodePoolDrawerTitle = 'Resize Pool: Linode 2 GB Plan';
 
-    // Add a new node pool, select plan, submit form in drawer.
-    ui.button
-      .findByTitle('Add a Node Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+      const decreaseSizeWarning =
+        'Resizing to fewer nodes will delete random nodes from the pool.';
+      const nodeSizeRecommendation =
+        'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
 
-    mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
-      'getNodePools'
-    );
-    ui.drawer
-      .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Dedicated 4 GB')
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+        'getNodePools'
+      );
+      mockGetLinodes(mockLinodes).as('getLinodes');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
+
+      // Confirm that nodes are listed with correct details.
+      mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
+        cy.get(`tr[data-qa-node-row="${node.id}"]`)
+          .should('be.visible')
+          .within(() => {
+            const nodeLinode = mockLinodes.find(
+              (linode: Linode) => linode.id === node.instance_id
+            );
+            if (nodeLinode) {
+              cy.findByText(nodeLinode.label).should('be.visible');
+              cy.findByText(nodeLinode.ipv4[0]).should('be.visible');
+              ui.button
+                .findByTitle('Recycle')
+                .should('be.visible')
+                .should('be.enabled');
+            }
+          });
+      });
+
+      // Click "Resize Pool" and increase size to 3 nodes.
+      ui.button
+        .findByTitle('Resize Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
+        'resizeNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
+        'getNodePools'
+      );
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.disabled');
+
+          cy.findByText(
+            'Current price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
+
+          cy.findByLabelText('Add 1')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.focused().click();
+
+          cy.findByLabelText('Edit Quantity').should('have.value', '3');
+          cy.findByText(
+            'Resized price: $36/month (3 nodes at $12/month each)'
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@resizeNodePool', '@getNodePools']);
+
+      // Confirm that new nodes are listed with correct info.
+      mockLinodes.forEach((mockLinode: Linode) => {
+        cy.findByText(mockLinode.label)
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByLabelText('Add 1').should('be.visible').click();
+            cy.findByText(mockLinode.ipv4[0]).should('be.visible');
+          });
+      });
+
+      // Click "Resize Pool" and decrease size back to 1 node.
+      ui.button
+        .findByTitle('Resize Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolInitial).as(
+        'resizeNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+        'getNodePools'
+      );
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          cy.findByLabelText('Subtract 1')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.focused().click();
+
+          cy.findByText(decreaseSizeWarning).should('be.visible');
+          cy.findByText(nodeSizeRecommendation).should('be.visible');
+
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@resizeNodePool', '@getNodePools']);
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+
+    /*
+     * - Confirms kubeconfig reset UI flow using mocked API responses.
+     * - Confirms that user is warned of repercussions before resetting config.
+     * - Confirms that toast appears confirming kubeconfig has reset.
+     */
+    it('can reset kubeconfig', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockResetKubeconfig(mockCluster.id).as('resetKubeconfig');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      const resetWarnings = [
+        'This will delete and regenerate the cluster’s Kubeconfig file',
+        'You will no longer be able to access this cluster via your previous Kubeconfig file',
+        'This action cannot be undone',
+      ];
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // Click "Reset" button, proceed through confirmation dialog.
+      cy.findByText('Reset').should('be.visible').click({ force: true });
+      ui.dialog
+        .findByTitle('Reset Cluster Kubeconfig?')
+        .should('be.visible')
+        .within(() => {
+          resetWarnings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
           });
 
-        ui.button.findByTitle('Add pool').scrollIntoView();
+          ui.button
+            .findByTitle('Reset Kubeconfig')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-        ui.button
-          .findByTitle('Add pool')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Wait for API responses and confirm that both node pools are shown.
-    cy.wait(['@addNodePool', '@getNodePools']);
-    cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
-    cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('be.visible');
-
-    // Delete the newly added node pool.
-    cy.get(`[data-qa-node-pool-id="${mockNewNodePool.id}"]`)
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete Pool')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    ui.dialog
-      .findByTitle('Delete Node Pool?')
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Confirm node pool is deleted, original node pool still exists, and
-    // delete pool button is once again disabled.
-    cy.wait(['@deleteNodePool', '@getNodePools']);
-    cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
-    cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('not.exist');
-
-    ui.button
-      .findByTitle('Delete Pool')
-      .should('be.visible')
-      .should('be.disabled');
-  });
-
-  /*
-   * - Confirms LKE summary page updates to reflect new cluster name.
-   */
-  it('can rename cluster', () => {
-    const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
-    });
-    const mockNewCluster = kubernetesClusterFactory.build({
-      label: 'newClusterName',
+      // Wait for API response and assert toast message appears.
+      cy.wait('@resetKubeconfig');
+      ui.toast.assertMessage('Successfully reset Kubeconfig');
     });
 
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockUpdateCluster(mockCluster.id, mockNewCluster).as('updateCluster');
+    it('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
+      const cluster = kubernetesClusterFactory.build({
+        tier: 'enterprise',
+      });
+      const account = accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      });
+      const type = linodeTypeFactory.build({
+        class: 'dedicated',
+        label: 'Fake Plan',
+      });
 
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          postLa: true,
+        },
+      });
 
-    // LKE clusters can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
-    cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
-    cy.get('[data-qa-edit-field]').within(() => {
-      cy.findByTestId('textfield-input')
+      mockGetAccount(account).as('getAccount');
+      mockGetCluster(cluster).as('getCluster');
+      mockGetClusterPools(cluster.id, []).as('getNodePools');
+      mockGetLinodeTypes([type]).as('getTypes');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${cluster.id}`);
+
+      cy.wait(['@getCluster', '@getNodePools', '@getAccount']);
+
+      ui.button
+        .findByTitle('Add a Node Pool')
         .should('be.visible')
-        .should('have.value', mockCluster.label)
-        .clear();
-      cy.focused().type(`${mockNewCluster.label}{enter}`);
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@getTypes');
+
+      // Selet a plan
+      cy.get(`[data-qa-plan-row="${type.label}"]`).within(() => {
+        // Increment nodes 3 times
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+      });
+
+      interceptCreateNodePool(cluster.id).as('createNodePool');
+
+      ui.drawer.findByTitle(`Add a Node Pool: ${cluster.label}`).within(() => {
+        cy.findByLabelText('Update Strategy')
+          .should('be.visible')
+          .should('be.enabled')
+          .should('have.value', 'On Recycle Updates') // Should default to "On Recycle"
+          .click(); // Open the Autocomplete
+
+        ui.autocompletePopper
+          .findByTitle('Rolling Updates') // Select "Rolling Updates"
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Verify the field's value actually changed
+        cy.findByLabelText('Update Strategy').should(
+          'have.value',
+          'Rolling Updates'
+        );
+
+        ui.button
+          .findByTitle('Add Pool')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
+
+      cy.wait('@createNodePool').then((intercept) => {
+        const payload = intercept.request.body;
+        expect(payload.update_strategy).to.equal('rolling_update');
+        expect(payload.type).to.equal(type.id);
+      });
     });
 
-    cy.wait('@updateCluster');
+    /*
+     * - Confirms UI flow when adding and deleting node pools.
+     * - Confirms that user cannot delete a node pool when there is only 1 pool.
+     * - Confirms that details page updates to reflect change when pools are added or deleted.
+     */
+    it('can add and delete node pools', () => {
+      const clusterRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-east',
+        })
+      );
+      mockGetRegions([clusterRegion]).as('getRegions');
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+        region: clusterRegion.id,
+      });
 
-    cy.findAllByText(mockNewCluster.label).should('be.visible');
-    cy.findAllByText(mockCluster.label).should('not.exist');
+      const mockNodePool = nodePoolFactory.build({
+        type: 'g6-dedicated-4',
+      });
+
+      const mockNewNodePool = nodePoolFactory.build({
+        type: 'g6-dedicated-2',
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
+      mockDeleteNodePool(mockCluster.id, mockNewNodePool.id).as(
+        'deleteNodePool'
+      );
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getRegions', '@getCluster', '@getNodePools', '@getVersions']);
+
+      // Assert that initial node pool is shown on the page.
+      cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+
+      // "Delete Pool" button should be disabled when only 1 node pool exists.
+      ui.button
+        .findByTitle('Delete Pool')
+        .should('be.visible')
+        .should('be.disabled');
+
+      // Add a new node pool, select plan, submit form in drawer.
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
+        'getNodePools'
+      );
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Dedicated 4 GB')
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByLabelText('Add 1').should('be.visible').click();
+            });
+
+          ui.button.findByTitle('Add pool').scrollIntoView();
+
+          ui.button
+            .findByTitle('Add pool')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API responses and confirm that both node pools are shown.
+      cy.wait(['@addNodePool', '@getNodePools']);
+      cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+      cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('be.visible');
+
+      // Delete the newly added node pool.
+      cy.get(`[data-qa-node-pool-id="${mockNewNodePool.id}"]`)
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Delete Pool')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      ui.dialog
+        .findByTitle('Delete Node Pool?')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Delete')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm node pool is deleted, original node pool still exists, and
+      // delete pool button is once again disabled.
+      cy.wait(['@deleteNodePool', '@getNodePools']);
+      cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+      cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('not.exist');
+
+      ui.button
+        .findByTitle('Delete Pool')
+        .should('be.visible')
+        .should('be.disabled');
+    });
+
+    /*
+     * - Confirms LKE summary page updates to reflect new cluster name.
+     */
+    it('can rename cluster', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+      const mockNewCluster = kubernetesClusterFactory.build({
+        label: 'newClusterName',
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockNewCluster).as('updateCluster');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // LKE clusters can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
+      cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
+      cy.get('[data-qa-edit-field]').within(() => {
+        cy.findByTestId('textfield-input')
+          .should('be.visible')
+          .should('have.value', mockCluster.label)
+          .clear();
+        cy.focused().type(`${mockNewCluster.label}{enter}`);
+      });
+
+      cy.wait('@updateCluster');
+
+      cy.findAllByText(mockNewCluster.label).should('be.visible');
+      cy.findAllByText(mockCluster.label).should('not.exist');
+    });
+
+    /*
+     * - Confirms error message shows when the API request fails.
+     */
+    it('can handle API errors when renaming cluster', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+      const mockErrorCluster = kubernetesClusterFactory.build({
+        label: 'errorClusterName',
+      });
+      const mockErrorMessage = 'API request fails';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateClusterError(mockCluster.id, mockErrorMessage).as(
+        'updateClusterError'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // LKE cluster can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
+      cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
+      cy.get('[data-qa-edit-field]').within(() => {
+        cy.findByTestId('textfield-input')
+          .should('be.visible')
+          .should('have.value', mockCluster.label)
+          .clear();
+        cy.focused().type(`${mockErrorCluster.label}{enter}`);
+      });
+
+      // Error message shows when API request fails.
+      cy.wait('@updateClusterError');
+      cy.findAllByText(mockErrorMessage).should('be.visible');
+    });
   });
 
-  /*
-   * - Confirms error message shows when the API request fails.
-   */
-  it('can handle API errors when renaming cluster', () => {
+  it('can add and delete node pool tags', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
-    const mockErrorCluster = kubernetesClusterFactory.build({
-      label: 'errorClusterName',
-    });
-    const mockErrorMessage = 'API request fails';
 
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockUpdateClusterError(mockCluster.id, mockErrorMessage).as(
-      'updateClusterError'
+    const mockType = linodeTypeFactory.build();
+
+    const mockNodePoolInstances = buildArray(3, () =>
+      linodeFactory.build({ label: randomLabel() })
     );
 
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+    const mockNodes = mockNodePoolInstances.map((linode, i) =>
+      kubeLinodeFactory.build({
+        instance_id: linode.id,
+        status: 'ready',
+      })
+    );
 
-    // LKE cluster can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
-    cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
-    cy.get('[data-qa-edit-field]').within(() => {
-      cy.findByTestId('textfield-input')
-        .should('be.visible')
-        .should('have.value', mockCluster.label)
-        .clear();
-      cy.focused().type(`${mockErrorCluster.label}{enter}`);
+    const mockNodePoolNoTags = nodePoolFactory.build({
+      id: 1,
+      nodes: mockNodes,
+      type: mockType.id,
     });
 
-    // Error message shows when API request fails.
-    cy.wait('@updateClusterError');
-    cy.findAllByText(mockErrorMessage).should('be.visible');
-  });
-});
+    const mockNodePoolWithTags = {
+      ...mockNodePoolNoTags,
+      tags: ['test-tag'],
+    };
 
-it('can add and delete node pool tags', () => {
-  const mockCluster = kubernetesClusterFactory.build({
-    k8s_version: latestKubernetesVersion,
-  });
-
-  const mockType = linodeTypeFactory.build();
-
-  const mockNodePoolInstances = buildArray(3, () =>
-    linodeFactory.build({ label: randomLabel() })
-  );
-
-  const mockNodes = mockNodePoolInstances.map((linode, i) =>
-    kubeLinodeFactory.build({
-      instance_id: linode.id,
-      status: 'ready',
-    })
-  );
-
-  const mockNodePoolNoTags = nodePoolFactory.build({
-    id: 1,
-    nodes: mockNodes,
-    type: mockType.id,
-  });
-
-  const mockNodePoolWithTags = {
-    ...mockNodePoolNoTags,
-    tags: ['test-tag'],
-  };
-
-  mockGetLinodes(mockNodePoolInstances);
-  mockGetLinodeType(linodeTypeFactory.build({ id: mockType.id })).as('getType');
-  mockGetCluster(mockCluster).as('getCluster');
-  mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
-    'getNodePoolsNoTags'
-  );
-  mockGetKubernetesVersions().as('getVersions');
-  mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
-    'getControlPlaneAcl'
-  );
-  mockUpdateNodePool(mockCluster.id, mockNodePoolWithTags).as('addTag');
-  mockGetDashboardUrl(mockCluster.id);
-  mockGetApiEndpoints(mockCluster.id);
-
-  cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-  cy.wait([
-    '@getCluster',
-    '@getNodePoolsNoTags',
-    '@getVersions',
-    '@getType',
-    '@getControlPlaneAcl',
-  ]);
-
-  // Confirm that Linode instance info has finished loading before attempting
-  // to interact with the tag button.
-  mockNodePoolInstances.forEach((linode) => {
-    cy.findByText(linode.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText('Running').should('be.visible');
-      });
-  });
-
-  cy.get(`[data-qa-node-pool-id="${mockNodePoolNoTags.id}"]`).within(() => {
-    ui.button.findByTitle('Add a tag').should('be.visible').click();
-
-    cy.findByLabelText('Create or Select a Tag')
-      .should('be.visible')
-      .type(`${mockNodePoolWithTags.tags[0]}`);
-
-    ui.autocompletePopper
-      .findByTitle(`Create "${mockNodePoolWithTags.tags[0]}"`)
-      .scrollIntoView()
-      .should('be.visible')
-      .click();
-  });
-
-  mockGetClusterPools(mockCluster.id, [mockNodePoolWithTags]).as(
-    'getNodePoolsWithTags'
-  );
-
-  cy.wait(['@addTag', '@getNodePoolsWithTags']);
-
-  mockUpdateNodePool(mockCluster.id, mockNodePoolNoTags).as('deleteTag');
-  mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
-    'getNodePoolsNoTags'
-  );
-
-  // Delete the newly added node pool tag.
-  cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
-    .should('be.visible')
-    .within(() => {
-      cy.get('[data-qa-delete-tag="true"]').should('be.visible').click();
-    });
-
-  cy.wait(['@deleteTag', '@getNodePoolsNoTags']);
-
-  cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`).should('not.exist');
-});
-
-/*
- * - Confirms Labels and Taints button exists for a node pool.
- * - Confirms Labels and Taints drawer displays the expected Labels and Taints.
- * - Confirms Labels and Taints can be deleted from a node pool.
- * - Confirms that Labels and Taints can be added to a node pool.
- * - Confirms validation and errors are handled gracefully.
- */
-describe('confirms labels and taints functionality for a node pool', () => {
-  const mockCluster = kubernetesClusterFactory.build({
-    k8s_version: latestKubernetesVersion,
-  });
-
-  const mockType = linodeTypeFactory.build({ label: 'Linode 2 GB' });
-
-  const mockNodePoolInstances = buildArray(1, () =>
-    linodeFactory.build({ label: randomLabel() })
-  );
-
-  const mockNodes = mockNodePoolInstances.map((linode, i) =>
-    kubeLinodeFactory.build({
-      instance_id: linode.id,
-      status: 'ready',
-    })
-  );
-
-  const mockNodePoolInitial = nodePoolFactory.build({
-    id: 1,
-    labels: {
-      ['example.com/my-app']: 'teams',
-    },
-    nodes: mockNodes,
-    taints: [
-      {
-        effect: 'NoSchedule',
-        key: 'example.com/my-app',
-        value: 'teamA',
-      },
-    ],
-    type: mockType.id,
-  });
-
-  const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
-
-  beforeEach(() => {
     mockGetLinodes(mockNodePoolInstances);
-    mockGetLinodeType(mockType).as('getType');
+    mockGetLinodeType(linodeTypeFactory.build({ id: mockType.id })).as(
+      'getType'
+    );
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePools'
+    mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
+      'getNodePoolsNoTags'
     );
     mockGetKubernetesVersions().as('getVersions');
     mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
       'getControlPlaneAcl'
     );
+    mockUpdateNodePool(mockCluster.id, mockNodePoolWithTags).as('addTag');
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
-  });
-
-  it('can delete labels and taints', () => {
-    const mockNodePoolUpdated = nodePoolFactory.build({
-      id: 1,
-      labels: {},
-      nodes: mockNodes,
-      taints: [],
-      type: mockType.id,
-    });
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait([
       '@getCluster',
-      '@getNodePools',
+      '@getNodePoolsNoTags',
       '@getVersions',
       '@getType',
       '@getControlPlaneAcl',
     ]);
 
-    mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
-      'updateNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
-      'getNodePoolsUpdated'
+    // Confirm that Linode instance info has finished loading before attempting
+    // to interact with the tag button.
+    mockNodePoolInstances.forEach((linode) => {
+      cy.findByText(linode.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Running').should('be.visible');
+        });
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePoolNoTags.id}"]`).within(() => {
+      ui.button.findByTitle('Add a tag').should('be.visible').click();
+
+      cy.findByLabelText('Create or Select a Tag')
+        .should('be.visible')
+        .type(`${mockNodePoolWithTags.tags[0]}`);
+
+      ui.autocompletePopper
+        .findByTitle(`Create "${mockNodePoolWithTags.tags[0]}"`)
+        .scrollIntoView()
+        .should('be.visible')
+        .click();
+    });
+
+    mockGetClusterPools(mockCluster.id, [mockNodePoolWithTags]).as(
+      'getNodePoolsWithTags'
     );
 
-    // Click "Labels and Taints" button and confirm drawer contents.
-    ui.button
-      .findByTitle('Labels and Taints')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    cy.wait(['@addTag', '@getNodePoolsWithTags']);
 
-    ui.drawer
-      .findByTitle(mockDrawerTitle)
+    mockUpdateNodePool(mockCluster.id, mockNodePoolNoTags).as('deleteTag');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
+      'getNodePoolsNoTags'
+    );
+
+    // Delete the newly added node pool tag.
+    cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
       .should('be.visible')
       .within(() => {
-        // Confirm drawer opens with the correct CTAs.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.disabled');
-
-        ui.button
-          .findByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled');
-
-        // Confirm that the Labels table exists and is populated with the correct details.
-        Object.entries(mockNodePoolInitial.labels).forEach(([key, value]) => {
-          cy.get(`tr[data-qa-label-row="${key}"]`)
-            .should('be.visible')
-            .within(() => {
-              cy.findByText(`${key}: ${value}`).should('be.visible');
-
-              // Confirm delete button exists, then click it.
-              ui.button
-                .findByAttribute('aria-label', `Remove ${key}: ${value}`)
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-
-              // Confirm the label is no longer visible.
-              cy.findByText(`${key}: ${value}`).should('not.exist');
-            });
-        });
-
-        // Confirm that the Taints table exists and is populated with the correct details.
-        mockNodePoolInitial.taints.forEach((taint: Taint) => {
-          cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
-            .should('be.visible')
-            .within(() => {
-              cy.findByText(`${taint.key}: ${taint.value}`).should(
-                'be.visible'
-              );
-              cy.findByText(taint.effect).should('be.visible');
-
-              // Confirm delete button exists, then click it.
-              ui.button
-                .findByAttribute(
-                  'aria-label',
-                  `Remove ${taint.key}: ${taint.value}`
-                )
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-
-              // Confirm the taint is no longer visible.
-              cy.findByText(`${taint.key}: ${taint.value}`).should('not.exist');
-            });
-        });
-
-        // Confirm empty state text displays for both empty tables.
-        cy.findByText('No labels').should('be.visible');
-        cy.findByText('No taints').should('be.visible');
-
-        // Confirm form can be submitted.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        cy.get('[data-qa-delete-tag="true"]').should('be.visible').click();
       });
 
-    // Confirm request has the correct data.
-    cy.wait('@updateNodePool').then((xhr) => {
-      const data = xhr.response?.body;
-      if (data) {
-        const actualLabels: Label = data.labels;
-        const actualTaints: Taint[] = data.taints;
+    cy.wait(['@deleteTag', '@getNodePoolsNoTags']);
 
-        expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
-        expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
-      }
-    });
-
-    cy.wait('@getNodePoolsUpdated');
-
-    // Confirm drawer closes.
-    cy.findByText(mockDrawerTitle).should('not.exist');
+    cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`).should(
+      'not.exist'
+    );
   });
 
-  it('can add labels and taints', () => {
-    const mockNewSimpleLabel = 'my_label.-key: my_label.-value';
-    const mockNewDNSLabel = 'my_label-key.io/app: my_label.-value';
-    const mockNewTaint: Taint = {
-      effect: 'NoSchedule',
-      key: 'my_taint.-key',
-      value: 'my_taint.-value',
-    };
-    const mockNewDNSTaint: Taint = {
-      effect: 'NoSchedule',
-      key: 'my_taint-key.io/app',
-      value: 'my_taint.-value',
-    };
-    const mockNodePoolUpdated = nodePoolFactory.build({
+  /*
+   * - Confirms Labels and Taints button exists for a node pool.
+   * - Confirms Labels and Taints drawer displays the expected Labels and Taints.
+   * - Confirms Labels and Taints can be deleted from a node pool.
+   * - Confirms that Labels and Taints can be added to a node pool.
+   * - Confirms validation and errors are handled gracefully.
+   */
+  describe('confirms labels and taints functionality for a node pool', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockType = linodeTypeFactory.build({ label: 'Linode 2 GB' });
+
+    const mockNodePoolInstances = buildArray(1, () =>
+      linodeFactory.build({ label: randomLabel() })
+    );
+
+    const mockNodes = mockNodePoolInstances.map((linode, i) =>
+      kubeLinodeFactory.build({
+        instance_id: linode.id,
+        status: 'ready',
+      })
+    );
+
+    const mockNodePoolInitial = nodePoolFactory.build({
       id: 1,
       labels: {
-        'my_label-key': 'my_label.-value',
-        'my_label-key.io/app': 'my_label.-value',
+        ['example.com/my-app']: 'teams',
       },
       nodes: mockNodes,
-      taints: [mockNewTaint, mockNewDNSTaint],
+      taints: [
+        {
+          effect: 'NoSchedule',
+          key: 'example.com/my-app',
+          value: 'teamA',
+        },
+      ],
       type: mockType.id,
     });
 
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getCluster',
-      '@getNodePools',
-      '@getVersions',
-      '@getType',
-      '@getControlPlaneAcl',
-    ]);
+    const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
 
-    mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
-      'updateNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
-      'getNodePoolsUpdated'
-    );
+    beforeEach(() => {
+      mockGetLinodes(mockNodePoolInstances);
+      mockGetLinodeType(mockType).as('getType');
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+        'getNodePools'
+      );
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
+        'getControlPlaneAcl'
+      );
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+    });
 
-    // Click "Labels and Taints" button and confirm drawer contents.
-    ui.button
-      .findByTitle('Labels and Taints')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    it('can delete labels and taints', () => {
+      const mockNodePoolUpdated = nodePoolFactory.build({
+        id: 1,
+        labels: {},
+        nodes: mockNodes,
+        taints: [],
+        type: mockType.id,
+      });
 
-    ui.drawer
-      .findByTitle(mockDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        // Confirm drawer opens with the correct CTAs.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.disabled');
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getType',
+        '@getControlPlaneAcl',
+      ]);
 
-        ui.button
-          .findByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled');
+      mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+        'updateNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
+        'getNodePoolsUpdated'
+      );
 
-        // Add a label:
+      // Click "Labels and Taints" button and confirm drawer contents.
+      ui.button
+        .findByTitle('Labels and Taints')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-        ui.button
-          .findByTitle('Add Label')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm form button is disabled and label form displays with the correct CTAs.
-        ui.button
-          .findByTitle('Add Label')
-          .should('be.visible')
-          .should('be.disabled');
-
-        // Confirm labels with simple keys and DNS subdomain keys can be added.
-        [mockNewSimpleLabel, mockNewDNSLabel].forEach((newLabel, index) => {
-          // Confirm form adds a valid new label.
-          cy.findByLabelText('Label').click();
-          cy.focused().type(newLabel);
-
-          ui.button.findByTitle('Add').click();
-
-          // Confirm add form closes and Add Label button is re-enabled.
-          cy.findByLabelText('Label').should('not.exist');
-          cy.findByLabelText('Add').should('not.exist');
-          ui.button.findByTitle('Add Label').should('be.enabled');
-
-          // Confirm new label is visible in table.
-          cy.get(`tr[data-qa-label-row="${newLabel.split(':')[0]}"]`)
+      ui.drawer
+        .findByTitle(mockDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          // Confirm drawer opens with the correct CTAs.
+          ui.button
+            .findByTitle('Save Changes')
             .should('be.visible')
-            .within(() => {
-              cy.findByText(newLabel).should('be.visible');
-            });
+            .should('be.disabled');
 
-          if (index === 0) {
-            ui.button.findByTitle('Add Label').click();
-          }
+          ui.button
+            .findByTitle('Cancel')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // Confirm that the Labels table exists and is populated with the correct details.
+          Object.entries(mockNodePoolInitial.labels).forEach(([key, value]) => {
+            cy.get(`tr[data-qa-label-row="${key}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(`${key}: ${value}`).should('be.visible');
+
+                // Confirm delete button exists, then click it.
+                ui.button
+                  .findByAttribute('aria-label', `Remove ${key}: ${value}`)
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+
+                // Confirm the label is no longer visible.
+                cy.findByText(`${key}: ${value}`).should('not.exist');
+              });
+          });
+
+          // Confirm that the Taints table exists and is populated with the correct details.
+          mockNodePoolInitial.taints.forEach((taint: Taint) => {
+            cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(`${taint.key}: ${taint.value}`).should(
+                  'be.visible'
+                );
+                cy.findByText(taint.effect).should('be.visible');
+
+                // Confirm delete button exists, then click it.
+                ui.button
+                  .findByAttribute(
+                    'aria-label',
+                    `Remove ${taint.key}: ${taint.value}`
+                  )
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+
+                // Confirm the taint is no longer visible.
+                cy.findByText(`${taint.key}: ${taint.value}`).should(
+                  'not.exist'
+                );
+              });
+          });
+
+          // Confirm empty state text displays for both empty tables.
+          cy.findByText('No labels').should('be.visible');
+          cy.findByText('No taints').should('be.visible');
+
+          // Confirm form can be submitted.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-        // Add a taint:
+      // Confirm request has the correct data.
+      cy.wait('@updateNodePool').then((xhr) => {
+        const data = xhr.response?.body;
+        if (data) {
+          const actualLabels: Label = data.labels;
+          const actualTaints: Taint[] = data.taints;
 
-        ui.button
-          .findByTitle('Add Taint')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+          expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
+          expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
+        }
+      });
 
-        // Confirm form button is disabled and label form displays with the correct CTAs.
-        ui.button.findByTitle('Add Taint').should('be.disabled');
+      cy.wait('@getNodePoolsUpdated');
 
-        // Confirm taints with simple keys and DNS subdomain keys can be added.
-        [mockNewTaint, mockNewDNSTaint].forEach((newTaint, index) => {
-          // Confirm form adds a valid new taint.
-          cy.findByLabelText('Taint').click();
-          cy.focused().type(`${newTaint.key}: ${newTaint.value}`);
+      // Confirm drawer closes.
+      cy.findByText(mockDrawerTitle).should('not.exist');
+    });
 
-          ui.autocomplete.findByLabel('Effect').click();
+    it('can add labels and taints', () => {
+      const mockNewSimpleLabel = 'my_label.-key: my_label.-value';
+      const mockNewDNSLabel = 'my_label-key.io/app: my_label.-value';
+      const mockNewTaint: Taint = {
+        effect: 'NoSchedule',
+        key: 'my_taint.-key',
+        value: 'my_taint.-value',
+      };
+      const mockNewDNSTaint: Taint = {
+        effect: 'NoSchedule',
+        key: 'my_taint-key.io/app',
+        value: 'my_taint.-value',
+      };
+      const mockNodePoolUpdated = nodePoolFactory.build({
+        id: 1,
+        labels: {
+          'my_label-key': 'my_label.-value',
+          'my_label-key.io/app': 'my_label.-value',
+        },
+        nodes: mockNodes,
+        taints: [mockNewTaint, mockNewDNSTaint],
+        type: mockType.id,
+      });
 
-          ui.autocompletePopper
-            .findByTitle(newTaint.effect)
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getType',
+        '@getControlPlaneAcl',
+      ]);
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+        'updateNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
+        'getNodePoolsUpdated'
+      );
+
+      // Click "Labels and Taints" button and confirm drawer contents.
+      ui.button
+        .findByTitle('Labels and Taints')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          // Confirm drawer opens with the correct CTAs.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.disabled');
+
+          ui.button
+            .findByTitle('Cancel')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // Add a label:
+
+          ui.button
+            .findByTitle('Add Label')
             .should('be.visible')
             .should('be.enabled')
             .click();
 
-          ui.button.findByTitle('Add').click();
-
-          // Confirm add form closes and Add Taint button is re-enabled.
-          cy.findByLabelText('Taint').should('not.exist');
-          cy.findByLabelText('Add').should('not.exist');
-          ui.button.findByTitle('Add Taint').should('be.enabled');
-
-          // Confirm new taint is visible in table.
-          cy.get(`tr[data-qa-taint-row="${newTaint.key}"]`)
+          // Confirm form button is disabled and label form displays with the correct CTAs.
+          ui.button
+            .findByTitle('Add Label')
             .should('be.visible')
-            .within(() => {
-              cy.findByText(`${newTaint.key}: ${newTaint.value}`).should(
-                'be.visible'
-              );
-              cy.findByText(newTaint.effect).should('be.visible');
-            });
+            .should('be.disabled');
 
-          if (index === 0) {
-            ui.button.findByTitle('Add Taint').click();
-          }
+          // Confirm labels with simple keys and DNS subdomain keys can be added.
+          [mockNewSimpleLabel, mockNewDNSLabel].forEach((newLabel, index) => {
+            // Confirm form adds a valid new label.
+            cy.findByLabelText('Label').click();
+            cy.focused().type(newLabel);
+
+            ui.button.findByTitle('Add').click();
+
+            // Confirm add form closes and Add Label button is re-enabled.
+            cy.findByLabelText('Label').should('not.exist');
+            cy.findByLabelText('Add').should('not.exist');
+            ui.button.findByTitle('Add Label').should('be.enabled');
+
+            // Confirm new label is visible in table.
+            cy.get(`tr[data-qa-label-row="${newLabel.split(':')[0]}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(newLabel).should('be.visible');
+              });
+
+            if (index === 0) {
+              ui.button.findByTitle('Add Label').click();
+            }
+          });
+
+          // Add a taint:
+
+          ui.button
+            .findByTitle('Add Taint')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm form button is disabled and label form displays with the correct CTAs.
+          ui.button.findByTitle('Add Taint').should('be.disabled');
+
+          // Confirm taints with simple keys and DNS subdomain keys can be added.
+          [mockNewTaint, mockNewDNSTaint].forEach((newTaint, index) => {
+            // Confirm form adds a valid new taint.
+            cy.findByLabelText('Taint').click();
+            cy.focused().type(`${newTaint.key}: ${newTaint.value}`);
+
+            ui.autocomplete.findByLabel('Effect').click();
+
+            ui.autocompletePopper
+              .findByTitle(newTaint.effect)
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.button.findByTitle('Add').click();
+
+            // Confirm add form closes and Add Taint button is re-enabled.
+            cy.findByLabelText('Taint').should('not.exist');
+            cy.findByLabelText('Add').should('not.exist');
+            ui.button.findByTitle('Add Taint').should('be.enabled');
+
+            // Confirm new taint is visible in table.
+            cy.get(`tr[data-qa-taint-row="${newTaint.key}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(`${newTaint.key}: ${newTaint.value}`).should(
+                  'be.visible'
+                );
+                cy.findByText(newTaint.effect).should('be.visible');
+              });
+
+            if (index === 0) {
+              ui.button.findByTitle('Add Taint').click();
+            }
+          });
+
+          // Confirm form can be submitted.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-        // Confirm form can be submitted.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+      // Confirm request has the correct data.
+      cy.wait('@updateNodePool').then((xhr) => {
+        const data = xhr.response?.body;
+        if (data) {
+          const actualLabels: Label = data.labels;
+          const actualTaints: Taint[] = data.taints;
+          console.log({ actualTaints }, { actualLabels });
+
+          expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
+          expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
+        }
       });
 
-    // Confirm request has the correct data.
-    cy.wait('@updateNodePool').then((xhr) => {
-      const data = xhr.response?.body;
-      if (data) {
-        const actualLabels: Label = data.labels;
-        const actualTaints: Taint[] = data.taints;
-        console.log({ actualTaints }, { actualLabels });
+      cy.wait('@getNodePoolsUpdated');
 
-        expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
-        expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
-      }
+      // Confirm drawer closes.
+      cy.findByText(mockDrawerTitle).should('not.exist');
     });
 
-    cy.wait('@getNodePoolsUpdated');
+    it('can handle validation and errors for labels and taints', () => {
+      const invalidDNSSubdomainLabel = `my-app/${randomString(129)}`;
+      const invalidLabels = [
+        'label with spaces',
+        'key-and-no-value',
+        randomString(64),
+        invalidDNSSubdomainLabel,
+        'valid-key: invalid value',
+        '%invalid-character: value',
+        'example.com/myapp: %invalid-character',
+        'kubernetes.io: value',
+        'linode.com: value',
+      ];
 
-    // Confirm drawer closes.
-    cy.findByText(mockDrawerTitle).should('not.exist');
-  });
+      const invalidTaintKeys = [
+        randomString(254),
+        'key with spaces',
+        '!invalid-characters',
+      ];
+      const invalidTaintValues = [
+        `key:${randomString(64)}`,
+        'key: kubernetes.io',
+        'key: linode.com',
+        'key:value with spaces',
+      ];
 
-  it('can handle validation and errors for labels and taints', () => {
-    const invalidDNSSubdomainLabel = `my-app/${randomString(129)}`;
-    const invalidLabels = [
-      'label with spaces',
-      'key-and-no-value',
-      randomString(64),
-      invalidDNSSubdomainLabel,
-      'valid-key: invalid value',
-      '%invalid-character: value',
-      'example.com/myapp: %invalid-character',
-      'kubernetes.io: value',
-      'linode.com: value',
-    ];
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getType',
+        '@getControlPlaneAcl',
+      ]);
+      const mockErrorMessage = 'API Error';
 
-    const invalidTaintKeys = [
-      randomString(254),
-      'key with spaces',
-      '!invalid-characters',
-    ];
-    const invalidTaintValues = [
-      `key:${randomString(64)}`,
-      'key: kubernetes.io',
-      'key: linode.com',
-      'key:value with spaces',
-    ];
+      mockUpdateNodePoolError(
+        mockCluster.id,
+        mockNodePoolInitial,
+        mockErrorMessage
+      ).as('updateNodePoolError');
 
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getCluster',
-      '@getNodePools',
-      '@getVersions',
-      '@getType',
-      '@getControlPlaneAcl',
-    ]);
-    const mockErrorMessage = 'API Error';
+      // Click "Labels and Taints" button and confirm drawer contents.
+      ui.button
+        .findByTitle('Labels and Taints')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-    mockUpdateNodePoolError(
-      mockCluster.id,
-      mockNodePoolInitial,
-      mockErrorMessage
-    ).as('updateNodePoolError');
+      ui.drawer
+        .findByTitle(mockDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          ui.button.findByTitle('Add Label').click();
 
-    // Click "Labels and Taints" button and confirm drawer contents.
-    ui.button
-      .findByTitle('Labels and Taints')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle(mockDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        ui.button.findByTitle('Add Label').click();
-
-        // Try to submit without adding a label.
-        ui.button.findByTitle('Add').click();
-
-        // Confirm error validation for invalid label input.
-        cy.findByText('Labels must be valid key-value pairs.').should(
-          'be.visible'
-        );
-
-        invalidLabels.forEach((invalidLabel) => {
-          cy.findByLabelText('Label').click();
-          cy.focused().clear();
-          cy.focused().type(invalidLabel);
-
-          // Try to submit with invalid label.
+          // Try to submit without adding a label.
           ui.button.findByTitle('Add').click();
 
           // Confirm error validation for invalid label input.
           cy.findByText('Labels must be valid key-value pairs.').should(
             'be.visible'
           );
-        });
 
-        // Submit a valid label to enable the 'Save Changes' button.
-        cy.findByLabelText('Label').click();
-        cy.focused().clear();
-        cy.focused().type('mockKey: mockValue');
+          invalidLabels.forEach((invalidLabel) => {
+            cy.findByLabelText('Label').click();
+            cy.focused().clear();
+            cy.focused().type(invalidLabel);
 
-        ui.button.findByTitle('Add').click();
+            // Try to submit with invalid label.
+            ui.button.findByTitle('Add').click();
 
-        ui.button.findByTitle('Add Taint').click();
+            // Confirm error validation for invalid label input.
+            cy.findByText('Labels must be valid key-value pairs.').should(
+              'be.visible'
+            );
+          });
 
-        // Try to submit without adding a taint.
-        ui.button.findByTitle('Add').click();
-
-        // Confirm error validation for invalid taint input.
-        cy.findByText('Key is required.').should('be.visible');
-
-        invalidTaintKeys.forEach((invalidTaintKey, index) => {
-          cy.findByLabelText('Taint').click();
+          // Submit a valid label to enable the 'Save Changes' button.
+          cy.findByLabelText('Label').click();
           cy.focused().clear();
-          cy.focused().type(invalidTaintKey);
+          cy.focused().type('mockKey: mockValue');
 
-          // Try to submit taint with invalid key.
           ui.button.findByTitle('Add').click();
 
-          if (index === 0) {
-            cy.findByText('Key must be between 1 and 253 characters.').should(
-              'be.visible'
-            );
-          } else {
-            cy.findByText(/Key must start with a letter or number/).should(
-              'be.visible'
-            );
-          }
-        });
+          ui.button.findByTitle('Add Taint').click();
 
-        invalidTaintValues.forEach((invalidTaintValue, index) => {
-          cy.findByLabelText('Taint').click();
-          cy.focused().clear();
-          cy.focused().type(invalidTaintValue);
-
-          // Try to submit taint with invalid value.
+          // Try to submit without adding a taint.
           ui.button.findByTitle('Add').click();
 
-          if (index === 0) {
-            cy.findByText('Value must be between 0 and 63 characters.').should(
-              'be.visible'
-            );
-          } else if (index === invalidTaintValues.length - 1) {
-            cy.findByText(/Value must start with a letter or number/).should(
-              'be.visible'
-            );
-          } else {
-            cy.findByText(
-              'Value cannot be "kubernetes.io" or "linode.com".'
-            ).should('be.visible');
-          }
+          // Confirm error validation for invalid taint input.
+          cy.findByText('Key is required.').should('be.visible');
+
+          invalidTaintKeys.forEach((invalidTaintKey, index) => {
+            cy.findByLabelText('Taint').click();
+            cy.focused().clear();
+            cy.focused().type(invalidTaintKey);
+
+            // Try to submit taint with invalid key.
+            ui.button.findByTitle('Add').click();
+
+            if (index === 0) {
+              cy.findByText('Key must be between 1 and 253 characters.').should(
+                'be.visible'
+              );
+            } else {
+              cy.findByText(/Key must start with a letter or number/).should(
+                'be.visible'
+              );
+            }
+          });
+
+          invalidTaintValues.forEach((invalidTaintValue, index) => {
+            cy.findByLabelText('Taint').click();
+            cy.focused().clear();
+            cy.focused().type(invalidTaintValue);
+
+            // Try to submit taint with invalid value.
+            ui.button.findByTitle('Add').click();
+
+            if (index === 0) {
+              cy.findByText(
+                'Value must be between 0 and 63 characters.'
+              ).should('be.visible');
+            } else if (index === invalidTaintValues.length - 1) {
+              cy.findByText(/Value must start with a letter or number/).should(
+                'be.visible'
+              );
+            } else {
+              cy.findByText(
+                'Value cannot be "kubernetes.io" or "linode.com".'
+              ).should('be.visible');
+            }
+          });
+
+          ui.button.findByAttribute('data-testid', 'cancel-taint').click();
+
+          // Try to submit form, but mock an API error.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-        ui.button.findByAttribute('data-testid', 'cancel-taint').click();
-
-        // Try to submit form, but mock an API error.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Confirm error message shows when API request fails.
-    cy.wait('@updateNodePoolError');
-    cy.findAllByText(mockErrorMessage).should('be.visible');
+      // Confirm error message shows when API request fails.
+      cy.wait('@updateNodePoolError');
+      cy.findAllByText(mockErrorMessage).should('be.visible');
+    });
   });
-});
 
-it('does not collapse the accordion when an action button is clicked in the accordion header', () => {
-  const mockCluster = kubernetesClusterFactory.build({
-    k8s_version: latestKubernetesVersion,
-  });
-  const mockSingleNodePool = mockNodePools[0];
-  mockGetCluster(mockCluster).as('getCluster');
-  mockGetClusterPools(mockCluster.id, [mockSingleNodePool]).as('getNodePools');
-
-  cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-  cy.wait(['@getCluster', '@getNodePools']);
-
-  cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
-    // Accordion should be expanded by default
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'true'
+  it('does not collapse the accordion when an action button is clicked in the accordion header', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    const mockSingleNodePool = mockNodePools[0];
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockSingleNodePool]).as(
+      'getNodePools'
     );
 
-    // Click on a disabled button
-    cy.get('[data-testid="node-pool-actions"]')
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete Pool')
-          .should('be.visible')
-          .should('be.disabled')
-          .click();
-      });
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools']);
 
-    // Check that the accordion is still expanded
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'true'
-    );
+    cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
+      // Accordion should be expanded by default
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
 
-    // Click on an action button
-    cy.get('[data-testid="node-pool-actions"]')
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Recycle Pool Nodes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-  });
-
-  // Exit dialog
-  ui.dialog
-    .findByTitle('Recycle node pool?')
-    .should('be.visible')
-    .within(() => {
-      ui.button
-        .findByTitle('Cancel')
+      // Click on a disabled button
+      cy.get('[data-testid="node-pool-actions"]')
         .should('be.visible')
-        .should('be.enabled')
-        .click();
+        .within(() => {
+          ui.button
+            .findByTitle('Delete Pool')
+            .should('be.visible')
+            .should('be.disabled')
+            .click();
+        });
+
+      // Check that the accordion is still expanded
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+
+      // Click on an action button
+      cy.get('[data-testid="node-pool-actions"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Recycle Pool Nodes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
     });
 
-  cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
-    // Check that the accordion is still expanded
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'true'
-    );
+    // Exit dialog
+    ui.dialog
+      .findByTitle('Recycle node pool?')
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
 
-    // Accordion should close on non-action button clicks
-    cy.get('[data-qa-panel-subheading]').click();
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'false'
-    );
-  });
-});
+    cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
+      // Check that the accordion is still expanded
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
 
-it('sets default expanded node pools and has collapse/expand all functionality', () => {
-  const mockCluster = kubernetesClusterFactory.build({
-    k8s_version: latestKubernetesVersion,
-  });
-  const mockNodePools = [
-    nodePoolFactory.build({
-      count: 10,
-      nodes: kubeLinodeFactory.buildList(10),
-    }),
-    nodePoolFactory.build({
-      count: 5,
-      nodes: kubeLinodeFactory.buildList(5),
-    }),
-    nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()] }),
-  ];
-  mockGetCluster(mockCluster).as('getCluster');
-  mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-
-  cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-  cy.wait(['@getCluster', '@getNodePools']);
-
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-    // Accordion should be collapsed by default since there are more than 9 nodes
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'false'
-    );
-  });
-
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-    // Accordion should be expanded by default since there are not more than 9 nodes
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'true'
-    );
-  });
-
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[2].id}"]`).within(() => {
-    // Accordion should be expanded by default since there are not more than 9 nodes
-    cy.get(`[data-qa-panel-summary]`).should(
-      'have.attr',
-      'aria-expanded',
-      'true'
-    );
-  });
-
-  // Collapse all pools
-  ui.button
-    .findByTitle('Collapse All Pools')
-    .should('be.visible')
-    .should('be.enabled')
-    .click();
-
-  cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
-    // Accordion should be collapsed
-    cy.wrap($pool).within(() => {
+      // Accordion should close on non-action button clicks
+      cy.get('[data-qa-panel-subheading]').click();
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',
@@ -1959,663 +1910,730 @@ it('sets default expanded node pools and has collapse/expand all functionality',
     });
   });
 
-  // Expand all pools
-  ui.button
-    .findByTitle('Expand All Pools')
-    .should('be.visible')
-    .should('be.enabled')
-    .click();
+  it('sets default expanded node pools and has collapse/expand all functionality', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    const mockNodePools = [
+      nodePoolFactory.build({
+        count: 10,
+        nodes: kubeLinodeFactory.buildList(10),
+      }),
+      nodePoolFactory.build({
+        count: 5,
+        nodes: kubeLinodeFactory.buildList(5),
+      }),
+      nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()] }),
+    ];
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
 
-  cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
-    // Accordion should be expanded
-    cy.wrap($pool).within(() => {
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools']);
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Accordion should be collapsed by default since there are more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'false'
+      );
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      // Accordion should be expanded by default since there are not more than 9 nodes
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',
         'true'
       );
     });
-  });
-});
 
-it('filters the node tables based on selected status filter', () => {
-  const mockCluster = kubernetesClusterFactory.build({
-    created: DateTime.local().toISO(),
-    k8s_version: latestKubernetesVersion,
-    tier: 'enterprise',
-  });
-  const mockNodePools = [
-    nodePoolFactory.build({
-      count: 4,
-      nodes: [
-        ...kubeLinodeFactory.buildList(2),
-        ...kubeLinodeFactory.buildList(2, { status: 'not_ready' }),
-      ],
-    }),
-    nodePoolFactory.build({
-      count: 2,
-      nodes: kubeLinodeFactory.buildList(2),
-    }),
-  ];
-  const mockLinodes: Linode[] = [
-    linodeFactory.build({
-      id: mockNodePools[0].nodes[0].instance_id ?? undefined,
-    }),
-    linodeFactory.build({
-      id: mockNodePools[0].nodes[1].instance_id ?? undefined,
-    }),
-    linodeFactory.build({
-      id: mockNodePools[0].nodes[2].instance_id ?? undefined,
-    }),
-    linodeFactory.build({
-      id: mockNodePools[0].nodes[3].instance_id ?? undefined,
-      status: 'provisioning',
-    }),
-    linodeFactory.build({
-      id: mockNodePools[1].nodes[0].instance_id ?? undefined,
-    }),
-    linodeFactory.build({
-      id: mockNodePools[1].nodes[1].instance_id ?? undefined,
-      status: 'offline',
-    }),
-  ];
-  mockGetCluster(mockCluster).as('getCluster');
-  mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-  mockGetLinodes(mockLinodes).as('getLinodes');
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[2].id}"]`).within(() => {
+      // Accordion should be expanded by default since there are not more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+    });
 
-  cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-  cy.wait(['@getCluster', '@getNodePools', '@getLinodes']);
+    // Collapse all pools
+    ui.button
+      .findByTitle('Collapse All Pools')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
-  // Filter is initially set to Show All nodes
-  cy.findByText(
-    'Nodes will appear once cluster provisioning is complete.'
-  ).should('not.exist');
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 4);
-  });
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 2);
+    cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
+      // Accordion should be collapsed
+      cy.wrap($pool).within(() => {
+        cy.get(`[data-qa-panel-summary]`).should(
+          'have.attr',
+          'aria-expanded',
+          'false'
+        );
+      });
+    });
+
+    // Expand all pools
+    ui.button
+      .findByTitle('Expand All Pools')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
+      // Accordion should be expanded
+      cy.wrap($pool).within(() => {
+        cy.get(`[data-qa-panel-summary]`).should(
+          'have.attr',
+          'aria-expanded',
+          'true'
+        );
+      });
+    });
   });
 
-  // Filter by Running status
-  ui.autocomplete.findByLabel('Status').click();
-  ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
-
-  // Only Running nodes should be displayed (Linode instance status = running AND node status = ready)
-  cy.findByText(
-    'Nodes will appear once cluster provisioning is complete.'
-  ).should('not.exist');
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 2);
-  });
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 1);
-  });
-
-  // Filter by Offline status
-  ui.autocomplete.findByLabel('Status').click();
-  ui.autocompletePopper.findByTitle('Offline').should('be.visible').click();
-
-  // Only Offline nodes should be displayed
-  cy.findByText(
-    'Nodes will appear once cluster provisioning is complete.'
-  ).should('not.exist');
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 0);
-  });
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 1);
-  });
-
-  // Filter by Provisioning status
-  ui.autocomplete.findByLabel('Status').click();
-  ui.autocompletePopper
-    .findByTitle('Provisioning')
-    .should('be.visible')
-    .click();
-
-  // Only Provisioning nodes should be displayed
-  cy.findByText(
-    'Nodes will appear once cluster provisioning is complete.'
-  ).should('not.exist');
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 1);
-  });
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 0);
-  });
-
-  // Filter by Show All status
-  ui.autocomplete.findByLabel('Status').click();
-  ui.autocompletePopper.findByTitle('Show All').should('be.visible').click();
-
-  // All nodes are displayed
-  cy.findByText(
-    'Nodes will appear once cluster provisioning is complete.'
-  ).should('not.exist');
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 4);
-  });
-  cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-    cy.get('[data-qa-node-row]').should('have.length', 2);
-  });
-});
-
-describe('LKE cluster updates for DC-specific prices', () => {
-  /*
-   * - Confirms node pool resize UI flow using mocked API responses.
-   * - Confirms that pool size can be increased and decreased.
-   * - Confirms that drawer reflects prices in regions with DC-specific pricing.
-   * - Confirms that details page updates total cluster price with DC-specific pricing.
-   */
-  it('can resize pools with DC-specific prices', () => {
-    const dcSpecificPricingRegion = extendRegion(
-      regionFactory.build({
-        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-        id: 'us-east',
-      })
-    );
-    mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
-    const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
-
+  it('filters the node tables based on selected status filter', () => {
     const mockCluster = kubernetesClusterFactory.build({
-      control_plane: {
-        high_availability: false,
-      },
+      created: DateTime.local().toISO(),
       k8s_version: latestKubernetesVersion,
-      region: dcSpecificPricingRegion.id,
+      tier: 'enterprise',
     });
-
-    const mockNodePoolResized = nodePoolFactory.build({
-      count: 3,
-      nodes: kubeLinodeFactory.buildList(3),
-      type: mockPlanType.id,
-    });
-
-    const mockNodePoolInitial = {
-      ...mockNodePoolResized,
-      count: 1,
-      nodes: [mockNodePoolResized.nodes[0]],
-    };
-
-    const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
-      (node: PoolNodeResponse): Linode => {
-        return linodeFactory.build({
-          id: node.instance_id ?? undefined,
-          ipv4: [randomIp()],
-          region: dcSpecificPricingRegion.id,
-          type: mockPlanType.id,
-        });
-      }
-    );
-
-    const mockNodePoolDrawerTitle = `Resize Pool: ${mockPlanType.formattedLabel} Plan`;
-
+    const mockNodePools = [
+      nodePoolFactory.build({
+        count: 4,
+        nodes: [
+          ...kubeLinodeFactory.buildList(2),
+          ...kubeLinodeFactory.buildList(2, { status: 'not_ready' }),
+        ],
+      }),
+      nodePoolFactory.build({
+        count: 2,
+        nodes: kubeLinodeFactory.buildList(2),
+      }),
+    ];
+    const mockLinodes: Linode[] = [
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[0].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[1].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[2].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[3].instance_id ?? undefined,
+        status: 'provisioning',
+      }),
+      linodeFactory.build({
+        id: mockNodePools[1].nodes[0].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[1].nodes[1].instance_id ?? undefined,
+        status: 'offline',
+      }),
+    ];
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePools'
-    );
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetLinodeType(mockPlanType).as('getLinodeType');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getRegions',
-      '@getCluster',
-      '@getNodePools',
-      '@getLinodes',
-      '@getVersions',
-      '@getLinodeType',
-    ]);
+    cy.wait(['@getCluster', '@getNodePools', '@getLinodes']);
 
-    // Confirm that nodes are visible.
-    mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
-      cy.get(`tr[data-qa-node-row="${node.id}"]`)
+    // Filter is initially set to Show All nodes
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 4);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
+    });
+
+    // Filter by Running status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
+
+    // Only Running nodes should be displayed (Linode instance status = running AND node status = ready)
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+
+    // Filter by Offline status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Offline').should('be.visible').click();
+
+    // Only Offline nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 0);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+
+    // Filter by Provisioning status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper
+      .findByTitle('Provisioning')
+      .should('be.visible')
+      .click();
+
+    // Only Provisioning nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 0);
+    });
+
+    // Filter by Show All status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Show All').should('be.visible').click();
+
+    // All nodes are displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 4);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
+    });
+  });
+
+  describe('LKE cluster updates for DC-specific prices', () => {
+    /*
+     * - Confirms node pool resize UI flow using mocked API responses.
+     * - Confirms that pool size can be increased and decreased.
+     * - Confirms that drawer reflects prices in regions with DC-specific pricing.
+     * - Confirms that details page updates total cluster price with DC-specific pricing.
+     */
+    it('can resize pools with DC-specific prices', () => {
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-east',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
+      const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
+
+      const mockCluster = kubernetesClusterFactory.build({
+        control_plane: {
+          high_availability: false,
+        },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
+      });
+
+      const mockNodePoolResized = nodePoolFactory.build({
+        count: 3,
+        nodes: kubeLinodeFactory.buildList(3),
+        type: mockPlanType.id,
+      });
+
+      const mockNodePoolInitial = {
+        ...mockNodePoolResized,
+        count: 1,
+        nodes: [mockNodePoolResized.nodes[0]],
+      };
+
+      const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
+        (node: PoolNodeResponse): Linode => {
+          return linodeFactory.build({
+            id: node.instance_id ?? undefined,
+            ipv4: [randomIp()],
+            region: dcSpecificPricingRegion.id,
+            type: mockPlanType.id,
+          });
+        }
+      );
+
+      const mockNodePoolDrawerTitle = `Resize Pool: ${mockPlanType.formattedLabel} Plan`;
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+        'getNodePools'
+      );
+      mockGetLinodes(mockLinodes).as('getLinodes');
+      mockGetLinodeType(mockPlanType).as('getLinodeType');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getRegions',
+        '@getCluster',
+        '@getNodePools',
+        '@getLinodes',
+        '@getVersions',
+        '@getLinodeType',
+      ]);
+
+      // Confirm that nodes are visible.
+      mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
+        cy.get(`tr[data-qa-node-row="${node.id}"]`)
+          .should('be.visible')
+          .within(() => {
+            const nodeLinode = mockLinodes.find(
+              (linode: Linode) => linode.id === node.instance_id
+            );
+            if (nodeLinode) {
+              cy.findByText(nodeLinode.label).should('be.visible');
+            }
+          });
+      });
+
+      // Confirm total price is listed in Kube Specs.
+      cy.findByText('$14.40/month').should('be.visible');
+
+      // Click "Resize Pool" and increase size to 3 nodes.
+      ui.button
+        .findByTitle('Resize Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
+        'resizeNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
+        'getNodePools'
+      );
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
-          const nodeLinode = mockLinodes.find(
-            (linode: Linode) => linode.id === node.instance_id
-          );
-          if (nodeLinode) {
-            cy.findByText(nodeLinode.label).should('be.visible');
-          }
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.disabled');
+
+          cy.findByText(
+            'Current price: $14.40/month (1 node at $14.40/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $14.40/month (1 node at $14.40/month each)'
+          ).should('be.visible');
+
+          cy.findByLabelText('Add 1')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.focused().click();
+          cy.focused().click();
+
+          cy.findByLabelText('Edit Quantity').should('have.value', '4');
+          cy.findByText(
+            'Current price: $14.40/month (1 node at $14.40/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $57.60/month (4 nodes at $14.40/month each)'
+          ).should('be.visible');
+
+          cy.findByLabelText('Subtract 1')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          cy.findByLabelText('Edit Quantity').should('have.value', '3');
+          cy.findByText(
+            'Resized price: $43.20/month (3 nodes at $14.40/month each)'
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
+
+      cy.wait(['@resizeNodePool', '@getNodePools']);
+
+      // Confirm total price updates in Kube Specs.
+      cy.findByText('$43.20/month').should('be.visible');
     });
 
-    // Confirm total price is listed in Kube Specs.
-    cy.findByText('$14.40/month').should('be.visible');
-
-    // Click "Resize Pool" and increase size to 3 nodes.
-    ui.button
-      .findByTitle('Resize Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
-      'resizeNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
-      'getNodePools'
-    );
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.disabled');
-
-        cy.findByText(
-          'Current price: $14.40/month (1 node at $14.40/month each)'
-        ).should('be.visible');
-        cy.findByText(
-          'Resized price: $14.40/month (1 node at $14.40/month each)'
-        ).should('be.visible');
-
-        cy.findByLabelText('Add 1')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.focused().click();
-        cy.focused().click();
-
-        cy.findByLabelText('Edit Quantity').should('have.value', '4');
-        cy.findByText(
-          'Current price: $14.40/month (1 node at $14.40/month each)'
-        ).should('be.visible');
-        cy.findByText(
-          'Resized price: $57.60/month (4 nodes at $14.40/month each)'
-        ).should('be.visible');
-
-        cy.findByLabelText('Subtract 1')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        cy.findByLabelText('Edit Quantity').should('have.value', '3');
-        cy.findByText(
-          'Resized price: $43.20/month (3 nodes at $14.40/month each)'
-        ).should('be.visible');
-
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+    /*
+     * - Confirms UI flow when adding node pools using mocked API responses.
+     * - Confirms that drawer reflects prices in regions with DC-specific pricing.
+     * - Confirms that details page updates total cluster price with DC-specific pricing.
+     */
+    it('can add node pools with DC-specific prices', () => {
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-east',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
+      const mockCluster = kubernetesClusterFactory.build({
+        control_plane: {
+          high_availability: false,
+        },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
       });
 
-    cy.wait(['@resizeNodePool', '@getNodePools']);
+      const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
 
-    // Confirm total price updates in Kube Specs.
-    cy.findByText('$43.20/month').should('be.visible');
-  });
-
-  /*
-   * - Confirms UI flow when adding node pools using mocked API responses.
-   * - Confirms that drawer reflects prices in regions with DC-specific pricing.
-   * - Confirms that details page updates total cluster price with DC-specific pricing.
-   */
-  it('can add node pools with DC-specific prices', () => {
-    const dcSpecificPricingRegion = extendRegion(
-      regionFactory.build({
-        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-        id: 'us-east',
-      })
-    );
-    mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
-    const mockCluster = kubernetesClusterFactory.build({
-      control_plane: {
-        high_availability: false,
-      },
-      k8s_version: latestKubernetesVersion,
-      region: dcSpecificPricingRegion.id,
-    });
-
-    const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
-
-    const mockNewNodePool = nodePoolFactory.build({
-      count: 2,
-      nodes: kubeLinodeFactory.buildList(2),
-      type: mockPlanType.id,
-    });
-
-    const mockNodePool = nodePoolFactory.build({
-      count: 1,
-      nodes: kubeLinodeFactory.buildList(1),
-      type: mockPlanType.id,
-    });
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
-    mockGetLinodeType(mockPlanType).as('getLinodeType');
-    mockGetLinodeTypes(dcPricingMockLinodeTypes);
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getRegions',
-      '@getCluster',
-      '@getNodePools',
-      '@getVersions',
-      '@getLinodeType',
-    ]);
-
-    // Assert that initial node pool is shown on the page.
-    cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
-      'be.visible'
-    );
-
-    // Confirm total price is listed in Kube Specs.
-    cy.findByText('$14.40/month').should('be.visible');
-
-    // Add a new node pool, select plan, submit form in drawer.
-    ui.button
-      .findByTitle('Add a Node Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
-      'getNodePools'
-    );
-
-    ui.drawer
-      .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Shared CPU')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findByText(mockPlanType.formattedLabel)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
-            cy.findByText('$14.40').should('be.visible');
-            cy.findByText('$0.021').should('be.visible');
-            cy.findByLabelText('Add 1').should('be.visible').click();
-            cy.focused().click();
-          });
-
-        // Assert that DC-specific prices are displayed as helper text.
-        cy.contains(
-          'This pool will add $28.80/month (2 nodes at $14.40/month) to this cluster.'
-        ).should('be.visible');
-
-        ui.button
-          .findByTitle('Add pool')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+      const mockNewNodePool = nodePoolFactory.build({
+        count: 2,
+        nodes: kubeLinodeFactory.buildList(2),
+        type: mockPlanType.id,
       });
 
-    // Wait for API responses.
-    cy.wait(['@addNodePool', '@getNodePools']);
+      const mockNodePool = nodePoolFactory.build({
+        count: 1,
+        nodes: kubeLinodeFactory.buildList(1),
+        type: mockPlanType.id,
+      });
 
-    // Confirm total price updates in Kube Specs: $14.40/mo existing pool + $28.80/mo new pool.
-    cy.findByText('$43.20/month').should('be.visible');
-  });
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
+      mockGetLinodeType(mockPlanType).as('getLinodeType');
+      mockGetLinodeTypes(dcPricingMockLinodeTypes);
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
 
-  /*
-   * - Confirms node pool resize UI flow using mocked API responses.
-   * - Confirms that pool size can be changed.
-   * - Confirms that drawer reflects $0 pricing.
-   * - Confirms that details page still shows $0 pricing after resizing.
-   */
-  it('can resize pools with region prices of $0', () => {
-    const dcSpecificPricingRegion = extendRegion(
-      regionFactory.build({
-        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-        id: 'us-southeast',
-      })
-    );
-    mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
-    const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getRegions',
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getLinodeType',
+      ]);
 
-    const mockCluster = kubernetesClusterFactory.build({
-      control_plane: {
-        high_availability: false,
-      },
-      k8s_version: latestKubernetesVersion,
-      region: dcSpecificPricingRegion.id,
-    });
+      // Assert that initial node pool is shown on the page.
+      cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+        'be.visible'
+      );
 
-    const mockNodePoolResized = nodePoolFactory.build({
-      count: 3,
-      nodes: kubeLinodeFactory.buildList(3),
-      type: mockPlanType.id,
-    });
+      // Confirm total price is listed in Kube Specs.
+      cy.findByText('$14.40/month').should('be.visible');
 
-    const mockNodePoolInitial = {
-      ...mockNodePoolResized,
-      count: 1,
-      nodes: [mockNodePoolResized.nodes[0]],
-    };
+      // Add a new node pool, select plan, submit form in drawer.
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-    const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
-      (node: PoolNodeResponse): Linode => {
-        return linodeFactory.build({
-          id: node.instance_id ?? undefined,
-          ipv4: [randomIp()],
-          region: dcSpecificPricingRegion.id,
-          type: mockPlanType.id,
-        });
-      }
-    );
+      mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
+        'getNodePools'
+      );
 
-    const mockNodePoolDrawerTitle = `Resize Pool: ${mockPlanType.formattedLabel} Plan`;
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePools'
-    );
-    mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetLinodeType(mockPlanType).as('getLinodeType');
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getRegions',
-      '@getCluster',
-      '@getNodePools',
-      '@getLinodes',
-      '@getVersions',
-      '@getLinodeType',
-    ]);
-
-    // Confirm that nodes are visible.
-    mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
-      cy.get(`tr[data-qa-node-row="${node.id}"]`)
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
-          const nodeLinode = mockLinodes.find(
-            (linode: Linode) => linode.id === node.instance_id
-          );
-          if (nodeLinode) {
-            cy.findByText(nodeLinode.label).should('be.visible');
-          }
+          cy.findByText('Shared CPU')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.findByText(mockPlanType.formattedLabel)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
+              cy.findByText('$14.40').should('be.visible');
+              cy.findByText('$0.021').should('be.visible');
+              cy.findByLabelText('Add 1').should('be.visible').click();
+              cy.focused().click();
+            });
+
+          // Assert that DC-specific prices are displayed as helper text.
+          cy.contains(
+            'This pool will add $28.80/month (2 nodes at $14.40/month) to this cluster.'
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Add pool')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
+
+      // Wait for API responses.
+      cy.wait(['@addNodePool', '@getNodePools']);
+
+      // Confirm total price updates in Kube Specs: $14.40/mo existing pool + $28.80/mo new pool.
+      cy.findByText('$43.20/month').should('be.visible');
     });
 
-    // Confirm total price is listed in Kube Specs.
-    cy.findByText('$0.00/month').should('be.visible');
+    /*
+     * - Confirms node pool resize UI flow using mocked API responses.
+     * - Confirms that pool size can be changed.
+     * - Confirms that drawer reflects $0 pricing.
+     * - Confirms that details page still shows $0 pricing after resizing.
+     */
+    it('can resize pools with region prices of $0', () => {
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-southeast',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
+      const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
 
-    // Click "Resize Pool" and increase size to 4 nodes.
-    ui.button
-      .findByTitle('Resize Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
-      'resizeNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
-      'getNodePools'
-    );
-
-    ui.drawer
-      .findByTitle(mockNodePoolDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.disabled');
-
-        cy.findByText(
-          'Current price: $0/month (1 node at $0/month each)'
-        ).should('be.visible');
-        cy.findByText(
-          'Resized price: $0/month (1 node at $0/month each)'
-        ).should('be.visible');
-
-        cy.findByLabelText('Add 1')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.focused().click();
-        cy.focused().click();
-
-        cy.findByLabelText('Edit Quantity').should('have.value', '4');
-        cy.findByText(
-          'Current price: $0/month (1 node at $0/month each)'
-        ).should('be.visible');
-        cy.findByText(
-          'Resized price: $0/month (4 nodes at $0/month each)'
-        ).should('be.visible');
-
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+      const mockCluster = kubernetesClusterFactory.build({
+        control_plane: {
+          high_availability: false,
+        },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
       });
 
-    cy.wait(['@resizeNodePool', '@getNodePools']);
+      const mockNodePoolResized = nodePoolFactory.build({
+        count: 3,
+        nodes: kubeLinodeFactory.buildList(3),
+        type: mockPlanType.id,
+      });
 
-    // Confirm total price is still $0 in Kube Specs.
-    cy.findByText('$0.00/month').should('be.visible');
-  });
+      const mockNodePoolInitial = {
+        ...mockNodePoolResized,
+        count: 1,
+        nodes: [mockNodePoolResized.nodes[0]],
+      };
 
-  /*
-   * - Confirms UI flow when adding node pools using mocked API responses.
-   * - Confirms that drawer reflects $0 prices.
-   * - Confirms that details page still shows $0 pricing after adding node pool.
-   */
-  it('can add node pools with region prices of $0', () => {
-    const dcSpecificPricingRegion = extendRegion(
-      regionFactory.build({
-        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-        id: 'us-southeast',
-      })
-    );
-    mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
-    const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
-
-    const mockCluster = kubernetesClusterFactory.build({
-      control_plane: {
-        high_availability: false,
-      },
-      k8s_version: latestKubernetesVersion,
-      region: dcSpecificPricingRegion.id,
-    });
-
-    const mockNewNodePool = nodePoolFactory.build({
-      count: 2,
-      nodes: kubeLinodeFactory.buildList(2),
-      type: mockPlanType.id,
-    });
-
-    const mockNodePool = nodePoolFactory.build({
-      count: 1,
-      nodes: kubeLinodeFactory.buildList(1),
-      type: mockPlanType.id,
-    });
-
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
-    mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
-    mockGetLinodeType(mockPlanType).as('getLinodeType');
-    mockGetLinodeTypes(dcPricingMockLinodeTypes);
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getRegions',
-      '@getCluster',
-      '@getNodePools',
-      '@getVersions',
-      '@getLinodeType',
-    ]);
-
-    // Assert that initial node pool is shown on the page.
-    cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
-      'be.visible'
-    );
-
-    // Confirm total price of $0 is listed in Kube Specs.
-    cy.findByText('$0.00/month').should('be.visible');
-
-    // Add a new node pool, select plan, submit form in drawer.
-    ui.button
-      .findByTitle('Add a Node Pool')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
-      'getNodePools'
-    );
-
-    ui.drawer
-      .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Shared CPU')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findByText('Linode 2 GB')
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            // Assert that $0 prices are displayed the plan table, then add a node pool with 2 linodes.
-            cy.findAllByText('$0').should('have.length', 2);
-            cy.findByLabelText('Add 1').should('be.visible').click();
-            cy.focused().click();
+      const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
+        (node: PoolNodeResponse): Linode => {
+          return linodeFactory.build({
+            id: node.instance_id ?? undefined,
+            ipv4: [randomIp()],
+            region: dcSpecificPricingRegion.id,
+            type: mockPlanType.id,
           });
+        }
+      );
 
-        // Assert that $0 prices are displayed as helper text.
-        cy.contains(
-          'This pool will add $0/month (2 nodes at $0/month) to this cluster.'
-        ).should('be.visible');
+      const mockNodePoolDrawerTitle = `Resize Pool: ${mockPlanType.formattedLabel} Plan`;
 
-        ui.button
-          .findByTitle('Add pool')
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+        'getNodePools'
+      );
+      mockGetLinodes(mockLinodes).as('getLinodes');
+      mockGetLinodeType(mockPlanType).as('getLinodeType');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getRegions',
+        '@getCluster',
+        '@getNodePools',
+        '@getLinodes',
+        '@getVersions',
+        '@getLinodeType',
+      ]);
+
+      // Confirm that nodes are visible.
+      mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
+        cy.get(`tr[data-qa-node-row="${node.id}"]`)
           .should('be.visible')
-          .should('be.enabled')
-          .click();
+          .within(() => {
+            const nodeLinode = mockLinodes.find(
+              (linode: Linode) => linode.id === node.instance_id
+            );
+            if (nodeLinode) {
+              cy.findByText(nodeLinode.label).should('be.visible');
+            }
+          });
       });
 
-    // Wait for API responses.
-    cy.wait(['@addNodePool', '@getNodePools']);
+      // Confirm total price is listed in Kube Specs.
+      cy.findByText('$0.00/month').should('be.visible');
 
-    // Confirm total price is still $0 in Kube Specs.
-    cy.findByText('$0.00/month').should('be.visible');
+      // Click "Resize Pool" and increase size to 4 nodes.
+      ui.button
+        .findByTitle('Resize Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
+        'resizeNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
+        'getNodePools'
+      );
+
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.disabled');
+
+          cy.findByText(
+            'Current price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+
+          cy.findByLabelText('Add 1')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.focused().click();
+          cy.focused().click();
+
+          cy.findByLabelText('Edit Quantity').should('have.value', '4');
+          cy.findByText(
+            'Current price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $0/month (4 nodes at $0/month each)'
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@resizeNodePool', '@getNodePools']);
+
+      // Confirm total price is still $0 in Kube Specs.
+      cy.findByText('$0.00/month').should('be.visible');
+    });
+
+    /*
+     * - Confirms UI flow when adding node pools using mocked API responses.
+     * - Confirms that drawer reflects $0 prices.
+     * - Confirms that details page still shows $0 pricing after adding node pool.
+     */
+    it('can add node pools with region prices of $0', () => {
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-southeast',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
+      const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
+
+      const mockCluster = kubernetesClusterFactory.build({
+        control_plane: {
+          high_availability: false,
+        },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
+      });
+
+      const mockNewNodePool = nodePoolFactory.build({
+        count: 2,
+        nodes: kubeLinodeFactory.buildList(2),
+        type: mockPlanType.id,
+      });
+
+      const mockNodePool = nodePoolFactory.build({
+        count: 1,
+        nodes: kubeLinodeFactory.buildList(1),
+        type: mockPlanType.id,
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetKubernetesVersions().as('getVersions');
+      mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
+      mockGetLinodeType(mockPlanType).as('getLinodeType');
+      mockGetLinodeTypes(dcPricingMockLinodeTypes);
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getRegions',
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getLinodeType',
+      ]);
+
+      // Assert that initial node pool is shown on the page.
+      cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+        'be.visible'
+      );
+
+      // Confirm total price of $0 is listed in Kube Specs.
+      cy.findByText('$0.00/month').should('be.visible');
+
+      // Add a new node pool, select plan, submit form in drawer.
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
+        'getNodePools'
+      );
+
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Shared CPU')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.findByText('Linode 2 GB')
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              // Assert that $0 prices are displayed the plan table, then add a node pool with 2 linodes.
+              cy.findAllByText('$0').should('have.length', 2);
+              cy.findByLabelText('Add 1').should('be.visible').click();
+              cy.focused().click();
+            });
+
+          // Assert that $0 prices are displayed as helper text.
+          cy.contains(
+            'This pool will add $0/month (2 nodes at $0/month) to this cluster.'
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Add pool')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API responses.
+      cy.wait(['@addNodePool', '@getNodePools']);
+
+      // Confirm total price is still $0 in Kube Specs.
+      cy.findByText('$0.00/month').should('be.visible');
+    });
   });
 });
 
