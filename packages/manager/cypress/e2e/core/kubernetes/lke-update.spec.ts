@@ -2190,7 +2190,7 @@ describe('LKE cluster updates', () => {
       cy.findByText('$14.40/month').should('be.visible');
 
       ui.actionMenu
-        .findByTitle(`Action menu from Node Pool ${mockNodePoolInitial.id}`)
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
         .should('be.visible')
         .click();
 
@@ -2458,7 +2458,7 @@ describe('LKE cluster updates', () => {
       cy.findByText('$0.00/month').should('be.visible');
 
       ui.actionMenu
-        .findByTitle(`Action menu from Node Pool ${mockNodePoolInitial.id}`)
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
         .should('be.visible')
         .click();
 
