@@ -118,11 +118,7 @@ export const AddNodePoolDrawer = (props: Props) => {
       onClose();
     } catch (errors) {
       for (const error of errors) {
-        if (error.field) {
-          form.setError(error.field, { message: error.reason });
-        } else {
-          form.setError('root', { message: error.reason });
-        }
+        form.setError(error.field ?? 'root', { message: error.reason });
       }
     }
   };
@@ -218,7 +214,8 @@ export const AddNodePoolDrawer = (props: Props) => {
                   />
                 )}
               />
-              {/* <Controller
+              {/*
+              <Controller
                 control={form.control}
                 name="firewall_id"
                 render={({ field, fieldState }) => (
@@ -230,7 +227,8 @@ export const AddNodePoolDrawer = (props: Props) => {
                     value={field.value ?? null}
                   />
                 )}
-              /> */}
+              />
+              */}
             </Stack>
           )}
         <Box
