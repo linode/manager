@@ -24,18 +24,13 @@ export const UserDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (isIAMEnabled && username) {
-    const isOnPermissions =
-      location.pathname === `/account/users/${username}/permissions`;
-
+  const isOnAccount = location.pathname.includes('/account');
+  if (isIAMEnabled && username && isOnAccount) {
+    const isOnPermissions = location.pathname.includes('/permissions');
+    const base = `/iam/users/${username}`;
+    const path = isOnPermissions ? '/roles' : '/details';
     navigate({
-      to: isOnPermissions
-        ? '/iam/users/$username/roles'
-        : '/iam/users/$username/details',
-      params: {
-        username,
-      },
-      replace: true,
+      to: base + path,
     });
   }
 

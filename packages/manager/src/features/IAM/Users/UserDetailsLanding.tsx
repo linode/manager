@@ -31,16 +31,11 @@ export const UserDetailsLanding = () => {
   const navigate = useNavigate();
 
   if (!isIAMEnabled && username) {
-    const isOnRoles = location.pathname === `/iam/users/${username}/roles`;
-
+    const isOnDetails = location.pathname === `/iam/users/${username}/details`;
+    const base = `/account/users/${username}`;
+    const path = !isOnDetails ? '/permissions' : '';
     navigate({
-      to: isOnRoles
-        ? '/account/users/$username/permissions'
-        : '/account/users/$username',
-      params: {
-        username,
-      },
-      replace: true,
+      to: base + path,
     });
   }
 
