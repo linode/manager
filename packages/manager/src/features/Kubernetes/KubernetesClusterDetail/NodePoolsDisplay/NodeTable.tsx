@@ -211,11 +211,12 @@ export const NodeTable = React.memo((props: Props) => {
                   Public IPv4
                 </TableSortCell>
                 {shouldShowVpcIPAddressColumns && (
-                  <TableCell>VPC IPv4</TableCell>
+                  <>
+                    <TableCell>VPC IPv4</TableCell>
+                    <TableCell>VPC IPv6</TableCell>
+                  </>
                 )}
-                {shouldShowVpcIPAddressColumns && (
-                  <TableCell>VPC IPv6</TableCell>
-                )}
+
                 <TableCell />
               </TableRow>
             </TableHead>

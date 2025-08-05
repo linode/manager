@@ -100,7 +100,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
         {linodeError ? (
           <Typography
             sx={(theme) => ({
-              color: theme.color.red,
+              color: theme.tokens.alias.Content.Text.Negative,
             })}
           >
             Error retrieving status
@@ -116,7 +116,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
         {linodeError ? (
           <Typography
             sx={(theme) => ({
-              color: theme.color.red,
+              color: theme.tokens.alias.Content.Text.Negative,
             })}
           >
             Error retrieving IP
@@ -138,7 +138,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           {linodeError || ipsError ? (
             <Typography
               sx={(theme) => ({
-                color: theme.color.red,
+                color: theme.tokens.alias.Content.Text.Negative,
               })}
             >
               Error retrieving IP
@@ -161,7 +161,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           {linodeError || ipsError ? (
             <Typography
               sx={(theme) => ({
-                color: theme.color.red,
+                color: theme.tokens.alias.Content.Text.Negative,
               })}
             >
               Error retrieving IP
