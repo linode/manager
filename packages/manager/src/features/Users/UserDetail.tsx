@@ -20,20 +20,6 @@ export const UserDetail = () => {
     from: '/account/users/$username',
   });
 
-  const { isIAMEnabled } = useIsIAMEnabled();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const isOnAccount = location.pathname.includes('/account');
-  if (isIAMEnabled && username && isOnAccount) {
-    const isOnPermissions = location.pathname.includes('/permissions');
-    const base = `/iam/users/${username}`;
-    const path = isOnPermissions ? '/roles' : '/details';
-    navigate({
-      to: base + path,
-    });
-  }
-
   const { data: profile } = useProfile();
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
 
@@ -51,6 +37,23 @@ export const UserDetail = () => {
   ]);
 
   const isProxyUser = user?.user_type === 'proxy';
+
+  const { isIAMEnabled } = useIsIAMEnabled();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isOnAccount = location.pathname.includes('/account');
+  if (isIAMEnabled && username && isOnAccount) {
+    const isOnPermissions = location.pathname.includes('/permissions');
+    navigate({
+      to: isOnPermissions
+        ? `/iam/users/$username/roles`
+        : `/iam/users/$username/details`,
+      params: { username },
+      replace: true,
+    });
+    return null;
+  }
 
   if (isLoading) {
     return <CircleProgress />;
