@@ -15,7 +15,8 @@ interface LinodePriceOptions {
 interface ClusterData {
   prefix: string;
   size?: string;
-  typeData?: any;
+  //typeData?: any;
+  typeData?: LinodeType;
   typeId?: string;
 }
 
@@ -80,7 +81,7 @@ export type ClusterDataTypes = {
 };
 
 export function parseClusterData(
-  stackscriptData: Record<string, any> = {}
+  stackscriptData: Record<string, string> = {}
 ): ClusterDataTypes[] {
   const result: ClusterDataTypes[] = [];
 
