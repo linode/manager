@@ -60,45 +60,20 @@ describe('EnhancedNumberInput', () => {
     expect(setValue).toHaveBeenCalledWith(0);
   });
 
-  it('prevents the use of special numbers like e, setting the value to the min', async () => {
-    const { getByTestId } = render(
-      wrapWithTheme(<EnhancedNumberInput {...props} />)
-    );
+  const inputToPrevent = ['+', '--3', '.', 'e', 'E'];
 
-    const input = getByTestId('textfield-input');
-    await userEvent.type(input, 'e');
-    expect(setValue).toHaveBeenCalledWith(0);
-  });
+  it.each(inputToPrevent)(
+    'prevents the use of special characters like "%s", setting the value to the min',
+    async (inputValue) => {
+      const { getByTestId } = render(
+        wrapWithTheme(<EnhancedNumberInput {...props} />)
+      );
 
-  it('prevents the use of special characters like -, setting the value to the min', async () => {
-    const { getByTestId } = render(
-      wrapWithTheme(<EnhancedNumberInput {...props} />)
-    );
-
-    const input = getByTestId('textfield-input');
-    await userEvent.type(input, '--3');
-    expect(setValue).toHaveBeenCalledWith(0);
-  });
-
-  it('prevents the use of special characters like +, setting the value to the min', async () => {
-    const { getByTestId } = render(
-      wrapWithTheme(<EnhancedNumberInput {...props} />)
-    );
-
-    const input = getByTestId('textfield-input');
-    await userEvent.type(input, '+');
-    expect(setValue).toHaveBeenCalledWith(0);
-  });
-
-  it('prevents the use of special characters like ., setting the value to the min', async () => {
-    const { getByTestId } = render(
-      wrapWithTheme(<EnhancedNumberInput {...props} />)
-    );
-
-    const input = getByTestId('textfield-input');
-    await userEvent.type(input, '.');
-    expect(setValue).toHaveBeenCalledWith(0);
-  });
+      const input = getByTestId('textfield-input');
+      await userEvent.type(input, inputValue);
+      expect(setValue).toHaveBeenCalledWith(0);
+    }
+  );
 
   it('should respect min values', () => {
     const { getByTestId } = render(
