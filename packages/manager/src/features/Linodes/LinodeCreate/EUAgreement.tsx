@@ -26,7 +26,7 @@ export const EUAgreement = () => {
 
   const { data: agreements } = useAccountAgreements(hasSelectedAnEURegion);
 
-  const { permissions } = usePermissions('account', [
+  const { data: permissions } = usePermissions('account', [
     'acknowledge_account_agreement',
   ]);
 

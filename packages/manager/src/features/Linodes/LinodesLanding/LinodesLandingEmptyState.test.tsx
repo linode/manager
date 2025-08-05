@@ -6,7 +6,7 @@ import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -37,7 +37,7 @@ describe('LinodesLandingEmptyState', () => {
 
   it('should enable "Create Linode" button if the user has create_linode permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

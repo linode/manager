@@ -12,7 +12,7 @@ import type { LinodeCreateFormValues } from '../utilities';
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: vi.fn(() => ({
-    permissions: { delete_firewall: true, update_firewall: true },
+    data: { delete_firewall: true, update_firewall: true },
   })),
 }));
 

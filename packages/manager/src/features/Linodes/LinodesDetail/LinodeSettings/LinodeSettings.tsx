@@ -16,7 +16,7 @@ const LinodeSettings = () => {
 
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['update_linode', 'delete_linode'],
     id

@@ -22,7 +22,7 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
-    permissions: { update_account: false, make_billing_payment: false },
+    data: { update_account: false, make_billing_payment: false },
   })),
 }));
 
@@ -98,7 +98,7 @@ describe('Payment Info Panel', () => {
 
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_account: true, make_billing_payment: true },
+      data: { update_account: true, make_billing_payment: true },
     });
     const { getByTestId, findByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
@@ -187,7 +187,7 @@ describe('Payment Info Panel', () => {
       });
 
       queryMocks.userPermissions.mockReturnValue({
-        permissions: { update_account: false, make_billing_payment: false },
+        data: { update_account: false, make_billing_payment: false },
       });
 
       const { getByTestId } = renderWithTheme(
