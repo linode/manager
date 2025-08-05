@@ -194,12 +194,21 @@ export const createKubernetesCluster = (mockState: MockState) => [
 
       // Create mock VPC.
       if (payload.tier === 'enterprise') {
+        // Default to auto-generated VPC.
         vpc = vpcFactory.build({
           region: payload.region,
           label: `vpc-${payload.label}`,
-          subnets: [subnetFactory.build({ id: payload.subnet_id })],
-          id: payload.vpc_id,
+          subnets: [subnetFactory.build()],
         });
+
+        // Connect BYO VPC.
+        if (payload.vpc_id) {
+          vpc = {
+            ...vpc,
+            id: payload.vpc_id,
+            subnets: [subnetFactory.build({ id: payload.subnet_id })],
+          };
+        }
         await mswDB.add('vpcs', vpc, mockState);
       }
 
