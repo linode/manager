@@ -82,13 +82,12 @@ export const useAlertDefinitionByServiceTypeQuery = (serviceType: string) => {
 
 export const useAlertDefinitionQuery = (
   alertId: string,
-  serviceType: string,
-  refetchOnMount?: boolean
+  serviceType: string
 ) => {
   return useQuery<Alert, APIError[]>({
     ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
 
-    refetchOnMount,
+    refetchOnMount: 'always',
     ...queryPresets.oneTimeFetch,
   });
 };

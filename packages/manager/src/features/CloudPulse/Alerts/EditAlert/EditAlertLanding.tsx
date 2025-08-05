@@ -34,7 +34,7 @@ export const EditAlertLanding = () => {
     data: alertDetails,
     isError,
     isLoading,
-  } = useAlertDefinitionQuery(alertId, serviceType, true);
+  } = useAlertDefinitionQuery(alertId, serviceType);
   const pathname = '/Definition/Edit';
 
   if (isLoading) {
