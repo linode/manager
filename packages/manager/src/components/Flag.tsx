@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, omittedProps } from '@linode/ui';
 import 'flag-icons/css/flag-icons.min.css';
 import { styled } from '@mui/material/styles';
 import React from 'react';
@@ -45,7 +45,10 @@ const getFlagClass = (country: Country | string) => {
   return country;
 };
 
-const StyledFlag = styled(Box, { label: 'StyledFlag' })<{
+const StyledFlag = styled(Box, {
+  label: 'StyledFlag',
+  shouldForwardProp: omittedProps(['hasBorder']),
+})<{
   hasBorder: boolean;
 }>(({ theme, hasBorder }) => ({
   boxShadow:
