@@ -80,25 +80,21 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
         ? 'active'
         : 'inactive';
 
-  const displayLabel = label ?? typeLabel;
+  const labelText = label ?? typeLabel;
 
-  const displayStatus =
+  const statusText =
     nodeStatus === 'not_ready'
       ? 'Provisioning'
       : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
 
-  const displayPublicIPv4 = ip ?? '';
-  const displayVPCIPv4 = vpcIpv4?.address ?? '';
-  const displayVPCIPv6 = vpcIpv6?.ipv6_addresses[0].slaac_address ?? '';
+  const publicIPv4Text = ip ?? '';
+  const vpcIpv4Text = vpcIpv4?.address ?? '';
+  const vpcIpv6Text = vpcIpv6?.ipv6_addresses[0].slaac_address ?? '';
 
   return (
     <TableRow data-qa-node-row={nodeId}>
       <TableCell noWrap>
-        {linodeLink ? (
-          <Link to={linodeLink}>{displayLabel}</Link>
-        ) : (
-          displayLabel
-        )}
+        {linodeLink ? <Link to={linodeLink}>{labelText}</Link> : labelText}
       </TableCell>
       <TableCell statusCell={!linodeError}>
         {linodeError ? (
@@ -112,7 +108,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
         ) : (
           <>
             <StatusIcon status={iconStatus} />
-            {displayStatus}
+            {statusText}
           </>
         )}
       </TableCell>
@@ -125,15 +121,15 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           >
             Error retrieving IP
           </Typography>
-        ) : displayPublicIPv4.length > 0 ? (
+        ) : publicIPv4Text.length > 0 ? (
           <Box alignItems="center" display="flex" gap={0.5}>
             <CopyTooltip
               copyableText
               masked={Boolean(maskSensitiveDataPreference)}
               maskedTextLength="ipv4"
-              text={displayPublicIPv4}
+              text={publicIPv4Text}
             />
-            <StyledCopyTooltip text={displayPublicIPv4} />
+            <StyledCopyTooltip text={publicIPv4Text} />
           </Box>
         ) : null}
       </TableCell>
@@ -147,15 +143,15 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
             >
               Error retrieving IP
             </Typography>
-          ) : displayVPCIPv4.length > 0 ? (
+          ) : vpcIpv4Text.length > 0 ? (
             <Box alignItems="center" display="flex" gap={0.5}>
               <CopyTooltip
                 copyableText
                 masked={Boolean(maskSensitiveDataPreference)}
                 maskedTextLength="ipv4"
-                text={displayVPCIPv4}
+                text={vpcIpv4Text}
               />
-              <StyledCopyTooltip text={displayVPCIPv4} />
+              <StyledCopyTooltip text={vpcIpv4Text} />
             </Box>
           ) : null}
         </TableCell>
@@ -170,15 +166,15 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
             >
               Error retrieving IP
             </Typography>
-          ) : displayVPCIPv6.length > 0 ? (
+          ) : vpcIpv6Text.length > 0 ? (
             <Box alignItems="center" display="flex" gap={0.5}>
               <CopyTooltip
                 copyableText
                 masked={Boolean(maskSensitiveDataPreference)}
                 maskedTextLength="ipv6"
-                text={displayVPCIPv6}
+                text={vpcIpv6Text}
               />
-              <StyledCopyTooltip text={displayVPCIPv6} />
+              <StyledCopyTooltip text={vpcIpv6Text} />
             </Box>
           ) : (
             '—'
