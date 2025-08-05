@@ -72,7 +72,7 @@ export const KubeCheckoutBar = (props: Props) => {
   });
 
   // Show a warning if any of the pools have fewer than 3 nodes
-  const showWarning = pools.some((thisPool) => thisPool.count < 3);
+  const showWarning = pools?.some((thisPool) => thisPool.count < 3);
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
