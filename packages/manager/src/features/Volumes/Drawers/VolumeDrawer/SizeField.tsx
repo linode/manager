@@ -107,14 +107,14 @@ export const SizeField = (props: Props) => {
         helperText={helperText}
         inputProps={{
           min: 0,
+        }}
+        InputProps={{
+          endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
           onKeyDown: (e) => {
             if (['+', '-', '.', 'E', 'e'].includes(e.key)) {
               e.preventDefault();
             }
           },
-        }}
-        InputProps={{
-          endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
         }}
         label="Size"
         name={name}

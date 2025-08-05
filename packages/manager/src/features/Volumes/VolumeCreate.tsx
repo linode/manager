@@ -358,7 +358,7 @@ export const VolumeCreate = () => {
           variant="error"
         />
       )}
-      <form noValidate onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <Paper>
             <Typography
