@@ -12,7 +12,6 @@ import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { Region } from '@linode/api-v4';
 import type { useRegionsQuery } from '@linode/queries';
-import type { CloudPulseResourceTypeMapFlag, Flags } from 'src/featureFlags';
 
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
@@ -26,17 +25,6 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
   useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
-
-const flags: Partial<Flags> = {
-  aclpResourceTypeMap: [
-    {
-      serviceType: 'dbaas',
-    },
-    {
-      serviceType: 'linode',
-    },
-  ] as CloudPulseResourceTypeMapFlag[],
-};
 
 const allRegions: Region[] = [
   regionFactory.build({
