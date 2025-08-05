@@ -5,11 +5,7 @@ import { CloudPulseAvailableViews } from './models';
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type {
-  CloudPulseServiceType,
-  Dashboard,
-  DateTimeWithPreset,
-} from '@linode/api-v4';
+import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 /**
  * This interface is used to get method parameters for this utility
@@ -62,7 +58,7 @@ export const checkMandatoryFiltersSelected = (
   props: ReusableDashboardFilterUtilProps
 ): boolean => {
   const { dashboardObj, filterValue, resource, timeDuration } = props;
-  const serviceTypeConfig = FILTER_CONFIG.get(dashboardObj.service_type);
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboardObj.id);
 
   if (!serviceTypeConfig) {
     return true;
@@ -97,14 +93,14 @@ export const checkMandatoryFiltersSelected = (
 
 /**
  * @param filterKey The current filterKey for which the check needs to made against the config
- * @param serviceType The serviceType of the selected dashboard
+ * @param dashboardId The ID of the dashboard
  * @returns True, if the filter is needed in the metrics call, else false
  */
 export const checkIfFilterNeededInMetricsCall = (
   filterKey: string,
-  serviceType: CloudPulseServiceType
+  dashboardId: number
 ): boolean => {
-  const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboardId);
 
   if (!serviceTypeConfig) {
     return false;
@@ -135,9 +131,7 @@ export const constructDimensionFilters = (
 ): CloudPulseMetricsAdditionalFilters[] => {
   const { dashboardObj, filterValue } = props;
   return Object.keys(filterValue)
-    .filter((key) =>
-      checkIfFilterNeededInMetricsCall(key, dashboardObj.service_type)
-    )
+    .filter((key) => checkIfFilterNeededInMetricsCall(key, dashboardObj.id))
     .map((key) => ({
       filterKey: key,
       filterValue: filterValue[key],
@@ -153,7 +147,7 @@ export const checkIfFilterBuilderNeeded = (dashboard?: Dashboard): boolean => {
     return false;
   }
 
-  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.id);
 
   if (!serviceTypeConfig) {
     return false;
