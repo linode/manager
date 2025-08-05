@@ -197,7 +197,8 @@ export const createKubernetesCluster = (mockState: MockState) => [
         vpc = vpcFactory.build({
           region: payload.region,
           label: `vpc-${payload.label}`,
-          subnets: [subnetFactory.build()],
+          subnets: [subnetFactory.build({ id: payload.subnet_id })],
+          id: payload.vpc_id,
         });
         await mswDB.add('vpcs', vpc, mockState);
       }
@@ -211,8 +212,6 @@ export const createKubernetesCluster = (mockState: MockState) => [
         vpc_id: payload.vpc_id,
         subnet_id: payload.subnet_id,
         stack_type: payload.stack_type,
-        vpc_id: vpc?.id,
-        subnet_id: vpc?.subnets[0].id,
       });
 
       // Create mock node pools.
