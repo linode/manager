@@ -25,6 +25,7 @@ import {
   VLANFactory,
   volumeFactory,
 } from 'src/factories';
+import { formatDate } from 'src/utilities/formatDate';
 
 import type { Notification } from '@linode/api-v4';
 
@@ -77,17 +78,7 @@ describe('QEMU reboot upgrade notification', () => {
         start_time: new Date().toISOString(),
       }),
     ];
-    const formattedTime = new Date(upcomingMaintenance[0].start_time)
-      .toLocaleString('en-CA', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-        timeZone: mockProfile.timezone,
-      })
-      .replace(',', '');
+    const formattedTime = formatDate(upcomingMaintenance[0].start_time);
     const maintenanceTooltipText = `This Linode’s maintenance window opens at ${formattedTime}. For more information, see your open support tickets.`;
 
     mockGetAccount(mockAccount).as('getAccount');
