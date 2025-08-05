@@ -26,7 +26,7 @@ export const Plan = () => {
   const { data: types } = useAllTypes();
   const createType = useGetLinodeCreateType();
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <PlansPanel
