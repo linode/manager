@@ -3,7 +3,6 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useEffect } from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -30,19 +29,20 @@ export const UserDetail = () => {
   const queryClient = useQueryClient();
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  useEffect(() => {
-    if (isIAMEnabled && username) {
-      const isOnPermissions =
-        window.location.pathname === `/account/users/${username}/permissions`;
+  if (isIAMEnabled && username) {
+    const isOnPermissions =
+      window.location.pathname === `/account/users/${username}/permissions`;
 
-      navigate({
-        to: isOnPermissions
-          ? `/iam/users/${username}/roles`
-          : `/iam/users/${username}/details`,
-        replace: true,
-      });
-    }
-  }, [isIAMEnabled, username]);
+    navigate({
+      to: isOnPermissions
+        ? `/iam/users/$username/roles`
+        : `/iam/users/$username/details`,
+      params: {
+        username,
+      },
+      replace: true,
+    });
+  }
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
