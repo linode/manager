@@ -1,4 +1,4 @@
-import { Outlet, useParams } from '@tanstack/react-router';
+import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -7,6 +7,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { useIsIAMEnabled } from '../hooks/useIsIAMEnabled';
 import { IAM_DOCS_LINK, IAM_LABEL } from '../Shared/constants';
 
 export const UserDetailsLanding = () => {
@@ -25,6 +26,23 @@ export const UserDetailsLanding = () => {
       title: 'Entity Access',
     },
   ]);
+
+  const { isIAMEnabled } = useIsIAMEnabled();
+  const navigate = useNavigate();
+
+  if (!isIAMEnabled && username) {
+    const isOnRoles = location.pathname === `/iam/users/${username}/roles`;
+
+    navigate({
+      to: isOnRoles
+        ? '/account/users/$username/permissions'
+        : '/account/users/$username',
+      params: {
+        username,
+      },
+      replace: true,
+    });
+  }
 
   return (
     <>

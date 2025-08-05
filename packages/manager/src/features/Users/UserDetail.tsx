@@ -1,7 +1,7 @@
 import { useAccountUser, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { useLocation, useParams } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -11,6 +11,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { useIsIAMEnabled } from '../IAM/hooks/useIsIAMEnabled';
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';
 
@@ -19,7 +20,24 @@ export const UserDetail = () => {
     from: '/account/users/$username',
   });
 
+  const { isIAMEnabled } = useIsIAMEnabled();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  if (isIAMEnabled && username) {
+    const isOnPermissions =
+      location.pathname === `/account/users/${username}/permissions`;
+
+    navigate({
+      to: isOnPermissions
+        ? '/iam/users/$username/roles'
+        : '/iam/users/$username/details',
+      params: {
+        username,
+      },
+      replace: true,
+    });
+  }
 
   const { data: profile } = useProfile();
   const { data: user, error, isLoading } = useAccountUser(username ?? '');

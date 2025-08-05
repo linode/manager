@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -8,6 +8,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { useIsIAMEnabled } from './hooks/useIsIAMEnabled';
 import { IAM_DOCS_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
@@ -30,6 +31,16 @@ export const IdentityAccessLanding = React.memo(() => {
     entity: 'Identity and Access',
     title: 'Identity and Access',
   };
+
+  const { isIAMEnabled } = useIsIAMEnabled();
+  const navigate = useNavigate();
+
+  if (!isIAMEnabled) {
+    navigate({
+      to: '/account/users',
+      replace: true,
+    });
+  }
 
   return (
     <>

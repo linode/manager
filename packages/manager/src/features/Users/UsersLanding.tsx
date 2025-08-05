@@ -14,6 +14,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { useIsIAMEnabled } from '../IAM/hooks/useIsIAMEnabled';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
@@ -25,6 +26,15 @@ import type { Filter } from '@linode/api-v4';
 export const UsersLanding = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { isIAMEnabled } = useIsIAMEnabled();
+
+  if (isIAMEnabled) {
+    navigate({
+      to: '/iam/users',
+      replace: true,
+    });
+  }
+
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
