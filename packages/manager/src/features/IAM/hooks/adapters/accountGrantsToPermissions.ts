@@ -29,7 +29,7 @@ export const accountGrantsToPermissions = (
     enable_managed: unrestricted,
     enroll_beta_program: unrestricted,
     is_account_admin: unrestricted,
-    update_account: unrestricted,
+    update_account: hasWriteAccess,
     update_account_settings: unrestricted,
     update_user: unrestricted, // TODO: verify mapping as this is not in the API
     update_user_grants: unrestricted, // TODO: verify mapping as this is not in the API
