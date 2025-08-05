@@ -601,7 +601,8 @@ describe('database resize', () => {
         'aria-disabled',
         'true'
       );
-      const expectedMessage = `Warning: Your current plan is currently unavailable and it can't be used to resize the cluster. You can only resize the cluster using other available plans.`;
+      const expectedMessage =
+        'Warning: Your current plan is currently unavailable and it can\u{2019}t be used to resize the cluster. You can only resize the cluster using other available plans.';
       const unavailableNotice = getAllByText(expectedMessage);
       expect(unavailableNotice[0]).toBeInTheDocument();
     });

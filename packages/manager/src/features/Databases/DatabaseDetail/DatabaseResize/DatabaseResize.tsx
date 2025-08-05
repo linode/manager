@@ -96,9 +96,7 @@ export const DatabaseResize = () => {
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     databaseRegion,
-    Boolean(flags.soldOutChips) &&
-      Boolean(flags.databasePremium) &&
-      Boolean(databaseRegion)
+    Boolean(flags.soldOutChips && flags.databasePremium && databaseRegion)
   );
 
   const { enqueueSnackbar } = useSnackbar();
@@ -202,7 +200,11 @@ export const DatabaseResize = () => {
 
   const currentPlanUnavailableNotice = (
     <Notice variant="warning">
-      <PlanNoticeTypography variant="h3">{`Warning: Your current plan is currently unavailable and it can't be used to resize the cluster. You can only resize the cluster using other available plans.`}</PlanNoticeTypography>
+      <PlanNoticeTypography variant="h3">
+        {
+          'Warning: Your current plan is currently unavailable and it can\u{2019}t be used to resize the cluster. You can only resize the cluster using other available plans.'
+        }
+      </PlanNoticeTypography>
     </Notice>
   );
 
