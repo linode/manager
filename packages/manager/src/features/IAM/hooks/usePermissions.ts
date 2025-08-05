@@ -28,23 +28,25 @@ import type {
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
 
+export type PermissionsResult = {
+  data: Record<PermissionType, boolean>;
+} & Omit<UseQueryResult<PermissionType[], APIError[]>, 'data'>;
+
 export const usePermissions = (
   accessType: AccessType,
   permissionsToCheck: PermissionType[],
   entityId?: number,
   enabled: boolean = true
-): { permissions: Record<PermissionType, boolean> } => {
+): PermissionsResult => {
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  const { data: userAccountPermissions } = useUserAccountPermissions(
-    isIAMEnabled && accessType === 'account' && enabled
-  );
+  const { data: userAccountPermissions, ...restAccountPermissions } =
+    useUserAccountPermissions(
+      isIAMEnabled && accessType === 'account' && enabled
+    );
 
-  const { data: userEntityPermisssions } = useUserEntityPermissions(
-    accessType,
-    entityId!,
-    isIAMEnabled && enabled
-  );
+  const { data: userEntityPermisssions, ...restEntityPermissions } =
+    useUserEntityPermissions(accessType, entityId!, isIAMEnabled && enabled);
 
   const usersPermissions =
     accessType === 'account' ? userAccountPermissions : userEntityPermisssions;
@@ -66,7 +68,11 @@ export const usePermissions = (
         entityId
       );
 
-  return { permissions: permissionMap } as const;
+  return {
+    data: permissionMap,
+    ...restAccountPermissions,
+    ...restEntityPermissions,
+  } as const;
 };
 
 export type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
