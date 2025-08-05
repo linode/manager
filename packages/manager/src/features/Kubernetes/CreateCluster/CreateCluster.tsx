@@ -91,6 +91,8 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 export interface CreateClusterFormValues {
   nodePools: CreateNodePoolData[];
   stack_type: KubernetesStackType | null;
+  subnet_id?: number;
+  vpc_id?: number;
 }
 
 export interface NodePoolConfigDrawerHandlerParams {
@@ -150,13 +152,14 @@ export const CreateCluster = () => {
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, ...form } = useForm<CreateClusterFormValues>({
-    defaultValues: {
-      nodePools: [],
-      stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
-    },
-    shouldUnregister: true,
-  });
+  const { control, trigger, formState, ...form } =
+    useForm<CreateClusterFormValues>({
+      defaultValues: {
+        nodePools: [],
+        stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
+      },
+      shouldUnregister: true,
+    });
   const nodePools = useWatch({ control, name: 'nodePools' });
   const { update } = useFieldArray({
     control,
@@ -278,6 +281,8 @@ export const CreateCluster = () => {
       pick(['type', 'count', 'update_strategy'])
     ) as CreateNodePoolData[];
 
+    const vpcId = form.getValues('vpc_id');
+    const subnetId = form.getValues('subnet_id');
     const stackType = form.getValues('stack_type');
 
     const _ipv4 = ipV4Addr
@@ -328,13 +333,30 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    if (isLkeEnterprisePhase2FeatureEnabled && stackType) {
-      payload = { ...payload, stack_type: stackType };
+    if (isLkeEnterprisePhase2FeatureEnabled) {
+      payload = {
+        ...payload,
+        vpc_id: vpcId,
+        subnet_id: subnetId,
+        stack_type: stackType ?? undefined,
+      };
     }
 
     const createClusterFn = isUsingBetaEndpoint
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
+
+    // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
+    if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
+      // Trigger the React Hook Form validation for BYO VPC selection.
+      trigger();
+      // Don't submit the form while RHF errors persist.
+      if (!formState.isValid) {
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+        return;
+      }
+    }
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
@@ -391,6 +413,8 @@ export const CreateCluster = () => {
       'k8s_version',
       'versionLoad',
       'control_plane',
+      'vpc_id',
+      'subnet_id',
     ],
     errors
   );
@@ -416,7 +440,12 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} {...form}>
+    <FormProvider
+      control={control}
+      formState={formState}
+      trigger={trigger}
+      {...form}
+    >
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
@@ -547,7 +576,7 @@ export const CreateCluster = () => {
             )}
             <Divider
               sx={{
-                marginBottom: selectedTier === 'enterprise' ? 3 : 1,
+                marginBottom: selectedTier === 'enterprise' ? 2 : 1,
                 marginTop: showAPL ? 1 : 4,
               }}
             />
@@ -567,7 +596,13 @@ export const CreateCluster = () => {
                 />
               </Box>
             )}
-            {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
+            {selectedTier === 'enterprise' && (
+              <ClusterNetworkingPanel
+                selectedRegionId={selectedRegion?.id}
+                subnetErrorText={errorMap.subnet_id}
+                vpcErrorText={errorMap.vpc_id}
+              />
+            )}
             <>
               <Divider
                 sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
