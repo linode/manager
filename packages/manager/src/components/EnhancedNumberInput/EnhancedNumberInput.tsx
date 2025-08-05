@@ -27,6 +27,10 @@ const sxTextField = {
   maxWidth: 70,
 };
 
+/**
+ * Using MUI's TextField component with type=number causes known issues, which MUI has documented: https://mui.com/material-ui/react-text-field/#type-quot-number-quot.
+ * Until MUI has a dedicated NumberInput component (https://github.com/mui/material-ui/issues/19154) or we redesign this one, this fixes the erroneous character issue.
+ */
 const charsToPrevent = ['+', '-', '.', 'e', 'E'];
 
 interface EnhancedNumberInputProps {
