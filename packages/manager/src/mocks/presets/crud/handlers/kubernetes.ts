@@ -191,6 +191,8 @@ export const createKubernetesCluster = (mockState: MockState) => [
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
         tier: payload.tier,
+        vpc_id: payload.vpc_id,
+        subnet_id: payload.subnet_id,
         stack_type: payload.stack_type,
       });
 
@@ -227,6 +229,22 @@ export const createKubernetesCluster = (mockState: MockState) => [
       });
 
       return makeResponse(cluster);
+      // Comment out the line above and uncomment below for mock error response.
+      // return makeResponse(
+      //   {
+      //     errors: [
+      //       {
+      //         reason: 'There is an error configuring this VPC.',
+      //         field: 'vpc_id',
+      //       },
+      //       {
+      //         reason: 'There is no /52 ipv6 subnet available inside the VPC.',
+      //         field: 'subnet_id',
+      //       },
+      //     ],
+      //   },
+      //   400
+      // );
     }
   ),
 ];
