@@ -6,7 +6,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
-import { ValueFieldBuilder } from './DimensionFilterValue/ValueFieldBuilder';
+import { ValueFieldRenderer } from './DimensionFilterValue/ValueFieldRenderer';
 
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
@@ -140,7 +140,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 field.onChange(
                   operation === 'selectOption' ? newValue.value : null
                 );
-                setValue(`${name}.value`, null)
+                setValue(`${name}.value`, null);
               }}
               options={dimensionOperatorOptions}
               placeholder="Select an Operator"
@@ -153,28 +153,31 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           )}
         />
       </GridLegacy>
-      <GridLegacy item lg={3.3} md={4.3} xs={12}>
-        <Box display="flex" gap={1}>
-          <Controller
-            control={control}
-            name={`${name}.value`}
-            render={({ field, fieldState }) => (
-              <ValueFieldBuilder
-                dimensionLabel={dimensionFieldWatcher}
-                disabled={!dimensionFieldWatcher}
-                entities={entities}
-                errorText={fieldState.error?.message}
-                onBlur={field.onBlur}
-                onChange={field.onChange}
-                operator={dimensionOperatorWatcher}
-                value={field.value}
-                values={selectedDimension?.values ?? []}
-              />
-            )}
-          />
-          <Box alignContent="flex-start" mt={6}>
-            <ClearIconButton handleClick={onFilterDelete} />
-          </Box>
+      <GridLegacy item lg={3} md={4} xs={12}>
+        {/* <Box display="flex" gap={1}> */}
+        <Controller
+          control={control}
+          name={`${name}.value`}
+          render={({ field, fieldState }) => (
+            <ValueFieldRenderer
+              dimensionLabel={dimensionFieldWatcher}
+              disabled={!dimensionFieldWatcher}
+              entities={entities}
+              errorText={fieldState.error?.message}
+              name={name}
+              onBlur={field.onBlur}
+              onChange={field.onChange}
+              operator={dimensionOperatorWatcher}
+              value={field.value}
+              values={selectedDimension?.values ?? []}
+            />
+          )}
+        />
+        {/* </Box> */}
+      </GridLegacy>
+      <GridLegacy item>
+        <Box alignContent="flex-start" mt={6}>
+          <ClearIconButton handleClick={onFilterDelete} />
         </Box>
       </GridLegacy>
     </GridLegacy>

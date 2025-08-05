@@ -2,7 +2,6 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 
 import {
-  getOperatorGroup,
   MULTISELECT_PLACEHOLDER_TEXT,
   SINGLESELECT_PLACEHOLDER_TEXT,
   TEXTFIELD_PLACEHOLDER_TEXT,
@@ -10,32 +9,74 @@ import {
 } from './constants';
 import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
 import { useFetchOptions } from './useFetchOptions';
+import { getOperatorGroup } from './utils';
 
 import type { DimensionFilterOperatorType } from '@linode/api-v4';
 
-interface ValueFieldBuilderProps {
+interface ValueFieldRendererProps {
+  /**
+   * The dimension_label extracted from the Dimension Data.
+   */
   dimensionLabel: null | string;
+
+  /**
+   * Disables the input field when set to true.
+   */
   disabled: boolean;
+
+  /**
+   * Optional list of entity IDs used to filter resources like firewalls.
+   */
   entities?: string[];
+  /**
+   * Error message to be displayed under the input field, if any.
+   */
   errorText: string | undefined;
+
+  /**
+   * The name of the field set in the form.
+   */
+  name: string;
+
+  /**
+   * Triggered when the input field loses focus.
+   */
   onBlur: () => void;
+
+  /**
+   * Callback fired when the value changes.
+   */
   onChange: (value: string | string[]) => void;
+
+  /**
+   * The operator used in the current filter. Used to determine the type of input to show.
+   */
   operator: DimensionFilterOperatorType | null;
+
+  /**
+   * The currently selected value for the input field.
+   */
   value: null | string;
+
+  /**
+   * Optional list of pre-defined values, used for static autocomplete options.
+   */
   values: null | string[];
 }
 
-export const ValueFieldBuilder: React.FC<ValueFieldBuilderProps> = ({
-  entities,
-  disabled,
-  dimensionLabel,
-  operator,
-  values,
-  value,
-  onChange,
-  onBlur,
-  errorText,
-}) => {
+export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
+  const {
+    dimensionLabel,
+    disabled,
+    entities,
+    errorText,
+    name,
+    onBlur,
+    onChange,
+    operator,
+    value,
+    values,
+  } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
 
@@ -49,6 +90,8 @@ export const ValueFieldBuilder: React.FC<ValueFieldBuilderProps> = ({
   if (config.type === 'textfield') {
     return (
       <TextField
+        data-qa-dimension-filter={`${name}-value`}
+        data-testid="value"
         disabled={disabled}
         errorText={errorText}
         fullWidth
@@ -59,7 +102,7 @@ export const ValueFieldBuilder: React.FC<ValueFieldBuilderProps> = ({
         onBlur={onBlur}
         onChange={(e) => onChange(e.target.value)}
         placeholder={config.placeholder ?? TEXTFIELD_PLACEHOLDER_TEXT}
-        sx={{ flex: 1, minWdth: '256px', maxWidth: '300px', width: '277px' }}
+        sx={{ flex: 1 }}
         type={config.inputType}
         value={value ?? ''}
       />
@@ -78,6 +121,7 @@ export const ValueFieldBuilder: React.FC<ValueFieldBuilderProps> = ({
         fieldOnChange={onChange}
         fieldValue={value}
         multiple={config.multiple}
+        name={name}
         placeholderText={config.placeholder ?? autocompletePlaceholder}
         values={items}
       />

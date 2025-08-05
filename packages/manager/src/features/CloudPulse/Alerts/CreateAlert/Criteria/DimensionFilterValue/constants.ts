@@ -1,79 +1,110 @@
 import {
+  CONFIG_ERROR_MESSAGE,
+  CONFIG_ID_PLACEHOLDER_TEXT,
+  CONFIGS_HELPER_TEXT,
+  CONFIGS_ID_PLACEHOLDER_TEXT,
   PORT_HELPER_TEXT,
   PORT_PLACEHOLDER_TEXT,
   PORTS_PLACEHOLDER_TEXT,
 } from '../../../constants';
 
-import type { Item } from '../../../constants';
-import type { DimensionFilterOperatorType } from '@linode/api-v4';
-
 export const MULTISELECT_PLACEHOLDER_TEXT = 'Select values';
 export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a value';
 export const SINGLESELECT_PLACEHOLDER_TEXT = 'Select a value';
 
-export const resolveSelectedValues = (
-  options: Item<string, string>[],
-  value: null | string,
-  isMultiple: boolean
-): Item<string, string> | Item<string, string>[] | null => {
-  if (!value) return isMultiple ? [] : null;
-
-  if (isMultiple) {
-    return options.filter((option) => value.split(',').includes(option.value));
-  }
-
-  return options.find((option) => option.value === value) ?? null;
-};
-
-export const handleValueChange = (
-  selected: Item<string, string> | Item<string, string>[] | null,
-  operation: string,
-  isMultiple: boolean
-): string => {
-  if (operation !== 'selectOption') return '';
-
-  if (isMultiple && Array.isArray(selected)) {
-    return selected.map((item) => item.value).join(',');
-  }
-
-  if (!isMultiple && selected && !Array.isArray(selected)) {
-    return selected.value;
-  }
-
-  return '';
-};
-
 export type FieldType = 'autocomplete' | 'textfield';
 
+/**
+ * Base configuration interface for the Value input components.
+ */
 export interface BaseConfig {
+  /**
+   * Specifies which type of input component to render.
+   * - 'autocomplete': Renders a select/multi-select dropdown.
+   * - 'textfield': Renders a free-form input field.
+   */
   type: 'autocomplete' | 'textfield';
 }
+
+/**
+ * Configuration interface for the TextField-based Value input.
+ */
 export interface TextFieldConfig extends BaseConfig {
+  /**
+   * Optional helper text to render below the input field (e.g., hints or constraints).
+   */
   helperText?: string;
+
+  /**
+   * - 'number': Renders an input that only accepts numeric values.
+   * - 'text': Accepts any textual input.
+   */
   inputType: 'number' | 'text';
+
+  /**
+   * Optional upper bound for numeric inputs (used with inputType: 'number').
+   */
   max?: number;
+
+  /**
+   * Optional lower bound for numeric inputs (used with inputType: 'number').
+   */
   min?: number;
+
+  /**
+   * Placeholder text to show in the field before a value is entered.
+   */
   placeholder?: string;
+
+  /**
+   * Enforces that this config is for a textfield input.
+   */
   type: 'textfield';
 }
 
+/**
+ * Configuration interface for the Autocomplete-based Value input.
+ */
 export interface AutocompleteConfig extends BaseConfig {
+  /**
+   * Indicates whether the Autocomplete supports selecting multiple options.
+   */
   multiple: boolean;
+
+  /**
+   * Optional placeholder to display when no value is selected.
+   */
   placeholder?: string;
+
+  /**
+   * Enforces that this config is for an autocomplete input.
+   */
   type: 'autocomplete';
 }
 
+/**
+ * Union of configuration types used to dynamically render
+ * either a TextField or Autocomplete input component.
+ */
 export type ValueFieldConfig = AutocompleteConfig | TextFieldConfig;
 
-export type DimensionLabel = '*' | 'linode_id' | 'port' | 'region_id';
+/**
+ * Operator grouping categories used to map to appropriate config.
+ */
+export type OperatorGroup = '*' | 'eq_neq' | 'in' | 'startswith_endswith';
 
+/**
+ * Configuration map that defines the input UI to render
+ * based on a given dimension and the operator type.
+ */
 export type ValueFieldConfigMap = Record<
   string,
   Record<OperatorGroup, ValueFieldConfig>
 >;
 
-type OperatorGroup = '*' | 'eq_neq' | 'in' | 'startswith_endswith';
-
+/**
+ * Full config for each dimension, operator group pair.
+ */
 export const valueFieldConfig: ValueFieldConfigMap = {
   port: {
     eq_neq: {
@@ -139,7 +170,30 @@ export const valueFieldConfig: ValueFieldConfigMap = {
       inputType: 'text',
     },
   },
-  // fallback for any dimension with values
+  config_id: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'number',
+      placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
+      helperText: CONFIG_ERROR_MESSAGE,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'number',
+      placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
+      helperText: CONFIG_ERROR_MESSAGE,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: CONFIGS_ID_PLACEHOLDER_TEXT,
+      helperText: CONFIGS_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'number',
+    },
+  },
   '*': {
     eq_neq: {
       type: 'autocomplete',
@@ -158,14 +212,4 @@ export const valueFieldConfig: ValueFieldConfigMap = {
       inputType: 'text',
     },
   },
-};
-
-export const getOperatorGroup = (
-  operator: DimensionFilterOperatorType | null
-): OperatorGroup => {
-  if (operator === 'eq' || operator === 'neq') return 'eq_neq';
-  if (operator === 'startswith' || operator === 'endswith')
-    return 'startswith_endswith';
-  if (operator === 'in') return 'in';
-  return '*'; // fallback for null/undefined/other
 };

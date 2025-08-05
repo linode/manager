@@ -1,25 +1,65 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { handleValueChange, resolveSelectedValues } from './constants';
+import { handleValueChange, resolveSelectedValues } from './utils';
 
 import type { Item } from '../../../constants';
 
 interface DimensionFilterAutocompleteProps {
+  /**
+   * Whether the autocomplete input should be disabled.
+   */
   disabled: boolean;
+
+  /**
+   * Optional error message to display beneath the input.
+   */
   errorText?: string;
+
+  /**
+   * Handler function called on input blur.
+   */
   fieldOnBlur: () => void;
+
+  /**
+   * Callback triggered when the user selects a new value(s).
+   */
   fieldOnChange: (newValue: string | string[]) => void;
+
+  /**
+   * Current raw string value (or null) from the form state.
+   */
   fieldValue: null | string;
+
+  /**
+   * To control single-select/multi-select in the Autocomplete.
+   */
   multiple?: boolean;
+  /**
+   * Name of the field set in the form.
+   */
+  name: string;
+  /**
+   * Placeholder text to display when no selection is made.
+   */
   placeholderText: string;
+
+  /**
+   * The full list of selectable options for the autocomplete input.
+   */
   values: Item<string, string>[];
 }
+
+/**
+ * Renders an Autocomplete input field for the DimensionFilter value field.
+ * This component supports both single and multiple selection based on config.
+ */
 export const DimensionFilterAutocomplete = (
   props: DimensionFilterAutocompleteProps
 ) => {
   const {
     multiple,
+    name,
     fieldOnChange,
     values,
     disabled,
@@ -50,7 +90,7 @@ export const DimensionFilterAutocomplete = (
       }}
       options={values}
       placeholder={placeholderText}
-      sx={{ flex: 1, minWidth: '256px' }}
+      sx={{ flex: 1 }}
       value={resolveSelectedValues(values, fieldValue, multiple ?? false)}
     />
   );
