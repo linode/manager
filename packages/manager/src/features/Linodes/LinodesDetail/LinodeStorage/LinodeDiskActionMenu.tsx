@@ -31,7 +31,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
     readOnly,
   } = props;
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
     linodeId,
