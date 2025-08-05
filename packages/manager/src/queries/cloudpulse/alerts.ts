@@ -86,9 +86,6 @@ export const useAlertDefinitionQuery = (
 ) => {
   return useQuery<Alert, APIError[]>({
     ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
-
-    refetchOnMount: 'always',
-    ...queryPresets.oneTimeFetch,
   });
 };
 
