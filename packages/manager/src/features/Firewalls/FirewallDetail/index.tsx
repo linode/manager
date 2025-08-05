@@ -73,7 +73,7 @@ export const FirewallDetail = () => {
     firewallSettings &&
     getFirewallDefaultEntities(firewallId, firewallSettings);
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'firewall',
     ['update_firewall_rules'],
     firewallId
