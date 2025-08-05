@@ -29,20 +29,22 @@ export const UserDetail = () => {
   const queryClient = useQueryClient();
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  if (isIAMEnabled && username) {
-    const isOnPermissions =
-      window.location.pathname === `/account/users/${username}/permissions`;
+  React.useEffect(() => {
+    if (isIAMEnabled && username) {
+      const isOnPermissions =
+        location.pathname === `/account/users/${username}/permissions`;
 
-    navigate({
-      to: isOnPermissions
-        ? `/iam/users/$username/roles`
-        : `/iam/users/$username/details`,
-      params: {
-        username,
-      },
-      replace: true,
-    });
-  }
+      navigate({
+        to: isOnPermissions
+          ? '/iam/users/$username/roles'
+          : '/iam/users/$username/details',
+        params: {
+          username,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isIAMEnabled, username]);
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
