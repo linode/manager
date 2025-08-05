@@ -131,6 +131,7 @@ it('test checkIfFilterBuilderNeeded method', () => {
 
   result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
+    id: -1,
     service_type: '',
   });
   expect(result).toBe(false); // should be false for empty / undefined case
