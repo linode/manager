@@ -21,7 +21,7 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => navigate),
   useParams: vi.fn(() => ({})),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
       resize_linode: false,
       delete_linode: false,
@@ -126,8 +126,8 @@ describe('LinodeDiskActionMenu', () => {
 
   it('Clone should redirect to clone page', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         clone_linode: true,
       },
     });
@@ -197,7 +197,7 @@ describe('LinodeDiskActionMenu', () => {
 
   it('should disable all actions menu if the user does not have permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_linode: false,
         resize_linode: false,
         delete_linode: false,
@@ -230,7 +230,7 @@ describe('LinodeDiskActionMenu', () => {
 
   it('should enable all actions menu if the user has permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_linode: true,
         resize_linode: true,
         delete_linode: true,

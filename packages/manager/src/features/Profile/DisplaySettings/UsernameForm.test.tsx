@@ -10,7 +10,7 @@ import { UsernameForm } from './UsernameForm';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_user: false,
     },
   })),
@@ -52,7 +52,7 @@ describe('UsernameForm', () => {
 
   it('disables the input if the user is a proxy user', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_user: true,
       },
     });
@@ -79,7 +79,7 @@ describe('UsernameForm', () => {
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_user: true,
       },
     });

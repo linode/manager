@@ -18,7 +18,7 @@ const props = {
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_firewall_device: false,
     },
   })),
@@ -63,7 +63,7 @@ describe('AddLinodeDrawer', () => {
 
   it('should disable "Add" button if the user does not have create_firewall_device permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_firewall_device: false,
       },
     });
@@ -86,7 +86,7 @@ describe('AddLinodeDrawer', () => {
 
   it('should enable "Add" button if the user has create_firewall_device permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_firewall_device: true,
       },
     });

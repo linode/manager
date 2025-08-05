@@ -36,7 +36,7 @@ export const Firewall = () => {
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
-  const { permissions } = usePermissions('account', [
+  const { data: permissions } = usePermissions('account', [
     'create_linode',
     'create_firewall',
   ]);

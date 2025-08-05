@@ -9,7 +9,7 @@ import { VLAN } from './VLAN';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -40,7 +40,7 @@ describe('VLAN', () => {
     const region = regionFactory.build({ capabilities: ['Vlans'] });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

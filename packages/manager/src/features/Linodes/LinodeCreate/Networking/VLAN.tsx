@@ -17,7 +17,7 @@ interface Props {
 export const VLAN = ({ index }: Props) => {
   const { control } = useFormContext<LinodeCreateFormValues>();
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const regionId = useWatch({ control, name: 'region' });
 

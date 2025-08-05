@@ -11,7 +11,7 @@ import type { LinodeBackupsResponse } from '@linode/api-v4';
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       list_linode_backups: true,
       create_linode_backup_snapshot: true,
       cancel_linode_backups: true,

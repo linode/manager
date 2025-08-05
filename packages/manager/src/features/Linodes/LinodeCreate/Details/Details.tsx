@@ -17,7 +17,7 @@ export const Details = () => {
 
   const createType = useGetLinodeCreateType();
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>

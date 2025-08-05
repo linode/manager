@@ -45,7 +45,7 @@ export const SelectLinodeCard = ({
     Boolean(linode?.image)
   );
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['shutdown_linode', 'clone_linode'],
     linode.id

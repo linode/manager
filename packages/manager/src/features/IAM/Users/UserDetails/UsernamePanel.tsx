@@ -23,7 +23,7 @@ export const UsernamePanel = ({ user }: Props) => {
 
   const { mutateAsync } = useUpdateUserMutation(user.username);
 
-  const { permissions } = usePermissions('account', ['update_user']);
+  const { data: permissions } = usePermissions('account', ['update_user']);
 
   const {
     control,

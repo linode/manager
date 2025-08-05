@@ -21,7 +21,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -77,7 +77,7 @@ describe('Region', () => {
 
   it('should enable the region select is the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

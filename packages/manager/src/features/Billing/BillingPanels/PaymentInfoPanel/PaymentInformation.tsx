@@ -48,7 +48,7 @@ const PaymentInformation = (props: Props) => {
 
   const isChildUser = profile?.user_type === 'child';
 
-  const { permissions } = usePermissions('account', ['update_account']);
+  const { data: permissions } = usePermissions('account', ['update_account']);
 
   const isReadOnly = !permissions.update_account || isChildUser;
 

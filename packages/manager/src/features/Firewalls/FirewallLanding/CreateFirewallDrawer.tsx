@@ -62,7 +62,7 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
 
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  const { permissions } = usePermissions('account', ['create_firewall']);
+  const { data: permissions } = usePermissions('account', ['create_firewall']);
 
   const { enqueueSnackbar } = useSnackbar();
 

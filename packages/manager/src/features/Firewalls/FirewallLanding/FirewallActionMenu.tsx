@@ -41,7 +41,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     triggerEnableFirewall,
   } = props;
 
-  const { permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'firewall',
     ['update_firewall', 'delete_firewall'],
     firewallID,
@@ -87,6 +87,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+      loading={isLoading}
       onOpen={() => setIsOpen(true)}
     />
   );
