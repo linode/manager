@@ -1,5 +1,5 @@
 import { useAccount, useGrants, useProfile } from '@linode/queries';
-import { Box, Divider, Stack, Typography } from '@linode/ui';
+import { Box, Divider, NewFeatureChip, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -29,6 +29,7 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   href: string;
+  isNewFeature?: boolean;
 }
 
 const profileLinks: MenuLink[] = [
@@ -114,6 +115,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           flags?.iamRbacPrimaryNavChanges && isIAMEnabled
             ? '/iam'
             : '/account/users',
+        isNewFeature: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
       },
       {
         display: 'Quotas',
@@ -137,7 +139,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         href: '/account/settings',
       },
     ],
-    [hasFullAccountAccess, isRestrictedUser]
+    [hasFullAccountAccess, isRestrictedUser, isIAMEnabled, flags]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -268,6 +270,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                     to={menuLink.href}
                   >
                     {menuLink.display}
+                    {menuLink?.isNewFeature ? (
+                      <NewFeatureChip component="span" />
+                    ) : null}
                   </Link>
                 )
               )}
