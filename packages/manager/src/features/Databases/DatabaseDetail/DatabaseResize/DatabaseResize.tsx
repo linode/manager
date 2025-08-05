@@ -82,8 +82,11 @@ export const DatabaseResize = () => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery({ platform: database.platform });
 
-  // When databasePremium flag is enabled, provide the database region ID to perform queries and enable additional behavior for the PlansPanel
-  const databaseRegion = flags.databasePremium ? database.region : '';
+  // When databasePremium flag is enabled for a new database cluster, provide the database region ID to perform queries and enable additional behavior for the PlansPanel
+  const databaseRegion =
+    flags.databasePremium && database.platform === 'rdbms-default'
+      ? database.region
+      : '';
 
   const {
     data: regionData,
@@ -92,10 +95,10 @@ export const DatabaseResize = () => {
   } = useRegionQuery(databaseRegion);
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
-    database.region || '',
+    databaseRegion,
     Boolean(flags.soldOutChips) &&
       Boolean(flags.databasePremium) &&
-      Boolean(database.region)
+      Boolean(databaseRegion)
   );
 
   const { enqueueSnackbar } = useSnackbar();
@@ -243,7 +246,7 @@ export const DatabaseResize = () => {
     ? getIsLimitedAvailability({
         plan: currentPlan,
         regionAvailabilities: regionAvailabilities ?? [],
-        selectedRegionId: database.region,
+        selectedRegionId: databaseRegion,
       })
     : false;
 
