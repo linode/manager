@@ -42,6 +42,7 @@ import type {
   Account,
   AccountMaintenance,
   Event,
+  Grants,
   Notification,
   PermissionType,
   Profile,
@@ -76,6 +77,9 @@ export const ServiceWorkerTool = () => {
   const [customAccountData, setCustomAccountData] = React.useState<
     Account | null | undefined
   >(getCustomAccountData());
+  const [customGrantsData, setCustomGrantsData] = React.useState<
+    Grants | null | undefined
+  >(); // todo
   const [customProfileData, setCustomProfileData] = React.useState<
     null | Profile | undefined
   >(getCustomProfileData());
