@@ -15,7 +15,6 @@ interface LinodePriceOptions {
 interface ClusterData {
   prefix: string;
   size?: string;
-  //typeData?: any;
   typeData?: LinodeType;
   typeId?: string;
 }

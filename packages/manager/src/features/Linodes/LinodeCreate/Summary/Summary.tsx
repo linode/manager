@@ -69,6 +69,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     vpcId,
     diskEncryption,
     clusterSize,
+    clusterName,
     linodeInterfaces,
     interfaceGeneration,
     alerts,
@@ -87,6 +88,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'interfaces.0.vpc_id',
       'disk_encryption',
       'stackscript_data.cluster_size',
+      'stackscript_data.cluster_name',
       'linodeInterfaces',
       'interface_generation',
       'alerts',
@@ -163,13 +165,30 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       },
       show: Boolean(region),
     },
-    {
-      item: {
-        details: price,
-        title: type ? formatStorageUnits(type.label) : typeId,
-      },
-      show: price,
-    },
+    ...(() => {
+      if (clusterSize) {
+        return [
+          {
+            item: {
+              title:
+                clusterName || (type ? formatStorageUnits(type.label) : typeId),
+              details: price,
+            },
+            show: price,
+          },
+        ];
+      } else {
+        return [
+          {
+            item: {
+              details: price,
+              title: type ? formatStorageUnits(type.label) : typeId,
+            },
+            show: price,
+          },
+        ];
+      }
+    })(),
     {
       item: {
         details: `$${backupsPrice}/month`,
