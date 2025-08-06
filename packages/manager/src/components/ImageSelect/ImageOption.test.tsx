@@ -65,7 +65,7 @@ describe('ImageOption', () => {
     );
     expect(
       getByText(image.label).closest('li')?.getAttribute('aria-label')
-    ).toBe('');
+    ).toBeNull();
   });
 
   it('renders (deprecated) if the image is deprecated', () => {

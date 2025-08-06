@@ -30,7 +30,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: notifications } = useNotificationsQuery();
   const { data: account } = useAccount();
 
-  const { permissions } = usePermissions('account', ['create_promo_code']);
+  const { data: permissions } = usePermissions('account', [
+    'create_promo_code',
+  ]);
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
