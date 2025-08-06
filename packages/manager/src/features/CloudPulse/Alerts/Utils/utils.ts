@@ -81,7 +81,7 @@ export interface AlertValidationSchemaProps {
   /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
-  serviceTypeObj: null | string;
+  serviceTypeObj: CloudPulseServiceType | null;
 }
 interface HandleMultipleErrorProps<T extends FieldValues> {
   /**
