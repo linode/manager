@@ -26,6 +26,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       <CloudPulseDashboardFilterBuilder
         dashboard={dashboardFactory.build({
           service_type: 'dbaas',
+          id: 1,
         })}
         emitFilterChange={vi.fn()}
         handleToggleAppliedFilter={vi.fn()}
