@@ -18,11 +18,7 @@ const iamRoute = createRoute({
   getParentRoute: () => rootRoute,
   validateSearch: (search: IamUsersSearchParams) => search,
   path: 'iam',
-}).lazy(() =>
-  import('src/features/IAM/iamLandingLazyRoute').then(
-    (m) => m.iamLandingLazyRoute
-  )
-);
+});
 
 const iamCatchAllRoute = createRoute({
   getParentRoute: () => iamRoute,
@@ -32,12 +28,16 @@ const iamCatchAllRoute = createRoute({
   },
 });
 
-const iamIndexRoute = createRoute({
-  beforeLoad: async () => {
-    throw redirect({ to: '/iam/users' });
-  },
+const iamTabsRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/',
+  beforeLoad: async ({ context }) => {
+    const { isIAMEnabled } = context;
+
+    if (!isIAMEnabled) {
+      throw redirect({ to: '/account' });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/iamLandingLazyRoute').then(
     (m) => m.iamLandingLazyRoute
@@ -45,7 +45,7 @@ const iamIndexRoute = createRoute({
 );
 
 const iamUsersRoute = createRoute({
-  getParentRoute: () => iamRoute,
+  getParentRoute: () => iamTabsRoute,
   path: 'users',
 }).lazy(() =>
   import('src/features/IAM/Users/UsersTable/usersLandingLazyRoute').then(
@@ -62,7 +62,7 @@ const iamUsersCatchAllRoute = createRoute({
 });
 
 const iamRolesRoute = createRoute({
-  getParentRoute: () => iamRoute,
+  getParentRoute: () => iamTabsRoute,
   path: 'roles',
 }).lazy(() =>
   import('src/features/IAM/Roles/rolesLandingLazyRoute').then(
@@ -79,8 +79,8 @@ const iamRolesCatchAllRoute = createRoute({
 });
 
 const iamUserNameRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: 'iam/users/$username',
+  getParentRoute: () => iamRoute,
+  path: '/users/$username',
 }).lazy(() =>
   import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
     (m) => m.userDetailsLandingLazyRoute
@@ -105,6 +105,17 @@ const iamUserNameIndexRoute = createRoute({
 const iamUserNameDetailsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'details',
+  beforeLoad: ({ context }) => {
+    const { isIAMEnabled } = context;
+    const username = context.profile?.username;
+
+    if (!isIAMEnabled && username) {
+      throw redirect({
+        to: '/account/users/$username/profile',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UserDetails/userProfileLazyRoute').then(
     (m) => m.userProfileLazyRoute
@@ -114,6 +125,17 @@ const iamUserNameDetailsRoute = createRoute({
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
+  beforeLoad: ({ context }) => {
+    const { isIAMEnabled } = context;
+    const username = context.profile?.username;
+
+    if (!isIAMEnabled && username) {
+      throw redirect({
+        to: '/account/users/$username/permissions',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UserRoles/userRolesLazyRoute').then(
     (m) => m.userRolesLazyRoute
@@ -124,6 +146,17 @@ const iamUserNameEntitiesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'entities',
   validateSearch: (search: IamEntitiesSearchParams) => search,
+  beforeLoad: ({ context }) => {
+    const { isIAMEnabled } = context;
+    const username = context.profile?.username;
+
+    if (!isIAMEnabled && username) {
+      throw redirect({
+        to: '/account/users/$username',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UserEntities/userEntitiesLazyRoute').then(
     (m) => m.userEntitiesLazyRoute
@@ -178,12 +211,13 @@ const iamUserNameEntitiesCatchAllRoute = createRoute({
 });
 
 export const iamRouteTree = iamRoute.addChildren([
-  iamIndexRoute,
-  iamRolesRoute,
-  iamUsersRoute,
+  iamTabsRoute.addChildren([
+    iamRolesRoute,
+    iamUsersRoute,
+    iamUsersCatchAllRoute,
+    iamRolesCatchAllRoute,
+  ]),
   iamCatchAllRoute,
-  iamUsersCatchAllRoute,
-  iamRolesCatchAllRoute,
   iamUserNameRoute.addChildren([
     iamUserNameIndexRoute,
     iamUserNameDetailsRoute,

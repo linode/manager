@@ -71,6 +71,13 @@ export const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   context: {
+    accountSettings: undefined,
+    isIAMEnabled: false,
+    globalErrors: {},
+    profile: undefined,
+    isACLPEnabled: false,
+    isDatabasesEnabled: false,
+    isPlacementGroupsEnabled: false,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
@@ -120,6 +127,13 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
 export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({
   context: {
+    accountSettings: undefined,
+    isIAMEnabled: false,
+    globalErrors: {},
+    profile: undefined,
+    isACLPEnabled: false,
+    isDatabasesEnabled: false,
+    isPlacementGroupsEnabled: false,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,

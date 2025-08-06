@@ -36,6 +36,7 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
+import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { migrationRouter } from './routes';
@@ -145,11 +146,14 @@ export const MainContent = () => {
   );
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   migrationRouter.update({
     context: {
       globalErrors,
       queryClient,
+      isIAMEnabled,
+      profile,
     },
   });
 

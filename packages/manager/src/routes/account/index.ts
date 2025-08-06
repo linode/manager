@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
@@ -101,6 +101,20 @@ const accountUsersUsernameRoute = createRoute({
 const accountUsersUsernameProfileRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'profile',
+  beforeLoad: async ({ context }) => {
+    const { isIAMEnabled } = context;
+    const username = context.profile?.username;
+
+    if (!isIAMEnabled || !username) {
+      return;
+    }
+
+    throw redirect({
+      to: '/iam/users/$username/details',
+      params: { username },
+      replace: true,
+    });
+  },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
     (m) => m.userDetailLazyRoute
@@ -110,6 +124,20 @@ const accountUsersUsernameProfileRoute = createRoute({
 const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'permissions',
+  beforeLoad: async ({ context }) => {
+    const { isIAMEnabled } = context;
+    const username = context.profile?.username;
+
+    if (!isIAMEnabled || !username) {
+      return;
+    }
+
+    throw redirect({
+      to: '/iam/users/$username/roles',
+      params: { username },
+      replace: true,
+    });
+  },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
     (m) => m.userDetailLazyRoute

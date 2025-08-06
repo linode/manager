@@ -1,4 +1,4 @@
-import { useAccountSettings } from '@linode/queries';
+import { useAccountSettings, useProfile } from '@linode/queries';
 import { QueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
@@ -8,6 +8,7 @@ import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { ErrorBoundaryFallback } from './features/ErrorBoundary/ErrorBoundaryFallback';
+import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { router } from './routes';
 
@@ -17,12 +18,16 @@ export const Router = () => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
   const globalErrors = useGlobalErrors();
+  const { data: profile } = useProfile();
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   // Update the router's context
   router.update({
     context: {
       accountSettings,
+      isIAMEnabled,
       globalErrors,
+      profile,
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
