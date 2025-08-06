@@ -26,6 +26,7 @@ describe('Maintenance', () => {
 
     // TODO When the Host & VM Maintenance feature rolls out, we want to enable the feature flag and update the test.
     mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
       vmHostMaintenance: {
         enabled: false,
       },
