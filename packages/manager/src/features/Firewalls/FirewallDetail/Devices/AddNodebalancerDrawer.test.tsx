@@ -15,6 +15,15 @@ const props = {
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_firewall_device: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -50,5 +59,21 @@ describe('AddNodeBalancerDrawer', () => {
   it('should contain an Add button', () => {
     const { getByText } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
     expect(getByText('Add')).toBeInTheDocument();
+  });
+
+  it('should disable "Add" button if the user does not have create_firewall_device permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_firewall_device: false,
+      },
+    });
+
+    const { getByRole } = renderWithTheme(<AddNodebalancerDrawer {...props} />);
+
+    const addButton = getByRole('button', {
+      name: 'Add',
+    });
+    expect(addButton).toBeInTheDocument();
+    expect(addButton).toBeDisabled();
   });
 });
