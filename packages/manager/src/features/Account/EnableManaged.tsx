@@ -16,22 +16,23 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
-  hasPermission?: boolean;
   isManaged: boolean;
 }
 
 interface ContentProps {
-  hasPermission?: boolean;
   isManaged: boolean;
   openConfirmationModal: () => void;
 }
 
 export const ManagedContent = (props: ContentProps) => {
-  const { isManaged, openConfirmationModal, hasPermission } = props;
+  const { isManaged, openConfirmationModal } = props;
 
+  const { data: permissions } = usePermissions('account', ['enable_managed']);
   if (isManaged) {
     return (
       <Typography>
@@ -53,7 +54,7 @@ export const ManagedContent = (props: ContentProps) => {
       <Box>
         <Button
           buttonType="outlined"
-          disabled={!hasPermission}
+          disabled={!permissions.enable_managed}
           onClick={openConfirmationModal}
         >
           Add Linode Managed
@@ -64,13 +65,14 @@ export const ManagedContent = (props: ContentProps) => {
 };
 
 export const EnableManaged = (props: Props) => {
-  const { isManaged, hasPermission } = props;
+  const { isManaged } = props;
   const queryClient = useQueryClient();
   const { data: linodes } = useLinodesQuery();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
+  const { data: permissions } = usePermissions('account', ['enable_managed']);
   const linodeCount = linodes?.results ?? 0;
 
   const handleClose = () => {
@@ -100,7 +102,7 @@ export const EnableManaged = (props: Props) => {
         'data-testid': 'submit-managed-enrollment',
         label: 'Add Linode Managed',
         loading: isLoading,
-        disabled: !hasPermission,
+        disabled: !permissions.enable_managed,
         onClick: handleSubmit,
       }}
       secondaryButtonProps={{
@@ -118,7 +120,6 @@ export const EnableManaged = (props: Props) => {
           Linode Managed
         </Typography>
         <ManagedContent
-          hasPermission={hasPermission}
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />

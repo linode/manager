@@ -22,15 +22,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 
 import type { UpdateFirewallSettings } from '@linode/api-v4';
 
 const DEFAULT_FIREWALL_PLACEHOLDER = 'None';
 
-interface DefaultFirewallsProps {
-  hasPermission?: boolean;
-}
-export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
+export const DefaultFirewalls = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
@@ -41,7 +39,9 @@ export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
   } = useFirewallSettingsQuery({ enabled: isLinodeInterfacesEnabled });
 
   const { mutateAsync: updateFirewallSettings } = useMutateFirewallSettings();
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const values = {
     default_firewall_ids: { ...firewallSettings?.default_firewall_ids },
   };
@@ -120,7 +120,7 @@ export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
-                  disabled={!props.hasPermission}
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Configuration Profile Interfaces Firewall"
@@ -136,7 +136,7 @@ export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
-                  disabled={!props.hasPermission}
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - Public Interface Firewall"
@@ -152,7 +152,7 @@ export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
-                  disabled={!props.hasPermission}
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - VPC Interface Firewall"
@@ -171,7 +171,7 @@ export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
-                  disabled={!props.hasPermission}
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="NodeBalancers Firewall"
@@ -186,7 +186,7 @@ export const DefaultFirewalls = (props: DefaultFirewallsProps) => {
         <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
           <Button
             buttonType="outlined"
-            disabled={!isDirty || !props.hasPermission}
+            disabled={!isDirty || !permissions.update_account_settings}
             loading={isSubmitting}
             type="submit"
           >

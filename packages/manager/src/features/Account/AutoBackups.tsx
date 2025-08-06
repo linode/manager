@@ -11,6 +11,8 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -32,7 +34,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
-  hasPermission?: boolean;
   isManagedCustomer: boolean;
   onChange: () => void;
   openBackupsDrawer: () => void;
@@ -45,11 +46,12 @@ const AutoBackups = (props: Props) => {
     isManagedCustomer,
     onChange,
     openBackupsDrawer,
-    hasPermission,
   } = props;
 
   const { classes } = useStyles();
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   return (
     <Paper>
       <Typography variant="h2">Backup Auto Enrollment</Typography>
@@ -79,7 +81,9 @@ const AutoBackups = (props: Props) => {
               <Toggle
                 checked={isManagedCustomer ? true : backups_enabled}
                 data-qa-toggle-auto-backup
-                disabled={!!isManagedCustomer || !hasPermission}
+                disabled={
+                  !!isManagedCustomer || !permissions.update_account_settings
+                }
                 onChange={onChange}
               />
             }

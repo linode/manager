@@ -11,6 +11,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DefaultFirewalls } from './DefaultFirewalls';
 
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: { update_account_settings: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('NetworkInterfaces', () => {
   it('renders the NetworkInterfaces section', async () => {
     const account = accountFactory.build({
@@ -51,7 +62,10 @@ describe('NetworkInterfaces', () => {
     expect(getByText('Save')).toBeVisible();
   });
 
-  it('should disable Save button and all select boxes if the user does not have permissions', async () => {
+  it('should disable Save button and all select boxes if the user does not have "update_account_settings" permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account_settings: false },
+    });
     const account = accountFactory.build({
       capabilities: ['Linode Interfaces'],
     });
@@ -67,7 +81,7 @@ describe('NetworkInterfaces', () => {
     );
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <DefaultFirewalls hasPermission={false} />,
+      <DefaultFirewalls />,
       {
         flags: { linodeInterfaces: { enabled: true } },
       }

@@ -19,6 +19,13 @@ const queryMocks = vi.hoisted(() => ({
   useTypeQuery: vi.fn().mockReturnValue({
     data: undefined,
   }),
+  userPermissions: vi.fn(() => ({
+    data: { enable_linode_backups: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -159,12 +166,15 @@ describe('BackupDrawer', () => {
       }
     });
   });
-  it('should disable "Confirm" button and AutoEnroll checkbox if the user does not have permission', async () => {
+  it('should disable "Confirm" button and AutoEnroll checkbox if the user does not have "enable_linode_backups" permission', async () => {
     queryMocks.useAllLinodesQuery.mockReturnValue({
       data: linodeFactory.buildList(1, { backups: { enabled: false } }),
     });
+    queryMocks.userPermissions.mockReturnValue({
+      data: { enable_linode_backups: false },
+    });
     const { findByText, getByRole } = renderWithTheme(
-      <BackupDrawer hasPermission={false} onClose={vi.fn()} open={true} />
+      <BackupDrawer onClose={vi.fn()} open={true} />
     );
     const confirmButton = (await findByText('Confirm')).closest('button');
     expect(confirmButton).toBeDisabled();

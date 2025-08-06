@@ -10,16 +10,20 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 interface AutoEnrollProps {
-  disabled?: boolean;
   enabled: boolean;
   error?: string;
   toggle: () => void;
 }
 
 export const AutoEnroll = (props: AutoEnrollProps) => {
-  const { enabled, error, toggle, disabled } = props;
+  const { enabled, error, toggle } = props;
 
+  const { data: permissions } = usePermissions('account', [
+    'enable_linode_backups',
+  ]);
   return (
     <Paper
       sx={(theme) => ({ backgroundColor: theme.palette.background.default })}
@@ -29,7 +33,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
       <FormControlLabel
         checked={enabled}
         control={<Toggle />}
-        disabled={disabled}
+        disabled={!permissions.enable_linode_backups}
         label={
           <Stack spacing={0.5}>
             <Typography sx={(theme) => ({ font: theme.font.bold })}>

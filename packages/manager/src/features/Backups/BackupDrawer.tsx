@@ -29,6 +29,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
 import {
@@ -39,15 +40,17 @@ import {
 import type { EnableBackupsRejectedResult } from './utils';
 
 interface Props {
-  hasPermission?: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const BackupDrawer = (props: Props) => {
-  const { onClose, open, hasPermission } = props;
+  const { onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
+  const { data: permissions } = usePermissions('account', [
+    'enable_linode_backups',
+  ]);
   const {
     data: linodes,
     error: linodesError,
@@ -172,7 +175,6 @@ all new Linodes will automatically be backed up.`
         {/* Don't show this if the setting is already active. */}
         {!accountSettings?.backups_enabled && (
           <AutoEnroll
-            disabled={!hasPermission}
             enabled={shouldEnableAutoEnroll}
             error={updateAccountSettingsError?.[0].reason}
             toggle={() => setShouldEnableAutoEnroll((prev) => !prev)}
@@ -193,7 +195,7 @@ all new Linodes will automatically be backed up.`
         <ActionsPanel
           primaryButtonProps={{
             label: 'Confirm',
-            disabled: !hasPermission,
+            disabled: !permissions.enable_linode_backups,
             loading: isUpdatingAccountSettings || isEnablingBackups,
             onClick: handleSubmit,
           }}

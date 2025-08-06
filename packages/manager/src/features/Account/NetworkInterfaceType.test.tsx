@@ -6,6 +6,16 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: { update_account_settings: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 describe('NetworkInterfaces', () => {
   it('renders the NetworkInterfaces section', () => {
     const { getByText } = renderWithTheme(<NetworkInterfaceType />);
@@ -31,9 +41,12 @@ describe('NetworkInterfaces', () => {
     await findByDisplayValue('Linode Interfaces Only');
   });
 
-  it('should disable "Save" button and the selectbox if the user does not have permission', () => {
+  it('should disable "Save" button and the selectbox if the user does not have "update_account_settings" permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account_settings: false },
+    });
     const { getByText, getByLabelText } = renderWithTheme(
-      <NetworkInterfaceType hasPermission={false} />
+      <NetworkInterfaceType />
     );
 
     expect(getByLabelText('Interfaces for new Linodes')).toHaveAttribute(

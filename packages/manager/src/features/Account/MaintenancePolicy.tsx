@@ -22,19 +22,20 @@ import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/
 import { useFlags } from 'src/hooks/useFlags';
 import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNotice';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { MaintenancePolicyValues } from 'src/hooks/useUpcomingMaintenanceNotice.ts';
 
-interface MaintenancePolicyProps {
-  hasPermission?: boolean;
-}
-export const MaintenancePolicy = (props: MaintenancePolicyProps) => {
+export const MaintenancePolicy = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
 
   const flags = useFlags();
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const {
     control,
     formState: { isDirty, isSubmitting },
@@ -93,7 +94,7 @@ export const MaintenancePolicy = (props: MaintenancePolicyProps) => {
             name="maintenance_policy"
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
-                disabled={!props.hasPermission}
+                disabled={!permissions.update_account_settings}
                 errorText={fieldState.error?.message}
                 hideDefaultChip
                 onChange={(policy) => field.onChange(policy.slug)}
@@ -104,7 +105,7 @@ export const MaintenancePolicy = (props: MaintenancePolicyProps) => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty || !props.hasPermission}
+              disabled={!isDirty || !permissions.update_account_settings}
               loading={isSubmitting}
               type="submit"
             >

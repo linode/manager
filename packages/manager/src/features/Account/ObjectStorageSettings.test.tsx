@@ -14,6 +14,13 @@ const preference: ManagerPreferences['type_to_confirm'] = true;
 
 const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: { update_account_settings: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -38,9 +45,7 @@ describe('ObjectStorageSettings', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
-      <ObjectStorageSettings hasPermission={true} />
-    );
+    const { findByText } = renderWithTheme(<ObjectStorageSettings />);
 
     const cancelButton = (await findByText('Cancel Object Storage')).closest(
       'button'
@@ -68,7 +73,7 @@ describe('ObjectStorageSettings', () => {
     );
 
     const { findByText, queryByText } = renderWithTheme(
-      <ObjectStorageSettings hasPermission={true} />
+      <ObjectStorageSettings />
     );
 
     const copy = await findByText('To get started with Object Storage', {
@@ -102,7 +107,7 @@ describe('ObjectStorageSettings', () => {
     );
 
     const { findByText, getByLabelText, getByTitle } = renderWithTheme(
-      <ObjectStorageSettings hasPermission={true} />
+      <ObjectStorageSettings />
     );
 
     const cancelButton = (await findByText('Cancel Object Storage')).closest(
@@ -141,7 +146,10 @@ describe('ObjectStorageSettings', () => {
     expect(copy).toBeVisible();
   });
 
-  it('should disable "Cancel Object Storage" button if the user does not have permission', async () => {
+  it('should disable "Cancel Object Storage" button if the user does not have "update_account_settings" permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account_settings: false },
+    });
     server.use(
       http.get('*/account/settings', () => {
         return HttpResponse.json(
@@ -150,9 +158,7 @@ describe('ObjectStorageSettings', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
-      <ObjectStorageSettings hasPermission={false} />
-    );
+    const { findByText } = renderWithTheme(<ObjectStorageSettings />);
 
     const cancelButton = (await findByText('Cancel Object Storage')).closest(
       'button'

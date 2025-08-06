@@ -4,6 +4,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type {
   AccountSettings,
   LinodeInterfaceAccountSetting,
@@ -34,15 +36,15 @@ const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting
       value: 'legacy_config_only',
     },
   ];
-interface NetworkInterfaceTypeProps {
-  hasPermission?: boolean;
-}
-export const NetworkInterfaceType = (props: NetworkInterfaceTypeProps) => {
+
+export const NetworkInterfaceType = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const values = {
     interfaces_for_new_linodes:
       accountSettings?.interfaces_for_new_linodes ??
@@ -85,7 +87,7 @@ export const NetworkInterfaceType = (props: NetworkInterfaceTypeProps) => {
             name="interfaces_for_new_linodes"
             render={({ field, fieldState }) => (
               <Select
-                disabled={!props.hasPermission}
+                disabled={!permissions.update_account_settings}
                 errorText={fieldState.error?.message}
                 label="Interfaces for new Linodes"
                 onChange={(
@@ -105,7 +107,7 @@ export const NetworkInterfaceType = (props: NetworkInterfaceTypeProps) => {
                   sx: {
                     width: '468px',
                   },
-                  tooltipText: !props.hasPermission
+                  tooltipText: !permissions.update_account_settings
                     ? "You don't have permission to change this setting."
                     : optionsTooltipText,
                   tooltipWidth: 410,
@@ -119,7 +121,7 @@ export const NetworkInterfaceType = (props: NetworkInterfaceTypeProps) => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty || !props.hasPermission}
+              disabled={!isDirty || !permissions.update_account_settings}
               loading={isSubmitting}
               type="submit"
             >
