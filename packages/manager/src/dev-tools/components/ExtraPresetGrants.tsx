@@ -80,7 +80,7 @@ export const ExtraPresetGrants = ({
         <Dialog
           onClose={() => setIsEditingCustomGrants(false)}
           open={isEditingCustomGrants}
-          title="Edit Custom User Account Permissions"
+          title="Edit Custom Grants"
         >
           <form
             className="dev-tools__modal-form"
@@ -91,10 +91,98 @@ export const ExtraPresetGrants = ({
           >
             <FieldWrapper>
               <JsonTextArea
-                label="User Permissions"
-                name="user_permissions"
+                label="Global Grants"
+                name="global_grants"
                 onChange={handleInputChange}
-                value={formData}
+                value={formData.global}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Database Grants"
+                name="database_grants"
+                onChange={handleInputChange}
+                value={formData.database}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Domain Grants"
+                name="domain_grants"
+                onChange={handleInputChange}
+                value={formData.domain}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Firewall Grants"
+                name="firewall_grants"
+                onChange={handleInputChange}
+                value={formData.firewall}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Image Grants"
+                name="image_grants"
+                onChange={handleInputChange}
+                value={formData.image}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Linode Grants"
+                name="linode_grants"
+                onChange={handleInputChange}
+                value={formData.linode}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="LKE Grants"
+                name="lke_grants"
+                onChange={handleInputChange}
+                value={formData.lkecluster}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Longview Grants"
+                name="longview_grants"
+                onChange={handleInputChange}
+                value={formData.longview}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Nodebalancer Grants"
+                name="nodebalancer_grants"
+                onChange={handleInputChange}
+                value={formData.nodebalancer}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="StackScript Grants"
+                name="stackscript_grants"
+                onChange={handleInputChange}
+                value={formData.stackscript}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="Volume Grants"
+                name="volume_grants"
+                onChange={handleInputChange}
+                value={formData.volume}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
+              <JsonTextArea
+                label="VPC Grants"
+                name="vpc_grants"
+                onChange={handleInputChange}
+                value={formData.vpc}
               />
             </FieldWrapper>
             <button className="dev-tools-button" type="submit">
