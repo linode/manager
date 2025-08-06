@@ -12,7 +12,12 @@ export const MULTISELECT_PLACEHOLDER_TEXT = 'Select values';
 export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a value';
 export const SINGLESELECT_PLACEHOLDER_TEXT = 'Select a value';
 
-export type FieldType = 'autocomplete' | 'textfield';
+/**
+ * Type definition for the value field renderer props.
+ * - 'autocomplete': Renders a select/multi-select dropdown.
+ * - 'textfield': Renders a free-form input field.
+ */
+export type ValueFieldType = 'autocomplete' | 'textfield';
 
 /**
  * Base configuration interface for the Value input components.
@@ -20,10 +25,8 @@ export type FieldType = 'autocomplete' | 'textfield';
 export interface BaseConfig {
   /**
    * Specifies which type of input component to render.
-   * - 'autocomplete': Renders a select/multi-select dropdown.
-   * - 'textfield': Renders a free-form input field.
    */
-  type: 'autocomplete' | 'textfield';
+  type: ValueFieldType;
 }
 
 /**
