@@ -9,8 +9,8 @@ import { useState } from 'react';
 import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import {
   BillingActionButton,
@@ -76,11 +76,9 @@ export const ContactInformation = React.memo((props: Props) => {
     return notification.type === 'tax_id_verifying';
   });
 
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+  const { permissions } = usePermissions('account', ['update_account']);
+
+  const isReadOnly = !permissions.update_account || isChildUser;
 
   const handleEditDrawerOpen = () => {
     navigate({
