@@ -20,7 +20,8 @@ export const hasInvalidNodePoolPrice = (
  */
 export const nodeToRow = (
   node: PoolNodeResponse,
-  linodes: Linode[]
+  linodes: Linode[],
+  shouldShowVpcIPAddressColumns: boolean
 ): NodeRow => {
   const foundLinode = linodes.find(
     (thisLinode) => thisLinode.id === node.instance_id
@@ -33,5 +34,6 @@ export const nodeToRow = (
     label: foundLinode?.label,
     nodeId: node.id,
     nodeStatus: node.status,
+    shouldShowVpcIPAddressColumns,
   };
 };

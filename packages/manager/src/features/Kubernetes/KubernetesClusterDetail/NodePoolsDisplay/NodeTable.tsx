@@ -16,6 +16,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { parseAPIDate } from 'src/utilities/date';
 
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodeRow as _NodeRow } from './NodeRow';
 import { nodeToRow } from './utils';
 
@@ -46,8 +47,15 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: profile } = useProfile();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
+  const shouldShowVpcIPAddressColumns =
+    isLkeEnterprisePhase2FeatureEnabled && clusterTier === 'enterprise';
+  const numColumns = shouldShowVpcIPAddressColumns ? 6 : 4;
+
+  const rowData = nodes.map((thisNode) =>
+    nodeToRow(thisNode, linodes ?? [], shouldShowVpcIPAddressColumns)
+  );
 
   const filteredRowData = ['offline', 'provisioning', 'running'].includes(
     statusFilter
@@ -145,8 +153,15 @@ export const NodeTable = React.memo((props: Props) => {
                     width: '35%',
                   })}
                 >
-                  IP Address
+                  Public IPv4
                 </TableSortCell>
+                {shouldShowVpcIPAddressColumns && (
+                  <>
+                    <TableCell>VPC IPv4</TableCell>
+                    <TableCell>VPC IPv6</TableCell>
+                  </>
+                )}
+
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -154,7 +169,7 @@ export const NodeTable = React.memo((props: Props) => {
               {rowData.length === 0 &&
                 isEnterpriseClusterWithin20MinsOfCreation() && (
                   <TableRow>
-                    <TableCell colSpan={4}>
+                    <TableCell colSpan={numColumns}>
                       <ErrorState
                         compact
                         CustomIcon={EmptyStateCloud}
@@ -182,7 +197,7 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableContentWrapper
                   length={paginatedAndOrderedData.length}
                   loading={isLoading}
-                  loadingProps={{ columns: 4 }}
+                  loadingProps={{ columns: numColumns }}
                 >
                   {paginatedAndOrderedData.map((eachRow) => {
                     return (
@@ -197,6 +212,9 @@ export const NodeTable = React.memo((props: Props) => {
                         nodeId={eachRow.nodeId}
                         nodeStatus={eachRow.nodeStatus}
                         openRecycleNodeDialog={openRecycleNodeDialog}
+                        shouldShowVpcIPAddressColumns={
+                          shouldShowVpcIPAddressColumns
+                        }
                         typeLabel={typeLabel}
                       />
                     );

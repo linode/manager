@@ -2962,125 +2962,265 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/monitor/services/:serviceType/metric-definitions', () => {
-    const response = {
-      data: [
-        {
-          available_aggregate_functions: ['min', 'max', 'avg'],
-          dimensions: [
-            {
-              dimension_label: 'cpu',
-              label: 'CPU name',
-              values: null,
-            },
-            {
-              dimension_label: 'state',
-              label: 'State of CPU',
-              values: [
-                'user',
-                'system',
-                'idle',
-                'interrupt',
-                'nice',
-                'softirq',
-                'steal',
-                'wait',
-              ],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'CPU utilization',
-          metric: 'system_cpu_utilization_percent',
-          metric_type: 'gauge',
-          scrape_interval: '2m',
-          unit: 'percent',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'state',
-              label: 'State of memory',
-              values: [
-                'used',
-                'free',
-                'buffered',
-                'cached',
-                'slab_reclaimable',
-                'slab_unreclaimable',
-              ],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Memory Usage',
-          metric: 'system_memory_usage_by_resource',
-          metric_type: 'gauge',
-          scrape_interval: '30s',
-          unit: 'byte',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'device',
-              label: 'Device name',
-              values: ['lo', 'eth0'],
-            },
-            {
-              dimension_label: 'direction',
-              label: 'Direction of network transfer',
-              values: ['transmit', 'receive'],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Network Traffic',
-          metric: 'system_network_io_by_resource',
-          metric_type: 'counter',
-          scrape_interval: '30s',
-          unit: 'byte',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'device',
-              label: 'Device name',
-              values: ['loop0', 'sda', 'sdb'],
-            },
-            {
-              dimension_label: 'direction',
-              label: 'Operation direction',
-              values: ['read', 'write'],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Disk I/O',
-          metric: 'system_disk_OPS_total',
-          metric_type: 'counter',
-          scrape_interval: '30s',
-          unit: 'ops_per_second',
-        },
-      ],
-    };
+  http.get(
+    '*/monitor/services/:serviceType/metric-definitions',
+    ({ params }) => {
+      const response = {
+        data: [
+          {
+            available_aggregate_functions: ['min', 'max', 'avg'],
+            dimensions: [
+              {
+                dimension_label: 'cpu',
+                label: 'CPU name',
+                values: null,
+              },
+              {
+                dimension_label: 'state',
+                label: 'State of CPU',
+                values: [
+                  'user',
+                  'system',
+                  'idle',
+                  'interrupt',
+                  'nice',
+                  'softirq',
+                  'steal',
+                  'wait',
+                ],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'CPU utilization',
+            metric: 'system_cpu_utilization_percent',
+            metric_type: 'gauge',
+            scrape_interval: '2m',
+            unit: 'percent',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'state',
+                label: 'State of memory',
+                values: [
+                  'used',
+                  'free',
+                  'buffered',
+                  'cached',
+                  'slab_reclaimable',
+                  'slab_unreclaimable',
+                ],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Memory Usage',
+            metric: 'system_memory_usage_by_resource',
+            metric_type: 'gauge',
+            scrape_interval: '30s',
+            unit: 'byte',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'device',
+                label: 'Device name',
+                values: ['lo', 'eth0'],
+              },
+              {
+                dimension_label: 'direction',
+                label: 'Direction of network transfer',
+                values: ['transmit', 'receive'],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Network Traffic',
+            metric: 'system_network_io_by_resource',
+            metric_type: 'counter',
+            scrape_interval: '30s',
+            unit: 'byte',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'device',
+                label: 'Device name',
+                values: ['loop0', 'sda', 'sdb'],
+              },
+              {
+                dimension_label: 'direction',
+                label: 'Operation direction',
+                values: ['read', 'write'],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Disk I/O',
+            metric: 'system_disk_OPS_total',
+            metric_type: 'counter',
+            scrape_interval: '30s',
+            unit: 'ops_per_second',
+          },
+        ],
+      };
 
-    return HttpResponse.json(response);
-  }),
+      const nodebalancerMetricsResponse = {
+        data: [
+          {
+            label: 'Ingress Traffic Rate',
+            metric: 'nb_ingress_traffic_rate',
+            unit: 'bytes_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Egress Traffic Rate',
+            metric: 'nb_egress_traffic_rate',
+            unit: 'bytes_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Total Active Sessions',
+            metric: 'nb_total_active_sessions',
+            unit: 'count',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['max', 'min', 'avg', 'sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'New Sessions',
+            metric: 'nb_new_sessions_per_second',
+            unit: 'sessions_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Total Active Backends',
+            metric: 'nb_total_active_backends',
+            unit: 'count',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['max', 'min', 'avg', 'sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+        ],
+      };
+      if (params.serviceType === 'nodebalancer') {
+        return HttpResponse.json(nodebalancerMetricsResponse);
+      }
+      return HttpResponse.json(response);
+    }
+  ),
   http.post('*/monitor/services/:serviceType/token', () => {
     const response = {
       token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
@@ -3089,23 +3229,30 @@ export const handlers = [
   }),
 
   http.get('*/monitor/dashboards/:id', ({ params }) => {
+    let serviceType: string;
+    let dashboardLabel: string;
+
+    const id = params.id;
+
+    if (id === '1') {
+      serviceType = 'dbaas';
+      dashboardLabel = 'DBaaS Service I/O Statistics';
+    } else if (id === '3') {
+      serviceType = 'nodebalancer';
+      dashboardLabel = 'NodeBalancer Service I/O Statistics';
+    } else if (id === '4') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    } else {
+      serviceType = 'linode';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    }
+
     const response = {
       created: '2024-04-29T17:09:29',
       id: params.id,
-      label:
-        params.id === '1'
-          ? 'DBaaS Service I/O Statistics'
-          : params.id === '3'
-            ? 'NodeBalancer Service I/O Statistics'
-            : 'Linode Service I/O Statistics',
-      service_type:
-        params.id === '1'
-          ? 'dbaas'
-          : params.id === '3'
-            ? 'nodebalancer'
-            : params.id === '4'
-              ? 'firewall'
-              : 'linode', // just update the service type and label and use same widget configs
+      label: dashboardLabel,
+      service_type: serviceType,
       type: 'standard',
       updated: null,
       widgets: [

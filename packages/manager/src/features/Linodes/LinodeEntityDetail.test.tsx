@@ -27,7 +27,7 @@ import type { AccountCapability } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
     },
   })),
