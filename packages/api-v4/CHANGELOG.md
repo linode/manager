@@ -1,3 +1,31 @@
+## [2025-08-12] - v0.146.0
+
+
+### Added:
+
+- ACLP: `string` type for `capabilityServiceTypeMapping` constant ([#12573](https://github.com/linode/manager/pull/12573))
+
+### Changed:
+
+- Update `LinodeIPsResponseIPV6` to include `vpc` array ([#12600](https://github.com/linode/manager/pull/12600))
+
+### Removed:
+
+- Remove unnecessary in-progress event.status type during earlier development ([#12512](https://github.com/linode/manager/pull/12512))
+- `getNodePoolBeta` in favor of `getNodePool` ([#12596](https://github.com/linode/manager/pull/12596))
+- `createNodePoolBeta` in favor of `createNodePool` ([#12596](https://github.com/linode/manager/pull/12596))
+- `updateNodePoolBeta` in favor of `updateNodePool` ([#12596](https://github.com/linode/manager/pull/12596))
+- `CreateNodePoolDataBeta` in favor of `CreateNodePoolData` ([#12596](https://github.com/linode/manager/pull/12596))
+- `UpdateNodePoolDataBeta` in favor of `UpdateNodePoolData` ([#12596](https://github.com/linode/manager/pull/12596))
+
+### Upcoming Features:
+
+- Add optional vpc_id and subnet_id fields to CreateKubeClusterPayload for LKE-E ([#12551](https://github.com/linode/manager/pull/12551))
+- Add validation to Create Stream POST request ([#12557](https://github.com/linode/manager/pull/12557))
+- GET API endpoints for Destinations ([#12559](https://github.com/linode/manager/pull/12559))
+- Remove the docs and costs from streams and destinations landing pages and stream create form ([#12572](https://github.com/linode/manager/pull/12572))
+- Add type and update cluster payload and interface to support optional stack_type field for LKE-E ([#12594](https://github.com/linode/manager/pull/12594))
+
 ## [2025-07-29] - v0.145.0
 
 
