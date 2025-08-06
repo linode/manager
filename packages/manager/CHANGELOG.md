@@ -4,6 +4,85 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-08-12] - v1.148.0
+
+### Added:
+
+- Improved search to the Volumes landing page ([#12553](https://github.com/linode/manager/pull/12553))
+- ACLP: `filterRegionByServiceType` method to alerts/utils/utils.ts, remove `supportedRegionIds` property from `CloudPulseResourceTypeMapFlag` feature flag  ([#12573](https://github.com/linode/manager/pull/12573))
+- Node Pool versions to Kubernetes Cluster detail page for LKE-E clusters ([#12596](https://github.com/linode/manager/pull/12596))
+- PlansPanel additionalBanners property for rendering additional banners and disabled property for DatabaseNodeSelector ([#12634](https://github.com/linode/manager/pull/12634))
+- ArangoDB, Memgraph, and Neo4j apps to Marketplace ([#12642](https://github.com/linode/manager/pull/12642))
+
+### Changed:
+
+- Use Search field on Images landing page rather than a classic Text field ([#12555](https://github.com/linode/manager/pull/12555))
+- Akamai Design System: Link Component ([#12569](https://github.com/linode/manager/pull/12569))
+- ACLP: dashboard filters will be rendered based on `dashboardId` instead of `serviceType` ([#12637](https://github.com/linode/manager/pull/12637))
+- Added IAM permission check to the Firewall Details / Add Node Balancer drawer ([#12641](https://github.com/linode/manager/pull/12641))
+- Replace the existing Premium tab description with generic description copy that works for both legacy Premium and MTC plans ([#12601](https://github.com/linode/manager/pull/12601))
+
+### Fixed:
+
+- Alignment of Closeicon in Textfields ([#12571](https://github.com/linode/manager/pull/12571))
+- Disabled Region select in NB create flow for restricted user ([#12571](https://github.com/linode/manager/pull/12571))
+- Longview UI alignment issue ([#12578](https://github.com/linode/manager/pull/12578))
+- Hover styling of disabled state for zebra striped table rows ([#12579](https://github.com/linode/manager/pull/12579))
+- Standardize `<FormHelperText />` error handling across components ([#12581](https://github.com/linode/manager/pull/12581))
+- UI and accessibility of disabled Autocomplete options ([#12583](https://github.com/linode/manager/pull/12583))
+- Geographical Area state in Distributed Region select in Linode Create flow ([#12584](https://github.com/linode/manager/pull/12584))
+- UIE-8955] - IAM RBAC: Fix removing entity can cause empty page ([#12586](https://github.com/linode/manager/pull/12586))
+- Left alignment of Encryption checkbox in Linode Create, Linode Rebuild, and Volume Create forms ([#12592](https://github.com/linode/manager/pull/12592))
+- Text overflow in SupportTicketDialog and QuotasIncreaseForm preview sections ([#12593](https://github.com/linode/manager/pull/12593))
+- Add borders to countries with white backgrounds ([#12604](https://github.com/linode/manager/pull/12604))
+- Use human readable date/time for Linode maintenance window ([#12605](https://github.com/linode/manager/pull/12605))
+- Negative values in volume size field ([#12606](https://github.com/linode/manager/pull/12606))
+- Creation of nodepool with a `--number` of nodes for LKE clusters ([#12616](https://github.com/linode/manager/pull/12616))
+- Premature validation of Linode Alert numeric input ([#12626](https://github.com/linode/manager/pull/12626))
+- DBaaS Create and Resize node selector options for premium plans and region disabling behavior and handling not being applied in Resize ([#12634](https://github.com/linode/manager/pull/12634))
+- ACLP: `loading` screen on auto refetch in edit alert page ([#12636](https://github.com/linode/manager/pull/12636))
+- ACLP: not display `/s` with *PS units on initial widget loading ([#12647](https://github.com/linode/manager/pull/12647))
+
+### Tech Stories:
+
+- Improve Create Linode code splitting & routing ([#12554](https://github.com/linode/manager/pull/12554))
+- Add MSW Crud support for Linode Config profiles and prevent deletion of vpcs/subnets with resources ([#12574](https://github.com/linode/manager/pull/12574))
+- Revise PR template to recommend video previews ([#12608](https://github.com/linode/manager/pull/12608))
+- Update PR template to hide a section; add a Scope subsection for confirmation of customer-facing changes ([#12609](https://github.com/linode/manager/pull/12609))
+
+### Tests:
+
+- Tests for ACLP alerts in Linode create flow ([#12540](https://github.com/linode/manager/pull/12540))
+- Add Cypress tests for QEMU Upgrade Notice  ([#12564](https://github.com/linode/manager/pull/12564))
+- Add Cypress verification tests for CloudPulse NodeBalancer widget ([#12568](https://github.com/linode/manager/pull/12568))
+- Improve stability of Linode create password field tests ([#12576](https://github.com/linode/manager/pull/12576))
+- Mock LKE versions in `lke-create.spec.ts` to fix test failure due to LKE version 1.31 being deprecated ([#12597](https://github.com/linode/manager/pull/12597))
+- Fix Cypress test result notifications missing test names ([#12620](https://github.com/linode/manager/pull/12620))
+- Fix the time format of the start time in QEMU Update Notice ([#12639](https://github.com/linode/manager/pull/12639))
+
+### Upcoming Features:
+
+- Add IPv6 columns to VPC Subnet and Subnet Linodes tables ([#12305](https://github.com/linode/manager/pull/12305))
+- Show GPU warning notice conditionally based on policy type - display for "migrate" policy but hide for "power-off-on" policy ([#12512](https://github.com/linode/manager/pull/12512))
+- Add BYO VPC support to LKE-E create cluster flow ([#12551](https://github.com/linode/manager/pull/12551))
+- Datastream form validation on create stream and destination ([#12557](https://github.com/linode/manager/pull/12557))
+- ACLP: add `linode id to label` translation logic for legend rows, add `entities` to `CloudPulseResouces` interface ([#12558](https://github.com/linode/manager/pull/12558))
+- DataStream: add destination's details for selected destination ([#12559](https://github.com/linode/manager/pull/12559))
+- Modified the query parameter to allow varying use cases. Return any errors from the API along with isLoading, isError values. ([#12560](https://github.com/linode/manager/pull/12560))
+- IAM RBAC: add a permission check in Profile and Account/Billing ([#12561](https://github.com/linode/manager/pull/12561))
+- Add subnet IPv6 to VPC create page ([#12563](https://github.com/linode/manager/pull/12563))
+- Add/update inline docs for ACLP Alerts logic ([#12578](https://github.com/linode/manager/pull/12578))
+- ACLP: add checkbox functionality in `AlertRegions`.  ([#12582](https://github.com/linode/manager/pull/12582))
+- Add Linode Interface support for Linode CLI codesnippets tool ([#12591](https://github.com/linode/manager/pull/12591))
+- Add IP Version (IPv4/IPv6) support to LKE-E cluster create flow ([#12594](https://github.com/linode/manager/pull/12594))
+- Add VPC IPv4 and IPv6 columns to node pools table on LKE-E cluster details page ([#12600](https://github.com/linode/manager/pull/12600))
+- Add VPC IPv6 address in Linode Detail > Summary panel ([#12610](https://github.com/linode/manager/pull/12610))
+- Update the usePermissions hook to return consistent with the other queries ([#12617](https://github.com/linode/manager/pull/12617))
+- Integrate RBAC permission checks in edit billing info ([#12618](https://github.com/linode/manager/pull/12618))
+- ACLP-Alerting: Changed the `aclpAlerting` to include alert and metric limits and other relevant changes  ([#12624](https://github.com/linode/manager/pull/12624))
+- ACLP-Alerting: Custom config_id validation, dynamic schema resolver, helperText map, TextField logic, and mock API for nodebalancer metrics added ([#12629](https://github.com/linode/manager/pull/12629))
+- Update VM Host Maintenance GPU Notice Text ([#12632](https://github.com/linode/manager/pull/12632))
+
 ## [2025-07-29] - v1.147.0
 
 ### Changed:
