@@ -3,6 +3,7 @@ import { defaultBaselineMockPreset, extraMockPresets } from 'src/mocks/presets';
 import {
   LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
   LOCAL_STORAGE_EVENTS_FORM_DATA_KEY,
+  LOCAL_STORAGE_GRANTS_FORM_DATA_KEY,
   LOCAL_STORAGE_KEY,
   LOCAL_STORAGE_MAINTENANCE_FORM_DATA_KEY,
   LOCAL_STORAGE_NOTIFICATIONS_FORM_DATA_KEY,
@@ -20,6 +21,7 @@ import type {
   Account,
   AccountMaintenance,
   Event,
+  Grants,
   Notification,
   PermissionType,
   Profile,
@@ -197,6 +199,30 @@ export const saveCustomProfileData = (data: null | Profile): void => {
   if (data) {
     localStorage.setItem(
       LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  }
+};
+
+/**
+ * Saves the custom grants form data to local storage.
+ */
+export const saveCustomGrantsData = (data: Grants | null): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_GRANTS_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  }
+};
+
+/**
+ * Retrieves the custom grants form data to local storage.
+ */
+export const getCustomGrantsData = (data: Grants | null): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_GRANTS_FORM_DATA_KEY,
       JSON.stringify(data)
     );
   }
