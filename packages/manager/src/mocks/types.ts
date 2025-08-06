@@ -13,6 +13,7 @@ import type {
   KubernetesCluster,
   Linode,
   LinodeInterface,
+  LinodeIPsResponse,
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
@@ -172,6 +173,7 @@ export interface MockState {
   kubernetesNodePools: KubeNodePoolResponse[];
   linodeConfigs: [number, Config][]; // number is Linode ID
   linodeInterfaces: [number, LinodeInterface][]; // number is Linode ID
+  linodeIps: [number, LinodeIPsResponse][]; // number is Linode ID
   linodes: Linode[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];

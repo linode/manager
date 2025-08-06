@@ -349,9 +349,9 @@ export const CreateCluster = () => {
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
       // Trigger the React Hook Form validation for BYO VPC selection.
-      trigger();
+      const isValid = await trigger();
       // Don't submit the form while RHF errors persist.
-      if (!formState.isValid) {
+      if (!isValid) {
         setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
         return;

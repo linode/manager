@@ -59,6 +59,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       ],
       link_local: ipAddressFactory.build({ type: 'ipv6' }),
       slaac: ipAddressFactory.build({ type: 'ipv6' }),
+      vpc: [],
     },
   };
 
