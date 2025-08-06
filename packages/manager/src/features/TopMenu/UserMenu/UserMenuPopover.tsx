@@ -1,5 +1,5 @@
 import { useAccount, useGrants, useProfile } from '@linode/queries';
-import { Box, Divider, Stack, Typography } from '@linode/ui';
+import { Box, Divider, NewFeatureChip, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -10,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -28,6 +29,7 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   href: string;
+  isNewFeature?: boolean;
 }
 
 const profileLinks: MenuLink[] = [
@@ -57,6 +59,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -103,9 +106,16 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       },
       // Restricted users can't view the Users tab regardless of their grants
       {
-        display: 'Users & Grants',
+        display:
+          flags?.iamRbacPrimaryNavChanges && isIAMEnabled
+            ? 'Identity & Access'
+            : 'Users & Grants',
         hide: isRestrictedUser,
-        href: '/account/users',
+        href:
+          flags?.iamRbacPrimaryNavChanges && isIAMEnabled
+            ? '/iam'
+            : '/account/users',
+        isNewFeature: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
       },
       {
         display: 'Quotas',
@@ -129,7 +139,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         href: '/account/settings',
       },
     ],
-    [hasFullAccountAccess, isRestrictedUser]
+    [hasFullAccountAccess, isRestrictedUser, isIAMEnabled, flags]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -239,7 +249,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         </Box>
         {hasAccountAccess && (
           <Box>
-            <Heading>Account</Heading>
+            <Heading>
+              {flags?.iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
+            </Heading>
             <Divider />
             <Stack
               gap={(theme) => theme.tokens.spacing.S8}
@@ -258,6 +270,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                     to={menuLink.href}
                   >
                     {menuLink.display}
+                    {menuLink?.isNewFeature ? (
+                      <NewFeatureChip component="span" />
+                    ) : null}
                   </Link>
                 )
               )}

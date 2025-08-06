@@ -1,3 +1,4 @@
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { pages } from 'support/ui/constants';
 
 import type { Page } from 'support/ui/constants';
@@ -8,6 +9,10 @@ beforeEach(() => {
 describe('smoke - deep links', () => {
   beforeEach(() => {
     cy.visitWithLogin('/null');
+    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    }).as('getFeatureFlags');
   });
 
   it('Go to each route and validate deep links', () => {

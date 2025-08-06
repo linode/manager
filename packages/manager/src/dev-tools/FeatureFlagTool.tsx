@@ -48,6 +48,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databasePremium', label: 'Database Premium' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
