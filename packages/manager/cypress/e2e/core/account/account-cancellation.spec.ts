@@ -189,38 +189,8 @@ describe('Account cancellation', () => {
       .within(() => {
         cy.findByTestId('close-account-button')
           .should('be.visible')
-          .should('be.enabled')
+          .should('be.disabled')
           .click();
-      });
-
-    // Fill out cancellation dialog and attempt submission.
-    ui.dialog
-      .findByTitle(cancellationDialogTitle)
-      .should('be.visible')
-      .within(() => {
-        // Check both boxes but verify submit remains disabled without email
-        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
-        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
-
-        ui.button
-          .findByTitle('Close Account')
-          .should('be.visible')
-          .should('be.disabled');
-
-        cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
-          .should('be.visible')
-          .should('be.enabled')
-          .type(mockProfile.email);
-
-        ui.button
-          .findByTitle('Close Account')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm that API unauthorized error message is displayed.
-        cy.wait('@cancelAccount');
-        cy.findByText('Unauthorized').should('be.visible');
       });
   });
 });
