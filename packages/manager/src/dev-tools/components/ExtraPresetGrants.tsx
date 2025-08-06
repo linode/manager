@@ -35,7 +35,25 @@ export const ExtraPresetGrants = ({
     ...customGrantsData,
   }));
 
-  const handleInputChange = () => {};
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+
+    try {
+      const newFormData = {
+        ...formData,
+        [name]: value,
+      };
+      setFormData(newFormData);
+
+      if (isEnabled) {
+        onFormChange?.(newFormData);
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to parse JSON from input value:', value, err);
+    }
+  };
+
   const [isEditingCustomGrants, setIsEditingCustomGrants] =
     React.useState(false);
 
@@ -92,7 +110,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Global Grants"
-                name="global_grants"
+                name="global"
                 onChange={handleInputChange}
                 value={formData.global}
               />
@@ -100,7 +118,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Database Grants"
-                name="database_grants"
+                name="database"
                 onChange={handleInputChange}
                 value={formData.database}
               />
@@ -108,7 +126,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Domain Grants"
-                name="domain_grants"
+                name="domain"
                 onChange={handleInputChange}
                 value={formData.domain}
               />
@@ -116,7 +134,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Firewall Grants"
-                name="firewall_grants"
+                name="firewall"
                 onChange={handleInputChange}
                 value={formData.firewall}
               />
@@ -124,7 +142,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Image Grants"
-                name="image_grants"
+                name="image"
                 onChange={handleInputChange}
                 value={formData.image}
               />
@@ -132,7 +150,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Linode Grants"
-                name="linode_grants"
+                name="linode"
                 onChange={handleInputChange}
                 value={formData.linode}
               />
@@ -140,7 +158,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="LKE Grants"
-                name="lke_grants"
+                name="lkecluster"
                 onChange={handleInputChange}
                 value={formData.lkecluster}
               />
@@ -148,7 +166,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Longview Grants"
-                name="longview_grants"
+                name="longview"
                 onChange={handleInputChange}
                 value={formData.longview}
               />
@@ -156,7 +174,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Nodebalancer Grants"
-                name="nodebalancer_grants"
+                name="nodebalancer"
                 onChange={handleInputChange}
                 value={formData.nodebalancer}
               />
@@ -164,7 +182,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="StackScript Grants"
-                name="stackscript_grants"
+                name="stackscript"
                 onChange={handleInputChange}
                 value={formData.stackscript}
               />
@@ -172,7 +190,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="Volume Grants"
-                name="volume_grants"
+                name="volume"
                 onChange={handleInputChange}
                 value={formData.volume}
               />
@@ -180,7 +198,7 @@ export const ExtraPresetGrants = ({
             <FieldWrapper>
               <JsonTextArea
                 label="VPC Grants"
-                name="vpc_grants"
+                name="vpc"
                 onChange={handleInputChange}
                 value={formData.vpc}
               />
