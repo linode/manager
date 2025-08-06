@@ -1,4 +1,4 @@
-import type { AccountSettings, Profile } from '@linode/api-v4';
+import type { AccountSettings } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 export type RouterContext = {
@@ -10,7 +10,6 @@ export type RouterContext = {
   isDatabasesEnabled?: boolean;
   isIAMEnabled?: boolean;
   isPlacementGroupsEnabled?: boolean;
-  profile?: Profile;
   queryClient: QueryClient;
 };
 

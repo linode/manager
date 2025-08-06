@@ -101,9 +101,9 @@ const accountUsersUsernameRoute = createRoute({
 const accountUsersUsernameProfileRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'profile',
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ context, params }) => {
     const { isIAMEnabled } = context;
-    const username = context.profile?.username;
+    const { username } = params;
 
     if (!isIAMEnabled || !username) {
       return;
@@ -124,9 +124,9 @@ const accountUsersUsernameProfileRoute = createRoute({
 const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'permissions',
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ context, params }) => {
     const { isIAMEnabled } = context;
-    const username = context.profile?.username;
+    const { username } = params;
 
     if (!isIAMEnabled || !username) {
       return;

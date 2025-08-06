@@ -105,9 +105,9 @@ const iamUserNameIndexRoute = createRoute({
 const iamUserNameDetailsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'details',
-  beforeLoad: ({ context }) => {
+  beforeLoad: ({ context, params }) => {
     const { isIAMEnabled } = context;
-    const username = context.profile?.username;
+    const { username } = params;
 
     if (!isIAMEnabled && username) {
       throw redirect({
@@ -125,9 +125,9 @@ const iamUserNameDetailsRoute = createRoute({
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
-  beforeLoad: ({ context }) => {
+  beforeLoad: ({ context, params }) => {
     const { isIAMEnabled } = context;
-    const username = context.profile?.username;
+    const { username } = params;
 
     if (!isIAMEnabled && username) {
       throw redirect({
@@ -146,9 +146,9 @@ const iamUserNameEntitiesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'entities',
   validateSearch: (search: IamEntitiesSearchParams) => search,
-  beforeLoad: ({ context }) => {
+  beforeLoad: ({ context, params }) => {
     const { isIAMEnabled } = context;
-    const username = context.profile?.username;
+    const { username } = params;
 
     if (!isIAMEnabled && username) {
       throw redirect({

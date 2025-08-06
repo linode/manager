@@ -153,7 +153,6 @@ export const MainContent = () => {
       globalErrors,
       queryClient,
       isIAMEnabled,
-      profile,
     },
   });
 

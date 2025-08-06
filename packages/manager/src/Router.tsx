@@ -1,4 +1,4 @@
-import { useAccountSettings, useProfile } from '@linode/queries';
+import { useAccountSettings } from '@linode/queries';
 import { QueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
@@ -18,7 +18,6 @@ export const Router = () => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
   const globalErrors = useGlobalErrors();
-  const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
 
   // Update the router's context
@@ -27,7 +26,6 @@ export const Router = () => {
       accountSettings,
       isIAMEnabled,
       globalErrors,
-      profile,
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
