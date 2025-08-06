@@ -33,6 +33,7 @@ import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export interface PlansPanelProps {
+  additionalBanners?: React.ReactNode[];
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
@@ -68,6 +69,7 @@ export interface PlansPanelProps {
  */
 export const PlansPanel = (props: PlansPanelProps) => {
   const {
+    additionalBanners,
     className,
     copy,
     currentPlanHeading,
@@ -182,6 +184,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
           return (
             <>
               <PlanInformation
+                additionalBanners={additionalBanners}
                 disabledClasses={disabledClasses}
                 flow="linode"
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
