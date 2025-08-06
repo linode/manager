@@ -25,7 +25,7 @@ interface ValueFieldRendererProps {
   disabled: boolean;
 
   /**
-   * Optional list of entity IDs used to filter resources like firewalls.
+   * List of entity IDs used to filter resources like firewalls.
    */
   entities?: string[];
   /**
@@ -59,7 +59,7 @@ interface ValueFieldRendererProps {
   value: null | string;
 
   /**
-   * Optional list of pre-defined values, used for static autocomplete options.
+   * List of pre-defined values, used for static autocomplete options.
    */
   values: null | string[];
 }

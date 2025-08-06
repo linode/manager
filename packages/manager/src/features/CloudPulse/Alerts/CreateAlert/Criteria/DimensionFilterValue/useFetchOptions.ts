@@ -19,7 +19,7 @@ interface FetchOptionsProps {
   dimensionLabel: null | string;
 
   /**
-   * Optional list of firewall entity IDs to filter on.
+   * List of firewall entity IDs to filter on.
    */
   entities?: string[];
 

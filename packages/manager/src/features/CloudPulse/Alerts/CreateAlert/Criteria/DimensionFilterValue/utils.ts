@@ -37,7 +37,7 @@ export const handleValueChange = (
   operation: string,
   isMultiple: boolean
 ): string => {
-  if (['removeOption', 'selectOption'].includes(operation)) return '';
+  if (!['removeOption', 'selectOption'].includes(operation)) return '';
 
   if (isMultiple && Array.isArray(selected)) {
     return selected.map((item) => item.value).join(',');
