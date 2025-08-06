@@ -309,7 +309,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               <Stack alignItems="center" direction="row">
                 {convertStringToCamelCasesWithSpaces(widget.label)} (
                 {scaledWidgetUnit.current}
-                {unit.endsWith('ps') ? '/s' : ''}){/* TODO: Add tooltip */}
+                {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
+                  ? '/s'
+                  : ''}
+                ){/* TODO: Add tooltip */}
                 {/* <TooltipIcon
                   status="help"
                   sxTooltipIcon={{
