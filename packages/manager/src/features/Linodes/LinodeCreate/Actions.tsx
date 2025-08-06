@@ -43,9 +43,13 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
       ],
     });
 
-  const { permissions } = usePermissions('linode', ['clone_linode'], linodeId);
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['clone_linode'],
+    linodeId
+  );
 
-  const { permissions: accountPermissions } = usePermissions('account', [
+  const { data: accountPermissions } = usePermissions('account', [
     'create_linode',
   ]);
 

@@ -533,6 +533,62 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       );
   });
 
+  it('should disable Create Alert when two alerts together use all 10 available metrics, and re-enable it after one is deleted', () => {
+    const mockAlerts = Array.from({ length: 2 }, (_, index) =>
+      alertFactory.build({
+        label: `Alert-${index}`,
+        service_type: serviceTypes[index % serviceTypes.length],
+        status: statusList[index % statusList.length],
+        type: 'user',
+        id: index,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
+        ...(index % 2 !== 0 && {
+          rule_criteria: {
+            rules: alertRulesFactory.buildList(10),
+          },
+        }),
+      })
+    );
+    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+
+    cy.visitWithLogin(alertDefinitionsUrl);
+    cy.wait('@getAlertDefinitionsList');
+
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
+
+    cy.get('[data-alert-notice="true"]')
+      .should('be.visible')
+      .and('have.text', metricLimitMessage);
+
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Alert ${mockAlerts[1].label}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    ui.dialog
+      .findByTitle(`Delete ${mockAlerts[1].label}? `)
+      .should('be.visible')
+      .within(() => {
+        // Focus the "Alert Label" confirmation input
+        cy.findByLabelText('Alert Label').click();
+
+        // Type the alert label to enable the Delete button
+        cy.focused().type(mockAlerts[1].label);
+
+        // Click the Delete button to confirm
+        ui.buttonGroup
+          .findButtonByTitle('Delete')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.enabled');
+  });
   /**
    * Validates the delete flow for an alert based on its label and whether deletion is allowed.
    * @param {string} label - The label of the alert to be deleted.
