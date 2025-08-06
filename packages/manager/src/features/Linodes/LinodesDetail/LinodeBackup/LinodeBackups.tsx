@@ -43,7 +43,7 @@ export const LinodeBackups = () => {
   const navigate = useNavigate();
   const { isBareMetalInstance } = useLinodeDetailContext();
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     [
       'cancel_linode_backups',

@@ -235,7 +235,7 @@ export const CONFIGS_HELPER_TEXT =
   'Enter one or more configuration IDs separated by commas.';
 
 export const CONFIGS_ERROR_MESSAGE =
-  'Enter valid configuration ID numbers as integers separated by commas.';
+  'Enter valid configuration ID numbers as integers separated by commas without spaces.';
 
 export const CONFIG_ERROR_MESSAGE = 'Enter a valid configuration ID number.';
 export const CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
