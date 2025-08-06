@@ -87,6 +87,7 @@ export const AccessKeyLanding = (props: Props) => {
   const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   // Redirect to base access keys route if current page has no data
+  // TODO: Remove this implementation and replace `usePagination` with `usePaginate` hook. See [M3-10442]
   React.useEffect(() => {
     const currentPage = Number(pagination.page);
 
