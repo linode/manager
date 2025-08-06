@@ -4,7 +4,7 @@ import React from 'react';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeEncryptionStauts } from './LinodeEncryptionStatus';
+import { LinodeEncryptionStatus } from './LinodeEncryptionStatus';
 
 describe('LinodeEncryptionStatus', () => {
   it('renders "Encrypted" if the Linode disk_encryption value is "enabled"', async () => {
@@ -17,7 +17,7 @@ describe('LinodeEncryptionStatus', () => {
     );
 
     const { findAllByText } = renderWithTheme(
-      <LinodeEncryptionStauts linodeId={linode.id} />
+      <LinodeEncryptionStatus linodeId={linode.id} />
     );
 
     const [icon, text] = await findAllByText('Encrypted');
@@ -43,7 +43,7 @@ describe('LinodeEncryptionStatus', () => {
     );
 
     const { findByLabelText } = renderWithTheme(
-      <LinodeEncryptionStauts linodeId={linode.id} />
+      <LinodeEncryptionStatus linodeId={linode.id} />
     );
 
     expect(

@@ -17,7 +17,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
-import { LinodeEncryptionStauts } from './LinodeEncryptionStatus';
+import { LinodeEncryptionStatus } from './LinodeEncryptionStatus';
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
@@ -233,7 +233,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             </Grid>
             {isDiskEncryptionFeatureEnabled && encryptionStatus && (
               <Grid>
-                <LinodeEncryptionStauts linodeId={linodeId} />
+                <LinodeEncryptionStatus linodeId={linodeId} />
               </Grid>
             )}
           </Grid>
