@@ -39,7 +39,7 @@ const GlobalSettings = () => {
 
   const { data: linodes } = useAllLinodesQuery();
 
-  const { permissions } = usePermissions('account', [
+  const { data: permissions } = usePermissions('account', [
     'update_account_settings',
     'enable_managed',
     'cancel_account',
