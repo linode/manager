@@ -21,7 +21,7 @@ const LinodeAlerts = () => {
   const { aclpBetaServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
 
-  const { permissions } = usePermissions('linode', ['update_linode'], id);
+  const { data: permissions } = usePermissions('linode', ['update_linode'], id);
 
   const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',

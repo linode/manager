@@ -7,7 +7,6 @@ import {
 } from '@linode/queries';
 import { omitProps } from '@linode/ui';
 import { isNotNullOrUndefined, utoa } from '@linode/utilities';
-import { useNavigate, useSearch } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import type { FieldErrors } from 'react-hook-form';
@@ -25,7 +24,6 @@ import {
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateInterface } from './Networking/utilities';
-import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type {
   AccountSettings,
   CreateLinodeRequest,
@@ -51,85 +49,6 @@ interface LinodeCreatePayloadOptions {
   isAclpIntegration?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
-
-/**
- * Hook that allows you to read and manage Linode Create flow query params.
- *
- * We have this because react-router-dom's query strings are not typesafe.
- */
-export const useLinodeCreateQueryParams = () => {
-  const search = useSearch({ strict: false });
-  const navigate = useNavigate();
-
-  /**
-   * Updates query params
-   */
-  const updateParams = (params: Partial<LinodeCreateSearchParams>) => {
-    navigate({
-      to: '/linodes/create',
-      search: (prev) => ({
-        ...prev,
-        ...params,
-      }),
-    });
-  };
-
-  /**
-   * Replaces query params with the provided values
-   */
-  const setParams = (params: Partial<LinodeCreateSearchParams>) => {
-    navigate({
-      to: '/linodes/create',
-      search: params,
-    });
-  };
-
-  const params = getParsedLinodeCreateQueryParams(search);
-
-  return { params, setParams, updateParams };
-};
-
-const getParsedLinodeCreateQueryParams = (
-  rawParams: LinodeCreateSearchParams
-): LinodeCreateSearchParams => {
-  return {
-    appID: rawParams.appID ?? undefined,
-    backupID: rawParams.backupID ?? undefined,
-    imageID: rawParams.imageID ?? undefined,
-    linodeID: rawParams.linodeID ?? undefined,
-    stackScriptID: rawParams.stackScriptID ?? undefined,
-    subtype: rawParams.subtype as StackScriptTabType | undefined,
-    type: rawParams.type as LinodeCreateType | undefined,
-  };
-};
-
-/**
- * Given the Linode Create flow 'type' from query params, this function
- * returns the tab's index. This allows us to control the tabs via the query string.
- */
-export const getTabIndex = (tabType: LinodeCreateType | undefined) => {
-  if (!tabType) {
-    return 0;
-  }
-
-  const currentTabIndex = tabs.indexOf(tabType);
-
-  // Users might type an invalid tab name into query params. Fallback to the first tab.
-  if (currentTabIndex === -1) {
-    return 0;
-  }
-
-  return currentTabIndex;
-};
-
-export const tabs: LinodeCreateType[] = [
-  'OS',
-  'One-Click',
-  'StackScripts',
-  'Images',
-  'Backups',
-  'Clone Linode',
-];
 
 /**
  * Performs some transformations to the Linode Create form data so that the data
@@ -330,6 +249,7 @@ export interface LinodeCreateFormContext {
  * The default values are dependent on the query params present.
  */
 export const defaultValues = async (
+  createType: LinodeCreateType,
   params: LinodeCreateSearchParams,
   queryClient: QueryClient,
   flags: {
@@ -379,7 +299,7 @@ export const defaultValues = async (
       );
 
       // Don't set the interface generation when cloning. The API can figure that out
-      if (flags.isLinodeInterfacesEnabled && params.type !== 'Clone Linode') {
+      if (flags.isLinodeInterfacesEnabled && createType !== 'Clone Linode') {
         interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
           accountSettings.interfaces_for_new_linodes
         );
@@ -418,7 +338,7 @@ export const defaultValues = async (
       firewallSettings && firewallSettings.default_firewall_ids.linode
         ? firewallSettings.default_firewall_ids.linode
         : undefined,
-    image: getDefaultImageId(params),
+    image: getDefaultImageId(createType, params),
     interface_generation: interfaceGeneration,
     interfaces: defaultInterfaces,
     linode,
@@ -436,7 +356,7 @@ export const defaultValues = async (
   try {
     values.label = await getGeneratedLinodeLabel({
       queryClient,
-      tab: params.type,
+      tab: createType,
       values,
     });
   } catch (error) {
@@ -446,20 +366,23 @@ export const defaultValues = async (
   return values;
 };
 
-const getDefaultImageId = (params: LinodeCreateSearchParams) => {
+const getDefaultImageId = (
+  createType: LinodeCreateType,
+  params: LinodeCreateSearchParams
+) => {
   // You can't have an Image selected when deploying from a backup.
-  if (params.type === 'Backups') {
+  if (createType === 'Backups') {
     return null;
   }
 
   // Always default debian for the OS tab.
-  if (!params.type || params.type === 'OS') {
+  if (!createType || createType === 'OS') {
     return DEFAULT_OS;
   }
 
   // If the user is deep linked to the Images tab with a preselected image,
   // default to it.
-  if (params.type === 'Images' && params.imageID) {
+  if (createType === 'Images' && params.imageID) {
     return params.imageID;
   }
 
