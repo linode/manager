@@ -28,7 +28,7 @@ vi.mock('@linode/queries', async () => {
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode_disk: false,
     },
   })),
@@ -93,7 +93,7 @@ describe('LinodeDisks', () => {
 
   it('should enable "add a disk" button if the user has a create_linode_disk permissions and has free disk space', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode_disk: true,
       },
     });
@@ -106,7 +106,7 @@ describe('LinodeDisks', () => {
 
   it('should disable the "Add a Disk" button when there is no free disk space', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode_disk: true,
       },
     });
@@ -125,7 +125,7 @@ describe('LinodeDisks', () => {
 
   it('should enable the "Add a Disk" button when there is free disk space', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode_disk: true,
       },
     });
