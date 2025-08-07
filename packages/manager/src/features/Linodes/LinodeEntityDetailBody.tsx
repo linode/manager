@@ -275,8 +275,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     variant="body1"
                   >
                     <Link
+                      hash={ipTableId}
                       params={{ linodeId }}
-                      to={`/linodes/$linodeId/networking#${ipTableId}`}
+                      to={'/linodes/$linodeId/networking'}
                     >
                       View all IP Addresses
                     </Link>

@@ -2,6 +2,7 @@ import { useAccountUsers, useProfile, useSSHKeysQuery } from '@linode/queries';
 import { Box, Button, Checkbox, Typography } from '@linode/ui';
 import { truncateAndJoinList } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -21,6 +22,7 @@ import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
 import type { TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
+import type { LinkProps } from '@tanstack/react-router';
 
 const MAX_SSH_KEYS_DISPLAY = 25;
 
@@ -55,6 +57,7 @@ interface Props {
 
 export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
+  const location = useLocation();
   const theme = useTheme();
   const { authorizedUsers, disabled, headingVariant, setAuthorizedUsers } =
     props;
@@ -63,7 +66,7 @@ export const UserSSHKeyPanel = (props: Props) => {
     React.useState<boolean>(false);
 
   const pagination = usePaginationV2({
-    currentRoute: '/profile/keys',
+    currentRoute: location.pathname as LinkProps['to'],
     initialPage: 1,
     preferenceKey: 'ssh-keys-users-table',
   });
