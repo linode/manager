@@ -67,6 +67,5 @@ export const accountGrantsToPermissions = (
     create_firewall: unrestricted || globalGrants?.add_firewalls,
     // AccountLinodeAdmin
     create_linode: unrestricted || globalGrants?.add_linodes,
-    enable_linode_backups: hasReadAccess,
   } as Record<AccountAdmin, boolean>;
 };

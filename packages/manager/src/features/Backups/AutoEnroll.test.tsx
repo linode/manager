@@ -6,9 +6,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AutoEnroll } from './AutoEnroll';
 
 const queryMocks = vi.hoisted(() => ({
-  useProfile: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
-    data: { enable_linode_backups: true },
+    data: { update_account_settings: true },
   })),
 }));
 
@@ -49,7 +48,7 @@ describe('AutoEnroll display component', () => {
 
   it('should disable toggle when user does not have "enable_linode_backups" permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      data: { enable_linode_backups: false },
+      data: { update_account_settings: false },
     });
     const { getByRole } = renderWithTheme(
       <AutoEnroll

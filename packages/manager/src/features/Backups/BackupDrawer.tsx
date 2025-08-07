@@ -49,7 +49,7 @@ export const BackupDrawer = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: permissions } = usePermissions('account', [
-    'enable_linode_backups',
+    'update_account_settings',
   ]);
   const {
     data: linodes,
@@ -195,7 +195,7 @@ all new Linodes will automatically be backed up.`
         <ActionsPanel
           primaryButtonProps={{
             label: 'Confirm',
-            disabled: !permissions.enable_linode_backups,
+            disabled: !permissions.update_account_settings,
             loading: isUpdatingAccountSettings || isEnablingBackups,
             onClick: handleSubmit,
           }}

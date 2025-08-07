@@ -20,7 +20,7 @@ const queryMocks = vi.hoisted(() => ({
     data: undefined,
   }),
   userPermissions: vi.fn(() => ({
-    data: { enable_linode_backups: true },
+    data: { update_account_settings: true },
   })),
 }));
 
@@ -171,7 +171,7 @@ describe('BackupDrawer', () => {
       data: linodeFactory.buildList(1, { backups: { enabled: false } }),
     });
     queryMocks.userPermissions.mockReturnValue({
-      data: { enable_linode_backups: false },
+      data: { update_account_settings: false },
     });
     const { findByText, getByRole } = renderWithTheme(
       <BackupDrawer onClose={vi.fn()} open={true} />
@@ -187,7 +187,7 @@ describe('BackupDrawer', () => {
       data: linodeFactory.buildList(1, { backups: { enabled: false } }),
     });
     queryMocks.userPermissions.mockReturnValue({
-      data: { enable_linode_backups: true },
+      data: { update_account_settings: true },
     });
     const { findByText, getByRole } = renderWithTheme(
       <BackupDrawer onClose={vi.fn()} open={true} />

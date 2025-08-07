@@ -22,7 +22,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
   const { enabled, error, toggle } = props;
 
   const { data: permissions } = usePermissions('account', [
-    'enable_linode_backups',
+    'update_account_settings',
   ]);
   return (
     <Paper
@@ -33,7 +33,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
       <FormControlLabel
         checked={enabled}
         control={<Toggle />}
-        disabled={!permissions.enable_linode_backups}
+        disabled={!permissions.update_account_settings}
         label={
           <Stack spacing={0.5}>
             <Typography sx={(theme) => ({ font: theme.font.bold })}>
