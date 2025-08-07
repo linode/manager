@@ -4,8 +4,8 @@ import {
   usePreferences,
 } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -121,50 +121,36 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Compute />,
           links: [
             {
-              activeLinks: [
-                '/managed',
-                '/managed/summary',
-                '/managed/monitors',
-                '/managed/ssh-access',
-                '/managed/credentials',
-                '/managed/contacts',
-              ],
               display: 'Managed',
               hide: !isManaged,
-              href: '/managed',
+              to: '/managed',
             },
             {
-              activeLinks: ['/linodes', '/linodes/create'],
               display: 'Linodes',
-              href: '/linodes',
+              to: '/linodes',
             },
             {
-              activeLinks: [
-                '/images/create/create-image',
-                '/images/create/upload-image',
-              ],
               display: 'Images',
-              href: '/images',
+              to: '/images',
             },
             {
-              activeLinks: ['/kubernetes/create'],
               display: 'Kubernetes',
-              href: '/kubernetes/clusters',
+              to: '/kubernetes/clusters',
             },
             {
               display: 'StackScripts',
-              href: '/stackscripts',
+              to: '/stackscripts',
             },
             {
               betaChipClassName: 'beta-chip-placement-groups',
               display: 'Placement Groups',
               hide: !isPlacementGroupsEnabled,
-              href: '/placement-groups',
+              to: '/placement-groups',
             },
             {
               attr: { 'data-qa-one-click-nav-btn': true },
               display: 'Marketplace',
-              href: '/linodes/create/marketplace',
+              to: '/linodes/create/marketplace',
             },
           ],
           name: 'Compute',
@@ -173,16 +159,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Storage />,
           links: [
             {
-              activeLinks: [
-                '/object-storage/buckets',
-                '/object-storage/access-keys',
-              ],
               display: 'Object Storage',
-              href: '/object-storage/buckets',
+              to: '/object-storage/buckets',
             },
             {
               display: 'Volumes',
-              href: '/volumes',
+              to: '/volumes',
             },
           ],
           name: 'Storage',
@@ -192,19 +174,19 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           links: [
             {
               display: 'VPC',
-              href: '/vpcs',
+              to: '/vpcs',
             },
             {
               display: 'Firewalls',
-              href: '/firewalls',
+              to: '/firewalls',
             },
             {
               display: 'NodeBalancers',
-              href: '/nodebalancers',
+              to: '/nodebalancers',
             },
             {
               display: 'Domains',
-              href: '/domains',
+              to: '/domains',
             },
           ],
           name: 'Networking',
@@ -215,7 +197,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             {
               display: 'Databases',
               hide: !isDatabasesEnabled,
-              href: '/databases',
+              to: '/databases',
               isBeta: isDatabasesV2Beta,
             },
           ],
@@ -227,23 +209,23 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             {
               display: 'Metrics',
               hide: !isACLPEnabled,
-              href: '/metrics',
+              to: '/metrics',
               isBeta: flags.aclp?.beta,
             },
             {
               display: 'Alerts',
               hide: !isAlertsEnabled,
-              href: '/alerts',
+              to: '/alerts',
               isBeta: flags.aclp?.beta,
             },
             {
               display: 'Longview',
-              href: '/longview',
+              to: '/longview',
             },
             {
               display: 'DataStream',
               hide: !flags.aclpLogs?.enabled,
-              href: '/datastream',
+              to: '/datastream',
               isBeta: flags.aclpLogs?.beta,
             },
           ],
@@ -255,22 +237,22 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             {
               display: 'Betas',
               hide: !flags.selfServeBetas,
-              href: '/betas',
+              to: '/betas',
             },
             {
               display: 'Identity & Access',
               hide: !isIAMEnabled,
-              href: '/iam',
+              to: '/iam',
               icon: <IAM />,
               isBeta: isIAMBeta,
             },
             {
               display: 'Account',
-              href: '/account',
+              to: '/account',
             },
             {
               display: 'Help & Support',
-              href: '/support',
+              to: '/support',
             },
           ],
           name: 'More',
@@ -364,12 +346,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       const filteredLinks = group.links.filter((link) => !link.hide);
 
       return filteredLinks.some((link) =>
-        linkIsActive(
-          link.href,
-          location.search,
-          location.pathname,
-          link.activeLinks
-        )
+        linkIsActive(location.pathname, link.to)
       );
     });
 
@@ -433,12 +410,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
           const PrimaryLinks = filteredLinks.map((link) => {
             const isActiveLink = Boolean(
-              linkIsActive(
-                link.href,
-                location.search,
-                location.pathname,
-                link.activeLinks
-              )
+              linkIsActive(location.pathname, link.to)
             );
 
             if (isActiveLink) {

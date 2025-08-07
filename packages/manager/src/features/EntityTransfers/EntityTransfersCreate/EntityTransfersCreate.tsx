@@ -1,9 +1,8 @@
 import { entityTransfersQueryKey, useCreateTransfer } from '@linode/queries';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -26,7 +25,7 @@ import type { CreateTransferPayload } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 export const EntityTransfersCreate = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const { error, isPending, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
 
@@ -70,7 +69,10 @@ export const EntityTransfersCreate = () => {
         queryClient.invalidateQueries({
           queryKey: [entityTransfersQueryKey],
         });
-        push({ pathname: '/account/service-transfers', state: { transfer } });
+        navigate({
+          to: '/account/service-transfers',
+          state: (prev) => ({ ...prev, transfer }),
+        });
       },
     }).catch((_) => null);
   };
@@ -127,9 +129,3 @@ export const EntityTransfersCreate = () => {
     </>
   );
 };
-
-export const entityTransfersCreateLazyRoute = createLazyRoute(
-  '/account/service-transfers/create'
-)({
-  component: EntityTransfersCreate,
-});

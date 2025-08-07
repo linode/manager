@@ -40,9 +40,7 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
   return (
     <TableRow data-qa-linode-firewall-row key={`firewall-${firewallID}`}>
       <TableCell data-qa-firewall-label>
-        <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
-          {label}
-        </Link>
+        <Link to={`/firewalls/${firewallID}`}>{label}</Link>
       </TableCell>
       <TableCell data-qa-firewall-status statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />

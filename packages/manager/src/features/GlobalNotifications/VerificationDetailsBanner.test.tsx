@@ -1,21 +1,21 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
-const mockHistory = {
-  push: vi.fn(),
-  replace: vi.fn(),
-};
+const mockNavigate = vi.fn();
 
-// Used to mock query params
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => mockNavigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useHistory: vi.fn(() => mockHistory),
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -59,7 +59,7 @@ describe('VerificationDetailsBanner', () => {
     expect(getByTestId('confirmButton')).toBeInTheDocument();
   });
 
-  it('triggers history push on button click', () => {
+  it('triggers a navigation on button click', async () => {
     const { getByTestId } = renderWithTheme(
       <VerificationDetailsBanner
         hasSecurityQuestions={false}
@@ -68,11 +68,15 @@ describe('VerificationDetailsBanner', () => {
     );
 
     // Trigger button click
-    fireEvent.click(getByTestId('confirmButton'));
+    await userEvent.click(getByTestId('confirmButton'));
 
-    // Ensure that history.push is called with the correct arguments
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      '/profile/auth?focusSecurityQuestions=true&focusTel=false'
-    );
+    // Ensure that navigation is called with the correct arguments
+    expect(mockNavigate).toHaveBeenCalledWith({
+      to: '/profile/auth',
+      search: {
+        focusSecurityQuestions: true,
+        focusTel: false,
+      },
+    });
   });
 });

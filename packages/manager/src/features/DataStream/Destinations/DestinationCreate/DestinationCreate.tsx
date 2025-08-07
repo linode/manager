@@ -12,12 +12,13 @@ import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtil
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { CreateDestinationForm } from 'src/features/DataStream/Shared/types';
 
 export const DestinationCreate = () => {
   const theme = useTheme();
 
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream/destinations/create',
       crumbOverrides: [

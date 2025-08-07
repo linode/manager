@@ -97,6 +97,12 @@ export const supportTicketStorageDefaults: SupportTicketFormFields = {
   selectedSeverity: undefined,
   summary: '',
   ticketType: 'general',
+  title: '',
+  entity: {
+    id: undefined,
+    type: 'none',
+  },
+  formPayloadValues: {},
 };
 
 export interface Storage {

@@ -1,7 +1,6 @@
 import { Box, Chip, SvgIcon } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { searchableEntityIconMap } from 'src/features/Search/utils';
 
@@ -27,7 +26,7 @@ export interface SearchSuggestionProps {
 
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
   const { data, searchText, selectOption, selectProps, ...rest } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const Icon = searchableEntityIconMap[data.entityType];
 
@@ -41,7 +40,10 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    history.push(`/search/?query=tag:${label}`);
+    navigate({
+      to: '/search',
+      search: { query: `tag:${label}` },
+    });
     selectProps.onMenuClose();
   };
 

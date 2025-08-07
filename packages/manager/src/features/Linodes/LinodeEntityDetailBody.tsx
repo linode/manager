@@ -5,7 +5,6 @@ import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY } from 'src/components/Encryption/constants';
@@ -275,11 +274,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     sx={{ position: matchesLgUp ? 'absolute' : 'relative' }}
                     variant="body1"
                   >
-                    <HashLink
-                      to={`/linodes/${linodeId}/networking#${ipTableId}`}
+                    <Link
+                      hash={ipTableId}
+                      params={{ linodeId }}
+                      to={'/linodes/$linodeId/networking'}
                     >
                       View all IP Addresses
-                    </HashLink>
+                    </Link>
                   </Typography>
                 ) : undefined
               }

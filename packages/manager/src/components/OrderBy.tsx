@@ -1,6 +1,5 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import {
-  getQueryParamsFromQueryString,
   pathOr,
   sortByArrayLength,
   sortByNumber,
@@ -8,10 +7,10 @@ import {
   splitAt,
   usePrevious,
 } from '@linode/utilities';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import { equals, sort } from 'ramda';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { sortByUTFDate } from 'src/utilities/sortByUTFDate';
@@ -159,13 +158,18 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
-  const history = useHistory();
-  const params = getQueryParamsFromQueryString(location.search);
+  const navigate = useNavigate();
+  const search = useSearch({
+    strict: false,
+  });
+  const onlySearch = Object.fromEntries(
+    Object.entries(search).filter(([key]) => key.startsWith('order'))
+  ) as Record<string, string>;
 
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
     sortPreferences ?? {},
-    params,
+    onlySearch,
     props.orderBy,
     props.order
   );
@@ -223,7 +227,14 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
     setOrder(newOrder);
 
     // Update the URL query params so that the current sort is bookmark-able
-    history.replace({ search: `?order=${newOrder}&orderBy=${newOrderBy}` });
+    navigate({
+      to: location.pathname,
+      search: (prev: Record<string, string>) => ({
+        ...prev,
+        order: newOrder,
+        orderBy: newOrderBy,
+      }),
+    });
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };

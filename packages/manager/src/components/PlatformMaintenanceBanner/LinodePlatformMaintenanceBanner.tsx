@@ -1,8 +1,8 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { Box, Button, Stack, Typography } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { usePlatformMaintenance } from 'src/hooks/usePlatformMaintenance';

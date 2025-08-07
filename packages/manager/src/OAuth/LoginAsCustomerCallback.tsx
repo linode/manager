@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
+import { useNavigate } from '@tanstack/react-router';
 import React, { useEffect } from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import {
@@ -18,14 +18,16 @@ import {
  * Admin will redirect to Cloud Manager with a URL like:
  * https://cloud.linode.com/admin/callback#access_token=fjhwehkfg&destination=dashboard&expires_in=900&token_type=Admin
  */
-export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
+export const LoginAsCustomerCallback = () => {
+  const navigate = useNavigate();
+
   const authenticate = async () => {
     try {
       const { returnTo } = await handleLoginAsCustomerCallback({
         params: location.hash.substring(1), // substring is called to remove the leading "#" from the hash params
       });
 
-      props.history.push(returnTo);
+      navigate({ to: returnTo });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

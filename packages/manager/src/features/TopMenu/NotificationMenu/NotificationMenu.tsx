@@ -5,8 +5,8 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { LinkButton } from 'src/components/LinkButton';
@@ -27,11 +27,11 @@ import {
 import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
 
 export const NotificationMenu = () => {
-  const history = useHistory();
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const notificationContext = React.useContext(_notificationContext);
+  const navigate = useNavigate();
 
   const { data } = useEventsInfiniteQuery();
 
@@ -150,7 +150,7 @@ export const NotificationMenu = () => {
             <Typography variant="h3">Events</Typography>
             <LinkButton
               onClick={() => {
-                history.push('/events');
+                navigate({ to: '/events' });
                 handleClose();
               }}
             >

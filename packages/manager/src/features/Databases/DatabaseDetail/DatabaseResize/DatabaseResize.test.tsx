@@ -161,20 +161,16 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
-      const location = window.location;
-      window.location = {
-        ...location,
-        pathname: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
-      } as any;
-
       const { getByRole, getByTestId } = renderWithTheme(
         <DatabaseDetailContext.Provider
           value={{ database: mockDatabase, engine, isResizeEnabled }}
         >
           <DatabaseResize />
         </DatabaseDetailContext.Provider>,
-        { flags }
+        {
+          flags,
+          initialRoute: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
+        }
       );
 
       await waitForElementToBeRemoved(getByTestId(loadingTestId));

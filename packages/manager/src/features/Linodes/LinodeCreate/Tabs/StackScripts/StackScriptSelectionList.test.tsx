@@ -71,6 +71,9 @@ describe('StackScriptSelectionList', () => {
       component: <StackScriptSelectionList type="Account" />,
       options: {
         initialRoute: '/linodes/create/stackscripts',
+        initialEntries: [
+          '/linodes/create/stackscripts?subtype=Account&stackScriptID=921609',
+        ],
       },
     });
 

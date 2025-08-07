@@ -24,6 +24,8 @@ import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
+
 export interface AlertRouteParams {
   /**
    * The id of the alert for which the data needs to be shown
@@ -47,16 +49,11 @@ export const AlertDetail = () => {
   } = useAlertDefinitionQuery(alertId, serviceType);
 
   const { crumbOverrides, pathname } = React.useMemo(() => {
-    const overrides = [
+    const overrides: CrumbOverridesProps[] = [
       {
         label: 'Definitions',
         linkTo: '/alerts/definitions',
         position: 1,
-      },
-      {
-        label: 'Details',
-        linkTo: `/alerts/definitions/details/${serviceType}/${alertId}`,
-        position: 2,
       },
     ];
     return { crumbOverrides: overrides, pathname: '/Definitions/Details' };

@@ -12,7 +12,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';
@@ -32,7 +32,11 @@ interface QuotasTableProps {
 export const QuotasTable = (props: QuotasTableProps) => {
   const { selectedLocation, selectedService } = props;
   const navigate = useNavigate();
-  const pagination = usePagination(1, 'quotas-table');
+  const pagination = usePaginationV2({
+    currentRoute: '/account/quotas',
+    initialPage: 1,
+    preferenceKey: 'quotas-table',
+  });
   const hasSelectedLocation = Boolean(selectedLocation);
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
   const [selectedQuota, setSelectedQuota] = React.useState<Quota | undefined>();
