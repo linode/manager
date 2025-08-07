@@ -5,7 +5,7 @@ import { streamFactory } from 'src/factories/datastream';
 import { StreamsLanding } from 'src/features/DataStream/Streams/StreamsLanding';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 
@@ -17,6 +17,7 @@ describe('Streams Landing Table', () => {
       })
     );
 
+    mockMatchMedia();
     const { getByText, queryByTestId, getByTestId } = renderWithTheme(
       <StreamsLanding />
     );
@@ -28,9 +29,11 @@ describe('Streams Landing Table', () => {
 
     // Table column headers
     getByText('Name');
+    getByText('Stream Type');
     getByText('Status');
     getByText('ID');
     getByText('Destination Type');
+    getByText('Creation Time');
 
     // PaginationFooter
     const paginationFooterSelectPageSizeInput = getByTestId(

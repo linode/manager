@@ -35,8 +35,25 @@ const streamsCreateRoute = createRoute({
   path: 'streams/create',
 }).lazy(() =>
   import(
-    'src/features/DataStream/Streams/StreamCreate/streamCreateLazyRoute'
+    'src/features/DataStream/Streams/StreamForm/streamCreateLazyRoute'
   ).then((m) => m.streamCreateLazyRoute)
+);
+
+const streamsEditRoute = createRoute({
+  getParentRoute: () => dataStreamRoute,
+  params: {
+    parse: ({ streamId }: { streamId: string }) => ({
+      streamId: Number(streamId),
+    }),
+    stringify: ({ streamId }: { streamId: number }) => ({
+      streamId: String(streamId),
+    }),
+  },
+  path: 'streams/$streamId/edit',
+}).lazy(() =>
+  import('src/features/DataStream/Streams/StreamForm/streamEditLazyRoute').then(
+    (m) => m.streamEditLazyRoute
+  )
 );
 
 const destinationsRoute = createRoute({
@@ -59,6 +76,6 @@ const destinationsCreateRoute = createRoute({
 
 export const dataStreamRouteTree = dataStreamRoute.addChildren([
   dataStreamLandingRoute,
-  streamsRoute.addChildren([streamsCreateRoute]),
+  streamsRoute.addChildren([streamsCreateRoute, streamsEditRoute]),
   destinationsRoute.addChildren([destinationsCreateRoute]),
 ]);

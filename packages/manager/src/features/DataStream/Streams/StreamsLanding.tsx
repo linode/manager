@@ -87,9 +87,11 @@ export const StreamsLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '30%' }}
             >
               Name
             </TableSortCell>
+            <TableCell>Stream Type</TableCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
@@ -106,8 +108,10 @@ export const StreamsLanding = () => {
             >
               ID
             </TableSortCell>
-            <TableCell>Destination Type</TableCell>
             <Hidden smDown>
+              <TableCell>Destination Type</TableCell>
+            </Hidden>
+            <Hidden lgDown>
               <TableSortCell
                 active={orderBy === 'created'}
                 direction={order}
@@ -117,6 +121,7 @@ export const StreamsLanding = () => {
                 Creation Time
               </TableSortCell>
             </Hidden>
+            <TableCell sx={{ width: '5%' }} />
           </TableRow>
         </TableHead>
         <TableBody>

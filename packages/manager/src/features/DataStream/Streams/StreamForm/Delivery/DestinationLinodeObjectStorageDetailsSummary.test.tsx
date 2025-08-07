@@ -33,22 +33,23 @@ describe('DestinationLinodeObjectStorageDetailsSummary', () => {
       <DestinationLinodeObjectStorageDetailsSummary {...details} />
     );
 
+    // Host:
     expect(screen.getByText('test host')).toBeVisible();
-
+    // Bucket:
     expect(screen.getByText('test bucket')).toBeVisible();
-
+    // Log Path:
     expect(screen.getByText('test/path')).toBeVisible();
-
+    // Region:
     await waitFor(() => {
       expect(screen.getByText('US, Chicago, IL')).toBeVisible();
     });
-
+    // Access Key ID:
     expect(
       within(screen.getByText('Access Key ID:').closest('div')!).getByText(
         '*****************'
       )
     ).toBeInTheDocument();
-
+    // Secret Access Key:
     expect(
       within(screen.getByText('Secret Access Key:').closest('div')!).getByText(
         '*****************'
