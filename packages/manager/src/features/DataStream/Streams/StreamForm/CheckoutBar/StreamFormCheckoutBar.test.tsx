@@ -5,20 +5,20 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { describe, expect } from 'vitest';
 
-import { StreamCreateCheckoutBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar';
-import { StreamCreateGeneralInfo } from 'src/features/DataStream/Streams/StreamCreate/StreamCreateGeneralInfo';
+import { StreamFormCheckoutBar } from 'src/features/DataStream/Streams/StreamForm/CheckoutBar/StreamFormCheckoutBar';
+import { StreamFormGeneralInfo } from 'src/features/DataStream/Streams/StreamForm/StreamFormGeneralInfo';
 import {
   renderWithTheme,
   renderWithThemeAndHookFormContext,
 } from 'src/utilities/testHelpers';
 
-describe('StreamCreateCheckoutBar', () => {
+describe('StreamFormCheckoutBar', () => {
   const getDeliveryPriceContext = () => screen.getByText(/\/unit/i).textContent;
   const createStream = () => {};
 
   const renderComponent = () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamCreateCheckoutBar createStream={createStream} />,
+      component: <StreamFormCheckoutBar createStream={createStream} />,
       useFormOptions: {
         defaultValues: {
           destination: {
@@ -61,8 +61,8 @@ describe('StreamCreateCheckoutBar', () => {
     return (
       <FormProvider {...methods}>
         <form>
-          <StreamCreateGeneralInfo />
-          <StreamCreateCheckoutBar createStream={createStream} />
+          <StreamFormGeneralInfo mode="create" />
+          <StreamFormCheckoutBar createStream={createStream} />
         </form>
       </FormProvider>
     );

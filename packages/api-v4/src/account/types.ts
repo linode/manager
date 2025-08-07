@@ -490,6 +490,8 @@ export const EventActionKeys = [
   'user_ssh_key_update',
   'user_update',
   'stream_create',
+  'stream_delete',
+  'stream_update',
   'volume_attach',
   'volume_clone',
   'volume_create',

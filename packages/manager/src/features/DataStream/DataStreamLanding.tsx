@@ -1,7 +1,10 @@
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { LandingHeader } from 'src/components/LandingHeader';
+import {
+  LandingHeader,
+  type LandingHeaderProps,
+} from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -23,7 +26,7 @@ const Streams = React.lazy(() =>
 );
 
 export const DataStreamLanding = React.memo(() => {
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream',
     },
