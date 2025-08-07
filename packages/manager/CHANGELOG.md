@@ -70,6 +70,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - DataStream: add destination's details for selected destination ([#12559](https://github.com/linode/manager/pull/12559))
 - IAM RBAC: Modify query parameter to allow varying use cases, return API errors, and return isLoading and isError values ([#12560](https://github.com/linode/manager/pull/12560))
 - IAM RBAC: add a permission check in Profile and Account/Billing ([#12561](https://github.com/linode/manager/pull/12561))
+- IAM RBAC: add a permission check in Account Settings Tab ([#12630](https://github.com/linode/manager/pull/12630))
 - Add subnet IPv6 to VPC create page ([#12563](https://github.com/linode/manager/pull/12563))
 - Add/update inline docs for ACLP Alerts logic ([#12578](https://github.com/linode/manager/pull/12578))
 - ACLP: add checkbox functionality in `AlertRegions`.  ([#12582](https://github.com/linode/manager/pull/12582))
