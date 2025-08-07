@@ -162,6 +162,7 @@ export interface LinodeIPsResponseIPV6 {
   global: IPRange[];
   link_local: IPAddress;
   slaac: IPAddress;
+  vpc: VPCIP[];
 }
 
 export type LinodeStatus =
