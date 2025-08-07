@@ -3,6 +3,7 @@ import { grantsFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { extraMockPresets } from 'src/mocks/presets';
+import { setCustomGrantData } from 'src/mocks/presets/extra/account/customGrants';
 
 import { saveCustomGrantsData } from '../utils';
 import { JsonTextArea } from './JsonTextArea';
@@ -65,6 +66,21 @@ export const ExtraPresetGrants = ({
     }
     onTogglePreset(e, 'grants:custom');
   };
+
+  React.useEffect(() => {
+    if (!isEnabled) {
+      setFormData({
+        ...grantsFactory.build(),
+      });
+      setCustomGrantData(null);
+    } else if (isEnabled && customGrantsData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...customGrantsData,
+      }));
+      setCustomGrantData(customGrantsData);
+    }
+  }, [isEnabled, customGrantsData]);
 
   if (!customGrantsPreset) {
     return null;
