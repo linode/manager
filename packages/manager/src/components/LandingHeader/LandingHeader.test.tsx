@@ -113,7 +113,7 @@ describe('LandingHeader', () => {
           crumbOverrides: [
             {
               label: 'My First Crumb',
-              linkTo: '/someRoute',
+              linkTo: '/linodes',
               noCap: true,
               position: 1,
             },
