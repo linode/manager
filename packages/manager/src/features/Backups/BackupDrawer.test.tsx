@@ -181,4 +181,20 @@ describe('BackupDrawer', () => {
 
     expect(getByRole('checkbox')).toBeDisabled();
   });
+
+  it('should enable "Confirm" button and AutoEnroll checkbox if the user has "enable_linode_backups" permission', async () => {
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(1, { backups: { enabled: false } }),
+    });
+    queryMocks.userPermissions.mockReturnValue({
+      data: { enable_linode_backups: true },
+    });
+    const { findByText, getByRole } = renderWithTheme(
+      <BackupDrawer onClose={vi.fn()} open={true} />
+    );
+    const confirmButton = (await findByText('Confirm')).closest('button');
+    expect(confirmButton).toBeEnabled();
+
+    expect(getByRole('checkbox')).toBeEnabled();
+  });
 });
