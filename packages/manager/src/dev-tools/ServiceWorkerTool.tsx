@@ -81,7 +81,7 @@ export const ServiceWorkerTool = () => {
   >(getCustomAccountData());
   const [customGrantsData, setCustomGrantsData] = React.useState<
     Grants | null | undefined
-  >(getCustomGrantsData()); // todo
+  >(getCustomGrantsData());
   const [customProfileData, setCustomProfileData] = React.useState<
     null | Profile | undefined
   >(getCustomProfileData());
@@ -289,6 +289,7 @@ export const ServiceWorkerTool = () => {
       saveSeedsCountMap({});
       saveExtraPresetsMap({});
       saveCustomAccountData(null);
+      saveCustomGrantsData(null);
       saveCustomProfileData(null);
       saveCustomEventsData(null);
       saveCustomMaintenanceData(null);
