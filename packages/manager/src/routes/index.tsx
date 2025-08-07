@@ -72,7 +72,7 @@ export const routeTree = rootRoute.addChildren([
 export const router = createRouter({
   context: {
     accountSettings: undefined,
-    isIAMEnabled: false,
+    flags: {},
     globalErrors: {},
     isACLPEnabled: false,
     isDatabasesEnabled: false,
@@ -127,7 +127,7 @@ export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({
   context: {
     accountSettings: undefined,
-    isIAMEnabled: false,
+    flags: {},
     globalErrors: {},
     isACLPEnabled: false,
     isDatabasesEnabled: false,

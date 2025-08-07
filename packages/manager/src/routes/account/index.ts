@@ -1,5 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
 
@@ -102,8 +104,12 @@ const accountUsersUsernameProfileRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'profile',
   beforeLoad: async ({ context, params }) => {
-    const { isIAMEnabled } = context;
     const { username } = params;
+
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
 
     if (!isIAMEnabled || !username) {
       return;
@@ -125,8 +131,12 @@ const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'permissions',
   beforeLoad: async ({ context, params }) => {
-    const { isIAMEnabled } = context;
     const { username } = params;
+
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
 
     if (!isIAMEnabled || !username) {
       return;

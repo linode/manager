@@ -1,5 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+
 import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
@@ -32,7 +34,10 @@ const iamTabsRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/',
   beforeLoad: async ({ context }) => {
-    const { isIAMEnabled } = context;
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
 
     if (!isIAMEnabled) {
       throw redirect({ to: '/account' });
@@ -105,8 +110,11 @@ const iamUserNameIndexRoute = createRoute({
 const iamUserNameDetailsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'details',
-  beforeLoad: ({ context, params }) => {
-    const { isIAMEnabled } = context;
+  beforeLoad: async ({ context, params }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
     const { username } = params;
 
     if (!isIAMEnabled && username) {
@@ -125,8 +133,11 @@ const iamUserNameDetailsRoute = createRoute({
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
-  beforeLoad: ({ context, params }) => {
-    const { isIAMEnabled } = context;
+  beforeLoad: async ({ context, params }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
     const { username } = params;
 
     if (!isIAMEnabled && username) {
@@ -146,8 +157,11 @@ const iamUserNameEntitiesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'entities',
   validateSearch: (search: IamEntitiesSearchParams) => search,
-  beforeLoad: ({ context, params }) => {
-    const { isIAMEnabled } = context;
+  beforeLoad: async ({ context, params }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
     const { username } = params;
 
     if (!isIAMEnabled && username) {
