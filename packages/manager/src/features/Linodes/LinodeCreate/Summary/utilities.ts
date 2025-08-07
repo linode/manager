@@ -24,6 +24,7 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
   const price = getLinodeRegionPrice(type, regionId);
 
   const isCluster = clusterSize !== undefined;
+  const hasClusterData = clusterData !== undefined;
 
   if (
     regionId === undefined ||
@@ -39,25 +40,27 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
     let clusterTotalMonthlyPrice = 0;
     let clusterTotalHourlyPrice = 0;
 
-    // cluster monthly
-    clusterData!.forEach((item) => {
-      const price = getLinodeRegionPrice(item.typeData, regionId);
-      const sizeMultiplier = parseInt(item.size ?? '0', 10);
-      clusterTotalMonthlyPrice += (price?.monthly ?? 0) * sizeMultiplier;
-    });
+    if (hasClusterData) {
+      // cluster monthly
+      clusterData.forEach((item) => {
+        const price = getLinodeRegionPrice(item.typeData, regionId);
+        const sizeMultiplier = parseInt(item.size ?? '0', 10);
+        clusterTotalMonthlyPrice += (price?.monthly ?? 0) * sizeMultiplier;
+      });
 
-    // cluster hourly
-    clusterData!.forEach((item) => {
-      const price = getLinodeRegionPrice(item.typeData, regionId);
-      const sizeMultiplier = parseInt(item.size ?? '0', 10);
-      clusterTotalHourlyPrice += (price?.hourly ?? 0) * sizeMultiplier;
-    });
+      // cluster hourly
+      clusterData.forEach((item) => {
+        const price = getLinodeRegionPrice(item.typeData, regionId);
+        const sizeMultiplier = parseInt(item.size ?? '0', 10);
+        clusterTotalHourlyPrice += (price?.hourly ?? 0) * sizeMultiplier;
+      });
 
-    // total cluster size
-    clusterData!.forEach((item) => {
-      const sizeMultiplier = parseInt(item.size ?? '0', 10);
-      totalClusterSize += sizeMultiplier;
-    });
+      // total cluster size
+      clusterData.forEach((item) => {
+        const sizeMultiplier = parseInt(item.size ?? '0', 10);
+        totalClusterSize += sizeMultiplier;
+      });
+    }
 
     // this instance
     const totalMonthlyPrice = renderMonthlyPriceToCorrectDecimalPlace(
