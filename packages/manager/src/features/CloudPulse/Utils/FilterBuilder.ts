@@ -394,7 +394,7 @@ export const shouldDisableFilterByFilterKey = (
   preferences?: AclpConfig
 ): boolean | undefined => {
   if (dashboard?.service_type) {
-    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.id);
     const filters = serviceTypeConfig?.filters ?? [];
 
     const filter = filters.find(
@@ -444,7 +444,7 @@ export const checkIfAllMandatoryFiltersAreSelected = (
   mandatoryFilterObj: CloudPulseMandatoryFilterCheckProps
 ): boolean => {
   const { dashboard, filterValue, timeDuration } = mandatoryFilterObj;
-  const serviceTypeConfig = FILTER_CONFIG?.get(dashboard.service_type);
+  const serviceTypeConfig = FILTER_CONFIG?.get(dashboard.id);
 
   if (!serviceTypeConfig) {
     return false;
@@ -468,17 +468,17 @@ export const checkIfAllMandatoryFiltersAreSelected = (
 
 /**
  * @param selectedFilters The selected filters from the global filters view from custom select component
- * @param serviceType The serviceType assosicated with the dashboard like linode, dbaas etc.,
+ * @param dashboardId The ID of the dashboard
  * @returns Constructs and returns the metrics call filters based on selected filters and service type
  */
 export const getMetricsCallCustomFilters = (
   selectedFilters: {
     [key: string]: FilterValueType;
   },
-  serviceType?: CloudPulseServiceType
+  dashboardId?: number
 ): CloudPulseMetricsAdditionalFilters[] => {
-  const serviceTypeConfig = serviceType
-    ? FILTER_CONFIG.get(serviceType)
+  const serviceTypeConfig = dashboardId
+    ? FILTER_CONFIG.get(dashboardId)
     : undefined;
 
   // If configuration exists, filter and map it to the desired CloudPulseMetricsAdditionalFilters format
@@ -533,7 +533,7 @@ const getDependentFiltersByFilterKey = (
   filterKey: string,
   dashboard: Dashboard
 ): string[] => {
-  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.id);
 
   if (!serviceTypeConfig) {
     return [];
@@ -624,7 +624,7 @@ export const getFilters = (
   dashboard: Dashboard,
   isServiceAnalyticsIntegration: boolean
 ): CloudPulseServiceTypeFilters[] | undefined => {
-  return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
+  return FILTER_CONFIG.get(dashboard.id)?.filters.filter((config) =>
     isServiceAnalyticsIntegration
       ? config.configuration.neededInViews.includes(
           CloudPulseAvailableViews.service

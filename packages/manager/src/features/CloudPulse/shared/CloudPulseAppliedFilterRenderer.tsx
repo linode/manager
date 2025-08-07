@@ -7,15 +7,15 @@ import type { CloudPulseAppliedFilterProps } from './CloudPulseAppliedFilter';
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface AppliedFilterRendererProps extends CloudPulseAppliedFilterProps {
-  serviceType: CloudPulseServiceType;
+  dashboardId: number;
 }
 
 export const CloudPulseAppliedFilterRenderer = (
   props: AppliedFilterRendererProps
 ) => {
-  const { filters, serviceType } = props;
+  const { filters, dashboardId } = props;
 
-  const filterConfig = FILTER_CONFIG.get(serviceType);
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
 
   if (!filterConfig) {
     return <></>;

@@ -3223,23 +3223,30 @@ export const handlers = [
   }),
 
   http.get('*/monitor/dashboards/:id', ({ params }) => {
+    let serviceType: string;
+    let dashboardLabel: string;
+
+    const id = params.id;
+
+    if (id === '1') {
+      serviceType = 'dbaas';
+      dashboardLabel = 'DBaaS Service I/O Statistics';
+    } else if (id === '3') {
+      serviceType = 'nodebalancer';
+      dashboardLabel = 'NodeBalancer Service I/O Statistics';
+    } else if (id === '4') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    } else {
+      serviceType = 'linode';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    }
+
     const response = {
       created: '2024-04-29T17:09:29',
       id: params.id,
-      label:
-        params.id === '1'
-          ? 'DBaaS Service I/O Statistics'
-          : params.id === '3'
-            ? 'NodeBalancer Service I/O Statistics'
-            : 'Linode Service I/O Statistics',
-      service_type:
-        params.id === '1'
-          ? 'dbaas'
-          : params.id === '3'
-            ? 'nodebalancer'
-            : params.id === '4'
-              ? 'firewall'
-              : 'linode', // just update the service type and label and use same widget configs
+      label: dashboardLabel,
+      service_type: serviceType,
       type: 'standard',
       updated: null,
       widgets: [

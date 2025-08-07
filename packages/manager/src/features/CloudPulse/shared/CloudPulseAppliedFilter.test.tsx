@@ -3,6 +3,7 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseAppliedFilter } from './CloudPulseAppliedFilter';
+import { CloudPulseAppliedFilterRenderer } from './CloudPulseAppliedFilterRenderer';
 
 const data = {
   region: ['us-east'],
@@ -26,5 +27,13 @@ describe('CloudPulse Applied Filter', () => {
     expect(getByTestId(testId)).toHaveTextContent('region');
     expect(getByTestId(testId)).toHaveTextContent('res1');
     expect(getByTestId(testId)).not.toHaveTextContent('resources');
+  });
+
+  it('should not render the applied filter component', () => {
+    const { queryByTestId } = renderWithTheme(
+      <CloudPulseAppliedFilterRenderer dashboardId={-1} filters={{}} />
+    );
+
+    expect(queryByTestId(testId)).toBe(null);
   });
 });
