@@ -45,7 +45,8 @@ export const PaymentMethodRow = (props: Props) => {
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
-    'update_account',
+    'set_default_payment_method',
+    'delete_payment_method',
   ]);
 
   const makeDefault = () => {
@@ -74,7 +75,9 @@ export const PaymentMethodRow = (props: Props) => {
     },
     {
       disabled:
-        isChildUser || !permissions.update_account || paymentMethod.is_default,
+        isChildUser ||
+        !permissions.set_default_payment_method ||
+        paymentMethod.is_default,
       onClick: makeDefault,
       title: 'Make Default',
       tooltip: paymentMethod.is_default
@@ -83,7 +86,9 @@ export const PaymentMethodRow = (props: Props) => {
     },
     {
       disabled:
-        isChildUser || !permissions.update_account || paymentMethod.is_default,
+        isChildUser ||
+        !permissions.delete_payment_method ||
+        paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default
