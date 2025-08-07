@@ -28,6 +28,7 @@ interface ExtendedPlanType {
 }
 
 export interface PlanInformationProps extends ExtendedPlanType {
+  additionalBanners?: React.ReactNode[];
   disabledClasses?: LinodeTypeClass[];
   flow: 'kubernetes' | 'linode';
   hasMajorityOfPlansDisabled: boolean;
@@ -40,6 +41,7 @@ export interface PlanInformationProps extends ExtendedPlanType {
 
 export const PlanInformation = (props: PlanInformationProps) => {
   const {
+    additionalBanners,
     disabledClasses,
     flow,
     hasMajorityOfPlansDisabled,
@@ -148,6 +150,10 @@ export const PlanInformation = (props: PlanInformationProps) => {
           </PlanNoticeTypography>
         </Notice>
       )}
+      {additionalBanners &&
+        additionalBanners.map((banner, index) => (
+          <React.Fragment key={index}>{banner}</React.Fragment>
+        ))}
       <ClassDescriptionCopy planType={planType} />
     </>
   );

@@ -43,7 +43,7 @@ export const LinodeBackups = () => {
   const navigate = useNavigate();
   const { isBareMetalInstance } = useLinodeDetailContext();
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     [
       'cancel_linode_backups',
@@ -79,10 +79,9 @@ export const LinodeBackups = () => {
 
   const handleDeploy = (backup: LinodeBackup) => {
     navigate({
-      to: '/linodes/create',
+      to: '/linodes/create/backups',
       search: (prev) => ({
         ...prev,
-        type: 'Backups',
         backupID: backup.id,
         linodeID: linode?.id,
         typeID: linode?.type,

@@ -57,7 +57,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     [
       'shutdown_linode',
@@ -150,7 +150,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
         navigate({
-          to: '/linodes/create',
+          to: '/linodes/create/clone',
           search: buildQueryStringForLinodeClone(
             linodeId,
             linodeRegion,

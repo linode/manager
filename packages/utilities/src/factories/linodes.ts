@@ -83,7 +83,25 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
     ],
     reserved: [],
     shared: [],
-    vpc: [],
+    vpc: [
+      {
+        address: '10.0.0.2',
+        address_range: null,
+        vpc_id: 1,
+        subnet_id: 1,
+        region: 'us-ord',
+        linode_id: 1,
+        config_id: 1,
+        interface_id: 1,
+        nodebalancer_id: null,
+        database_id: null,
+        active: true,
+        nat_1_1: null,
+        gateway: '10.0.0.1',
+        prefix: 24,
+        subnet_mask: '255.255.255.0',
+      },
+    ],
   },
   ipv6: {
     global: [
@@ -118,6 +136,32 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       subnet_mask: 'ffff:ffff:ffff:ffff::',
       type: 'ipv6',
     },
+    vpc: [
+      {
+        address: null,
+        address_range: null,
+        vpc_id: 1,
+        subnet_id: 1,
+        region: 'us-ord',
+        linode_id: 1,
+        config_id: 1,
+        interface_id: 1,
+        nodebalancer_id: null,
+        database_id: null,
+        active: true,
+        nat_1_1: '',
+        gateway: null,
+        prefix: 64,
+        subnet_mask: '',
+        ipv6_range: '2600:3c02:e000:0201::/64',
+        ipv6_is_public: false,
+        ipv6_addresses: [
+          {
+            slaac_address: '2600:3c12:e456:1:2000:7891:fdce:4200',
+          },
+        ],
+      },
+    ],
   },
 });
 

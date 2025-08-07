@@ -14,7 +14,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
-import { useLinodeCreateQueryParams } from './utilities';
+import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
@@ -30,19 +30,19 @@ export const Firewall = () => {
 
   const flags = useFlags();
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
-  const { permissions } = usePermissions('account', [
+  const { data: permissions } = usePermissions('account', [
     'create_linode',
     'create_firewall',
   ]);
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: params.type ?? 'OS',
+    createType: createType ?? 'OS',
     headerName: 'Firewall',
     interaction: 'click',
     label: 'Firewall',
@@ -58,7 +58,7 @@ export const Firewall = () => {
           <Link
             onClick={() =>
               sendLinodeCreateFormInputEvent({
-                createType: params.type ?? 'OS',
+                createType: createType ?? 'OS',
                 headerName: 'Firewall',
                 interaction: 'click',
                 label: 'Learn more',

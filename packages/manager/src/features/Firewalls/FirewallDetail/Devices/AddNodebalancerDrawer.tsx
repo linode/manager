@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
@@ -37,6 +38,12 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const { data, error, isLoading } = useAllFirewallsQuery(open);
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
+
+  const { data: permissions } = usePermissions(
+    'firewall',
+    ['create_firewall_device'],
+    firewall?.id
+  );
 
   const theme = useTheme();
 
@@ -204,7 +211,9 @@ export const AddNodebalancerDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: selectedNodebalancers.length === 0,
+            disabled:
+              selectedNodebalancers.length === 0 ||
+              !permissions.create_firewall_device,
             label: 'Add',
             loading: addDeviceIsLoading,
             onClick: handleSubmit,

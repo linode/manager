@@ -1,6 +1,7 @@
 import type {
   CloudNAT,
   Config,
+  Destination,
   Domain,
   DomainRecord,
   Event,
@@ -12,6 +13,7 @@ import type {
   KubernetesCluster,
   Linode,
   LinodeInterface,
+  LinodeIPsResponse,
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
@@ -160,6 +162,7 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
 export interface MockState {
   cloudnats: CloudNAT[];
   configInterfaces: [number, Interface][]; // number is Config ID
+  destinations: Destination[];
   domainRecords: DomainRecord[];
   domains: Domain[];
   eventQueue: Event[];
@@ -170,6 +173,7 @@ export interface MockState {
   kubernetesNodePools: KubeNodePoolResponse[];
   linodeConfigs: [number, Config][]; // number is Linode ID
   linodeInterfaces: [number, LinodeInterface][]; // number is Linode ID
+  linodeIps: [number, LinodeIPsResponse][]; // number is Linode ID
   linodes: Linode[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];

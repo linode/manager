@@ -21,7 +21,7 @@ const defaultProps = {
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       shutdown_linode: false,
       clone_linode: false,
     },
@@ -75,7 +75,7 @@ describe('SelectLinodeCard', () => {
 
   it('should enable the Selection Card if user has clone_linode permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         shutdown_linode: true,
         clone_linode: true,
       },
@@ -95,7 +95,7 @@ describe('SelectLinodeCard', () => {
 
   it('displays the status and the enabled Power Off button of a linode that is selected and running when power actions should be shown, and user has shutdown_linode permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         shutdown_linode: true,
         clone_linode: true,
       },

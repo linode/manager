@@ -5,7 +5,6 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -19,8 +18,8 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
-import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import {
   databaseTypeClassMap,
   getSearchPlaceholderText,
@@ -129,14 +128,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isLoading: isRegionsLoading,
   } = useRegionsQuery();
 
-  const flags = useFlags();
   const theme = useTheme();
 
-  // Validate launchDarkly region ids with the ids from regionOptions prop
-  const supportedRegionIds = getSupportedRegionIds(
-    flags.aclpResourceTypeMap,
-    serviceType
-  );
+  const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds
       ? {
@@ -460,11 +454,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           resources &&
           resources.length > 0 && (
             <GridLegacy item xs={12}>
-              <AlertsResourcesNotice
+              <AlertSelectedInfoNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
-                selectedResources={selectedResources.length}
-                totalResources={resources?.length ?? 0}
+                property="entities"
+                selectedCount={selectedResources.length}
+                totalCount={resources?.length ?? 0}
               />
             </GridLegacy>
           )}

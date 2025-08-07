@@ -1,3 +1,10 @@
+## [2025-08-12] - v0.7.0
+
+
+### Changed:
+
+- Allow Linode Select options to be disabled on a per-option basis ([#12585](https://github.com/linode/manager/pull/12585))
+
 ## [2025-07-29] - v0.6.0
 
 

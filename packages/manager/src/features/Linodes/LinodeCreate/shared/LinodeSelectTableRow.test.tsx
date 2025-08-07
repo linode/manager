@@ -14,7 +14,7 @@ import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       shutdown_linode: false,
       clone_linode: false,
     },
@@ -68,7 +68,7 @@ describe('LinodeSelectTableRow', () => {
 
   it('should should call onSelect when a radio is selected', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         shutdown_linode: false,
         clone_linode: true,
       },
@@ -179,7 +179,7 @@ describe('LinodeSelectTableRow', () => {
   it('should render an enabled power off button if the Linode is powered on, a onPowerOff function is passed, and the row is selected, if user has shutdown_linode permission', async () => {
     const linode = linodeFactory.build({ status: 'running' });
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         shutdown_linode: true,
         clone_linode: true,
       },

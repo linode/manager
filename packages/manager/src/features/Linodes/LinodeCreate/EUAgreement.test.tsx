@@ -12,7 +12,7 @@ import type { LinodeCreateFormValues } from './utilities';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       acknowledge_account_agreement: false,
     },
   })),
@@ -48,7 +48,7 @@ describe('EUAgreement', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         acknowledge_account_agreement: true,
       },
     });

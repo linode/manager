@@ -109,8 +109,7 @@ export const getDisabledImages = (options: DisabledImageOptions) => {
     for (const image of images) {
       if (!image.capabilities.includes('distributed-sites')) {
         disabledImages[image.id] = {
-          reason:
-            'The selected image cannot be deployed to a distributed region.',
+          reason: 'This image cannot be deployed to a distributed region.',
         };
       }
     }

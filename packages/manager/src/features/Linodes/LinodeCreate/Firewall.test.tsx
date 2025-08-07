@@ -15,7 +15,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
       create_firewall: false,
     },
@@ -78,7 +78,7 @@ describe('Linode Create Firewall', () => {
 
   it('should enable a Firewall select if the user has create_linode permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
         create_firewall: true,
       },
@@ -95,7 +95,7 @@ describe('Linode Create Firewall', () => {
 
   it('should enable a "Create Firewall" button if the user has create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
         create_firewall: true,
       },

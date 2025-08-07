@@ -53,13 +53,11 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: 'us-ord',
     },
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: '',
     },
   ],
 };
@@ -69,6 +67,7 @@ const { dashboardName, id, metrics, region, resource, serviceType } =
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
+  id,
   widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
@@ -99,6 +98,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Linodes'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    alerts: [],
+    metrics: ['Linodes'],
+  },
 });
 
 const extendedMockRegion = regionFactory.build({

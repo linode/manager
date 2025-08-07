@@ -50,7 +50,7 @@ describe('Search Volumes', () => {
         cy.findByText(volume2.label).should('not.exist');
 
         // Clear search, confirm both volumes are shown.
-        cy.findByTestId('clear-volumes-search').click();
+        cy.findByLabelText('Clear').click();
         cy.findByText(volume1.label).should('be.visible');
         cy.findByText(volume2.label).should('be.visible');
 

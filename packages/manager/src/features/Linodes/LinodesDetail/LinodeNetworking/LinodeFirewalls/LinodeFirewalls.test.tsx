@@ -24,7 +24,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       apply_linode_firewalls: false,
       delete_firewall_device: false,
     },
@@ -70,8 +70,8 @@ describe('LinodeFirewalls', () => {
 
   it("should enable 'Add Firewall' button if the user has apply_linode_firewalls permission", async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         apply_linode_firewalls: true,
       },
     });
@@ -84,8 +84,8 @@ describe('LinodeFirewalls', () => {
 
   it("should disable 'Add Firewall' button if the user doesn't have apply_linode_firewalls permission", async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         apply_linode_firewalls: false,
       },
     });
@@ -98,8 +98,8 @@ describe('LinodeFirewalls', () => {
 
   it("should enable 'Unassign' button if the user has delete_firewall_device permission", async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         delete_firewall_device: true,
       },
     });
@@ -122,8 +122,8 @@ describe('LinodeFirewalls', () => {
 
   it("should disable 'Unassign' button if the user doesn't have delete_firewall_device permission", async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         delete_firewall_device: false,
       },
     });

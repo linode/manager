@@ -17,10 +17,12 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import type { Linode, LinodeBackup } from '@linode/api-v4/lib/linodes';
+
 interface Props {
   backup: LinodeBackup | undefined;
   linodeId: number;
@@ -35,18 +37,19 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  // TODO - UIE-8999 - this query must be included with the useQueryWithPermissions hook
-  const {
-    data: linodes,
-    error: linodeError,
-    isLoading: linodesLoading,
-  } = useAllLinodesQuery(
+  const query = useAllLinodesQuery(
     {},
     {
       region: linode?.region,
     },
     open && linode !== undefined
   );
+
+  const {
+    data: linodes,
+    error: linodeError,
+    isLoading: linodesLoading,
+  } = useQueryWithPermissions<Linode>(query, 'linode', ['update_linode']);
 
   const {
     error,

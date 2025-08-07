@@ -1,7 +1,7 @@
 import { ipAddressFactory } from 'src/factories/networking';
 
-import { createType, ipResponseToDisplayRows } from './LinodeIPAddresses';
 import { listIPv6InRange } from './LinodeIPAddressRow';
+import { createType, ipResponseToDisplayRows } from './utils';
 
 import type { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 
@@ -59,6 +59,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       ],
       link_local: ipAddressFactory.build({ type: 'ipv6' }),
       slaac: ipAddressFactory.build({ type: 'ipv6' }),
+      vpc: [],
     },
   };
 

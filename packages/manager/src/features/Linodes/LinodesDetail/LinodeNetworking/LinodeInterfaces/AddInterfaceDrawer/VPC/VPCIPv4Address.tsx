@@ -76,7 +76,7 @@ export const VPCIPv4Address = (props: Props) => {
               sx={{ pl: 0.4 }}
             />
             {fieldState.error?.message && (
-              <FormHelperText>{fieldState.error.message}</FormHelperText>
+              <FormHelperText error>{fieldState.error.message}</FormHelperText>
             )}
           </FormControl>
         )}

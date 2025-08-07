@@ -13,7 +13,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
@@ -30,7 +30,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_label: '',
+          destination: { label: '' },
         },
       },
     });
@@ -47,7 +47,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
@@ -64,7 +64,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
@@ -81,7 +81,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
@@ -104,7 +104,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
@@ -121,7 +121,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });
@@ -138,7 +138,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: { type: destinationType.LinodeObjectStorage },
         },
       },
     });

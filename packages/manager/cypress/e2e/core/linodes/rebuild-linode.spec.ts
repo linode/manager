@@ -444,7 +444,7 @@ describe('rebuild linode', () => {
     mockGetAllImages([image]);
     mockGetImage(image.id, image);
 
-    cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
+    cy.visitWithLogin(`/linodes/${linode.id}/metrics/?rebuild=true`);
 
     findRebuildDialog(linode.label).within(() => {
       // Select an Image

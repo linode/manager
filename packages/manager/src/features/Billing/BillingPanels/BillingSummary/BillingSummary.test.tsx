@@ -12,6 +12,18 @@ import BillingSummary from './BillingSummary';
 const accountBalanceText = 'account-balance-text';
 const accountBalanceValue = 'account-balance-value';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_promo_code: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
@@ -164,5 +176,39 @@ describe('BillingSummary', () => {
 
     expect(getByTestId('drawer')).toBeVisible();
     expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+  });
+
+  it('does not display the "Add a promo code" button if user does not have create_promo_code permission', async () => {
+    const { queryByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
+    );
+    expect(queryByText('Add a promo code')).not.toBeInTheDocument();
+  });
+
+  it('displays the "Add a promo code" button if user has create_promo_code permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_promo_code: true,
+      },
+    });
+    const { queryByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <BillingSummary
+          balance={-10}
+          balanceUninvoiced={5}
+          paymentMethods={[]}
+          promotions={[]}
+        />
+      </PayPalScriptProvider>,
+      {
+        initialRoute: '/account/billing',
+      }
+    );
+    expect(queryByText('Add a promo code')).toBeInTheDocument();
   });
 });

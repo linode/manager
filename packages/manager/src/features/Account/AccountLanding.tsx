@@ -23,6 +23,7 @@ import { useTabs } from 'src/hooks/useTabs';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
@@ -37,6 +38,10 @@ export const AccountLanding = () => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { limitsEvolution } = useFlags();
+
+  const { data: permissions } = usePermissions('account', [
+    'make_billing_payment',
+  ]);
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
@@ -55,11 +60,7 @@ export const AccountLanding = () => {
 
   const showQuotasTab = limitsEvolution?.enabled ?? false;
 
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+  const isReadOnly = !permissions.make_billing_payment || isChildUser;
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',

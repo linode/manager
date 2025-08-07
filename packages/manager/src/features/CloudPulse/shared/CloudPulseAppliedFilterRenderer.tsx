@@ -6,15 +6,15 @@ import { CloudPulseAppliedFilter } from './CloudPulseAppliedFilter';
 import type { CloudPulseAppliedFilterProps } from './CloudPulseAppliedFilter';
 
 interface AppliedFilterRendererProps extends CloudPulseAppliedFilterProps {
-  serviceType: string;
+  dashboardId: number;
 }
 
 export const CloudPulseAppliedFilterRenderer = (
   props: AppliedFilterRendererProps
 ) => {
-  const { filters, serviceType } = props;
+  const { filters, dashboardId } = props;
 
-  const filterConfig = FILTER_CONFIG.get(serviceType);
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
 
   if (!filterConfig) {
     return <></>;

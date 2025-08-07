@@ -57,7 +57,7 @@ export const getTestResults = (suite: TestSuites): TestResult[] => {
         return {
           testFilename: filepath,
           groupName: suitename || '',
-          testName: testCase.classname || '',
+          testName: testCase.name || '',
           passing: !testCase.failure,
           failing: !!testCase.failure,
         };

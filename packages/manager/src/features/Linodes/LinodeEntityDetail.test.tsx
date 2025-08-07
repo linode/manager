@@ -21,14 +21,14 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
-import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
+import { getSubnetsString, getVPCIPv4 } from './utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
     },
   })),

@@ -1,3 +1,10 @@
+## [2025-08-12] - v0.11.0
+
+
+### Upcoming Features:
+
+- Add GET queries for destinations endpoints ([#12559](https://github.com/linode/manager/pull/12559))
+
 ## [2025-07-29] - v0.10.0
 
 
