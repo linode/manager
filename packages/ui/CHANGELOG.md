@@ -9,7 +9,7 @@
 
 - Check icon color in dark mode and Color Token for all checkbox states ([#12603](https://github.com/linode/manager/pull/12603))
 - Restore the previous date value when Cancel is clicked ([#12611](https://github.com/linode/manager/pull/12611))
-- DatePicker:  Show error if end date time is before start date time ([#12614](https://github.com/linode/manager/pull/12614))
+- DatePicker: Error not shown if end date time is before start date time ([#12614](https://github.com/linode/manager/pull/12614))
 
 ## [2025-07-29] - v0.17.0
 
