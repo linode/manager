@@ -1,4 +1,3 @@
-import { type AlertSeverityType } from '@linode/api-v4';
 import {
   createAlertDefinitionSchema,
   dimensionFilters,
@@ -9,6 +8,7 @@ import { array, lazy, mixed, number, object, string } from 'yup';
 
 import { getDimensionFilterValueSchema } from './Criteria/DimensionFilterValue/ValueSchemas';
 
+import type { AlertSeverityType, CloudPulseServiceType } from '@linode/api-v4';
 import type { AlertDefinitionScope, AlertDefinitionType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
@@ -79,8 +79,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
         .required()
         .min(1, 'At least one metric criteria is required.'),
     }).required(),
-    serviceType: string()
-      .oneOf(['linode', 'dbaas', 'firewall', 'nodebalancer'])
+    serviceType: mixed<CloudPulseServiceType>()
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
