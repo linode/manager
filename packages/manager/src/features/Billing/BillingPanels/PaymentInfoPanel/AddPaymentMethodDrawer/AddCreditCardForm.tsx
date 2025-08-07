@@ -9,6 +9,7 @@ import NumberFormat from 'react-number-format';
 import type { NumberFormatProps } from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -152,9 +153,16 @@ export const AddCreditCardForm = (props: Props) => {
   };
 
   const disableInput = isSubmitting || disabled;
+  const { data: permissions } = usePermissions('account', [
+    'create_payment_method',
+  ]);
 
   const disableAddButton =
-    disabled || !values.card_number || !values.cvv || !values.expiry_month;
+    disabled ||
+    !values.card_number ||
+    !values.cvv ||
+    !values.expiry_month ||
+    !permissions?.create_payment_method;
 
   return (
     <form onSubmit={handleSubmit}>
