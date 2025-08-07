@@ -1,3 +1,4 @@
+import { type PermissionType } from '@linode/api-v4';
 import { Accordion } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
@@ -28,6 +29,7 @@ interface Props {
   isLoading: boolean;
   page: number;
   pageSize: number;
+  permissions?: Record<PermissionType, boolean>;
   results: number;
   transfers?: EntityTransfer[];
   transferType: 'pending' | 'received' | 'sent';
@@ -44,6 +46,7 @@ export const TransfersTable = React.memo((props: Props) => {
     results,
     transferType,
     transfers,
+    permissions,
   } = props;
 
   const [cancelPendingDialogOpen, setCancelPendingDialogOpen] =
@@ -155,6 +158,7 @@ export const TransfersTable = React.memo((props: Props) => {
                     }
                     handleTokenClick={handleTokenClick}
                     key={`${transferType}-${idx}`}
+                    permissions={permissions}
                     status={transfer.status}
                     token={transfer.token}
                     transferType={transferType}

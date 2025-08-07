@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TransfersTable } from '../TransfersTable';
@@ -114,10 +115,16 @@ export const EntityTransfersLanding = () => {
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
   const sentTransfersResults = sentTransfersData?.results ?? 0;
 
+  const { data: permissions } = usePermissions('account', [
+    'accept_service_transfer',
+    'create_service_transfer',
+    'cancel_service_transfer',
+  ]);
+
   return (
     <div style={{ overflowX: 'hidden' }}>
       <DocumentTitleSegment segment="Transfers" />
-      <TransferControls />
+      <TransferControls permissions={permissions} />
       <CreateTransferSuccessDialog
         isOpen={successDialogOpen}
         onClose={handleCloseSuccessDialog}
@@ -139,6 +146,7 @@ export const EntityTransfersLanding = () => {
               isLoading={pendingTransfersLoading}
               page={paginationPendingTransfers.page}
               pageSize={paginationPendingTransfers.pageSize}
+              permissions={permissions}
               results={pendingTransfersResults}
               transfers={pendingTransfers}
               transferType="pending"
