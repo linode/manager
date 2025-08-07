@@ -5,11 +5,7 @@ import { CloudPulseAvailableViews } from './models';
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type {
-  CloudPulseServiceType,
-  Dashboard,
-  DateTimeWithPreset,
-} from '@linode/api-v4';
+import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 /**
  * This interface is used to get method parameters for this utility

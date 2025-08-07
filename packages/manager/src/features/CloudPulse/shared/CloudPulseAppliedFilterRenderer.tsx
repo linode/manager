@@ -4,7 +4,6 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { CloudPulseAppliedFilter } from './CloudPulseAppliedFilter';
 
 import type { CloudPulseAppliedFilterProps } from './CloudPulseAppliedFilter';
-import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface AppliedFilterRendererProps extends CloudPulseAppliedFilterProps {
   dashboardId: number;

@@ -4,7 +4,6 @@ import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
-import type { CloudPulseServiceType } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 

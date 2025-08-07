@@ -27,7 +27,6 @@ import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWid
 import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
-  CloudPulseServiceType,
   Dashboard,
   DateTimeWithPreset,
   Filter,
