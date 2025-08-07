@@ -18,6 +18,7 @@ import {
 } from './RenderTransferRow.styles';
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
 
+import type { PermissionType } from '@linode/api-v4';
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 
 interface Props {
@@ -29,6 +30,7 @@ interface Props {
     entities: TransferEntities
   ) => void;
   handleTokenClick: (token: string, entities: TransferEntities) => void;
+  permissions?: Record<PermissionType, boolean>;
   status?: string;
   token: string;
   transferType?: 'pending' | 'received' | 'sent';
@@ -44,6 +46,7 @@ export const RenderTransferRow = React.memo((props: Props) => {
     status,
     token,
     transferType,
+    permissions,
   } = props;
 
   const entitiesAndTheirCounts = Object.entries(entities);
@@ -97,6 +100,7 @@ export const RenderTransferRow = React.memo((props: Props) => {
               onCancelClick={() =>
                 handleCancelPendingTransferClick(token, entities)
               }
+              permissions={permissions}
             />
           </TableCell>
         </>
