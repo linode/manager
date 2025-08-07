@@ -30,15 +30,15 @@ import type { CloudPulseServiceTypeFilters } from './models';
 
 const mockDashboard = dashboardFactory.build();
 
-const linodeConfig = FILTER_CONFIG.get('linode');
+const linodeConfig = FILTER_CONFIG.get(2);
 
-const dbaasConfig = FILTER_CONFIG.get('dbaas');
+const dbaasConfig = FILTER_CONFIG.get(1);
 
-const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancer');
+const nodeBalancerConfig = FILTER_CONFIG.get(3);
 
-const firewallConfig = FILTER_CONFIG.get('firewall');
+const firewallConfig = FILTER_CONFIG.get(4);
 
-const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
+const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas', id: 1 });
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
@@ -105,7 +105,7 @@ it('test getResourceSelectionProperties method', () => {
     } = getResourcesProperties(
       {
         config: resourceSelectionConfig,
-        dashboard: mockDashboard,
+        dashboard: { ...mockDashboard, id: 2 },
         dependentFilters: { region: 'us-east' },
         isServiceAnalyticsIntegration: true,
       },
@@ -216,7 +216,7 @@ describe('shouldDisableFilterByFilterKey', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
       { region: 'us-east' },
-      mockDashboard
+      { ...mockDashboard, id: 2 }
     );
     expect(result).toEqual(false);
   });
@@ -242,7 +242,7 @@ describe('shouldDisableFilterByFilterKey', () => {
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
-      { region: undefined,},
+      { region: undefined },
       mockDashboard,
       { region: 'us-east' } // tags are defined in preferences which confirms that this optional filter was selected
     );
@@ -317,7 +317,7 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   expect(resourceSelectionConfig).toBeDefined();
   const now = DateTime.now();
   let result = checkIfAllMandatoryFiltersAreSelected({
-    dashboard: mockDashboard,
+    dashboard: { ...mockDashboard, id: 2 },
     filterValue: { region: 'us-east', resource_id: ['1', '2'] },
     timeDuration: {
       end: now.toISO(),
@@ -465,7 +465,7 @@ it('test getFiltersForMetricsCallFromCustomSelect method', () => {
     {
       resource_id: [1, 2, 3],
     },
-    'linode'
+    2
   );
 
   expect(result).toBeDefined();
@@ -478,7 +478,7 @@ it('test constructAdditionalRequestFilters method', () => {
       {
         resource_id: [1, 2, 3],
       },
-      'linode'
+      2
     )
   );
 
@@ -539,10 +539,7 @@ it('returns false for different arrays', () => {
 });
 
 it('should return the filters based on dashboard', () => {
-  const filters = getFilters(
-    dashboardFactory.build({ service_type: 'dbaas' }),
-    true
-  );
+  const filters = getFilters(dashboardFactory.build({ id: 1 }), true);
 
   expect(filters?.length).toBe(1);
 });

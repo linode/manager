@@ -62,7 +62,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
   } = props;
 
   // Use the node pool state from the main create flow from.
-  const { control: parentFormControl } = useFormContext<CreateClusterFormValues>();
+  const { control: parentFormControl } =
+    useFormContext<CreateClusterFormValues>();
   const _nodePools = useWatch({
     control: parentFormControl,
     name: 'nodePools',

@@ -8,7 +8,7 @@ import { LinodeRow, RenderFlag } from './LinodeRow';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {},
+    data: {},
   })),
 }));
 

@@ -109,7 +109,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
         if (dashboard && dashboard.service_type) {
-          const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+          const serviceTypeConfig = FILTER_CONFIG.get(dashboard.id);
           const filters = serviceTypeConfig?.filters ?? [];
 
           for (const filter of filters) {
@@ -410,7 +410,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     if (
       !dashboard ||
       !dashboard.service_type ||
-      !FILTER_CONFIG.has(dashboard.service_type)
+      !FILTER_CONFIG.has(dashboard.id)
     ) {
       return <NullComponent />; // in this we don't want to show the filters at all
     }

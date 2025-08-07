@@ -20,7 +20,7 @@ interface Props {
 export const FirewallLandingEmptyState = (props: Props) => {
   const { openAddFirewallDrawer } = props;
 
-  const { permissions } = usePermissions('account', ['create_firewall']);
+  const { data: permissions } = usePermissions('account', ['create_firewall']);
 
   return (
     <ResourcesSection

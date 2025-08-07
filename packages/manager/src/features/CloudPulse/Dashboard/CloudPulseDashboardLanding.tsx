@@ -97,8 +97,8 @@ export const CloudPulseDashboardLanding = () => {
               />
               {dashboard?.service_type && showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
+                  dashboardId={dashboard.id}
                   filters={filterData.label}
-                  serviceType={dashboard.service_type}
                 />
               )}
             </Box>
