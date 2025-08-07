@@ -6,6 +6,7 @@ import { alertFactory, serviceTypesFactory } from 'src/factories';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
+  alertsFromEnabledServices,
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
@@ -23,7 +24,10 @@ import type {
   APIError,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  AclpServices,
+} from 'src/featureFlags';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -33,8 +37,6 @@ it('test getServiceTypeLabel method', () => {
       service.label
     );
   });
-  expect(getServiceTypeLabel('test', { data: services })).toBe('test');
-  expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
 
 it('test convertSecondsToMinutes method', () => {
@@ -54,6 +56,7 @@ it('test convertSecondsToOptions method', () => {
 });
 
 it('test filterAlerts method', () => {
+  alertFactory.resetSequenceNumber();
   const alerts = [
     ...alertFactory.buildList(12, { created_by: 'system' }),
     alertFactory.build({
@@ -144,7 +147,7 @@ describe('getSchemaWithEntityIdValidation', () => {
   it('should return baseSchema if maxSelectionCount is undefined', () => {
     const schema = getSchemaWithEntityIdValidation({
       ...props,
-      serviceTypeObj: 'unknown',
+      serviceTypeObj: 'firewall',
     });
     expect(schema).toBe(baseSchema);
   });
@@ -318,76 +321,6 @@ describe('useContextualAlertsState', () => {
   });
 });
 
-describe('useContextualAlertsState', () => {
-  it('should return empty initial state when no entityId provided', () => {
-    const alerts = alertFactory.buildList(3);
-    const { result } = renderHook(() => useContextualAlertsState(alerts));
-    expect(result.current.initialState).toEqual({ system: [], user: [] });
-  });
-
-  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
-    const entityId = '123';
-    const alerts = [
-      alertFactory.build({
-        id: 1,
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 2,
-        label: 'alert2',
-        type: 'user',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 3,
-        label: 'alert3',
-        type: 'system',
-        entity_ids: ['456'],
-        scope: 'region',
-      }),
-    ];
-
-    const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
-    );
-
-    expect(result.current.initialState.system).toContain(1);
-    expect(result.current.initialState.system).toContain(3);
-    expect(result.current.initialState.user).toContain(2);
-  });
-
-  it('should detect unsaved changes when alerts are modified', () => {
-    const entityId = '123';
-    const alerts = [
-      alertFactory.build({
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-    ];
-
-    const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
-    );
-
-    expect(result.current.hasUnsavedChanges).toBe(false);
-
-    act(() => {
-      result.current.setEnabledAlerts((prev) => ({
-        ...prev,
-        system: [...(prev.system ?? []), 999],
-      }));
-    });
-
-    expect(result.current.hasUnsavedChanges).toBe(true);
-  });
-});
-
 describe('filterRegionByServiceType', () => {
   const regions = [
     regionFactory.build({
@@ -435,9 +368,55 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for firewall service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
+    expect(result).toHaveLength(0);
+  });
+});
+
+describe('alertsFromEnabledServices', () => {
+  const allAlerts = [
+    ...alertFactory.buildList(3, { service_type: 'dbaas' }),
+    ...alertFactory.buildList(3, { service_type: 'linode' }),
+  ];
+  const aclpServicesFlag: Partial<AclpServices> = {
+    linode: {
+      alerts: { enabled: true, beta: true },
+      metrics: { enabled: true, beta: true },
+    },
+    dbaas: {
+      alerts: { enabled: false, beta: true },
+      metrics: { enabled: false, beta: true },
+    },
+  };
+
+  it('should return empty list when no alerts are provided', () => {
+    const result = alertsFromEnabledServices([], aclpServicesFlag);
+    expect(result).toHaveLength(0);
+  });
+
+  it('should return alerts from enabled services', () => {
+    const result = alertsFromEnabledServices(allAlerts, aclpServicesFlag);
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        alerts: { enabled: true, beta: true },
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing the alerts property in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        metrics: { enabled: true, beta: true },
+      },
+    });
     expect(result).toHaveLength(0);
   });
 });

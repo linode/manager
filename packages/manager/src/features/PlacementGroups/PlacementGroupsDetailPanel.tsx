@@ -8,9 +8,9 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import {
   NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE,
   PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
@@ -53,9 +53,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     selectedRegion?.capabilities.includes('Placement Group')
   );
 
-  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
     handlePlacementGroupChange(placementGroup);
@@ -159,7 +157,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
         )}
       </Box>
       <PlacementGroupsCreateDrawer
-        disabledPlacementGroupCreateButton={isLinodeReadOnly}
+        disabledPlacementGroupCreateButton={!permissions.create_linode}
         onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
         onPlacementGroupCreate={handlePlacementGroupCreated}
         open={isCreatePlacementGroupDrawerOpen}

@@ -1,22 +1,40 @@
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   backup: LinodeBackup;
-  disabled: boolean;
+  linodeId: number;
   onDeploy: () => void;
   onRestore: () => void;
 }
 
 export const LinodeBackupActionMenu = (props: Props) => {
-  const { backup, disabled, onDeploy, onRestore } = props;
-  const disabledProps = {
-    disabled,
-    tooltip: disabled
+  const { backup, linodeId, onDeploy, onRestore } = props;
+
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
+
+  const disabledPropsForRestore = {
+    disabled: !linodePermissions.update_linode,
+    tooltip: !linodePermissions.update_linode
+      ? "You don't have permission to deploy from this Linode\u{2019}s backups"
+      : undefined,
+  };
+
+  const disabledPropsForDeployNew = {
+    disabled: !accountPermissions.create_linode,
+    tooltip: !accountPermissions.create_linode
       ? "You don't have permission to deploy from this Linode\u{2019}s backups"
       : undefined,
   };
@@ -27,14 +45,14 @@ export const LinodeBackupActionMenu = (props: Props) => {
         onRestore();
       },
       title: 'Restore to Existing Linode',
-      ...disabledProps,
+      ...disabledPropsForRestore,
     },
     {
       onClick: () => {
         onDeploy();
       },
       title: 'Deploy New Linode',
-      ...disabledProps,
+      ...disabledPropsForDeployNew,
     },
   ];
 

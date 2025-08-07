@@ -1,8 +1,6 @@
-import { grantsFactory, profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Details } from './Details';
@@ -11,6 +9,11 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_linode: false,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -22,6 +25,10 @@ vi.mock('@tanstack/react-router', async () => {
     useParams: queryMocks.useParams,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 describe('Linode Create Details', () => {
   beforeEach(() => {
@@ -77,27 +84,14 @@ describe('Linode Create Details', () => {
     const { queryByText } = renderWithThemeAndHookFormContext({
       component: <Details />,
       options: {
-        MemoryRouter: {
-          initialEntries: ['/linodes/create?type=Clone+Linode'],
-        },
+        initialRoute: '/linodes/create/clone',
       },
     });
 
     expect(queryByText('Tags')).toBeNull();
   });
 
-  it('should disable the label and tag TextFields if the user does not have permission to create a linode', async () => {
-    server.use(
-      http.get('*/v4/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/v4/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { add_linodes: false } })
-        );
-      })
-    );
-
+  it('should disable the label and tag TextFields if the user does not have create_linode permission', async () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: <Details />,
     });
@@ -105,9 +99,24 @@ describe('Linode Create Details', () => {
     const labelInput = getByLabelText('Linode Label');
     const tagsInput = getByLabelText('Add Tags');
 
-    await waitFor(() => {
-      expect(labelInput).toBeDisabled();
-      expect(tagsInput).toBeDisabled();
+    expect(labelInput).toBeDisabled();
+    expect(tagsInput).toBeDisabled();
+  });
+
+  it('should enable the label and tag TextFields if the user has create_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_linode: true,
+      },
     });
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: <Details />,
+    });
+
+    const labelInput = getByLabelText('Linode Label');
+    const tagsInput = getByLabelText('Add Tags');
+
+    expect(labelInput).toBeEnabled();
+    expect(tagsInput).toBeEnabled();
   });
 });

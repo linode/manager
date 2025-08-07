@@ -12,8 +12,8 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStartEvent,
@@ -25,11 +25,9 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { getDisabledRegions } from './Region.utils';
+import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 import { TwoStepRegion } from './TwoStepRegion';
-import {
-  getGeneratedLinodeLabel,
-  useLinodeCreateQueryParams,
-} from './utilities';
+import { getGeneratedLinodeLabel } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -41,7 +39,7 @@ export const Region = React.memo(() => {
   const flags = useFlags();
   const queryClient = useQueryClient();
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const {
     control,
@@ -72,9 +70,7 @@ export const Region = React.memo(() => {
     Boolean(selectedLinode?.type)
   );
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const { data: regions } = useRegionsQuery();
 
@@ -84,7 +80,7 @@ export const Region = React.memo(() => {
   );
 
   const showTwoStepRegion =
-    isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
+    isGeckoLAEnabled && isDistributedRegionSupported(createType ?? 'OS');
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -124,10 +120,14 @@ export const Region = React.memo(() => {
       setValue('metadata.user_data', null);
     }
 
-    if (
-      values.maintenance_policy &&
-      !region.capabilities.includes('Maintenance Policy')
-    ) {
+    // Handle maintenance policy based on region capabilities
+    if (region.capabilities.includes('Maintenance Policy')) {
+      // If the region supports maintenance policy, set it to the default value
+      // or keep the current value if it's already set
+      if (!values.maintenance_policy) {
+        setValue('maintenance_policy', 'linode/migrate');
+      }
+    } else {
       // Clear maintenance_policy if the selected region doesn't support it
       setValue('maintenance_policy', undefined);
     }
@@ -165,7 +165,7 @@ export const Region = React.memo(() => {
       // Auto-generate the Linode label because the region is included in the generated label
       const label = await getGeneratedLinodeLabel({
         queryClient,
-        tab: params.type ?? 'OS',
+        tab: createType ?? 'OS',
         values: { ...values, region: region.id },
       });
 
@@ -174,17 +174,17 @@ export const Region = React.memo(() => {
 
     // Begin tracking the Linode Create form.
     sendLinodeCreateFormStartEvent({
-      createType: params.type ?? 'OS',
+      createType: createType ?? 'OS',
     });
   };
 
   const showCrossDataCenterCloneWarning =
-    params.type === 'Clone Linode' &&
+    createType === 'Clone Linode' &&
     selectedLinode &&
     selectedLinode.region !== field.value;
 
   const showClonePriceWarning =
-    params.type === 'Clone Linode' &&
+    createType === 'Clone Linode' &&
     isLinodeTypeDifferentPriceInSelectedRegion({
       regionA: selectedLinode?.region,
       regionB: field.value,
@@ -192,8 +192,7 @@ export const Region = React.memo(() => {
     });
 
   const hideDistributedRegions =
-    !flags.gecko2?.enabled ||
-    !isDistributedRegionSupported(params.type ?? 'OS');
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(createType ?? 'OS');
 
   const disabledRegions = getDisabledRegions({
     regions: regions ?? [],
@@ -203,15 +202,13 @@ export const Region = React.memo(() => {
   if (showTwoStepRegion) {
     return (
       <TwoStepRegion
-        disabled={isLinodeCreateRestricted}
+        disabled={!permissions.create_linode}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={onChange}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
+          hideDistributedRegions && createType !== 'Images' ? 'core' : undefined
         }
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}
@@ -228,7 +225,7 @@ export const Region = React.memo(() => {
           label={DOCS_LINK_LABEL_DC_PRICING}
           onClick={() =>
             sendLinodeCreateFormInputEvent({
-              createType: params.type ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Region',
               interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
@@ -248,16 +245,14 @@ export const Region = React.memo(() => {
       <RegionSelect
         currentCapability="Linodes"
         disableClearable
-        disabled={isLinodeCreateRestricted}
+        disabled={!permissions.create_linode}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         isGeckoLAEnabled={isGeckoLAEnabled}
         onChange={(e, region) => onChange(region)}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
+          hideDistributedRegions && createType !== 'Images' ? 'core' : undefined
         }
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}

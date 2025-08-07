@@ -4,6 +4,7 @@ import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
 import type { LinodeCreateFormValues } from './utilities';
@@ -25,6 +26,10 @@ export const EUAgreement = () => {
 
   const { data: agreements } = useAccountAgreements(hasSelectedAnEURegion);
 
+  const { data: permissions } = usePermissions('account', [
+    'acknowledge_account_agreement',
+  ]);
+
   if (hasSelectedAnEURegion && agreements?.eu_model === false) {
     return (
       <Paper>
@@ -36,6 +41,7 @@ export const EUAgreement = () => {
           <EUAgreementCheckbox
             centerCheckbox
             checked={field.value ?? false}
+            disabled={!permissions.acknowledge_account_agreement}
             onChange={(_, checked) => field.onChange(checked)}
           />
         </Stack>

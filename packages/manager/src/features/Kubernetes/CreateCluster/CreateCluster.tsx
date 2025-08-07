@@ -79,23 +79,27 @@ import { NodePoolPanel } from './NodePoolPanel';
 
 import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type {
+  APIError,
   CreateKubeClusterPayload,
-  CreateNodePoolDataBeta,
-  KubeNodePoolResponseBeta,
+  CreateNodePoolData,
+  KubernetesStackType,
   KubernetesTier,
-} from '@linode/api-v4/lib/kubernetes';
-import type { Region } from '@linode/api-v4/lib/regions';
-import type { APIError } from '@linode/api-v4/lib/types';
+  Region,
+} from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-type FormValues = {
-  nodePools: KubeNodePoolResponseBeta[];
-};
+export interface CreateClusterFormValues {
+  nodePools: CreateNodePoolData[];
+  stack_type: KubernetesStackType | null;
+  subnet_id?: number;
+  vpc_id?: number;
+}
 
 export interface NodePoolConfigDrawerHandlerParams {
   drawerMode: NodePoolConfigDrawerMode;
   isOpen: boolean;
   planLabel?: string;
+  poolIndex?: number;
 }
 
 export const CreateCluster = () => {
@@ -138,14 +142,24 @@ export const CreateCluster = () => {
   const [nodePoolConfigDrawerMode, setNodePoolConfigDrawerMode] =
     React.useState<NodePoolConfigDrawerMode>('add');
   const [selectedType, setSelectedType] = React.useState<string>();
+  const [selectedPoolIndex, setSelectedPoolIndex] = React.useState<number>();
+
+  const {
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+    isLkeEnterprisePhase2FeatureEnabled,
+  } = useIsLkeEnterpriseEnabled();
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, ...form } = useForm<FormValues>({
-    defaultValues: {
-      nodePools: [],
-    },
-  });
+  const { control, trigger, formState, ...form } =
+    useForm<CreateClusterFormValues>({
+      defaultValues: {
+        nodePools: [],
+        stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
+      },
+      shouldUnregister: true,
+    });
   const nodePools = useWatch({ control, name: 'nodePools' });
   const { update } = useFieldArray({
     control,
@@ -225,9 +239,6 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesClusterBeta } =
     useCreateKubernetesClusterBetaMutation();
 
-  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
-    useIsLkeEnterpriseEnabled();
-
   const {
     isLoadingVersions,
     versions: versionData,
@@ -249,10 +260,12 @@ export const CreateCluster = () => {
     drawerMode,
     isOpen,
     planLabel,
+    poolIndex,
   }: NodePoolConfigDrawerHandlerParams) => {
     setNodePoolConfigDrawerMode(drawerMode);
     setIsNodePoolConfigDrawerOpen(isOpen);
     setSelectedType(planLabel);
+    setSelectedPoolIndex(poolIndex);
   };
 
   const createCluster = async () => {
@@ -266,7 +279,11 @@ export const CreateCluster = () => {
 
     const node_pools = nodePools.map(
       pick(['type', 'count', 'update_strategy'])
-    ) as CreateNodePoolDataBeta[];
+    ) as CreateNodePoolData[];
+
+    const vpcId = form.getValues('vpc_id');
+    const subnetId = form.getValues('subnet_id');
+    const stackType = form.getValues('stack_type');
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
@@ -316,9 +333,30 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
+    if (isLkeEnterprisePhase2FeatureEnabled) {
+      payload = {
+        ...payload,
+        vpc_id: vpcId,
+        subnet_id: subnetId,
+        stack_type: stackType ?? undefined,
+      };
+    }
+
     const createClusterFn = isUsingBetaEndpoint
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
+
+    // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
+    if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
+      // Trigger the React Hook Form validation for BYO VPC selection.
+      const isValid = await trigger();
+      // Don't submit the form while RHF errors persist.
+      if (!isValid) {
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+        return;
+      }
+    }
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
@@ -375,6 +413,8 @@ export const CreateCluster = () => {
       'k8s_version',
       'versionLoad',
       'control_plane',
+      'vpc_id',
+      'subnet_id',
     ],
     errors
   );
@@ -400,7 +440,12 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} {...form}>
+    <FormProvider
+      control={control}
+      formState={formState}
+      trigger={trigger}
+      {...form}
+    >
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
@@ -531,7 +576,7 @@ export const CreateCluster = () => {
             )}
             <Divider
               sx={{
-                marginBottom: selectedTier === 'enterprise' ? 3 : 1,
+                marginBottom: selectedTier === 'enterprise' ? 2 : 1,
                 marginTop: showAPL ? 1 : 4,
               }}
             />
@@ -551,7 +596,13 @@ export const CreateCluster = () => {
                 />
               </Box>
             )}
-            {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
+            {selectedTier === 'enterprise' && (
+              <ClusterNetworkingPanel
+                selectedRegionId={selectedRegion?.id}
+                subnetErrorText={errorMap.subnet_id}
+                vpcErrorText={errorMap.vpc_id}
+              />
+            )}
             <>
               <Divider
                 sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
@@ -623,6 +674,7 @@ export const CreateCluster = () => {
                 ? lkeEnterpriseType?.price.monthly
                 : undefined
             }
+            handleConfigurePool={handleOpenNodePoolConfigDrawer}
             hasAgreed={hasAgreed}
             highAvailability={highAvailability}
             highAvailabilityPrice={
@@ -652,6 +704,8 @@ export const CreateCluster = () => {
         onClose={() => setIsNodePoolConfigDrawerOpen(false)}
         open={isNodePoolConfigDrawerOpen}
         planId={selectedType}
+        poolIndex={selectedPoolIndex}
+        selectedRegion={selectedRegion}
         selectedTier={selectedTier}
       />
     </FormProvider>

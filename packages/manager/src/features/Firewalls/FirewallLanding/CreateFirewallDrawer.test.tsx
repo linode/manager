@@ -10,12 +10,18 @@ import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: { create_firewall: true },
+    data: { create_firewall: true },
   })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 const props = {
@@ -114,7 +120,7 @@ describe('Create Firewall Drawer', () => {
 
   it('enables the submit button if the user has create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { create_firewall: true },
+      data: { create_firewall: true },
     });
 
     renderWithTheme(<CreateFirewallDrawer {...props} />);
@@ -124,7 +130,7 @@ describe('Create Firewall Drawer', () => {
 
   it('disables the submit button if the user does not have create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { create_firewall: false },
+      data: { create_firewall: false },
     });
 
     renderWithTheme(<CreateFirewallDrawer {...props} />);

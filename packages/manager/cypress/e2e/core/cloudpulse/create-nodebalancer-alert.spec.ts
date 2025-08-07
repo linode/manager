@@ -7,7 +7,6 @@ import {
   regionFactory,
 } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
-import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateAlertDefinition,
@@ -31,6 +30,7 @@ import {
   dashboardMetricFactory,
   databaseFactory,
   egressTrafficRateRulesFactory,
+  flagsFactory,
   ingressTrafficRateRulesFactory,
   newSessionsRulesFactory,
   notificationChannelFactory,
@@ -44,8 +44,6 @@ import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/con
 import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Flags } from 'src/featureFlags';
-
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
@@ -54,27 +52,6 @@ export interface MetricDetails {
   threshold: string;
 }
 
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpBetaServices: { nodebalancer: { alerts: true, metrics: true } },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'nodebalancer',
-    },
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegions = [
@@ -97,7 +74,7 @@ const mockRegions = [
     },
   }),
 ];
-const { serviceType } = widgetDetails.nodebalancer;
+const serviceType = 'nodebalancer';
 const regionList = ['us-ord', 'us-east'];
 
 const databaseMock = regionList.map((region) =>
@@ -295,7 +272,7 @@ describe('Create Alert', () => {
    * - Confirms that the UI displays a success message after creating an alert.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);

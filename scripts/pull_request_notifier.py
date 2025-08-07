@@ -136,3 +136,4 @@ def getRandomMessage():
     return messages[randint(0, len(messages) - 1)]
 
 send_message()
+

@@ -3,7 +3,6 @@ import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
-
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 import { ValueFieldRenderer } from './DimensionFilterValue/ValueFieldRenderer';
@@ -154,7 +153,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
         />
       </GridLegacy>
       <GridLegacy item lg={3} md={4} xs={12}>
-        {/* <Box display="flex" gap={1}> */}
         <Controller
           control={control}
           name={`${name}.value`}
@@ -173,7 +171,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             />
           )}
         />
-        {/* </Box> */}
       </GridLegacy>
       <GridLegacy item>
         <Box alignContent="flex-start" mt={6}>

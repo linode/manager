@@ -17,6 +17,15 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    data: {
+      clone_linode: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {

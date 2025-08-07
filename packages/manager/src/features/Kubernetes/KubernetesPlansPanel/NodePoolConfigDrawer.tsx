@@ -1,10 +1,12 @@
 import { useSpecificTypes } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import { isNumber, pluralize } from '@linode/utilities';
 import { Box, FormLabel } from '@mui/material';
 import * as React from 'react';
 import {
   Controller,
   FormProvider,
+  useFieldArray,
   useForm,
   useFormContext,
   useWatch,
@@ -12,18 +14,22 @@ import {
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { extendType } from 'src/utilities/extendType';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import {
   DEFAULT_PLAN_COUNT,
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
+  nodeWarning,
 } from '../constants';
 import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
+import type { CreateClusterFormValues } from '../CreateCluster/CreateCluster';
 import type {
-  CreateNodePoolDataBeta,
   KubernetesTier,
   NodePoolUpdateStrategy,
+  Region,
 } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
@@ -34,6 +40,8 @@ export interface Props {
   onClose: () => void;
   open: boolean;
   planId: string | undefined;
+  poolIndex?: number;
+  selectedRegion: Region | undefined;
   selectedTier: KubernetesTier;
 }
 
@@ -43,12 +51,24 @@ interface VersionUpdateFormFields {
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const { onClose, open, selectedTier, planId, mode } = props;
+  const {
+    onClose,
+    open,
+    selectedRegion,
+    selectedTier,
+    planId,
+    poolIndex,
+    mode,
+  } = props;
 
   // Use the node pool state from the main create flow from.
-  const { control: parentFormControl, setValue: parentFormSetValue } =
-    useFormContext();
-  const _nodePools: CreateNodePoolDataBeta[] = useWatch({
+  const { control: parentFormControl } =
+    useFormContext<CreateClusterFormValues>();
+  const _nodePools = useWatch({
+    control: parentFormControl,
+    name: 'nodePools',
+  });
+  const { append, update } = useFieldArray({
     control: parentFormControl,
     name: 'nodePools',
   });
@@ -67,7 +87,19 @@ export const NodePoolConfigDrawer = (props: Props) => {
     ? extendType(typesQuery[0].data)
     : undefined;
 
+  // Keep track of the node count to display an accurate price.
+  const nodeCountWatcher = useWatch({ control, name: 'nodeCount' });
+  const updatedCount =
+    nodeCountWatcher ?? form.getValues('nodeCount') ?? DEFAULT_PLAN_COUNT;
+  const pricePerNode = getLinodeRegionPrice(
+    planType,
+    selectedRegion?.toString()
+  )?.monthly;
+
   const isAddMode = mode === 'add';
+
+  // Show a warning if any of the pools have fewer than 3 nodes
+  const shouldShowWarning = updatedCount < 3;
 
   React.useEffect(() => {
     if (!planId || !selectedTier) {
@@ -79,25 +111,28 @@ export const NodePoolConfigDrawer = (props: Props) => {
       selectedTier === 'enterprise' ? 'on_recycle' : undefined
     );
 
-    // eslint-disable-next-line sonarjs/todo-tag
-    // TODO - M3-10295: If the plan has been added to the cluster, set the existing node count for editing.
-  }, [planId, open, selectedTier, setValue]);
+    // If we're in edit mode, set the existing config values on the pool.
+    if (!isAddMode && poolIndex !== undefined) {
+      setValue('nodeCount', _nodePools[poolIndex]?.count);
+      setValue('updateStrategy', _nodePools[poolIndex]?.update_strategy);
+    }
+  }, [planId, open, selectedTier, setValue, isAddMode, poolIndex, _nodePools]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
-      if (isAddMode) {
-        parentFormSetValue('nodePools', [
-          ..._nodePools,
-          {
-            count: values.nodeCount,
-            type: planId,
-            update_strategy: values.updateStrategy,
-          },
-        ]);
-      } else {
-        // eslint-disable-next-line sonarjs/todo-tag
-        // TODO - M3-10295: We're in edit mode, so find the existing pool in _nodePools based on
-        // selected pool index and set the updated node count/update strategy values.
+      // If there's a pool index, the drawer is in edit mode. Else, it's in add mode.
+      if (poolIndex !== undefined) {
+        update(poolIndex, {
+          ..._nodePools[poolIndex],
+          count: values.nodeCount,
+          update_strategy: values.updateStrategy,
+        });
+      } else if (planId) {
+        append({
+          count: values.nodeCount,
+          type: planId,
+          update_strategy: values.updateStrategy,
+        });
       }
       onClose();
       form.reset();
@@ -126,6 +161,9 @@ export const NodePoolConfigDrawer = (props: Props) => {
           variant="error"
         />
       ) : null}
+      {shouldShowWarning && (
+        <Notice spacingTop={16} text={nodeWarning} variant="warning" />
+      )}
       <FormProvider
         control={control}
         formState={formState}
@@ -152,12 +190,27 @@ export const NodePoolConfigDrawer = (props: Props) => {
                       ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
                       : MAX_NODES_PER_POOL_STANDARD_TIER
                   }
+                  min={1}
                   setValue={field.onChange}
                   value={field.value}
                 />
               )}
             />
+            {isNumber(pricePerNode) && (
+              <Typography marginTop={3}>
+                {/* Renders total pool price/month for N nodes at price per node/month. */}
+                <strong>
+                  {`$${renderMonthlyPriceToCorrectDecimalPlace(
+                    updatedCount * pricePerNode
+                  )}/month`}{' '}
+                </strong>
+                ({pluralize('node', 'nodes', updatedCount)} at $
+                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+                /month each)
+              </Typography>
+            )}
           </Box>
+
           {selectedTier === 'enterprise' && <NodePoolConfigOptions />}
           <ActionsPanel
             primaryButtonProps={{

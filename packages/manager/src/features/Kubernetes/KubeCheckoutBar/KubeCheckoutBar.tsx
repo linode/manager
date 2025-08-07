@@ -33,15 +33,17 @@ import {
 import { nodeWarning } from '../constants';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
-import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
+import type { CreateNodePoolData, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
   enterprisePrice?: number;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
-  pools: KubeNodePoolResponse[];
+  pools: CreateNodePoolData[];
   region: string | undefined;
   regionsData: Region[];
   submitting: boolean;
@@ -52,6 +54,7 @@ export const KubeCheckoutBar = (props: Props) => {
   const {
     createCluster,
     enterprisePrice,
+    handleConfigurePool,
     hasAgreed,
     highAvailability,
     highAvailabilityPrice,
@@ -69,7 +72,7 @@ export const KubeCheckoutBar = (props: Props) => {
   });
 
   // Show a warning if any of the pools have fewer than 3 nodes
-  const showWarning = pools.some((thisPool) => thisPool.count < 3);
+  const showWarning = pools?.some((thisPool) => thisPool.count < 3);
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
@@ -153,9 +156,11 @@ export const KubeCheckoutBar = (props: Props) => {
         {pools.map((thisPool, idx) => (
           <NodePoolSummaryItem
             clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
+            handleConfigurePool={handleConfigurePool}
             key={idx}
             nodeCount={thisPool.count}
             onRemove={() => remove(idx)}
+            poolIndex={idx}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }

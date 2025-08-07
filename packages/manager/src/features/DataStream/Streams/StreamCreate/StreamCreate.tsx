@@ -1,34 +1,53 @@
-import { Stack } from '@linode/ui';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { destinationType, streamType } from '@linode/api-v4';
+import { useCreateStreamMutation } from '@linode/queries';
+import { omitProps, Stack } from '@linode/ui';
+import { createStreamAndDestinationFormSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { destinationType } from 'src/features/DataStream/Shared/types';
+import { StreamCreateSubmitBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateSubmitBar';
+import { StreamCreateDelivery } from 'src/features/DataStream/Streams/StreamCreate/Delivery/StreamCreateDelivery';
+import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateClusters } from './StreamCreateClusters';
-import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import { type CreateStreamForm, streamType } from './types';
+
+import type { CreateStreamPayload } from '@linode/api-v4';
+import type {
+  CreateStreamAndDestinationForm,
+  CreateStreamForm,
+} from 'src/features/DataStream/Streams/StreamCreate/types';
 
 export const StreamCreate = () => {
-  const form = useForm<CreateStreamForm>({
+  const { mutateAsync: createStream } = useCreateStreamMutation();
+  const navigate = useNavigate();
+
+  const form = useForm<CreateStreamAndDestinationForm>({
     defaultValues: {
-      type: streamType.AuditLogs,
-      destination_type: destinationType.LinodeObjectStorage,
-      region: '',
-      details: {
-        is_auto_add_all_clusters_enabled: false,
+      stream: {
+        type: streamType.AuditLogs,
+        details: {},
+      },
+      destination: {
+        type: destinationType.LinodeObjectStorage,
+        details: {
+          region: '',
+        },
       },
     },
+    mode: 'onBlur',
+    resolver: yupResolver(createStreamAndDestinationFormSchema),
   });
 
   const { control, handleSubmit } = form;
   const selectedStreamType = useWatch({
     control,
-    name: 'type',
+    name: 'stream.type',
   });
 
   const landingHeaderProps = {
@@ -46,14 +65,39 @@ export const StreamCreate = () => {
     title: 'Create Stream',
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    const {
+      stream: { label, type, destinations, details },
+    } = form.getValues();
+    const payload: CreateStreamForm = {
+      label,
+      type,
+      destinations,
+      details,
+    };
+
+    if (type === streamType.LKEAuditLogs && details) {
+      if (details.is_auto_add_all_clusters_enabled) {
+        payload.details = omitProps(details, ['cluster_ids']);
+      } else {
+        payload.details = omitProps(details, [
+          'is_auto_add_all_clusters_enabled',
+        ]);
+      }
+    }
+
+    createStream(payload as CreateStreamPayload).then(() => {
+      sendCreateStreamEvent('Stream Create Page');
+      navigate({ to: '/datastream/streams' });
+    });
+  };
 
   return (
     <>
       <DocumentTitleSegment segment="Create Stream" />
       <LandingHeader {...landingHeaderProps} />
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <Grid container spacing={2}>
             <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
               <Stack spacing={2}>
@@ -65,7 +109,7 @@ export const StreamCreate = () => {
               </Stack>
             </Grid>
             <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
-              <StreamCreateCheckoutBar />
+              <StreamCreateSubmitBar createStream={handleSubmit(onSubmit)} />
             </Grid>
           </Grid>
         </form>

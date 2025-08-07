@@ -1,3 +1,4 @@
+import { regionAvailabilityFactory, regionFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -15,12 +16,59 @@ import {
   renderWithTheme,
 } from 'src/utilities/testHelpers';
 
+import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseResize } from './DatabaseResize';
 import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
 
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
+const engine = 'mysql';
+const isResizeEnabled = true;
 const loadingTestId = 'circle-progress';
+
+const mockDedicatedTypes = [
+  databaseTypeFactory.build({
+    class: 'dedicated',
+    disk: 81920,
+    id: 'g6-dedicated-2',
+    label: 'Dedicated 4 GB',
+    memory: 4096,
+  }),
+  databaseTypeFactory.build({
+    class: 'dedicated',
+    disk: 163840,
+    id: 'g6-dedicated-4',
+    label: 'Dedicated 8 GB',
+    memory: 8192,
+  }),
+];
+
+const availabilities = [
+  regionAvailabilityFactory.build({
+    plan: 'premium-32',
+    region: 'us-east',
+    available: false,
+  }),
+];
+
+const queryMocks = vi.hoisted(() => ({
+  useRegionAvailabilityQuery: vi.fn().mockReturnValue({ data: [] }),
+  useRegionQuery: vi.fn().mockReturnValue({ data: {} }),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useRegionQuery: queryMocks.useRegionQuery,
+    useRegionAvailabilityQuery: queryMocks.useRegionAvailabilityQuery,
+  };
+});
+
+// Mock response from region availability query to simulate limited availability for premium-32 plan in us-ord region (Chicago)
+queryMocks.useRegionAvailabilityQuery.mockReturnValue({
+  data: availabilities,
+});
 
 beforeAll(() => mockMatchMedia());
 
@@ -61,7 +109,11 @@ describe('database resize', () => {
 
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseResize database={database} />
+      <DatabaseDetailContext.Provider
+        value={{ database, engine, isResizeEnabled }}
+      >
+        <DatabaseResize />
+      </DatabaseDetailContext.Provider>
     );
     // Should render a loading state
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -69,7 +121,11 @@ describe('database resize', () => {
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseResize database={database} />
+      <DatabaseDetailContext.Provider
+        value={{ database, engine, isResizeEnabled }}
+      >
+        <DatabaseResize />
+      </DatabaseDetailContext.Provider>
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -90,7 +146,11 @@ describe('database resize', () => {
 
     it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={database} />
+        <DatabaseDetailContext.Provider
+          value={{ database, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -109,7 +169,11 @@ describe('database resize', () => {
       } as any;
 
       const { getByRole, getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
 
@@ -134,7 +198,11 @@ describe('database resize', () => {
 
     it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} disabled={true} />
+        <DatabaseDetailContext.Provider
+          value={{ database, engine, disabled: true, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -164,15 +232,6 @@ describe('database resize', () => {
         }),
         ...databaseTypeFactory.buildList(7, { class: 'standard' }),
       ];
-      const mockDedicatedTypes = [
-        databaseTypeFactory.build({
-          class: 'dedicated',
-          disk: 81920,
-          id: 'g6-dedicated-2',
-          label: 'Dedicated 4 GB',
-          memory: 4096,
-        }),
-      ];
 
       server.use(
         http.get('*/databases/types', () => {
@@ -191,7 +250,11 @@ describe('database resize', () => {
 
     it('should render set node section', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
 
@@ -206,7 +269,11 @@ describe('database resize', () => {
 
     it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -230,7 +297,11 @@ describe('database resize', () => {
 
     it('should preselect cluster size in Set Number of Nodes', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -247,7 +318,11 @@ describe('database resize', () => {
         type: 'g6-nanode-1',
       });
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -276,7 +351,11 @@ describe('database resize', () => {
         type: 'g6-nanode-1',
       });
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -301,24 +380,6 @@ describe('database resize', () => {
 
   describe('on rendering of page and isDatabasesV2GA is true and the Dedicated CPU tab is preselected', () => {
     beforeEach(() => {
-      // Mock database types
-      const mockDedicatedTypes = [
-        databaseTypeFactory.build({
-          class: 'dedicated',
-          disk: 81920,
-          id: 'g6-dedicated-2',
-          label: 'Dedicated 4 GB',
-          memory: 4096,
-        }),
-        databaseTypeFactory.build({
-          class: 'dedicated',
-          disk: 163840,
-          id: 'g6-dedicated-4',
-          label: 'Dedicated 8 GB',
-          memory: 8192,
-        }),
-      ];
-
       // Mock database types
       const standardTypes = [
         databaseTypeFactory.build({
@@ -359,7 +420,11 @@ describe('database resize', () => {
       };
 
       const { getByRole, getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <DatabaseDetailContext.Provider
+          value={{ database: mockDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
         { flags }
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -442,11 +507,104 @@ describe('database resize', () => {
       );
 
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseResize database={database} />
+        <DatabaseDetailContext.Provider
+          value={{ database, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       expect(getByText('Shared CPU')).toHaveAttribute('aria-disabled', 'true');
+    });
+  });
+
+  describe('on rendering of page and databasePremium flag is true and the current plan for the cluster is unavailable', () => {
+    beforeEach(() => {
+      // Mock database types
+      const standardTypes = [
+        databaseTypeFactory.build({
+          class: 'nanode',
+          id: 'g6-nanode-1',
+          label: `New DBaaS - Nanode 1 GB`,
+          memory: 1024,
+        }),
+      ];
+      const premiumTypes = [
+        databaseTypeFactory.build({
+          class: 'premium',
+          id: 'premium-32',
+          label: `DBaaS - Premium 32 GB`,
+          memory: 1024,
+        }),
+      ];
+
+      const mockRegion = regionFactory.build({
+        capabilities: ['VPCs'],
+        id: 'us-east',
+        label: 'Newark, NJ',
+      });
+      queryMocks.useRegionQuery.mockReturnValue({
+        data: mockRegion,
+      });
+
+      server.use(
+        http.get('*/databases/types', () => {
+          return HttpResponse.json(
+            makeResourcePage([
+              ...mockDedicatedTypes,
+              ...standardTypes,
+              ...premiumTypes,
+            ])
+          );
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build({
+            capabilities: ['Managed Databases', 'Managed Databases Beta'],
+          });
+          return HttpResponse.json(account);
+        })
+      );
+    });
+
+    it('should disable node selection and display unavailable current plan notice', async () => {
+      const databaseWithPremiumSelection = {
+        ...mockDatabase,
+        type: 'premium-32',
+        region: 'us-east',
+      };
+
+      const flags = {
+        dbaasV2: {
+          beta: false,
+          enabled: true,
+        },
+        databasePremium: true,
+      };
+
+      const { getByTestId, getAllByText } = renderWithTheme(
+        <DatabaseDetailContext.Provider
+          value={{
+            database: databaseWithPremiumSelection,
+            engine,
+            isResizeEnabled,
+          }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
+        { flags }
+      );
+      expect(getByTestId(loadingTestId)).toBeInTheDocument();
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+      expect(getByTestId('database-nodes')).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+      const expectedMessage =
+        'Warning: Your current plan is currently unavailable and it can\u{2019}t be used to resize the cluster. You can only resize the cluster using other available plans.';
+      const unavailableNotice = getAllByText(expectedMessage);
+      expect(unavailableNotice[0]).toBeInTheDocument();
     });
   });
 });

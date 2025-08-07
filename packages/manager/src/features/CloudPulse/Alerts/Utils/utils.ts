@@ -2,9 +2,9 @@ import {
   type Alert,
   type AlertDefinitionMetricCriteria,
   type AlertDefinitionType,
-  type AlertServiceType,
   type APIError,
   capabilityServiceTypeMapping,
+  type CloudPulseServiceType,
   type EditAlertPayloadWithService,
   type NotificationChannel,
   type Region,
@@ -21,7 +21,10 @@ import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChip
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type { MonitoringCapabilities } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  AclpServices,
+} from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -81,7 +84,7 @@ export interface AlertValidationSchemaProps {
   /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
-  serviceTypeObj: null | string;
+  serviceTypeObj: CloudPulseServiceType | null;
 }
 interface HandleMultipleErrorProps<T extends FieldValues> {
   /**
@@ -106,6 +109,25 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
    * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
    */
   singleLineErrorSeparator: string;
+}
+
+interface FilterRegionProps {
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The selected region ids
+   */
+  selectedRegions: string[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface HandleMultipleErrorProps<T extends FieldValues> {
@@ -149,7 +171,7 @@ interface FilterRegionProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface SupportedRegionsProps {
@@ -164,7 +186,7 @@ interface SupportedRegionsProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface FilterAlertsProps {
@@ -192,7 +214,7 @@ interface FilterAlertsProps {
  * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
-  serviceType: string,
+  serviceType: CloudPulseServiceType,
   serviceTypeList: ServiceTypesList | undefined
 ) => {
   if (!serviceTypeList) {
@@ -345,7 +367,7 @@ export const convertAlertDefinitionValues = (
     scope,
     regions,
   }: Alert,
-  serviceType: AlertServiceType
+  serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
   return {
     scope,
@@ -585,7 +607,7 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
 export const filterRegionByServiceType = (
   type: keyof MonitoringCapabilities,
   regions?: Region[],
-  serviceType?: null | string
+  serviceType?: CloudPulseServiceType | null
 ): Region[] => {
   if (!serviceType || !regions) return regions ?? [];
   const capability = capabilityServiceTypeMapping[serviceType];
@@ -611,4 +633,20 @@ export const convertSecondsToOptions = (seconds: number): string => {
     const hours = minutes / 60;
     return `${hours} hr`;
   }
+};
+
+/**
+ * Filters alerts based on the enabled services
+ * @param allAlerts list of all alerts
+ * @param aclpServices list of services with their statuses
+ * @returns list of alerts from enabled services
+ */
+export const alertsFromEnabledServices = (
+  allAlerts: Alert[] | undefined,
+  aclpServices: Partial<AclpServices> | undefined
+) => {
+  // Return the alerts whose service type is enabled in the aclpServices flag
+  return allAlerts?.filter(
+    (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
+  );
 };

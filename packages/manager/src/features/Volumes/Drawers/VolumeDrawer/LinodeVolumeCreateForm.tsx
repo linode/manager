@@ -95,6 +95,20 @@ export const LinodeVolumeCreateForm = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
+  const regionSupportsBlockStorageEncryption = doesRegionSupportFeature(
+    linode.region,
+    regions ?? [],
+    'Block Storage Encryption'
+  );
+
+  if (
+    isBlockStorageEncryptionFeatureEnabled &&
+    regionSupportsBlockStorageEncryption
+  ) {
+    initialValues.encryption = 'enabled';
+    setClientLibraryCopyVisible(true);
+  }
+
   const toggleVolumeEncryptionEnabled = (
     encryption: undefined | VolumeEncryption
   ) => {
@@ -166,12 +180,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
     },
     validationSchema: CreateVolumeSchema,
   });
-
-  const regionSupportsBlockStorageEncryption = doesRegionSupportFeature(
-    linode.region,
-    regions ?? [],
-    'Block Storage Encryption'
-  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -278,6 +286,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
                 : []
             }
             onChange={() => toggleVolumeEncryptionEnabled(values.encryption)}
+            sxCheckbox={{ paddingLeft: '0px' }}
           />
         </Box>
       )}

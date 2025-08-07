@@ -119,6 +119,8 @@ import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
+import type { PathParams } from 'msw';
+
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
@@ -134,12 +136,13 @@ import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/consta
 import type {
   AccountMaintenance,
   AlertDefinitionType,
-  AlertServiceType,
   AlertSeverityType,
   AlertStatusType,
+  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
+  Database,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
@@ -163,6 +166,37 @@ export const makeResourcePage = <T>(
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
 });
+
+const makeMockDatabase = (params: PathParams): Database => {
+  const isDefault = Number(params.id) % 2 !== 0;
+  const db: Record<string, boolean | number | string | undefined> = {
+    engine: params.engine as 'mysql',
+    id: Number(params.id),
+    label: `database-${params.id}`,
+    platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
+  };
+  if (!isDefault) {
+    db.replication_commit_type =
+      params.engine === 'postgresql' ? 'local' : undefined;
+
+    db.replication_type =
+      params.engine === 'mysql'
+        ? pickRandom(possibleMySQLReplicationTypes)
+        : undefined;
+
+    db.replication_type =
+      params.engine === 'postgresql'
+        ? pickRandom(possiblePostgresReplicationTypes)
+        : undefined;
+
+    db.ssl_connection = true;
+  }
+  const database = databaseFactory.build(db);
+  if (database.platform !== 'rdbms-default') {
+    delete database.private_network;
+  }
+  return database;
+};
 
 const statusPage = [
   http.get('*/api/v2/incidents*', () => {
@@ -279,8 +313,19 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
+
+    const planSizes = [4, 8, 16, 32, 64, 96, 128, 256];
+    const premiumTypes = planSizes.map((size) => {
+      return databaseTypeFactory.build({
+        class: 'premium',
+        id: `premium-${size}`,
+        label: `DBaaS - Premium ${size} GB`,
+        memory: size * 1024,
+      });
+    });
+
     return HttpResponse.json(
-      makeResourcePage([...standardTypes, ...dedicatedTypes])
+      makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
     );
   }),
 
@@ -296,28 +341,12 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
-    const isDefault = Number(params.id) % 2 !== 0;
-    const db: Record<string, boolean | number | string | undefined> = {
-      engine: params.engine as 'mysql',
-      id: Number(params.id),
-      label: `database-${params.id}`,
-      platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
-    };
-    if (!isDefault) {
-      db.replication_commit_type =
-        params.engine === 'postgresql' ? 'local' : undefined;
-      db.replication_type =
-        params.engine === 'mysql'
-          ? pickRandom(possibleMySQLReplicationTypes)
-          : params.engine === 'postgresql'
-            ? pickRandom(possiblePostgresReplicationTypes)
-            : (undefined as any);
-      db.ssl_connection = true;
-    }
-    const database = databaseFactory.build(db);
-    if (database.platform !== 'rdbms-default') {
-      delete database.private_network;
-    }
+    const database = makeMockDatabase(params);
+    return HttpResponse.json(database);
+  }),
+
+  http.put('*/databases/:engine/instances/:id', ({ params }) => {
+    const database = makeMockDatabase(params);
     return HttpResponse.json(database);
   }),
 
@@ -2425,6 +2454,11 @@ export const handlers = [
         plan: 'g6-standard-7',
         region: selectedRegion,
       }),
+      regionAvailabilityFactory.build({
+        plan: 'premium-32',
+        region: selectedRegion,
+        available: false, // Mock for when a premium plan is not available or sold out in a region.
+      }),
       // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
       ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
@@ -2659,7 +2693,7 @@ export const handlers = [
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
-      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+      const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
       const reqBody = await request.json();
       const response = alertFactory.build({
         ...(reqBody as CreateAlertDefinitionPayload),
@@ -2696,6 +2730,7 @@ export const handlers = [
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
             type: 'user',
             scope: 'region',
+            regions: ['us-east'],
           }),
         ],
       });
@@ -2848,11 +2883,12 @@ export const handlers = [
   }),
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    const serviceType = params.serviceType as string;
-    const serviceTypesMap: Record<string, string> = {
+    const serviceType = params.serviceType as CloudPulseServiceType;
+    const serviceTypesMap: Record<CloudPulseServiceType, string> = {
       linode: 'Linode',
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',
+      firewall: 'Firewalls',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -2930,125 +2966,265 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/monitor/services/:serviceType/metric-definitions', () => {
-    const response = {
-      data: [
-        {
-          available_aggregate_functions: ['min', 'max', 'avg'],
-          dimensions: [
-            {
-              dimension_label: 'cpu',
-              label: 'CPU name',
-              values: null,
-            },
-            {
-              dimension_label: 'state',
-              label: 'State of CPU',
-              values: [
-                'user',
-                'system',
-                'idle',
-                'interrupt',
-                'nice',
-                'softirq',
-                'steal',
-                'wait',
-              ],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'CPU utilization',
-          metric: 'system_cpu_utilization_percent',
-          metric_type: 'gauge',
-          scrape_interval: '2m',
-          unit: 'percent',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'state',
-              label: 'State of memory',
-              values: [
-                'used',
-                'free',
-                'buffered',
-                'cached',
-                'slab_reclaimable',
-                'slab_unreclaimable',
-              ],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Memory Usage',
-          metric: 'system_memory_usage_by_resource',
-          metric_type: 'gauge',
-          scrape_interval: '30s',
-          unit: 'byte',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'device',
-              label: 'Device name',
-              values: ['lo', 'eth0'],
-            },
-            {
-              dimension_label: 'direction',
-              label: 'Direction of network transfer',
-              values: ['transmit', 'receive'],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Network Traffic',
-          metric: 'system_network_io_by_resource',
-          metric_type: 'counter',
-          scrape_interval: '30s',
-          unit: 'byte',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'device',
-              label: 'Device name',
-              values: ['loop0', 'sda', 'sdb'],
-            },
-            {
-              dimension_label: 'direction',
-              label: 'Operation direction',
-              values: ['read', 'write'],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Disk I/O',
-          metric: 'system_disk_OPS_total',
-          metric_type: 'counter',
-          scrape_interval: '30s',
-          unit: 'ops_per_second',
-        },
-      ],
-    };
+  http.get(
+    '*/monitor/services/:serviceType/metric-definitions',
+    ({ params }) => {
+      const response = {
+        data: [
+          {
+            available_aggregate_functions: ['min', 'max', 'avg'],
+            dimensions: [
+              {
+                dimension_label: 'cpu',
+                label: 'CPU name',
+                values: null,
+              },
+              {
+                dimension_label: 'state',
+                label: 'State of CPU',
+                values: [
+                  'user',
+                  'system',
+                  'idle',
+                  'interrupt',
+                  'nice',
+                  'softirq',
+                  'steal',
+                  'wait',
+                ],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'CPU utilization',
+            metric: 'system_cpu_utilization_percent',
+            metric_type: 'gauge',
+            scrape_interval: '2m',
+            unit: 'percent',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'state',
+                label: 'State of memory',
+                values: [
+                  'used',
+                  'free',
+                  'buffered',
+                  'cached',
+                  'slab_reclaimable',
+                  'slab_unreclaimable',
+                ],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Memory Usage',
+            metric: 'system_memory_usage_by_resource',
+            metric_type: 'gauge',
+            scrape_interval: '30s',
+            unit: 'byte',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'device',
+                label: 'Device name',
+                values: ['lo', 'eth0'],
+              },
+              {
+                dimension_label: 'direction',
+                label: 'Direction of network transfer',
+                values: ['transmit', 'receive'],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Network Traffic',
+            metric: 'system_network_io_by_resource',
+            metric_type: 'counter',
+            scrape_interval: '30s',
+            unit: 'byte',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'device',
+                label: 'Device name',
+                values: ['loop0', 'sda', 'sdb'],
+              },
+              {
+                dimension_label: 'direction',
+                label: 'Operation direction',
+                values: ['read', 'write'],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Disk I/O',
+            metric: 'system_disk_OPS_total',
+            metric_type: 'counter',
+            scrape_interval: '30s',
+            unit: 'ops_per_second',
+          },
+        ],
+      };
 
-    return HttpResponse.json(response);
-  }),
+      const nodebalancerMetricsResponse = {
+        data: [
+          {
+            label: 'Ingress Traffic Rate',
+            metric: 'nb_ingress_traffic_rate',
+            unit: 'bytes_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Egress Traffic Rate',
+            metric: 'nb_egress_traffic_rate',
+            unit: 'bytes_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Total Active Sessions',
+            metric: 'nb_total_active_sessions',
+            unit: 'count',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['max', 'min', 'avg', 'sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'New Sessions',
+            metric: 'nb_new_sessions_per_second',
+            unit: 'sessions_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Total Active Backends',
+            metric: 'nb_total_active_backends',
+            unit: 'count',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['max', 'min', 'avg', 'sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+        ],
+      };
+      if (params.serviceType === 'nodebalancer') {
+        return HttpResponse.json(nodebalancerMetricsResponse);
+      }
+      return HttpResponse.json(response);
+    }
+  ),
   http.post('*/monitor/services/:serviceType/token', () => {
     const response = {
       token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
@@ -3057,23 +3233,30 @@ export const handlers = [
   }),
 
   http.get('*/monitor/dashboards/:id', ({ params }) => {
+    let serviceType: string;
+    let dashboardLabel: string;
+
+    const id = params.id;
+
+    if (id === '1') {
+      serviceType = 'dbaas';
+      dashboardLabel = 'DBaaS Service I/O Statistics';
+    } else if (id === '3') {
+      serviceType = 'nodebalancer';
+      dashboardLabel = 'NodeBalancer Service I/O Statistics';
+    } else if (id === '4') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    } else {
+      serviceType = 'linode';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    }
+
     const response = {
       created: '2024-04-29T17:09:29',
       id: params.id,
-      label:
-        params.id === '1'
-          ? 'DBaaS Service I/O Statistics'
-          : params.id === '3'
-            ? 'NodeBalancer Service I/O Statistics'
-            : 'Linode Service I/O Statistics',
-      service_type:
-        params.id === '1'
-          ? 'dbaas'
-          : params.id === '3'
-            ? 'nodebalancer'
-            : params.id === '4'
-              ? 'firewall'
-              : 'linode', // just update the service type and label and use same widget configs
+      label: dashboardLabel,
+      service_type: serviceType,
       type: 'standard',
       updated: null,
       widgets: [

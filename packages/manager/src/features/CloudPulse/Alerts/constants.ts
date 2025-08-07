@@ -1,5 +1,7 @@
 import type { FieldPath } from 'react-hook-form';
 
+import { PORTS_HELPER_TEXT } from '../Utils/constants';
+
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
   AlertDefinitionScope,
@@ -106,6 +108,8 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
+export const textFieldOperators = ['endswith', 'startswith'];
+
 export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
   { label: 'Account', value: 'account' },
   { label: 'Region', value: 'region' },
@@ -117,8 +121,6 @@ export const entityGroupMap: Record<AlertDefinitionScope, string> = {
   region: 'Region',
   entity: 'Entity',
 };
-
-export const textFieldOperators = ['endswith', 'startswith'];
 
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
@@ -214,10 +216,11 @@ export const ALERT_SCOPE_TOOLTIP_TEXT =
 export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
   'Indicates whether the alert applies to all entities in the account, entities in specific regions, or just this entity.';
 
-export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
+export type AlertFormMode = 'create' | 'edit' | 'view';
+
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
-export type AlertFormMode = 'create' | 'edit' | 'view';
+export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 
 export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
   'Trailing comma is not allowed.';

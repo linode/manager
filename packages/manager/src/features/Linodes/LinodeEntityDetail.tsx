@@ -74,7 +74,7 @@ export const LinodeEntityDetail = (props: Props) => {
     linodeId: linode.id,
   });
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['update_linode'],
     linode.id
@@ -149,7 +149,6 @@ export const LinodeEntityDetail = (props: Props) => {
         }
         footer={
           <LinodeEntityDetailFooter
-            isLinodesGrantReadOnly={!permissions.update_linode}
             linodeCreated={linode.created}
             linodeId={linode.id}
             linodeLabel={linode.label}

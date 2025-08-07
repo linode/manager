@@ -25,31 +25,15 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
+  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 const timeDurationToSelect = 'Last 24 Hours';
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
-
-const { dashboardName, id, metrics, serviceType } = widgetDetails.linode;
-
+const { dashboardName, id, metrics } = widgetDetails.linode;
+const serviceType = 'linode';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
@@ -112,7 +96,8 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
 // Reason : Tag filter is not needed as per template
 describe.skip('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
+
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');

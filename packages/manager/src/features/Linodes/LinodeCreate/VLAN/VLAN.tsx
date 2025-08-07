@@ -11,21 +11,19 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { VLANAvailabilityNotice } from '../Networking/VLANAvailabilityNotice';
-import { useLinodeCreateQueryParams } from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const VLAN = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const [imageId, regionId] = useWatch({ control, name: ['image', 'region'] });
 
@@ -34,12 +32,12 @@ export const VLAN = () => {
   const regionSupportsVLANs =
     selectedRegion?.capabilities.includes('Vlans') ?? false;
 
-  const isCreatingFromBackup = params.type === 'Backups';
+  const isCreatingFromBackup = createType === 'Backups';
 
   const disabled =
     !imageId ||
     isCreatingFromBackup ||
-    isLinodeCreateRestricted ||
+    !permissions.create_linode ||
     !regionSupportsVLANs;
 
   return (

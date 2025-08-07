@@ -4,12 +4,12 @@ import { useController, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { extendType } from 'src/utilities/extendType';
 
-import { useLinodeCreateQueryParams } from './utilities';
+import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -24,16 +24,14 @@ export const Plan = () => {
 
   const { data: regions } = useRegionsQuery();
   const { data: types } = useAllTypes();
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
-  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <PlansPanel
       data-qa-select-plan
-      disabled={isLinodeCreateRestricted}
+      disabled={!permissions.create_linode}
       docsLink={
         <DocsLink
           href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
@@ -41,7 +39,7 @@ export const Plan = () => {
           onClick={() => {
             sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
             sendLinodeCreateFormInputEvent({
-              createType: params.type ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Linode Plan',
               interaction: 'click',
               label: 'Choosing a Plan',

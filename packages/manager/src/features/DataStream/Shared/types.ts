@@ -1,10 +1,10 @@
-export const destinationType = {
-  CustomHttps: 'custom_https',
-  LinodeObjectStorage: 'linode_object_storage',
-} as const;
+import {
+  type DestinationType,
+  destinationType,
+  type LinodeObjectStorageDetails,
+} from '@linode/api-v4';
 
-export type DestinationType =
-  (typeof destinationType)[keyof typeof destinationType];
+import type { CustomHTTPsDetails } from '@linode/api-v4';
 
 export interface DestinationTypeOption {
   label: string;
@@ -22,18 +22,8 @@ export const destinationTypeOptions: DestinationTypeOption[] = [
   },
 ];
 
-export interface LinodeObjectStorageDetails {
-  access_key_id: string;
-  access_key_secret: string;
-  bucket_name: string;
-  host: string;
-  path: string;
-  region: string;
-}
-
-export type DestinationDetails = LinodeObjectStorageDetails; // Later a CustomHTTPsDetails type will be added
-
-export interface CreateDestinationForm extends DestinationDetails {
-  destination_label: string;
-  destination_type: DestinationType;
+export interface CreateDestinationForm {
+  details: CustomHTTPsDetails | LinodeObjectStorageDetails;
+  label: string;
+  type: DestinationType;
 }

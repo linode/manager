@@ -111,19 +111,6 @@ describe('Alert Resuable Component for contextual view', () => {
     const alert = alerts[alerts.length - 1];
     expect(getByText(alert.label)).toBeInTheDocument();
   });
-
-  it('Should filter alerts based on region', async () => {
-    renderWithTheme(component);
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByText('test-alert')).toBeVisible();
-  });
-
-  it('Should show header for edit mode', async () => {
-    renderWithTheme(component);
-    expect(screen.getByText('Manage Alerts')).toBeVisible();
-    expect(screen.getByText('Alerts')).toBeVisible();
-  });
-
   it('Should not show header for create mode', async () => {
     const componentWithoutEntityData = (
       <AlertReusableComponent
@@ -135,5 +122,25 @@ describe('Alert Resuable Component for contextual view', () => {
     renderWithTheme(componentWithoutEntityData);
     expect(screen.queryByText('Manage Alerts')).toBeNull();
     expect(screen.queryByText('Alerts')).toBeNull();
+  });
+
+  it('Should hide manage alerts button for undefined entityId', () => {
+    renderWithTheme(<AlertReusableComponent serviceType={serviceType} />);
+
+    const manageAlerts = screen.queryByTestId('manage-alerts');
+    expect(manageAlerts).not.toBeInTheDocument();
+    expect(screen.queryByText('Alerts')).not.toBeInTheDocument();
+  });
+
+  it('Should filter alerts based on region', async () => {
+    renderWithTheme(component);
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText('test-alert')).toBeVisible();
+  });
+
+  it('Should show header for edit mode', async () => {
+    renderWithTheme(component);
+    await userEvent.click(screen.getByText('Manage Alerts'));
+    expect(screen.getByText('Alerts')).toBeVisible();
   });
 });

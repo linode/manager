@@ -1,5 +1,5 @@
 import { linodeBackupsFactory, regionFactory } from '@linode/utilities';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -28,7 +28,7 @@ const props: LinodeActionMenuProps = {
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       shutdown_linode: false,
       reboot_linode: false,
       clone_linode: false,
@@ -104,6 +104,28 @@ describe('LinodeActionMenu', () => {
       expect(queryByText('Power Off')).toBeNull();
     });
 
+    it('should disable Power On when the Linode is rebooting', async () => {
+      const { getByLabelText, queryByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeStatus="rebooting" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Linode ${props.linodeLabel}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const powerOnItem = queryByTestId('Power On');
+      expect(powerOnItem).toHaveAttribute('aria-disabled', 'true');
+
+      const tooltipButton = within(powerOnItem!).getByRole('button');
+
+      expect(tooltipButton).toHaveAttribute(
+        'aria-label',
+        'This action is unavailable while your Linode is offline.'
+      );
+    });
+
     it('should allow a reboot if the Linode is running', async () => {
       renderWithTheme(<LinodeActionMenu {...props} />);
       await userEvent.click(screen.getByLabelText(/^Action menu for/));
@@ -114,7 +136,7 @@ describe('LinodeActionMenu', () => {
       // TODO: Should check for "read_only" permissions too
       renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
       await userEvent.click(screen.getByLabelText(/^Action menu for/));
-      expect(screen.queryByText('Reboot')?.closest('li')).toHaveAttribute(
+      expect(screen.queryByTestId('Reboot')).toHaveAttribute(
         'aria-disabled',
         'true'
       );
@@ -145,7 +167,6 @@ describe('LinodeActionMenu', () => {
         []
       );
       expect(result).toMatchObject({
-        type: 'Clone Linode',
         linodeID: 1,
       });
     });
@@ -186,7 +207,7 @@ describe('LinodeActionMenu', () => {
 
   it('should disable Action menu items if the user does not have required permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         shutdown_linode: false,
         reboot_linode: false,
         clone_linode: false,
@@ -223,7 +244,7 @@ describe('LinodeActionMenu', () => {
 
     for (const action of actions) {
       expect(getByText(action)).toBeVisible();
-      expect(screen.queryByText(action)?.closest('li')).toHaveAttribute(
+      expect(screen.queryByTestId(action)).toHaveAttribute(
         'aria-disabled',
         'true'
       );
@@ -232,8 +253,8 @@ describe('LinodeActionMenu', () => {
 
   it('should enable "Reboot" button if the user has reboot_linode permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         reboot_linode: true,
       },
     });

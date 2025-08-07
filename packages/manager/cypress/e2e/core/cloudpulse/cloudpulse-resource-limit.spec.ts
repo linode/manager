@@ -41,31 +41,13 @@ import {
   accountFactory,
   dashboardFactory,
   databaseFactory,
+  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
-
-const { clusterName, dashboardName, engine, id, metrics, serviceType } =
-  widgetDetails.dbaas;
-
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 1,
-      serviceType: 'dbaas',
-    },
-  ],
-};
-
+const { clusterName, dashboardName, engine, id, metrics } = widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
@@ -129,7 +111,22 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
   });
 
   it('When the maximum resource limit is reached, the appropriate message is displayed, clusters are disabled, and the Select All option is hidden', () => {
-    mockAppendFeatureFlags(flags).as('getFeatureFlags');
+    const mockflags = flagsFactory.build({
+      aclpServices: {
+        linode: {
+          // No metrics config: both `enabled` and `beta` missing
+        },
+      },
+      aclpResourceTypeMap: [
+        {
+          dimensionKey: 'cluster_id',
+          maxResourceSelections: 1,
+          serviceType: 'dbaas',
+        },
+      ],
+    });
+
+    mockAppendFeatureFlags(mockflags).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
@@ -208,22 +205,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
   });
 
   it('When the maximum resource limit is not reached, the "Select All" option is visible under Database Clusters input', () => {
-    const flags: Partial<Flags> = {
-      aclp: { beta: true, enabled: true },
-      aclpResourceTypeMap: [
-        {
-          dimensionKey: 'LINODE_ID',
-          maxResourceSelections: 10,
-          serviceType: 'linode',
-        },
-        {
-          dimensionKey: 'cluster_id',
-          maxResourceSelections: 10,
-          serviceType: 'dbaas',
-        },
-      ],
-    };
-    mockAppendFeatureFlags(flags).as('getFeatureFlags');
+    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
 
     cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');

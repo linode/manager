@@ -21,7 +21,7 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
-  { flag: 'aclpBetaServices', label: 'ACLP Beta Services' },
+  { flag: 'aclpServices', label: 'ACLP Services' },
   { flag: 'aclpLogs', label: 'ACLP Logs' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
@@ -45,6 +45,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },
+  { flag: 'databasePremium', label: 'Database Premium' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
   {

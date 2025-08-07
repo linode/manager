@@ -21,14 +21,14 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
-import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
+import { getSubnetsString, getVPCIPv4 } from './utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
     },
   })),
@@ -360,36 +360,6 @@ describe('Linode Entity Detail', () => {
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
     expect(encryptionStatusFragment).toBeInTheDocument();
-  });
-
-  it('should disable "Add A Tag" button if the user does not have update_linode permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        update_linode: false,
-      },
-    });
-
-    const { getByText } = renderWithTheme(
-      <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
-    );
-    const addTagBtn = getByText('Add a tag');
-    expect(addTagBtn).toBeInTheDocument();
-    expect(addTagBtn).toBeDisabled();
-  });
-
-  it('should enable "Add A Tag" button if the user has update_linode permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        update_linode: true,
-      },
-    });
-
-    const { getByText } = renderWithTheme(
-      <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
-    );
-    const addTagBtn = getByText('Add a tag');
-    expect(addTagBtn).toBeInTheDocument();
-    expect(addTagBtn).toBeEnabled();
   });
 });
 

@@ -3,10 +3,10 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import { useLinodeCreateQueryParams } from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { PlacementGroupPanel } from './PlacementGroupPanel';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -15,11 +15,9 @@ export const Details = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
-  const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>
@@ -29,7 +27,7 @@ export const Details = () => {
         name="label"
         render={({ field, fieldState }) => (
           <TextField
-            disabled={isCreateLinodeRestricted}
+            disabled={!permissions.create_linode}
             errorText={fieldState.error?.message}
             label="Linode Label"
             onBlur={field.onBlur}
@@ -38,13 +36,13 @@ export const Details = () => {
           />
         )}
       />
-      {params.type !== 'Clone Linode' && (
+      {createType !== 'Clone Linode' && (
         <Controller
           control={control}
           name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              disabled={isCreateLinodeRestricted}
+              disabled={!permissions.create_linode}
               onChange={(item) => field.onChange(item.map((i) => i.value))}
               tagError={fieldState.error?.message}
               value={

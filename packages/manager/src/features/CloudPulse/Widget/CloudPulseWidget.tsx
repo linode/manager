@@ -24,6 +24,7 @@ import { ZoomIcon } from './components/Zoomer';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
+  CloudPulseServiceType,
   DateTimeWithPreset,
   Filters,
   MetricDefinition,
@@ -92,7 +93,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * Service type selected by user
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -305,20 +306,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }}
           >
             <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
-              <Stack alignItems="center" direction="row">
-                {convertStringToCamelCasesWithSpaces(widget.label)} (
-                {scaledWidgetUnit.current}
-                {unit.endsWith('ps') ? '/s' : ''}){/* TODO: Add tooltip */}
-                {/* <TooltipIcon
-                  status="help"
-                  sxTooltipIcon={{
-                    '& .MuiSvgIcon-root': {
-                      fill: theme.color.headline + '!important',
-                    },
-                  }}
-                  text="Some description"
-                /> */}
-              </Stack>
+              {convertStringToCamelCasesWithSpaces(widget.label)} (
+              {scaledWidgetUnit.current}
+              {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
+                ? '/s'
+                : ''}
+              )
             </Typography>
             <Stack
               direction={{ sm: 'row' }}
