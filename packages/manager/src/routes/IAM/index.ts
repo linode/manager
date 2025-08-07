@@ -33,16 +33,6 @@ const iamCatchAllRoute = createRoute({
 const iamTabsRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/',
-  beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags
-    );
-
-    if (!isIAMEnabled) {
-      throw redirect({ to: '/account' });
-    }
-  },
 }).lazy(() =>
   import('src/features/IAM/iamLandingLazyRoute').then(
     (m) => m.iamLandingLazyRoute
@@ -52,6 +42,18 @@ const iamTabsRoute = createRoute({
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'users',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/account/users',
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UsersTable/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -69,6 +71,18 @@ const iamUsersCatchAllRoute = createRoute({
 const iamRolesRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'roles',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/account/users',
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Roles/rolesLandingLazyRoute').then(
     (m) => m.rolesLandingLazyRoute

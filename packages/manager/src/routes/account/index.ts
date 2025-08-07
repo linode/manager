@@ -40,6 +40,16 @@ const accountBillingRoute = createRoute({
 const accountUsersRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/users',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (isIAMEnabled) {
+      throw redirect({ to: '/iam/users' });
+    }
+  },
 }).lazy(() =>
   import('src/features/Users/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -94,6 +104,24 @@ const accountSettingsRoute = createRoute({
 const accountUsersUsernameRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/users/$username',
+  beforeLoad: async ({ context, params }) => {
+    const { username } = params;
+
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (!isIAMEnabled || !username) {
+      return;
+    }
+
+    throw redirect({
+      to: '/iam/users/$username/details',
+      params: { username },
+      replace: true,
+    });
+  },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
     (m) => m.userDetailLazyRoute
