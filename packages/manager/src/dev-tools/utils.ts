@@ -219,13 +219,9 @@ export const saveCustomGrantsData = (data: Grants | null): void => {
 /**
  * Retrieves the custom grants form data to local storage.
  */
-export const getCustomGrantsData = (data: Grants | null): void => {
-  if (data) {
-    localStorage.setItem(
-      LOCAL_STORAGE_GRANTS_FORM_DATA_KEY,
-      JSON.stringify(data)
-    );
-  }
+export const getCustomGrantsData = (): Grants | null => {
+  const data = localStorage.getItem(LOCAL_STORAGE_GRANTS_FORM_DATA_KEY);
+  return data ? JSON.parse(data) : null;
 };
 
 /**
