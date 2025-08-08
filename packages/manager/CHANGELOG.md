@@ -83,6 +83,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ACLP-Alerting: change the `aclpAlerting` to include alert and metric limits and other relevant changes  ([#12624](https://github.com/linode/manager/pull/12624))
 - ACLP-Alerting: add custom config_id validation, dynamic schema resolver, helperText map, TextField logic, and mock API for nodebalancer metrics added ([#12629](https://github.com/linode/manager/pull/12629))
 - Update VM Host Maintenance GPU Notice Text ([#12632](https://github.com/linode/manager/pull/12632))
+- Improve maintenance banner datetime display and formatting ([#12663](https://github.com/linode/manager/pull/12663))
 
 ## [2025-07-29] - v1.147.0
 
