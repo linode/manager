@@ -2027,7 +2027,8 @@ export const oneClickApps: Record<number, OCA> = {
     website: 'https://netfoundry.io/',
   },
   1873119: {
-    alt_description: 'Multi-model NoSQL database for graph, document, and key-value data.',
+    alt_description:
+      'Multi-model NoSQL database for graph, document, and key-value data.',
     alt_name: 'Graph Database',
     categories: ['Databases'],
     colors: {
@@ -2044,11 +2045,13 @@ export const oneClickApps: Record<number, OCA> = {
         title: 'Deploy ArangoDB through the Linode Marketplace',
       },
     ],
-    summary: 'Multi-model database combining graph, document, and key-value capabilities.',
+    summary:
+      'Multi-model database combining graph, document, and key-value capabilities.',
     website: 'https://arangodb.com/',
   },
   1878106: {
-    alt_description: 'In-memory graph database built for real-time analytics and applications.',
+    alt_description:
+      'In-memory graph database built for real-time analytics and applications.',
     alt_name: 'Graph Database',
     categories: ['Databases'],
     colors: {
@@ -2065,11 +2068,13 @@ export const oneClickApps: Record<number, OCA> = {
         title: 'Deploy Memgraph through the Linode Marketplace',
       },
     ],
-    summary: 'High-performance in-memory graph database for real-time applications.',
+    summary:
+      'High-performance in-memory graph database for real-time applications.',
     website: 'https://memgraph.com/',
   },
   1884304: {
-    alt_description: 'Leading graph database platform for connected data applications.',
+    alt_description:
+      'Leading graph database platform for connected data applications.',
     alt_name: 'Graph Database',
     categories: ['Databases'],
     colors: {
