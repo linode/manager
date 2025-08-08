@@ -15,6 +15,7 @@ env:
   CY_TEST_SPLIT_RUN: 1
   CY_TEST_SPLIT_RUN_TOTAL: 4
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 13 * * 1-5"
   push:
