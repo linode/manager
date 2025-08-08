@@ -30,12 +30,15 @@ export const actionMenuItem = {
    * cy.get(...).within(() => {})), the action menu item may not be found.
    *
    * @param menuItemTitle - Title of the action menu item to find.
+   * @param options - Additional options for the selector matcher.
    *
    * @returns Cypress chainable.
    */
   findByTitle: (menuItemTitle: string): Cypress.Chainable => {
     return cy
-      .get('[data-qa-action-menu]')
+      .document()
+      .its('body')
+      .find('[data-qa-action-menu]')
       .should('be.visible')
       .find(`[data-qa-action-menu-item="${menuItemTitle}"]`)
       .should('be.visible');

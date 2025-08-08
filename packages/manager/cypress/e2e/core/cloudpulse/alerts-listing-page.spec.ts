@@ -381,8 +381,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
             .findByTitle(`Action menu for Alert ${alertName}`)
             .should('be.visible')
             .click();
+          ui.actionMenuItem.findByTitle(action).should('be.visible').click();
         });
-      ui.actionMenuItem.findByTitle(action).should('be.visible').click();
 
       // verify dialog title
       ui.dialog
