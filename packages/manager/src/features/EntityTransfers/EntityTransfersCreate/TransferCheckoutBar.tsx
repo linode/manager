@@ -12,7 +12,7 @@ import {
 } from './TransferCheckoutBar.styles';
 
 import type { TransferState } from './transferReducer';
-import type { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
+import type { CreateTransferPayload } from '@linode/api-v4';
 
 interface Props {
   handleSubmit: (payload: CreateTransferPayload) => void;

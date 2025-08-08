@@ -5,7 +5,6 @@ export * from './cloudnats';
 export * from './databases';
 export * from './datastreams';
 export * from './domains';
-// export * from './entitytransfers';
 export * from './eventHandlers';
 export * from './firewalls';
 export * from './iam';

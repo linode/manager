@@ -17,10 +17,10 @@ import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
 
 import type {
+  APIError,
   EntityTransfer,
   TransferEntities,
-} from '@linode/api-v4/lib/entity-transfers';
-import type { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4/lib/types';
 
 interface Props {
   error: APIError[] | null;
