@@ -1,24 +1,26 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { streamFactory } from 'src/factories/datastream';
-import { StreamsLanding } from 'src/features/DataStream/Streams/StreamsLanding';
+import { destinationFactory } from 'src/factories/datastream';
+import { DestinationsLanding } from 'src/features/DataStream/Destinations/DestinationsLanding';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 
-describe('Streams Landing Table', () => {
-  it('should render streams landing table with items PaginationFooter', async () => {
+describe('Destinations Landing Table', () => {
+  it('should render destinations landing table with items PaginationFooter', async () => {
     server.use(
-      http.get('*/monitor/streams', () => {
-        return HttpResponse.json(makeResourcePage(streamFactory.buildList(30)));
+      http.get('*/monitor/streams/destinations', () => {
+        return HttpResponse.json(
+          makeResourcePage(destinationFactory.buildList(30))
+        );
       })
     );
 
     const { getByText, queryByTestId, getByTestId } = renderWithTheme(
-      <StreamsLanding />
+      <DestinationsLanding />
     );
 
     const loadingElement = queryByTestId(loadingTestId);
@@ -28,9 +30,9 @@ describe('Streams Landing Table', () => {
 
     // Table column headers
     getByText('Name');
-    getByText('Status');
+    getByText('Type');
     getByText('ID');
-    getByText('Destination Type');
+    getByText('Last Modified');
 
     // PaginationFooter
     const paginationFooterSelectPageSizeInput = getByTestId(
@@ -41,20 +43,20 @@ describe('Streams Landing Table', () => {
 
   it('should render images landing empty state', async () => {
     server.use(
-      http.get('*/monitor/streams', () => {
+      http.get('*/monitor/streams/destinations', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(<StreamsLanding />);
+    const { getByText, queryByTestId } = renderWithTheme(
+      <DestinationsLanding />
+    );
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
       await waitForElementToBeRemoved(loadingElement);
     }
 
-    getByText((text) =>
-      text.includes('Create a data stream and configure delivery of cloud logs')
-    );
+    getByText((text) => text.includes('Create a destination for cloud logs'));
   });
 });
