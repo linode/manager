@@ -1,4 +1,4 @@
-name: Run Tests On Push/Schedule
+name: Run Tests On Push/Schedule Debug
 concurrency: UI_TESTS
 
 permissions:
@@ -57,7 +57,8 @@ jobs:
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
           echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}" >> ./packages/manager/.env
           echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}" >> ./packages/manager/.env
-      - run: echo "Matrix user name: ${{ matrix.user.name }}"
+      - run: |
+        echo "Matrix user name: ${{ matrix.user.name }}"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
