@@ -50,6 +50,8 @@ export const ExtraPresetList = <T extends object>({
   const [selectedTemplate, setSelectedTemplate] = React.useState<string>();
   const [jsonText, setJsonText] = React.useState<string>('');
   const [jsonError, setJsonError] = React.useState<string>('');
+  const [isJsonEditorCollapsed, setIsJsonEditorCollapsed] =
+    React.useState(true);
 
   React.useEffect(() => {
     if (!isEnabled) {
@@ -229,24 +231,45 @@ export const ExtraPresetList = <T extends object>({
             </DndContext>
 
             {/* JSON Editor - especially useful for Custom Notification and Custom Maintenance */}
-            <div className="dev-tools__modal-form dev-tools__modal__rectangle-group">
-              <FieldWrapper>
-                <label htmlFor="json-editor">
-                  Edit JSON (Advanced)
-                  <textarea
-                    className={`dt-textarea ${jsonError ? 'error' : ''}`}
-                    id="json-editor"
-                    onChange={handleJsonTextChange}
-                    placeholder="Edit the complete JSON array here..."
-                    value={jsonText}
-                  />
-                </label>
-                {jsonError && (
-                  <div className="dev-tools__modal-form__field error-message">
-                    {jsonError}
-                  </div>
-                )}
-              </FieldWrapper>
+            <div
+              className="dev-tools__modal-form dev-tools__modal__rectangle-group"
+              style={{ paddingTop: 0 }}
+            >
+              <div
+                className="dev-tools__modal__controls"
+                style={{
+                  margin: '0 0 10px 0',
+                  padding: 0,
+                  border: 0,
+                }}
+              >
+                <button
+                  onClick={() => setIsJsonEditorCollapsed((prev) => !prev)}
+                >
+                  {isJsonEditorCollapsed
+                    ? '► Expand JSON Editor'
+                    : '▼ Collapse JSON Editor'}
+                </button>
+              </div>
+              {!isJsonEditorCollapsed && (
+                <FieldWrapper>
+                  <label htmlFor="json-editor">
+                    Edit JSON (Advanced)
+                    <textarea
+                      className={`dt-textarea ${jsonError ? 'error' : ''}`}
+                      id="json-editor"
+                      onChange={handleJsonTextChange}
+                      placeholder="Edit the complete JSON array here..."
+                      value={jsonText}
+                    />
+                  </label>
+                  {jsonError && (
+                    <div className="dev-tools__modal-form__field error-message">
+                      {jsonError}
+                    </div>
+                  )}
+                </FieldWrapper>
+              )}
             </div>
 
             <div>
