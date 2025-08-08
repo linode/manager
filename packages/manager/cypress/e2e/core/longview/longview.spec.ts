@@ -14,7 +14,6 @@ import {
   mockUpdateLongviewClient,
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 
 import {
@@ -132,10 +131,6 @@ const longviewGetLatestValueInstalled = longviewResponseFactory.build({
 
 authenticate();
 describe('longview', () => {
-  before(() => {
-    cleanUp(['linodes', 'longview-clients']);
-  });
-
   /*
    * - Tests Longview installation end-to-end using mock API data.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
