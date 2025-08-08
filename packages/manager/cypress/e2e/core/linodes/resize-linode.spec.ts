@@ -21,7 +21,7 @@ describe('resize linode', () => {
       createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
     ).then((linode) => {
       interceptLinodeResize(linode.id).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/metrics?resize=true`);
 
       ui.dialog
         .findByTitle(`Resize Linode ${linode.label}`)
@@ -63,7 +63,7 @@ describe('resize linode', () => {
       createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
     ).then((linode) => {
       interceptLinodeResize(linode.id).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/metrics?resize=true`);
 
       ui.dialog
         .findByTitle(`Resize Linode ${linode.label}`)
@@ -168,7 +168,7 @@ describe('resize linode', () => {
       // Error flow when attempting to resize a linode to a smaller size without
       // resizing the disk to the requested size first.
       interceptLinodeResize(linode.id).as('linodeResize');
-      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.visitWithLogin(`/linodes/${linode.id}/metrics?resize=true`);
 
       ui.dialog
         .findByTitle(`Resize Linode ${linode.label}`)

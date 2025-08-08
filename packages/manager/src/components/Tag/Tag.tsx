@@ -1,8 +1,7 @@
 import { CloseIcon } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { StyledChip, StyledDeleteButton } from './Tag.styles';
 
@@ -51,7 +50,7 @@ export const Tag = (props: TagProps) => {
     ...chipProps
   } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = (e: React.MouseEvent<any>) => {
     e.preventDefault();
@@ -59,7 +58,10 @@ export const Tag = (props: TagProps) => {
     if (closeMenu) {
       closeMenu();
     }
-    history.push(`/search?query=tag:${label}`);
+    navigate({
+      to: '/search',
+      search: { query: `tag:${label}` },
+    });
   };
 
   // If maxLength is set, truncate display to that length.
