@@ -256,6 +256,19 @@ export const useServiceAlertsMutation = (
       queryClient.invalidateQueries({
         queryKey: queryFactory.resources(serviceType).queryKey,
       });
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey:
+          queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          entityId
+        ).queryKey,
+      });
     },
   });
 };
