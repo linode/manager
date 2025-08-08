@@ -46,6 +46,11 @@ jobs:
         with:
           node-version: "20.17"
       - run: echo "Hello World"
+      - name: Debug matrix.user.name mapping
+        run: |
+          echo "Matrix user index: ${{ matrix.user.index }}"
+          echo "Matrix user name: ${{ matrix.user.name }}"
+          echo "Secret value (masked): ${{ secrets[matrix.user.name] }}"
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
