@@ -4,10 +4,10 @@ import {
   useProfile,
   useUserAccountPermissions,
 } from '@linode/queries';
+import { queryOptions } from '@tanstack/react-query';
 
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { IamAccountRoles, PermissionType, Profile } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FlagSet } from 'src/featureFlags';
 
@@ -50,51 +50,26 @@ export const checkIAMEnabled = async (
     return false;
   }
 
-  const profile: Profile | undefined = await queryClient.getQueryData(
-    profileQueries.profile().queryKey
-  );
-
-  if (!profile) {
-    return false;
-  }
-
-  let roles: IamAccountRoles | undefined;
-  let permissions: PermissionType[] | undefined;
-
-  // For non-restricted users ONLY, get roles
-  if (!profile.restricted) {
-    roles = await queryClient.getQueryData(iamQueries.accountRoles.queryKey);
-
-    if (!roles) {
-      try {
-        roles = await queryClient.fetchQuery({
-          queryKey: iamQueries.accountRoles.queryKey,
-          queryFn: iamQueries.accountRoles.queryFn,
-        });
-      } catch {
-        return false;
-      }
-    }
-    // Don't fetch permissions for non-restricted users
-  } else {
-    // For restricted users ONLY, get permissions
-    permissions = await queryClient.getQueryData(
-      iamQueries.user(profile.username)._ctx.accountPermissions.queryKey
+  try {
+    const profile = await queryClient.ensureQueryData(
+      queryOptions(profileQueries.profile())
     );
 
-    if (!permissions) {
-      try {
-        permissions = await queryClient.fetchQuery({
-          queryKey: iamQueries.user(profile.username)._ctx.accountPermissions
-            .queryKey,
-          queryFn: iamQueries.user(profile.username)._ctx.accountPermissions
-            .queryFn,
-        });
-      } catch {
-        return false;
-      }
+    if (profile.restricted) {
+      // For restricted users ONLY, get permissions
+      const permissions = await queryClient.ensureQueryData(
+        queryOptions(iamQueries.user(profile.username)._ctx.accountPermissions)
+      );
+      return Boolean(permissions.length);
     }
-  }
 
-  return Boolean(roles || permissions?.length);
+    // For non-restricted users ONLY, get roles
+    const roles = await queryClient.ensureQueryData(
+      queryOptions(iamQueries.accountRoles)
+    );
+
+    return Boolean(roles);
+  } catch {
+    return false;
+  }
 };

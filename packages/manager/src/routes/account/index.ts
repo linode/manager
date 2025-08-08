@@ -104,7 +104,7 @@ const accountSettingsRoute = createRoute({
 const accountUsersUsernameRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/users/$username',
-  beforeLoad: async ({ context, params }) => {
+  beforeLoad: async ({ context, params, location }) => {
     const { username } = params;
 
     const isIAMEnabled = await checkIAMEnabled(
@@ -114,6 +114,14 @@ const accountUsersUsernameRoute = createRoute({
 
     if (!isIAMEnabled || !username) {
       return;
+    }
+
+    if (location.pathname.endsWith('/permissions')) {
+      throw redirect({
+        to: '/iam/users/$username/roles',
+        params: { username },
+        replace: true,
+      });
     }
 
     throw redirect({
@@ -131,24 +139,6 @@ const accountUsersUsernameRoute = createRoute({
 const accountUsersUsernameProfileRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'profile',
-  beforeLoad: async ({ context, params }) => {
-    const { username } = params;
-
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags
-    );
-
-    if (!isIAMEnabled || !username) {
-      return;
-    }
-
-    throw redirect({
-      to: '/iam/users/$username/details',
-      params: { username },
-      replace: true,
-    });
-  },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
     (m) => m.userDetailLazyRoute
@@ -158,24 +148,6 @@ const accountUsersUsernameProfileRoute = createRoute({
 const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'permissions',
-  beforeLoad: async ({ context, params }) => {
-    const { username } = params;
-
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags
-    );
-
-    if (!isIAMEnabled || !username) {
-      return;
-    }
-
-    throw redirect({
-      to: '/iam/users/$username/roles',
-      params: { username },
-      replace: true,
-    });
-  },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
     (m) => m.userDetailLazyRoute
