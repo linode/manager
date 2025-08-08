@@ -81,6 +81,12 @@ export const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   context: {
+    accountSettings: undefined,
+    flags: {},
+    globalErrors: {},
+    isACLPEnabled: false,
+    isDatabasesEnabled: false,
+    isPlacementGroupsEnabled: false,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
