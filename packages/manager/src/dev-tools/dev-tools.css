@@ -340,12 +340,6 @@
   width: 100%;
 }
 
-.dev-tools__modal-form__field.error-message {
-  color: #d63c42;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
 .dev-tools__body input[type="checkbox"] {
   margin-right: 8px;
   position: relative;
