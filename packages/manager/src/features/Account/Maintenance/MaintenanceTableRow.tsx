@@ -115,7 +115,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
           {(tableType === 'upcoming' || tableType === 'completed') && (
             <Hidden mdDown>
               <TableCell data-testid="relative-date">
-                {parseAPIDate(when).toRelative()}
+                {when ? parseAPIDate(when).toRelative() : '—'}
               </TableCell>
             </Hidden>
           )}
@@ -130,13 +130,15 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
       {!flags.vmHostMaintenance?.enabled && (
         <>
           <TableCell noWrap>
-            {formatDate(when, {
-              timezone: profile?.timezone,
-            })}
+            {when
+              ? formatDate(when, {
+                  timezone: profile?.timezone,
+                })
+              : '—'}
           </TableCell>
           <Hidden mdDown>
             <TableCell data-testid="relative-date">
-              {parseAPIDate(when).toRelative()}
+              {when ? parseAPIDate(when).toRelative() : '—'}
             </TableCell>
           </Hidden>
         </>
