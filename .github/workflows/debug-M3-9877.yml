@@ -57,8 +57,10 @@ jobs:
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
           echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}" >> ./packages/manager/.env
           echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}" >> ./packages/manager/.env
-      - run: |
-        echo "Matrix user name: ${{ matrix.user.name }}"
+      - name: Log matrix values
+        run: |
+          echo "Matrix user index: ${{ matrix.user.index }}"
+          echo "Matrix user name: ${{ matrix.user.name }}"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
