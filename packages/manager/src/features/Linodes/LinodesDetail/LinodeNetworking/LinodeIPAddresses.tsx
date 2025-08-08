@@ -154,6 +154,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
       from: '/linodes/$linodeId/networking',
     },
     preferenceKey: 'linode-ip-addresses',
+    prefix: 'linode-ip-addresses',
   });
 
   if (isLoading) {
