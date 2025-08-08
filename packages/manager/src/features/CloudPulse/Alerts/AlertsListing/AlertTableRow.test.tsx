@@ -3,7 +3,6 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -73,18 +72,16 @@ describe('Alert Row', () => {
     history.push('/alerts/definitions');
     const link = `/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
     const renderedAlert = (
-      <Router history={history}>
-        <AlertTableRow
-          alert={alert}
-          handlers={{
-            handleDelete: vi.fn(),
-            handleDetails: vi.fn(),
-            handleEdit: vi.fn(),
-            handleStatusChange: vi.fn(),
-          }}
-          services={mockServices}
-        />
-      </Router>
+      <AlertTableRow
+        alert={alert}
+        handlers={{
+          handleDelete: vi.fn(),
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleStatusChange: vi.fn(),
+        }}
+        services={mockServices}
+      />
     );
     const { getByText } = renderWithTheme(wrapWithTableBody(renderedAlert));
 

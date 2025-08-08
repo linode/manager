@@ -1,7 +1,7 @@
 import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 import { Dialog, Select } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
@@ -10,7 +10,7 @@ import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 import type { SelectOption } from '@linode/ui';
 
 export const GoTo = React.memo(() => {
-  const routerHistory = useHistory();
+  const navigate = useNavigate();
 
   const { data: accountSettings } = useAccountSettings();
   const { data: grants } = useGrants();
@@ -30,7 +30,7 @@ export const GoTo = React.memo(() => {
   };
 
   const onSelect = (item: SelectOption<string>) => {
-    routerHistory.push(item.value);
+    navigate({ to: item.value });
     onClose();
   };
 
