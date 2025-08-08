@@ -13,7 +13,6 @@ const props: Props = {
   clusterTier: 'standard',
   onClose: vi.fn(),
   open: true,
-  regionsData: [],
 };
 
 describe('AddNodePoolDrawer', () => {
@@ -34,6 +33,6 @@ describe('AddNodePoolDrawer', () => {
       <AddNodePoolDrawer {...props} clusterTier="enterprise" />
     );
 
-    await expect(queryByText('GPU')).toBeNull();
+    expect(queryByText('GPU')).toBeNull();
   });
 });

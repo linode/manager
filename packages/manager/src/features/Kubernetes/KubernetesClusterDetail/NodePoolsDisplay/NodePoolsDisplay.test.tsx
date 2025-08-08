@@ -14,7 +14,6 @@ const props: Props = {
   clusterRegionId: 'us-east',
   clusterTier: 'standard',
   isLkeClusterRestricted: false,
-  regionsData: [],
 };
 
 describe('NodeTable', () => {
