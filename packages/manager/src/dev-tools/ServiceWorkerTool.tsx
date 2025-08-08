@@ -13,6 +13,7 @@ import {
   getBaselinePreset,
   getCustomAccountData,
   getCustomEventsData,
+  getCustomGrantsData,
   getCustomMaintenanceData,
   getCustomNotificationsData,
   getCustomProfileData,
@@ -26,6 +27,7 @@ import {
   saveBaselinePreset,
   saveCustomAccountData,
   saveCustomEventsData,
+  saveCustomGrantsData,
   saveCustomMaintenanceData,
   saveCustomNotificationsData,
   saveCustomProfileData,
@@ -42,6 +44,7 @@ import type {
   Account,
   AccountMaintenance,
   Event,
+  Grants,
   Notification,
   PermissionType,
   Profile,
@@ -76,6 +79,9 @@ export const ServiceWorkerTool = () => {
   const [customAccountData, setCustomAccountData] = React.useState<
     Account | null | undefined
   >(getCustomAccountData());
+  const [customGrantsData, setCustomGrantsData] = React.useState<
+    Grants | null | undefined
+  >(getCustomGrantsData());
   const [customProfileData, setCustomProfileData] = React.useState<
     null | Profile | undefined
   >(getCustomProfileData());
@@ -118,6 +124,7 @@ export const ServiceWorkerTool = () => {
 
   React.useEffect(() => {
     const currentAccountData = getCustomAccountData();
+    const currentGrantsData = getCustomGrantsData();
     const currentProfileData = getCustomProfileData();
     const currentUserAccountPermissionsData =
       getCustomUserAccountPermissionsData();
@@ -128,6 +135,8 @@ export const ServiceWorkerTool = () => {
     const currentNotificationsData = getCustomNotificationsData();
     const hasCustomAccountChanges =
       JSON.stringify(currentAccountData) !== JSON.stringify(customAccountData);
+    const hasCustomGrantsChanges =
+      JSON.stringify(currentGrantsData) !== JSON.stringify(customGrantsData);
     const hasCustomProfileChanges =
       JSON.stringify(currentProfileData) !== JSON.stringify(customProfileData);
     const hasCustomEventsChanges =
@@ -148,6 +157,7 @@ export const ServiceWorkerTool = () => {
 
     if (
       hasCustomAccountChanges ||
+      hasCustomGrantsChanges ||
       hasCustomProfileChanges ||
       hasCustomEventsChanges ||
       hasCustomMaintenanceChanges ||
@@ -163,6 +173,7 @@ export const ServiceWorkerTool = () => {
   }, [
     customAccountData,
     customEventsData,
+    customGrantsData,
     customMaintenanceData,
     customNotificationsData,
     customProfileData,
@@ -182,7 +193,9 @@ export const ServiceWorkerTool = () => {
       if (extraPresets.includes('account:custom') && customAccountData) {
         saveCustomAccountData(customAccountData);
       }
-
+      if (extraPresets.includes('grants:custom') && customGrantsData) {
+        saveCustomGrantsData(customGrantsData);
+      }
       if (extraPresets.includes('profile:custom') && customProfileData) {
         saveCustomProfileData(customProfileData);
       }
@@ -238,6 +251,7 @@ export const ServiceWorkerTool = () => {
       setSeedsCountMap(getSeedsCountMap());
       setPresetsCountMap(getExtraPresetsMap());
       setCustomAccountData(getCustomAccountData());
+      setCustomGrantsData(getCustomGrantsData());
       setCustomProfileData(getCustomProfileData());
       setCustomEventsData(getCustomEventsData());
       setCustomMaintenanceData(getCustomMaintenanceData());
@@ -261,6 +275,7 @@ export const ServiceWorkerTool = () => {
       setExtraPresets([]);
       setPresetsCountMap({});
       setCustomAccountData(null);
+      setCustomGrantsData(null);
       setCustomProfileData(null);
       setCustomEventsData(null);
       setCustomMaintenanceData(null);
@@ -274,6 +289,7 @@ export const ServiceWorkerTool = () => {
       saveSeedsCountMap({});
       saveExtraPresetsMap({});
       saveCustomAccountData(null);
+      saveCustomGrantsData(null);
       saveCustomProfileData(null);
       saveCustomEventsData(null);
       saveCustomMaintenanceData(null);
@@ -492,6 +508,7 @@ export const ServiceWorkerTool = () => {
                 <ExtraPresetOptions
                   customAccountData={customAccountData}
                   customEventsData={customEventsData}
+                  customGrantsData={customGrantsData}
                   customMaintenanceData={customMaintenanceData}
                   customNotificationsData={customNotificationsData}
                   customProfileData={customProfileData}
@@ -504,6 +521,7 @@ export const ServiceWorkerTool = () => {
                   handlers={extraPresets}
                   onCustomAccountChange={setCustomAccountData}
                   onCustomEventsChange={setCustomEventsData}
+                  onCustomGrantsChange={setCustomGrantsData}
                   onCustomMaintenanceChange={setCustomMaintenanceData}
                   onCustomNotificationsChange={setCustomNotificationsData}
                   onCustomProfileChange={setCustomProfileData}
