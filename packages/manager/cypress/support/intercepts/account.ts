@@ -230,7 +230,7 @@ export const mockUpdateUserGrants = (
  * @returns Cypress chainable.
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('account/entity-transfers'));
+  return cy.intercept('POST', apiMatcher('account/service-transfers'));
 };
 
 /**
@@ -245,7 +245,7 @@ export const mockInitiateEntityTransferError = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher('account/entity-transfers'),
+    apiMatcher('account/service-transfers'),
     makeErrorResponse(errorMessage)
   );
 };
@@ -272,38 +272,42 @@ export const mockGetEntityTransfers = (
   received: EntityTransfer[],
   sent: EntityTransfer[]
 ) => {
-  return cy.intercept('GET', apiMatcher('account/entity-transfers*'), (req) => {
-    const filters = getFilters(req);
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/service-transfers*'),
+    (req) => {
+      const filters = getFilters(req);
 
-    if (filters?.['status'] === 'pending') {
-      req.reply(paginateResponse(pending));
-      return;
-    }
-
-    if (filters?.['+and'] && Array.isArray(filters['+and'])) {
-      const compositeFilters: Record<string, unknown>[] = filters['+and'];
-
-      // Confirm that `is_sender` is set, and, if so, that it has the expected value.
-      const hasTrueSenderValue = compositeFilters.some(
-        (compositeFilter) => compositeFilter['is_sender'] === true
-      );
-      const hasFalseSenderValue = compositeFilters.some(
-        (compositeFilter) => compositeFilter['is_sender'] === false
-      );
-
-      if (hasTrueSenderValue) {
-        req.reply(paginateResponse(sent));
+      if (filters?.['status'] === 'pending') {
+        req.reply(paginateResponse(pending));
         return;
       }
 
-      if (hasFalseSenderValue) {
-        req.reply(paginateResponse(received));
-        return;
-      }
-    }
+      if (filters?.['+and'] && Array.isArray(filters['+and'])) {
+        const compositeFilters: Record<string, unknown>[] = filters['+and'];
 
-    req.continue();
-  });
+        // Confirm that `is_sender` is set, and, if so, that it has the expected value.
+        const hasTrueSenderValue = compositeFilters.some(
+          (compositeFilter) => compositeFilter['is_sender'] === true
+        );
+        const hasFalseSenderValue = compositeFilters.some(
+          (compositeFilter) => compositeFilter['is_sender'] === false
+        );
+
+        if (hasTrueSenderValue) {
+          req.reply(paginateResponse(sent));
+          return;
+        }
+
+        if (hasFalseSenderValue) {
+          req.reply(paginateResponse(received));
+          return;
+        }
+      }
+
+      req.continue();
+    }
+  );
 };
 
 /**
@@ -320,7 +324,7 @@ export const mockGetEntityTransfersError = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher('account/entity-transfers*'),
+    apiMatcher('account/service-transfers*'),
     makeErrorResponse(errorMessage, statusCode)
   );
 };
@@ -339,7 +343,7 @@ export const mockReceiveEntityTransfer = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`account/entity-transfers/${token}`),
+    apiMatcher(`account/service-transfers/${token}`),
     transfer
   );
 };
@@ -356,7 +360,7 @@ export const mockAcceptEntityTransfer = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher(`account/entity-transfers/${token}/accept`),
+    apiMatcher(`account/service-transfers/${token}/accept`),
     {}
   );
 };
