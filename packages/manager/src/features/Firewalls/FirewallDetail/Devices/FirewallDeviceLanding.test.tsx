@@ -19,7 +19,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_firewall_device: false,
     },
   })),
@@ -97,7 +97,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
       if (serviceName !== 'Linode') {
         it(`should contain a disabled Add ${serviceName} button`, () => {
           queryMocks.usePermissions.mockReturnValue({
-            permissions: {
+            data: {
               create_firewall_device: false,
             },
           });
@@ -121,7 +121,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
       if (serviceName !== 'Linode') {
         it(`should contain an enabled Add ${serviceName} button`, () => {
           queryMocks.usePermissions.mockReturnValue({
-            permissions: {
+            data: {
               create_firewall_device: true,
             },
           });
@@ -135,7 +135,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
 
         it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, async () => {
           queryMocks.usePermissions.mockReturnValue({
-            permissions: {
+            data: {
               create_firewall_device: true,
             },
           });
@@ -163,7 +163,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
       if (serviceName === 'Linode') {
         it('should disable "Add Linodes to Firewall" button if the user does not have create_firewall_device permission', async () => {
           queryMocks.usePermissions.mockReturnValue({
-            permissions: {
+            data: {
               create_firewall_device: false,
             },
           });
@@ -180,7 +180,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
         });
         it('should enable "Add Linodes to Firewall" button if the user has create_firewall_device permission', async () => {
           queryMocks.usePermissions.mockReturnValue({
-            permissions: {
+            data: {
               create_firewall_device: true,
             },
           });

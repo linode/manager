@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { destinationType } from '@linode/api-v4';
 import { Autocomplete, Box, Button, Paper, TextField } from '@linode/ui';
+import { createDestinationSchema } from '@linode/validation';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -10,12 +12,13 @@ import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtil
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
-import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
+import type { CreateDestinationForm } from 'src/features/DataStream/Shared/types';
 
 export const DestinationCreate = () => {
   const theme = useTheme();
 
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream/destinations/create',
       crumbOverrides: [
@@ -30,17 +33,21 @@ export const DestinationCreate = () => {
     title: 'Create Destination',
   };
 
-  const form = useForm<CreateStreamForm>({
+  const form = useForm<CreateDestinationForm>({
     defaultValues: {
-      destination_type: destinationType.LinodeObjectStorage,
-      region: '',
+      type: destinationType.LinodeObjectStorage,
+      details: {
+        region: '',
+      },
     },
+    mode: 'onBlur',
+    resolver: yupResolver(createDestinationSchema),
   });
   const { control, handleSubmit } = form;
 
   const selectedDestinationType = useWatch({
     control,
-    name: 'destination_type',
+    name: 'type',
   });
 
   const onSubmit = handleSubmit(async () => {});
@@ -51,15 +58,16 @@ export const DestinationCreate = () => {
       <LandingHeader {...landingHeaderProps} />
       <Paper>
         <FormProvider {...form}>
-          <form onSubmit={onSubmit}>
+          <form id="createDestinationForm" onSubmit={onSubmit}>
             <Controller
               control={control}
-              name="destination_type"
+              name="type"
               render={({ field }) => (
                 <Autocomplete
                   disableClearable
                   disabled={true}
                   label="Destination Type"
+                  onBlur={field.onBlur}
                   onChange={(_, { value }) => {
                     field.onChange(value);
                   }}
@@ -71,11 +79,13 @@ export const DestinationCreate = () => {
             />
             <Controller
               control={control}
-              name="destination_label"
-              render={({ field }) => (
+              name="label"
+              render={({ field, fieldState }) => (
                 <TextField
                   aria-required
+                  errorText={fieldState.error?.message}
                   label="Destination Name"
+                  onBlur={field.onBlur}
                   onChange={(value) => {
                     field.onChange(value);
                   }}
@@ -100,6 +110,7 @@ export const DestinationCreate = () => {
       >
         <Button
           buttonType="primary"
+          form="createDestinationForm"
           sx={{ mt: theme.spacingFunction(16) }}
           type="submit"
         >
