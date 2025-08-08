@@ -21,7 +21,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -77,7 +77,7 @@ describe('Region', () => {
 
   it('should enable the region select is the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });
@@ -116,6 +116,9 @@ describe('Region', () => {
   });
 
   it('renders a warning if the user selects a region with different pricing when cloning', async () => {
+    queryMocks.useLocation.mockReturnValue({
+      pathname: '/linodes/create/clone',
+    });
     const regionA = regionFactory.build({ capabilities: ['Linodes'] });
     const regionB = regionFactory.build({ capabilities: ['Linodes'] });
 
@@ -160,6 +163,9 @@ describe('Region', () => {
   });
 
   it('renders a warning if the user tries to clone across datacenters', async () => {
+    queryMocks.useLocation.mockReturnValue({
+      pathname: '/linodes/create/clone',
+    });
     const regionA = regionFactory.build({ capabilities: ['Linodes'] });
     const regionB = regionFactory.build({ capabilities: ['Linodes'] });
 
@@ -196,7 +202,7 @@ describe('Region', () => {
     ).toBeVisible();
   });
 
-  //TODO: this is an expected failure until we fix the filtering
+  // TODO: this is an expected failure until we fix the filtering
   it.skip('should disable distributed regions if the selected image does not have the `distributed-sites` capability', async () => {
     const image = imageFactory.build({ capabilities: [] });
 

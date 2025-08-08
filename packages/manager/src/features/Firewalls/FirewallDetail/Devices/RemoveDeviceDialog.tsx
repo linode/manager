@@ -52,13 +52,13 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const deviceDialog = formattedTypes[deviceType ?? 'linode'];
 
-  const { permissions: firewallPermissions } = usePermissions(
+  const { data: firewallPermissions } = usePermissions(
     'firewall',
     ['delete_firewall_device'],
     firewallId
   );
 
-  const { permissions: linodePermissions } = usePermissions(
+  const { data: linodePermissions } = usePermissions(
     'linode',
     ['update_linode'],
     device?.entity.id

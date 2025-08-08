@@ -6,7 +6,7 @@ import { InterfaceFirewall } from './InterfaceFirewall';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
       create_firewall: false,
     },
@@ -42,7 +42,7 @@ describe('InterfaceFirewall', () => {
 
   it('should enable a Firewall select if the user has create_linode permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
         create_firewall: true,
       },
@@ -59,7 +59,7 @@ describe('InterfaceFirewall', () => {
 
   it('should enable a "Create Firewall" button if the user has create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
         create_firewall: true,
       },

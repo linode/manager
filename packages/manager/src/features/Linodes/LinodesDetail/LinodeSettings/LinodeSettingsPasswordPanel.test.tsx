@@ -16,7 +16,7 @@ const mockPoweredOffLinode = linodeFactory.build({ status: 'offline' });
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       password_reset_linode: false,
     },
   })),
@@ -72,7 +72,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         password_reset_linode: true,
       },
     });
@@ -92,7 +92,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         password_reset_linode: false,
       },
     });
@@ -120,7 +120,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         password_reset_linode: false,
       },
     });
@@ -148,7 +148,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         password_reset_linode: true,
       },
     });
@@ -172,7 +172,7 @@ describe('LinodeSettingsPasswordPanel', () => {
     });
 
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         password_reset_linode: true,
       },
     });

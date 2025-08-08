@@ -1,3 +1,23 @@
+## [2025-08-12] - v0.72.0
+
+
+### Changed:
+
+- Update `createVPCSchema` to support IPv6 subnets ([#12563](https://github.com/linode/manager/pull/12563))
+
+### Fixed:
+
+- ACLP - Alerting: Fix missing 'in' operator check in dimension filter for create alert schema ([#12628](https://github.com/linode/manager/pull/12628))
+- Non-human-readable validation messages for Linode Alert numeric input ([#12635](https://github.com/linode/manager/pull/12635))
+
+### Removed:
+
+- `nodePoolBetaSchema` in favor of `nodePoolSchema` ([#12596](https://github.com/linode/manager/pull/12596))
+
+### Upcoming Features:
+
+- Validation for datastream forms: create stream and destination. Validation for datastream create POST request ([#12557](https://github.com/linode/manager/pull/12557))
+
 ## [2025-07-29] - v0.71.0
 
 

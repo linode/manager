@@ -30,7 +30,7 @@ export const Firewall = () => {
   ] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const { permissions } = usePermissions('account', [
+  const { data: permissions } = usePermissions('account', [
     'create_linode',
     'create_firewall',
   ]);

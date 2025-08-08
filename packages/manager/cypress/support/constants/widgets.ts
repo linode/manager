@@ -55,7 +55,7 @@ export const widgetDetails = {
   },
   linode: {
     dashboardName: 'Linode Dashboard',
-    id: 1,
+    id: 2,
     metrics: [
       {
         expectedAggregation: 'max',
@@ -97,5 +97,52 @@ export const widgetDetails = {
     region: 'US, Chicago, IL (us-ord)',
     resource: 'linode-resource',
     serviceType: 'linode',
+  },
+  nodebalancer: {
+    dashboardName: 'NodeBalancer Dashboard',
+    id: 3,
+    metrics: [
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        name: 'system_cpu_utilization_percent',
+        title: 'CPU Utilization',
+        unit: '%',
+        yLabel: 'system_cpu_utilization_ratio',
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        name: 'system_memory_usage_by_resource',
+        title: 'Memory Usage',
+        unit: 'B',
+        yLabel: 'system_memory_usage_bytes',
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        name: 'system_network_io_by_resource',
+        title: 'Network Traffic',
+        unit: 'B',
+        yLabel: 'system_network_io_bytes_total',
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        name: 'system_disk_OPS_total',
+        title: 'Disk I/O',
+        unit: 'OPS',
+        yLabel: 'system_disk_operations_total',
+      },
+    ],
+    region: 'Newark, NJ, USA (us-east)',
+    resource: 'NodeBalancer-resource',
+    serviceType: 'nodebalancer',
+    port: 1,
+    protocols: ['TCP', 'UDP'],
   },
 };

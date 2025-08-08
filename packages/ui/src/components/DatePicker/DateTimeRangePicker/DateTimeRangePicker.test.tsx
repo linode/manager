@@ -175,5 +175,37 @@ describe('DateTimeRangePicker', () => {
       // Ensure the local time remains the same, but the timezone changes
       expect(startTimeField).toHaveValue('1:00 PM');
     });
+
+    it('should restore the previous Start Date value when Cancel is clicked after selecting a new date', async () => {
+      renderWithTheme(<DateTimeRangePicker {...defaultProps} />);
+
+      const defaultDateValue = mockDate?.toFormat('yyyy-MM-dd hh:mm a');
+
+      const startDateField = screen.getByRole('textbox', {
+        name: 'Start Date',
+      });
+
+      // Assert initial displayed value
+      expect(startDateField).toHaveDisplayValue(defaultDateValue);
+
+      // Open popover
+      await userEvent.click(startDateField);
+      expect(screen.getByRole('dialog')).toBeVisible();
+
+      // Select preset value
+      const preset = screen.getByRole('button', {
+        name: 'last 7 days',
+      });
+      await userEvent.click(preset);
+
+      // Date should now be updated in the field
+      expect(startDateField).not.toHaveDisplayValue(defaultDateValue);
+
+      // Click Cancel
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      // Expect field to reset to previous value
+      expect(startDateField).toHaveDisplayValue(defaultDateValue);
+    });
   });
 });

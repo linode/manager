@@ -10,7 +10,7 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
       delete_linode: false,
     },
@@ -91,7 +91,7 @@ describe('LinodeSettings', () => {
 
   it('should enable all buttons if the user has update_linode and delete_linode permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_linode: true,
         delete_linode: true,
       },

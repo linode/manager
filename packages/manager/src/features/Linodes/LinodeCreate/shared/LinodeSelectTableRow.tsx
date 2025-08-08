@@ -33,7 +33,7 @@ export const LinodeSelectTableRow = (props: Props) => {
 
   const region = regions?.find((r) => r.id === linode.region);
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['shutdown_linode', 'clone_linode'],
     linode.id

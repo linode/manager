@@ -7,7 +7,7 @@ import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: { create_firewall: true },
+    data: { create_firewall: true },
   })),
 }));
 
@@ -18,7 +18,7 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 describe('FirewallLandingEmptyState', () => {
   it('enables the Create Firewall button if the user has create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { create_firewall: true },
+      data: { create_firewall: true },
     });
     renderWithTheme(
       <FirewallLandingEmptyState openAddFirewallDrawer={vi.fn()} />
@@ -29,7 +29,7 @@ describe('FirewallLandingEmptyState', () => {
 
   it('disables the Create Firewall button if the user does not have create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { create_firewall: false },
+      data: { create_firewall: false },
     });
     renderWithTheme(
       <FirewallLandingEmptyState openAddFirewallDrawer={vi.fn()} />

@@ -18,6 +18,7 @@ import { NodeTable } from './NodeTable';
 import type { StatusFilter } from './NodePoolsDisplay';
 import type {
   AutoscaleSettings,
+  KubeNodePoolResponse,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
@@ -30,7 +31,7 @@ interface Props {
   clusterId: number;
   clusterTier: KubernetesTier;
   count: number;
-  encryptionStatus: EncryptionStatus | undefined;
+  encryptionStatus: EncryptionStatus;
   handleAccordionClick: () => void;
   handleClickAutoscale: (poolId: number) => void;
   handleClickLabelsAndTaints: (poolId: number) => void;
@@ -42,6 +43,7 @@ interface Props {
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  poolVersion: KubeNodePoolResponse['k8s_version'];
   regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
@@ -68,6 +70,7 @@ export const NodePool = (props: Props) => {
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     poolId,
+    poolVersion,
     regionSupportsDiskEncryption,
     statusFilter,
     tags,
@@ -241,6 +244,7 @@ export const NodePool = (props: Props) => {
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}
+        poolVersion={poolVersion}
         regionSupportsDiskEncryption={regionSupportsDiskEncryption}
         statusFilter={statusFilter}
         tags={tags}

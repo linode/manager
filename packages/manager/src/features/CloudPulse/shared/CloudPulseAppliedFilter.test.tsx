@@ -31,7 +31,7 @@ describe('CloudPulse Applied Filter', () => {
 
   it('should not render the applied filter component', () => {
     const { queryByTestId } = renderWithTheme(
-      <CloudPulseAppliedFilterRenderer filters={{}} serviceType="abc" />
+      <CloudPulseAppliedFilterRenderer dashboardId={-1} filters={{}} />
     );
 
     expect(queryByTestId(testId)).toBe(null);

@@ -29,6 +29,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
 import {
@@ -47,6 +48,9 @@ export const BackupDrawer = (props: Props) => {
   const { onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const {
     data: linodes,
     error: linodesError,
@@ -191,6 +195,7 @@ all new Linodes will automatically be backed up.`
         <ActionsPanel
           primaryButtonProps={{
             label: 'Confirm',
+            disabled: !permissions.update_account_settings,
             loading: isUpdatingAccountSettings || isEnablingBackups,
             onClick: handleSubmit,
           }}

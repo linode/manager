@@ -10,6 +10,8 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 interface AutoEnrollProps {
   enabled: boolean;
   error?: string;
@@ -19,6 +21,9 @@ interface AutoEnrollProps {
 export const AutoEnroll = (props: AutoEnrollProps) => {
   const { enabled, error, toggle } = props;
 
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   return (
     <Paper
       sx={(theme) => ({ backgroundColor: theme.palette.background.default })}
@@ -28,6 +33,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
       <FormControlLabel
         checked={enabled}
         control={<Toggle />}
+        disabled={!permissions.update_account_settings}
         label={
           <Stack spacing={0.5}>
             <Typography sx={(theme) => ({ font: theme.font.bold })}>

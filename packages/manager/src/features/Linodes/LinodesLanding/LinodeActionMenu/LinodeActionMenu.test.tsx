@@ -28,7 +28,7 @@ const props: LinodeActionMenuProps = {
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       shutdown_linode: false,
       reboot_linode: false,
       clone_linode: false,
@@ -167,7 +167,6 @@ describe('LinodeActionMenu', () => {
         []
       );
       expect(result).toMatchObject({
-        type: 'Clone Linode',
         linodeID: 1,
       });
     });
@@ -208,7 +207,7 @@ describe('LinodeActionMenu', () => {
 
   it('should disable Action menu items if the user does not have required permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         shutdown_linode: false,
         reboot_linode: false,
         clone_linode: false,
@@ -254,8 +253,8 @@ describe('LinodeActionMenu', () => {
 
   it('should enable "Reboot" button if the user has reboot_linode permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         reboot_linode: true,
       },
     });

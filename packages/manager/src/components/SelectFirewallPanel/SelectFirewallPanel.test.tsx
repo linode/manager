@@ -15,7 +15,7 @@ const testId = 'select-firewall-panel';
 
 const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn(() => ({
-    permissions: { delete_firewall: true, update_firewall: true },
+    data: { delete_firewall: true, update_firewall: true },
   })),
   useQueryWithPermissions: vi.fn().mockReturnValue({
     data: [],

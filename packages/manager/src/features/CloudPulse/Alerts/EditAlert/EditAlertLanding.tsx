@@ -33,11 +33,11 @@ export const EditAlertLanding = () => {
   const {
     data: alertDetails,
     isError,
-    isFetching,
+    isLoading,
   } = useAlertDefinitionQuery(alertId, serviceType);
   const pathname = '/Definition/Edit';
 
-  if (isFetching) {
+  if (isLoading) {
     return (
       <EditAlertLoadingState overrides={overrides} pathname={pathname}>
         <CircleProgress />

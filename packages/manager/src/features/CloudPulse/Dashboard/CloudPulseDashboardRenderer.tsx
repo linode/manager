@@ -19,8 +19,8 @@ export const CloudPulseDashboardRenderer = React.memo(
       'Select a dashboard and apply filters to visualize metrics.';
 
     const getMetricsCall = React.useMemo(
-      () => getMetricsCallCustomFilters(filterValue, dashboard?.service_type),
-      [dashboard?.service_type, filterValue]
+      () => getMetricsCallCustomFilters(filterValue, dashboard?.id),
+      [dashboard?.id, filterValue]
     );
 
     if (!dashboard) {
@@ -31,7 +31,7 @@ export const CloudPulseDashboardRenderer = React.memo(
       );
     }
 
-    if (!FILTER_CONFIG.get(dashboard.service_type)) {
+    if (!FILTER_CONFIG.get(dashboard.id)) {
       return (
         <CloudPulseErrorPlaceholder errorMessage="No filters are configured for the selected dashboard's service type." />
       );

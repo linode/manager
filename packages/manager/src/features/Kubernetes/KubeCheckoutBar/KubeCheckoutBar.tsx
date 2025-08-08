@@ -34,7 +34,7 @@ import { nodeWarning } from '../constants';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
 import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
-import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
+import type { CreateNodePoolData, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
@@ -43,7 +43,7 @@ export interface Props {
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
-  pools: KubeNodePoolResponse[];
+  pools: CreateNodePoolData[];
   region: string | undefined;
   regionsData: Region[];
   submitting: boolean;
@@ -72,7 +72,7 @@ export const KubeCheckoutBar = (props: Props) => {
   });
 
   // Show a warning if any of the pools have fewer than 3 nodes
-  const showWarning = pools.some((thisPool) => thisPool.count < 3);
+  const showWarning = pools?.some((thisPool) => thisPool.count < 3);
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();

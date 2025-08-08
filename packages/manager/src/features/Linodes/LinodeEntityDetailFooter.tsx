@@ -40,7 +40,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeTags,
   } = props;
 
-  const { permissions } = usePermissions('account', ['update_account']);
+  const { data: permissions } = usePermissions('account', ['update_account']);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 

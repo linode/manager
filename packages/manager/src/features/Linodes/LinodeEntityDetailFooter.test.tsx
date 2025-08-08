@@ -15,7 +15,7 @@ const props = {
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: { update_account: false },
+    data: { update_account: false },
   })),
 }));
 
@@ -37,7 +37,7 @@ describe('LinodeEntityDetailFooter', () => {
 
   it('should enable "Add a tag" button if the user has update_account permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_account: true },
+      data: { update_account: true },
     });
 
     const { getByRole } = renderWithTheme(

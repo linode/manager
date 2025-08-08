@@ -14,8 +14,8 @@ export const useStyles = makeStyles<void, 'iconContainer'>()(
     iconContainer: {
       '& svg': {
         color: theme.textColors.linkActiveLight,
-        height: 12,
-        width: 12,
+        height: 16,
+        width: 16,
       },
       color: theme.palette.primary.main,
       display: 'inline-block',
@@ -25,10 +25,17 @@ export const useStyles = makeStyles<void, 'iconContainer'>()(
       // nifty trick to avoid the icon from wrapping by itself after the last word
       transform: 'translateX(18px)',
       width: 14,
+      top: '3px',
     },
     root: {
       alignItems: 'baseline',
       color: theme.textColors.linkActiveLight,
+      '&:hover': {
+        color: theme.textColors.linkHover,
+        '& svg': {
+          color: theme.textColors.linkHover,
+        },
+      },
     },
   })
 );

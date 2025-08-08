@@ -1,4 +1,4 @@
-import { grantsFactory, profileFactory } from '@linode/utilities';
+import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -8,8 +8,10 @@ import { ContactInformation } from './ContactInformation';
 const EDIT_BUTTON_ID = 'edit-contact-info';
 
 const queryMocks = vi.hoisted(() => ({
-  useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: { update_account: false },
+  })),
 }));
 
 const props = {
@@ -28,11 +30,14 @@ const props = {
   zip: '19106',
 };
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
-    useGrants: queryMocks.useGrants,
     useProfile: queryMocks.useProfile,
   };
 });
@@ -55,7 +60,7 @@ describe('Edit Contact Information', () => {
     );
   });
 
-  it('should be disabled for restricted users', async () => {
+  it('should be disabled if user does not have update_account permission', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({
         restricted: true,
@@ -63,15 +68,48 @@ describe('Edit Contact Information', () => {
       }),
     });
 
-    queryMocks.useGrants.mockReturnValue({
-      data: grantsFactory.build({
-        global: {
-          account_access: 'read_only',
-        },
+    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
+
+    expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
+
+  it('should be enabled if user has update_account permission', async () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({
+        restricted: true,
+        user_type: 'default',
       }),
     });
 
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account: true },
+    });
+
     const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
+
+    expect(getByTestId(EDIT_BUTTON_ID)).not.toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
+
+  it('should be disabled for all child users and if user has update_account permission', async () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({
+        user_type: 'child',
+      }),
+    });
+
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account: true },
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <ContactInformation {...props} profile={queryMocks.useProfile().data} />
+    );
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',

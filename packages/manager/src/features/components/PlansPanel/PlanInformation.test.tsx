@@ -1,3 +1,4 @@
+import { Notice } from '@linode/ui';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
@@ -56,5 +57,23 @@ describe('PlanInformation', () => {
       limitedAvailabilityBannerTestId
     );
     expect(limitedAvailabilityBanner).toBeInTheDocument();
+  });
+
+  it('should render additionalBanners when provided', () => {
+    const infoBanner = (
+      <Notice variant="info">This is an Information Notice</Notice>
+    );
+    const warningBanner = (
+      <Notice variant="warning">This is a Warning Notice</Notice>
+    );
+
+    const additionalBanners = [infoBanner, warningBanner];
+    renderWithTheme(
+      <PlanInformation {...mockProps} additionalBanners={additionalBanners} />
+    );
+    const infoNotice = screen.getByText('This is an Information Notice');
+    const warningNotice = screen.getByText('This is a Warning Notice');
+    expect(infoNotice).toBeInTheDocument();
+    expect(warningNotice).toBeInTheDocument();
   });
 });

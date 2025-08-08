@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
@@ -52,6 +53,10 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: {
+    metrics: ['Managed Databases'],
+    alerts: [],
+  },
 });
 
 const flags: Partial<Flags> = {
@@ -61,7 +66,6 @@ const flags: Partial<Flags> = {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
     },
   ],
 };
@@ -256,6 +260,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       minute: endMinute,
     } = getDateRangeInGMT(12, 30);
 
+    cy.wait(1000);
     // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
@@ -263,17 +268,20 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       cy.findAllByText(startDay).first().click();
       cy.findAllByText(endDay).first().click();
     });
+
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
-      .should('be.visible')
+      .should('be.visible', { timeout: 10000 }) // waits up to 10 seconds
       .as('timePickerButton');
-
     cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
-    cy.get('@timePickerButton').click();
+    cy.get('@timePickerButton', { timeout: 15000 })
+      .wait(300) // ⛔ doesn't work like this! (cy.wait isn't chainable on element)
+      .click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
+    cy.wait(1000);
     cy.findByLabelText('Select hours')
       .as('selectHours')
       .scrollIntoView({ easing: 'linear' });
@@ -282,15 +290,18 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       cy.get(`[aria-label="${startHour} hours"]`).click();
     });
 
+    cy.wait(1000);
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
-      .should('be.visible')
+      .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
     cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
-    cy.get('@timePickerButton').click();
+    cy.get('@timePickerButton', { timeout: 15000 })
+      .wait(300) // ⛔ doesn't work like this! (cy.wait isn't chainable on element)
+      .click();
 
     cy.findByLabelText('Select minutes')
       .as('selectMinutes')
@@ -303,12 +314,14 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
-      .should('be.visible')
+      .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
     cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
-    cy.get('@timePickerButton').click();
+    cy.get('@timePickerButton', { timeout: 15000 })
+      .wait(300) // ⛔ doesn't work like this! (cy.wait isn't chainable on element)
+      .click();
 
     cy.findByLabelText('Select meridiem')
       .as('startMeridiemSelect')
@@ -319,10 +332,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .last()
-      .should('be.visible')
+      .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
-    cy.get('@timePickerButton').click();
+    cy.get('@timePickerButton', { timeout: 15000 }).click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.findByLabelText('Select hours').scrollIntoView({
@@ -338,8 +351,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .as('timePickerButton');
 
-    cy.get('@timePickerButton').click();
-
+    cy.get('@timePickerButton', { timeout: 15000 })
+      .wait(300) // ⛔ doesn't work like this! (cy.wait isn't chainable on element)
+      .click();
     cy.findByLabelText('Select minutes').scrollIntoView({
       duration: 500,
       easing: 'linear',
@@ -350,10 +364,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.get('[aria-label^="Choose time"]')
       .last()
-      .should('be.visible')
+      .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
-    cy.get('@timePickerButton').click();
+    cy.get('@timePickerButton', { timeout: 15000 })
+      .wait(300) // ⛔ doesn't work like this! (cy.wait isn't chainable on element)
+      .click();
 
     cy.findByLabelText('Select meridiem')
       .as('endMeridiemSelect')

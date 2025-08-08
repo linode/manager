@@ -32,11 +32,12 @@ import {
   TAX_ID_AGREEMENT_TEXT,
   TAX_ID_HELPER_TEXT,
 } from 'src/features/Billing/constants';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Account } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
+
 interface Props {
   focusEmail: boolean;
   onClose: () => void;
@@ -58,11 +59,13 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+  const { data: permissions } = usePermissions('account', [
+    'acknowledge_account_agreement',
+    'update_account',
+  ]);
+  const isAccountReadOnly = !permissions.update_account || isChildUser;
+  const isAcknowledgeAgreementDisabled =
+    !permissions.acknowledge_account_agreement || isChildUser;
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -260,7 +263,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         data-qa-update-contact
         spacing={0}
       >
-        {isReadOnly && (
+        {isAccountReadOnly && (
           <Grid size={12}>
             <Notice
               text={getRestrictedResourceText({
@@ -279,7 +282,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-contact-email
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.email}
             helperTextPosition="top"
             inputRef={emailRef}
@@ -300,7 +303,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         >
           <TextField
             data-qa-contact-first-name
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.first_name}
             label="First Name"
             name="first_name"
@@ -316,7 +319,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         >
           <TextField
             data-qa-contact-last-name
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.last_name}
             label="Last Name"
             name="last_name"
@@ -327,7 +330,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-company
-            disabled={isReadOnly || isParentUser}
+            disabled={isAccountReadOnly || isParentUser}
             errorText={errorMap.company}
             label="Company Name"
             name="company"
@@ -338,7 +341,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-contact-address-1
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.address_1}
             label="Address"
             name="address_1"
@@ -349,7 +352,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-contact-address-2
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.address_2}
             label="Address 2"
             name="address_2"
@@ -366,7 +369,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         >
           <Autocomplete
             disableClearable
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.country}
             keepSearchEnabledOnMobile
             label="Country"
@@ -393,7 +396,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <Autocomplete
               disableClearable
-              disabled={isReadOnly}
+              disabled={isAccountReadOnly}
               errorText={errorMap.state}
               keepSearchEnabledOnMobile
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
@@ -421,7 +424,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           ) : (
             <TextField
               data-qa-contact-state-province
-              disabled={isReadOnly}
+              disabled={isAccountReadOnly}
               errorText={errorMap.state}
               label="State / Province"
               name="state"
@@ -440,7 +443,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         >
           <TextField
             data-qa-contact-city
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.city}
             label="City"
             name="city"
@@ -456,7 +459,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         >
           <TextField
             data-qa-contact-post-code
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.zip}
             label="Postal Code"
             name="zip"
@@ -467,7 +470,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-contact-phone
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.phone}
             label="Phone"
             name="phone"
@@ -479,7 +482,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-contact-tax-id
-            disabled={isReadOnly}
+            disabled={isAccountReadOnly}
             errorText={errorMap.tax_id}
             helperText={nonUSCountry && TAX_ID_HELPER_TEXT}
             label="Tax ID"
@@ -500,6 +503,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             <Checkbox
               checked={billingAgreementChecked}
               data-testid="tax-id-checkbox"
+              disabled={isAcknowledgeAgreementDisabled}
               id="taxIdAgreementCheckbox"
               onChange={() =>
                 setBillingAgreementChecked(!billingAgreementChecked)
@@ -522,7 +526,8 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         className={classes.actions}
         primaryButtonProps={{
           'data-testid': 'save-contact-info',
-          disabled: isReadOnly || (nonUSCountry && !billingAgreementChecked),
+          disabled:
+            isAccountReadOnly || (nonUSCountry && !billingAgreementChecked),
           label: 'Save Changes',
           loading: isPending,
           type: 'submit',

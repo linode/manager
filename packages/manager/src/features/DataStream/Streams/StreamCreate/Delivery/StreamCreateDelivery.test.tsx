@@ -1,22 +1,45 @@
 import { destinationType } from '@linode/api-v4';
-import { screen } from '@testing-library/react';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import { beforeEach, describe } from 'vitest';
 
+import { destinationFactory } from 'src/factories/datastream';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 
+const loadingTestId = 'circle-progress';
+
+const mockDestinations = destinationFactory.buildList(5);
+
 describe('StreamCreateDelivery', () => {
+  beforeEach(async () => {
+    server.use(
+      http.get('*/monitor/streams/destinations', () => {
+        return HttpResponse.json(makeResourcePage(mockDestinations));
+      })
+    );
+  });
+
   it('should render disabled Destination Type input with proper selection', async () => {
     renderWithThemeAndHookFormContext({
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: {
+            type: destinationType.LinodeObjectStorage,
+          },
         },
       },
     });
+
+    const loadingElement = screen.queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
     const destinationTypeAutocomplete =
       screen.getByLabelText('Destination Type');
@@ -30,10 +53,18 @@ describe('StreamCreateDelivery', () => {
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination_label: '',
+          destination: {
+            label: '',
+            type: destinationType.LinodeObjectStorage,
+          },
         },
       },
     });
+
+    const loadingElement = screen.queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
     const destinationNameAutocomplete =
       screen.getByLabelText('Destination Name');
@@ -53,11 +84,18 @@ describe('StreamCreateDelivery', () => {
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination_label: '',
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: {
+            label: '',
+            type: destinationType.LinodeObjectStorage,
+          },
         },
       },
     });
+
+    const loadingElement = screen.queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
     const destinationNameAutocomplete =
       screen.getByLabelText('Destination Name');

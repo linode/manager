@@ -6,10 +6,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
@@ -185,7 +185,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                     disabled={
                       Boolean(dashboardError) || !dashboard || isClusterReadOnly
                     }
-                    endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
+                    endIcon={<ExternalLinkIcon sx={{ height: '14px' }} />}
                     onClick={() => window.open(dashboard?.url, '_blank')}
                   >
                     Kubernetes Dashboard
