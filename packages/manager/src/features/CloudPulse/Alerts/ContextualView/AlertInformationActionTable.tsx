@@ -210,7 +210,7 @@ export const AlertInformationActionTable = (
           alertIds.push(alert.id);
         }
 
-        // Call onToggleAlert with the enabled alerts in both create and edit flow
+        // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
           onToggleAlert(newPayload, hasUnsavedChanges);
         }
