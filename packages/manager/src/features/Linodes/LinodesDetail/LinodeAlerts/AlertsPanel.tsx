@@ -5,6 +5,7 @@ import {
 } from '@linode/queries';
 import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
+import { alertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useBlocker } from '@tanstack/react-router';
 import { useFormik } from 'formik';
@@ -15,7 +16,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import { AlertSection } from './AlertSection';
+import { AlertSection, AlertSectionProps } from './AlertSection';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -75,6 +76,8 @@ export const AlertsPanel = (props: Props) => {
   const formik = useFormik<Linode['alerts']>({
     enableReinitialize: true,
     initialValues,
+    validateOnChange: true,
+    validationSchema: alertsSchema,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
@@ -109,11 +112,11 @@ export const AlertsPanel = (props: Props) => {
     error ?? undefined
   );
 
-  const alertSections = [
+  const alertSections: AlertSectionProps[] = [
     {
       copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       endAdornment: '%',
-      error: hasErrorFor('alerts.cpu'),
+      error: formik.touched.cpu ? formik.errors.cpu : undefined,
       hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -132,6 +135,9 @@ export const AlertsPanel = (props: Props) => {
           'cpu',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('cpu');
+      },
       radioInputLabel: 'cpu_usage_state',
       state:
         formik.values.cpu === ('' as unknown) || Boolean(formik.values.cpu),
@@ -143,7 +149,7 @@ export const AlertsPanel = (props: Props) => {
     {
       copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       endAdornment: 'IOPS',
-      error: hasErrorFor('alerts.io'),
+      error: formik.touched.io ? formik.errors.io : undefined,
       hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -158,6 +164,9 @@ export const AlertsPanel = (props: Props) => {
           'io',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('io');
+      },
       radioInputLabel: 'disk_io_state',
       state: formik.values.io === ('' as unknown) || Boolean(formik.values.io),
       textInputLabel: 'disk_io_threshold',
@@ -169,7 +178,7 @@ export const AlertsPanel = (props: Props) => {
       copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
         alert.`,
       endAdornment: 'Mb/s',
-      error: hasErrorFor('alerts.network_in'),
+      error: formik.touched.network_in ? formik.errors.network_in : undefined,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -187,6 +196,9 @@ export const AlertsPanel = (props: Props) => {
           'network_in',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('network_in');
+      },
       radioInputLabel: 'incoming_traffic_state',
       state:
         formik.values.network_in === ('' as unknown) ||
@@ -200,7 +212,7 @@ export const AlertsPanel = (props: Props) => {
       copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
         alert.`,
       endAdornment: 'Mb/s',
-      error: hasErrorFor('alerts.network_out'),
+      error: formik.touched.network_out ? formik.errors.network_out : undefined,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -218,6 +230,9 @@ export const AlertsPanel = (props: Props) => {
           'network_out',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('network_out');
+      },
       radioInputLabel: 'outbound_traffic_state',
       state:
         formik.values.network_out === ('' as unknown) ||
@@ -231,7 +246,9 @@ export const AlertsPanel = (props: Props) => {
       copy: `Percentage of network transfer quota used being greater than this value will trigger
           this alert.`,
       endAdornment: '%',
-      error: hasErrorFor('alerts.transfer_quota'),
+      error: formik.touched.transfer_quota
+        ? formik.errors.transfer_quota
+        : undefined,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -249,6 +266,9 @@ export const AlertsPanel = (props: Props) => {
           'transfer_quota',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('transfer_quota');
+      },
       radioInputLabel: 'transfer_quota_state',
       state:
         formik.values.transfer_quota === ('' as unknown) ||

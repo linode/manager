@@ -413,15 +413,15 @@ const DiskEncryptionSchema = string()
   .oneOf(['enabled', 'disabled'])
   .notRequired();
 
-const alerts = object({
+export const alertsSchema = object({
   cpu: number()
-    .typeError('CPU Usage must be a number')
+    .required('CPU Usage must be a number')
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800'),
-  network_in: number().typeError('Incoming Traffic must be a number'),
-  network_out: number().typeError('Outbound Traffic must be a number'),
-  transfer_quota: number().typeError('Transfer Quota must be a number'),
-  io: number().typeError('Disk I/O Rate must be a number'),
+  network_in: number().required('Incoming Traffic must be a number'),
+  network_out: number().required('Outbound Traffic must be a number'),
+  transfer_quota: number().required('Transfer Quota must be a number'),
+  io: number().required('Disk I/O Rate must be a number'),
 }).notRequired();
 
 const schedule = object({
@@ -470,7 +470,7 @@ export const UpdateLinodeSchema = object({
     .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
-  alerts,
+  alertsSchema,
   backups,
 });
 

@@ -11,10 +11,11 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-interface Props {
+export interface AlertSectionProps {
   copy: string;
   endAdornment: string;
   error?: string;
+  onBlur: () => void;
   onStateChange: (e: React.ChangeEvent<{}>, checked: boolean) => void;
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   radioInputLabel: string;
@@ -26,7 +27,7 @@ interface Props {
   value: number;
 }
 
-export const AlertSection = (props: Props) => {
+export const AlertSection = (props: AlertSectionProps) => {
   const theme = useTheme();
   const {
     copy,
@@ -34,6 +35,7 @@ export const AlertSection = (props: Props) => {
     error,
     onStateChange,
     onValueChange,
+    onBlur,
     readOnly,
     state,
     textTitle,
@@ -127,6 +129,7 @@ export const AlertSection = (props: Props) => {
           label={textTitle}
           max={Infinity}
           min={0}
+          onBlur={onBlur}
           onChange={onValueChange}
           sx={{
             '.MuiInput-root': {
