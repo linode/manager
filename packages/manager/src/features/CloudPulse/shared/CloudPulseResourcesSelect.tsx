@@ -7,7 +7,11 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
-import type { Filter, FilterValue } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Filter,
+  FilterValue,
+} from '@linode/api-v4';
 
 export interface CloudPulseResources {
   engineType?: string;
@@ -28,7 +32,7 @@ export interface CloudPulseResourcesSelectProps {
   label: string;
   placeholder?: string;
   region?: string;
-  resourceType: string | undefined;
+  resourceType: CloudPulseServiceType | undefined;
   savePreferences?: boolean;
   tags?: string[];
   xFilter?: Filter;

@@ -28,7 +28,7 @@ import type {
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
-  dashboard?: Dashboard | undefined;
+  dashboard: Dashboard;
   duration: DateTimeWithPreset;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
@@ -40,7 +40,7 @@ interface WidgetProps {
   savePref?: boolean;
 }
 
-const renderPlaceHolder = (subtitle: string) => {
+export const renderPlaceHolder = (subtitle: string) => {
   return (
     <GridLegacy item xs>
       <Paper>
@@ -79,7 +79,7 @@ export const RenderWidgets = React.memo(
         errorLabel: 'Error occurred while loading data.',
         isJweTokenFetching: false,
         resources: [],
-        serviceType: dashboard?.service_type ?? '',
+        serviceType: dashboard.service_type,
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
         widget: { ...widget, time_granularity: autoIntervalOption },
@@ -117,7 +117,7 @@ export const RenderWidgets = React.memo(
       }
     };
 
-    if (!dashboard || !dashboard.widgets?.length) {
+    if (!dashboard.widgets?.length) {
       return renderPlaceHolder(
         'No visualizations are available at this moment. Create Dashboards to list here.'
       );
