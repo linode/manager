@@ -5,6 +5,9 @@ import { array, boolean, lazy, mixed, number, object, string } from 'yup';
 
 import { vpcsValidateIP } from './vpcs.schema';
 
+const VPC_INTERFACE_IP_RULE =
+  'A VPC interface must have an IPv4, an IPv6, or both, but not neither.';
+
 // Functions for test validations
 const validateIP = (ipAddress?: null | string) => {
   if (!ipAddress) {
@@ -87,9 +90,51 @@ const IPv6 = string()
     test: (value) => test_vpcsValidateIP(value),
   });
 
-const ipv4ConfigInterface = object({
-  vpc: IPv4,
-  nat_1_1: IPv4,
+const ipv4ConfigInterface = object().when('purpose', {
+  is: 'vpc',
+  then: (schema) =>
+    schema
+      .shape({
+        vpc: IPv4,
+        nat_1_1: lazy((value) =>
+          value === 'any' ? string().notRequired().nullable() : IPv4,
+        ),
+      })
+      .when('ipv6', {
+        is: (value: unknown) => value === null || value === undefined,
+        then: (schema) => schema.required(VPC_INTERFACE_IP_RULE),
+      }),
+  otherwise: (schema) =>
+    schema
+      .nullable()
+      .test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv4.vpc'),
+        /*
+        Workaround to get test to fail if field is populated when it should not be based
+        on purpose (inspired by similar approach in firewalls.schema.ts for ports field).
+        Similarly-structured logic (return typeof xyz === 'undefined') throughout this
+        file serves the same purpose.
+      */
+        test: (value: any) => {
+          if (value?.vpc) {
+            return typeof value.vpc === 'undefined';
+          }
+
+          return true;
+        },
+      })
+      .test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv4.nat_1_1'),
+        test: (value: any) => {
+          if (value?.nat_1_1) {
+            return typeof value.nat_1_1 === 'undefined';
+          }
+
+          return true;
+        },
+      }),
 });
 
 const slaacSchema = object().shape({
@@ -124,9 +169,7 @@ const ipv6Interface = object({
     }),
   ranges: array().of(VPCInterfaceIPv6RangeSchema),
   is_public: boolean(),
-})
-  .notRequired()
-  .nonNullable();
+}).notRequired();
 
 // This is the validation schema for legacy interfaces attached to configuration profiles
 // For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
@@ -226,7 +269,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
           }),
     }),
     ipv4: ipv4ConfigInterface,
-    ipv6: ipv6Interface,
+    ipv6: ipv6Interface.nonNullable(),
     ip_ranges: array()
       .of(string().defined())
       .notRequired()

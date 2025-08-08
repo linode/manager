@@ -195,14 +195,6 @@ export interface IPv6SLAAC {
   range: string;
 }
 
-export interface ConfigInterfaceIPv6 {
-  is_public?: boolean;
-  ranges?: {
-    range: string;
-  }[];
-  slaac?: IPv6SLAAC[];
-}
-
 // The legacy interface type - for Configuration Profile Interfaces
 export interface Interface {
   active: boolean;
@@ -210,7 +202,7 @@ export interface Interface {
   ip_ranges?: string[];
   ipam_address: null | string;
   ipv4?: ConfigInterfaceIPv4;
-  ipv6?: ConfigInterfaceIPv6;
+  ipv6?: IPv6Interface;
   label: null | string;
   primary?: boolean;
   purpose: InterfacePurpose;
@@ -225,7 +217,7 @@ export interface InterfacePayload {
    */
   ipam_address?: null | string;
   ipv4?: ConfigInterfaceIPv4;
-  ipv6?: ConfigInterfaceIPv6;
+  ipv6?: Partial<IPv6Interface>;
   /**
    * Required to specify a VLAN
    */
@@ -301,14 +293,13 @@ export interface LinodeInterfaces {
   interfaces: LinodeInterface[];
 }
 
-export interface LinodeInterfaceIPv6 {
+export interface IPv6Interface {
   is_public: boolean;
   ranges: {
     range: string;
   }[];
   slaac: IPv6SLAAC[];
 }
-
 export interface VPCInterfaceData {
   ipv4?: {
     addresses: {
@@ -318,7 +309,7 @@ export interface VPCInterfaceData {
     }[];
     ranges: { range: string }[];
   };
-  ipv6?: LinodeInterfaceIPv6;
+  ipv6?: IPv6Interface;
   subnet_id: number;
   vpc_id: number;
 }
