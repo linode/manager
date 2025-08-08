@@ -51,6 +51,16 @@ jobs:
           echo "Matrix user index: ${{ matrix.user.index }}"
           echo "Matrix user name: ${{ matrix.user.name }}"
           echo "Secret value (masked): ${{ secrets[matrix.user.name] }}"
+      - name: Check secret presence safely
+        shell: bash
+        run: |
+          key='${{ matrix.user.name }}'
+          val='${{ secrets[matrix.user.name] }}'
+          if [ -z "$val" ]; then
+            echo "Secret $key is NOT available to this job"
+            exit 1
+          fi
+          echo "Secret $key exists. Length: ${#val}"
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
