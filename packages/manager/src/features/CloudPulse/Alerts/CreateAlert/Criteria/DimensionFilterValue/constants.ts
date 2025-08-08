@@ -1,3 +1,5 @@
+import { PORTS_HELPER_TEXT } from 'src/features/CloudPulse/Utils/constants';
+
 import {
   CONFIG_ERROR_MESSAGE,
   CONFIG_ID_PLACEHOLDER_TEXT,
@@ -130,14 +132,14 @@ export const valueFieldConfig: ValueFieldConfigMap = {
       type: 'textfield',
       inputType: 'text',
       placeholder: PORTS_PLACEHOLDER_TEXT,
-      helperText: PORT_HELPER_TEXT,
+      helperText: PORTS_HELPER_TEXT,
     },
     '*': {
       type: 'textfield',
       inputType: 'number',
     },
   },
-  linode_id: {
+  parent_vm_entity_id: {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
@@ -195,6 +197,24 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     '*': {
       type: 'textfield',
       inputType: 'number',
+    },
+  },
+  emptyValue: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
     },
   },
   '*': {

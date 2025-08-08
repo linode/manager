@@ -118,9 +118,9 @@ describe('Utils', () => {
 
   describe('getFirewallLinodes', () => {
     it('should merge and flatten entities into options', () => {
-      const resources = [
+      const resources: Record<'entities', Record<string, string>>[] = [
         { entities: { '123': 'linode1' } },
-        { entities: { '123': 'linode2' } },
+        { entities: { '456': 'linode2' } },
       ];
       expect(getFirewallLinodes(resources)).toEqual([
         { label: 'linode1', value: '123' },

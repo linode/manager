@@ -50,6 +50,7 @@ describe('<ValueFieldRenderer />', () => {
       ...defaultProps,
       dimensionLabel: 'protocol', // assuming this maps to autocomplete
       operator: IN,
+      values: ['tcp', 'udp'],
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
@@ -97,6 +98,7 @@ describe('<ValueFieldRenderer />', () => {
       dimensionLabel: 'protocol',
       operator: IN,
       onChange,
+      values: ['tcp', 'udp'],
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);

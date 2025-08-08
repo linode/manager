@@ -11,6 +11,7 @@ import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
 import { useFetchOptions } from './useFetchOptions';
 import { getOperatorGroup } from './utils';
 
+import type { OperatorGroup, ValueFieldConfig } from './constants';
 import type { DimensionFilterOperatorType } from '@linode/api-v4';
 
 interface ValueFieldRendererProps {
@@ -79,9 +80,18 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
+  let dimensionConfig: Record<OperatorGroup, ValueFieldConfig>;
 
-  const dimensionConfig =
-    valueFieldConfig[dimensionLabel ?? '*'] ?? valueFieldConfig['*'];
+  if (dimensionLabel && valueFieldConfig[dimensionLabel]) {
+    // 1. Use dimension-specific config if available
+    dimensionConfig = valueFieldConfig[dimensionLabel];
+  } else if (!values || values.length === 0) {
+    // 2. No dimension-specific config & no values → use emptyValue
+    dimensionConfig = valueFieldConfig['emptyValue'];
+  } else {
+    // 3. No dimension-specific config & values present → use *
+    dimensionConfig = valueFieldConfig['*'];
+  }
 
   const config = dimensionConfig[operatorGroup];
   const items = useFetchOptions({ dimensionLabel, values, entities });

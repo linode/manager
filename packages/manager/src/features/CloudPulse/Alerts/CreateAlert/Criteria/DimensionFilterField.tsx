@@ -3,6 +3,7 @@ import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
+
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 import { ValueFieldRenderer } from './DimensionFilterValue/ValueFieldRenderer';
