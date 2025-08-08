@@ -45,12 +45,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - run: echo "Hello World"
+      - run: echo "Hello World!"
       - name: Debug matrix.user.name mapping
         run: |
           echo "Matrix user index: ${{ matrix.user.index }}"
           echo "Matrix user name: ${{ matrix.user.name }}"
-          echo "Secret value (masked): ${{ secrets[matrix.user.name] }}"
+          echo "Secret value (masked): ${{ env[matrix.user.name] }}"
       - name: Check secret presence safely
         shell: bash
         run: |
