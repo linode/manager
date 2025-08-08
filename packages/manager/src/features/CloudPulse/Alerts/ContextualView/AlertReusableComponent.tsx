@@ -8,9 +8,8 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
@@ -87,7 +86,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
 
   const { aclpBetaServices } = useFlags();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Filter unique alert types from alerts list
   const types = convertAlertsToTypeSet(alerts);
@@ -109,7 +108,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               buttonType="outlined"
               data-qa-buttons="true"
               data-testid="manage-alerts"
-              onClick={() => history.push('/alerts/definitions')}
+              onClick={() => navigate({ to: '/alerts/definitions' })}
             >
               Manage Alerts
             </Button>
