@@ -11,7 +11,7 @@ import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
 import { TransferControls } from './TransferControls';
 
-import type { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import type { EntityTransfer } from '@linode/api-v4';
 
 export const EntityTransfersLanding = () => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);

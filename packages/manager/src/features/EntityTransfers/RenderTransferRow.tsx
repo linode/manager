@@ -18,9 +18,7 @@ import {
 } from './RenderTransferRow.styles';
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
 
-import type { PermissionType } from '@linode/api-v4';
-import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-
+import type { PermissionType, TransferEntities } from '@linode/api-v4';
 interface Props {
   created: string;
   entities: TransferEntities;

@@ -19,7 +19,7 @@ import {
   StyledTypography,
 } from './CreateTransferSuccessDialog.styles';
 
-import type { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
+import type { EntityTransfer } from '@linode/api-v4';
 
 const debouncedSendEntityTransferCopyTokenEvent = debounce(
   10 * 1000,
