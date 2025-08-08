@@ -156,8 +156,8 @@ export const AlertInformationActionTable = (
 
   // To send initial state of alerts through toggle handler function
   React.useEffect(() => {
-    if (onToggleAlert) {
-      onToggleAlert(enabledAlerts, hasUnsavedChanges);
+    if (!isEditMode && onToggleAlert) {
+      onToggleAlert(enabledAlerts);
     }
   }, []);
 
