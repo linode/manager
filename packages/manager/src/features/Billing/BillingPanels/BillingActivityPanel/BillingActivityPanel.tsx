@@ -6,7 +6,7 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { Autocomplete, Typography } from '@linode/ui';
+import { Autocomplete, Notice, Typography, WarningIcon } from '@linode/ui';
 import { getAll, useSet } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -37,6 +37,7 @@ import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -199,6 +200,17 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     preferenceKey: 'billing-activity-order',
   });
 
+  const { data: permissions } = usePermissions('account', [
+    'list_billing_payments', // GET https://api.linode.com/v4/account/payments
+    'list_billing_invoices', // GET https://api.linode.com/v4/account/invoices
+    'list_invoice_items', // GET https://api.linode.com/v4/account/invoices/{invoiceId}/items
+    // view_account ?
+    // view_profile >
+  ]);
+
+  const canViewInvoices = permissions.list_billing_invoices;
+  const canViewPayments = permissions.list_billing_payments;
+
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();
   const flags = useFlags();
@@ -218,13 +230,13 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     data: payments,
     error: accountPaymentsError,
     isLoading: accountPaymentsLoading,
-  } = useAllAccountPayments({}, filter);
+  } = useAllAccountPayments({}, filter, canViewPayments);
 
   const {
     data: invoices,
     error: accountInvoicesError,
     isLoading: accountInvoicesLoading,
-  } = useAllAccountInvoices({}, filter);
+  } = useAllAccountInvoices({}, filter, canViewInvoices);
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
@@ -356,7 +368,19 @@ export const BillingActivityPanel = React.memo((props: Props) => {
       return (
         <TableRowEmpty
           colSpan={NUM_COLS}
-          message="No Billing & Payment History found."
+          message={
+            canViewInvoices && canViewPayments ? (
+              'No Billing & Payment History found.'
+            ) : (
+              <>
+                <WarningIcon
+                  style={{ position: 'relative', top: 4, marginRight: 2 }}
+                  width={16}
+                />{' '}
+                You do not have permission to view billing or payment history.
+              </>
+            )
+          }
         />
       );
     }
@@ -457,6 +481,16 @@ export const BillingActivityPanel = React.memo((props: Props) => {
             />
           </div>
         </StyledBillingAndPaymentHistoryHeader>
+        {(!canViewInvoices || !canViewPayments) &&
+        !(!canViewInvoices && !canViewPayments) ? (
+          <Notice
+            spacingBottom={20}
+            text={`You do not have permission to view ${
+              canViewInvoices ? 'payments' : 'invoices'
+            } history.`}
+            variant="error"
+          />
+        ) : null}
         <Table aria-label="List of Invoices and Payments" sx={{ border: 0 }}>
           <TableHead>
             <TableRow>
