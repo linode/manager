@@ -45,7 +45,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - run: echo "Hello World"
+      - run: echo "Hello World123"
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
@@ -57,10 +57,8 @@ jobs:
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
           echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}" >> ./packages/manager/.env
           echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}" >> ./packages/manager/.env
-      - name: Log matrix values
-        run: |
-          echo "Matrix user index: ${{ matrix.user.index }}"
-          echo "Matrix user name: ${{ matrix.user.name }}"
+      - name: Log MANAGER_OAUTH value (masked)
+        run: echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
