@@ -9,13 +9,13 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { StreamCreateDelivery } from './StreamCreateDelivery';
+import { StreamFormDelivery } from './StreamFormDelivery';
 
 const loadingTestId = 'circle-progress';
 
 const mockDestinations = destinationFactory.buildList(5);
 
-describe('StreamCreateDelivery', () => {
+describe('StreamFormDelivery', () => {
   beforeEach(async () => {
     server.use(
       http.get('*/monitor/streams/destinations', () => {
@@ -26,7 +26,7 @@ describe('StreamCreateDelivery', () => {
 
   it('should render disabled Destination Type input with proper selection', async () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamCreateDelivery />,
+      component: <StreamFormDelivery />,
       useFormOptions: {
         defaultValues: {
           destination: {
@@ -50,7 +50,7 @@ describe('StreamCreateDelivery', () => {
 
   it('should render Destination Name input and allow to select an existing option', async () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamCreateDelivery />,
+      component: <StreamFormDelivery />,
       useFormOptions: {
         defaultValues: {
           destination: {
@@ -81,7 +81,7 @@ describe('StreamCreateDelivery', () => {
 
   const renderComponentAndAddNewDestinationName = async () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamCreateDelivery />,
+      component: <StreamFormDelivery />,
       useFormOptions: {
         defaultValues: {
           destination: {

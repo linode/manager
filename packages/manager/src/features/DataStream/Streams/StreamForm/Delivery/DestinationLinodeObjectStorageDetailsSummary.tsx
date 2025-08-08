@@ -1,0 +1,26 @@
+import { useRegionsQuery } from '@linode/queries';
+import React from 'react';
+
+import { LabelValue } from 'src/features/DataStream/Shared/LabelValue';
+
+import type { LinodeObjectStorageDetails } from '@linode/api-v4';
+
+export const DestinationLinodeObjectStorageDetailsSummary = (
+  props: LinodeObjectStorageDetails
+) => {
+  const { bucket_name, host, region, path } = props;
+  const { data: regions } = useRegionsQuery();
+
+  const regionValue = regions?.find(({ id }) => id === region)?.label || region;
+
+  return (
+    <>
+      <LabelValue label="Host" value={host} />
+      <LabelValue label="Bucket" value={bucket_name} />
+      <LabelValue label="Region" value={regionValue} />
+      <LabelValue label="Access Key ID" value="*****************" />
+      <LabelValue label="Secret Access Key" value="*****************" />
+      <LabelValue label="Log Path" value={path} />
+    </>
+  );
+};
