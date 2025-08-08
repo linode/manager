@@ -45,22 +45,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - run: echo "Hello World!2"
-      - name: Debug matrix.user.name mapping
-        run: |
-          echo "Matrix user index: ${{ matrix.user.index }}"
-          echo "Matrix user name: ${{ matrix.user.name }}"
-          echo "Secret value (masked): ${{ env[matrix.user.name] }}"
-      - name: Check secret presence safely
-        shell: bash
-        run: |
-          key='${{ matrix.user.name }}'
-          val='${{ secrets[matrix.user.name] }}'
-          if [ -z "$val" ]; then
-            echo "Secret $key is NOT available to this job"
-            exit 1
-          fi
-          echo "Secret $key exists. Length: ${#val}"
+      - run: echo "Hello World"
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
@@ -70,7 +55,7 @@ jobs:
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
-          echo "MANAGER_OAUTH=${{ secrets[matrix.user.name] }}" >> ./packages/manager/.env
+          echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}" >> ./packages/manager/.env
           echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}" >> ./packages/manager/.env
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
