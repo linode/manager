@@ -39,8 +39,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeRegionDisplay,
     linodeTags,
   } = props;
-
-  const { data: permissions } = usePermissions('account', ['update_account']);
+  const { data: permissions } = usePermissions('linode', ['update_linode']);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
@@ -143,7 +142,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
-          disabled={!permissions.update_account}
+          disabled={!permissions.update_linode}
           entityLabel={linodeLabel}
           sx={{
             width: '100%',
