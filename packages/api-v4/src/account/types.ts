@@ -585,7 +585,7 @@ export interface AccountMaintenance {
   not_before: string;
   reason: string;
   source: 'platform' | 'user';
-  start_time: null | string;
+  start_time: string;
   status:
     | 'canceled'
     | 'completed'
