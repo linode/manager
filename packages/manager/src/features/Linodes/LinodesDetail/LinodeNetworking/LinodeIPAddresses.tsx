@@ -96,6 +96,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const [isViewRDNSDialogOpen, setIsViewRDNSDialogOpen] = React.useState(false);
   const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(false);
 
+  const ipAddressesTableRef = React.useRef<HTMLTableElement>(null);
+
+  React.useEffect(() => {
+    if (ipAddressesTableRef.current && location.hash === `#${ipTableId}`) {
+      ipAddressesTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.hash]);
+
   const openRemoveIPDialog = (ip: IPAddress) => {
     setSelectedIP(ip);
     setIsDeleteIPDialogOpen(true);
@@ -230,7 +239,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
-      <Table aria-label="Linode IP Addresses" id={ipTableId}>
+      <Table
+        aria-label="Linode IP Addresses"
+        id={ipTableId}
+        ref={ipAddressesTableRef}
+      >
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: '15%' }}>Address</TableCell>
