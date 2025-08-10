@@ -285,23 +285,23 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Quotas',
-                to: '/account/quotas', // TODO: replace with '/billing' when flat route is added
+                to: '/account/quotas', // TODO: replace with '/quotas' when flat route is added
               },
               {
                 display: 'Login History',
-                to: '/account/login-history', // TODO: replace with '/billing' when flat route is added
+                to: '/account/login-history', // TODO: replace with '/login-history' when flat route is added
               },
               {
                 display: 'Service Transfers',
-                to: '/account/service-transfers', // TODO: replace with '/billing' when flat route is added
+                to: '/account/service-transfers', // TODO: replace with '/service-transfers' when flat route is added
               },
               {
                 display: 'Maintenance',
-                to: '/account/maintenance', // TODO: replace with '/billing' when flat route is added
+                to: '/account/maintenance', // TODO: replace with '/maintenance' when flat route is added
               },
               {
                 display: 'Settings',
-                to: '/account/settings', // TODO: replace with '/billing' when flat route is added
+                to: '/account/settings', // TODO: replace with '/settings' when flat route is added
               },
             ],
             name: 'Administration',
