@@ -5,15 +5,16 @@ import {
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
 } from '@linode/utilities'; // `link.ts` utils from @linode/utilities
-import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Link as RouterLink } from 'react-router-dom';
-import type { LinkProps as _LinkProps } from 'react-router-dom';
+import { Link as RouterLink } from '@tanstack/react-router';
+import * as React from 'react';
 
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { useStyles } from 'src/components/Link.styles';
 
-import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
+import type { LinkProps as _LinkProps } from '@tanstack/react-router';
+
+type To = _LinkProps['to'] | (string & {});
 
 export interface LinkProps extends Omit<_LinkProps, 'to'> {
   /**
@@ -26,6 +27,10 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    * @default false
    */
   bypassSanitization?: boolean;
+  /**
+   * Optional prop to pass a className to the link.
+   */
+  className?: string;
   /**
    * Optional prop to render the link as an external link, which features an external link icon, opens in a new tab<br />
    * and provides by default "noopener noreferrer" attributes to prevent security vulnerabilities.
@@ -45,14 +50,21 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    */
   hideIcon?: boolean;
   /**
-   * The Link's destination.
-   * We are overwriting react-router-dom's `to` type because they allow objects, functions, and strings.
-   * We want to keep our `to` prop simple so that we can easily read and sanitize it.
-   *
-   * @example "/profile/display"
-   * @example "https://linode.com"
+   * Optional prop to pass a onClick handler to the link.
    */
-  to: Exclude<(string & {}) | TanStackLinkProps['to'], null | undefined>;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /**
+   * Optional prop to pass a sx style to the link.
+   */
+  style?: React.CSSProperties;
+  /**
+   * Optional prop to pass a title to the link.
+   */
+  title?: string;
+  /**
+   * The destination URL. Can be a relative path for internal navigation or an absolute URL for external links.
+   */
+  to?: To;
 }
 
 /**
@@ -87,18 +99,27 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       forceCopyColor,
       hideIcon,
       onClick,
+      style,
+      title,
       to,
     } = props;
     const { classes, cx } = useStyles();
-    const processedUrl = () => (bypassSanitization ? to : sanitizeUrl(to));
+    const processedUrl = () => {
+      if (!to) return '';
+      return bypassSanitization ? to : sanitizeUrl(to);
+    };
     const shouldOpenInNewTab = opensInNewTab(processedUrl());
-    const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
+    const resolvedChildren =
+      typeof children === 'function'
+        ? children({ isActive: false, isTransitioning: false })
+        : children;
+    const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(resolvedChildren);
     const externalNotice = '- link opens in a new tab';
     const ariaLabel = accessibleAriaLabel
       ? `${accessibleAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`
       : `${childrenAsAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`;
 
-    if (childrenContainsNoText(children) && !accessibleAriaLabel) {
+    if (childrenContainsNoText(resolvedChildren) && !accessibleAriaLabel) {
       // eslint-disable-next-line no-console
       console.error(
         'Link component must have text content to be accessible to screen readers. Please provide an accessibleAriaLabel prop or text content.'
@@ -127,9 +148,11 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
         onClick={onClick}
         ref={ref}
         rel="noopener noreferrer"
+        style={style}
         target="_blank"
+        title={title}
       >
-        {children}
+        {resolvedChildren}
         {external && !hideIcon && (
           <span
             className={cx(classes.iconContainer, {
@@ -153,7 +176,9 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           className
         )}
         ref={ref}
-        to={to as string}
+        style={style}
+        title={title}
+        {...(to && !shouldOpenInNewTab ? { to: to as _LinkProps['to'] } : {})}
       />
     );
   }
