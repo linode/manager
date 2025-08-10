@@ -3,9 +3,8 @@ import {
   useNodeBalancerQuery,
   useNodeBalancersFirewallsQuery,
 } from '@linode/queries';
-import { Box, CircleProgress } from '@linode/ui';
+import { Box, CircleProgress, Typography } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

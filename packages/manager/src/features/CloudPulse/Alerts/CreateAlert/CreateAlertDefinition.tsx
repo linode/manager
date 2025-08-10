@@ -38,6 +38,7 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type { APIError } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -66,16 +67,11 @@ const initialValues: CreateAlertDefinitionForm = {
   scope: 'entity',
 };
 
-const overrides = [
+const overrides: CrumbOverridesProps[] = [
   {
     label: 'Definitions',
     linkTo: '/alerts/definitions',
     position: 1,
-  },
-  {
-    label: 'Details',
-    linkTo: `/alerts/definitions/create`,
-    position: 2,
   },
 ];
 export const CreateAlertDefinition = () => {
