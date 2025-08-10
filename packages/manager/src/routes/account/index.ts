@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
@@ -27,8 +27,11 @@ const accountTabsRoute = createRoute({
 
 const accountBillingRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
-  path: '/billing',
+  path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
+  beforeLoad: () => {
+    redirect({ to: '/billing' });
+  },
 }).lazy(() =>
   import('src/features/Billing/billingDetailLazyRoute').then(
     (m) => m.billingDetailLazyRoute

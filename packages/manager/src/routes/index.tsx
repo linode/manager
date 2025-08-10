@@ -8,6 +8,7 @@ import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';
 import { betaRouteTree } from './betas';
+import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
 import { dataStreamRouteTree } from './datastream';
 import { domainsRouteTree } from './domains';
@@ -44,6 +45,7 @@ const indexRoute = createRoute({
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
+  billingRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
@@ -93,6 +95,7 @@ declare module '@tanstack/react-router' {
  */
 export const migrationRouteTree = migrationRootRoute.addChildren([
   accountRouteTree,
+  billingRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
