@@ -22,7 +22,7 @@ const billingIndexRoute = createRoute({
   getParentRoute: () => billingRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/BillingLanding/billingLandingLazyRoute').then(
+  import('src/features/Billing/BillingLanding/billingLandingLazyRoute').then(
     (m) => m.billingLandingLazyRoute
   )
 );

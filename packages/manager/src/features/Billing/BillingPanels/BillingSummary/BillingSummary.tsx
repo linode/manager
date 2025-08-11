@@ -7,6 +7,7 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -34,6 +35,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     'create_promo_code',
   ]);
 
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
 
@@ -51,7 +54,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   const navigate = useNavigate();
-  const search = useSearch({ from: '/account/billing' });
+  const search = useSearch({
+    from: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+  });
   const { paymentMethodId } = search;
 
   const makePaymentRouteMatch = search.action === 'make-payment';
@@ -74,7 +79,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const closePaymentDrawer = React.useCallback(() => {
     setPaymentDrawerOpen(false);
     setSelectedPaymentMethod(undefined);
-    navigate({ to: '/account/billing' });
+    navigate({
+      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+    });
   }, [navigate]);
 
   const openPromoDialog = () => setIsPromoDialogOpen(true);
@@ -131,7 +138,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         <Button
           onClick={() =>
             navigate({
-              to: '/account/billing',
+              to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
               search: (prev) => ({
                 ...prev,
                 action: 'make-payment',

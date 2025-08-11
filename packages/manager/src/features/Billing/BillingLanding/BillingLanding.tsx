@@ -12,10 +12,11 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
-import { SwitchAccountButton } from '../Account/SwitchAccountButton';
-import { SwitchAccountDrawer } from '../Account/SwitchAccountDrawer';
-import { usePermissions } from '../IAM/hooks/usePermissions';
+import { PlatformMaintenanceBanner } from '../../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
+import { SwitchAccountButton } from '../../Account/SwitchAccountButton';
+import { SwitchAccountDrawer } from '../../Account/SwitchAccountDrawer';
+import { usePermissions } from '../../IAM/hooks/usePermissions';
+import { BillingDetailV2 } from '../BillingDetailV2';
 
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
@@ -106,8 +107,9 @@ export const BillingLanding = () => {
     <>
       <PlatformMaintenanceBanner pathname={location.pathname} />
       <MaintenanceBannerV2 pathname={location.pathname} />
-      <DocumentTitleSegment segment="Account Settings" />
+      <DocumentTitleSegment segment="Billing" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
+      <BillingDetailV2 />
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
