@@ -41,8 +41,6 @@ export interface MetricDetails {
   threshold: string;
 }
 
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
-
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegions = [
