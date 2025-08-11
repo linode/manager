@@ -17,7 +17,8 @@ import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
 import type { AlertRegion } from './DisplayAlertRegions';
-import type { AlertServiceType, Filter } from '@linode/api-v4';
+import type { AlertServiceType } from '@linode/api-v4';
+import { RESOURCE_FILTER_MAP } from '../../Utils/constants';
 
 interface AlertRegionsProps {
   /**
@@ -48,19 +49,11 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
-
-  const resourceFilterMap: Record<string, Filter> = {
-    dbaas: {
-      platform: 'rdbms-default',
-    },
-  };
   const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
-    {
-      ...(resourceFilterMap[serviceType ?? ''] ?? {}),
-    }
+    { ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}) }
   );
 
   const handleSelectionChange = React.useCallback(

@@ -1,4 +1,4 @@
-import { Button, ErrorState, Typography } from '@linode/ui';
+import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -30,7 +30,10 @@ import {
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { type CloudPulseServiceTypeFilters } from '../Utils/models';
 
-import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type {
+  CloudPulseMetricsFilter,
+  FilterValueType,
+} from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -54,6 +57,16 @@ export interface CloudPulseDashboardFilterBuilderProps {
   ) => void;
 
   handleToggleAppliedFilter: (isVisible: boolean) => void;
+
+  /**
+   * Is cluster Call
+   */
+  isError?: boolean;
+
+  /**
+   * Property to disable filters
+   */
+  isLoading?: boolean;
 
   /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
@@ -80,19 +93,18 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isServiceAnalyticsIntegration,
       preferences,
       resource_ids,
+      isError = false,
+      isLoading = false,
     } = props;
 
-    const [, setDependentFilters] = React.useState<{
-      [key: string]: FilterValueType;
-    }>({});
+    const [, setDependentFilters] = React.useState<CloudPulseMetricsFilter>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
 
     const theme = useTheme();
 
-    const dependentFilterReference: React.MutableRefObject<{
-      [key: string]: FilterValueType;
-    }> = React.useRef({});
+    const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> =
+      React.useRef({});
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
@@ -261,6 +273,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              shouldDisable: isError || isLoading,
             },
             handleTagsChange
           );
@@ -272,6 +285,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               dependentFilters: dependentFilterReference.current,
+              shouldDisable: isError || isLoading,
             },
             handleRegionChange
           );
@@ -283,6 +297,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              shouldDisable: isError || isLoading,
             },
             handleResourceChange
           );
@@ -299,8 +314,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               resource_ids: resource_ids?.length
                 ? resource_ids
                 : (
-                    dependentFilterReference.current[RESOURCE_ID] as string[]
-                  )?.map((id: string) => Number(id)),
+                  dependentFilterReference.current[RESOURCE_ID] as string[]
+                )?.map((id: string) => Number(id)),
+              shouldDisable: isError || isLoading,
             },
             handleNodeTypeChange
           );
@@ -317,6 +333,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: resource_ids?.length
                 ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
+              shouldDisable: isError || isLoading,
             },
             handleTextFilterChange
           );
@@ -330,6 +347,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              shouldDisable: isError || isLoading,
             },
             handleCustomSelectChange
           );
@@ -345,6 +363,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
         preferences,
+        isError,
+        isLoading,
       ]
     );
 
@@ -438,21 +458,32 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             <Typography variant="h3">Filters</Typography>
           </Button>
         </GridLegacy>
-        <GridLegacy
-          columnSpacing={theme.spacing(2)}
-          container
-          item
-          sx={{
-            display: showFilter ? 'flex' : 'none',
-            maxHeight: theme.spacing(23),
-            overflow: 'auto',
-            pr: { sm: 0, xs: 2 },
-            rowGap: theme.spacing(2),
-          }}
-          xs={12}
-        >
-          <RenderFilters />
-        </GridLegacy>
+        {isLoading ? (
+          <GridLegacy
+            alignItems="center"
+            container
+            display="flex"
+            justifyContent="center"
+          >
+            <CircleProgress size="md" />
+          </GridLegacy>
+        ) : (
+          <GridLegacy
+            columnSpacing={theme.spacingFunction(16)}
+            container
+            item
+            sx={{
+              display: showFilter ? 'flex' : 'none',
+              maxHeight: '184px',
+              overflow: 'auto',
+              pr: { sm: 0, xs: 2 },
+              rowGap: theme.spacingFunction(16),
+            }}
+            xs={12}
+          >
+            <RenderFilters />
+          </GridLegacy>
+        )}
       </GridLegacy>
     );
   },
@@ -466,6 +497,8 @@ function compareProps(
   return (
     oldProps.dashboard?.id === newProps.dashboard?.id &&
     oldProps.preferences?.[DASHBOARD_ID] ===
-      newProps.preferences?.[DASHBOARD_ID]
+      newProps.preferences?.[DASHBOARD_ID] &&
+    oldProps.isLoading === newProps.isLoading &&
+    oldProps.isError === newProps.isError
   );
 }

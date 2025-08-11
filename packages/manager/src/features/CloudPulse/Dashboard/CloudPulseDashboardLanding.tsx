@@ -18,12 +18,15 @@ export interface FilterData {
   id: { [filterKey: string]: FilterValueType };
   label: { [filterKey: string]: string[] };
 }
+export interface CloudPulseMetricsFilter {
+  [key: string]: FilterValueType;
+}
 export interface DashboardProp {
   dashboard?: Dashboard;
   filterValue: {
     [key: string]: FilterValueType;
   };
-  timeDuration?: DateTimeWithPreset;
+  timeDuration?: CloudPulseMetricsFilter;
 }
 
 export const CloudPulseDashboardLanding = () => {

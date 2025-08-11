@@ -9,8 +9,12 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
-import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
+import {
+  renderPlaceHolder,
+  RenderWidgets,
+} from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
@@ -89,7 +93,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
   );
 
   const {
