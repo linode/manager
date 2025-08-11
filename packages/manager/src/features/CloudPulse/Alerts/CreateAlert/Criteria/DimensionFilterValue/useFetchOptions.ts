@@ -26,7 +26,7 @@ interface FetchOptionsProps {
   /**
    * Static list of value strings to be converted to autocomplete options.
    */
-  values: null | string[];
+  values?: null | string[];
 }
 
 /**
@@ -39,7 +39,7 @@ export function useFetchOptions(
   const { dimensionLabel, values, entities } = props;
 
   // Create static options if a predefined list of strings is provided
-  const staticOptions = useMemo(() => getStaticOptions(values), [values]);
+  const staticOptions = useMemo(() => getStaticOptions(values ?? []), [values]);
 
   // Fetch all firewall resources when dimension requires it
   const { data: firewallResources } = useResourcesQuery(

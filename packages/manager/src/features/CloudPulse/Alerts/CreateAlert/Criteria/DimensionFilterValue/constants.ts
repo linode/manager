@@ -10,9 +10,9 @@ import {
   PORTS_PLACEHOLDER_TEXT,
 } from '../../../constants';
 
-export const MULTISELECT_PLACEHOLDER_TEXT = 'Select values';
-export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a value';
-export const SINGLESELECT_PLACEHOLDER_TEXT = 'Select a value';
+export const MULTISELECT_PLACEHOLDER_TEXT = 'Select Values';
+export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a Value';
+export const SINGLESELECT_PLACEHOLDER_TEXT = 'Select a Value';
 
 /**
  * Type definition for the value field renderer props.
