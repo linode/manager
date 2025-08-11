@@ -143,6 +143,9 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
+          // A restricted user can technically add tags to a Linode if they have read-write permission on the Linode,
+          // but for the sake of the user experience, we choose to disable the "Add a tag" button in the UI because
+          // restricted users can't see account tags using GET /v4/tags
           disabled={!permissions.is_account_admin}
           entityLabel={linodeLabel}
           sx={{
