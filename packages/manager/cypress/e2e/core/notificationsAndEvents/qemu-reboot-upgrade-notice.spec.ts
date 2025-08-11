@@ -79,11 +79,11 @@ describe('QEMU reboot upgrade notification', () => {
       }),
     ];
     const formattedTime = upcomingMaintenance[0].start_time
-      ? formatDate(upcomingMaintenance[0].start_time, {
+      ? `at ${formatDate(upcomingMaintenance[0].start_time, {
           timezone: mockProfile.timezone,
-        })
-      : 'unknown time';
-    const maintenanceTooltipText = `This Linode’s maintenance window opens at ${formattedTime}. For more information, see your open support tickets.`;
+        })}`
+      : 'soon';
+    const maintenanceTooltipText = `This Linode’s maintenance window opens ${formattedTime}. For more information, see your open support tickets.`;
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetLinodes(mockLinodes).as('getLinodes');
