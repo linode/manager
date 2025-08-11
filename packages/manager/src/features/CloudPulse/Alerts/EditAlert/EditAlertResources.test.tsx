@@ -1,9 +1,7 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -160,15 +158,12 @@ describe('EditAlertResources component tests', () => {
       reset: vi.fn(),
     });
 
-    const push = vi.fn();
-    const history = createMemoryHistory(); // Create a memory history for testing
-    history.push = push;
-    history.push('/alerts/definitions/edit/linode/1');
-
     const { getByTestId, getByText } = renderWithTheme(
-      <Router history={history}>
-        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
-      </Router>
+      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />,
+      {
+        initialEntries: ['/alerts/definitions/edit/linode/1'],
+        initialRoute: '/alerts/definitions/edit/linode/1',
+      }
     );
 
     expect(getByTestId(saveResources)).toBeInTheDocument();
