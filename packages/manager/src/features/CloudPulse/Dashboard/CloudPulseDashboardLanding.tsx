@@ -23,10 +23,8 @@ export interface CloudPulseMetricsFilter {
 }
 export interface DashboardProp {
   dashboard?: Dashboard;
-  filterValue: {
-    [key: string]: FilterValueType;
-  };
-  timeDuration?: CloudPulseMetricsFilter;
+  filterValue: CloudPulseMetricsFilter;
+  timeDuration?: DateTimeWithPreset;
 }
 
 export const CloudPulseDashboardLanding = () => {

@@ -135,6 +135,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return <CircleProgress />;
   }
 
+  if (!dashboard) {
+    return renderPlaceHolder(
+      'No visualizations are available at this moment. Create Dashboards to list here.'
+    );
+  }
+
   return (
     <RenderWidgets
       additionalFilters={additionalFilters}

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { PRIMARY_NODE } from '../Utils/constants';
+import { PRIMARY_NODE, RESOURCE_FILTER_MAP } from '../Utils/constants';
 
 import type { FilterValue } from '@linode/api-v4';
 

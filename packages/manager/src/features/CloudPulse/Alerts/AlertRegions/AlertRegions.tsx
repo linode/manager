@@ -6,6 +6,7 @@ import React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { RESOURCE_FILTER_MAP } from '../../Utils/constants';
 import {
   type AlertFormMode,
   REGION_GROUP_INFO_MESSAGE,
@@ -17,8 +18,7 @@ import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
 import type { AlertRegion } from './DisplayAlertRegions';
-import type { AlertServiceType } from '@linode/api-v4';
-import { RESOURCE_FILTER_MAP } from '../../Utils/constants';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface AlertRegionsProps {
   /**
@@ -36,7 +36,7 @@ interface AlertRegionsProps {
   /**
    * The service type for which the regions are being selected.
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
   /**
    * The selected regions.
    */
