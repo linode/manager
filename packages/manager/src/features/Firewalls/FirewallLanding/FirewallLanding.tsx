@@ -16,8 +16,8 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -34,14 +34,20 @@ const preferenceKey = 'firewalls';
 const FirewallLanding = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const pagination = usePagination(1, preferenceKey);
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const pagination = usePaginationV2({
+    currentRoute: '/firewalls',
+    preferenceKey,
+  });
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/firewalls',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey,
+  });
 
   const filter = {
     ['+order']: order,
@@ -72,7 +78,7 @@ const FirewallLanding = () => {
     (firewall) => firewall.id === selectedFirewallId
   );
 
-  const { permissions } = usePermissions('account', ['create_firewall']);
+  const { data: permissions } = usePermissions('account', ['create_firewall']);
 
   const openModal = (mode: Mode, id: number) => {
     setSelectedFirewallId(id);

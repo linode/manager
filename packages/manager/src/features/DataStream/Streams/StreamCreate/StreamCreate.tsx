@@ -11,13 +11,14 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { StreamCreateSubmitBar } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateSubmitBar';
+import { StreamCreateDelivery } from 'src/features/DataStream/Streams/StreamCreate/Delivery/StreamCreateDelivery';
 import { sendCreateStreamEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { StreamCreateClusters } from './StreamCreateClusters';
-import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
 
 import type { CreateStreamPayload } from '@linode/api-v4';
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type {
   CreateStreamAndDestinationForm,
   CreateStreamForm,
@@ -50,7 +51,7 @@ export const StreamCreate = () => {
     name: 'stream.type',
   });
 
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream/streams/create',
       crumbOverrides: [

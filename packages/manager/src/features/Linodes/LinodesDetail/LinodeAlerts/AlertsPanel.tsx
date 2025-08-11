@@ -12,8 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -93,6 +91,7 @@ export const AlertsPanel = (props: Props) => {
             { variant: 'success' }
           );
         })
+        .catch(() => {})
         .finally(() => {
           setIsDialogOpen(false);
         });
@@ -131,10 +130,11 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'cpu',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'cpu_usage_state',
-      state: (formik.values.cpu ?? 0) > 0,
+      state:
+        formik.values.cpu === ('' as unknown) || Boolean(formik.values.cpu),
       textInputLabel: 'cpu_usage_threshold',
       textTitle: 'Usage Threshold',
       title: 'CPU Usage',
@@ -156,10 +156,10 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'io',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'disk_io_state',
-      state: (formik.values.io ?? 0) > 0,
+      state: formik.values.io === ('' as unknown) || Boolean(formik.values.io),
       textInputLabel: 'disk_io_threshold',
       textTitle: 'I/O Threshold',
       title: 'Disk I/O Rate',
@@ -185,10 +185,12 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'network_in',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'incoming_traffic_state',
-      state: (formik.values.network_in ?? 0) > 0,
+      state:
+        formik.values.network_in === ('' as unknown) ||
+        Boolean(formik.values.network_in),
       textInputLabel: 'incoming_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Incoming Traffic',
@@ -214,10 +216,12 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'network_out',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'outbound_traffic_state',
-      state: (formik.values.network_out ?? 0) > 0,
+      state:
+        formik.values.network_out === ('' as unknown) ||
+        Boolean(formik.values.network_out),
       textInputLabel: 'outbound_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Outbound Traffic',
@@ -243,10 +247,12 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'transfer_quota',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'transfer_quota_state',
-      state: (formik.values.transfer_quota ?? 0) > 0,
+      state:
+        formik.values.transfer_quota === ('' as unknown) ||
+        Boolean(formik.values.transfer_quota),
       textInputLabel: 'transfer_quota_threshold',
       textTitle: 'Quota Threshold',
       title: 'Transfer Quota',
@@ -299,42 +305,34 @@ export const AlertsPanel = (props: Props) => {
 
   return (
     <>
-      {/* Use Prompt for now until Link is coupled with Tanstack router */}
-      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
-        {({ handleCancel, handleConfirm, isModalOpen }) => (
-          <ConfirmationDialog
-            actions={() => (
-              <ActionsPanel
-                primaryButtonProps={{
-                  label: 'Confirm',
-                  onClick: () => {
-                    handleProceedNavigation();
-                    handleConfirm();
-                  },
-                }}
-                secondaryButtonProps={{
-                  buttonType: 'outlined',
-                  label: 'Cancel',
-                  onClick: () => {
-                    handleCancelNavigation();
-                    handleCancel();
-                  },
-                }}
-              />
-            )}
-            onClose={() => {
-              handleCancelNavigation();
-              handleCancel();
+      <ConfirmationDialog
+        actions={() => (
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Confirm',
+              onClick: () => {
+                handleProceedNavigation();
+              },
             }}
-            open={status === 'blocked' || isModalOpen}
-            title="Unsaved Changes"
-          >
-            <Typography variant="body1">
-              Are you sure you want to leave the page? You have unsaved changes.
-            </Typography>
-          </ConfirmationDialog>
+            secondaryButtonProps={{
+              buttonType: 'outlined',
+              label: 'Cancel',
+              onClick: () => {
+                handleCancelNavigation();
+              },
+            }}
+          />
         )}
-      </Prompt>
+        onClose={() => {
+          handleCancelNavigation();
+        }}
+        open={status === 'blocked'}
+        title="Unsaved Changes"
+      >
+        <Typography variant="body1">
+          Are you sure you want to leave the page? You have unsaved changes.
+        </Typography>
+      </ConfirmationDialog>
 
       {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
       when user already subscribed to Beta/ACLP Mode and makes changes in the

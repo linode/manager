@@ -13,16 +13,11 @@ import { EditAlertResources } from './EditAlertResources';
 import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
-const overrides = [
+const overrides: CrumbOverridesProps[] = [
   {
     label: 'Definitions',
     linkTo: '/alerts/definitions',
     position: 1,
-  },
-  {
-    label: 'Edit',
-    linkTo: `/alerts/definitions/edit`,
-    position: 2,
   },
 ];
 
@@ -33,11 +28,11 @@ export const EditAlertLanding = () => {
   const {
     data: alertDetails,
     isError,
-    isFetching,
+    isLoading,
   } = useAlertDefinitionQuery(alertId, serviceType);
   const pathname = '/Definition/Edit';
 
-  if (isFetching) {
+  if (isLoading) {
     return (
       <EditAlertLoadingState overrides={overrides} pathname={pathname}>
         <CircleProgress />

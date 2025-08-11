@@ -68,9 +68,10 @@ export const CloudPulseRegionSelect = React.memo(
       flags.gecko2?.la
     );
 
+    const dashboardId = selectedDashboard?.id;
     const serviceType = selectedDashboard?.service_type;
-    const capability = serviceType
-      ? FILTER_CONFIG.get(serviceType)?.capability
+    const capability = dashboardId
+      ? FILTER_CONFIG.get(dashboardId)?.capability
       : undefined;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
