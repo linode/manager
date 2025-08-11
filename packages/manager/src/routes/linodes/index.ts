@@ -175,8 +175,12 @@ const linodesDetailRoute = createRoute({
 );
 
 const lishRoute = createRoute({
-  getParentRoute: () => linodesDetailRoute,
-  path: 'lish/$type',
+  getParentRoute: () => rootRoute,
+  path: '/linodes/$linodeId/lish/$type',
+  parseParams: (params) => ({
+    linodeId: Number(params.linodeId),
+    type: params.type,
+  }),
 }).lazy(() =>
   import('src/features/Lish/lishLazyRoute').then((m) => m.lishLazyRoute)
 );
