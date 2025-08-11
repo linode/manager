@@ -24,9 +24,8 @@ import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
-import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
-
 import type { CloudPulseServiceType } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export interface AlertRouteParams {
   /**
