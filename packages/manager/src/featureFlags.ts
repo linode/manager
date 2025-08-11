@@ -149,6 +149,7 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
+  iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
