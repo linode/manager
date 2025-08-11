@@ -204,12 +204,11 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     'list_billing_payments', // GET https://api.linode.com/v4/account/payments
     'list_billing_invoices', // GET https://api.linode.com/v4/account/invoices
     'list_invoice_items', // GET https://api.linode.com/v4/account/invoices/{invoiceId}/items
-    // view_account ?
-    // view_profile >
   ]);
 
   const canViewInvoices = permissions.list_billing_invoices;
   const canViewPayments = permissions.list_billing_payments;
+  const canViewInvoiceDetails = permissions.list_invoice_items;
 
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();
@@ -389,6 +388,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
         const lastItem = idx === orderedPaginatedData.length - 1;
         return (
           <ActivityFeedItem
+            canViewInvoiceDetails={canViewInvoiceDetails}
             downloadPDF={
               thisItem.type === 'invoice'
                 ? downloadInvoicePDF
@@ -452,6 +452,16 @@ export const BillingActivityPanel = React.memo((props: Props) => {
             <Autocomplete
               className={classes.transactionType}
               disableClearable
+              disabled={!canViewInvoices && !canViewPayments}
+              filterOptions={(options) => {
+                if (!canViewInvoices) {
+                  return options.filter((option) => option.value !== 'invoice');
+                }
+                if (!canViewPayments) {
+                  return options.filter((option) => option.value !== 'payment');
+                }
+                return options;
+              }}
               label="Transaction Types"
               noMarginTop
               onChange={(_, item) => {
@@ -507,8 +517,9 @@ export const BillingActivityPanel = React.memo((props: Props) => {
               >
                 Amount
               </TableSortCell>
-
-              <TableCell className={classes.pdfDownloadColumn} />
+              {canViewInvoiceDetails && (
+                <TableCell className={classes.pdfDownloadColumn} />
+              )}
             </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
@@ -537,6 +548,7 @@ const StyledBillingAndPaymentHistoryHeader = styled('div', {
 // <ActivityFeedItem />
 // =============================================================================
 interface ActivityFeedItemProps extends ActivityFeedItem {
+  canViewInvoiceDetails: boolean;
   downloadPDF: (id: number) => void;
   hasError: boolean;
   isLoading: boolean;
@@ -547,6 +559,7 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
   const {
+    canViewInvoiceDetails,
     date,
     downloadPDF,
     hasError,
@@ -576,7 +589,7 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   return (
     <TableRow data-testid={`${type}-${id}`} sx={sxRow}>
       <TableCell>
-        {type === 'invoice' ? (
+        {type === 'invoice' && canViewInvoiceDetails ? (
           <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
         ) : (
           label
@@ -588,14 +601,16 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
       <TableCell className={classes.totalColumn}>
         <Currency quantity={total} wrapInParentheses={total < 0} />
       </TableCell>
-      <TableCell className={classes.pdfDownloadColumn}>
-        <InlineMenuAction
-          actionText={action.title}
-          className={action.className}
-          loading={isLoading}
-          onClick={action.onClick}
-        />
-      </TableCell>
+      {canViewInvoiceDetails && (
+        <TableCell className={classes.pdfDownloadColumn}>
+          <InlineMenuAction
+            actionText={action.title}
+            className={action.className}
+            loading={isLoading}
+            onClick={action.onClick}
+          />
+        </TableCell>
+      )}
     </TableRow>
   );
 });
