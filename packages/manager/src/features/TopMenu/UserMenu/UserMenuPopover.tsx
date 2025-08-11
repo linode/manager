@@ -1,5 +1,5 @@
 import { useAccount, useGrants, useProfile } from '@linode/queries';
-import { Box, Divider, NewFeatureChip, Stack, Typography } from '@linode/ui';
+import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -29,7 +29,7 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   href: string;
-  isNewFeature?: boolean;
+  isBeta?: boolean;
 }
 
 const profileLinks: MenuLink[] = [
@@ -115,7 +115,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           flags?.iamRbacPrimaryNavChanges && isIAMEnabled
             ? '/iam'
             : '/account/users',
-        isNewFeature: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
+        isBeta: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
       },
       {
         display: 'Quotas',
@@ -270,9 +270,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                     to={menuLink.href}
                   >
                     {menuLink.display}
-                    {menuLink?.isNewFeature ? (
-                      <NewFeatureChip component="span" />
-                    ) : null}
+                    {menuLink?.isBeta ? <BetaChip component="span" /> : null}
                   </Link>
                 )
               )}
