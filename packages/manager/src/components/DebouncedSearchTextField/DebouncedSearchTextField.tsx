@@ -126,7 +126,6 @@ export const DebouncedSearchTextField = React.memo(
                   <IconButton
                     aria-label="Clear"
                     onClick={() => {
-                      // Cancel any pending debounced search before clearing.
                       debouncedRef.current?.cancel();
                       setTextFieldValue('');
                       onSearch('');
