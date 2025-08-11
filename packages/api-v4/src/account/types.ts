@@ -600,7 +600,7 @@ export interface AccountMaintenance {
     | 'power_off_on'
     | 'reboot'
     | 'volume_migration';
-  when: null | string;
+  when: string;
 }
 
 // Note: In the future there will be more slugs, ie: 'private/1234'.
