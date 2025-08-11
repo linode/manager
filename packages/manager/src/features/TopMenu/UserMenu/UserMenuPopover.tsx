@@ -122,6 +122,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         hide: !flags.limitsEvolution?.enabled,
         href: '/account/quotas',
       },
+      {
+        display: 'Login History',
+        href: '/account/login-history',
+      },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
