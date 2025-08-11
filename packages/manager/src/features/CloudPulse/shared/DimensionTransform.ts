@@ -27,7 +27,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
     node_type: TRANSFORMS.capitalize,
   },
   firewall: {
-    interface_type: TRANSFORMS.capitalize,
+    interface_type: TRANSFORMS.uppercase,
   },
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,
