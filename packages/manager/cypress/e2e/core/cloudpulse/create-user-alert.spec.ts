@@ -67,7 +67,8 @@ const mockRegions = [
     },
   }),
 ];
-const { metrics, serviceType } = widgetDetails.dbaas;
+const { metrics } = widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const databaseMock = databaseFactory.buildList(10, {
   cluster_size: 3,
   engine: 'mysql',

@@ -35,8 +35,8 @@ import {
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   Alert,
-  AlertServiceType,
   APIError,
+  CloudPulseServiceType,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
@@ -49,7 +49,7 @@ export interface EditAlertProps {
   /**
    * The type of service associated with the alert
    */
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
 }
 
 export const EditAlertDefinition = (props: EditAlertProps) => {

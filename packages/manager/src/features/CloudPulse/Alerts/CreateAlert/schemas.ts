@@ -24,7 +24,7 @@ import {
   PORTS_TRAILING_COMMA_ERROR_MESSAGE,
 } from '../constants';
 
-import type { AlertSeverityType } from '@linode/api-v4';
+import type { AlertSeverityType, CloudPulseServiceType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -281,8 +281,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
         .required()
         .min(1, 'At least one metric criteria is required.'),
     }).required(),
-    serviceType: string()
-      .oneOf(['linode', 'dbaas', 'firewall', 'nodebalancer'])
+    serviceType: mixed<CloudPulseServiceType>()
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
