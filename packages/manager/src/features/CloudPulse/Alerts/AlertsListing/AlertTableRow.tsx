@@ -14,7 +14,7 @@ import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Item } from '../constants';
 import type { ActionHandlers } from './AlertActionMenu';
-import type { Alert, AlertServiceType } from '@linode/api-v4';
+import type { Alert, CloudPulseServiceType } from '@linode/api-v4';
 
 interface Props {
   /**
@@ -28,7 +28,7 @@ interface Props {
   /**
    * services list for the reverse mapping to display the labels from the alert service values
    */
-  services: Item<string, AlertServiceType>[];
+  services: Item<string, CloudPulseServiceType>[];
 }
 
 export const AlertTableRow = (props: Props) => {

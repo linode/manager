@@ -28,7 +28,11 @@ import {
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertStatusType,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 const alertDefinitionsUrl = '/alerts/definitions';
 
@@ -111,7 +115,7 @@ const statusList: AlertStatusType[] = [
   'in progress',
   'failed',
 ];
-const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 
 /**
  * @description
