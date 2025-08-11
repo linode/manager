@@ -37,21 +37,27 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
         Linode {linodeMaintenance.entity.label} {linodeMaintenance.description}{' '}
         maintenance {maintenanceTypeLabel} will begin{' '}
         <strong>
-          <DateTimeDisplay
-            format="MM/dd/yyyy"
-            sx={(theme) => ({
-              font: theme.font.bold,
-            })}
-            value={linodeMaintenance.start_time}
-          />{' '}
-          at{' '}
-          <DateTimeDisplay
-            format="HH:mm"
-            sx={(theme) => ({
-              font: theme.font.bold,
-            })}
-            value={linodeMaintenance.start_time}
-          />
+          {linodeMaintenance.start_time ? (
+            <>
+              <DateTimeDisplay
+                format="MM/dd/yyyy"
+                sx={(theme) => ({
+                  font: theme.font.bold,
+                })}
+                value={linodeMaintenance.start_time}
+              />{' '}
+              at{' '}
+              <DateTimeDisplay
+                format="HH:mm"
+                sx={(theme) => ({
+                  font: theme.font.bold,
+                })}
+                value={linodeMaintenance.start_time}
+              />
+            </>
+          ) : (
+            'soon'
+          )}
         </strong>
         . For more details, view{' '}
         <Link to="/account/maintenance">Account Maintenance</Link>.
