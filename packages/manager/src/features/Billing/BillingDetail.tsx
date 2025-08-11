@@ -8,10 +8,12 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { Navigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
@@ -26,6 +28,8 @@ export const BillingDetail = () => {
     isLoading: paymentMethodsLoading,
   } = useAllPaymentMethodsQuery();
 
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
   const {
     data: account,
     error: accountError,
@@ -33,6 +37,10 @@ export const BillingDetail = () => {
   } = useAccount();
 
   const { data: profile } = useProfile();
+
+  if (iamRbacPrimaryNavChanges) {
+    return <Navigate replace to="/billing" />;
+  }
 
   if (accountLoading) {
     return <CircleProgress />;
