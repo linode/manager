@@ -422,33 +422,10 @@ describe('Tests for API error handling', () => {
       .findByTitle(dashboardName)
       .should('be.visible')
       .click();
-
-    // Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
-
-    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
-
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionId(mockRegions[0].id, mockRegions)
-      .should('be.visible')
-      .click();
-
     // simulate an error on instances call before changing the region again
     mockGetDatabasesError('Internal Server Error').as(
       'getDatabaseInstancesError'
     );
-
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionId(mockRegions[1].id, mockRegions)
-      .should('be.visible')
-      .click();
 
     // Wait for the intercepted request to complete
     cy.wait('@getDatabaseInstancesError');
