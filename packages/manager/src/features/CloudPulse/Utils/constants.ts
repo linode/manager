@@ -92,8 +92,26 @@ export const NO_REGION_MESSAGE: Record<string, string> = {
   linode: 'No linodes configured in any regions.',
 };
 
+export const ORDER_BY_LABLE_ASC = {
+  '+order': 'asc',
+  '+order_by': 'label',
+};
+
 export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
   dbaas: {
     platform: 'rdbms-default',
+    ...ORDER_BY_LABLE_ASC,
+  },
+  linode: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  nodebalancer: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  firewall: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  netloadbalancer: {
+    ...ORDER_BY_LABLE_ASC,
   },
 };

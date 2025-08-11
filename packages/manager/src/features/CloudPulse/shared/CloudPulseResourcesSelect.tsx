@@ -76,11 +76,7 @@ export const CloudPulseResourcesSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
-      return (
-        filterUsingDependentFilters(resources, xFilter)?.sort((a, b) =>
-          a.label.localeCompare(b.label)
-        ) ?? []
-      );
+      return filterUsingDependentFilters(resources, xFilter) ?? [];
     }, [resources, xFilter]);
 
     // Maximum resource selection limit is fetched from launchdarkly
