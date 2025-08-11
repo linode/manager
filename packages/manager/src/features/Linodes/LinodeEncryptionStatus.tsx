@@ -43,9 +43,10 @@ export const LinodeEncryptionStatus = ({ linodeId }: Props) => {
       <Typography sx={{ whiteSpace: 'nowrap' }}>
         {isEncrypted ? 'Encrypted' : 'Not Encrypted'}
       </Typography>
-      {userCanControlEncryption && (
+      {userCanControlEncryption && !isEncrypted && (
         <TooltipIcon
           status="info"
+          sxTooltipIcon={{ p: 0.5 }}
           text={UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY}
         />
       )}
