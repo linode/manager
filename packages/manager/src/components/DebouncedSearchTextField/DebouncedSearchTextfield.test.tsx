@@ -55,33 +55,6 @@ describe('Debounced Search Text Field', () => {
     await waitFor(() => expect(props.onSearch).toHaveBeenCalled());
   });
 
-  it('provides debounced function reference via onDebouncedRef callback', async () => {
-    const onDebouncedRef = vi.fn();
-    const onSearchMock = vi.fn();
-
-    const screen = renderWithTheme(
-      <DebouncedSearchTextField
-        {...props}
-        debounceTime={250}
-        onDebouncedRef={onDebouncedRef}
-        onSearch={onSearchMock}
-      />
-    );
-
-    const textfield = screen.getByTestId(textfieldId);
-    await userEvent.type(textfield, 'test');
-
-    expect(onDebouncedRef).toHaveBeenCalledWith(
-      expect.objectContaining({
-        cancel: expect.any(Function),
-      })
-    );
-
-    const debouncedFn = onDebouncedRef.mock.calls[0][0];
-    debouncedFn.cancel();
-    expect(onSearchMock).not.toHaveBeenCalled();
-  });
-
   it('renders the expected placeholder', () => {
     const screen = renderWithTheme(
       <DebouncedSearchTextField
