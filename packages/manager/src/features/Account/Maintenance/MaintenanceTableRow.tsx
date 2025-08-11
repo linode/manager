@@ -30,7 +30,7 @@ const statusTextMap: Record<AccountMaintenance['status'], string> = {
   pending: 'Pending',
   started: 'In Progress',
   canceled: 'Canceled',
-  'in-progress': 'In Progress',
+  in_progress: 'In Progress',
   scheduled: 'Scheduled',
 };
 
@@ -39,7 +39,7 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   pending: 'active',
   started: 'other',
   canceled: 'inactive',
-  'in-progress': 'other',
+  in_progress: 'other',
   scheduled: 'active',
 };
 

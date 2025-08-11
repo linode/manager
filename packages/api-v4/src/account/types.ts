@@ -589,7 +589,7 @@ export interface AccountMaintenance {
   status:
     | 'canceled'
     | 'completed'
-    | 'in-progress'
+    | 'in_progress'
     | 'pending'
     | 'scheduled'
     | 'started';
