@@ -108,3 +108,9 @@ export interface CreateStreamPayload {
   status?: StreamStatus;
   type: StreamType;
 }
+
+export interface CreateDestinationPayload {
+  details: CustomHTTPsDetails | LinodeObjectStorageDetails;
+  label: string;
+  type: DestinationType;
+}
