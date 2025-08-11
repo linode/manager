@@ -201,9 +201,9 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   });
 
   const { data: permissions } = usePermissions('account', [
-    'list_billing_payments', // GET https://api.linode.com/v4/account/payments
-    'list_billing_invoices', // GET https://api.linode.com/v4/account/invoices
-    'list_invoice_items', // GET https://api.linode.com/v4/account/invoices/{invoiceId}/items
+    'list_billing_payments',
+    'list_billing_invoices',
+    'list_invoice_items',
   ]);
 
   const canViewInvoices = permissions.list_billing_invoices;
