@@ -26,9 +26,6 @@ describe('LinodeEntityDetailFooter', () => {
   });
 
   it('should enable the "Add a tag" button if the user is unrestricted (legacy grants)', async () => {
-    // A restricted user can technically add tags to a Linode if they have read-write permission on the Linode,
-    // but for the sake of the user experience, we choose to disable the "Add a tag" button in the UI because
-    // restricted users can't see account tags using GET /v4/tags
     server.use(
       http.get('*/v4*/profile', () =>
         HttpResponse.json(profileFactory.build({ restricted: false }))
