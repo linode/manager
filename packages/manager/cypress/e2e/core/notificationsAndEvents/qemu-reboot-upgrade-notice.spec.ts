@@ -78,12 +78,13 @@ describe('QEMU reboot upgrade notification', () => {
         start_time: new Date().toISOString(),
       }),
     ];
-    const formattedTime = upcomingMaintenance[0].start_time
-      ? `at ${formatDate(upcomingMaintenance[0].start_time, {
-          timezone: mockProfile.timezone,
-        })}`
-      : 'soon';
-    const maintenanceTooltipText = `This Linode’s maintenance window opens ${formattedTime}. For more information, see your open support tickets.`;
+
+    // We use ! since in `LinodeMaintenanceText` the `start_time` is never null.
+    const formattedTime = `at ${formatDate(upcomingMaintenance[0].start_time!, {
+      timezone: mockProfile.timezone,
+    })}`;
+
+    const maintenanceTooltipText = `This Linode’s maintenance window opens at ${formattedTime}. For more information, see your open support tickets.`;
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetLinodes(mockLinodes).as('getLinodes');
