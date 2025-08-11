@@ -50,7 +50,7 @@ export const VPCRow = ({
 
   const actions: Action[] = [
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: isVPCReadOnly,
       onClick: handleEditVPC,
       title: 'Edit',
       tooltip: isVPCReadOnly
@@ -64,7 +64,7 @@ export const VPCRow = ({
           : undefined,
     },
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: isVPCReadOnly,
       onClick: handleDeleteVPC,
       title: 'Delete',
       tooltip: isVPCReadOnly
