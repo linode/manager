@@ -27,9 +27,7 @@ export const DomainTableRow = React.memo((props: DomainTableRowProps) => {
       <TableCell data-qa-domain-label>
         <StyledDiv>
           {domain.type !== 'slave' ? (
-            <Link tabIndex={0} to={`/domains/${domain.id}`}>
-              {domain.domain}
-            </Link>
+            <Link to={`/domains/${domain.id}`}>{domain.domain}</Link>
           ) : (
             <StyledLinkButton onClick={() => props.onEdit(domain)}>
               {domain.domain}

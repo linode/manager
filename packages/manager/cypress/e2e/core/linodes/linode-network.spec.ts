@@ -74,6 +74,7 @@ describe('IP Addresses', () => {
         global: [_ipv6Range],
         link_local: ipv6Address,
         slaac: ipv6Address,
+        vpc: [],
       },
     }).as('getLinodeIPAddresses');
     mockUpdateIPAddress(linodeIPv4, mockRDNS).as('updateIPAddress');

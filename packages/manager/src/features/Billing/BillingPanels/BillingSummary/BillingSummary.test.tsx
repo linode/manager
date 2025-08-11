@@ -14,7 +14,7 @@ const accountBalanceValue = 'account-balance-value';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_promo_code: false,
     },
   })),
@@ -192,7 +192,7 @@ describe('BillingSummary', () => {
 
   it('displays the "Add a promo code" button if user has create_promo_code permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_promo_code: true,
       },
     });

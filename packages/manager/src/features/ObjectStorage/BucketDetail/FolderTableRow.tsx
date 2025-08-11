@@ -22,6 +22,8 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
   const { displayName, folderName, handleClickDelete, ...tableRowProps } =
     props;
 
+  const encodedFolderName = encodeURIComponent(folderName);
+
   return (
     <TableRow key={folderName} {...tableRowProps}>
       <TableCell>
@@ -37,10 +39,7 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
             <FolderIcon size={22} />
           </StyledIconWrapper>
           <Grid>
-            <Link
-              className="secondaryLink"
-              to={`?prefix=${encodeURIComponent(folderName)}`}
-            >
+            <Link className="secondaryLink" to={`?prefix=${encodedFolderName}`}>
               {displayName}
             </Link>
           </Grid>

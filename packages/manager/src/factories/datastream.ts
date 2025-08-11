@@ -15,11 +15,18 @@ export const destinationFactory = Factory.Sync.makeFactory<Destination>({
   id: Factory.each((id) => id),
   label: Factory.each((id) => `Destination ${id}`),
   type: destinationType.LinodeObjectStorage,
+  version: '1.0',
+  updated: '2025-07-30',
+  updated_by: 'username',
+  created: '2025-07-30',
+  created_by: 'username',
 });
 
 export const streamFactory = Factory.Sync.makeFactory<Stream>({
   created_by: 'username',
-  destinations: [destinationFactory.build({ id: 1, label: 'Destination 1' })],
+  destinations: Factory.each(() => [
+    { ...destinationFactory.build(), id: 123 },
+  ]),
   details: {},
   updated: '2025-07-30',
   updated_by: 'username',

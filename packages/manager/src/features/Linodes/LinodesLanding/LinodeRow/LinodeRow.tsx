@@ -96,9 +96,7 @@ export const LinodeRow = (props: Props) => {
       onMouseLeave={handleMouseLeave}
     >
       <TableCell noWrap>
-        <Link tabIndex={0} to={`/linodes/${id}`}>
-          {label}
-        </Link>
+        <Link to={`/linodes/${id}`}>{label}</Link>
       </TableCell>
       <StyledMaintenanceTableCell
         data-qa-status
