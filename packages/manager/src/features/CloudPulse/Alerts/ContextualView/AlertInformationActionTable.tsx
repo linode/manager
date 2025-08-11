@@ -4,7 +4,6 @@ import { Grid, TableBody, TableHead } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-// eslint-disable-next-line no-restricted-imports
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -22,7 +21,10 @@ import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import type {
+  CloudPulseAlertsPayload,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -67,7 +69,7 @@ export interface AlertInformationActionTableProps {
   /**
    * Service type of the selected entity
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * Flag to determine if confirmation dialog should be displayed
