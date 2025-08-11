@@ -425,7 +425,6 @@ export const VPCSubnetsTable = (props: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={isVPCLKEEnterpriseCluster}
           onClick={handleSubnetCreate}
           sx={{
             marginBottom: theme.spacingFunction(16),

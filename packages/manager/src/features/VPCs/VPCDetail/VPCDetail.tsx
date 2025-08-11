@@ -15,7 +15,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
+import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
@@ -166,16 +166,10 @@ const VPCDetail = () => {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="end">
-          <StyledActionButton
-            disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => handleEditVPC(vpc)}
-          >
+          <StyledActionButton onClick={() => handleEditVPC(vpc)}>
             Edit
           </StyledActionButton>
-          <StyledActionButton
-            disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => handleDeleteVPC(vpc)}
-          >
+          <StyledActionButton onClick={() => handleDeleteVPC(vpc)}>
             Delete
           </StyledActionButton>
         </Box>
@@ -240,7 +234,7 @@ const VPCDetail = () => {
           style={{ padding: '8px 16px' }}
           variant="warning"
         >
-          <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
+          <Typography>{LKE_ENTERPRISE_AUTOGEN_VPC_WARNING}</Typography>
         </Notice>
       )}
       <Box
