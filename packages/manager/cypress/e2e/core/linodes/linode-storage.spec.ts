@@ -167,7 +167,18 @@ describe('linode storage tab', () => {
    */
   it('delete disk', () => {
     const diskName = randomLabel();
-    cy.defer(() => createTestLinode({ image: null })).then((linode) => {
+    cy.defer(() =>
+      createTestLinode({
+        image: null,
+        /**
+         * Workaround 🚨
+         * Disable disk encryption as a workaround for a hypervisor-level issue
+         * causing disk deletions to fail when the Linode is created with `booted: false`
+         * and `disk_encryption: "enabled"`. See M3-10450 for full context.
+         */
+        disk_encryption: 'disabled',
+      })
+    ).then((linode) => {
       interceptDeleteDisks(linode.id).as('deleteDisk');
       interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
