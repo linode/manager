@@ -22,11 +22,16 @@ import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/
 import { useFlags } from 'src/hooks/useFlags';
 import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNotice';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { MaintenancePolicyValues } from 'src/hooks/useUpcomingMaintenanceNotice.ts';
 
 export const MaintenancePolicy = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
 
@@ -100,8 +105,13 @@ export const MaintenancePolicy = () => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty}
+              disabled={!isDirty || !permissions.update_account_settings}
               loading={isSubmitting}
+              tooltipText={
+                !permissions.update_account_settings
+                  ? 'You do not have permission to change the Maintenance Policy.'
+                  : undefined
+              }
               type="submit"
             >
               Save Maintenance Policy

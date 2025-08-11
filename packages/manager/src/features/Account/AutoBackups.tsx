@@ -11,6 +11,8 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -45,8 +47,12 @@ const AutoBackups = (props: Props) => {
     onChange,
     openBackupsDrawer,
   } = props;
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const { classes } = useStyles();
+  const isToggleDisabled =
+    !!isManagedCustomer || !permissions.update_account_settings;
 
   return (
     <Paper>
@@ -77,8 +83,13 @@ const AutoBackups = (props: Props) => {
               <Toggle
                 checked={isManagedCustomer ? true : backups_enabled}
                 data-qa-toggle-auto-backup
-                disabled={!!isManagedCustomer}
+                disabled={isToggleDisabled}
                 onChange={onChange}
+                tooltipText={
+                  !permissions.update_account_settings
+                    ? 'You do not have permission to enable Auto Backups.'
+                    : undefined
+                }
               />
             }
             label={

@@ -2,6 +2,8 @@ import { useProfile } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
 import CloseAccountDialog from './CloseAccountDialog';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
@@ -13,9 +15,11 @@ const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
+  const { data: permissions } = usePermissions('account', ['cancel_account']);
 
-  // Disable the Close Account button for users with a Parent/Proxy/Child user type.
-  const isCloseAccountDisabled = Boolean(profile?.user_type !== 'default');
+  // Disable the Close Account button for users with a Parent/Proxy/Child user type or if they don't have the cancel_account permission
+  const isCloseAccountDisabled =
+    Boolean(profile?.user_type !== 'default') || !permissions.cancel_account;
 
   let closeAccountButtonTooltipText;
   const userType = profile?.user_type;
@@ -30,6 +34,10 @@ const CloseAccountSetting = () => {
       break;
     default:
       closeAccountButtonTooltipText = PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+  }
+  if (!permissions.cancel_account) {
+    closeAccountButtonTooltipText =
+      'You do not have permission to close your account.';
   }
 
   return (

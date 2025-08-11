@@ -16,6 +16,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
@@ -29,6 +31,7 @@ interface ContentProps {
 
 export const ManagedContent = (props: ContentProps) => {
   const { isManaged, openConfirmationModal } = props;
+  const { data: permissions } = usePermissions('account', ['enable_managed']);
 
   if (isManaged) {
     return (
@@ -49,7 +52,16 @@ export const ManagedContent = (props: ContentProps) => {
         <Link to="https://linode.com/managed">Learn more</Link>.
       </Typography>
       <Box>
-        <Button buttonType="outlined" onClick={openConfirmationModal}>
+        <Button
+          buttonType="outlined"
+          disabled={!permissions.enable_managed}
+          onClick={openConfirmationModal}
+          tooltipText={
+            !permissions.enable_managed
+              ? 'You do not have permission to enable Linode Managed.'
+              : undefined
+          }
+        >
           Add Linode Managed
         </Button>
       </Box>
@@ -61,6 +73,7 @@ export const EnableManaged = (props: Props) => {
   const { isManaged } = props;
   const queryClient = useQueryClient();
   const { data: linodes } = useLinodesQuery();
+  const { data: permissions } = usePermissions('account', ['enable_managed']);
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -93,6 +106,7 @@ export const EnableManaged = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'submit-managed-enrollment',
         label: 'Add Linode Managed',
+        disabled: !permissions.enable_managed,
         loading: isLoading,
         onClick: handleSubmit,
       }}

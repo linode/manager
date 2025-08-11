@@ -4,6 +4,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type {
   AccountSettings,
   LinodeInterfaceAccountSetting,
@@ -40,6 +42,9 @@ export const NetworkInterfaceType = () => {
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
 
   const values = {
     interfaces_for_new_linodes:
@@ -114,8 +119,13 @@ export const NetworkInterfaceType = () => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty}
+              disabled={!isDirty || !permissions.update_account_settings}
               loading={isSubmitting}
+              tooltipText={
+                !permissions.update_account_settings
+                  ? 'You do not have permission to change the Network Interface Type.'
+                  : undefined
+              }
               type="submit"
             >
               Save
