@@ -175,6 +175,7 @@ describe('linode storage tab', () => {
          * Disable disk encryption as a workaround for a hypervisor-level issue
          * causing disk deletions to fail when the Linode is created with `booted: false`
          * and `disk_encryption: "enabled"`. See M3-10450 for full context.
+         * @todo reevaluate or remove the workaround
          */
         disk_encryption: 'disabled',
       })
