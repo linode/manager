@@ -60,7 +60,7 @@ export const CloudPulseDashboardSelect = React.memo(
       aclpServices
     );
 
-    const serviceTypeMap: Map<string, string> = new Map(
+    const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
       (serviceTypesList?.data || [])
         .filter((item) => item?.service_type !== undefined)
         .map((item) => [item.service_type, item.label ?? ''])
