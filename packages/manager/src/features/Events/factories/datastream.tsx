@@ -14,3 +14,14 @@ export const stream: PartialEventMap<'stream'> = {
     ),
   },
 };
+
+export const destination: PartialEventMap<'destination'> = {
+  destination_create: {
+    notification: (e) => (
+      <>
+        Destination <EventLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
+      </>
+    ),
+  },
+};
