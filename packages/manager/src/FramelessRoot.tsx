@@ -6,11 +6,6 @@ import { useDialogContext } from 'src/context/useDialogContext';
 import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 
 import { sessionExpirationContext } from './context/sessionExpirationContext';
-import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
-import { useNewRelic } from './hooks/useNewRelic';
-import { usePendo } from './hooks/usePendo';
-import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
-import { useEventsPoller } from './queries/events/events';
 
 export const FramelessRoot = () => {
   const SessionExpirationProvider = sessionExpirationContext.Provider;
@@ -25,16 +20,6 @@ export const FramelessRoot = () => {
           <Outlet />
         </ErrorBoundaryFallback>
       </React.Suspense>
-      <GlobalListeners />
     </SessionExpirationProvider>
   );
-};
-
-const GlobalListeners = () => {
-  useEventsPoller();
-  useAdobeAnalytics();
-  usePendo();
-  useNewRelic();
-  useSessionExpiryToast();
-  return null;
 };
