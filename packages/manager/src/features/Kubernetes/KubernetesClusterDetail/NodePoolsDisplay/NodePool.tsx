@@ -94,7 +94,7 @@ export const NodePool = (props: Props) => {
           <Stack alignItems="center" direction="row" spacing={1}>
             {autoscaler.enabled && (
               <Typography mx={1}>
-                <Hidden mdDown>Autoscaling </Hidden>(Min {autoscaler.min} / Max{' '}
+                <Hidden smDown>Autoscaling </Hidden>(Min {autoscaler.min} / Max{' '}
                 {autoscaler.max})
               </Typography>
             )}
