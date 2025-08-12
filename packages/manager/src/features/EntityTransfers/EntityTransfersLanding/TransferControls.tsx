@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ConfirmTransferDialog } from './ConfirmTransferDialog';
 import {
@@ -17,7 +17,7 @@ export const TransferControls = React.memo(() => {
   const [token, setToken] = React.useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setToken(e.target.value);
@@ -29,7 +29,9 @@ export const TransferControls = React.memo(() => {
     setTimeout(() => setToken(''), 150);
   };
 
-  const handleCreateTransfer = () => push('/account/service-transfers/create');
+  const handleCreateTransfer = () =>
+    navigate({ to: '/account/service-transfers/create' });
+
   return (
     <>
       <StyledRootGrid
