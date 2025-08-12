@@ -1,4 +1,4 @@
-import { useRegionQuery, useSpecificTypes } from '@linode/queries';
+import { useSpecificTypes } from '@linode/queries';
 import {
   Box,
   Button,
@@ -85,8 +85,6 @@ export const NodePoolsDisplay = (props: Props) => {
     isLoading,
   } = useAllKubernetesNodePoolQuery(clusterID, { refetchInterval: 15000 });
 
-  const { data: region } = useRegionQuery(clusterRegionId);
-
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
 
   const [selectedPoolId, setSelectedPoolId] = useState(-1);
@@ -146,11 +144,6 @@ export const NodePoolsDisplay = (props: Props) => {
     handleAccordionClick,
     setExpandedAccordions,
   } = useDefaultExpandedNodePools(clusterID, _pools);
-
-  const regionSupportsDiskEncryption =
-    (region?.capabilities.includes('Disk Encryption') ||
-      region?.capabilities.includes('LA Disk Encryption')) ??
-    false;
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
@@ -317,7 +310,6 @@ export const NodePoolsDisplay = (props: Props) => {
               }}
               poolId={thisPool.id}
               poolVersion={thisPool.k8s_version}
-              regionSupportsDiskEncryption={regionSupportsDiskEncryption}
               statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}
