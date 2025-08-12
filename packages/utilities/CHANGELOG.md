@@ -1,3 +1,14 @@
+## [2025-08-12] - v0.7.0
+
+
+### Removed:
+
+- IPAM address from `linodeConfigInterfaceFactoryWithVPC` ([#12574](https://github.com/linode/manager/pull/12574))
+
+### Upcoming Features:
+
+- Update linodeConfigInterfaceFactoryWithVPC and linodeInterfaceFactoryVPC with IPv6 data ([#12305](https://github.com/linode/manager/pull/12305))
+
 ## [2025-07-29] - v0.6.0
 
 

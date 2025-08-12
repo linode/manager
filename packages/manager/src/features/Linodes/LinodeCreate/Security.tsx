@@ -45,7 +45,7 @@ export const Security = () => {
     selectedRegion?.id ?? ''
   );
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>
@@ -117,6 +117,7 @@ export const Security = () => {
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
+                sxCheckbox={{ paddingLeft: '0px' }}
               />
             )}
           />

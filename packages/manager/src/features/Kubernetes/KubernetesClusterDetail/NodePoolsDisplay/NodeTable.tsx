@@ -1,5 +1,12 @@
 import { useAllLinodesQuery, useProfile } from '@linode/queries';
-import { Box, ErrorState, TooltipIcon, Typography } from '@linode/ui';
+import {
+  Box,
+  Divider,
+  ErrorState,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { DateTime, Interval } from 'luxon';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -23,33 +30,29 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodeRow as _NodeRow } from './NodeRow';
-import {
-  StyledNotEncryptedBox,
-  StyledPoolInfoBox,
-  StyledTableFooter,
-  StyledTypography,
-  StyledVerticalDivider,
-} from './NodeTable.styles';
+import { NodePoolTableFooter } from './NodeTable.styles';
+import { nodeToRow } from './utils';
 
 import type { StatusFilter } from './NodePoolsDisplay';
-import type { NodeRow } from './NodeRow';
 import type {
+  KubeNodePoolResponse,
   KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
-import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 export interface Props {
   clusterCreated: string;
   clusterId: number;
   clusterTier: KubernetesTier;
-  encryptionStatus: EncryptionStatus | undefined;
+  encryptionStatus: EncryptionStatus;
   isLkeClusterRestricted: boolean;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  poolVersion: KubeNodePoolResponse['k8s_version'];
   regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
@@ -63,6 +66,7 @@ export const NodeTable = React.memo((props: Props) => {
     clusterCreated,
     clusterId,
     clusterTier,
+    poolVersion,
     encryptionStatus,
     nodes,
     openRecycleNodeDialog,
@@ -79,6 +83,7 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
+  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -99,7 +104,13 @@ export const NodeTable = React.memo((props: Props) => {
     [updateNodePool]
   );
 
-  const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
+  const shouldShowVpcIPAddressColumns =
+    isLkeEnterprisePhase2FeatureEnabled && clusterTier === 'enterprise';
+  const numColumns = shouldShowVpcIPAddressColumns ? 6 : 4;
+
+  const rowData = nodes.map((thisNode) =>
+    nodeToRow(thisNode, linodes ?? [], shouldShowVpcIPAddressColumns)
+  );
 
   const filteredRowData = ['offline', 'provisioning', 'running'].includes(
     statusFilter
@@ -197,8 +208,15 @@ export const NodeTable = React.memo((props: Props) => {
                     width: '35%',
                   })}
                 >
-                  IP Address
+                  Public IPv4
                 </TableSortCell>
+                {shouldShowVpcIPAddressColumns && (
+                  <>
+                    <TableCell>VPC IPv4</TableCell>
+                    <TableCell>VPC IPv6</TableCell>
+                  </>
+                )}
+
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -206,7 +224,7 @@ export const NodeTable = React.memo((props: Props) => {
               {rowData.length === 0 &&
                 isEnterpriseClusterWithin20MinsOfCreation() && (
                   <TableRow>
-                    <TableCell colSpan={4}>
+                    <TableCell colSpan={numColumns}>
                       <ErrorState
                         compact
                         CustomIcon={EmptyStateCloud}
@@ -234,7 +252,7 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableContentWrapper
                   length={paginatedAndOrderedData.length}
                   loading={isLoading}
-                  loadingProps={{ columns: 4 }}
+                  loadingProps={{ columns: numColumns }}
                 >
                   {paginatedAndOrderedData.map((eachRow) => {
                     return (
@@ -249,6 +267,9 @@ export const NodeTable = React.memo((props: Props) => {
                         nodeId={eachRow.nodeId}
                         nodeStatus={eachRow.nodeStatus}
                         openRecycleNodeDialog={openRecycleNodeDialog}
+                        shouldShowVpcIPAddressColumns={
+                          shouldShowVpcIPAddressColumns
+                        }
                         typeLabel={typeLabel}
                       />
                     );
@@ -270,62 +291,51 @@ export const NodeTable = React.memo((props: Props) => {
              **/
             sx={{ position: 'relative' }}
           />
-          <StyledTableFooter>
-            <StyledPoolInfoBox>
-              {isDiskEncryptionFeatureEnabled &&
-              encryptionStatus !== undefined ? (
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                >
+          <NodePoolTableFooter>
+            <Box>
+              <Stack
+                alignItems="center"
+                columnGap={{ sm: 2, xs: 1.5 }}
+                direction="row"
+                divider={
+                  <Divider
+                    flexItem
+                    orientation="vertical"
+                    sx={{ borderWidth: 1, height: '20px' }}
+                  />
+                }
+                flexWrap={{ sm: 'unset', xs: 'wrap' }}
+                rowGap={1}
+              >
+                <Typography sx={{ textWrap: 'nowrap' }}>
+                  <b>Pool ID</b> {poolId}
+                </Typography>
+                {clusterTier === 'enterprise' && poolVersion && (
                   <Typography sx={{ textWrap: 'nowrap' }}>
-                    Pool ID {poolId}
+                    <b>Version</b> {poolVersion}
                   </Typography>
-                  <StyledVerticalDivider />
+                )}
+                {isDiskEncryptionFeatureEnabled && (
                   <EncryptedStatus
                     encryptionStatus={encryptionStatus}
                     regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                     tooltipText={undefined}
                   />
-                </Box>
-              ) : (
-                <Typography>Pool ID {poolId}</Typography>
-              )}
-            </StyledPoolInfoBox>
+                )}
+              </Stack>
+            </Box>
             <TagCell
               disabled={isLkeClusterRestricted}
               tags={tags}
               updateTags={updateTags}
               view="inline"
             />
-          </StyledTableFooter>
+          </NodePoolTableFooter>
         </>
       )}
     </Paginate>
   );
 });
-
-/**
- * Transforms an LKE Pool Node to a NodeRow.
- */
-export const nodeToRow = (
-  node: PoolNodeResponse,
-  linodes: LinodeWithMaintenance[]
-): NodeRow => {
-  const foundLinode = linodes.find(
-    (thisLinode) => thisLinode.id === node.instance_id
-  );
-
-  return {
-    instanceId: node.instance_id || undefined,
-    instanceStatus: foundLinode?.status,
-    ip: foundLinode?.ipv4[0],
-    label: foundLinode?.label,
-    nodeId: node.id,
-    nodeStatus: node.status,
-  };
-};
 
 export const EncryptedStatus = ({
   encryptionStatus,
@@ -336,20 +346,22 @@ export const EncryptedStatus = ({
   regionSupportsDiskEncryption: boolean;
   tooltipText: string | undefined;
 }) => {
-  return encryptionStatus === 'enabled' ? (
-    <>
-      <Lock />
-      <StyledTypography>Encrypted</StyledTypography>
-    </>
-  ) : encryptionStatus === 'disabled' ? (
-    <>
+  if (encryptionStatus === 'enabled') {
+    return (
+      <Stack alignItems="center" direction="row" spacing={1}>
+        <Lock />
+        <Typography>Encrypted</Typography>
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack alignItems="center" direction="row" spacing={1}>
       <Unlock />
-      <StyledNotEncryptedBox>
-        <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
-        {regionSupportsDiskEncryption && tooltipText ? (
-          <TooltipIcon status="info" text={tooltipText} />
-        ) : null}
-      </StyledNotEncryptedBox>
-    </>
-  ) : null;
+      <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
+      {regionSupportsDiskEncryption && tooltipText && (
+        <TooltipIcon status="info" text={tooltipText} />
+      )}
+    </Stack>
+  );
 };
