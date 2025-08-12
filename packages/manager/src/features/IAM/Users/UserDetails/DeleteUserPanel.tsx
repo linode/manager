@@ -1,8 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { PARENT_USER } from 'src/features/Account/constants';
 
@@ -17,7 +16,7 @@ interface Props {
 export const DeleteUserPanel = ({ user }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { data: profile } = useProfile();
 
   const isProxyUserProfile = user.user_type === 'proxy';
@@ -48,7 +47,7 @@ export const DeleteUserPanel = ({ user }: Props) => {
         </Typography>
         <UserDeleteConfirmation
           onClose={() => setIsDeleteDialogOpen(false)}
-          onSuccess={() => history.push(`/iam/users`)}
+          onSuccess={() => navigate({ to: '/iam/users' })}
           open={isDeleteDialogOpen}
           username={user.username}
         />

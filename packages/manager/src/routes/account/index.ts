@@ -133,7 +133,7 @@ const accountEntityTransfersCreateRoute = createRoute({
   path: 'service-transfers/create',
 }).lazy(() =>
   import(
-    'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
+    'src/features/EntityTransfers/EntityTransfersCreate/entityTransfersCreateLazyRoute'
   ).then((m) => m.entityTransfersCreateLazyRoute)
 );
 
