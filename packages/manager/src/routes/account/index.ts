@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
@@ -29,6 +29,14 @@ const accountBillingRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/billingDetailLazyRoute').then(
     (m) => m.billingDetailLazyRoute
@@ -122,6 +130,15 @@ const accountInvoiceDetailsRoute = createRoute({
     invoiceId: Number(params.invoiceId),
   }),
   path: 'billing/invoices/$invoiceId',
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing/invoices/$invoiceId`,
+        params: { invoiceId: params.invoiceId },
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
     (m) => m.invoiceDetailLazyRoute

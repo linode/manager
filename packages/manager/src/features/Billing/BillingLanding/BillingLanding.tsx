@@ -16,7 +16,7 @@ import { PlatformMaintenanceBanner } from '../../../components/PlatformMaintenan
 import { SwitchAccountButton } from '../../Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from '../../Account/SwitchAccountDrawer';
 import { usePermissions } from '../../IAM/hooks/usePermissions';
-import { BillingDetailV2 } from '../BillingDetailV2';
+import { BillingDetail } from '../BillingDetail';
 
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
@@ -109,7 +109,7 @@ export const BillingLanding = () => {
       <MaintenanceBannerV2 pathname={location.pathname} />
       <DocumentTitleSegment segment="Billing" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
-      <BillingDetailV2 />
+      <BillingDetail />
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
