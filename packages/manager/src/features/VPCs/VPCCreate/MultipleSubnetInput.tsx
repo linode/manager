@@ -1,8 +1,9 @@
 import { Button, Divider } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   getRecommendedSubnetIPv4,
@@ -27,9 +28,13 @@ export const MultipleSubnetInput = (props: Props) => {
     name: 'subnets',
   });
 
+  const vpcIPv6 = useWatch({ control, name: 'ipv6' });
+
   const [lastRecommendedIPv4, setLastRecommendedIPv4] = React.useState(
     DEFAULT_SUBNET_IPV4_VALUE
   );
+
+  const { shouldDisplayIPv6, recommendedIPv6 } = useVPCDualStack(vpcIPv6);
 
   const handleAddSubnet = () => {
     const recommendedIPv4 = getRecommendedSubnetIPv4(
@@ -39,6 +44,7 @@ export const MultipleSubnetInput = (props: Props) => {
     setLastRecommendedIPv4(recommendedIPv4);
     append({
       ipv4: recommendedIPv4,
+      ipv6: recommendedIPv6,
       label: '',
     });
   };
@@ -56,6 +62,7 @@ export const MultipleSubnetInput = (props: Props) => {
               idx={subnetIdx}
               isCreateVPCDrawer={isDrawer}
               remove={remove}
+              shouldDisplayIPv6={shouldDisplayIPv6}
             />
           </Grid>
         );

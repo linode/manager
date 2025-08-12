@@ -5,7 +5,7 @@ import { Controller, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
+import { useGetLinodeCreateType } from '../utils/useGetLinodeCreateType';
 
 import type { CreateLinodeRequest, Image } from '@linode/api-v4';
 
@@ -14,7 +14,7 @@ export const StackScriptImages = () => {
     name: 'stackscript_id',
   });
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const hasStackScriptSelected =
     stackscriptId !== null && stackscriptId !== undefined;
@@ -34,7 +34,7 @@ export const StackScriptImages = () => {
 
   const helperText = !hasStackScriptSelected
     ? `Select ${
-        params.type === 'One-Click' ? 'an app' : 'a StackScript'
+        createType === 'One-Click' ? 'an app' : 'a StackScript'
       } to see compatible Images.`
     : undefined;
 

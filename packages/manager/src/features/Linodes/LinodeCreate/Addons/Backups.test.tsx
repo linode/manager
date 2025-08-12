@@ -16,7 +16,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -65,7 +65,7 @@ describe('Linode Create Backups Addon', () => {
 
   it('should be enabled if the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

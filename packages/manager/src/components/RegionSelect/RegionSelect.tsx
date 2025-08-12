@@ -110,6 +110,7 @@ export const RegionSelect = <
         data-testid="region-select"
         disableClearable={disableClearable}
         disabled={disabled}
+        disabledItemsFocusable
         errorText={errorText}
         filterOptions={filterOptions}
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
@@ -126,7 +127,7 @@ export const RegionSelect = <
         onChange={onChange}
         options={regionOptions}
         placeholder={placeholder ?? 'Select a Region'}
-        renderOption={(props, region, { selected }) => {
+        renderOption={(props, region, state) => {
           const { key, ...rest } = props;
 
           return (
@@ -136,7 +137,7 @@ export const RegionSelect = <
               item={region}
               key={`${region.id}-${key}`}
               props={rest}
-              selected={selected}
+              selected={state.selected}
             />
           );
         }}

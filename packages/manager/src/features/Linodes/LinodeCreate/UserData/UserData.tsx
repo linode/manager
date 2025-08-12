@@ -43,7 +43,7 @@ export const UserData = () => {
     [regions, regionId]
   );
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   if (!region?.capabilities.includes('Metadata')) {
     return null;

@@ -1,8 +1,3 @@
-import {
-  docsLink,
-  guidesMoreLinkText,
-} from 'src/utilities/emptyStateLandingUtils';
-
 import type {
   ResourcesHeaders,
   ResourcesLinks,
@@ -21,16 +16,10 @@ export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
 };
 
 export const gettingStartedGuides: ResourcesLinkSection = {
-  links: [
-    {
-      // TODO: Change the link and text when proper documentation is ready
-      text: 'Getting started guide',
-      to: 'https://techdocs.akamai.com/cloud-computing/docs',
-    },
-  ],
+  links: [],
   moreInfo: {
-    text: guidesMoreLinkText,
-    to: docsLink,
+    text: '',
+    to: '',
   },
-  title: 'Getting Started Guides',
+  title: '',
 };

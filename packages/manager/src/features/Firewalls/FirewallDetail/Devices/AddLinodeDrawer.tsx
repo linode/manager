@@ -59,7 +59,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'firewall',
     ['create_firewall_device'],
     firewall?.id

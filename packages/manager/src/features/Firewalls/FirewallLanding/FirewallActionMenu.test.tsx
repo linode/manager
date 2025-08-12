@@ -10,10 +10,10 @@ import type { FirewallStatus } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: { update_firewall: false, delete_firewall: false },
+    data: { update_firewall: false, delete_firewall: false },
   })),
   useIsLinodeInterfacesEnabled: vi.fn(() => ({
-    permissions: { isLinodeInterfacesEnabled: false },
+    data: { isLinodeInterfacesEnabled: false },
   })),
 }));
 
@@ -51,7 +51,7 @@ describe('FirewallActionMenu', () => {
 
   it('enables Enable/Disable and Delete actions if user has permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_firewall: true, delete_firewall: true },
+      data: { update_firewall: true, delete_firewall: true },
     });
 
     renderWithTheme(<FirewallActionMenu {...defaultProps} />);
@@ -68,7 +68,7 @@ describe('FirewallActionMenu', () => {
 
   it('enables Enable/Disable and disabled Delete actions if user has permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_firewall: true, delete_firewall: false },
+      data: { update_firewall: true, delete_firewall: false },
     });
 
     renderWithTheme(<FirewallActionMenu {...defaultProps} />);

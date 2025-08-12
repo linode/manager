@@ -5,15 +5,10 @@ import { validateIP } from './firewalls.schema';
 export const nodePoolSchema = object({
   type: string(),
   count: number(),
+  upgrade_strategy: string(),
+  k8_version: string(),
+  firewall_id: number(),
 });
-
-export const nodePoolBetaSchema = nodePoolSchema.concat(
-  object({
-    upgrade_strategy: string(),
-    k8_version: string(),
-    firewall_id: number(),
-  }),
-);
 
 export const clusterLabelSchema = string()
   .required('Label is required.')

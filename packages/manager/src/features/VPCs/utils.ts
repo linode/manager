@@ -103,8 +103,11 @@ export const getIsVPCLKEEnterpriseCluster = (vpc: VPC) =>
 export const getLinodeInterfacePrimaryIPv4 = (iface: LinodeInterface) =>
   iface.vpc?.ipv4?.addresses.find((address) => address.primary)?.address;
 
-export const getLinodeInterfaceRanges = (iface: LinodeInterface) =>
+export const getLinodeInterfaceIPv4Ranges = (iface: LinodeInterface) =>
   iface.vpc?.ipv4?.ranges.map((range) => range.range);
+
+export const getLinodeInterfaceIPv6Ranges = (iface: LinodeInterface) =>
+  iface.vpc?.ipv6?.ranges.map((range) => range.range);
 
 // TODO: update this when converting to react-hook-form
 // gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload

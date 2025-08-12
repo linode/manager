@@ -34,7 +34,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
   });
   expect(result).toBe(false);
   result = checkMandatoryFiltersSelected({
-    dashboardObj: mockDashboard,
+    dashboardObj: { ...mockDashboard, id: 2 },
     filterValue: { region: 'us-east' },
     resource: 1,
     timeDuration: {
@@ -100,26 +100,26 @@ it('test constructDimensionFilters method', () => {
 });
 
 it('test checkIfFilterNeededInMetricsCall method', () => {
-  let result = checkIfFilterNeededInMetricsCall('region', 'linode');
+  let result = checkIfFilterNeededInMetricsCall('region', 2);
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('resource_id', 'linode');
+  result = checkIfFilterNeededInMetricsCall('resource_id', 2);
   expect(result).toEqual(false); // not needed as dimension filter
 
-  result = checkIfFilterNeededInMetricsCall('node_type', 'dbaas');
+  result = checkIfFilterNeededInMetricsCall('node_type', 1);
   expect(result).toEqual(true);
 
-  result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
+  result = checkIfFilterNeededInMetricsCall('engine', 1);
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('node_type', 'xyz'); // xyz service type
+  result = checkIfFilterNeededInMetricsCall('node_type', 2);
   expect(result).toEqual(false);
 });
 
 it('test checkIfFilterBuilderNeeded method', () => {
   let result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
-    service_type: 'linode',
+    id: 2,
   });
   expect(result).toBe(false); // should be false for linode
 
@@ -131,6 +131,7 @@ it('test checkIfFilterBuilderNeeded method', () => {
 
   result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
+    id: -1,
     service_type: '',
   });
   expect(result).toBe(false); // should be false for empty / undefined case

@@ -100,7 +100,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       clearOnBlur={true}
       data-testid="placement-groups-select"
       disabled={Boolean(!selectedRegion?.id) || disabled}
+      disabledItemsFocusable
       errorText={error?.[0]?.reason}
+      getOptionDisabled={(placementGroup) =>
+        isDisabledPlacementGroup(placementGroup, selectedRegion)
+      }
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       helperText={
         !selectedRegion

@@ -86,7 +86,6 @@ export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
   serviceType: string;
-  supportedRegionIds?: string;
 }
 
 interface GpuV2 {
@@ -106,6 +105,8 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 interface AclpAlerting {
+  accountAlertLimit: number;
+  accountMetricLimit: number;
   alertDefinitions: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;

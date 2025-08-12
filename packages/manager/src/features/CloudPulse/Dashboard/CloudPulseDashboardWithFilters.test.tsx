@@ -87,7 +87,6 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
   it('renders a CloudPulseDashboardWithFilters component successfully without error placeholders', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: mockDashboard,
       error: false,
       isError: false,
       isLoading: false,
@@ -141,14 +140,14 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
   it('renders a CloudPulseDashboardWithFilters component with no filters configured error', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: { ...mockDashboard, service_type: 'xyz' },
+      data: { ...mockDashboard, id: -1, service_type: 'xyz' },
       error: false,
       isError: false,
       isLoading: false,
     });
 
     renderWithTheme(
-      <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
+      <CloudPulseDashboardWithFilters dashboardId={-1} resource={1} />
     );
 
     const noFilterText = screen.getByText(

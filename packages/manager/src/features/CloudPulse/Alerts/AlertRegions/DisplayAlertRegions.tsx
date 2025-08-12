@@ -10,15 +10,45 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { AlertFormMode } from '../constants';
-import type { Region } from '@linode/api-v4';
+import type { AlertFormMode, SelectDeselectAll } from '../constants';
+
+export interface AlertRegion {
+  /**
+   * Indicates if the region is selected.
+   * This is used to determine if the region should be checked in the UI.
+   */
+  checked: boolean;
+  /**
+   * The number of associated entities in the region.
+   */
+  count: number;
+  /**
+   * Id of the region
+   */
+  id: string;
+  /**
+   * Label of the region.
+   */
+  label: string;
+}
 
 interface DisplayAlertRegionProps {
+  /**
+   * Function to handle the selection of all regions.
+   */
+  handleSelectAll: (action: SelectDeselectAll) => void;
   /**
    * Function to handle the change in selection of a region.
    */
   handleSelectionChange: (regionId: string, isChecked: boolean) => void;
-
+  /**
+   * Indicates if all regions are selected.
+   */
+  isAllSelected?: boolean;
+  /**
+   * Indicates if some regions are selected.
+   */
+  isSomeSelected?: boolean;
   /**
    * Flag to indicate the mode of the form
    */
@@ -26,7 +56,7 @@ interface DisplayAlertRegionProps {
   /**
    * List of regions to be displayed.
    */
-  regions?: Region[];
+  regions?: AlertRegion[];
   /**
    * To indicate whether to show only selected regions or not.
    */
@@ -35,7 +65,15 @@ interface DisplayAlertRegionProps {
 
 export const DisplayAlertRegions = React.memo(
   (props: DisplayAlertRegionProps) => {
-    const { regions, handleSelectionChange, mode } = props;
+    const {
+      regions,
+      handleSelectionChange,
+      isSomeSelected,
+      isAllSelected,
+      showSelected,
+      handleSelectAll,
+      mode,
+    } = props;
 
     return (
       <Paginate data={regions ?? []}>
@@ -60,8 +98,14 @@ export const DisplayAlertRegions = React.memo(
                     <TableCell>
                       <Box>
                         <Checkbox
+                          checked={!isSomeSelected && isAllSelected}
                           data-testid="select-all-checkbox"
-                          onChange={(_, _checked) => {}}
+                          indeterminate={isSomeSelected && !isAllSelected}
+                          onChange={(_, checked) =>
+                            handleSelectAll(
+                              checked ? 'Select All' : 'Deselect All'
+                            )
+                          }
                         />
                       </Box>
                     </TableCell>
@@ -76,6 +120,16 @@ export const DisplayAlertRegions = React.memo(
                   >
                     Region
                   </TableSortCell>
+                  <TableSortCell
+                    active={true}
+                    data-qa-header="associated-entities"
+                    data-qa-sorting="associated-header"
+                    direction="asc"
+                    handleClick={() => {}}
+                    label="Associated Entities"
+                  >
+                    Associated Entities
+                  </TableSortCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -83,25 +137,29 @@ export const DisplayAlertRegions = React.memo(
                   length={regions?.length ?? 0}
                   loading={false}
                 >
-                  {paginatedData.map(({ label, id }) => {
-                    return (
-                      <TableRow data-testid={`region-row-${id}`} key={id}>
-                        {mode !== 'view' && (
-                          <TableCell>
-                            <Checkbox
-                              onChange={(_, status) =>
-                                handleSelectionChange(id, status)
-                              }
-                            />
-                          </TableCell>
-                        )}
+                  {paginatedData
+                    ?.filter(({ checked }) => (showSelected ? checked : true))
+                    .map(({ label, id, checked, count }) => {
+                      return (
+                        <TableRow data-testid={`region-row-${id}`} key={id}>
+                          {mode !== 'view' && (
+                            <TableCell>
+                              <Checkbox
+                                checked={checked}
+                                onChange={(_, status) =>
+                                  handleSelectionChange(id, status)
+                                }
+                              />
+                            </TableCell>
+                          )}
 
-                        <TableCell>
-                          {label} ({id})
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                          <TableCell>
+                            {label} ({id})
+                          </TableCell>
+                          <TableCell>{count}</TableCell>
+                        </TableRow>
+                      );
+                    })}
                 </TableContentWrapper>
               </TableBody>
             </Table>

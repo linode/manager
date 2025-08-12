@@ -271,7 +271,13 @@ export const createVPCSchema = object({
   label: labelValidation.required(LABEL_REQUIRED),
   description: string(),
   region: string().required('Region is required'),
-  subnets: array().of(createSubnetSchemaIPv4),
+  subnets: array()
+    .of(createSubnetSchemaIPv4)
+    .when('ipv6', {
+      is: (value: unknown) => value === undefined,
+      then: () => array().of(createSubnetSchemaIPv4),
+      otherwise: () => array().of(createSubnetSchemaWithIPv6),
+    }),
   ipv6: array().of(createVPCIPv6Schema).max(1).optional(),
 });
 

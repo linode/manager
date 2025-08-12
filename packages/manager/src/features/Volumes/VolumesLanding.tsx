@@ -1,16 +1,10 @@
 import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  CloseIcon,
-  ErrorState,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from '@linode/ui';
+import { getAPIFilterFromQuery } from '@linode/search';
+import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
-import * as React from 'react';
-import { debounce } from 'throttle-debounce';
+import React from 'react';
 
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -21,6 +15,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -46,30 +41,26 @@ import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
 import type { Filter, Volume } from '@linode/api-v4';
-import type {
-  VolumeAction,
-  VolumesSearchParams,
-} from 'src/routes/volumes/index';
+import type { VolumeAction } from 'src/routes/volumes/index';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
-  const search: VolumesSearchParams = useSearch({
-    from: '/volumes',
+  const search = useSearch({
+    from: '/volumes/',
+    shouldThrow: false,
   });
   const pagination = usePaginationV2({
     currentRoute: '/volumes',
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
     searchParams: (prev) => ({
       ...prev,
-      query: search.query,
+      query: search?.query,
     }),
   });
   const isVolumeCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
   });
-
-  const { query } = search;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -82,12 +73,17 @@ export const VolumesLanding = () => {
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
   });
 
+  const { filter: searchFilter, error: searchError } = getAPIFilterFromQuery(
+    search?.query,
+    {
+      searchableFieldsWithoutOperator: ['label', 'tags'],
+    }
+  );
+
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
-    ...(query && {
-      label: { '+contains': query },
-    }),
+    ...searchFilter,
   };
 
   const {
@@ -120,22 +116,12 @@ export const VolumesLanding = () => {
     });
   };
 
-  const resetSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        query: undefined,
-      }),
-      to: '/volumes',
-    });
-  };
-
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSearch = (query: string) => {
     navigate({
       search: (prev) => ({
         ...prev,
         page: undefined,
-        query: e.target.value || undefined,
+        query: query ? query : undefined,
       }),
       to: '/volumes',
     });
@@ -148,11 +134,13 @@ export const VolumesLanding = () => {
     });
   };
 
+  const numberOfColumns = isBlockStorageEncryptionFeatureEnabled ? 7 : 6;
+
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (error) {
+  if (error && !search?.query) {
     return (
       <ErrorState
         errorText={
@@ -162,12 +150,12 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && !query) {
+  if (volumes?.results === 0 && !search?.query) {
     return <VolumesLandingEmptyState />;
   }
 
   return (
-    <>
+    <Stack spacing={2}>
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
         breadcrumbProps={{
@@ -185,34 +173,17 @@ export const VolumesLanding = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
-        spacingBottom={16}
         title="Volumes"
       />
-      <TextField
+      <DebouncedSearchTextField
+        clearable
+        errorText={searchError?.message}
         hideLabel
-        InputProps={{
-          endAdornment: query && (
-            <InputAdornment position="end">
-              {isFetching && <CircleProgress size="sm" />}
-
-              <IconButton
-                aria-label="Clear"
-                data-testid="clear-volumes-search"
-                onClick={resetSearch}
-                size="small"
-              >
-                <CloseIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-          sx: { mb: 3 },
-        }}
+        isSearching={isFetching}
         label="Search"
-        onChange={debounce(400, (e) => {
-          onSearch(e);
-        })}
+        onSearch={onSearch}
         placeholder="Search Volumes"
-        value={query ?? ''}
+        value={search?.query ?? ''}
       />
       <Table>
         <TableHead>
@@ -250,8 +221,17 @@ export const VolumesLanding = () => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {search?.query && error && (
+            <TableRowError
+              colSpan={numberOfColumns}
+              message={error[0].reason}
+            />
+          )}
           {volumes?.data.length === 0 && (
-            <TableRowEmpty colSpan={6} message="No volume found" />
+            <TableRowEmpty
+              colSpan={numberOfColumns}
+              message="No volume found"
+            />
           )}
           {volumes?.data.map((volume) => (
             <VolumeTableRow
@@ -346,6 +326,6 @@ export const VolumesLanding = () => {
         volume={selectedVolume}
         volumeError={selectedVolumeError}
       />
-    </>
+    </Stack>
   );
 };

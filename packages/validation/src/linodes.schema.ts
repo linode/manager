@@ -418,10 +418,10 @@ const alerts = object({
     .typeError('CPU Usage must be a number')
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800'),
-  network_in: number(),
-  network_out: number(),
-  transfer_quota: number(),
-  io: number(),
+  network_in: number().typeError('Incoming Traffic must be a number'),
+  network_out: number().typeError('Outbound Traffic must be a number'),
+  transfer_quota: number().typeError('Transfer Quota must be a number'),
+  io: number().typeError('Disk I/O Rate must be a number'),
 }).notRequired();
 
 const schedule = object({

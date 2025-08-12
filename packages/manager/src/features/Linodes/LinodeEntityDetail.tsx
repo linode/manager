@@ -74,7 +74,7 @@ export const LinodeEntityDetail = (props: Props) => {
     linodeId: linode.id,
   });
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['update_linode'],
     linode.id

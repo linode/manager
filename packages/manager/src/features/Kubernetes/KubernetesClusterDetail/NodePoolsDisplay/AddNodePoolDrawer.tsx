@@ -15,10 +15,7 @@ import {
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
   nodeWarning,
 } from 'src/features/Kubernetes/constants';
-import {
-  useCreateNodePoolBetaMutation,
-  useCreateNodePoolMutation,
-} from 'src/queries/kubernetes';
+import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
@@ -88,11 +85,6 @@ export const AddNodePoolDrawer = (props: Props) => {
   const { data: types } = useAllTypes(open);
 
   const {
-    error: errorBeta,
-    isPending: isPendingBeta,
-    mutateAsync: createPoolBeta,
-  } = useCreateNodePoolBetaMutation(clusterId);
-  const {
     error,
     isPending,
     mutateAsync: createPool,
@@ -142,11 +134,7 @@ export const AddNodePoolDrawer = (props: Props) => {
       setAddNodePoolError(error?.[0].reason);
       scrollErrorIntoViewV2(drawerRef);
     }
-    if (errorBeta) {
-      setAddNodePoolError(errorBeta?.[0].reason);
-      scrollErrorIntoViewV2(drawerRef);
-    }
-  }, [error, errorBeta]);
+  }, [error]);
 
   const resetDrawer = () => {
     setSelectedTypeInfo(undefined);
@@ -159,14 +147,6 @@ export const AddNodePoolDrawer = (props: Props) => {
   const handleAdd = () => {
     if (!selectedTypeInfo) {
       return;
-    }
-    if (clusterTier === 'enterprise') {
-      return createPoolBeta({
-        count: selectedTypeInfo.count,
-        type: selectedTypeInfo.planId,
-      }).then(() => {
-        onClose();
-      });
     }
     return createPool({
       count: selectedTypeInfo.count,
@@ -218,7 +198,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          isSubmitting={isPending || isPendingBeta}
+          isSubmitting={isPending}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           onSelect={(newType: string) => {
             if (selectedTypeInfo?.planId !== newType) {

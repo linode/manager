@@ -21,7 +21,9 @@ describe('StreamCreateCheckoutBar', () => {
       component: <StreamCreateCheckoutBar createStream={createStream} />,
       useFormOptions: {
         defaultValues: {
-          destination_type: destinationType.LinodeObjectStorage,
+          destination: {
+            type: destinationType.LinodeObjectStorage,
+          },
         },
       },
     });
@@ -46,9 +48,13 @@ describe('StreamCreateCheckoutBar', () => {
   const TestFormComponent = () => {
     const methods = useForm({
       defaultValues: {
-        type: streamType.AuditLogs,
-        destination_type: destinationType.LinodeObjectStorage,
-        label: '',
+        stream: {
+          label: '',
+          type: streamType.AuditLogs,
+        },
+        destination: {
+          type: destinationType.LinodeObjectStorage,
+        },
       },
     });
 

@@ -54,7 +54,7 @@ const LinodeConfigs = () => {
 
   const id = Number(linodeId);
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['create_linode_config_profile'],
     id

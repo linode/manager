@@ -10,7 +10,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { Stream } from '@linode/api-v4';
+import type { Destination, Stream } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -89,6 +89,37 @@ export const createStreams = (mockState: MockState) => [
       });
 
       return makeResponse(stream);
+    }
+  ),
+];
+
+export const getDestinations = () => [
+  http.get(
+    '*/v4beta/monitor/streams/destinations',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Destination>>
+    > => {
+      return makePaginatedResponse({
+        data: destinationFactory.buildList(5),
+        request,
+      });
+    }
+  ),
+  http.get(
+    '*/v4beta/monitor/streams/destinations/:id',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
+      const id = Number(params.id);
+      const destination = await mswDB.get('destinations', id);
+
+      if (!destination) {
+        return makeNotFoundResponse();
+      }
+
+      return makeResponse(destination);
     }
   ),
 ];

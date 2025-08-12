@@ -109,7 +109,9 @@ export const MaintenancePolicySelect = (props: Props) => {
               </InputAdornment>
             ),
         },
-        tooltipText: (
+        tooltipText: disabled ? (
+          "You don't have permission to change this setting."
+        ) : (
           <Stack spacing={2}>
             <Typography>
               <strong>Migrate:</strong> {MIGRATE_TOOLTIP_TEXT}

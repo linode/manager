@@ -24,7 +24,7 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({}),
 
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -52,17 +52,20 @@ describe('Security', () => {
       component: <Security />,
     });
 
-    await waitFor(() => {
-      const rootPasswordInput = getByLabelText('Root Password');
+    await waitFor(
+      () => {
+        const rootPasswordInput = getByLabelText('Root Password');
 
-      expect(rootPasswordInput).toBeVisible();
-      expect(rootPasswordInput).toBeDisabled();
-    });
+        expect(rootPasswordInput).toBeVisible();
+        expect(rootPasswordInput).toBeDisabled();
+      },
+      { timeout: 5_000 }
+    );
   });
 
   it('should enable the root password input if the user does has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });
@@ -92,7 +95,7 @@ describe('Security', () => {
 
   it('should disable an "Add An SSH Key" button if the user does not have create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: false,
       },
     });
@@ -109,7 +112,7 @@ describe('Security', () => {
 
   it('should enable an "Add An SSH Key" button if the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

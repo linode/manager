@@ -29,7 +29,7 @@ vi.mock('src/hooks/useFlags', () => {
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: vi.fn(() => ({
-    permissions: { create_firewall: true },
+    data: { create_firewall: true },
   })),
 }));
 

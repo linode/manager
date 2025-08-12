@@ -18,6 +18,8 @@ export const PreviewReply = (props: Props) => {
         height: '243px',
         overflowY: 'auto',
         padding: 1.75,
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word',
       }}
       variant="outlined"
     >

@@ -323,6 +323,13 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
         return mapResourceIdToName(value, resources);
       }
 
+      if (key === 'linode_id') {
+        return (
+          resources.find((resource) => resource.entities?.[value] !== undefined)
+            ?.entities?.[value] ?? value
+        );
+      }
+
       if (key === 'metric_name' && hideMetricName) {
         return '';
       }

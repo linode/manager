@@ -6,12 +6,12 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { filterRegionByServiceType } from '../Alerts/Utils/utils';
 import { NO_REGION_MESSAGE } from '../Utils/constants';
 import { deepEqual } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { Dashboard, Filter, FilterValue, Region } from '@linode/api-v4';
-import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -68,9 +68,10 @@ export const CloudPulseRegionSelect = React.memo(
       flags.gecko2?.la
     );
 
-    const serviceType: string | undefined = selectedDashboard?.service_type;
-    const capability = serviceType
-      ? FILTER_CONFIG.get(serviceType)?.capability
+    const dashboardId = selectedDashboard?.id;
+    const serviceType = selectedDashboard?.service_type;
+    const capability = dashboardId
+      ? FILTER_CONFIG.get(dashboardId)?.capability
       : undefined;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
@@ -105,26 +106,9 @@ export const CloudPulseRegionSelect = React.memo(
       regions, // Function to call on change
     ]);
 
-    // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-      const resourceTypeFlag = flags.aclpResourceTypeMap?.find(
-        (item: CloudPulseResourceTypeMapFlag) =>
-          item.serviceType === serviceType
-      );
-
-      if (
-        resourceTypeFlag?.supportedRegionIds === null ||
-        resourceTypeFlag?.supportedRegionIds === undefined
-      ) {
-        return regions;
-      }
-
-      const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
-        .split(',')
-        .map((regionId: string) => regionId.trim());
-
-      return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
-    }, [flags.aclpResourceTypeMap, regions, serviceType]);
+      return filterRegionByServiceType('metrics', regions, serviceType);
+    }, [regions, serviceType]);
 
     const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
       resources?.some(({ region }) => region === id)

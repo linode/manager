@@ -227,6 +227,8 @@ describe('PrimaryNav', () => {
         enabled: true,
       },
       aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
         alertDefinitions: true,
         notificationChannels: false,
         recentActivity: false,
@@ -266,6 +268,8 @@ describe('PrimaryNav', () => {
         enabled: false,
       },
       aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
         alertDefinitions: true,
         notificationChannels: true,
         recentActivity: true,
@@ -304,6 +308,8 @@ describe('PrimaryNav', () => {
         enabled: true,
       },
       aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
         alertDefinitions: false,
         notificationChannels: false,
         recentActivity: false,

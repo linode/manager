@@ -27,7 +27,7 @@ interface LinodeFirewallsProps {
 
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['apply_linode_firewalls'],
     linodeID,

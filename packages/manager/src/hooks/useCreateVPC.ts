@@ -6,20 +6,17 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import {
-  getQueryParamsFromQueryString,
-  scrollErrorIntoView,
-} from '@linode/utilities';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { createVPCSchema } from '@linode/validation';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router-dom';
 
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
 import type { CreateVPCPayload, VPC } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 export interface UseCreateVPCInputs {
@@ -35,14 +32,13 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
 
   const previousSubmitCount = React.useRef<number>(0);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
-  const location = useLocation();
+  const createType = useGetLinodeCreateType();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const { data: regions } = useRegionsQuery();
   const regionsData = regions ?? [];
@@ -54,7 +50,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     try {
       const vpc = await createVPC(values);
       if (pushToVPCPage) {
-        history.push(`/vpcs/${vpc.id}`);
+        navigate({ to: '/vpcs/$vpcId', params: { vpcId: vpc.id } });
       } else {
         if (handleSelectVPC && onDrawerClose) {
           handleSelectVPC(vpc);
@@ -66,7 +62,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       // Fire analytics form submit upon successful VPC creation from Linode Create flow.
       if (isFromLinodeCreate) {
         sendLinodeCreateFormStepEvent({
-          createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+          createType: createType ?? 'OS',
           headerName: 'Create VPC',
           interaction: 'click',
           label: 'Create VPC',

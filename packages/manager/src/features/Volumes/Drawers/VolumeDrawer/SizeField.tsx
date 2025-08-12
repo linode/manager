@@ -105,8 +105,16 @@ export const SizeField = (props: Props) => {
         data-qa-size
         errorText={error}
         helperText={helperText}
+        inputProps={{
+          min: 0,
+        }}
         InputProps={{
           endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
+          onKeyDown: (e) => {
+            if (['+', '-', '.', 'E', 'e'].includes(e.key)) {
+              e.preventDefault();
+            }
+          },
         }}
         label="Size"
         name={name}

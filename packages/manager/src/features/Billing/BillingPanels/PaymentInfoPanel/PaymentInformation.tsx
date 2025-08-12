@@ -10,7 +10,7 @@ import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/Delet
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -48,11 +48,9 @@ const PaymentInformation = (props: Props) => {
 
   const isChildUser = profile?.user_type === 'child';
 
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+  const { data: permissions } = usePermissions('account', ['update_account']);
+
+  const isReadOnly = !permissions.update_account || isChildUser;
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -135,7 +133,6 @@ const PaymentInformation = (props: Props) => {
           <PaymentMethods
             error={error}
             isChildUser={isChildUser}
-            isRestrictedUser={isReadOnly}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}

@@ -4,6 +4,8 @@ import {
   type LinodeObjectStorageDetails,
 } from '@linode/api-v4';
 
+import type { CustomHTTPsDetails } from '@linode/api-v4';
+
 export interface DestinationTypeOption {
   label: string;
   value: string;
@@ -20,7 +22,8 @@ export const destinationTypeOptions: DestinationTypeOption[] = [
   },
 ];
 
-export interface CreateDestinationForm extends LinodeObjectStorageDetails {
-  destination_label: string;
-  destination_type: DestinationType;
+export interface CreateDestinationForm {
+  details: CustomHTTPsDetails | LinodeObjectStorageDetails;
+  label: string;
+  type: DestinationType;
 }

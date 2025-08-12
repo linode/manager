@@ -93,6 +93,7 @@ export const AlertsPanel = (props: Props) => {
             { variant: 'success' }
           );
         })
+        .catch(() => {})
         .finally(() => {
           setIsDialogOpen(false);
         });
@@ -131,10 +132,11 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'cpu',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'cpu_usage_state',
-      state: (formik.values.cpu ?? 0) > 0,
+      state:
+        formik.values.cpu === ('' as unknown) || Boolean(formik.values.cpu),
       textInputLabel: 'cpu_usage_threshold',
       textTitle: 'Usage Threshold',
       title: 'CPU Usage',
@@ -156,10 +158,10 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'io',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'disk_io_state',
-      state: (formik.values.io ?? 0) > 0,
+      state: formik.values.io === ('' as unknown) || Boolean(formik.values.io),
       textInputLabel: 'disk_io_threshold',
       textTitle: 'I/O Threshold',
       title: 'Disk I/O Rate',
@@ -185,10 +187,12 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'network_in',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'incoming_traffic_state',
-      state: (formik.values.network_in ?? 0) > 0,
+      state:
+        formik.values.network_in === ('' as unknown) ||
+        Boolean(formik.values.network_in),
       textInputLabel: 'incoming_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Incoming Traffic',
@@ -214,10 +218,12 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'network_out',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'outbound_traffic_state',
-      state: (formik.values.network_out ?? 0) > 0,
+      state:
+        formik.values.network_out === ('' as unknown) ||
+        Boolean(formik.values.network_out),
       textInputLabel: 'outbound_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Outbound Traffic',
@@ -243,10 +249,12 @@ export const AlertsPanel = (props: Props) => {
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue(
           'transfer_quota',
-          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
       radioInputLabel: 'transfer_quota_state',
-      state: (formik.values.transfer_quota ?? 0) > 0,
+      state:
+        formik.values.transfer_quota === ('' as unknown) ||
+        Boolean(formik.values.transfer_quota),
       textInputLabel: 'transfer_quota_threshold',
       textTitle: 'Quota Threshold',
       title: 'Transfer Quota',
