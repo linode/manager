@@ -18,7 +18,7 @@ interface Props {
 export const HistoryTableContent = (props: Props) => {
   const { data, error, isLoading } = props;
 
-  const cols = 6;
+  const cols = 4;
 
   if (isLoading) {
     return <TableRowLoading columns={cols} rows={1} />;
