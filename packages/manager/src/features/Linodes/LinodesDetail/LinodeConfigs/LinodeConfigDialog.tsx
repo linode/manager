@@ -44,7 +44,6 @@ import type { JSX } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import {
   useIsLkeEnterpriseEnabled,
   useKubernetesBetaEndpoint,
@@ -1323,10 +1322,6 @@ export const unrecommendedConfigNoticeSelector = ({
     values.interfaces &&
     values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
-  // Return a different warning if the VPC interface was created for a LKE-E cluster
-  if (vpcInterface && isLKEEnterpriseCluster) {
-    return noticeForScenario(LKE_ENTERPRISE_AUTOGEN_VPC_WARNING);
-  }
   /*
    Scenario 1:
     - the interface passed in to this function is a VPC interface
