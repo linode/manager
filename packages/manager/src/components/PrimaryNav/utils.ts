@@ -14,7 +14,15 @@ export const linkIsActive = (locationPathname: string, to: LinkProps['to']) => {
     return currentlyOnOneClickTab && isOneClickTab;
   }
 
-  return to?.split('/')[1] === locationPathname.split('/')[1];
+  if (to === locationPathname) {
+    return true;
+  }
+
+  if (locationPathname.startsWith(to + '/')) {
+    return true;
+  }
+
+  return false;
 };
 
 /**
