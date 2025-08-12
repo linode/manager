@@ -574,7 +574,7 @@ export interface SaveCreditCardData {
 }
 
 export interface AccountMaintenance {
-  complete_time: string;
+  complete_time: null | string;
   description: 'emergency' | 'scheduled';
   entity: {
     id: number;
@@ -583,14 +583,14 @@ export interface AccountMaintenance {
     url: string;
   };
   maintenance_policy_set: MaintenancePolicySlug;
-  not_before: string;
+  not_before: null | string;
   reason: string;
   source: 'platform' | 'user';
-  start_time: string;
+  start_time: null | string;
   status:
     | 'canceled'
     | 'completed'
-    | 'in-progress'
+    | 'in_progress'
     | 'pending'
     | 'scheduled'
     | 'started';
@@ -601,7 +601,7 @@ export interface AccountMaintenance {
     | 'power_off_on'
     | 'reboot'
     | 'volume_migration';
-  when: string;
+  when: string; // Never null, always datetime object
 }
 
 // Note: In the future there will be more slugs, ie: 'private/1234'.
