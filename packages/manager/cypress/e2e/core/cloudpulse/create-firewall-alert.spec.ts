@@ -1,7 +1,7 @@
 /**
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
-import { profileFactory } from '@linode/utilities';
+import { linodeFactory, profileFactory } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -16,6 +16,7 @@ import {
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetFirewalls } from 'support/intercepts/firewalls';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
@@ -46,6 +47,8 @@ import {
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
+
+import type { FirewallDeviceEntityType, Linode } from '@linode/api-v4';
 
 export interface MetricDetails {
   aggregationType: string;
@@ -164,8 +167,13 @@ const metricDefinitions = firewallMetricDefinitionData.map(
       unit,
       dimensions: [
         {
-          dimension_label: 'region_id',
-          label: 'Region',
+          dimension_label: 'Linode',
+          label: 'parent_vm_entity_id"',
+          values: [],
+        },
+        {
+          dimension_label: 'Linode Region',
+          label: 'region_id',
           values: [],
         },
         {
@@ -194,8 +202,8 @@ const metricDefinitions = firewallMetricDefinitionData.map(
           values: ['vpc', 'public'],
         },
         {
-          dimension_label: 'vpc_subnet_id',
-          label: 'VPC Subnet ID',
+          dimension_label: 'VPC-Subnet',
+          label: 'vpc_subnet_id',
           values: [],
         },
       ],
@@ -209,7 +217,17 @@ const mockAlerts = alertFactory.build({
   service_type: 'firewall',
   entity_ids: ['2'],
 });
-const mockFirewalls = firewallFactory.build({ label: firewalls });
+const mockFirewalls = firewallFactory.build({
+  label: firewalls,
+  entities: [
+    {
+      id: 1,
+      label: 'my-linode',
+      type: 'linode' as FirewallDeviceEntityType,
+      parent_entity: null,
+    },
+  ],
+});
 
 const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
 /**
@@ -296,6 +314,14 @@ const verifyAlertRow = (
     });
 };
 
+const mockLinodes: Linode[] = [
+  linodeFactory.build({
+    id: 1,
+    label: 'Linode 1',
+    region: 'us-ord',
+  }),
+];
+
 describe('Create Alert', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
@@ -315,6 +341,7 @@ describe('Create Alert', () => {
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
     mockGetAlertChannels([notificationChannels]);
     mockGetFirewalls([mockFirewalls]);
+    mockGetLinodes(mockLinodes);
   });
 
   it('should navigate to the Create Alert page from the Alert Listings page', () => {
@@ -441,9 +468,9 @@ describe('Create Alert', () => {
           .findByLabel('Data Field')
           .eq(1)
           .should('be.visible')
-          .type('Region');
+          .type('region_id');
 
-        cy.findByText('Region').should('be.visible').click();
+        cy.findByText('region_id').should('be.visible').click();
 
         ui.autocomplete
           .findByLabel('Operator')
@@ -583,10 +610,8 @@ describe('Create Alert', () => {
           expect(firstRule.metric).to.equal(firstCustomRule.metric);
           expect(firstRule.operator).to.equal(firstCustomRule.operator);
           expect(firstRule.threshold).to.equal(firstCustomRule.threshold);
-          expect(
-            firstRule.dimension_filters[0]?.dimension_label ?? ''
-          ).to.equal(
-            firstCustomRule.dimension_filters?.[0]?.dimension_label ?? ''
+          expect(firstRule.dimension_filters[0].dimension_label).to.equal(
+            'Linode Region'
           );
           expect(firstRule.dimension_filters[0]?.operator ?? '').to.equal('eq');
           expect(firstRule.dimension_filters[0]?.value ?? '').to.equal(
