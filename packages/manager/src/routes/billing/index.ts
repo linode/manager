@@ -34,8 +34,8 @@ const billingInvoiceDetailsRoute = createRoute({
   }),
   path: 'invoices/$invoiceId',
 }).lazy(() =>
-  import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
-    (m) => m.invoiceDetailLazyRoute
+  import('src/features/Billing/BillingLanding/invoiceDetailsLazyRoute').then(
+    (m) => m.invoiceDetailsLazyRoute
   )
 );
 
