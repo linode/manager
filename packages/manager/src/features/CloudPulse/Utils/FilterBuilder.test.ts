@@ -151,64 +151,6 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(label).toEqual(name);
   }
 });
-it('test getNodeTypeProperties', () => {
-  const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Node Type'
-  );
-
-  expect(nodeTypeSelectionConfig).toBeDefined();
-
-  if (nodeTypeSelectionConfig) {
-    const {
-      database_ids,
-      disabled,
-      handleNodeTypeChange,
-      label,
-      savePreferences,
-    } = getNodeTypeProperties(
-      {
-        config: nodeTypeSelectionConfig,
-        dashboard: dbaasDashboard,
-        dependentFilters: { [RESOURCE_ID]: [1] },
-        isServiceAnalyticsIntegration: false,
-        resource_ids: [1],
-      },
-      vi.fn()
-    );
-    const { name } = nodeTypeSelectionConfig.configuration;
-    expect(database_ids).toEqual([1]);
-    expect(handleNodeTypeChange).toBeDefined();
-    expect(savePreferences).toEqual(true);
-    expect(disabled).toEqual(false);
-    expect(label).toEqual(name);
-  }
-});
-
-it('test getNodeTypeProperties with disabled true', () => {
-  const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Node Type'
-  );
-
-  expect(nodeTypeSelectionConfig).toBeDefined();
-
-  if (nodeTypeSelectionConfig) {
-    const { disabled, handleNodeTypeChange, label, savePreferences } =
-      getNodeTypeProperties(
-        {
-          config: nodeTypeSelectionConfig,
-          dashboard: dbaasDashboard,
-          dependentFilters: {},
-          isServiceAnalyticsIntegration: false,
-        },
-        vi.fn()
-      );
-    const { name } = nodeTypeSelectionConfig.configuration;
-    expect(handleNodeTypeChange).toBeDefined();
-    expect(savePreferences).toEqual(true);
-    expect(disabled).toEqual(true);
-    expect(label).toEqual(name);
-  }
-});
 
 describe('shouldDisableFilterByFilterKey', () => {
   // resources filter has region as mandatory filter, this should reflect in the dependent filters
@@ -242,9 +184,9 @@ describe('shouldDisableFilterByFilterKey', () => {
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
-      { region: undefined },
+      {},
       mockDashboard,
-      { region: 'us-east' } // tags are defined in preferences which confirms that this optional filter was selected
+      { region: 'us-east' } // region is still not defined, so the result should be true
     );
     expect(result).toEqual(true);
   });

@@ -132,7 +132,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
-    return <CircleProgress />;
+    return (
+      <CircleProgress
+        sx={{
+          padding: 2,
+        }}
+      />
+    );
   }
 
   if (!dashboard) {
