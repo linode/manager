@@ -48,9 +48,11 @@ const PaymentInformation = (props: Props) => {
 
   const isChildUser = profile?.user_type === 'child';
 
-  const { data: permissions } = usePermissions('account', ['update_account']);
+  const { data: permissions } = usePermissions('account', [
+    'create_payment_method',
+  ]);
 
-  const isReadOnly = !permissions.update_account || isChildUser;
+  const isReadOnly = !permissions?.create_payment_method || isChildUser;
 
   const doDelete = () => {
     setDeleteLoading(true);
