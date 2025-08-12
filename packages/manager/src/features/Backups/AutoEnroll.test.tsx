@@ -5,6 +5,15 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AutoEnroll } from './AutoEnroll';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: { update_account_settings: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 describe('AutoEnroll display component', () => {
   it('should render', () => {
     const { getByText } = renderWithTheme(
@@ -35,5 +44,19 @@ describe('AutoEnroll display component', () => {
       />
     );
     expect(getByText('OMG! This is an error!')).toBeVisible();
+  });
+
+  it('should disable toggle when user does not have "enable_linode_backups" permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account_settings: false },
+    });
+    const { getByRole } = renderWithTheme(
+      <AutoEnroll
+        enabled={false}
+        error="OMG! This is an error!"
+        toggle={vi.fn()}
+      />
+    );
+    expect(getByRole('checkbox')).toBeDisabled();
   });
 });

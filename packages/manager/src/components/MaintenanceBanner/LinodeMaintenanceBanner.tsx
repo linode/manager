@@ -28,6 +28,8 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
   );
 
   const maintenanceTypeLabel = linodeMaintenance?.type.split('_').join(' ');
+  const maintenanceStartTime =
+    linodeMaintenance?.start_time || linodeMaintenance?.when;
 
   if (!linodeMaintenance) return null;
 
@@ -37,14 +39,14 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
         Linode {linodeMaintenance.entity.label} {linodeMaintenance.description}{' '}
         maintenance {maintenanceTypeLabel} will begin{' '}
         <strong>
-          {linodeMaintenance.start_time ? (
+          {maintenanceStartTime ? (
             <>
               <DateTimeDisplay
                 format="MM/dd/yyyy"
                 sx={(theme) => ({
                   font: theme.font.bold,
                 })}
-                value={linodeMaintenance.start_time}
+                value={maintenanceStartTime}
               />{' '}
               at{' '}
               <DateTimeDisplay
@@ -52,7 +54,7 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
                 sx={(theme) => ({
                   font: theme.font.bold,
                 })}
-                value={linodeMaintenance.start_time}
+                value={maintenanceStartTime}
               />
             </>
           ) : (

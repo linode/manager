@@ -22,6 +22,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 
 import type { UpdateFirewallSettings } from '@linode/api-v4';
 
@@ -38,7 +39,9 @@ export const DefaultFirewalls = () => {
   } = useFirewallSettingsQuery({ enabled: isLinodeInterfacesEnabled });
 
   const { mutateAsync: updateFirewallSettings } = useMutateFirewallSettings();
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const values = {
     default_firewall_ids: { ...firewallSettings?.default_firewall_ids },
   };
@@ -117,6 +120,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Configuration Profile Interfaces Firewall"
@@ -132,6 +136,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - Public Interface Firewall"
@@ -147,6 +152,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - VPC Interface Firewall"
@@ -165,6 +171,7 @@ export const DefaultFirewalls = () => {
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
+                  disabled={!permissions.update_account_settings}
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="NodeBalancers Firewall"
@@ -179,7 +186,7 @@ export const DefaultFirewalls = () => {
         <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
           <Button
             buttonType="outlined"
-            disabled={!isDirty}
+            disabled={!isDirty || !permissions.update_account_settings}
             loading={isSubmitting}
             type="submit"
           >
