@@ -44,11 +44,24 @@ export const AssignSelectedRolesDrawer = ({
 }: Props) => {
   const theme = useTheme();
 
-  const { data: allUsers } = useAccountUsers({});
   const [username, setUsername] = useState<null | string>('');
 
+  const userFilter = username
+    ? {
+        ['+or']: [{ username: { ['+contains']: username } }],
+      }
+    : undefined;
+
+  const {
+    data: accountUsers,
+    isFetching: isFetchingAccountUsers,
+    isLoading: isLoadingAccountUsers,
+  } = useAccountUsers({
+    filters: userFilter,
+  });
+
   const getUserOptions = () => {
-    return allUsers?.data.map((user: User) => ({
+    return accountUsers?.data.map((user: User) => ({
       label: user.username,
       value: user.username,
     }));
@@ -143,7 +156,7 @@ export const AssignSelectedRolesDrawer = ({
             <Typography mb={theme.spacingFunction(8)} variant="h3">
               Users
             </Typography>
-            {allUsers && allUsers?.data?.length > 0 && (
+            {accountUsers && accountUsers?.data?.length > 0 && (
               <Controller
                 control={control}
                 name={`username`}
@@ -152,11 +165,14 @@ export const AssignSelectedRolesDrawer = ({
                     errorText={fieldState.error?.message}
                     getOptionLabel={(option) => option.label}
                     label="Select a User"
+                    loading={isLoadingAccountUsers || isFetchingAccountUsers}
                     noMarginTop
                     onChange={(_, option) => {
-                      const username = option?.label || null;
+                      setUsername(option?.label || null);
                       onChange(username);
-                      setUsername(username);
+                    }}
+                    onInputChange={(_, value) => {
+                      setUsername(value);
                     }}
                     options={getUserOptions() || []}
                     placeholder="Select a User"
