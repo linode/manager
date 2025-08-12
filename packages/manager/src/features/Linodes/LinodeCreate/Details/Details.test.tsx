@@ -85,6 +85,7 @@ describe('Linode Create Details', () => {
       component: <Details />,
       options: {
         initialRoute: '/linodes/create/clone',
+        initialEntries: ['/linodes/create/clone'],
       },
     });
 
