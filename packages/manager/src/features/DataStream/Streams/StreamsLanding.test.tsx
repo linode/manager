@@ -17,7 +17,7 @@ describe('Streams Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId, getByTestId } = await renderWithTheme(
+    const { getByText, queryByTestId, getByTestId } = renderWithTheme(
       <StreamsLanding />
     );
 
@@ -46,21 +46,15 @@ describe('Streams Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithTheme(
-      <StreamsLanding />
-    );
+    const { getByText, queryByTestId } = renderWithTheme(<StreamsLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
       await waitForElementToBeRemoved(loadingElement);
     }
 
-    expect(
-      getByText((text) =>
-        text.includes(
-          'Create a data stream and configure delivery of cloud logs'
-        )
-      )
-    ).toBeInTheDocument();
+    getByText((text) =>
+      text.includes('Create a data stream and configure delivery of cloud logs')
+    );
   });
 });

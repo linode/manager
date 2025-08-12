@@ -15,7 +15,10 @@ import {
 
 import type { AlertFormMode } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertDefinitionScope, AlertServiceType } from '@linode/api-v4';
+import type {
+  AlertDefinitionScope,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 interface ScopeOption {
   disabled: boolean;
   label: string;
@@ -27,7 +30,7 @@ interface AlertEntityScopeSelectProps {
     CreateAlertDefinitionForm,
     AlertDefinitionScope | null | undefined
   >;
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
   const { name, serviceType, formMode = 'create' } = props;
