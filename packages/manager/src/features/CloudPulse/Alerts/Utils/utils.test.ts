@@ -431,7 +431,7 @@ describe('transformDimensionValue', () => {
     );
     expect(
       transformDimensionValue('firewall', 'interface_type', 'public')
-    ).toBe('Public');
+    ).toBe('PUBLIC');
     expect(transformDimensionValue('nodebalancer', 'protocol', 'http')).toBe(
       'HTTP'
     );
