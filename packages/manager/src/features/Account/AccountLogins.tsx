@@ -18,6 +18,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import AccountLoginsTableRow from './AccountLoginsTableRow';
 import { getRestrictedResourceText } from './utils';
 
@@ -42,6 +43,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 const AccountLogins = () => {
   const { classes } = useStyles();
+  const { data: permissions } = usePermissions('account', [
+    'list_account_logins',
+  ]);
   const pagination = usePaginationV2({
     currentRoute: '/account/login-history',
     preferenceKey: 'account-logins-pagination',
@@ -72,7 +76,7 @@ const AccountLogins = () => {
   );
   const { data: profile } = useProfile();
   const isChildUser = profile?.user_type === 'child';
-  const isAccountAccessRestricted = profile?.restricted;
+  const isAccountAccessRestricted = !permissions.list_account_logins;
 
   const renderTableContent = () => {
     if (isLoading) {
