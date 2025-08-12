@@ -41,7 +41,7 @@ const Main = () => {
 };
 
 async function loadApp() {
-  if (ENABLE_DEV_TOOLS) {
+  if (ENABLE_DEV_TOOLS && !window.location.pathname.includes('/lish/')) {
     const devTools = await import('./dev-tools/load');
     await devTools.loadDevTools();
 
