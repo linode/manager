@@ -255,6 +255,17 @@ export const mockAddNodePool = (
 };
 
 /**
+ * Intercepts POST request to create Node Pool.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateNodePool = (
+  clusterId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`lke/clusters/${clusterId}/pools`));
+};
+
+/**
  * Intercepts PUT request to update a node pool and mocks the response.
  *
  * @param clusterId - Numeric ID of LKE cluster for which to mock response.

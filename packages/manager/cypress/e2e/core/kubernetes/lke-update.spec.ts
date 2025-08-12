@@ -14,6 +14,7 @@ import {
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 import {
+  interceptCreateNodePool,
   mockAddNodePool,
   mockDeleteNodePool,
   mockGetApiEndpoints,
@@ -978,6 +979,85 @@ describe('LKE cluster updates', () => {
       // Wait for API response and assert toast message appears.
       cy.wait('@resetKubeconfig');
       ui.toast.assertMessage('Successfully reset Kubeconfig');
+    });
+
+    it('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
+      const cluster = kubernetesClusterFactory.build({
+        tier: 'enterprise',
+      });
+      const account = accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      });
+      const type = linodeTypeFactory.build({
+        class: 'dedicated',
+        label: 'Fake Plan',
+      });
+
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          postLa: true,
+        },
+      });
+
+      mockGetAccount(account).as('getAccount');
+      mockGetCluster(cluster).as('getCluster');
+      mockGetClusterPools(cluster.id, []).as('getNodePools');
+      mockGetLinodeTypes([type]).as('getTypes');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${cluster.id}`);
+
+      cy.wait(['@getCluster', '@getNodePools', '@getAccount']);
+
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@getTypes');
+
+      // Selet a plan
+      cy.get(`[data-qa-plan-row="${type.label}"]`).within(() => {
+        // Increment nodes 3 times
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+      });
+
+      interceptCreateNodePool(cluster.id).as('createNodePool');
+
+      ui.drawer.findByTitle(`Add a Node Pool: ${cluster.label}`).within(() => {
+        cy.findByLabelText('Update Strategy')
+          .should('be.visible')
+          .should('be.enabled')
+          .should('have.value', 'On Recycle Updates') // Should default to "On Recycle"
+          .click(); // Open the Autocomplete
+
+        ui.autocompletePopper
+          .findByTitle('Rolling Updates') // Select "Rolling Updates"
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Verify the field's value actually changed
+        cy.findByLabelText('Update Strategy').should(
+          'have.value',
+          'Rolling Updates'
+        );
+
+        ui.button
+          .findByTitle('Add pool')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
+
+      cy.wait('@createNodePool').then((intercept) => {
+        const payload = intercept.request.body;
+        expect(payload.update_strategy).to.equal('rolling_update');
+        expect(payload.type).to.equal(type.id);
+      });
     });
 
     /*
