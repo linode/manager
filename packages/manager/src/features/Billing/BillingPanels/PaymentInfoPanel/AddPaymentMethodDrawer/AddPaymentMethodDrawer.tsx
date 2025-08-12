@@ -13,7 +13,7 @@ import * as React from 'react';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { GooglePayChip } from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
@@ -53,11 +53,12 @@ export const AddPaymentMethodDrawer = (props: Props) => {
     PaymentMessage | undefined
   >(undefined);
   const isChildUser = profile?.user_type === 'child';
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+
+  const { data: permissions } = usePermissions('account', [
+    'create_payment_method',
+  ]);
+
+  const isReadOnly = !permissions?.create_payment_method || isChildUser;
 
   React.useEffect(() => {
     if (open) {
