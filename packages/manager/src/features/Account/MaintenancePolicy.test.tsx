@@ -9,6 +9,16 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { MaintenancePolicy } from './MaintenancePolicy';
 
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: { update_account_settings: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 describe('MaintenancePolicy', () => {
   it('renders the MaintenancePolicy section', () => {
     const { getByText } = renderWithTheme(<MaintenancePolicy />);
@@ -49,5 +59,20 @@ describe('MaintenancePolicy', () => {
         'Power Off / Power On'
       );
     });
+  });
+
+  it('should disable "Save Maintenance Policy" button and the selectbox if the user does not have "update_account_settings" permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_account_settings: false },
+    });
+    const { getByText, getByLabelText } = renderWithTheme(
+      <MaintenancePolicy />
+    );
+
+    expect(getByLabelText('Maintenance Policy')).toHaveAttribute('disabled');
+    expect(getByText('Save Maintenance Policy')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 });
