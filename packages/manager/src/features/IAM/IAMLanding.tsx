@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -11,6 +11,9 @@ import { useTabs } from 'src/hooks/useTabs';
 import { IAM_DOCS_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/iam/users`,
@@ -30,6 +33,10 @@ export const IdentityAccessLanding = React.memo(() => {
     entity: 'Identity and Access',
     title: 'Identity and Access',
   };
+
+  if (location.pathname === '/iam') {
+    navigate({ to: '/iam/users' });
+  }
 
   return (
     <>

@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
@@ -19,11 +20,13 @@ export const Router = () => {
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
+  const flags = useFlags();
 
   // Update the router's context
   router.update({
     context: {
       accountSettings,
+      flags,
       globalErrors,
       isACLPEnabled,
       isDatabasesEnabled,
