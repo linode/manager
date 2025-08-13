@@ -83,10 +83,10 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           >
             {!isNarrowViewport && (
               <Link
-                accessibleAriaLabel="Akamai - Dashboard"
+                accessibleAriaLabel="Akamai - Cloud Manager"
                 style={{ lineHeight: 0 }}
-                title="Akamai - Dashboard"
-                to={`/dashboard`}
+                title="Akamai - Cloud Manager"
+                to={`/`}
               >
                 <StyledAkamaiLogo
                   sx={{

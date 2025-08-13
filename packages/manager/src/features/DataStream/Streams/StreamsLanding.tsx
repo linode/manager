@@ -1,4 +1,4 @@
-import { useDataStreamsQuery } from '@linode/queries';
+import { useStreamsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
@@ -46,7 +46,7 @@ export const StreamsLanding = () => {
     data: streams,
     isLoading,
     error,
-  } = useDataStreamsQuery(
+  } = useStreamsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
