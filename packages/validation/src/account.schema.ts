@@ -82,11 +82,9 @@ export const userNameErrors = {
   lengthError: 'Username must be between 3 and 32 characters.',
   consecutiveError:
     'Username must not include two dashes or underscores in a row.',
-  startEndError:
+  charsError:
     'Username may only contain letters, numbers, dashes, and underscores and must begin and end with letters or numbers.',
   spacesError: 'Username may not contain spaces or tabs.',
-  specialCharsError:
-    'Username may only contain letters, numbers, dashes, and underscores and must begin and end with letters or numbers.',
   nonAsciiError: 'Username must only use ASCII characters.',
 };
 
@@ -111,7 +109,7 @@ export const CreateUserSchema = object({
         return !value.includes('__') && !value.includes('--');
       },
     )
-    .test('valid-characters', userNameErrors.startEndError, (value) => {
+    .test('valid-characters', userNameErrors.charsError, (value) => {
       if (!value) return false;
 
       // Check first and last characters (letters or numbers)

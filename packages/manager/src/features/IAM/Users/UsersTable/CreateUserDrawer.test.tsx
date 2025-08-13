@@ -108,30 +108,27 @@ describe('CreateUserDrawer - Username Validation', () => {
   });
 
   it('should display error for username starting with underscore', async () => {
-    await testUsernameValidation('_testuser', userNameErrors.startEndError);
+    await testUsernameValidation('_testuser', userNameErrors.charsError);
   });
 
   it('should display error for username ending with dash', async () => {
-    await testUsernameValidation('testuser-', userNameErrors.startEndError);
+    await testUsernameValidation('testuser-', userNameErrors.charsError);
   });
 
   it('should display error for username with spaces', async () => {
-    await testUsernameValidation('test user', userNameErrors.specialCharsError);
+    await testUsernameValidation('test user', userNameErrors.charsError);
   });
 
   it('should display error for username with tabs', async () => {
-    await testUsernameValidation(
-      'test\tuser',
-      userNameErrors.specialCharsError
-    );
+    await testUsernameValidation('test\tuser', userNameErrors.charsError);
   });
 
   it('should display error for username with special characters', async () => {
-    await testUsernameValidation('test@user', userNameErrors.specialCharsError);
+    await testUsernameValidation('test@user', userNameErrors.charsError);
   });
 
   it('should display error for non-ASCII characters', async () => {
-    await testUsernameValidation('tëstuser', userNameErrors.specialCharsError);
+    await testUsernameValidation('tëstuser', userNameErrors.charsError);
   });
 
   describe('Valid usernames', () => {
