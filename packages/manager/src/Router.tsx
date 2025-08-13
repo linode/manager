@@ -20,19 +20,18 @@ export const Router = () => {
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
-
   const flags = useFlags();
 
   // Update the router's context
   router.update({
     context: {
       accountSettings,
+      flags,
       globalErrors,
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
       queryClient,
-      flags,
     },
   });
 

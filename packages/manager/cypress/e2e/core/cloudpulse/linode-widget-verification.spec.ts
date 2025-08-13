@@ -24,6 +24,7 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
+  flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
@@ -31,7 +32,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -46,21 +46,6 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
 const { dashboardName, id, metrics, region, resource } = widgetDetails.linode;
 const serviceType = 'linode';
 const dashboard = dashboardFactory.build({
@@ -159,7 +144,7 @@ const getWidgetLegendRowValuesFromResponse = (
 
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);

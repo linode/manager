@@ -4,7 +4,7 @@ import type { FlagSet } from 'src/featureFlags';
 
 export type RouterContext = {
   accountSettings?: AccountSettings;
-  flags?: FlagSet;
+  flags: FlagSet;
   globalErrors?: {
     account_unactivated?: boolean;
   };
