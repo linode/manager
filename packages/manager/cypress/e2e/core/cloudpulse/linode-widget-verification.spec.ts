@@ -61,12 +61,12 @@ const flags: Partial<Flags> = {
     },
   ],
 };
-const { dashboardName, id, metrics, region, resource, serviceType } =
-  widgetDetails.linode;
-
+const { dashboardName, id, metrics, region, resource } = widgetDetails.linode;
+const serviceType = 'linode';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
+  id,
   widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,

@@ -15,7 +15,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { DeleteSSHKeyDialog } from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import { SSHKeyActionMenu } from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { parseAPIDate } from 'src/utilities/date';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 
@@ -30,7 +30,11 @@ export const SSHKeys = () => {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [selectedKeyId, setSelectedKeyId] = React.useState(-1);
 
-  const pagination = usePagination(1, PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/profile/keys',
+    initialPage: 1,
+    preferenceKey: PREFERENCE_KEY,
+  });
 
   const params = {
     page: pagination.page,

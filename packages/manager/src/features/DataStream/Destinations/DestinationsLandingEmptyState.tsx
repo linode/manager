@@ -1,4 +1,3 @@
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
@@ -11,8 +10,14 @@ import {
 } from 'src/features/DataStream/Destinations/DestinationsLandingEmptyStateData';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
-export const DestinationsLandingEmptyState = () => {
-  const navigate = useNavigate();
+interface DestinationsLandingEmptyStateProps {
+  navigateToCreate: () => void;
+}
+
+export const DestinationsLandingEmptyState = (
+  props: DestinationsLandingEmptyStateProps
+) => {
+  const { navigateToCreate } = props;
 
   return (
     <>
@@ -27,7 +32,7 @@ export const DestinationsLandingEmptyState = () => {
                 category: linkAnalyticsEvent.category,
                 label: 'Create Destination',
               });
-              navigate({ to: '/datastream/destinations/create' });
+              navigateToCreate();
             },
           },
         ]}
