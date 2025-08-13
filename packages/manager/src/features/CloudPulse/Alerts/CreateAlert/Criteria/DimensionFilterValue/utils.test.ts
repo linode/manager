@@ -83,14 +83,14 @@ describe('Utils', () => {
 
   describe('getStaticOptions', () => {
     it('should return capitalized label/value pairs', () => {
-      expect(getStaticOptions(['dev', 'prod'])).toEqual([
+      expect(getStaticOptions('dbaas', 'env', ['dev', 'prod'])).toEqual([
         { label: 'Dev', value: 'dev' },
         { label: 'Prod', value: 'prod' },
       ]);
     });
 
     it('should return empty array if input is null', () => {
-      expect(getStaticOptions(null)).toEqual([]);
+      expect(getStaticOptions('linode', 'dim', null)).toEqual([]);
     });
   });
 
