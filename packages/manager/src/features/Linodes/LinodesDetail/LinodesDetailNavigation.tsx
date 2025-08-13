@@ -96,7 +96,7 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        aclpServices?.linode?.metrics?.enabled &&
+        aclpServices?.linode?.alerts?.enabled &&
         aclpServices?.linode?.alerts?.beta &&
         isAclpAlertsSupportedRegionLinode &&
         isAclpAlertsBetaEditFlow ? (
