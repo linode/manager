@@ -397,9 +397,7 @@ export const VPCSubnetsTable = (props: Props) => {
         InnerTable,
         OuterTableCells,
         id: subnet.id,
-        label: `${subnet.label}${
-          isVPCLKEEnterpriseCluster ? ' (Managed)' : ''
-        }`,
+        label: subnet.label,
       };
     });
   };
