@@ -74,7 +74,7 @@ export const createToast = (options: ToastOptions) => {
  */
 export const toasts: Toasts = {
   backups_restore: createToast({ failure: { persist: true } }),
-  disk_delete: createToast({ failure: false, success: true }),
+  disk_delete: createToast({ failure: true, success: true }),
   disk_imagize: createToast({ failure: { persist: true }, success: true }),
   disk_resize: createToast({ failure: { persist: true }, success: true }),
   image_delete: createToast({ failure: true, success: true }),
