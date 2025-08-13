@@ -128,6 +128,11 @@ describe('AlertResources component tests', () => {
     });
     // search with invalid text and a region
     await userEvent.type(searchInput, 'dummy');
+    // Wait for debounced search to complete and filter results
+    await waitFor(() => {
+      expect(queryByText(linodes[0].label)).not.toBeInTheDocument();
+      expect(queryByText(linodes[1].label)).not.toBeInTheDocument();
+    });
     await userEvent.click(getByPlaceholderText('Select Regions'));
     await userEvent.click(getByTestId(regions[0].id));
     await userEvent.click(getByRole('button', { name: 'Close' }));
