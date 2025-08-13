@@ -91,7 +91,7 @@ describe('linode landing checks', () => {
   });
 
   it('checks the landing page side menu items', () => {
-    cy.findByTitle('Akamai - Dashboard').should('be.visible');
+    cy.findByTitle('Akamai - Cloud Manager').should('be.visible');
     cy.findByTestId('menu-item-Linodes').should('be.visible');
     cy.findByTestId('menu-item-Volumes').should('be.visible');
     cy.findByTestId('menu-item-NodeBalancers').should('be.visible');
