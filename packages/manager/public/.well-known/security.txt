@@ -1,6 +1,6 @@
 # Akamai uses HackerOne for responsible disclosure using
 # separate, invite-only programs for specific scopes:
-# Akamai CDN:                      https://hackerone.com/akamai?type=team
+# Akamai CDN:            https://hackerone.com/akamai?type=team
 # Akamai Cloud / Linode: https://hackerone.com/linode?type=team
 Policy: https://www.akamai.com/site/en/documents/akamai/2024/security-research-agreement.pdf
 
