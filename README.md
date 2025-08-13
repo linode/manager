@@ -1,8 +1,8 @@
 <h3 align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-white-text.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-navy-text.svg">
-    <img alt="Akamai Logo" src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-navy-text.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="./packages/manager/src/assets/logo/akamai-logo-white-text.svg">
+    <source media="(prefers-color-scheme: light)" srcset="./packages/manager/src/assets/logo/akamai-logo-navy-text.svg">
+    <img alt="Akamai Logo" src="./packages/manager/src/assets/logo/akamai-logo-navy-text.svg" width="200">
   </picture>
   <br />
   <br />
@@ -38,7 +38,7 @@
 
 ## Overview
 
-This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related Typescript packages:
+This repository is home to the Akamai **[Cloud Manager](https://cloud.linode.com)** and related Typescript packages:
 - [`@linode/api-v4`](packages/api-v4/)
 - [`@linode/queries`](packages/queries/)
 - [`@linode/search`](packages/search/)
