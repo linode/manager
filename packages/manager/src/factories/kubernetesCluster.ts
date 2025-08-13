@@ -54,6 +54,7 @@ export const kubernetesClusterFactory =
     updated: '2020-04-08T16:58:21',
     vpc_id: Factory.each((id) => id),
     subnet_id: Factory.each((id) => id),
+    logGeneration: true,
   });
 
 export const kubeEndpointFactory =

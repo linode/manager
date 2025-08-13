@@ -1,4 +1,13 @@
-import { Box, Checkbox, Notice, Paper, Typography } from '@linode/ui';
+import { getAPIFilterFromQuery } from '@linode/search';
+import {
+  Box,
+  Checkbox,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { isNotNullOrUndefined, usePrevious } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
 import type { ControllerRenderProps } from 'react-hook-form';
@@ -6,6 +15,8 @@ import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,17 +25,9 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { clusters } from 'src/features/DataStream/Streams/StreamForm/StreamFormClustersData';
+import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
-
-// TODO: remove type after fetching the clusters will be done
-export type Cluster = {
-  id: number;
-  label: string;
-  logGeneration: boolean;
-  region: string;
-};
 
 type OrderByKeys = 'label' | 'logGeneration' | 'region';
 
@@ -34,9 +37,35 @@ export const StreamFormClusters = () => {
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(MIN_PAGE_SIZE);
   const [searchText, setSearchText] = useState<string>('');
 
-  const idsWithLogGenerationEnabled = clusters
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(searchText, {
+      searchableFieldsWithoutOperator: ['label', 'region'],
+    });
+
+  const filter = {
+    ['+order']: order,
+    ['+order_by']: orderBy,
+    ...searchFilter,
+  };
+
+  const {
+    data: clusters,
+    isLoading,
+    error,
+  } = useKubernetesClustersQuery({
+    filter,
+    isUsingBetaEndpoint: true,
+    params: {
+      page,
+      page_size: pageSize,
+    },
+  });
+
+  const idsWithLogGenerationEnabled = clusters?.data
     .filter(({ logGeneration }) => logGeneration)
     .map(({ id }) => id);
 
@@ -95,7 +124,7 @@ export const StreamFormClusters = () => {
     const selectedIds = field.value || [];
 
     const isAllSelected =
-      selectedIds.length === idsWithLogGenerationEnabled.length;
+      selectedIds.length === (idsWithLogGenerationEnabled?.length ?? 0);
     const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
 
     const toggleAllClusters = () =>
@@ -109,44 +138,12 @@ export const StreamFormClusters = () => {
       field.onChange(updatedClusterIds);
     };
 
-    const filteredAndSortedClusters = clusters
-      .filter(({ label, region, logGeneration }) => {
-        const search = searchText.toLowerCase();
-        const logStatus = logGeneration ? 'enabled' : 'disabled';
-
-        return (
-          label.toLowerCase().includes(search) ||
-          region.toLowerCase().includes(search) ||
-          logStatus.includes(search)
-        );
-      })
-      .sort((a, b) => {
-        const asc = order === 'asc';
-
-        if (orderBy === 'label' || orderBy === 'region') {
-          const aValue = a[orderBy].toLowerCase();
-          const bValue = b[orderBy].toLowerCase();
-          if (aValue === bValue) return 0;
-          return asc ? (aValue < bValue ? -1 : 1) : aValue > bValue ? -1 : 1;
-        }
-
-        if (orderBy === 'logGeneration') {
-          const aLogGenerationNumber = Number(a.logGeneration);
-          const bLogGenerationNumber = Number(b.logGeneration);
-          return asc
-            ? bLogGenerationNumber - aLogGenerationNumber
-            : aLogGenerationNumber - bLogGenerationNumber;
-        }
-
-        return 0;
-      });
-
     return (
       <>
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: '5%' }}>
-              {!!filteredAndSortedClusters.length && (
+              {!!clusters?.results && (
                 <Checkbox
                   aria-label="Toggle all clusters"
                   checked={isAllSelected}
@@ -187,30 +184,28 @@ export const StreamFormClusters = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredAndSortedClusters.length ? (
-            filteredAndSortedClusters.map(
-              ({ label, region, id, logGeneration }) => (
-                <TableRow key={id}>
-                  <TableCell>
-                    <Checkbox
-                      aria-label={`Toggle ${label} cluster`}
-                      checked={selectedIds.includes(id)}
-                      disabled={isAutoAddAllClustersEnabled || !logGeneration}
-                      onBlur={field.onBlur}
-                      onChange={() => toggleCluster(id)}
-                    />
-                  </TableCell>
-                  <TableCell>{label}</TableCell>
-                  <TableCell>{region}</TableCell>
-                  <TableCell>
-                    <Box alignItems="center" display="flex">
-                      <StatusIcon status={logGeneration ? 'active' : 'error'} />
-                      {logGeneration ? 'Enabled' : 'Disabled'}
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              )
-            )
+          {clusters?.results ? (
+            clusters.data.map(({ label, region, id, logGeneration }) => (
+              <TableRow key={id}>
+                <TableCell>
+                  <Checkbox
+                    aria-label={`Toggle ${label} cluster`}
+                    checked={selectedIds.includes(id)}
+                    disabled={isAutoAddAllClustersEnabled || !logGeneration}
+                    onBlur={field.onBlur}
+                    onChange={() => toggleCluster(id)}
+                  />
+                </TableCell>
+                <TableCell>{label}</TableCell>
+                <TableCell>{region}</TableCell>
+                <TableCell>
+                  <Box alignItems="center" display="flex">
+                    <StatusIcon status={logGeneration ? 'active' : 'error'} />
+                    {logGeneration ? 'Enabled' : 'Disabled'}
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))
           ) : (
             <TableRowEmpty colSpan={4} message="No items to display." />
           )}
@@ -222,54 +217,74 @@ export const StreamFormClusters = () => {
   return (
     <Paper>
       <Typography variant="h2">Clusters</Typography>
-      <Notice sx={{ mt: 2 }} variant="info">
-        Disabling this option allows you to manually define which clusters will
-        be included in the stream. Stream will not be updated automatically with
-        newly configured clusters.
-      </Notice>
-      <Controller
-        name={'stream.details.is_auto_add_all_clusters_enabled'}
-        render={({ field }) => (
-          <Checkbox
-            checked={field.value}
-            onBlur={field.onBlur}
-            onChange={(_, checked) => field.onChange(checked)}
-            sxFormLabel={{ ml: -1 }}
-            text="Automatically include all existing and recently configured clusters."
-          />
-        )}
-      />
-      <DebouncedSearchTextField
-        clearable
-        containerProps={{
-          sx: {
-            width: '40%',
-            mt: 2,
-          },
-        }}
-        debounceTime={250}
-        hideLabel
-        label="Search"
-        onSearch={(value) => setSearchText(value)}
-        placeholder="Search"
-        value={searchText}
-      />
-      <Box sx={{ mt: 2 }}>
-        <Table data-testid="clusters-table">
+      {isLoading ? (
+        <CircleProgress
+          size="md"
+          style={{ display: 'block', margin: 'auto' }}
+        />
+      ) : error ? (
+        <ErrorState errorText="There was an error loading your Kubernetes clusters." />
+      ) : (
+        <>
+          <Notice sx={{ mt: 2 }} variant="info">
+            Disabling this option allows you to manually define which clusters
+            will be included in the stream. Stream will not be updated
+            automatically with newly configured clusters.
+          </Notice>
           <Controller
-            control={control}
-            name="stream.details.cluster_ids"
-            render={({ field }) => getTableContent(field)}
+            name={'stream.details.is_auto_add_all_clusters_enabled'}
+            render={({ field }) => (
+              <Checkbox
+                checked={field.value}
+                onBlur={field.onBlur}
+                onChange={(_, checked) => field.onChange(checked)}
+                sxFormLabel={{ ml: -1 }}
+                text="Automatically include all existing and recently configured clusters."
+              />
+            )}
           />
-        </Table>
-        {!isAutoAddAllClustersEnabled &&
-          formState.errors.stream?.details?.cluster_ids?.message && (
-            <Notice
-              text={formState.errors.stream?.details?.cluster_ids?.message}
-              variant="error"
+          <DebouncedSearchTextField
+            clearable
+            containerProps={{
+              sx: {
+                width: '40%',
+                mt: 2,
+              },
+            }}
+            debounceTime={250}
+            errorText={searchParseError?.message}
+            hideLabel
+            label="Search"
+            onSearch={(value) => setSearchText(value)}
+            placeholder="Search"
+            value={searchText}
+          />
+          <Box sx={{ mt: 2 }}>
+            <Table data-testid="clusters-table">
+              <Controller
+                control={control}
+                name="stream.details.cluster_ids"
+                render={({ field }) => getTableContent(field)}
+              />
+            </Table>
+            <PaginationFooter
+              count={clusters?.results || 0}
+              eventCategory="Clusters Table"
+              handlePageChange={setPage}
+              handleSizeChange={setPageSize}
+              page={page}
+              pageSize={pageSize}
             />
-          )}
-      </Box>
+            {!isAutoAddAllClustersEnabled &&
+              formState.errors.stream?.details?.cluster_ids?.message && (
+                <Notice
+                  text={formState.errors.stream?.details?.cluster_ids?.message}
+                  variant="error"
+                />
+              )}
+          </Box>
+        </>
+      )}
     </Paper>
   );
 };
