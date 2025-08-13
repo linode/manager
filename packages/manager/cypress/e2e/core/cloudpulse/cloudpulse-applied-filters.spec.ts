@@ -248,12 +248,9 @@ describe('Integration Tests for Applied Filters', () => {
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     // Select a region from the dropdown.
     ui.regionSelect.find().click();
@@ -282,9 +279,9 @@ describe('Integration Tests for Applied Filters', () => {
     // Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Database Engine ${'PostgreSQL'}"]`)
+      cy.get(`[data-qa-value="Database Engine ${'MySQL'}"]`)
         .should('be.visible')
-        .should('have.text', 'PostgreSQL');
+        .should('have.text', 'MySQL');
 
       cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
         .should('be.visible')

@@ -1,8 +1,9 @@
-import { useAllLinodesQuery } from '@linode/queries';
+import { useAllLinodesQuery, useRegionsQuery } from '@linode/queries';
 import { useMemo } from 'react';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { getSupportedRegionIds } from '../../../Utils/AlertResourceUtils';
 import {
   getFilteredFirewallResources,
   getFirewallLinodes,
@@ -11,6 +12,7 @@ import {
 } from './utils';
 
 import type { Item } from '../../../constants';
+import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
 
 interface FetchOptionsProps {
   /**
@@ -24,6 +26,10 @@ interface FetchOptionsProps {
   entities?: string[];
 
   /**
+   * Service to apply specific transformations to dimension values.
+   */
+  serviceType?: CloudPulseServiceType | null;
+  /**
    * Static list of value strings to be converted to autocomplete options.
    */
   values?: null | string[];
@@ -36,10 +42,30 @@ interface FetchOptionsProps {
 export function useFetchOptions(
   props: FetchOptionsProps
 ): Item<string, string>[] {
-  const { dimensionLabel, values, entities } = props;
+  const { dimensionLabel, values, entities, serviceType } = props;
 
   // Create static options if a predefined list of strings is provided
-  const staticOptions = useMemo(() => getStaticOptions(values ?? []), [values]);
+  const staticOptions = useMemo(
+    () =>
+      getStaticOptions(
+        serviceType ?? undefined,
+        dimensionLabel ?? '',
+        values ?? []
+      ),
+    [dimensionLabel, serviceType, values]
+  );
+
+  const { data: regions } = useRegionsQuery();
+  const supportedRegionIds =
+    serviceType && getSupportedRegionIds(regions, 'linode');
+  const regionFilter: Filter =
+    supportedRegionIds && supportedRegionIds.length > 0
+      ? {
+          '+or': supportedRegionIds.map((regionId) => ({
+            region: regionId,
+          })),
+        }
+      : {};
 
   // Fetch all firewall resources when dimension requires it
   const { data: firewallResources } = useResourcesQuery(
@@ -65,14 +91,16 @@ export function useFetchOptions(
     [firewallLinodes]
   );
 
-  // Fetch linodes data when needed (for region_id)
+  const combinedFilter = {
+    '+and': [
+      { '+or': selectedFirewallLinodeIds.map((id) => ({ id })) },
+      ...(regionFilter['+or'] ? [regionFilter] : []),
+    ],
+  };
+  // Fetch all linodes if the dimension is region_id and there are selected firewall linodes
   const { data: linodes } = useAllLinodesQuery(
     {},
-    selectedFirewallLinodeIds.length > 0
-      ? {
-          '+or': selectedFirewallLinodeIds.map((id) => ({ id })),
-        }
-      : {},
+    combinedFilter,
     selectedFirewallLinodeIds.length > 0 && dimensionLabel === 'region_id'
   );
 

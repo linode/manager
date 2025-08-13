@@ -109,12 +109,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
@@ -209,12 +206,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     ui.regionSelect.find().click();
     ui.autocompletePopper.find().within(() => {
@@ -259,12 +253,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     ui.regionSelect.find().click();
     ui.autocompletePopper.find().within(() => {
@@ -308,12 +299,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     ui.regionSelect.find().click();
     ui.autocompletePopper.find().within(() => {
@@ -355,12 +343,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type('PostgreSQL');
+      .type('MySQL');
 
-    ui.autocompletePopper
-      .findByTitle('PostgreSQL')
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
 
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();

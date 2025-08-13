@@ -1,8 +1,13 @@
 import { capitalize } from '@linode/utilities';
 
+import { transformDimensionValue } from '../../../Utils/utils';
+
 import type { Item } from '../../../constants';
 import type { OperatorGroup } from './constants';
-import type { DimensionFilterOperatorType } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DimensionFilterOperatorType,
+} from '@linode/api-v4';
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.
@@ -71,11 +76,13 @@ export const getOperatorGroup = (
  * @returns - List of label/value option objects.
  */
 export const getStaticOptions = (
+  serviceType: CloudPulseServiceType | undefined,
+  dimensionLabel: string,
   values: null | string[]
 ): Item<string, string>[] => {
   return (
     values?.map((val: string) => ({
-      label: capitalize(val),
+      label: transformDimensionValue(serviceType ?? null, dimensionLabel, val),
       value: val,
     })) ?? []
   );

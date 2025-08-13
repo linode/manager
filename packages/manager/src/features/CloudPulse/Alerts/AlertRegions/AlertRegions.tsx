@@ -6,6 +6,7 @@ import React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { RESOURCE_FILTER_MAP } from '../../Utils/constants';
 import {
   type AlertFormMode,
   REGION_GROUP_INFO_MESSAGE,
@@ -17,7 +18,7 @@ import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
 import type { AlertRegion } from './DisplayAlertRegions';
-import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface AlertRegionsProps {
   /**
@@ -49,17 +50,12 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
 
-  const resourceFilterMap: Record<string, Filter> = {
-    dbaas: {
-      platform: 'rdbms-default',
-    },
-  };
   const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
     {
-      ...(resourceFilterMap[serviceType ?? ''] ?? {}),
+      ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}),
     }
   );
 

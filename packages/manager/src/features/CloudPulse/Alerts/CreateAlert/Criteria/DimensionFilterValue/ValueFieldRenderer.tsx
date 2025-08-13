@@ -12,7 +12,10 @@ import { useFetchOptions } from './useFetchOptions';
 import { getOperatorGroup } from './utils';
 
 import type { OperatorGroup, ValueFieldConfig } from './constants';
-import type { DimensionFilterOperatorType } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DimensionFilterOperatorType,
+} from '@linode/api-v4';
 
 interface ValueFieldRendererProps {
   /**
@@ -53,6 +56,10 @@ interface ValueFieldRendererProps {
    * The operator used in the current filter. Used to determine the type of input to show.
    */
   operator: DimensionFilterOperatorType | null;
+  /**
+   * Service type of the alert
+   */
+  serviceType?: CloudPulseServiceType | null;
 
   /**
    * The currently selected value for the input field.
@@ -67,6 +74,7 @@ interface ValueFieldRendererProps {
 
 export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const {
+    serviceType,
     dimensionLabel,
     disabled,
     entities,
@@ -94,7 +102,12 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   }
 
   const config = dimensionConfig[operatorGroup];
-  const items = useFetchOptions({ dimensionLabel, values, entities });
+  const items = useFetchOptions({
+    dimensionLabel,
+    values,
+    entities,
+    serviceType,
+  });
   if (!config) return null;
 
   if (config.type === 'textfield') {
