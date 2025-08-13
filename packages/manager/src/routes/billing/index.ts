@@ -17,6 +17,15 @@ const billingRoute = createRoute({
   validateSearch: (search: BillingSearch) => search,
 });
 
+// Catch all route for billing page
+const billingCatchAllRoute = createRoute({
+  getParentRoute: () => billingRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/billing' });
+  },
+});
+
 // Index route: /billing (main billing content)
 const billingIndexRoute = createRoute({
   getParentRoute: () => billingRoute,
@@ -56,7 +65,20 @@ const billingInvoiceDetailsRoute = createRoute({
   )
 );
 
+// Catch all route for invoice details page
+const billingInvoiceDetailsCatchAllRoute = createRoute({
+  getParentRoute: () => billingRoute,
+  path: 'invoices/$invoiceId/$invalidPath',
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/billing/invoices/$invoiceId',
+      params: { invoiceId: Number(params.invoiceId) },
+    });
+  },
+});
+
 export const billingRouteTree = billingRoute.addChildren([
   billingIndexRoute,
-  billingInvoiceDetailsRoute,
+  billingCatchAllRoute,
+  billingInvoiceDetailsRoute.addChildren([billingInvoiceDetailsCatchAllRoute]),
 ]);
