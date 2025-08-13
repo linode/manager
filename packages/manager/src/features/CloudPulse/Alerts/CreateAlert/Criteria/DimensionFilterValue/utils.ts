@@ -98,7 +98,7 @@ export const getFilteredFirewallResources = (
   firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
 ): string[] => {
-  if (!firewallResources?.length || !entities?.length) return [];
+  if (!(firewallResources?.length && entities?.length)) return [];
 
   return firewallResources
     .filter((firewall) => entities.includes(firewall.id))

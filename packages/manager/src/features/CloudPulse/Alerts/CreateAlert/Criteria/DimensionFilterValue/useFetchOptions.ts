@@ -76,7 +76,9 @@ export function useFetchOptions(
   const { data: linodes } = useAllLinodesQuery(
     {},
     combinedFilter,
-    dimensionLabel === 'region_id' || dimensionLabel === 'parent_vm_entity_id'
+    (dimensionLabel === 'region_id' ||
+      dimensionLabel === 'parent_vm_entity_id') &&
+      filteredFirewallResourcesIds.length > 0
   );
 
   // Extract linodes from filtered firewall resources
