@@ -76,7 +76,7 @@ const AccountLogins = () => {
   );
   const { data: profile } = useProfile();
   const isChildUser = profile?.user_type === 'child';
-  const isAccountAccessRestricted = !permissions.list_account_logins;
+  const canViewAccountLogins = permissions.list_account_logins;
 
   const renderTableContent = () => {
     if (isLoading) {
@@ -106,7 +106,7 @@ const AccountLogins = () => {
     return null;
   };
 
-  return !isAccountAccessRestricted ? (
+  return canViewAccountLogins ? (
     <>
       <DocumentTitleSegment segment="Login History" />
       <Typography className={classes.copy} variant="body1">
