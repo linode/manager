@@ -1,8 +1,12 @@
 <h3 align="center">
-  <img src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-color.svg" width="200" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-white-text.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-navy-text.svg">
+    <img alt="Akamai Logo" src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-navy-text.svg">
+  </picture>
   <br />
   <br />
-  Akamai Connected Cloud Manager
+  Akamai Cloud Manager
 </h3>
 
 <p align="center">
@@ -16,27 +20,20 @@
   <a href="https://cloud.linode.com">
   <img alt="Website" src="https://img.shields.io/website?down_color=red&down_message=outage&label=cloud.linode.com&up_color=green&up_message=up&url=https%3A%2F%2Fcloud.linode.com" />
   </a>
-  <a href="https://github.com/linode/manager/releases">
-    <img src="https://img.shields.io/github/package-json/v/linode/manager?filename=packages%2Fmanager%2Fpackage.json&label=cloud.linode.com" alt="Cloud Manager Version" />
-  </a>
   <a href="https://design.linode.com">
     <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg" alt="Storybook" />
   </a>
 </p>
 <p align="center">
+  <a href="https://github.com/linode/manager/releases">
+    <img src="https://img.shields.io/github/package-json/v/linode/manager?filename=packages%2Fmanager%2Fpackage.json&label=cloud.linode.com" alt="Cloud Manager Version" />
+  </a>
   <a href="https://www.npmjs.com/package/@linode/api-v4">
     <img src="https://img.shields.io/npm/v/@linode/api-v4?label=%40linode%2Fapi-v4" alt="@linode/api-v4 version" />
-  </a>
-  <a href="https://bundlephobia.com/package/@linode/api-v4">
-    <img alt="api-v4 bundle size" src="https://img.shields.io/bundlephobia/min/@linode/api-v4?label=api-v4 size">
   </a>
   <a href="https://www.npmjs.com/package/@linode/validation">
     <img src="https://img.shields.io/npm/v/@linode/validation?label=%40linode%2Fvalidation" alt="@linode/validation version" />
   </a>
-  <a href="https://bundlephobia.com/package/@linode/validation">
-    <img alt="validation bundle size" src="https://img.shields.io/bundlephobia/min/@linode/validation?label=validation size">
-  </a>
-  
 </p>
 
 ## Overview
