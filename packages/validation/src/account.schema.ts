@@ -82,7 +82,50 @@ export const CreateUserSchema = object({
   username: string()
     .required('Username is required.')
     .min(3, 'Username must be between 3 and 32 characters.')
-    .max(32, 'Username must be between 3 and 32 characters.'),
+    .max(32, 'Username must be between 3 and 32 characters.')
+    .test('ascii-only', 'Username must only use ASCII characters.', (value) => {
+      if (!value) return false;
+      try {
+        return btoa(value).length > 0; // Simple ASCII check
+      } catch {
+        return false;
+      }
+    })
+    .test(
+      'no-consecutive-separators',
+      'Username must not include two dashes or underscores in a row.',
+      (value) => {
+        if (!value) return true; // Allow empty values (required check handles this)
+        return !value.includes('__') && !value.includes('--');
+      },
+    )
+    .test(
+      'valid-characters',
+      'Username may only contain letters, numbers, dashes, and underscores and must begin and end with letters or numbers.',
+      (value) => {
+        if (!value) return false;
+
+        // Check first and last characters (letters or numbers)
+        const firstChar = value[0];
+        const lastChar = value[value.length - 1];
+        const isAlphaNum = /[a-zA-Z0-9]/;
+
+        if (!isAlphaNum.test(firstChar) || !isAlphaNum.test(lastChar)) {
+          return false;
+        }
+
+        // Check all characters are valid (letters, numbers, dashes, underscores)
+        return /^[a-zA-Z0-9_-]+$/.test(value);
+      },
+    )
+    .test(
+      'no-whitespace',
+      'Username may not contain spaces or tabs.',
+      (value) => {
+        if (!value) return true; // Allow empty values (required check handles this)
+        return !/[ \t]/.test(value);
+      },
+    ),
   email: string()
     .required('Email address is required.')
     .email('Must be a valid email address.'),
