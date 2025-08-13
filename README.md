@@ -9,14 +9,13 @@
   Akamai Cloud Manager
 </h3>
 
-<p align="center">
-  <img alt="Linode Manager Code Coverage" src="https://cloud-manager-coverage.us-east-1.linodeobjects.com/badges.svg?v=1" />
-</p>
+  
 
 <p align="center">
   <a href="https://github.com/linode/manager/actions/workflows/ci.yml">
     <img src="https://github.com/linode/manager/actions/workflows/ci.yml/badge.svg?branch=develop" alt="CI Build Stats on develop" />
   </a>
+  <img alt="Linode Manager Code Coverage" src="https://cloud-manager-coverage.us-east-1.linodeobjects.com/badges.svg?v=1" />
   <a href="https://cloud.linode.com">
   <img alt="Website" src="https://img.shields.io/website?down_color=red&down_message=outage&label=cloud.linode.com&up_color=green&up_message=up&url=https%3A%2F%2Fcloud.linode.com" />
   </a>
