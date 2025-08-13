@@ -35,6 +35,7 @@ import {
   cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   memoryRulesFactory,
   notificationChannelFactory,
   triggerConditionFactory,
@@ -43,10 +44,7 @@ import { UPDATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/con
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
-// Feature flag setup
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 
 // Mock alert details
@@ -127,7 +125,7 @@ describe('Integration Tests for Edit Alert', () => {
    */
   beforeEach(() => {
     // Mocking various API responses
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetRegions(regions);

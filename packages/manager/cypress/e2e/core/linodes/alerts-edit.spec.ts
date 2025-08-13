@@ -58,10 +58,16 @@ const mockEnabledBetaAlerts = {
 describe('region enables alerts', function () {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpBetaServices: {
+      aclpServices: {
         linode: {
-          alerts: true,
-          metrics: false,
+          alerts: {
+            beta: true,
+            enabled: true,
+          },
+          metrics: {
+            beta: false,
+            enabled: false,
+          },
         },
       },
     }).as('getFeatureFlags');
@@ -400,10 +406,16 @@ describe('region enables alerts', function () {
 describe('region disables alerts. beta alerts not available regardless of linode settings', function () {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpBetaServices: {
+      aclpServices: {
         linode: {
-          alerts: true,
-          metrics: false,
+          alerts: {
+            beta: true,
+            enabled: true,
+          },
+          metrics: {
+            beta: false,
+            enabled: false,
+          },
         },
       },
     }).as('getFeatureFlags');

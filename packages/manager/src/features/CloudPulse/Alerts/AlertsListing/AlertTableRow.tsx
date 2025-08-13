@@ -45,7 +45,7 @@ export const AlertTableRow = (props: Props) => {
     updated_by,
   } = alert;
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
@@ -68,7 +68,7 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>
         {services.find((service) => service.value === service_type)?.label}{' '}
-        {aclpBetaServices?.[service_type]?.alerts && <BetaChip />}
+        {aclpServices?.[service_type]?.alerts?.beta && <BetaChip />}
       </TableCell>
       <TableCell data-testid={`created-by-${id}`}>{created_by}</TableCell>
       <TableCell data-testid={`updated-${id}`}>

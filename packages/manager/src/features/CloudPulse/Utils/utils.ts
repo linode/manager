@@ -35,6 +35,7 @@ import type {
   TimeDuration,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
+import type { AclpServices } from 'src/featureFlags';
 import type {
   StatWithDummyPoint,
   WithStartAndEnd,
@@ -215,15 +216,23 @@ export const seriesDataFormatter = (
 /**
  *
  * @param rawServiceTypes list of service types returned from api response
- * @returns converted service types list into string array
+ * @param aclpServices list of services with their statuses
+ * @returns enabled service types
  */
-export const formattedServiceTypes = (
-  rawServiceTypes: ServiceTypesList | undefined
+export const getEnabledServiceTypes = (
+  rawServiceTypes: ServiceTypesList | undefined,
+  aclpServices: Partial<AclpServices> | undefined
 ): CloudPulseServiceType[] => {
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
-  return rawServiceTypes.data.map((obj: Service) => obj.service_type);
+  // Return the service types that are enabled in the aclpServices flag
+  return rawServiceTypes.data
+    .filter(
+      (obj: Service) =>
+        aclpServices?.[obj.service_type]?.metrics?.enabled ?? false
+    )
+    .map((obj: Service) => obj.service_type);
 };
 
 /**
