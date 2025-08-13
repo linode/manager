@@ -7,11 +7,9 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import {
-  getIsVPCLKEEnterpriseCluster,
   getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
 } from '../utils';
@@ -46,11 +44,9 @@ export const VPCRow = ({
     id: vpc.id,
   });
 
-  const isVPCLKEEnterpriseCluster = getIsVPCLKEEnterpriseCluster(vpc);
-
   const actions: Action[] = [
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: isVPCReadOnly,
       onClick: handleEditVPC,
       title: 'Edit',
       tooltip: isVPCReadOnly
@@ -59,12 +55,10 @@ export const VPCRow = ({
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: isVPCReadOnly,
       onClick: handleDeleteVPC,
       title: 'Delete',
       tooltip: isVPCReadOnly
@@ -73,9 +67,7 @@ export const VPCRow = ({
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
   ];
 
