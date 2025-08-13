@@ -10,7 +10,6 @@ import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
 const props = {
   handlePowerActionsLinode: vi.fn(),
   handleUnassignLinode: vi.fn(),
-  isVPCLKEEnterpriseCluster: false,
   linode: linodeFactory.build({ label: 'linode-1' }),
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   isOffline: false,
@@ -89,21 +88,5 @@ describe('SubnetActionMenu', () => {
     const unassignButton = getByText('Unassign Linode');
     await userEvent.click(unassignButton);
     expect(props.handleUnassignLinode).toHaveBeenCalled();
-  });
-
-  it('should disable action buttons if isVPCLKEEnterpriseCluster is true', async () => {
-    const updatedProps = { ...props, isVPCLKEEnterpriseCluster: true };
-    const { getByLabelText, getAllByRole } = renderWithTheme(
-      <SubnetLinodeActionMenu {...updatedProps} />
-    );
-    const actionMenu = getByLabelText(
-      `Action menu for Linodes in Subnet subnet-1`
-    );
-    await userEvent.click(actionMenu);
-
-    const actionButtons = getAllByRole('menuitem');
-    actionButtons.forEach((button) =>
-      expect(button).toHaveAttribute('aria-disabled', 'true')
-    );
   });
 });
