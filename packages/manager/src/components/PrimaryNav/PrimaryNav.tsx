@@ -61,6 +61,7 @@ export type NavEntity =
   | 'Service Transfers'
   | 'Settings'
   | 'StackScripts'
+  | 'Users & Grants'
   | 'Volumes'
   | 'VPC';
 
@@ -276,6 +277,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               {
                 display: 'Billing',
                 to: '/billing',
+              },
+              {
+                display: 'Users & Grants',
+                hide: isIAMEnabled,
+                to: '/account/users',
               },
               {
                 display: 'Identity & Access',
