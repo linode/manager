@@ -43,6 +43,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
+  const url = iamRbacPrimaryNavChanges ? '/billing' : '/account/billing';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
   const isBalanceOutsideGracePeriod = notifications?.some(
@@ -55,7 +56,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const navigate = useNavigate();
   const search = useSearch({
-    from: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+    from: url,
   });
   const { paymentMethodId } = search;
 
@@ -80,7 +81,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     setPaymentDrawerOpen(false);
     setSelectedPaymentMethod(undefined);
     navigate({
-      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+      to: url,
     });
   }, [navigate]);
 
@@ -138,7 +139,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         <Button
           onClick={() =>
             navigate({
-              to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+              to: url,
               search: (prev) => ({
                 ...prev,
                 action: 'make-payment',
