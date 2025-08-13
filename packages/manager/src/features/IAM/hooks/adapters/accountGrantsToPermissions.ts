@@ -21,16 +21,16 @@ export const accountGrantsToPermissions = (
     // AccountAdmin
     accept_service_transfer: unrestricted,
     acknowledge_account_agreement: hasWriteAccess,
-    cancel_account: unrestricted || globalGrants?.cancel_account,
+    cancel_account: hasWriteAccess || globalGrants?.cancel_account,
     cancel_service_transfer: unrestricted,
     create_service_transfer: unrestricted,
     create_user: unrestricted,
     delete_user: unrestricted, // TODO: verify mapping as this is not in the API
-    enable_managed: unrestricted,
+    enable_managed: hasWriteAccess,
     enroll_beta_program: unrestricted,
     is_account_admin: unrestricted,
     update_account: hasWriteAccess,
-    update_account_settings: unrestricted,
+    update_account_settings: hasWriteAccess,
     update_user: unrestricted, // TODO: verify mapping as this is not in the API
     update_user_grants: unrestricted, // TODO: verify mapping as this is not in the API
     // AccountViewer
