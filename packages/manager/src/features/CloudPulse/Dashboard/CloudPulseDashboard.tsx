@@ -134,9 +134,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return (
       <CircleProgress
-        sx={{
-          padding: 2,
-        }}
+        sx={(theme) => ({
+          padding: theme.spacingFunction(16),
+        })}
       />
     );
   }
