@@ -15,7 +15,11 @@ import { ui } from 'support/ui';
 
 import { accountFactory, alertFactory } from 'src/factories';
 
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertStatusType,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
@@ -27,7 +31,7 @@ const statusList: AlertStatusType[] = [
   'in progress',
   'failed',
 ];
-const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 const tagSequence = ['LinodeTags', 'DBaaSTags', 'bothTags', 'No Tags'];
 
 // Generate mock alerts with a mix of tags, statuses, and service types

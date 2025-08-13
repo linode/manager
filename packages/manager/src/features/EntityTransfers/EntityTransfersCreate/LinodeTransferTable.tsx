@@ -11,7 +11,7 @@ import * as React from 'react';
 import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { extendType } from 'src/utilities/extendType';
 
 import { TransferTable } from './TransferTable';
@@ -31,7 +31,11 @@ export const LinodeTransferTable = React.memo((props: Props) => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
   const [searchText, setSearchText] = React.useState('');
 
-  const pagination = usePagination();
+  const pagination = usePaginationV2({
+    currentRoute: '/account/service-transfers/create',
+    initialPage: 1,
+    preferenceKey: 'linode-transfer-table',
+  });
 
   const { data, dataUpdatedAt, error, isError, isLoading } = useLinodesQuery(
     {

@@ -2026,4 +2026,72 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Software gateway solution at the edge.',
     website: 'https://netfoundry.io/',
   },
+  1873119: {
+    alt_description:
+      'Multi-model NoSQL database for graph, document, and key-value data.',
+    alt_name: 'Graph Database',
+    categories: ['Databases'],
+    colors: {
+      end: 'dde072',
+      start: '577038',
+    },
+    description:
+      'ArangoDB is a multi-model database that combines the power of graphs, documents, and key-value pairs in a single engine. It provides ACID transactions, flexible data modeling, and powerful query capabilities with AQL (ArangoDB Query Language). Perfect for applications requiring complex data relationships, real-time analytics, and scalable performance.',
+    isNew: true,
+    logo_url: 'arangodb.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/arangodb/',
+        title: 'Deploy ArangoDB through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'Multi-model database combining graph, document, and key-value capabilities.',
+    website: 'https://arangodb.com/',
+  },
+  1878106: {
+    alt_description:
+      'In-memory graph database built for real-time analytics and applications.',
+    alt_name: 'Graph Database',
+    categories: ['Databases'],
+    colors: {
+      end: 'ffbd14',
+      start: '75008f',
+    },
+    description:
+      'Memgraph is a high-performance, in-memory graph database designed for real-time analytics and streaming data. It uses the Cypher query language and supports powerful graph algorithms out of the box. With built-in support for streaming data, Memgraph makes it easy to build apps that respond instantly to changes in complex connected data.',
+    isNew: true,
+    logo_url: 'memgraph.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/memgraph/',
+        title: 'Deploy Memgraph through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'High-performance in-memory graph database for real-time applications.',
+    website: 'https://memgraph.com/',
+  },
+  1884304: {
+    alt_description:
+      'Leading graph database platform for connected data applications.',
+    alt_name: 'Graph Database',
+    categories: ['Databases'],
+    colors: {
+      end: '241f20',
+      start: '013f63',
+    },
+    description:
+      'Neo4j is a high-performance, open-source property graph database designed to store and query data as a network of connected nodes and relationships. It is optimized for handling complex, interconnected data and supports the Cypher query language for expressive and efficient graph queries.',
+    isNew: true,
+    logo_url: 'neo4j.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/neo4j/',
+        title: 'Deploy Neo4j through the Linode Marketplace',
+      },
+    ],
+    summary: 'Leading graph database for connected data applications.',
+    website: 'https://neo4j.com/',
+  },
 };

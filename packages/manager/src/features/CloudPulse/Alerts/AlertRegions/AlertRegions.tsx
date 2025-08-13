@@ -17,7 +17,7 @@ import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
 import type { AlertRegion } from './DisplayAlertRegions';
-import type { AlertServiceType, Filter } from '@linode/api-v4';
+import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
   /**
@@ -35,7 +35,7 @@ interface AlertRegionsProps {
   /**
    * The service type for which the regions are being selected.
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
   /**
    * The selected regions.
    */

@@ -73,7 +73,7 @@ export const KubernetesClusterRow = (props: Props) => {
           justifyContent="space-between"
           spacing={1}
         >
-          <Link tabIndex={0} to={`/kubernetes/clusters/${cluster.id}/summary`}>
+          <Link to={`/kubernetes/clusters/${cluster.id}/summary`}>
             {cluster.label}
           </Link>
           <ClusterChips cluster={cluster} />

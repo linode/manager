@@ -23,7 +23,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { LinodeMaintenanceText } from '../../LinodeMaintenanceText';
 import { IPAddress } from '../IPAddress';
 import { RegionIndicator } from '../RegionIndicator';
-import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
+import { getLinodeIconStatus } from '../utils';
 import {
   StyledButton,
   StyledIpTableCell,
@@ -65,9 +65,7 @@ export const LinodeRow = (props: Props) => {
 
   const isTransitioning = linodeInTransition(status, recentEvent);
 
-  const parsedMaintenanceStartTime = parseMaintenanceStartTime(
-    maintenance?.start_time || maintenance?.when
-  );
+  const maintenanceStartTime = maintenance?.start_time || maintenance?.when;
 
   const iconStatus = getLinodeIconStatus(status);
 
@@ -85,7 +83,7 @@ export const LinodeRow = (props: Props) => {
     maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
 
   const isInProgress =
-    maintenance?.status === 'started' || maintenance?.status === 'in-progress';
+    maintenance?.status === 'started' || maintenance?.status === 'in_progress';
 
   return (
     <TableRow
@@ -96,9 +94,7 @@ export const LinodeRow = (props: Props) => {
       onMouseLeave={handleMouseLeave}
     >
       <TableCell noWrap>
-        <Link tabIndex={0} to={`/linodes/${id}`}>
-          {label}
-        </Link>
+        <Link to={`/linodes/${id}`}>{label}</Link>
       </TableCell>
       <StyledMaintenanceTableCell
         data-qa-status
@@ -117,7 +113,7 @@ export const LinodeRow = (props: Props) => {
             />
           </StyledButton>
         )}
-        {isInProgress && (
+        {isInProgress && maintenanceStartTime && (
           <TooltipIcon
             className="ui-TooltipIcon ui-TooltipIcon-isActive"
             icon={statusTooltipIcons.active}
@@ -125,7 +121,7 @@ export const LinodeRow = (props: Props) => {
             text={
               <LinodeMaintenanceText
                 isOpened
-                maintenanceStartTime={parsedMaintenanceStartTime}
+                maintenanceStartTime={maintenanceStartTime}
               />
             }
             tooltipPosition="top"
@@ -143,11 +139,13 @@ export const LinodeRow = (props: Props) => {
             text={
               maintenance?.status === 'pending' ? (
                 "This Linode's maintenance window is pending."
-              ) : (
+              ) : maintenanceStartTime ? (
                 <LinodeMaintenanceText
                   isOpened={false}
-                  maintenanceStartTime={parsedMaintenanceStartTime}
+                  maintenanceStartTime={maintenanceStartTime}
                 />
+              ) : (
+                "This Linode's maintenance window is scheduled."
               )
             }
             tooltipPosition="top"
