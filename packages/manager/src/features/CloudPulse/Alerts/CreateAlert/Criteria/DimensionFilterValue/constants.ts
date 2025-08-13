@@ -85,6 +85,11 @@ export interface AutocompleteConfig extends BaseConfig {
    * Enforces that this config is for an autocomplete input.
    */
   type: 'autocomplete';
+
+  /**
+   * Flag to use a custom fetch function instead of the static options.
+   */
+  useCustomFetch?: boolean;
 }
 
 /**
@@ -143,6 +148,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
+      useCustomFetch: true,
     },
     startswith_endswith: {
       type: 'textfield',
@@ -151,6 +157,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
+      useCustomFetch: true,
     },
     '*': {
       type: 'textfield',
@@ -161,6 +168,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
+      useCustomFetch: true,
     },
     startswith_endswith: {
       type: 'textfield',
@@ -169,6 +177,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
+      useCustomFetch: true,
     },
     '*': {
       type: 'textfield',

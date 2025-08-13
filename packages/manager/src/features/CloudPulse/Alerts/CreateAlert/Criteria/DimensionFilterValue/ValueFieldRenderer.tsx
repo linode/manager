@@ -1,5 +1,6 @@
+import { useRegionsQuery } from '@linode/queries';
 import { TextField } from '@linode/ui';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import {
   MULTISELECT_PLACEHOLDER_TEXT,
@@ -9,7 +10,7 @@ import {
 } from './constants';
 import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
 import { useFetchOptions } from './useFetchOptions';
-import { getOperatorGroup } from './utils';
+import { getOperatorGroup, getStaticOptions } from './utils';
 
 import type { OperatorGroup, ValueFieldConfig } from './constants';
 import type {
@@ -100,14 +101,23 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     // 3. No dimension-specific config & values present → use *
     dimensionConfig = valueFieldConfig['*'];
   }
-
+  const { data: regions } = useRegionsQuery();
   const config = dimensionConfig[operatorGroup];
-  const items = useFetchOptions({
+  const customFetchItems = useFetchOptions({
     dimensionLabel,
-    values,
+    regions,
     entities,
     serviceType,
   });
+  const staticOptions = useMemo(
+    () =>
+      getStaticOptions(
+        serviceType ?? undefined,
+        dimensionLabel ?? '',
+        values ?? []
+      ),
+    [dimensionLabel, serviceType, values]
+  );
   if (!config) return null;
 
   if (config.type === 'textfield') {
@@ -136,6 +146,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     const autocompletePlaceholder = config.multiple
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
+    const items = config.useCustomFetch ? customFetchItems : staticOptions;
     return (
       <DimensionFilterAutocomplete
         disabled={disabled}

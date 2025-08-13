@@ -7,7 +7,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ValueFieldRenderer } from './ValueFieldRenderer';
 
-import type { DimensionFilterOperatorType } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DimensionFilterOperatorType,
+} from '@linode/api-v4';
 
 vi.mock('./useFetchOptions', () => ({
   useFetchOptions: () => [
@@ -18,9 +21,10 @@ vi.mock('./useFetchOptions', () => ({
 
 const EQ: DimensionFilterOperatorType = 'eq';
 const IN: DimensionFilterOperatorType = 'in';
-
+const NB: CloudPulseServiceType = 'nodebalancer';
 describe('<ValueFieldRenderer />', () => {
   const defaultProps = {
+    serviceType: NB,
     name: `rule_criteria.rules.${0}.dimension_filters.${0}`,
     dimensionLabel: 'protocol',
     disabled: false,

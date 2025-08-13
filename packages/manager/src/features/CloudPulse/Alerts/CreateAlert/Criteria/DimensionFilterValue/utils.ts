@@ -1,5 +1,3 @@
-import { capitalize } from '@linode/utilities';
-
 import { transformDimensionValue } from '../../../Utils/utils';
 
 import type { Item } from '../../../constants';
@@ -7,7 +5,9 @@ import type { OperatorGroup } from './constants';
 import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
+  Linode,
 } from '@linode/api-v4';
+import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.
@@ -89,19 +89,22 @@ export const getStaticOptions = (
 };
 
 /**
- * Filters firewall resources by matching entity IDs.
+ * Filters firewall resources and returns matching entity IDs.
  * @param firewallResources - List of firewall resource objects.
  * @param entities - List of target firewall entity IDs.
- * @returns - Filtered list of firewall resources.
+ * @returns - Flattened array of matching entity IDs.
  */
 export const getFilteredFirewallResources = (
-  firewallResources:
-    | undefined
-    | { entities?: Record<string, string>; id: string }[],
+  firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
-): { entities?: Record<string, string>; id: string }[] => {
+): string[] => {
   if (!firewallResources?.length || !entities?.length) return [];
-  return firewallResources.filter((fw) => entities.includes(fw.id));
+
+  return firewallResources
+    .filter((firewall) => entities.includes(firewall.id))
+    .flatMap((firewall) =>
+      firewall.entities ? Object.keys(firewall.entities) : []
+    );
 };
 
 /**
@@ -110,15 +113,16 @@ export const getFilteredFirewallResources = (
  * @returns - Flattened list of linode ID/label pairs as options.
  */
 export const getFirewallLinodes = (
-  resources: { entities?: Record<string, string> }[]
+  linodes: Linode[]
 ): Item<string, string>[] => {
-  const mergedEntities: Record<string, string> = resources
-    .map((fw) => fw.entities ?? {})
-    .reduce((acc, cur) => ({ ...acc, ...cur }), {});
-
-  return Object.entries(mergedEntities).map(([id, label]) => ({
-    label,
-    value: id,
+  if (!linodes) return [];
+  return linodes.map((linode) => ({
+    label: transformDimensionValue(
+      'firewall',
+      'parent_vm_entity_id',
+      linode.label
+    ),
+    value: String(linode.id),
   }));
 };
 
@@ -127,14 +131,12 @@ export const getFirewallLinodes = (
  * @param linodes - Linode objects with region information.
  * @returns - Deduplicated list of regions as options.
  */
-export const getLinodeRegions = (
-  linodes: undefined | { region?: string }[]
-): Item<string, string>[] => {
+export const getLinodeRegions = (linodes: Linode[]): Item<string, string>[] => {
   if (!linodes) return [];
   const regions = new Set<string>();
-  linodes.forEach((l) => l.region && regions.add(l.region));
+  linodes.forEach(({ region }) => region && regions.add(region));
   return Array.from(regions).map((region) => ({
-    label: capitalize(region),
+    label: transformDimensionValue('firewall', 'region_id', region),
     value: region,
   }));
 };
