@@ -2,6 +2,7 @@ import { createLinodeRequestFactory } from '@linode/utilities';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { authenticate } from 'support/api/authentication';
 import { mockGetAccountSettings } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { interceptDeleteLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -65,6 +66,9 @@ describe('delete linode', () => {
   });
   beforeEach(() => {
     cy.tag('method:e2e');
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    }).as('getFeatureFlags');
   });
 
   it('deletes linode from linode details page', () => {
