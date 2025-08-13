@@ -62,6 +62,7 @@ const LinodesDetailNavigation = () => {
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       chip:
+        aclpServices?.linode?.metrics?.enabled &&
         aclpServices?.linode?.metrics?.beta &&
         isAclpMetricsSupportedRegionLinode &&
         isAclpMetricsPreferenceBeta ? (
@@ -95,6 +96,7 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
+        aclpServices?.linode?.metrics?.enabled &&
         aclpServices?.linode?.alerts?.beta &&
         isAclpAlertsSupportedRegionLinode &&
         isAclpAlertsBetaEditFlow ? (
