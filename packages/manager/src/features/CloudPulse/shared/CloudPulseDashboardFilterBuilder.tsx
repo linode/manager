@@ -11,6 +11,7 @@ import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
   INTERFACE_ID,
+  LINODE_REGION,
   NODE_TYPE,
   PORT,
   REGION,
@@ -295,7 +296,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleRegionChange
           );
-        } else if (config.configuration.filterKey === 'region_id') {
+        } else if (config.configuration.filterKey === LINODE_REGION) {
           return getRegionProperties(
             {
               config,

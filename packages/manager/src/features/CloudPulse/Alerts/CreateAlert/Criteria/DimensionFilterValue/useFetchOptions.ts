@@ -61,7 +61,9 @@ export function useFetchOptions(
 
   // Fetch all firewall resources when dimension requires it
   const { data: firewallResources } = useResourcesQuery(
-    dimensionLabel === 'parent_vm_entity_id' || dimensionLabel === 'region_id',
+    dimensionLabel === 'parent_vm_entity_id' ||
+      dimensionLabel === 'region_id' ||
+      dimensionLabel === 'associated_entity_region',
     'firewall'
   );
 
@@ -83,7 +85,8 @@ export function useFetchOptions(
     {},
     combinedFilter,
     (dimensionLabel === 'region_id' ||
-      dimensionLabel === 'parent_vm_entity_id') &&
+      dimensionLabel === 'parent_vm_entity_id' ||
+      dimensionLabel === 'associated_entity_region') &&
       filteredFirewallResourcesIds.length > 0
   );
 
@@ -101,6 +104,8 @@ export function useFetchOptions(
 
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
+    case 'associated_entity_region':
+      return linodeRegions;
     case 'parent_vm_entity_id':
       return firewallLinodes;
     case 'region_id':
