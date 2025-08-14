@@ -215,7 +215,7 @@ describe('linode storage tab', () => {
   });
 
   /*
-   * - Same test as above, but uses different linode config: booted: false, disk_encryption: 'disabled', image: null
+   * - Same test as above, but uses different linode config for disk_encryption and image
    */
   it('delete disk succeeds', () => {
     const diskName = randomLabel();
