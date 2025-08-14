@@ -164,7 +164,7 @@ describe('linode storage tab', () => {
    * - Confirms UI flow end-to-end when a user deletes a Linode disk.
    * - Confirms that user can successfully delete a disk from a Linode.
    * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
-   * TODO: Disk cannot be deleted if config {booted: false, disk_encryption: 'enabled', image: null }
+   * TODO: Disk cannot be deleted if disk_encryption is 'enabled'
    * TODO: edit result of this test if/when behavior of backend is updated. uncertain what expected behavior is for this disk config
    */
   it('delete disk fails', () => {
@@ -215,7 +215,7 @@ describe('linode storage tab', () => {
   });
 
   /*
-   * - Same test as above, but uses different linode config for disk_encryption and image
+   * - Same test as above, but uses different linode config for disk_encryption
    */
   it('delete disk succeeds', () => {
     const diskName = randomLabel();
