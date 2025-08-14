@@ -17,6 +17,10 @@ import {
   DIMENSION_TRANSFORM_CONFIG,
   TRANSFORMS,
 } from '../../shared/DimensionTransform';
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from '../../shared/DimensionTransform';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
@@ -593,22 +597,6 @@ export const convertSecondsToOptions = (seconds: number): string => {
     const hours = minutes / 60;
     return `${hours} hr`;
   }
-};
-
-/**
- * Filters alerts based on the enabled services
- * @param allAlerts list of all alerts
- * @param aclpServices list of services with their statuses
- * @returns list of alerts from enabled services
- */
-export const alertsFromEnabledServices = (
-  allAlerts: Alert[] | undefined,
-  aclpServices: Partial<AclpServices> | undefined
-) => {
-  // Return the alerts whose service type is enabled in the aclpServices flag
-  return allAlerts?.filter(
-    (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
-  );
 };
 
 /**
