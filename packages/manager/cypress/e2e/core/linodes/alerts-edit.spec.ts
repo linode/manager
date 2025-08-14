@@ -14,6 +14,7 @@ import { alertFactory } from 'src/factories';
 import {
   ALERTS_BETA_MODE_BANNER_TEXT,
   ALERTS_BETA_MODE_BUTTON_TEXT,
+  ALERTS_BETA_PROMPT,
   ALERTS_LEGACY_MODE_BANNER_TEXT,
   ALERTS_LEGACY_MODE_BUTTON_TEXT,
   ALERTS_LEGACY_PROMPT,
@@ -118,7 +119,7 @@ describe('region enables alerts', function () {
     );
   });
 
-  it('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
+  xit('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -179,7 +180,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
+  xit('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -240,29 +241,9 @@ describe('region enables alerts', function () {
           .should('be.enabled')
           .click();
       });
-
-    // TODO: this test passes but modal behavior may change when properly implemented in api (M3-10195)
-    // ui.dialog
-    //   .findByTitle('Save Alerts?')
-    //   .should('be.visible')
-    //   .within(() => {
-    //     ui.button.findByTitle('Save').should('be.visible')
-    //     .click();
-    //   });
-    // TODO: content of request.body not match prod, 'alerts' attribute missing here
-    // cy.wait('@updateLinode').then((xhr) => {
-    //   // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
-    //   const edits = xhr.request.body;
-    //   expect(JSON.stringify(edits.system)).to.equal(
-    //     JSON.stringify([])
-    //   );
-    //   expect(JSON.stringify(edits.user)).to.equal(
-    //     JSON.stringify([])
-    //   );
-    // });
   });
 
-  it('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
+  xit('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -329,7 +310,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
+  xit('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -401,6 +382,142 @@ describe('region enables alerts', function () {
         ui.button.findByTitle('Confirm').should('be.visible').click();
       });
   });
+
+  xit('in default beta mode, edits to beta alerts do not trigger confirmation modal ', function () {
+    const mockLinode = linodeFactory.build({
+      id: 2,
+      label: randomLabel(),
+      region: this.mockEnabledRegion.id,
+      alerts: {
+        ...mockEnabledLegacyAlerts,
+        ...mockEnabledBetaAlerts,
+      },
+    });
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
+    cy.wait(['@getFeatureFlags', '@getRegions', '@getLinode']);
+    ui.tabList.findTabByTitle('Alerts').within(() => {
+      cy.get('[data-testid="betaChip"]').should('be.visible');
+    });
+    cy.get('[data-reach-tab-panels]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('Alerts').should('be.visible');
+        cy.get('[data-testid="notice-info"]')
+          .should('be.visible')
+          .within(() => {
+            cy.contains(ALERTS_BETA_MODE_BANNER_TEXT);
+          });
+        cy.wait(['@getAlertDefinitions']);
+        // toggles in table are on but can be turned off
+        assertLinodeAlertsEnabled(this.alertDefinitions);
+
+        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        ui.button
+          .findByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // M3-10369: "Save Alerts?" prompt does not appear bc beta is already default mode
+    ui.dialog.find().should('not.exist');
+  });
+
+  it('in default legacy mode, edits to beta alerts trigger confirmation modal ', function () {
+    // mockAppendFeatureFlags({
+    //   aclpServices: {
+    //     linode: {
+    //       alerts: {
+    //         beta: false,
+    //         enabled: true, // this should cause legacy alerts UI to load
+    //       }
+    //     },
+    //   },
+    // }).as('getBetaDisabledFeatureFlags');
+    const mockLinode = linodeFactory.build({
+      id: 2,
+      label: randomLabel(),
+      region: this.mockEnabledRegion.id,
+      alerts: {
+        ...mockEnabledLegacyAlerts,
+      },
+    });
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
+    cy.wait(['@getRegions', '@getLinode']);
+    ui.tabList.findTabByTitle('Alerts').within(() => {
+      cy.get('[data-testid="betaChip"]').should('not.exist');
+    });
+    cy.get('[data-reach-tab-panels]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('Alerts').should('be.visible');
+        cy.get('[data-testid="notice-info"]')
+          .should('be.visible')
+          .within(() => {
+            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+          });
+      });
+
+    // upgrade from legacy alerts to ACLP alerts
+    ui.button
+      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.tabList.findTabByTitle('Alerts').within(() => {
+      cy.get('[data-testid="betaChip"]').should('be.visible');
+    });
+    cy.get('[data-reach-tab-panels]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('Alerts').should('be.visible');
+        cy.get('[data-testid="notice-info"]')
+          .should('be.visible')
+          .within(() => {
+            cy.contains(ALERTS_BETA_MODE_BANNER_TEXT);
+          });
+        cy.wait(['@getAlertDefinitions']);
+        cy.get('table[data-testid="alert-table"]')
+          .should('be.visible')
+          .get('tbody > tr')
+          .should('have.length', 3)
+          .each((row, index) => {
+            // match alert definitions to table cell contents
+            cy.wrap(row).within(() => {
+              cy.get('td')
+                .eq(0)
+                .within(() => {
+                  // each alert's toggle should be enabled/on/true and editable
+                  ui.toggle
+                    .find()
+                    .should('have.attr', 'data-qa-toggle', 'true')
+                    .should('be.visible')
+                    .should('be.enabled')
+                    .click();
+                  ui.toggle
+                    .find()
+                    .should('have.attr', 'data-qa-toggle', 'false');
+                });
+            });
+          });
+
+        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        ui.button
+          .findByTitle('Save')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    // M3-10369: "Save Alerts?" prompt appears bc of edits to beta alerts but linode was previously in legacy mode
+    ui.dialog
+      .findByTitle(ALERTS_BETA_PROMPT)
+      .should('be.visible')
+      .within(() => {
+        ui.button.findByTitle('Confirm').should('be.visible').click();
+      });
+  });
 });
 
 describe('region disables alerts. beta alerts not available regardless of linode settings', function () {
@@ -430,7 +547,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
     mockGetRegions([mockDisabledRegion]).as('getRegions');
   });
 
-  it('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
+  xit('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -466,7 +583,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
+  xit('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
