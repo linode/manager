@@ -8,6 +8,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 
+import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
