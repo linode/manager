@@ -1,9 +1,10 @@
-import { Box, ErrorState, Stack, Typography } from '@linode/ui';
+import { Box, ErrorState, Stack, SvgIcon, Typography } from '@linode/ui';
 import BuildIcon from '@mui/icons-material/Build';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import Logo from 'src/assets/logo/akamai-logo.svg';
+import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-navy-text.svg';
+import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo-white-text.svg';
 import { Link } from 'src/components/Link';
 
 import type { Theme } from '@mui/material/styles';
@@ -11,10 +12,17 @@ import type { Theme } from '@mui/material/styles';
 export const MaintenanceScreen = () => {
   const theme = useTheme<Theme>();
 
+  const Logo =
+    theme.name === 'light' ? LightThemeAkamaiLogo : DarkThemeAkamaiLogo;
+
   return (
     <Stack bgcolor={theme.bg.main} justifyContent="center" minHeight="100vh">
       <Box display="flex" justifyContent="center">
-        <Logo width={215} />
+        <SvgIcon
+          component={Logo}
+          inheritViewBox
+          sx={{ width: '100%', height: '85px' }}
+        />
       </Box>
       <ErrorState
         CustomIcon={BuildIcon}
