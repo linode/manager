@@ -154,9 +154,6 @@ export const UsersLanding = () => {
             buttonType="primary"
             disabled={isRestrictedUser}
             onClick={() => setIsCreateDrawerOpen(true)}
-            sx={{
-              maxWidth: '120px',
-            }}
             tooltipText={
               isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
