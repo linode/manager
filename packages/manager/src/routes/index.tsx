@@ -33,6 +33,7 @@ import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
+import { quotasRouteTree } from './quotas';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
 import { serviceTransfersRouteTree } from './serviceTransfers';
@@ -80,6 +81,7 @@ export const routeTree = rootRoute.addChildren([
   objectStorageRouteTree,
   placementGroupsRouteTree,
   profileRouteTree,
+  quotasRouteTree,
   searchRouteTree,
   serviceTransfersRouteTree,
   settingsRouteTree,

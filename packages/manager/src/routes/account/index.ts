@@ -67,6 +67,14 @@ const accountUsersRoute = createRoute({
 const accountQuotasRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/quotas',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/quotas`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/Quotas/quotasLazyRoute').then(
     (m) => m.quotasLazyRoute
