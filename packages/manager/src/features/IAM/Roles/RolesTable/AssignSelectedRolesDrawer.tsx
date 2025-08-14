@@ -1,6 +1,6 @@
 import {
   useAccountRoles,
-  useAccountUsers,
+  useAccountUsersInfiniteQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
@@ -11,6 +11,7 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { enqueueSnackbar } from 'notistack';
@@ -44,24 +45,35 @@ export const AssignSelectedRolesDrawer = ({
 }: Props) => {
   const theme = useTheme();
 
+  const [usernameInput, setUsernameInput] = useState<string>('');
+  const debouncedUsernameInput = useDebouncedValue(usernameInput);
+
   const [username, setUsername] = useState<null | string>('');
 
-  const userFilter = username
+  const userSearchFilter = debouncedUsernameInput
     ? {
-        ['+or']: [{ username: { ['+contains']: username } }],
+        ['+or']: [
+          { username: { ['+contains']: debouncedUsernameInput } },
+          { email: { ['+contains']: debouncedUsernameInput } },
+        ],
       }
     : undefined;
 
   const {
     data: accountUsers,
+    fetchNextPage,
+    hasNextPage,
     isFetching: isFetchingAccountUsers,
     isLoading: isLoadingAccountUsers,
-  } = useAccountUsers({
-    filters: userFilter,
+  } = useAccountUsersInfiniteQuery({
+    ...userSearchFilter,
+    '+order': 'asc',
+    '+order_by': 'username',
   });
 
   const getUserOptions = () => {
-    return accountUsers?.data.map((user: User) => ({
+    const users = accountUsers?.pages.flatMap((page) => page.data);
+    return users?.map((user: User) => ({
       label: user.username,
       value: user.username,
     }));
@@ -156,32 +168,45 @@ export const AssignSelectedRolesDrawer = ({
             <Typography mb={theme.spacingFunction(8)} variant="h3">
               Users
             </Typography>
-            {accountUsers && accountUsers?.data?.length > 0 && (
-              <Controller
-                control={control}
-                name={`username`}
-                render={({ field: { onChange }, fieldState }) => (
-                  <Autocomplete
-                    errorText={fieldState.error?.message}
-                    getOptionLabel={(option) => option.label}
-                    label="Select a User"
-                    loading={isLoadingAccountUsers || isFetchingAccountUsers}
-                    noMarginTop
-                    onChange={(_, option) => {
-                      setUsername(option?.label || null);
-                      onChange(username);
-                    }}
-                    onInputChange={(_, value) => {
-                      setUsername(value);
-                    }}
-                    options={getUserOptions() || []}
-                    placeholder="Select a User"
-                    textFieldProps={{ hideLabel: true }}
-                  />
-                )}
-                rules={{ required: 'Select a user.' }}
-              />
-            )}
+
+            <Controller
+              control={control}
+              name={`username`}
+              render={({ field: { onChange }, fieldState }) => (
+                <Autocomplete
+                  errorText={fieldState.error?.message}
+                  getOptionLabel={(option) => option.label}
+                  label="Select a User"
+                  loading={isLoadingAccountUsers || isFetchingAccountUsers}
+                  noMarginTop
+                  onChange={(_, option) => {
+                    setUsername(option?.label || null);
+                    onChange(username);
+                  }}
+                  onInputChange={(_, value) => {
+                    setUsernameInput(value);
+                  }}
+                  options={getUserOptions() || []}
+                  placeholder="Select a User"
+                  slotProps={{
+                    listbox: {
+                      onScroll: (event: React.SyntheticEvent) => {
+                        const listboxNode = event.currentTarget;
+                        if (
+                          listboxNode.scrollTop + listboxNode.clientHeight >=
+                            listboxNode.scrollHeight &&
+                          hasNextPage
+                        ) {
+                          fetchNextPage();
+                        }
+                      },
+                    },
+                  }}
+                  textFieldProps={{ hideLabel: true }}
+                />
+              )}
+              rules={{ required: 'Select a user.' }}
+            />
           </Grid>
 
           <Grid
