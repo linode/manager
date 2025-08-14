@@ -60,6 +60,7 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export interface BodyProps {
+  disabled: boolean;
   encryptionStatus: EncryptionStatus | undefined;
   gbRAM: number;
   gbStorage: number;
@@ -82,6 +83,7 @@ export interface BodyProps {
 
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
+    disabled,
     encryptionStatus,
     gbRAM,
     gbStorage,
@@ -405,6 +407,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         />
       ) : (
         <LinodeEntityDetailRowConfigFirewall
+          cannotUpdateLinode={disabled}
           cluster={cluster}
           interfaceGeneration={interfaceGeneration}
           linodeId={linodeId}
