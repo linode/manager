@@ -4,6 +4,7 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
+import { useNodePoolDisplayLabel } from '../../kubeUtils';
 import { NodePoolFooter } from './NodePoolFooter';
 import { NodeTable } from './NodeTable';
 
@@ -31,6 +32,7 @@ interface Props {
   handleClickResize: (poolId: number) => void;
   isLkeClusterRestricted: boolean;
   isOnlyNodePool: boolean;
+  label: string;
   nodes: PoolNodeResponse[];
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
@@ -39,7 +41,7 @@ interface Props {
   poolVersion: KubeNodePoolResponse['k8s_version'];
   statusFilter: StatusFilter;
   tags: string[];
-  typeLabel: string;
+  type: string;
 }
 
 export const NodePool = (props: Props) => {
@@ -66,8 +68,11 @@ export const NodePool = (props: Props) => {
     poolVersion,
     statusFilter,
     tags,
-    typeLabel,
+    label,
+    type,
   } = props;
+
+  const nodePoolLabel = useNodePoolDisplayLabel({ label, type });
 
   return (
     <Accordion
@@ -88,7 +93,7 @@ export const NodePool = (props: Props) => {
             divider={<Divider flexItem orientation="vertical" />}
             spacing={{ sm: 1.5, xs: 1 }}
           >
-            <Typography variant="h3">{typeLabel}</Typography>
+            <Typography variant="h3">{nodePoolLabel}</Typography>
             <Typography variant="h3">
               {pluralize('Node', 'Nodes', count)}
             </Typography>
@@ -159,10 +164,10 @@ export const NodePool = (props: Props) => {
         clusterCreated={clusterCreated}
         clusterTier={clusterTier}
         isLkeClusterRestricted={isLkeClusterRestricted}
+        nodePoolType={type}
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         statusFilter={statusFilter}
-        typeLabel={typeLabel}
       />
       <NodePoolFooter
         clusterId={clusterId}

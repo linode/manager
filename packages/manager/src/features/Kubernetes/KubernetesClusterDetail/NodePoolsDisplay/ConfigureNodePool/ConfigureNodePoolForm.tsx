@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { useNodePoolDisplayLabel } from 'src/features/Kubernetes/kubeUtils';
 import { NodePoolUpdateStrategySelect } from 'src/features/Kubernetes/NodePoolUpdateStrategySelect';
 import {
   useKubernetesTieredVersionsQuery,
@@ -37,6 +38,9 @@ interface Props {
 export const ConfigureNodePoolForm = (props: Props) => {
   const { clusterId, onSaved, nodePool, clusterTier } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
+  const labelPlaceholder = useNodePoolDisplayLabel(nodePool, true);
+
   const form = useForm<UpdateNodePoolData>({
     defaultValues: {
       label: nodePool.label,
@@ -44,8 +48,6 @@ export const ConfigureNodePoolForm = (props: Props) => {
       k8s_version: nodePool.k8s_version,
     },
   });
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -89,7 +91,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
               label="Label"
               noMarginTop
               onChange={field.onChange}
-              placeholder="None"
+              placeholder={labelPlaceholder}
               value={field.value}
             />
           )}
@@ -99,8 +101,8 @@ export const ConfigureNodePoolForm = (props: Props) => {
           name="update_strategy"
           render={({ field }) => (
             <NodePoolUpdateStrategySelect
-              noMarginTop
               label="Update Strategy"
+              noMarginTop
               onChange={field.onChange}
               value={field.value!}
             />
@@ -111,9 +113,9 @@ export const ConfigureNodePoolForm = (props: Props) => {
           name="k8s_version"
           render={({ field }) => (
             <Autocomplete
-              noMarginTop
               disableClearable
               label="Kubernetes Version"
+              noMarginTop
               onChange={(e, version) => field.onChange(version.id)}
               options={versionOptions}
               value={versionOptions.find((option) => option.id === field.value)}

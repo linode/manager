@@ -1,4 +1,3 @@
-import { useSpecificTypes } from '@linode/queries';
 import {
   Box,
   Button,
@@ -18,7 +17,6 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
@@ -106,9 +104,6 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(5);
   const _pools = pools?.slice(0, numPoolsToDisplay);
-
-  const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
-  const types = extendTypesQueryResult(typesQuery);
 
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
 
@@ -275,14 +270,8 @@ export const NodePoolsDisplay = (props: Props) => {
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
         {_pools?.map((thisPool) => {
-          const { count, disk_encryption, id, nodes, tags } = thisPool;
-
-          const thisPoolType = types?.find(
-            (thisType) => thisType.id === thisPool.type
-          );
-
-          const typeLabel = thisPoolType?.formattedLabel ?? 'Unknown type';
-
+          const { count, disk_encryption, id, nodes, tags, label, type } =
+            thisPool;
           return (
             <NodePool
               accordionExpanded={
@@ -304,6 +293,7 @@ export const NodePoolsDisplay = (props: Props) => {
               isLkeClusterRestricted={isLkeClusterRestricted}
               isOnlyNodePool={pools?.length === 1}
               key={id}
+              label={label}
               nodes={nodes ?? []}
               openDeletePoolDialog={(id) => {
                 setSelectedPoolId(id);
@@ -321,7 +311,7 @@ export const NodePoolsDisplay = (props: Props) => {
               poolVersion={thisPool.k8s_version}
               statusFilter={statusFilter}
               tags={tags}
-              typeLabel={typeLabel}
+              type={type}
             />
           );
         })}

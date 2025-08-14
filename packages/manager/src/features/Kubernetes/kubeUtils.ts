@@ -1,5 +1,9 @@
 import { useAccount, useAccountBetaQuery, useTypeQuery } from '@linode/queries';
-import { getBetaStatus, isFeatureEnabledV2 } from '@linode/utilities';
+import {
+  formatStorageUnits,
+  getBetaStatus,
+  isFeatureEnabledV2,
+} from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -374,7 +378,8 @@ export const useKubernetesBetaEndpoint = () => {
 };
 
 export const useNodePoolDisplayLabel = (
-  nodePool: KubeNodePoolResponse | undefined
+  nodePool: Pick<KubeNodePoolResponse, 'label' | 'type'> | undefined,
+  ignoreNodePoolsLabel = false
 ) => {
   const { data: type } = useTypeQuery(
     nodePool?.type ?? '',
@@ -385,12 +390,12 @@ export const useNodePoolDisplayLabel = (
     return '';
   }
 
-  if (nodePool.label) {
+  if (nodePool.label && !ignoreNodePoolsLabel) {
     return nodePool.label;
   }
 
   if (type) {
-    return type.label;
+    return formatStorageUnits(type.label);
   }
 
   return nodePool.type;
