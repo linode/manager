@@ -119,7 +119,7 @@ describe('region enables alerts', function () {
     );
   });
 
-  xit('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
+  it('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -180,7 +180,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  xit('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
+  it('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -243,7 +243,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  xit('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
+  it('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -310,7 +310,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  xit('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
+  it('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -383,7 +383,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  xit('in default beta mode, edits to beta alerts do not trigger confirmation modal ', function () {
+  it('in default beta mode, edits to beta alerts do not trigger confirmation modal ', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -424,16 +424,6 @@ describe('region enables alerts', function () {
   });
 
   it('in default legacy mode, edits to beta alerts trigger confirmation modal ', function () {
-    // mockAppendFeatureFlags({
-    //   aclpServices: {
-    //     linode: {
-    //       alerts: {
-    //         beta: false,
-    //         enabled: true, // this should cause legacy alerts UI to load
-    //       }
-    //     },
-    //   },
-    // }).as('getBetaDisabledFeatureFlags');
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -444,7 +434,7 @@ describe('region enables alerts', function () {
     });
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
-    cy.wait(['@getRegions', '@getLinode']);
+    cy.wait(['@getFeatureFlags', '@getRegions', '@getLinode']);
     ui.tabList.findTabByTitle('Alerts').within(() => {
       cy.get('[data-testid="betaChip"]').should('not.exist');
     });
@@ -547,7 +537,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
     mockGetRegions([mockDisabledRegion]).as('getRegions');
   });
 
-  xit('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
+  it('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -583,7 +573,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
       });
   });
 
-  xit('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
+  it('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
