@@ -6,6 +6,7 @@ import { grantsFactory, profileFactory } from '@linode/utilities';
 import { paymentMethodFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetProfile,
   mockGetProfileGrants,
@@ -223,6 +224,9 @@ const assertMakeAPaymentEnabled = () => {
 describe('restricted user billing flows', () => {
   beforeEach(() => {
     mockGetPaymentMethods(mockPaymentMethods);
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
   });
 
   /*

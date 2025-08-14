@@ -33,8 +33,12 @@ import type { Account, Invoice, InvoiceItem } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const InvoiceDetail = () => {
+  const flags = useFlags();
+
   const { invoiceId } = useParams({
-    from: '/account/billing/invoices/$invoiceId',
+    from: flags?.iamRbacPrimaryNavChanges
+      ? '/billing/invoices/$invoiceId'
+      : '/account/billing/invoices/$invoiceId',
   });
   const theme = useTheme();
 
@@ -51,8 +55,6 @@ export const InvoiceDetail = () => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [pdfGenerationError, setPDFGenerationError] =
     React.useState<any>(undefined);
-
-  const flags = useFlags();
 
   const shouldShowRegion = invoiceCreatedAfterDCPricingLaunch(invoice?.date);
 
@@ -132,7 +134,11 @@ export const InvoiceDetail = () => {
               <Link
                 accessibleAriaLabel="Back to Billing"
                 data-qa-back-to-billing
-                to="/account/billing"
+                to={
+                  flags?.iamRbacPrimaryNavChanges
+                    ? '/billing'
+                    : '/account/billing'
+                }
               >
                 <IconButton
                   component="span"

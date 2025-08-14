@@ -28,26 +28,26 @@ interface UserMenuPopoverProps {
 interface MenuLink {
   display: string;
   hide?: boolean;
-  href: string;
   isBeta?: boolean;
+  to: string;
 }
 
 const profileLinks: MenuLink[] = [
   {
     display: 'Display',
-    href: '/profile/display',
+    to: '/profile/display',
   },
-  { display: 'Login & Authentication', href: '/profile/auth' },
-  { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Console Settings', href: '/profile/lish' },
+  { display: 'Login & Authentication', to: '/profile/auth' },
+  { display: 'SSH Keys', to: '/profile/keys' },
+  { display: 'LISH Console Settings', to: '/profile/lish' },
   {
     display: 'API Tokens',
-    href: '/profile/tokens',
+    to: '/profile/tokens',
   },
-  { display: 'OAuth Apps', href: '/profile/clients' },
-  { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'My Settings', href: '/profile/settings' },
-  { display: 'Log Out', href: '/logout' },
+  { display: 'OAuth Apps', to: '/profile/clients' },
+  { display: 'Referrals', to: '/profile/referrals' },
+  { display: 'My Settings', to: '/profile/settings' },
+  { display: 'Log Out', to: '/logout' },
 ];
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
@@ -102,7 +102,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     () => [
       {
         display: 'Billing & Contact Information',
-        href: '/account/billing',
+        to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
       // Restricted users can't view the Users tab regardless of their grants
       {
@@ -111,7 +111,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             ? 'Identity & Access'
             : 'Users & Grants',
         hide: isRestrictedUser,
-        href:
+        to:
           flags?.iamRbacPrimaryNavChanges && isIAMEnabled
             ? '/iam'
             : '/account/users',
@@ -120,27 +120,27 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       {
         display: 'Quotas',
         hide: !flags.limitsEvolution?.enabled,
-        href: '/account/quotas',
+        to: '/account/quotas',
       },
       {
         display: 'Login History',
-        href: '/account/login-history',
+        to: '/account/login-history',
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
         hide: isRestrictedUser,
-        href: '/account/service-transfers',
+        to: '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        href: '/account/maintenance',
+        to: '/account/maintenance',
       },
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
         hide: !hasFullAccountAccess,
-        href: '/account/settings',
+        to: '/account/settings',
       },
     ],
     [hasFullAccountAccess, isRestrictedUser, isIAMEnabled, flags]
@@ -160,7 +160,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             color: theme.tokens.alias.Content.Text.Link.Default,
             font: theme.tokens.alias.Typography.Body.Semibold,
           }}
-          to={link.href}
+          to={link.to}
         >
           {link.display}
         </Link>
@@ -271,7 +271,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                       color: theme.tokens.alias.Content.Text.Link.Default,
                       font: theme.tokens.alias.Typography.Body.Semibold,
                     }}
-                    to={menuLink.href}
+                    to={menuLink.to}
                   >
                     {menuLink.display}
                     {menuLink?.isBeta ? <BetaChip component="span" /> : null}

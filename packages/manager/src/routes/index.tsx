@@ -14,6 +14,7 @@ import {
   oauthCallbackRoute,
 } from './auth';
 import { betaRouteTree } from './betas';
+import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
 import { dataStreamRouteTree } from './datastream';
 import { domainsRouteTree } from './domains';
@@ -54,6 +55,7 @@ export const routeTree = rootRoute.addChildren([
   logoutRoute,
   oauthCallbackRoute,
   accountRouteTree,
+  billingRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,

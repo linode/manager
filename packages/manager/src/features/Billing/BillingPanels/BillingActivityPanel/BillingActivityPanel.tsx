@@ -512,6 +512,8 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
 export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
   const {
     date,
     downloadPDF,
@@ -543,7 +545,15 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
     <TableRow data-testid={`${type}-${id}`} sx={sxRow}>
       <TableCell>
         {type === 'invoice' ? (
-          <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+          <Link
+            to={
+              iamRbacPrimaryNavChanges
+                ? `/billing/invoices/${id}`
+                : `/account/billing/invoices/${id}`
+            }
+          >
+            {label}
+          </Link>
         ) : (
           label
         )}
