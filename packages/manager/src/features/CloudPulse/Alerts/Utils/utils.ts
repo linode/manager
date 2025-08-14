@@ -13,6 +13,10 @@ import {
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from '../../shared/DimensionTransform';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
@@ -593,5 +597,24 @@ export const alertsFromEnabledServices = (
   // Return the alerts whose service type is enabled in the aclpServices flag
   return allAlerts?.filter(
     (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
+  );
+};
+
+/**
+ * Transform a dimension value using the appropriate transform function
+ * @param serviceType - The cloud pulse service type
+ * @param dimensionLabel - The dimension label
+ * @param value - The value to transform
+ * @returns Transformed value
+ */
+export const transformDimensionValue = (
+  serviceType: CloudPulseServiceType | null,
+  dimensionLabel: string,
+  value: string
+): string => {
+  return (
+    (
+      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
+    )?.(value) ?? TRANSFORMS.capitalize(value)
   );
 };

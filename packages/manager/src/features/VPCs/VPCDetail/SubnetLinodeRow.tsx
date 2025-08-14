@@ -266,18 +266,15 @@ export const SubnetLinodeRow = (props: Props) => {
         )}
       </Hidden>
       <TableCell actionCell noWrap>
-        {!isVPCLKEEnterpriseCluster && (
-          <SubnetLinodeActionMenu
-            handlePowerActionsLinode={handlePowerActionsLinode}
-            handleUnassignLinode={handleUnassignLinode}
-            isOffline={isOffline}
-            isRebootNeeded={isRebootNeeded}
-            isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
-            linode={linode}
-            showPowerButton={showPowerButton}
-            subnet={subnet}
-          />
-        )}
+        <SubnetLinodeActionMenu
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isOffline={isOffline}
+          isRebootNeeded={isRebootNeeded}
+          linode={linode}
+          showPowerButton={showPowerButton}
+          subnet={subnet}
+        />
       </TableCell>
     </TableRow>
   );

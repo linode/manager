@@ -275,7 +275,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             links: [
               {
                 display: 'Billing',
-                to: '/account/billing', // TODO: replace with '/billing' when flat route is added
+                to: '/billing',
               },
               {
                 display: 'Identity & Access',
