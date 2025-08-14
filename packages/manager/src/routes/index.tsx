@@ -35,6 +35,7 @@ import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
+import { settingsRouteTree } from './settings';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
@@ -79,6 +80,7 @@ export const routeTree = rootRoute.addChildren([
   placementGroupsRouteTree,
   profileRouteTree,
   searchRouteTree,
+  settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
   volumesRouteTree,

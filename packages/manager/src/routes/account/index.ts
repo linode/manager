@@ -119,6 +119,14 @@ const accountMaintenanceRoute = createRoute({
 const accountSettingsRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/settings',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/settings`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/globalSettingsLazyRoute').then(
     (m) => m.globalSettingsLazyRoute
