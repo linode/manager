@@ -153,8 +153,8 @@ describe('Account cancellation', () => {
     // user to complete the exit survey. Confirm that clicking survey button
     // directs the user to the expected URL.
     cy.findByText('It’s been our pleasure to serve you.').should('be.visible');
-    ui.button
-      .findByTitle('Take our exit survey')
+
+    cy.findByRole('link', { name: 'Take our exit survey' })
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -428,8 +428,8 @@ describe('Parent/Child account cancellation', () => {
     // user to complete the exit survey. Confirm that clicking survey button
     // directs the user to the expected URL.
     cy.findByText('It’s been our pleasure to serve you.').should('be.visible');
-    ui.button
-      .findByTitle('Take our exit survey')
+
+    cy.findByRole('link', { name: 'Take our exit survey' })
       .should('be.visible')
       .should('be.enabled')
       .click();
