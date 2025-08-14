@@ -5,6 +5,7 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
+import type { PermissionType } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -13,24 +14,30 @@ interface Props {
   onOpenDeleteDialog: () => void;
   onOpenEditDrawer: () => void;
   onOpenResetDialog: () => void;
+  permissions: Partial<Record<PermissionType, boolean>>;
 }
 
 export const OAuthClientActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
+  const { permissions, label } = props;
+
   const actions: Action[] = [
     {
       onClick: props.onOpenEditDrawer,
       title: 'Edit',
+      disabled: !permissions.update_oauth_client,
     },
     {
       onClick: props.onOpenResetDialog,
       title: 'Reset',
+      disabled: !permissions.reset_oauth_client_secret,
     },
     {
       onClick: props.onOpenDeleteDialog,
       title: 'Delete',
+      disabled: !permissions.delete_oauth_client,
     },
   ];
 
@@ -40,13 +47,14 @@ export const OAuthClientActionMenu = (props: Props) => {
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
-          ariaLabel={`Action menu for OAuth Client ${props.label}`}
+          ariaLabel={`Action menu for OAuth Client ${label}`}
         />
       ) : (
         actions.map((action) => {
           return (
             <InlineMenuAction
               actionText={action.title}
+              disabled={action.disabled}
               key={action.title}
               onClick={action.onClick}
             />
