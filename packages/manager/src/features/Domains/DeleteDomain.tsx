@@ -47,7 +47,7 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
         entity={{
           action: 'deletion',
           error: domainError,
-          name: domainLabel ?? 'Unknown',
+          name: domainLabel,
           primaryBtnText: 'Delete Domain',
           type: 'Domain',
         }}
@@ -57,7 +57,7 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
         onClick={onDelete}
         onClose={() => setOpen(false)}
         open={open}
-        title={`Delete Domain ${domainLabel ?? 'Unknown'}?`}
+        title={`Delete Domain ${domainLabel}?`}
       >
         <Notice variant="warning">
           <Typography>
