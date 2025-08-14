@@ -86,9 +86,9 @@ describe('QEMU reboot upgrade notification', () => {
     ];
 
     // We use ! since in `LinodeMaintenanceText` the `start_time` is never null.
-    const formattedTime = `at ${formatDate(upcomingMaintenance[0].start_time!, {
+    const formattedTime = formatDate(upcomingMaintenance[0].start_time!, {
       timezone: mockProfile.timezone,
-    })}`;
+    });
 
     const maintenanceTooltipText = `This Linode’s maintenance window opens at ${formattedTime}. For more information, see your open support tickets.`;
 
