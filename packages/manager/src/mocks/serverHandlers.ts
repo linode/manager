@@ -136,9 +136,9 @@ import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/consta
 import type {
   AccountMaintenance,
   AlertDefinitionType,
-  AlertServiceType,
   AlertSeverityType,
   AlertStatusType,
+  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
@@ -1643,6 +1643,10 @@ export const handlers = [
         const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
         const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
 
+        if (statusA === null || statusB === null) {
+          return 0;
+        }
+
         if (statusA < statusB) {
           return -1;
         }
@@ -2693,8 +2697,7 @@ export const handlers = [
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
-      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-
+      const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
       const reqBody = await request.json();
       const response = alertFactory.build({
         ...(reqBody as CreateAlertDefinitionPayload),
@@ -2874,26 +2877,21 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
-      return HttpResponse.json({}, { status: 404 });
-    }
-
-    const response =
-      params.serviceType === 'linode'
-        ? serviceTypesFactory.build({
-            label: 'Linodes',
-            service_type: 'linode',
-            regions: 'us-iad,us-east',
-            alert: serviceAlertFactory.build({ scope: ['entity'] }),
-          })
-        : serviceTypesFactory.build({
-            label: 'Databases',
-            service_type: 'dbaas',
-            alert: serviceAlertFactory.build({
-              evaluation_period_seconds: [300],
-              polling_interval_seconds: [300],
-            }),
-          });
+    const serviceType = params.serviceType as CloudPulseServiceType;
+    const serviceTypesMap: Record<CloudPulseServiceType, string> = {
+      linode: 'Linode',
+      dbaas: 'Databases',
+      nodebalancer: 'NodeBalancers',
+      firewall: 'Firewalls',
+    };
+    const response = serviceTypesFactory.build({
+      service_type: `${serviceType}`,
+      label: serviceTypesMap[serviceType],
+      alert: serviceAlertFactory.build({
+        evaluation_period_seconds: [300],
+        polling_interval_seconds: [300],
+      }),
+    });
 
     return HttpResponse.json(response, { status: 200 });
   }),

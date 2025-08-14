@@ -1,5 +1,5 @@
 import { useAccount, useGrants, useProfile } from '@linode/queries';
-import { Box, Divider, Stack, Typography } from '@linode/ui';
+import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -10,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -27,25 +28,26 @@ interface UserMenuPopoverProps {
 interface MenuLink {
   display: string;
   hide?: boolean;
-  href: string;
+  isBeta?: boolean;
+  to: string;
 }
 
 const profileLinks: MenuLink[] = [
   {
     display: 'Display',
-    href: '/profile/display',
+    to: '/profile/display',
   },
-  { display: 'Login & Authentication', href: '/profile/auth' },
-  { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Console Settings', href: '/profile/lish' },
+  { display: 'Login & Authentication', to: '/profile/auth' },
+  { display: 'SSH Keys', to: '/profile/keys' },
+  { display: 'LISH Console Settings', to: '/profile/lish' },
   {
     display: 'API Tokens',
-    href: '/profile/tokens',
+    to: '/profile/tokens',
   },
-  { display: 'OAuth Apps', href: '/profile/clients' },
-  { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'My Settings', href: '/profile/settings' },
-  { display: 'Log Out', href: '/logout' },
+  { display: 'OAuth Apps', to: '/profile/clients' },
+  { display: 'Referrals', to: '/profile/referrals' },
+  { display: 'My Settings', to: '/profile/settings' },
+  { display: 'Log Out', to: '/logout' },
 ];
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
@@ -57,6 +59,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -99,37 +102,48 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     () => [
       {
         display: 'Billing & Contact Information',
-        href: '/account/billing',
+        to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
       // Restricted users can't view the Users tab regardless of their grants
       {
-        display: 'Users & Grants',
+        display:
+          flags?.iamRbacPrimaryNavChanges && isIAMEnabled
+            ? 'Identity & Access'
+            : 'Users & Grants',
         hide: isRestrictedUser,
-        href: '/account/users',
+        to:
+          flags?.iamRbacPrimaryNavChanges && isIAMEnabled
+            ? '/iam'
+            : '/account/users',
+        isBeta: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
       },
       {
         display: 'Quotas',
         hide: !flags.limitsEvolution?.enabled,
-        href: '/account/quotas',
+        to: '/account/quotas',
+      },
+      {
+        display: 'Login History',
+        to: '/account/login-history',
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
         hide: isRestrictedUser,
-        href: '/account/service-transfers',
+        to: '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        href: '/account/maintenance',
+        to: '/account/maintenance',
       },
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
         hide: !hasFullAccountAccess,
-        href: '/account/settings',
+        to: '/account/settings',
       },
     ],
-    [hasFullAccountAccess, isRestrictedUser]
+    [hasFullAccountAccess, isRestrictedUser, isIAMEnabled, flags]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -146,7 +160,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             color: theme.tokens.alias.Content.Text.Link.Default,
             font: theme.tokens.alias.Typography.Body.Semibold,
           }}
-          to={link.href}
+          to={link.to}
         >
           {link.display}
         </Link>
@@ -239,7 +253,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         </Box>
         {hasAccountAccess && (
           <Box>
-            <Heading>Account</Heading>
+            <Heading>
+              {flags?.iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
+            </Heading>
             <Divider />
             <Stack
               gap={(theme) => theme.tokens.spacing.S8}
@@ -255,9 +271,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                       color: theme.tokens.alias.Content.Text.Link.Default,
                       font: theme.tokens.alias.Typography.Body.Semibold,
                     }}
-                    to={menuLink.href}
+                    to={menuLink.to}
                   >
                     {menuLink.display}
+                    {menuLink?.isBeta ? <BetaChip component="span" /> : null}
                   </Link>
                 )
               )}
