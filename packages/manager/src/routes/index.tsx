@@ -26,6 +26,7 @@ import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
+import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
 import { nodeBalancersRouteTree } from './nodeBalancers';
@@ -71,6 +72,7 @@ export const routeTree = rootRoute.addChildren([
   linodesRouteTree,
   loginHistoryRouteTree,
   longviewRouteTree,
+  maintenanceRouteTree,
   managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,

@@ -102,6 +102,14 @@ const accountServiceTransfersRoute = createRoute({
 const accountMaintenanceRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/maintenance',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/maintenance`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/Maintenance/maintenanceLandingLazyRoute').then(
     (m) => m.maintenanceLandingLazyRoute
