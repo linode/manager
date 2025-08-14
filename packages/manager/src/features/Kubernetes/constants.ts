@@ -31,11 +31,8 @@ export const CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY =
 export const CREATE_CLUSTER_STANDARD_TIER_ACL_COPY =
   'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.';
 
-export const LKE_ENTERPRISE_VPC_WARNING =
-  'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits is disabled to avoid disruption to cluster communication.';
-
-export const LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING =
-  'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits may disrupt cluster communication.';
+export const LKE_ENTERPRISE_AUTOGEN_VPC_WARNING =
+  'This VPC has been automatically generated for your LKE Enterprise cluster.';
 
 export const MAX_NODES_PER_POOL_ENTERPRISE_TIER = 500; // TODO LKE-E M3-9793: Update this limit once a higher one is supported on the backend.
 export const MAX_NODES_PER_POOL_STANDARD_TIER = 100;

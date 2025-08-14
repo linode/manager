@@ -75,14 +75,30 @@ export const DebouncedSearchTextField = React.memo(
 
     const [textFieldValue, setTextFieldValue] = React.useState<string>('');
 
-    // Memoize the debounced onChange handler to prevent unnecessary re-creations.
-    const debouncedOnChange = React.useMemo(
-      () =>
-        debounce(debounceTime ?? 400, (e) => {
+    const debouncedRef = React.useRef<null | ReturnType<typeof debounce>>(null);
+
+    React.useEffect(() => {
+      // Cancel any pending call from a previous instance.
+      debouncedRef.current?.cancel();
+
+      debouncedRef.current = debounce(
+        debounceTime ?? 400,
+        (e: React.ChangeEvent<HTMLInputElement>) => {
           onSearch(e.target.value);
           setTextFieldValue(e.target.value);
-        }),
-      [debounceTime, onSearch]
+        }
+      );
+
+      return () => {
+        debouncedRef.current?.cancel();
+      };
+    }, [debounceTime, onSearch]);
+
+    const handleChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        debouncedRef.current?.(e);
+      },
+      []
     );
 
     // Synchronize the internal state with the prop value when the value prop changes.
@@ -99,7 +115,7 @@ export const DebouncedSearchTextField = React.memo(
         defaultValue={defaultValue}
         hideLabel={hideLabel}
         label={label}
-        onChange={debouncedOnChange}
+        onChange={handleChange}
         placeholder={placeholder || 'Filter by query'}
         slotProps={{
           input: {
@@ -110,13 +126,12 @@ export const DebouncedSearchTextField = React.memo(
                   <IconButton
                     aria-label="Clear"
                     onClick={() => {
+                      debouncedRef.current?.cancel();
                       setTextFieldValue('');
                       onSearch('');
                     }}
                     size="small"
-                    sx={{
-                      padding: 0,
-                    }}
+                    sx={{ padding: 0 }}
                   >
                     <CloseIcon />
                   </IconButton>
