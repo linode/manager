@@ -21,7 +21,7 @@ export const MaintenanceScreen = () => {
         <SvgIcon
           component={Logo}
           inheritViewBox
-          sx={{ width: '100%', height: '85px' }}
+          sx={{ width: '215px', height: '100%' }}
         />
       </Box>
       <ErrorState
