@@ -84,7 +84,7 @@ export const LinodeCreate = () => {
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
   const linodeCreateType = useGetLinodeCreateType();
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   // In Create flow, alerts always default to 'legacy' mode
   const [isAclpAlertsBetaCreateFlow, setIsAclpAlertsBetaCreateFlow] =
@@ -157,7 +157,7 @@ export const LinodeCreate = () => {
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-      isAclpIntegration: aclpBetaServices?.linode?.alerts,
+      isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
       isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
     });
 
