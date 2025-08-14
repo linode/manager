@@ -1,5 +1,17 @@
-import { profileFactory } from '@linode/utilities';
+/**
+ * Confirms read operations on LKE-Enterprise clusters.
+ */
+
+import {
+  linodeFactory,
+  linodeIPFactory,
+  profileFactory,
+} from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockGetLinodeIPAddresses,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 import {
   mockGetCluster,
   mockGetClusterPools,
@@ -8,12 +20,96 @@ import {
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetVPC } from 'support/intercepts/vpc';
 
-import { kubernetesClusterFactory, vpcFactory } from 'src/factories';
+import {
+  kubeLinodeFactory,
+  kubernetesClusterFactory,
+  nodePoolFactory,
+  subnetFactory,
+  vpcFactory,
+} from 'src/factories';
 
 const mockProfile = profileFactory.build();
 
+const mockVPC = vpcFactory.build({
+  id: 123,
+  label: 'lke-e-vpc',
+  subnets: [subnetFactory.build()],
+});
+
+const mockClusterWithVPC = kubernetesClusterFactory.build({
+  id: 1,
+  vpc_id: mockVPC.id,
+  subnet_id: mockVPC.subnets[0].id,
+  tier: 'enterprise',
+});
+const mockClusterWithoutVPC = kubernetesClusterFactory.build({
+  id: 2,
+  vpc_id: null,
+  tier: 'enterprise',
+});
+const mockNodePools = [
+  nodePoolFactory.build({
+    id: 1,
+    nodes: [kubeLinodeFactory.build()],
+    count: 1,
+  }),
+];
+
+const mockLinodes = mockNodePools.map((pool, i) =>
+  linodeFactory.build({
+    id: pool.nodes[i].instance_id ?? undefined,
+    lke_cluster_id: mockClusterWithVPC.id,
+    type: pool.type,
+  })
+);
+const mockLinodeIPs = linodeIPFactory.build({
+  ipv4: {
+    public: [
+      {
+        address: '192.0.2.1',
+        linode_id: mockLinodes[0].id,
+      },
+    ],
+    private: [
+      {
+        linode_id: mockLinodes[0].id,
+      },
+    ],
+    vpc: [
+      {
+        address: '10.0.0.1',
+        linode_id: mockLinodes[0].id,
+        vpc_id: mockVPC.id,
+        subnet_id: mockVPC.subnets[0].id,
+      },
+    ],
+  },
+  ipv6: {
+    slaac: {
+      address: '2600:abcd::efgh:ijkl:mnop:qrst',
+      linode_id: mockLinodes[0].id,
+    },
+    link_local: {
+      linode_id: mockLinodes[0].id,
+    },
+    vpc: [
+      {
+        linode_id: mockLinodes[0].id,
+        vpc_id: mockVPC.id,
+        subnet_id: mockVPC.subnets[0].id,
+        ipv6_addresses: [
+          {
+            slaac_address: '2600:1234::abcd:5678:efgh:9012',
+          },
+        ],
+      },
+    ],
+  },
+});
+
 /**
- * Confirms read operations on LKE-Enterprise clusters.
+ * - Confirms the linked VPC is shown for an LKE-E cluster when it exists.
+ * - Confirms a linked VPC is not shown for an LKE-E cluster when it doesn't exist.
  */
 describe('LKE-E Cluster Summary - VPC Section', () => {
   beforeEach(() => {
@@ -23,19 +119,9 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
     });
   });
   /*
-   * - Confirms LKE-E summary page shows VPC info and links to the correct VPC page when a vpc_id is present.
+   * Confirms LKE-E summary page shows VPC info and links to the correct VPC page when a vpc_id is present.
    */
   it('shows linked VPC in summary for cluster with a VPC', () => {
-    const mockVPC = vpcFactory.build({
-      id: 123,
-      label: 'lke-e-vpc',
-    });
-
-    const mockClusterWithVPC = kubernetesClusterFactory.build({
-      id: 1,
-      vpc_id: mockVPC.id,
-      tier: 'enterprise',
-    });
     mockGetCluster(mockClusterWithVPC).as('getCluster');
     mockGetKubernetesVersions().as('getVersions');
     mockGetClusterPools(mockClusterWithVPC.id, []).as('getNodePools');
@@ -69,15 +155,9 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
   });
 
   /*
-   * - Confirms VPC info is not shown when cluster's vpc_id is null.
+   * Confirms VPC info is not shown when cluster's vpc_id is null.
    */
-  it('does not show linked VPC in summary when cluster does not have a VPC', () => {
-    const mockClusterWithoutVPC = kubernetesClusterFactory.build({
-      id: 2,
-      vpc_id: null,
-      tier: 'enterprise',
-    });
-
+  it('does not show linked VPC in summary when cluster does not specify a VPC', () => {
     mockGetCluster(mockClusterWithoutVPC).as('getCluster');
     mockGetKubernetesVersions().as('getVersions');
     mockGetClusterPools(mockClusterWithoutVPC.id, []).as('getNodePools');
@@ -92,6 +172,61 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
     cy.get('[data-qa-kube-entity-footer]').within(() => {
       cy.contains('VPC:').should('not.exist');
       cy.findByTestId('assigned-lke-cluster-label').should('not.exist');
+    });
+  });
+});
+
+/**
+ * Confirms the correct information is shown for a cluster's node pools.
+ */
+describe('LKE-E Node Pools', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      // TODO LKE-E: Remove once feature is in GA
+      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+    });
+  });
+
+  /**
+   * - Confirms the VPC IP address table headers are shown in the node table.
+   * - Confirms the IP address data is shown for a node in the node pool.
+   */
+  it('shows VPC IPv4 and IPv6 columns for an LKE-E cluster', () => {
+    mockGetCluster(mockClusterWithVPC).as('getCluster');
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetClusterPools(mockClusterWithVPC.id, mockNodePools).as(
+      'getNodePools'
+    );
+    mockGetVPC(mockVPC).as('getVPC');
+    mockGetProfile(mockProfile).as('getProfile');
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetLinodeIPAddresses(mockLinodes[0].id, mockLinodeIPs).as(
+      'getLinodeIPs'
+    );
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockClusterWithVPC.id}/summary`);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getVersions',
+      '@getProfile',
+      '@getVPC',
+    ]);
+
+    // Confirm VPC IP columns are present in the table header
+    cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {
+      cy.contains('th', 'VPC IPv4').should('be.visible');
+      cy.contains('th', 'VPC IPv6').should('be.visible');
+    });
+
+    // Confirm VPC IP addresses are present in the table data
+    const vpcIPv6 =
+      mockLinodeIPs.ipv6?.vpc?.[0]?.ipv6_addresses?.[0]?.slaac_address;
+    const vpcIPv4 = mockLinodeIPs.ipv4?.vpc?.[0]?.address;
+
+    cy.get('[data-qa-node-row]').within(() => {
+      cy.contains('td', vpcIPv6).should('be.visible');
+      cy.contains('td', vpcIPv4).should('be.visible');
     });
   });
 });
