@@ -15,7 +15,7 @@ import { useDebouncedValue } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { enqueueSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
@@ -71,13 +71,13 @@ export const AssignSelectedRolesDrawer = ({
     '+order_by': 'username',
   });
 
-  const getUserOptions = () => {
+  const getUserOptions = useCallback(() => {
     const users = accountUsers?.pages.flatMap((page) => page.data);
     return users?.map((user: User) => ({
       label: user.username,
       value: user.username,
     }));
-  };
+  }, [accountUsers]);
 
   const { data: accountRoles } = useAccountRoles();
 
@@ -142,6 +142,17 @@ export const AssignSelectedRolesDrawer = ({
     onClose();
   };
 
+  const handleScroll = (event: React.SyntheticEvent) => {
+    const listboxNode = event.currentTarget;
+    if (
+      listboxNode.scrollTop + listboxNode.clientHeight >=
+        listboxNode.scrollHeight &&
+      hasNextPage
+    ) {
+      fetchNextPage();
+    }
+  };
+
   return (
     <Drawer
       onClose={onClose}
@@ -190,16 +201,7 @@ export const AssignSelectedRolesDrawer = ({
                   placeholder="Select a User"
                   slotProps={{
                     listbox: {
-                      onScroll: (event: React.SyntheticEvent) => {
-                        const listboxNode = event.currentTarget;
-                        if (
-                          listboxNode.scrollTop + listboxNode.clientHeight >=
-                            listboxNode.scrollHeight &&
-                          hasNextPage
-                        ) {
-                          fetchNextPage();
-                        }
-                      },
+                      onScroll: handleScroll,
                     },
                   }}
                   textFieldProps={{ hideLabel: true }}
