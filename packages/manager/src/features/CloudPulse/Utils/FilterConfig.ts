@@ -1,6 +1,10 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
-import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
+import {
+  INTERFACE_IDS_PLACEHOLDER_TEXT,
+  LINODE_REGION,
+  RESOURCE_ID,
+} from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
@@ -232,7 +236,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         dependency: ['resource_id'],
-        filterKey: 'region_id',
+        filterKey: LINODE_REGION,
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,

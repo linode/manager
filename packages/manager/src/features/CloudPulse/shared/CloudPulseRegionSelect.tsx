@@ -8,8 +8,12 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { useFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
 import { filterRegionByServiceType } from '../Alerts/Utils/utils';
-import { NO_REGION_MESSAGE } from '../Utils/constants';
-import { deepEqual } from '../Utils/FilterBuilder';
+import {
+  LINODE_REGION,
+  NO_REGION_MESSAGE,
+  RESOURCE_FILTER_MAP,
+} from '../Utils/constants';
+import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { Item } from '../Alerts/constants';
@@ -129,7 +133,7 @@ export const CloudPulseRegionSelect = React.memo(
     }, [regions, serviceType]);
 
     const supportedRegionsFromResources =
-      filterKey === 'region_id'
+      filterKey === LINODE_REGION
         ? supportedLinodeRegions
         : supportedRegions.filter(({ id }) => resources?.some(({ region }) => region === id));
 
