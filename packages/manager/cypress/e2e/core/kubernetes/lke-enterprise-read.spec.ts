@@ -108,6 +108,7 @@ const mockLinodeIPs = linodeIPFactory.build({
 });
 
 /**
+ * Confirms the expected information is displayed in the cluster summary section of the cluster details page:
  * - Confirms the linked VPC is shown for an LKE-E cluster when it exists.
  * - Confirms a linked VPC is not shown for an LKE-E cluster when it doesn't exist.
  */
@@ -177,7 +178,7 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
 });
 
 /**
- * Confirms the correct information is shown for a cluster's node pools.
+ * Confirms the expected information is shown for a cluster's node pools on the cluster details page.
  */
 describe('LKE-E Node Pools', () => {
   beforeEach(() => {
