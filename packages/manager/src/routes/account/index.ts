@@ -29,8 +29,16 @@ const accountTabsRoute = createRoute({
 
 const accountBillingRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
-  path: '/billing',
+  path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/billingDetailLazyRoute').then(
     (m) => m.billingDetailLazyRoute
@@ -59,6 +67,14 @@ const accountUsersRoute = createRoute({
 const accountQuotasRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/quotas',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/quotas`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/Quotas/quotasLazyRoute').then(
     (m) => m.quotasLazyRoute
@@ -160,6 +176,15 @@ const accountInvoiceDetailsRoute = createRoute({
     invoiceId: Number(params.invoiceId),
   }),
   path: 'billing/invoices/$invoiceId',
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing/invoices/$invoiceId`,
+        params: { invoiceId: params.invoiceId },
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
     (m) => m.invoiceDetailLazyRoute
