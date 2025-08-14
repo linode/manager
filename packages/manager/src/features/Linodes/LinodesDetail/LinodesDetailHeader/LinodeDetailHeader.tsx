@@ -8,6 +8,7 @@ import * as React from 'react';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -55,6 +56,11 @@ export const LinodeDetailHeader = () => {
   const { mutateAsync: updateLinode } =
     useLinodeUpdateMutation(matchedLinodeId);
 
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(search.delete);
@@ -193,6 +199,7 @@ export const LinodeDetailHeader = () => {
           },
           pathname: `/linodes/${linode.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_linode}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() => {
