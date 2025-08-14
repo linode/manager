@@ -31,8 +31,8 @@ const quotasIndexRoute = createRoute({
     }
   },
 }).lazy(() =>
-  import('src/features/Account/Quotas/quotasLazyRoute').then(
-    (m) => m.quotasLazyRoute
+  import('src/features/Quotas//quotasLandingLazyRoute').then(
+    (m) => m.quotasLandingLazyRoute
   )
 );
 
