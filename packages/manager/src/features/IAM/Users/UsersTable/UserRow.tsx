@@ -12,6 +12,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { UsersActionMenu } from './UsersActionMenu';
 
 import type { User } from '@linode/api-v4';
@@ -25,6 +26,13 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
+  const { data: permissions } = usePermissions('account', [
+    'view_user',
+    'delete_user',
+    'list_user_grants',
+  ]);
+
+  const canViewUser = permissions.view_user;
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
 
@@ -42,9 +50,13 @@ export const UserRow = ({ onDelete, user }: Props) => {
           />
           <MaskableText isToggleable text={user.username}>
             <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              <Link to={`/iam/users/${user.username}/details`}>
-                {user.username}
-              </Link>
+              {canViewUser ? (
+                <Link to={`/iam/users/${user.username}/details`}>
+                  {user.username}
+                </Link>
+              ) : (
+                user.username
+              )}
             </Typography>
           </MaskableText>
           <Box display="flex" flexGrow={1} />
@@ -68,6 +80,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
         <UsersActionMenu
           isProxyUser={isProxyUser}
           onDelete={onDelete}
+          permissions={permissions}
           username={user.username}
         />
       </TableCell>

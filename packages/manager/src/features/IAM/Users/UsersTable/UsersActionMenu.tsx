@@ -4,15 +4,24 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
+import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+
+type UserActionMenuPermissions = PickPermissions<
+  'delete_user' | 'list_user_grants' | 'view_user'
+>;
 
 interface Props {
   isProxyUser: boolean;
   onDelete: (username: string) => void;
+  permissions: Record<UserActionMenuPermissions, boolean>;
+
   username: string;
 }
 
-export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
+export const UsersActionMenu = (props: Props) => {
+  const { isProxyUser, onDelete, permissions, username } = props;
+
   const navigate = useNavigate();
 
   const { data: profile } = useProfile();
@@ -26,6 +35,7 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
           params: { username },
         });
       },
+      disabled: !permissions.list_user_grants,
       title: 'Manage Access',
     },
   ];
@@ -38,6 +48,7 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
           params: { username },
         });
       },
+      disabled: !permissions.view_user,
       title: 'View User Details',
     },
     {
@@ -47,6 +58,7 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
           params: { username },
         });
       },
+      disabled: !permissions.list_user_grants,
       title: 'View Assigned Roles',
     },
     {
@@ -56,10 +68,11 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
           params: { username },
         });
       },
+      disabled: !permissions.list_user_grants,
       title: 'View Entity Access',
     },
     {
-      disabled: username === profileUsername,
+      disabled: username === profileUsername || !permissions.delete_user,
       onClick: () => {
         onDelete(username);
       },

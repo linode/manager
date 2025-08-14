@@ -2,6 +2,7 @@ import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
+  Notice,
   Paper,
   Typography,
   useTheme,
@@ -11,6 +12,7 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import {
   ERROR_STATE_TEXT,
@@ -20,13 +22,14 @@ import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
+  const { data: permissions } = usePermissions('account', ['list_user_grants']);
   const theme = useTheme();
 
   const {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useUserRoles(username ?? '');
+  } = useUserRoles(username ?? '', permissions?.list_user_grants);
 
   const { error } = useAccountUser(username ?? '');
 
@@ -37,6 +40,14 @@ export const UserRoles = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (!permissions?.list_user_grants) {
+    return (
+      <Notice variant="error">
+        You do not have permission to view this user roles.
+      </Notice>
+    );
   }
 
   if (error || assignedRolesError) {

@@ -2,6 +2,7 @@ import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
+  Notice,
   Paper,
   Typography,
   useTheme,
@@ -11,6 +12,7 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_ENTITIES_TEXT,
@@ -20,13 +22,13 @@ import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 
 export const UserEntities = () => {
   const theme = useTheme();
-
   const { username } = useParams({ from: '/iam/users/$username' });
+  const { data: permissions } = usePermissions('account', ['list_user_grants']);
   const {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useUserRoles(username ?? '');
+  } = useUserRoles(username ?? '', permissions?.list_user_grants);
 
   const { error } = useAccountUser(username ?? '');
 
@@ -36,6 +38,14 @@ export const UserEntities = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (!permissions?.list_user_grants) {
+    return (
+      <Notice variant="error">
+        You do not have permission to view this user entities.
+      </Notice>
+    );
   }
 
   if (error || assignedRolesError) {
