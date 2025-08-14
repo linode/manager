@@ -14,9 +14,9 @@ export const regions: Region[] = [
       'Block Storage Migrations',
       'Managed Databases',
     ],
-    country: 'in',
-    id: 'ap-west',
-    label: 'Mumbai, IN',
+    country: 'us',
+    id: 'us-iad',
+    label: 'Washington, DC',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: 10,
@@ -27,7 +27,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: [], metrics: [] },
+    monitors: { alerts: [], metrics: ['Linodes'] },
   },
   {
     capabilities: [

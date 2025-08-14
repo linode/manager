@@ -6,18 +6,22 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { useFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
 import { filterRegionByServiceType } from '../Alerts/Utils/utils';
 import { NO_REGION_MESSAGE, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
+import type { Item } from '../Alerts/constants';
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
   disabled?: boolean;
+  filterKey: string;
   handleRegionChange: (
+    filterKey: string,
     region: string | undefined,
     labels: string[],
     savePref?: boolean
@@ -26,6 +30,7 @@ export interface CloudPulseRegionSelectProps {
   placeholder?: string;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
+  selectedEntities: string[];
   xFilter?: CloudPulseMetricsFilter;
 }
 
@@ -33,11 +38,13 @@ export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
     const {
       defaultValue,
+      filterKey,
       handleRegionChange,
       label,
       placeholder,
       savePreferences,
       selectedDashboard,
+      selectedEntities,
       disabled = false,
       xFilter,
     } = props;
@@ -86,13 +93,13 @@ export const CloudPulseRegionSelect = React.memo(
           ? regions.find((regionObj) => regionObj.id === defaultValue)
           : undefined;
         // Notify parent and set internal state
-        handleRegionChange(region?.id, region ? [region.label] : []);
+        handleRegionChange(filterKey, region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
       } else {
         if (selectedRegion !== undefined) {
           setSelectedRegion('');
         }
-        handleRegionChange(undefined, []);
+        handleRegionChange(filterKey, undefined, []);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
@@ -100,15 +107,29 @@ export const CloudPulseRegionSelect = React.memo(
       regions, // Function to call on change
     ]);
 
-    const supportedRegions = React.useMemo<Region[] | undefined>(() => {
+    const linodeRegionIds = useFetchOptions({
+      dimensionLabel: filterKey,
+      entities: selectedEntities,
+      regions,
+      serviceType,
+      type: 'metrics',
+    }).map((option: Item<string, string>) => option.value);
+
+    const supportedLinodeRegions =
+      regions?.filter((region) => linodeRegionIds?.includes(region.id)) ?? [];
+
+    const supportedRegions = React.useMemo<Region[]>(() => {
       return filterRegionByServiceType('metrics', regions, serviceType);
     }, [regions, serviceType]);
 
-    const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
-      filterUsingDependentFilters(resources, xFilter)?.some(
-        ({ region }) => region === id
-      )
-    );
+    const supportedRegionsFromResources =
+      filterKey === 'region_id'
+        ? supportedLinodeRegions
+        : supportedRegions.filter(({ id }) =>
+            filterUsingDependentFilters(resources, xFilter)?.some(
+              ({ region }) => region === id
+            )
+          );
 
     return (
       <RegionSelect
@@ -133,13 +154,14 @@ export const CloudPulseRegionSelect = React.memo(
         onChange={(_, region) => {
           setSelectedRegion(region?.id ?? '');
           handleRegionChange(
+            filterKey,
             region?.id,
             region ? [region.label] : [],
             savePreferences
           );
         }}
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegionsFromResources ?? []}
+        regions={supportedRegionsFromResources}
         value={
           supportedRegionsFromResources?.length ? selectedRegion : undefined
         }

@@ -53,6 +53,7 @@ const Components: {
   relative_time_duration: CloudPulseDateTimeRangePicker,
   resource_id: CloudPulseResourcesSelect,
   tags: CloudPulseTagsSelect,
+  region_id: CloudPulseRegionSelect,
 };
 
 const buildComponent = (props: CloudPulseComponentRendererProps) => {
