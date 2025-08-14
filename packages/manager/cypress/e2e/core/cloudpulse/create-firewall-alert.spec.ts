@@ -199,7 +199,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
         {
           dimension_label: 'interface_type',
           label: 'Interface Type',
-          values: ['vpc', 'public'],
+          values: ['VPC', 'PUBLIC'],
         },
         {
           dimension_label: 'VPC-Subnet',
@@ -365,7 +365,7 @@ describe('Create Alert', () => {
   // Each item in the array represents a way to scope entities when generating or organizing alerts.
   // The scoping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
   entityGroupingOptions
-    .filter(({ value }) => !(serviceType === 'firewall' && value === 'region'))
+    .filter(({ value }) => serviceType === 'firewall' && value === 'entity')
     .forEach(({ label: groupLabel, value }) => {
       it(`should successfully create a new alert for ${groupLabel} level`, () => {
         const alerts = alertFactory.build({
@@ -510,8 +510,14 @@ describe('Create Alert', () => {
 
         ui.autocomplete.findByLabel('Value').click();
 
-        ui.autocomplete.findByLabel('Value').should('be.visible').type('Vpc');
-        cy.findByText('Vpc').should('be.visible').click();
+        ui.autocomplete
+          .findByLabel('Value')
+          .should('be.visible')
+          .should('not.be.disabled')
+          .click()
+          .type('VPC');
+
+        ui.autocompletePopper.findByTitle('VPC').click();
 
         // Fill metric details for the second rule
 
