@@ -45,18 +45,24 @@ export const CloudPulseServiceSelect = (
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
   const getServicesList = React.useMemo((): Item<
     string,
     CloudPulseServiceType
   >[] => {
+    // Return only the service types that are enabled in the aclpServices flag
     return serviceOptions?.data?.length
-      ? serviceOptions.data.map((service) => ({
-          label: service.label,
-          value: service.service_type as CloudPulseServiceType,
-        }))
+      ? serviceOptions.data
+          .filter(
+            (service) =>
+              aclpServices?.[service.service_type]?.alerts?.enabled ?? false
+          )
+          .map((service) => ({
+            label: service.label,
+            value: service.service_type,
+          }))
       : [];
-  }, [serviceOptions]);
+  }, [aclpServices, serviceOptions]);
 
   return (
     <Controller
@@ -95,8 +101,10 @@ export const CloudPulseServiceSelect = (
             const { key, ...rest } = props;
             return (
               <ListItem {...rest} data-qa-option key={key}>
-                <Box flexGrow={1}>{option.label}</Box>{' '}
-                {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
+                <Box data-qa-id={option.value} flexGrow={1} gap={0.5}>
+                  {option.label}
+                </Box>
+                {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                 <SelectedIcon visible={selected} />
               </ListItem>
             );

@@ -13,16 +13,13 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory } from 'src/factories';
+import { accountFactory, alertFactory, flagsFactory } from 'src/factories';
 
 import type {
   Alert,
   AlertStatusType,
   CloudPulseServiceType,
 } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
-
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 const mockAccount = accountFactory.build();
 const statusList: AlertStatusType[] = [
@@ -89,7 +86,7 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
    */
   it('Displays alerts accurately grouped under their corresponding tags', () => {
     // Setup necessary mocks and feature flags
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(serviceTypes);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
