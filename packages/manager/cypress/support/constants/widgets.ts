@@ -188,5 +188,6 @@ export const widgetDetails = {
     ],
     firewalls: 'Firewall-resource',
     serviceType: 'firewall',
+    region: 'Newark',
   },
 };

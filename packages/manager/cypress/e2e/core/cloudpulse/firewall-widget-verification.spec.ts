@@ -1,7 +1,4 @@
-/**
- * @file Integration Tests for CloudPulse firewall Dashboard.
- */
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -16,6 +13,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { randomNumber } from 'support/util/random';
@@ -27,7 +25,6 @@ import {
   dashboardMetricFactory,
   firewallFactory,
   flagsFactory,
-  kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
@@ -35,6 +32,7 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse, Filters } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
+
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -48,7 +46,7 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, firewalls } = widgetDetails.firewall;
+const { dashboardName, id, metrics, firewalls,region } = widgetDetails.firewall;
 const serviceType = 'firewall';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -126,9 +124,18 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 const mockLinode = linodeFactory.build({
-  id: kubeLinodeFactory.build().instance_id ?? undefined,
+  id: 1,
   label: firewalls,
   region: 'us-east',
+});
+const mockRegion = regionFactory.build({
+  capabilities: ['Linodes','Cloud Firewall'],
+  id: 'us-east',
+  label: 'Newark, NJ',
+  monitors: {
+    alerts: [],
+    metrics: ['Cloud Firewall','Linodes'],
+  },
 });
 const mockFirewalls = firewallFactory.build({ label: firewalls });
 
@@ -148,6 +155,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
     mockGetLinodes([mockLinode]);
     mockGetFirewalls([mockFirewalls]);
     mockGetUserPreferences({});
+    mockGetRegions([mockRegion]);
 
     // navigate to the metrics page
     cy.visitWithLogin('/metrics');
@@ -186,19 +194,11 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     ui.autocomplete.findByLabel('Firewalls').click();
 
-    cy.findByText(firewalls).should('be.visible');
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    ui.regionSelect.find().type(`${region}{enter}`);
 
-    // Expand the applied filters section
-    ui.button.findByTitle('Filters').should('be.visible').click();
-
-    // Verify that the applied filters
-    cy.get('[data-qa-applied-filter-id="applied-filter"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get(`[data-qa-value="Firewalls ${firewalls}"]`)
-          .should('be.visible')
-          .should('have.text', firewalls);
-      });
+    ui.autocomplete.findByLabel('Linode Region').click();
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
@@ -217,9 +217,6 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
   it('should apply optional filter (InterfaceIds,InterfaceTypes) and verify API request payloads', () => {
     const randomInterfaceids = `${randomNumber(0, 100)},${randomNumber(101, 200)}`;
-
-    ui.button.findByTitle('Filters').should('be.visible').click();
-
     cy.findByPlaceholderText('e.g., 1234,5678')
       .should('be.visible')
       .type(randomInterfaceids);
