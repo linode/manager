@@ -6,6 +6,7 @@ import { alertFactory, serviceTypesFactory } from 'src/factories';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
+  alertsFromEnabledServices,
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
@@ -15,6 +16,7 @@ import {
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
+  transformDimensionValue,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -23,7 +25,10 @@ import type {
   APIError,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  AclpServices,
+} from 'src/featureFlags';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -51,6 +56,7 @@ it('test convertSecondsToOptions method', () => {
 });
 
 it('test filterAlerts method', () => {
+  alertFactory.resetSequenceNumber();
   const alerts = [
     ...alertFactory.buildList(12, { created_by: 'system' }),
     alertFactory.build({
@@ -418,5 +424,73 @@ describe('filterRegionByServiceType', () => {
     const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('alertsFromEnabledServices', () => {
+  const allAlerts = [
+    ...alertFactory.buildList(3, { service_type: 'dbaas' }),
+    ...alertFactory.buildList(3, { service_type: 'linode' }),
+  ];
+  const aclpServicesFlag: Partial<AclpServices> = {
+    linode: {
+      alerts: { enabled: true, beta: true },
+      metrics: { enabled: true, beta: true },
+    },
+    dbaas: {
+      alerts: { enabled: false, beta: true },
+      metrics: { enabled: false, beta: true },
+    },
+  };
+
+  it('should return empty list when no alerts are provided', () => {
+    const result = alertsFromEnabledServices([], aclpServicesFlag);
+    expect(result).toHaveLength(0);
+  });
+
+  it('should return alerts from enabled services', () => {
+    const result = alertsFromEnabledServices(allAlerts, aclpServicesFlag);
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        alerts: { enabled: true, beta: true },
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing the alerts property in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(0);
+  });
+});
+
+describe('transformDimensionValue', () => {
+  it('should apply service-specific transformations', () => {
+    expect(transformDimensionValue('linode', 'type', '')).toBe('');
+    expect(transformDimensionValue('linode', 'operation', 'read')).toBe('Read');
+    expect(transformDimensionValue('dbaas', 'node_type', 'primary')).toBe(
+      'Primary'
+    );
+    expect(
+      transformDimensionValue('firewall', 'interface_type', 'public')
+    ).toBe('PUBLIC');
+    expect(transformDimensionValue('nodebalancer', 'protocol', 'http')).toBe(
+      'HTTP'
+    );
+  });
+
+  it('should fallback to capitalize for unknown dimensions', () => {
+    expect(
+      transformDimensionValue('linode', 'unknown_dimension', 'test_value')
+    ).toBe('Test_value');
   });
 });

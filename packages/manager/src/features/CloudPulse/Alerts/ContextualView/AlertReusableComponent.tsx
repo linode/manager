@@ -84,7 +84,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     [alerts, regionId, searchText, selectedType]
   );
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const navigate = useNavigate();
 
@@ -102,7 +102,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
-              {aclpBetaServices?.[serviceType]?.alerts && <BetaChip />}
+              {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
             </Box>
             <Button
               buttonType="outlined"

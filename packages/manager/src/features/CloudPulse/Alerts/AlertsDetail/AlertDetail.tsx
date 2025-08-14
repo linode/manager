@@ -152,7 +152,10 @@ export const AlertDetail = () => {
                 overflow: 'auto',
               }}
             >
-              <AlertDetailCriteria alertDetails={alertDetails} />
+              <AlertDetailCriteria
+                alertDetails={alertDetails}
+                serviceType={alertServiceType}
+              />
             </Box>
           </Box>
           <Box

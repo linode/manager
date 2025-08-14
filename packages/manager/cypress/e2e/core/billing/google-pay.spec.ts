@@ -1,4 +1,5 @@
 import { mockGetPaymentMethods } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
 import type { CreditCardData, PaymentMethod } from '@linode/api-v4';
@@ -56,6 +57,11 @@ const braintreeURL =
   'https://+(payments.braintree-api.com|payments.sandbox.braintree-api.com)/*';
 
 describe('Google Pay', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
+  });
   it('adds google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     mockGetPaymentMethods(mockPaymentMethods).as('getPaymentMethods');

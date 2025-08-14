@@ -16,12 +16,14 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
+import {
+  accountFactory,
+  alertFactory,
+  databaseFactory,
+  flagsFactory,
+} from 'src/factories';
 
 import type { Alert, Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
-
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
 const mockAccount = accountFactory.build();
@@ -69,7 +71,7 @@ describe('Integration Tests for Edit Alert', () => {
    * - Confirms that after submitting, the data matches with the API response.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetRegions(regions);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');

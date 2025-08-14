@@ -182,6 +182,7 @@ const genericLinkStyle = {
   background: 'none',
   border: 'none',
   color: Alias.Content.Text.Link.Default,
+  fontFamily: Font.FontFamily.Brand,
   cursor: 'pointer',
   minWidth: 0,
   padding: 0,

@@ -269,6 +269,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       status,
       unit,
+      serviceType,
     });
 
     data = generatedData.dimensions;

@@ -105,6 +105,7 @@ describe('restricted user details pages', () => {
     mockAppendFeatureFlags({
       apl: false,
       dbaasV2: { beta: false, enabled: false },
+      iamRbacPrimaryNavChanges: false,
     });
   });
 

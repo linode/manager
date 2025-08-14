@@ -71,23 +71,4 @@ describe('VPC Table Row', () => {
     await userEvent.click(editButton);
     expect(handleEdit).toHaveBeenCalled();
   });
-
-  it('should disable edit and delete buttons for LKE-E VPCs', () => {
-    const vpc = vpcFactory.build({
-      description: 'workload VPC for LKE Enterprise Cluster lke1234567',
-      label: 'lke1234567',
-    });
-    const { getAllByRole } = renderWithTheme(
-      wrapWithTableBody(
-        <VPCRow
-          handleDeleteVPC={vi.fn()}
-          handleEditVPC={vi.fn()}
-          isNodebalancerVPCEnabled
-          vpc={vpc}
-        />
-      )
-    );
-    const actionButtons = getAllByRole('button');
-    actionButtons.forEach((button) => expect(button).toBeDisabled());
-  });
 });
