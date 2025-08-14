@@ -341,6 +341,7 @@ export const NodePoolsDisplay = (props: Props) => {
       />
       <ConfigureNodePoolDrawer
         clusterId={clusterID}
+        clusterTier={clusterTier}
         nodePool={selectedPool}
         onClose={() => setIsConfigureNodePoolDrawerOpen(false)}
         open={isConfigureNodePoolDrawerOpen}

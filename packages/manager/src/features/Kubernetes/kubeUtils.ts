@@ -1,4 +1,4 @@
-import { useAccount, useAccountBetaQuery } from '@linode/queries';
+import { useAccount, useAccountBetaQuery, useTypeQuery } from '@linode/queries';
 import { getBetaStatus, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -371,4 +371,27 @@ export const useKubernetesBetaEndpoint = () => {
     isAPLAvailabilityLoading,
     isUsingBetaEndpoint,
   };
+};
+
+export const useNodePoolDisplayLabel = (
+  nodePool: KubeNodePoolResponse | undefined
+) => {
+  const { data: type } = useTypeQuery(
+    nodePool?.type ?? '',
+    Boolean(nodePool?.type)
+  );
+
+  if (!nodePool) {
+    return '';
+  }
+
+  if (nodePool.label) {
+    return nodePool.label;
+  }
+
+  if (type) {
+    return type.label;
+  }
+
+  return nodePool.type;
 };

@@ -119,6 +119,12 @@ export interface CreateNodePoolData {
    */
   k8s_version?: string;
   /**
+   * An optional label/name for the Node Pool.
+   *
+   * @default ""
+   */
+  label?: string;
+  /**
    * Key-value pairs added as labels to nodes in the node pool.
    */
   labels?: Label;
