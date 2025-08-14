@@ -69,6 +69,10 @@ const preferenceOverrides = {
 authenticate();
 describe('linode landing checks', () => {
   beforeEach(() => {
+    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
     });
@@ -87,7 +91,7 @@ describe('linode landing checks', () => {
   });
 
   it('checks the landing page side menu items', () => {
-    cy.findByTitle('Akamai - Dashboard').should('be.visible');
+    cy.findByTitle('Akamai - Cloud Manager').should('be.visible');
     cy.findByTestId('menu-item-Linodes').should('be.visible');
     cy.findByTestId('menu-item-Volumes').should('be.visible');
     cy.findByTestId('menu-item-NodeBalancers').should('be.visible');
@@ -470,6 +474,10 @@ describe('linode landing checks', () => {
 
 describe('linode landing checks for empty state', () => {
   beforeEach(() => {
+    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
     // Mock setup to display the Linode landing page in an empty state
     mockGetLinodes([]).as('getLinodes');
   });
@@ -572,6 +580,10 @@ describe('linode landing checks for empty state', () => {
 
 describe('linode landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
+    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
     // Mock setup to display the Linode landing page in an non-empty state
     const mockLinodes: Linode[] = new Array(1)
       .fill(null)

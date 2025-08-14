@@ -24,6 +24,7 @@ import { ZoomIcon } from './components/Zoomer';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
+  CloudPulseServiceType,
   DateTimeWithPreset,
   Filters,
   MetricDefinition,
@@ -92,7 +93,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * Service type selected by user
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -268,6 +269,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       status,
       unit,
+      serviceType,
     });
 
     data = generatedData.dimensions;

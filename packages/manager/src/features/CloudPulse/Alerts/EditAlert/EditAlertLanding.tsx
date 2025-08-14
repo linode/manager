@@ -10,7 +10,7 @@ import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { EditAlertDefinition } from './EditAlertDefinition';
 import { EditAlertResources } from './EditAlertResources';
 
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 const overrides: CrumbOverridesProps[] = [
@@ -60,14 +60,14 @@ export const EditAlertLanding = () => {
     return (
       <EditAlertResources
         alertDetails={alertDetails}
-        serviceType={serviceType as AlertServiceType}
+        serviceType={serviceType as CloudPulseServiceType}
       />
     );
   } else {
     return (
       <EditAlertDefinition
         alertDetails={alertDetails}
-        serviceType={serviceType as AlertServiceType}
+        serviceType={serviceType as CloudPulseServiceType}
       />
     );
   }

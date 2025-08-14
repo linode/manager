@@ -24,6 +24,7 @@ import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
+import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export interface AlertRouteParams {
@@ -46,7 +47,7 @@ export const AlertDetail = () => {
     data: alertDetails,
     isError,
     isLoading,
-  } = useAlertDefinitionQuery(alertId, serviceType);
+  } = useAlertDefinitionQuery(alertId, serviceType as CloudPulseServiceType);
 
   const { crumbOverrides, pathname } = React.useMemo(() => {
     const overrides: CrumbOverridesProps[] = [
@@ -151,7 +152,10 @@ export const AlertDetail = () => {
                 overflow: 'auto',
               }}
             >
-              <AlertDetailCriteria alertDetails={alertDetails} />
+              <AlertDetailCriteria
+                alertDetails={alertDetails}
+                serviceType={alertServiceType}
+              />
             </Box>
           </Box>
           <Box
