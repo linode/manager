@@ -24,6 +24,7 @@ import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscaleNodePoolDrawer } from './AutoscaleNodePoolDrawer';
+import { ConfigureNodePoolDrawer } from './ConfigureNodePool/ConfigureNodePoolDrawer';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { LabelAndTaintDrawer } from './LabelsAndTaints/LabelAndTaintDrawer';
 import { NodePool } from './NodePool';
@@ -90,6 +91,8 @@ export const NodePoolsDisplay = (props: Props) => {
   const [selectedPoolId, setSelectedPoolId] = useState(-1);
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
+  const [isConfigureNodePoolDrawerOpen, setIsConfigureNodePoolDrawerOpen] =
+    useState(false);
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
   const [isLabelsAndTaintsDrawerOpen, setIsLabelsAndTaintsDrawerOpen] =
     useState(false);
@@ -121,6 +124,11 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const handleOpenAddDrawer = () => {
     setAddDrawerOpen(true);
+  };
+
+  const handleOpenConfigureNodePoolDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsConfigureNodePoolDrawerOpen(true);
   };
 
   const handleOpenAutoscaleDrawer = (poolId: number) => {
@@ -290,6 +298,7 @@ export const NodePoolsDisplay = (props: Props) => {
               encryptionStatus={disk_encryption}
               handleAccordionClick={() => handleAccordionClick(id)}
               handleClickAutoscale={handleOpenAutoscaleDrawer}
+              handleClickConfigureNodePool={handleOpenConfigureNodePoolDrawer}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isLkeClusterRestricted={isLkeClusterRestricted}
@@ -304,7 +313,7 @@ export const NodePoolsDisplay = (props: Props) => {
                 setSelectedPoolId(id);
                 setIsRecycleAllPoolNodesOpen(true);
               }}
-              openRecycleNodeDialog={(nodeId, linodeLabel) => {
+              openRecycleNodeDialog={(nodeId) => {
                 setSelectedNodeId(nodeId);
                 setIsRecycleNodeOpen(true);
               }}
@@ -329,6 +338,12 @@ export const NodePoolsDisplay = (props: Props) => {
         clusterTier={clusterTier}
         onClose={() => setAddDrawerOpen(false)}
         open={addDrawerOpen}
+      />
+      <ConfigureNodePoolDrawer
+        clusterId={clusterID}
+        nodePool={selectedPool}
+        onClose={() => setIsConfigureNodePoolDrawerOpen(false)}
+        open={isConfigureNodePoolDrawerOpen}
       />
       <LabelAndTaintDrawer
         clusterId={clusterID}

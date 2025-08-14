@@ -26,6 +26,7 @@ interface Props {
   encryptionStatus: EncryptionStatus;
   handleAccordionClick: () => void;
   handleClickAutoscale: (poolId: number) => void;
+  handleClickConfigureNodePool: (poolId: number) => void;
   handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isLkeClusterRestricted: boolean;
@@ -52,6 +53,7 @@ export const NodePool = (props: Props) => {
     encryptionStatus,
     handleAccordionClick,
     handleClickAutoscale,
+    handleClickConfigureNodePool,
     handleClickLabelsAndTaints,
     handleClickResize,
     isLkeClusterRestricted,
@@ -100,6 +102,11 @@ export const NodePool = (props: Props) => {
             )}
             <ActionMenu
               actionsList={[
+                {
+                  disabled: isLkeClusterRestricted,
+                  onClick: () => handleClickConfigureNodePool(poolId),
+                  title: 'Configure Pool',
+                },
                 {
                   disabled: isLkeClusterRestricted,
                   onClick: () => handleClickLabelsAndTaints(poolId),
