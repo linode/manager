@@ -57,6 +57,10 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
 
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+
   const { data: permissions } = usePermissions(
     'linode',
     [
@@ -144,6 +148,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       condition: !isBareMetalInstance,
       disabled:
         !permissions.clone_linode ||
+        !accountPermissions.create_linode ||
         hasHostMaintenance ||
         linodeIsInDistributedRegion,
       isReadOnly: !permissions.clone_linode,
