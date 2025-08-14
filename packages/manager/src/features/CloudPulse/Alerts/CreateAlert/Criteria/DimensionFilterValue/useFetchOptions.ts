@@ -31,7 +31,7 @@ interface FetchOptionsProps {
    */
   serviceType?: CloudPulseServiceType | null;
   /**
-   * The type of alert to filter on.
+   * The type of monitoring to filter on.
    */
   type: 'alerts' | 'metrics';
 }
