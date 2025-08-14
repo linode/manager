@@ -75,7 +75,7 @@ export const FirewallDetail = () => {
 
   const { data: permissions } = usePermissions(
     'firewall',
-    ['update_firewall_rules'],
+    ['update_firewall_rules', 'update_firewall'],
     firewallId
   );
 
@@ -173,6 +173,7 @@ export const FirewallDetail = () => {
           },
           pathname: `/firewalls/${firewall.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_firewall}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         spacingBottom={4}
