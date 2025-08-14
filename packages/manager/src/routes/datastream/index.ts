@@ -3,6 +3,13 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { DataStreamRoute } from './DataStreamRoute';
 
+import type { TableSearchParams } from 'src/routes/types';
+
+export interface StreamSearchParams extends TableSearchParams {
+  label?: string;
+  status?: string;
+}
+
 export const dataStreamRoute = createRoute({
   component: DataStreamRoute,
   getParentRoute: () => rootRoute,
@@ -24,6 +31,7 @@ const dataStreamLandingRoute = createRoute({
 const streamsRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'streams',
+  validateSearch: (search: StreamSearchParams) => search,
 }).lazy(() =>
   import('src/features/DataStream/dataStreamLandingLazyRoute').then(
     (m) => m.dataStreamLandingLazyRoute
@@ -39,9 +47,14 @@ const streamsCreateRoute = createRoute({
   ).then((m) => m.streamCreateLazyRoute)
 );
 
+export interface DestinationSearchParams extends TableSearchParams {
+  label?: string;
+}
+
 const destinationsRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'destinations',
+  validateSearch: (search: DestinationSearchParams) => search,
 }).lazy(() =>
   import('src/features/DataStream/dataStreamLandingLazyRoute').then(
     (m) => m.dataStreamLandingLazyRoute

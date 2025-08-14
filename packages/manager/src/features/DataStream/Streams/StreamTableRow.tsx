@@ -36,9 +36,9 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
 const humanizeStreamStatus = (status: StreamStatus) => {
   switch (status) {
     case 'active':
-      return 'Active';
+      return 'Enabled';
     case 'inactive':
-      return 'Inactive';
+      return 'Disabled';
     default:
       return 'Unknown';
   }
