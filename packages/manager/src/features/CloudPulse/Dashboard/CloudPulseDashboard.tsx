@@ -35,6 +35,11 @@ export interface DashboardProperties {
   duration: DateTimeWithPreset;
 
   /**
+   * Selected linode region for the dashboard
+   */
+  linodeRegion?: string;
+
+  /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
    */
   manualRefreshTimeStamp?: number;
@@ -68,6 +73,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    linodeRegion,
   } = props;
 
   const { preferences } = useAclpPreference();
@@ -147,6 +153,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       duration={duration}
       isJweTokenFetching={isJweTokenFetching}
       jweToken={jweToken}
+      linodeRegion={linodeRegion}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}

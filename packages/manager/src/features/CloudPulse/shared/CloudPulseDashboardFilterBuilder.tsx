@@ -212,17 +212,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const handleRegionChange = React.useCallback(
       (
+        filterKey: string,
         region: string | undefined,
         labels: string[],
         savePref: boolean = false
       ) => {
-        const updatedPreferenceData = {
-          [REGION]: region,
-          [RESOURCES]: undefined,
-          [TAGS]: undefined,
-        };
+        const updatedPreferenceData =
+          filterKey === REGION
+            ? {
+                [filterKey]: region,
+                [RESOURCES]: undefined,
+                [TAGS]: undefined,
+              }
+            : {
+                [filterKey]: region,
+              };
         emitFilterChangeByFilterKey(
-          REGION,
+          filterKey,
           region,
           labels,
           savePref,
@@ -272,6 +278,20 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               dependentFilters: dependentFilterReference.current,
+            },
+            handleRegionChange
+          );
+        } else if (config.configuration.filterKey === 'region_id') {
+          return getRegionProperties(
+            {
+              config,
+              dashboard,
+              isServiceAnalyticsIntegration,
+              preferences,
+              dependentFilters: resource_ids?.length
+                ? { [RESOURCE_ID]: resource_ids }
+                : dependentFilterReference.current,
+              shouldDisable: isError || isLoading,
             },
             handleRegionChange
           );
