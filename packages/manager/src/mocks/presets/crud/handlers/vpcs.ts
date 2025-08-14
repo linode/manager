@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { subnetFactory, vpcFactory, vpcIPFactory } from 'src/factories';
+import { subnetFactory, vpcFactory, vpcIPv4Factory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeErrorResponse,
@@ -136,7 +136,7 @@ export const createVPC = (mockState: MockState) => [
         mockState
       );
 
-      const vpcIp = vpcIPFactory.build({
+      const vpcIp = vpcIPv4Factory.build({
         vpc_id: createdVPC.id,
       });
 

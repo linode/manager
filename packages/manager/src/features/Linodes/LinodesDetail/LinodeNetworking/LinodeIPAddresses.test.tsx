@@ -1,4 +1,5 @@
 import { ipAddressFactory } from 'src/factories/networking';
+import { vpcIPv4Factory, vpcIPv6Factory } from 'src/factories/vpcs';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';
 import { createType, ipResponseToDisplayRows } from './utils';
@@ -46,7 +47,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       public: ipAddressFactory.buildList(1, { public: true, type: 'ipv4' }),
       reserved: ipAddressFactory.buildList(1),
       shared: ipAddressFactory.buildList(1),
-      vpc: [],
+      vpc: [vpcIPv4Factory.build()],
     },
     ipv6: {
       global: [
@@ -59,7 +60,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       ],
       link_local: ipAddressFactory.build({ type: 'ipv6' }),
       slaac: ipAddressFactory.build({ type: 'ipv6' }),
-      vpc: [],
+      vpc: [vpcIPv6Factory.build()],
     },
   };
 
@@ -68,7 +69,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       ipResponse: response,
       isLinodeInterface: false,
     });
-    expect(result).toHaveLength(7);
+    expect(result).toHaveLength(10);
   });
 
   it('includes the meta _ip field for IP addresses', () => {
@@ -88,7 +89,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       isLinodeInterface: false,
     });
     // Check the last row (the IPv6 range)
-    expect(result[6]._range).toBeDefined();
+    expect(result[9]._range).toBeDefined();
   });
 });
 

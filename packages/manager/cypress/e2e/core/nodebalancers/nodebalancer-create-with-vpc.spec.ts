@@ -14,7 +14,7 @@ import { ui } from 'support/ui';
 import { randomIp, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { subnetFactory, vpcFactory, vpcIPFactory } from 'src/factories';
+import { subnetFactory, vpcFactory, vpcIPv4Factory } from 'src/factories';
 
 authenticate();
 describe('Create a NodeBalancer with VPCs', () => {
@@ -48,7 +48,7 @@ describe('Create a NodeBalancer with VPCs', () => {
       region: region.id,
     });
 
-    const mockLinodeVPCIPv4 = vpcIPFactory.build({
+    const mockLinodeVPCIPv4 = vpcIPv4Factory.build({
       address: '10.0.0.2',
       vpc_id: mockVPC.id,
       subnet_id: mockSubnet.id,
