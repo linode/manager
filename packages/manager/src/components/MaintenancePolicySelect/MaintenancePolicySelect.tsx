@@ -27,7 +27,7 @@ interface Props {
   hideDefaultChip?: boolean;
   onChange: (policy: MaintenancePolicy) => void;
   textFieldProps?: Partial<TextFieldProps>;
-  value?: 'linode/migrate' | 'linode/power_off_on';
+  value?: 'linode/migrate' | 'linode/power_off_on' | null;
 }
 
 export const MaintenancePolicySelect = (props: Props) => {

@@ -120,7 +120,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
-              value={value}
+              value={value ?? null}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
@@ -154,7 +154,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}
-              value={value}
+              value={value ?? null}
             />
           </SafeTabPanel>
         </TabPanels>
