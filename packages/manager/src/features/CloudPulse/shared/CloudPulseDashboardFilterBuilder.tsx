@@ -292,7 +292,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dependentFilters: resource_ids?.length
                 ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
-              shouldDisable: isError || isLoading,
             },
             handleRegionChange
           );
