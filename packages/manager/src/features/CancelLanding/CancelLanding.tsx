@@ -12,10 +12,6 @@ export const CancelLanding = React.memo(() => {
 
   const surveyLink = search.survey_link;
 
-  const goToSurvey = () => {
-    window.location.assign(surveyLink);
-  };
-
   const Logo =
     theme.name === 'light' ? LightThemeAkamaiLogo : DarkThemeAkamaiLogo;
 
@@ -43,7 +39,7 @@ export const CancelLanding = React.memo(() => {
       <Button
         buttonType="primary"
         data-testid="survey-button"
-        onClick={goToSurvey}
+        href={surveyLink}
       >
         Take our exit survey
       </Button>
