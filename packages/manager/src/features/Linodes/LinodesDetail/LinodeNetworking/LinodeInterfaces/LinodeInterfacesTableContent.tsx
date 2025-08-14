@@ -11,11 +11,16 @@ import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
 import type { HiddenProps } from '@linode/ui';
 
 interface Props {
+  disabled: boolean;
   handlers: InterfaceActionHandlers;
   linodeId: number;
 }
 
-export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
+export const LinodeInterfacesTableContent = ({
+  disabled,
+  handlers,
+  linodeId,
+}: Props) => {
   const { data, error, isPending } = useLinodeInterfacesQuery(linodeId);
 
   const cols = 9;
@@ -46,6 +51,7 @@ export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
 
   return data.interfaces.map((networkInterface) => (
     <LinodeInterfaceTableRow
+      disabled={disabled}
       handlers={handlers}
       key={networkInterface.id}
       linodeId={linodeId}

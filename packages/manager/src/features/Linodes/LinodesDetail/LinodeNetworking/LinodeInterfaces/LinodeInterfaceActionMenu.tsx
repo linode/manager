@@ -4,7 +4,11 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { LinodeInterfaceType } from './utilities';
 
+const NO_PERMISSION_TOOLTIP_TEXT =
+  'You do not have permission to perform this action.';
+
 interface Props {
+  disabled: boolean;
   handlers: InterfaceActionHandlers;
   id: number;
   type: LinodeInterfaceType;
@@ -17,7 +21,7 @@ export interface InterfaceActionHandlers {
 }
 
 export const LinodeInterfaceActionMenu = (props: Props) => {
-  const { handlers, id, type } = props;
+  const { disabled, handlers, id, type } = props;
 
   const editOptions =
     type === 'VLAN'
@@ -33,8 +37,15 @@ export const LinodeInterfaceActionMenu = (props: Props) => {
       onClick: () => handlers.onEdit(id),
       title: 'Edit',
       ...editOptions,
+      disabled,
+      tooltip: disabled ? NO_PERMISSION_TOOLTIP_TEXT : undefined,
     },
-    { onClick: () => handlers.onDelete(id), title: 'Delete' },
+    {
+      onClick: () => handlers.onDelete(id),
+      disabled,
+      title: 'Delete',
+      tooltip: disabled ? NO_PERMISSION_TOOLTIP_TEXT : undefined,
+    },
   ];
 
   return (

@@ -12,11 +12,16 @@ import { LinodeInterfacesTableContent } from './LinodeInterfacesTableContent';
 import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
 
 interface Props {
+  disabled: boolean;
   handlers: InterfaceActionHandlers;
   linodeId: number;
 }
 
-export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
+export const LinodeInterfacesTable = ({
+  disabled,
+  handlers,
+  linodeId,
+}: Props) => {
   return (
     <Table>
       <TableHead>
@@ -41,7 +46,11 @@ export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        <LinodeInterfacesTableContent handlers={handlers} linodeId={linodeId} />
+        <LinodeInterfacesTableContent
+          disabled={disabled}
+          handlers={handlers}
+          linodeId={linodeId}
+        />
       </TableBody>
     </Table>
   );
