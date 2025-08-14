@@ -38,10 +38,11 @@ export const useIsPageScrollable = (
     if (!contentRef.current) {
       return;
     }
+    const documentHeight = document.documentElement.scrollHeight;
+    const viewportHeight = window.innerHeight;
+    const overflow = documentHeight - viewportHeight;
 
-    const contentHeight = contentRef.current.scrollHeight;
-    const viewportHeight = document.documentElement.clientHeight;
-    setIsPageScrollable(contentHeight + TOPMENU_HEIGHT > viewportHeight);
+    setIsPageScrollable(overflow > TOPMENU_HEIGHT);
   }, [contentRef]);
 
   React.useEffect(() => {
