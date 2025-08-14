@@ -120,7 +120,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       {
         display: 'Quotas',
         hide: !flags.limitsEvolution?.enabled,
-        to: '/account/quotas',
+        to: flags?.iamRbacPrimaryNavChanges ? '/quotas' : '/account/quotas',
       },
       {
         display: 'Login History',
