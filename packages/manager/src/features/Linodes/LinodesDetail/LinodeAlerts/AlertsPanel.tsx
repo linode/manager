@@ -101,7 +101,7 @@ export const AlertsPanel = (props: Props) => {
     },
   });
 
-  const hasErrorFor = getAPIErrorFor(
+  const hasAPIErrorFor = getAPIErrorFor(
     {
       'alerts.cpu': 'CPU',
       'alerts.io': 'Disk I/O rate',
@@ -112,11 +112,15 @@ export const AlertsPanel = (props: Props) => {
     error ?? undefined
   );
 
+  const generalError = hasAPIErrorFor('none');
+
   const alertSections: AlertSectionProps[] = [
     {
       copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       endAdornment: '%',
-      error: formik.touched.cpu ? formik.errors.cpu : undefined,
+      error:
+        (formik.touched.cpu ? formik.errors.cpu : undefined) ||
+        hasAPIErrorFor('alerts.cpu'),
       hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -130,11 +134,12 @@ export const AlertsPanel = (props: Props) => {
               : 90 * (linode?.specs.vcpus ?? 1)
             : 0
         ),
-      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         formik.setFieldValue(
           'cpu',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
-        ),
+        );
+      },
       onBlur: () => {
         formik.setFieldTouched('cpu');
       },
@@ -149,7 +154,9 @@ export const AlertsPanel = (props: Props) => {
     {
       copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       endAdornment: 'IOPS',
-      error: formik.touched.io ? formik.errors.io : undefined,
+      error:
+        (formik.touched.io ? formik.errors.io : undefined) ||
+        hasAPIErrorFor('alerts.io'),
       hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -178,7 +185,9 @@ export const AlertsPanel = (props: Props) => {
       copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
         alert.`,
       endAdornment: 'Mb/s',
-      error: formik.touched.network_in ? formik.errors.network_in : undefined,
+      error:
+        (formik.touched.network_in ? formik.errors.network_in : undefined) ||
+        hasAPIErrorFor('alerts.network_in'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -212,7 +221,9 @@ export const AlertsPanel = (props: Props) => {
       copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
         alert.`,
       endAdornment: 'Mb/s',
-      error: formik.touched.network_out ? formik.errors.network_out : undefined,
+      error:
+        (formik.touched.network_out ? formik.errors.network_out : undefined) ||
+        hasAPIErrorFor('alerts.network_out'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -246,9 +257,10 @@ export const AlertsPanel = (props: Props) => {
       copy: `Percentage of network transfer quota used being greater than this value will trigger
           this alert.`,
       endAdornment: '%',
-      error: formik.touched.transfer_quota
-        ? formik.errors.transfer_quota
-        : undefined,
+      error:
+        (formik.touched.transfer_quota
+          ? formik.errors.transfer_quota
+          : undefined) || hasAPIErrorFor('alerts.transfer_quota'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -279,8 +291,6 @@ export const AlertsPanel = (props: Props) => {
       value: formik.values.transfer_quota ?? 0,
     },
   ].filter((thisAlert) => !thisAlert.hidden);
-
-  const generalError = hasErrorFor('none');
 
   const hasUnsavedChanges = formik.dirty;
 

@@ -14,6 +14,10 @@ import * as React from 'react';
 export interface AlertSectionProps {
   copy: string;
   endAdornment: string;
+  /**
+   * Error message to display for the field,
+   * from client-side validation or API response.
+   */
   error?: string;
   onBlur: () => void;
   onStateChange: (e: React.ChangeEvent<{}>, checked: boolean) => void;
