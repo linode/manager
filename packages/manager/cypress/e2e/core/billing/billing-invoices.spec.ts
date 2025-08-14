@@ -9,6 +9,7 @@ import {
   mockGetInvoice,
   mockGetInvoiceItems,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { formatUsd } from 'support/util/currency';
@@ -30,6 +31,11 @@ const getRegionLabel = (regionId: string) => {
 };
 
 describe('Account invoices', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
+  });
   /*
    * - Confirms that invoice items are listed on invoice details page using mock API data.
    * - Confirms that each invoice item is displayed with correct accompanying info.
