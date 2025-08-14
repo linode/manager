@@ -60,14 +60,14 @@ export const Alerts = ({
       subHeading={subHeading}
       summaryProps={{ sx: { p: 0 } }}
     >
-      {aclpServices?.linode?.alerts?.beta && (
+      {aclpServices?.linode?.alerts?.enabled && (
         <AclpPreferenceToggle
           isAlertsBetaMode={isAlertsBetaMode}
           onAlertsModeChange={onAlertsModeChange}
           type="alerts"
         />
       )}
-      {aclpServices?.linode?.alerts?.beta && isAlertsBetaMode ? (
+      {aclpServices?.linode?.alerts?.enabled && isAlertsBetaMode ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}

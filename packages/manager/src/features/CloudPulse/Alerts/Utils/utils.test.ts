@@ -29,7 +29,6 @@ import type {
   AclpAlertServiceTypeConfig,
   AclpServices,
 } from 'src/featureFlags';
-
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
   services.forEach((service) => {
@@ -437,9 +436,55 @@ describe('transformDimensionValue', () => {
     );
   });
 
-  it('should fallback to capitalize for unknown dimensions', () => {
+  it('should fallback to capitalize for firewall dimensions', () => {
     expect(
-      transformDimensionValue('linode', 'unknown_dimension', 'test_value')
+      transformDimensionValue('linode', 'firewall_dimension', 'test_value')
     ).toBe('Test_value');
+  });
+});
+
+describe('alertsFromEnabledServices', () => {
+  const allAlerts = [
+    ...alertFactory.buildList(3, { service_type: 'dbaas' }),
+    ...alertFactory.buildList(3, { service_type: 'linode' }),
+  ];
+  const aclpServicesFlag: Partial<AclpServices> = {
+    linode: {
+      alerts: { enabled: true, beta: true },
+      metrics: { enabled: true, beta: true },
+    },
+    dbaas: {
+      alerts: { enabled: false, beta: true },
+      metrics: { enabled: false, beta: true },
+    },
+  };
+
+  it('should return empty list when no alerts are provided', () => {
+    const result = alertsFromEnabledServices([], aclpServicesFlag);
+    expect(result).toHaveLength(0);
+  });
+
+  it('should return alerts from enabled services', () => {
+    const result = alertsFromEnabledServices(allAlerts, aclpServicesFlag);
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        alerts: { enabled: true, beta: true },
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing the alerts property in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(0);
   });
 });

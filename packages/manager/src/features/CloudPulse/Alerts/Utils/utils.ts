@@ -612,6 +612,22 @@ export const alertsFromEnabledServices = (
 };
 
 /**
+ * Filters alerts based on the enabled services
+ * @param allAlerts list of all alerts
+ * @param aclpServices list of services with their statuses
+ * @returns list of alerts from enabled services
+ */
+export const alertsFromEnabledServices = (
+  allAlerts: Alert[] | undefined,
+  aclpServices: Partial<AclpServices> | undefined
+) => {
+  // Return the alerts whose service type is enabled in the aclpServices flag
+  return allAlerts?.filter(
+    (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
+  );
+};
+
+/**
  * Transform a dimension value using the appropriate transform function
  * @param serviceType - The cloud pulse service type
  * @param dimensionLabel - The dimension label

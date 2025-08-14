@@ -147,6 +147,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   }
 
+  if (!dashboard) {
+    return renderPlaceHolder(
+      'No visualizations are available at this moment. Create Dashboards to list here.'
+    );
+  }
+
   return (
     <RenderWidgets
       additionalFilters={additionalFilters}
