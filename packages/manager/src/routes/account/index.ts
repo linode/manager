@@ -31,7 +31,7 @@ const accountBillingRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
-  beforeLoad: ({ context }) => {
+  beforeLoad: ({ context, params }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
       throw redirect({
         to: `/billing`,
