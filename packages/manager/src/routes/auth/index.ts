@@ -14,11 +14,14 @@ const cancelLandingRoute = createRoute({
   onError() {
     throw redirect({ to: '/' });
   },
-  validateSearch: (search) => {
-    if (!search.survey_link || typeof search.survey_link !== 'string') {
-      throw new Error('No survey!');
+  validateSearch(search) {
+    if (!search.survey_link) {
+      throw new Error('No survey in search params!');
     }
-    return { survey_link: search.survey_link as string };
+    if (typeof search.survey_link !== 'string') {
+      throw new Error('Expected survey_link to be a string but it was not...');
+    }
+    return { survey_link: search.survey_link };
   },
 });
 
