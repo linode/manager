@@ -34,7 +34,6 @@ import {
   dashboardMetricFactory,
   databaseFactory,
   flagsFactory,
-  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 
