@@ -293,15 +293,15 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Service Transfers',
-                to: '/account/service-transfers', // TODO: replace with '/service-transfers' when flat route is added
+                to: '/service-transfers',
               },
               {
                 display: 'Maintenance',
-                to: '/account/maintenance', // TODO: replace with '/maintenance' when flat route is added
+                to: '/maintenance',
               },
               {
                 display: 'Settings',
-                to: '/account/settings', // TODO: replace with '/settings' when flat route is added
+                to: '/settings',
               },
             ],
             name: 'Administration',

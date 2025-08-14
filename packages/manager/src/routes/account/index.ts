@@ -93,6 +93,14 @@ const accountLoginHistoryRoute = createRoute({
 const accountServiceTransfersRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/service-transfers',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/service-transfers`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import(
     'src/features/EntityTransfers/EntityTransfersLanding/entityTransferLandingLazyRoute'
@@ -210,6 +218,14 @@ const accountInvoiceDetailsRoute = createRoute({
 const accountEntityTransfersCreateRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: 'service-transfers/create',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/service-transfers/create`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import(
     'src/features/EntityTransfers/EntityTransfersCreate/entityTransfersCreateLazyRoute'
