@@ -17,10 +17,6 @@ import {
   DIMENSION_TRANSFORM_CONFIG,
   TRANSFORMS,
 } from '../../shared/DimensionTransform';
-import {
-  DIMENSION_TRANSFORM_CONFIG,
-  TRANSFORMS,
-} from '../../shared/DimensionTransform';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';

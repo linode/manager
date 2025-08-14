@@ -4,7 +4,6 @@ import type {
   AlertSeverityType,
   ChannelType,
   CloudPulseServiceType,
-  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   DimensionFilter,
   DimensionFilterOperatorType,
