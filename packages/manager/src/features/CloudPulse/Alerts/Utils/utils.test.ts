@@ -436,9 +436,9 @@ describe('transformDimensionValue', () => {
     );
   });
 
-  it('should fallback to capitalize for firewall dimensions', () => {
+  it('should fallback to capitalize for unknown dimensions', () => {
     expect(
-      transformDimensionValue('linode', 'firewall_dimension', 'test_value')
+      transformDimensionValue('linode', 'unknown_dimension', 'test_value')
     ).toBe('Test_value');
   });
 });
