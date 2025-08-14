@@ -107,14 +107,14 @@ export const useEditAlertDefinition = () => {
 
     onSuccess(data) {
       const allAlertsQueryKey = queryFactory.alerts._ctx.all().queryKey;
-      queryClient.cancelQueries({ queryKey: allAlertsQueryKey });
-      queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
-        return (
-          oldData?.map((alert) => {
-            return alert.id === data.id ? data : alert;
-          }) ?? [data]
+       const oldAlerts = queryClient.getQueryData<Alert[]>(allAlertsQueryKey);
+
+      if (oldAlerts) {
+        queryClient.setQueryData<Alert[]>(
+          allAlertsQueryKey,
+          oldAlerts.map((alert) => (alert.id === data.id ? data : alert))
         );
-      });
+      }
 
       queryClient.setQueryData<Alert>(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(
