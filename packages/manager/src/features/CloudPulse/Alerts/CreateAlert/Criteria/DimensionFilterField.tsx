@@ -1,9 +1,10 @@
 import { Autocomplete, Box, TextField } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
+
+import { transformDimensionValue } from 'src/features/CloudPulse/Alerts/Utils/utils';
 
 import {
   dimensionOperatorOptions,
@@ -79,6 +80,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   });
 
   const dimensionValueWatcher = useWatch({ control, name: `${name}.value` });
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -89,7 +92,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const valueOptions = () => {
     if (selectedDimension !== null && selectedDimension.values) {
       return selectedDimension.values.map((val) => ({
-        label: capitalize(val),
+        label: transformDimensionValue(
+          serviceTypeWatcher,
+          selectedDimension.dimension_label,
+          val
+        ),
         value: val,
       }));
     }
