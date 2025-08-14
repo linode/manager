@@ -289,7 +289,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Login History',
-                to: '/account/login-history', // TODO: replace with '/login-history' when flat route is added
+                to: '/login-history',
               },
               {
                 display: 'Service Transfers',

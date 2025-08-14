@@ -76,6 +76,14 @@ const accountQuotasRoute = createRoute({
 const accountLoginHistoryRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/login-history',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/login-history`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/accountLoginsLazyRoute').then(
     (m) => m.accountLoginsLazyRoute

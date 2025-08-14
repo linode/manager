@@ -24,6 +24,7 @@ import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
+import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
@@ -68,6 +69,7 @@ export const routeTree = rootRoute.addChildren([
   imagesRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
+  loginHistoryRouteTree,
   longviewRouteTree,
   managedRouteTree,
   nodeBalancersRouteTree,

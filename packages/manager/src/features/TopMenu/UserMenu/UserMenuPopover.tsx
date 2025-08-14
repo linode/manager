@@ -124,7 +124,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       },
       {
         display: 'Login History',
-        to: '/account/login-history',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/login-history'
+          : '/account/login-history',
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
