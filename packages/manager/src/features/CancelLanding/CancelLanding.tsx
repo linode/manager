@@ -1,19 +1,13 @@
 import { Button, Stack, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import { useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-navy-text.svg';
-import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo-white-text.svg';
+import { ThemeAwareLogo } from 'src/components/ThemeAwareLogo';
 
 export const CancelLanding = React.memo(() => {
   const search = useSearch({ from: '/cancel' });
-  const theme = useTheme();
 
   const surveyLink = search.survey_link;
-
-  const Logo =
-    theme.name === 'light' ? LightThemeAkamaiLogo : DarkThemeAkamaiLogo;
 
   return (
     <Stack
@@ -22,7 +16,7 @@ export const CancelLanding = React.memo(() => {
       height="calc(100vh - 200px)"
       justifyContent="center"
     >
-      <Logo />
+      <ThemeAwareLogo sx={{ width: '200px', height: '75px' }} />
       <Typography variant="h2">
         It&rsquo;s been our pleasure to serve you.
       </Typography>

@@ -1,30 +1,27 @@
-import { Box, ErrorState, Stack, SvgIcon, Typography } from '@linode/ui';
+import { ErrorState, Stack, Typography } from '@linode/ui';
 import BuildIcon from '@mui/icons-material/Build';
 import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
+import React from 'react';
 
-import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-navy-text.svg';
-import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo-white-text.svg';
 import { Link } from 'src/components/Link';
+
+import { ThemeAwareLogo } from './ThemeAwareLogo';
 
 import type { Theme } from '@mui/material/styles';
 
 export const MaintenanceScreen = () => {
   const theme = useTheme<Theme>();
 
-  const Logo =
-    theme.name === 'light' ? LightThemeAkamaiLogo : DarkThemeAkamaiLogo;
-
   return (
-    <Stack bgcolor={theme.bg.main} justifyContent="center" minHeight="100vh">
-      <Box display="flex" justifyContent="center">
-        <SvgIcon
-          component={Logo}
-          inheritViewBox
-          sx={{ width: '215px', height: '100%' }}
-        />
-      </Box>
+    <Stack
+      alignItems="center"
+      bgcolor={theme.bg.main}
+      justifyContent="center"
+      minHeight="100vh"
+    >
+      <ThemeAwareLogo sx={{ width: '200px', height: '75px' }} />
       <ErrorState
+        compact
         CustomIcon={BuildIcon}
         CustomIconStyles={{
           color: theme.palette.text.primary,
