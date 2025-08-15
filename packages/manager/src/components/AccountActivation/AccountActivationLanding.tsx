@@ -5,8 +5,8 @@ import React from 'react';
 
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
+import { AkamaiLogo } from '../AkamaiLogo';
 import { LinkButton } from '../LinkButton';
-import { ThemeAwareLogo } from '../ThemeAwareLogo';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
@@ -41,7 +41,7 @@ export const AccountActivationLanding = () => {
       height="calc(100vh - 200px)"
       justifyContent="center"
     >
-      <ThemeAwareLogo sx={{ width: '200px', height: '75px' }} />
+      <AkamaiLogo sx={{ width: '200px', height: '75px' }} />
       <ErrorState
         compact
         CustomIcon={CheckIcon}

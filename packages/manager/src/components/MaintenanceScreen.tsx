@@ -5,7 +5,7 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
-import { ThemeAwareLogo } from './ThemeAwareLogo';
+import { AkamaiLogo } from './AkamaiLogo';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -19,7 +19,7 @@ export const MaintenanceScreen = () => {
       justifyContent="center"
       minHeight="100vh"
     >
-      <ThemeAwareLogo sx={{ width: '200px', height: '75px' }} />
+      <AkamaiLogo sx={{ width: '200px', height: '75px' }} />
       <ErrorState
         compact
         CustomIcon={BuildIcon}

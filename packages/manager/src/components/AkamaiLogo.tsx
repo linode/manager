@@ -11,7 +11,12 @@ const LOGO_MAP = {
   dark: DarkThemeAkamaiLogo,
 };
 
-export const ThemeAwareLogo = (props: SvgIconProps) => {
+/**
+ * Given the app's current theme, it will render the correct Akamai logo.
+ * - In light mode ☀️, it will render the Akamai logo that has dark blue text.
+ * - In dark mode 🌑, it will render the Akamai logo that has white text.
+ */
+export const AkamaiLogo = (props: SvgIconProps) => {
   const theme = useTheme();
 
   return <SvgIcon component={LOGO_MAP[theme.name]} inheritViewBox {...props} />;

@@ -2,7 +2,7 @@ import { Button, Stack, Typography } from '@linode/ui';
 import { useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { ThemeAwareLogo } from 'src/components/ThemeAwareLogo';
+import { AkamaiLogo } from 'src/components/AkamaiLogo';
 
 export const CancelLanding = React.memo(() => {
   const search = useSearch({ from: '/cancel' });
@@ -16,7 +16,7 @@ export const CancelLanding = React.memo(() => {
       height="calc(100vh - 200px)"
       justifyContent="center"
     >
-      <ThemeAwareLogo sx={{ width: '200px', height: '75px' }} />
+      <AkamaiLogo sx={{ width: '200px', height: '75px' }} />
       <Typography variant="h2">
         It&rsquo;s been our pleasure to serve you.
       </Typography>
