@@ -33,13 +33,13 @@ interface Props {
    */
   nodePool: KubeNodePoolResponse;
   /**
-   * A function that will be called when the Node Pool's configure is successfully saved
+   * A function that will be called when the user saves or cancels
    */
-  onSaved?: () => void;
+  onDone?: () => void;
 }
 
 export const ConfigureNodePoolForm = (props: Props) => {
-  const { clusterId, onSaved, nodePool, clusterTier } = props;
+  const { clusterId, onDone, nodePool, clusterTier } = props;
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { enqueueSnackbar } = useSnackbar();
   const labelPlaceholder = useNodePoolDisplayLabel(nodePool, true);
@@ -70,7 +70,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
       enqueueSnackbar('Node Pool configuration successfully updated. ', {
         variant: 'success',
       });
-      onSaved?.();
+      onDone?.();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
@@ -133,7 +133,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
             </>
           )}
         <Stack direction="row" justifyContent="flex-end" spacing={1}>
-          <Button buttonType="secondary" onClick={onSaved}>
+          <Button buttonType="secondary" onClick={onDone}>
             Cancel
           </Button>
           <Button

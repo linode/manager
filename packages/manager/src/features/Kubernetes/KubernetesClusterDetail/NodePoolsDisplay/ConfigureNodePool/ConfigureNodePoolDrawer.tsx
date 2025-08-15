@@ -30,7 +30,7 @@ export const ConfigureNodePoolDrawer = (props: Props) => {
           clusterId={clusterId}
           clusterTier={clusterTier}
           nodePool={nodePool}
-          onSaved={onClose}
+          onDone={onClose}
         />
       )}
     </Drawer>
