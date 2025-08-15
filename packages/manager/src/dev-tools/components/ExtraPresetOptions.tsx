@@ -5,6 +5,7 @@ import { extraMockPresets } from 'src/mocks/presets';
 
 import { ExtraPresetAccount } from './ExtraPresetAccount';
 import { ExtraPresetEvents } from './ExtraPresetEvents';
+import { ExtraPresetGrants } from './ExtraPresetGrants';
 import { ExtraPresetMaintenance } from './ExtraPresetMaintenance';
 import { ExtraPresetNotifications } from './ExtraPresetNotifications';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
@@ -17,6 +18,7 @@ import type {
   Account,
   AccountMaintenance,
   Event,
+  Grants,
   Notification,
   PermissionType,
   Profile,
@@ -25,6 +27,7 @@ import type {
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
   customEventsData?: Event[] | null;
+  customGrantsData?: Grants | null;
   customMaintenanceData?: AccountMaintenance[] | null;
   customNotificationsData?: Notification[] | null;
   customProfileData?: null | Profile;
@@ -33,6 +36,7 @@ export interface ExtraPresetOptionsProps {
   handlers: string[];
   onCustomAccountChange?: (data: Account | null | undefined) => void;
   onCustomEventsChange?: (data: Event[] | null | undefined) => void;
+  onCustomGrantsChange?: (data: Grants | null | undefined) => void;
   onCustomMaintenanceChange?: (
     data: AccountMaintenance[] | null | undefined
   ) => void;
@@ -57,6 +61,7 @@ export interface ExtraPresetOptionsProps {
  */
 export const ExtraPresetOptions = ({
   customAccountData,
+  customGrantsData,
   customProfileData,
   customEventsData,
   customMaintenanceData,
@@ -65,6 +70,7 @@ export const ExtraPresetOptions = ({
   customUserEntityPermissionsData,
   handlers,
   onCustomAccountChange,
+  onCustomGrantsChange,
   onCustomProfileChange,
   onCustomEventsChange,
   onCustomMaintenanceChange,
@@ -117,6 +123,14 @@ export const ExtraPresetOptions = ({
                 customAccountData={customAccountData}
                 handlers={handlers}
                 onFormChange={onCustomAccountChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'grants' && (
+              <ExtraPresetGrants
+                customGrantsData={customGrantsData}
+                handlers={handlers}
+                onFormChange={onCustomGrantsChange}
                 onTogglePreset={onTogglePreset}
               />
             )}

@@ -7,6 +7,7 @@ import { baselineLegacyPreset } from './baseline/legacy';
 import { baselineNoMocksPreset } from './baseline/noMocks';
 import { customAccountPreset } from './extra/account/customAccount';
 import { customEventsPreset } from './extra/account/customEvents';
+import { customGrantsPreset } from './extra/account/customGrants';
 import { customMaintenancePreset } from './extra/account/customMaintenance';
 import { customNotificationsPreset } from './extra/account/customNotifications';
 import { customProfilePreset } from './extra/account/customProfile';
@@ -45,6 +46,7 @@ export const baselineMockPresets: MockPresetBaseline[] = [
 export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
   customAccountPreset,
+  customGrantsPreset,
   customProfilePreset,
   customEventsPreset,
   customUserAccountPermissionsPreset,
