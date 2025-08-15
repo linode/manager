@@ -14,8 +14,8 @@ export const firewall: PartialEventMap<'firewall'> = {
       const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          A firewall change could not be <strong>applied</strong> to{' '}
-          {entityType} <EventLink event={e} to="entity" />.
+          {entityType} <EventLink event={e} to="entity" /> Firewall update could{' '}
+          <strong>not</strong> be <strong>applied</strong>.
         </>
       );
     },
@@ -23,8 +23,8 @@ export const firewall: PartialEventMap<'firewall'> = {
       const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          A firewall change has been <strong>applied</strong> to {entityType}{' '}
-          <EventLink event={e} to="entity" />.
+          {entityType} <EventLink event={e} to="entity" /> Firewall update has{' '}
+          been <strong>applied</strong>.
         </>
       );
     },
@@ -32,8 +32,8 @@ export const firewall: PartialEventMap<'firewall'> = {
       const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          A firewall change is scheduled to be <strong>applied</strong> to{' '}
-          {entityType} <EventLink event={e} to="entity" />.
+          {entityType} <EventLink event={e} to="entity" /> Firewall update is{' '}
+          <strong>scheduled</strong>.
         </>
       );
     },
@@ -41,8 +41,8 @@ export const firewall: PartialEventMap<'firewall'> = {
       const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          A firewall change has <strong>started</strong> for {entityType}{' '}
-          <EventLink event={e} to="entity" />.
+          {entityType} <EventLink event={e} to="entity" /> Firewall update has{' '}
+          <strong>started</strong>.
         </>
       );
     },
