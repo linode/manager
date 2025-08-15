@@ -80,7 +80,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
       defaultValues: {
         nodeCount: DEFAULT_PLAN_COUNT,
       },
-      shouldUnregister: true, // For conditionally defined fields (e.g. updateStrategy)
+      shouldUnregister: true, // For conditionally defined fields (e.g. updateStrategy, firewall_id)
     });
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);

@@ -11,9 +11,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 
 export const NodePoolFirewallSelect = () => {
-  const [isUsingOwnFirewall, setIsUsingOwnFirewall] = React.useState(false);
+  const { control, watch } = useFormContext();
+  const watchedFirewallId: number = watch('firewall_id');
 
-  const { control } = useFormContext();
+  const [isUsingOwnFirewall, setIsUsingOwnFirewall] = React.useState(
+    Boolean(watchedFirewallId)
+  );
 
   return (
     <Stack marginTop={3}>
