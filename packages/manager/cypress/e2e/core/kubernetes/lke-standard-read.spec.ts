@@ -3,6 +3,7 @@
  */
 
 import { linodeFactory, profileFactory } from '@linode/utilities';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -13,6 +14,7 @@ import {
 import { mockGetProfile } from 'support/intercepts/profile';
 
 import {
+  accountFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   nodePoolFactory,
@@ -47,11 +49,16 @@ const mockLinodes = mockNodePools.map((pool, i) =>
  * Confirms the expected information is displayed in the cluster summary section of the cluster details page.
  */
 describe('LKE Cluster Summary', () => {
-  it('does not show linked VPC in summary when for a standard cluster', () => {
+  it('does not show linked VPC in summary for a standard cluster', () => {
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
       lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
     });
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
 
     mockGetCluster(mockCluster).as('getCluster');
     mockGetKubernetesVersions().as('getVersions');
@@ -81,6 +88,11 @@ describe('LKE Node Pools', () => {
     mockAppendFeatureFlags({
       lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
     });
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
 
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');

@@ -7,6 +7,7 @@ import {
   linodeIPFactory,
   profileFactory,
 } from '@linode/utilities';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeIPAddresses,
@@ -21,6 +22,7 @@ import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetVPC } from 'support/intercepts/vpc';
 
 import {
+  accountFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   nodePoolFactory,
@@ -118,6 +120,11 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
     mockAppendFeatureFlags({
       lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
     });
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
   });
   /*
    * Confirms LKE-E summary page shows VPC info and links to the correct VPC page when a vpc_id is present.
@@ -181,18 +188,21 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
  * Confirms the expected information is shown for a cluster's node pools on the cluster details page.
  */
 describe('LKE-E Node Pools', () => {
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      // TODO LKE-E: Remove once feature is in GA
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
-    });
-  });
-
   /**
    * - Confirms the VPC IP address table headers are shown in the node table.
    * - Confirms the IP address data is shown for a node in the node pool.
    */
   it('shows VPC IPv4 and IPv6 columns for an LKE-E cluster', () => {
+    mockAppendFeatureFlags({
+      // TODO LKE-E: Remove once feature is in GA
+      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+    });
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
+
     mockGetCluster(mockClusterWithVPC).as('getCluster');
     mockGetKubernetesVersions().as('getVersions');
     mockGetClusterPools(mockClusterWithVPC.id, mockNodePools).as(
