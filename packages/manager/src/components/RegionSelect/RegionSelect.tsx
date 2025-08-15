@@ -68,7 +68,7 @@ export const RegionSelect = <
   });
 
   const selectedRegion = value
-    ? regionOptions.find((r) => r.id === value)
+    ? (regionOptions.find((r) => r.id === value) ?? null)
     : null;
 
   const disabledRegions = regionOptions.reduce<
