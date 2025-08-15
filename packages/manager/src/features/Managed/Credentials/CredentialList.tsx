@@ -252,7 +252,7 @@ export const CredentialList = () => {
         onClick={handleDelete}
         onClose={() => navigate({ to: '/managed/credentials' })}
         open={isDeleteDialogOpen}
-        title={`Delete Credential ${selectedCredential?.label || 'Unknown'}?`}
+        title={`Delete Credential${selectedCredential ? ` ${selectedCredential.label}` : ''}?`}
       >
         <Notice variant="warning">
           <Typography>
