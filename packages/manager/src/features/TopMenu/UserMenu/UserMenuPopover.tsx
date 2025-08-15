@@ -124,23 +124,29 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       },
       {
         display: 'Login History',
-        to: '/account/login-history',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/login-history'
+          : '/account/login-history',
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
         hide: isRestrictedUser,
-        to: '/account/service-transfers',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/service-transfers'
+          : '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        to: '/account/maintenance',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/maintenance'
+          : '/account/maintenance',
       },
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
         hide: !hasFullAccountAccess,
-        to: '/account/settings',
+        to: flags?.iamRbacPrimaryNavChanges ? '/settings' : '/account/settings',
       },
     ],
     [hasFullAccountAccess, isRestrictedUser, isIAMEnabled, flags]
