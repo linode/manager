@@ -1,13 +1,13 @@
-import { destinationType } from '@linode/api-v4';
+import { destinationType, streamType, } from '@linode/api-v4';
 
 import type { CreateDestinationPayload } from '@linode/api-v4';
 
-export interface DestinationTypeOption {
+export interface LabelValueOption {
   label: string;
   value: string;
 }
 
-export const destinationTypeOptions: DestinationTypeOption[] = [
+export const destinationTypeOptions: LabelValueOption[] = [
   {
     value: destinationType.CustomHttps,
     label: 'Custom HTTPS',
@@ -15,6 +15,17 @@ export const destinationTypeOptions: DestinationTypeOption[] = [
   {
     value: destinationType.LinodeObjectStorage,
     label: 'Linode Object Storage',
+  },
+];
+
+export const streamTypeOptions: LabelValueOption[] = [
+  {
+    value: streamType.AuditLogs,
+    label: 'Audit Logs',
+  },
+  {
+    value: streamType.LKEAuditLogs,
+    label: 'Kubernetes Audit Logs',
   },
 ];
 

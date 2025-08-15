@@ -18,6 +18,8 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
+const destinations = destinationFactory.buildList(5);
+
 export const getStreams = () => [
   http.get(
     '*/v4beta/monitor/streams',
@@ -88,6 +90,83 @@ export const createStreams = (mockState: MockState) => [
       });
 
       return makeResponse(stream);
+    }
+  ),
+];
+
+export const updateStream = (mockState: MockState) => [
+  http.put(
+    '*/v4beta/monitor/streams/:id',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | Stream>> => {
+      const id = Number(params.id);
+      const stream = await mswDB.get('streams', id);
+
+      if (!stream) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      const updatedStream = {
+        ...stream,
+        ...payload,
+        destinations: payload['destinations'].map((destinationId: number) =>
+          destinations?.find(({ id }) => id === destinationId)
+        ),
+        updated: DateTime.now().toISO(),
+      };
+
+      await mswDB.update('streams', id, updatedStream, mockState);
+
+      queueEvents({
+        event: {
+          action: 'stream_update',
+          entity: {
+            id: stream.id,
+            label: stream.label,
+            type: 'stream',
+            url: `/v4beta/monitor/streams/${stream.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse(updatedStream);
+    }
+  ),
+];
+
+export const deleteStream = (mockState: MockState) => [
+  http.delete(
+    '*/v4beta/monitor/streams/:id',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      const id = Number(params.id);
+      const stream = await mswDB.get('streams', id);
+
+      if (!stream) {
+        return makeNotFoundResponse();
+      }
+
+      await mswDB.delete('streams', id, mockState);
+
+      queueEvents({
+        event: {
+          action: 'stream_delete',
+          entity: {
+            id: stream.id,
+            label: stream.label,
+            type: 'domain',
+            url: `/v4beta/monitor/streams/${stream.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse({});
     }
   ),
 ];

@@ -14,9 +14,9 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { clusters } from 'src/features/DataStream/Streams/StreamCreate/StreamCreateClustersData';
+import { clusters } from 'src/features/DataStream/Streams/StreamForm/StreamFormClustersData';
 
-import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
 // TODO: remove type after fetching the clusters will be done
 export type Cluster = {
@@ -28,9 +28,9 @@ export type Cluster = {
 
 type OrderByKeys = 'label' | 'logGeneration' | 'region';
 
-export const StreamCreateClusters = () => {
+export const StreamFormClusters = () => {
   const { control, setValue, formState } =
-    useFormContext<CreateStreamAndDestinationForm>();
+    useFormContext<StreamAndDestinationFormType>();
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
@@ -73,7 +73,7 @@ export const StreamCreateClusters = () => {
 
   const getTableContent = (
     field: ControllerRenderProps<
-      CreateStreamAndDestinationForm,
+      StreamAndDestinationFormType,
       'stream.details.cluster_ids'
     >
   ) => {

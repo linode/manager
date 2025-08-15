@@ -1,12 +1,14 @@
 import type { CreateStreamPayload } from '@linode/api-v4';
 import type { CreateDestinationForm } from 'src/features/DataStream/Shared/types';
 
-export interface CreateStreamForm
+export interface StreamFormType
   extends Omit<CreateStreamPayload, 'destinations'> {
   destinations: (number | undefined)[];
 }
 
-export interface CreateStreamAndDestinationForm {
+export interface StreamAndDestinationFormType {
   destination: CreateDestinationForm;
-  stream: CreateStreamForm;
+  stream: StreamFormType;
 }
+
+export type StreamFormMode = 'create' | 'edit';

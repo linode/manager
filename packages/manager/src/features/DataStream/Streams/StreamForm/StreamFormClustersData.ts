@@ -1,4 +1,4 @@
-import type { Cluster } from 'src/features/DataStream/Streams/StreamCreate/StreamCreateClusters';
+import type { Cluster } from 'src/features/DataStream/Streams/StreamForm/StreamFormClusters';
 
 export const clusters: Cluster[] = [
   {
