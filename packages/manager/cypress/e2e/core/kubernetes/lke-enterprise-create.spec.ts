@@ -1,3 +1,7 @@
+/**
+ * Confirms create operations on LKE-Enterprise clusters.
+ */
+
 import { regionFactory } from '@linode/utilities';
 import {
   clusterPlans,
@@ -60,7 +64,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
     const mockErrorMessage =
       'Cannot create LKE-E cluster in existing VPC with IPv4 stack';
 
-    // Accounts for the different combination of IP Networking and VPC/Subnet radio selections.
+    // Accounts for the different combination of IP Networking and VPC/Subnet radio selections
     const possibleNetworkingConfigurations = [
       {
         description:
@@ -172,7 +176,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
             cy.findByText(/subnet-a/).click();
           }
 
-          // Select either the IPv4 or Dual Stack (IPv4+IPv6) IP Networking radio button
+          // Select either the IPv4 or IPv4 + IPv6 (dual-stack) IP Networking radio button
           cy.findByLabelText(
             stackType === 'ipv4' ? 'IPv4' : 'IPv4 + IPv6'
           ).click();
@@ -205,7 +209,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
             mockCreateCluster(mockEnterpriseCluster).as('createCluster');
           }
 
-          // Create LKE cluster
+          // Create LKE-E cluster
           cy.get('[data-testid="kube-checkout-bar"]')
             .should('be.visible')
             .within(() => {
