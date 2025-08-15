@@ -106,6 +106,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
           name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
+              label="Tags"
               noMarginTop
               onChange={(tags) => field.onChange(tags.map((tag) => tag.value))}
               tagError={fieldState.error?.message}
