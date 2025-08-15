@@ -25,6 +25,7 @@ import type {
 } from '@linode/api-v4';
 
 interface Props {
+  cannotUpdateLinode: boolean;
   cluster: KubernetesCluster | undefined;
   interfaceGeneration: InterfaceGenerationType | undefined;
   linodeId: number;
@@ -33,8 +34,14 @@ interface Props {
 }
 
 export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
-  const { cluster, linodeId, linodeLkeClusterId, interfaceGeneration, region } =
-    props;
+  const {
+    cannotUpdateLinode,
+    cluster,
+    linodeId,
+    linodeLkeClusterId,
+    interfaceGeneration,
+    region,
+  } = props;
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -138,7 +145,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
                 <Chip
                   aria-label="Upgrade Configuration Profile Interfaces to Linode Interfaces"
                   component="span"
-                  disabled={!canUpgradeInterfaces}
+                  disabled={!canUpgradeInterfaces || cannotUpdateLinode}
                   label="UPGRADE"
                   onClick={openUpgradeInterfacesDialog}
                   size="small"
@@ -149,11 +156,15 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
                   })}
                 />
               </Tooltip>
-              {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
+              {((!canUpgradeInterfaces && unableToUpgradeTooltipText) ||
+                cannotUpdateLinode) && (
                 <TooltipIcon
                   status="info"
                   sxTooltipIcon={{ padding: 0 }}
-                  text={unableToUpgradeTooltipText}
+                  text={
+                    unableToUpgradeTooltipText ??
+                    'You do not have permission to perform this action.'
+                  }
                 />
               )}
             </span>

@@ -116,6 +116,7 @@ export const LinodeEntityDetail = (props: Props) => {
       <EntityDetail
         body={
           <LinodeEntityDetailBody
+            disabled={!permissions.update_linode}
             encryptionStatus={linode.disk_encryption}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}

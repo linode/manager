@@ -1,8 +1,4 @@
-import {
-  useAllLinodeConfigsQuery,
-  useGrants,
-  useLinodeQuery,
-} from '@linode/queries';
+import { useAllLinodeConfigsQuery, useLinodeQuery } from '@linode/queries';
 import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useParams } from '@tanstack/react-router';
@@ -56,7 +52,7 @@ const LinodeConfigs = () => {
 
   const { data: permissions } = usePermissions(
     'linode',
-    ['create_linode_config_profile'],
+    ['create_linode_config_profile', 'update_linode'],
     id
   );
 
@@ -78,13 +74,6 @@ const LinodeConfigs = () => {
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef(undefined);
-
-  const { data: grants } = useGrants();
-
-  const isReadOnly =
-    grants !== undefined &&
-    grants?.linode.find((grant) => grant.id === id)?.permissions ===
-      'read_only';
 
   const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
@@ -168,7 +157,7 @@ const LinodeConfigs = () => {
             <Button
               alwaysShowTooltip
               buttonType="outlined"
-              disabled={isReadOnly || !canUpgradeInterfaces}
+              disabled={!permissions.update_linode || !canUpgradeInterfaces}
               onClick={openUpgradeInterfacesDialog}
               TooltipProps={{
                 slotProps: {
@@ -179,7 +168,11 @@ const LinodeConfigs = () => {
                   },
                 },
               }}
-              tooltipText={upgradeInterfacesTooltipText}
+              tooltipText={
+                !permissions.update_linode
+                  ? 'You do not have permission to perform this action.'
+                  : upgradeInterfacesTooltipText
+              }
             >
               Upgrade Interfaces
             </Button>

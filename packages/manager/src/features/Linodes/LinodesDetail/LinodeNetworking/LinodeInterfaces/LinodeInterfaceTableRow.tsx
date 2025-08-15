@@ -15,13 +15,22 @@ import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
 import type { LinodeInterface } from '@linode/api-v4';
 
 interface Props extends LinodeInterface {
+  disabled: boolean;
   handlers: InterfaceActionHandlers;
   linodeId: number;
 }
 
 export const LinodeInterfaceTableRow = (props: Props) => {
-  const { created, handlers, id, linodeId, mac_address, updated, version } =
-    props;
+  const {
+    disabled,
+    created,
+    handlers,
+    id,
+    linodeId,
+    mac_address,
+    updated,
+    version,
+  } = props;
 
   const type = getLinodeInterfaceType(props);
 
@@ -54,7 +63,12 @@ export const LinodeInterfaceTableRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <LinodeInterfaceActionMenu handlers={handlers} id={id} type={type} />
+        <LinodeInterfaceActionMenu
+          disabled={disabled}
+          handlers={handlers}
+          id={id}
+          type={type}
+        />
       </TableCell>
     </TableRow>
   );
