@@ -150,7 +150,7 @@ describe('ConfigureNodePoolForm', () => {
 
     const saveButton = getByRole('button', { name: 'Save' });
 
-    // The save button is disabled until the user names a change.
+    // The save button should be disabled until the user makes a change
     expect(saveButton).toBeDisabled();
 
     await userEvent.type(getByLabelText('Label'), 'my-new-node-pool-label');
@@ -160,10 +160,12 @@ describe('ConfigureNodePoolForm', () => {
 
     await userEvent.click(saveButton);
 
+    // Verify the onDone prop was called
     await waitFor(() => {
       expect(onDone).toHaveBeenCalled();
     });
 
+    // Verify the PUT request happend with the expected payload
     expect(onUpdateNodePool).toHaveBeenCalledWith({
       label: 'my-new-node-pool-label',
     });
@@ -183,6 +185,7 @@ describe('ConfigureNodePoolForm', () => {
     );
 
     await userEvent.click(getByRole('button', { name: 'Cancel' }));
+
     expect(onDone).toHaveBeenCalled();
   });
 });
