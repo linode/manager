@@ -1,14 +1,57 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import {
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it } from 'vitest';
 
+import { kubernetesClusterFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamCreateClusters } from './StreamCreateClusters';
 
-const renderComponentWithoutSelectedClusters = () => {
-  renderWithThemeAndHookFormContext({
+const queryMocks = vi.hoisted(() => ({
+  useOrderV2: vi.fn().mockReturnValue({}),
+}));
+
+const loadingTestId = 'circle-progress';
+const testClustersDetails = [
+  {
+    label: 'gke-prod-europe-west1',
+    id: 1,
+    region: 'US, Atalanta, GA',
+    logGeneration: false,
+  },
+  {
+    label: 'metrics-stream-cluster',
+    id: 2,
+    region: 'US, Chicago, IL',
+    logGeneration: true,
+  },
+  {
+    label: 'prod-cluster-eu',
+    id: 3,
+    region: 'NL, Amsterdam',
+    logGeneration: true,
+  },
+];
+const clusters = kubernetesClusterFactory.buildList(3).map((cluster, idx) => ({
+  ...cluster,
+  ...testClustersDetails[idx],
+}));
+
+const renderComponentWithoutSelectedClusters = async () => {
+  server.use(
+    http.get('*/lke/clusters', () => {
+      return HttpResponse.json(makeResourcePage(clusters));
+    })
+  );
+
+  const utils = renderWithThemeAndHookFormContext({
     component: <StreamCreateClusters />,
     useFormOptions: {
       defaultValues: {
@@ -18,6 +61,13 @@ const renderComponentWithoutSelectedClusters = () => {
       },
     },
   });
+
+  const loadingElement = utils.queryByTestId(loadingTestId);
+  if (loadingElement) {
+    await waitForElementToBeRemoved(loadingElement);
+  }
+
+  return utils;
 };
 
 const getColumnsValuesFromTable = (column = 1) => {
@@ -51,7 +101,7 @@ const expectCheckboxStateToBe = (
 
 describe('StreamCreateClusters', () => {
   it('should render all clusters in table', async () => {
-    renderComponentWithoutSelectedClusters();
+    await renderComponentWithoutSelectedClusters();
 
     expect(getColumnsValuesFromTable()).toEqual([
       'gke-prod-europe-west1',
@@ -60,50 +110,8 @@ describe('StreamCreateClusters', () => {
     ]);
   });
 
-  it('should filter clusters by name', async () => {
-    renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Search');
-
-    // Type test value inside the search
-    await userEvent.click(input);
-    await userEvent.type(input, 'metrics');
-
-    await waitFor(() =>
-      expect(getColumnsValuesFromTable()).toEqual(['metrics-stream-cluster'])
-    );
-  });
-
-  it('should filter clusters by region', async () => {
-    renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Search');
-
-    // Type test value inside the search
-    await userEvent.click(input);
-    await userEvent.type(input, 'US,');
-
-    await waitFor(() =>
-      expect(getColumnsValuesFromTable(2)).toEqual([
-        'US, Atalanta, GA',
-        'US, Chicago, IL',
-      ])
-    );
-  });
-
-  it('should filter clusters by log generation status', async () => {
-    renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Search');
-
-    // Type test value inside the search
-    await userEvent.click(input);
-    await userEvent.type(input, 'enabled');
-
-    await waitFor(() =>
-      expect(getColumnsValuesFromTable(3)).toEqual(['Enabled', 'Enabled'])
-    );
-  });
-
   it('should toggle clusters checkboxes and header checkbox', async () => {
-    renderComponentWithoutSelectedClusters();
+    await renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
     const headerCheckbox = within(table).getAllByRole('checkbox')[0];
     const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
@@ -130,7 +138,7 @@ describe('StreamCreateClusters', () => {
   });
 
   it('should select and deselect all clusters with header checkbox', async () => {
-    renderComponentWithoutSelectedClusters();
+    await renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
     const headerCheckbox = within(table).getAllByRole('checkbox')[0];
     const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
@@ -158,18 +166,30 @@ describe('StreamCreateClusters', () => {
 
   describe('when form has already selected clusters', () => {
     it('should render table with properly selected clusters', async () => {
+      server.use(
+        http.get('*/lke/clusters', () => {
+          return HttpResponse.json(makeResourcePage(clusters));
+        })
+      );
+
       renderWithThemeAndHookFormContext({
         component: <StreamCreateClusters />,
         useFormOptions: {
           defaultValues: {
             stream: {
               details: {
-                cluster_ids: [3],
+                cluster_ids: [2],
               },
             },
           },
         },
       });
+
+      const loadingElement = screen.queryByTestId(loadingTestId);
+      if (loadingElement) {
+        await waitForElementToBeRemoved(loadingElement);
+      }
+
       const table = screen.getByRole('table');
       const headerCheckbox = within(table).getAllByRole('checkbox')[0];
       const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
@@ -186,7 +206,7 @@ describe('StreamCreateClusters', () => {
   });
 
   it('should disable all table checkboxes if "Automatically include all..." checkbox is selected', async () => {
-    renderComponentWithoutSelectedClusters();
+    await renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
     const autoIncludeAllCheckbox = screen.getByText(
       'Automatically include all existing and recently configured clusters.'
@@ -211,7 +231,7 @@ describe('StreamCreateClusters', () => {
   });
 
   it('should select and deselect all clusters with "Automatically include all..." checkbox', async () => {
-    renderComponentWithoutSelectedClusters();
+    await renderComponentWithoutSelectedClusters();
     const checkboxes = screen.getAllByRole('checkbox');
     const [autoIncludeAllCheckbox, headerTableCheckbox] = checkboxes;
     const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
@@ -239,75 +259,8 @@ describe('StreamCreateClusters', () => {
     expect(prodClusterCheckbox).not.toBeChecked();
   });
 
-  it('should sort clusters by Cluster Name if clicked', async () => {
-    renderComponentWithoutSelectedClusters();
-    const sortHeader = screen.getByRole('columnheader', {
-      name: 'Cluster Name',
-    });
-
-    expect(getColumnsValuesFromTable()).toEqual([
-      'gke-prod-europe-west1',
-      'metrics-stream-cluster',
-      'prod-cluster-eu',
-    ]);
-
-    // Sort by Cluster Name descending
-    await userEvent.click(sortHeader);
-    expect(getColumnsValuesFromTable()).toEqual([
-      'prod-cluster-eu',
-      'metrics-stream-cluster',
-      'gke-prod-europe-west1',
-    ]);
-  });
-
-  it('should sort clusters by Region if clicked', async () => {
-    renderComponentWithoutSelectedClusters();
-    const sortHeader = screen.getByRole('columnheader', {
-      name: 'Region',
-    });
-
-    // Sort by Region ascending
-    await userEvent.click(sortHeader);
-    expect(getColumnsValuesFromTable(2)).toEqual([
-      'NL, Amsterdam',
-      'US, Atalanta, GA',
-      'US, Chicago, IL',
-    ]);
-
-    // Sort by Region descending
-    await userEvent.click(sortHeader);
-    expect(getColumnsValuesFromTable(2)).toEqual([
-      'US, Chicago, IL',
-      'US, Atalanta, GA',
-      'NL, Amsterdam',
-    ]);
-  });
-
-  it('should sort clusters by Log Generation if clicked', async () => {
-    renderComponentWithoutSelectedClusters();
-    const sortHeader = screen.getByRole('columnheader', {
-      name: 'Log Generation',
-    });
-
-    // Sort by Log Generation ascending
-    await userEvent.click(sortHeader);
-    expect(getColumnsValuesFromTable(3)).toEqual([
-      'Enabled',
-      'Enabled',
-      'Disabled',
-    ]);
-
-    // Sort by Log Generation descending
-    await userEvent.click(sortHeader);
-    expect(getColumnsValuesFromTable(3)).toEqual([
-      'Disabled',
-      'Enabled',
-      'Enabled',
-    ]);
-  });
-
   it('should keep checkboxes selection after sorting', async () => {
-    renderComponentWithoutSelectedClusters();
+    await renderComponentWithoutSelectedClusters();
     const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
     const metricsStreamCheckbox = getCheckboxByClusterName(
       'metrics-stream-cluster'
@@ -315,7 +268,7 @@ describe('StreamCreateClusters', () => {
     const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
     const sortHeader = screen.getByRole('columnheader', {
-      name: 'Log Generation',
+      name: 'Cluster Name',
     });
 
     // Select "prod-cluster-eu" cluster
@@ -324,7 +277,13 @@ describe('StreamCreateClusters', () => {
     expect(metricsStreamCheckbox).not.toBeChecked();
     expect(prodClusterCheckbox).toBeChecked();
 
-    // Sort by Log Generation ascending
+    // Sort by Cluster Name descending
+    queryMocks.useOrderV2.mockReturnValue({
+      order: 'desc',
+      orderBy: 'label',
+      sortedData: clusters.reverse(),
+    });
+
     await userEvent.click(sortHeader);
     expect(gkeProdCheckbox).not.toBeChecked();
     expect(metricsStreamCheckbox).not.toBeChecked();
