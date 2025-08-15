@@ -15,7 +15,15 @@ import {
   StyledTypography,
 } from './TransferControls.styles';
 
-export const TransferControls = React.memo(() => {
+import type { PermissionType } from '@linode/api-v4';
+
+interface Props {
+  permissions: Partial<Record<PermissionType, boolean>>;
+}
+
+export const TransferControls = React.memo((props: Props) => {
+  const { permissions } = props;
+
   const flags = useFlags();
   const [token, setToken] = React.useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
@@ -66,7 +74,7 @@ export const TransferControls = React.memo(() => {
             />
             <StyledReviewButton
               buttonType="primary"
-              disabled={token === ''}
+              disabled={!permissions.accept_service_transfer || token === ''}
               onClick={() => setConfirmDialogOpen(true)}
               tooltipText="Enter a service transfer token to review the details and accept the transfer."
             >
@@ -77,6 +85,7 @@ export const TransferControls = React.memo(() => {
         <StyledTransferGrid>
           <StyledTransferButton
             buttonType="primary"
+            disabled={!permissions.create_service_transfer}
             onClick={handleCreateTransfer}
           >
             Make a Service Transfer
