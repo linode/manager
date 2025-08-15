@@ -48,7 +48,7 @@ export interface Props {
 interface VersionUpdateFormFields {
   firewall_id: number | undefined;
   nodeCount: number;
-  updateStrategy: NodePoolUpdateStrategy | undefined;
+  update_strategy: NodePoolUpdateStrategy | undefined;
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
@@ -80,7 +80,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
       defaultValues: {
         nodeCount: DEFAULT_PLAN_COUNT,
       },
-      shouldUnregister: true, // For conditionally defined fields (e.g. updateStrategy, firewall_id)
+      shouldUnregister: true, // For conditionally defined fields (e.g. update_strategy, firewall_id)
     });
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);
@@ -108,7 +108,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
     }
     // Ensure the update strategy resets when the tier is changed.
     setValue(
-      'updateStrategy',
+      'update_strategy',
       selectedTier === 'enterprise' ? 'on_recycle' : undefined
     );
     setValue('firewall_id', undefined);
@@ -116,7 +116,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
     // If we're in edit mode, set the existing config values on the pool.
     if (!isAddMode && poolIndex !== undefined) {
       setValue('nodeCount', _nodePools[poolIndex]?.count);
-      setValue('updateStrategy', _nodePools[poolIndex]?.update_strategy);
+      setValue('update_strategy', _nodePools[poolIndex]?.update_strategy);
       setValue('firewall_id', _nodePools[poolIndex]?.firewall_id);
     }
   }, [planId, open, selectedTier, setValue, isAddMode, poolIndex, _nodePools]);
@@ -128,14 +128,14 @@ export const NodePoolConfigDrawer = (props: Props) => {
         update(poolIndex, {
           ..._nodePools[poolIndex],
           count: values.nodeCount,
-          update_strategy: values.updateStrategy,
+          update_strategy: values.update_strategy,
           firewall_id: values.firewall_id,
         });
       } else if (planId) {
         append({
           count: values.nodeCount,
           type: planId,
-          update_strategy: values.updateStrategy,
+          update_strategy: values.update_strategy,
           firewall_id: values.firewall_id,
         });
       }

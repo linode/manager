@@ -11,7 +11,7 @@ export const NodePoolConfigOptions = () => {
     <>
       <Controller
         control={control}
-        name="updateStrategy"
+        name="update_strategy"
         render={({ field }) => (
           <NodePoolUpdateStrategySelect
             onChange={field.onChange}
