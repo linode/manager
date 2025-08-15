@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import {
   useIsLkeEnterpriseEnabled,
   useNodePoolDisplayLabel,
@@ -47,6 +48,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
   const form = useForm<UpdateNodePoolData>({
     defaultValues: {
       label: nodePool.label,
+      tags: nodePool.tags,
       update_strategy: nodePool.update_strategy,
       k8s_version: nodePool.k8s_version,
     },
@@ -96,6 +98,20 @@ export const ConfigureNodePoolForm = (props: Props) => {
               onChange={field.onChange}
               placeholder={labelPlaceholder}
               value={field.value}
+            />
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="tags"
+          render={({ field, fieldState }) => (
+            <TagsInput
+              noMarginTop
+              onChange={(tags) => field.onChange(tags.map((tag) => tag.value))}
+              tagError={fieldState.error?.message}
+              value={
+                field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
+              }
             />
           )}
         />
