@@ -65,6 +65,7 @@ export const firewall: PartialEventMap<'firewall'> = {
   firewall_device_add: {
     notification: (e) => {
       if (e.secondary_entity?.type) {
+        // TODO - Linode Interfaces [M3-10447] - clean this up when API ticket [VPC-3359] is completed
         const secondaryEntityName =
           formattedTypes[e.secondary_entity.type as FirewallDeviceEntityType] ??
           'Linode Interface';
