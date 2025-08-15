@@ -62,7 +62,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
     ];
 
     const mockErrorMessage =
-      'Cannot create LKE-E cluster in existing VPC with IPv4 stack';
+      'Cannot create LKE-E cluster in existing VPC + Subnet with IPv4 stack';
 
     // Accounts for the different combination of IP Networking and VPC/Subnet radio selections
     const possibleNetworkingConfigurations = [
@@ -224,9 +224,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
           if (shouldError) {
             cy.wait('@createClusterError');
             // Confirm the error is surfaced in the UI
-            cy.contains(
-              'Cannot create LKE-E cluster in existing VPC with IPv4 stack'
-            ).should('be.visible');
+            cy.contains(mockErrorMessage).should('be.visible');
           } else {
             cy.wait('@createCluster').then((intercept) => {
               const payload = intercept.request.body;
