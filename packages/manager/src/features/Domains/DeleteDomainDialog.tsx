@@ -60,7 +60,7 @@ export const DeleteDomainDialog = (props: DeleteDomainProps) => {
       <Notice variant="warning">
         <Typography>
           <strong>Warning:</strong> Deleting this domain is permanent and can’t
-          be undone.{' '}
+          be undone.
         </Typography>
       </Notice>
     </TypeToConfirmDialog>
