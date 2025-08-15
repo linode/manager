@@ -32,7 +32,7 @@ export const firewall: PartialEventMap<'firewall'> = {
       const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          A firewall change is scheduled to be <strong>applied</strong> to
+          A firewall change is scheduled to be <strong>applied</strong> to{' '}
           {entityType} <EventLink event={e} to="entity" />.
         </>
       );
