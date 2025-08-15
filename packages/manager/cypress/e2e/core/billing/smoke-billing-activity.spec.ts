@@ -8,6 +8,7 @@ import {
   mockGetPaymentMethods,
   mockGetPayments,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile, mockUpdateProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
@@ -117,6 +118,11 @@ const assertPaymentInfo = (payment: Payment, timezone: string) => {
 
 authenticate();
 describe('Billing Activity Feed', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    });
+  });
   /*
    * - Uses mocked API data to confirm that invoices and payments are listed on billing page.
    * - Confirms that invoice and payment labels, dates, and totals are displayed as expected.
