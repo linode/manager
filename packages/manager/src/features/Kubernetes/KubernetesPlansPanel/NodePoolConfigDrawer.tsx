@@ -46,6 +46,7 @@ export interface Props {
 }
 
 interface VersionUpdateFormFields {
+  firewall_id: number | undefined;
   nodeCount: number;
   updateStrategy: NodePoolUpdateStrategy | undefined;
 }
@@ -110,11 +111,13 @@ export const NodePoolConfigDrawer = (props: Props) => {
       'updateStrategy',
       selectedTier === 'enterprise' ? 'on_recycle' : undefined
     );
+    setValue('firewall_id', undefined);
 
     // If we're in edit mode, set the existing config values on the pool.
     if (!isAddMode && poolIndex !== undefined) {
       setValue('nodeCount', _nodePools[poolIndex]?.count);
       setValue('updateStrategy', _nodePools[poolIndex]?.update_strategy);
+      setValue('firewall_id', _nodePools[poolIndex]?.firewall_id);
     }
   }, [planId, open, selectedTier, setValue, isAddMode, poolIndex, _nodePools]);
 
@@ -126,12 +129,14 @@ export const NodePoolConfigDrawer = (props: Props) => {
           ..._nodePools[poolIndex],
           count: values.nodeCount,
           update_strategy: values.updateStrategy,
+          firewall_id: values.firewall_id,
         });
       } else if (planId) {
         append({
           count: values.nodeCount,
           type: planId,
           update_strategy: values.updateStrategy,
+          firewall_id: values.firewall_id,
         });
       }
       onClose();

@@ -49,16 +49,23 @@ export const NodePoolFirewallSelect = () => {
         <Controller
           control={control}
           name="firewall_id"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FirewallSelect
-              //   disabled={!permissions.create_linode}
-              //   errorText={fieldState.error?.message}
+              errorText={fieldState.error?.message}
               onBlur={field.onBlur}
               onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
               placeholder="Select firewall"
               value={field.value}
             />
           )}
+          rules={{
+            validate: (value) => {
+              if (isUsingOwnFirewall && !value) {
+                return 'You must either select a Firewall or select the default firewall.';
+              }
+              return true;
+            },
+          }}
         />
       )}
     </Stack>
