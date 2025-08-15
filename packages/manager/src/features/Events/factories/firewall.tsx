@@ -10,6 +10,15 @@ import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
 export const firewall: PartialEventMap<'firewall'> = {
   firewall_apply: {
+    failed: (e) => {
+      const entityType = capitalize(e.entity?.type ?? '');
+      return (
+        <>
+          A firewall change could not be <strong>applied</strong> to{' '}
+          {entityType} <EventLink event={e} to="entity" />.
+        </>
+      );
+    },
     finished: (e) => {
       const entityType = capitalize(e.entity?.type ?? '');
       return (
@@ -25,6 +34,15 @@ export const firewall: PartialEventMap<'firewall'> = {
         <>
           A firewall change is scheduled to be <strong>applied</strong> to
           {entityType} <EventLink event={e} to="entity" />.
+        </>
+      );
+    },
+    started: (e) => {
+      const entityType = capitalize(e.entity?.type ?? '');
+      return (
+        <>
+          A firewall change has <strong>started</strong> for {entityType}{' '}
+          <EventLink event={e} to="entity" />.
         </>
       );
     },
