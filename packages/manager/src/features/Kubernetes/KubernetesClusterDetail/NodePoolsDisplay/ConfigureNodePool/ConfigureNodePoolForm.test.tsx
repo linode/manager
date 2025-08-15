@@ -168,6 +168,7 @@ describe('ConfigureNodePoolForm', () => {
     // Verify the PUT request happend with the expected payload
     expect(onUpdateNodePool).toHaveBeenCalledWith({
       label: 'my-new-node-pool-label',
+      tags: [],
     });
   });
 
