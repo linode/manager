@@ -131,8 +131,8 @@ export const TwoStepRegion = (props: CombinedProps) => {
               </Typography>
             </Box>
             <Autocomplete
+              clearIcon={null}
               defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
-              disableClearable
               label="Geographical Area"
               onChange={(_, selectedOption) => {
                 if (selectedOption?.value) {
@@ -140,9 +140,11 @@ export const TwoStepRegion = (props: CombinedProps) => {
                 }
               }}
               options={GEOGRAPHICAL_AREA_OPTIONS}
-              value={GEOGRAPHICAL_AREA_OPTIONS.find(
-                (option) => option.value === regionFilter
-              )}
+              value={
+                GEOGRAPHICAL_AREA_OPTIONS.find(
+                  (option) => option.value === regionFilter
+                ) ?? null
+              }
             />
             <RegionSelect
               currentCapability="Linodes"
