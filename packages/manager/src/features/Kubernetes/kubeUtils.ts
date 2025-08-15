@@ -377,6 +377,15 @@ export const useKubernetesBetaEndpoint = () => {
   };
 };
 
+/**
+ * Given a Node Pool, this hook will return the Node Pool's display label.
+ *
+ * We use this helper rather than just using `label` on the Node Pool because the `label`
+ * field is optional was added later on to the API. For Node Pools without explicit labels,
+ * we identiy them in the UI by their plan's label.
+ *
+ * @returns The Node Pool's label
+ */
 export const useNodePoolDisplayLabel = (
   nodePool: Pick<KubeNodePoolResponse, 'label' | 'type'> | undefined,
   ignoreNodePoolsLabel = false
@@ -391,12 +400,15 @@ export const useNodePoolDisplayLabel = (
   }
 
   if (nodePool.label && !ignoreNodePoolsLabel) {
+    // If the Node Pool has an explict label, return it.
     return nodePool.label;
   }
 
   if (type) {
+    // If the Node Pool's type is loaded, return that type's formatted label.
     return formatStorageUnits(type.label);
   }
 
+  // As a last resort, fallback to the Node Pool's type ID.
   return nodePool.type;
 };

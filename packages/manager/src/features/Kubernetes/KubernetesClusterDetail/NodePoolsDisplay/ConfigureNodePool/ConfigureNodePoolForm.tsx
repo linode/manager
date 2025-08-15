@@ -3,7 +3,10 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useNodePoolDisplayLabel } from 'src/features/Kubernetes/kubeUtils';
+import {
+  useIsLkeEnterpriseEnabled,
+  useNodePoolDisplayLabel,
+} from 'src/features/Kubernetes/kubeUtils';
 import { NodePoolUpdateStrategySelect } from 'src/features/Kubernetes/NodePoolUpdateStrategySelect';
 import {
   useKubernetesTieredVersionsQuery,
@@ -37,7 +40,7 @@ interface Props {
 
 export const ConfigureNodePoolForm = (props: Props) => {
   const { clusterId, onSaved, nodePool, clusterTier } = props;
-
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { enqueueSnackbar } = useSnackbar();
   const labelPlaceholder = useNodePoolDisplayLabel(nodePool, true);
 
@@ -96,32 +99,39 @@ export const ConfigureNodePoolForm = (props: Props) => {
             />
           )}
         />
-        <Controller
-          control={form.control}
-          name="update_strategy"
-          render={({ field }) => (
-            <NodePoolUpdateStrategySelect
-              label="Update Strategy"
-              noMarginTop
-              onChange={field.onChange}
-              value={field.value!}
-            />
+        {isLkeEnterprisePostLAFeatureEnabled &&
+          clusterTier === 'enterprise' && (
+            <>
+              <Controller
+                control={form.control}
+                name="update_strategy"
+                render={({ field }) => (
+                  <NodePoolUpdateStrategySelect
+                    label="Update Strategy"
+                    noMarginTop
+                    onChange={field.onChange}
+                    value={field.value!}
+                  />
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="k8s_version"
+                render={({ field }) => (
+                  <Autocomplete
+                    disableClearable
+                    label="Kubernetes Version"
+                    noMarginTop
+                    onChange={(e, version) => field.onChange(version.id)}
+                    options={versionOptions}
+                    value={versionOptions.find(
+                      (option) => option.id === field.value
+                    )}
+                  />
+                )}
+              />
+            </>
           )}
-        />
-        <Controller
-          control={form.control}
-          name="k8s_version"
-          render={({ field }) => (
-            <Autocomplete
-              disableClearable
-              label="Kubernetes Version"
-              noMarginTop
-              onChange={(e, version) => field.onChange(version.id)}
-              options={versionOptions}
-              value={versionOptions.find((option) => option.id === field.value)}
-            />
-          )}
-        />
         <Stack direction="row" justifyContent="flex-end" spacing={1}>
           <Button buttonType="secondary" onClick={onSaved}>
             Cancel
