@@ -75,6 +75,8 @@ export const Avatar = (props: AvatarProps) => {
         '& svg': {
           height: width / 2,
           width: width / 2,
+          // If the Akamai logo shows, make sure it is white.
+          ...(isAkamai && { '*': { fill: 'white' } }),
         },
         bgcolor: color ?? savedAvatarColor,
         height,
