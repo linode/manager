@@ -123,6 +123,52 @@ describe('ConfigureNodePoolForm', () => {
     expect(await findByPlaceholderText('Fake Linode 2 GB')).toBeVisible();
   });
 
+  it('makes a PUT request to /v4beta/lke/clusters/:id/pools/:id and calls onDone when the form is saved', async () => {
+    const clusterId = 1;
+    const nodePool = nodePoolFactory.build();
+    const onDone = vi.fn();
+    const onUpdateNodePool = vi.fn();
+
+    server.use(
+      http.put(
+        `*/v4*/lke/clusters/${clusterId}/pools/${nodePool.id}`,
+        async ({ request }) => {
+          onUpdateNodePool(await request.json());
+          return HttpResponse.json(nodePool);
+        }
+      )
+    );
+
+    const { getByRole, getByLabelText } = renderWithTheme(
+      <ConfigureNodePoolForm
+        clusterId={clusterId}
+        clusterTier="standard"
+        nodePool={nodePool}
+        onDone={onDone}
+      />
+    );
+
+    const saveButton = getByRole('button', { name: 'Save' });
+
+    // The save button is disabled until the user names a change.
+    expect(saveButton).toBeDisabled();
+
+    await userEvent.type(getByLabelText('Label'), 'my-new-node-pool-label');
+
+    // The save button should be enabled now that the user changed the Node Pool's label
+    expect(saveButton).toBeEnabled();
+
+    await userEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(onDone).toHaveBeenCalled();
+    });
+
+    expect(onUpdateNodePool).toHaveBeenCalledWith({
+      label: 'my-new-node-pool-label',
+    });
+  });
+
   it("calls onDone when 'Cancel' is clicked", async () => {
     const nodePool = nodePoolFactory.build();
     const onDone = vi.fn();
