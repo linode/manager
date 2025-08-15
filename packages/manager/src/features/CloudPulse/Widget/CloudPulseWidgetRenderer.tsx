@@ -32,6 +32,7 @@ interface WidgetProps {
   duration: DateTimeWithPreset;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
+  linodeRegion?: string;
   manualRefreshTimeStamp?: number;
   metricDefinitions: ResourcePage<MetricDefinition> | undefined;
   preferences?: AclpConfig;
@@ -64,6 +65,7 @@ export const RenderWidgets = React.memo(
       resourceList,
       resources,
       savePref,
+      linodeRegion,
     } = props;
 
     const getCloudPulseGraphProperties = (
@@ -166,6 +168,7 @@ export const RenderWidgets = React.memo(
                 authToken={jweToken?.token}
                 availableMetrics={availMetrics}
                 isJweTokenFetching={isJweTokenFetching}
+                linodeRegion={linodeRegion}
                 resources={resourceList!}
                 savePref={savePref}
               />

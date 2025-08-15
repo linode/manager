@@ -103,8 +103,9 @@ export const getTagsProperties = (
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
   handleRegionChange: (
+    filterKey: string,
     region: string | undefined,
-    labels: [],
+    labels: string[],
     savePref?: boolean
   ) => void
 ): CloudPulseRegionSelectProps => {
@@ -117,8 +118,9 @@ export const getRegionProperties = (
     config,
   } = props;
   return {
-    defaultValue: preferences?.[REGION],
+    defaultValue: preferences?.[filterKey],
     handleRegionChange,
+    filterKey,
     label,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
@@ -129,6 +131,7 @@ export const getRegionProperties = (
       dashboard
     ),
     xFilter: buildXFilter(config, dependentFilters ?? {}),
+    selectedEntities: (dependentFilters?.[RESOURCE_ID] ?? []) as string[],
   };
 };
 
