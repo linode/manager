@@ -1,4 +1,4 @@
-import { cancelTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { cancelServiceTransfer } from '@linode/api-v4';
 import { entityTransfersQueryKey } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
@@ -9,8 +9,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, TransferEntities } from '@linode/api-v4/lib/types';
 
 export interface Props {
   entities?: TransferEntities;
@@ -46,7 +45,7 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
     setSubmissionErrors(null);
     setSubmitting(true);
 
-    cancelTransfer(token)
+    cancelServiceTransfer(token)
       .then(() => {
         // @analytics
         sendEntityTransferCancelEvent();
