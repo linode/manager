@@ -127,16 +127,17 @@ export const ConfigureNodePoolForm = (props: Props) => {
                     label="Update Strategy"
                     noMarginTop
                     onChange={field.onChange}
-                    value={field.value!}
+                    value={field.value ?? 'on_recycle'}
                   />
                 )}
               />
               <Controller
                 control={form.control}
                 name="k8s_version"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <Autocomplete
                     disableClearable
+                    errorText={fieldState.error?.message}
                     label="Kubernetes Version"
                     noMarginTop
                     onChange={(e, version) => field.onChange(version.id)}
