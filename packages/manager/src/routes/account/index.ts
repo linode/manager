@@ -1,4 +1,6 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
+
+import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
@@ -27,8 +29,16 @@ const accountTabsRoute = createRoute({
 
 const accountBillingRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
-  path: '/billing',
+  path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/billingDetailLazyRoute').then(
     (m) => m.billingDetailLazyRoute
@@ -38,6 +48,16 @@ const accountBillingRoute = createRoute({
 const accountUsersRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/users',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (isIAMEnabled) {
+      throw redirect({ to: '/iam/users' });
+    }
+  },
 }).lazy(() =>
   import('src/features/Users/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -47,6 +67,14 @@ const accountUsersRoute = createRoute({
 const accountQuotasRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/quotas',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/quotas`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/Quotas/quotasLazyRoute').then(
     (m) => m.quotasLazyRoute
@@ -92,6 +120,32 @@ const accountSettingsRoute = createRoute({
 const accountUsersUsernameRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/users/$username',
+  beforeLoad: async ({ context, params, location }) => {
+    const { username } = params;
+
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (!isIAMEnabled || !username) {
+      return;
+    }
+
+    if (location.pathname.endsWith('/permissions')) {
+      throw redirect({
+        to: '/iam/users/$username/roles',
+        params: { username },
+        replace: true,
+      });
+    }
+
+    throw redirect({
+      to: '/iam/users/$username/details',
+      params: { username },
+      replace: true,
+    });
+  },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
     (m) => m.userDetailLazyRoute
@@ -122,6 +176,15 @@ const accountInvoiceDetailsRoute = createRoute({
     invoiceId: Number(params.invoiceId),
   }),
   path: 'billing/invoices/$invoiceId',
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing/invoices/$invoiceId`,
+        params: { invoiceId: params.invoiceId },
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
     (m) => m.invoiceDetailLazyRoute
