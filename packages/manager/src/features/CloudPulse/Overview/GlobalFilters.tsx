@@ -4,13 +4,19 @@ import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/refresh.svg';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
-import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
+import {
+  DASHBOARD_ID,
+  REFRESH,
+  RESOURCE_FILTER_MAP,
+  TIME_DURATION,
+} from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -88,6 +94,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange(REFRESH, Date.now(), []);
   }, []);
 
+  const { isLoading, isError } = useResourcesQuery(
+    selectedDashboard !== undefined,
+    selectedDashboard?.service_type ?? '',
+    {},
+
+    RESOURCE_FILTER_MAP[selectedDashboard?.service_type ?? ''] ?? {}
+  );
+
   return (
     <GridLegacy container>
       <GridLegacy item xs={12}>
@@ -150,6 +164,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           dashboard={selectedDashboard}
           emitFilterChange={emitFilterChange}
           handleToggleAppliedFilter={handleToggleAppliedFilter}
+          isError={isError}
+          isLoading={isLoading}
           isServiceAnalyticsIntegration={false}
           preferences={preferences}
         />
