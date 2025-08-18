@@ -10,7 +10,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 const loadingTestId = 'circle-progress';
 
 describe('Destinations Landing Table', () => {
-  it('should render destinations landing table with items PaginationFooter', async () => {
+  it('should render destinations landing tab header and table with items PaginationFooter', async () => {
     server.use(
       http.get('*/monitor/streams/destinations', () => {
         return HttpResponse.json(
@@ -19,14 +19,21 @@ describe('Destinations Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId, getByTestId } = renderWithTheme(
-      <DestinationsLanding />
-    );
+    const { getByText, queryByTestId, getAllByTestId, getByPlaceholderText } =
+      renderWithTheme(<DestinationsLanding />, {
+        initialRoute: '/datastream/destinations',
+      });
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
       await waitForElementToBeRemoved(loadingElement);
     }
+
+    // search text input
+    getByPlaceholderText('Search for a Destination');
+
+    // button
+    getByText('Create Destination');
 
     // Table column headers
     getByText('Name');
@@ -35,13 +42,13 @@ describe('Destinations Landing Table', () => {
     getByText('Last Modified');
 
     // PaginationFooter
-    const paginationFooterSelectPageSizeInput = getByTestId(
+    const paginationFooterSelectPageSizeInput = getAllByTestId(
       'textfield-input'
-    ) as HTMLInputElement;
+    )[1] as HTMLInputElement;
     expect(paginationFooterSelectPageSizeInput.value).toBe('Show 25');
   });
 
-  it('should render images landing empty state', async () => {
+  it('should render destinations landing empty state', async () => {
     server.use(
       http.get('*/monitor/streams/destinations', () => {
         return HttpResponse.json(makeResourcePage([]));
@@ -49,7 +56,10 @@ describe('Destinations Landing Table', () => {
     );
 
     const { getByText, queryByTestId } = renderWithTheme(
-      <DestinationsLanding />
+      <DestinationsLanding />,
+      {
+        initialRoute: '/datastream/destinations',
+      }
     );
 
     const loadingElement = queryByTestId(loadingTestId);
