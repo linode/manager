@@ -27,8 +27,8 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { extendType } from 'src/utilities/extendType';
 
@@ -96,11 +96,11 @@ export const LinodeResize = (props: Props) => {
   const hostMaintenance = linode?.status === 'stopped';
   const isLinodeOffline = linode?.status === 'offline';
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linodeId,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['resize_linode'],
+    linodeId
+  );
 
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {
@@ -164,7 +164,7 @@ export const LinodeResize = (props: Props) => {
     }
   }, [error]);
 
-  const tableDisabled = hostMaintenance || isLinodesGrantReadOnly;
+  const tableDisabled = hostMaintenance || !permissions.resize_linode;
 
   const submitButtonDisabled =
     Boolean(typeToConfirmPreference) && confirmationText !== linode?.label;
@@ -195,7 +195,7 @@ export const LinodeResize = (props: Props) => {
         <CircleProgress />
       ) : (
         <form onSubmit={formik.handleSubmit} ref={formRef}>
-          {isLinodesGrantReadOnly && <LinodePermissionsError />}
+          {!permissions.resize_linode && <LinodePermissionsError />}
           {hostMaintenance && <HostMaintenanceError />}
           {disksError && (
             <Notice
