@@ -412,9 +412,10 @@ export const useNodePoolDisplayLabel = (
   }
 
   // If the Node Pool has an explict label, return it.
-  if (nodePool.label && !options?.ignoreNodePoolsLabel) {
-    return nodePool.label;
-  }
+  // @todo uncomment this when it's time to surface Node Pool labels in the UI
+  // if (nodePool.label && !options?.ignoreNodePoolsLabel) {
+  //   return nodePool.label;
+  // }
 
   // If the Node Pool's type is loaded, return that type's formatted label.
   if (type) {

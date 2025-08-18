@@ -29,7 +29,8 @@ const props: Props = {
 };
 
 describe('ResizeNodePoolDrawer', () => {
-  it("should render a title containing the Node Pool's label when the node pool has a label", async () => {
+  // @todo enable this test when we begin surfacing Node Pool `label` in the UI
+  it.skip("should render a title containing the Node Pool's label when the node pool has a label", async () => {
     const nodePool = nodePoolFactory.build({ label: 'my-mock-node-pool-1' });
 
     const { getByText } = renderWithTheme(

@@ -1,13 +1,9 @@
-import { Autocomplete, Button, Notice, Stack, TextField } from '@linode/ui';
+import { Autocomplete, Button, Notice, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import {
-  useIsLkeEnterpriseEnabled,
-  useNodePoolDisplayLabel,
-} from 'src/features/Kubernetes/kubeUtils';
+import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { NodePoolUpdateStrategySelect } from 'src/features/Kubernetes/NodePoolUpdateStrategySelect';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
@@ -46,14 +42,17 @@ export const ConfigureNodePoolForm = (props: Props) => {
   const { clusterId, onDone, nodePool, clusterTier, clusterVersion } = props;
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { enqueueSnackbar } = useSnackbar();
-  const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
-    ignoreNodePoolsLabel: true,
-  });
+
+  // @todo uncomment when we begin surfacing the Text Field for a Node Pool's `label`
+  // const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
+  //   ignoreNodePoolsLabel: true,
+  // });
 
   const form = useForm<UpdateNodePoolData>({
     defaultValues: {
-      label: nodePool.label,
-      tags: nodePool.tags,
+      // @todo uncomment when we want to allow users to configure their Node Pool's `label` and `tags`
+      // label: nodePool.label,
+      // tags: nodePool.tags,
       update_strategy: nodePool.update_strategy,
       k8s_version: nodePool.k8s_version,
     },
@@ -89,7 +88,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
         {form.formState.errors.root?.message && (
           <Notice text={form.formState.errors.root.message} variant="error" />
         )}
-        <Controller
+        {/* <Controller
           control={form.control}
           name="label"
           render={({ field, fieldState }) => (
@@ -118,7 +117,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
               }
             />
           )}
-        />
+        /> */}
         {isLkeEnterprisePostLAFeatureEnabled &&
           clusterTier === 'enterprise' && (
             <>

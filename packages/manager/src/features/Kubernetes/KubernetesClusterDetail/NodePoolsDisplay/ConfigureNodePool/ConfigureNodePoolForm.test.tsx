@@ -20,7 +20,8 @@ const flags = {
 };
 
 describe('ConfigureNodePoolForm', () => {
-  it("renders a label field containing the Node Pool's label", () => {
+  // @todo Enable this test when we allow users to edit their Node Pool's label in the UI
+  it.skip("renders a label field containing the Node Pool's label", () => {
     const nodePool = nodePoolFactory.build({ label: 'my-node-pool-1' });
 
     const { getByLabelText } = renderWithTheme(
@@ -37,6 +38,27 @@ describe('ConfigureNodePoolForm', () => {
     expect(labelTextField).toBeEnabled();
     expect(labelTextField).toBeVisible();
     expect(labelTextField).toHaveDisplayValue('my-node-pool-1');
+  });
+
+  // @todo Enable this test when we allow users to edit their Node Pool's label in the UI
+  it.skip("uses the Node Pool's type as the label field's placeholder if the node pool does not have an explicit label", async () => {
+    const type = linodeTypeFactory.build({ label: 'Fake Linode 2GB' });
+    const nodePool = nodePoolFactory.build({ label: '', type: type.id });
+
+    server.use(
+      http.get(`*/v4*/linode/types/${type.id}`, () => HttpResponse.json(type))
+    );
+
+    const { findByPlaceholderText } = renderWithTheme(
+      <ConfigureNodePoolForm
+        clusterId={0}
+        clusterTier="standard"
+        clusterVersion={''}
+        nodePool={nodePool}
+      />
+    );
+
+    expect(await findByPlaceholderText('Fake Linode 2 GB')).toBeVisible();
   });
 
   it('renders an Update Strategy select if the cluster is enterprise, the account has the capability, and the postLa feature flag is enabled', async () => {
@@ -100,33 +122,17 @@ describe('ConfigureNodePoolForm', () => {
     expect(getByRole('option', { name: 'v1.31.8+lke6' })).toBeVisible();
   });
 
-  it("uses the Node Pool's type as the label field's placeholder if the node pool does not have an explicit label", async () => {
-    const type = linodeTypeFactory.build({ label: 'Fake Linode 2GB' });
-    const nodePool = nodePoolFactory.build({ label: '', type: type.id });
-
-    server.use(
-      http.get(`*/v4*/linode/types/${type.id}`, () => HttpResponse.json(type))
-    );
-
-    const { findByPlaceholderText } = renderWithTheme(
-      <ConfigureNodePoolForm
-        clusterId={0}
-        clusterTier="standard"
-        clusterVersion={''}
-        nodePool={nodePool}
-      />
-    );
-
-    expect(await findByPlaceholderText('Fake Linode 2 GB')).toBeVisible();
-  });
-
   it('makes a PUT request to /v4beta/lke/clusters/:id/pools/:id and calls onDone when the form is saved', async () => {
     const clusterId = 1;
-    const nodePool = nodePoolFactory.build();
+    const nodePool = nodePoolFactory.build({ k8s_version: 'v1.31.8+lke5' });
     const onDone = vi.fn();
     const onUpdateNodePool = vi.fn();
+    const account = accountFactory.build({
+      capabilities: ['Kubernetes Enterprise'],
+    });
 
     server.use(
+      http.get('*/v4*/account', () => HttpResponse.json(account)),
       http.put(
         `*/v4*/lke/clusters/${clusterId}/pools/${nodePool.id}`,
         async ({ request }) => {
@@ -136,14 +142,17 @@ describe('ConfigureNodePoolForm', () => {
       )
     );
 
-    const { getByRole, getByLabelText } = renderWithTheme(
+    const { getByRole, findByLabelText } = renderWithTheme(
       <ConfigureNodePoolForm
         clusterId={clusterId}
-        clusterTier="standard"
-        clusterVersion={''}
+        clusterTier="enterprise"
+        clusterVersion="v1.31.8+lke6"
         nodePool={nodePool}
         onDone={onDone}
-      />
+      />,
+      {
+        flags,
+      }
     );
 
     const saveButton = getByRole('button', { name: 'Save' });
@@ -151,7 +160,11 @@ describe('ConfigureNodePoolForm', () => {
     // The save button should be disabled until the user makes a change
     expect(saveButton).toBeDisabled();
 
-    await userEvent.type(getByLabelText('Label'), 'my-new-node-pool-label');
+    // Must await because we must load and check /v4/account 's capabilities to know if LKE-E should be enabled
+    await userEvent.click(await findByLabelText('Kubernetes Version'));
+
+    // Select the cluster's newer version
+    await userEvent.click(getByRole('option', { name: 'v1.31.8+lke6' }));
 
     // The save button should be enabled now that the user changed the Node Pool's label
     expect(saveButton).toBeEnabled();
@@ -165,8 +178,7 @@ describe('ConfigureNodePoolForm', () => {
 
     // Verify the PUT request happend with the expected payload
     expect(onUpdateNodePool).toHaveBeenCalledWith({
-      label: 'my-new-node-pool-label',
-      tags: [],
+      k8s_version: 'v1.31.8+lke6',
     });
   });
 

@@ -107,11 +107,16 @@ export const NodePool = (props: Props) => {
             )}
             <ActionMenu
               actionsList={[
-                {
-                  disabled: isLkeClusterRestricted,
-                  onClick: () => handleClickConfigureNodePool(poolId),
-                  title: 'Configure Pool',
-                },
+                // Currently, only LKE enterprise users can configure their cluster...
+                ...(clusterTier === 'enterprise'
+                  ? [
+                      {
+                        disabled: isLkeClusterRestricted,
+                        onClick: () => handleClickConfigureNodePool(poolId),
+                        title: 'Configure Pool',
+                      },
+                    ]
+                  : []),
                 {
                   disabled: isLkeClusterRestricted,
                   onClick: () => handleClickLabelsAndTaints(poolId),
