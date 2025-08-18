@@ -8,41 +8,44 @@ import { EventLink } from '../EventLink';
 import type { PartialEventMap } from '../types';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
+const entityPrefix = (e: any) => {
+  const type = e?.entity?.type ? capitalize(e.entity.type) : null;
+
+  return type ? (
+    <>
+      {type} <EventLink event={e} to="entity" />{' '}
+    </>
+  ) : null;
+};
+
 export const firewall: PartialEventMap<'firewall'> = {
   firewall_apply: {
     failed: (e) => {
-      const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          {entityType} <EventLink event={e} to="entity" /> Firewall update could{' '}
-          <strong>not</strong> be <strong>applied</strong>.
+          {entityPrefix(e)} Firewall update could <strong>not</strong> be{' '}
+          <strong>applied</strong>.
         </>
       );
     },
     finished: (e) => {
-      const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          {entityType} <EventLink event={e} to="entity" /> Firewall update has{' '}
-          been <strong>applied</strong>.
+          {entityPrefix(e)} Firewall update has been <strong>applied</strong>.
         </>
       );
     },
     scheduled: (e) => {
-      const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          {entityType} <EventLink event={e} to="entity" /> Firewall update is{' '}
-          <strong>scheduled</strong>.
+          {entityPrefix(e)} Firewall update is <strong>scheduled</strong>.
         </>
       );
     },
     started: (e) => {
-      const entityType = capitalize(e.entity?.type ?? '');
       return (
         <>
-          {entityType} <EventLink event={e} to="entity" /> Firewall update has{' '}
-          <strong>started</strong>.
+          {entityPrefix(e)} Firewall update has <strong>started</strong>.
         </>
       );
     },
