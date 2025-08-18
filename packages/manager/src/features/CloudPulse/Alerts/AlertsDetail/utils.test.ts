@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { transformDimensionValue } from '../Utils/utils';
-import { handleDimensionValueCapitalization } from './utils';
+import { handleDimensionValue } from './utils';
 
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
@@ -12,11 +12,7 @@ describe('handleDimensionValueCapitalization', () => {
     const value = 'ipv4';
     const expected = transformDimensionValue(serviceType, 'protocol', value);
 
-    const result = handleDimensionValueCapitalization(
-      value,
-      serviceType,
-      'protocol'
-    );
+    const result = handleDimensionValue(value, serviceType, 'protocol');
 
     expect(result).toBe(expected);
   });
@@ -28,11 +24,7 @@ describe('handleDimensionValueCapitalization', () => {
       .map((v) => transformDimensionValue(serviceType, 'protocol', v))
       .join(',');
 
-    const result = handleDimensionValueCapitalization(
-      value,
-      serviceType,
-      'protocol'
-    );
+    const result = handleDimensionValue(value, serviceType, 'protocol');
 
     expect(result).toBe(expected);
   });
