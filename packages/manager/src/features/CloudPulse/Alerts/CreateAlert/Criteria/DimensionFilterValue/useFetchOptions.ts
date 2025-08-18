@@ -45,9 +45,12 @@ export function useFetchOptions(
   const { dimensionLabel, regions, entities, serviceType, type } = props;
 
   const supportedRegionIds =
-    serviceType &&
-    regions &&
-    filterRegionByServiceType(type, regions, serviceType).map(({ id }) => id);
+    (serviceType &&
+      regions &&
+      filterRegionByServiceType(type, regions, serviceType).map(
+        ({ id }) => id
+      )) ||
+    [];
 
   // Create a filter for regions based on suppoerted region IDs
   const regionFilter: Filter =
@@ -89,7 +92,8 @@ export function useFetchOptions(
     {},
     combinedFilter,
     filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallResourcesIds.length > 0
+      filteredFirewallResourcesIds.length > 0 &&
+      supportedRegionIds.length > 0
   );
 
   // Extract linodes from filtered firewall resources
