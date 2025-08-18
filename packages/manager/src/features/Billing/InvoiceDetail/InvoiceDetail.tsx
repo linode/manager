@@ -22,6 +22,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -41,6 +42,9 @@ export const InvoiceDetail = () => {
       : '/account/billing/invoices/$invoiceId',
   });
   const theme = useTheme();
+  const { data: permissions } = usePermissions('account', [
+    'list_invoice_items',
+  ]);
 
   const csvRef = React.useRef<any>(undefined);
 
@@ -59,6 +63,10 @@ export const InvoiceDetail = () => {
   const shouldShowRegion = invoiceCreatedAfterDCPricingLaunch(invoice?.date);
 
   const requestData = () => {
+    if (!permissions.list_invoice_items) {
+      return;
+    }
+
     setLoading(true);
 
     const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
@@ -85,6 +93,14 @@ export const InvoiceDetail = () => {
   React.useEffect(() => {
     requestData();
   }, []);
+
+  if (!permissions.list_invoice_items) {
+    return (
+      <Notice variant="error">
+        You do not have permission to view invoice details.
+      </Notice>
+    );
+  }
 
   const printInvoicePDF = async (
     account: Account,
