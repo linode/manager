@@ -42,7 +42,7 @@ describe('ResizeNodePoolDrawer', () => {
   it("should render a title containing the Node Pool's type initially when the node pool does not have a label", () => {
     const { getByText } = renderWithTheme(<ResizeNodePoolDrawer {...props} />);
 
-    expect(getByText('Resize Pool: fake-linode-type-id')).toBeVisible();
+    expect(getByText('Resize Pool: fake-linode-type-id Plan')).toBeVisible();
   });
 
   it("should render a title containing the Node Pool's type's label once the type data has loaded when the node pool does not have a label", async () => {
@@ -52,7 +52,7 @@ describe('ResizeNodePoolDrawer', () => {
 
     const { findByText } = renderWithTheme(<ResizeNodePoolDrawer {...props} />);
 
-    expect(await findByText(`Resize Pool: Linode 2 GB`)).toBeVisible();
+    expect(await findByText('Resize Pool: Linode 2 GB Plan')).toBeVisible();
   });
 
   it('should display a warning if the user tries to resize a node pool to < 3 nodes', async () => {
