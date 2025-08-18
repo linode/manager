@@ -56,7 +56,7 @@ export const AssignedEntities = ({
         ref={(el: HTMLDivElement) => {
           itemRefs.current[index] = el;
         }}
-        style={{ display: 'inline-block', marginRight: 8 }}
+        style={{ display: 'inline', marginRight: 8 }}
       >
         <Chip
           data-testid="entities"
@@ -89,9 +89,9 @@ export const AssignedEntities = ({
         display: 'flex',
       }}
     >
-      <div
+      <Box
         ref={containerRef}
-        style={{
+        sx={{
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 1,
           display: '-webkit-box',
@@ -99,7 +99,7 @@ export const AssignedEntities = ({
         }}
       >
         {items}
-      </div>
+      </Box>
       {numHiddenItems > 0 && (
         <Box
           sx={{
