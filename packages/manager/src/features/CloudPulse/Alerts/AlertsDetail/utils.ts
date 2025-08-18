@@ -7,7 +7,7 @@ import type { CloudPulseServiceType } from '@linode/api-v4';
  * @param dimensionLabel The dimnsion label used to determine the transformation logic.
  * @returns string value with proper capitalization based on the service type and dimension label.
  */
-export const handleDimensionValueCapitalization = (
+export const handleDimensionValue = (
   value: string,
   serviceType: CloudPulseServiceType,
   dimensionLabel: string
