@@ -634,11 +634,11 @@ export const getFilters = (
   return FILTER_CONFIG.get(dashboard.id)?.filters.filter((config) =>
     isServiceAnalyticsIntegration
       ? config.configuration.neededInViews.includes(
-        CloudPulseAvailableViews.service
-      )
+          CloudPulseAvailableViews.service
+        )
       : config.configuration.neededInViews.includes(
-        CloudPulseAvailableViews.central
-      )
+          CloudPulseAvailableViews.central
+        )
   );
 };
 
