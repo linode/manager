@@ -3,12 +3,7 @@ import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import {
-  accountFactory,
-  kubernetesVersionFactory,
-  nodePoolFactory,
-} from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { accountFactory, nodePoolFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -72,26 +67,20 @@ describe('ConfigureNodePoolForm', () => {
   });
 
   it('renders an Kubernetes Version select if the cluster is enterprise, the account has the capability, and the postLa feature flag is enabled', async () => {
-    const kubernetesVersion = kubernetesVersionFactory.build();
     const nodePool = nodePoolFactory.build({
-      k8s_version: kubernetesVersion.id,
+      k8s_version: 'v1.31.8+lke5',
     });
     const account = accountFactory.build({
       capabilities: ['Kubernetes Enterprise'],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => HttpResponse.json(account)),
-      http.get('*/v4*/lke/tiers/enterprise/versions', () =>
-        HttpResponse.json(makeResourcePage([kubernetesVersion]))
-      )
-    );
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
-    const { findByLabelText } = renderWithTheme(
+    const { getByRole, findByLabelText } = renderWithTheme(
       <ConfigureNodePoolForm
         clusterId={0}
         clusterTier="enterprise"
-        clusterVersion={''}
+        clusterVersion="v1.31.8+lke6"
         nodePool={nodePool}
       />,
       { flags }
@@ -101,10 +90,14 @@ describe('ConfigureNodePoolForm', () => {
 
     expect(kubernetesVersionField).toBeEnabled();
     expect(kubernetesVersionField).toBeVisible();
+    expect(kubernetesVersionField).toHaveDisplayValue('v1.31.8+lke5');
 
-    await waitFor(() => {
-      expect(kubernetesVersionField).toHaveDisplayValue(kubernetesVersion.id);
-    });
+    // Open the version select
+    await userEvent.click(kubernetesVersionField);
+
+    // Verify the Node Pool's version and the cluster's version show as version options
+    expect(getByRole('option', { name: 'v1.31.8+lke5' })).toBeVisible();
+    expect(getByRole('option', { name: 'v1.31.8+lke6' })).toBeVisible();
   });
 
   it("uses the Node Pool's type as the label field's placeholder if the node pool does not have an explicit label", async () => {
