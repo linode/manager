@@ -1,6 +1,7 @@
 import { Alias } from '@linode/design-language-system';
 import { getMetrics } from '@linode/utilities';
 
+import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
 import {
   convertValueToUnit,
   formatToolTip,
@@ -17,6 +18,7 @@ import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
+  CloudPulseServiceType,
   DateTimeWithPreset,
   TimeDuration,
   Widgets,
@@ -26,7 +28,7 @@ import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
-interface LabelNameOptionsProps {
+export interface LabelNameOptionsProps {
   /**
    * Boolean to check if metric name should be hidden
    */
@@ -46,6 +48,11 @@ interface LabelNameOptionsProps {
    * list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the data
+   */
+  serviceType: CloudPulseServiceType;
 
   /**
    * unit of the data
@@ -70,6 +77,11 @@ interface GraphDataOptionsProps {
   resources: CloudPulseResources[];
 
   /**
+   * service type of the data
+   */
+  serviceType: CloudPulseServiceType;
+
+  /**
    * status returned from react query ( pending | error | success)
    */
   status: 'error' | 'pending' | 'success';
@@ -92,6 +104,11 @@ interface MetricRequestProps {
   entityIds: string[];
 
   /**
+   * selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
    * list of CloudPulse resources available
    */
   resources: CloudPulseResources[];
@@ -102,7 +119,7 @@ interface MetricRequestProps {
   widget: Widgets;
 }
 
-interface DimensionNameProperties {
+export interface DimensionNameProperties {
   /**
    * Boolean to check if metric name should be hidden
    */
@@ -117,6 +134,11 @@ interface DimensionNameProperties {
    * resources list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the data
+   */
+  serviceType: CloudPulseServiceType;
 }
 
 interface GraphData {
@@ -146,7 +168,7 @@ interface GraphData {
  * @returns parameters which will be necessary to populate graph & legends
  */
 export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
-  const { label, metricsList, resources, status, unit } = props;
+  const { label, metricsList, resources, serviceType, status, unit } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
@@ -182,6 +204,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           resources,
           unit,
           hideMetricName,
+          serviceType,
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
@@ -265,7 +288,7 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget } = props;
+  const { duration, entityIds, resources, widget, linodeRegion } = props;
   const preset = duration.preset;
 
   return {
@@ -292,6 +315,7 @@ export const getCloudPulseMetricRequest = (
             unit: widget.time_granularity.unit,
             value: widget.time_granularity.value,
           },
+    associated_entity_region: linodeRegion,
   };
 };
 
@@ -300,14 +324,21 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 export const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { label, metric, resources, unit, hideMetricName = false } = props;
+  const {
+    label,
+    metric,
+    resources,
+    unit,
+    hideMetricName = false,
+    serviceType,
+  } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
     return `${label} (${unit})`;
   }
 
-  return getDimensionName({ metric, resources, hideMetricName });
+  return getDimensionName({ metric, resources, hideMetricName, serviceType });
 };
 
 /**
@@ -316,7 +347,7 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
  */
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { metric, resources, hideMetricName = false } = props;
+  const { metric, resources, hideMetricName = false, serviceType } = props;
   return Object.entries(metric)
     .map(([key, value]) => {
       if (key === 'entity_id') {
@@ -334,7 +365,9 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
         return '';
       }
 
-      return value ?? '';
+      return (
+        DIMENSION_TRANSFORM_CONFIG[serviceType]?.[key]?.(value) ?? value ?? ''
+      );
     })
     .filter(Boolean)
     .join(' | ');

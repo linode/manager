@@ -13,6 +13,10 @@ import {
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from '../../shared/DimensionTransform';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
@@ -86,50 +90,6 @@ export interface AlertValidationSchemaProps {
    */
   serviceTypeObj: CloudPulseServiceType | null;
 }
-interface HandleMultipleErrorProps<T extends FieldValues> {
-  /**
-   *  A mapping of API error field names to form field paths. Use this to redirect API errors
-   *  to specific form fields. For example, if the API returns an error for "user.name" but
-   *  your form field is called "fullName", you would map "user" to "fullName".
-   */
-  errorFieldMap: Record<string, FieldPath<T>>;
-  /**
-   * List of errors returned from the API
-   */
-  errors: APIError[];
-  /**
-   * Separator for multiple errors on fields that are rendered explicitly. Ex : Usage in @AlertListNoticeMessages component
-   */
-  multiLineErrorSeparator: string;
-  /**
-   * React Hook Form's setError function to register errors with the form
-   */
-  setError: UseFormSetError<T>;
-  /**
-   * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
-   */
-  singleLineErrorSeparator: string;
-}
-
-interface FilterRegionProps {
-  /**
-   * The list of regions
-   */
-  regions?: Region[];
-  /**
-   * The list of resources
-   */
-  resources?: CloudPulseResources[];
-  /**
-   * The selected region ids
-   */
-  selectedRegions: string[];
-  /**
-   * The service type for which the regions are being filtered
-   */
-  serviceType: CloudPulseServiceType | null;
-}
-
 interface HandleMultipleErrorProps<T extends FieldValues> {
   /**
    *  A mapping of API error field names to form field paths. Use this to redirect API errors
@@ -648,5 +608,24 @@ export const alertsFromEnabledServices = (
   // Return the alerts whose service type is enabled in the aclpServices flag
   return allAlerts?.filter(
     (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
+  );
+};
+
+/**
+ * Transform a dimension value using the appropriate transform function
+ * @param serviceType - The cloud pulse service type
+ * @param dimensionLabel - The dimension label
+ * @param value - The value to transform
+ * @returns Transformed value
+ */
+export const transformDimensionValue = (
+  serviceType: CloudPulseServiceType | null,
+  dimensionLabel: string,
+  value: string
+): string => {
+  return (
+    (
+      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
+    )?.(value) ?? TRANSFORMS.capitalize(value)
   );
 };

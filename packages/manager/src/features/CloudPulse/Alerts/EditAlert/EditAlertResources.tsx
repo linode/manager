@@ -13,6 +13,7 @@ import { getAlertBoxStyles } from '../Utils/utils';
 import { EditAlertResourcesConfirmDialog } from './EditAlertResourcesConfirmationDialog';
 
 import type { EditAlertProps } from './EditAlertDefinition';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export const EditAlertResources = (props: EditAlertProps) => {
   const theme = useTheme();
@@ -36,16 +37,11 @@ export const EditAlertResources = (props: EditAlertProps) => {
   }, [alertDetails]);
 
   const { newPathname, overrides } = React.useMemo(() => {
-    const overrides = [
+    const overrides: CrumbOverridesProps[] = [
       {
         label: 'Definitions',
         linkTo: definitionLanding,
         position: 1,
-      },
-      {
-        label: 'Edit',
-        linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-        position: 2,
       },
     ];
 

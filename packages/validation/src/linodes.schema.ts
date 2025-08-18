@@ -145,76 +145,31 @@ const slaacSchema = object().shape({
       message: 'Must be a /64 IPv6 network CIDR',
       test: (value) => validateIPv6PrefixLengthIs64(value),
     }),
+  address: string().required(),
 });
 
-const IPv6ConfigInterfaceRangesSchema = object({
+const VPCInterfaceIPv6RangeSchema = object({
   range: string()
-    .optional()
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
       test: (value) => validateIPv6PrefixLengthIs64(value),
+    })
+    .required(),
+});
+
+const ipv6Interface = object({
+  slaac: array()
+    .of(slaacSchema)
+    .test({
+      name: 'slaac field must have zero or one entry',
+      message: 'ipv6.slaac field must have zero or one entry',
+      test: (value) =>
+        !value ? true : value?.length === 0 || value?.length === 1,
     }),
-});
-
-const ipv6ConfigInterface = object().when('purpose', {
-  is: 'vpc',
-  then: (schema) =>
-    schema
-      .shape({
-        slaac: array()
-          .of(slaacSchema)
-          .test({
-            name: 'slaac field must have zero or one entry',
-            message: 'ipv6.slaac field must have zero or one entry',
-            test: (value) =>
-              !value ? true : value?.length === 0 || value?.length === 1,
-          }),
-        ranges: array().of(IPv6ConfigInterfaceRangesSchema),
-        is_public: boolean(),
-      })
-      .notRequired()
-      .when('ipv4', {
-        is: (value: unknown) => value === null || value === undefined,
-        then: (schema) => schema.required(VPC_INTERFACE_IP_RULE),
-      }),
-  otherwise: (schema) =>
-    schema
-      .nullable()
-      .test({
-        name: testnameDisallowedBasedOnPurpose('VPC'),
-        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv6.slaac'),
-        test: (value: any) => {
-          if (value?.slaac) {
-            return typeof value.slaac === 'undefined';
-          }
-
-          return true;
-        },
-      })
-      .test({
-        name: testnameDisallowedBasedOnPurpose('VPC'),
-        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv6.ranges'),
-        test: (value: any) => {
-          if (value?.ranges) {
-            return typeof value.ranges === 'undefined';
-          }
-
-          return true;
-        },
-      })
-      .test({
-        name: testnameDisallowedBasedOnPurpose('VPC'),
-        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv6.is_public'),
-        test: (value: any) => {
-          if (value?.is_public) {
-            return typeof value.is_public === 'undefined';
-          }
-
-          return true;
-        },
-      }),
-});
+  ranges: array().of(VPCInterfaceIPv6RangeSchema),
+  is_public: boolean(),
+}).notRequired();
 
 // This is the validation schema for legacy interfaces attached to configuration profiles
 // For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
@@ -314,7 +269,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
           }),
     }),
     ipv4: ipv4ConfigInterface,
-    ipv6: ipv6ConfigInterface,
+    ipv6: ipv6Interface.nonNullable(),
     ip_ranges: array()
       .of(string().defined())
       .notRequired()
@@ -385,20 +340,12 @@ export const UpdateConfigInterfaceSchema = object({
   ip_ranges: array().of(string().test(validateIP)).max(1).notRequired(),
 });
 
-// const rootPasswordValidation = string().test(
-//   'is-strong-password',
-//   'Password does not meet strength requirements.',
-//   (value: string) =>
-//     Boolean(value) && zxcvbn(value).score >= MINIMUM_PASSWORD_STRENGTH
-// );
-
 export const ResizeLinodeDiskSchema = object({
   size: number().required('Size is required.').min(1),
 });
 
 export const UpdateLinodePasswordSchema = object({
   password: string().required('Password is required.'),
-  // .concat(rootPasswordValidation)
 });
 
 const MetadataSchema = object({
@@ -418,10 +365,10 @@ const alerts = object({
     .typeError('CPU Usage must be a number')
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800'),
-  network_in: number(),
-  network_out: number(),
-  transfer_quota: number(),
-  io: number(),
+  network_in: number().typeError('Incoming Traffic must be a number'),
+  network_out: number().typeError('Outbound Traffic must be a number'),
+  transfer_quota: number().typeError('Transfer Quota must be a number'),
+  io: number().typeError('Disk I/O Rate must be a number'),
 }).notRequired();
 
 const schedule = object({
@@ -629,10 +576,6 @@ const VPCInterfaceIPv4RangeSchema = object({
   range: string().required('Range is required.'),
 });
 
-const VPCInterfaceIPv6RangeSchema = object({
-  range: string().test((value) => validateIPv6PrefixLengthIs64(value)),
-});
-
 const PublicInterfaceRangeSchema = object({
   range: string().required('IPv6 range is required.').nullable(),
 });
@@ -663,11 +606,7 @@ export const CreateVPCInterfaceSchema = object({
     addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
     ranges: array().of(VPCInterfaceIPv4RangeSchema),
   }).notRequired(),
-  ipv6: object({
-    slaac: array().of(slaacSchema),
-    ranges: array().of(VPCInterfaceIPv6RangeSchema),
-    is_public: boolean(),
-  }).notRequired(),
+  ipv6: ipv6Interface,
 });
 
 export const CreateLinodeInterfaceSchema = object({

@@ -8,6 +8,7 @@ import { notificationFactory } from '@src/factories/notification';
 import { mockGetAccount, mockGetMaintenance } from 'support/intercepts/account';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockGetNotifications } from 'support/intercepts/events';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
   mockGetLinodes,
@@ -25,10 +26,16 @@ import {
   VLANFactory,
   volumeFactory,
 } from 'src/factories';
+import { formatDate } from 'src/utilities/formatDate';
 
 import type { Notification } from '@linode/api-v4';
 
 describe('QEMU reboot upgrade notification', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    }).as('getFeatureFlags');
+  });
   const NOTIFICATION_BANNER_TEXT = 'critical platform maintenance';
   const noticeMessageShort =
     'One or more Linodes need to be rebooted for critical platform maintenance.';
@@ -77,7 +84,13 @@ describe('QEMU reboot upgrade notification', () => {
         start_time: new Date().toISOString(),
       }),
     ];
-    const maintenanceTooltipText = `This Linode’s maintenance window opens at ${upcomingMaintenance[0].start_time}. For more information, see your open support tickets.`;
+
+    // We use ! since in `LinodeMaintenanceText` the `start_time` is never null.
+    const formattedTime = formatDate(upcomingMaintenance[0].start_time!, {
+      timezone: mockProfile.timezone,
+    });
+
+    const maintenanceTooltipText = `This Linode’s maintenance window opens at ${formattedTime}. For more information, see your open support tickets.`;
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetLinodes(mockLinodes).as('getLinodes');
