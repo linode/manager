@@ -491,8 +491,8 @@ export const BillingActivityPanel = React.memo((props: Props) => {
             />
           </div>
         </StyledBillingAndPaymentHistoryHeader>
-        {(!canViewInvoices || !canViewPayments) &&
-        !(!canViewInvoices && !canViewPayments) ? (
+        {(canViewInvoices && !canViewPayments) ||
+        (!canViewInvoices && canViewPayments) ? (
           <Notice
             spacingBottom={20}
             text={`You do not have permission to view ${
