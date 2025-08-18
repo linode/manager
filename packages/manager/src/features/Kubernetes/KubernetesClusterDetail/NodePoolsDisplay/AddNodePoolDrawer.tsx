@@ -1,15 +1,16 @@
-import { useAllTypes } from '@linode/queries';
-import { ActionsPanel, Box, Drawer, Notice, Typography } from '@linode/ui';
+import { useAllTypes, useRegionsQuery } from '@linode/queries';
+import { Box, Button, Drawer, Notice, Stack, Typography } from '@linode/ui';
 import {
   isNumber,
   plansNoticesUtils,
   pluralize,
-  scrollErrorIntoViewV2,
+  scrollErrorIntoView,
 } from '@linode/utilities';
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import React from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
+// import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
@@ -24,42 +25,15 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
+import { NodePoolUpdateStrategySelect } from '../../NodePoolUpdateStrategySelect';
 import { hasInvalidNodePoolPrice } from './utils';
 
-import type { KubernetesTier, Region } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  boxOuter: {
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-    },
-    width: '100%',
-  },
-  error: {
-    marginBottom: '0 !important',
-  },
-  plans: {
-    '& > *': {
-      '& > *': {
-        padding: 0,
-      },
-      marginTop: 0,
-    },
-  },
-  priceDisplay: {
-    '& span': {
-      font: theme.font.bold,
-    },
-    color: theme.color.headline,
-    display: 'inline',
-    fontSize: '1rem',
-    lineHeight: '1.25rem',
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-}));
+import type {
+  CreateNodePoolData,
+  KubernetesTier,
+  Region,
+} from '@linode/api-v4';
 
 export interface Props {
   clusterId: number;
@@ -68,7 +42,6 @@ export interface Props {
   clusterTier: KubernetesTier;
   onClose: () => void;
   open: boolean;
-  regionsData: Region[];
 }
 
 export const AddNodePoolDrawer = (props: Props) => {
@@ -79,10 +52,11 @@ export const AddNodePoolDrawer = (props: Props) => {
     clusterTier,
     onClose,
     open,
-    regionsData,
   } = props;
-  const { classes } = useStyles();
-  const { data: types } = useAllTypes(open);
+
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
+  const { data: types, isLoading: isTypesLoading } = useAllTypes(open);
 
   const {
     error,
@@ -90,24 +64,24 @@ export const AddNodePoolDrawer = (props: Props) => {
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
-  const drawerRef = React.useRef<HTMLDivElement>(null);
-
-  // Only want to use current types here.
-  const extendedTypes = filterCurrentTypes(types?.map(extendType));
-
-  const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
-    undefined | { count: number; planId: string }
-  >(undefined);
-  const [addNodePoolError, setAddNodePoolError] = React.useState<string>('');
-
-  const getTypeCount = React.useCallback(
-    (planId: string) =>
-      planId === selectedTypeInfo?.planId ? selectedTypeInfo.count : 0,
-    [selectedTypeInfo]
+  // Only want to use current types here and filter out nanodes
+  const extendedTypes = filterCurrentTypes(types?.map(extendType)).filter(
+    (t) => t.class !== 'nanode'
   );
 
-  const selectedType = selectedTypeInfo
-    ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
+  const form = useForm<CreateNodePoolData>({
+    defaultValues: {
+      update_strategy: clusterTier === 'enterprise' ? 'on_recycle' : undefined,
+    },
+  });
+
+  const [type, count] = useWatch({
+    control: form.control,
+    name: ['type', 'count'],
+  });
+
+  const selectedType = type
+    ? extendedTypes.find((t) => t.id === type)
     : undefined;
 
   const pricePerNode = getLinodeRegionPrice(
@@ -116,44 +90,37 @@ export const AddNodePoolDrawer = (props: Props) => {
   )?.monthly;
 
   const totalPrice =
-    selectedTypeInfo && isNumber(pricePerNode)
-      ? selectedTypeInfo.count * pricePerNode
-      : undefined;
+    type && count && isNumber(pricePerNode) ? count * pricePerNode : undefined;
 
   const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
+  const shouldShowPricingInfo = type && count > 0;
 
   React.useEffect(() => {
     if (open) {
-      resetDrawer();
-      setAddNodePoolError('');
+      form.reset();
     }
   }, [open]);
 
   React.useEffect(() => {
     if (error) {
-      setAddNodePoolError(error?.[0].reason);
-      scrollErrorIntoViewV2(drawerRef);
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
   }, [error]);
 
-  const resetDrawer = () => {
-    setSelectedTypeInfo(undefined);
-  };
-
   const updatePlanCount = (planId: string, newCount: number) => {
-    setSelectedTypeInfo(newCount > 0 ? { count: newCount, planId } : undefined);
+    form.setValue('type', newCount === 0 ? '' : planId);
+    form.setValue('count', newCount);
   };
 
-  const handleAdd = () => {
-    if (!selectedTypeInfo) {
-      return;
-    }
-    return createPool({
-      count: selectedTypeInfo.count,
-      type: selectedTypeInfo.planId,
-    }).then(() => {
+  const onSubmit = async (values: CreateNodePoolData) => {
+    try {
+      await createPool(values);
       onClose();
-    });
+    } catch (errors) {
+      for (const error of errors) {
+        form.setError(error.field ?? 'root', { message: error.reason });
+      }
+    }
   };
 
   const {
@@ -161,7 +128,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    regionsData,
+    regionsData: regions,
     selectedRegionID: clusterRegionId,
   });
 
@@ -173,59 +140,57 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
+      isFetching={isRegionsLoading || isTypesLoading}
       onClose={onClose}
       open={open}
-      PaperProps={{
-        sx: { maxWidth: '790px !important' },
+      slotProps={{
+        paper: {
+          sx: { maxWidth: '790px !important' },
+        },
       }}
-      ref={drawerRef}
       title={`Add a Node Pool: ${clusterLabel}`}
       wide
     >
-      {addNodePoolError && (
+      {form.formState.errors.root?.message && (
         <Notice spacingBottom={0} spacingTop={12} variant="error">
           <ErrorMessage
             entity={{ id: clusterId, type: 'lkecluster_id' }}
-            message={addNodePoolError}
+            message={form.formState.errors.root?.message}
           />
         </Notice>
       )}
-      <form className={classes.plans}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <KubernetesPlansPanel
-          addPool={handleAdd}
           copy={getPlansPanelCopy()}
-          getTypeCount={getTypeCount}
+          getTypeCount={(plan) => {
+            if (plan === type) {
+              return count;
+            }
+            return 0;
+          }}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           isSubmitting={isPending}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ count: 1, planId: newType });
-            }
-          }}
-          regionsData={regionsData}
-          resetValues={resetDrawer}
-          selectedId={selectedTypeInfo?.planId}
+          onSelect={(type) => form.setValue('type', type)}
+          regionsData={regions ?? []}
+          resetValues={() => form.reset()}
+          selectedId={type}
           selectedRegionId={clusterRegionId}
           selectedTier={clusterTier}
-          // No nanodes in clusters
-          types={extendedTypes.filter((t) => t.class !== 'nanode')}
+          types={extendedTypes}
           updatePlanCount={updatePlanCount}
         />
-        {selectedTypeInfo &&
-          selectedTypeInfo.count > 0 &&
-          selectedTypeInfo.count < 3 && (
-            <Notice
-              spacingBottom={16}
-              spacingTop={8}
-              text={nodeWarning}
-              variant="warning"
-            />
-          )}
-
-        {selectedTypeInfo && hasInvalidPrice && (
+        {count > 0 && count < 3 && (
+          <Notice
+            spacingBottom={16}
+            spacingTop={8}
+            text={nodeWarning}
+            variant="warning"
+          />
+        )}
+        {hasInvalidPrice && shouldShowPricingInfo && (
           <Notice
             spacingBottom={16}
             spacingTop={8}
@@ -233,34 +198,66 @@ export const AddNodePoolDrawer = (props: Props) => {
             variant="error"
           />
         )}
-
+        {isLkeEnterprisePostLAFeatureEnabled &&
+          clusterTier === 'enterprise' && (
+            <Stack spacing={2}>
+              <Typography variant="h3">Configuration</Typography>
+              <Controller
+                control={form.control}
+                name="update_strategy"
+                render={({ field }) => (
+                  <NodePoolUpdateStrategySelect
+                    label="Update Strategy"
+                    noMarginTop
+                    onChange={field.onChange}
+                    value={field.value!}
+                  />
+                )}
+              />
+              {/*
+              <Controller
+                control={form.control}
+                name="firewall_id"
+                render={({ field, fieldState }) => (
+                  <FirewallSelect
+                    errorText={fieldState.error?.message}
+                    onChange={(e, firewall) =>
+                      field.onChange(firewall?.id ?? null)
+                    }
+                    value={field.value ?? null}
+                  />
+                )}
+              />
+              */}
+            </Stack>
+          )}
         <Box
           alignItems="center"
-          className={classes.boxOuter}
           display="flex"
           flexDirection="row"
-          justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
+          justifyContent={shouldShowPricingInfo ? 'space-between' : 'flex-end'}
+          mt={3}
         >
-          {selectedTypeInfo && (
-            <Typography className={classes.priceDisplay}>
+          {shouldShowPricingInfo && (
+            <Typography>
               This pool will add{' '}
               <strong>
                 ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month (
-                {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
+                {pluralize('node', 'nodes', count)} at $
                 {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
                 /month)
               </strong>{' '}
               to this cluster.
             </Typography>
           )}
-          <ActionsPanel
-            primaryButtonProps={{
-              disabled: !selectedTypeInfo || hasInvalidPrice,
-              label: 'Add pool',
-              loading: isPending,
-              onClick: handleAdd,
-            }}
-          />
+          <Button
+            buttonType="primary"
+            disabled={!type || hasInvalidPrice}
+            loading={form.formState.isSubmitting}
+            type="submit"
+          >
+            Add pool
+          </Button>
         </Box>
       </form>
     </Drawer>

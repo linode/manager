@@ -43,6 +43,7 @@ export interface MetricDetails {
   ruleIndex: number;
   threshold: string;
 }
+
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegions = [

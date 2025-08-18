@@ -108,6 +108,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     regions,
     entities,
     serviceType,
+    type: 'alerts',
   });
   const staticOptions = useMemo(
     () =>

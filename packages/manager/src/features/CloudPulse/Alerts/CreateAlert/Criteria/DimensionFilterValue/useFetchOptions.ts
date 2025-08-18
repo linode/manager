@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { getSupportedRegionIds } from '../../../Utils/AlertResourceUtils';
+import { filterRegionByServiceType } from '../../../Utils/utils';
 import {
   getFilteredFirewallResources,
   getFirewallLinodes,
@@ -30,6 +30,10 @@ interface FetchOptionsProps {
    * Service to apply specific transformations to dimension values.
    */
   serviceType?: CloudPulseServiceType | null;
+  /**
+   * The type of monitoring to filter on.
+   */
+  type: 'alerts' | 'metrics';
 }
 /**
  * Custom hook to return selectable options based on the dimension type.
@@ -38,10 +42,12 @@ interface FetchOptionsProps {
 export function useFetchOptions(
   props: FetchOptionsProps
 ): Item<string, string>[] {
-  const { dimensionLabel, regions, entities, serviceType } = props;
+  const { dimensionLabel, regions, entities, serviceType, type } = props;
 
   const supportedRegionIds =
-    serviceType && regions && getSupportedRegionIds(regions, serviceType);
+    serviceType &&
+    regions &&
+    filterRegionByServiceType(type, regions, serviceType).map(({ id }) => id);
 
   // Create a filter for regions based on suppoerted region IDs
   const regionFilter: Filter =
@@ -55,7 +61,9 @@ export function useFetchOptions(
 
   // Fetch all firewall resources when dimension requires it
   const { data: firewallResources } = useResourcesQuery(
-    dimensionLabel === 'parent_vm_entity_id' || dimensionLabel === 'region_id',
+    dimensionLabel === 'parent_vm_entity_id' ||
+      dimensionLabel === 'region_id' ||
+      dimensionLabel === 'associated_entity_region',
     'firewall'
   );
 
@@ -77,7 +85,8 @@ export function useFetchOptions(
     {},
     combinedFilter,
     (dimensionLabel === 'region_id' ||
-      dimensionLabel === 'parent_vm_entity_id') &&
+      dimensionLabel === 'parent_vm_entity_id' ||
+      dimensionLabel === 'associated_entity_region') &&
       filteredFirewallResourcesIds.length > 0
   );
 
@@ -95,6 +104,8 @@ export function useFetchOptions(
 
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
+    case 'associated_entity_region':
+      return linodeRegions;
     case 'parent_vm_entity_id':
       return firewallLinodes;
     case 'region_id':

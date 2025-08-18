@@ -59,7 +59,7 @@ export const CloudPulseServiceSelect = (
           )
           .map((service) => ({
             label: service.label,
-            value: service.service_type as CloudPulseServiceType,
+            value: service.service_type,
           }))
       : [];
   }, [aclpServices, serviceOptions]);

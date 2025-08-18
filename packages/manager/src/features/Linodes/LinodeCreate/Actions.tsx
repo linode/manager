@@ -99,7 +99,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-          isAclpIntegration: aclpServices?.linode?.alerts?.beta,
+          isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
           isAclpAlertsPreferenceBeta: isAlertsBetaMode,
         })}
       />
