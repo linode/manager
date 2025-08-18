@@ -21,6 +21,7 @@ import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
+  disabled: boolean;
   handleRemove: (linodesToRemove: string[]) => void;
   handleSelect: (linodes: Entity[]) => void;
   handleToggle: (linode: Entity) => void;
@@ -28,7 +29,13 @@ interface Props {
 }
 
 export const LinodeTransferTable = React.memo((props: Props) => {
-  const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
+  const {
+    handleRemove,
+    handleSelect,
+    handleToggle,
+    selectedLinodes,
+    disabled,
+  } = props;
   const [searchText, setSearchText] = React.useState('');
 
   const pagination = usePaginationV2({
@@ -78,6 +85,7 @@ export const LinodeTransferTable = React.memo((props: Props) => {
   return (
     <TransferTable
       count={data?.results ?? 0}
+      disabled={disabled}
       handleSearch={handleSearch}
       hasSelectedAll={hasSelectedAll}
       headers={columns}
@@ -96,6 +104,7 @@ export const LinodeTransferTable = React.memo((props: Props) => {
       >
         {linodesCurrentPage.map((thisLinode) => (
           <LinodeRow
+            disabled={disabled}
             handleToggleCheck={() => handleToggle(thisLinode)}
             isChecked={Boolean(selectedLinodes[thisLinode.id])}
             key={thisLinode.id}
@@ -108,13 +117,14 @@ export const LinodeTransferTable = React.memo((props: Props) => {
 });
 
 interface RowProps {
+  disabled?: boolean;
   handleToggleCheck: () => void;
   isChecked: boolean;
   linode: Linode;
 }
 
 const LinodeRow = (props: RowProps) => {
-  const { handleToggleCheck, isChecked, linode } = props;
+  const { handleToggleCheck, isChecked, linode, disabled } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
   const displayType = type?.formattedLabel ?? linode.type;
@@ -124,6 +134,8 @@ const LinodeRow = (props: RowProps) => {
   const displayRegion = region?.label ?? linode.region;
   return (
     <SelectableTableRow
+      className={disabled ? 'disabled-row' : ''}
+      disabled={disabled}
       handleToggleCheck={handleToggleCheck}
       isChecked={isChecked}
     >

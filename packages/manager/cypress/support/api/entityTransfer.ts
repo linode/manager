@@ -1,4 +1,8 @@
-import { cancelTransfer, getEntityTransfers, getLinodes } from '@linode/api-v4';
+import {
+  cancelServiceTransfer,
+  getLinodes,
+  getServiceTransfers,
+} from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
@@ -18,7 +22,7 @@ export const cancelAllTestEntityTransfers = async (): Promise<void> => {
 
   const entityTransfers = (
     await depaginate<EntityTransfer>((page: number) =>
-      getEntityTransfers({ page, page_size: pageSize })
+      getServiceTransfers({ page, page_size: pageSize })
     )
   ).filter(
     (entityTransfer: EntityTransfer) => entityTransfer.status === 'pending'
@@ -37,7 +41,7 @@ export const cancelAllTestEntityTransfers = async (): Promise<void> => {
         }
       );
       if (allLinodesAreTestLinodes) {
-        await cancelTransfer(entityTransfer.token);
+        await cancelServiceTransfer(entityTransfer.token);
       }
     }
   );
