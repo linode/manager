@@ -37,19 +37,9 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   });
 
   const rawClusterData = parseClusterData(stackscriptData);
-  const clusterTypeQueries = useQueries({
-    queries: rawClusterData.map((cluster) => {
-      const mappedTypeId = getLinodeTypeMapMarketplace[cluster.typeId ?? ''];
-      return {
-        queryKey: ['linodeType', mappedTypeId],
-        queryFn: () =>
-          mappedTypeId
-            ? fetchLinodeType(mappedTypeId)
-            : Promise.resolve(undefined),
-        enabled: Boolean(mappedTypeId),
-      };
-    }),
-  });
+  const clusterTypeQueries = useSpecificTypes(
+    rawClusterData.map((t) => t.typeId!)
+  );
 
   const clusterData = rawClusterData.map((cluster, i) => ({
     ...cluster,
