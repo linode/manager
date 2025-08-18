@@ -369,7 +369,7 @@ export const alertsSchema = object({
   network_out: number().required('Outbound Traffic is required.'),
   transfer_quota: number().required('Transfer Quota is required.'),
   io: number().required('Disk I/O Rate is required.'),
-}).notRequired();
+});
 
 const schedule = object({
   day: mixed().oneOf(
@@ -417,7 +417,7 @@ export const UpdateLinodeSchema = object({
     .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
-  alerts: alertsSchema,
+  alerts: alertsSchema.notRequired().default(undefined),
   backups,
 });
 

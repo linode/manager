@@ -16,8 +16,9 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import { AlertSection, AlertSectionProps } from './AlertSection';
+import { AlertSection } from './AlertSection';
 
+import type { AlertSectionProps } from './AlertSection';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
