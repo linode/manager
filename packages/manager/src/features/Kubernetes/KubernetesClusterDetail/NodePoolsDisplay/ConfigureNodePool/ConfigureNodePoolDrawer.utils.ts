@@ -6,7 +6,7 @@ interface NodePoolVersionOptions {
 }
 
 /**
- * This functions returns Autocomplete `options` for a Node Pool's possible versions.
+ * This function returns Autocomplete `options` for possible Node Pool versions.
  *
  * The only valid k8s_version options for a Node Pool are
  * - The Node Pool's current version
