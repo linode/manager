@@ -120,14 +120,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
-<<<<<<< HEAD
-        hide: isRestrictedUser,
         to: flags?.iamRbacPrimaryNavChanges
           ? '/service-transfers'
           : '/account/service-transfers',
-=======
-        to: '/account/service-transfers',
->>>>>>> e49519c740 (feat: [UIE-8879] - user menu permissions)
       },
       {
         display: 'Maintenance',
@@ -138,12 +133,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
-<<<<<<< HEAD
-        hide: !hasFullAccountAccess,
         to: flags?.iamRbacPrimaryNavChanges ? '/settings' : '/account/settings',
-=======
-        to: '/account/settings',
->>>>>>> e49519c740 (feat: [UIE-8879] - user menu permissions)
       },
     ],
     [isIAMEnabled, flags]
