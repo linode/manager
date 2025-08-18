@@ -18,6 +18,13 @@ export const productInformationBannerFactory =
 
 export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
   aclp: { beta: true, enabled: true },
+  aclpAlerting: {
+    accountAlertLimit: 10,
+    accountMetricLimit: 10,
+    alertDefinitions: true,
+    recentActivity: false,
+    notificationChannels: false,
+  },
   aclpServices: {
     linode: {
       alerts: { beta: true, enabled: true },
