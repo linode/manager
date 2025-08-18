@@ -110,7 +110,6 @@ export const UsersLanding = () => {
     <React.Fragment>
       {isProxyUser && (
         <ProxyUserTable
-          // TODO IAM - figure out what permission allows listing all users
           canListUsers={true}
           handleDelete={handleDelete}
           isProxyUser={isProxyUser}

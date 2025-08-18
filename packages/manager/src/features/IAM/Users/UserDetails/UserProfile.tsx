@@ -22,6 +22,8 @@ export const UserProfile = () => {
   const { data: permissions } = usePermissions('account', [
     'view_user',
     'list_user_grants',
+    'update_user',
+    'delete_user',
   ]);
 
   const {
@@ -33,6 +35,9 @@ export const UserProfile = () => {
     username ?? '',
     permissions?.list_user_grants
   );
+
+  const canUpdateUser = permissions?.update_user;
+  const canDeleteUser = permissions?.delete_user;
 
   if (isLoading) {
     return <CircleProgress />;
@@ -62,9 +67,9 @@ export const UserProfile = () => {
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
         <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
-        <UsernamePanel user={user} />
-        <UserEmailPanel user={user} />
-        <DeleteUserPanel user={user} />
+        <UsernamePanel canUpdateUser={canUpdateUser} user={user} />
+        <UserEmailPanel canUpdateUser={canUpdateUser} user={user} />
+        <DeleteUserPanel canDeleteUser={canDeleteUser} user={user} />
       </Stack>
     </>
   );

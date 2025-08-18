@@ -17,6 +17,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
 import {
@@ -73,6 +74,10 @@ export const AssignedRolesTable = () => {
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+  const { data: permissions } = usePermissions('account', [
+    'update_user_grants',
+    'list_user_grants',
+  ]);
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/users/$username/roles',
@@ -238,6 +243,7 @@ export const AssignedRolesTable = () => {
                 handleUnassignRole={handleUnassignRole}
                 handleUpdateEntities={handleUpdateEntities}
                 handleViewEntities={handleViewEntities}
+                permissions={permissions}
                 role={role}
               />
             </TableCell>
