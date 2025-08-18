@@ -34,7 +34,7 @@ export const AdditionalOptions = ({
   });
 
   const showAlerts =
-    aclpServices?.linode?.alerts?.beta && isAclpAlertsSupportedRegionLinode;
+    aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegionLinode;
 
   const hideAdditionalOptions = !showAlerts && !isVMHostMaintenanceEnabled;
 
