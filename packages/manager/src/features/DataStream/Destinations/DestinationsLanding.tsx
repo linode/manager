@@ -2,7 +2,7 @@ import { useDestinationsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -20,9 +20,13 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 export const DestinationsLanding = () => {
   const navigate = useNavigate();
-
+  const destinationsUrl = '/datastream/destinations';
+  const search = useSearch({
+    from: destinationsUrl,
+    shouldThrow: false,
+  });
   const pagination = usePaginationV2({
-    currentRoute: '/datastream/destinations',
+    currentRoute: destinationsUrl,
     preferenceKey: DESTINATIONS_TABLE_PREFERENCE_KEY,
   });
 
@@ -32,7 +36,7 @@ export const DestinationsLanding = () => {
         order: DESTINATIONS_TABLE_DEFAULT_ORDER,
         orderBy: DESTINATIONS_TABLE_DEFAULT_ORDER_BY,
       },
-      from: '/datastream/destinations',
+      from: destinationsUrl,
     },
     preferenceKey: `destinations-order`,
   });
@@ -40,11 +44,15 @@ export const DestinationsLanding = () => {
   const filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(search?.label !== undefined && {
+      label: { '+contains': search?.label },
+    }),
   };
 
   const {
     data: destinations,
     isLoading,
+    isFetching,
     error,
   } = useDestinationsQuery(
     {
@@ -53,6 +61,17 @@ export const DestinationsLanding = () => {
     },
     filter
   );
+
+  const onSearch = (label: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        label: label ? label : undefined,
+      }),
+      to: destinationsUrl,
+    });
+  };
 
   const navigateToCreate = () => {
     navigate({ to: '/datastream/destinations/create' });
@@ -78,8 +97,11 @@ export const DestinationsLanding = () => {
     <>
       <DataStreamTabHeader
         entity="Destination"
+        isSearching={isFetching}
         loading={isLoading}
         onButtonClick={navigateToCreate}
+        onSearch={onSearch}
+        searchValue={search?.label ?? ''}
       />
       <Table>
         <TableHead>
