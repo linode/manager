@@ -595,7 +595,7 @@ describe('database resize', () => {
       expect(getByText('Premium CPU')).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('should disable Premium Plans Tab when database is on a dedicated plan', async () => {
+    it('should disable Dedicated and Shared Plans Tabs when database is on a premium plan', async () => {
       const mockFlags = { databaseRestrictPlanResize: true };
 
       const premiumPlanDatabase = databaseFactory.build({

@@ -34,6 +34,11 @@ import {
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 
+import {
+  RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
+  RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
+} from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGrid,
@@ -110,8 +115,8 @@ export const DatabaseResize = () => {
 
   const premiumRestrictedTabsCopy =
     currentPlanType?.class === 'premium'
-      ? 'Resizing to a Shared CPU or a Dedicated CPU plan is not available for database clusters on a Premium CPU plan.'
-      : 'Resizing to a Premium CPU plan is not available for database clusters on a Shared CPU or a Dedicated CPU plan.';
+      ? RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT
+      : RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT;
 
   const restrictPlanTypes = () => {
     if (currentPlanType?.class === 'premium') {
@@ -121,10 +126,10 @@ export const DatabaseResize = () => {
     }
   };
 
-  const getDisabledTabsConfig = (): {
+  const disabledTabsConfig: {
     disabledTabs: string[];
     disabledTabsCopy: string;
-  } => {
+  } = React.useMemo(() => {
     // For new database clusters, restrict plan types based on the current plan
     if (isDefaultDatabase(database) && flags.databaseRestrictPlanResize) {
       return {
@@ -135,8 +140,7 @@ export const DatabaseResize = () => {
     // Disable shared tab for legacy database clusters when cluster size is 2
     if (!isNewDatabaseGA && isDisabledSharedTab) {
       return {
-        disabledTabsCopy:
-          'Resizing a 2-node cluster is only allowed with Dedicated plans.',
+        disabledTabsCopy: RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
         disabledTabs: ['shared'],
       };
     }
@@ -145,7 +149,7 @@ export const DatabaseResize = () => {
       disabledTabs: [],
       disabledTabsCopy: '',
     };
-  };
+  }, [database, flags, isNewDatabaseGA]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -396,7 +400,7 @@ export const DatabaseResize = () => {
           data-qa-select-plan
           disabled={disabled}
           disabledSmallerPlans={disabledPlans}
-          disabledTabs={getDisabledTabsConfig().disabledTabs}
+          disabledTabs={disabledTabsConfig.disabledTabs}
           flow="database"
           handleTabChange={handleTabChange}
           header="Choose a Plan"
@@ -406,7 +410,7 @@ export const DatabaseResize = () => {
           regionsData={shouldProvideRegions ? regionsData : undefined}
           selectedId={selectedPlanId}
           selectedRegionID={databaseRegion}
-          tabDisabledMessage={getDisabledTabsConfig().disabledTabsCopy}
+          tabDisabledMessage={disabledTabsConfig.disabledTabsCopy}
           types={displayTypes}
         />
         {isNewDatabaseGA && (
