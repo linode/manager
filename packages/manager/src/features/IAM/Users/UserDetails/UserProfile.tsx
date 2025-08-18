@@ -41,7 +41,7 @@ export const UserProfile = () => {
   if (!permissions?.view_user) {
     return (
       <Notice variant="error">
-        You do not have permission to view this user details.
+        You do not have permission to view this user&apos;s details.
       </Notice>
     );
   }

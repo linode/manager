@@ -22,7 +22,10 @@ import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions('account', ['list_user_grants']);
+  const { data: permissions } = usePermissions('account', [
+    'list_user_grants',
+    'view_user',
+  ]);
   const theme = useTheme();
 
   const {
@@ -31,7 +34,7 @@ export const UserRoles = () => {
     error: assignedRolesError,
   } = useUserRoles(username ?? '', permissions?.list_user_grants);
 
-  const { error } = useAccountUser(username ?? '');
+  const { error } = useAccountUser(username ?? '', permissions?.view_user);
 
   const hasAssignedRoles = assignedRoles
     ? assignedRoles.account_access.length > 0 ||
@@ -45,7 +48,7 @@ export const UserRoles = () => {
   if (!permissions?.list_user_grants) {
     return (
       <Notice variant="error">
-        You do not have permission to view this user roles.
+        You do not have permission to view this user&apos;s roles.
       </Notice>
     );
   }

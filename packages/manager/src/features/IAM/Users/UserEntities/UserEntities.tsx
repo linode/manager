@@ -23,14 +23,17 @@ import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 export const UserEntities = () => {
   const theme = useTheme();
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions('account', ['list_user_grants']);
+  const { data: permissions } = usePermissions('account', [
+    'list_user_grants',
+    'view_user',
+  ]);
   const {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
   } = useUserRoles(username ?? '', permissions?.list_user_grants);
 
-  const { error } = useAccountUser(username ?? '');
+  const { error } = useAccountUser(username ?? '', permissions?.view_user);
 
   const hasAssignedRoles = assignedRoles
     ? assignedRoles.entity_access.length > 0
@@ -43,7 +46,7 @@ export const UserEntities = () => {
   if (!permissions?.list_user_grants) {
     return (
       <Notice variant="error">
-        You do not have permission to view this user entities.
+        You do not have permission to view this user&apos;s entities.
       </Notice>
     );
   }
