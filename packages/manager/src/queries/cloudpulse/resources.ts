@@ -23,12 +23,13 @@ export const useResourcesQuery = (
           resource.entities?.forEach((entity: FirewallDeviceEntity) => {
             if (entity.type === 'linode' && entity.label) {
               entities[String(entity.id)] = entity.label;
-            } else if (
+            }
+            if (
               entity.type === 'linode_interface' &&
               entity.parent_entity?.label
             ) {
-              const { id, label } = entity.parent_entity;
-              entities[String(id)] = label;
+              entities[String(entity.parent_entity.id)] =
+                entity.parent_entity.label;
             }
           });
         }
