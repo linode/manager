@@ -1,3 +1,5 @@
+import type { Filter } from '@linode/api-v4';
+
 export const DASHBOARD_ID = 'dashboardId';
 
 export const PRIMARY_NODE = 'primary';
@@ -89,4 +91,28 @@ export const HELPER_TEXT: Record<string, string> = {
 export const PLACEHOLDER_TEXT: Record<string, string> = {
   [PORT]: PORTS_PLACEHOLDER_TEXT,
   [INTERFACE_ID]: INTERFACE_IDS_PLACEHOLDER_TEXT,
+};
+
+export const ORDER_BY_LABLE_ASC = {
+  '+order': 'asc',
+  '+order_by': 'label',
+};
+
+export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
+  dbaas: {
+    platform: 'rdbms-default',
+    ...ORDER_BY_LABLE_ASC,
+  },
+  linode: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  nodebalancer: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  firewall: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  netloadbalancer: {
+    ...ORDER_BY_LABLE_ASC,
+  },
 };

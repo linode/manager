@@ -9,6 +9,7 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
@@ -98,7 +99,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
   );
 
   const {
@@ -137,7 +138,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
-    return <CircleProgress />;
+    return (
+      <CircleProgress
+        sx={(theme) => ({
+          padding: theme.spacingFunction(16),
+        })}
+      />
+    );
   }
 
   if (!dashboard) {
