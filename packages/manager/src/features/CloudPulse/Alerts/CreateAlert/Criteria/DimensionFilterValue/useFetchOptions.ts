@@ -59,11 +59,15 @@ export function useFetchOptions(
         }
       : {};
 
+  const filterLabels: string[] = [
+    'parent_vm_entity_id',
+    'region_id',
+    'associated_entity_region',
+  ];
+
   // Fetch all firewall resources when dimension requires it
   const { data: firewallResources } = useResourcesQuery(
-    dimensionLabel === 'parent_vm_entity_id' ||
-      dimensionLabel === 'region_id' ||
-      dimensionLabel === 'associated_entity_region',
+    filterLabels.includes(dimensionLabel ?? ''),
     'firewall'
   );
 
@@ -84,9 +88,7 @@ export function useFetchOptions(
   const { data: linodes } = useAllLinodesQuery(
     {},
     combinedFilter,
-    (dimensionLabel === 'region_id' ||
-      dimensionLabel === 'parent_vm_entity_id' ||
-      dimensionLabel === 'associated_entity_region') &&
+    filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallResourcesIds.length > 0
   );
 
