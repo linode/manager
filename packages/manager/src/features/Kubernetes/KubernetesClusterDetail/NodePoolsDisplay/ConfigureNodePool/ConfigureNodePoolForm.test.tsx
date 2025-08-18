@@ -32,6 +32,7 @@ describe('ConfigureNodePoolForm', () => {
       <ConfigureNodePoolForm
         clusterId={0}
         clusterTier="standard"
+        clusterVersion={''}
         nodePool={nodePool}
       />
     );
@@ -57,6 +58,7 @@ describe('ConfigureNodePoolForm', () => {
       <ConfigureNodePoolForm
         clusterId={0}
         clusterTier="enterprise"
+        clusterVersion={''}
         nodePool={nodePool}
       />,
       { flags }
@@ -89,6 +91,7 @@ describe('ConfigureNodePoolForm', () => {
       <ConfigureNodePoolForm
         clusterId={0}
         clusterTier="enterprise"
+        clusterVersion={''}
         nodePool={nodePool}
       />,
       { flags }
@@ -116,6 +119,7 @@ describe('ConfigureNodePoolForm', () => {
       <ConfigureNodePoolForm
         clusterId={0}
         clusterTier="standard"
+        clusterVersion={''}
         nodePool={nodePool}
       />
     );
@@ -143,6 +147,7 @@ describe('ConfigureNodePoolForm', () => {
       <ConfigureNodePoolForm
         clusterId={clusterId}
         clusterTier="standard"
+        clusterVersion={''}
         nodePool={nodePool}
         onDone={onDone}
       />
@@ -180,6 +185,7 @@ describe('ConfigureNodePoolForm', () => {
       <ConfigureNodePoolForm
         clusterId={0}
         clusterTier="standard"
+        clusterVersion={''}
         nodePool={nodePool}
         onDone={onDone}
       />

@@ -65,6 +65,7 @@ export interface Props {
   clusterLabel: string;
   clusterRegionId: string;
   clusterTier: KubernetesTier;
+  clusterVersion: string;
   isLkeClusterRestricted: boolean;
 }
 
@@ -75,6 +76,7 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterLabel,
     clusterRegionId,
     clusterTier,
+    clusterVersion,
     isLkeClusterRestricted,
   } = props;
 
@@ -332,6 +334,7 @@ export const NodePoolsDisplay = (props: Props) => {
       <ConfigureNodePoolDrawer
         clusterId={clusterID}
         clusterTier={clusterTier}
+        clusterVersion={clusterVersion}
         nodePool={selectedPool}
         onClose={() => setIsConfigureNodePoolDrawerOpen(false)}
         open={isConfigureNodePoolDrawerOpen}

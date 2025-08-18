@@ -9,10 +9,9 @@ import {
   useNodePoolDisplayLabel,
 } from 'src/features/Kubernetes/kubeUtils';
 import { NodePoolUpdateStrategySelect } from 'src/features/Kubernetes/NodePoolUpdateStrategySelect';
-import {
-  useKubernetesTieredVersionsQuery,
-  useUpdateNodePoolMutation,
-} from 'src/queries/kubernetes';
+import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
+
+import { getNodePoolVersionOptions } from './ConfigureNodePoolDrawer.utils';
 
 import type {
   KubeNodePoolResponse,
@@ -30,6 +29,10 @@ interface Props {
    */
   clusterTier: KubernetesCluster['tier'];
   /**
+   * The version of the LKE cluster
+   */
+  clusterVersion: KubernetesCluster['k8s_version'];
+  /**
    * The Node Pool to configure
    */
   nodePool: KubeNodePoolResponse;
@@ -40,7 +43,7 @@ interface Props {
 }
 
 export const ConfigureNodePoolForm = (props: Props) => {
-  const { clusterId, onDone, nodePool, clusterTier } = props;
+  const { clusterId, onDone, nodePool, clusterTier, clusterVersion } = props;
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { enqueueSnackbar } = useSnackbar();
   const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
@@ -61,12 +64,10 @@ export const ConfigureNodePoolForm = (props: Props) => {
     nodePool.id
   );
 
-  const { data: versions } = useKubernetesTieredVersionsQuery(
-    clusterTier ?? 'standard'
-  );
-
-  const versionOptions =
-    versions?.map((version) => ({ ...version, label: version.id })) ?? [];
+  const versionOptions = getNodePoolVersionOptions({
+    clusterVersion,
+    nodePoolVersion: nodePool.k8s_version,
+  });
 
   const onSubmit = async (values: UpdateNodePoolData) => {
     try {
@@ -142,10 +143,10 @@ export const ConfigureNodePoolForm = (props: Props) => {
                     errorText={fieldState.error?.message}
                     label="Kubernetes Version"
                     noMarginTop
-                    onChange={(e, version) => field.onChange(version.id)}
+                    onChange={(e, version) => field.onChange(version.label)}
                     options={versionOptions}
                     value={versionOptions.find(
-                      (option) => option.id === field.value
+                      (option) => option.label === field.value
                     )}
                   />
                 )}
