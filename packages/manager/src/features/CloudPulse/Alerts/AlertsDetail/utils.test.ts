@@ -8,7 +8,7 @@ import type { CloudPulseServiceType } from '@linode/api-v4';
 describe('handleDimensionValueCapitalization', () => {
   const serviceType: CloudPulseServiceType = 'linode';
 
-  it('should ransform a single value', () => {
+  it('should transform a single value', () => {
     const value = 'ipv4';
     const expected = transformDimensionValue(serviceType, 'protocol', value);
 
