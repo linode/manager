@@ -8,6 +8,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
       limitsEvolution: {
         enabled: true,
       },
+      iamRbacPrimaryNavChanges: false,
     }).as('getFeatureFlags');
   });
   it('can navigate directly to Quotas page', () => {
@@ -50,6 +51,7 @@ describe('Quotas inaccessible when limitsEvolution feature flag disabled', () =>
       limitsEvolution: {
         enabled: false,
       },
+      iamRbacPrimaryNavChanges: false,
     }).as('getFeatureFlags');
   });
   it('Quotas page is inaccessible', () => {
