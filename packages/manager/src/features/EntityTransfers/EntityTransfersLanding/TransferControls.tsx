@@ -1,6 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { ConfirmTransferDialog } from './ConfirmTransferDialog';
 import {
   StyledLabelWrapperGrid,
@@ -22,6 +24,7 @@ interface Props {
 export const TransferControls = React.memo((props: Props) => {
   const { permissions } = props;
 
+  const flags = useFlags();
   const [token, setToken] = React.useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 
@@ -38,7 +41,11 @@ export const TransferControls = React.memo((props: Props) => {
   };
 
   const handleCreateTransfer = () =>
-    navigate({ to: '/account/service-transfers/create' });
+    navigate({
+      to: flags?.iamRbacPrimaryNavChanges
+        ? '/service-transfers/create'
+        : '/account/service-transfers/create',
+    });
 
   return (
     <>
