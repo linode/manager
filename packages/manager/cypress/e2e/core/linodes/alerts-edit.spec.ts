@@ -383,7 +383,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('in default beta mode, edits to legacy alerts trigger confirmation modal', function () {
+  it('in default beta mode, edits to beta alerts do not trigger confirmation modal', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
