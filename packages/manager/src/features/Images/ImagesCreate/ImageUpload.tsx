@@ -27,8 +27,6 @@ import { useDispatch } from 'react-redux';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
@@ -125,7 +123,7 @@ export const ImageUpload = () => {
         recordImageAnalytics('success', file);
 
         // Force a re-render so that `hasPendingUpload` is false when navigating away
-        // from the upload page. We need this to make the <Prompt /> work as expected.
+        // from the upload page. We need this to make the navigation prompt work as expected.
         flushSync(() => {
           dispatch(setPendingUpload(false));
         });
@@ -165,21 +163,6 @@ export const ImageUpload = () => {
   const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
-
-  // Called after a user confirms they want to navigate to another part of
-  // Cloud during a pending upload. When we have refresh tokens this won't be
-  // necessary; the user will be able to navigate to other components and we
-  // will show the upload progress in the lower part of the screen. For now we
-  // box the user on this page so we can handle token expiry (semi)-gracefully.
-  const onConfirm = (nextLocation: string) => {
-    if (cancelRef.current) {
-      cancelRef.current();
-    }
-
-    dispatch(setPendingUpload(false));
-
-    navigate({ search: () => ({}), to: nextLocation });
-  };
 
   const { proceed, reset, status } = useBlocker({
     enableBeforeUnload: hasPendingUpload,
@@ -433,48 +416,34 @@ export const ImageUpload = () => {
         onClose={() => setLinodeCLIModalOpen(false)}
       />
 
-      {/* Use Prompt for now until Link is coupled with Tanstack router */}
-      <Prompt
-        confirmWhenLeaving={true}
-        onConfirm={onConfirm}
-        when={hasPendingUpload}
-      >
-        {({ handleCancel, handleConfirm, isModalOpen }) => {
-          return (
-            <ConfirmationDialog
-              actions={
-                <ActionsPanel
-                  primaryButtonProps={{
-                    label: 'Leave Page',
-                    onClick: () => {
-                      handleProceedNavigation();
-                      handleConfirm();
-                    },
-                  }}
-                  secondaryButtonProps={{
-                    label: 'Cancel',
-                    onClick: () => {
-                      handleCancelNavigation();
-                      handleCancel();
-                    },
-                  }}
-                />
-              }
-              onClose={() => {
+      <ConfirmationDialog
+        actions={
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Leave Page',
+              onClick: () => {
+                handleProceedNavigation();
+              },
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: () => {
                 handleCancelNavigation();
-                handleCancel();
-              }}
-              open={status === 'blocked' || isModalOpen}
-              title="Leave this page?"
-            >
-              <Typography variant="subtitle1">
-                An upload is in progress. If you navigate away from this page,
-                the upload will be canceled.
-              </Typography>
-            </ConfirmationDialog>
-          );
+              },
+            }}
+          />
+        }
+        onClose={() => {
+          handleCancelNavigation();
         }}
-      </Prompt>
+        open={status === 'blocked'}
+        title="Leave this page?"
+      >
+        <Typography variant="subtitle1">
+          An upload is in progress. If you navigate away from this page, the
+          upload will be canceled.
+        </Typography>
+      </ConfirmationDialog>
     </FormProvider>
   );
 };

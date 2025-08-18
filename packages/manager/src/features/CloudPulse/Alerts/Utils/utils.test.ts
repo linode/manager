@@ -16,6 +16,7 @@ import {
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
+  transformDimensionValue,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -28,7 +29,6 @@ import type {
   AclpAlertServiceTypeConfig,
   AclpServices,
 } from 'src/featureFlags';
-
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
   services.forEach((service) => {
@@ -418,5 +418,27 @@ describe('alertsFromEnabledServices', () => {
       },
     });
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('transformDimensionValue', () => {
+  it('should apply service-specific transformations', () => {
+    expect(transformDimensionValue('linode', 'type', '')).toBe('');
+    expect(transformDimensionValue('linode', 'operation', 'read')).toBe('Read');
+    expect(transformDimensionValue('dbaas', 'node_type', 'primary')).toBe(
+      'Primary'
+    );
+    expect(
+      transformDimensionValue('firewall', 'interface_type', 'public')
+    ).toBe('PUBLIC');
+    expect(transformDimensionValue('nodebalancer', 'protocol', 'http')).toBe(
+      'HTTP'
+    );
+  });
+
+  it('should fallback to capitalize for unknown dimensions', () => {
+    expect(
+      transformDimensionValue('linode', 'unknown_dimension', 'test_value')
+    ).toBe('Test_value');
   });
 });

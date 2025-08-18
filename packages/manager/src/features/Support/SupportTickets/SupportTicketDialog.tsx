@@ -12,12 +12,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
-import { useLocation as useLocationTanstack } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation as useLocationRouterDom } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -51,7 +49,6 @@ import type {
   TicketSeverity,
 } from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-import type { SupportState } from 'src/routes/support';
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -107,12 +104,23 @@ export interface SupportTicketDialogProps {
 
 export interface SupportTicketFormFields {
   description: string;
+  entity?: EntityForTicketDetails;
   entityId: string;
   entityInputValue: string;
   entityType: EntityType;
+  formPayloadValues?: FormPayloadValues;
   selectedSeverity: TicketSeverity | undefined;
   summary: string;
   ticketType: TicketType;
+  title?: string;
+}
+
+export interface SupportTicketLocationState {
+  description?: SupportTicketDialogProps['prefilledDescription'];
+  entity?: SupportTicketDialogProps['prefilledEntity'];
+  formPayloadValues?: SupportTicketFormFields['formPayloadValues'];
+  ticketType?: SupportTicketDialogProps['prefilledTicketType'];
+  title?: SupportTicketDialogProps['prefilledTitle'];
 }
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -140,23 +148,20 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const locationRouterDom = useLocationRouterDom<any>();
-  const locationTanstack = useLocationTanstack();
-  const locationTanstackState = locationTanstack.state as SupportState;
-  const stateParams =
-    locationRouterDom.state ?? locationTanstackState.supportTicketFormFields;
+  const location = useLocation();
+  const locationState = location.state as SupportTicketLocationState;
 
   // Collect prefilled data from props or Link parameters.
-  const _prefilledDescription: string =
-    prefilledDescription ?? stateParams?.description ?? undefined;
-  const _prefilledEntity: EntityForTicketDetails =
-    prefilledEntity ?? stateParams?.entity ?? undefined;
-  const _prefilledTitle: string =
-    prefilledTitle ?? stateParams?.title ?? undefined;
-  const prefilledFormPayloadValues: FormPayloadValues =
-    stateParams?.formPayloadValues ?? undefined;
-  const _prefilledTicketType: TicketType =
-    prefilledTicketType ?? stateParams?.ticketType ?? undefined;
+  const _prefilledDescription: string | undefined =
+    prefilledDescription ?? locationState?.description ?? undefined;
+  const _prefilledEntity: EntityForTicketDetails | undefined =
+    prefilledEntity ?? locationState?.entity ?? undefined;
+  const _prefilledTitle: string | undefined =
+    prefilledTitle ?? locationState?.title ?? undefined;
+  const prefilledFormPayloadValues: FormPayloadValues | undefined =
+    locationState?.formPayloadValues ?? undefined;
+  const _prefilledTicketType: TicketType | undefined =
+    prefilledTicketType ?? locationState?.ticketType ?? undefined;
 
   // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
   const newPrefilledTitle = _prefilledTitle

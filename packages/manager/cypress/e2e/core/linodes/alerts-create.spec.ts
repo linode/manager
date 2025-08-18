@@ -459,7 +459,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 });
 
-describe('aclpBetaServices feature flag disabled', function () {
+describe('aclpServices feature flag disabled', function () {
   it('Alerts not present when feature flag disabled', function () {
     const mockEnabledRegion = regionFactory.build({
       capabilities: ['Linodes'],

@@ -81,6 +81,11 @@ export interface CloudPulseWidgetProperties {
   isJweTokenFetching: boolean;
 
   /**
+   * Selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
    * List of resources available of selected service type
    */
   resources: CloudPulseResources[];
@@ -150,6 +155,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     timeStamp,
     unit,
     widget: widgetProp,
+    linodeRegion,
   } = props;
 
   const timezone =
@@ -245,6 +251,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
+        linodeRegion,
       }),
       filters, // any additional dimension filters will be constructed and passed here
     },
@@ -269,6 +276,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       status,
       unit,
+      serviceType,
     });
 
     data = generatedData.dimensions;
@@ -306,23 +314,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }}
           >
             <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
-              <Stack alignItems="center" direction="row">
-                {convertStringToCamelCasesWithSpaces(widget.label)} (
-                {scaledWidgetUnit.current}
-                {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
-                  ? '/s'
-                  : ''}
-                ){/* TODO: Add tooltip */}
-                {/* <TooltipIcon
-                  status="help"
-                  sxTooltipIcon={{
-                    '& .MuiSvgIcon-root': {
-                      fill: theme.color.headline + '!important',
-                    },
-                  }}
-                  text="Some description"
-                /> */}
-              </Stack>
+              {convertStringToCamelCasesWithSpaces(widget.label)} (
+              {scaledWidgetUnit.current}
+              {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
+                ? '/s'
+                : ''}
+              )
             </Typography>
             <Stack
               direction={{ sm: 'row' }}

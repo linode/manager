@@ -1,3 +1,5 @@
+import type { Filter } from '@linode/api-v4';
+
 export const DASHBOARD_ID = 'dashboardId';
 
 export const PRIMARY_NODE = 'primary';
@@ -5,6 +7,8 @@ export const PRIMARY_NODE = 'primary';
 export const SECONDARY_NODE = 'secondary';
 
 export const REGION = 'region';
+
+export const LINODE_REGION = 'associated_entity_region';
 
 export const RESOURCES = 'resources';
 
@@ -88,4 +92,28 @@ export const PLACEHOLDER_TEXT: Record<string, string> = {
 export const NO_REGION_MESSAGE: Record<string, string> = {
   dbaas: 'No database clusters configured in any regions.',
   linode: 'No linodes configured in any regions.',
+};
+
+export const ORDER_BY_LABLE_ASC = {
+  '+order': 'asc',
+  '+order_by': 'label',
+};
+
+export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
+  dbaas: {
+    platform: 'rdbms-default',
+    ...ORDER_BY_LABLE_ASC,
+  },
+  linode: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  nodebalancer: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  firewall: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  netloadbalancer: {
+    ...ORDER_BY_LABLE_ASC,
+  },
 };

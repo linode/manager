@@ -145,6 +145,7 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
+    serviceType,
   });
 
   // Destructure metrics data from the first legend row

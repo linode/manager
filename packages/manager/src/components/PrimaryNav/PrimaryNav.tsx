@@ -4,12 +4,12 @@ import {
   usePreferences,
 } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
+import CoreUser from 'src/assets/icons/entityIcons/coreuser.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
-import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
 import Networking from 'src/assets/icons/entityIcons/networking.svg';
 import Storage from 'src/assets/icons/entityIcons/storage.svg';
@@ -35,6 +35,7 @@ export type NavEntity =
   | 'Account'
   | 'Alerts'
   | 'Betas'
+  | 'Billing'
   | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
@@ -46,7 +47,9 @@ export type NavEntity =
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
+  | 'Login History'
   | 'Longview'
+  | 'Maintenance'
   | 'Managed'
   | 'Marketplace'
   | 'Metrics'
@@ -54,11 +57,15 @@ export type NavEntity =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
+  | 'Quotas'
+  | 'Service Transfers'
+  | 'Settings'
   | 'StackScripts'
   | 'Volumes'
   | 'VPC';
 
 export type ProductFamily =
+  | 'Administration'
   | 'Compute'
   | 'Databases'
   | 'Monitor'
@@ -98,6 +105,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.aclpAlerting?.recentActivity ||
       flags.aclpAlerting?.notificationChannels);
 
+  const isIAMRbacPrimaryNavChangesEnabled = flags?.iamRbacPrimaryNavChanges;
+
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
@@ -113,169 +122,194 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const productFamilyLinkGroups: ProductFamilyLinkGroup<PrimaryLinkType[]>[] =
     React.useMemo(
-      () => [
-        {
-          links: [],
-        },
-        {
-          icon: <Compute />,
-          links: [
-            {
-              activeLinks: [
-                '/managed',
-                '/managed/summary',
-                '/managed/monitors',
-                '/managed/ssh-access',
-                '/managed/credentials',
-                '/managed/contacts',
-              ],
-              display: 'Managed',
-              hide: !isManaged,
-              href: '/managed',
-            },
-            {
-              activeLinks: ['/linodes', '/linodes/create'],
-              display: 'Linodes',
-              href: '/linodes',
-            },
-            {
-              activeLinks: [
-                '/images/create/create-image',
-                '/images/create/upload-image',
-              ],
-              display: 'Images',
-              href: '/images',
-            },
-            {
-              activeLinks: ['/kubernetes/create'],
-              display: 'Kubernetes',
-              href: '/kubernetes/clusters',
-            },
-            {
-              display: 'StackScripts',
-              href: '/stackscripts',
-            },
-            {
-              betaChipClassName: 'beta-chip-placement-groups',
-              display: 'Placement Groups',
-              hide: !isPlacementGroupsEnabled,
-              href: '/placement-groups',
-            },
-            {
-              attr: { 'data-qa-one-click-nav-btn': true },
-              display: 'Marketplace',
-              href: '/linodes/create/marketplace',
-            },
-          ],
-          name: 'Compute',
-        },
-        {
-          icon: <Storage />,
-          links: [
-            {
-              activeLinks: [
-                '/object-storage/buckets',
-                '/object-storage/access-keys',
-              ],
-              display: 'Object Storage',
-              href: '/object-storage/buckets',
-            },
-            {
-              display: 'Volumes',
-              href: '/volumes',
-            },
-          ],
-          name: 'Storage',
-        },
-        {
-          icon: <Networking />,
-          links: [
-            {
-              display: 'VPC',
-              href: '/vpcs',
-            },
-            {
-              display: 'Firewalls',
-              href: '/firewalls',
-            },
-            {
-              display: 'NodeBalancers',
-              href: '/nodebalancers',
-            },
-            {
-              display: 'Domains',
-              href: '/domains',
-            },
-          ],
-          name: 'Networking',
-        },
-        {
-          icon: <Database />,
-          links: [
-            {
-              display: 'Databases',
-              hide: !isDatabasesEnabled,
-              href: '/databases',
-              isBeta: isDatabasesV2Beta,
-            },
-          ],
-          name: 'Databases',
-        },
-        {
-          icon: <Monitor />,
-          links: [
-            {
-              display: 'Metrics',
-              hide: !isACLPEnabled,
-              href: '/metrics',
-              isBeta: flags.aclp?.beta,
-            },
-            {
-              display: 'Alerts',
-              hide: !isAlertsEnabled,
-              href: '/alerts',
-              isBeta: flags.aclp?.beta,
-            },
-            {
-              display: 'Longview',
-              href: '/longview',
-            },
-            {
-              display: 'DataStream',
-              hide: !flags.aclpLogs?.enabled,
-              href: '/datastream',
-              isBeta: flags.aclpLogs?.beta,
-            },
-          ],
-          name: 'Monitor',
-        },
-        {
-          icon: <More />,
-          links: [
-            {
-              display: 'Betas',
-              hide: !flags.selfServeBetas,
-              href: '/betas',
-            },
-            {
-              display: 'Identity & Access',
-              hide: !isIAMEnabled,
-              href: '/iam',
-              icon: <IAM />,
-              isBeta: isIAMBeta,
-            },
-            {
-              display: 'Account',
-              href: '/account',
-            },
-            {
-              display: 'Help & Support',
-              href: '/support',
-            },
-          ],
-          name: 'More',
-        },
-      ],
+      () => {
+        const groups: ProductFamilyLinkGroup<PrimaryLinkType[]>[] = [
+          {
+            links: [],
+          },
+          {
+            icon: <Compute />,
+            links: [
+              {
+                display: 'Managed',
+                hide: !isManaged,
+                to: '/managed',
+              },
+              {
+                display: 'Linodes',
+                to: '/linodes',
+              },
+              {
+                display: 'Images',
+                to: '/images',
+              },
+              {
+                display: 'Kubernetes',
+                to: '/kubernetes/clusters',
+              },
+              {
+                display: 'StackScripts',
+                to: '/stackscripts',
+              },
+              {
+                betaChipClassName: 'beta-chip-placement-groups',
+                display: 'Placement Groups',
+                hide: !isPlacementGroupsEnabled,
+                to: '/placement-groups',
+              },
+              {
+                attr: { 'data-qa-one-click-nav-btn': true },
+                display: 'Marketplace',
+                to: '/linodes/create/marketplace',
+              },
+            ],
+            name: 'Compute',
+          },
+          {
+            icon: <Storage />,
+            links: [
+              {
+                display: 'Object Storage',
+                to: '/object-storage/buckets',
+              },
+              {
+                display: 'Volumes',
+                to: '/volumes',
+              },
+            ],
+            name: 'Storage',
+          },
+          {
+            icon: <Networking />,
+            links: [
+              {
+                display: 'VPC',
+                to: '/vpcs',
+              },
+              {
+                display: 'Firewalls',
+                to: '/firewalls',
+              },
+              {
+                display: 'NodeBalancers',
+                to: '/nodebalancers',
+              },
+              {
+                display: 'Domains',
+                to: '/domains',
+              },
+            ],
+            name: 'Networking',
+          },
+          {
+            icon: <Database />,
+            links: [
+              {
+                display: 'Databases',
+                hide: !isDatabasesEnabled,
+                to: '/databases',
+                isBeta: isDatabasesV2Beta,
+              },
+            ],
+            name: 'Databases',
+          },
+          {
+            icon: <Monitor />,
+            links: [
+              {
+                display: 'Metrics',
+                hide: !isACLPEnabled,
+                to: '/metrics',
+                isBeta: flags.aclp?.beta,
+              },
+              {
+                display: 'Alerts',
+                hide: !isAlertsEnabled,
+                to: '/alerts',
+                isBeta: flags.aclp?.beta,
+              },
+              {
+                display: 'Longview',
+                to: '/longview',
+              },
+              {
+                display: 'DataStream',
+                hide: !flags.aclpLogs?.enabled,
+                to: '/datastream',
+                isBeta: flags.aclpLogs?.beta,
+              },
+            ],
+            name: 'Monitor',
+          },
+          {
+            icon: <More />,
+            links: [
+              {
+                display: 'Betas',
+                hide: !flags.selfServeBetas,
+                to: '/betas',
+              },
+              {
+                display: 'Identity & Access',
+                hide: !isIAMEnabled || isIAMRbacPrimaryNavChangesEnabled,
+                to: '/iam',
+                isBeta: isIAMBeta,
+              },
+              {
+                display: 'Account',
+                hide: isIAMRbacPrimaryNavChangesEnabled,
+                to: '/account',
+              },
+              {
+                display: 'Help & Support',
+                to: '/support',
+              },
+            ],
+            name: 'More',
+          },
+        ];
+
+        if (isIAMRbacPrimaryNavChangesEnabled) {
+          groups.splice(groups.length - 1, 0, {
+            icon: <CoreUser />,
+            links: [
+              {
+                display: 'Billing',
+                to: '/account/billing', // TODO: replace with '/billing' when flat route is added
+              },
+              {
+                display: 'Identity & Access',
+                hide: !isIAMEnabled,
+                to: '/iam',
+                isBeta: isIAMBeta,
+              },
+              {
+                display: 'Quotas',
+                to: '/account/quotas', // TODO: replace with '/quotas' when flat route is added
+              },
+              {
+                display: 'Login History',
+                to: '/account/login-history', // TODO: replace with '/login-history' when flat route is added
+              },
+              {
+                display: 'Service Transfers',
+                to: '/account/service-transfers', // TODO: replace with '/service-transfers' when flat route is added
+              },
+              {
+                display: 'Maintenance',
+                to: '/account/maintenance', // TODO: replace with '/maintenance' when flat route is added
+              },
+              {
+                display: 'Settings',
+                to: '/account/settings', // TODO: replace with '/settings' when flat route is added
+              },
+            ],
+            name: 'Administration',
+          });
+        }
+
+        return groups;
+      },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         isDatabasesEnabled,
@@ -285,6 +319,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isACLPEnabled,
         isIAMBeta,
         isIAMEnabled,
+        isIAMRbacPrimaryNavChangesEnabled,
       ]
     );
 
@@ -364,12 +399,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       const filteredLinks = group.links.filter((link) => !link.hide);
 
       return filteredLinks.some((link) =>
-        linkIsActive(
-          link.href,
-          location.search,
-          location.pathname,
-          link.activeLinks
-        )
+        linkIsActive(location.pathname, link.to)
       );
     });
 
@@ -433,12 +463,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
           const PrimaryLinks = filteredLinks.map((link) => {
             const isActiveLink = Boolean(
-              linkIsActive(
-                link.href,
-                location.search,
-                location.pathname,
-                link.activeLinks
-              )
+              linkIsActive(location.pathname, link.to)
             );
 
             if (isActiveLink) {

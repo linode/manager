@@ -16,6 +16,7 @@ import {
   ALERTS_BETA_MODE_BUTTON_TEXT,
   ALERTS_LEGACY_MODE_BANNER_TEXT,
   ALERTS_LEGACY_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_PROMPT,
 } from 'src/features/Linodes/constants';
 
 const MOCK_LINODE_ID = 2;
@@ -393,23 +394,12 @@ describe('region enables alerts', function () {
           .should('be.enabled')
           .click();
       });
-    // TODO: this test passes but modal behavior may change when properly implemented in api (M3-10195)
-    // ui.dialog
-    // .findByTitle('Are you sure you want to save legacy Alerts?')
-    // .should('be.visible')
-    // .within(() => {
-    //   ui.button.findByTitle('Confirm').should('be.visible')
-    //   .click();
-    // });
-    // TODO: this test passes but modal behavior will change when properly implemented in api (M3-10195)
-    // TODO: this test passes but modal behavior may change when properly implemented in api (M3-10195)
-    // ui.dialog
-    //   .findByTitle('Save Alerts?')
-    //   .should('be.visible')
-    //   .within(() => {
-    //     ui.button.findByTitle('Save').should('be.visible')
-    //     .click();
-    //   });
+    ui.dialog
+      .findByTitle(ALERTS_LEGACY_PROMPT)
+      .should('be.visible')
+      .within(() => {
+        ui.button.findByTitle('Confirm').should('be.visible').click();
+      });
   });
 });
 
