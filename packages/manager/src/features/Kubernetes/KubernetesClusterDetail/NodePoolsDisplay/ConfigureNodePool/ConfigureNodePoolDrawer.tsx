@@ -17,7 +17,7 @@ interface Props {
 
 export const ConfigureNodePoolDrawer = (props: Props) => {
   const { nodePool, onClose, clusterId, open, clusterTier } = props;
-  const nodePoolLabel = useNodePoolDisplayLabel(nodePool);
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
 
   return (
     <Drawer

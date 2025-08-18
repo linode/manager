@@ -69,7 +69,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
   } = props;
   const { classes } = useStyles();
 
-  const nodePoolLabel = useNodePoolDisplayLabel(nodePool);
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
 
   const { data: planType, isLoading: isLoadingTypes } = useTypeQuery(
     nodePool?.type ?? '',

@@ -43,7 +43,9 @@ export const ConfigureNodePoolForm = (props: Props) => {
   const { clusterId, onDone, nodePool, clusterTier } = props;
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { enqueueSnackbar } = useSnackbar();
-  const labelPlaceholder = useNodePoolDisplayLabel(nodePool, true);
+  const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
+    ignoreNodePoolsLabel: true,
+  });
 
   const form = useForm<UpdateNodePoolData>({
     defaultValues: {

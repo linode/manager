@@ -377,6 +377,18 @@ export const useKubernetesBetaEndpoint = () => {
   };
 };
 
+interface Options {
+  /**
+   * If set to `true`, the hook will only return the node pool's type's `id` or `label`
+   * and never it's actual `label`
+   */
+  ignoreNodePoolsLabel?: boolean;
+  /**
+   * Appends a suffix to the Node Pool's type `id` or `label` if it is returned
+   */
+  suffix?: string;
+}
+
 /**
  * Given a Node Pool, this hook will return the Node Pool's display label.
  *
@@ -388,7 +400,7 @@ export const useKubernetesBetaEndpoint = () => {
  */
 export const useNodePoolDisplayLabel = (
   nodePool: Pick<KubeNodePoolResponse, 'label' | 'type'> | undefined,
-  ignoreNodePoolsLabel = false
+  options?: Options
 ) => {
   const { data: type } = useTypeQuery(
     nodePool?.type ?? '',
@@ -399,16 +411,26 @@ export const useNodePoolDisplayLabel = (
     return '';
   }
 
-  if (nodePool.label && !ignoreNodePoolsLabel) {
-    // If the Node Pool has an explict label, return it.
+  // If the Node Pool has an explict label, return it.
+  if (nodePool.label && !options?.ignoreNodePoolsLabel) {
     return nodePool.label;
   }
 
+  // If the Node Pool's type is loaded, return that type's formatted label.
   if (type) {
-    // If the Node Pool's type is loaded, return that type's formatted label.
-    return formatStorageUnits(type.label);
+    const typeLabel = formatStorageUnits(type.label);
+
+    if (options?.suffix) {
+      return `${typeLabel} ${options.suffix}`;
+    }
+
+    return typeLabel;
   }
 
   // As a last resort, fallback to the Node Pool's type ID.
+  if (options?.suffix) {
+    return `${nodePool.type} ${options.suffix}`;
+  }
+
   return nodePool.type;
 };

@@ -87,7 +87,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     open,
   } = props;
   const autoscaler = nodePool?.autoscaler;
-  const nodePoolLabel = useNodePoolDisplayLabel(nodePool);
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 

@@ -36,7 +36,7 @@ interface LabelsAndTaintsFormFields {
 export const LabelAndTaintDrawer = (props: Props) => {
   const { clusterId, nodePool, onClose, open } = props;
 
-  const nodePoolLabel = useNodePoolDisplayLabel(nodePool);
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
 
   const [shouldShowLabelForm, setShouldShowLabelForm] = React.useState(false);
   const [shouldShowTaintForm, setShouldShowTaintForm] = React.useState(false);
