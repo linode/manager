@@ -114,6 +114,11 @@ interface MetricRequestProps {
   entityIds: string[];
 
   /**
+   * selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
    * list of CloudPulse resources available
    */
   resources: CloudPulseResources[];
@@ -299,7 +304,7 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget } = props;
+  const { duration, entityIds, resources, widget, linodeRegion } = props;
   const preset = duration.preset;
 
   return {
@@ -326,6 +331,7 @@ export const getCloudPulseMetricRequest = (
             unit: widget.time_granularity.unit,
             value: widget.time_granularity.value,
           },
+    associated_entity_region: linodeRegion,
   };
 };
 
