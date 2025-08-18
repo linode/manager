@@ -253,15 +253,6 @@ export const useServiceAlertsMutation = (
       return updateServiceAlerts(serviceType, entityId, payload);
     },
     onSuccess() {
-      const allAlerts = queryClient.getQueryData<Alert[]>(
-        queryFactory.alerts._ctx.all().queryKey
-      );
-
-      const entityAlertIds =
-        allAlerts
-          ?.filter((alert) => alert.entity_ids.includes(entityId))
-          .map((alert) => alert.id) || [];
-
       queryClient.invalidateQueries({
         queryKey: queryFactory.resources(serviceType).queryKey,
       });
@@ -271,16 +262,6 @@ export const useServiceAlertsMutation = (
       queryClient.invalidateQueries({
         queryKey:
           queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
-      });
-
-      // Invalidate all alerts associated with this entityId
-      entityAlertIds.forEach((alertId) => {
-        queryClient.invalidateQueries({
-          queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
-            serviceType,
-            String(alertId)
-          ).queryKey,
-        });
       });
     },
   });
