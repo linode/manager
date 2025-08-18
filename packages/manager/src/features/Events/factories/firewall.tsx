@@ -6,9 +6,10 @@ import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/co
 import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
+import type { Event } from '@linode/api-v4';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
-const entityPrefix = (e: any) => {
+const entityPrefix = (e: Event) => {
   const type = e?.entity?.type ? capitalize(e.entity.type) : null;
 
   return type ? (
