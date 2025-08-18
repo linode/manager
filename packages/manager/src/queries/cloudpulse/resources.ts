@@ -25,12 +25,10 @@ export const useResourcesQuery = (
               entities[String(entity.id)] = entity.label;
             } else if (
               entity.type === 'linode_interface' &&
-              entity.parent_entity
+              entity.parent_entity?.label
             ) {
               const { id, label } = entity.parent_entity;
-              if (label) {
-                entities[String(id)] = label;
-              }
+              entities[String(id)] = label;
             }
           });
         }
