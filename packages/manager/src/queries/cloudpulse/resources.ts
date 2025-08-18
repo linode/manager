@@ -24,6 +24,12 @@ export const useResourcesQuery = (
             (entity: { id: number; label: string; type: string }) => {
               if (entity.type === 'linode') {
                 entities[String(entity.id)] = entity.label;
+              } else if (entity.type === 'linode_interface') {
+                resource.entities?.parent_entity?.forEach(
+                  (parent: { id: number; label: string }) => {
+                    entities[String(parent.id)] = parent.label;
+                  }
+                );
               }
             }
           );
