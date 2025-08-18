@@ -29,3 +29,6 @@ export const ALERTS_BETA_MODE_BUTTON_TEXT = 'Switch to legacy Alerts';
 
 export const ALERTS_LEGACY_PROMPT =
   'Are you sure you want to save legacy Alerts?';
+
+export const ALERTS_BETA_PROMPT =
+  'Are you sure you want to save (Beta) Alerts?';
