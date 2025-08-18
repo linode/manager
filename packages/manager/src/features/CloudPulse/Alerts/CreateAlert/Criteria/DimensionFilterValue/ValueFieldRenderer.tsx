@@ -18,7 +18,7 @@ import type {
 
 interface ValueFieldRendererProps {
   /**
-   * The dimension_label extracted from the Dimension Data.
+   * The dimension label extracted from the Dimension Data.
    */
   dimensionLabel: null | string;
 
