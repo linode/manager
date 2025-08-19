@@ -103,8 +103,9 @@ export const getTagsProperties = (
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
   handleRegionChange: (
+    filterKey: string,
     region: string | undefined,
-    labels: [],
+    labels: string[],
     savePref?: boolean
   ) => void
 ): CloudPulseRegionSelectProps => {
@@ -118,8 +119,9 @@ export const getRegionProperties = (
     shouldDisable,
   } = props;
   return {
-    defaultValue: preferences?.[REGION],
+    defaultValue: preferences?.[filterKey],
     handleRegionChange,
+    filterKey,
     label,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
@@ -132,6 +134,7 @@ export const getRegionProperties = (
         dashboard
       ),
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+    selectedEntities: (dependentFilters?.[RESOURCE_ID] ?? []) as string[],
   };
 };
 
@@ -634,11 +637,11 @@ export const getFilters = (
   return FILTER_CONFIG.get(dashboard.id)?.filters.filter((config) =>
     isServiceAnalyticsIntegration
       ? config.configuration.neededInViews.includes(
-        CloudPulseAvailableViews.service
-      )
+          CloudPulseAvailableViews.service
+        )
       : config.configuration.neededInViews.includes(
-        CloudPulseAvailableViews.central
-      )
+          CloudPulseAvailableViews.central
+        )
   );
 };
 
