@@ -27,8 +27,8 @@ import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
 import type { CreateClusterFormValues } from '../CreateCluster/CreateCluster';
 import type {
+  CreateNodePoolData,
   KubernetesTier,
-  NodePoolUpdateStrategy,
   Region,
 } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
@@ -43,12 +43,6 @@ export interface Props {
   poolIndex?: number;
   selectedRegion: Region | undefined;
   selectedTier: KubernetesTier;
-}
-
-interface VersionUpdateFormFields {
-  firewall_id: number | undefined;
-  nodeCount: number;
-  update_strategy: NodePoolUpdateStrategy | undefined;
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
@@ -75,13 +69,14 @@ export const NodePoolConfigDrawer = (props: Props) => {
   });
 
   // Manage node pool options within this drawer form.
-  const { control, formState, setValue, ...form } =
-    useForm<VersionUpdateFormFields>({
+  const { control, formState, setValue, ...form } = useForm<CreateNodePoolData>(
+    {
       defaultValues: {
-        nodeCount: DEFAULT_PLAN_COUNT,
+        count: DEFAULT_PLAN_COUNT,
       },
       shouldUnregister: true, // For conditionally defined fields (e.g. update_strategy, firewall_id)
-    });
+    }
+  );
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);
   const planType = typesQuery[0]?.data
@@ -89,9 +84,9 @@ export const NodePoolConfigDrawer = (props: Props) => {
     : undefined;
 
   // Keep track of the node count to display an accurate price.
-  const nodeCountWatcher = useWatch({ control, name: 'nodeCount' });
+  const nodeCountWatcher = useWatch({ control, name: 'count' });
   const updatedCount =
-    nodeCountWatcher ?? form.getValues('nodeCount') ?? DEFAULT_PLAN_COUNT;
+    nodeCountWatcher ?? form.getValues('count') ?? DEFAULT_PLAN_COUNT;
   const pricePerNode = getLinodeRegionPrice(
     planType,
     selectedRegion?.toString()
@@ -115,25 +110,25 @@ export const NodePoolConfigDrawer = (props: Props) => {
 
     // If we're in edit mode, set the existing config values on the pool.
     if (!isAddMode && poolIndex !== undefined) {
-      setValue('nodeCount', _nodePools[poolIndex]?.count);
+      setValue('count', _nodePools[poolIndex]?.count);
       setValue('update_strategy', _nodePools[poolIndex]?.update_strategy);
       setValue('firewall_id', _nodePools[poolIndex]?.firewall_id);
     }
   }, [planId, open, selectedTier, setValue, isAddMode, poolIndex, _nodePools]);
 
-  const onSubmit = async (values: VersionUpdateFormFields) => {
+  const onSubmit = async (values: CreateNodePoolData) => {
     try {
       // If there's a pool index, the drawer is in edit mode. Else, it's in add mode.
       if (poolIndex !== undefined) {
         update(poolIndex, {
           ..._nodePools[poolIndex],
-          count: values.nodeCount,
+          count: values.count,
           update_strategy: values.update_strategy,
           firewall_id: values.firewall_id,
         });
       } else if (planId) {
         append({
-          count: values.nodeCount,
+          count: values.count,
           type: planId,
           update_strategy: values.update_strategy,
           firewall_id: values.firewall_id,
@@ -186,7 +181,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
           <Box marginBottom={4} marginTop={2}>
             <Controller
               control={control}
-              name="nodeCount"
+              name="count"
               render={({ field }) => (
                 <EnhancedNumberInput
                   inputLabel={`edit-quantity-${planId}`}
