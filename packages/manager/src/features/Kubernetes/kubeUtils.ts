@@ -411,8 +411,8 @@ export const useNodePoolDisplayLabel = (
     return '';
   }
 
+  // @TODO uncomment this when it's time to surface Node Pool labels in the UI (ECE-353)
   // If the Node Pool has an explict label, return it.
-  // @todo uncomment this when it's time to surface Node Pool labels in the UI
   // if (nodePool.label && !options?.ignoreNodePoolsLabel) {
   //   return nodePool.label;
   // }

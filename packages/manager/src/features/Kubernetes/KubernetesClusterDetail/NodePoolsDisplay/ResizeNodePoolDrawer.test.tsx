@@ -29,7 +29,7 @@ const props: Props = {
 };
 
 describe('ResizeNodePoolDrawer', () => {
-  // @todo enable this test when we begin surfacing Node Pool `label` in the UI
+  // @TODO enable this test when we begin surfacing Node Pool `label` in the UI (ECE-353)
   it.skip("should render a title containing the Node Pool's label when the node pool has a label", async () => {
     const nodePool = nodePoolFactory.build({ label: 'my-mock-node-pool-1' });
 

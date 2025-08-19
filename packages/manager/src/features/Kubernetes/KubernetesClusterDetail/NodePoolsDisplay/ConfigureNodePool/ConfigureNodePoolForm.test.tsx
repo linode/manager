@@ -20,7 +20,7 @@ const flags = {
 };
 
 describe('ConfigureNodePoolForm', () => {
-  // @todo Enable this test when we allow users to edit their Node Pool's label in the UI
+  // @todo Enable this test when we allow users to edit their Node Pool's label in the UI (ECE-353)
   it.skip("renders a label field containing the Node Pool's label", () => {
     const nodePool = nodePoolFactory.build({ label: 'my-node-pool-1' });
 
@@ -40,7 +40,7 @@ describe('ConfigureNodePoolForm', () => {
     expect(labelTextField).toHaveDisplayValue('my-node-pool-1');
   });
 
-  // @todo Enable this test when we allow users to edit their Node Pool's label in the UI
+  // @todo Enable this test when we allow users to edit their Node Pool's label in the UI (ECE-353)
   it.skip("uses the Node Pool's type as the label field's placeholder if the node pool does not have an explicit label", async () => {
     const type = linodeTypeFactory.build({ label: 'Fake Linode 2GB' });
     const nodePool = nodePoolFactory.build({ label: '', type: type.id });

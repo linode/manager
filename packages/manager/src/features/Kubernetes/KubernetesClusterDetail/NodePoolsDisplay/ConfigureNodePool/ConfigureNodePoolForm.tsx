@@ -43,14 +43,14 @@ export const ConfigureNodePoolForm = (props: Props) => {
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { enqueueSnackbar } = useSnackbar();
 
-  // @todo uncomment when we begin surfacing the Text Field for a Node Pool's `label`
+  // @TODO uncomment when we begin surfacing the Text Field for a Node Pool's `label` (ECE-353)
   // const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
   //   ignoreNodePoolsLabel: true,
   // });
 
   const form = useForm<UpdateNodePoolData>({
     defaultValues: {
-      // @todo uncomment when we want to allow users to configure their Node Pool's `label` and `tags`
+      // @TODO allow users to edit Node Pool `label` and `tags` because the API supports it. (ECE-353)
       // label: nodePool.label,
       // tags: nodePool.tags,
       update_strategy: nodePool.update_strategy,
@@ -88,7 +88,9 @@ export const ConfigureNodePoolForm = (props: Props) => {
         {form.formState.errors.root?.message && (
           <Notice text={form.formState.errors.root.message} variant="error" />
         )}
-        {/* <Controller
+        {/*
+        // @TODO allow users to edit Node Pool `label` and `tags` because the API supports it. (ECE-353)
+        <Controller
           control={form.control}
           name="label"
           render={({ field, fieldState }) => (
@@ -117,7 +119,8 @@ export const ConfigureNodePoolForm = (props: Props) => {
               }
             />
           )}
-        /> */}
+        />
+        */}
         {isLkeEnterprisePostLAFeatureEnabled &&
           clusterTier === 'enterprise' && (
             <>

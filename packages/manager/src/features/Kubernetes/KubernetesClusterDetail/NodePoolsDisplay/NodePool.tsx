@@ -4,7 +4,10 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-import { useNodePoolDisplayLabel } from '../../kubeUtils';
+import {
+  useIsLkeEnterpriseEnabled,
+  useNodePoolDisplayLabel,
+} from '../../kubeUtils';
 import { NodePoolFooter } from './NodePoolFooter';
 import { NodeTable } from './NodeTable';
 
@@ -72,6 +75,7 @@ export const NodePool = (props: Props) => {
     type,
   } = props;
 
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const nodePoolLabel = useNodePoolDisplayLabel({ label, type });
 
   return (
@@ -107,8 +111,9 @@ export const NodePool = (props: Props) => {
             )}
             <ActionMenu
               actionsList={[
-                // Currently, only LKE enterprise users can configure their cluster...
-                ...(clusterTier === 'enterprise'
+                // Right now, only LKE enterprise users can configure their cluster... (ECE-353)
+                ...(clusterTier === 'enterprise' &&
+                isLkeEnterprisePostLAFeatureEnabled
                   ? [
                       {
                         disabled: isLkeClusterRestricted,
