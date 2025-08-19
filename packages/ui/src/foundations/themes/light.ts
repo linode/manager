@@ -236,14 +236,6 @@ const graphTransparency = '0.7';
 
 const spacing = 8;
 
-const MuiTableHeadSvgStyles = {
-  svg: {
-    path: {
-      fill: Color.Brand[90],
-    },
-  },
-};
-
 const MuiTableZebraHoverStyles = {
   '&:not(.disabled-row)': {
     '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
@@ -1561,10 +1553,20 @@ export const lightTheme: ThemeOptions = {
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
-            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            '&.MuiIconButton-isActive': {
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Active,
+                },
+              },
+            },
             ':hover': {
               color: Color.Brand[60],
-              ...MuiTableHeadSvgStyles,
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Hover,
+                },
+              },
             },
           },
           borderBottom: `1px solid ${Border.Normal}`,
@@ -1643,16 +1645,20 @@ export const lightTheme: ThemeOptions = {
             color: Table.HeaderNested.Text,
           },
           ':hover, :focus': {
-            ...MuiTableHeadSvgStyles,
             color: Color.Brand[90],
             cursor: 'pointer',
+            svg: {
+              path: {
+                fill: Table.HeaderNested.Icon.Hover,
+              },
+            },
           },
           fontSize: Font.FontSize.Xs,
           svg: {
             height: '16px',
             margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Icon,
+              fill: Table.HeaderNested.Icon.Default,
             },
             width: '16px',
           },

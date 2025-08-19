@@ -147,8 +147,8 @@ importers:
         specifier: workspace:*
         version: link:../api-v4
       '@linode/design-language-system':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       '@linode/queries':
         specifier: workspace:*
         version: link:../queries
@@ -211,7 +211,7 @@ importers:
         version: 5.5.0
       akamai-cds-react-components:
         specifier: 0.0.1-alpha.11
-        version: 0.0.1-alpha.11(@linode/design-language-system@4.0.0)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 0.0.1-alpha.11(@linode/design-language-system@5.0.0)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       algoliasearch:
         specifier: ^4.14.3
         version: 4.24.0
@@ -642,8 +642,8 @@ importers:
         specifier: ^11.11.0
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react@19.1.0)
       '@linode/design-language-system':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       '@mui/icons-material':
         specifier: ^7.1.0
         version: 7.1.0(@mui/material@7.1.0(@emotion/react@11.13.5(@types/react@19.1.6)(react@19.1.0))(@emotion/styled@11.13.5(@emotion/react@11.13.5(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.6)(react@19.1.0)
@@ -1410,8 +1410,8 @@ packages:
   '@kwsites/promise-deferred@1.1.1':
     resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
 
-  '@linode/design-language-system@4.0.0':
-    resolution: {integrity: sha512-SKM4AG0GpFjgirKI+7bG3RT6ai3VU7MJJLUvaZsHf0OgmEJ25qWH7DqGOx5FWSTtzX0YemJSrwnKMpL+3CLawg==}
+  '@linode/design-language-system@5.0.0':
+    resolution: {integrity: sha512-yU2DN/UFt7xokb6sgsrPNSNFfjpKq8/3PbM7pRgXGcNbFKf0thJ83Ib7rHyWAevrbxU22cdl/KsSOa4POYja3Q==}
 
   '@linode/eslint-plugin-cloud-manager@0.0.11':
     resolution: {integrity: sha512-QKb4IqwTcpifYKnCHE70EXPW6NHO5aJAUKn3lx+cuh5MJSU5IFvtcN4ZhNHwtOlI4nIsNDEP+Bc8JaMT/YvfFQ==}
@@ -6725,7 +6725,7 @@ snapshots:
 
   '@kwsites/promise-deferred@1.1.1': {}
 
-  '@linode/design-language-system@4.0.0': {}
+  '@linode/design-language-system@5.0.0': {}
 
   '@linode/eslint-plugin-cloud-manager@0.0.11(eslint@9.31.0(jiti@2.4.2))':
     dependencies:
@@ -7918,19 +7918,19 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  akamai-cds-react-components@0.0.1-alpha.11(@linode/design-language-system@4.0.0)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  akamai-cds-react-components@0.0.1-alpha.11(@linode/design-language-system@5.0.0)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@lit/react': 1.0.7(@types/react@19.1.6)
-      akamai-cds-web-components: 0.0.1-alpha.11(@linode/design-language-system@4.0.0)
+      akamai-cds-web-components: 0.0.1-alpha.11(@linode/design-language-system@5.0.0)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     transitivePeerDependencies:
       - '@linode/design-language-system'
       - '@types/react'
 
-  akamai-cds-web-components@0.0.1-alpha.11(@linode/design-language-system@4.0.0):
+  akamai-cds-web-components@0.0.1-alpha.11(@linode/design-language-system@5.0.0):
     dependencies:
-      '@linode/design-language-system': 4.0.0
+      '@linode/design-language-system': 5.0.0
       lit: 3.3.0
 
   algoliasearch@4.24.0:

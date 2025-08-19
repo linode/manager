@@ -162,9 +162,11 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   onClick={toggleGroupLinodes}
                   sx={(theme) => ({
                     ':hover': {
-                      color: theme.tokens.color.Brand[60],
+                      color:
+                        theme.tokens.component.Table.HeaderNested.Icon.Hover,
                     },
-                    color: theme.tokens.component.Table.HeaderNested.Icon,
+                    color:
+                      theme.tokens.component.Table.HeaderNested.Icon.Default,
                   })}
                 >
                   <GroupByTag />

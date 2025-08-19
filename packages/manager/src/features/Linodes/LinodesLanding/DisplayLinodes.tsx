@@ -222,10 +222,13 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                           onClick={toggleGroupLinodes}
                           sx={(theme) => ({
                             ':hover': {
-                              color: theme.tokens.color.Brand[60],
+                              color:
+                                theme.tokens.component.Table.HeaderNested.Icon
+                                  .Hover,
                             },
                             color:
-                              theme.tokens.component.Table.HeaderNested.Icon,
+                              theme.tokens.component.Table.HeaderNested.Icon
+                                .Default,
                           })}
                         >
                           <GroupByTag />
