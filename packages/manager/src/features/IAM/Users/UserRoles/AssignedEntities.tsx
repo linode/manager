@@ -29,7 +29,6 @@ export const AssignedEntities = ({
   );
 
   React.useEffect(() => {
-    // Ensure calculateHiddenItems runs after layout stabilization on initial render
     const rafId = requestAnimationFrame(() => {
       requestAnimationFrame(() => calculateHiddenItems());
     });
