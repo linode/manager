@@ -9,10 +9,10 @@ export const POWER_OFF_TOOLTIP_TEXT =
 export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
 
 export const MAINTENANCE_POLICY_DESCRIPTION =
-  'Select the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.';
+  'Select the preferred maintenance policy for this Linode. During scheduled maintenance events (such as host upgrades), this policy setting determines the type of maintenance that is performed. The selected policy does not factor in during emergency maintenance.';
 
 export const MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION =
-  'Select the preferred default host maintenance policy for newly deployed Linodes. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is performed. This preference can be changed when creating new Linodes or modifying existing Linodes.';
+  'Select the preferred default maintenance policy for newly deployed Linodes. During scheduled maintenance events (such as host upgrades), this policy setting determines the type of maintenance that is performed. This preference can be changed when creating new Linodes or modifying existing Linodes. The selected policy does not factor in during emergency maintenance.';
 
 export const MAINTENANCE_POLICY_OPTION_DESCRIPTIONS: Record<
   MaintenancePolicySlug,
