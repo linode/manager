@@ -4,8 +4,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { NodePoolFirewallSelect } from '../NodePoolFirewallSelect';
 import { NodePoolUpdateStrategySelect } from '../NodePoolUpdateStrategySelect';
 
+import type { CreateNodePoolData } from '@linode/api-v4';
+
 export const NodePoolConfigOptions = () => {
-  const { control } = useFormContext();
+  const { control } = useFormContext<CreateNodePoolData>();
 
   return (
     <>

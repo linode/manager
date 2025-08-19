@@ -10,9 +10,11 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 
+import type { CreateNodePoolData } from '@linode/api-v4';
+
 export const NodePoolFirewallSelect = () => {
-  const { control, watch } = useFormContext();
-  const watchedFirewallId: number = watch('firewall_id');
+  const { control, watch } = useFormContext<CreateNodePoolData>();
+  const watchedFirewallId = watch('firewall_id');
 
   const [isUsingOwnFirewall, setIsUsingOwnFirewall] = React.useState(
     Boolean(watchedFirewallId)
