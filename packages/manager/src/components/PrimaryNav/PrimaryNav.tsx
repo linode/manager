@@ -1,4 +1,8 @@
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import {
+  useAccountSettings,
+  useMutatePreferences,
+  usePreferences,
+} from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
@@ -17,7 +21,6 @@ import {
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -92,9 +95,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const flags = useFlags();
   const location = useLocation();
 
-  const { data: permissions } = usePermissions('account', [
-    'view_account_settings',
-  ]);
+  const { data: accountSettings } = useAccountSettings();
+  const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
 
@@ -131,7 +133,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             links: [
               {
                 display: 'Managed',
-                hide: !permissions.view_account_settings,
+                hide: !isManaged,
                 to: '/managed',
               },
               {
@@ -319,6 +321,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       [
         isDatabasesEnabled,
         isDatabasesV2Beta,
+        isManaged,
         isPlacementGroupsEnabled,
         isACLPEnabled,
         isIAMBeta,
