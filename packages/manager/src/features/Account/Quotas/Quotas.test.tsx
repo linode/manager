@@ -40,13 +40,6 @@ vi.mock('./utils', () => ({
 }));
 
 describe('Quotas', () => {
-  beforeEach(() => {
-    queryMocks.useFlags.mockReturnValue({
-      limitsEvolution: {
-        enabled: true,
-      },
-    });
-  });
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
