@@ -1,7 +1,13 @@
 import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { REFRESH, REGION, RESOURCE_ID, TAGS } from '../Utils/constants';
+import {
+  LINODE_REGION,
+  REFRESH,
+  REGION,
+  RESOURCE_ID,
+  TAGS,
+} from '../Utils/constants';
 import {
   checkIfAllMandatoryFiltersAreSelected,
   getMetricsCallCustomFilters,
@@ -57,6 +63,12 @@ export const CloudPulseDashboardRenderer = React.memo(
         additionalFilters={getMetricsCall}
         dashboardId={dashboard.id}
         duration={timeDuration}
+        linodeRegion={
+          filterValue[LINODE_REGION] &&
+          typeof filterValue[LINODE_REGION] === 'string'
+            ? (filterValue[LINODE_REGION] as string)
+            : undefined
+        }
         manualRefreshTimeStamp={
           filterValue[REFRESH] && typeof filterValue[REFRESH] === 'number'
             ? filterValue[REFRESH]

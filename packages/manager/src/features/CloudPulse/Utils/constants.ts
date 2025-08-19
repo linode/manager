@@ -8,6 +8,8 @@ export const SECONDARY_NODE = 'secondary';
 
 export const REGION = 'region';
 
+export const LINODE_REGION = 'associated_entity_region';
+
 export const RESOURCES = 'resources';
 
 export const INTERVAL = 'interval';
