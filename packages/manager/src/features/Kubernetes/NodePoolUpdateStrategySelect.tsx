@@ -7,7 +7,7 @@ interface Props {
   label?: string;
   noMarginTop?: boolean;
   onChange: (value: string | undefined) => void;
-  value: string;
+  value: string | undefined;
 }
 
 export const NodePoolUpdateStrategySelect = (props: Props) => {
