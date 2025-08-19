@@ -40,13 +40,16 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const poweredOnTooltip =
     linodeStatus !== 'offline'
-      ? 'Your Linode must be fully powered down in order to perform this action'
+      ? 'Your Linode must be fully powered down in order to perform this action.'
       : undefined;
 
   const swapTooltip =
     disk.filesystem == 'swap'
       ? 'You cannot create images from Swap images.'
       : undefined;
+
+  const noPermissionTooltip =
+    'You do not have permission to perform this action.';
 
   const actions: Action[] = [
     {
@@ -58,7 +61,9 @@ export const LinodeDiskActionMenu = (props: Props) => {
       disabled: !permissions.resize_linode || linodeStatus !== 'offline',
       onClick: onResize,
       title: 'Resize',
-      tooltip: poweredOnTooltip,
+      tooltip: !permissions.resize_linode
+        ? noPermissionTooltip
+        : poweredOnTooltip,
     },
     {
       disabled: readOnly || !!swapTooltip,
@@ -89,7 +94,9 @@ export const LinodeDiskActionMenu = (props: Props) => {
       disabled: !permissions.delete_linode || linodeStatus !== 'offline',
       onClick: onDelete,
       title: 'Delete',
-      tooltip: poweredOnTooltip,
+      tooltip: !permissions.delete_linode
+        ? noPermissionTooltip
+        : poweredOnTooltip,
     },
   ];
 
