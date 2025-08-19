@@ -40,6 +40,14 @@ vi.mock('./utils', () => ({
 }));
 
 describe('Quotas', () => {
+  beforeEach(() => {
+    queryMocks.useFlags.mockReturnValue({
+      // iamRbacPrimaryNavChanges: true,
+      limitsEvolution: {
+        enabled: true,
+      },
+    });
+  });
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
