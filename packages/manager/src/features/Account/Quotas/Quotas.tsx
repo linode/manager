@@ -42,7 +42,7 @@ export const Quotas = () => {
   return (
     <>
       <DocumentTitleSegment segment="Quotas" />
-      {flags?.iamRbacPrimaryNavChanges && flags?.limitsEvolution?.enabled ? (
+      {flags?.limitsEvolution?.enabled ? (
         <Paper
           sx={(theme: Theme) => ({
             marginTop: theme.spacingFunction(16),
