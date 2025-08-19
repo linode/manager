@@ -1,4 +1,5 @@
 import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
@@ -9,7 +10,12 @@ const creditCardExpiredBannerNotice =
 
 describe('Credit Card Expired Banner', () => {
   beforeEach(() => {
-    mockGetUserPreferences({ dismissed_notifications: {} });
+    mockGetUserPreferences({
+      dismissed_notifications: {},
+    });
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    }).as('getFeatureFlags');
   });
 
   it('appears when the expiration date is in the past', () => {

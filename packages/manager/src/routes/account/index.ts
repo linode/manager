@@ -29,8 +29,16 @@ const accountTabsRoute = createRoute({
 
 const accountBillingRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
-  path: '/billing',
+  path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/billingDetailLazyRoute').then(
     (m) => m.billingDetailLazyRoute
@@ -59,6 +67,14 @@ const accountUsersRoute = createRoute({
 const accountQuotasRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/quotas',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/quotas`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/Quotas/quotasLazyRoute').then(
     (m) => m.quotasLazyRoute
@@ -68,6 +84,14 @@ const accountQuotasRoute = createRoute({
 const accountLoginHistoryRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/login-history',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/login-history`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/accountLoginsLazyRoute').then(
     (m) => m.accountLoginsLazyRoute
@@ -77,6 +101,14 @@ const accountLoginHistoryRoute = createRoute({
 const accountServiceTransfersRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/service-transfers',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/service-transfers`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import(
     'src/features/EntityTransfers/EntityTransfersLanding/entityTransferLandingLazyRoute'
@@ -86,6 +118,14 @@ const accountServiceTransfersRoute = createRoute({
 const accountMaintenanceRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/maintenance',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/maintenance`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/Maintenance/maintenanceLandingLazyRoute').then(
     (m) => m.maintenanceLandingLazyRoute
@@ -95,6 +135,14 @@ const accountMaintenanceRoute = createRoute({
 const accountSettingsRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/settings',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/settings`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Account/globalSettingsLazyRoute').then(
     (m) => m.globalSettingsLazyRoute
@@ -160,6 +208,15 @@ const accountInvoiceDetailsRoute = createRoute({
     invoiceId: Number(params.invoiceId),
   }),
   path: 'billing/invoices/$invoiceId',
+  beforeLoad: ({ context, params }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/billing/invoices/$invoiceId`,
+        params: { invoiceId: params.invoiceId },
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
     (m) => m.invoiceDetailLazyRoute
@@ -169,6 +226,14 @@ const accountInvoiceDetailsRoute = createRoute({
 const accountEntityTransfersCreateRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: 'service-transfers/create',
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/service-transfers/create`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import(
     'src/features/EntityTransfers/EntityTransfersCreate/entityTransfersCreateLazyRoute'
