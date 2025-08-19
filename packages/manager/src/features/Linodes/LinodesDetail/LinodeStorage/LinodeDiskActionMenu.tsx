@@ -56,6 +56,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
       disabled: !permissions.update_linode,
       onClick: onRename,
       title: 'Rename',
+      tooltip: !permissions.update_linode ? noPermissionTooltip : undefined,
     },
     {
       disabled: !permissions.resize_linode || linodeStatus !== 'offline',
@@ -88,6 +89,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
           },
         });
       },
+      tooltip: !permissions.clone_linode ? noPermissionTooltip : undefined,
       title: 'Clone',
     },
     {
