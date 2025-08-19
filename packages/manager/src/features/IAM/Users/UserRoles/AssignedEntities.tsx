@@ -24,13 +24,15 @@ export const AssignedEntities = ({
     useCalculateHiddenItems(role.entity_names!);
 
   const handleResize = React.useMemo(
-    () => debounce(() => calculateHiddenItems(), 100),
+    () => debounce(() => calculateHiddenItems(), 250),
     [calculateHiddenItems]
   );
 
   React.useEffect(() => {
     // Ensure calculateHiddenItems runs after layout stabilization on initial render
-    const rafId = requestAnimationFrame(() => calculateHiddenItems());
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => calculateHiddenItems());
+    });
 
     window.addEventListener('resize', handleResize);
 
@@ -49,14 +51,24 @@ export const AssignedEntities = ({
     [role.entity_names, role.entity_ids]
   );
 
+  const isLastVisibleItem = React.useCallback(
+    (index: number) => {
+      return combinedEntities.length - numHiddenItems - 1 === index;
+    },
+    [combinedEntities.length, numHiddenItems]
+  );
+
   const items = combinedEntities?.map(
     (entity: CombinedEntity, index: number) => (
-      <div
+      <Box
         key={entity.id}
         ref={(el: HTMLDivElement) => {
           itemRefs.current[index] = el;
         }}
-        style={{ display: 'inline', marginRight: 8 }}
+        sx={{
+          display: 'inline',
+          marginRight: theme.tokens.spacing.S8,
+        }}
       >
         <Chip
           data-testid="entities"
@@ -76,9 +88,18 @@ export const AssignedEntities = ({
             '& .MuiChip-deleteIcon': {
               color: theme.tokens.alias.Content.Text.Primary.Default,
             },
+            position: 'relative',
+            '&::after': {
+              content:
+                numHiddenItems > 0 && isLastVisibleItem(index) ? '"..."' : '""',
+              position: 'absolute',
+              top: 0,
+              right: -16,
+              width: 14,
+            },
           }}
         />
-      </div>
+      </Box>
     )
   );
 
@@ -87,15 +108,14 @@ export const AssignedEntities = ({
       sx={{
         alignItems: 'center',
         display: 'flex',
+        position: 'relative',
       }}
     >
       <Box
         ref={containerRef}
         sx={{
-          WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 1,
-          display: '-webkit-box',
           overflow: 'hidden',
+          height: 24,
         }}
       >
         {items}
