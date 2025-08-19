@@ -163,10 +163,18 @@ describe('linode storage tab', () => {
    * - Confirms UI flow end-to-end when a user deletes a Linode disk.
    * - Confirms that user can successfully delete a disk from a Linode.
    * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
+   * TODO: Disk cannot be deleted if disk_encryption is 'enabled'
+   * TODO: edit result of this test if/when behavior of backend is updated. uncertain what expected behavior is for this disk config
    */
-  it('delete disk', () => {
+  it('delete disk fails', () => {
     const diskName = randomLabel();
-    cy.defer(() => createTestLinode({ image: null })).then((linode) => {
+    cy.defer(() =>
+      createTestLinode({
+        booted: false,
+        disk_encryption: 'enabled',
+        image: null,
+      })
+    ).then((linode) => {
       interceptDeleteDisks(linode.id).as('deleteDisk');
       interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
@@ -188,6 +196,57 @@ describe('linode storage tab', () => {
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.findByText('Deleting', { exact: false }).should('be.visible');
       ui.button.findByTitle('Add a Disk').should('be.enabled');
+      //   ui.toast.assertMessage(
+      //     `Disk ${diskName} on Linode ${linode.label} has been deleted.`
+      //   );
+      ui.toast
+        .findByMessage(
+          `Disk ${diskName} on Linode ${linode.label} has been deleted.`
+        )
+        .should('not.exist');
+      //   cy.findByLabelText('List of Disks').within(() => {
+      //     cy.contains(diskName).should('not.exist');
+      //   });
+      cy.findByLabelText('List of Disks').within(() => {
+        cy.contains(diskName).should('be.visible');
+      });
+    });
+  });
+
+  /*
+   * - Same test as above, but uses different linode config for disk_encryption
+   */
+  it('delete disk succeeds', () => {
+    const diskName = randomLabel();
+    cy.defer(() =>
+      createTestLinode({
+        booted: false,
+        disk_encryption: 'disabled',
+        image: null,
+      })
+    ).then((linode) => {
+      interceptDeleteDisks(linode.id).as('deleteDisk');
+      interceptAddDisks(linode.id).as('addDisk');
+      cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      addDisk(diskName);
+
+      cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
+
+      cy.findByText(diskName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          // Disk should show "Creating". We must wait for it to finish "Creating" before we try to delete the disk
+          cy.findByText('Creating', { exact: false }).should('be.visible');
+          // "Creating" should go away when the Disk is able to be deleted
+          cy.findByText('Creating', { exact: false }).should('not.exist');
+        });
+
+      deleteDisk(diskName);
+      cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
+      cy.findByText('Deleting', { exact: false }).should('be.visible');
+      ui.button.findByTitle('Add a Disk').should('be.enabled');
+
       ui.toast.assertMessage(
         `Disk ${diskName} on Linode ${linode.label} has been deleted.`
       );

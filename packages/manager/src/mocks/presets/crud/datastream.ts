@@ -1,4 +1,5 @@
 import {
+  createDestinations,
   createStreams,
   getDestinations,
   getStreams,
@@ -8,7 +9,7 @@ import type { MockPresetCrud } from 'src/mocks/types';
 
 export const datastreamCrudPreset: MockPresetCrud = {
   group: { id: 'DataStream' },
-  handlers: [getStreams, createStreams, getDestinations],
+  handlers: [getStreams, createStreams, getDestinations, createDestinations],
   id: 'datastream:crud',
   label: 'Data Stream CRUD',
 };

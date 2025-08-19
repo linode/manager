@@ -12,9 +12,10 @@ import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { Region } from '@linode/api-v4';
 import type { useRegionsQuery } from '@linode/queries';
-import type { CloudPulseResourceTypeMapFlag, Flags } from 'src/featureFlags';
 
 const props: CloudPulseRegionSelectProps = {
+  filterKey: 'region',
+  selectedEntities: [],
   handleRegionChange: vi.fn(),
   label: 'Region',
   selectedDashboard: undefined,
@@ -26,17 +27,6 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
   useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
-
-const flags: Partial<Flags> = {
-  aclpResourceTypeMap: [
-    {
-      serviceType: 'dbaas',
-    },
-    {
-      serviceType: 'linode',
-    },
-  ] as CloudPulseResourceTypeMapFlag[],
-};
 
 const allRegions: Region[] = [
   regionFactory.build({
@@ -164,19 +154,12 @@ describe('CloudPulseRegionSelect', () => {
     });
     renderWithTheme(<CloudPulseRegionSelect {...props} />);
 
-    expect(queryMocks.useResourcesQuery).toHaveBeenLastCalledWith(
-      false,
-      undefined,
-      {},
-      {}
-    ); // use resources should have called with enabled false since the region call failed
-
     const errorMessage = screen.getByText('Failed to fetch Region.'); // should show regions failure only
 
     expect(errorMessage).not.toBeNull();
   });
 
-  it('should render a Region Select component with capability specific and launchDarkly based supported regions', async () => {
+  it('should render a Region Select component with capability specific', async () => {
     const user = userEvent.setup();
 
     // resources are present only in us-west, no other regions like us-east here should be listed
@@ -191,13 +174,15 @@ describe('CloudPulseRegionSelect', () => {
     renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
-        selectedDashboard={dashboardFactory.build({ service_type: 'dbaas' })}
-      />,
-      { flags }
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'dbaas',
+          id: 1,
+        })}
+      />
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported via launchDarkly
+    // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported
     const usWestRegion = screen.getByRole('option', {
       name: 'US, Fremont, CA (us-west)',
     });

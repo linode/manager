@@ -1,5 +1,8 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { AlertServiceType, TPAProvider } from '@linode/api-v4/lib/profile';
+import type {
+  CloudPulseServiceType,
+  TPAProvider,
+} from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
@@ -65,8 +68,17 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 }
 
 interface AclpFlag {
+  /**
+   * This property indicates whether the feature is in beta
+   */
   beta: boolean;
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
   bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether the feature is enabled
+   */
   enabled: boolean;
 }
 
@@ -85,7 +97,7 @@ interface CloudNatFlag extends BetaFeatureFlag {
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 interface GpuV2 {
@@ -123,10 +135,10 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpBetaServices: AclpBetaServices;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
+  aclpServices: Partial<AclpServices>;
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
@@ -146,6 +158,7 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
+  iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
@@ -310,13 +323,13 @@ export interface APIMaintenance {
 
 export interface AclpAlertServiceTypeConfig {
   maxResourceSelectionCount: number;
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
   // This can be extended to have supportedRegions, supportedFilters and other tags
 }
 
-export interface AclpBetaServices {
-  [serviceType: string]: {
-    alerts: boolean;
-    metrics: boolean;
+export type AclpServices = {
+  [serviceType in CloudPulseServiceType]: {
+    alerts?: AclpFlag;
+    metrics?: AclpFlag;
   };
-}
+};

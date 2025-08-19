@@ -29,10 +29,10 @@ const restrictedImportPaths = [
       'Please use Typography component from @linode/ui instead of @mui/material',
   },
   {
-    name: 'react-router-dom',
+    name: '@tanstack/react-router',
     importNames: ['Link'],
     message:
-      'Please use the Link component from src/components/Link instead of react-router-dom',
+      'Please use the Link component from src/components/Link instead of direct imports from @tanstack/react-router',
   },
 ];
 
@@ -401,93 +401,7 @@ export const baseConfig = [
     },
   },
 
-  // 14. Tanstack Router (temporary)
-  {
-    files: [
-      // for each new features added to the migration router, add its directory here
-      'src/features/Account/**/*',
-      'src/features/Billing/**/*',
-      'src/features/Betas/**/*',
-      'src/features/CloudPulse/**/*',
-      'src/features/Databases/**/*',
-      'src/features/Domains/**/*',
-      'src/features/DataStream/**/*',
-      'src/features/Events/**/*',
-      'src/features/Firewalls/**/*',
-      'src/features/Help/**/*',
-      'src/features/IAM/**/*',
-      'src/features/Images/**/*',
-      'src/features/Kubernetes/**/*',
-      'src/features/Linodes/**/*',
-      'src/features/Longview/**/*',
-      'src/features/Managed/**/*',
-      'src/features/NodeBalancers/**/*',
-      'src/features/ObjectStorage/**/*',
-      'src/features/PlacementGroups/**/*',
-      'src/features/Profile/**/*',
-      'src/features/Search/**/*',
-      'src/features/TopMenu/SearchBar/**/*',
-      'src/components/Tag/**/*',
-      'src/features/StackScripts/**/*',
-      'src/features/Support/**/*',
-      'src/features/Users/**/*',
-      'src/features/Volumes/**/*',
-      'src/features/VPCs/**/*',
-    ],
-    rules: {
-      'no-restricted-imports': [
-        // This needs to remain an error however trying to link to a feature that is not yet migrated will break the router
-        // For those cases react-router-dom history.push is still needed
-        // using `eslint-disable-next-line no-restricted-imports` can help bypass those imports
-        'error',
-        {
-          paths: [
-            {
-              importNames: [
-                // intentionally not including <Link> in this list as this will be updated last globally
-                'useNavigate',
-                'useParams',
-                'useLocation',
-                'useHistory',
-                'useRouteMatch',
-                'matchPath',
-                'MemoryRouter',
-                'Route',
-                'RouteProps',
-                'Switch',
-                'Redirect',
-                'RouteComponentProps',
-                'withRouter',
-              ],
-              message:
-                'Please use routing utilities intended for @tanstack/react-router.',
-              name: 'react-router-dom',
-            },
-            {
-              importNames: ['TabLinkList'],
-              message:
-                'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
-              name: 'src/components/Tabs/TabLinkList',
-            },
-            {
-              importNames: ['OrderBy', 'default'],
-              message:
-                'Please use useOrderV2 hook for components being migrated to TanStack Router.',
-              name: 'src/components/OrderBy',
-            },
-            {
-              importNames: ['Prompt'],
-              message:
-                'Please use the TanStack useBlocker hook for components/features being migrated to TanStack Router.',
-              name: 'src/components/Prompt/Prompt',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
-  // 15. Prettier (coming last as recommended)
+  // 14. Prettier (coming last as recommended)
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {

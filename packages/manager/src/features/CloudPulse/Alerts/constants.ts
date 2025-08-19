@@ -91,16 +91,16 @@ export const dimensionOperatorOptions: Item<
     value: 'eq',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'Not Equal',
     value: 'neq',
   },
   {
     label: 'Starts with',
     value: 'startswith',
+  },
+  {
+    label: 'Ends with',
+    value: 'endswith',
   },
   {
     label: 'In',

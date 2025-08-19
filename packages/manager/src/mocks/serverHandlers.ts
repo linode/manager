@@ -56,6 +56,7 @@ import {
   entityTransferFactory,
   eventFactory,
   firewallDeviceFactory,
+  firewallEntityfactory,
   firewallFactory,
   imageFactory,
   incidentResponseFactory,
@@ -136,9 +137,9 @@ import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/consta
 import type {
   AccountMaintenance,
   AlertDefinitionType,
-  AlertServiceType,
   AlertSeverityType,
   AlertStatusType,
+  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
@@ -214,7 +215,7 @@ function sleep(ms: number) {
 }
 
 const entityTransfers = [
-  http.get('*/account/entity-transfers', () => {
+  http.get('*/account/service-transfers', () => {
     const transfers1 = entityTransferFactory.buildList(10);
     const transfers2 = entityTransferFactory.buildList(10, {
       token: 'TEST123',
@@ -239,14 +240,14 @@ const entityTransfers = [
     );
     return HttpResponse.json(makeResourcePage(combinedTransfers));
   }),
-  http.get('*/account/entity-transfers/:transferId', () => {
+  http.get('*/account/service-transfers/:transferId', () => {
     const transfer = entityTransferFactory.build();
     return HttpResponse.json(transfer);
   }),
   http.get('*/account/agreements', () =>
     HttpResponse.json(accountAgreementsFactory.build())
   ),
-  http.post('*/account/entity-transfers', async ({ request }) => {
+  http.post('*/account/service-transfers', async ({ request }) => {
     const body = await request.json();
     const payload = body as any;
     const newTransfer = entityTransferFactory.build({
@@ -254,10 +255,10 @@ const entityTransfers = [
     });
     return HttpResponse.json(newTransfer);
   }),
-  http.post('*/account/entity-transfers/:transferId/accept', () => {
+  http.post('*/account/service-transfers/:transferId/accept', () => {
     return HttpResponse.json({});
   }),
-  http.delete('*/account/entity-transfers/:transferId', () => {
+  http.delete('*/account/service-transfers/:transferId', () => {
     return HttpResponse.json({});
   }),
 ];
@@ -1100,7 +1101,21 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/v4beta/networking/firewalls', () => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = [
+      ...firewallFactory.buildList(10),
+      firewallFactory.build({
+        entities: [
+          firewallEntityfactory.build({
+            type: 'linode_interface',
+            parent_entity: firewallEntityfactory.build({
+              type: 'linode',
+              id: 123,
+              label: 'Linode-123',
+            }),
+          }),
+        ],
+      }),
+    ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
@@ -1642,6 +1657,10 @@ export const handlers = [
       accountMaintenance.sort((a, b) => {
         const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
         const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
+
+        if (statusA === null || statusB === null) {
+          return 0;
+        }
 
         if (statusA < statusB) {
           return -1;
@@ -2693,8 +2712,7 @@ export const handlers = [
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
-      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-
+      const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
       const reqBody = await request.json();
       const response = alertFactory.build({
         ...(reqBody as CreateAlertDefinitionPayload),
@@ -2874,26 +2892,21 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
-      return HttpResponse.json({}, { status: 404 });
-    }
-
-    const response =
-      params.serviceType === 'linode'
-        ? serviceTypesFactory.build({
-            label: 'Linodes',
-            service_type: 'linode',
-            regions: 'us-iad,us-east',
-            alert: serviceAlertFactory.build({ scope: ['entity'] }),
-          })
-        : serviceTypesFactory.build({
-            label: 'Databases',
-            service_type: 'dbaas',
-            alert: serviceAlertFactory.build({
-              evaluation_period_seconds: [300],
-              polling_interval_seconds: [300],
-            }),
-          });
+    const serviceType = params.serviceType as CloudPulseServiceType;
+    const serviceTypesMap: Record<CloudPulseServiceType, string> = {
+      linode: 'Linode',
+      dbaas: 'Databases',
+      nodebalancer: 'NodeBalancers',
+      firewall: 'Firewalls',
+    };
+    const response = serviceTypesFactory.build({
+      service_type: `${serviceType}`,
+      label: serviceTypesMap[serviceType],
+      alert: serviceAlertFactory.build({
+        evaluation_period_seconds: [300],
+        polling_interval_seconds: [300],
+      }),
+    });
 
     return HttpResponse.json(response, { status: 200 });
   }),
@@ -3229,23 +3242,30 @@ export const handlers = [
   }),
 
   http.get('*/monitor/dashboards/:id', ({ params }) => {
+    let serviceType: string;
+    let dashboardLabel: string;
+
+    const id = params.id;
+
+    if (id === '1') {
+      serviceType = 'dbaas';
+      dashboardLabel = 'DBaaS Service I/O Statistics';
+    } else if (id === '3') {
+      serviceType = 'nodebalancer';
+      dashboardLabel = 'NodeBalancer Service I/O Statistics';
+    } else if (id === '4') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    } else {
+      serviceType = 'linode';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    }
+
     const response = {
       created: '2024-04-29T17:09:29',
       id: params.id,
-      label:
-        params.id === '1'
-          ? 'DBaaS Service I/O Statistics'
-          : params.id === '3'
-            ? 'NodeBalancer Service I/O Statistics'
-            : 'Linode Service I/O Statistics',
-      service_type:
-        params.id === '1'
-          ? 'dbaas'
-          : params.id === '3'
-            ? 'nodebalancer'
-            : params.id === '4'
-              ? 'firewall'
-              : 'linode', // just update the service type and label and use same widget configs
+      label: dashboardLabel,
+      service_type: serviceType,
       type: 'standard',
       updated: null,
       widgets: [
@@ -3355,6 +3375,7 @@ export const handlers = [
             metric: {
               entity_id: '456',
               metric_name: 'average_cpu_usage',
+              linode_id: '123',
               node_id: 'primary-2',
             },
             values: [

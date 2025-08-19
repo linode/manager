@@ -1,7 +1,13 @@
 import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { REFRESH, REGION, RESOURCE_ID, TAGS } from '../Utils/constants';
+import {
+  LINODE_REGION,
+  REFRESH,
+  REGION,
+  RESOURCE_ID,
+  TAGS,
+} from '../Utils/constants';
 import {
   checkIfAllMandatoryFiltersAreSelected,
   getMetricsCallCustomFilters,
@@ -19,8 +25,8 @@ export const CloudPulseDashboardRenderer = React.memo(
       'Select a dashboard and apply filters to visualize metrics.';
 
     const getMetricsCall = React.useMemo(
-      () => getMetricsCallCustomFilters(filterValue, dashboard?.service_type),
-      [dashboard?.service_type, filterValue]
+      () => getMetricsCallCustomFilters(filterValue, dashboard?.id),
+      [dashboard?.id, filterValue]
     );
 
     if (!dashboard) {
@@ -31,7 +37,7 @@ export const CloudPulseDashboardRenderer = React.memo(
       );
     }
 
-    if (!FILTER_CONFIG.get(dashboard.service_type)) {
+    if (!FILTER_CONFIG.get(dashboard.id)) {
       return (
         <CloudPulseErrorPlaceholder errorMessage="No filters are configured for the selected dashboard's service type." />
       );
@@ -57,6 +63,12 @@ export const CloudPulseDashboardRenderer = React.memo(
         additionalFilters={getMetricsCall}
         dashboardId={dashboard.id}
         duration={timeDuration}
+        linodeRegion={
+          filterValue[LINODE_REGION] &&
+          typeof filterValue[LINODE_REGION] === 'string'
+            ? (filterValue[LINODE_REGION] as string)
+            : undefined
+        }
         manualRefreshTimeStamp={
           filterValue[REFRESH] && typeof filterValue[REFRESH] === 'number'
             ? filterValue[REFRESH]

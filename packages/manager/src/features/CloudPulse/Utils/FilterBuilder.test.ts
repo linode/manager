@@ -1,16 +1,17 @@
 import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
-import { dashboardFactory } from 'src/factories';
+import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
   deepEqual,
+  filterBasedOnConfig,
+  filterUsingDependentFilters,
   getFilters,
   getTextFilterProperties,
 } from './FilterBuilder';
 import {
-  buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
   constructAdditionalRequestFilters,
   getCustomSelectProperties,
@@ -22,19 +23,22 @@ import {
   shouldDisableFilterByFilterKey,
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseSelectTypes } from './models';
+import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { CloudPulseServiceTypeFilters } from './models';
 
 const mockDashboard = dashboardFactory.build();
 
-const linodeConfig = FILTER_CONFIG.get('linode');
+const linodeConfig = FILTER_CONFIG.get(2);
 
-const dbaasConfig = FILTER_CONFIG.get('dbaas');
+const dbaasConfig = FILTER_CONFIG.get(1);
 
-const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancer');
+const nodeBalancerConfig = FILTER_CONFIG.get(3);
 
-const firewallConfig = FILTER_CONFIG.get('firewall');
+const firewallConfig = FILTER_CONFIG.get(4);
 
-const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
+const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas', id: 1 });
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
@@ -101,7 +105,7 @@ it('test getResourceSelectionProperties method', () => {
     } = getResourcesProperties(
       {
         config: resourceSelectionConfig,
-        dashboard: mockDashboard,
+        dashboard: { ...mockDashboard, id: 2 },
         dependentFilters: { region: 'us-east' },
         isServiceAnalyticsIntegration: true,
       },
@@ -111,7 +115,7 @@ it('test getResourceSelectionProperties method', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(xFilter)).toEqual('{"region":"us-east"}');
     expect(label).toEqual(name);
   }
 });
@@ -143,7 +147,7 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(true);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(xFilter)).toEqual('{}');
     expect(label).toEqual(name);
   }
 });
@@ -154,7 +158,7 @@ describe('shouldDisableFilterByFilterKey', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
       { region: 'us-east' },
-      mockDashboard
+      { ...mockDashboard, id: 2 }
     );
     expect(result).toEqual(false);
   });
@@ -247,26 +251,6 @@ it('test getNodeTypeProperties with disabled true', () => {
   }
 });
 
-it('test buildXfilter method', () => {
-  const resourceSelectionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Resources'
-  );
-
-  expect(resourceSelectionConfig).toBeDefined(); // fails if resources selection in not defined
-
-  if (resourceSelectionConfig) {
-    let result = buildXFilter(resourceSelectionConfig, {
-      region: 'us-east',
-    });
-
-    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
-
-    result = buildXFilter(resourceSelectionConfig, {});
-
-    expect(JSON.stringify(result)).toEqual('{"+and":[]}');
-  }
-});
-
 it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
     (filterObj) => filterObj.name === 'Resources'
@@ -275,7 +259,7 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   expect(resourceSelectionConfig).toBeDefined();
   const now = DateTime.now();
   let result = checkIfAllMandatoryFiltersAreSelected({
-    dashboard: mockDashboard,
+    dashboard: { ...mockDashboard, id: 2 },
     filterValue: { region: 'us-east', resource_id: ['1', '2'] },
     timeDuration: {
       end: now.toISO(),
@@ -423,7 +407,7 @@ it('test getFiltersForMetricsCallFromCustomSelect method', () => {
     {
       resource_id: [1, 2, 3],
     },
-    'linode'
+    2
   );
 
   expect(result).toBeDefined();
@@ -436,7 +420,7 @@ it('test constructAdditionalRequestFilters method', () => {
       {
         resource_id: [1, 2, 3],
       },
-      'linode'
+      2
     )
   );
 
@@ -497,10 +481,143 @@ it('returns false for different arrays', () => {
 });
 
 it('should return the filters based on dashboard', () => {
-  const filters = getFilters(
-    dashboardFactory.build({ service_type: 'dbaas' }),
-    true
-  );
+  const filters = getFilters(dashboardFactory.build({ id: 1 }), true);
 
   expect(filters?.length).toBe(1);
+});
+
+describe('filterUsingDependentFilters', () => {
+  const mockData: CloudPulseResources[] = [
+    {
+      ...databaseInstanceFactory.build(),
+      region: 'us-east',
+      engineType: 'mysql',
+      id: '1',
+      tags: ['test'],
+    },
+    {
+      ...databaseInstanceFactory.build(),
+      region: 'us-west',
+      engineType: 'postgresql',
+      id: '2',
+      tags: ['test', 'test2'],
+    },
+  ];
+  it('should return the data passed if data or dependentFilters are undefined', () => {
+    expect(filterUsingDependentFilters(undefined, undefined)).toBeUndefined();
+    expect(filterUsingDependentFilters(mockData, undefined)).toBe(mockData);
+    expect(filterUsingDependentFilters(undefined, {})).toBeUndefined();
+  });
+
+  it('should filter based on a single key-value match', () => {
+    const filters = { engineType: 'mysql' };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[0]]);
+  });
+
+  it('should filter when both resource and filter value are arrays', () => {
+    const filters = { tags: ['test', 'test2'] };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[0], mockData[1]]);
+  });
+
+  it('should return empty array if no resource matches', () => {
+    const filters = { region: 'us-central' };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([]);
+  });
+
+  it('should apply multiple filters simultaneously', () => {
+    let filters = {
+      engineType: 'postgresql',
+      region: 'us-east',
+      tags: 'test',
+    };
+    let result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([]);
+
+    filters = {
+      engineType: 'postgresql',
+      region: 'us-east',
+      tags: 'test',
+    };
+
+    result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([]);
+
+    filters = {
+      engineType: 'postgresql',
+      region: 'us-west',
+      tags: 'test',
+    };
+
+    result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[1]]);
+  });
+});
+
+describe('filterBasedOnConfig', () => {
+  const config: CloudPulseServiceTypeFilters = {
+    configuration: {
+      dependency: [], // empty dependency
+      filterKey: 'resource_id',
+      filterType: 'string',
+      isFilterable: true,
+      isMetricsFilter: true,
+      isMultiSelect: true,
+      name: 'Database Clusters',
+      neededInViews: [CloudPulseAvailableViews.central],
+      placeholder: 'Select Database Clusters',
+      priority: 3,
+    },
+    name: 'Resources',
+  };
+  it('should return empty object if config has no dependencies', () => {
+    const dependentFilters = { engine: 'mysql', region: 'us-east' };
+    const result = filterBasedOnConfig(config, dependentFilters);
+    expect(result).toEqual({});
+  });
+
+  it('should return filtered values based on dependency keys', () => {
+    const dependentFilters = {
+      engine: 'mysql',
+      region: 'us-east',
+      status: 'running',
+    };
+    const result = filterBasedOnConfig(
+      {
+        ...config,
+        configuration: {
+          ...config.configuration,
+          dependency: ['engine', 'status'],
+        },
+      },
+      dependentFilters
+    );
+    expect(result).toEqual({
+      engineType: 'mysql',
+      status: 'running',
+    });
+  });
+
+  it('should work with array values in filters', () => {
+    const dependentFilters = {
+      engine: 'mysql',
+      tags: ['db', 'prod'],
+    };
+    const result = filterBasedOnConfig(
+      {
+        ...config,
+        configuration: {
+          ...config.configuration,
+          dependency: ['engine', 'tags'],
+        },
+      },
+      dependentFilters
+    );
+    expect(result).toEqual({
+      engineType: 'mysql',
+      tags: ['db', 'prod'],
+    });
+  });
 });

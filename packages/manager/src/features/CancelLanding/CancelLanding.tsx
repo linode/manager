@@ -1,78 +1,42 @@
-import { Button, H1Header, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
+import { Button, Stack, Typography } from '@linode/ui';
+import { useSearch } from '@tanstack/react-router';
+import React from 'react';
 
-import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-color.svg';
-import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  logo: {
-    width: '100px',
-  },
-  root: {
-    '& button': {
-      marginTop: theme.spacing(8),
-    },
-    '& h1': {
-      marginBottom: theme.spacing(4),
-      marginTop: theme.spacing(4),
-    },
-    '& p': {
-      fontSize: theme.spacing(2),
-      lineHeight: theme.spacing(3),
-      marginTop: theme.spacing(2),
-    },
-    alignItems: 'center',
-    backgroundColor: theme.bg.main,
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
-    padding: `${theme.spacing(4)} ${theme.spacing(2)} 0px`,
-  },
-}));
+import { AkamaiLogo } from 'src/components/AkamaiLogo';
 
 export const CancelLanding = React.memo(() => {
-  const { classes } = useStyles();
-  const location = useLocation<{ survey_link?: string }>();
-  const theme = useTheme();
+  const search = useSearch({ from: '/cancel' });
 
-  const surveyLink = location.state?.survey_link;
-
-  if (!surveyLink) {
-    return <Redirect to="/" />;
-  }
-
-  const goToSurvey = () => {
-    window.location.assign(surveyLink);
-  };
+  const surveyLink = search.survey_link;
 
   return (
-    <div className={classes.root} data-testid="body">
-      {theme.name === 'light' ? (
-        <LightThemeAkamaiLogo className={classes.logo} />
-      ) : (
-        <DarkThemeAkamaiLogo className={classes.logo} />
-      )}
-      <H1Header title="It&rsquo;s been our pleasure to serve you." />
-      <Typography>
-        Your account is closed. We hope you&rsquo;ll consider us for your future
-        cloud hosting needs.
+    <Stack
+      alignItems="center"
+      gap={3}
+      height="calc(100vh - 200px)"
+      justifyContent="center"
+    >
+      <AkamaiLogo sx={{ width: '200px', height: '75px' }} />
+      <Typography variant="h2">
+        It&rsquo;s been our pleasure to serve you.
       </Typography>
-      <Typography>
-        Would you mind taking a brief survey? It will help us understand why
-        you&rsquo;re leaving and what we can do better.
-      </Typography>
+      <Stack mb={2} spacing={1} textAlign="center">
+        <Typography>
+          Your account is closed. We hope you&rsquo;ll consider us for your
+          future cloud hosting needs.
+        </Typography>
+        <Typography>
+          Would you mind taking a brief survey? It will help us understand why
+          you&rsquo;re leaving and what we can do better.
+        </Typography>
+      </Stack>
       <Button
         buttonType="primary"
         data-testid="survey-button"
-        onClick={goToSurvey}
+        href={surveyLink}
       >
         Take our exit survey
       </Button>
-    </div>
+    </Stack>
   );
 });

@@ -1,56 +1,38 @@
-import { fireEvent, render } from '@testing-library/react';
-import * as React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import React from 'react';
 
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CancelLanding } from './CancelLanding';
 
-const realLocation = window.location;
-
-afterAll(() => {
-  window.location = realLocation;
-});
-
 describe('CancelLanding', () => {
-  it('does not render the body when there is no survey_link in the state', () => {
-    const { queryByTestId } = render(wrapWithTheme(<CancelLanding />));
-    expect(queryByTestId('body')).toBe(null);
+  const options = {
+    initialEntries: ['/cancel?survey_link=https://linode.com/fake-survey'],
+    initialRoute: '/cancel',
+  };
+
+  it("renders text explaining that the user's account is closed", () => {
+    const { getByText } = renderWithTheme(<CancelLanding />, options);
+
+    expect(
+      getByText('Your account is closed.', { exact: false })
+    ).toBeVisible();
   });
 
-  it('renders the body when there is a survey_link in the state', () => {
-    const { queryByTestId } = renderWithTheme(
-      <MemoryRouter
-        initialEntries={[
-          { pathname: '/cancel', state: { survey_link: 'https://linode.com' } },
-        ]}
-      >
-        <CancelLanding />
-      </MemoryRouter>
-    );
-    expect(queryByTestId('body')).toBeInTheDocument();
+  it('renders text asking the user to complete a survey', () => {
+    const { getByText } = renderWithTheme(<CancelLanding />, options);
+
+    expect(
+      getByText('Would you mind taking a brief survey?', { exact: false })
+    ).toBeVisible();
   });
 
-  it('navigates to the survey link when the button is clicked', () => {
-    // Mock window.location.assign.
-    // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
-    const mockAssign = vi.fn();
-    delete (window as Partial<Window>).location;
+  it('renders a link to the survey', () => {
+    const { getByRole } = renderWithTheme(<CancelLanding />, options);
 
-    window.location = { ...realLocation, assign: mockAssign };
+    const link = getByRole('link');
 
-    const survey_link = 'https://linode.com';
-    const { getByTestId } = renderWithTheme(
-      // Use a custom MemoryRouter here because the renderWithTheme MemoryRouter option does not support state.
-      // This will likely need to be updated when CancelLanding uses TanStack router fully.
-      <MemoryRouter
-        initialEntries={[{ pathname: '/cancel', state: { survey_link } }]}
-      >
-        <CancelLanding />
-      </MemoryRouter>
-    );
-    const button = getByTestId('survey-button');
-    fireEvent.click(button);
-    expect(mockAssign).toHaveBeenCalledWith(survey_link);
+    expect(link).toBeVisible();
+    expect(link).toHaveTextContent('Take our exit survey');
+    expect(link).toHaveAttribute('href', 'https://linode.com/fake-survey');
   });
 });
