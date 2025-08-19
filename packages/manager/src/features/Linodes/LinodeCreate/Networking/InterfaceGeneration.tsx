@@ -13,6 +13,7 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
@@ -35,12 +36,13 @@ export const InterfaceGeneration = () => {
   });
 
   const { data: accountSettings } = useAccountSettings();
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const disabledReason =
     accountSettings &&
     disabledReasonMap[accountSettings.interfaces_for_new_linodes];
 
-  const disabled = disabledReason !== undefined;
+  const disabled = disabledReason !== undefined || !permissions.create_linode;
 
   return (
     <Box>
@@ -49,7 +51,7 @@ export const InterfaceGeneration = () => {
           TooltipProps: {
             placement: 'right',
           },
-          alwaysShowTooltip: disabled,
+          alwaysShowTooltip: disabledReason !== undefined,
           tooltipText: disabledReason,
         }}
         defaultExpanded={!disabled}
