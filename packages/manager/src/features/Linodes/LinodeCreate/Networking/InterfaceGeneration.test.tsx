@@ -7,6 +7,12 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { InterfaceGeneration } from './InterfaceGeneration';
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    data: { create_linode: true },
+  })),
+}));
+
 describe('InterfaceGeneration', () => {
   it('disables the radios if the account setting enforces linode_only interfaces', async () => {
     const accountSettings = accountSettingsFactory.build({
