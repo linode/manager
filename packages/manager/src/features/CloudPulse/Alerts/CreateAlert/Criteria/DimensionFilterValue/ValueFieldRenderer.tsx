@@ -147,7 +147,9 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     const autocompletePlaceholder = config.multiple
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
-    const items = config.useCustomFetch ? customFetchItems : staticOptions;
+    const { values, isLoading, isError } = config.useCustomFetch
+      ? customFetchItems
+      : { values: staticOptions, isLoading: false, isError: false };
     return (
       <DimensionFilterAutocomplete
         disabled={disabled}
@@ -155,10 +157,12 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
         fieldOnBlur={onBlur}
         fieldOnChange={onChange}
         fieldValue={value}
+        isError={isError}
+        isLoading={isLoading}
         multiple={config.multiple}
         name={name}
         placeholderText={config.placeholder ?? autocompletePlaceholder}
-        values={items}
+        values={values}
       />
     );
   }

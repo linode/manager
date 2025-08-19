@@ -1,4 +1,4 @@
-import { useAllLinodesQuery } from '@linode/queries';
+import { useAllLinodesQuery, useAllVPCsQuery } from '@linode/queries';
 import { useMemo } from 'react';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -8,9 +8,10 @@ import {
   getFilteredFirewallResources,
   getFirewallLinodes,
   getLinodeRegions,
+  getVPCSubnets,
 } from './utils';
 
-import type { Item } from '../../../constants';
+import type { FetchOptions } from './constants';
 import type { CloudPulseServiceType, Filter, Region } from '@linode/api-v4';
 
 interface FetchOptionsProps {
@@ -39,31 +40,39 @@ interface FetchOptionsProps {
  * Custom hook to return selectable options based on the dimension type.
  * Handles fetching and transforming data for edge-cases.
  */
-export function useFetchOptions(
-  props: FetchOptionsProps
-): Item<string, string>[] {
+export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
   const { dimensionLabel, regions, entities, serviceType, type } = props;
 
   const supportedRegionIds =
-    serviceType &&
-    regions &&
-    filterRegionByServiceType(type, regions, serviceType).map(({ id }) => id);
+    (serviceType &&
+      regions &&
+      filterRegionByServiceType(type, regions, serviceType).map(
+        ({ id }) => id
+      )) ||
+    [];
 
   // Create a filter for regions based on suppoerted region IDs
-  const regionFilter: Filter =
-    supportedRegionIds && supportedRegionIds.length > 0
-      ? {
-          '+or': supportedRegionIds.map((regionId) => ({
+  const regionFilter: Filter = {
+    '+or':
+      supportedRegionIds && supportedRegionIds.length > 0
+        ? supportedRegionIds.map((regionId) => ({
             region: regionId,
-          })),
-        }
-      : {};
+          }))
+        : [{ region: '' }],
+  };
 
+  const filterLabels: string[] = [
+    'linode_id',
+    'region_id',
+    'associated_entity_region',
+  ];
   // Fetch all firewall resources when dimension requires it
-  const { data: firewallResources } = useResourcesQuery(
-    dimensionLabel === 'parent_vm_entity_id' ||
-      dimensionLabel === 'region_id' ||
-      dimensionLabel === 'associated_entity_region',
+  const {
+    data: firewallResources,
+    isLoading: isResourcesLoading,
+    isError: isResourcesError,
+  } = useResourcesQuery(
+    filterLabels.includes(dimensionLabel ?? ''),
     'firewall'
   );
 
@@ -73,23 +82,27 @@ export function useFetchOptions(
     [firewallResources, entities]
   );
 
-  const idFilter = filteredFirewallResourcesIds.length
-    ? { '+or': filteredFirewallResourcesIds.map((id) => ({ id })) }
-    : [];
+  const idFilter = {
+    '+or': filteredFirewallResourcesIds.length
+      ? filteredFirewallResourcesIds.map((id) => ({ id }))
+      : [{ id: '' }],
+  };
 
   const combinedFilter: Filter = {
     '+and': [idFilter, regionFilter].filter(Boolean) as Filter[],
   };
   // Fetch all linodes with the combined filter
-  const { data: linodes } = useAllLinodesQuery(
+  const {
+    data: linodes,
+    isError: isLinodesError,
+    isLoading: isLinodesLoading,
+  } = useAllLinodesQuery(
     {},
     combinedFilter,
-    (dimensionLabel === 'region_id' ||
-      dimensionLabel === 'parent_vm_entity_id' ||
-      dimensionLabel === 'associated_entity_region') &&
-      filteredFirewallResourcesIds.length > 0
+    filterLabels.includes(dimensionLabel ?? '') &&
+      filteredFirewallResourcesIds.length > 0 &&
+      supportedRegionIds?.length > 0
   );
-
   // Extract linodes from filtered firewall resources
   const firewallLinodes = useMemo(
     () => getFirewallLinodes(linodes ?? []),
@@ -102,15 +115,37 @@ export function useFetchOptions(
     [linodes]
   );
 
+  const {
+    data: vpcs,
+    isLoading: isVPCsLoading,
+    isError: isVPCsError,
+  } = useAllVPCsQuery({
+    enabled: dimensionLabel === 'vpc_subnet_id',
+  });
+
+  const vpcSubnets = useMemo(() => getVPCSubnets(vpcs ?? []), [vpcs]);
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
     case 'associated_entity_region':
-      return linodeRegions;
-    case 'parent_vm_entity_id':
-      return firewallLinodes;
     case 'region_id':
-      return linodeRegions;
+      return {
+        values: linodeRegions,
+        isError: isLinodesError || isResourcesError,
+        isLoading: isLinodesLoading || isResourcesLoading,
+      };
+    case 'linode_id':
+      return {
+        values: firewallLinodes,
+        isError: isLinodesError || isResourcesError,
+        isLoading: isLinodesLoading || isResourcesLoading,
+      };
+    case 'vpc_subnet_id':
+      return {
+        values: vpcSubnets,
+        isError: isVPCsLoading,
+        isLoading: isVPCsError,
+      };
     default:
-      return [];
+      return { values: [], isLoading: false, isError: false };
   }
 }

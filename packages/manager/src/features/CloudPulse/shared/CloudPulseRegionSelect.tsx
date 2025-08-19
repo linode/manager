@@ -111,13 +111,20 @@ export const CloudPulseRegionSelect = React.memo(
       regions, // Function to call on change
     ]);
 
-    const linodeRegionIds = useFetchOptions({
+    const {
+      values,
+      isLoading: isLinodeRegionIdLoading,
+      isError: isLinodeRegionIdError,
+    } = useFetchOptions({
       dimensionLabel: filterKey,
       entities: selectedEntities,
       regions,
       serviceType,
       type: 'metrics',
-    }).map((option: Item<string, string>) => option.value);
+    });
+    const linodeRegionIds = values.map(
+      (option: Item<string, string>) => option.value
+    );
 
     const supportedLinodeRegions =
       regions?.filter((region) => linodeRegionIds?.includes(region.id)) ?? [];
@@ -142,14 +149,17 @@ export const CloudPulseRegionSelect = React.memo(
         disableClearable={false}
         disabled={!selectedDashboard || !regions || disabled || !resources}
         errorText={
-          isError || isResourcesError
+          isError || isResourcesError || isLinodeRegionIdError
             ? `Failed to fetch ${label || 'Regions'}.`
             : ''
         }
         fullWidth
         isGeckoLAEnabled={isGeckoLAEnabled}
         label={label || 'Region'}
-        loading={!disabled && (isLoading || isResourcesLoading)}
+        loading={
+          !disabled &&
+          (isLoading || isResourcesLoading || isLinodeRegionIdLoading)
+        }
         noMarginTop
         noOptionsText={
           NO_REGION_MESSAGE[selectedDashboard?.service_type ?? ''] ??

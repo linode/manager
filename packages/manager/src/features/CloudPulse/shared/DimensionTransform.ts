@@ -28,7 +28,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
   },
   firewall: {
     interface_type: TRANSFORMS.uppercase,
-    parent_vm_entity_id: TRANSFORMS.lowercase,
+    linode_id: TRANSFORMS.lowercase,
   },
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,

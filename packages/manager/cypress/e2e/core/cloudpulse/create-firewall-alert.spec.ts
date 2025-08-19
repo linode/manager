@@ -168,7 +168,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
       dimensions: [
         {
           dimension_label: 'Linode',
-          label: 'parent_vm_entity_id"',
+          label: 'linode_id"',
           values: [],
         },
         {
@@ -182,7 +182,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
           values: [],
         },
         {
-          dimension_label: 'parent_vm_entity_id',
+          dimension_label: 'linode_id',
           label: 'Parent VM Entity ID',
           values: [],
         },
