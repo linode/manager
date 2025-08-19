@@ -1,4 +1,8 @@
-import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+  useRegionQuery,
+} from '@linode/queries';
 import { Accordion, Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -30,6 +34,11 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
+
+  const { data: region } = useRegionQuery(linode?.region ?? '');
+
+  const regionSupportsMaintenancePolicy =
+    region?.capabilities.includes('Maintenance Policy') ?? false;
 
   const values: MaintenancePolicyValues = {
     maintenance_policy: linode?.maintenance_policy ?? 'linode/migrate',
@@ -89,7 +98,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
             name="maintenance_policy"
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
-                disabled={isReadOnly}
+                disabled={isReadOnly || !regionSupportsMaintenancePolicy}
                 errorText={fieldState.error?.message}
                 onChange={(policy) => field.onChange(policy.slug)}
                 value={field.value}
