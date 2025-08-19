@@ -70,7 +70,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { disabled, disabledRegions, errorText, onChange, value } = props;
 
   const [regionFilter, setRegionFilter] =
-    React.useState<RegionFilterValue>('distributed');
+    React.useState<RegionFilterValue>('distributed-ALL');
 
   const { data: regions } = useRegionsQuery();
   const createType = useGetLinodeCreateType();
