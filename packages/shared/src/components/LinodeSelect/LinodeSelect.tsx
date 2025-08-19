@@ -189,7 +189,7 @@ export const LinodeSelect = (
           ? multiple && Array.isArray(value)
             ? (linodes?.filter(value) ?? null)
             : (linodes?.find(value) ?? null)
-          : (mapIdsToDevices<Linode>(value, linodes) ?? null)
+          : mapIdsToDevices<Linode>(value, linodes)
       }
     />
   );
