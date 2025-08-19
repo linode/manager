@@ -6,15 +6,15 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 
 import type { CreateNodePoolData } from '@linode/api-v4';
 
 export const NodePoolFirewallSelect = () => {
-  const { control, watch } = useFormContext<CreateNodePoolData>();
-  const watchedFirewallId = watch('firewall_id');
+  const { control } = useFormContext<CreateNodePoolData>();
+  const watchedFirewallId = useWatch({ control, name: 'firewall_id' });
 
   const [isUsingOwnFirewall, setIsUsingOwnFirewall] = React.useState(
     Boolean(watchedFirewallId)
@@ -31,7 +31,6 @@ export const NodePoolFirewallSelect = () => {
       </Typography>
       <RadioGroup
         aria-label="Bring your own firewall"
-        data-testid="isUsingOwnFirewall"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setIsUsingOwnFirewall(e.target.value === 'yes');
         }}
