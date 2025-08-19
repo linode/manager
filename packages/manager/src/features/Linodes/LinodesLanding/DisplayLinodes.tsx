@@ -221,7 +221,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                           disableRipple
                           onClick={toggleGroupLinodes}
                           sx={(theme) => ({
-                            ':hover': {
+                            ':hover, :focus': {
                               color:
                                 theme.tokens.component.Table.HeaderNested.Icon
                                   .Hover,

@@ -1560,8 +1560,8 @@ export const lightTheme: ThemeOptions = {
                 },
               },
             },
-            ':hover': {
-              color: Color.Brand[60],
+            ':hover, :focus': {
+              color: Table.HeaderNested.Icon.Hover,
               svg: {
                 path: {
                   fill: Table.HeaderNested.Icon.Hover,
@@ -1645,7 +1645,7 @@ export const lightTheme: ThemeOptions = {
             color: Table.HeaderNested.Text,
           },
           ':hover, :focus': {
-            color: Color.Brand[90],
+            color: Table.HeaderNested.Icon.Hover,
             cursor: 'pointer',
             svg: {
               path: {

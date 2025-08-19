@@ -161,7 +161,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   disableRipple
                   onClick={toggleGroupLinodes}
                   sx={(theme) => ({
-                    ':hover': {
+                    ':hover, :focus': {
                       color:
                         theme.tokens.component.Table.HeaderNested.Icon.Hover,
                     },
