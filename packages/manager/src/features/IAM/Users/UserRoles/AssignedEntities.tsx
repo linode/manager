@@ -29,6 +29,7 @@ export const AssignedEntities = ({
   );
 
   React.useEffect(() => {
+    // Double RAF for good measure - see https://stackoverflow.com/questions/44145740/how-does-double-requestanimationframe-work
     const rafId = requestAnimationFrame(() => {
       requestAnimationFrame(() => calculateHiddenItems());
     });
@@ -66,7 +67,10 @@ export const AssignedEntities = ({
         }}
         sx={{
           display: 'inline',
-          marginRight: theme.tokens.spacing.S8,
+          marginRight:
+            numHiddenItems > 0 && isLastVisibleItem(index)
+              ? theme.tokens.spacing.S16
+              : theme.tokens.spacing.S8,
         }}
       >
         <Chip
