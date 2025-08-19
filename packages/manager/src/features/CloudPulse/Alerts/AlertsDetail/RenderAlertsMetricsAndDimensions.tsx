@@ -30,6 +30,7 @@ interface AlertMetricAndDimensionsProp {
   serviceType: CloudPulseServiceType;
 }
 
+const transformationAllowedOperators = ['eq', 'neq', 'in'];
 export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria, serviceType } = props;
@@ -79,11 +80,13 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    handleDimensionValue(
-                      value,
-                      serviceType,
-                      dimensionFilterKey
-                    ),
+                    transformationAllowedOperators.includes(dimensionOperator)
+                      ? handleDimensionValue(
+                          value,
+                          serviceType,
+                          dimensionFilterKey
+                        )
+                      : value,
                   ]
                 )}
               />

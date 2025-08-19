@@ -18,5 +18,5 @@ export const handleDimensionValue = (
     .map((part) =>
       transformDimensionValue(serviceType, dimensionLabel, part.trim())
     )
-    .join(',');
+    .join(', ');
 };

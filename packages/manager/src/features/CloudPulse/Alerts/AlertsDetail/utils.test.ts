@@ -22,7 +22,7 @@ describe('handleDimensionValueCapitalization', () => {
     const expected = value
       .split(',')
       .map((v) => transformDimensionValue(serviceType, 'protocol', v))
-      .join(',');
+      .join(', ');
 
     const result = handleDimensionValue(value, serviceType, 'protocol');
 
