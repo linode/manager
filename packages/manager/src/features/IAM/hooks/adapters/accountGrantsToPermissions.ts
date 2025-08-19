@@ -68,9 +68,9 @@ export const accountGrantsToPermissions = (
     // AccountLinodeAdmin
     create_linode: unrestricted || globalGrants?.add_linodes,
     // AccountOAuthClientAdmin
-    create_oauth_client: unrestricted,
-    update_oauth_client: unrestricted,
-    delete_oauth_client: unrestricted,
-    reset_oauth_client_secret: unrestricted,
+    create_oauth_client: true,
+    update_oauth_client: true,
+    delete_oauth_client: true,
+    reset_oauth_client_secret: true,
   } as Record<AccountAdmin, boolean>;
 };
