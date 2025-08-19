@@ -67,5 +67,10 @@ export const accountGrantsToPermissions = (
     create_firewall: unrestricted || globalGrants?.add_firewalls,
     // AccountLinodeAdmin
     create_linode: unrestricted || globalGrants?.add_linodes,
+    // AccountOAuthClientAdmin
+    create_oauth_client: true,
+    update_oauth_client: true,
+    delete_oauth_client: true,
+    reset_oauth_client_secret: true,
   } as Record<AccountAdmin, boolean>;
 };

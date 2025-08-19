@@ -14,6 +14,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -54,6 +55,13 @@ const OAuthClients = () => {
       '+order_by': orderBy,
     }
   );
+
+  const { data: permissions } = usePermissions('account', [
+    'create_oauth_client',
+    'update_oauth_client',
+    'delete_oauth_client',
+    'reset_oauth_client_secret',
+  ]);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
@@ -120,6 +128,7 @@ const OAuthClients = () => {
               setSelectedOAuthClientId(id);
               setIsResetDialogOpen(true);
             }}
+            permissions={permissions}
           />
         </TableCell>
       </TableRow>
@@ -137,6 +146,7 @@ const OAuthClients = () => {
       >
         <Button
           buttonType="primary"
+          disabled={!permissions.create_oauth_client}
           onClick={() => setIsCreateDrawerOpen(true)}
         >
           Add an OAuth App
