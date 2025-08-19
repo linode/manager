@@ -124,6 +124,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
         {isLkeEnterprisePostLAFeatureEnabled &&
           clusterTier === 'enterprise' && (
             <>
+              {/* @TODO use `NodePoolConfigOptions` when the form field names are updated to align with APIv4 types */}
               <Controller
                 control={form.control}
                 name="update_strategy"
