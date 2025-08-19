@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateUserMutation } from '@linode/queries';
 import { ActionsPanel, Box, Drawer, Notice, TextField } from '@linode/ui';
+import { CreateUserSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -19,6 +21,7 @@ export const CreateUserDrawer = (props: Props) => {
     reset,
     setError,
   } = useForm({
+    resolver: yupResolver(CreateUserSchema),
     defaultValues: {
       email: '',
       restricted: true,

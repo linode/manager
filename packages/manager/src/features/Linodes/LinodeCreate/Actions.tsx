@@ -27,7 +27,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const { formState, getValues, trigger, control } =
     useFormContext<LinodeCreateFormValues>();
@@ -99,7 +99,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-          isAclpIntegration: aclpBetaServices?.linode?.alerts,
+          isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
           isAclpAlertsPreferenceBeta: isAlertsBetaMode,
         })}
       />

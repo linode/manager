@@ -340,6 +340,11 @@ describe('PrimaryNav', () => {
         beta: true,
         enabled: true,
       },
+      limitsEvolution: {
+        enabled: true,
+        requestForIncreaseDisabledForAll: true,
+        requestForIncreaseDisabledForInternalAccountsOnly: true,
+      },
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
