@@ -1,5 +1,3 @@
-import { getType } from '@linode/api-v4/lib/linodes/types';
-
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
@@ -108,7 +106,3 @@ export function parseClusterData(
   }
   return result;
 }
-
-export const fetchLinodeType = async (typeId: string): Promise<LinodeType> => {
-  return await getType(typeId);
-};

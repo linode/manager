@@ -1,9 +1,14 @@
-import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
+import {
+  useAllTypes,
+  useImageQuery,
+  useRegionsQuery,
+  useSpecificTypes,
+  useTypeQuery,
+} from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useQueries } from '@tanstack/react-query';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -14,11 +19,8 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import {
-  getLinodeTypeMapMarketplace,
-  type LinodeCreateFormValues,
-} from '../utilities';
-import { fetchLinodeType, getLinodePrice, parseClusterData } from './utilities';
+import { type LinodeCreateFormValues } from '../utilities';
+import { getLinodePrice, parseClusterData } from './utilities';
 
 interface SummaryProps {
   isAlertsBetaMode?: boolean;
@@ -37,9 +39,22 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   });
 
   const rawClusterData = parseClusterData(stackscriptData);
-  const clusterTypeQueries = useSpecificTypes(
-    rawClusterData.map((t) => t.typeId!)
-  );
+
+  const { data: allTypes } = useAllTypes();
+
+  const labelToIdMap = React.useMemo(() => {
+    if (!allTypes) return {};
+    return allTypes.reduce<Record<string, string>>((acc, type) => {
+      acc[type.label] = type.id;
+      return acc;
+    }, {});
+  }, [allTypes]);
+
+  const typeIds = rawClusterData
+    .map((c) => labelToIdMap[c.typeId ?? ''])
+    .filter((id): id is string => Boolean(id));
+
+  const clusterTypeQueries = useSpecificTypes(typeIds);
 
   const clusterData = rawClusterData.map((cluster, i) => ({
     ...cluster,

@@ -15,7 +15,6 @@ import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalyt
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
-import types from '../../../utilities/types.json';
 import {
   getDefaultInterfacePayload,
   getLegacyInterfaceFromLinodeInterface,
@@ -654,15 +653,3 @@ export const getDoesEmployeeNeedToAssignFirewall = (
 
   return !legacyFirewallId;
 };
-
-/**
- * getLinodeTypeMapMarketplace
- *
- * allows us to map Linode labels in types.json to their appropiate
- * instance types. This allows for better readablity on Cloud Manager
- * when a customer is choosing a plan type for a cluster group
- */
-
-export const getLinodeTypeMapMarketplace = Object.fromEntries(
-  types.data.map((type) => [type.label, type.id])
-);
