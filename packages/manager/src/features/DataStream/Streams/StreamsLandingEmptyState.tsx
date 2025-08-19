@@ -11,12 +11,12 @@ import {
   linkAnalyticsEvent,
 } from './StreamsLandingEmptyStateData';
 
-interface StreamsEmptyLandingStateProps {
+interface StreamsLandingEmptyStateProps {
   navigateToCreate: () => void;
 }
 
 export const StreamsLandingEmptyState = (
-  props: StreamsEmptyLandingStateProps
+  props: StreamsLandingEmptyStateProps
 ) => {
   const { navigateToCreate } = props;
 

@@ -29,7 +29,6 @@ import type {
   AclpAlertServiceTypeConfig,
   AclpServices,
 } from 'src/featureFlags';
-
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
   services.forEach((service) => {

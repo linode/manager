@@ -99,7 +99,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       : firewallId;
 
   const hasBetaAclpAlertsAssigned =
-    aclpServices?.linode?.alerts?.beta &&
+    aclpServices?.linode?.alerts?.enabled &&
     isAclpAlertsSupportedRegionLinode &&
     isAlertsBetaMode;
 
