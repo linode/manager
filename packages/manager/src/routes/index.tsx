@@ -24,7 +24,9 @@ import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
+import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
+import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
 import { nodeBalancersRouteTree } from './nodeBalancers';
@@ -34,6 +36,8 @@ import { profileRouteTree } from './profile';
 import { quotasRouteTree } from './quotas';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
+import { serviceTransfersRouteTree } from './serviceTransfers';
+import { settingsRouteTree } from './settings';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
@@ -69,7 +73,9 @@ export const routeTree = rootRoute.addChildren([
   imagesRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
+  loginHistoryRouteTree,
   longviewRouteTree,
+  maintenanceRouteTree,
   managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
@@ -77,6 +83,8 @@ export const routeTree = rootRoute.addChildren([
   profileRouteTree,
   quotasRouteTree,
   searchRouteTree,
+  serviceTransfersRouteTree,
+  settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
   volumesRouteTree,
