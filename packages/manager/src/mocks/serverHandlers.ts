@@ -56,6 +56,7 @@ import {
   entityTransferFactory,
   eventFactory,
   firewallDeviceFactory,
+  firewallEntityfactory,
   firewallFactory,
   imageFactory,
   incidentResponseFactory,
@@ -1100,7 +1101,21 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/v4beta/networking/firewalls', () => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = [
+      ...firewallFactory.buildList(10),
+      firewallFactory.build({
+        entities: [
+          firewallEntityfactory.build({
+            type: 'linode_interface',
+            parent_entity: firewallEntityfactory.build({
+              type: 'linode',
+              id: 123,
+              label: 'Linode-123',
+            }),
+          }),
+        ],
+      }),
+    ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
@@ -3360,6 +3375,7 @@ export const handlers = [
             metric: {
               entity_id: '456',
               metric_name: 'average_cpu_usage',
+              linode_id: '123',
               node_id: 'primary-2',
             },
             values: [
