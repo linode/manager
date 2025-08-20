@@ -9,9 +9,9 @@ beforeEach(() => {
 describe('smoke - deep links', () => {
   beforeEach(() => {
     cy.visitWithLogin('/null');
-    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
+      iamRbacPrimaryNavChanges: true,
     }).as('getFeatureFlags');
   });
 

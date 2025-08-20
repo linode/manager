@@ -40,10 +40,10 @@ const serviceTransferEmptyState = 'No data to display.';
 export const serviceTransferErrorMessage = 'An unknown error has occurred';
 
 // Service transfer landing page URL.
-const serviceTransferLandingUrl = '/account/service-transfers';
+const serviceTransferLandingUrl = '/service-transfers';
 
 // Service transfer initiation page URL.
-const serviceTransferCreateUrl = '/account/service-transfers/create';
+const serviceTransferCreateUrl = '/service-transfers/create';
 
 // Possible status responses for service transfers.
 const serviceTransferStatuses: EntityTransferStatus[] = [
@@ -130,7 +130,8 @@ describe('Account service transfers', () => {
   beforeEach(() => {
     // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
+      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+      iamRbacPrimaryNavChanges: true,
     }).as('getFeatureFlags');
   });
 
@@ -408,7 +409,9 @@ describe('Account service transfers', () => {
           cy.findByText(errorMessage).should('be.visible');
 
           // Navigate back to landing page and cancel transfer.
-          cy.contains('a', 'Service Transfers').should('be.visible').click();
+          ui.entityHeader.find().within(() => {
+            cy.contains('a', 'Service Transfers').should('be.visible').click();
+          });
           cy.url().should('endWith', serviceTransferLandingUrl);
 
           cy.findByText(token)

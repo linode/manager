@@ -21,7 +21,6 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -151,11 +150,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
   describe('From Parent to Child', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        iamRbacPrimaryNavChanges: false,
-      });
-    });
     /*
      * - Confirms that Parent account user can switch to Child account from Account Billing page.
      * - Confirms that Child account information is displayed in user menu button after switch.
@@ -384,11 +378,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch back from Child accounts as expected.
    */
   describe('From Child to Parent', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        iamRbacPrimaryNavChanges: false,
-      });
-    });
     /*
      * - Confirms that a Child account Proxy user can switch back to a Parent account from Billing page.
      * - Confirms that Parent account information is displayed in user menu button after switch.
@@ -476,11 +465,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Proxy users can switch to other Child accounts as expected.
    */
   describe('From Child to Child', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        iamRbacPrimaryNavChanges: false,
-      });
-    });
     /*
      * - Confirms that a Child account Proxy user can switch to another Child account from Billing page.
      * - Confirms that alternate Child account information is displayed in user menu button after switch.
@@ -579,11 +563,6 @@ describe('Parent/Child account switching', () => {
   });
 
   describe('Child Account Access', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        iamRbacPrimaryNavChanges: false,
-      });
-    });
     /*
      * - Smoke test to confirm that restricted parent users with the child_account_access grant can switch accounts.
      * - Confirms that the "Switch Account" button is rendered.
@@ -662,11 +641,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Cloud handles account switching errors gracefully.
    */
   describe('Error flows', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        iamRbacPrimaryNavChanges: false,
-      });
-    });
     /*
      * - Confirms error handling upon failure to fetch child accounts.
      * - Confirms "Try Again" button can be used to re-fetch child accounts successfully.
