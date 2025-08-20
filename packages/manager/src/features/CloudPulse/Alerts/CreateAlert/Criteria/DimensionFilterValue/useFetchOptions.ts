@@ -45,9 +45,12 @@ export function useFetchOptions(
   const { dimensionLabel, regions, entities, serviceType, type } = props;
 
   const supportedRegionIds =
-    serviceType &&
-    regions &&
-    filterRegionByServiceType(type, regions, serviceType).map(({ id }) => id);
+    (serviceType &&
+      regions &&
+      filterRegionByServiceType(type, regions, serviceType).map(
+        ({ id }) => id
+      )) ||
+    [];
 
   // Create a filter for regions based on suppoerted region IDs
   const regionFilter: Filter =
@@ -59,11 +62,15 @@ export function useFetchOptions(
         }
       : {};
 
+  const filterLabels: string[] = [
+    'parent_vm_entity_id',
+    'region_id',
+    'associated_entity_region',
+  ];
+
   // Fetch all firewall resources when dimension requires it
   const { data: firewallResources } = useResourcesQuery(
-    dimensionLabel === 'parent_vm_entity_id' ||
-      dimensionLabel === 'region_id' ||
-      dimensionLabel === 'associated_entity_region',
+    filterLabels.includes(dimensionLabel ?? ''),
     'firewall'
   );
 
@@ -84,10 +91,9 @@ export function useFetchOptions(
   const { data: linodes } = useAllLinodesQuery(
     {},
     combinedFilter,
-    (dimensionLabel === 'region_id' ||
-      dimensionLabel === 'parent_vm_entity_id' ||
-      dimensionLabel === 'associated_entity_region') &&
-      filteredFirewallResourcesIds.length > 0
+    filterLabels.includes(dimensionLabel ?? '') &&
+      filteredFirewallResourcesIds.length > 0 &&
+      supportedRegionIds.length > 0
   );
 
   // Extract linodes from filtered firewall resources

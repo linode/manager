@@ -125,6 +125,11 @@ export const accountQueries = createQueryKeys('account', {
         queryFn: () => getUsers(params, filter),
         queryKey: [params, filter],
       }),
+      infinite: (filter: Filter = {}) => ({
+        queryFn: ({ pageParam }) =>
+          getUsers({ page: pageParam as number, page_size: 25 }, filter),
+        queryKey: [filter],
+      }),
       user: (username: string) => ({
         contextQueries: {
           grants: {
