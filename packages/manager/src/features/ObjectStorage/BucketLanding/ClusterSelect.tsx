@@ -59,7 +59,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}
-      value={selectedCluster ?? undefined}
+      value={selectedCluster ?? null}
     />
   );
 };
