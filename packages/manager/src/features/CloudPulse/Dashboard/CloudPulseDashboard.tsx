@@ -145,17 +145,10 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return (
       <CircleProgress
-        sx={{
-          padding: 2,
-        }}
+        sx={(theme) => ({
+          padding: theme.spacingFunction(16),
+        })}
       />
-    );
-  }
-
-
-  if (!dashboard) {
-    return renderPlaceHolder(
-      'No visualizations are available at this moment. Create Dashboards to list here.'
     );
   }
 
