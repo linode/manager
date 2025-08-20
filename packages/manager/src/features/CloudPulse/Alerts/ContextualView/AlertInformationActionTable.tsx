@@ -12,6 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
 import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -358,12 +359,12 @@ export const AlertInformationActionTable = (
         isOpen={isDialogOpen}
         message={
           <>
-            Are you sure you want to save (Beta) Alerts? <b>Legacy</b> settings
-            will be disabled and replaced by (Beta) Alerts settings.
+            {ALERTS_BETA_PROMPT} <b>Legacy</b> settings will be disabled and
+            replaced by (Beta) Alerts settings.
           </>
         }
         primaryButtonLabel="Confirm"
-        title="Are you sure you want to save (Beta) Alerts? "
+        title={ALERTS_BETA_PROMPT}
       />
     </>
   );

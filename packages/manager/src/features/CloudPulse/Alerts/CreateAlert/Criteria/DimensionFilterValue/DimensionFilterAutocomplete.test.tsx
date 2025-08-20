@@ -144,7 +144,7 @@ describe('<DimensionFilterAutocomplete />', () => {
     renderWithTheme(
       <DimensionFilterAutocomplete
         {...defaultProps}
-        errorText="Failed to fetch the Values."
+        errorText={undefined}
         fieldValue={null}
         isError={true}
         isLoading={false}

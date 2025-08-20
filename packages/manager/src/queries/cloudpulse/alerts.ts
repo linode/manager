@@ -106,15 +106,23 @@ export const useEditAlertDefinition = () => {
       editAlertDefinition(data, serviceType, alertId),
 
     onSuccess(data) {
-      const allAlertsQueryKey = queryFactory.alerts._ctx.all().queryKey;
-      const oldAlerts = queryClient.getQueryData<Alert[]>(allAlertsQueryKey);
+      const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
 
-      if (oldAlerts) {
-        queryClient.setQueryData<Alert[]>(
-          allAlertsQueryKey,
-          oldAlerts.map((alert) => (alert.id === data.id ? data : alert))
-        );
-      }
+      queryClient.setQueryData<Alert[] | undefined>(allAlertsKey, (prev) => {
+        // nothing cached yet
+        if (!prev) return prev;
+
+        const idx = prev.findIndex((a) => a.id === data.id);
+        if (idx === -1) return prev;
+
+        // if no change keep referential equality
+        if (prev[idx] === data) return prev;
+
+        const next = prev.slice();
+        next[idx] = data;
+        return next;
+      });
+
       queryClient.setQueryData<Alert>(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(
           data.service_type,

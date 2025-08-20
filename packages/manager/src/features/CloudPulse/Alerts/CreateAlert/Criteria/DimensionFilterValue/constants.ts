@@ -179,6 +179,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     },
     startswith_endswith: {
       type: 'textfield',
+      placeholder: 'e.g., us-ord',
       inputType: 'text',
     },
     in: {
@@ -255,6 +256,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     },
     startswith_endswith: {
       type: 'textfield',
+      placeholder: 'e.g., VPC-label_subnet-label',
       inputType: 'text',
     },
     in: {

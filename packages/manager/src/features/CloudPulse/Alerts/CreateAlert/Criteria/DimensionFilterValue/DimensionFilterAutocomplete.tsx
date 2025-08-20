@@ -79,11 +79,13 @@ export const DimensionFilterAutocomplete = (
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
-      errorText={isError ? 'Failed to fetch the values.' : errorText}
+      errorText={
+        errorText ?? (isError ? 'Failed to fetch the values.' : undefined)
+      }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
       limitTags={1}
-      loading={!disabled && isLoading}
+      loading={!disabled && isLoading && !isError}
       multiple={multiple}
       onBlur={fieldOnBlur}
       onChange={(_, selected, operation) => {

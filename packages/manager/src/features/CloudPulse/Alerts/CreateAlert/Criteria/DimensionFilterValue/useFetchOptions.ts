@@ -142,8 +142,8 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     case 'vpc_subnet_id':
       return {
         values: vpcSubnets,
-        isError: isVPCsLoading,
-        isLoading: isVPCsError,
+        isError: isVPCsError,
+        isLoading: isVPCsLoading,
       };
     default:
       return { values: [], isLoading: false, isError: false };
