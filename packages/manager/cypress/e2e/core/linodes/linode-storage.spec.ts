@@ -57,7 +57,7 @@ const deleteInUseDisk = (diskName: string) => {
   });
 
   cy.findByText(
-    'Your Linode must be fully powered down in order to perform this action'
+    'Your Linode must be fully powered down in order to perform this action.'
   ).should('be.visible');
 };
 
