@@ -4,7 +4,7 @@
 
 <https://hackerone.com/akamai?type=team>
 
-## Akamai Cloud / Linode
+## Akamai Connected Cloud / Linode
 
 <https://hackerone.com/linode?type=team>
 
