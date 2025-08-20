@@ -7,7 +7,7 @@ export const nodePoolSchema = object({
   count: number(),
   upgrade_strategy: string(),
   k8_version: string(),
-  firewall_id: number(),
+  firewall_id: number().notRequired(),
 });
 
 export const clusterLabelSchema = string()

@@ -38,19 +38,15 @@ interface Props {
 }
 
 export const ConfigureNodePoolForm = (props: Props) => {
-  const { clusterId, onDone, nodePool, clusterVersion } = props;
+  const { clusterId, onDone, nodePool, clusterVersion, clusterTier } = props;
   const { enqueueSnackbar } = useSnackbar();
-
-  // @TODO uncomment when we begin surfacing the Text Field for a Node Pool's `label` (ECE-353)
-  // const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
-  //   ignoreNodePoolsLabel: true,
-  // });
 
   const form = useForm<UpdateNodePoolData>({
     defaultValues: {
       // @TODO allow users to edit Node Pool `label` and `tags` because the API supports it. (ECE-353)
       // label: nodePool.label,
       // tags: nodePool.tags,
+      firewall_id: nodePool.firewall_id,
       update_strategy: nodePool.update_strategy,
       k8s_version: nodePool.k8s_version,
     },
@@ -88,6 +84,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
             <Notice text={form.formState.errors.root.message} variant="error" />
           )}
           <NodePoolConfigOptions
+            clusterTier={clusterTier ?? 'standard'}
             versionFieldOptions={{
               show: true,
               versions,

@@ -1,11 +1,12 @@
 import { Autocomplete, Stack } from '@linode/ui';
-import * as React from 'react';
+import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 import { NodePoolFirewallSelect } from '../NodePoolFirewallSelect';
 import { NodePoolUpdateStrategySelect } from '../NodePoolUpdateStrategySelect';
 
-import type { CreateNodePoolData } from '@linode/api-v4';
+import type { CreateNodePoolData, KubernetesTier } from '@linode/api-v4';
 
 interface KubernetesVersionFieldOptions {
   show: boolean;
@@ -13,17 +14,24 @@ interface KubernetesVersionFieldOptions {
 }
 
 interface Props {
+  clusterTier: KubernetesTier;
   versionFieldOptions?: KubernetesVersionFieldOptions;
 }
 
 export const NodePoolConfigOptions = (props: Props) => {
-  const { versionFieldOptions } = props;
+  const { versionFieldOptions, clusterTier } = props;
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { control } = useFormContext<CreateNodePoolData>();
 
   const versionOptions =
     versionFieldOptions?.versions.map((version) => ({
       label: version,
     })) ?? [];
+
+  // @TODO uncomment and wire this up when we begin surfacing the Text Field for a Node Pool's `label` (ECE-353)
+  // const labelPlaceholder = useNodePoolDisplayLabel(nodePool, {
+  //   ignoreNodePoolsLabel: true,
+  // });
 
   return (
     <Stack spacing={3}>
@@ -60,36 +68,41 @@ export const NodePoolConfigOptions = (props: Props) => {
         )}
       />
       */}
-      <Controller
-        control={control}
-        name="update_strategy"
-        render={({ field }) => (
-          <NodePoolUpdateStrategySelect
-            onChange={field.onChange}
-            value={field.value}
+      {/* LKE Enterprise cluster Node Pools have more configurability */}
+      {clusterTier === 'enterprise' && isLkeEnterprisePostLAFeatureEnabled && (
+        <>
+          <Controller
+            control={control}
+            name="update_strategy"
+            render={({ field }) => (
+              <NodePoolUpdateStrategySelect
+                onChange={field.onChange}
+                value={field.value}
+              />
+            )}
           />
-        )}
-      />
-      {versionFieldOptions?.show && (
-        <Controller
-          control={control}
-          name="k8s_version"
-          render={({ field, fieldState }) => (
-            <Autocomplete
-              disableClearable
-              errorText={fieldState.error?.message}
-              label="Kubernetes Version"
-              noMarginTop
-              onChange={(e, version) => field.onChange(version.label)}
-              options={versionOptions}
-              value={versionOptions.find(
-                (option) => option.label === field.value
+          {versionFieldOptions?.show && (
+            <Controller
+              control={control}
+              name="k8s_version"
+              render={({ field, fieldState }) => (
+                <Autocomplete
+                  disableClearable
+                  errorText={fieldState.error?.message}
+                  label="Kubernetes Version"
+                  noMarginTop
+                  onChange={(e, version) => field.onChange(version.label)}
+                  options={versionOptions}
+                  value={versionOptions.find(
+                    (option) => option.label === field.value
+                  )}
+                />
               )}
             />
           )}
-        />
+          <NodePoolFirewallSelect />
+        </>
       )}
-      <NodePoolFirewallSelect />
     </Stack>
   );
 };

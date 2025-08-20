@@ -1,12 +1,15 @@
 import {
+  FormControl,
   FormControlLabel,
+  FormHelperText,
   Radio,
   RadioGroup,
   Stack,
-  Typography,
 } from '@linode/ui';
 import React from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
+
+import { FormLabel } from 'src/components/FormLabel';
 
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 
@@ -14,64 +17,54 @@ import type { CreateNodePoolData } from '@linode/api-v4';
 
 export const NodePoolFirewallSelect = () => {
   const { control } = useFormContext<CreateNodePoolData>();
-  const watchedFirewallId = useWatch({ control, name: 'firewall_id' });
+  const { field, fieldState } = useController({
+    control,
+    name: 'firewall_id',
+  });
 
   const [isUsingOwnFirewall, setIsUsingOwnFirewall] = React.useState(
-    Boolean(watchedFirewallId)
+    Boolean(field.value)
   );
 
   return (
     <Stack>
-      <Typography
-        sx={(theme) => ({
-          font: theme.tokens.alias.Typography.Label.Bold.S,
-        })}
-      >
-        Firewall
-      </Typography>
-      <RadioGroup
-        aria-label="Bring your own firewall"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setIsUsingOwnFirewall(e.target.value === 'yes');
-        }}
-        value={isUsingOwnFirewall}
-      >
-        <FormControlLabel
-          checked={!isUsingOwnFirewall}
-          control={<Radio />}
-          label="Use default firewall"
-          value="no"
-        />
-        <FormControlLabel
-          checked={isUsingOwnFirewall}
-          control={<Radio />}
-          label="Select existing firewall"
-          value="yes"
-        />
-      </RadioGroup>
-      {isUsingOwnFirewall && (
-        <Controller
-          control={control}
-          name="firewall_id"
-          render={({ field, fieldState }) => (
-            <FirewallSelect
-              errorText={fieldState.error?.message}
-              noMarginTop
-              onBlur={field.onBlur}
-              onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
-              placeholder="Select firewall"
-              value={field.value}
-            />
-          )}
-          rules={{
-            validate: (value) => {
-              if (isUsingOwnFirewall && !value) {
-                return 'You must either select a Firewall or select the default firewall.';
-              }
-              return true;
-            },
+      <FormControl error={Boolean(fieldState.error)} sx={{ mt: 0 }}>
+        <FormLabel sx={{ m: 0, p: 0 }}>Firewall</FormLabel>
+        <RadioGroup
+          aria-label="Bring your own firewall"
+          onChange={(e, value) => {
+            setIsUsingOwnFirewall(value === 'yes');
+            field.onChange(0);
           }}
-          shouldUnregister
+          value={isUsingOwnFirewall ? 'yes' : 'no'}
+        >
+          <FormControlLabel
+            checked={!isUsingOwnFirewall}
+            control={<Radio />}
+            label="Use default firewall"
+            value="no"
+          />
+          <FormControlLabel
+            checked={isUsingOwnFirewall}
+            control={<Radio />}
+            label="Select existing firewall"
+            value="yes"
+          />
+        </RadioGroup>
+        {!isUsingOwnFirewall && (
+          <FormHelperText sx={{ m: 0 }}>
+            {fieldState.error?.message}
+          </FormHelperText>
+        )}
+      </FormControl>
+      {isUsingOwnFirewall && (
+        <FirewallSelect
+          errorText={fieldState.error?.message}
+          noMarginTop
+          onBlur={field.onBlur}
+          onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
+          placeholder="Select firewall"
+          value={field.value}
         />
       )}
     </Stack>
