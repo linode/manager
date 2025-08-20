@@ -89,7 +89,12 @@ export const CloudPulseNodeTypeFilter = React.memo(
       data: databaseClusters,
       isError,
       isLoading,
-    } = useResourcesQuery(!disabled, 'dbaas', {}, RESOURCE_FILTER_MAP['dbaas']); // fetch all databases
+    } = useResourcesQuery(
+      !disabled,
+      'dbaas',
+      {},
+      RESOURCE_FILTER_MAP['dbaas'] ?? {}
+    ); // fetch all databases
 
     const isClusterSizeGreaterThanOne = React.useMemo<
       boolean | undefined

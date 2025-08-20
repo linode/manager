@@ -393,6 +393,11 @@ describe('Tests for API error handling', () => {
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
+    // simulate an error on instances call before changing the region again
+    mockGetDatabasesError('Internal Server Error').as(
+      'getDatabaseInstancesError'
+    );
+
     //  Select a dashboard from the autocomplete input
     ui.autocomplete
       .findByLabel('Dashboard')

@@ -85,6 +85,7 @@ describe('Billing Contact', () => {
       taxId: {
         enabled: true,
       },
+      iamRbacPrimaryNavChanges: false,
     });
   });
   it('Mask Contact Info', () => {
