@@ -27,12 +27,11 @@ export const UserRow = ({ onDelete, user }: Props) => {
 
   const { data: profile } = useProfile();
   const { data: permissions } = usePermissions('account', [
-    'view_user',
     'delete_user',
-    'list_user_grants',
+    'is_account_admin',
   ]);
 
-  const canViewUser = permissions.view_user;
+  const canViewUser = permissions.is_account_admin;
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
 

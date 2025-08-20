@@ -75,8 +75,7 @@ describe('UserEntities', () => {
     });
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        list_user_grants: true,
-        view_user: true,
+        is_account_admin: true,
       },
     });
   });
@@ -158,8 +157,7 @@ describe('UserEntities', () => {
   it('should not render if user does not have permissions', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        list_user_grants: false,
-        view_user: false,
+        is_account_admin: false,
       },
     });
 

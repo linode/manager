@@ -43,8 +43,7 @@ describe('UsersActionMenu', () => {
         isProxyUser={true}
         onDelete={mockOnDelete}
         permissions={{
-          view_user: true,
-          list_user_grants: true,
+          is_account_admin: true,
           delete_user: true,
         }}
         username="test_user"
@@ -84,8 +83,7 @@ describe('UsersActionMenu', () => {
         isProxyUser={false}
         onDelete={mockOnDelete}
         permissions={{
-          view_user: true,
-          list_user_grants: true,
+          is_account_admin: true,
           delete_user: true,
         }}
         username="test_user"
@@ -141,8 +139,7 @@ describe('UsersActionMenu', () => {
         isProxyUser={false}
         onDelete={mockOnDelete}
         permissions={{
-          view_user: true,
-          list_user_grants: true,
+          is_account_admin: true,
           delete_user: true,
         }}
         username="current_user"

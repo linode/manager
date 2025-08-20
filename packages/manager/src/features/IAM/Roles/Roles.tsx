@@ -8,9 +8,9 @@ import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities'
 import { usePermissions } from '../hooks/usePermissions';
 
 export const RolesLanding = () => {
-  const { data: permissions } = usePermissions('account', ['list_user_grants']);
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
   const { data: accountRoles, isLoading } = useAccountRoles(
-    permissions?.list_user_grants
+    permissions?.is_account_admin
   );
 
   const { roles } = React.useMemo(() => {
@@ -25,7 +25,7 @@ export const RolesLanding = () => {
     return <CircleProgress />;
   }
 
-  if (!permissions?.list_user_grants) {
+  if (!permissions?.is_account_admin) {
     return (
       <Notice variant="error">You do not have permission to view roles.</Notice>
     );

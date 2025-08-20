@@ -55,7 +55,7 @@ describe('RolesLanding', () => {
     const mockPermissions = accountRolesFactory.build();
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        list_user_grants: true,
+        is_account_admin: true,
       },
     });
     queryMocks.useAccountRoles.mockReturnValue({
@@ -71,7 +71,7 @@ describe('RolesLanding', () => {
   it('should show an error message if user does not have permissions', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        list_user_grants: false,
+        is_account_admin: false,
       },
     });
 

@@ -3,21 +3,17 @@ import React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { ExtendedRoleView } from '../types';
-import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
-type RolesActionsPermissions = PickPermissions<'update_user_grants'>;
 interface Props {
   handleChangeRole: (role: ExtendedRoleView) => void;
   handleUnassignRole: (role: ExtendedRoleView) => void;
   handleUpdateEntities: (role: ExtendedRoleView) => void;
   handleViewEntities: (role: string) => void;
-  permissions: Record<RolesActionsPermissions, boolean>;
   role: ExtendedRoleView;
 }
 
 export const AssignedRolesActionMenu = ({
-  permissions,
   handleChangeRole,
   handleUnassignRole,
   handleUpdateEntities,
@@ -26,14 +22,12 @@ export const AssignedRolesActionMenu = ({
 }: Props) => {
   const accountMenu: Action[] = [
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => {
         handleChangeRole(role);
       },
       title: 'Change Role',
     },
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => {
         handleUnassignRole(role);
       },
@@ -43,26 +37,22 @@ export const AssignedRolesActionMenu = ({
 
   const entitiesMenu: Action[] = [
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => handleViewEntities(role.name),
       title: 'View Entities',
     },
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => {
         handleUpdateEntities(role);
       },
       title: 'Update List of Entities',
     },
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => {
         handleChangeRole(role);
       },
       title: 'Change Role',
     },
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => {
         handleUnassignRole(role);
       },

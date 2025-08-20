@@ -8,7 +8,7 @@ import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 type UserActionMenuPermissions = PickPermissions<
-  'delete_user' | 'list_user_grants' | 'view_user'
+  'delete_user' | 'is_account_admin'
 >;
 
 interface Props {
@@ -35,7 +35,7 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.list_user_grants,
+      disabled: !permissions.is_account_admin,
       title: 'Manage Access',
     },
   ];
@@ -48,7 +48,7 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.view_user,
+      disabled: !permissions.is_account_admin,
       title: 'View User Details',
     },
     {
@@ -58,7 +58,7 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.list_user_grants,
+      disabled: !permissions.is_account_admin,
       title: 'View Assigned Roles',
     },
     {
@@ -68,7 +68,7 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.list_user_grants,
+      disabled: !permissions.is_account_admin,
       title: 'View Entity Access',
     },
     {
