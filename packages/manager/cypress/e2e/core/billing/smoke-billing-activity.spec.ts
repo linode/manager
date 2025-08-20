@@ -51,7 +51,7 @@ const navigateToBilling = () => {
       cy.findByText('Billing').should('be.visible').click();
     });
 
-  cy.url().should('endWith', '/account/billing');
+  cy.url().should('endWith', '/billing');
 };
 
 /**
@@ -118,7 +118,8 @@ authenticate();
 describe('Billing Activity Feed', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
+      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+      iamRbacPrimaryNavChanges: true,
     });
   });
   /*
@@ -167,7 +168,7 @@ describe('Billing Activity Feed', () => {
 
     cy.defer(() => getProfile()).then((profile: Profile) => {
       const timezone = profile.timezone;
-      cy.visitWithLogin('/account/billing');
+      cy.visitWithLogin('/billing');
       cy.wait(['@getInvoices', '@getPayments']);
       cy.findByText('Billing & Payment History')
         .as('qaBilling')
@@ -270,7 +271,7 @@ describe('Billing Activity Feed', () => {
     mockGetPayments([]).as('getPayments');
     mockGetPaymentMethods([]).as('getPaymentMethods');
 
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/billing');
     cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
 
     // Change invoice date selection from "6 Months" to "All Time".

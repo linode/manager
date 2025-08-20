@@ -244,17 +244,12 @@ export const pages: Page[] = [
     url: `${routes.supportTicketsClosed}`,
   },
   {
-    assertIsLoaded: () => cy.findByText('Billing Info').should('be.visible'),
-    name: 'Account',
-    url: `${routes.account}`,
-  },
-  {
     assertIsLoaded: () =>
       cy.findByText('Update Contact Information').should('be.visible'),
     goWithUI: [
       {
         go: () => {
-          loadAppNoLogin(`${routes.account}/users`);
+          loadAppNoLogin(`/account/users`);
           cy.findByText('Username');
           waitDoubleRerender();
           cy.findByText('Billing Info').should('be.visible').click();
@@ -263,23 +258,7 @@ export const pages: Page[] = [
       },
     ],
     name: 'Account/Billing',
-    url: `${routes.account}/billing`,
-  },
-  {
-    assertIsLoaded: () => cy.findByText('Add a User').should('be.visible'),
-    goWithUI: [
-      {
-        go: () => {
-          loadAppNoLogin(`${routes.account}/billing`);
-          cy.findByText('Billing Contact');
-          waitDoubleRerender();
-          cy.get('[data-reach-tab]').contains('Users').click();
-        },
-        name: 'Tab',
-      },
-    ],
-    name: 'Account/Users',
-    url: `${routes.account}/users`,
+    url: `/billing`,
   },
   {
     assertIsLoaded: () =>
@@ -287,7 +266,7 @@ export const pages: Page[] = [
     goWithUI: [
       {
         go: () => {
-          loadAppNoLogin(`${routes.account}/billing`);
+          loadAppNoLogin(`/billing`);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
           cy.contains('Settings').click();
@@ -295,7 +274,7 @@ export const pages: Page[] = [
         name: 'Tab',
       },
     ],
-    name: 'Account/Settings',
-    url: `${routes.account}/settings`,
+    name: 'Settings',
+    url: `/settings`,
   },
 ];
