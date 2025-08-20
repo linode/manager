@@ -358,3 +358,5 @@ export interface Roles {
 }
 
 export type IamAccessType = keyof IamAccountRoles;
+
+export type PickPermissions<T extends PermissionType> = T;
