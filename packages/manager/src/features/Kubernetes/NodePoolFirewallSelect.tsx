@@ -42,13 +42,18 @@ export const NodePoolFirewallSelect = () => {
           aria-label="Bring your own firewall"
           onChange={(e, value) => {
             setIsUsingOwnFirewall(value === 'yes');
+
             if (value === 'yes') {
-              field.onChange(
-                formState.defaultValues?.firewall_id
-                  ? formState.defaultValues?.firewall_id
-                  : null
-              );
+              // If the user chooses to use an existing firewall...
+              if (formState.defaultValues?.firewall_id) {
+                // If the Node Pool has a `firewall_id` set, restore that value (For the edit Node Pool flow)
+                field.onChange(formState.defaultValues?.firewall_id);
+              } else {
+                // Set `firewall_id` to `null` so that our validation forces the user to pick a firewall or pick the default backend-generated one
+                field.onChange(null);
+              }
             } else {
+              // Setting `firewall_id` to `0` tells the API to use the default backend-generated firewall
               field.onChange(0);
             }
           }}
