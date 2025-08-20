@@ -28,16 +28,16 @@ import type {
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
 
-export type PermissionsResult = {
-  data: Record<PermissionType, boolean>;
+export type PermissionsResult<T extends readonly PermissionType[]> = {
+  data: Record<T[number], boolean>;
 } & Omit<UseQueryResult<PermissionType[], APIError[]>, 'data'>;
 
-export const usePermissions = (
+export const usePermissions = <T extends readonly PermissionType[]>(
   accessType: AccessType,
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: T,
   entityId?: number,
   enabled: boolean = true
-): PermissionsResult => {
+): PermissionsResult<T> => {
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const { data: userAccountPermissions, ...restAccountPermissions } =
@@ -45,24 +45,26 @@ export const usePermissions = (
       isIAMEnabled && accessType === 'account' && enabled
     );
 
-  const { data: userEntityPermisssions, ...restEntityPermissions } =
+  const { data: userEntityPermissions, ...restEntityPermissions } =
     useUserEntityPermissions(accessType, entityId!, isIAMEnabled && enabled);
 
   const usersPermissions =
-    accessType === 'account' ? userAccountPermissions : userEntityPermisssions;
+    accessType === 'account' ? userAccountPermissions : userEntityPermissions;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
+  const mutablePermissionsToCheck = [...permissionsToCheck];
+
   const permissionMap = isIAMEnabled
     ? toPermissionMap(
-        permissionsToCheck,
+        mutablePermissionsToCheck,
         usersPermissions!,
         profile?.restricted
       )
     : fromGrants(
         accessType,
-        permissionsToCheck,
+        mutablePermissionsToCheck,
         grants!,
         profile?.restricted,
         entityId

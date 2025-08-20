@@ -18,20 +18,11 @@ const accountRoute = createRoute({
   path: 'account',
 });
 
-const accountTabsRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: '/',
-}).lazy(() =>
-  import('src/features/Account/accountLandingLazyRoute').then(
-    (m) => m.accountLandingLazyRoute
-  )
-);
-
 const accountBillingRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: 'billing',
   validateSearch: (search: AccountBillingSearch) => search,
-  beforeLoad: ({ context, params }) => {
+  beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
       throw redirect({
         to: `/billing`,
@@ -46,7 +37,7 @@ const accountBillingRoute = createRoute({
 );
 
 const accountUsersRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: '/users',
   beforeLoad: async ({ context }) => {
     const isIAMEnabled = await checkIAMEnabled(
@@ -65,7 +56,7 @@ const accountUsersRoute = createRoute({
 );
 
 const accountQuotasRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: '/quotas',
   beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
@@ -82,7 +73,7 @@ const accountQuotasRoute = createRoute({
 );
 
 const accountLoginHistoryRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: '/login-history',
   beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
@@ -99,7 +90,7 @@ const accountLoginHistoryRoute = createRoute({
 );
 
 const accountServiceTransfersRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: '/service-transfers',
   beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
@@ -116,7 +107,7 @@ const accountServiceTransfersRoute = createRoute({
 );
 
 const accountMaintenanceRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: '/maintenance',
   beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
@@ -133,7 +124,7 @@ const accountMaintenanceRoute = createRoute({
 );
 
 const accountSettingsRoute = createRoute({
-  getParentRoute: () => accountTabsRoute,
+  getParentRoute: () => accountRoute,
   path: '/settings',
   beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
@@ -241,15 +232,13 @@ const accountEntityTransfersCreateRoute = createRoute({
 );
 
 export const accountRouteTree = accountRoute.addChildren([
-  accountTabsRoute.addChildren([
-    accountBillingRoute,
-    accountUsersRoute,
-    accountQuotasRoute,
-    accountLoginHistoryRoute,
-    accountServiceTransfersRoute,
-    accountMaintenanceRoute,
-    accountSettingsRoute,
-  ]),
+  accountBillingRoute,
+  accountUsersRoute,
+  accountQuotasRoute,
+  accountLoginHistoryRoute,
+  accountServiceTransfersRoute,
+  accountMaintenanceRoute,
+  accountSettingsRoute,
   accountInvoiceDetailsRoute,
   accountEntityTransfersCreateRoute,
   accountUsersUsernameRoute.addChildren([
