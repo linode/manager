@@ -47,16 +47,6 @@ export const AccountLanding = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
-  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
-  if (location.pathname === '/account') {
-    if (iamRbacPrimaryNavChanges) {
-      return <NotFound />;
-    }
-    navigate({
-      to: '/account/billing',
-    });
-  }
-
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
   const isChildUser = profile?.user_type === 'child';
@@ -112,6 +102,16 @@ export const AccountLanding = () => {
       });
     }
   }, [match.routeId, showQuotasTab, navigate, iamRbacPrimaryNavChanges]);
+
+  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
+  if (location.pathname === '/account') {
+    if (iamRbacPrimaryNavChanges) {
+      return <NotFound />;
+    }
+    navigate({
+      to: '/account/billing',
+    });
+  }
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
