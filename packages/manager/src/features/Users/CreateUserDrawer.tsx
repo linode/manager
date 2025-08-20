@@ -19,7 +19,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { UseNavigateResult } from '@tanstack/react-router';
 
 interface CreateUserDrawerProps {
-  iamRbacPrimaryNavChanges: boolean;
+  iamRbacPrimaryNavChanges?: boolean;
   navigate: UseNavigateResult<'/account/users'>;
   onClose: () => void;
   open: boolean;

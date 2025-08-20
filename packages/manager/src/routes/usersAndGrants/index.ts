@@ -35,7 +35,7 @@ const usersAndGrantsIndexRoute = createRoute({
 
 const usersAndGrantsUsernameRoute = createRoute({
   getParentRoute: () => usersAndGrantsRoute,
-  path: '/$username',
+  path: '$username',
   beforeLoad: async ({ context, params, location }) => {
     const { username } = params;
     const isIAMEnabled = await checkIAMEnabled(
@@ -70,7 +70,7 @@ const usersAndGrantsUsernameProfileRoute = createRoute({
 );
 
 const usersAndGrantsUsernamePermissionsRoute = createRoute({
-  getParentRoute: () => usersAndGrantsUsernameProfileRoute,
+  getParentRoute: () => usersAndGrantsUsernameRoute,
   path: 'permissions',
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(
