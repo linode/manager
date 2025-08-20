@@ -139,6 +139,8 @@ export const AssignSelectedRolesDrawer = ({
 
   const handleClose = () => {
     reset();
+    setUsername(null);
+    setUsernameInput('');
     onClose();
   };
 
@@ -155,7 +157,7 @@ export const AssignSelectedRolesDrawer = ({
 
   return (
     <Drawer
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Assign Role${selectedRoles.length > 1 ? `s` : ``}`}
     >
