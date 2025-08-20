@@ -80,12 +80,12 @@ describe('ConfigActionMenu', () => {
     const deleteBtn = screen.getByTestId('Delete');
     expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
 
-    const tooltip = screen.getByLabelText(
-      "You don't have permission to perform this action"
+    const tooltips = screen.getAllByLabelText(
+      'You do not have permission to perform this action.'
     );
-    expect(tooltip).toBeInTheDocument();
-    fireEvent.click(tooltip);
-    expect(tooltip).toBeVisible();
+    expect(tooltips).toHaveLength(4);
+    fireEvent.click(tooltips[0]);
+    expect(tooltips[0]).toBeVisible();
   });
 
   it('should enable all actions menu if the user has permissions', async () => {
