@@ -20,6 +20,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -48,6 +49,9 @@ export const AssignedEntitiesTable = () => {
     from: '/iam/users/$username',
   });
   const theme = useTheme();
+  const { data: permissions } = usePermissions('account', [
+    'update_user_grants',
+  ]);
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
     strict: false,
@@ -184,16 +188,24 @@ export const AssignedEntitiesTable = () => {
             .map((el: EntitiesRole) => {
               const actions: Action[] = [
                 {
+                  disabled: !permissions?.update_user_grants,
                   onClick: () => {
                     handleChangeRole(el, 'change-role-for-entity');
                   },
                   title: 'Change Role ',
+                  tooltip: !permissions?.update_user_grants
+                    ? 'You do not have permission to change this role.'
+                    : undefined,
                 },
                 {
+                  disabled: !permissions?.update_user_grants,
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
                   title: 'Remove Assignment',
+                  tooltip: !permissions?.update_user_grants
+                    ? 'You do not have permission to remove this assignment.'
+                    : undefined,
                 },
               ];
 
