@@ -409,8 +409,9 @@ describe('Account service transfers', () => {
           cy.findByText(errorMessage).should('be.visible');
 
           // Navigate back to landing page and cancel transfer.
-          // TODO M3-10494 - Replace 'service-transfers' with 'service transfers' when the breadcrumb link label is fixed.
-          cy.contains('a', 'service-transfers').should('be.visible').click();
+          ui.entityHeader.find().within(() => {
+            cy.contains('a', 'Service Transfers').should('be.visible').click();
+          });
           cy.url().should('endWith', serviceTransferLandingUrl);
 
           cy.findByText(token)
