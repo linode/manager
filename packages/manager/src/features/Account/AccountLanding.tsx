@@ -37,7 +37,7 @@ export const AccountLanding = () => {
   });
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { limitsEvolution } = useFlags();
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
@@ -104,10 +104,10 @@ export const AccountLanding = () => {
   React.useEffect(() => {
     if (match.routeId === '/account/quotas' && !showQuotasTab) {
       navigate({
-        to: '/account/billing',
+        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/billing',
       });
     }
-  }, [match.routeId, showQuotasTab, navigate]);
+  }, [match.routeId, showQuotasTab, navigate, iamRbacPrimaryNavChanges]);
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {

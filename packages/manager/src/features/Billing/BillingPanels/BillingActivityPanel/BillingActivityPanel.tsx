@@ -184,9 +184,12 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
+  const flags = useFlags();
 
   const pagination = usePaginationV2({
-    currentRoute: '/account/billing',
+    currentRoute: flags?.iamRbacPrimaryNavChanges
+      ? '/billing'
+      : '/account/billing',
     preferenceKey: 'billing-activity-pagination',
   });
   const { handleOrderChange, order, orderBy } = useOrderV2({
@@ -195,7 +198,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
         order: 'desc',
         orderBy: 'amount',
       },
-      from: '/account/billing',
+      from: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
     },
     preferenceKey: 'billing-activity-order',
   });
@@ -212,7 +215,6 @@ export const BillingActivityPanel = React.memo((props: Props) => {
 
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();
-  const flags = useFlags();
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 

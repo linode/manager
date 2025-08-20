@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
+import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 import type { SelectOption } from '@linode/ui';
@@ -15,6 +16,8 @@ export const GoTo = React.memo(() => {
   const { data: accountSettings } = useAccountSettings();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
+
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const isManagedAccount = accountSettings?.managed ?? false;
 
@@ -103,11 +106,22 @@ export const GoTo = React.memo(() => {
         display: 'Marketplace',
         href: '/linodes/create/marketplace',
       },
-      {
-        display: 'Account',
-        hide: !hasAccountAccess,
-        href: '/account/billing',
-      },
+      ...(iamRbacPrimaryNavChanges
+        ? [
+            { display: 'Billing', href: '/billing' },
+            { display: 'Identity & Access', href: '/iam' },
+            { display: 'Login History', href: '/login-history' },
+            { display: 'Service Transfers', href: '/service-transfers' },
+            { display: 'Maintenance', href: '/maintenance' },
+            { display: 'Settings', href: '/settings' },
+          ]
+        : [
+            {
+              display: 'Account',
+              hide: !hasAccountAccess,
+              href: '/account/billing',
+            },
+          ]),
       {
         display: 'Help & Support',
         href: '/support',
@@ -117,7 +131,12 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [hasAccountAccess, isManagedAccount, isPlacementGroupsEnabled]
+    [
+      hasAccountAccess,
+      isManagedAccount,
+      isPlacementGroupsEnabled,
+      iamRbacPrimaryNavChanges,
+    ]
   );
 
   const options: SelectOption<string>[] = React.useMemo(

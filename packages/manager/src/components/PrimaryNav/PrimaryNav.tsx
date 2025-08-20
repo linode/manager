@@ -327,6 +327,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
+        limitsEvolution,
       ]
     );
 

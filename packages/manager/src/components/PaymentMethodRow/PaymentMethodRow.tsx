@@ -8,6 +8,7 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
@@ -39,6 +40,7 @@ export const PaymentMethodRow = (props: Props) => {
   const { is_default, type } = paymentMethod;
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const flags = useFlags();
 
   const { mutateAsync: makePaymentMethodDefault } =
     useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
@@ -63,7 +65,7 @@ export const PaymentMethodRow = (props: Props) => {
       disabled: isChildUser || !permissions.make_billing_payment,
       onClick: () => {
         navigate({
-          to: '/account/billing',
+          to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
           search: (prev) => ({
             ...prev,
             action: 'make-payment',

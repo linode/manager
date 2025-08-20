@@ -55,7 +55,10 @@ export const TaxCollectionBanner = () => {
     <Button
       buttonType="primary"
       onClick={() =>
-        navigate({ to: '/account/billing', search: { action: 'edit' } })
+        navigate({
+          to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+          search: { action: 'edit' },
+        })
       }
       sx={(theme) => ({
         marginLeft: theme.spacing(2),
