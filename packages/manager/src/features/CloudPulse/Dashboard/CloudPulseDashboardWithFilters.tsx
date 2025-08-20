@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 
+import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
@@ -42,6 +43,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       label: {},
     });
 
+    const [groupBy, setGroupBy] = React.useState<string[]>([]);
+
     const [timeDuration, setTimeDuration] =
       React.useState<DateTimeWithPreset>();
 
@@ -69,6 +72,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
       },
       []
     );
+
+    const handleGroupByChange = React.useCallback((groupBy: string[]) => {
+      setGroupBy(groupBy);
+    }, []);
 
     const handleTimeRangeChange = React.useCallback(
       (timeDuration: DateTimeWithPreset) => {
@@ -115,6 +122,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
       filterValue: filterData.id,
       resource,
       timeDuration,
+      groupBy,
     });
 
     return (
@@ -138,11 +146,21 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   defaultValue={dashboardId}
                   isServiceIntegration
                 />
-
-                <CloudPulseDateTimeRangePicker
-                  handleStatsChange={handleTimeRangeChange}
-                  savePreferences
-                />
+                <Box
+                  display="flex"
+                  flexDirection={{ md: 'row', xs: 'column' }}
+                  flexWrap="wrap"
+                  gap={2}
+                >
+                  <CloudPulseDateTimeRangePicker
+                    handleStatsChange={handleTimeRangeChange}
+                    savePreferences
+                  />
+                  <GlobalFilterGroupByRenderer
+                    handleChange={handleGroupByChange}
+                    selectedDashboard={dashboard}
+                  />
+                </Box>
               </Box>
             </GridLegacy>
 
@@ -188,6 +206,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
               filterValue: filterData.id,
               resource,
               timeDuration,
+              groupBy,
             })}
           />
         ) : (

@@ -251,6 +251,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
+        groupBy: widgetProp.group_by,
         linodeRegion,
       }),
       filters, // any additional dimension filters will be constructed and passed here
