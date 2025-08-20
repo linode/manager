@@ -22,7 +22,7 @@ export const NodePoolFirewallSelect = () => {
     name: 'firewall_id',
     rules: {
       validate: (value) => {
-        if (!fieldState.error && isUsingOwnFirewall && !value && value !== 0) {
+        if (isUsingOwnFirewall && !value && value !== 0) {
           return 'You must either select a Firewall or select the default firewall.';
         }
         return true;
