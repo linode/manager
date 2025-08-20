@@ -17,12 +17,12 @@ import type { CreateNodePoolData } from '@linode/api-v4';
 
 export const NodePoolFirewallSelect = () => {
   const { control } = useFormContext<CreateNodePoolData>();
-  const { field, fieldState } = useController({
+  const { field, fieldState, formState } = useController({
     control,
     name: 'firewall_id',
     rules: {
       validate: (value) => {
-        if (isUsingOwnFirewall && !value && value !== 0) {
+        if (!fieldState.error && isUsingOwnFirewall && !value && value !== 0) {
           return 'You must either select a Firewall or select the default firewall.';
         }
         return true;
@@ -42,7 +42,15 @@ export const NodePoolFirewallSelect = () => {
           aria-label="Bring your own firewall"
           onChange={(e, value) => {
             setIsUsingOwnFirewall(value === 'yes');
-            field.onChange(0);
+            if (value === 'yes') {
+              field.onChange(
+                formState.defaultValues?.firewall_id
+                  ? formState.defaultValues?.firewall_id
+                  : null
+              );
+            } else {
+              field.onChange(0);
+            }
           }}
           value={isUsingOwnFirewall ? 'yes' : 'no'}
         >

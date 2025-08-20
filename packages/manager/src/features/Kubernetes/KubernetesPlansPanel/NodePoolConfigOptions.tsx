@@ -68,7 +68,7 @@ export const NodePoolConfigOptions = (props: Props) => {
         )}
       />
       */}
-      {/* LKE Enterprise cluster Node Pools have more configurability */}
+      {/* LKE Enterprise cluster node pools have more configurability */}
       {clusterTier === 'enterprise' && isLkeEnterprisePostLAFeatureEnabled && (
         <>
           <Controller
