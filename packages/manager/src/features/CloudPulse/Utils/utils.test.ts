@@ -64,10 +64,17 @@ describe('arePortsValid', () => {
     expect(arePortsValid('abc')).toBe(PORTS_ERROR_MESSAGE);
   });
 
-  it('should return invalid for more than 15 ports', () => {
-    const ports = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
-    const result = arePortsValid(ports);
-    expect(result).toBe(PORTS_LIMIT_ERROR_MESSAGE);
+  it('should return invalid for input length more than 100 characters', () => {
+    expect(
+      arePortsValid(
+        '1234567890123456789012345678,012345678901234567890123456789,1234567890123456789012345678901234567890'
+      )
+    ).toBe(undefined);
+    expect(
+      arePortsValid(
+        '12345678901234567890123456789,123456789,01234567890123456789,1234567890123456789012345678901234567890'
+      )
+    ).toBe('Port list must be 100 characters or less.');
   });
 });
 
@@ -93,10 +100,17 @@ describe('areValidInterfaceIds', () => {
     expect(areValidInterfaceIds('abc')).toBe(INTERFACE_IDS_ERROR_MESSAGE);
   });
 
-  it('should return invalid for more than 15 interface ids', () => {
-    const interfaceIds = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
-    const result = areValidInterfaceIds(interfaceIds);
-    expect(result).toBe(INTERFACE_IDS_LIMIT_ERROR_MESSAGE);
+  it('should return invalid for input length more than 100 characters', () => {
+    expect(
+      areValidInterfaceIds(
+        '1234567890123456789,12345678901234567890123456789012345678,1234567890123456789012345678901234567890'
+      )
+    ).toBe(undefined);
+    expect(
+      areValidInterfaceIds(
+        '1234567890123456789,12345678901234567890,1234567890123456789,1234567890123456789012345678901234567890'
+      )
+    ).toBe('Interface IDs list must be 100 characters or less.');
   });
 });
 

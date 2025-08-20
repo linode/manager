@@ -10,13 +10,11 @@ import {
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,
   INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
-  INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
   PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
-  PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
 import { compareArrays } from './FilterBuilder';
@@ -299,6 +297,9 @@ export const arePortsValid = (ports: string): string | undefined => {
     return undefined;
   }
 
+  if (ports.length > 100) {
+    return 'Port list must be 100 characters or less.';
+  }
   if (ports.startsWith(',')) {
     return PORTS_LEADING_COMMA_ERROR_MESSAGE;
   }
@@ -309,21 +310,6 @@ export const arePortsValid = (ports: string): string | undefined => {
 
   if (!/^[\d,]+$/.test(ports)) {
     return PORTS_ERROR_MESSAGE;
-  }
-
-  const portList = ports.split(',');
-  let portLimitCount = 0;
-
-  for (const port of portList) {
-    const result = isValidPort(port);
-    if (result !== undefined) {
-      return result;
-    }
-    portLimitCount++;
-  }
-
-  if (portLimitCount > 15) {
-    return PORTS_LIMIT_ERROR_MESSAGE;
   }
 
   return undefined;
@@ -341,6 +327,10 @@ export const areValidInterfaceIds = (
     return undefined;
   }
 
+  if (interfaceIds.length > 100) {
+    return 'Interface IDs list must be 100 characters or less.';
+  }
+
   if (interfaceIds.startsWith(',')) {
     return INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE;
   }
@@ -350,13 +340,6 @@ export const areValidInterfaceIds = (
   }
   if (!/^[\d,]+$/.test(interfaceIds)) {
     return INTERFACE_IDS_ERROR_MESSAGE;
-  }
-
-  const interfaceIdList = interfaceIds.split(',');
-  const interfaceIdLimitCount = interfaceIdList.length;
-
-  if (interfaceIdLimitCount > 15) {
-    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
   }
 
   return undefined;

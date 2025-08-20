@@ -19,16 +19,16 @@ import {
   PORTS_TRAILING_COMMA_ERROR_MESSAGE,
 } from '../../../constants';
 
+const lengthErrorMsg = 'Value must be 100 characters or less.';
 const fieldErrorMessage = 'This field is required.';
 const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
 const LEADING_ZERO_PORT_REGEX = /^0\d+/;
 const CONFIG_NUMBER_REGEX = /^\d+$/;
 
 // Validation schema for a single input port
-const singlePortSchema = string().test(
-  'validate-single-port',
-  PORT_HELPER_TEXT,
-  function (value) {
+const singlePortSchema = string()
+  .max(100, lengthErrorMsg)
+  .test('validate-single-port', PORT_HELPER_TEXT, function (value) {
     if (!value || typeof value !== 'string') {
       return this.createError({ message: fieldErrorMessage });
     }
@@ -48,8 +48,7 @@ const singlePortSchema = string().test(
     }
 
     return true;
-  }
-);
+  });
 
 // Validation schema for a multiple comma-separated ports
 const commaSeparatedPortListSchema = string().test(
@@ -114,7 +113,7 @@ const commaSeparatedPortListSchema = string().test(
   }
 );
 const singleConfigSchema = string()
-  .max(100, 'Value must be 100 characters or less.')
+  .max(100, lengthErrorMsg)
   .test(
     'validate-single-config-schema',
     CONFIG_ERROR_MESSAGE,
@@ -131,7 +130,7 @@ const singleConfigSchema = string()
   );
 
 const multipleConfigSchema = string()
-  .max(100, 'Value must be 100 characters or less.')
+  .max(100, lengthErrorMsg)
   .test(
     'validate-multi-config-schema',
     CONFIGS_ERROR_MESSAGE,
@@ -194,6 +193,9 @@ export const getDimensionFilterValueSchema = ({
   dimensionLabel,
   operator,
 }: GetValueSchemaParams) => {
+  if (['endswith', 'startswith'].includes(operator)) {
+    return baseValueSchema.concat(string().max(100, lengthErrorMsg));
+  }
   if (dimensionLabel === 'port') {
     const portSchema =
       operator === 'in' ? commaSeparatedPortListSchema : singlePortSchema;
