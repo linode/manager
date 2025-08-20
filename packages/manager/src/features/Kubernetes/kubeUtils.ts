@@ -380,7 +380,7 @@ export const useKubernetesBetaEndpoint = () => {
 interface Options {
   /**
    * If set to `true`, the hook will only return the node pool's type's `id` or `label`
-   * and never it's actual `label`
+   * and never its actual `label`
    */
   ignoreNodePoolsLabel?: boolean;
   /**
@@ -394,7 +394,7 @@ interface Options {
  *
  * We use this helper rather than just using `label` on the Node Pool because the `label`
  * field is optional was added later on to the API. For Node Pools without explicit labels,
- * we identiy them in the UI by their plan's label.
+ * we identify them in the UI by their plan's label.
  *
  * @returns The Node Pool's label
  */
