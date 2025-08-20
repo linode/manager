@@ -12,6 +12,8 @@ import * as React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
+import type { CloudPulseServiceType } from '@linode/api-v4';
+
 export interface GroupByDrawerProps {
   defaultValue?: GroupByOption[];
   message?: string;
@@ -19,7 +21,7 @@ export interface GroupByDrawerProps {
   onCancel: () => void;
   open?: boolean;
   options: GroupByOption[];
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
   subtitle?: string;
   title: string;
 }
