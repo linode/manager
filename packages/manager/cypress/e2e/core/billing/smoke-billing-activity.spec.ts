@@ -260,17 +260,12 @@ describe('Billing Activity Feed', () => {
   });
 
   /*
-   * Temporarily skipped due to an issue with invoice pagination when IAM RBAC
-   * navigation feature flag is enabled.
-   */
-  /*
    * - Confirms that invoice pagination works as expected using mock API data.
    * - Confirms that the expected number of pages are shown for invoices.
    * - Confirms that the expected invoices are shown for each page.
    * - Confirms that invoice list updates to reflect changes to page size selection.
    */
-  // TODO M3-10497 - Re-enable invoice pagination test once IAM navigation pagination issue is fixed.
-  it.skip('paginates the list of invoices', () => {
+  it('paginates the list of invoices', () => {
     const mockInvoices = invoiceFactory.buildList(100);
     const pages = [1, 2, 3, 4];
 

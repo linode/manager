@@ -92,15 +92,11 @@ describe('Quotas inaccessible when limitsEvolution feature flag disabled', () =>
     }).as('getFeatureFlags');
   });
 
-  /*
-   * The redirect from the quotas page to the billing page currently fails to occur when `iamRbacPrimaryNavChanges` is enabled
-   * and `limitsEvolution` is disabled. We'll unskip this test once that issue is addressed.
-   */
-  // TODO M3-10493 - Unskip "Quotas page is inaccessible" test once URL redirect issue is fixed.
-  it.skip('Quotas page is inaccessible', () => {
+  it('Quotas page is inaccessible', () => {
     cy.visitWithLogin('/quotas');
     cy.wait('@getFeatureFlags');
-    cy.url().should('endWith', '/billing');
+    cy.findByText('Not Found').should('be.visible');
+    cy.findByText('This page does not exist.').should('be.visible');
   });
 
   it('Cannot navigate to the Quotas tab via the user menu', () => {

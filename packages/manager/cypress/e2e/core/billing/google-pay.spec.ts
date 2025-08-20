@@ -74,13 +74,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  /*
-   * When `iamRbacPrimaryNavChanges` feature flag is enabled, the "Make a Payment" button in the
-   * payment method action menu no longer functions. The "Make a Payment" button at the top of the
-   * page still works, however.
-   */
-  // TODO M3-10495 - Unskip Google Pay payment test once "Make a Payment" button issue is addressed.
-  it.skip('can make a payment via Google Pay using payment method menu button', () => {
+  it('can make a payment via Google Pay using payment method menu button', () => {
     cy.intercept(braintreeURL).as('braintree');
     mockGetPaymentMethods(mockPaymentMethods).as('getPaymentMethods');
     cy.visitWithLogin('/billing');
@@ -114,8 +108,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  // TODO M3-##### - Unskip Google Pay payment test once "Make a Payment" button issue is addressed.
-  it.skip('cannot make a payment with an expired payment method via Google Pay using payment method menu button', () => {
+  it('cannot make a payment with an expired payment method via Google Pay using payment method menu button', () => {
     cy.intercept(braintreeURL).as('braintree');
     mockGetPaymentMethods(mockPaymentMethodsExpired).as('getPaymentMethods');
     cy.visitWithLogin('/billing');
