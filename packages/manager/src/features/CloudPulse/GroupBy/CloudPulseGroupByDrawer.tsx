@@ -14,6 +14,8 @@ import NullComponent from 'src/components/NullComponent';
 
 import { GROUP_BY_SELECTION_LIMIT } from './constants';
 
+import type { CloudPulseServiceType } from '@linode/api-v4';
+
 export interface GroupByDrawerProps {
   defaultValue?: GroupByOption[];
   message?: string;
@@ -21,7 +23,7 @@ export interface GroupByDrawerProps {
   onCancel: () => void;
   open?: boolean;
   options: GroupByOption[];
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
   subtitle?: string;
   title: string;
 }

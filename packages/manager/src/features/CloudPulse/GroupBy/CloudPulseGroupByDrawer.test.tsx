@@ -29,6 +29,7 @@ const drawerProps: GroupByDrawerProps = {
   message,
   options,
   open: true,
+  serviceType: 'linode',
 };
 
 describe('Cloud Pulse Group By Drawer Component', () => {
