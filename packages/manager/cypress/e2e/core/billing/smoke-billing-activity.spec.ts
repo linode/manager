@@ -48,9 +48,7 @@ const navigateToBilling = () => {
     .find()
     .should('be.visible')
     .within(() => {
-      cy.findByText('Billing & Contact Information')
-        .should('be.visible')
-        .click();
+      cy.findByText('Billing').should('be.visible').click();
     });
 
   cy.url().should('endWith', '/account/billing');

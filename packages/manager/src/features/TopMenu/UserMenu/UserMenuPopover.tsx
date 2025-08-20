@@ -92,7 +92,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
       {
-        display: 'Billing & Contact Information',
+        display: 'Billing',
         to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
       {
