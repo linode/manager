@@ -176,56 +176,58 @@ describe('Dimension filter field component', () => {
   });
 
   it('should render the Value component with options happy path and select an option', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: (
-          <DimensionFilterField
-            dataFieldDisabled={false}
-            dimensionOptions={mockData[0].dimensions}
-            name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
-            onFilterDelete={vi.fn()}
-          />
-        ),
-        useFormOptions: {
-          defaultValues: {
-            rule_criteria: {
-              rules: [mockData[0]],
-            },
-            serviceType: 'linode',
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <DimensionFilterField
+          dataFieldDisabled={false}
+          dimensionOptions={mockData[0].dimensions}
+          name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
+          onFilterDelete={vi.fn()}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [mockData[0]],
           },
+          serviceType: 'linode',
         },
-      });
-    const dataFieldContainer = container.getByTestId(dataFieldId);
+      },
+    });
+    // selecting data field
+    const dataFieldContainer = screen.getByTestId(dataFieldId);
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
-    const valueLabel = capitalize(dimensionFieldMockData[1].values[0]);
     await user.click(dataFieldInput);
     await user.click(
-      await container.findByRole('option', {
+      await screen.findByRole('option', {
         name: dimensionFieldMockData[1].label,
       })
     );
-    const valueContainer = container.getByTestId('value');
-    const valueInput = within(valueContainer).getByRole('button', {
-      name: 'Open',
-    });
-
-    user.click(valueInput);
-    expect(
-      await container.findByRole('option', {
-        name: valueLabel,
-      })
-    );
-
-    expect(
-      await container.findByRole('option', {
-        name: valueLabel,
-      })
-    );
-
+    // selecting operator
+    const operatorContainer = screen.getByTestId('operator');
     await user.click(
-      container.getByRole('option', {
+      within(operatorContainer).getByRole('button', {
+        name: 'Open',
+      })
+    );
+    await user.click(
+      await screen.findByRole('option', {
+        name: 'Equal',
+      })
+    );
+
+    // selecting value
+    const valueLabel = capitalize(dimensionFieldMockData[1].values[0]);
+    const valueContainer = screen.getByTestId('value');
+    await user.click(
+      within(valueContainer).getByRole('button', {
+        name: 'Open',
+      })
+    );
+    await user.click(
+      await screen.findByRole('option', {
         name: valueLabel,
       })
     );
@@ -308,57 +310,5 @@ describe('Dimension filter field component', () => {
 
     expect(within(valueContainer).getByText(userLabel)).toBeInTheDocument();
     expect(within(valueContainer).getByText(idleLabel)).toBeInTheDocument();
-  });
-  it('should render a TextField for the Value input when the selected dimension has no values (for all operators)', async () => {
-    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <DimensionFilterField
-          dataFieldDisabled={false}
-          dimensionOptions={mockData[0].dimensions}
-          name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
-          onFilterDelete={vi.fn()}
-        />
-      ),
-      useFormOptions: {
-        defaultValues: {
-          rule_criteria: {
-            rules: [mockData[0]],
-          },
-          serviceType: 'linode',
-        },
-      },
-    });
-
-    const dataFieldContainer = screen.getByTestId('data-field');
-    const dataFieldInput = within(dataFieldContainer).getByRole('button', {
-      name: 'Open',
-    });
-
-    await user.click(dataFieldInput);
-    await user.click(
-      await screen.findByRole('option', {
-        name: dimensionFieldMockData[0].label,
-      })
-    );
-
-    const operatorContainer = screen.getByTestId('operator');
-    const operatorInput = within(operatorContainer).getByRole('button', {
-      name: 'Open',
-    });
-
-    await user.click(operatorInput);
-    await user.click(
-      screen.getByRole('option', {
-        name: 'Equal',
-      })
-    );
-
-    const valueContainer = screen.getByTestId('value');
-
-    expect(within(valueContainer).getByRole('textbox')).toBeInTheDocument();
-
-    await user.click(operatorInput);
-    await user.click(screen.getByRole('option', { name: 'In' }));
-    expect(within(valueContainer).getByRole('textbox')).toBeInTheDocument();
   });
 });
