@@ -1,3 +1,19 @@
+## [2025-08-26] - v0.12.0
+
+
+### Added:
+
+- Implemented `enabled` parameters for payments & invoices queries ([#12660](https://github.com/linode/manager/pull/12660))
+- Enable parameters to useAccountUsers & useUserRoles ([#12714](https://github.com/linode/manager/pull/12714))
+
+### Changed:
+
+- Replace deprecated quieries from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
+
+### Upcoming Features:
+
+- Add queries for destinations enpoints (paginated GET, POST) ([#12627](https://github.com/linode/manager/pull/12627))
+
 ## [2025-08-12] - v0.11.0
 
 
