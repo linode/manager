@@ -22,7 +22,9 @@ describe('UsernamePanel', () => {
   it("initializes the form with the user's username", async () => {
     const user = accountUserFactory.build();
 
-    const { getByLabelText } = renderWithTheme(<UsernamePanel user={user} />);
+    const { getByLabelText } = renderWithTheme(
+      <UsernamePanel canUpdateUser={true} user={user} />
+    );
 
     const usernameTextField = getByLabelText('Username');
 
@@ -32,7 +34,9 @@ describe('UsernamePanel', () => {
   it('disables the input if the user doesn not have update_user permission', async () => {
     const user = accountUserFactory.build();
 
-    const { getByLabelText } = renderWithTheme(<UsernamePanel user={user} />);
+    const { getByLabelText } = renderWithTheme(
+      <UsernamePanel canUpdateUser={false} user={user} />
+    );
 
     expect(getByLabelText('Username')).toBeDisabled();
 
@@ -56,7 +60,7 @@ describe('UsernamePanel', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <UsernamePanel user={user} />
+      <UsernamePanel canUpdateUser={true} user={user} />
     );
 
     const warning = getByLabelText('This field can’t be modified.');
@@ -84,7 +88,7 @@ describe('UsernamePanel', () => {
     });
 
     const { getByLabelText, getByRole, findByDisplayValue } = renderWithTheme(
-      <UsernamePanel user={user} />
+      <UsernamePanel canUpdateUser={true} user={user} />
     );
 
     await findByDisplayValue(user.username);
@@ -96,5 +100,27 @@ describe('UsernamePanel', () => {
     await userEvent.type(getByLabelText('Username'), 'my-linode-username-1');
 
     expect(saveButton).toBeEnabled();
+  });
+
+  it('disables the save button when the user does not have update_user permission', async () => {
+    const user = accountUserFactory.build({
+      username: 'my-linode-username',
+    });
+
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_user: false,
+      },
+    });
+
+    const { getByRole, findByDisplayValue } = renderWithTheme(
+      <UsernamePanel canUpdateUser={false} user={user} />
+    );
+
+    await findByDisplayValue(user.username);
+
+    const saveButton = getByRole('button', { name: 'Save' });
+
+    expect(saveButton).toBeDisabled();
   });
 });

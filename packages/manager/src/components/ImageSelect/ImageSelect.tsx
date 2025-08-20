@@ -152,9 +152,16 @@ export const ImageSelect = (props: Props) => {
     return isImageDeprecated(value) && [value];
   }, [value]);
 
-  if (options.length === 1 && onChange && selectIfOnlyOneOption && !multiple) {
-    onChange(options[0]);
-  }
+  React.useEffect(() => {
+    if (
+      options.length === 1 &&
+      onChange &&
+      selectIfOnlyOneOption &&
+      !multiple
+    ) {
+      onChange(options[0]);
+    }
+  }, [options.length, onChange, selectIfOnlyOneOption, multiple, options]);
 
   return (
     <Box sx={{ width: '100%' }}>

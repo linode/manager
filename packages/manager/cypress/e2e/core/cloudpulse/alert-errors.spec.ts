@@ -78,9 +78,9 @@ describe('Alerts Listing Page - Error Handling', () => {
             .findByTitle(`Action menu for Alert ${alertName}`)
             .should('be.visible')
             .click();
+          ui.actionMenuItem.findByTitle(action).should('be.visible').click();
         });
 
-      ui.actionMenuItem.findByTitle(action).should('be.visible').click();
       ui.button.findByTitle(action).should('be.visible').click();
       cy.wait(alias).then(({ response }) => {
         ui.toast.assertMessage(response?.body.errors[0].reason);
