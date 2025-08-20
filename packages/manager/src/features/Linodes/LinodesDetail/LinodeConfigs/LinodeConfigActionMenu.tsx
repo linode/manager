@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
@@ -15,8 +16,6 @@ interface Props {
   onDelete: () => void;
   onEdit: () => void;
 }
-const NO_PERMISSION_TOOLTIP_TEXT =
-  'You do not have permission to perform this action.';
 
 export const ConfigActionMenu = (props: Props) => {
   const { config, linodeId, onBoot, onDelete, onEdit } = props;

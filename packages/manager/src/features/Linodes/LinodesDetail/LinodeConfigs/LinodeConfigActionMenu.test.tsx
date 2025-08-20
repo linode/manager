@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
 import { linodeConfigFactory } from 'src/factories';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -80,9 +81,7 @@ describe('ConfigActionMenu', () => {
     const deleteBtn = screen.getByTestId('Delete');
     expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
 
-    const tooltips = screen.getAllByLabelText(
-      'You do not have permission to perform this action.'
-    );
+    const tooltips = screen.getAllByLabelText(NO_PERMISSION_TOOLTIP_TEXT);
     expect(tooltips).toHaveLength(4);
     fireEvent.click(tooltips[0]);
     expect(tooltips[0]).toBeVisible();
