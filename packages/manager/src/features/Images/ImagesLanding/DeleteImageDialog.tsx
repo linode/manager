@@ -15,7 +15,7 @@ export const DeleteImageDialog = (props: Props) => {
   const { data: image, isLoading, error } = useImageQuery(imageId);
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutate } = useDeleteImageMutation({
+  const { mutate: deleteImage, isPending } = useDeleteImageMutation({
     onSuccess() {
       enqueueSnackbar('Image has been scheduled for deletion.', {
         variant: 'info',
@@ -35,9 +35,10 @@ export const DeleteImageDialog = (props: Props) => {
         name: image?.label,
       }}
       errors={error}
+      isFetching={isLoading}
       label="Image Label"
-      loading={isLoading}
-      onClick={() => mutate({ imageId })}
+      loading={isPending}
+      onClick={() => deleteImage({ imageId })}
       onClose={onClose}
       open={open}
       secondaryButtonProps={{
@@ -46,7 +47,7 @@ export const DeleteImageDialog = (props: Props) => {
       title={
         isPendingUpload
           ? 'Cancel Upload?'
-          : `Delete Image ${image?.label ?? imageId}?`
+          : `Delete Image ${image?.label ?? imageId}`
       }
     />
   );
