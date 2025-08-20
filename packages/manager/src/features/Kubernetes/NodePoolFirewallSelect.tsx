@@ -20,6 +20,14 @@ export const NodePoolFirewallSelect = () => {
   const { field, fieldState } = useController({
     control,
     name: 'firewall_id',
+    rules: {
+      validate: (value) => {
+        if (isUsingOwnFirewall && !value && value !== 0) {
+          return 'You must either select a Firewall or select the default firewall.';
+        }
+        return true;
+      },
+    },
   });
 
   const [isUsingOwnFirewall, setIsUsingOwnFirewall] = React.useState(
