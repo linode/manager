@@ -118,10 +118,10 @@ const DatabaseLandingTable = ({
             </TableSortCell>
             {isNewDatabase && (
               <TableSortCell
-                active={orderBy === 'plan'}
+                active={orderBy === 'type'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="plan"
+                label="type"
               >
                 Plan
               </TableSortCell>
