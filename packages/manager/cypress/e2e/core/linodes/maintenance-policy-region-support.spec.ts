@@ -131,8 +131,7 @@ describe('maintenance policy region support - Linode Details > Settings', () => 
     // We'll use a distributed region that doesn't have the 'Maintenance Policy' capability
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: 'us-den-1', // Denver, CO - distributed region that doesn't support maintenance policies
-      type: 'g6-nanode-edge-1', // Use the correct plan type for distributed regions
+      region: 'us-ord', // A region known not to support maintenance policies as of 8/20/2025.
     });
 
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
