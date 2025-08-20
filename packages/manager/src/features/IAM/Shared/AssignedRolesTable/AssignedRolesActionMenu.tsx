@@ -49,12 +49,14 @@ export const AssignedRolesActionMenu = ({
 
   const entitiesMenu: Action[] = [
     {
-      disabled: !permissions.update_user_grants,
       onClick: () => handleViewEntities(role.name),
       title: 'View Entities',
     },
     {
       disabled: !permissions.update_user_grants,
+      tooltip: !permissions.update_user_grants
+        ? 'You do not have permission to update this role.'
+        : undefined,
       onClick: () => {
         handleUpdateEntities(role);
       },
@@ -62,6 +64,9 @@ export const AssignedRolesActionMenu = ({
     },
     {
       disabled: !permissions.update_user_grants,
+      tooltip: !permissions.update_user_grants
+        ? 'You do not have permission to change this role.'
+        : undefined,
       onClick: () => {
         handleChangeRole(role);
       },
@@ -69,6 +74,9 @@ export const AssignedRolesActionMenu = ({
     },
     {
       disabled: !permissions.update_user_grants,
+      tooltip: !permissions.update_user_grants
+        ? 'You do not have permission to unassign this role.'
+        : undefined,
       onClick: () => {
         handleUnassignRole(role);
       },
