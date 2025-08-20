@@ -58,11 +58,11 @@ export const useAccountUsersInfiniteQuery = (
   });
 };
 
-export const useAccountUser = (username: string) => {
+export const useAccountUser = (username: string, enabled: boolean = true) => {
   return useQuery<User, APIError[]>({
     ...accountQueries.users._ctx.user(username),
     // Enable the query if the user is not on the blocklist
-    enabled: !getIsBlocklistedUser(username),
+    enabled: !getIsBlocklistedUser(username) && enabled,
   });
 };
 

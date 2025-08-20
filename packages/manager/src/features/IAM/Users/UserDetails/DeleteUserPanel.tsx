@@ -10,10 +10,11 @@ import { UserDeleteConfirmation } from './UserDeleteConfirmation';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  canDeleteUser: boolean;
   user: User;
 }
 
-export const DeleteUserPanel = ({ user }: Props) => {
+export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -35,9 +36,17 @@ export const DeleteUserPanel = ({ user }: Props) => {
         <Box>
           <Button
             buttonType="outlined"
-            disabled={profile?.username === user.username || isProxyUserProfile}
+            disabled={
+              profile?.username === user.username ||
+              isProxyUserProfile ||
+              !canDeleteUser
+            }
             onClick={() => setIsDeleteDialogOpen(true)}
-            tooltipText={tooltipText}
+            tooltipText={
+              !canDeleteUser
+                ? 'You do not have permission to delete this user.'
+                : tooltipText
+            }
           >
             Delete
           </Button>
