@@ -8,6 +8,8 @@ import {
   GPU_PLAN_NOTICE,
   MAINTENANCE_POLICY_DESCRIPTION,
   MAINTENANCE_POLICY_LEARN_MORE_URL,
+  MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT,
+  MAINTENANCE_POLICY_SELECT_REGION_TEXT,
   MAINTENANCE_POLICY_TITLE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
@@ -81,7 +83,9 @@ export const MaintenancePolicy = () => {
             onChange={(policy) => field.onChange(policy.slug)}
             textFieldProps={{
               helperText: isDisabledDueToPrerequisites
-                ? 'Select a region to choose a maintenance policy.'
+                ? selectedRegion && !regionSupportsMaintenancePolicy
+                  ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
+                  : MAINTENANCE_POLICY_SELECT_REGION_TEXT
                 : undefined,
             }}
             value={field.value ?? undefined}

@@ -12,6 +12,7 @@ import { Link } from 'src/components/Link';
 import {
   MAINTENANCE_POLICY_DESCRIPTION,
   MAINTENANCE_POLICY_LEARN_MORE_URL,
+  MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS,
   MAINTENANCE_POLICY_TITLE,
   UPCOMING_MAINTENANCE_NOTICE,
 } from 'src/components/MaintenancePolicySelect/constants';
@@ -122,7 +123,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
                 onChange={(policy) => field.onChange(policy.slug)}
                 textFieldProps={{
                   helperText: isDisabledDueToPrerequisites
-                    ? 'Maintenance policy is not available in this current region.'
+                    ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS
                     : undefined,
                 }}
                 value={field.value}

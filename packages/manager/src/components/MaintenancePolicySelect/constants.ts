@@ -30,6 +30,12 @@ export const MAINTENANCE_POLICY_LEARN_MORE_URL =
 export const MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT =
   'Maintenance policy is not available in the selected region.';
 
+export const MAINTENANCE_POLICY_SELECT_REGION_TEXT =
+  'Select a region to choose a maintenance policy.';
+
+export const MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS =
+  'Maintenance policy is not available in this current region.';
+
 export const GPU_PLAN_NOTICE =
   'GPU plans do not support live migrations. Instead, when the migrate policy is selected, a warm migration is attempted first during maintenance events.';
 
