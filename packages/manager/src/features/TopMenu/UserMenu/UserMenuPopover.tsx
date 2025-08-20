@@ -103,7 +103,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         to:
           flags?.iamRbacPrimaryNavChanges && isIAMEnabled
             ? '/iam'
-            : '/account/users',
+            : flags?.iamRbacPrimaryNavChanges && !isIAMEnabled
+              ? '/users'
+              : '/account/users',
         isBeta: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
       },
       {
