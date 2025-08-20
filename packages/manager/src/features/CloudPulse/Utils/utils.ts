@@ -10,11 +10,13 @@ import {
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,
   INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
+  INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
   PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
+  PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
 import { compareArrays } from './FilterBuilder';
@@ -304,7 +306,7 @@ export const arePortsValid = (ports: string): string | undefined => {
   }
 
   if (ports.length > 100) {
-    return 'Port list must be 100 characters or less.';
+    return PORTS_LIMIT_ERROR_MESSAGE;
   }
   if (ports.startsWith(',')) {
     return PORTS_LEADING_COMMA_ERROR_MESSAGE;
@@ -343,7 +345,7 @@ export const areValidInterfaceIds = (
   }
 
   if (interfaceIds.length > 100) {
-    return 'Interface IDs list must be 100 characters or less.';
+    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
   }
 
   if (interfaceIds.startsWith(',')) {
