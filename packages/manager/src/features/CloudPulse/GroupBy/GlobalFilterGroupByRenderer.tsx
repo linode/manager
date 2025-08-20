@@ -11,7 +11,7 @@ import { useGlobalDimensions } from './utils';
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { Dashboard } from '@linode/api-v4';
 
-interface GlobalGroupByRendererProps {
+interface GlobalFilterGroupByRendererProps {
   /**
    * Handler function called when the group by selection changes.
    * @param selectedValue - Array of selected group by values.
@@ -23,7 +23,9 @@ interface GlobalGroupByRendererProps {
   selectedDashboard?: Dashboard;
 }
 
-export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
+export const GlobalFilterGroupByRenderer = (
+  props: GlobalFilterGroupByRendererProps
+) => {
   const { selectedDashboard, handleChange } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
