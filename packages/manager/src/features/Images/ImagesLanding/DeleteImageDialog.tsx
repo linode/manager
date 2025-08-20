@@ -46,7 +46,7 @@ export const DeleteImageDialog = (props: Props) => {
       }}
       title={
         isPendingUpload
-          ? 'Cancel Upload?'
+          ? 'Cancel Upload'
           : `Delete Image ${image?.label ?? imageId}`
       }
     />
