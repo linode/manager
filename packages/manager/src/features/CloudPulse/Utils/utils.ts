@@ -318,6 +318,15 @@ export const arePortsValid = (ports: string): string | undefined => {
     return PORTS_ERROR_MESSAGE;
   }
 
+  const portList = ports.split(',');
+
+  for (const port of portList) {
+    const result = isValidPort(port);
+    if (result !== undefined) {
+      return result;
+    }
+  }
+
   return undefined;
 };
 

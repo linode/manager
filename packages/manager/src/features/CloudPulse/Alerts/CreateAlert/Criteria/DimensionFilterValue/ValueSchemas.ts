@@ -6,7 +6,6 @@ import {
   PORTS_HELPER_TEXT,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
-  PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from 'src/features/CloudPulse/Utils/constants';
 
@@ -51,10 +50,9 @@ const singlePortSchema = string()
   });
 
 // Validation schema for a multiple comma-separated ports
-const commaSeparatedPortListSchema = string().test(
-  'validate-port-list',
-  PORTS_HELPER_TEXT,
-  function (value) {
+const commaSeparatedPortListSchema = string()
+  .max(100, lengthErrorMsg)
+  .test('validate-port-list', PORTS_HELPER_TEXT, function (value) {
     if (!value || typeof value !== 'string') {
       return this.createError({ message: fieldErrorMessage });
     }
@@ -86,11 +84,6 @@ const commaSeparatedPortListSchema = string().test(
 
     const ports = rawSegments.map((p) => p.trim());
 
-    if (ports.length > 15) {
-      return this.createError({
-        message: PORTS_LIMIT_ERROR_MESSAGE,
-      });
-    }
     for (const port of ports) {
       const trimmedPort = port.trim();
 
@@ -110,8 +103,7 @@ const commaSeparatedPortListSchema = string().test(
     }
 
     return true;
-  }
-);
+  });
 const singleConfigSchema = string()
   .max(100, lengthErrorMsg)
   .test(
