@@ -3,7 +3,6 @@ import { GridLegacy } from '@mui/material';
 import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
-import { transformDimensionValue } from 'src/features/CloudPulse/Alerts/Utils/utils';
 
 import {
   aggregationTypeMap,
@@ -11,6 +10,7 @@ import {
   metricOperatorTypeMap,
 } from '../constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
+import { transformCommaSeperatedDimensionValues } from './utils';
 
 import type {
   AlertDefinitionMetricCriteria,
@@ -30,6 +30,7 @@ interface AlertMetricAndDimensionsProp {
   serviceType: CloudPulseServiceType;
 }
 
+const transformationAllowedOperators = ['eq', 'neq', 'in'];
 export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria, serviceType } = props;
@@ -79,11 +80,13 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    transformDimensionValue(
-                      serviceType,
-                      dimensionFilterKey,
-                      value
-                    ),
+                    transformationAllowedOperators.includes(dimensionOperator)
+                      ? transformCommaSeperatedDimensionValues(
+                          value,
+                          serviceType,
+                          dimensionFilterKey
+                        )
+                      : value,
                   ]
                 )}
               />
