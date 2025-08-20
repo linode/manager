@@ -54,7 +54,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       entity_access: updatedUserEntityRoles,
     });
 
-    enqueueSnackbar(`Entity removed`, {
+    enqueueSnackbar(`Entity access removed`, {
       variant: 'success',
     });
 
