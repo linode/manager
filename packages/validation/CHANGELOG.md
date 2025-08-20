@@ -1,3 +1,14 @@
+## [2025-08-26] - v0.73.0
+
+
+### :
+
+- Update `alertsSchema` to require numeric fields when empty and change the validation messages ([#12703](https://github.com/linode/manager/pull/12703))
+
+### Tech Stories:
+
+- Clean up linode ipv6 interfaces ([#12612](https://github.com/linode/manager/pull/12612))
+
 ## [2025-08-12] - v0.72.0
 
 
