@@ -12,6 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
 import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -57,8 +58,12 @@ export interface AlertInformationActionTableProps {
   /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -103,7 +108,10 @@ export interface AlertRowPropsOptions {
   /**
    * Callback function to handle alert toggle
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 }
 
 export const AlertInformationActionTable = (
@@ -132,8 +140,12 @@ export const AlertInformationActionTable = (
   const isEditMode = !!entityId;
   const isCreateMode = !isEditMode;
 
-  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
-    useContextualAlertsState(alerts, entityId);
+  const {
+    enabledAlerts,
+    setEnabledAlerts,
+    hasUnsavedChanges,
+    resetToInitialState,
+  } = useContextualAlertsState(alerts, entityId);
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
     serviceType,
@@ -142,7 +154,7 @@ export const AlertInformationActionTable = (
 
   // To send initial state of alerts through toggle handler function
   React.useEffect(() => {
-    if (onToggleAlert) {
+    if (!isEditMode && onToggleAlert) {
       onToggleAlert(enabledAlerts);
     }
   }, []);
@@ -162,6 +174,8 @@ export const AlertInformationActionTable = (
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
+          // Reset the state to sync with the updated alerts from API
+          resetToInitialState();
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {
@@ -173,7 +187,7 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar]
+    [updateAlerts, enqueueSnackbar, resetToInitialState]
   );
 
   const handleToggleAlert = React.useCallback(
@@ -196,15 +210,15 @@ export const AlertInformationActionTable = (
           alertIds.push(alert.id);
         }
 
-        // Call onToggleAlert with the enabled alerts in both create and edit flow
+        // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
-          onToggleAlert(newPayload);
+          onToggleAlert(newPayload, hasUnsavedChanges);
         }
 
         return newPayload;
       });
     },
-    [onToggleAlert, setEnabledAlerts]
+    [hasUnsavedChanges, onToggleAlert, setEnabledAlerts]
   );
 
   const handleCustomPageChange = React.useCallback(
@@ -345,12 +359,12 @@ export const AlertInformationActionTable = (
         isOpen={isDialogOpen}
         message={
           <>
-            Are you sure you want to save (Beta) Alerts? <b>Legacy</b> settings
-            will be disabled and replaced by (Beta) Alerts settings.
+            {ALERTS_BETA_PROMPT} <b>Legacy</b> settings will be disabled and
+            replaced by (Beta) Alerts settings.
           </>
         }
         primaryButtonLabel="Confirm"
-        title="Are you sure you want to save (Beta) Alerts? "
+        title={ALERTS_BETA_PROMPT}
       />
     </>
   );
