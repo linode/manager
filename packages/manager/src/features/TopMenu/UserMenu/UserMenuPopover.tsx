@@ -1,4 +1,4 @@
-import { useAccount, useGrants, useProfile } from '@linode/queries';
+import { useAccount, useProfile } from '@linode/queries';
 import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -58,7 +58,6 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
@@ -66,14 +65,6 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   });
 
   const isProxyUser = profile?.user_type === 'proxy';
-
-  const isRestrictedUser = profile?.restricted ?? false;
-
-  const hasAccountAccess =
-    !isRestrictedUser || Boolean(grants?.global.account_access);
-
-  const hasFullAccountAccess =
-    !isRestrictedUser || grants?.global.account_access === 'read_write';
 
   const canSwitchBetweenParentOrProxyAccount =
     (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
@@ -104,13 +95,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         display: 'Billing & Contact Information',
         to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
-      // Restricted users can't view the Users tab regardless of their grants
       {
         display:
           flags?.iamRbacPrimaryNavChanges && isIAMEnabled
             ? 'Identity & Access'
             : 'Users & Grants',
-        hide: isRestrictedUser,
         to:
           flags?.iamRbacPrimaryNavChanges && isIAMEnabled
             ? '/iam'
@@ -124,26 +113,28 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       },
       {
         display: 'Login History',
-        to: '/account/login-history',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/login-history'
+          : '/account/login-history',
       },
-      // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
-        hide: isRestrictedUser,
-        to: '/account/service-transfers',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/service-transfers'
+          : '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        to: '/account/maintenance',
+        to: flags?.iamRbacPrimaryNavChanges
+          ? '/maintenance'
+          : '/account/maintenance',
       },
-      // Restricted users with read_write account access can view Settings.
       {
-        display: 'Account Settings',
-        hide: !hasFullAccountAccess,
-        to: '/account/settings',
+        display: 'Settings',
+        to: flags?.iamRbacPrimaryNavChanges ? '/settings' : '/account/settings',
       },
     ],
-    [hasFullAccountAccess, isRestrictedUser, isIAMEnabled, flags]
+    [isIAMEnabled, flags]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -251,36 +242,34 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             </Grid>
           </Grid>
         </Box>
-        {hasAccountAccess && (
-          <Box>
-            <Heading>
-              {flags?.iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
-            </Heading>
-            <Divider />
-            <Stack
-              gap={(theme) => theme.tokens.spacing.S8}
-              mt={(theme) => theme.tokens.spacing.S8}
-            >
-              {accountLinks.map((menuLink) =>
-                menuLink.hide ? null : (
-                  <Link
-                    data-testid={`menu-item-${menuLink.display}`}
-                    key={menuLink.display}
-                    onClick={onClose}
-                    style={{
-                      color: theme.tokens.alias.Content.Text.Link.Default,
-                      font: theme.tokens.alias.Typography.Body.Semibold,
-                    }}
-                    to={menuLink.to}
-                  >
-                    {menuLink.display}
-                    {menuLink?.isBeta ? <BetaChip component="span" /> : null}
-                  </Link>
-                )
-              )}
-            </Stack>
-          </Box>
-        )}
+        <Box>
+          <Heading>
+            {flags?.iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
+          </Heading>
+          <Divider />
+          <Stack
+            gap={(theme) => theme.tokens.spacing.S8}
+            mt={(theme) => theme.tokens.spacing.S8}
+          >
+            {accountLinks.map((menuLink) =>
+              menuLink.hide ? null : (
+                <Link
+                  data-testid={`menu-item-${menuLink.display}`}
+                  key={menuLink.display}
+                  onClick={onClose}
+                  style={{
+                    color: theme.tokens.alias.Content.Text.Link.Default,
+                    font: theme.tokens.alias.Typography.Body.Semibold,
+                  }}
+                  to={menuLink.to}
+                >
+                  {menuLink.display}
+                  {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                </Link>
+              )
+            )}
+          </Stack>
+        </Box>
       </Stack>
     </Popover>
   );
