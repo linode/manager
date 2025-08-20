@@ -1,4 +1,3 @@
-import { fireEvent } from '@testing-library/react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -83,7 +82,7 @@ describe('ConfigActionMenu', () => {
 
     const tooltips = screen.getAllByLabelText(NO_PERMISSION_TOOLTIP_TEXT);
     expect(tooltips).toHaveLength(4);
-    fireEvent.click(tooltips[0]);
+    await userEvent.click(tooltips[0]);
     expect(tooltips[0]).toBeVisible();
   });
 
