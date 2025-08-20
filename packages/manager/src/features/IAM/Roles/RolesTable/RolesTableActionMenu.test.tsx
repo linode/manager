@@ -11,7 +11,9 @@ beforeEach(() => {
 
 describe('RolesTableActionMenu', () => {
   it('renders when used', () => {
-    renderWithTheme(<RolesTableActionMenu />);
+    renderWithTheme(
+      <RolesTableActionMenu canUpdateUserGrants={true} onClick={() => {}} />
+    );
 
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
