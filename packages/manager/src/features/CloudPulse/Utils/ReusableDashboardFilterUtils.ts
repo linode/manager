@@ -19,6 +19,9 @@ interface ReusableDashboardFilterUtilProps {
    * The selected filter values
    */
   filterValue: CloudPulseMetricsFilter;
+  /**
+   * The selected grouping criteria
+   */
   groupBy: string[];
   /**
    * The selected resource id
