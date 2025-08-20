@@ -33,7 +33,6 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 import type { CloudPulseMetricsResponse, Filters } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
-
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
  * This test suite is dedicated to verifying the functionality and display of widgets on the Cloudpulse dashboard.
@@ -46,7 +45,8 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, firewalls,region } = widgetDetails.firewall;
+const { dashboardName, id, metrics, firewalls, region } =
+  widgetDetails.firewall;
 const serviceType = 'firewall';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -111,6 +111,7 @@ const getWidgetLegendRowValuesFromResponse = (
     status: 'success',
     unit,
     serviceType,
+    groupBy: ['entity_id'],
   });
 
   // Destructure metrics data from the first legend row
@@ -129,12 +130,12 @@ const mockLinode = linodeFactory.build({
   region: 'us-east',
 });
 const mockRegion = regionFactory.build({
-  capabilities: ['Linodes','Cloud Firewall'],
+  capabilities: ['Linodes', 'Cloud Firewall'],
   id: 'us-east',
   label: 'Newark, NJ',
   monitors: {
     alerts: [],
-    metrics: ['Cloud Firewall','Linodes'],
+    metrics: ['Cloud Firewall', 'Linodes'],
   },
 });
 const mockFirewalls = firewallFactory.build({ label: firewalls });
