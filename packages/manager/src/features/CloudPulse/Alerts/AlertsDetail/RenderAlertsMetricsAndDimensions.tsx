@@ -4,7 +4,6 @@ import { GridLegacy } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import NullComponent from 'src/components/NullComponent';
-import { transformDimensionValue } from 'src/features/CloudPulse/Alerts/Utils/utils';
 
 import {
   aggregationTypeMap,
@@ -12,6 +11,7 @@ import {
   metricOperatorTypeMap,
 } from '../constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
+import { transformCommaSeperatedDimensionValues } from './utils';
 
 import type {
   AlertDefinitionMetricCriteria,
@@ -31,23 +31,23 @@ interface AlertMetricAndDimensionsProp {
   serviceType: CloudPulseServiceType;
 }
 
+const transformationAllowedOperators = ['eq', 'neq', 'in'];
 export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria, serviceType } = props;
-
     const needsLinodes = useMemo(
       () =>
         ruleCriteria.rules?.some((rule) =>
           rule.dimension_filters?.some(
-            (df) =>
-              df.dimension_label === 'linode_id' &&
-              ['equal', 'in', 'not_equal'].includes(df.operator ?? '')
+            (dimension) =>
+              dimension.dimension_label === 'linode_id' &&
+              transformationAllowedOperators.includes(dimension.operator ?? '')
           )
         ) ?? false,
-      [ruleCriteria]
+      [ruleCriteria.rules]
     );
 
-    // 2. Always call the query, but only run when needed
+    // Initialize the query, but only run when needed
     const { data: linodes } = useAllLinodesQuery({}, {}, needsLinodes);
 
     const linodeMap = useMemo(
@@ -104,26 +104,30 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => {
                     let resolvedValue = value;
 
+                    // console.log(dimensionOperator);
                     //  Special case: linode_id → resolve to labels
                     if (
                       dimensionFilterKey === 'linode_id' &&
-                      ['equal', 'in', 'not_equal'].includes(
+                      transformationAllowedOperators.includes(
                         dimensionOperator
                       ) &&
                       value
                     ) {
                       resolvedValue = value
                         .split(',')
-                        .map((id) => linodeMap[id] ?? id)
+                        .map((id) => linodeMap[id.trim()] ?? id.trim())
                         .join(', ');
                     }
 
                     // Pass the resolved value into transformDimensionValue
-                    const displayValue = transformDimensionValue(
-                      serviceType,
-                      dimensionFilterKey,
-                      resolvedValue
-                    );
+                    const displayValue =
+                      transformationAllowedOperators.includes(dimensionOperator)
+                        ? transformCommaSeperatedDimensionValues(
+                            resolvedValue,
+                            serviceType,
+                            dimensionFilterKey
+                          )
+                        : resolvedValue;
                     return [
                       dimensionLabel,
                       dimensionOperatorTypeMap[dimensionOperator],

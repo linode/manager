@@ -22,7 +22,7 @@ import {
   PORTS_TRAILING_COMMA_ERROR_MESSAGE,
 } from '../../../constants';
 
-const textfieldLengthErrorMessage = 'Value must be 100 characters or less.';
+const lengthErrorMsg = 'Value must be 100 characters or less.';
 const fieldErrorMessage = 'This field is required.';
 const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
 const LEADING_ZERO_PORT_REGEX = /^0\d+/;
@@ -118,7 +118,7 @@ const commaSeparatedPortListSchema = string().test(
   }
 );
 const singleConfigSchema = string()
-  .max(100, textfieldLengthErrorMessage)
+  .max(100, lengthErrorMsg)
   .test(
     'validate-single-config-schema',
     CONFIG_ERROR_MESSAGE,
@@ -135,7 +135,7 @@ const singleConfigSchema = string()
   );
 
 const multipleConfigSchema = string()
-  .max(100, textfieldLengthErrorMessage)
+  .max(100, lengthErrorMsg)
   .test(
     'validate-multi-config-schema',
     CONFIGS_ERROR_MESSAGE,
@@ -185,7 +185,7 @@ const multipleConfigSchema = string()
   );
 
 const singleInterfaceSchema = string()
-  .max(100, textfieldLengthErrorMessage)
+  .max(100, lengthErrorMsg)
   .test(
     'validate-single-interface-schema',
     INTERFACE_ID_ERROR_MESSAGE,
@@ -202,7 +202,7 @@ const singleInterfaceSchema = string()
   );
 
 const multipleInterfacesSchema = string()
-  .max(100, textfieldLengthErrorMessage)
+  .max(100, lengthErrorMsg)
   .test(
     'validate-multi-interface-schema',
     INTERFACE_IDS_ERROR_MESSAGE,

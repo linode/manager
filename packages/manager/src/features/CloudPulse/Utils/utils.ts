@@ -63,10 +63,10 @@ interface AclpSupportedRegionProps {
 export const useIsACLPEnabled = (): {
   isACLPEnabled: boolean;
 } => {
-  const { data: account, error } = useAccount();
+  const { data: account } = useAccount();
   const flags = useFlags();
 
-  if (error || !flags) {
+  if (!flags) {
     return { isACLPEnabled: false };
   }
 
@@ -84,7 +84,7 @@ export const useIsACLPEnabled = (): {
 /**
  * @param alerts List of alerts to be displayed
  * @param entityId Id of the selected entity
- * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState
+ * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState, resetToInitialState
  */
 export const useContextualAlertsState = (
   alerts: Alert[],
@@ -123,6 +123,11 @@ export const useContextualAlertsState = (
 
   const [enabledAlerts, setEnabledAlerts] = React.useState(initialState);
 
+  // Reset function to sync with latest initial state
+  const resetToInitialState = React.useCallback(() => {
+    setEnabledAlerts(initialState);
+  }, [initialState]);
+
   // Check if the enabled alerts have changed from the initial state
   const hasUnsavedChanges = React.useMemo(() => {
     return (
@@ -136,6 +141,7 @@ export const useContextualAlertsState = (
     setEnabledAlerts,
     hasUnsavedChanges,
     initialState,
+    resetToInitialState,
   };
 };
 

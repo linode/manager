@@ -107,15 +107,14 @@ export const useEditAlertDefinition = () => {
 
     onSuccess(data) {
       const allAlertsQueryKey = queryFactory.alerts._ctx.all().queryKey;
-      queryClient.cancelQueries({ queryKey: allAlertsQueryKey });
-      queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
-        return (
-          oldData?.map((alert) => {
-            return alert.id === data.id ? data : alert;
-          }) ?? [data]
-        );
-      });
+      const oldAlerts = queryClient.getQueryData<Alert[]>(allAlertsQueryKey);
 
+      if (oldAlerts) {
+        queryClient.setQueryData<Alert[]>(
+          allAlertsQueryKey,
+          oldAlerts.map((alert) => (alert.id === data.id ? data : alert))
+        );
+      }
       queryClient.setQueryData<Alert>(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(
           data.service_type,
@@ -245,9 +244,43 @@ export const useServiceAlertsMutation = (
     mutationFn: (payload: CloudPulseAlertsPayload) => {
       return updateServiceAlerts(serviceType, entityId, payload);
     },
-    onSuccess() {
+    onSuccess(_, payload) {
+      const allAlerts = queryClient.getQueryData<Alert[]>(
+        queryFactory.alerts._ctx.all().queryKey
+      );
+
+      // Get alerts previously enabled for this entity
+      const oldEnabledAlertIds =
+        allAlerts
+          ?.filter((alert) => alert.entity_ids.includes(entityId))
+          .map((alert) => alert.id) || [];
+
+      // Combine enabled user and system alert IDs from payload
+      const newEnabledAlertIds = [
+        ...(payload.user ?? []),
+        ...(payload.system ?? []),
+      ];
+
+      // Get unique list of all enabled alert IDs for cache invalidation
+      const alertIdsToInvalidate = Array.from(
+        new Set([...oldEnabledAlertIds, ...newEnabledAlertIds])
+      );
+
       queryClient.invalidateQueries({
         queryKey: queryFactory.resources(serviceType).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      alertIdsToInvalidate.forEach((alertId) => {
+        queryClient.invalidateQueries({
+          queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+            serviceType,
+            String(alertId)
+          ).queryKey,
+        });
       });
     },
   });

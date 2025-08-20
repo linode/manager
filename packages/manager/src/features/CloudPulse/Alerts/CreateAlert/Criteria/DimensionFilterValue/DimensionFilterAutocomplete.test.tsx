@@ -152,6 +152,6 @@ describe('<DimensionFilterAutocomplete />', () => {
       />
     );
 
-    expect(screen.getByText('Failed to fetch the Values.')).toBeVisible();
+    expect(screen.getByText('Failed to fetch the values.')).toBeVisible();
   });
 });
