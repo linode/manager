@@ -1,8 +1,12 @@
-import { createLinodeRequestFactory } from '@linode/utilities';
+import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import { linodeTypeFactory, regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodeStatsError,
+  mockGetLinodeTypes,
+} from 'support/intercepts/linodes';
 import {
   mockGetRegionAvailability,
   mockGetRegions,
@@ -120,46 +124,60 @@ describe('maintenance policy region support - Linode Details > Settings', () => 
   });
 
   beforeEach(() => {
-    cy.tag('method:e2e');
     mockAppendFeatureFlags({
       iamRbacPrimaryNavChanges: false,
     }).as('getFeatureFlags');
   });
 
   it('disables maintenance policy selector when region does not support it', () => {
-    // Create a linode in a region that doesn't support maintenance policies
-    // We'll use a distributed region that doesn't have the 'Maintenance Policy' capability
-    const linodeCreatePayload = createLinodeRequestFactory.build({
+    // Mock a linode in a region that doesn't support maintenance policies
+    const mockRegion = regionFactory.build({
+      capabilities: [
+        // The 'Maintenance Policy' capability should be absent.
+        'Linodes',
+      ],
+    });
+
+    const mockLinode = linodeFactory.build({
       label: randomLabel(),
-      region: 'us-ord', // A region known not to support maintenance policies as of 8/20/2025.
+      region: mockRegion.id,
     });
 
-    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
-      // Visit the linode details page
-      cy.visitWithLogin(`/linodes/${linode.id}`);
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+    mockGetLinodeStatsError(
+      mockLinode.id,
+      'Stats for this Linode are not available yet',
+      400
+    );
+    mockGetRegions([mockRegion]);
 
-      // Wait for content to load
-      cy.findByText('Stats for this Linode are not available yet');
+    // cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
+    // Visit the linode details page
+    cy.visitWithLogin(`/linodes/${mockLinode.id}`);
 
-      // Navigate to the Settings tab
-      cy.findByText('Settings').should('be.visible').click();
+    // Wait for content to load
+    cy.findByText('Stats for this Linode are not available yet');
 
-      // Look for the Host Maintenance Policy section
-      cy.findByText('Host Maintenance Policy').should('be.visible');
+    // Navigate to the Settings tab
+    cy.findByText('Settings').should('be.visible').click();
 
-      // Find the maintenance policy selector and verify it's disabled
-      cy.findByLabelText('Maintenance Policy')
-        .should('be.visible')
-        .should('be.disabled');
+    // Look for the Host Maintenance Policy section
+    cy.findByText('Host Maintenance Policy').should('be.visible');
 
-      // Verify the helper text appears explaining why it's disabled
-      cy.findByText(
-        MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS
-      ).should('be.visible');
-    });
+    // Find the maintenance policy selector and verify it's disabled
+    cy.findByLabelText('Maintenance Policy')
+      .should('be.visible')
+      .should('be.disabled');
+
+    // Verify the helper text appears explaining why it's disabled
+    cy.findByText(
+      MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS
+    ).should('be.visible');
+    // });
   });
 
   it('enables maintenance policy selector when region supports it', () => {
+    cy.tag('method:e2e');
     // Create a linode in a region that supports maintenance policies
     // eu-central is known to support maintenance policies
     const linodeCreatePayload = createLinodeRequestFactory.build({
