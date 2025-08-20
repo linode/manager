@@ -20,8 +20,5 @@ export function getNodePoolVersionOptions(options: NodePoolVersionOptions) {
   const definedVersions = versions.filter((version) => version !== undefined);
 
   // Get unique versions because the Node Pool's version and the cluster's version can be the same
-  const uniqueVersions = Array.from(new Set(definedVersions));
-
-  // Map the versions to have a `label` field so they satisfy our Autocomplete's types
-  return uniqueVersions.map((version) => ({ label: version }));
+  return Array.from(new Set(definedVersions));
 }

@@ -21,7 +21,7 @@ export const NodePoolFirewallSelect = () => {
   );
 
   return (
-    <Stack marginTop={3}>
+    <Stack>
       <Typography
         sx={(theme) => ({
           font: theme.tokens.alias.Typography.Label.Bold.S,
@@ -56,6 +56,7 @@ export const NodePoolFirewallSelect = () => {
           render={({ field, fieldState }) => (
             <FirewallSelect
               errorText={fieldState.error?.message}
+              noMarginTop
               onBlur={field.onBlur}
               onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
               placeholder="Select firewall"
@@ -70,6 +71,7 @@ export const NodePoolFirewallSelect = () => {
               return true;
             },
           }}
+          shouldUnregister
         />
       )}
     </Stack>
