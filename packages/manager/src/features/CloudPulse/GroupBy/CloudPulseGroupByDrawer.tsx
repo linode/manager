@@ -12,6 +12,8 @@ import * as React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
+import { GROUP_BY_SELECTION_LIMIT } from './constants';
+
 export interface GroupByDrawerProps {
   defaultValue?: GroupByOption[];
   message?: string;
@@ -28,8 +30,6 @@ export interface GroupByOption {
   label: string;
   value: string;
 }
-
-const groupBySelectionLimit = 3;
 export const CloudPulseGroupByDrawer = React.memo(
   (props: GroupByDrawerProps) => {
     const {
@@ -47,7 +47,7 @@ export const CloudPulseGroupByDrawer = React.memo(
     const [selectedValue, setSelectedValue] = React.useState<GroupByOption[]>(
       defaultValue?.slice(
         0,
-        Math.min(defaultValue.length ?? 0, groupBySelectionLimit)
+        Math.min(defaultValue.length ?? 0, GROUP_BY_SELECTION_LIMIT)
       )
     );
     const previousValueRef = React.useRef<GroupByOption[]>(defaultValue);
@@ -60,7 +60,7 @@ export const CloudPulseGroupByDrawer = React.memo(
     React.useEffect(() => {
       const value = defaultValue?.slice(
         0,
-        Math.min(defaultValue.length ?? 0, groupBySelectionLimit)
+        Math.min(defaultValue.length ?? 0, GROUP_BY_SELECTION_LIMIT)
       );
       onApply(value);
       setSelectedValue(value);
@@ -88,7 +88,7 @@ export const CloudPulseGroupByDrawer = React.memo(
           </Typography>
           <Autocomplete
             data-testid="dimension-select"
-            helperText={`You can select upto ${groupBySelectionLimit} dimensions.`}
+            helperText={`You can select upto ${GROUP_BY_SELECTION_LIMIT} dimensions.`}
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
             }
@@ -109,10 +109,10 @@ export const CloudPulseGroupByDrawer = React.memo(
                 ? StyledListItem
                 : 'li';
               const isDisabled =
-                selectedValue.length >= groupBySelectionLimit && !isSelected;
+                selectedValue.length >= GROUP_BY_SELECTION_LIMIT && !isSelected;
               const isHidden =
                 isSelectAllORDeslectAllOption &&
-                options.length > groupBySelectionLimit;
+                options.length > GROUP_BY_SELECTION_LIMIT;
 
               if (isHidden) {
                 return <NullComponent />;
