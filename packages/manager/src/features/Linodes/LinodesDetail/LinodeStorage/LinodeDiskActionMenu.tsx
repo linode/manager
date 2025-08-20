@@ -77,7 +77,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
           },
         }),
       title: 'Create Disk Image',
-      tooltip: swapTooltip,
+      tooltip: readOnly ? noPermissionTooltip : swapTooltip,
     },
     {
       disabled: !permissions.clone_linode,

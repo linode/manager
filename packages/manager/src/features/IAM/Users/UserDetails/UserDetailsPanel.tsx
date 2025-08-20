@@ -27,7 +27,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       value: <MaskableText isToggleable text={user.username} />,
     },
     {
-      label: 'E-mail',
+      label: 'Email',
       value: <MaskableText isToggleable text={user.email} />,
     },
     {

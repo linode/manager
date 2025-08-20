@@ -19,7 +19,7 @@ describe('UserDetailsPanel', () => {
     expect(getByText(/Username/)).toBeVisible();
     expect(getByText(user.username)).toBeVisible();
 
-    expect(getByText(/E-mail/)).toBeVisible();
+    expect(getByText(/Email/)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
   });
 
