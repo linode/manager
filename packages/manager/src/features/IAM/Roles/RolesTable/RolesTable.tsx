@@ -26,6 +26,7 @@ import {
 } from 'src/features/IAM/Shared/utilities';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import {
   ROLES_LEARN_MORE_LINK,
   ROLES_TABLE_PREFERENCE_KEY,
@@ -43,6 +44,7 @@ interface Props {
   roles?: RoleView[];
 }
 const DEFAULT_PAGE_SIZE = 10;
+
 export const RolesTable = ({ roles = [] }: Props) => {
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
@@ -53,6 +55,11 @@ export const RolesTable = ({ roles = [] }: Props) => {
   >(undefined);
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const { data: permissions } = usePermissions('account', [
+    'update_user_grants',
+  ]);
+  const canUpdateUserGrants = permissions?.update_user_grants;
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/roles',
@@ -194,12 +201,14 @@ export const RolesTable = ({ roles = [] }: Props) => {
           </Grid>
           <Button
             buttonType="primary"
-            disabled={selectedRows.length === 0}
+            disabled={selectedRows.length === 0 || !canUpdateUserGrants}
             onClick={() => handleAssignSelectedRoles()}
             tooltipText={
               selectedRows.length === 0
                 ? 'You must select some roles to assign them.'
-                : undefined
+                : !canUpdateUserGrants
+                  ? 'You do not have permission to assign roles.'
+                  : undefined
             }
           >
             Assign Selected Roles
@@ -279,6 +288,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     }}
                   >
                     <RolesTableActionMenu
+                      canUpdateUserGrants={canUpdateUserGrants}
                       onClick={() => {
                         assignRoleRow(roleRow);
                       }}

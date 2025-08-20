@@ -26,6 +26,8 @@ export const UsersActionMenu = (props: Props) => {
 
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
+  const isAccountAdmin = permissions.is_account_admin;
+  const canDeleteUser = permissions.delete_user;
 
   const proxyUserActions: Action[] = [
     {
@@ -35,7 +37,10 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.is_account_admin,
+      disabled: !isAccountAdmin,
+      tooltip: !isAccountAdmin
+        ? 'You do not have permission to manage access.'
+        : undefined,
       title: 'Manage Access',
     },
   ];
@@ -48,7 +53,10 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.is_account_admin,
+      disabled: !isAccountAdmin,
+      tooltip: !isAccountAdmin
+        ? 'You do not have permission to view user details.'
+        : undefined,
       title: 'View User Details',
     },
     {
@@ -58,7 +66,10 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.is_account_admin,
+      disabled: !isAccountAdmin,
+      tooltip: !isAccountAdmin
+        ? 'You do not have permission to view assigned roles.'
+        : undefined,
       title: 'View Assigned Roles',
     },
     {
@@ -68,11 +79,14 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !permissions.is_account_admin,
+      disabled: !isAccountAdmin,
+      tooltip: !isAccountAdmin
+        ? 'You do not have permission to view entity access.'
+        : undefined,
       title: 'View Entity Access',
     },
     {
-      disabled: username === profileUsername || !permissions.delete_user,
+      disabled: username === profileUsername || !canDeleteUser,
       onClick: () => {
         onDelete(username);
       },
@@ -80,7 +94,9 @@ export const UsersActionMenu = (props: Props) => {
       tooltip:
         username === profileUsername
           ? "You can't delete the currently active user."
-          : undefined,
+          : !canDeleteUser
+            ? 'You do not have permission to delete this user.'
+            : undefined,
     },
   ];
 

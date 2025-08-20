@@ -379,7 +379,13 @@ export const AssignedRolesTable = () => {
         <Grid sx={{ alignSelf: 'flex-start' }}>
           <Button
             buttonType="primary"
+            disabled={!permissions?.update_user_grants}
             onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+            tooltipText={
+              !permissions?.update_user_grants
+                ? 'You do not have permission to assign roles.'
+                : undefined
+            }
           >
             Assign New Roles
           </Button>
