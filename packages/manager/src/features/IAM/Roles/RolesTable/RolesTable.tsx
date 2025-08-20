@@ -56,10 +56,8 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-  const { data: permissions } = usePermissions('account', [
-    'update_user_grants',
-  ]);
-  const canUpdateUserGrants = permissions?.update_user_grants;
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const isAccountAdmin = permissions?.is_account_admin;
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/roles',
@@ -201,12 +199,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
           </Grid>
           <Button
             buttonType="primary"
-            disabled={selectedRows.length === 0 || !canUpdateUserGrants}
+            disabled={selectedRows.length === 0 || !isAccountAdmin}
             onClick={() => handleAssignSelectedRoles()}
             tooltipText={
               selectedRows.length === 0
                 ? 'You must select some roles to assign them.'
-                : !canUpdateUserGrants
+                : !isAccountAdmin
                   ? 'You do not have permission to assign roles.'
                   : undefined
             }
@@ -288,7 +286,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     }}
                   >
                     <RolesTableActionMenu
-                      canUpdateUserGrants={canUpdateUserGrants}
+                      canUpdateUserGrants={isAccountAdmin}
                       onClick={() => {
                         assignRoleRow(roleRow);
                       }}

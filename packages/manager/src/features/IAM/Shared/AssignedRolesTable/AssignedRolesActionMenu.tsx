@@ -6,7 +6,7 @@ import type { ExtendedRoleView } from '../types';
 import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
-type RolesActionsPermissions = PickPermissions<'update_user_grants'>;
+type RolesActionsPermissions = PickPermissions<'is_account_admin'>;
 interface Props {
   handleChangeRole: (role: ExtendedRoleView) => void;
   handleUnassignRole: (role: ExtendedRoleView) => void;
@@ -26,22 +26,22 @@ export const AssignedRolesActionMenu = ({
 }: Props) => {
   const accountMenu: Action[] = [
     {
-      disabled: !permissions.update_user_grants,
+      disabled: !permissions.is_account_admin,
       onClick: () => {
         handleChangeRole(role);
       },
       title: 'Change Role',
-      tooltip: !permissions.update_user_grants
+      tooltip: !permissions.is_account_admin
         ? 'You do not have permission to change this role.'
         : undefined,
     },
     {
-      disabled: !permissions.update_user_grants,
+      disabled: !permissions.is_account_admin,
       onClick: () => {
         handleUnassignRole(role);
       },
       title: 'Unassign Role',
-      tooltip: !permissions.update_user_grants
+      tooltip: !permissions.is_account_admin
         ? 'You do not have permission to unassign this role.'
         : undefined,
     },
@@ -53,8 +53,8 @@ export const AssignedRolesActionMenu = ({
       title: 'View Entities',
     },
     {
-      disabled: !permissions.update_user_grants,
-      tooltip: !permissions.update_user_grants
+      disabled: !permissions.is_account_admin,
+      tooltip: !permissions.is_account_admin
         ? 'You do not have permission to update this role.'
         : undefined,
       onClick: () => {
@@ -63,8 +63,8 @@ export const AssignedRolesActionMenu = ({
       title: 'Update List of Entities',
     },
     {
-      disabled: !permissions.update_user_grants,
-      tooltip: !permissions.update_user_grants
+      disabled: !permissions.is_account_admin,
+      tooltip: !permissions.is_account_admin
         ? 'You do not have permission to change this role.'
         : undefined,
       onClick: () => {
@@ -73,8 +73,8 @@ export const AssignedRolesActionMenu = ({
       title: 'Change Role',
     },
     {
-      disabled: !permissions.update_user_grants,
-      tooltip: !permissions.update_user_grants
+      disabled: !permissions.is_account_admin,
+      tooltip: !permissions.is_account_admin
         ? 'You do not have permission to unassign this role.'
         : undefined,
       onClick: () => {

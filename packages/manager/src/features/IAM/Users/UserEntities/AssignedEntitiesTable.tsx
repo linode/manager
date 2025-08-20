@@ -49,9 +49,7 @@ export const AssignedEntitiesTable = () => {
     from: '/iam/users/$username',
   });
   const theme = useTheme();
-  const { data: permissions } = usePermissions('account', [
-    'update_user_grants',
-  ]);
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
     strict: false,
@@ -188,22 +186,22 @@ export const AssignedEntitiesTable = () => {
             .map((el: EntitiesRole) => {
               const actions: Action[] = [
                 {
-                  disabled: !permissions?.update_user_grants,
+                  disabled: !permissions?.is_account_admin,
                   onClick: () => {
                     handleChangeRole(el, 'change-role-for-entity');
                   },
                   title: 'Change Role ',
-                  tooltip: !permissions?.update_user_grants
+                  tooltip: !permissions?.is_account_admin
                     ? 'You do not have permission to change this role.'
                     : undefined,
                 },
                 {
-                  disabled: !permissions?.update_user_grants,
+                  disabled: !permissions?.is_account_admin,
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
                   title: 'Remove Assignment',
-                  tooltip: !permissions?.update_user_grants
+                  tooltip: !permissions?.is_account_admin
                     ? 'You do not have permission to remove this assignment.'
                     : undefined,
                 },
