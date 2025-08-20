@@ -215,7 +215,7 @@ function sleep(ms: number) {
 }
 
 const entityTransfers = [
-  http.get('*/account/entity-transfers', () => {
+  http.get('*/account/service-transfers', () => {
     const transfers1 = entityTransferFactory.buildList(10);
     const transfers2 = entityTransferFactory.buildList(10, {
       token: 'TEST123',
@@ -240,14 +240,14 @@ const entityTransfers = [
     );
     return HttpResponse.json(makeResourcePage(combinedTransfers));
   }),
-  http.get('*/account/entity-transfers/:transferId', () => {
+  http.get('*/account/service-transfers/:transferId', () => {
     const transfer = entityTransferFactory.build();
     return HttpResponse.json(transfer);
   }),
   http.get('*/account/agreements', () =>
     HttpResponse.json(accountAgreementsFactory.build())
   ),
-  http.post('*/account/entity-transfers', async ({ request }) => {
+  http.post('*/account/service-transfers', async ({ request }) => {
     const body = await request.json();
     const payload = body as any;
     const newTransfer = entityTransferFactory.build({
@@ -255,10 +255,10 @@ const entityTransfers = [
     });
     return HttpResponse.json(newTransfer);
   }),
-  http.post('*/account/entity-transfers/:transferId/accept', () => {
+  http.post('*/account/service-transfers/:transferId/accept', () => {
     return HttpResponse.json({});
   }),
-  http.delete('*/account/entity-transfers/:transferId', () => {
+  http.delete('*/account/service-transfers/:transferId', () => {
     return HttpResponse.json({});
   }),
 ];
