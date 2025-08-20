@@ -40,6 +40,7 @@ import { serviceTransfersRouteTree } from './serviceTransfers';
 import { settingsRouteTree } from './settings';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
+import { usersAndGrantsRouteTree } from './usersAndGrants';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
@@ -87,6 +88,7 @@ export const routeTree = rootRoute.addChildren([
   settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
+  usersAndGrantsRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
 ]);

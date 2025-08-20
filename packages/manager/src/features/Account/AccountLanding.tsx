@@ -1,4 +1,5 @@
 import { useAccount, useProfile } from '@linode/queries';
+import { NotFound } from '@linode/ui';
 import {
   Outlet,
   useLocation,
@@ -45,13 +46,6 @@ export const AccountLanding = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
-
-  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
-  if (location.pathname === '/account') {
-    navigate({
-      to: '/account/billing',
-    });
-  }
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
@@ -109,6 +103,16 @@ export const AccountLanding = () => {
     }
   }, [match.routeId, showQuotasTab, navigate, iamRbacPrimaryNavChanges]);
 
+  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
+  if (location.pathname === '/account') {
+    if (iamRbacPrimaryNavChanges) {
+      return <NotFound />;
+    }
+    navigate({
+      to: '/account/billing',
+    });
+  }
+
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
       return sessionContext.updateState({
@@ -145,7 +149,7 @@ export const AccountLanding = () => {
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
         navigate({
-          to: '/account/billing',
+          to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
           search: { action: 'make-payment' },
         });
     }

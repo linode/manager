@@ -42,18 +42,6 @@ const iamTabsRoute = createRoute({
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'users',
-  beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags
-    );
-
-    if (!isIAMEnabled) {
-      throw redirect({
-        to: '/account/users',
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/IAM/Users/UsersTable/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -130,7 +118,6 @@ const iamUserNameDetailsRoute = createRoute({
       context.flags
     );
     const { username } = params;
-
     if (!isIAMEnabled && username) {
       throw redirect({
         to: '/account/users/$username/profile',

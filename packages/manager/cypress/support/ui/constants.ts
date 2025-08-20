@@ -245,23 +245,6 @@ export const pages: Page[] = [
   },
   {
     assertIsLoaded: () =>
-      cy.findByText('Update Contact Information').should('be.visible'),
-    goWithUI: [
-      {
-        go: () => {
-          loadAppNoLogin(`/account/users`);
-          cy.findByText('Username');
-          waitDoubleRerender();
-          cy.findByText('Billing Info').should('be.visible').click();
-        },
-        name: 'Tab',
-      },
-    ],
-    name: 'Account/Billing',
-    url: `/billing`,
-  },
-  {
-    assertIsLoaded: () =>
       cy.findByText('Backup Auto Enrollment').should('be.visible'),
     goWithUI: [
       {

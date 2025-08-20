@@ -281,7 +281,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               {
                 display: 'Users & Grants',
                 hide: isIAMEnabled,
-                to: '/account/users',
+                to: '/users',
               },
               {
                 display: 'Identity & Access',
