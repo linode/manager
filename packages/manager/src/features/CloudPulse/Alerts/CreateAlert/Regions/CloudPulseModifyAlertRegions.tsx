@@ -28,14 +28,16 @@ export const CloudPulseModifyAlertRegions = React.memo(
         shouldValidate: true,
       });
     };
-
+    const titleRef = React.useRef<HTMLDivElement>(null);
     return (
       <Controller
         control={control}
         name={name}
         render={({ field, fieldState }) => (
           <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
-            <Typography variant="h2">2. Regions</Typography>
+            <Typography ref={titleRef} variant="h2">
+              2. Regions
+            </Typography>
             <Box
               sx={(theme) => ({
                 ...getAlertBoxStyles(theme),
