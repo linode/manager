@@ -939,19 +939,38 @@ export const handlers = [
         }),
       ];
       const linodeAclpSupportedRegionDetails = [
+        // Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook.
+        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
-          alerts: { user: [100, 101], system: [200] },
+          alerts: {
+            user: [21, 22, 23, 24, 25],
+            system: [19, 20],
+            cpu: 0,
+            io: 0,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 0,
+          },
         }),
+        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
-          alerts: { user: [], system: [] },
+          alerts: {
+            user: [],
+            system: [],
+            cpu: 10,
+            io: 10000,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 80,
+          },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -2733,11 +2752,18 @@ export const handlers = [
       alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
-          ...alertFactory.buildList(20, {
+          ...alertFactory.buildList(18, {
             rule_criteria: {
               rules: alertRulesFactory.buildList(2),
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+          }),
+          ...alertFactory.buildList(2, {
+            rule_criteria: {
+              rules: alertRulesFactory.buildList(2),
+            },
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            entity_ids: ['1004'],
           }),
           ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
