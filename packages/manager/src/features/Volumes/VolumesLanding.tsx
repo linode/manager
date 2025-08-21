@@ -18,9 +18,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,
@@ -50,6 +50,8 @@ export const VolumesLanding = () => {
     from: '/volumes/',
     shouldThrow: false,
   });
+  const { data: permissions } = usePermissions('account', ['create_volume']);
+
   const pagination = usePaginationV2({
     currentRoute: '/volumes',
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
@@ -58,9 +60,8 @@ export const VolumesLanding = () => {
       query: search?.query,
     }),
   });
-  const isVolumeCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_volumes',
-  });
+
+  const isVolumeCreationRestricted = !permissions?.create_volume;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
