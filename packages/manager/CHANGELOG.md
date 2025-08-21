@@ -41,7 +41,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Wrong stackScriptID used when clicking Deploy New Linode during an active search ([#12623](https://github.com/linode/manager/pull/12623))
-- Fix ImageSelect onChange rendering bug as well as other console errors ([#12638](https://github.com/linode/manager/pull/12638))
+- ImageSelect onChange rendering bug as well as other console errors ([#12638](https://github.com/linode/manager/pull/12638))
 - Console error from `hasBorder` prop in `StyledFlag` component ([#12657](https://github.com/linode/manager/pull/12657))
 - IAM RBAC: Accidental row expansion in Roles table when selecting roles via checkbox ([#12659](https://github.com/linode/manager/pull/12659))
 - Correct maintenance status from `in-progress` to `in_progress` for consistency. Update components to handle nullable time fields with proper fallbacks ([#12665](https://github.com/linode/manager/pull/12665))
@@ -70,10 +70,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - DBaaS drawers and dialogs in resize, configuration, and settings not resetting errors and validation state on close ([#12733](https://github.com/linode/manager/pull/12733))
 - Navigating to "/account" redirects to "/billing" when IAM navigation is enabled ([#12735](https://github.com/linode/manager/pull/12735))
 - Navigating to "account/users" shows tabs for administration pages when IAM nav is enabled ([#12735](https://github.com/linode/manager/pull/12735))
+- IAM RBAC: User Detail UI fix, add missing tooltips to Linode Storage Action Menu ([#12722](https://github.com/linode/manager/pull/12722))
 
 ### Tech Stories:
 
-- Routing: remove `react-router-dom` and fully switch to tanstack router ([#12602](https://github.com/linode/manager/pull/12602))
+- Routing: remove `react-router-dom` and fully switch to TanStack router ([#12602](https://github.com/linode/manager/pull/12602))
 - Clean up types for `LinodeCreateFormValues` interface ([#12612](https://github.com/linode/manager/pull/12612))
 - Refactor single disk encryption status component into two separate components (Node Pool and Linodes) ([#12619](https://github.com/linode/manager/pull/12619))
 - Refactor the Add Node Pool drawer to use `react-hook-form` ([#12631](https://github.com/linode/manager/pull/12631))
@@ -103,16 +104,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Redirect /account/billing → /billing when feature flag is enabled ([#12670](https://github.com/linode/manager/pull/12670))
 - CloudPulse: Add new flag - 'aclpServices', filter services at `CloudPulseDashboardSelect.tsx`, `AlertListing.tsx`, `ServiceTypeSelect.tsx` ([#12671](https://github.com/linode/manager/pull/12671))
 - CloudPulse: Add dimension filter value label transformation config at `DimensionTransform.ts` and update labels in metrics and alerts ([#12676](https://github.com/linode/manager/pull/12676))
-- Add search and select inputs for Streams table. Add search input for Desitnations table ([#12679](https://github.com/linode/manager/pull/12679))
+- Add search and select inputs for Streams table. Add search input for Destinations table ([#12679](https://github.com/linode/manager/pull/12679))
 - Temporarily fix Linode Interface `firewall_device_add` event message ([#12685](https://github.com/linode/manager/pull/12685))
 - Restrict access to the Identity & Access link from the Primary Nav for non-beta users ([#12692](https://github.com/linode/manager/pull/12692))
 - Redirect Account tabs to flat routes `/login-history`, `/settings`, `/maintenance`, and `/service-transfers` ([#12702](https://github.com/linode/manager/pull/12702))
 - CloudPulse: Add linode region filter in `filterconfig.ts`, refactor `CloudPulseRegionSelect.tsx`, add `useFetchOptions.ts` hook ([#12704](https://github.com/linode/manager/pull/12704))
 - Add node pool firewall selection to LKE-E create flow ([#12712](https://github.com/linode/manager/pull/12712))
-- IAM RBAC: User Detail UI fix, add missing tooltips to Linode Storage Action Menu ([#12722](https://github.com/linode/manager/pull/12722))
-
-### Upcoming:
-
 - CloudPulse metric label support for Linode Interface firewall entities ([#12716](https://github.com/linode/manager/pull/12716))
 
 ## [2025-08-12] - v1.148.0

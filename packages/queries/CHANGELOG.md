@@ -1,6 +1,5 @@
 ## [2025-08-26] - v0.12.0
 
-
 ### Added:
 
 - Implemented `enabled` parameters for payments & invoices queries ([#12660](https://github.com/linode/manager/pull/12660))
@@ -8,7 +7,7 @@
 
 ### Changed:
 
-- Replace deprecated quieries from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
+- Replace deprecated queries from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
 
 ### Upcoming Features:
 
@@ -16,13 +15,11 @@
 
 ## [2025-08-12] - v0.11.0
 
-
 ### Upcoming Features:
 
 - Add GET queries for destinations endpoints ([#12559](https://github.com/linode/manager/pull/12559))
 
 ## [2025-07-29] - v0.10.0
-
 
 ### Changed:
 
@@ -34,7 +31,6 @@
 
 ## [2025-07-15] - v0.9.0
 
-
 ### Added:
 
 - `entitytransfers/` directory and migrated relevant query keys and hooks ([#12406](https://github.com/linode/manager/pull/12406))
@@ -42,7 +38,6 @@
 - `statusPage/` directory and migrated relevant query keys and hooks ([#12468](https://github.com/linode/manager/pull/12468))
 
 ## [2025-07-01] - v0.8.0
-
 
 ### Added:
 
@@ -55,7 +50,6 @@
 - Add CRUD CloudNAT queries ([#12379](https://github.com/linode/manager/pull/12379))
 
 ## [2025-06-17] - v0.7.0
-
 
 ### Added:
 
