@@ -252,9 +252,43 @@ export const useServiceAlertsMutation = (
     mutationFn: (payload: CloudPulseAlertsPayload) => {
       return updateServiceAlerts(serviceType, entityId, payload);
     },
-    onSuccess() {
+    onSuccess(_, payload) {
+      const allAlerts = queryClient.getQueryData<Alert[]>(
+        queryFactory.alerts._ctx.all().queryKey
+      );
+
+      // Get alerts previously enabled for this entity
+      const oldEnabledAlertIds =
+        allAlerts
+          ?.filter((alert) => alert.entity_ids.includes(entityId))
+          .map((alert) => alert.id) || [];
+
+      // Combine enabled user and system alert IDs from payload
+      const newEnabledAlertIds = [
+        ...(payload.user ?? []),
+        ...(payload.system ?? []),
+      ];
+
+      // Get unique list of all enabled alert IDs for cache invalidation
+      const alertIdsToInvalidate = Array.from(
+        new Set([...oldEnabledAlertIds, ...newEnabledAlertIds])
+      );
+
       queryClient.invalidateQueries({
         queryKey: queryFactory.resources(serviceType).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      alertIdsToInvalidate.forEach((alertId) => {
+        queryClient.invalidateQueries({
+          queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+            serviceType,
+            String(alertId)
+          ).queryKey,
+        });
       });
     },
   });
