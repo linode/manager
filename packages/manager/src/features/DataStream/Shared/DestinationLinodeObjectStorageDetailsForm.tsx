@@ -1,12 +1,11 @@
 import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
-import { Box, Divider, TextField, Typography } from '@linode/ui';
+import { TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { PathSample } from 'src/features/DataStream/Shared/PathSample';
 import { useFlags } from 'src/hooks/useFlags';
 
 interface DestinationLinodeObjectStorageDetailsFormProps {
@@ -123,29 +122,22 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
           />
         )}
       />
-      <Divider sx={{ my: 3 }} />
-      <Typography variant="h2">Path</Typography>
-      <Box alignItems="end" display="flex" flexWrap="wrap" gap="16px">
-        <Controller
-          control={control}
-          name={controlPaths.path}
-          render={({ field, fieldState }) => (
-            <TextField
-              aria-required
-              errorText={fieldState.error?.message}
-              label="Log Path Prefix"
-              onBlur={field.onBlur}
-              onChange={(value) => field.onChange(value)}
-              placeholder="Log Path Prefix..."
-              sx={{ width: 416 }}
-              value={field.value}
-            />
-          )}
-        />
-        <PathSample
-          value="text-cloud/logs/audit/02/26/2026" // TODO: Generate sample path value in DPS-33654
-        />
-      </Box>
+      <Controller
+        control={control}
+        name={controlPaths.path}
+        render={({ field, fieldState }) => (
+          <TextField
+            aria-required
+            errorText={fieldState.error?.message}
+            label="Log path"
+            onBlur={field.onBlur}
+            onChange={(value) => field.onChange(value)}
+            placeholder="logs/{%Y/%d/%m}"
+            sx={{ width: 416 }}
+            value={field.value}
+          />
+        )}
+      />
     </>
   );
 };
