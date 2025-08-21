@@ -1,31 +1,29 @@
 import { describe, expect, it } from 'vitest';
 
-import { transformDimensionValue } from '../Utils/utils';
-import { handleDimensionValue } from './utils';
-
-import type { CloudPulseServiceType } from '@linode/api-v4';
+import { transformCommaSeperatedDimensionValues } from './utils';
 
 describe('handleDimensionValueCapitalization', () => {
-  const serviceType: CloudPulseServiceType = 'linode';
-
   it('should transform a single value', () => {
-    const value = 'ipv4';
-    const expected = transformDimensionValue(serviceType, 'protocol', value);
+    const value = 'primary';
 
-    const result = handleDimensionValue(value, serviceType, 'protocol');
+    const result = transformCommaSeperatedDimensionValues(
+      value,
+      'dbaas',
+      'protocol'
+    );
 
-    expect(result).toBe(expected);
+    expect(result).toBe('Primary');
   });
 
   it('should transform multiple comma-separated values', () => {
-    const value = 'ipv4,ipv6';
-    const expected = value
-      .split(',')
-      .map((v) => transformDimensionValue(serviceType, 'protocol', v))
-      .join(', ');
+    const value = 'udp,tcp,http';
 
-    const result = handleDimensionValue(value, serviceType, 'protocol');
+    const result = transformCommaSeperatedDimensionValues(
+      value,
+      'nodebalancer',
+      'protocol'
+    );
 
-    expect(result).toBe(expected);
+    expect(result).toBe('UDP, TCP, HTTP');
   });
 });

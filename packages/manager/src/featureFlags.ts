@@ -150,6 +150,7 @@ export interface Flags {
   databaseBeta: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
+  databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseVpc: boolean;
   dbaasV2: BetaFeatureFlag;

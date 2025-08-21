@@ -3,6 +3,7 @@ import React from 'react';
 
 import EmptyState from 'src/assets/icons/empty-state-cloud.svg';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 export const NoAssignedRoles = (props: Props) => {
   const { text, hasAssignNewRoleDrawer } = props;
   const theme = useTheme();
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
     React.useState<boolean>(false);
@@ -42,7 +44,13 @@ export const NoAssignedRoles = (props: Props) => {
       {hasAssignNewRoleDrawer && (
         <Button
           buttonType="primary"
+          disabled={!permissions?.is_account_admin}
           onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+          tooltipText={
+            !permissions?.is_account_admin
+              ? 'You do not have permission to assign roles.'
+              : undefined
+          }
         >
           Assign New Roles
         </Button>
