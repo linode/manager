@@ -11,7 +11,7 @@
 
 ### Upcoming Features:
 
-- Add queries for destinations enpoints (paginated GET, POST) ([#12627](https://github.com/linode/manager/pull/12627))
+- Add queries for destinations endpoints (paginated GET, POST) ([#12627](https://github.com/linode/manager/pull/12627))
 
 ## [2025-08-12] - v0.11.0
 
