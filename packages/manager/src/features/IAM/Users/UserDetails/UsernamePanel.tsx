@@ -12,10 +12,11 @@ import { usePermissions } from '../../hooks/usePermissions';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  canUpdateUser: boolean;
   user: User;
 }
 
-export const UsernamePanel = ({ user }: Props) => {
+export const UsernamePanel = ({ user, canUpdateUser }: Props) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -79,9 +80,14 @@ export const UsernamePanel = ({ user }: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={!isDirty}
+          disabled={!isDirty || !canUpdateUser}
           loading={isSubmitting}
           sx={{ mt: 2 }}
+          tooltipText={
+            !canUpdateUser
+              ? 'You do not have permission to update this user.'
+              : undefined
+          }
           type="submit"
         >
           Save

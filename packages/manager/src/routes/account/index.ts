@@ -57,6 +57,10 @@ const accountUsersRoute = createRoute({
     if (isIAMEnabled) {
       throw redirect({ to: '/iam/users' });
     }
+
+    if (context?.flags?.iamRbacPrimaryNavChanges && !isIAMEnabled) {
+      throw redirect({ to: '/users' });
+    }
   },
 }).lazy(() =>
   import('src/features/Users/usersLandingLazyRoute').then(
@@ -160,23 +164,34 @@ const accountUsersUsernameRoute = createRoute({
       context.flags
     );
 
-    if (!isIAMEnabled || !username) {
+    if (!username) {
       return;
     }
 
-    if (location.pathname.endsWith('/permissions')) {
+    if (isIAMEnabled) {
+      const url = location.pathname.endsWith('/permissions')
+        ? '/iam/users/$username/roles'
+        : '/iam/users/$username/details';
+
       throw redirect({
-        to: '/iam/users/$username/roles',
+        to: url,
         params: { username },
         replace: true,
       });
     }
 
-    throw redirect({
-      to: '/iam/users/$username/details',
-      params: { username },
-      replace: true,
-    });
+    if (context?.flags?.iamRbacPrimaryNavChanges && !isIAMEnabled) {
+      const url = location.pathname.endsWith('/profile')
+        ? '/users/$username/profile'
+        : location.pathname.endsWith('/permissions')
+          ? '/users/$username/permissions'
+          : '/users/$username';
+      throw redirect({
+        to: url,
+        params: { username },
+        replace: true,
+      });
+    }
   },
 }).lazy(() =>
   import('src/features/Users/userDetailLazyRoute').then(

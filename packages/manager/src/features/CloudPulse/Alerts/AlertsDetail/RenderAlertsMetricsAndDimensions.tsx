@@ -10,7 +10,7 @@ import {
   metricOperatorTypeMap,
 } from '../constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
-import { handleDimensionValue } from './utils';
+import { transformCommaSeperatedDimensionValues } from './utils';
 
 import type {
   AlertDefinitionMetricCriteria,
@@ -81,7 +81,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
                     transformationAllowedOperators.includes(dimensionOperator)
-                      ? handleDimensionValue(
+                      ? transformCommaSeperatedDimensionValues(
                           value,
                           serviceType,
                           dimensionFilterKey

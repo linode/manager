@@ -208,10 +208,12 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           .findByTitle(`Action menu for Alert ${label}`)
           .should('be.visible')
           .click();
+        // Select the "Show Details" option from the action menu
+        ui.actionMenuItem
+          .findByTitle('Show Details')
+          .should('be.visible')
+          .click();
       });
-
-    // Select the "Show Details" option from the action menu
-    ui.actionMenuItem.findByTitle('Show Details').should('be.visible').click();
 
     // Verify the URL ends with the expected details page path
     cy.url().should('endWith', `/detail/${service_type}/${id}`);
