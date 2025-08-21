@@ -100,7 +100,7 @@ export const BillingLanding = () => {
             search: { action: 'make-payment' },
           })
         : {},
-    title: 'Account',
+    title: 'Billing',
   };
 
   return (

@@ -46,8 +46,8 @@ const getFlagClass = (country: Country | string) => {
 };
 
 const StyledFlag = styled(Box, {
-  shouldForwardProp: omittedProps(['hasBorder']),
   label: 'StyledFlag',
+  shouldForwardProp: omittedProps(['hasBorder']),
 })<{
   hasBorder: boolean;
 }>(({ theme, hasBorder }) => ({
