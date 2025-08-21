@@ -61,7 +61,7 @@ export const VolumesLanding = () => {
     }),
   });
 
-  const isVolumeCreationRestricted = !permissions?.create_volume;
+  const canCreateVolume = permissions?.create_volume;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -170,7 +170,7 @@ export const VolumesLanding = () => {
             resourceType: 'Volumes',
           }),
         }}
-        disabledCreateButton={isVolumeCreationRestricted}
+        disabledCreateButton={!canCreateVolume}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
