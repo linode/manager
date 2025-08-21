@@ -78,9 +78,12 @@ describe('QEMU reboot upgrade notification', () => {
         start_time: new Date().toISOString(),
       }),
     ];
-    const formattedTime = formatDate(upcomingMaintenance[0].start_time, {
+
+    // We use ! since in `LinodeMaintenanceText` the `start_time` is never null.
+    const formattedTime = formatDate(upcomingMaintenance[0].start_time!, {
       timezone: mockProfile.timezone,
     });
+
     const maintenanceTooltipText = `This Linode’s maintenance window opens at ${formattedTime}. For more information, see your open support tickets.`;
 
     mockGetAccount(mockAccount).as('getAccount');

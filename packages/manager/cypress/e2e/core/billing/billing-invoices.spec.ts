@@ -9,6 +9,7 @@ import {
   mockGetInvoice,
   mockGetInvoiceItems,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { formatUsd } from 'support/util/currency';
@@ -30,6 +31,12 @@ const getRegionLabel = (regionId: string) => {
 };
 
 describe('Account invoices', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+      iamRbacPrimaryNavChanges: true,
+    });
+  });
   /*
    * - Confirms that invoice items are listed on invoice details page using mock API data.
    * - Confirms that each invoice item is displayed with correct accompanying info.
@@ -138,7 +145,7 @@ describe('Account invoices', () => {
     mockGetInvoice(mockInvoice).as('getInvoice');
     mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
 
-    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+    cy.visitWithLogin(`/billing/invoices/${mockInvoice.id}`);
     cy.wait(['@getInvoice', '@getInvoiceItems']);
 
     // Confirm that "Region" table column is not present; old invoices will not be backfilled and we don't want to display a blank column.
@@ -249,7 +256,7 @@ describe('Account invoices', () => {
     // Confirm that clicking the "Back to Billing" button redirects the user to
     // the account billing page.
     cy.get('[data-qa-back-to-billing]').should('be.visible').click();
-    cy.url().should('endWith', '/account/billing');
+    cy.url().should('endWith', '/billing');
   });
 
   it('does not list the region on past invoices', () => {
@@ -267,7 +274,7 @@ describe('Account invoices', () => {
     mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
 
     // Visit invoice details page, wait for relevant requests to resolve.
-    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+    cy.visitWithLogin(`/billing/invoices/${mockInvoice.id}`);
     cy.wait(['@getInvoice', '@getInvoiceItems']);
 
     cy.findByLabelText('Invoice Details').within(() => {
@@ -300,7 +307,7 @@ describe('Account invoices', () => {
     mockGetInvoice(mockInvoice).as('getInvoice');
     mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
 
-    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+    cy.visitWithLogin(`/billing/invoices/${mockInvoice.id}`);
     cy.wait(['@getInvoice', '@getInvoiceItems']);
 
     cy.findByLabelText('Invoice Details').within(() => {

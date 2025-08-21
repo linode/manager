@@ -15,7 +15,7 @@ import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/Database
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
@@ -41,13 +41,17 @@ const DatabaseLandingTable = ({
   order,
   orderBy,
   results,
-  showSuspend,
 }: Props) => {
   const { data: events } = useInProgressEvents();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
-  const pagination = usePagination(1, preferenceKey, dbPlatformType);
+  const pagination = usePaginationV2({
+    currentRoute: '/databases',
+    initialPage: 1,
+    preferenceKey,
+    queryParamsPrefix: dbPlatformType,
+  });
 
   const [selectedDatabase, setSelectedDatabase] =
     React.useState<DatabaseInstance>({} as DatabaseInstance);
@@ -114,10 +118,10 @@ const DatabaseLandingTable = ({
             </TableSortCell>
             {isNewDatabase && (
               <TableSortCell
-                active={orderBy === 'plan'}
+                active={orderBy === 'type'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="plan"
+                label="type"
               >
                 Plan
               </TableSortCell>

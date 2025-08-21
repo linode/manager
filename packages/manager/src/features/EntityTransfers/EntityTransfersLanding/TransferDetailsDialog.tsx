@@ -2,7 +2,7 @@ import { Dialog, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers/types';
+import type { TransferEntities } from '@linode/api-v4';
 
 export interface Props {
   entities?: TransferEntities;

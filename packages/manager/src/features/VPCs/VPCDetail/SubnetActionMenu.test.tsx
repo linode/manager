@@ -16,7 +16,6 @@ const props = {
   handleDelete: vi.fn(),
   handleEdit: vi.fn(),
   handleUnassignLinodes: vi.fn(),
-  isVPCLKEEnterpriseCluster: false,
   numLinodes: 1,
   numNodebalancers: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
@@ -105,17 +104,5 @@ describe('SubnetActionMenu', () => {
     const assignButton = view.getByText('Assign Linodes');
     await userEvent.click(assignButton);
     expect(props.handleAssignLinodes).toHaveBeenCalled();
-  });
-
-  it('should disable action buttons if isVPCLKEEnterpriseCluster is true', async () => {
-    const updatedProps = { ...props, isVPCLKEEnterpriseCluster: true };
-    const view = renderWithTheme(<SubnetActionMenu {...updatedProps} />);
-    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
-    await userEvent.click(actionMenu);
-
-    const actionButtons = view.getAllByRole('menuitem');
-    actionButtons.forEach((button) =>
-      expect(button).toHaveAttribute('aria-disabled', 'true')
-    );
   });
 });

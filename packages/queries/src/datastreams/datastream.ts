@@ -1,5 +1,5 @@
 import {
-  type APIError,
+  createDestination,
   createStream,
   getDestination,
   getDestinations,
@@ -12,6 +12,8 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
+  APIError,
+  CreateDestinationPayload,
   CreateStreamPayload,
   Destination,
   Filter,
@@ -76,7 +78,7 @@ export const datastreamQueries = createQueryKeys('datastream', {
   },
 });
 
-export const useDataStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
+export const useStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
   useQuery<ResourcePage<Stream>, APIError[]>({
     ...datastreamQueries.streams._ctx.paginated(params, filter),
   });
@@ -112,3 +114,35 @@ export const useAllDestinationsQuery = (
   useQuery<Destination[], APIError[]>({
     ...datastreamQueries.destinations._ctx.all(params, filter),
   });
+
+export const useDestinationsQuery = (
+  params: Params = {},
+  filter: Filter = {},
+) =>
+  useQuery<ResourcePage<Destination>, APIError[]>({
+    ...datastreamQueries.destinations._ctx.paginated(params, filter),
+  });
+
+export const useCreateDestinationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Destination, APIError[], CreateDestinationPayload>({
+    mutationFn: createDestination,
+    onSuccess(destination) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.destinations._ctx.paginated._def,
+      });
+
+      // Set Destination in cache
+      queryClient.setQueryData(
+        datastreamQueries.destination(destination.id).queryKey,
+        destination,
+      );
+
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+    },
+  });
+};

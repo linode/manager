@@ -5,6 +5,7 @@ import {
 } from '@linode/queries';
 import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
+import { alertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useBlocker } from '@tanstack/react-router';
 import { useFormik } from 'formik';
@@ -12,13 +13,12 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
 
+import type { AlertSectionProps } from './AlertSection';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
@@ -77,6 +77,8 @@ export const AlertsPanel = (props: Props) => {
   const formik = useFormik<Linode['alerts']>({
     enableReinitialize: true,
     initialValues,
+    validateOnChange: true,
+    validationSchema: alertsSchema,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
@@ -100,7 +102,7 @@ export const AlertsPanel = (props: Props) => {
     },
   });
 
-  const hasErrorFor = getAPIErrorFor(
+  const hasAPIErrorFor = getAPIErrorFor(
     {
       'alerts.cpu': 'CPU',
       'alerts.io': 'Disk I/O rate',
@@ -111,11 +113,15 @@ export const AlertsPanel = (props: Props) => {
     error ?? undefined
   );
 
-  const alertSections = [
+  const generalError = hasAPIErrorFor('none');
+
+  const alertSections: AlertSectionProps[] = [
     {
       copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       endAdornment: '%',
-      error: hasErrorFor('alerts.cpu'),
+      error:
+        (formik.touched.cpu ? formik.errors.cpu : undefined) ||
+        hasAPIErrorFor('alerts.cpu'),
       hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -129,11 +135,15 @@ export const AlertsPanel = (props: Props) => {
               : 90 * (linode?.specs.vcpus ?? 1)
             : 0
         ),
-      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         formik.setFieldValue(
           'cpu',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
-        ),
+        );
+      },
+      onBlur: () => {
+        formik.setFieldTouched('cpu');
+      },
       radioInputLabel: 'cpu_usage_state',
       state:
         formik.values.cpu === ('' as unknown) || Boolean(formik.values.cpu),
@@ -145,7 +155,9 @@ export const AlertsPanel = (props: Props) => {
     {
       copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       endAdornment: 'IOPS',
-      error: hasErrorFor('alerts.io'),
+      error:
+        (formik.touched.io ? formik.errors.io : undefined) ||
+        hasAPIErrorFor('alerts.io'),
       hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -160,6 +172,9 @@ export const AlertsPanel = (props: Props) => {
           'io',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('io');
+      },
       radioInputLabel: 'disk_io_state',
       state: formik.values.io === ('' as unknown) || Boolean(formik.values.io),
       textInputLabel: 'disk_io_threshold',
@@ -171,7 +186,9 @@ export const AlertsPanel = (props: Props) => {
       copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
         alert.`,
       endAdornment: 'Mb/s',
-      error: hasErrorFor('alerts.network_in'),
+      error:
+        (formik.touched.network_in ? formik.errors.network_in : undefined) ||
+        hasAPIErrorFor('alerts.network_in'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -189,6 +206,9 @@ export const AlertsPanel = (props: Props) => {
           'network_in',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('network_in');
+      },
       radioInputLabel: 'incoming_traffic_state',
       state:
         formik.values.network_in === ('' as unknown) ||
@@ -202,7 +222,9 @@ export const AlertsPanel = (props: Props) => {
       copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
         alert.`,
       endAdornment: 'Mb/s',
-      error: hasErrorFor('alerts.network_out'),
+      error:
+        (formik.touched.network_out ? formik.errors.network_out : undefined) ||
+        hasAPIErrorFor('alerts.network_out'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -220,6 +242,9 @@ export const AlertsPanel = (props: Props) => {
           'network_out',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('network_out');
+      },
       radioInputLabel: 'outbound_traffic_state',
       state:
         formik.values.network_out === ('' as unknown) ||
@@ -233,7 +258,10 @@ export const AlertsPanel = (props: Props) => {
       copy: `Percentage of network transfer quota used being greater than this value will trigger
           this alert.`,
       endAdornment: '%',
-      error: hasErrorFor('alerts.transfer_quota'),
+      error:
+        (formik.touched.transfer_quota
+          ? formik.errors.transfer_quota
+          : undefined) || hasAPIErrorFor('alerts.transfer_quota'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -251,6 +279,9 @@ export const AlertsPanel = (props: Props) => {
           'transfer_quota',
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : ''
         ),
+      onBlur: () => {
+        formik.setFieldTouched('transfer_quota');
+      },
       radioInputLabel: 'transfer_quota_state',
       state:
         formik.values.transfer_quota === ('' as unknown) ||
@@ -261,8 +292,6 @@ export const AlertsPanel = (props: Props) => {
       value: formik.values.transfer_quota ?? 0,
     },
   ].filter((thisAlert) => !thisAlert.hidden);
-
-  const generalError = hasErrorFor('none');
 
   const hasUnsavedChanges = formik.dirty;
 
@@ -307,42 +336,34 @@ export const AlertsPanel = (props: Props) => {
 
   return (
     <>
-      {/* Use Prompt for now until Link is coupled with Tanstack router */}
-      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
-        {({ handleCancel, handleConfirm, isModalOpen }) => (
-          <ConfirmationDialog
-            actions={() => (
-              <ActionsPanel
-                primaryButtonProps={{
-                  label: 'Confirm',
-                  onClick: () => {
-                    handleProceedNavigation();
-                    handleConfirm();
-                  },
-                }}
-                secondaryButtonProps={{
-                  buttonType: 'outlined',
-                  label: 'Cancel',
-                  onClick: () => {
-                    handleCancelNavigation();
-                    handleCancel();
-                  },
-                }}
-              />
-            )}
-            onClose={() => {
-              handleCancelNavigation();
-              handleCancel();
+      <ConfirmationDialog
+        actions={() => (
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Confirm',
+              onClick: () => {
+                handleProceedNavigation();
+              },
             }}
-            open={status === 'blocked' || isModalOpen}
-            title="Unsaved Changes"
-          >
-            <Typography variant="body1">
-              Are you sure you want to leave the page? You have unsaved changes.
-            </Typography>
-          </ConfirmationDialog>
+            secondaryButtonProps={{
+              buttonType: 'outlined',
+              label: 'Cancel',
+              onClick: () => {
+                handleCancelNavigation();
+              },
+            }}
+          />
         )}
-      </Prompt>
+        onClose={() => {
+          handleCancelNavigation();
+        }}
+        open={status === 'blocked'}
+        title="Unsaved Changes"
+      >
+        <Typography variant="body1">
+          Are you sure you want to leave the page? You have unsaved changes.
+        </Typography>
+      </ConfirmationDialog>
 
       {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
       when user already subscribed to Beta/ACLP Mode and makes changes in the

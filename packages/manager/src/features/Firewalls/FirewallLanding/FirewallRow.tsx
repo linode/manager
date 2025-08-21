@@ -38,9 +38,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
             justifyContent: 'flex-start',
           }}
         >
-          <Link tabIndex={0} to={`/firewalls/${id}`}>
-            {label}
-          </Link>
+          <Link to={`/firewalls/${id}`}>{label}</Link>
           {isLinodeInterfacesEnabled && isDefault && (
             <DefaultFirewallChip
               chipProps={{ sx: { marginLeft: 1 } }}

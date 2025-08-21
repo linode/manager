@@ -18,7 +18,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { grantTypeMap } from 'src/features/Account/constants';
-import { usePagination } from 'src/hooks/usePagination';
+import { useFlags } from 'src/hooks/useFlags';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import type { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
 import type { Theme } from '@mui/material/styles';
@@ -34,7 +35,15 @@ interface Props {
 export const UserPermissionsEntitySection = React.memo(
   ({ entity, entitySetAllTo, grants, setGrantTo, showHeading }: Props) => {
     const theme: Theme = useTheme();
-    const pagination = usePagination(1);
+    const { iamRbacPrimaryNavChanges } = useFlags();
+
+    const pagination = usePaginationV2({
+      currentRoute: iamRbacPrimaryNavChanges
+        ? '/users/$username/permissions'
+        : '/account/users/$username/permissions',
+      initialPage: 1,
+      preferenceKey: 'user-permissions-entity-section',
+    });
 
     if (!grants || grants.length === 0) {
       return null;

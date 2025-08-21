@@ -83,7 +83,7 @@ export const LinodeRow = (props: Props) => {
     maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
 
   const isInProgress =
-    maintenance?.status === 'started' || maintenance?.status === 'in-progress';
+    maintenance?.status === 'started' || maintenance?.status === 'in_progress';
 
   return (
     <TableRow

@@ -26,6 +26,7 @@ import {
 } from 'src/features/IAM/Shared/utilities';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import {
   ROLES_LEARN_MORE_LINK,
   ROLES_TABLE_PREFERENCE_KEY,
@@ -43,8 +44,8 @@ interface Props {
   roles?: RoleView[];
 }
 const DEFAULT_PAGE_SIZE = 10;
+
 export const RolesTable = ({ roles = [] }: Props) => {
-  const [expandedRows, setExpandedRows] = useState<string[]>([]);
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
   const [filterableEntityType, setFilterableEntityType] =
@@ -54,6 +55,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
   >(undefined);
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const isAccountAdmin = permissions?.is_account_admin;
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/roles',
@@ -147,12 +151,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
     pagination.handlePageSizeChange(newSize);
     pagination.handlePageChange(1);
   };
-  const handleExpandToggle = (e: React.MouseEvent, name: string) => {
-    e.stopPropagation();
-    setExpandedRows((prev) =>
-      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
-    );
-  };
+
   return (
     <>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -200,12 +199,14 @@ export const RolesTable = ({ roles = [] }: Props) => {
           </Grid>
           <Button
             buttonType="primary"
-            disabled={selectedRows.length === 0}
+            disabled={selectedRows.length === 0 || !isAccountAdmin}
             onClick={() => handleAssignSelectedRoles()}
             tooltipText={
               selectedRows.length === 0
                 ? 'You must select some roles to assign them.'
-                : undefined
+                : !isAccountAdmin
+                  ? 'You do not have permission to assign roles.'
+                  : undefined
             }
           >
             Assign Selected Roles
@@ -253,7 +254,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
               paginatedRows.map((roleRow) => (
                 <TableRow
                   expandable
-                  expanded={expandedRows.includes(roleRow.name)}
                   hoverable
                   key={roleRow.name}
                   rowborder
@@ -262,7 +262,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
-                    onClick={(e) => handleExpandToggle(e, roleRow.name)}
                     style={{ minWidth: '26%', wordBreak: 'break-word' }}
                   >
                     {roleRow.name}
@@ -287,6 +286,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     }}
                   >
                     <RolesTableActionMenu
+                      canUpdateUserGrants={isAccountAdmin}
                       onClick={() => {
                         assignRoleRow(roleRow);
                       }}
@@ -296,11 +296,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     slot="expanded"
                     style={{ marginBottom: 12, padding: 0, width: '100%' }}
                   >
-                    {expandedRows.includes(roleRow.name) && (
-                      <RolesTableExpandedRow
-                        permissions={roleRow.permissions}
-                      />
-                    )}
+                    <RolesTableExpandedRow permissions={roleRow.permissions} />
                   </TableRowExpanded>
                 </TableRow>
               ))

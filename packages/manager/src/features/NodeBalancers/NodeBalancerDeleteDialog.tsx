@@ -59,7 +59,7 @@ export const NodeBalancerDeleteDialog = ({
           : () => navigate({ to: '/nodebalancers' })
       }
       open={open}
-      title={`Delete ${label ?? 'Unknown'}?`}
+      title={`Delete${label ? ` ${label}` : ''}?`}
       typographyStyle={{ marginTop: '20px' }}
     >
       <Notice variant="warning">
