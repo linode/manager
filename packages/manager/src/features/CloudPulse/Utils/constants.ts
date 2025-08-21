@@ -93,6 +93,13 @@ export const PLACEHOLDER_TEXT: Record<string, string> = {
   [INTERFACE_ID]: INTERFACE_IDS_PLACEHOLDER_TEXT,
 };
 
+export const NO_REGION_MESSAGE: Record<string, string> = {
+  dbaas: 'No Database Clusters configured in any Regions.',
+  linode: 'No Linodes configured in any Regions.',
+  nodebalancer: 'No NodeBalancers configured in any Regions.',
+  firewall: 'No Firewalls configured in any Linode Regions.',
+};
+
 export const ORDER_BY_LABLE_ASC = {
   '+order': 'asc',
   '+order_by': 'label',
