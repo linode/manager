@@ -35,18 +35,19 @@ const transformationAllowedOperators = ['eq', 'neq', 'in'];
 export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria, serviceType } = props;
-    const needsLinodes = useMemo(
-      () =>
+    const needsLinodesCheck = () => {
+      return (
         ruleCriteria.rules?.some((rule) =>
           rule.dimension_filters?.some(
             (dimension) =>
               dimension.dimension_label === 'linode_id' &&
               transformationAllowedOperators.includes(dimension.operator ?? '')
           )
-        ) ?? false,
-      [ruleCriteria.rules]
-    );
+        ) ?? false
+      );
+    };
 
+    const needsLinodes = needsLinodesCheck();
     // Initialize the query, but only run when needed
     const { data: linodes } = useAllLinodesQuery({}, {}, needsLinodes);
 
@@ -104,7 +105,6 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => {
                     let resolvedValue = value;
 
-                    // console.log(dimensionOperator);
                     //  Special case: linode_id → resolve to labels
                     if (
                       dimensionFilterKey === 'linode_id' &&
