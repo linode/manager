@@ -92,7 +92,7 @@ export const PLACEHOLDER_TEXT: Record<string, string> = {
 export const NO_REGION_MESSAGE: Record<string, string> = {
   dbaas: 'No Database Clusters configured in any Regions.',
   linode: 'No Linodes configured in any Regions.',
-  nodebalancer: 'No NodeBalancers configured in any Regions.',
+  nodebalancer: 'No Nodebalancers configured in any Regions.',
   firewall: 'No Firewalls configured in any Linode Regions.',
 };
 
