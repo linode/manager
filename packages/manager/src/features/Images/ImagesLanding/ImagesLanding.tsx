@@ -77,11 +77,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const ImagesLanding = () => {
   const { classes } = useStyles();
-  const {
-    action,
-    imageId: selectedImageId,
-  }: { action: ImageAction; imageId: string } = useParams({
-    strict: false,
+  const params = useParams({
+    from: '/images/$imageId/$action',
+    shouldThrow: false,
   });
   const search = useSearch({ from: '/images' });
   const { query } = search;
@@ -233,7 +231,7 @@ export const ImagesLanding = () => {
     data: selectedImage,
     isLoading: isFetchingSelectedImage,
     error: selectedImageError,
-  } = useImageQuery(selectedImageId, !!selectedImageId);
+  } = useImageQuery(params?.imageId ?? '', !!params?.imageId);
 
   const { events } = useEventsInfiniteQuery();
 
@@ -543,20 +541,20 @@ export const ImagesLanding = () => {
           imageError={selectedImageError}
           isFetching={isFetchingSelectedImage}
           onClose={handleCloseDialog}
-          open={action === 'edit'}
+          open={params?.action === 'edit'}
         />
         <RebuildImageDrawer
           image={selectedImage}
           imageError={selectedImageError}
           isFetching={isFetchingSelectedImage}
           onClose={handleCloseDialog}
-          open={action === 'rebuild'}
+          open={params?.action === 'rebuild'}
         />
         <Drawer
           error={selectedImageError}
           isFetching={isFetchingSelectedImage}
           onClose={handleCloseDialog}
-          open={action === 'manage-replicas'}
+          open={params?.action === 'manage-replicas'}
           title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
         >
           <ManageImageReplicasForm
@@ -565,9 +563,9 @@ export const ImagesLanding = () => {
           />
         </Drawer>
         <DeleteImageDialog
-          imageId={selectedImageId}
+          imageId={params?.imageId}
           onClose={handleCloseDialog}
-          open={action === 'delete'}
+          open={params?.action === 'delete'}
         />
       </Stack>
     </>

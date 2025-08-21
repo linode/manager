@@ -5,15 +5,20 @@ import React from 'react';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
 interface Props {
-  imageId: string;
+  imageId: string | undefined;
   onClose: () => void;
   open: boolean;
 }
 
 export const DeleteImageDialog = (props: Props) => {
   const { imageId, open, onClose } = props;
-  const { data: image, isLoading, error } = useImageQuery(imageId);
   const { enqueueSnackbar } = useSnackbar();
+
+  const {
+    data: image,
+    isLoading,
+    error,
+  } = useImageQuery(imageId ?? '', Boolean(imageId));
 
   const { mutate: deleteImage, isPending } = useDeleteImageMutation({
     onSuccess() {
@@ -38,7 +43,7 @@ export const DeleteImageDialog = (props: Props) => {
       isFetching={isLoading}
       label="Image Label"
       loading={isPending}
-      onClick={() => deleteImage({ imageId })}
+      onClick={() => deleteImage({ imageId: imageId ?? '' })}
       onClose={onClose}
       open={open}
       secondaryButtonProps={{
