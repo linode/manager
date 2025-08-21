@@ -13,6 +13,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import {
   VPC_CREATE_ROUTE,
@@ -22,7 +23,6 @@ import {
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
@@ -91,10 +91,7 @@ const VPCLanding = () => {
     navigate({ to: VPC_CREATE_ROUTE });
   };
 
-  const isVPCCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_vpcs',
-  });
-
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
   const {
     data: selectedVPC,
     isFetching: isFetchingVPC,
@@ -133,7 +130,7 @@ const VPCLanding = () => {
           }),
         }}
         createButtonText="Create VPC"
-        disabledCreateButton={isVPCCreationRestricted}
+        disabledCreateButton={!permissions.create_vpc}
         docsLink={VPC_DOCS_LINK}
         onButtonClick={createVPC}
         title={VPC_LABEL}
