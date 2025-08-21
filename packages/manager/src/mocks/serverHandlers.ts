@@ -946,7 +946,7 @@ export const handlers = [
       const linodeAclpSupportedRegionDetails = [
         /** Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook. */
 
-        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region.
+        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region (mock Linode ID: 1004)
         linodeFactory.build({
           id,
           backups: { enabled: false },
@@ -962,7 +962,7 @@ export const handlers = [
             transfer_quota: 0,
           },
         }),
-        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region.
+        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region (mock Linode ID: 1005)
         linodeFactory.build({
           id,
           backups: { enabled: false },
@@ -978,7 +978,7 @@ export const handlers = [
             transfer_quota: 80,
           },
         }),
-        // 3. Example: Linode in an ACLP-supported region with NO enabled alerts.
+        // 3. Example: Linode in an ACLP-supported region with NO enabled alerts (mock Linode ID: 1006)
         // - Whether this Linode is ACLP-subscribed depends on the ACLP release stage:
         //   a. Beta stage: NOT subscribed to ACLP
         //   b. GA stage: Subscribed to ACLP
@@ -2785,6 +2785,7 @@ export const handlers = [
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
           }),
+          // Mocked 2 alert definitions associated with mock Linode ID '1004' (aclp-supported-region-linode-1)
           ...alertFactory.buildList(2, {
             rule_criteria: {
               rules: alertRulesFactory.buildList(2),
