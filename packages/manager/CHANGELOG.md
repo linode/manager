@@ -83,7 +83,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Tests:
 
-- M3-10293 Allow action menu items to be selected in 'within' blocks in Cypress ([#12625](https://github.com/linode/manager/pull/12625))
+- Allow action menu items to be selected in 'within' blocks in Cypress ([#12625](https://github.com/linode/manager/pull/12625))
 - Remove clean up from longview.spec.ts ([#12651](https://github.com/linode/manager/pull/12651))
 - Show legacy 'Save Alerts' confirmation modal only if user has already opted into Beta Alerts mode ([#12683](https://github.com/linode/manager/pull/12683))
 - Update `smoke-linode-landing-table.spec.ts` to account for removal of `/dashboard` ([#12690](https://github.com/linode/manager/pull/12690))
