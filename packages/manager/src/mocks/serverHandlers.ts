@@ -813,6 +813,11 @@ export const handlers = [
         region: 'us-east',
         id: 1005,
       }),
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-3',
+        region: 'us-iad',
+        id: 1006,
+      }),
     ];
     const linodes = [
       ...mtcLinodes,
@@ -939,8 +944,9 @@ export const handlers = [
         }),
       ];
       const linodeAclpSupportedRegionDetails = [
-        // Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook.
-        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region
+        /** Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook. */
+
+        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region.
         linodeFactory.build({
           id,
           backups: { enabled: false },
@@ -956,7 +962,7 @@ export const handlers = [
             transfer_quota: 0,
           },
         }),
-        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region
+        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region.
         linodeFactory.build({
           id,
           backups: { enabled: false },
@@ -970,6 +976,25 @@ export const handlers = [
             network_in: 0,
             network_out: 0,
             transfer_quota: 80,
+          },
+        }),
+        // 3. Example: Linode in an ACLP-supported region with NO enabled alerts.
+        // - Whether this Linode is ACLP-subscribed depends on the ACLP release stage:
+        //   a. Beta stage: NOT subscribed to ACLP
+        //   b. GA stage: Subscribed to ACLP
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-3',
+          region: 'us-iad',
+          alerts: {
+            user: [],
+            system: [],
+            cpu: 0,
+            io: 0,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 0,
           },
         }),
       ];
@@ -1005,6 +1030,8 @@ export const handlers = [
           return linodeAclpSupportedRegionDetails[0];
         case 1005:
           return linodeAclpSupportedRegionDetails[1];
+        case 1006:
+          return linodeAclpSupportedRegionDetails[2];
         default:
           return linodeDetail;
       }
