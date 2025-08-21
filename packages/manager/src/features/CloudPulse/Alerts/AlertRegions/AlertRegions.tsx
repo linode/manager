@@ -111,8 +111,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     return <CircleProgress />;
   }
   const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
-    ({ label, checked }) =>
-      label.toLowerCase().includes(searchText.toLowerCase()) &&
+    ({ label, checked, id }) =>
+      (label.toLowerCase().includes(searchText.toLowerCase()) ||
+        id.includes(searchText.toLowerCase())) &&
       ((mode && checked) || !mode)
   );
 
