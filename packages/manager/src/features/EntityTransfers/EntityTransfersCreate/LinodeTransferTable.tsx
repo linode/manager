@@ -11,7 +11,8 @@ import * as React from 'react';
 import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { usePagination } from 'src/hooks/usePagination';
+import { useFlags } from 'src/hooks/useFlags';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { extendType } from 'src/utilities/extendType';
 
 import { TransferTable } from './TransferTable';
@@ -21,6 +22,7 @@ import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
+  disabled: boolean;
   handleRemove: (linodesToRemove: string[]) => void;
   handleSelect: (linodes: Entity[]) => void;
   handleToggle: (linode: Entity) => void;
@@ -28,10 +30,24 @@ interface Props {
 }
 
 export const LinodeTransferTable = React.memo((props: Props) => {
-  const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
+  const {
+    handleRemove,
+    handleSelect,
+    handleToggle,
+    selectedLinodes,
+    disabled,
+  } = props;
+  const flags = useFlags();
+
   const [searchText, setSearchText] = React.useState('');
 
-  const pagination = usePagination();
+  const pagination = usePaginationV2({
+    currentRoute: flags?.iamRbacPrimaryNavChanges
+      ? '/service-transfers/create'
+      : '/account/service-transfers/create',
+    initialPage: 1,
+    preferenceKey: 'linode-transfer-table',
+  });
 
   const { data, dataUpdatedAt, error, isError, isLoading } = useLinodesQuery(
     {
@@ -74,6 +90,7 @@ export const LinodeTransferTable = React.memo((props: Props) => {
   return (
     <TransferTable
       count={data?.results ?? 0}
+      disabled={disabled}
       handleSearch={handleSearch}
       hasSelectedAll={hasSelectedAll}
       headers={columns}
@@ -92,6 +109,7 @@ export const LinodeTransferTable = React.memo((props: Props) => {
       >
         {linodesCurrentPage.map((thisLinode) => (
           <LinodeRow
+            disabled={disabled}
             handleToggleCheck={() => handleToggle(thisLinode)}
             isChecked={Boolean(selectedLinodes[thisLinode.id])}
             key={thisLinode.id}
@@ -104,13 +122,14 @@ export const LinodeTransferTable = React.memo((props: Props) => {
 });
 
 interface RowProps {
+  disabled?: boolean;
   handleToggleCheck: () => void;
   isChecked: boolean;
   linode: Linode;
 }
 
 const LinodeRow = (props: RowProps) => {
-  const { handleToggleCheck, isChecked, linode } = props;
+  const { handleToggleCheck, isChecked, linode, disabled } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
   const displayType = type?.formattedLabel ?? linode.type;
@@ -120,6 +139,8 @@ const LinodeRow = (props: RowProps) => {
   const displayRegion = region?.label ?? linode.region;
   return (
     <SelectableTableRow
+      className={disabled ? 'disabled-row' : ''}
+      disabled={disabled}
       handleToggleCheck={handleToggleCheck}
       isChecked={isChecked}
     >

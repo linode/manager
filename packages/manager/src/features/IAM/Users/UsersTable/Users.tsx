@@ -13,6 +13,7 @@ import { TableBody } from 'src/components/TableBody';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { ProxyUserTable } from './ProxyUserTable';
@@ -32,6 +33,7 @@ export const UsersLanding = () => {
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const { data: profile } = useProfile();
   const theme = useTheme();
+  const { data: permissions } = usePermissions('account', ['create_user']);
   const pagination = usePaginationV2({
     currentRoute: '/iam/users',
     initialPage: 1,
@@ -77,8 +79,6 @@ export const UsersLanding = () => {
     },
   });
 
-  const isRestrictedUser = profile?.restricted;
-
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -104,13 +104,15 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
+  const canCreateUser = permissions.create_user;
+
   return (
     <React.Fragment>
       {isProxyUser && (
         <ProxyUserTable
+          canListUsers={true}
           handleDelete={handleDelete}
           isProxyUser={isProxyUser}
-          isRestrictedUser={isRestrictedUser}
           order={order}
         />
       )}
@@ -152,13 +154,10 @@ export const UsersLanding = () => {
           )}
           <Button
             buttonType="primary"
-            disabled={isRestrictedUser}
+            disabled={!canCreateUser}
             onClick={() => setIsCreateDrawerOpen(true)}
-            sx={{
-              maxWidth: '120px',
-            }}
             tooltipText={
-              isRestrictedUser
+              canCreateUser
                 ? 'You cannot create other users as a restricted user.'
                 : undefined
             }

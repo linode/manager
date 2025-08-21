@@ -23,7 +23,7 @@ describe('Accept Entity Transfer confirmation dialog', () => {
   describe('Component', () => {
     it("should show an error if the token being confirmed is from the current user's account", async () => {
       server.use(
-        http.get('*/account/entity-transfers/:transferId', () => {
+        http.get('*/account/service-transfers/:transferId', () => {
           const transfer = entityTransferFactory.build({
             is_sender: true,
           });
@@ -36,7 +36,7 @@ describe('Accept Entity Transfer confirmation dialog', () => {
 
     it('should render a list of entity types included in the token', async () => {
       server.use(
-        http.get('*/account/entity-transfers/:transferId', () => {
+        http.get('*/account/service-transfers/:transferId', () => {
           const transfer = entityTransferFactory.build({
             entities: {
               domains: [1, 2, 3, 4, 5],

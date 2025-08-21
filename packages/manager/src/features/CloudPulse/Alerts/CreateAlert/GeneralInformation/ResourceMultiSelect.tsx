@@ -7,7 +7,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface CloudPulseResourceSelectProps {
   /**
@@ -25,7 +25,7 @@ interface CloudPulseResourceSelectProps {
   /**
    * service type selected by the user
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 export const CloudPulseMultiResourceSelect = (

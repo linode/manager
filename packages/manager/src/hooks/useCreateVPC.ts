@@ -30,9 +30,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { handleSelectVPC, onDrawerClose, pushToVPCPage, selectedRegion } =
     inputs;
 
+  const navigate = useNavigate();
+
   const previousSubmitCount = React.useRef<number>(0);
 
-  const navigate = useNavigate();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;

@@ -24,6 +24,7 @@ import { ZoomIcon } from './components/Zoomer';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
+  CloudPulseServiceType,
   DateTimeWithPreset,
   Filters,
   MetricDefinition,
@@ -80,6 +81,11 @@ export interface CloudPulseWidgetProperties {
   isJweTokenFetching: boolean;
 
   /**
+   * Selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
    * List of resources available of selected service type
    */
   resources: CloudPulseResources[];
@@ -92,7 +98,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * Service type selected by user
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -149,6 +155,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     timeStamp,
     unit,
     widget: widgetProp,
+    linodeRegion,
   } = props;
 
   const timezone =
@@ -244,6 +251,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
+        linodeRegion,
       }),
       filters, // any additional dimension filters will be constructed and passed here
     },
@@ -268,6 +276,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       status,
       unit,
+      serviceType,
     });
 
     data = generatedData.dimensions;

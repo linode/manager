@@ -30,11 +30,12 @@ interface ExtendedPlanType {
 export interface PlanInformationProps extends ExtendedPlanType {
   additionalBanners?: React.ReactNode[];
   disabledClasses?: LinodeTypeClass[];
-  flow: 'kubernetes' | 'linode';
+  flow: 'database' | 'kubernetes' | 'linode';
   hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
   isAPLEnabled?: boolean;
+  isResize?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
   regionsData?: Region[];
 }
@@ -48,6 +49,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
     isAPLEnabled,
+    isResize,
     isSelectedRegionEligibleForPlan,
     planType,
     regionsData,
@@ -128,7 +130,9 @@ export const PlanInformation = (props: PlanInformationProps) => {
       ) : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
+          flow={flow}
           hasSelectedRegion={hasSelectedRegion}
+          isResize={isResize}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           planType={planType}
           regionsData={regionsData || []}

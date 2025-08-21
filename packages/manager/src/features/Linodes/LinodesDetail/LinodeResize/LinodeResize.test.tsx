@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { extDisk, swapDisk } from 'src/__data__/disks';
@@ -18,6 +19,18 @@ const props: Props = {
   onClose: () => vi.fn(),
   open: true,
 };
+
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      resize_linode: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 beforeAll(() => {
   mockMatchMedia();
@@ -99,6 +112,32 @@ describe('LinodeResize', () => {
           isSmallerThanCurrentPlan('g5-standard-2', 'g5-standard-1', [])
         ).toBe(false);
       });
+    });
+  });
+
+  it('should not allow resizing if user does not have permission', async () => {
+    const { findByText, getByRole } = renderWithTheme(
+      <LinodeResize {...props} />
+    );
+    await findByText(
+      "You don't have permissions to edit this Linode. Please contact your account administrator to request the necessary permissions."
+    );
+
+    const resizeBtn = getByRole('button', { name: 'Resize Linode' });
+    expect(resizeBtn).toBeDisabled();
+  });
+
+  it('should not render LinodePermissionsError when user has resize_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        resize_linode: true,
+      },
+    });
+
+    const { queryByTestId } = renderWithTheme(<LinodeResize {...props} />);
+
+    await waitFor(() => {
+      expect(queryByTestId('linode-permissions-error')).not.toBeInTheDocument();
     });
   });
 });

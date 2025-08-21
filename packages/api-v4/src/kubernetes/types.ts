@@ -39,7 +39,7 @@ export interface KubernetesCluster {
    * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
    * and may change in subsequent releases.
    */
-  subnet_id?: number;
+  subnet_id?: null | number;
   tags: string[];
   /** Marked as 'optional' in this existing interface to prevent duplicated code for beta functionality, in line with the apl_enabled approach.
    * @todo LKE-E - Make this field required once LKE-E is in GA. tier defaults to 'standard' in the API.
@@ -50,7 +50,7 @@ export interface KubernetesCluster {
    * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
    * and may change in subsequent releases.
    */
-  vpc_id?: number;
+  vpc_id?: null | number;
 }
 
 export interface KubeNodePoolResponse {

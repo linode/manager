@@ -35,8 +35,9 @@ describe('Delete stackscripts', () => {
           .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
       });
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
     cy.wait('@getStackScript');
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)
@@ -53,6 +54,11 @@ describe('Delete stackscripts', () => {
       });
 
     // The StackScript is deleted successfully.
+    mockDeleteStackScript(stackScripts[0].id).as('deleteStackScript');
+    mockGetStackScripts([stackScripts[1]]).as('getUpdatedStackScripts');
+    mockGetStackScript(stackScripts[1].id, stackScripts[1]).as(
+      'getUpdatedStackScript'
+    );
     cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`)
       .closest('tr')
       .within(() => {
@@ -60,13 +66,9 @@ describe('Delete stackscripts', () => {
           .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
       });
-    mockDeleteStackScript(stackScripts[0].id).as('deleteStackScript');
-    mockGetStackScripts([stackScripts[1]]).as('getUpdatedStackScripts');
-    mockGetStackScript(stackScripts[1].id, stackScripts[1]).as(
-      'getUpdatedStackScript'
-    );
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)
       .should('be.visible')
@@ -76,11 +78,12 @@ describe('Delete stackscripts', () => {
           .should('be.visible')
           .click();
       });
-    cy.wait('@deleteStackScript');
-    cy.wait('@getUpdatedStackScripts');
+    cy.wait(['@deleteStackScript', '@getUpdatedStackScripts']);
     cy.findByText(stackScripts[0].label).should('not.exist');
 
     // The "Automate Deployment with StackScripts!" welcome page appears when no StackScript exists.
+    mockDeleteStackScript(stackScripts[1].id).as('deleteStackScript');
+    mockGetStackScripts([]).as('getUpdatedStackScripts');
     cy.get(`[data-qa-table-row="${stackScripts[1].label}"]`)
       .closest('tr')
       .within(() => {
@@ -88,10 +91,9 @@ describe('Delete stackscripts', () => {
           .findByTitle(`Action menu for StackScript ${stackScripts[1].label}`)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
       });
-    mockDeleteStackScript(stackScripts[1].id).as('deleteStackScript');
-    mockGetStackScripts([]).as('getUpdatedStackScripts');
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
     cy.wait('@getUpdatedStackScript');
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[1].label}?`)

@@ -35,10 +35,11 @@ import {
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   Alert,
-  AlertServiceType,
   APIError,
+  CloudPulseServiceType,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export interface EditAlertProps {
   /**
@@ -48,7 +49,7 @@ export interface EditAlertProps {
   /**
    * The type of service associated with the alert
    */
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
 }
 
 export const EditAlertDefinition = (props: EditAlertProps) => {
@@ -121,16 +122,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   });
   const definitionLanding = '/alerts/definitions';
 
-  const overrides = [
+  const overrides: CrumbOverridesProps[] = [
     {
       label: 'Definitions',
       linkTo: definitionLanding,
       position: 1,
-    },
-    {
-      label: 'Edit',
-      linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-      position: 2,
     },
   ];
 

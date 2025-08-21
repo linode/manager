@@ -50,7 +50,7 @@ export const StackScriptDeleteDialog = (props: Props) => {
       isFetching={isFetching}
       onClose={onClose}
       open={open}
-      title={`Delete StackScript ${stackscript?.label ?? 'Unknown'}?`}
+      title={`Delete StackScript${stackscript ? ` ${stackscript.label}` : ''}?`}
     >
       <Typography>Are you sure you want to delete this StackScript?</Typography>
     </ConfirmationDialog>

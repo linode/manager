@@ -87,4 +87,40 @@ describe('PlansAvailabilityNotice', () => {
       expect(queryByTestId(/premium-notice/)).not.toBeInTheDocument();
     }
   );
+
+  it('renders additional global availability text in notice when you are in database create flow with a selected region that does not support the plan', () => {
+    const props: PlansAvailabilityNoticeProps = {
+      hasSelectedRegion: true,
+      isSelectedRegionEligibleForPlan: false,
+      planType: 'premium',
+      regionsData: mockedRegionData,
+      flow: 'database',
+    };
+
+    const { queryByText } = renderWithTheme(
+      <PlansAvailabilityNotice {...props} />
+    );
+    const expectedText = `See global availability`;
+    const availabilityNotice = queryByText(expectedText);
+    expect(availabilityNotice).toBeInTheDocument();
+  });
+
+  it('does not render additional global availability text in notice when you are in database resize flow for a cluster in a region that does not support the plan', () => {
+    const props: PlansAvailabilityNoticeProps = {
+      hasSelectedRegion: true,
+      isSelectedRegionEligibleForPlan: false,
+      planType: 'premium',
+      regionsData: mockedRegionData,
+      isResize: true,
+      flow: 'database',
+    };
+
+    const { queryByText } = renderWithTheme(
+      <PlansAvailabilityNotice {...props} />
+    );
+    const formattedPlanType = formatPlanTypes(props.planType);
+    const expectedText = `${formattedPlanType} Plans are not currently available in this region.`;
+    const availabilityNotice = queryByText(expectedText, { exact: true });
+    expect(availabilityNotice).toBeInTheDocument();
+  });
 });

@@ -26,6 +26,7 @@ import type {
   APIError,
   Capabilities,
   CloudPulseAlertsPayload,
+  CloudPulseServiceType,
   Dashboard,
   MonitoringCapabilities,
   ResourcePage,
@@ -34,6 +35,7 @@ import type {
   TimeDuration,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
+import type { AclpServices } from 'src/featureFlags';
 import type {
   StatWithDummyPoint,
   WithStartAndEnd,
@@ -61,10 +63,10 @@ interface AclpSupportedRegionProps {
 export const useIsACLPEnabled = (): {
   isACLPEnabled: boolean;
 } => {
-  const { data: account, error } = useAccount();
+  const { data: account } = useAccount();
   const flags = useFlags();
 
-  if (error || !flags) {
+  if (!flags) {
     return { isACLPEnabled: false };
   }
 
@@ -214,15 +216,23 @@ export const seriesDataFormatter = (
 /**
  *
  * @param rawServiceTypes list of service types returned from api response
- * @returns converted service types list into string array
+ * @param aclpServices list of services with their statuses
+ * @returns enabled service types
  */
-export const formattedServiceTypes = (
-  rawServiceTypes: ServiceTypesList | undefined
-): string[] => {
+export const getEnabledServiceTypes = (
+  rawServiceTypes: ServiceTypesList | undefined,
+  aclpServices: Partial<AclpServices> | undefined
+): CloudPulseServiceType[] => {
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
-  return rawServiceTypes.data.map((obj: Service) => obj.service_type);
+  // Return the service types that are enabled in the aclpServices flag
+  return rawServiceTypes.data
+    .filter(
+      (obj: Service) =>
+        aclpServices?.[obj.service_type]?.metrics?.enabled ?? false
+    )
+    .map((obj: Service) => obj.service_type);
 };
 
 /**
@@ -233,7 +243,7 @@ export const formattedServiceTypes = (
  */
 export const getAllDashboards = (
   queryResults: UseQueryResult<ResourcePage<Dashboard>, APIError[]>[],
-  serviceTypes: string[]
+  serviceTypes: CloudPulseServiceType[]
 ) => {
   let error = '';
   let isLoading = false;

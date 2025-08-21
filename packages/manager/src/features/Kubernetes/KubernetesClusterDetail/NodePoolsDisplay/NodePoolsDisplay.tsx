@@ -30,7 +30,7 @@ import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
-import type { KubernetesTier, Region } from '@linode/api-v4';
+import type { KubernetesTier } from '@linode/api-v4';
 
 export type StatusFilter = 'all' | 'offline' | 'provisioning' | 'running';
 
@@ -67,7 +67,6 @@ export interface Props {
   clusterRegionId: string;
   clusterTier: KubernetesTier;
   isLkeClusterRestricted: boolean;
-  regionsData: Region[];
 }
 
 export const NodePoolsDisplay = (props: Props) => {
@@ -78,7 +77,6 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterRegionId,
     clusterTier,
     isLkeClusterRestricted,
-    regionsData,
   } = props;
 
   const {
@@ -146,15 +144,6 @@ export const NodePoolsDisplay = (props: Props) => {
     handleAccordionClick,
     setExpandedAccordions,
   } = useDefaultExpandedNodePools(clusterID, _pools);
-
-  const regionSupportsDiskEncryption =
-    (regionsData
-      .find((regionDatum) => regionDatum.id === clusterRegionId)
-      ?.capabilities.includes('Disk Encryption') ||
-      regionsData
-        .find((regionDatum) => regionDatum.id === clusterRegionId)
-        ?.capabilities.includes('LA Disk Encryption')) ??
-    false;
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
@@ -321,7 +310,6 @@ export const NodePoolsDisplay = (props: Props) => {
               }}
               poolId={thisPool.id}
               poolVersion={thisPool.k8s_version}
-              regionSupportsDiskEncryption={regionSupportsDiskEncryption}
               statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}
@@ -341,7 +329,6 @@ export const NodePoolsDisplay = (props: Props) => {
         clusterTier={clusterTier}
         onClose={() => setAddDrawerOpen(false)}
         open={addDrawerOpen}
-        regionsData={regionsData}
       />
       <LabelAndTaintDrawer
         clusterId={clusterID}

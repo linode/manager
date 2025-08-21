@@ -193,9 +193,10 @@ describe('machine image', () => {
         .findByTitle(`Action menu for Image ${initialLabel}`)
         .should('be.visible')
         .click();
+
+      ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
     });
 
-    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
     cy.wait('@getImage');
 
     mockUpdateImage(mockImage.id, mockImageUpdated).as('updateImage');
@@ -219,6 +220,10 @@ describe('machine image', () => {
       });
 
     cy.wait(['@getImages', '@updateImage']);
+
+    mockDeleteImage(mockImage.id).as('deleteImage');
+    mockGetCustomImages([]).as('getImages');
+
     cy.get(`[data-qa-image-cell="${mockImage.id}"]`).within(() => {
       cy.findByText(updatedLabel).should('be.visible');
       cy.findByText(initialLabel).should('not.exist');
@@ -226,11 +231,8 @@ describe('machine image', () => {
         .findByTitle(`Action menu for Image ${updatedLabel}`)
         .should('be.visible')
         .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     });
-
-    mockDeleteImage(mockImage.id).as('deleteImage');
-    mockGetCustomImages([]).as('getImages');
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog
       .findByTitle(`Delete Image ${updatedLabel}`)

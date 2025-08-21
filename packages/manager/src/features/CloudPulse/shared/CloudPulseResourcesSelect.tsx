@@ -5,11 +5,14 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { deepEqual } from '../Utils/FilterBuilder';
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
+import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 
-import type { Filter, FilterValue } from '@linode/api-v4';
+import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
+  clusterSize?: number;
   engineType?: string;
   entities?: Record<string, string>;
   id: string;
@@ -28,10 +31,10 @@ export interface CloudPulseResourcesSelectProps {
   label: string;
   placeholder?: string;
   region?: string;
-  resourceType: string | undefined;
+  resourceType: CloudPulseServiceType | undefined;
   savePreferences?: boolean;
   tags?: string[];
-  xFilter?: Filter;
+  xFilter?: CloudPulseMetricsFilter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
@@ -45,19 +48,10 @@ export const CloudPulseResourcesSelect = React.memo(
       region,
       resourceType,
       savePreferences,
-      tags,
       xFilter,
     } = props;
 
     const flags = useFlags();
-
-    const resourceFilterMap: Record<string, Filter> = {
-      dbaas: {
-        '+order': 'asc',
-        '+order_by': 'label',
-        platform: 'rdbms-default',
-      },
-    };
 
     const {
       data: resources,
@@ -67,16 +61,8 @@ export const CloudPulseResourcesSelect = React.memo(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
-      xFilter
-        ? {
-            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
-            ...xFilter, // the usual xFilters
-          }
-        : {
-            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
-            region,
-            ...(tags ?? []),
-          }
+
+      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {}
     );
 
     const [selectedResources, setSelectedResources] =
@@ -90,8 +76,8 @@ export const CloudPulseResourcesSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
-      return resources && resources.length > 0 ? resources : [];
-    }, [resources]);
+      return filterUsingDependentFilters(resources, xFilter) ?? [];
+    }, [resources, xFilter]);
 
     // Maximum resource selection limit is fetched from launchdarkly
     const maxResourceSelectionLimit = React.useMemo(() => {

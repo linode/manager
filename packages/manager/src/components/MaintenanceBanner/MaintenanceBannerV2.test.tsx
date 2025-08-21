@@ -31,7 +31,7 @@ describe('MaintenanceBannerV2', () => {
         type: 'reboot',
         entity: { type: 'linode' },
         reason: 'Another scheduled maintenance',
-        status: 'in-progress',
+        status: 'in_progress',
         description: 'scheduled',
       }),
       accountMaintenanceFactory.build({
