@@ -3,22 +3,25 @@ import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { type CreateStreamAndDestinationForm } from './types';
+import {
+  getStreamTypeOption,
+  isFormInEditMode,
+} from 'src/features/DataStream/dataStreamUtils';
+import { LabelValue } from 'src/features/DataStream/Shared/LabelValue';
+import { streamTypeOptions } from 'src/features/DataStream/Shared/types';
 
-export const StreamCreateGeneralInfo = () => {
-  const { control, setValue } =
-    useFormContext<CreateStreamAndDestinationForm>();
+import type { StreamAndDestinationFormType } from './types';
+import type { FormMode } from 'src/features/DataStream/Shared/types';
 
-  const streamTypeOptions = [
-    {
-      value: streamType.AuditLogs,
-      label: 'Audit Logs',
-    },
-    {
-      value: streamType.LKEAuditLogs,
-      label: 'Kubernetes Audit Logs',
-    },
-  ];
+type StreamFormGeneralInfoProps = {
+  mode: FormMode;
+  streamId?: string;
+};
+
+export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
+  const { mode, streamId } = props;
+
+  const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
 
   const updateStreamDetails = (value: string) => {
     if (value === streamType.LKEAuditLogs) {
@@ -31,6 +34,7 @@ export const StreamCreateGeneralInfo = () => {
   return (
     <Paper>
       <Typography variant="h2">General Information</Typography>
+      {streamId && <LabelValue compact={true} label="ID" value={streamId} />}
       <Controller
         control={control}
         name="stream.label"
@@ -55,6 +59,7 @@ export const StreamCreateGeneralInfo = () => {
         render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
+            disabled={isFormInEditMode(mode)}
             errorText={fieldState.error?.message}
             label="Stream Type"
             onBlur={field.onBlur}
@@ -63,7 +68,7 @@ export const StreamCreateGeneralInfo = () => {
               updateStreamDetails(value);
             }}
             options={streamTypeOptions}
-            value={streamTypeOptions.find(({ value }) => value === field.value)}
+            value={getStreamTypeOption(field.value)}
           />
         )}
         rules={{ required: true }}
