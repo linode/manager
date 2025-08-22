@@ -32,35 +32,91 @@ import {
   vpcFactory,
 } from 'src/factories';
 
+const clusterLabel = randomLabel();
+const selectedVpcId = 1;
+const selectedSubnetId = 1;
+
+const mockEnterpriseCluster = kubernetesClusterFactory.build({
+  k8s_version: latestEnterpriseTierKubernetesVersion.id,
+  label: clusterLabel,
+  region: 'us-iad',
+  tier: 'enterprise',
+});
+
+const mockVpcs = [
+  {
+    ...vpcFactory.build(),
+    id: selectedVpcId,
+    label: 'test-vpc',
+    region: 'us-iad',
+    subnets: [
+      subnetFactory.build({
+        id: selectedSubnetId,
+        label: 'subnet-a',
+        ipv4: '10.0.0.0/13',
+      }),
+    ],
+  },
+];
+
 describe('LKE Cluster Creation with LKE-E', () => {
-  describe('LKE-E Phase 2 Networking Configurations', () => {
-    const clusterLabel = randomLabel();
-    const selectedVpcId = 1;
-    const selectedSubnetId = 1;
-
-    const mockEnterpriseCluster = kubernetesClusterFactory.build({
-      k8s_version: latestEnterpriseTierKubernetesVersion.id,
-      label: clusterLabel,
-      region: 'us-iad',
-      tier: 'enterprise',
-    });
-
-    const mockVpcs = [
-      {
-        ...vpcFactory.build(),
-        id: selectedVpcId,
-        label: 'test-vpc',
-        region: 'us-iad',
-        subnets: [
-          subnetFactory.build({
-            id: selectedSubnetId,
-            label: 'subnet-a',
-            ipv4: '10.0.0.0/13',
-          }),
-        ],
+  beforeEach(() => {
+    // TODO LKE-E: Remove feature flag mocks once we're in GA
+    mockAppendFeatureFlags({
+      lkeEnterprise: {
+        enabled: true,
+        la: true,
+        postLa: false,
+        phase2Mtc: true,
       },
-    ];
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
 
+    mockGetTieredKubernetesVersions('enterprise', [
+      latestEnterpriseTierKubernetesVersion,
+    ]).as('getTieredKubernetesVersions');
+    mockGetKubernetesVersions([latestKubernetesVersion]).as(
+      'getKubernetesVersions'
+    );
+
+    mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
+    mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
+      'getLKEEnterpriseClusterTypes'
+    );
+    mockCreateCluster(mockEnterpriseCluster).as('createCluster');
+
+    mockGetRegions([
+      regionFactory.build({
+        capabilities: [
+          'Linodes',
+          'Kubernetes',
+          'Kubernetes Enterprise',
+          'VPCs',
+        ],
+        id: 'us-iad',
+        label: 'Washington, DC',
+      }),
+    ]).as('getRegions');
+
+    mockGetVPCs(mockVpcs).as('getVPCs');
+
+    cy.visitWithLogin('/kubernetes/clusters');
+    cy.wait(['@getAccount']);
+
+    ui.button.findByTitle('Create Cluster').click();
+    cy.url().should('endWith', '/kubernetes/create');
+    cy.wait([
+      '@getKubernetesVersions',
+      '@getTieredKubernetesVersions',
+      '@getLinodeTypes',
+    ]);
+  });
+
+  describe('LKE-E Phase 2 Networking Configurations', () => {
     // Accounts for the different combination of IP Networking and VPC/Subnet radio selections
     const possibleNetworkingConfigurations = [
       {
@@ -89,62 +145,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
       },
     ];
 
-    beforeEach(() => {
-      // TODO LKE-E: Remove feature flag mocks once we're in GA
-      mockAppendFeatureFlags({
-        lkeEnterprise: {
-          enabled: true,
-          la: true,
-          postLa: false,
-          phase2Mtc: true,
-        },
-      }).as('getFeatureFlags');
-      mockGetAccount(
-        accountFactory.build({
-          capabilities: ['Kubernetes Enterprise'],
-        })
-      ).as('getAccount');
-
-      mockGetTieredKubernetesVersions('enterprise', [
-        latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetKubernetesVersions([latestKubernetesVersion]).as(
-        'getKubernetesVersions'
-      );
-
-      mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
-      mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
-        'getLKEEnterpriseClusterTypes'
-      );
-      mockCreateCluster(mockEnterpriseCluster).as('createCluster');
-
-      mockGetRegions([
-        regionFactory.build({
-          capabilities: [
-            'Linodes',
-            'Kubernetes',
-            'Kubernetes Enterprise',
-            'VPCs',
-          ],
-          id: 'us-iad',
-          label: 'Washington, DC',
-        }),
-      ]).as('getRegions');
-
-      mockGetVPCs(mockVpcs).as('getVPCs');
-
-      cy.visitWithLogin('/kubernetes/clusters');
-      cy.wait(['@getAccount']);
-
-      ui.button.findByTitle('Create Cluster').click();
-      cy.url().should('endWith', '/kubernetes/create');
-      cy.wait([
-        '@getKubernetesVersions',
-        '@getTieredKubernetesVersions',
-        '@getLinodeTypes',
-      ]);
-    });
-
     possibleNetworkingConfigurations.forEach(
       ({ description, isUsingOwnVPC, stackType }) => {
         it(`${description}`, () => {
@@ -159,9 +159,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
           // Select either the autogenerated or existing (BYO) VPC radio button
           if (isUsingOwnVPC) {
-            cy.findByTestId('isUsingOwnVpc').within(() => {
-              cy.findByLabelText('Use an existing VPC').click();
-            });
+            cy.findByLabelText('Use an existing VPC').click();
 
             // Select the existing VPC and Subnet to use
             ui.autocomplete.findByLabel('VPC').click();
@@ -223,27 +221,17 @@ describe('LKE Cluster Creation with LKE-E', () => {
         });
       }
     );
+  });
 
-    const mockErrorMessage = 'VPC must be dual-stack for IPv4 + IPv6 clusters';
-    const mockSingleStackVpc = {
-      ...vpcFactory.build(),
-      id: selectedVpcId,
-      label: 'single-stack-vpc',
-      region: 'us-iad',
-      subnets: [
-        subnetFactory.build({
-          id: selectedSubnetId,
-          label: 'subnet-a',
-          ipv4: '10.0.0.0/13',
-        }),
-      ],
-    };
-
+  describe('LKE-E Cluster Error Handling', () => {
     /*
-     * Surfaces an API errors (e.g. subnet is the wrong size)
+     * Surfaces an API errors on the page.
      */
-    it('surfaces API error when creating cluster with single-stack VPC and IPv4+IPv6 stack type', () => {
-      mockGetVPCs([mockSingleStackVpc]).as('getVPCs');
+    it('surfaces API error when creating cluster with an invalid configuration', () => {
+      const mockErrorMessage =
+        'There was a general error when creating your cluster.';
+
+      mockGetVPCs(mockVpcs).as('getVPCs');
       mockCreateClusterError(mockErrorMessage).as('createClusterError');
 
       cy.findByLabelText('Cluster Label').type(clusterLabel);
@@ -253,15 +241,9 @@ describe('LKE Cluster Creation with LKE-E', () => {
       ui.regionSelect.find().clear().type('Washington, DC{enter}');
       cy.wait('@getVPCs');
 
-      cy.findByTestId('isUsingOwnVpc').within(() => {
-        cy.findByLabelText('Use an existing VPC').click();
-      });
-
-      ui.autocomplete.findByLabel('VPC').click();
-      cy.findByText('single-stack-vpc').click();
-      ui.autocomplete.findByLabel('Subnet').click();
-      cy.findByText(/subnet-a/).click();
-
+      cy.findByLabelText(
+        'Automatically generate a VPC for this cluster'
+      ).click();
       cy.findByLabelText('IPv4 + IPv6 (dual-stack)').click();
 
       // Bypass ACL validation
@@ -291,11 +273,78 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.findByText(mockErrorMessage).should('be.visible');
     });
 
+    /**
+     * Surfaces field-level errors on the page.
+     */
+    it('surfaces field-level errors on VPC fields', () => {
+      // Intercept the create cluster request and force an error response
+      cy.intercept('POST', '/v4beta/lke/clusters', {
+        statusCode: 400,
+        body: {
+          errors: [
+            {
+              reason: 'There is an error configuring this VPC.',
+              field: 'vpc_id',
+            },
+            {
+              reason: 'There is an error configuring this subnet.',
+              field: 'subnet_id',
+            },
+          ],
+        },
+      }).as('createClusterError');
+
+      cy.findByLabelText('Cluster Label').type(clusterLabel);
+      cy.findByText('LKE Enterprise').click();
+
+      // Select region, VPC, subnet, and IP stack
+      ui.regionSelect.find().clear().type('Washington, DC{enter}');
+      cy.findByLabelText('Use an existing VPC').click();
+      ui.autocomplete.findByLabel('VPC').click();
+      cy.findByText('test-vpc').click();
+      ui.autocomplete.findByLabel('Subnet').click();
+      cy.findByText(/subnet-a/).click();
+      cy.findByLabelText('IPv4 + IPv6 (dual-stack)').click();
+
+      // Bypass ACL validation
+      cy.get('input[name="acl-acknowledgement"]').check();
+
+      // Select a plan and add nodes
+      cy.findByText(clusterPlans[0].tab).should('be.visible').click();
+      cy.findByText(clusterPlans[0].planName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[name="Quantity"]').should('be.visible').click();
+          cy.focused().type(`{selectall}${clusterPlans[0].nodeCount}`);
+
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Try to submit the form
+      cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+        ui.button.findByTitle('Create Cluster').click();
+      });
+
+      // Confirm error messages display
+      cy.wait('@createClusterError');
+      cy.findByText('There is an error configuring this VPC.').should(
+        'be.visible'
+      );
+      cy.findByText('There is an error configuring this subnet.').should(
+        'be.visible'
+      );
+    });
+
     /*
-     * Surfaces client-side validation errors (e.g. BYO VPC selected but no VPC provided)
+     * Surfaces client-side validation error for VPC selection.
      */
     it('surfaces a client-side validation error when BYO VPC is selected but no VPC is chosen', () => {
-      mockGetVPCs([mockSingleStackVpc]).as('getVPCs');
+      mockGetVPCs(mockVpcs).as('getVPCs');
       const errorText =
         'You must either select a VPC or select automatic VPC generation.';
 
@@ -325,30 +374,25 @@ describe('LKE Cluster Creation with LKE-E', () => {
             .click();
         });
 
-      cy.findByTestId('isUsingOwnVpc').within(() => {
-        cy.findByLabelText('Use an existing VPC').click();
-      });
+      // Select the 'bring your own' VPC option
+      cy.findByLabelText('Use an existing VPC').click();
 
-      // Don’t select a VPC
+      // Try to create the cluster without actually selecting a VPC
       cy.get('[data-testid="kube-checkout-bar"]').within(() => {
         ui.button.findByTitle('Create Cluster').click();
       });
 
-      // Error should surface on the VPC field
+      // Confirm error surfaces on the VPC field
       cy.findByText(errorText).should('be.visible');
 
-      // Switch to autogenerated clears the error
-      cy.findByTestId('isUsingOwnVpc').within(() => {
-        cy.findByLabelText(
-          'Automatically generate a VPC for this cluster'
-        ).click();
-      });
+      // Confirm switching to an autogenerated VPC clears the error
+      cy.findByLabelText(
+        'Automatically generate a VPC for this cluster'
+      ).click();
       cy.findByText(errorText).should('not.exist');
 
-      // Switch back to existing VPC; error stays cleared
-      cy.findByTestId('isUsingOwnVpc').within(() => {
-        cy.findByLabelText('Use an existing VPC').click();
-      });
+      // Confirm the error stays cleared when switching back to the existing VPC option
+      cy.findByLabelText('Use an existing VPC').click();
       cy.findByText(errorText).should('not.exist');
     });
   });
