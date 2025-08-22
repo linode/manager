@@ -30,6 +30,9 @@ export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
     rules: {
       validate: (value) => {
         if (isUsingOwnFirewall && !value && value !== 0) {
+          if (disableDefaultFirewallRadio) {
+            return 'You must select a Firewall.';
+          }
           return 'You must either select a Firewall or select the default firewall.';
         }
         return true;
