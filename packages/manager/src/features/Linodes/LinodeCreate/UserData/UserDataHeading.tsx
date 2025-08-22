@@ -1,4 +1,4 @@
-import { Notice, Stack, TooltipIcon, Typography } from '@linode/ui';
+import { Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -25,22 +25,19 @@ export const UserDataHeading = () => {
 
   return (
     <Stack spacing={1}>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="column" spacing={1}>
         <Typography variant="h2">Add User Data</Typography>
-        <TooltipIcon
-          status="info"
-          sxTooltipIcon={{ p: 0 }}
-          text={
-            <>
-              User data allows you to provide additional custom data to
-              cloud-init to further configure your system.{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service">
-                Learn more
-              </Link>
-              .
-            </>
-          }
-        />
+        <Typography>
+          User data is a feature of the Metadata service that enables you to
+          perform system configuration tasks (such as adding users and
+          installing software) by providing custom instructions or scripts to
+          cloud-init. Any user data should be added at this step and cannot be
+          modified after the the Linode has been created.{' '}
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service">
+            Learn more
+          </Link>
+          .
+        </Typography>
       </Stack>
       {warningMessage && (
         <Notice spacingBottom={0} spacingTop={0} variant="warning">
