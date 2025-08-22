@@ -1,5 +1,6 @@
 import { linodeFactory } from '@linode/utilities';
 import { mockGetMaintenance } from 'support/intercepts/account';
+import { mockGetNotifications } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinode, mockGetLinodes } from 'support/intercepts/linodes';
 import { randomLabel } from 'support/util/random';
@@ -26,25 +27,47 @@ describe('host & VM maintenance notification banner', () => {
     ];
     cy.wrap(mockLinodes).as('mockLinodes');
     mockGetLinodes(mockLinodes).as('getLinodes');
-    const mockLinodeMaintenance = accountMaintenanceFactory.build({
-      entity: {
-        id: mockLinodes[0].id,
-        label: mockLinodes[0].label,
-        type: 'linode',
-        url: `/v4/linode/instances/${mockLinodes[0].id}`,
-      },
-      maintenance_policy_set: 'linode/power_off_on',
-      status: 'scheduled',
-      start_time: '2022-01-17T23:45:46.960',
-    });
-    cy.wrap(mockLinodeMaintenance).as('mockLinodeMaintenance');
+    const mockLinodeMaintenances = [
+      accountMaintenanceFactory.build({
+        entity: {
+          id: mockLinodes[0].id,
+          label: mockLinodes[0].label,
+          type: 'linode',
+          url: `/v4/linode/instances/${mockLinodes[0].id}`,
+        },
+        maintenance_policy_set: 'linode/power_off_on',
+        status: 'scheduled',
+        start_time: '2022-01-17T23:45:46.960',
+      }),
+      accountMaintenanceFactory.build({
+        entity: {
+          id: mockLinodes[1].id,
+          label: mockLinodes[1].label,
+          type: 'linode',
+          url: `/v4/linode/instances/${mockLinodes[1].id}`,
+        },
+        maintenance_policy_set: 'linode/power_off_on',
+        status: 'scheduled',
+      }),
+    ];
+    cy.wrap(mockLinodeMaintenances).as('mockLinodeMaintenances');
+    // suppress platform notifications to prevent other notification banners
+
+    mockGetNotifications([]).as('getNotifications');
   });
 
   it('maintenance notification banner on landing page for 1 linode', function () {
-    mockGetMaintenance([this.mockLinodeMaintenance], []).as('getMaintenance');
+    mockGetMaintenance([this.mockLinodeMaintenances[0]], []).as(
+      'getMaintenances'
+    );
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getLinodes', '@getFeatureFlags', '@getMaintenance']);
-    cy.findByTestId('notice-warning').within(() => {
+    cy.wait([
+      '@getLinodes',
+      '@getFeatureFlags',
+      '@getNotifications',
+      '@getMaintenances',
+    ]);
+    cy.findByTestId('maintenance-banner-v2').within(() => {
       cy.get('p')
         .invoke('text')
         .then((text) => {
@@ -59,22 +82,15 @@ describe('host & VM maintenance notification banner', () => {
   });
 
   it('maintenance notification banner on landing page for >1 linodes', function () {
-    const mockMaintenance2 = accountMaintenanceFactory.build({
-      entity: {
-        id: this.mockLinodes[1].id,
-        label: this.mockLinodes[1].label,
-        type: 'linode',
-        url: `/v4/linode/instances/${this.mockLinodes[1].id}`,
-      },
-      maintenance_policy_set: 'linode/power_off_on',
-      status: 'scheduled',
-    });
-    mockGetMaintenance([this.mockLinodeMaintenance, mockMaintenance2], []).as(
-      'getMaintenance'
-    );
+    mockGetMaintenance(this.mockLinodeMaintenances, []).as('getMaintenances');
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getLinodes', '@getFeatureFlags', '@getMaintenance']);
-    cy.findByTestId('notice-warning').within(() => {
+    cy.wait([
+      '@getLinodes',
+      '@getFeatureFlags',
+      '@getNotifications',
+      '@getMaintenances',
+    ]);
+    cy.findByTestId('maintenance-banner-v2').within(() => {
       cy.get('p')
         .invoke('text')
         .then((text) => {
@@ -88,21 +104,19 @@ describe('host & VM maintenance notification banner', () => {
     });
   });
 
-  it('maintenance notification banner not present on landing page if no linodes have pending maintenance', () => {
-    mockGetMaintenance([], []).as('getMaintenance');
-    cy.visitWithLogin('/linodes');
-    cy.wait(['@getLinodes', '@getFeatureFlags', '@getMaintenance']);
-    cy.findByTestId('notice-warning').should('not.exist');
-  });
-
   it('banner present on details page when linode has pending maintenance', function () {
     const mockLinode = this.mockLinodes[0];
     mockGetLinode(mockLinode.id, mockLinode).as('getLinode');
-    const mockMaintenance = this.mockLinodeMaintenance;
-    mockGetMaintenance([mockMaintenance], []).as('getMaintenance');
+    const mockMaintenance = this.mockLinodeMaintenances[0];
+    mockGetMaintenance([mockMaintenance], []).as('getMaintenances');
 
     cy.visitWithLogin(`/linodes/${mockLinode.id}`);
-    cy.wait(['@getLinode', '@getFeatureFlags', '@getMaintenance']);
+    cy.wait([
+      '@getLinode',
+      '@getFeatureFlags',
+      '@getNotifications',
+      '@getMaintenances',
+    ]);
     cy.findByTestId('linode-maintenance-banner').within(() => {
       cy.get('p')
         .invoke('text')
@@ -118,12 +132,29 @@ describe('host & VM maintenance notification banner', () => {
     });
   });
 
+  it('maintenance notification banner not present on landing page if no linodes have pending maintenance', () => {
+    mockGetMaintenance([], []).as('getMaintenances');
+    cy.visitWithLogin('/linodes');
+    cy.wait([
+      '@getLinodes',
+      '@getFeatureFlags',
+      '@getNotifications',
+      '@getMaintenances',
+    ]);
+    cy.findByTestId('maintenance-banner-v2').should('not.exist');
+  });
+
   it('banner not present on details page if no pending maintenance', function () {
-    mockGetMaintenance([], []).as('getMaintenance');
+    mockGetMaintenance([], []).as('getMaintenances');
     const mockLinode = this.mockLinodes[0];
     mockGetLinode(mockLinode.id, mockLinode).as('getLinode');
     cy.visitWithLogin(`/linodes/${this.mockLinodes[0].id}`);
-    cy.wait(['@getLinode', '@getFeatureFlags', '@getMaintenance']);
+    cy.wait([
+      '@getLinode',
+      '@getFeatureFlags',
+      '@getNotifications',
+      '@getMaintenances',
+    ]);
     cy.findByTestId('linode-maintenance-banner').should('not.exist');
   });
 });
