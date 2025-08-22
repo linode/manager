@@ -58,6 +58,7 @@ import {
   firewallDeviceFactory,
   firewallEntityfactory,
   firewallFactory,
+  firewallMetricDefinitionsResponse,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -3238,6 +3239,9 @@ export const handlers = [
           },
         ],
       };
+      if (params.serviceType === 'firewall') {
+        return HttpResponse.json({ data: [firewallMetricDefinitionsResponse] });
+      }
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
       }

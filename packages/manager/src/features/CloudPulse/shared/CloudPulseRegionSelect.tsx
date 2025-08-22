@@ -112,7 +112,7 @@ export const CloudPulseRegionSelect = React.memo(
     ]);
 
     const {
-      values,
+      values: linodeRegions,
       isLoading: isLinodeRegionIdLoading,
       isError: isLinodeRegionIdError,
     } = useFetchOptions({
@@ -122,7 +122,7 @@ export const CloudPulseRegionSelect = React.memo(
       serviceType,
       type: 'metrics',
     });
-    const linodeRegionIds = values.map(
+    const linodeRegionIds = linodeRegions.map(
       (option: Item<string, string>) => option.value
     );
 
