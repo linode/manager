@@ -1,6 +1,7 @@
 import { accountGrantsToPermissions } from './accountGrantsToPermissions';
 import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
+import { volumeGrantsToPermissions } from './volumeGrantsToPermissions';
 
 import type { EntityBase } from '../usePermissions';
 import type {
@@ -41,6 +42,14 @@ export const entityPermissionMapFrom = (
           ) as PermissionMap;
           entityPermissionsMap[entity.id] = linodePermissionsMap;
           break;
+        case 'volume':
+          // eslint-disable-next-line no-case-declarations
+          const volumePermissionsMap = volumeGrantsToPermissions(
+            entity?.permissions,
+            profile?.restricted
+          ) as PermissionMap;
+          entityPermissionsMap[entity.id] = volumePermissionsMap;
+          break;
       }
     });
   }
@@ -77,6 +86,14 @@ export const fromGrants = (
       const linode = grants?.linode.find((f) => f.id === entityId);
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
+        isRestricted
+      ) as PermissionMap;
+      break;
+    case 'volume':
+      // eslint-disable-next-line no-case-declarations
+      const volume = grants?.volume.find((f) => f.id === entityId);
+      usersPermissionsMap = volumeGrantsToPermissions(
+        volume?.permissions,
         isRestricted
       ) as PermissionMap;
       break;
