@@ -14,6 +14,7 @@ import type { BodyProps } from './LinodeEntityDetailBody';
 
 describe('LinodeEntityDetailBody', () => {
   const baseProps: BodyProps = {
+    disabled: false,
     encryptionStatus: 'enabled',
     gbRAM: 4,
     gbStorage: 80,
