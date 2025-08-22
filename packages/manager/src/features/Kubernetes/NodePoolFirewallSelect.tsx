@@ -37,9 +37,13 @@ export const NodePoolFirewallSelect = () => {
   return (
     <Stack>
       <FormControl error={Boolean(fieldState.error)} sx={{ mt: 0 }}>
-        <FormLabel sx={{ m: 0, p: 0 }}>Firewall</FormLabel>
+        <FormLabel id="node-pool-firewall-label" sx={{ m: 0, p: 0 }}>
+          Firewall
+        </FormLabel>
         <RadioGroup
           aria-label="Bring your own firewall"
+          aria-labelledby="node-pool-firewall-label"
+          id="firewall-radio-group"
           onChange={(e, value) => {
             setIsUsingOwnFirewall(value === 'yes');
 

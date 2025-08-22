@@ -716,7 +716,7 @@ export const darkTheme: ThemeOptions = {
           '&$disabled': {
             color: Component.Label.Text,
           },
-          '&$error': {
+          '&.Mui-error': {
             color: Component.Label.Text,
           },
           '&.Mui-focused': {
