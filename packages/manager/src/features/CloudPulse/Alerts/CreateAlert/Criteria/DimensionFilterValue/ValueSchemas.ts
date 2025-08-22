@@ -37,7 +37,6 @@ const singlePortSchema = string()
         message: PORTS_LEADING_ZERO_ERROR_MESSAGE,
       });
     }
-
     if (!DECIMAL_PORT_REGEX.test(value)) {
       return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
     }
@@ -185,9 +184,6 @@ export const getDimensionFilterValueSchema = ({
   dimensionLabel,
   operator,
 }: GetValueSchemaParams) => {
-  if (['endswith', 'startswith'].includes(operator)) {
-    return baseValueSchema.concat(string().max(100, LENGTH_ERROR_MESSAGE));
-  }
   if (dimensionLabel === 'port') {
     const portSchema =
       operator === 'in' ? commaSeparatedPortListSchema : singlePortSchema;
@@ -198,6 +194,8 @@ export const getDimensionFilterValueSchema = ({
       operator === 'in' ? multipleConfigSchema : singleConfigSchema;
     return configSchema.concat(baseValueSchema);
   }
-
+  if (['endswith', 'startswith'].includes(operator)) {
+    return baseValueSchema.concat(string().max(100, LENGTH_ERROR_MESSAGE));
+  }
   return baseValueSchema;
 };
