@@ -82,6 +82,7 @@ export const DatabaseResize = () => {
     error: resizeError,
     isPending: submitInProgress,
     mutateAsync: updateDatabase,
+    reset: resetMutation,
   } = useDatabaseMutation(database.engine, database.id);
 
   const {
@@ -362,6 +363,11 @@ export const DatabaseResize = () => {
     setSelectedTab(index);
   };
 
+  const handleOnClose = () => {
+    setIsResizeConfirmationDialogOpen(false);
+    resetMutation?.();
+  };
+
   if (!isResizeEnabled) {
     navigate({
       to: `/databases/$engine/$databaseId/summary`,
@@ -471,7 +477,7 @@ export const DatabaseResize = () => {
         label={'Cluster Name'}
         loading={submitInProgress}
         onClick={onResize}
-        onClose={() => setIsResizeConfirmationDialogOpen(false)}
+        onClose={handleOnClose}
         open={isResizeConfirmationDialogOpen}
         title={`Resize Database Cluster ${database.label}?`}
       >

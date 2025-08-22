@@ -28,6 +28,7 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -56,6 +57,14 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 describe('UserEntities', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -63,6 +72,11 @@ describe('UserEntities', () => {
     });
     queryMocks.useSearch.mockReturnValue({
       selectedRole: '',
+    });
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: true,
+      },
     });
   });
 
@@ -138,5 +152,18 @@ describe('UserEntities', () => {
 
     renderWithTheme(<UserEntities />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
+  });
+
+  it('should not render if user does not have permissions', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: false,
+      },
+    });
+
+    renderWithTheme(<UserEntities />);
+    expect(screen.queryByText('This list is empty')).toBeNull();
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
+    expect(screen.queryByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeNull();
   });
 });

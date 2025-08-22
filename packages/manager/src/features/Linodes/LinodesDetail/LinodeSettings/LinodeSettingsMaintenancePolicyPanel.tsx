@@ -1,4 +1,8 @@
-import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+  useRegionQuery,
+} from '@linode/queries';
 import { Accordion, Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,11 +12,13 @@ import { Link } from 'src/components/Link';
 import {
   MAINTENANCE_POLICY_DESCRIPTION,
   MAINTENANCE_POLICY_LEARN_MORE_URL,
+  MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS,
   MAINTENANCE_POLICY_TITLE,
   UPCOMING_MAINTENANCE_NOTICE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { getFeatureChip } from 'src/features/Account/MaintenancePolicy';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNotice';
 
@@ -30,6 +36,24 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
+
+  const { data: region } = useRegionQuery(linode?.region ?? '');
+
+  // Check if user has permission to update linodes (needed for maintenance policy)
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
+
+  const regionSupportsMaintenancePolicy =
+    region?.capabilities.includes('Maintenance Policy') ?? false;
+
+  // Determine if disabled due to missing prerequisites vs permission issues
+  const isDisabledDueToPrerequisites = !regionSupportsMaintenancePolicy;
+  const isDisabledDueToPermissions = !permissions?.update_linode;
+  const isDisabled =
+    isReadOnly || isDisabledDueToPrerequisites || isDisabledDueToPermissions;
 
   const values: MaintenancePolicyValues = {
     maintenance_policy: linode?.maintenance_policy ?? 'linode/migrate',
@@ -89,9 +113,19 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
             name="maintenance_policy"
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
-                disabled={isReadOnly}
+                disabled={isDisabled}
+                disabledReason={
+                  isDisabledDueToPermissions
+                    ? 'You do not have permission to update this Linode.'
+                    : undefined
+                }
                 errorText={fieldState.error?.message}
                 onChange={(policy) => field.onChange(policy.slug)}
+                textFieldProps={{
+                  helperText: isDisabledDueToPrerequisites
+                    ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT_DETAILS
+                    : undefined,
+                }}
                 value={field.value}
               />
             )}
@@ -99,7 +133,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
           <Box>
             <Button
               buttonType="outlined"
-              disabled={!isDirty || isReadOnly}
+              disabled={!isDirty || isDisabled}
               loading={isSubmitting}
               type="submit"
             >
