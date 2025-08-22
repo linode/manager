@@ -20,7 +20,13 @@ describe('TagCell Component', () => {
 
     it('should display the tooltip if disabled and tooltipText is true', async () => {
       const { getByTestId } = renderWithTheme(
-        <TagCell disabled tags={tags} updateTags={updateTags} view="panel" />
+        <TagCell
+          disabled
+          disabledTooltipText="You must be an unrestricted User in order to add or modify tags on Linodes."
+          tags={tags}
+          updateTags={updateTags}
+          view="panel"
+        />
       );
       const disabledButton = getByTestId('button');
       expect(disabledButton).toBeInTheDocument();
