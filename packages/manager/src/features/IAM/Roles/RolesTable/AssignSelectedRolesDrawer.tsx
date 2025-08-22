@@ -104,7 +104,7 @@ export const AssignSelectedRolesDrawer = ({
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
   const { mutateAsync: updateUserRoles, isPending } = useUserRolesMutation(
-    form.watch('username') ?? ''
+    username ?? ''
   );
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
