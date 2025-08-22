@@ -5,6 +5,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  TooltipIcon,
 } from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
@@ -15,7 +16,13 @@ import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 
 import type { CreateNodePoolData } from '@linode/api-v4';
 
-export const NodePoolFirewallSelect = () => {
+export interface NodePoolFirewallSelectProps {
+  defaultFirewallRadioTooltip?: string;
+  disableDefaultFirewallRadio?: boolean;
+}
+
+export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
+  const { defaultFirewallRadioTooltip, disableDefaultFirewallRadio } = props;
   const { control } = useFormContext<CreateNodePoolData>();
   const { field, fieldState, formState } = useController({
     control,
@@ -66,7 +73,18 @@ export const NodePoolFirewallSelect = () => {
           <FormControlLabel
             checked={!isUsingOwnFirewall}
             control={<Radio />}
-            label="Use default firewall"
+            disabled={disableDefaultFirewallRadio}
+            label={
+              <>
+                Use default firewall
+                {defaultFirewallRadioTooltip && (
+                  <TooltipIcon
+                    status="info"
+                    text={defaultFirewallRadioTooltip}
+                  />
+                )}
+              </>
+            }
             value="no"
           />
           <FormControlLabel

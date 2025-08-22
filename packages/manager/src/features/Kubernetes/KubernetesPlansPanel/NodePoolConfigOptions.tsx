@@ -6,6 +6,7 @@ import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 import { NodePoolFirewallSelect } from '../NodePoolFirewallSelect';
 import { NodePoolUpdateStrategySelect } from '../NodePoolUpdateStrategySelect';
 
+import type { NodePoolFirewallSelectProps } from '../NodePoolFirewallSelect';
 import type { CreateNodePoolData, KubernetesTier } from '@linode/api-v4';
 
 interface KubernetesVersionFieldOptions {
@@ -15,11 +16,12 @@ interface KubernetesVersionFieldOptions {
 
 interface Props {
   clusterTier: KubernetesTier;
+  firewallSelectOptions?: NodePoolFirewallSelectProps;
   versionFieldOptions?: KubernetesVersionFieldOptions;
 }
 
 export const NodePoolConfigOptions = (props: Props) => {
-  const { versionFieldOptions, clusterTier } = props;
+  const { versionFieldOptions, clusterTier, firewallSelectOptions } = props;
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { control } = useFormContext<CreateNodePoolData>();
 
@@ -100,7 +102,7 @@ export const NodePoolConfigOptions = (props: Props) => {
               )}
             />
           )}
-          <NodePoolFirewallSelect />
+          <NodePoolFirewallSelect {...firewallSelectOptions} />
         </>
       )}
     </Stack>
