@@ -8,14 +8,16 @@ import { setCustomProfileData } from 'src/mocks/presets/extra/account/customProf
 import { saveCustomProfileData } from '../utils';
 import { JsonTextArea } from './JsonTextArea';
 
-import type { Profile } from '@linode/api-v4';
+import type { Grants, Profile } from '@linode/api-v4';
 
 const profilePreset = extraMockPresets.find((p) => p.id === 'profile:custom');
 
 interface ExtraPresetProfileProps {
+  customGrantsData: Grants | null | undefined;
   customProfileData: null | Profile | undefined;
   handlers: string[];
-  onFormChange?: (data: null | Profile | undefined) => void;
+  onFormChangeGrants?: (data: Grants | null | undefined) => void;
+  onFormChangeProfile?: (data: null | Profile | undefined) => void;
   onTogglePreset: (
     e: React.ChangeEvent<HTMLInputElement>,
     presetId: string
@@ -23,9 +25,11 @@ interface ExtraPresetProfileProps {
 }
 
 export const ExtraPresetProfile = ({
+  customGrantsData,
   customProfileData,
   handlers,
-  onFormChange,
+  onFormChangeGrants,
+  onFormChangeProfile,
   onTogglePreset,
 }: ExtraPresetProfileProps) => {
   const isEnabled = handlers.includes('profile:custom');
@@ -60,7 +64,7 @@ export const ExtraPresetProfile = ({
     setFormData(newFormData);
 
     if (isEnabled) {
-      onFormChange?.(newFormData);
+      onFormChangeProfile?.(newFormData);
     }
   };
 
