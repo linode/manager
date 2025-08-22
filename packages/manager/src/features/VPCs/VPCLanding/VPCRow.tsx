@@ -7,7 +7,7 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import {
   getUniqueLinodesFromSubnets,
@@ -38,18 +38,18 @@ export const VPCRow = ({
     ? getUniqueResourcesFromSubnets(vpc.subnets)
     : getUniqueLinodesFromSubnets(vpc.subnets);
 
-  const isVPCReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'vpc',
-    id: vpc.id,
-  });
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpc.id
+  );
 
   const actions: Action[] = [
     {
-      disabled: isVPCReadOnly,
+      disabled: !permissions.update_vpc,
       onClick: handleEditVPC,
       title: 'Edit',
-      tooltip: isVPCReadOnly
+      tooltip: !permissions.update_vpc
         ? getRestrictedResourceText({
             action: 'edit',
             isSingular: true,
@@ -58,10 +58,10 @@ export const VPCRow = ({
         : undefined,
     },
     {
-      disabled: isVPCReadOnly,
+      disabled: !permissions.delete_vpc,
       onClick: handleDeleteVPC,
       title: 'Delete',
-      tooltip: isVPCReadOnly
+      tooltip: !permissions.delete_vpc
         ? getRestrictedResourceText({
             action: 'delete',
             isSingular: true,

@@ -10,6 +10,11 @@ beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
   useVPCsQuery: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_vpc: true,
+    },
+  })),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -19,7 +24,9 @@ vi.mock('@linode/queries', async () => {
     useVPCsQuery: queryMocks.useVPCsQuery,
   };
 });
-
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 describe('VPC Landing Table', () => {
   it('should render vpc landing table with items', async () => {
     const vpcsWithSubnet = vpcFactory.buildList(3, {
@@ -94,5 +101,37 @@ describe('VPC Landing Table', () => {
 
     const loading = await findByTestId('circle-progress');
     expect(loading).toBeInTheDocument();
+  });
+
+  it('should disable "Create VPC" button if user does not have create_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_vpc: false,
+      },
+    });
+    queryMocks.useVPCsQuery.mockReturnValue({
+      isLoading: false,
+    });
+
+    const { findByText } = renderWithTheme(<VPCLanding />);
+
+    const createButton = await findByText(/Create VPC/);
+    expect(createButton).toBeDisabled();
+  });
+
+  it('should enable "Create VPC" button if user has create_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_vpc: true,
+      },
+    });
+    queryMocks.useVPCsQuery.mockReturnValue({
+      isLoading: false,
+    });
+
+    const { findByText } = renderWithTheme(<VPCLanding />);
+
+    const createButton = await findByText(/Create VPC/);
+    expect(createButton).toBeEnabled();
   });
 });

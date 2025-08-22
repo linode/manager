@@ -3,6 +3,7 @@ import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
 import { nodeBalancerGrantsToPermissions } from './nodeBalancerGrantsToPermissions';
 import { volumeGrantsToPermissions } from './volumeGrantsToPermissions';
+import { vpcGrantsToPermissions } from './vpcGrantsToPermissions';
 
 import type { EntityBase } from '../usePermissions';
 import type {
@@ -58,6 +59,14 @@ export const entityPermissionMapFrom = (
         case 'volume':
           entityPermissionsMap[entity.id] = volumePermissionsMap;
           break;
+        case 'vpc':
+          // eslint-disable-next-line no-case-declarations
+          const vpcPermissionsMap = vpcGrantsToPermissions(
+            entity?.permissions,
+            profile?.restricted
+          ) as PermissionMap;
+          entityPermissionsMap[entity.id] = vpcPermissionsMap;
+          break;
       }
     });
   }
@@ -109,6 +118,14 @@ export const fromGrants = (
     case 'volume':
       usersPermissionsMap = volumeGrantsToPermissions(
         volume?.permissions,
+        isRestricted
+      ) as PermissionMap;
+      break;
+    case 'vpc':
+      // eslint-disable-next-line no-case-declarations
+      const vpc = grants?.vpc.find((f) => f.id === entityId);
+      usersPermissionsMap = vpcGrantsToPermissions(
+        vpc?.permissions,
         isRestricted
       ) as PermissionMap;
       break;
