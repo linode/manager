@@ -134,7 +134,6 @@ export const constructDimensionFilters = (
   const { dashboardObj, filterValue } = props;
   return Object.keys(filterValue)
     .filter((key) => checkIfFilterNeededInMetricsCall(key, dashboardObj.id))
-    .filter((key) => filterValue[key] !== undefined)
     .map((key) => ({
       filterKey: key,
       filterValue: filterValue[key],
