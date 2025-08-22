@@ -244,7 +244,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.findByLabelText(
         'Automatically generate a VPC for this cluster'
       ).click();
-      cy.findByLabelText('IPv4 + IPv6 (dual-stack)').click();
+      cy.findByLabelText('IPv4 + IPv6').click();
 
       // Bypass ACL validation
       cy.get('input[name="acl-acknowledgement"]').check();
@@ -304,7 +304,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.findByText('test-vpc').click();
       ui.autocomplete.findByLabel('Subnet').click();
       cy.findByText(/subnet-a/).click();
-      cy.findByLabelText('IPv4 + IPv6 (dual-stack)').click();
+      cy.findByLabelText('IPv4 + IPv6').click();
 
       // Bypass ACL validation
       cy.get('input[name="acl-acknowledgement"]').check();
