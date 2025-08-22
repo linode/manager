@@ -1,6 +1,6 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
-import { StreamCreate } from 'src/features/DataStream/Streams/StreamCreate/StreamCreate';
+import { StreamCreate } from 'src/features/DataStream/Streams/StreamForm/StreamCreate';
 
 export const streamCreateLazyRoute = createLazyRoute(
   '/datastream/streams/create'
