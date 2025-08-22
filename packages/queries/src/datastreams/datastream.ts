@@ -1,10 +1,12 @@
 import {
   createDestination,
   createStream,
+  deleteStream,
   getDestination,
   getDestinations,
   getStream,
   getStreams,
+  updateStream,
 } from '@linode/api-v4';
 import { profileQueries } from '@linode/queries';
 import { getAll } from '@linode/utilities';
@@ -20,6 +22,7 @@ import type {
   Params,
   ResourcePage,
   Stream,
+  UpdateStreamPayloadWithId,
 } from '@linode/api-v4';
 
 export const getAllDataStreams = (
@@ -83,6 +86,9 @@ export const useStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
     ...datastreamQueries.streams._ctx.paginated(params, filter),
   });
 
+export const useStreamQuery = (id: number) =>
+  useQuery<Stream, APIError[]>({ ...datastreamQueries.stream(id) });
+
 export const useCreateStreamMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Stream, APIError[], CreateStreamPayload>({
@@ -102,6 +108,43 @@ export const useCreateStreamMutation = () => {
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
         queryKey: profileQueries.grants.queryKey,
+      });
+    },
+  });
+};
+
+export const useUpdateStreamMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Stream, APIError[], UpdateStreamPayloadWithId>({
+    mutationFn: ({ id, ...data }) => updateStream(id, data),
+    onSuccess(stream) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams.queryKey,
+      });
+
+      // Update stream in cache
+      queryClient.setQueryData(
+        datastreamQueries.stream(stream.id).queryKey,
+        stream,
+      );
+    },
+  });
+};
+
+export const useDeleteStreamMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>({
+    mutationFn: ({ id }) => deleteStream(id),
+    onSuccess(_, { id }) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams.queryKey,
+      });
+
+      // Remove stream from the cache
+      queryClient.removeQueries({
+        queryKey: datastreamQueries.stream(id).queryKey,
       });
     },
   });

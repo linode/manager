@@ -16,13 +16,13 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
-import { DestinationLinodeObjectStorageDetailsSummary } from 'src/features/DataStream/Streams/StreamCreate/Delivery/DestinationLinodeObjectStorageDetailsSummary';
+import { DestinationLinodeObjectStorageDetailsSummary } from 'src/features/DataStream/Streams/StreamForm/Delivery/DestinationLinodeObjectStorageDetailsSummary';
 
 import type {
   DestinationType,
   LinodeObjectStorageDetails,
 } from '@linode/api-v4';
-import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
 type DestinationName = {
   create?: boolean;
@@ -40,14 +40,11 @@ const controlPaths = {
   region: 'destination.details.region',
 };
 
-export const StreamCreateDelivery = () => {
+export const StreamFormDelivery = () => {
   const theme = useTheme();
-  const { control, setValue } =
-    useFormContext<CreateStreamAndDestinationForm>();
+  const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
 
   const [showDestinationForm, setShowDestinationForm] =
-    React.useState<boolean>(false);
-  const [showExistingDestination, setShowExistingDestination] =
     React.useState<boolean>(false);
 
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
@@ -118,16 +115,12 @@ export const StreamCreateDelivery = () => {
             label="Destination Name"
             onBlur={field.onBlur}
             onChange={(_, newValue) => {
-              const selectedExistingDestination = !!(
-                newValue?.label && newValue?.id
+              setValue(
+                'stream.destinations',
+                newValue?.id ? [newValue?.id] : []
               );
-              if (selectedExistingDestination) {
-                setValue('stream.destinations', [newValue?.id as number]);
-              }
               field.onChange(newValue?.label || newValue);
-              setValue('stream.destinations', [newValue?.id as number]);
               setShowDestinationForm(!!newValue?.create);
-              setShowExistingDestination(selectedExistingDestination);
             }}
             options={destinationNameOptions.filter(
               ({ type }) => type === selectedDestinationType
@@ -158,7 +151,7 @@ export const StreamCreateDelivery = () => {
               controlPaths={controlPaths}
             />
           )}
-          {showExistingDestination && (
+          {!!selectedDestinations?.length && (
             <DestinationLinodeObjectStorageDetailsSummary
               {...(destinations?.find(
                 ({ id }) => id === selectedDestinations[0]

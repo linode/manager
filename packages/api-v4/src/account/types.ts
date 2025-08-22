@@ -470,6 +470,8 @@ export const EventActionKeys = [
   'stackscript_revise',
   'stackscript_update',
   'stream_create',
+  'stream_delete',
+  'stream_update',
   'subnet_create',
   'subnet_delete',
   'subnet_update',
