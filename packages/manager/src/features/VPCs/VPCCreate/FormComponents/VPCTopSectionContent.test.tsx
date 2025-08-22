@@ -37,10 +37,10 @@ describe('VPC Top Section form content', () => {
     expect(screen.getByText('VPC Label')).toBeVisible();
     expect(screen.getByText('Description')).toBeVisible();
     // @TODO VPC IPv6: Remove this check once VPC IPv6 is in GA
-    expect(screen.queryByText('Networking IP Stack')).not.toBeInTheDocument();
+    expect(screen.queryByText('IP Stack')).not.toBeInTheDocument();
   });
 
-  it('renders a Networking IP Stack section with IPv4 pre-checked if the vpcIpv6 feature flag is enabled', async () => {
+  it('renders an IP Stack section with IPv4 pre-checked if the vpcIpv6 feature flag is enabled', async () => {
     const account = accountFactory.build({
       capabilities: ['VPC Dual Stack'],
     });
@@ -66,7 +66,7 @@ describe('VPC Top Section form content', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Networking IP Stack')).toBeVisible();
+      expect(screen.getByText('IP Stack')).toBeVisible();
     });
 
     const NetworkingIPStackRadios = screen.getAllByRole('radio');
@@ -100,7 +100,7 @@ describe('VPC Top Section form content', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Networking IP Stack')).toBeVisible();
+      expect(screen.getByText('IP Stack')).toBeVisible();
     });
 
     const NetworkingIPStackRadios = screen.getAllByRole('radio');
@@ -140,7 +140,7 @@ describe('VPC Top Section form content', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Networking IP Stack')).toBeVisible();
+      expect(screen.getByText('IP Stack')).toBeVisible();
     });
 
     const NetworkingIPStackRadios = screen.getAllByRole('radio');
