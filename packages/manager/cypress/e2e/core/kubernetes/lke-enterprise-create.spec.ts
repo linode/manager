@@ -15,6 +15,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 import {
   mockCreateCluster,
+  mockCreateClusterError,
   mockGetKubernetesVersions,
   mockGetLKEClusterTypes,
   mockGetTieredKubernetesVersions,
@@ -222,5 +223,72 @@ describe('LKE Cluster Creation with LKE-E', () => {
         });
       }
     );
+
+    const mockErrorMessage = 'VPC must be dual-stack for IPv4 + IPv6 clusters';
+    const mockSingleStackVpc = {
+      ...vpcFactory.build(),
+      id: selectedVpcId,
+      label: 'single-stack-vpc',
+      region: 'us-iad',
+      subnets: [
+        subnetFactory.build({
+          id: selectedSubnetId,
+          label: 'subnet-a',
+          ipv4: '10.0.0.0/13',
+        }),
+      ],
+    };
+
+    /*
+     * Surfaces an API errors (e.g. subnet is the wrong size)
+     */
+    it('surfaces API error when creating cluster with single-stack VPC and IPv4+IPv6 stack type', () => {
+      mockGetVPCs([mockSingleStackVpc]).as('getVPCs');
+      mockCreateClusterError(mockErrorMessage).as('createClusterError');
+
+      cy.findByLabelText('Cluster Label').type(clusterLabel);
+      cy.findByText('LKE Enterprise').click();
+      cy.wait(['@getLKEEnterpriseClusterTypes', '@getRegions']);
+
+      ui.regionSelect.find().clear().type('Washington, DC{enter}');
+      cy.wait('@getVPCs');
+
+      cy.findByTestId('isUsingOwnVpc').within(() => {
+        cy.findByLabelText('Use an existing VPC').click();
+      });
+
+      ui.autocomplete.findByLabel('VPC').click();
+      cy.findByText('single-stack-vpc').click();
+      ui.autocomplete.findByLabel('Subnet').click();
+      cy.findByText(/subnet-a/).click();
+
+      cy.findByLabelText('IPv4 + IPv6 (dual-stack)').click();
+
+      // Bypass ACL validation
+      cy.get('input[name="acl-acknowledgement"]').check();
+
+      // Select a plan and add nodes
+      cy.findByText(clusterPlans[0].tab).should('be.visible').click();
+      cy.findByText(clusterPlans[0].planName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[name="Quantity"]').should('be.visible').click();
+          cy.focused().type(`{selectall}${clusterPlans[0].nodeCount}`);
+
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+        ui.button.findByTitle('Create Cluster').click();
+      });
+
+      cy.wait('@createClusterError');
+      cy.findByText(mockErrorMessage).should('be.visible');
+    });
   });
 });
