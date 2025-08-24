@@ -8,22 +8,17 @@ import { LinodeVolumeAttachForm } from './LinodeVolumeAttachForm';
 import { LinodeVolumeCreateForm } from './LinodeVolumeCreateForm';
 import { ModeSelection } from './ModeSelection';
 
-import type { Linode, PickPermissions, Volume } from '@linode/api-v4';
-
-export type AddVolumeDrawerPermissions = PickPermissions<
-  'attach_volume' | 'create_volume'
->;
+import type { Linode, Volume } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
   onClose: () => void;
   open: boolean;
   openDetails: (volume: Volume) => void;
-  permissions: Record<AddVolumeDrawerPermissions, boolean>;
 }
 
 export const LinodeVolumeAddDrawer = (props: Props) => {
-  const { linode, onClose, open, openDetails, permissions } = props;
+  const { linode, onClose, open, openDetails } = props;
 
   const [mode, setMode] = React.useState<'attach' | 'create'>('create');
 
@@ -59,11 +54,7 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
           : `Create Volume for ${linode.label}`
       }
     >
-      <ModeSelection
-        mode={mode}
-        onChange={toggleMode}
-        permissions={permissions}
-      />
+      <ModeSelection mode={mode} onChange={toggleMode} />
       {isBlockStorageEncryptionFeatureEnabled &&
         !linodeSupportsBlockStorageEncryption &&
         clientLibraryCopyVisible && (

@@ -31,10 +31,6 @@ describe('LinodeVolumeAddDrawer', () => {
         onClose={vi.fn}
         open
         openDetails={() => vi.fn}
-        permissions={{
-          attach_volume: true,
-          create_volume: true,
-        }}
       />,
       {
         flags: { blockStorageEncryption: true },

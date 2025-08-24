@@ -1,17 +1,14 @@
 import { FormControlLabel, Radio, RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
-import type { AddVolumeDrawerPermissions } from './LinodeVolumeAddDrawer';
-
 type Mode = 'attach' | 'create';
 
 interface Props {
   mode: Mode;
   onChange: (value: Mode) => void;
-  permissions: Record<AddVolumeDrawerPermissions, boolean>;
 }
 
-export const ModeSelection = ({ mode, onChange, permissions }: Props) => {
+export const ModeSelection = ({ mode, onChange }: Props) => {
   return (
     <RadioGroup
       aria-label="mode"
@@ -22,7 +19,6 @@ export const ModeSelection = ({ mode, onChange, permissions }: Props) => {
       <FormControlLabel
         control={<Radio />}
         data-qa-radio="Create and Attach Volume"
-        disabled={!permissions.create_volume}
         label="Create and Attach Volume"
         value="create"
       />

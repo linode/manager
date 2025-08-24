@@ -42,7 +42,6 @@ export const LinodeVolumes = () => {
 
   const { data: linode } = useLinodeQuery(id);
   const { data: volumePermissions } = usePermissions('account', [
-    'attach_volume',
     'create_volume',
   ]);
 
@@ -205,15 +204,10 @@ export const LinodeVolumes = () => {
         <Typography variant="h3">Volumes</Typography>
         <Button
           buttonType="primary"
-          disabled={!volumePermissions?.attach_volume}
+          disabled={!volumePermissions?.create_volume}
           onClick={handleCreateVolume}
           tooltipText={
-            // This is for the Create Volume Drawer, which has two options:
-            // - create and attach a new volume
-            // - attach an existing volume.
-            // If the user does not have permission to attach a volume, there is nothing they can do in here, which is why we use this permission check.
-            // However, since they may also not be able to create a volume, which we check in the drawer.
-            !volumePermissions?.attach_volume
+            !volumePermissions?.create_volume
               ? 'You do not have permission to create volumes.'
               : undefined
           }
@@ -273,7 +267,6 @@ export const LinodeVolumes = () => {
           onClose={() => setIsCreateDrawerOpen(false)}
           open={isCreateDrawerOpen}
           openDetails={handleDetails}
-          permissions={volumePermissions}
         />
       )}
       <VolumeDetailsDrawer
