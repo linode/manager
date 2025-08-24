@@ -14,6 +14,6 @@ export const volumeGrantsToPermissions = (
     detach_volume: unrestricted || grantLevel === 'read_write',
     resize_volume: unrestricted || grantLevel === 'read_write',
     update_volume: unrestricted || grantLevel === 'read_write',
-    view_volume: unrestricted || grantLevel === 'read_write',
+    view_volume: unrestricted || grantLevel !== null,
   };
 };

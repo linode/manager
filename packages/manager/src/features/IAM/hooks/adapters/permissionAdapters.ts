@@ -25,29 +25,29 @@ export const entityPermissionMapFrom = (
   const entityPermissionsMap: EntityPermissionMap = {};
   if (grants) {
     grants[grantType]?.forEach((entity) => {
+      /** Entity Permissions Maps */
+      const firewallPermissionsMap = firewallGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+      const linodePermissionsMap = linodeGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+      const volumePermissionsMap = volumeGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+
+      /** Add entity permissions to map */
       switch (grantType) {
         case 'firewall':
-          // eslint-disable-next-line no-case-declarations
-          const firewallPermissionsMap = firewallGrantsToPermissions(
-            entity?.permissions,
-            profile?.restricted
-          ) as PermissionMap;
           entityPermissionsMap[entity.id] = firewallPermissionsMap;
           break;
         case 'linode':
-          // eslint-disable-next-line no-case-declarations
-          const linodePermissionsMap = linodeGrantsToPermissions(
-            entity?.permissions,
-            profile?.restricted
-          ) as PermissionMap;
           entityPermissionsMap[entity.id] = linodePermissionsMap;
           break;
         case 'volume':
-          // eslint-disable-next-line no-case-declarations
-          const volumePermissionsMap = volumeGrantsToPermissions(
-            entity?.permissions,
-            profile?.restricted
-          ) as PermissionMap;
           entityPermissionsMap[entity.id] = volumePermissionsMap;
           break;
       }
@@ -64,8 +64,14 @@ export const fromGrants = (
   isRestricted?: boolean,
   entityId?: number
 ): PermissionMap => {
+  /** Find the entity in the grants */
+  const firewall = grants?.firewall.find((f) => f.id === entityId);
+  const linode = grants?.linode.find((f) => f.id === entityId);
+  const volume = grants?.volume.find((f) => f.id === entityId);
+
   let usersPermissionsMap = {} as PermissionMap;
 
+  /** Convert the entity permissions to the new IAM RBAC model */
   switch (accessType) {
     case 'account':
       usersPermissionsMap = accountGrantsToPermissions(
@@ -74,24 +80,18 @@ export const fromGrants = (
       ) as PermissionMap;
       break;
     case 'firewall':
-      // eslint-disable-next-line no-case-declarations
-      const firewall = grants?.firewall.find((f) => f.id === entityId);
       usersPermissionsMap = firewallGrantsToPermissions(
         firewall?.permissions,
         isRestricted
       ) as PermissionMap;
       break;
     case 'linode':
-      // eslint-disable-next-line no-case-declarations
-      const linode = grants?.linode.find((f) => f.id === entityId);
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
         isRestricted
       ) as PermissionMap;
       break;
     case 'volume':
-      // eslint-disable-next-line no-case-declarations
-      const volume = grants?.volume.find((f) => f.id === entityId);
       usersPermissionsMap = volumeGrantsToPermissions(
         volume?.permissions,
         isRestricted
