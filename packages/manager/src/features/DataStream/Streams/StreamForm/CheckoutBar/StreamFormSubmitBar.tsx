@@ -2,19 +2,24 @@ import { Box, Button, Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
-import { StyledHeader } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar.styles';
+import {
+  getDestinationTypeOption,
+  isFormInEditMode,
+} from 'src/features/DataStream/dataStreamUtils';
+import { StyledHeader } from 'src/features/DataStream/Streams/StreamForm/CheckoutBar/StreamFormCheckoutBar.styles';
 
-import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { FormMode } from 'src/features/DataStream/Shared/types';
+import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
-type StreamCreateSidebarProps = {
-  createStream: () => void;
+type StreamFormSubmitBarProps = {
+  mode: FormMode;
+  onSubmit: () => void;
 };
 
-export const StreamCreateSubmitBar = (props: StreamCreateSidebarProps) => {
-  const { createStream } = props;
+export const StreamFormSubmitBar = (props: StreamFormSubmitBarProps) => {
+  const { onSubmit, mode } = props;
 
-  const { control } = useFormContext<CreateStreamAndDestinationForm>();
+  const { control } = useFormContext<StreamAndDestinationFormType>();
   const destinationType = useWatch({ control, name: 'destination.type' });
 
   return (
@@ -32,7 +37,7 @@ export const StreamCreateSubmitBar = (props: StreamCreateSidebarProps) => {
         <Button
           buttonType="primary"
           data-qa-deploy-linode
-          onClick={createStream}
+          onClick={onSubmit}
           sx={(theme) => ({
             mt: `${theme.spacingFunction(24)} !important`,
             [theme.breakpoints.down('lg')]: {
@@ -40,7 +45,7 @@ export const StreamCreateSubmitBar = (props: StreamCreateSidebarProps) => {
             },
           })}
         >
-          Create Stream
+          {isFormInEditMode(mode) ? 'Edit' : 'Create'} Stream
         </Button>
       </Stack>
     </Paper>
