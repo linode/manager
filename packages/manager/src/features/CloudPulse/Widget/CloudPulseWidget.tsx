@@ -61,6 +61,11 @@ export interface CloudPulseWidgetProperties {
   availableMetrics: MetricDefinition | undefined;
 
   /**
+   * ID of the selected dashboard
+   */
+  dashboardId: number;
+
+  /**
    * time duration to fetch the metrics data in this widget
    */
   duration: DateTimeWithPreset;
@@ -143,6 +148,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const {
     additionalFilters,
+    dashboardId,
     ariaLabel,
     authToken,
     availableMetrics,
