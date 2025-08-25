@@ -36,16 +36,18 @@ interface UsePermissionsProps<T extends readonly PermissionType[]> {
   accessType: AccessType;
   enabled?: boolean;
   entityId?: number;
+  limitedAvailabilityOnly?: boolean;
   permissionsToCheck: T;
 }
 
 export const usePermissions = <T extends readonly PermissionType[]>({
   accessType,
-  permissionsToCheck,
-  entityId,
   enabled = true,
+  entityId,
+  limitedAvailabilityOnly = false,
+  permissionsToCheck,
 }: UsePermissionsProps<T>): PermissionsResult<T> => {
-  const { isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
   const { data: userAccountPermissions, ...restAccountPermissions } =
     useUserAccountPermissions(
@@ -61,7 +63,16 @@ export const usePermissions = <T extends readonly PermissionType[]>({
   const { data: profile } = useProfile();
   const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
-  const permissionMap = isIAMEnabled
+  /**
+   * The following logic serves the permission model assignment:
+   * - If the user is IAM enabled (via useIsIAMEnabled)
+   *   - During beta: only serve non-LA features (laOnly === false)
+   *   - After beta (LA phase): serve all features including LA-only ones
+   */
+  const shouldUseIamPermissions =
+    isIAMEnabled && (isIAMBeta ? limitedAvailabilityOnly === false : true);
+
+  const permissionMap = shouldUseIamPermissions
     ? toPermissionMap(
         permissionsToCheck,
         usersPermissions!,
