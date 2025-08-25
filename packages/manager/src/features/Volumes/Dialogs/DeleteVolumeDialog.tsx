@@ -49,7 +49,7 @@ export const DeleteVolumeDialog = (props: Props) => {
       onClick={onDelete}
       onClose={onClose}
       open={open}
-      title={`Delete Volume ${volume?.label ?? 'Unknown'}?`}
+      title={`Delete Volume${volume ? ` ${volume.label}` : ''}?`}
       typographyStyle={{ marginTop: '10px' }}
     />
   );

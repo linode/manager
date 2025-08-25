@@ -12,6 +12,12 @@ const mockSupportTicketFormFields: SupportTicketFormFields = {
   selectedSeverity: undefined,
   summary: 'My Summary',
   ticketType: 'general',
+  title: 'My Title',
+  formPayloadValues: {},
+  entity: {
+    id: undefined,
+    type: 'none',
+  },
 };
 
 const mockSupportTicketCustomFormFields: SMTPCustomFields = {

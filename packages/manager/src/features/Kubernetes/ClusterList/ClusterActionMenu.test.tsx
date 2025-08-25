@@ -4,7 +4,6 @@ import { fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { resizeScreenSize, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ClusterActionMenu } from './ClusterActionMenu';
@@ -30,7 +29,6 @@ const props = {
   clusterLabel: 'my-cluster',
   enqueueSnackbar: vi.fn(),
   openDialog: vi.fn(),
-  ...reactRouterProps,
 };
 
 describe('Kubernetes cluster action menu', () => {

@@ -165,7 +165,7 @@ export const CloudPulseCustomSelect = React.memo(
     });
 
     React.useEffect(() => {
-      if (!selectedResource) {
+      if (!selectedResource && !disabled) {
         setResource(
           getInitialDefaultSelections({
             defaultValue,
@@ -180,7 +180,7 @@ export const CloudPulseCustomSelect = React.memo(
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savePreferences, options, apiV4QueryKey, queriedResources]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
+    }, [savePreferences, options, apiV4QueryKey, queriedResources, disabled]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
 
     const handleChange = (
       _: React.SyntheticEvent,

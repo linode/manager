@@ -1,5 +1,6 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { ui } from 'support/ui';
 import { parseCsv } from 'support/util/csv';
 
 import { accountMaintenanceFactory } from 'src/factories';
@@ -26,6 +27,8 @@ describe('Maintenance', () => {
 
     // TODO When the Host & VM Maintenance feature rolls out, we want to enable the feature flag and update the test.
     mockAppendFeatureFlags({
+      // TODO M3-10491 - Remove "iamRbacPrimaryNavChanges" feature flag mock once feature flag is deleted.
+      iamRbacPrimaryNavChanges: true,
       vmHostMaintenance: {
         enabled: false,
       },
@@ -37,14 +40,18 @@ describe('Maintenance', () => {
 
     cy.visitWithLogin('/linodes');
     cy.wait('@getFeatureFlags');
-    // user can navigate to account maintenance page via user menu.
-    cy.findByTestId('nav-group-profile').click();
-    cy.findByTestId('menu-item-Maintenance')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-    cy.url().should('endWith', '/account/maintenance');
 
+    // User can navigate to maintenance page via user menu.
+    ui.userMenuButton.find().should('be.visible').click();
+
+    ui.userMenu
+      .find()
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Maintenance').should('be.visible').click();
+      });
+
+    cy.url().should('endWith', '/maintenance');
     cy.wait('@getMaintenance');
 
     // Confirm correct messages shown in the table when no maintenance.

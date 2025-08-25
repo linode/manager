@@ -23,8 +23,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -65,12 +65,12 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     linode?.region ?? ''
   );
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linodeID,
-  });
-
+  // TODO: Update to check share_ips, assign_ips, update_ip_rdns, and allocate_linode_ip_address permissions once available
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeID
+  );
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
   const { isUnreachablePublicIPv4, isUnreachablePublicIPv6, interfaceWithVPC } =
@@ -95,6 +95,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const [isViewRDNSDialogOpen, setIsViewRDNSDialogOpen] = React.useState(false);
   const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(false);
+
+  const ipAddressesTableRef = React.useRef<HTMLTableElement>(null);
+
+  React.useEffect(() => {
+    if (ipAddressesTableRef.current && location.hash === `#${ipTableId}`) {
+      ipAddressesTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.hash]);
 
   const openRemoveIPDialog = (ip: IPAddress) => {
     setSelectedIP(ip);
@@ -182,19 +191,22 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               ...(showAddIPButton
                 ? [
                     {
-                      disabled: isLinodesGrantReadOnly,
+                      // TODO: change to allocate_linode_ip_address permission
+                      disabled: !permissions.update_linode,
                       onClick: () => setIsAddDrawerOpen(true),
                       title: 'Add an IP Address',
                     },
                   ]
                 : []),
               {
-                disabled: isLinodesGrantReadOnly,
+                // TODO: change to assign_ips permission
+                disabled: !permissions.update_linode,
                 onClick: () => setIsTransferDialogOpen(true),
                 title: 'IP Transfer',
               },
               {
-                disabled: isLinodesGrantReadOnly,
+                // TODO: change to share_ips permission
+                disabled: !permissions.update_linode,
                 onClick: () => setIsShareDialogOpen(true),
                 title: 'IP Sharing',
               },
@@ -205,14 +217,16 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
           <Stack direction="row" spacing={1}>
             <Button
               buttonType="secondary"
-              disabled={isLinodesGrantReadOnly}
+              // TODO: change to assign_ips permission
+              disabled={!permissions.update_linode}
               onClick={() => setIsTransferDialogOpen(true)}
             >
               IP Transfer
             </Button>
             <Button
               buttonType="secondary"
-              disabled={isLinodesGrantReadOnly}
+              // TODO: change to share_ips permission
+              disabled={!permissions.update_linode}
               onClick={() => setIsShareDialogOpen(true)}
             >
               IP Sharing
@@ -220,7 +234,8 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             {showAddIPButton && (
               <Button
                 buttonType="primary"
-                disabled={isLinodesGrantReadOnly}
+                // TODO: change to allocate_linode_ip_address permission
+                disabled={!permissions.update_linode}
                 onClick={() => setIsAddDrawerOpen(true)}
               >
                 Add an IP Address
@@ -230,7 +245,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
-      <Table aria-label="Linode IP Addresses" id={ipTableId}>
+      <Table
+        aria-label="Linode IP Addresses"
+        id={ipTableId}
+        ref={ipAddressesTableRef}
+      >
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: '15%' }}>Address</TableCell>
@@ -259,7 +278,8 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               isUnreachablePublicIPv6={isUnreachablePublicIPv6}
               key={`${ipDisplay.address}-${ipDisplay.type}`}
               linodeId={linodeID}
-              readOnly={isLinodesGrantReadOnly}
+              // TODO: change to update_ip_rdns permission
+              readOnly={!permissions.update_linode}
             />
           ))}
         </TableBody>
@@ -296,19 +316,22 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         linodeIsInDistributedRegion={linodeIsInDistributedRegion}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
-        readOnly={isLinodesGrantReadOnly}
+        // TODO: change to allocate_linode_ip_address permission
+        readOnly={!permissions.update_linode}
       />
       <IPTransfer
         linodeId={linodeID}
         onClose={() => setIsTransferDialogOpen(false)}
         open={isTransferDialogOpen}
-        readOnly={isLinodesGrantReadOnly}
+        // TODO: change to assign_ips permission
+        readOnly={!permissions.update_linode}
       />
       <IPSharing
         linodeId={linodeID}
         onClose={() => setIsShareDialogOpen(false)}
         open={isShareDialogOpen}
-        readOnly={isLinodesGrantReadOnly}
+        readOnly={!permissions.update_linode}
+        // TODO: change to share_ips permission
       />
       {selectedIP && (
         <DeleteIPDialog

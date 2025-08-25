@@ -62,7 +62,7 @@ export const VPCDeleteDialog = (props: Props) => {
       onClick={onDeleteVPC}
       onClose={onClose}
       open={open}
-      title={`Delete VPC ${vpc?.label ?? 'Unknown'}`}
+      title={`Delete VPC${vpc ? ` ${vpc.label}` : ''}`}
     />
   );
 };

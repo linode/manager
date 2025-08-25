@@ -1,8 +1,16 @@
+import { createDestinationSchema } from '@linode/validation';
+
 import { BETA_API_ROOT } from '../constants';
-import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
-import type { Destination } from './types';
+import type { CreateDestinationPayload, Destination } from './types';
 
 /**
  * Returns all the information about a specified Destination.
@@ -28,4 +36,16 @@ export const getDestinations = (params?: Params, filter?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
+  );
+
+/**
+ * Adds a new Destination.
+ *
+ * @param data { object } Data for type, label, etc.
+ */
+export const createDestination = (data: CreateDestinationPayload) =>
+  Request<Destination>(
+    setData(data, createDestinationSchema),
+    setURL(`${BETA_API_ROOT}/monitor/streams/destinations`),
+    setMethod('POST'),
   );

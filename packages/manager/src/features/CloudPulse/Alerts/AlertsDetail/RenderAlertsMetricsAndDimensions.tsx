@@ -1,5 +1,4 @@
 import { Divider } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { GridLegacy } from '@mui/material';
 import React from 'react';
 
@@ -11,8 +10,12 @@ import {
   metricOperatorTypeMap,
 } from '../constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
+import { transformCommaSeperatedDimensionValues } from './utils';
 
-import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
+import type {
+  AlertDefinitionMetricCriteria,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 interface AlertMetricAndDimensionsProp {
   /*
@@ -21,11 +24,16 @@ interface AlertMetricAndDimensionsProp {
   ruleCriteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  /**
+   * The service type of the alert for which the criteria needs to be displayed
+   */
+  serviceType: CloudPulseServiceType;
 }
 
+const transformationAllowedOperators = ['eq', 'neq', 'in'];
 export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
-    const { ruleCriteria } = props;
+    const { ruleCriteria, serviceType } = props;
 
     if (!ruleCriteria.rules?.length) {
       return <NullComponent />;
@@ -66,12 +74,19 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                 values={dimensionFilters.map(
                   ({
                     label: dimensionLabel,
+                    dimension_label: dimensionFilterKey,
                     operator: dimensionOperator,
                     value,
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    capitalize(value),
+                    transformationAllowedOperators.includes(dimensionOperator)
+                      ? transformCommaSeperatedDimensionValues(
+                          value,
+                          serviceType,
+                          dimensionFilterKey
+                        )
+                      : value,
                   ]
                 )}
               />

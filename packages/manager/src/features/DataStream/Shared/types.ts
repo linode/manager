@@ -1,12 +1,13 @@
-import {
-  type DestinationType,
-  destinationType,
-  type LinodeObjectStorageDetails,
-} from '@linode/api-v4';
+import { destinationType, streamStatus } from '@linode/api-v4';
 
-import type { CustomHTTPsDetails } from '@linode/api-v4';
+import type { CreateDestinationPayload } from '@linode/api-v4';
 
 export interface DestinationTypeOption {
+  label: string;
+  value: string;
+}
+
+export interface LabelValueOption {
   label: string;
   value: string;
 }
@@ -22,8 +23,15 @@ export const destinationTypeOptions: DestinationTypeOption[] = [
   },
 ];
 
-export interface CreateDestinationForm {
-  details: CustomHTTPsDetails | LinodeObjectStorageDetails;
-  label: string;
-  type: DestinationType;
-}
+export const streamStatusOptions = [
+  {
+    value: streamStatus.Active,
+    label: 'Enabled',
+  },
+  {
+    value: streamStatus.Inactive,
+    label: 'Disabled',
+  },
+];
+
+export type CreateDestinationForm = CreateDestinationPayload;

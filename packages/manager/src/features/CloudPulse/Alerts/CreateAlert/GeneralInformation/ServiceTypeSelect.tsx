@@ -14,7 +14,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface CloudPulseServiceSelectProps {
   /**
@@ -29,7 +29,10 @@ interface CloudPulseServiceSelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType | null>;
+  name: FieldPathByValue<
+    CreateAlertDefinitionForm,
+    CloudPulseServiceType | null
+  >;
 }
 
 export const CloudPulseServiceSelect = (
@@ -42,18 +45,24 @@ export const CloudPulseServiceSelect = (
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
   const getServicesList = React.useMemo((): Item<
     string,
-    AlertServiceType
+    CloudPulseServiceType
   >[] => {
+    // Return only the service types that are enabled in the aclpServices flag
     return serviceOptions?.data?.length
-      ? serviceOptions.data.map((service) => ({
-          label: service.label,
-          value: service.service_type as AlertServiceType,
-        }))
+      ? serviceOptions.data
+          .filter(
+            (service) =>
+              aclpServices?.[service.service_type]?.alerts?.enabled ?? false
+          )
+          .map((service) => ({
+            label: service.label,
+            value: service.service_type,
+          }))
       : [];
-  }, [serviceOptions]);
+  }, [aclpServices, serviceOptions]);
 
   return (
     <Controller
@@ -73,7 +82,7 @@ export const CloudPulseServiceSelect = (
           onBlur={field.onBlur}
           onChange={(
             _,
-            selected: { label: string; value: AlertServiceType },
+            selected: { label: string; value: CloudPulseServiceType },
             reason
           ) => {
             if (selected) {
@@ -92,8 +101,10 @@ export const CloudPulseServiceSelect = (
             const { key, ...rest } = props;
             return (
               <ListItem {...rest} data-qa-option key={key}>
-                <Box flexGrow={1}>{option.label}</Box>{' '}
-                {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
+                <Box data-qa-id={option.value} flexGrow={1} gap={0.5}>
+                  {option.label}
+                </Box>
+                {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                 <SelectedIcon visible={selected} />
               </ListItem>
             );

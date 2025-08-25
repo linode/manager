@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
@@ -43,11 +43,11 @@ export const LinodeRebuildForm = (props: Props) => {
 
   const [type, setType] = useState<LinodeRebuildType>('Image');
 
-  const isLinodeReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linode.id,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['rebuild_linode'],
+    linode.id
+  );
 
   const { data: isTypeToConfirmEnabled } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true
@@ -127,7 +127,7 @@ export const LinodeRebuildForm = (props: Props) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
-          {isLinodeReadOnly && <LinodePermissionsError />}
+          {!permissions.rebuild_linode && <LinodePermissionsError />}
           {form.formState.errors.root && (
             <Notice text={form.formState.errors.root.message} variant="error" />
           )}
@@ -150,7 +150,7 @@ export const LinodeRebuildForm = (props: Props) => {
             }}
           >
             <RebuildFromSelect
-              disabled={isLinodeReadOnly}
+              disabled={!permissions.rebuild_linode}
               setType={setType}
               type={type}
             />
@@ -167,21 +167,21 @@ export const LinodeRebuildForm = (props: Props) => {
               <StackScriptSelectionList type="Community" />
             )}
             {type.includes('StackScript') && <UserDefinedFields />}
-            <Image disabled={isLinodeReadOnly} />
-            <Password disabled={isLinodeReadOnly} />
-            <SSHKeys disabled={isLinodeReadOnly} />
+            <Image disabled={!permissions.rebuild_linode} />
+            <Password disabled={!permissions.rebuild_linode} />
+            <SSHKeys disabled={!permissions.rebuild_linode} />
             <DiskEncryption
-              disabled={isLinodeReadOnly}
+              disabled={!permissions.rebuild_linode}
               isLKELinode={linode.lke_cluster_id !== null}
               linodeRegion={linode.region}
             />
-            <UserData disabled={isLinodeReadOnly} linode={linode} />
+            <UserData disabled={!permissions.rebuild_linode} linode={linode} />
             <Confirmation
-              disabled={isLinodeReadOnly}
+              disabled={!permissions.rebuild_linode}
               linodeLabel={linode.label}
             />
           </Stack>
-          <Actions disabled={isLinodeReadOnly} />
+          <Actions disabled={!permissions.rebuild_linode} />
         </Stack>
       </form>
     </FormProvider>

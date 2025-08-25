@@ -53,7 +53,7 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create OAuth App">
+    <Drawer onClose={onClose} open={open} title="Edit OAuth App">
       {hasErrorFor('none') && (
         <Notice text={hasErrorFor('none')} variant="error" />
       )}

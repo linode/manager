@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { destinationType } from '@linode/api-v4';
+import { useCreateDestinationMutation } from '@linode/queries';
 import { Autocomplete, Box, Button, Paper, TextField } from '@linode/ui';
 import { createDestinationSchema } from '@linode/validation';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -12,12 +14,15 @@ import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtil
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
 
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { CreateDestinationForm } from 'src/features/DataStream/Shared/types';
 
 export const DestinationCreate = () => {
   const theme = useTheme();
+  const { mutateAsync: createDestination } = useCreateDestinationMutation();
+  const navigate = useNavigate();
 
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream/destinations/create',
       crumbOverrides: [
@@ -49,7 +54,12 @@ export const DestinationCreate = () => {
     name: 'type',
   });
 
-  const onSubmit = handleSubmit(async () => {});
+  const onSubmit = () => {
+    const payload = form.getValues();
+    createDestination(payload).then(() => {
+      navigate({ to: '/datastream/destinations' });
+    });
+  };
 
   return (
     <>
@@ -57,7 +67,7 @@ export const DestinationCreate = () => {
       <LandingHeader {...landingHeaderProps} />
       <Paper>
         <FormProvider {...form}>
-          <form id="createDestinationForm" onSubmit={onSubmit}>
+          <form id="createDestinationForm" onSubmit={handleSubmit(onSubmit)}>
             <Controller
               control={control}
               name="type"

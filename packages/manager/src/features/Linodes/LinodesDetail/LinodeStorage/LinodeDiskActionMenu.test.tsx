@@ -157,6 +157,13 @@ describe('LinodeDiskActionMenu', () => {
   });
 
   it('should disable Resize and Delete when the Linode is running', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        ...queryMocks.userPermissions().data,
+        resize_linode: true,
+        delete_linode: true,
+      },
+    });
     const { getAllByLabelText, getByLabelText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
@@ -169,7 +176,7 @@ describe('LinodeDiskActionMenu', () => {
 
     expect(
       getAllByLabelText(
-        'Your Linode must be fully powered down in order to perform this action'
+        'Your Linode must be fully powered down in order to perform this action.'
       )
     ).toHaveLength(2);
   });

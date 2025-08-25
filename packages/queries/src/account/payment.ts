@@ -2,7 +2,6 @@ import { addPaymentMethod, makeDefaultPaymentMethod } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
-import { useGrants } from '../profile';
 import { accountQueries } from './queries';
 
 import type {
@@ -12,13 +11,11 @@ import type {
   PaymentMethodPayload,
 } from '@linode/api-v4';
 
-export const useAllPaymentMethodsQuery = () => {
-  const { data: grants } = useGrants();
-
+export const useAllPaymentMethodsQuery = (enabled: boolean) => {
   return useQuery<PaymentMethod[], APIError[]>({
     ...accountQueries.paymentMethods,
     ...queryPresets.oneTimeFetch,
-    enabled: grants?.global?.account_access !== null,
+    enabled,
   });
 };
 

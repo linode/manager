@@ -15,7 +15,7 @@ export interface LinodeMaintenance {
   status?:
     | 'canceled'
     | 'completed'
-    | 'in-progress'
+    | 'in_progress'
     | 'pending'
     | 'scheduled'
     | 'started';

@@ -4,47 +4,17 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { CookieWarning } from 'src/components/CookieWarning';
-import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import 'src/exceptionReporting';
 import { SplashScreen } from 'src/components/SplashScreen';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import './index.css';
+import { App } from './App';
 import { ENABLE_DEV_TOOLS } from './constants';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-
-const Lish = React.lazy(() => import('src/features/Lish'));
-
-const App = React.lazy(() =>
-  import('./App').then((module) => ({
-    default: module.App,
-  }))
-);
-
-const CancelLanding = React.lazy(() =>
-  import('src/features/CancelLanding/CancelLanding').then((module) => ({
-    default: module.CancelLanding,
-  }))
-);
-
-const Logout = React.lazy(() =>
-  import('./OAuth/Logout').then((module) => ({
-    default: module.Logout,
-  }))
-);
-
-const LoginAsCustomerCallback = React.lazy(() =>
-  import('src/OAuth/LoginAsCustomerCallback').then((module) => ({
-    default: module.LoginAsCustomerCallback,
-  }))
-);
-const OAuthCallback = React.lazy(() =>
-  import('src/OAuth/OAuthCallback').then((m) => ({ default: m.OAuthCallback }))
-);
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -62,38 +32,7 @@ const Main = () => {
         <LinodeThemeWrapper>
           <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
-            <Router>
-              <Snackbar
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                autoHideDuration={4000}
-                hideIconVariant={false}
-                maxSnack={3}
-              >
-                <React.Suspense fallback={<SplashScreen />}>
-                  <Switch>
-                    <Route
-                      component={OAuthCallback}
-                      exact
-                      path="/oauth/callback"
-                    />
-                    <Route
-                      component={LoginAsCustomerCallback}
-                      exact
-                      path="/admin/callback"
-                    />
-                    <Route component={Logout} exact path="/logout" />
-                    <Route component={CancelLanding} exact path="/cancel" />
-                    <Route component={Logout} exact path="/logout" />
-                    <Route component={CancelLanding} exact path="/cancel" />
-                    <Route
-                      component={Lish}
-                      path="/linodes/:linodeId/lish/:type"
-                    />
-                    <Route component={App} />
-                  </Switch>
-                </React.Suspense>
-              </Snackbar>
-            </Router>
+            <App />
           </React.Suspense>
         </LinodeThemeWrapper>
       </QueryClientProvider>
@@ -102,7 +41,7 @@ const Main = () => {
 };
 
 async function loadApp() {
-  if (ENABLE_DEV_TOOLS) {
+  if (ENABLE_DEV_TOOLS && !window.location.pathname.includes('/lish/')) {
     const devTools = await import('./dev-tools/load');
     await devTools.loadDevTools();
 

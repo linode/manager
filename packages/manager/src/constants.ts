@@ -286,3 +286,7 @@ export const DISALLOWED_IMAGE_REGIONS = [
   'sg-sin-2',
   'jp-tyo-3',
 ];
+
+// Default tooltip text for actions without permission
+export const NO_PERMISSION_TOOLTIP_TEXT =
+  'You do not have permission to perform this action.';

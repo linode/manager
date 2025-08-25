@@ -280,7 +280,7 @@ describe('OAuth Apps', () => {
         cy.findByText('Edit').should('be.visible').click();
       });
     ui.drawer
-      .findByTitle('Create OAuth App')
+      .findByTitle('Edit OAuth App')
       .should('be.visible')
       .within(() => {
         ui.buttonGroup
@@ -299,7 +299,7 @@ describe('OAuth Apps', () => {
       .within(() => {
         cy.findByText('Edit').should('be.visible').click();
       });
-    ui.drawer.findByTitle('Create OAuth App').should('be.visible');
+    ui.drawer.findByTitle('Edit OAuth App').should('be.visible');
     ui.drawerCloseButton.find().click();
 
     // Confirm edition.
@@ -317,7 +317,7 @@ describe('OAuth Apps', () => {
     mockGetOAuthApps(updatedApps).as('getUpdatedOAuthApps');
     mockUpdateOAuthApps(updatedApps[0].id, updatedApps).as('updateOAuthApp');
     ui.drawer
-      .findByTitle('Create OAuth App')
+      .findByTitle('Edit OAuth App')
       .should('be.visible')
       .within(() => {
         // If there is no changes, the 'save' button should disabled

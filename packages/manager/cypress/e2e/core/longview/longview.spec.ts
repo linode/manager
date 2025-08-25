@@ -14,7 +14,6 @@ import {
   mockUpdateLongviewClient,
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 
 import {
@@ -132,10 +131,6 @@ const longviewGetLatestValueInstalled = longviewResponseFactory.build({
 
 authenticate();
 describe('longview', () => {
-  before(() => {
-    cleanUp(['linodes', 'longview-clients']);
-  });
-
   /*
    * - Tests Longview installation end-to-end using mock API data.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
@@ -380,8 +375,8 @@ describe('longview', () => {
         .findByTitle(`Action menu for Longview Client ${client.label}`)
         .should('be.visible')
         .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     });
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
     // Confirms that Cloud Manager UI has delete warning message and can cancel deletion.
     ui.dialog
@@ -397,8 +392,8 @@ describe('longview', () => {
       ui.actionMenu
         .findByTitle(`Action menu for Longview Client ${client.label}`)
         .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     });
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog.findByTitle(`Delete ${client.label}?`).within(() => {
       ui.buttonGroup

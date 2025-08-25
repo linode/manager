@@ -1,4 +1,4 @@
-import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { acceptServiceTransfer } from '@linode/api-v4';
 import {
   entityTransfersQueryKey,
   TRANSFER_FILTERS,
@@ -27,8 +27,7 @@ import {
   StyledUl,
 } from './ConfirmTransferDialog.styles';
 
-import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, TransferEntities } from '@linode/api-v4/lib/types';
 
 export interface ConfirmTransferDialogProps {
   onClose: () => void;
@@ -80,7 +79,7 @@ export const ConfirmTransferDialog = React.memo(
       }
       setSubmissionErrors(null);
       setSubmitting(true);
-      acceptEntityTransfer(token)
+      acceptServiceTransfer(token)
         .then(() => {
           // @analytics
           if (data?.entities) {

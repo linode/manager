@@ -44,8 +44,8 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   metric: Factory.each((i) => `widget_metric_${i}`),
   namespace_id: Factory.each((i) => i % 10),
   region_id: Factory.each((i) => i % 5),
-  service_type: 'default',
-  serviceType: 'default',
+  service_type: 'linode',
+  serviceType: 'linode',
   size: 12,
   time_duration: {
     unit: 'min',

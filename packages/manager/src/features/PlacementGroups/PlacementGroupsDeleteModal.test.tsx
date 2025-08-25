@@ -74,7 +74,7 @@ describe('PlacementGroupsDeleteModal', () => {
 
     expect(
       getByRole('heading', {
-        name: 'Delete Placement Group PG-to-delete',
+        name: 'Delete Placement Group PG-to-delete?',
       })
     ).toBeInTheDocument();
     expect(

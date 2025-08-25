@@ -14,6 +14,8 @@ import type { Region } from '@linode/api-v4';
 import type { useRegionsQuery } from '@linode/queries';
 
 const props: CloudPulseRegionSelectProps = {
+  filterKey: 'region',
+  selectedEntities: [],
   handleRegionChange: vi.fn(),
   label: 'Region',
   selectedDashboard: undefined,
@@ -151,13 +153,6 @@ describe('CloudPulseRegionSelect', () => {
       isLoading: false,
     });
     renderWithTheme(<CloudPulseRegionSelect {...props} />);
-
-    expect(queryMocks.useResourcesQuery).toHaveBeenLastCalledWith(
-      false,
-      undefined,
-      {},
-      {}
-    ); // use resources should have called with enabled false since the region call failed
 
     const errorMessage = screen.getByText('Failed to fetch Region.'); // should show regions failure only
 

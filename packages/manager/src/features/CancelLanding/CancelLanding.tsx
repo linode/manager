@@ -1,7 +1,7 @@
 import { Button, H1Header, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { redirect, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-color.svg';
@@ -37,13 +37,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
-  const location = useLocation<{ survey_link?: string }>();
+  const search = useSearch({ from: '/cancel' });
   const theme = useTheme();
 
-  const surveyLink = location.state?.survey_link;
+  const surveyLink = search.survey_link;
 
   if (!surveyLink) {
-    return <Redirect to="/" />;
+    throw redirect({ to: '/' });
   }
 
   const goToSurvey = () => {

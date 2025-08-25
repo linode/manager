@@ -10,7 +10,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
 import {
   sendCreateAccessKeyEvent,
@@ -53,7 +53,11 @@ export const AccessKeyLanding = (props: Props) => {
     openAccessDrawer,
   } = props;
 
-  const pagination = usePagination(1);
+  const pagination = usePaginationV2({
+    currentRoute: '/object-storage/access-keys',
+    initialPage: 1,
+    preferenceKey: 'object-storage-keys-table',
+  });
 
   const { data, error, isLoading, refetch } = useObjectStorageAccessKeys({
     page: pagination.page,

@@ -42,6 +42,10 @@ describe('UsersActionMenu', () => {
       <UsersActionMenu
         isProxyUser={true}
         onDelete={mockOnDelete}
+        permissions={{
+          is_account_admin: true,
+          delete_user: true,
+        }}
         username="test_user"
       />
     );
@@ -78,6 +82,10 @@ describe('UsersActionMenu', () => {
       <UsersActionMenu
         isProxyUser={false}
         onDelete={mockOnDelete}
+        permissions={{
+          is_account_admin: true,
+          delete_user: true,
+        }}
         username="test_user"
       />
     );
@@ -130,6 +138,10 @@ describe('UsersActionMenu', () => {
       <UsersActionMenu
         isProxyUser={false}
         onDelete={mockOnDelete}
+        permissions={{
+          is_account_admin: true,
+          delete_user: true,
+        }}
         username="current_user"
       />
     );

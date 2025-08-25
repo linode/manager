@@ -8,9 +8,15 @@ import { TableCell } from 'src/components/TableCell';
 
 export const StyledPaginationFooter = styled(PaginationFooter, {
   label: 'StyledPaginationFooter',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ disabled?: boolean }>(({ theme, disabled }) => ({
   marginBottom: theme.spacing(),
   padding: theme.spacing(),
+  ...(disabled && {
+    '&.MuiButtonBase-root': {
+      cursor: 'not-allowed',
+    },
+  }),
 }));
 
 export const StyledTypography = styled(Typography, {

@@ -20,7 +20,6 @@ describe('LinodeEntityDetailBody', () => {
     interfaceGeneration: 'linode',
     ipv4: ['192.0.2.1'],
     ipv6: '2600:0000:0000:0000:0000:0000:0000:0000',
-    isLKELinode: false,
     isUnreachablePublicIPv4: false,
     isUnreachablePublicIPv6: false,
     linodeCapabilities: [],
@@ -31,7 +30,6 @@ describe('LinodeEntityDetailBody', () => {
     numCPUs: 2,
     numVolumes: 0,
     region: 'us-east',
-    regionSupportsDiskEncryption: false,
   };
 
   it('does not render VPC section if linode is not assigned to a VPC', () => {

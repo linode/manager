@@ -5,9 +5,13 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
+import { getAllDashboards, getEnabledServiceTypes } from '../Utils/utils';
 
-import type { Dashboard, FilterValue } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dashboard,
+  FilterValue,
+} from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
   /**
@@ -48,10 +52,18 @@ export const CloudPulseDashboardSelect = React.memo(
       isLoading: serviceTypesLoading,
     } = useCloudPulseServiceTypes(true);
 
-    const { aclpBetaServices } = useFlags();
-    const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
-    const serviceTypeMap: Map<string, string> = new Map(
-      serviceTypesList?.data.map((item) => [item.service_type, item.label])
+    const { aclpServices } = useFlags();
+
+    // Get formatted enabled service types based on the LD flag
+    const serviceTypes: CloudPulseServiceType[] = getEnabledServiceTypes(
+      serviceTypesList,
+      aclpServices
+    );
+
+    const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
+      (serviceTypesList?.data || [])
+        .filter((item) => item?.service_type !== undefined)
+        .map((item) => [item.service_type, item.label ?? ''])
     );
 
     const {
@@ -125,10 +137,18 @@ export const CloudPulseDashboardSelect = React.memo(
         placeholder={placeHolder}
         renderGroup={(params) => (
           <Box key={params.key}>
-            <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.get(params.group) || params.group}{' '}
-              {aclpBetaServices?.[params.group]?.metrics && <BetaChip />}
-            </Typography>
+            <Box display="flex">
+              <Typography
+                data-qa-id={params.group}
+                sx={{ marginLeft: '3.5%' }}
+                variant="h3"
+              >
+                {serviceTypeMap.get(params.group as CloudPulseServiceType) ||
+                  params.group}
+              </Typography>
+              {aclpServices?.[params.group as CloudPulseServiceType]?.metrics
+                ?.beta && <BetaChip />}
+            </Box>
             {params.children}
           </Box>
         )}

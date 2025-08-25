@@ -34,7 +34,7 @@ interface FooterProps {
   isLoadingKubernetesACL: boolean;
   setControlPlaneACLDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sx?: SxProps;
-  vpcId: number | undefined;
+  vpcId: null | number | undefined;
 }
 
 export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {

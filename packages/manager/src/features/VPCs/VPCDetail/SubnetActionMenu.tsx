@@ -14,7 +14,6 @@ interface SubnetActionHandlers {
 }
 
 interface Props extends SubnetActionHandlers {
-  isVPCLKEEnterpriseCluster: boolean;
   numLinodes: number;
   numNodebalancers: number;
   subnet: Subnet;
@@ -27,7 +26,6 @@ export const SubnetActionMenu = (props: Props) => {
     handleDelete,
     handleEdit,
     handleUnassignLinodes,
-    isVPCLKEEnterpriseCluster,
     numLinodes,
     numNodebalancers,
     subnet,
@@ -37,35 +35,31 @@ export const SubnetActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      disabled: isVPCLKEEnterpriseCluster,
       onClick: () => {
         handleAssignLinodes(subnet);
       },
       title: 'Assign Linodes',
     },
     {
-      disabled: isVPCLKEEnterpriseCluster,
       onClick: () => {
         handleUnassignLinodes(subnet);
       },
       title: 'Unassign Linodes',
     },
     {
-      disabled: isVPCLKEEnterpriseCluster,
       onClick: () => {
         handleEdit(subnet);
       },
       title: 'Edit',
     },
     {
-      disabled:
-        numLinodes !== 0 || numNodebalancers !== 0 || isVPCLKEEnterpriseCluster,
+      disabled: numLinodes !== 0 || numNodebalancers !== 0,
       onClick: () => {
         handleDelete(subnet);
       },
       title: 'Delete',
       tooltip:
-        !isVPCLKEEnterpriseCluster && (numLinodes > 0 || numNodebalancers > 0)
+        numLinodes > 0 || numNodebalancers > 0
           ? `${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'} assigned to a subnet must be unassigned before the subnet can be deleted.`
           : '',
     },

@@ -1,3 +1,26 @@
+## [2025-08-26] - v0.147.0
+
+
+### Added:
+
+- ACLP: `CloudPulseServiceType` type for type safety across cloudpulse  ([#12646](https://github.com/linode/manager/pull/12646))
+
+### Changed:
+
+- Replace deprecated apis from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
+- IAM RBAC Update `getAccountEntities` API call with params ([#12762](https://github.com/linode/manager/pull/12762))
+
+### Removed:
+
+- Delete `ConfigInterfaceIPv6` and use `IPv6Interface` instead ([#12612](https://github.com/linode/manager/pull/12612))
+
+### Upcoming Features:
+
+- API endpoint for Datastream - Create Destination ([#12627](https://github.com/linode/manager/pull/12627))
+- Updated AccontMaintenance interface to make time fields nullable to match API ([#12665](https://github.com/linode/manager/pull/12665))
+- Update  `KubernetesCluster` `vpc_id` and `subnet_id` types to include `null` ([#12700](https://github.com/linode/manager/pull/12700))
+- CloudPulse: Update cloud pulse metrics request payload type at `types.ts` ([#12704](https://github.com/linode/manager/pull/12704))
+
 ## [2025-08-12] - v0.146.0
 
 

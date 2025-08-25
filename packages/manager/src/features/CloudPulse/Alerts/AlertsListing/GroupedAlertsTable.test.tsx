@@ -9,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
-import type { Alert, AlertServiceType } from '@linode/api-v4';
+import type { Alert, CloudPulseServiceType } from '@linode/api-v4';
 import type { GroupedBy } from '@linode/utilities';
 
 const mockScrollToElement = vi.hoisted(() => vi.fn());
@@ -22,7 +22,7 @@ const mockHandleDetails = vi.fn();
 const mockHandleEdit = vi.fn();
 const mockHandleStatusChange = vi.fn();
 const mockHandleDelete = vi.fn();
-const mockServices: Item<string, AlertServiceType>[] = [
+const mockServices: Item<string, CloudPulseServiceType>[] = [
   { label: 'Linode', value: 'linode' },
   { label: 'Databases', value: 'dbaas' },
 ];

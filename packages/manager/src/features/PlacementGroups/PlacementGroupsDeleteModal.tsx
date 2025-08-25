@@ -116,7 +116,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       onClick={onDelete}
       onClose={handleClose}
       open={open}
-      title={`Delete Placement Group ${selectedPlacementGroup?.label ?? 'Unknown'}`}
+      title={`Delete Placement Group${selectedPlacementGroup ? ` ${selectedPlacementGroup.label}` : ''}?`}
     >
       {error && (
         <Notice

@@ -1,3 +1,4 @@
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { pages } from 'support/ui/constants';
 
 import type { Page } from 'support/ui/constants';
@@ -8,6 +9,10 @@ beforeEach(() => {
 describe('smoke - deep links', () => {
   beforeEach(() => {
     cy.visitWithLogin('/null');
+    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: true,
+    }).as('getFeatureFlags');
   });
 
   it('Go to each route and validate deep links', () => {

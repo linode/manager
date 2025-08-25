@@ -1,6 +1,6 @@
-import { Link as TanstackLink } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { Link as TanstackLink } from 'src/components/Link';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 

@@ -36,10 +36,16 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     cy.wrap(mockRegions).as('mockRegions');
     mockGetRegions(mockRegions).as('getRegions');
     mockAppendFeatureFlags({
-      aclpBetaServices: {
+      aclpServices: {
         linode: {
-          alerts: true,
-          metrics: false,
+          alerts: {
+            beta: true,
+            enabled: true,
+          },
+          metrics: {
+            beta: false,
+            enabled: false,
+          },
         },
       },
     }).as('getFeatureFlags');
@@ -453,7 +459,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 });
 
-describe('aclpBetaServices feature flag disabled', function () {
+describe('aclpServices feature flag disabled', function () {
   it('Alerts not present when feature flag disabled', function () {
     const mockEnabledRegion = regionFactory.build({
       capabilities: ['Linodes'],
@@ -465,10 +471,16 @@ describe('aclpBetaServices feature flag disabled', function () {
     cy.wrap(mockRegions).as('mockRegions');
     mockGetRegions(mockRegions).as('getRegions');
     mockAppendFeatureFlags({
-      aclpBetaServices: {
+      aclpServices: {
         linode: {
-          alerts: false,
-          metrics: false,
+          alerts: {
+            beta: false,
+            enabled: false,
+          },
+          metrics: {
+            beta: false,
+            enabled: false,
+          },
         },
       },
     }).as('getFeatureFlags');

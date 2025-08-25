@@ -18,6 +18,7 @@ import { StreamCreateClusters } from './StreamCreateClusters';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
 
 import type { CreateStreamPayload } from '@linode/api-v4';
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type {
   CreateStreamAndDestinationForm,
   CreateStreamForm,
@@ -50,7 +51,7 @@ export const StreamCreate = () => {
     name: 'stream.type',
   });
 
-  const landingHeaderProps = {
+  const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream/streams/create',
       crumbOverrides: [

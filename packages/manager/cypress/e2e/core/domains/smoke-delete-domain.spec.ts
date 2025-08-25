@@ -36,8 +36,11 @@ describe('Delete a Domain', () => {
               .findByTitle(`Action menu for Domain ${domain.domain}`)
               .should('be.visible')
               .click();
+            ui.actionMenuItem
+              .findByTitle('Delete')
+              .should('be.visible')
+              .click();
           });
-        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
         // Cancel deletion when prompted to confirm.
         ui.dialog
@@ -60,8 +63,11 @@ describe('Delete a Domain', () => {
               .findByTitle(`Action menu for Domain ${domain.domain}`)
               .should('be.visible')
               .click();
+            ui.actionMenuItem
+              .findByTitle('Delete')
+              .should('be.visible')
+              .click();
           });
-        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
         // Confirm deletion.
         ui.dialog

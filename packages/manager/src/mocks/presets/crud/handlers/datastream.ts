@@ -58,14 +58,13 @@ export const createStreams = (mockState: MockState) => [
     '*/v4beta/monitor/streams',
     async ({ request }): Promise<StrictResponse<APIErrorResponse | Stream>> => {
       const payload = await request.clone().json();
+      const destinations = await mswDB.getAll('destinations');
+
       const stream = streamFactory.build({
         label: payload['label'],
         type: payload['type'],
         destinations: payload['destinations'].map((destinationId: number) =>
-          destinationFactory.build({
-            id: destinationId,
-            label: `Destination ${destinationId}`,
-          })
+          destinations?.find(({ id }) => id === destinationId)
         ),
         details: payload['details'],
         created: DateTime.now().toISO(),
@@ -101,8 +100,14 @@ export const getDestinations = () => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Destination>>
     > => {
+      const destinations = await mswDB.getAll('destinations');
+
+      if (!destinations) {
+        return makeNotFoundResponse();
+      }
+
       return makePaginatedResponse({
-        data: destinationFactory.buildList(5),
+        data: destinations,
         request,
       });
     }
@@ -118,6 +123,42 @@ export const getDestinations = () => [
       if (!destination) {
         return makeNotFoundResponse();
       }
+
+      return makeResponse(destination);
+    }
+  ),
+];
+
+export const createDestinations = (mockState: MockState) => [
+  http.post(
+    '*/v4beta/monitor/streams/destinations',
+    async ({
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
+      const payload = await request.clone().json();
+      const destination = destinationFactory.build({
+        label: payload['label'],
+        type: payload['type'],
+        details: payload['details'],
+        created: DateTime.now().toISO(),
+        updated: DateTime.now().toISO(),
+      });
+
+      await mswDB.add('destinations', destination, mockState);
+
+      queueEvents({
+        event: {
+          action: 'destination_create',
+          entity: {
+            id: destination.id,
+            label: destination.label,
+            type: 'destination',
+            url: `/v4beta/datastream/streams/destinations`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
 
       return makeResponse(destination);
     }

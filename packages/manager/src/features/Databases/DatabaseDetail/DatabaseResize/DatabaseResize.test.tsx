@@ -1,4 +1,4 @@
-import { regionAvailabilityFactory, regionFactory } from '@linode/utilities';
+import { regionAvailabilityFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -40,6 +40,15 @@ const mockDedicatedTypes = [
     id: 'g6-dedicated-4',
     label: 'Dedicated 8 GB',
     memory: 8192,
+  }),
+];
+
+const mockPremiumTypes = [
+  databaseTypeFactory.build({
+    class: 'premium',
+    id: 'premium-32',
+    label: `DBaaS - Premium 32 GB`,
+    memory: 1024,
   }),
 ];
 
@@ -161,20 +170,16 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
-      const location = window.location;
-      window.location = {
-        ...location,
-        pathname: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
-      } as any;
-
       const { getByRole, getByTestId } = renderWithTheme(
         <DatabaseDetailContext.Provider
           value={{ database: mockDatabase, engine, isResizeEnabled }}
         >
           <DatabaseResize />
         </DatabaseDetailContext.Provider>,
-        { flags }
+        {
+          flags,
+          initialRoute: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
+        }
       );
 
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -519,6 +524,104 @@ describe('database resize', () => {
     });
   });
 
+  describe('on rendering resize when databaseRestrictPlanResize feature flag is enabled', () => {
+    beforeEach(() => {
+      const standardTypes = [
+        databaseTypeFactory.build({
+          class: 'nanode',
+          id: 'g6-nanode-1',
+          label: `Nanode 1 GB`,
+          memory: 1024,
+        }),
+      ];
+      server.use(
+        http.get('*/databases/types', () => {
+          return HttpResponse.json(
+            makeResourcePage([
+              ...mockDedicatedTypes,
+              ...standardTypes,
+              ...mockPremiumTypes,
+            ])
+          );
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build();
+          return HttpResponse.json(account);
+        })
+      );
+    });
+
+    it('should disable Premium Plans Tab when database is on a shared plan', async () => {
+      const mockFlags = { databaseRestrictPlanResize: true };
+
+      const sharedPlanDatabase = databaseFactory.build({
+        type: 'g6-nanode-1',
+        platform: 'rdbms-default',
+      });
+
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseDetailContext.Provider
+          value={{ database: sharedPlanDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
+        { flags: mockFlags }
+      );
+      const loadingElement = getByTestId(loadingTestId);
+      expect(loadingElement).toBeInTheDocument();
+      await waitForElementToBeRemoved(loadingElement);
+      expect(getByText('Premium CPU')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should disable Premium Plans Tab when database is on a dedicated plan', async () => {
+      const mockFlags = { databaseRestrictPlanResize: true };
+
+      const dedicatedPlanDatabase = databaseFactory.build({
+        type: 'g6-dedicated-2',
+        platform: 'rdbms-default',
+      });
+
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseDetailContext.Provider
+          value={{ database: dedicatedPlanDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
+        { flags: mockFlags }
+      );
+      const loadingElement = getByTestId(loadingTestId);
+      expect(loadingElement).toBeInTheDocument();
+      await waitForElementToBeRemoved(loadingElement);
+      expect(getByText('Premium CPU')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should disable Dedicated and Shared Plans Tabs when database is on a premium plan', async () => {
+      const mockFlags = { databaseRestrictPlanResize: true };
+
+      const premiumPlanDatabase = databaseFactory.build({
+        type: 'premium-32',
+        platform: 'rdbms-default',
+      });
+
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseDetailContext.Provider
+          value={{ database: premiumPlanDatabase, engine, isResizeEnabled }}
+        >
+          <DatabaseResize />
+        </DatabaseDetailContext.Provider>,
+        { flags: mockFlags }
+      );
+      const loadingElement = getByTestId(loadingTestId);
+      expect(loadingElement).toBeInTheDocument();
+      await waitForElementToBeRemoved(loadingElement);
+      expect(getByText('Dedicated CPU')).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+      expect(getByText('Shared CPU')).toHaveAttribute('aria-disabled', 'true');
+    });
+  });
+
   describe('on rendering of page and databasePremium flag is true and the current plan for the cluster is unavailable', () => {
     beforeEach(() => {
       // Mock database types
@@ -530,23 +633,6 @@ describe('database resize', () => {
           memory: 1024,
         }),
       ];
-      const premiumTypes = [
-        databaseTypeFactory.build({
-          class: 'premium',
-          id: 'premium-32',
-          label: `DBaaS - Premium 32 GB`,
-          memory: 1024,
-        }),
-      ];
-
-      const mockRegion = regionFactory.build({
-        capabilities: ['VPCs'],
-        id: 'us-east',
-        label: 'Newark, NJ',
-      });
-      queryMocks.useRegionQuery.mockReturnValue({
-        data: mockRegion,
-      });
 
       server.use(
         http.get('*/databases/types', () => {
@@ -554,7 +640,7 @@ describe('database resize', () => {
             makeResourcePage([
               ...mockDedicatedTypes,
               ...standardTypes,
-              ...premiumTypes,
+              ...mockPremiumTypes,
             ])
           );
         }),

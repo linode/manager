@@ -8,6 +8,7 @@ import {
   mockGetPaymentMethods,
   mockGetPayments,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile, mockUpdateProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
@@ -47,12 +48,10 @@ const navigateToBilling = () => {
     .find()
     .should('be.visible')
     .within(() => {
-      cy.findByText('Billing & Contact Information')
-        .should('be.visible')
-        .click();
+      cy.findByText('Billing').should('be.visible').click();
     });
 
-  cy.url().should('endWith', '/account/billing');
+  cy.url().should('endWith', '/billing');
 };
 
 /**
@@ -117,6 +116,12 @@ const assertPaymentInfo = (payment: Payment, timezone: string) => {
 
 authenticate();
 describe('Billing Activity Feed', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+      iamRbacPrimaryNavChanges: true,
+    });
+  });
   /*
    * - Uses mocked API data to confirm that invoices and payments are listed on billing page.
    * - Confirms that invoice and payment labels, dates, and totals are displayed as expected.
@@ -163,7 +168,7 @@ describe('Billing Activity Feed', () => {
 
     cy.defer(() => getProfile()).then((profile: Profile) => {
       const timezone = profile.timezone;
-      cy.visitWithLogin('/account/billing');
+      cy.visitWithLogin('/billing');
       cy.wait(['@getInvoices', '@getPayments']);
       cy.findByText('Billing & Payment History')
         .as('qaBilling')
@@ -266,7 +271,7 @@ describe('Billing Activity Feed', () => {
     mockGetPayments([]).as('getPayments');
     mockGetPaymentMethods([]).as('getPaymentMethods');
 
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/billing');
     cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
 
     // Change invoice date selection from "6 Months" to "All Time".

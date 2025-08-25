@@ -84,7 +84,7 @@ describe('Placement Group deletion', () => {
     ).as('deletePlacementGroupError');
 
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Placement Group').type(mockPlacementGroup.label);
@@ -106,7 +106,7 @@ describe('Placement Group deletion', () => {
 
     // Confirm deletion warning appears, complete Type-to-Confirm, and submit confirmation.
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.findByText(deletionWarning).should('be.visible');
@@ -197,7 +197,7 @@ describe('Placement Group deletion', () => {
     ).as('UnassignPlacementGroupError');
 
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.get('[data-qa-selection-list]').within(() => {
@@ -223,7 +223,7 @@ describe('Placement Group deletion', () => {
     // Confirm deletion warning appears and that form cannot be submitted
     // while Linodes are assigned.
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.findByText(deletionWarning).should('be.visible');
@@ -346,7 +346,7 @@ describe('Placement Group deletion', () => {
 
     // The dialog can be closed after an unexpect error show up
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Placement Group').type(mockPlacementGroup.label);
@@ -366,9 +366,9 @@ describe('Placement Group deletion', () => {
           .should('be.enabled')
           .click();
       });
-    cy.findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`).should(
-      'not.exist'
-    );
+    cy.findByTitle(
+      `Delete Placement Group ${mockPlacementGroup.label}?`
+    ).should('not.exist');
 
     // Click "Delete" button next to the mock Placement Group,
     // mock a successful response and confirm that Cloud
@@ -389,7 +389,7 @@ describe('Placement Group deletion', () => {
 
     // Confirm deletion warning appears, complete Type-to-Confirm, and submit confirmation.
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         // ensure error message not exist when reopening the dialog
@@ -472,7 +472,7 @@ describe('Placement Group deletion', () => {
     ).as('UnassignPlacementGroupError');
 
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.get('[data-qa-selection-list]').within(() => {
@@ -501,9 +501,9 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
-    cy.findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`).should(
-      'not.exist'
-    );
+    cy.findByTitle(
+      `Delete Placement Group ${mockPlacementGroup.label}?`
+    ).should('not.exist');
 
     // Click "Delete" button next to the mock Placement Group to reopen the dialog.
     cy.findByText(mockPlacementGroup.label)
@@ -519,7 +519,7 @@ describe('Placement Group deletion', () => {
 
     // Confirm that the error message from the previous attempt is no longer present.
     ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}?`)
       .should('be.visible')
       .within(() => {
         cy.findByText(PlacementGroupErrorMessage).should('not.exist');

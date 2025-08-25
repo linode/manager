@@ -1,13 +1,14 @@
-import { useDataStreamsQuery } from '@linode/queries';
+import { useStreamsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { DataStreamTabHeader } from 'src/features/DataStream/Shared/DataStreamTabHeader/DataStreamTabHeader';
+import { streamStatusOptions } from 'src/features/DataStream/Shared/types';
 import {
   STREAMS_TABLE_DEFAULT_ORDER,
   STREAMS_TABLE_DEFAULT_ORDER_BY,
@@ -20,9 +21,13 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 export const StreamsLanding = () => {
   const navigate = useNavigate();
-
+  const streamsUrl = '/datastream/streams';
+  const search = useSearch({
+    from: '/datastream/streams',
+    shouldThrow: false,
+  });
   const pagination = usePaginationV2({
-    currentRoute: '/datastream/streams',
+    currentRoute: streamsUrl,
     preferenceKey: STREAMS_TABLE_PREFERENCE_KEY,
   });
 
@@ -32,7 +37,7 @@ export const StreamsLanding = () => {
         order: STREAMS_TABLE_DEFAULT_ORDER,
         orderBy: STREAMS_TABLE_DEFAULT_ORDER_BY,
       },
-      from: '/datastream/streams',
+      from: streamsUrl,
     },
     preferenceKey: `streams-order`,
   });
@@ -40,19 +45,48 @@ export const StreamsLanding = () => {
   const filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(search?.label !== undefined && {
+      label: { '+contains': search?.label },
+    }),
+    ...(search?.status !== undefined && {
+      status: { '+contains': search?.status },
+    }),
   };
 
   const {
     data: streams,
     isLoading,
+    isFetching,
     error,
-  } = useDataStreamsQuery(
+  } = useStreamsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
     filter
   );
+
+  const onSearch = (label: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        label: label ? label : undefined,
+      }),
+      to: streamsUrl,
+    });
+  };
+
+  const onSelect = (status: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        status: status ? status : undefined,
+      }),
+      to: streamsUrl,
+    });
+  };
 
   const navigateToCreate = () => {
     navigate({ to: '/datastream/streams/create' });
@@ -76,8 +110,14 @@ export const StreamsLanding = () => {
     <>
       <DataStreamTabHeader
         entity="Stream"
+        isSearching={isFetching}
         loading={isLoading}
         onButtonClick={navigateToCreate}
+        onSearch={onSearch}
+        onSelect={onSelect}
+        searchValue={search?.label ?? ''}
+        selectList={streamStatusOptions}
+        selectValue={search?.status}
       />
       <Table>
         <TableHead>

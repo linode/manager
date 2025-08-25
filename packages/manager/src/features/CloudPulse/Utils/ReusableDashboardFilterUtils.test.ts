@@ -132,7 +132,7 @@ it('test checkIfFilterBuilderNeeded method', () => {
   result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
     id: -1,
-    service_type: '',
+    service_type: 'linode',
   });
   expect(result).toBe(false); // should be false for empty / undefined case
 

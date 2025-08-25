@@ -1,3 +1,10 @@
+## [2025-08-26] - v0.19.0
+
+
+### Changed:
+
+- Update sort icon tokens to use separate Default, Hover, and Active tokens for each table header type ([#12728](https://github.com/linode/manager/pull/12728))
+
 ## [2025-08-12] - v0.18.0
 
 

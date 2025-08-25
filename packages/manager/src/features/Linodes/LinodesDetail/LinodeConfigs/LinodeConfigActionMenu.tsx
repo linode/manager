@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
@@ -28,20 +29,22 @@ export const ConfigActionMenu = (props: Props) => {
     isOpen
   );
 
-  const tooltip = !permissions.delete_linode
-    ? "You don't have permission to perform this action"
-    : undefined;
-
   const actions: Action[] = [
     {
       disabled: !permissions.reboot_linode,
       onClick: onBoot,
       title: 'Boot',
+      tooltip: !permissions.reboot_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
       disabled: !permissions.update_linode,
       onClick: onEdit,
       title: 'Edit',
+      tooltip: !permissions.update_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
       disabled: !permissions.clone_linode,
@@ -55,12 +58,17 @@ export const ConfigActionMenu = (props: Props) => {
         });
       },
       title: 'Clone',
+      tooltip: !permissions.clone_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
       disabled: !permissions.delete_linode,
       onClick: onDelete,
       title: 'Delete',
-      tooltip,
+      tooltip: !permissions.delete_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
   ];
 

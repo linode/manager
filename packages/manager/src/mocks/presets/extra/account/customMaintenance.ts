@@ -30,6 +30,10 @@ const mockCustomMaintenance = () => {
           const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
           const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
 
+          if (statusA === null || statusB === null) {
+            return 0;
+          }
+
           if (statusA < statusB) {
             return -1;
           }

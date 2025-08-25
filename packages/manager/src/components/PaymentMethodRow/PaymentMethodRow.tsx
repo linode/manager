@@ -8,6 +8,7 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
@@ -39,13 +40,15 @@ export const PaymentMethodRow = (props: Props) => {
   const { is_default, type } = paymentMethod;
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const flags = useFlags();
 
   const { mutateAsync: makePaymentMethodDefault } =
     useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
-    'update_account',
+    'set_default_payment_method',
+    'delete_payment_method',
   ]);
 
   const makeDefault = () => {
@@ -62,7 +65,7 @@ export const PaymentMethodRow = (props: Props) => {
       disabled: isChildUser || !permissions.make_billing_payment,
       onClick: () => {
         navigate({
-          to: '/account/billing',
+          to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
           search: (prev) => ({
             ...prev,
             action: 'make-payment',
@@ -74,7 +77,9 @@ export const PaymentMethodRow = (props: Props) => {
     },
     {
       disabled:
-        isChildUser || !permissions.update_account || paymentMethod.is_default,
+        isChildUser ||
+        !permissions.set_default_payment_method ||
+        paymentMethod.is_default,
       onClick: makeDefault,
       title: 'Make Default',
       tooltip: paymentMethod.is_default
@@ -83,7 +88,9 @@ export const PaymentMethodRow = (props: Props) => {
     },
     {
       disabled:
-        isChildUser || !permissions.update_account || paymentMethod.is_default,
+        isChildUser ||
+        !permissions.delete_payment_method ||
+        paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default

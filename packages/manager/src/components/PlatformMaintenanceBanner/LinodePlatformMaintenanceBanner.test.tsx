@@ -10,7 +10,6 @@ const queryMocks = vi.hoisted(() => ({
   useNotificationsQuery: vi.fn().mockReturnValue({}),
   useAllAccountMaintenanceQuery: vi.fn().mockReturnValue({}),
   useLinodeQuery: vi.fn().mockReturnValue({}),
-  useLocation: vi.fn(),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -21,17 +20,8 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: queryMocks.useLocation,
-  };
-});
-
 beforeEach(() => {
   vi.stubEnv('TZ', 'UTC');
-  queryMocks.useLocation.mockReturnValue({ pathname: '/linodes' });
 });
 
 describe('LinodePlatformMaintenanceBanner', () => {
@@ -161,9 +151,6 @@ describe('LinodePlatformMaintenanceBanner', () => {
       }),
     });
 
-    // Mock location to be on a different page
-    queryMocks.useLocation.mockReturnValue({ pathname: '/linodes' });
-
     const { getByRole } = renderWithTheme(
       <LinodePlatformMaintenanceBanner linodeId={123} />
     );
@@ -200,11 +187,11 @@ describe('LinodePlatformMaintenanceBanner', () => {
       }),
     });
 
-    // Mock location to be on the linode detail page
-    queryMocks.useLocation.mockReturnValue({ pathname: '/linodes/123' });
-
     const { container, queryByRole } = renderWithTheme(
-      <LinodePlatformMaintenanceBanner linodeId={123} />
+      <LinodePlatformMaintenanceBanner linodeId={123} />,
+      {
+        initialRoute: '/linodes/123',
+      }
     );
 
     // Should show the label as plain text within the Typography component

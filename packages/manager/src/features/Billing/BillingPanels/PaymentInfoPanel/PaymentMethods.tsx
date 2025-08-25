@@ -49,7 +49,7 @@ const PaymentMethods = ({
     );
   }
 
-  if (!paymentMethods || paymentMethods?.length == 0) {
+  if (!paymentMethods || paymentMethods?.length === 0) {
     return (
       <Typography>
         No payment methods have been specified for this account.

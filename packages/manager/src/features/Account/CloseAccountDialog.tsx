@@ -2,9 +2,8 @@ import { cancelAccount } from '@linode/api-v4/lib/account';
 import { useProfile } from '@linode/queries';
 import { Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import {
@@ -24,7 +23,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
     React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
-  const history = useHistory();
+  const navigate = useNavigate();
   const { data: profile } = useProfile();
 
   React.useEffect(() => {
@@ -61,7 +60,10 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       .then((response) => {
         setIsClosingAccount(false);
         /** shoot the user off to survey monkey to answer some questions */
-        history.push('/cancel', { survey_link: response.survey_link });
+        navigate({
+          to: '/cancel',
+          search: { survey_link: response.survey_link },
+        });
       })
       .catch((e: APIError[]) => {
         setIsClosingAccount(false);
