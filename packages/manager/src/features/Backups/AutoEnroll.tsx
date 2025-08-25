@@ -21,9 +21,10 @@ interface AutoEnrollProps {
 export const AutoEnroll = (props: AutoEnrollProps) => {
   const { enabled, error, toggle } = props;
 
-  const { data: permissions } = usePermissions('account', [
-    'update_account_settings',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account_settings'],
+  });
   return (
     <Paper
       sx={(theme) => ({ backgroundColor: theme.palette.background.default })}

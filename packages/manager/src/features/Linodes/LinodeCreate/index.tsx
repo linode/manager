@@ -113,7 +113,10 @@ export const LinodeCreate = () => {
   const { handleLinodeCreateAnalyticsFormError } =
     useHandleLinodeCreateAnalyticsFormError(linodeCreateType ?? 'OS');
 
-  const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {

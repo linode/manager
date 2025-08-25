@@ -26,7 +26,10 @@ const APPS_MORE_LINKS_TEXT = 'See all Marketplace apps';
 export const LinodesLandingEmptyState = () => {
   const navigate = useNavigate();
 
-  const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
 
   return (
     <React.Fragment>

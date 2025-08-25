@@ -32,7 +32,10 @@ export const Images = () => {
   });
   const queryClient = useQueryClient();
 
-  const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
 
   const regionId = useWatch({ control, name: 'region' });
 

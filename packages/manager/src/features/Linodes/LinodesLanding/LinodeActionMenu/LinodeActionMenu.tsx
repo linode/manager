@@ -56,13 +56,14 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
 
-  const { data: accountPermissions } = usePermissions('account', [
-    'create_linode',
-  ]);
+  const { data: accountPermissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    [
+  const { data: permissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: [
       'shutdown_linode',
       'reboot_linode',
       'boot_linode',
@@ -74,8 +75,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       'delete_linode',
       'generate_linode_lish_token',
     ],
-    linodeId
-  );
+    entityId: linodeId,
+  });
 
   const handlePowerAction = () => {
     const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';

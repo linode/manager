@@ -43,15 +43,15 @@ export const LinodeBackups = () => {
   const navigate = useNavigate();
   const { isBareMetalInstance } = useLinodeDetailContext();
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    [
+  const { data: permissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: [
       'cancel_linode_backups',
       'create_linode_backup_snapshot',
       'enable_linode_backups',
     ],
-    linodeId
-  );
+    entityId: linodeId,
+  });
 
   const { data: linode } = useLinodeQuery(id);
   const { data: regions } = useRegionsQuery();

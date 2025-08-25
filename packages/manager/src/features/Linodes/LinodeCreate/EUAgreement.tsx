@@ -26,9 +26,10 @@ export const EUAgreement = () => {
 
   const { data: agreements } = useAccountAgreements(hasSelectedAnEURegion);
 
-  const { data: permissions } = usePermissions('account', [
-    'acknowledge_account_agreement',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['acknowledge_account_agreement'],
+  });
 
   if (hasSelectedAnEURegion && agreements?.eu_model === false) {
     return (

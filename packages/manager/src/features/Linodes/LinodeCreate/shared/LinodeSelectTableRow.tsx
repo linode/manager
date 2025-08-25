@@ -33,11 +33,11 @@ export const LinodeSelectTableRow = (props: Props) => {
 
   const region = regions?.find((r) => r.id === linode.region);
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    ['shutdown_linode', 'clone_linode'],
-    linode.id
-  );
+  const { data: permissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: ['shutdown_linode', 'clone_linode'],
+    entityId: linode.id,
+  });
 
   return (
     <TableRow disabled={!permissions.clone_linode} key={linode.label}>

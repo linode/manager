@@ -33,9 +33,10 @@ export const MaintenancePolicy = () => {
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
 
   const flags = useFlags();
-  const { data: permissions } = usePermissions('account', [
-    'update_account_settings',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account_settings'],
+  });
   const {
     control,
     formState: { isDirty, isSubmitting },

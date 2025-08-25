@@ -96,11 +96,11 @@ export const LinodeResize = (props: Props) => {
   const hostMaintenance = linode?.status === 'stopped';
   const isLinodeOffline = linode?.status === 'offline';
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    ['resize_linode'],
-    linodeId
-  );
+  const { data: permissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: ['resize_linode'],
+    entityId: linodeId,
+  });
 
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {

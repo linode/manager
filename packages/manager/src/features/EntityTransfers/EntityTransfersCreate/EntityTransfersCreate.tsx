@@ -34,9 +34,10 @@ export const EntityTransfersCreate = () => {
   const { error, isPending, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
 
-  const { data: permissions } = usePermissions('account', [
-    'create_service_transfer',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_service_transfer'],
+  });
 
   /**
    * Reducer and helpers for working with the payload/selection process

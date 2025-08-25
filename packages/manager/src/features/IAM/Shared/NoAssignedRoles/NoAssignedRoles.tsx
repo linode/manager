@@ -14,7 +14,10 @@ interface Props {
 export const NoAssignedRoles = (props: Props) => {
   const { text, hasAssignNewRoleDrawer } = props;
   const theme = useTheme();
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['is_account_admin'],
+  });
 
   const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
     React.useState<boolean>(false);

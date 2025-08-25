@@ -32,12 +32,19 @@ export type PermissionsResult<T extends readonly PermissionType[]> = {
   data: Record<T[number], boolean>;
 } & Omit<UseQueryResult<PermissionType[], APIError[]>, 'data'>;
 
-export const usePermissions = <T extends readonly PermissionType[]>(
-  accessType: AccessType,
-  permissionsToCheck: T,
-  entityId?: number,
-  enabled: boolean = true
-): PermissionsResult<T> => {
+interface UsePermissionsProps<T extends readonly PermissionType[]> {
+  accessType: AccessType;
+  enabled?: boolean;
+  entityId?: number;
+  permissionsToCheck: T;
+}
+
+export const usePermissions = <T extends readonly PermissionType[]>({
+  accessType,
+  permissionsToCheck,
+  entityId,
+  enabled = true,
+}: UsePermissionsProps<T>): PermissionsResult<T> => {
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const { data: userAccountPermissions, ...restAccountPermissions } =

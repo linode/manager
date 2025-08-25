@@ -69,7 +69,11 @@ describe('usePermissions', () => {
     const flags = { iam: { beta: true, enabled: true } };
 
     renderHook(
-      () => usePermissions('account', ['cancel_account', 'create_linode']),
+      () =>
+        usePermissions({
+          accessType: 'account',
+          permissionsToCheck: ['cancel_account', 'create_linode'],
+        }),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }
@@ -88,7 +92,12 @@ describe('usePermissions', () => {
     const flags = { iam: { beta: true, enabled: true } };
 
     renderHook(
-      () => usePermissions('linode', ['reboot_linode', 'view_linode'], 123),
+      () =>
+        usePermissions({
+          accessType: 'linode',
+          permissionsToCheck: ['reboot_linode', 'view_linode'],
+          entityId: 123,
+        }),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }
@@ -113,7 +122,11 @@ describe('usePermissions', () => {
 
     const flags = { iam: { beta: false, enabled: false } };
     renderHook(
-      () => usePermissions('account', ['cancel_account', 'create_linode']),
+      () =>
+        usePermissions({
+          accessType: 'account',
+          permissionsToCheck: ['cancel_account', 'create_linode'],
+        }),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }

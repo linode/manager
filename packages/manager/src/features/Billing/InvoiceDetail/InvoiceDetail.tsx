@@ -42,9 +42,10 @@ export const InvoiceDetail = () => {
       : '/account/billing/invoices/$invoiceId',
   });
   const theme = useTheme();
-  const { data: permissions } = usePermissions('account', [
-    'list_invoice_items',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['list_invoice_items'],
+  });
 
   const csvRef = React.useRef<any>(undefined);
 
