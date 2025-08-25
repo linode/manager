@@ -43,8 +43,8 @@ const mockCustomGrants = () => {
 
 export const customProfileAndGrantsPreset: MockPresetExtra = {
   desc: 'Custom Profile and Grants',
-  group: { id: 'Profile', type: 'profile' },
+  group: { id: 'Profile & Grants', type: 'profile & grants' },
   handlers: [mockCustomProfile, mockCustomGrants],
-  id: 'profile:custom',
+  id: 'profile-grants:custom',
   label: 'Custom Profile and Grants',
 };

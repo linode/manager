@@ -125,7 +125,7 @@ export const ExtraPresetOptions = ({
                 onTogglePreset={onTogglePreset}
               />
             )}
-            {currentGroupType === 'profile' && (
+            {currentGroupType === 'profile & grants' && (
               <ExtraPresetProfileAndGrants
                 customGrantsData={customGrantsData}
                 customProfileData={customProfileData}

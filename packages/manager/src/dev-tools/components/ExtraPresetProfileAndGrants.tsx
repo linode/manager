@@ -13,7 +13,9 @@ import { JsonTextArea } from './JsonTextArea';
 
 import type { Grants, Profile } from '@linode/api-v4';
 
-const profilePreset = extraMockPresets.find((p) => p.id === 'profile:custom');
+const profilePreset = extraMockPresets.find(
+  (p) => p.id === 'profile-grants:custom'
+);
 
 interface ExtraPresetProfileProps {
   customGrantsData: Grants | null | undefined;
@@ -167,7 +169,7 @@ export const ExtraPresetProfileAndGrants = ({
         <Dialog
           onClose={() => setIsEditingCustomProfile(false)}
           open={isEditingCustomProfile}
-          title="Edit Custom Profile"
+          title="Edit Custom Profile and Grants"
         >
           <form
             className="dev-tools__modal-form"
