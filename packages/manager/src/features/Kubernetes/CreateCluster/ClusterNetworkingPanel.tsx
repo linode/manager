@@ -59,11 +59,11 @@ export const ClusterNetworkingPanel = (props: Props) => {
             onChange={(e) => field.onChange(e.target.value)}
             value={field.value ?? null}
           >
-            <FormLabel>IP Version</FormLabel>
+            <FormLabel>IP Stack</FormLabel>
             <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
             <FormControlLabel
               control={<Radio />}
-              label="IPv4 + IPv6"
+              label="IPv4 + IPv6 (dual-stack)"
               value="ipv4-ipv6"
             />
           </RadioGroup>

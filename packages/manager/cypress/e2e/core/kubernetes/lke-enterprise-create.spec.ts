@@ -170,7 +170,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
           // Select either the IPv4 or IPv4 + IPv6 (dual-stack) IP Networking radio button
           cy.findByLabelText(
-            stackType === 'ipv4' ? 'IPv4' : 'IPv4 + IPv6'
+            stackType === 'ipv4' ? 'IPv4' : 'IPv4 + IPv6 (dual-stack)'
           ).click();
 
           // Select a plan and add nodes
