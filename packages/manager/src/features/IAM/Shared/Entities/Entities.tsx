@@ -1,17 +1,22 @@
+import { AccountEntity } from '@linode/api-v4';
 import { Autocomplete, Notice, TextField, Typography } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import { useTheme } from '@mui/material';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { useAccountEntities } from 'src/queries/entities/entities';
+import {
+  // useAccountEntities,
+  useAccountEntitiesInfinityQuery,
+} from 'src/queries/entities/entities';
 
 import { getFormattedEntityType } from '../utilities';
 import {
   getCreateLinkForEntityType,
-  getEntitiesByType,
+  // getEntitiesByType,
   getPlaceholder,
-  mapEntitiesToOptions,
+  // mapEntitiesToOptions,
 } from './utils';
 
 import type { DrawerModes, EntitiesOption } from '../types';
@@ -34,16 +39,69 @@ export const Entities = ({
   type,
   value,
 }: Props) => {
-  const { data: entities } = useAccountEntities();
+  const [entityNameInput, setEntityNameInput] = useState<string>('');
+  const debouncedEntityNameInput = useDebouncedValue(entityNameInput);
+
+  const entitySearchFilter = debouncedEntityNameInput
+    ? {
+        ['+and']: [
+          { 'entity.type': type },
+          { label: { ['+contains']: debouncedEntityNameInput } },
+        ],
+      }
+    : { type };
+  // const entitySearchFilter = debouncedEntityNameInput
+  //   ? {
+  //     ['+or']: [
+  //       { label: { ['+contains']: debouncedEntityNameInput } },
+  //     ],
+  //   }
+  //   : undefined;
+
+  const {
+    data: entities,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isLoading,
+  } = useAccountEntitiesInfinityQuery(
+    {
+      ...entitySearchFilter,
+      '+order': 'asc',
+      '+order_by': 'label',
+    },
+    true
+  );
+
   const theme = useTheme();
 
-  const memoizedEntities = React.useMemo(() => {
-    if (access !== 'entity_access' || !entities) {
-      return [];
+  // const memoizedEntities = React.useMemo(() => {
+  //   if (access !== 'entity_access' || !entities) {
+  //     return [];
+  //   }
+  //   // const typeEntities = getEntitiesByType(type, entities.data);
+  //   // return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
+  //   return entities;
+  // }, [entities, access, type]);
+
+  const getEntityOptions = useCallback(() => {
+    const ents = entities?.pages.flatMap((page) => page.data);
+    return ents?.map((ent: AccountEntity) => ({
+      label: ent.label,
+      value: ent.id,
+    }));
+  }, [entities]);
+
+  const handleScroll = (event: React.SyntheticEvent) => {
+    const listboxNode = event.currentTarget;
+    if (
+      listboxNode.scrollTop + listboxNode.clientHeight >=
+        listboxNode.scrollHeight &&
+      hasNextPage
+    ) {
+      fetchNextPage();
     }
-    const typeEntities = getEntitiesByType(type, entities.data);
-    return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
-  }, [entities, access, type]);
+  };
 
   if (access === 'account_access') {
     return (
@@ -70,21 +128,20 @@ export const Entities = ({
   return (
     <>
       <Autocomplete
-        disabled={!memoizedEntities.length}
         getOptionLabel={(option) => option.label}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Entities"
+        loading={isLoading || isFetching}
         multiple
         noMarginTop
         onChange={(_, newValue) => {
           onChange(newValue || []);
         }}
-        options={memoizedEntities}
-        placeholder={getPlaceholder(
-          type,
-          value.length,
-          memoizedEntities.length
-        )}
+        onInputChange={(_, value) => {
+          setEntityNameInput(value);
+        }}
+        options={getEntityOptions() || []}
+        placeholder={getPlaceholder(type, value.length, 1)}
         readOnly={mode === 'change-role'}
         renderInput={(params) => (
           <TextField
@@ -93,13 +150,14 @@ export const Entities = ({
             errorText={errorText}
             label="Entities"
             noMarginTop
-            placeholder={getPlaceholder(
-              type,
-              value.length,
-              memoizedEntities.length
-            )}
+            placeholder={getPlaceholder(type, value.length, 1)}
           />
         )}
+        slotProps={{
+          listbox: {
+            onScroll: handleScroll,
+          },
+        }}
         sx={{
           marginTop: 0,
           '& .MuiChip-root': {
@@ -119,7 +177,7 @@ export const Entities = ({
         }}
         value={value || []}
       />
-      {!memoizedEntities.length && (
+      {!getEntityOptions()?.length && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
