@@ -78,9 +78,12 @@ export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
   'Enter a maximum of 15 interface ID numbers';
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
+
 export const NO_REGION_MESSAGE: Record<string, string> = {
   dbaas: 'No database clusters configured in any regions.',
-  linode: 'No linodes configured in any regions.',
+  linode: 'No Linodes configured in any regions.',
+  nodebalancer: 'No NodeBalancers configured in any regions.',
+  firewall: 'No firewalls configured in any Linode regions.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {
