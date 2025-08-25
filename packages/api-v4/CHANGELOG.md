@@ -8,6 +8,7 @@
 ### Changed:
 
 - Replace deprecated apis from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
+- IAM RBAC Update `getAccountEntities` API call with params ([#12762](https://github.com/linode/manager/pull/12762))
 
 ### Removed:
 
