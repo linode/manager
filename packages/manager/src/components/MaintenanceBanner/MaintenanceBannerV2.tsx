@@ -14,7 +14,7 @@ export const MaintenanceBannerV2 = ({ pathname }: { pathname?: string }) => {
     PENDING_MAINTENANCE_FILTER
   );
 
-  const hideAccountMaintenanceLink = pathname === '/account/maintenance';
+  const hideAccountMaintenanceLink = pathname === '/maintenance';
 
   // Filter out platform maintenance, since that is handled separately
   const linodeMaintenance =
@@ -30,7 +30,7 @@ export const MaintenanceBannerV2 = ({ pathname }: { pathname?: string }) => {
 
   return (
     maintenanceLinodes.size > 0 && (
-      <Notice variant="warning">
+      <Notice data-testid="maintenance-banner" variant="warning">
         <Typography>
           <strong>
             {pluralize('Linode', 'Linodes', maintenanceLinodes.size)}
@@ -38,11 +38,11 @@ export const MaintenanceBannerV2 = ({ pathname }: { pathname?: string }) => {
           {maintenanceLinodes.size === 1 ? 'has' : 'have'} upcoming{' '}
           <strong>scheduled</strong> maintenance.
           {!hideAccountMaintenanceLink && (
-            <>
+            <span data-testid="maintenance-link-section">
               {' '}
               For more details, view{' '}
-              <Link to="/account/maintenance">Account Maintenance</Link>.
-            </>
+              <Link to="/maintenance">Account Maintenance</Link>.
+            </span>
           )}
         </Typography>
       </Notice>

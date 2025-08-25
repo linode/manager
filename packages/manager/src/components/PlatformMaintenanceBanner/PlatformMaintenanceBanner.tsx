@@ -20,12 +20,12 @@ export const PlatformMaintenanceBanner = ({
   const { accountHasPlatformMaintenance, linodesWithPlatformMaintenance } =
     usePlatformMaintenance();
 
-  const hideAccountMaintenanceLink = pathname === '/account/maintenance';
+  const hideAccountMaintenanceLink = pathname === '/maintenance';
 
   if (!accountHasPlatformMaintenance) return null;
 
   return (
-    <Notice variant="warning">
+    <Notice data-testid="platform-maintenance-banner" variant="warning">
       <Typography>
         <strong>
           {linodesWithPlatformMaintenance.size > 0
@@ -36,11 +36,11 @@ export const PlatformMaintenanceBanner = ({
         need{linodesWithPlatformMaintenance.size === 1 && 's'} to be rebooted
         for critical platform maintenance.
         {!hideAccountMaintenanceLink && (
-          <>
+          <span data-testid="platform-maintenance-link-section">
             {' '}
             See which Linodes are <strong>scheduled</strong> for reboot on the{' '}
-            <Link to="/account/maintenance">Account Maintenance</Link> page.
-          </>
+            <Link to="/maintenance">Account Maintenance</Link> page.
+          </span>
         )}
       </Typography>
     </Notice>
