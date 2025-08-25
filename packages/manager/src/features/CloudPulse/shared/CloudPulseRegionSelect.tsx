@@ -81,6 +81,9 @@ export const CloudPulseRegionSelect = React.memo(
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     React.useEffect(() => {
+      if (!savePreferences) {
+        return; // early exit if savePreferences is false
+      }
       if (disabled && !selectedRegion) {
         return; // no need to do anything
       }

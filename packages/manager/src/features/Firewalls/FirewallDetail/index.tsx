@@ -49,6 +49,14 @@ const FirewallDeviceLanding = React.lazy(() =>
   }))
 );
 
+const FirewallMetricsLanding = React.lazy(() =>
+  import('../../CloudPulse/Dashboard/CloudPulseDashboardWithFilters').then(
+    (module) => ({
+      default: module.CloudPulseDashboardWithFilters,
+    })
+  )
+);
+
 export const FirewallDetail = () => {
   const { id } = useParams({
     strict: false,
@@ -122,6 +130,10 @@ export const FirewallDetail = () => {
     {
       title: `NodeBalancers (${nodebalancerCount})`,
       to: `/firewalls/$id/nodebalancers`,
+    },
+    {
+      title: 'Metrics',
+      to: `/firewalls/$id/metrics`,
     },
   ]);
 
@@ -246,6 +258,9 @@ export const FirewallDetail = () => {
                 firewallLabel={firewall.label}
                 type="nodebalancer"
               />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <FirewallMetricsLanding dashboardId={4} resource={firewall.id} />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
