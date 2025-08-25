@@ -102,7 +102,8 @@ export type AccountAdmin =
   | AccountBillingAdmin
   | AccountFirewallAdmin
   | AccountLinodeAdmin
-  | AccountOauthClientAdmin;
+  | AccountOauthClientAdmin
+  | AccountVolumeAdmin;
 
 /** Permissions associated with the "account_billing_admin" role. */
 export type AccountBillingAdmin =
@@ -140,6 +141,12 @@ export type AccountLinodeAdmin = AccountLinodeCreator | LinodeAdmin;
 
 /** Permissions associated with the "account_linode_creator" role. */
 export type AccountLinodeCreator = 'create_linode';
+
+/** Permissions associated with the "account_volume_admin" role. */
+export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
+
+/** Permissions associated with the "account_volume_creator" role. */
+export type AccountVolumeCreator = 'create_volume';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';
@@ -207,7 +214,8 @@ export type AccountViewer =
   | AccountOauthClientViewer
   | AccountProfileViewer
   | FirewallViewer
-  | LinodeViewer;
+  | LinodeViewer
+  | VolumeViewer;
 
 /** Permissions associated with the "firewall_admin role. */
 export type FirewallAdmin =
@@ -286,6 +294,20 @@ export type LinodeViewer =
   | 'view_linode_monthly_stats'
   | 'view_linode_network_transfer'
   | 'view_linode_stats';
+
+/** Permissions associated with the "volume_admin" role. */
+export type VolumeAdmin =
+  | 'attach_volume'
+  | 'clone_volume'
+  | 'create_volume'
+  | 'delete_volume'
+  | 'detach_volume'
+  | 'resize_volume'
+  | 'update_volume'
+  | 'view_volume';
+
+/** Permissions associated with the "volume_viewer" role. */
+export type VolumeViewer = 'view_volume';
 
 /** Facade roles represent the existing Grant model for entities that are not yet migrated to IAM */
 export type AccountRoleFacade =

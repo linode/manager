@@ -19,6 +19,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { DeleteVolumeDialog } from 'src/features/Volumes/Dialogs/DeleteVolumeDialog';
 import { DetachVolumeDialog } from 'src/features/Volumes/Dialogs/DetachVolumeDialog';
 import { CloneVolumeDrawer } from 'src/features/Volumes/Drawers/CloneVolumeDrawer';
@@ -28,7 +29,6 @@ import { ResizeVolumeDrawer } from 'src/features/Volumes/Drawers/ResizeVolumeDra
 import { VolumeDetailsDrawer } from 'src/features/Volumes/Drawers/VolumeDetailsDrawer';
 import { LinodeVolumeAddDrawer } from 'src/features/Volumes/Drawers/VolumeDrawer/LinodeVolumeAddDrawer';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -41,12 +41,9 @@ export const LinodeVolumes = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id,
-  });
+  const { data: volumePermissions } = usePermissions('account', [
+    'create_volume',
+  ]);
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -207,8 +204,13 @@ export const LinodeVolumes = () => {
         <Typography variant="h3">Volumes</Typography>
         <Button
           buttonType="primary"
-          disabled={isLinodesGrantReadOnly}
+          disabled={!volumePermissions?.create_volume}
           onClick={handleCreateVolume}
+          tooltipText={
+            !volumePermissions?.create_volume
+              ? 'You do not have permission to create volumes.'
+              : undefined
+          }
         >
           Add Volume
         </Button>
