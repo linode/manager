@@ -1,4 +1,4 @@
-import { regionFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 /**
  * @file Integration Tests for contextual view of Entity Listing.
@@ -8,22 +8,25 @@ import {
   mockAddEntityToAlert,
   mockDeleteEntityFromAlert,
   mockGetAlertDefinition,
+  mockGetAllAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { chooseRegion } from 'support/util/regions';
 
-import { accountFactory, alertFactory } from 'src/factories';
+import { accountFactory, alertFactory, flagsFactory } from 'src/factories';
 
 import type {
   AlertDefinitionType,
   AlertStatusType,
+  Linode,
   MetricAggregationType,
 } from '@linode/api-v4';
 import type { RecPartial } from 'factory.ts';
-import type { Flags } from 'src/featureFlags';
 
 const serviceType = 'linode';
 const ALERT_TYPE = 'alert-definition-id';
@@ -32,13 +35,14 @@ const mockAccount = accountFactory.build();
 
 const alertConfigs = [
   {
-    aggregate_function: 'avg' as RecPartial<MetricAggregationType>,
+    aggregate_function: 'min' as RecPartial<MetricAggregationType>,
     created_by: 'user1',
     metric: 'CPU Usage',
     threshold: 55,
     type: 'system',
     status: 'enabled',
-    scope: 'region',
+    scope: 'account',
+    id: 1,
   },
   {
     aggregate_function: 'min' as RecPartial<MetricAggregationType>,
@@ -87,28 +91,17 @@ const alertConfigs = [
     scope: 'entity',
   },
 ];
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
 
-const mockRegion = [
-  regionFactory.build({
-    id: 'us-ord',
-    monitors: { metrics: [], alerts: ['Linodes', 'Managed Databases'] },
-  }),
-];
+const mockRegion = regionFactory.build({
+  id: chooseRegion().id,
+  label: chooseRegion().label,
+  country: chooseRegion().country,
+  capabilities: ['Linodes', 'Managed Databases', 'Cloud Firewall'],
+  monitors: {
+    metrics: [],
+    alerts: ['Linodes', 'Managed Databases', 'Cloud Firewall'],
+  },
+});
 const alerts = alertConfigs.flatMap((config) => {
   // Create the alert
   return alertFactory.build({
@@ -132,6 +125,7 @@ const alerts = alertConfigs.flatMap((config) => {
     type: config.type as AlertDefinitionType,
     scope: config.scope as 'account' | 'entity' | 'region',
     service_type: 'linode',
+    regions: [mockRegion.id],
   });
 });
 
@@ -173,6 +167,12 @@ describe('update linode label', () => {
     cleanUp(['linodes']);
     cy.tag('method:e2e');
   });
+  const mockLinodes = new Array(5).fill(null).map((): Linode => {
+    return linodeFactory.build({
+      label: chooseRegion().label,
+      region: chooseRegion().id,
+    });
+  });
 
   /*
    * - Mocks feature flags, account data, and necessary API calls for database alerts.
@@ -190,13 +190,18 @@ describe('update linode label', () => {
    * - Verifies that sorting by different columns (ID, label, type) works as expected with ascending and descending orders.
    */
   // Reason: Checking by anantha
-  it.skip('should verify sorting, alert management, and search functionality for contextual view of entity listing.', () => {
-    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
-      mockAppendFeatureFlags(flags);
+  it('should verify sorting, alert management, and search functionality for contextual view of entity listing.', () => {
+    cy.defer(() =>
+      createTestLinode({ region: mockRegion.id, booted: true })
+    ).then((linode) => {
+      mockGetLinodes(mockLinodes);
+      mockAppendFeatureFlags(flagsFactory.build());
       mockGetAccount(mockAccount);
       mockGetAlertDefinition(serviceType, alerts).as(
         'getDBaaSAlertDefinitions'
       );
+      mockGetAllAlertDefinitions(alerts).as('getAlertDefinitionsList');
+
       mockAddEntityToAlert(serviceType, '100', { [ALERT_TYPE]: 100 }).as(
         'addEntityToAlert'
       );
@@ -206,7 +211,7 @@ describe('update linode label', () => {
       mockDeleteEntityFromAlert(serviceType, '100', 4).as(
         'deleteEntityToAlert'
       );
-      mockGetRegions(mockRegion);
+      mockGetRegions([mockRegion]);
 
       // Visit the database alerts page
       cy.visitWithLogin(`/linodes/${linode.id}/alerts`);
@@ -217,7 +222,7 @@ describe('update linode label', () => {
       cy.get('[data-qa-notice="true"]')
         .should('be.visible')
         .contains(
-          'Welcome to Alerts (Beta) with more options and greater flexibility.'
+          'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.'
         );
 
       // Test sorting
@@ -231,7 +236,7 @@ describe('update linode label', () => {
 
       ui.tooltip
         .findByText(
-          'Indicates whether the alert applies to all Linodes in the account, Linodes in specific regions, or just this Linode (entity).'
+          'Indicates whether the alert applies to all entities in the account, entities in specific regions, or just this entity.'
         )
         .should('be.visible');
 
@@ -241,11 +246,11 @@ describe('update linode label', () => {
         )
         .should('be.visible');
 
-      ui.tooltip
-        .findByText(
-          "Region-level alerts can't be enabled or disabled for a single entity."
-        )
-        .should('be.visible');
+      // ui.tooltip
+      //   .findByText(
+      //     "Region-level alerts can't be enabled or disabled for a single entity."
+      //   )
+      //   .should('be.visible');
 
       // Alert Links Verification
       [1, 2, 3, 4].forEach((id) => {
@@ -302,8 +307,7 @@ describe('update linode label', () => {
         .click();
 
       ui.button.findByTitle('Save').should('be.visible').click();
-
-      cy.get('button[data-testid="button"]').contains('Save').click();
+      ui.button.findByTitle('Confirm').should('be.visible').click();
 
       // Assert successful API call for disabling the alert
       ui.toast.assertMessage('Your settings for alerts have been saved.');

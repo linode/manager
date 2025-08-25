@@ -116,6 +116,7 @@ export const checkIfFilterNeededInMetricsCall = (
     const {
       filterKey: configFilterKey,
       isFilterable,
+      isMetricsFilter,
       neededInViews,
     } = configuration;
 
@@ -123,6 +124,7 @@ export const checkIfFilterNeededInMetricsCall = (
       // Indicates if this filter should be included in the metrics call
       configFilterKey === filterKey &&
       Boolean(isFilterable) &&
+      !isMetricsFilter &&
       neededInViews.includes(CloudPulseAvailableViews.service)
     );
   });

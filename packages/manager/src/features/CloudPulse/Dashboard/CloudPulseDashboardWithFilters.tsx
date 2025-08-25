@@ -11,6 +11,7 @@ import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
+import { LINODE_REGION } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -208,6 +209,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
               timeDuration,
               groupBy,
             })}
+            linodeRegion={
+              filterData.id[LINODE_REGION]
+                ? (filterData.id[LINODE_REGION] as string)
+                : undefined
+            }
           />
         ) : (
           renderPlaceHolder('Select filters to visualize metrics.')
