@@ -1,4 +1,10 @@
-import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
+import {
+  useAllTypes,
+  useImageQuery,
+  useRegionsQuery,
+  useSpecificTypes,
+  useTypeQuery,
+} from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -13,9 +19,8 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import { getLinodePrice } from './utilities';
-
-import type { LinodeCreateFormValues } from '../utilities';
+import { type LinodeCreateFormValues } from '../utilities';
+import { getLinodePrice, parseClusterData } from './utilities';
 
 interface SummaryProps {
   isAlertsBetaMode?: boolean;
@@ -27,6 +32,34 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { control } = useFormContext<LinodeCreateFormValues>();
+
+  const [stackscriptData] = useWatch({
+    control,
+    name: ['stackscript_data'],
+  });
+
+  const rawClusterData = parseClusterData(stackscriptData);
+
+  const { data: allTypes } = useAllTypes();
+
+  const labelToIdMap = React.useMemo(() => {
+    if (!allTypes) return {};
+    return allTypes.reduce<Record<string, string>>((acc, type) => {
+      acc[type.label] = type.id;
+      return acc;
+    }, {});
+  }, [allTypes]);
+
+  const typeIds = rawClusterData
+    .map((c) => labelToIdMap[c.typeId ?? ''])
+    .filter((id): id is string => Boolean(id));
+
+  const clusterTypeQueries = useSpecificTypes(typeIds);
+
+  const clusterData = rawClusterData.map((cluster, i) => ({
+    ...cluster,
+    typeData: clusterTypeQueries[i]?.data,
+  }));
 
   const [
     label,
@@ -41,6 +74,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     vpcId,
     diskEncryption,
     clusterSize,
+    clusterName,
     linodeInterfaces,
     interfaceGeneration,
     alerts,
@@ -59,6 +93,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'interfaces.0.vpc_id',
       'disk_encryption',
       'stackscript_data.cluster_size',
+      'stackscript_data.cluster_name',
       'linodeInterfaces',
       'interface_generation',
       'alerts',
@@ -83,7 +118,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
-  const price = getLinodePrice({ clusterSize, regionId, type });
+  const price = getLinodePrice({ clusterSize, regionId, type, clusterData });
 
   const hasVPC = isLinodeInterfacesEnabled
     ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
@@ -135,13 +170,30 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       },
       show: Boolean(region),
     },
-    {
-      item: {
-        details: price,
-        title: type ? formatStorageUnits(type.label) : typeId,
-      },
-      show: price,
-    },
+    ...(() => {
+      if (clusterSize) {
+        return [
+          {
+            item: {
+              title:
+                clusterName || (type ? formatStorageUnits(type.label) : typeId),
+              details: price,
+            },
+            show: price,
+          },
+        ];
+      } else {
+        return [
+          {
+            item: {
+              details: price,
+              title: type ? formatStorageUnits(type.label) : typeId,
+            },
+            show: price,
+          },
+        ];
+      }
+    })(),
     {
       item: {
         details: `$${backupsPrice}/month`,
