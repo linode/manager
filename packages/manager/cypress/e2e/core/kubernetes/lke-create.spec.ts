@@ -132,6 +132,7 @@ describe('LKE Cluster Creation', () => {
 
   /*
    * - Confirms that users can create a cluster by completing the LKE create form.
+   * - Confirms that no IP Stack or VPC options are visible for standard tier clusters (LKE-E only).
    * - Confirms that LKE cluster is created.
    * - Confirms that user is redirected to new LKE cluster summary page.
    * - Confirms that correct information is shown on the LKE cluster summary page
