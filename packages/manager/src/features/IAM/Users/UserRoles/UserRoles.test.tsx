@@ -27,6 +27,7 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -55,6 +56,14 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 describe('UserRoles', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -62,6 +71,11 @@ describe('UserRoles', () => {
     });
     queryMocks.useSearch.mockReturnValue({
       selectedRole: '',
+    });
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: true,
+      },
     });
   });
 

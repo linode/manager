@@ -30,12 +30,12 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database, DateTimeWithPreset } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
@@ -58,17 +58,6 @@ const mockRegion = regionFactory.build({
     alerts: [],
   },
 });
-
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
 
 const { dashboardName, engine, id, metrics } = widgetDetails.dbaas;
 const serviceType = 'dbaas';
@@ -212,8 +201,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
    */
 
   beforeEach(() => {
-    cy.viewport(1280, 720);
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');

@@ -44,8 +44,12 @@ interface AlertReusableComponentProps {
   /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 
   /**
    * Region ID for the selected entity
@@ -84,7 +88,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     [alerts, regionId, searchText, selectedType]
   );
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const navigate = useNavigate();
 
@@ -102,7 +106,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
-              {aclpBetaServices?.[serviceType]?.alerts && <BetaChip />}
+              {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
             </Box>
             <Button
               buttonType="outlined"

@@ -35,6 +35,7 @@ import type {
   TimeDuration,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
+import type { AclpServices } from 'src/featureFlags';
 import type {
   StatWithDummyPoint,
   WithStartAndEnd,
@@ -62,10 +63,10 @@ interface AclpSupportedRegionProps {
 export const useIsACLPEnabled = (): {
   isACLPEnabled: boolean;
 } => {
-  const { data: account, error } = useAccount();
+  const { data: account } = useAccount();
   const flags = useFlags();
 
-  if (error || !flags) {
+  if (!flags) {
     return { isACLPEnabled: false };
   }
 
@@ -83,7 +84,7 @@ export const useIsACLPEnabled = (): {
 /**
  * @param alerts List of alerts to be displayed
  * @param entityId Id of the selected entity
- * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState
+ * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState, resetToInitialState
  */
 export const useContextualAlertsState = (
   alerts: Alert[],
@@ -122,6 +123,11 @@ export const useContextualAlertsState = (
 
   const [enabledAlerts, setEnabledAlerts] = React.useState(initialState);
 
+  // Reset function to sync with latest initial state
+  const resetToInitialState = React.useCallback(() => {
+    setEnabledAlerts(initialState);
+  }, [initialState]);
+
   // Check if the enabled alerts have changed from the initial state
   const hasUnsavedChanges = React.useMemo(() => {
     return (
@@ -135,6 +141,7 @@ export const useContextualAlertsState = (
     setEnabledAlerts,
     hasUnsavedChanges,
     initialState,
+    resetToInitialState,
   };
 };
 
@@ -215,15 +222,23 @@ export const seriesDataFormatter = (
 /**
  *
  * @param rawServiceTypes list of service types returned from api response
- * @returns converted service types list into string array
+ * @param aclpServices list of services with their statuses
+ * @returns enabled service types
  */
-export const formattedServiceTypes = (
-  rawServiceTypes: ServiceTypesList | undefined
+export const getEnabledServiceTypes = (
+  rawServiceTypes: ServiceTypesList | undefined,
+  aclpServices: Partial<AclpServices> | undefined
 ): CloudPulseServiceType[] => {
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
-  return rawServiceTypes.data.map((obj: Service) => obj.service_type);
+  // Return the service types that are enabled in the aclpServices flag
+  return rawServiceTypes.data
+    .filter(
+      (obj: Service) =>
+        aclpServices?.[obj.service_type]?.metrics?.enabled ?? false
+    )
+    .map((obj: Service) => obj.service_type);
 };
 
 /**

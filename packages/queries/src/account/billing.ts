@@ -10,22 +10,26 @@ import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 export const useAllAccountInvoices = (
   params: Params = {},
   filter: Filter = {},
+  enabled: boolean = true,
 ) => {
   return useQuery<Invoice[], APIError[]>({
     ...accountQueries.invoices(params, filter),
     ...queryPresets.oneTimeFetch,
     placeholderData: keepPreviousData,
+    enabled,
   });
 };
 
 export const useAllAccountPayments = (
   params: Params = {},
   filter: Filter = {},
+  enabled: boolean = true,
 ) => {
   return useQuery<Payment[], APIError[]>({
     ...accountQueries.payments(params, filter),
     ...queryPresets.oneTimeFetch,
     placeholderData: keepPreviousData,
+    enabled,
   });
 };
 
