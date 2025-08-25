@@ -63,6 +63,52 @@ const getCommonGroups = (
   });
 };
 
+export const useWidgetDimension = (
+  dashboardId: number | undefined,
+  serviceType: CloudPulseServiceType | undefined,
+  globalDimensions: GroupByOption[],
+  metric: string | undefined
+) => {
+  const { data: dashboard, isLoading: dashboardLoading } =
+    useCloudPulseDashboardByIdQuery(dashboardId);
+  const { data: metricDefinition, isLoading: metricLoading } =
+    useGetCloudPulseMetricDefinitionsByServiceType(
+      serviceType,
+      serviceType !== undefined
+    );
+
+  if (metricLoading || dashboardLoading) {
+    return { options: [], defaultValue: [], isLoading: true };
+  }
+
+  const metricDimensions: GroupByOption[] =
+    metricDefinition?.data
+      .find((def) => def.metric === metric)
+      ?.dimensions?.map(({ label, dimension_label }) => ({
+        label,
+        value: dimension_label,
+      })) ?? [];
+  const defaultGroupBy =
+    dashboard?.widgets.find((widget) => widget.metric === metric)?.group_by ??
+    [];
+  const options = metricDimensions.filter(
+    (metricDimension) =>
+      !globalDimensions.some(
+        (dimension) => dimension.label === metricDimension.label
+      )
+  );
+
+  const defaultValue = options.filter((options) =>
+    defaultGroupBy.includes(options.value)
+  );
+
+  return {
+    options,
+    defaultValue,
+    isLoading: false,
+  };
+};
+
 const getMetricDimensions = (
   metricDefinition: MetricDefinition[]
 ): MetricDimension => {
