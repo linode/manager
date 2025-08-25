@@ -61,13 +61,15 @@ const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
 ];
 
 interface Props {
-  onChange: (region: RegionType) => void;
+  onChange: (region?: RegionType) => void;
 }
 
 type CombinedProps = Props & Omit<Partial<RegionSelectProps>, 'onChange'>;
 
 export const TwoStepRegion = (props: CombinedProps) => {
   const { disabled, disabledRegions, errorText, onChange, value } = props;
+
+  const [tabIndex, setTabIndex] = React.useState(0);
 
   const [regionFilter, setRegionFilter] =
     React.useState<RegionFilterValue>('distributed');
@@ -97,7 +99,15 @@ export const TwoStepRegion = (props: CombinedProps) => {
           }
         />
       </Box>
-      <Tabs>
+      <Tabs
+        // onChange={(index: number) => {
+        //   if (index !== tabIndex) {
+        //     setTabIndex(index);
+        //     // Reset region selection when switching between site types
+        //     // onChange(undefined);
+        //   }
+        // }}
+      >
         <TabList>
           <Tab>Core</Tab>
           <Tab>Distributed</Tab>

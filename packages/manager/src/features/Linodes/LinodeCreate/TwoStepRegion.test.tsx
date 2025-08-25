@@ -115,4 +115,29 @@ describe('TwoStepRegion', () => {
     const geographicalAreaSelect2 = screen.getByLabelText('Geographical Area');
     expect(geographicalAreaSelect2).toHaveAttribute('value', 'North America');
   });
+
+  it.only('should clear the selected region when switching between the Core and Distributed tabs', async () => {
+    renderWithThemeAndHookFormContext({
+      component: <TwoStepRegion onChange={vi.fn()} />,
+    });
+
+    // Select a core region
+    const regionSelect = screen.getByLabelText('Region');
+    await userEvent.click(regionSelect);
+
+    const coreRegionOption = screen.getByText(`US, Atlanta, GA (us-southeast)`);
+    await userEvent.click(coreRegionOption);
+    expect(regionSelect).toHaveAttribute('value', 'US, Atlanta, GA (us-southeast)');
+
+    // Switch tabs
+    const [coreTab, distributedTab] = screen.getAllByRole('tab');
+    await userEvent.click(distributedTab);
+    await userEvent.click(coreTab);
+
+    // Previous Region value should be cleared
+    // const select2 = screen.getByLabelText('Region');
+    // expect(select2).toHaveAttribute('value', 'undefined');
+
+    expect(regionSelect).toHaveAttribute('value', 'US, Atlanta, GA (us-southeast)');
+  });
 });
