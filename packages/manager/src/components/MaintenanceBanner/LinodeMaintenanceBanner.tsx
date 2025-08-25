@@ -34,7 +34,7 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
   if (!linodeMaintenance) return null;
 
   return (
-    <Notice variant="warning">
+    <Notice data-testid="linode-maintenance-banner" variant="warning">
       <Typography>
         Linode {linodeMaintenance.entity.label} {linodeMaintenance.description}{' '}
         maintenance {maintenanceTypeLabel} will begin{' '}

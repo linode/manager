@@ -30,7 +30,7 @@ export const MaintenanceBannerV2 = ({ pathname }: { pathname?: string }) => {
 
   return (
     maintenanceLinodes.size > 0 && (
-      <Notice variant="warning">
+      <Notice data-testid="maintenance-banner-v2" variant="warning">
         <Typography>
           <strong>
             {pluralize('Linode', 'Linodes', maintenanceLinodes.size)}
