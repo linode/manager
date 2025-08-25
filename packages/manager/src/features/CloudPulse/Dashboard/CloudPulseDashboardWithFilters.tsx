@@ -191,7 +191,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
               timeDuration,
             })}
             linodeRegion={
-              typeof filterData.id[LINODE_REGION] === 'string'
+              filterData.id[LINODE_REGION]
                 ? (filterData.id[LINODE_REGION] as string)
                 : undefined
             }
