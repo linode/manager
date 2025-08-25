@@ -78,7 +78,12 @@ describe('LKE Create Cluster', () => {
     cy.findByLabelText('Cluster Label').click();
     cy.focused().type(mockCluster.label);
 
-    ui.regionSelect.find().click().type(`${chooseRegion().label}{enter}`);
+    const lkeRegion = chooseRegion({
+      capabilities: ['Kubernetes'],
+    });
+
+    ui.regionSelect.find().click().type(`${lkeRegion.label}`);
+    ui.regionSelect.findItemByRegionId(lkeRegion.id).click();
 
     cy.findByLabelText('Kubernetes Version').should('be.visible').click();
     cy.findByText('1.32').should('be.visible').click();
