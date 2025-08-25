@@ -14,8 +14,17 @@ const defaultOption: GroupByOption = {
 };
 
 interface GroupByDimension {
+  /**
+   * The default grouping options to use
+   */
   defaultValue: GroupByOption[];
+  /**
+   * Indicates if the grouping options are currently loading
+   */
   isLoading: boolean;
+  /**
+   * Available grouping options
+   */
   options: GroupByOption[];
 }
 

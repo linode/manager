@@ -12,10 +12,25 @@ import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface WidgetGroupByRendererProps {
+  /**
+   * Unique identifier for the dashboard
+   */
   dashboardId: number;
+  /**
+   * Callback function triggered when the selection changes
+   */
   handleChange: (selectedValue: string[]) => void;
+  /**
+   * Display label for the widget
+   */
   label: string;
+  /**
+   * Metric name to be used for data retrieval
+   */
   metric: string;
+  /**
+   * Type of cloud service being monitored
+   */
   serviceType: CloudPulseServiceType;
 }
 

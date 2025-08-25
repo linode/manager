@@ -12,7 +12,14 @@ import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { Dashboard } from '@linode/api-v4';
 
 interface GlobalGroupByRendererProps {
+  /**
+   * Handler function called when the group by selection changes.
+   * @param selectedValue - Array of selected group by values.
+   */
   handleChange: (selectedValue: string[]) => void;
+  /**
+   * The currently selected dashboard, if any.
+   */
   selectedDashboard?: Dashboard;
 }
 
