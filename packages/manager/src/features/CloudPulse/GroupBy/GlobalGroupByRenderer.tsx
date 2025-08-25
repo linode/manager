@@ -5,37 +5,28 @@ import GroupByIcon from 'src/assets/icons/group-by.svg';
 
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { CloudPulseGroupByDrawer } from './CloudPulseGroupByDrawer';
-import { WIDGET_GROUP_BY_MESSAGE } from './constants';
-import { useGlobalDimensions, useWidgetDimension } from './useGroupByDimension';
+import { GLOBAL_GROUP_BY_MESSAGE } from './constants';
+import { useGlobalDimensions } from './useGroupByDimension';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
-import type { CloudPulseServiceType } from '@linode/api-v4';
+import type { Dashboard } from '@linode/api-v4';
 
-interface WidgetFilterGroupByRendererProps {
-  dashboardId: number;
+interface GlobalGroupByRendererProps {
   handleChange: (selectedValue: string[]) => void;
-  label: string;
-  metric: string;
-  serviceType: CloudPulseServiceType;
+  selectedDashboard?: Dashboard;
 }
 
-export const WidgetFilterGroupByRenderer = (
-  props: WidgetFilterGroupByRendererProps
-) => {
-  const { metric, dashboardId, serviceType, label, handleChange } = props;
+export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
+  const { selectedDashboard, handleChange } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
-  const { isLoading: globalDimensionLoading, options: globalDimensions } =
-    useGlobalDimensions(dashboardId, serviceType);
-  const {
-    isLoading: widgetDimensionLoading,
-    options: widgetDimensions,
-    defaultValue,
-  } = useWidgetDimension(dashboardId, serviceType, globalDimensions, metric);
+  const { options, defaultValue, isLoading } = useGlobalDimensions(
+    selectedDashboard?.id,
+    selectedDashboard?.service_type
+  );
+
   const [open, setOpen] = React.useState(false);
-  const onCancel = React.useCallback(() => {
-    setOpen(false);
-  }, []);
+
   const onApply = React.useCallback(
     (selectedValue: GroupByOption[]) => {
       if (selectedValue.length === 0) {
@@ -46,14 +37,12 @@ export const WidgetFilterGroupByRenderer = (
       handleChange(selectedValue.map(({ value }) => value));
       onCancel();
     },
-    [handleChange, onCancel]
+    [handleChange]
   );
 
-  const isDisabled =
-    globalDimensionLoading ||
-    widgetDimensionLoading ||
-    widgetDimensions.length === 0;
-
+  const onCancel = React.useCallback(() => {
+    setOpen(false);
+  }, []);
   return (
     <>
       <CloudPulseTooltip placement="bottom-end" title="Group By">
@@ -61,30 +50,30 @@ export const WidgetFilterGroupByRenderer = (
           aria-label="Group By Dashboard Metrics"
           color="inherit"
           data-testid="group-by"
-          disabled={isDisabled}
+          disabled={!selectedDashboard || isLoading}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
+            marginTop: { md: theme.spacing(3.5) },
             color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
-            padding: 0,
           })}
         >
           <GroupByIcon height="24px" width="24px" />
         </IconButton>
       </CloudPulseTooltip>
 
-      {!isDisabled && (
+      {!isLoading && selectedDashboard && (
         <CloudPulseGroupByDrawer
           defaultValue={defaultValue}
-          message={WIDGET_GROUP_BY_MESSAGE}
+          message={GLOBAL_GROUP_BY_MESSAGE}
           onApply={onApply}
           onCancel={onCancel}
           open={open}
-          options={widgetDimensions}
-          serviceType={serviceType}
-          subtitle={label}
-          title="Group By"
+          options={options}
+          serviceType={selectedDashboard.service_type}
+          subtitle={`Dashboard: ${selectedDashboard.label}`}
+          title="Global Group By"
         />
       )}
     </>

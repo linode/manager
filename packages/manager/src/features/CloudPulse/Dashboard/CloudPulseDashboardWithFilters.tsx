@@ -4,7 +4,7 @@ import React from 'react';
 
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 
-import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
+import { GlobalGroupByRenderer } from '../GroupBy/GlobalGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
@@ -156,7 +156,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                     handleStatsChange={handleTimeRangeChange}
                     savePreferences
                   />
-                  <GlobalFilterGroupByRenderer
+                  <GlobalGroupByRenderer
                     handleChange={handleGroupByChange}
                     selectedDashboard={dashboard}
                   />
