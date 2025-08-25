@@ -109,6 +109,27 @@ describe('Image Table Row', () => {
     ).toBeNull();
   });
 
+  it('should not show an unencrypted icon when an Image is still "pending_upload"', () => {
+    // The API does not populate the "distributed-sites" capability until the image is done creating.
+    // We must account for this because the image would show as "Unencrypted" while it is creating,
+    // then suddenly show as encrypted once it was done creating. We don't want that.
+    // Therefore, we decided we won't show the unencrypted icon until the image is done uploading to
+    // prevent confusion.
+    const image = imageFactory.build({
+      capabilities: ['cloud-init'],
+      status: 'pending_upload',
+      type: 'manual',
+    });
+
+    const { queryByLabelText } = renderWithTheme(
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
+    );
+
+    expect(
+      queryByLabelText('This image is not encrypted.', { exact: false })
+    ).toBeNull();
+  });
+
   it('should show N/A if Image does not have any regions', () => {
     const image = imageFactory.build({ regions: [] });
 
