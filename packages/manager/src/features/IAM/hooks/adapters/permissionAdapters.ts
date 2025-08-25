@@ -50,7 +50,7 @@ export const entityPermissionMapFrom = (
 /** Convert the existing Grant model to the new IAM RBAC model. */
 export const fromGrants = (
   accessType: AccessType,
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: readonly PermissionType[],
   grants?: Grants,
   isRestricted?: boolean,
   entityId?: number
@@ -97,7 +97,7 @@ export const fromGrants = (
 export const toEntityPermissionMap = (
   entities: EntityBase[] | undefined,
   entitiesPermissions: (PermissionType[] | undefined)[] | undefined,
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: readonly PermissionType[],
   isRestricted?: boolean
 ): EntityPermissionMap => {
   const entityPermissionsMap: EntityPermissionMap = {};
@@ -118,7 +118,7 @@ export const toEntityPermissionMap = (
 
 /** Combines the permissions a user wants to check with the permissions returned from the backend */
 export const toPermissionMap = (
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: readonly PermissionType[],
   usersPermissions: PermissionType[],
   isRestricted?: boolean
 ): PermissionMap => {

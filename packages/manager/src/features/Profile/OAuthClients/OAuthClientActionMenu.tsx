@@ -9,12 +9,17 @@ import type { PermissionType } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
+type PermissionsSubset<T extends PermissionType> = T;
+type OAuthClientPermissions = PermissionsSubset<
+  'delete_oauth_client' | 'reset_oauth_client_secret' | 'update_oauth_client'
+>;
+
 interface Props {
   label: string;
   onOpenDeleteDialog: () => void;
   onOpenEditDrawer: () => void;
   onOpenResetDialog: () => void;
-  permissions: Partial<Record<PermissionType, boolean>>;
+  permissions: Record<OAuthClientPermissions, boolean>;
 }
 
 export const OAuthClientActionMenu = (props: Props) => {
