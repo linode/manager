@@ -1,6 +1,9 @@
 import { destinationType, streamStatus, streamType } from '@linode/api-v4';
 
-import type { CreateDestinationPayload } from '@linode/api-v4';
+import type {
+  CreateDestinationPayload,
+  UpdateDestinationPayload,
+} from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
 
@@ -42,4 +45,6 @@ export const streamStatusOptions: LabelValueOption[] = [
   },
 ];
 
-export type CreateDestinationForm = CreateDestinationPayload;
+export type DestinationFormType =
+  | CreateDestinationPayload
+  | UpdateDestinationPayload;

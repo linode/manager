@@ -166,7 +166,7 @@ describe('Streams Landing Table', () => {
       });
     });
 
-    describe('when Enabled clicked', () => {
+    describe('when Enable clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({

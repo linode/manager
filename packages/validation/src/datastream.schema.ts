@@ -74,7 +74,7 @@ const linodeObjectStorageDetailsSchema = object({
     .required('Access Key Secret is required.'),
 });
 
-export const createDestinationSchema = object().shape({
+export const destinationSchema = object().shape({
   label: string()
     .max(maxLength, maxLengthMessage)
     .required('Destination name is required.'),
@@ -157,7 +157,7 @@ export const streamAndDestinationFormSchema = object({
       })
       .required(),
   }),
-  destination: createDestinationSchema.defined().when('stream.destinations', {
+  destination: destinationSchema.defined().when('stream.destinations', {
     is: (value: never[]) => value?.length === 1 && value[0] === undefined,
     then: (schema) => schema,
     otherwise: (schema) =>
