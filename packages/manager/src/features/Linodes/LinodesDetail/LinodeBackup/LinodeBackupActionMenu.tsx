@@ -16,14 +16,15 @@ interface Props {
 export const LinodeBackupActionMenu = (props: Props) => {
   const { backup, linodeId, onDeploy, onRestore } = props;
 
-  const { data: accountPermissions } = usePermissions('account', [
-    'create_linode',
-  ]);
-  const { data: linodePermissions } = usePermissions(
-    'linode',
-    ['update_linode'],
-    linodeId
-  );
+  const { data: accountPermissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
+  const { data: linodePermissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: ['update_linode'],
+    entityId: linodeId,
+  });
 
   const disabledPropsForRestore = {
     disabled: !linodePermissions.update_linode,

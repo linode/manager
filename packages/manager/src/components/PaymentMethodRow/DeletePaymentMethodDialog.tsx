@@ -36,9 +36,10 @@ export const DeletePaymentMethodDialog = React.memo((props: Props) => {
   const { error, loading, onClose, onDelete, open, paymentMethod } = props;
   const { classes } = useStyles();
 
-  const { data: permissions } = usePermissions('account', [
-    'delete_payment_method',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['delete_payment_method'],
+  });
 
   const actions = (
     <ActionsPanel

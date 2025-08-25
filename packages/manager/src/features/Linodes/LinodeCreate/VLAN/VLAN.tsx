@@ -23,7 +23,10 @@ export const VLAN = () => {
 
   const createType = useGetLinodeCreateType();
 
-  const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
 
   const [imageId, regionId] = useWatch({ control, name: ['image', 'region'] });
 

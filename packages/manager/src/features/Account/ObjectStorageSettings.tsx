@@ -21,9 +21,10 @@ export const ObjectStorageSettings = () => {
   const { data: profile } = useProfile();
   const { data: accountSettings, isLoading } = useAccountSettings();
 
-  const { data: permissions } = usePermissions('account', [
-    'update_account_settings',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account_settings'],
+  });
 
   const {
     error,

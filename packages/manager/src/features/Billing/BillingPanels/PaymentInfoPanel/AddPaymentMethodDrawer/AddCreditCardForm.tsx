@@ -153,9 +153,10 @@ export const AddCreditCardForm = (props: Props) => {
   };
 
   const disableInput = isSubmitting || disabled;
-  const { data: permissions } = usePermissions('account', [
-    'create_payment_method',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_payment_method'],
+  });
 
   const disableAddButton =
     disabled ||

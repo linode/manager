@@ -49,9 +49,10 @@ const AutoBackups = (props: Props) => {
   } = props;
 
   const { classes } = useStyles();
-  const { data: permissions } = usePermissions('account', [
-    'update_account_settings',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account_settings'],
+  });
   return (
     <Paper>
       <Typography variant="h2">Backup Auto Enrollment</Typography>

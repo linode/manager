@@ -23,7 +23,10 @@ import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 export const UserEntities = () => {
   const theme = useTheme();
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['is_account_admin'],
+  });
   const {
     data: assignedRoles,
     isLoading,

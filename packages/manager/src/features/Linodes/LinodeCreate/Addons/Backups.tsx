@@ -35,7 +35,10 @@ export const Backups = () => {
     name: ['region', 'type', 'disk_encryption'],
   });
 
-  const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode'],
+  });
 
   const { data: type } = useTypeQuery(typeId, Boolean(typeId));
   const { data: regions } = useRegionsQuery();

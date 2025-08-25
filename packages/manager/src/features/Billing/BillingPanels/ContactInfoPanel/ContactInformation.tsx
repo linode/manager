@@ -78,7 +78,10 @@ export const ContactInformation = React.memo((props: Props) => {
     return notification.type === 'tax_id_verifying';
   });
 
-  const { data: permissions } = usePermissions('account', ['update_account']);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account'],
+  });
 
   const isReadOnly = !permissions.update_account || isChildUser;
 

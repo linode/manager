@@ -48,9 +48,10 @@ export const BackupDrawer = (props: Props) => {
   const { onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: permissions } = usePermissions('account', [
-    'update_account_settings',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account_settings'],
+  });
   const {
     data: linodes,
     error: linodesError,

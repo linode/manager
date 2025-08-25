@@ -39,9 +39,10 @@ export const DefaultFirewalls = () => {
   } = useFirewallSettingsQuery({ enabled: isLinodeInterfacesEnabled });
 
   const { mutateAsync: updateFirewallSettings } = useMutateFirewallSettings();
-  const { data: permissions } = usePermissions('account', [
-    'update_account_settings',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['update_account_settings'],
+  });
   const values = {
     default_firewall_ids: { ...firewallSettings?.default_firewall_ids },
   };

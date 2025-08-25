@@ -41,12 +41,12 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     triggerEnableFirewall,
   } = props;
 
-  const { data: permissions, isLoading } = usePermissions(
-    'firewall',
-    ['update_firewall', 'delete_firewall'],
-    firewallID,
-    isOpen
-  );
+  const { data: permissions, isLoading } = usePermissions({
+    accessType: 'firewall',
+    permissionsToCheck: ['update_firewall', 'delete_firewall'],
+    entityId: firewallID,
+    enabled: isOpen,
+  });
 
   const disabledProps = (hasPermission: boolean) =>
     !hasPermission || (isLinodeInterfacesEnabled && isDefaultFirewall)

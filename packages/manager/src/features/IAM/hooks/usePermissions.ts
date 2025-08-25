@@ -32,12 +32,19 @@ export type PermissionsResult = {
   data: Record<PermissionType, boolean>;
 } & Omit<UseQueryResult<PermissionType[], APIError[]>, 'data'>;
 
-export const usePermissions = (
-  accessType: AccessType,
-  permissionsToCheck: PermissionType[],
-  entityId?: number,
-  enabled: boolean = true
-): PermissionsResult => {
+interface UsePermissionsProps {
+  accessType: AccessType;
+  enabled?: boolean;
+  entityId?: number;
+  permissionsToCheck: PermissionType[];
+}
+
+export const usePermissions = ({
+  accessType,
+  permissionsToCheck,
+  entityId,
+  enabled = true,
+}: UsePermissionsProps): PermissionsResult => {
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const { data: userAccountPermissions, ...restAccountPermissions } =
