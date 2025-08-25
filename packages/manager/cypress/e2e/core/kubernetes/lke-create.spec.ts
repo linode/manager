@@ -121,7 +121,12 @@ describe('LKE Cluster Creation', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise: {
+        enabled: true,
+        la: true,
+        postLa: false,
+        phase2Mtc: true,
+      },
     }).as('getFeatureFlags');
   });
 
@@ -199,6 +204,15 @@ describe('LKE Cluster Creation', () => {
 
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
+    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display if the 'standard' LKE tier is selected.
+    cy.findByLabelText('IP Stack').should('not.exist');
+    cy.findByLabelText('IPv4').should('not.exist');
+    cy.findByLabelText('IPv4 + IPv6 (dual-stack)').should('not.exist');
+    cy.findByLabelText('Automatically generate a VPC for this cluster').should(
+      'not.exist'
+    );
+    cy.findByLabelText('Use an existing VPC').should('not.exist');
+
     let monthPrice = 0;
 
     // Confirm the expected available plans display.
@@ -269,12 +283,20 @@ describe('LKE Cluster Creation', () => {
           .click();
       });
 
+    // Confirm request payload.
+    cy.wait('@createCluster').then((intercept) => {
+      const payload = intercept.request.body;
+      expect(payload.tier).to.equal('standard');
+      expect(payload.stack_type).to.be.undefined;
+      expect(payload.vpc_id).to.be.undefined;
+      expect(payload.subnet_id).to.be.undefined;
+    });
+
     // Wait for LKE cluster to be created and confirm that we are redirected
     // to the cluster summary page.
     cy.wait([
       '@getCluster',
       '@getClusterPools',
-      '@createCluster',
       '@getLKEClusterTypes',
       '@getDashboardUrl',
       '@getControlPlaneACL',
