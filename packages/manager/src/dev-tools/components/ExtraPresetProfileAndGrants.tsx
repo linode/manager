@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { extraMockPresets } from 'src/mocks/presets';
 import {
-  setCustomGrantData,
+  setCustomGrantsData,
   setCustomProfileData,
-} from 'src/mocks/presets/extra/account/customProfile';
+} from 'src/mocks/presets/extra/account/customProfileAndGrants';
 
 import { saveCustomGrantsData, saveCustomProfileData } from '../utils';
 import { JsonTextArea } from './JsonTextArea';
@@ -27,7 +27,7 @@ interface ExtraPresetProfileProps {
   ) => void;
 }
 
-export const ExtraPresetProfile = ({
+export const ExtraPresetProfileAndGrants = ({
   customGrantsData,
   customProfileData,
   handlers,
@@ -116,7 +116,7 @@ export const ExtraPresetProfile = ({
       setGrantsFormData({
         ...grantsFactory.build(),
       });
-      setCustomGrantData(null);
+      setCustomGrantsData(null);
     } else if (isEnabled) {
       if (customProfileData) {
         setProfileFormData((prev) => ({
@@ -130,10 +130,10 @@ export const ExtraPresetProfile = ({
           ...prev,
           ...customGrantsData,
         }));
-        setCustomGrantData(customGrantsData);
+        setCustomGrantsData(customGrantsData);
       }
     }
-  }, [isEnabled, customProfileData]);
+  }, [isEnabled, customProfileData, customGrantsData]);
 
   if (!profilePreset) {
     return null;
@@ -173,7 +173,7 @@ export const ExtraPresetProfile = ({
             className="dev-tools__modal-form"
             onSubmit={() => setIsEditingCustomProfile(false)}
           >
-            <h2>Profile</h2>
+            <h3>Profile</h3>
             <FieldWrapper>
               <label>
                 Username
@@ -344,7 +344,8 @@ export const ExtraPresetProfile = ({
                 value={profileFormData.authorized_keys}
               />
             </FieldWrapper>
-            <h2>Grants</h2>
+            <hr />
+            <h3>Grants</h3>
             <FieldWrapper>
               <JsonTextArea
                 label="Global Grants"

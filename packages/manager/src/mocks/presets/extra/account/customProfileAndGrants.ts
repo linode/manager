@@ -13,7 +13,7 @@ export const setCustomProfileData = (data: null | Profile) => {
   customProfileData = data;
 };
 
-export const setCustomGrantData = (data: Grants | null) => {
+export const setCustomGrantsData = (data: Grants | null) => {
   customGrantsData = data;
 };
 
@@ -41,10 +41,10 @@ const mockCustomGrants = () => {
   ];
 };
 
-export const customProfilePreset: MockPresetExtra = {
-  desc: 'Custom Profile',
+export const customProfileAndGrantsPreset: MockPresetExtra = {
+  desc: 'Custom Profile and Grants',
   group: { id: 'Profile', type: 'profile' },
   handlers: [mockCustomProfile, mockCustomGrants],
   id: 'profile:custom',
-  label: 'Custom Profile',
+  label: 'Custom Profile and Grants',
 };

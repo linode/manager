@@ -9,7 +9,7 @@ import { ExtraPresetMaintenance } from './ExtraPresetMaintenance';
 import { ExtraPresetNotifications } from './ExtraPresetNotifications';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
-import { ExtraPresetProfile } from './ExtraPresetProfile';
+import { ExtraPresetProfileAndGrants } from './ExtraPresetProfileAndGrants';
 import { ExtraPresetUserAccountPermissions } from './ExtraPresetUserAccountPermissions';
 import { ExtraPresetUserEntityPermissions } from './ExtraPresetUserEntityPermissions';
 
@@ -126,7 +126,7 @@ export const ExtraPresetOptions = ({
               />
             )}
             {currentGroupType === 'profile' && (
-              <ExtraPresetProfile
+              <ExtraPresetProfileAndGrants
                 customGrantsData={customGrantsData}
                 customProfileData={customProfileData}
                 handlers={handlers}
