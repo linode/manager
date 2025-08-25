@@ -36,10 +36,10 @@ export const Firewall = () => {
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
-  const { data: permissions } = usePermissions('account', [
-    'create_linode',
-    'create_firewall',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: ['create_linode', 'create_firewall'],
+  });
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
     createType: createType ?? 'OS',

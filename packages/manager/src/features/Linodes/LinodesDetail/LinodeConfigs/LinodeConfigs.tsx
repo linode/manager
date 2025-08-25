@@ -55,11 +55,11 @@ const LinodeConfigs = () => {
 
   const id = Number(linodeId);
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    ['create_linode_config_profile'],
-    id
-  );
+  const { data: permissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: ['create_linode_config_profile'],
+    entityId: id,
+  });
 
   const { data: linode } = useLinodeQuery(id);
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();

@@ -203,11 +203,14 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     preferenceKey: 'billing-activity-order',
   });
 
-  const { data: permissions } = usePermissions('account', [
-    'list_billing_payments',
-    'list_billing_invoices',
-    'list_invoice_items',
-  ]);
+  const { data: permissions } = usePermissions({
+    accessType: 'account',
+    permissionsToCheck: [
+      'list_billing_payments',
+      'list_billing_invoices',
+      'list_invoice_items',
+    ],
+  });
 
   const canViewInvoices = permissions.list_billing_invoices;
   const canViewPayments = permissions.list_billing_payments;

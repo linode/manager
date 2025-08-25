@@ -16,11 +16,11 @@ const LinodeSettings = () => {
 
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    ['update_linode', 'delete_linode'],
-    id
-  );
+  const { data: permissions } = usePermissions({
+    accessType: 'linode',
+    permissionsToCheck: ['update_linode', 'delete_linode'],
+    entityId: id,
+  });
 
   return (
     <>
