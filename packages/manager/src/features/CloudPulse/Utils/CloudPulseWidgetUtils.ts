@@ -32,7 +32,7 @@ export interface LabelNameOptionsProps {
   /**
    * array of group by fields
    */
-  groupBy: string[];
+  groupBy?: string[];
 
   /**
    * Boolean to check if metric name should be hidden
@@ -69,7 +69,7 @@ interface GraphDataOptionsProps {
   /**
    * array of group by fields
    */
-  groupBy: string[];
+  groupBy?: string[];
 
   /**
    * label for the graph title
@@ -135,7 +135,7 @@ export interface DimensionNameProperties {
   /**
    * array of group by fields
    */
-  groupBy: string[];
+  groupBy?: string[];
   /**
    * Boolean to check if metric name should be hidden
    */
@@ -306,7 +306,8 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget, groupBy, linodeRegion } = props;
+  const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
+    props;
   const preset = duration.preset;
 
   return {
@@ -377,7 +378,7 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
     resources,
     hideMetricName = false,
     serviceType,
-    groupBy,
+    groupBy = [],
   } = props;
   const labels: string[] = new Array(groupBy.length).fill('');
   Object.entries(metric).forEach(([key, value]) => {
