@@ -604,4 +604,39 @@ describe('region disables alerts. beta alerts not available regardless of linode
         });
       });
   });
+
+  it('Deleting entire value in numeric input triggers validation error', function () {
+    const mockLinode = linodeFactory.build({
+      id: MOCK_LINODE_ID,
+      label: randomLabel(),
+      region: this.mockDisabledRegion.id,
+      alerts: { ...mockEnabledLegacyAlerts },
+    });
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
+    cy.wait(['@getFeatureFlags', '@getRegions', '@getLinode']);
+    ui.tabList.findTabByTitle('Alerts').within(() => {
+      cy.get('[data-testid="betaChip"]').should('not.exist');
+    });
+    cy.get('[data-reach-tab-panels]')
+      .should('be.visible')
+      .within(() => {
+        // no errors on page load
+        cy.get('p[data-qa-textfield-error-text]').should('not.exist');
+        cy.get('input[data-testid="textfield-input"]').each(($numericInput) => {
+          cy.wrap($numericInput).clear();
+          cy.wrap($numericInput).blur();
+          // error appears
+          cy.get('p[data-qa-textfield-error-text]')
+            .should('be.visible')
+            .then(($err) => {
+              expect($err).to.contain('is required.');
+            });
+          cy.wrap($numericInput).click();
+          cy.wrap($numericInput).type('1');
+          // error is removed
+          cy.get('p[data-qa-textfield-error-text]').should('not.exist');
+        });
+      });
+  });
 });
