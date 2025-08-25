@@ -83,7 +83,6 @@ export const ClusterNetworkingPanel = (props: Props) => {
         </Typography>
         <RadioGroup
           aria-label="Bring your own VPC"
-          data-testid="isUsingOwnVpc"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setIsUsingOwnVpc(e.target.value === 'yes');
 
