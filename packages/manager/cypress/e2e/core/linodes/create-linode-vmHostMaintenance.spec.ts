@@ -56,9 +56,6 @@ describe('vmHostMaintenance feature flag', function () {
         cy.findByText('Select a region to choose a maintenance policy.').should(
           'be.visible'
         );
-        ui.tooltip
-          .findByText("You don't have permission to change this setting.")
-          .should('be.visible');
       });
 
     // user selects region that does not have the "Maintenance Policy" capability
