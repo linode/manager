@@ -621,8 +621,14 @@ describe('region disables alerts. beta alerts not available regardless of linode
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
       .within(() => {
-        // no errors on page load
+        // no errors on page load, and all toggle buttons are enabled
         cy.get('p[data-qa-textfield-error-text]').should('not.exist');
+        ui.toggle.find().each(($toggle) => {
+          cy.wrap($toggle)
+            .should('have.attr', 'data-qa-toggle', 'true')
+            .should('be.visible')
+            .should('be.enabled');
+        });
         cy.get('input[data-testid="textfield-input"]').each(($numericInput) => {
           cy.wrap($numericInput).clear();
           cy.wrap($numericInput).blur();
@@ -632,6 +638,14 @@ describe('region disables alerts. beta alerts not available regardless of linode
             .then(($err) => {
               expect($err).to.contain('is required.');
             });
+          // error message does not disable adjacent toggle button
+          // difficult to find closest toggle btn, so test them all
+          ui.toggle.find().each(($toggle) => {
+            cy.wrap($toggle)
+              .should('have.attr', 'data-qa-toggle', 'true')
+              .should('be.visible')
+              .should('be.enabled');
+          });
           cy.wrap($numericInput).click();
           cy.wrap($numericInput).type('1');
           // error is removed
