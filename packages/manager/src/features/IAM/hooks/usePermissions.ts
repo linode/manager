@@ -54,17 +54,15 @@ export const usePermissions = <T extends readonly PermissionType[]>(
   const { data: profile } = useProfile();
   const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
-  const _permissionsToCheck = [...permissionsToCheck];
-
   const permissionMap = isIAMEnabled
     ? toPermissionMap(
-        _permissionsToCheck,
+        permissionsToCheck,
         usersPermissions!,
         profile?.restricted
       )
     : fromGrants(
         accessType,
-        _permissionsToCheck,
+        permissionsToCheck,
         grants!,
         profile?.restricted,
         entityId
