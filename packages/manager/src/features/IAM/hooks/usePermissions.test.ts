@@ -23,12 +23,15 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    useIsIAMEnabled: queryMocks.useIsIAMEnabled,
     useUserAccountPermissions: queryMocks.useUserAccountPermissions,
     useUserEntityPermissions: queryMocks.useUserEntityPermissions,
     useGrants: queryMocks.useGrants,
   };
 });
+
+vi.mock('./useIsIAMEnabled', () => ({
+  useIsIAMEnabled: queryMocks.useIsIAMEnabled,
+}));
 
 vi.mock('./adapters', () => ({
   fromGrants: vi.fn(
@@ -138,6 +141,58 @@ describe('usePermissions', () => {
       'account',
       undefined,
       false
+    );
+  });
+
+  it('does not serve IAM permissions when limited availability only is true (uses grants)', () => {
+    const flags = { iam: { beta: true, enabled: true } };
+
+    renderHook(
+      () =>
+        usePermissions({
+          accessType: 'account',
+          permissionsToCheck: ['cancel_account', 'create_linode'],
+          limitedAvailabilityOnly: true,
+        }),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, { flags }),
+      }
+    );
+
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
+    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'account',
+      undefined,
+      false
+    );
+  });
+
+  it('serves IAM permissions when limited availability only is true and IAM beta is false (Limited Availability)', () => {
+    queryMocks.useIsIAMEnabled.mockReturnValue({
+      isIAMEnabled: true,
+      isIAMBeta: false,
+    });
+    const flags = { iam: { beta: false, enabled: true } };
+
+    renderHook(
+      () =>
+        usePermissions({
+          accessType: 'account',
+          permissionsToCheck: ['cancel_account', 'create_linode'],
+          limitedAvailabilityOnly: true,
+        }),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, { flags }),
+      }
+    );
+
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'account',
+      undefined,
+      true
     );
   });
 });
