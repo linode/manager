@@ -8,7 +8,7 @@
 ### Changed:
 
 - Replace deprecated queries from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
-- Increase getAccountEntities page size to 500 ([#12762](https://github.com/linode/manager/pull/12762))
+- IAM RBAC - Increase getAccountEntities page size to 500 ([#12762](https://github.com/linode/manager/pull/12762))
 
 ### Upcoming Features:
 
