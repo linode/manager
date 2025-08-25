@@ -178,10 +178,6 @@ describe('rebuild linode', () => {
     getLatestImage(almaLinuxImageLabel).then((value: Image) => {
       almaLinuxImageLabel = value.label;
     });
-
-    mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
-    });
   });
 
   /*
