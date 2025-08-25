@@ -86,7 +86,7 @@ export const RenderWidgets = React.memo(
         serviceType: dashboard.service_type,
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
-
+        dashboardId: dashboard.id,
         widget: {
           ...widget,
           time_granularity: autoIntervalOption,
