@@ -37,7 +37,7 @@ export const ExtraPresetProfileAndGrants = ({
   onFormChangeProfile,
   onTogglePreset,
 }: ExtraPresetProfileProps) => {
-  const isEnabled = handlers.includes('profile:custom');
+  const isEnabled = handlers.includes('profile-grants:custom');
   const [profileFormData, setProfileFormData] = React.useState<Profile>(() => ({
     ...profileFactory.build({
       restricted: false,
@@ -106,7 +106,7 @@ export const ExtraPresetProfileAndGrants = ({
       saveCustomProfileData(profileFormData);
       saveCustomGrantsData(grantsFormData);
     }
-    onTogglePreset(e, 'profile:custom');
+    onTogglePreset(e, 'profile-grants:custom');
   };
 
   React.useEffect(() => {

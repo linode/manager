@@ -194,7 +194,7 @@ export const ServiceWorkerTool = () => {
         saveCustomAccountData(customAccountData);
       }
 
-      if (extraPresets.includes('profile:custom')) {
+      if (extraPresets.includes('profile-grants:custom')) {
         if (customProfileData) {
           saveCustomProfileData(customProfileData);
         }
