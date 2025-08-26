@@ -25,6 +25,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
@@ -90,6 +91,12 @@ export const VPCSubnetsTable = (props: Props) => {
   const { query } = search;
 
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['create_vpc_subnet'],
+    vpcId
+  );
 
   const pagination = usePaginationV2({
     currentRoute: VPC_DETAILS_ROUTE,
@@ -423,10 +430,12 @@ export const VPCSubnetsTable = (props: Props) => {
         />
         <Button
           buttonType="primary"
+          disabled={!permissions.create_vpc_subnet}
           onClick={handleSubnetCreate}
           sx={{
             marginBottom: theme.spacingFunction(16),
           }}
+          tooltipText={'You do not have permission to create a VPC subnet.'}
         >
           Create Subnet
         </Button>

@@ -1,10 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useCreateSubnetMutation,
-  useGrants,
-  useProfile,
-  useVPCQuery,
-} from '@linode/queries';
+import { useCreateSubnetMutation, useVPCQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -21,6 +16,7 @@ import {
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   calculateAvailableIPv4sRFC1918,
@@ -42,11 +38,13 @@ interface Props {
 export const SubnetCreateDrawer = (props: Props) => {
   const { onClose, open, vpcId } = props;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
   const { data: vpc } = useVPCQuery(vpcId, open);
 
-  const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['create_vpc_subnet'],
+    vpcId
+  );
 
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
@@ -110,7 +108,7 @@ export const SubnetCreateDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
-      {userCannotAddSubnet && (
+      {!permissions.create_vpc_subnet && (
         <Notice
           spacingBottom={8}
           spacingTop={16}
@@ -128,7 +126,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter a subnet label"
-                disabled={userCannotAddSubnet}
+                disabled={!permissions.create_vpc_subnet}
                 errorText={fieldState.error?.message}
                 label="Subnet Label"
                 onBlur={field.onBlur}
@@ -144,7 +142,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter an IPv4"
-                disabled={userCannotAddSubnet}
+                disabled={!permissions.create_vpc_subnet}
                 errorText={fieldState.error?.message}
                 label={
                   shouldDisplayIPv6
@@ -195,7 +193,7 @@ export const SubnetCreateDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-subnet-drawer-button',
-            disabled: !isDirty || userCannotAddSubnet,
+            disabled: !isDirty || !permissions.create_vpc_subnet,
             label: 'Create Subnet',
             loading: isPending || isSubmitting,
             type: 'submit',
