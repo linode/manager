@@ -110,10 +110,14 @@ export const InterfaceType = ({ index }: Props) => {
     <FormControl>
       <Box alignItems="center" display="flex" flexDirection="row">
         <FormLabel id="network-connection-label">Network Connection</FormLabel>
-        {isCreatingFromBackup && (
+        {disabled && (
           <TooltipIcon
             status="info"
-            sxTooltipIcon={{ p: 0, marginLeft: '8px' }}
+            sxTooltipIcon={{
+              padding: 0,
+              marginLeft: '8px',
+              marginBottom: '8px',
+            }}
             text="You cannot use Configuration Profile Interfaces when deploying to a new Linode from a backup."
           />
         )}
