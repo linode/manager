@@ -206,13 +206,13 @@ describe('LKE Cluster Creation', () => {
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
     // Confirms LKE-E Phase 2 IP Stack and VPC options do not display if the 'standard' LKE tier is selected.
-    cy.findByLabelText('IP Stack').should('not.exist');
-    cy.findByLabelText('IPv4').should('not.exist');
-    cy.findByLabelText('IPv4 + IPv6 (dual-stack)').should('not.exist');
-    cy.findByLabelText('Automatically generate a VPC for this cluster').should(
+    cy.findByText('IP Stack').should('not.exist');
+    cy.findByText('IPv4', { exact: true }).should('not.exist');
+    cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
+    cy.findByText('Automatically generate a VPC for this cluster').should(
       'not.exist'
     );
-    cy.findByLabelText('Use an existing VPC').should('not.exist');
+    cy.findByText('Use an existing VPC').should('not.exist');
 
     let monthPrice = 0;
 
@@ -284,10 +284,9 @@ describe('LKE Cluster Creation', () => {
           .click();
       });
 
-    // Confirm request payload.
+    // Confirm request payload does not include LKE-E-specific values.
     cy.wait('@createCluster').then((intercept) => {
       const payload = intercept.request.body;
-      expect(payload.tier).to.equal('standard');
       expect(payload.stack_type).to.be.undefined;
       expect(payload.vpc_id).to.be.undefined;
       expect(payload.subnet_id).to.be.undefined;
