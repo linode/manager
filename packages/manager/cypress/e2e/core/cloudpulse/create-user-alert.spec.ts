@@ -115,7 +115,7 @@ const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
  * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Average").
+ * @param aggregationType - The aggregation type (e.g., "Avg").
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
@@ -305,7 +305,7 @@ describe('Create Alert', () => {
         cy.get('[data-testid="select_all_notice"]').click();
       // Fill metric details for the first rule
       const cpuUsageMetricDetails = {
-        aggregationType: 'Average',
+        aggregationType: 'Avg',
         dataField: 'CPU Utilization',
         operator: '=',
         ruleIndex: 0,
@@ -355,7 +355,7 @@ describe('Create Alert', () => {
       // Fill metric details for the second rule
 
       const memoryUsageMetricDetails = {
-        aggregationType: 'Average',
+        aggregationType: 'Avg',
         dataField: 'Memory Usage',
         operator: '=',
         ruleIndex: 1,
