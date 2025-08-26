@@ -117,16 +117,17 @@ describe('Update stackscripts', () => {
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+      'getStackScript'
+    );
     cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`).within(() => {
       ui.actionMenu
         .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
         .should('be.visible')
         .click();
+      ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
     });
-    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
-      'getStackScript'
-    );
-    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+
     cy.wait('@getStackScript');
     cy.url().should('endWith', `/stackscripts/${stackScripts[0].id}/edit`);
 

@@ -2,7 +2,6 @@ import { createLinodeRequestFactory } from '@linode/utilities';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { authenticate } from 'support/api/authentication';
 import { mockGetAccountSettings } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { interceptDeleteLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -66,9 +65,6 @@ describe('delete linode', () => {
   });
   beforeEach(() => {
     cy.tag('method:e2e');
-    mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
-    }).as('getFeatureFlags');
   });
 
   it('deletes linode from linode details page', () => {
@@ -131,7 +127,7 @@ describe('delete linode', () => {
       cy.findByText('Stats for this Linode are not available yet');
 
       // Go to setting tab
-      cy.findByText('Settings').should('be.visible').click();
+      ui.tabList.findTabByTitle('Settings').should('be.visible').click();
 
       // Check elements in setting tab
       cy.findByText('Linode Label').should('be.visible');
