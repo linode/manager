@@ -33,9 +33,8 @@ export const MaintenancePolicy = () => {
 
   // Check if user has permission to update linodes (needed for maintenance policy)
   const { data: permissions } = usePermissions({
-    accessType: 'linode',
+    accessType: 'account',
     permissionsToCheck: ['update_linode'],
-    // Shouldn't we pass the linode id here?
   });
 
   const isGPUPlan = type && type.class === 'gpu';
