@@ -196,14 +196,6 @@ const genericTableHeaderStyle = {
   },
 };
 
-const MuiTableHeadSvgStyles = {
-  svg: {
-    path: {
-      fill: Color.Brand[60],
-    },
-  },
-};
-
 const MuiTableZebraHoverStyles = {
   '&:not(.disabled-row)': {
     '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
@@ -1082,10 +1074,20 @@ export const darkTheme: ThemeOptions = {
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
-            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
-            ':hover': {
-              color: Color.Brand[60],
-              ...MuiTableHeadSvgStyles,
+            '&.MuiIconButton-isActive': {
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Active,
+                },
+              },
+            },
+            ':hover, :focus': {
+              color: Table.HeaderNested.Icon.Hover,
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Hover,
+                },
+              },
             },
             svg: {
               path: {
@@ -1147,9 +1149,13 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-active': {
             color: Table.HeaderNested.Text,
           },
-          ':hover': {
-            ...MuiTableHeadSvgStyles,
-            color: Color.Brand[60],
+          ':hover, :focus': {
+            color: Table.HeaderNested.Icon.Hover,
+            svg: {
+              path: {
+                fill: Table.HeaderNested.Icon.Hover,
+              },
+            },
           },
           svg: {
             path: {

@@ -127,7 +127,7 @@ describe('delete linode', () => {
       cy.findByText('Stats for this Linode are not available yet');
 
       // Go to setting tab
-      cy.findByText('Settings').should('be.visible').click();
+      ui.tabList.findTabByTitle('Settings').should('be.visible').click();
 
       // Check elements in setting tab
       cy.findByText('Linode Label').should('be.visible');

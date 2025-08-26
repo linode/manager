@@ -16,9 +16,7 @@ describe('TabList component', () => {
         </Tabs>,
         {
           initialRoute: '/tab-1',
-          MemoryRouter: {
-            initialEntries: ['/tab-1'],
-          },
+          initialEntries: ['/tab-1'],
         }
       )
     );
@@ -34,9 +32,7 @@ describe('TabList component', () => {
         </Tabs>,
         {
           initialRoute: '/tab-1',
-          MemoryRouter: {
-            initialEntries: ['/tab-1'],
-          },
+          initialEntries: ['/tab-1'],
         }
       )
     );
@@ -56,9 +52,7 @@ describe('TabList component', () => {
         </Tabs>,
         {
           initialRoute: '/tab-1',
-          MemoryRouter: {
-            initialEntries: ['/tab-1'],
-          },
+          initialEntries: ['/tab-1'],
         }
       )
     );

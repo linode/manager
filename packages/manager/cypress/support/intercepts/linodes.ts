@@ -781,6 +781,25 @@ export const mockGetLinodeStats = (
 };
 
 /**
+ * Intercepts GET request to retrieve network stats for a Linode and mocks an error response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeStatsError = (
+  linodeId: number,
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/stats`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
  * Intercepts PUT request to edit details of a linode
  *
  * @param linodeId - ID of Linode for intercepted request.

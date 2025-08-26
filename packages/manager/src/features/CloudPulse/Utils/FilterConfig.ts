@@ -1,6 +1,10 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
-import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
+import {
+  INTERFACE_IDS_PLACEHOLDER_TEXT,
+  LINODE_REGION,
+  RESOURCE_ID,
+} from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
@@ -194,6 +198,20 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
       },
       name: 'Ports',
     },
+    {
+      configuration: {
+        filterKey: 'relative_time_duration',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: false,
+        name: TIME_DURATION,
+        neededInViews: [], // we will have a static time duration component, no need render from filter builder
+        placeholder: 'Select a Duration',
+        priority: 4,
+      },
+      name: TIME_DURATION,
+    },
   ],
   serviceType: 'nodebalancer',
 };
@@ -214,6 +232,24 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         priority: 1,
       },
       name: 'Firewalls',
+    },
+    {
+      configuration: {
+        dependency: ['resource_id'],
+        filterKey: LINODE_REGION,
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: false,
+        name: 'Linode Region',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        placeholder: 'Select a Linode Region',
+        priority: 2,
+      },
+      name: 'Linode Region',
     },
     {
       configuration: {
@@ -260,6 +296,20 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         priority: 2,
       },
       name: 'Interface IDs',
+    },
+    {
+      configuration: {
+        filterKey: 'relative_time_duration',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: false,
+        name: TIME_DURATION,
+        neededInViews: [], // we will have a static time duration component, no need render from filter builder
+        placeholder: 'Select a Duration',
+        priority: 4,
+      },
+      name: TIME_DURATION,
     },
   ],
   serviceType: 'firewall',
