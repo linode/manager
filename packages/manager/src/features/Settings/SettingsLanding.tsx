@@ -28,8 +28,8 @@ export const SettingsLanding = () => {
 
   return (
     <>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <DocumentTitleSegment segment="Settings" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <GlobalSettings />

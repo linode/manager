@@ -97,9 +97,9 @@ describe('MaintenanceBannerV2', () => {
       data: mockMaintenance,
     });
 
-    const { queryByTestId } = renderWithTheme(
-      <MaintenanceBannerV2 pathname="/maintenance" />
-    );
+    const { queryByTestId } = renderWithTheme(<MaintenanceBannerV2 />, {
+      initialRoute: '/maintenance',
+    });
 
     // Should show the maintenance banner but not the maintenance link section
     expect(queryByTestId('maintenance-link-section')).not.toBeInTheDocument();
@@ -120,9 +120,9 @@ describe('MaintenanceBannerV2', () => {
       data: mockMaintenance,
     });
 
-    const { getByTestId } = renderWithTheme(
-      <MaintenanceBannerV2 pathname="/dashboard" />
-    );
+    const { getByTestId } = renderWithTheme(<MaintenanceBannerV2 />, {
+      initialRoute: '/dashboard',
+    });
 
     // Should show the maintenance banner AND the maintenance link section
     getByTestId('maintenance-link-section');

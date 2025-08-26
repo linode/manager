@@ -123,9 +123,9 @@ describe('PlatformMaintenanceBanner', () => {
       }),
     });
 
-    const { queryByTestId } = renderWithTheme(
-      <PlatformMaintenanceBanner pathname="/maintenance" />
-    );
+    const { queryByTestId } = renderWithTheme(<PlatformMaintenanceBanner />, {
+      initialRoute: '/maintenance',
+    });
 
     // Should show the platform maintenance banner but not the maintenance link section
     expect(
@@ -151,9 +151,9 @@ describe('PlatformMaintenanceBanner', () => {
       }),
     });
 
-    const { getByTestId } = renderWithTheme(
-      <PlatformMaintenanceBanner pathname="/dashboard" />
-    );
+    const { getByTestId } = renderWithTheme(<PlatformMaintenanceBanner />, {
+      initialRoute: '/dashboard',
+    });
 
     // Should show the platform maintenance banner AND the maintenance link section
     getByTestId('platform-maintenance-link-section');

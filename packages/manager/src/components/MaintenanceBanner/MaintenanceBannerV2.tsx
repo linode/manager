@@ -1,6 +1,7 @@
 import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
@@ -8,13 +9,14 @@ import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { Link } from '../Link';
 
-export const MaintenanceBannerV2 = ({ pathname }: { pathname?: string }) => {
+export const MaintenanceBannerV2 = () => {
   const { data: allMaintenance } = useAllAccountMaintenanceQuery(
     {},
     PENDING_MAINTENANCE_FILTER
   );
+  const location = useLocation();
 
-  const hideAccountMaintenanceLink = pathname === '/maintenance';
+  const hideAccountMaintenanceLink = location.pathname === '/maintenance';
 
   // Filter out platform maintenance, since that is handled separately
   const linodeMaintenance =

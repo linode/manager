@@ -1,4 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 
 import { usePlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
@@ -12,15 +13,12 @@ import { Link } from '../Link';
  * them separately from the standard MaintenanceBanner.
  */
 
-export const PlatformMaintenanceBanner = ({
-  pathname,
-}: {
-  pathname?: string;
-}) => {
+export const PlatformMaintenanceBanner = () => {
   const { accountHasPlatformMaintenance, linodesWithPlatformMaintenance } =
     usePlatformMaintenance();
+  const location = useLocation();
 
-  const hideAccountMaintenanceLink = pathname === '/maintenance';
+  const hideAccountMaintenanceLink = location.pathname === '/maintenance';
 
   if (!accountHasPlatformMaintenance) return null;
 

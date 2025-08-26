@@ -28,8 +28,8 @@ export const ServiceTransfersLanding = () => {
 
   return (
     <>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <DocumentTitleSegment segment="Service Transfers" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <EntityTransfersLanding />

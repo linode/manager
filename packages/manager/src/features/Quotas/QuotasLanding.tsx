@@ -34,8 +34,8 @@ export const QuotasLanding = () => {
 
   return (
     <>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <DocumentTitleSegment segment="Quotas" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <Quotas />
