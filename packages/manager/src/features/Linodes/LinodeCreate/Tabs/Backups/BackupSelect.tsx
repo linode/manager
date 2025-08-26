@@ -15,9 +15,6 @@ export const BackupSelect = () => {
   const { field, fieldState } = useController<CreateLinodeRequest, 'backup_id'>(
     { name: 'backup_id' }
   );
-  const { field: imageField } = useController<CreateLinodeRequest, 'image'>({
-    name: 'image',
-  });
 
   const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
 
@@ -51,11 +48,7 @@ export const BackupSelect = () => {
               checked={backup.id === field.value}
               heading="Automatic"
               key={backup.id}
-              onClick={() => {
-                field.onChange(backup.id);
-                // Ensure no image selected if deploying Linode from a backup
-                imageField.onChange(null);
-              }}
+              onClick={() => field.onChange(backup.id)}
               subheadings={[
                 <DateTimeDisplay
                   key={`backup-${backup.id}-date`}
@@ -69,11 +62,7 @@ export const BackupSelect = () => {
               checked={data.snapshot.current.id === field.value}
               heading={data.snapshot.current.label ?? 'Snapshot'}
               key={data.snapshot.current.id}
-              onClick={() => {
-                field.onChange(data.snapshot.current!.id);
-                // Ensure no image selected if deploying Linode from a backup
-                imageField.onChange(null);
-              }}
+              onClick={() => field.onChange(data.snapshot.current!.id)}
               subheadings={[
                 <DateTimeDisplay
                   key={`backup-${data.snapshot.current.id}-date`}
