@@ -134,7 +134,7 @@ export const InterfaceType = ({ index }: Props) => {
         <Grid container spacing={2}>
           {interfaceTypes.map((interfaceType) => (
             <SelectionCard
-              checked={field.value === interfaceType.purpose}
+              checked={disabled ? false : field.value === interfaceType.purpose}
               disabled={disabled}
               gridSize={{
                 md: 3,
@@ -146,7 +146,7 @@ export const InterfaceType = ({ index }: Props) => {
               onClick={() => onChange(interfaceType.purpose)}
               renderIcon={() => (
                 <Radio
-                  checked={field.value === interfaceType.purpose}
+                  checked={disabled ? false : field.value === interfaceType.purpose}
                   disabled={disabled}
                 />
               )}
