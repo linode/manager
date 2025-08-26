@@ -8,6 +8,8 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
       cancel_service_transfer: false,
+      accept_service_transfer: false,
+      create_service_transfer: false,
     },
   })),
 }));
@@ -35,7 +37,11 @@ describe('TransfersPendingActionMenu', () => {
 
   it('should enable "Cancel" button if the user has cancel_service_transfer permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      data: { cancel_service_transfer: true },
+      data: {
+        cancel_service_transfer: true,
+        accept_service_transfer: false,
+        create_service_transfer: false,
+      },
     });
 
     const { getByRole } = renderWithTheme(

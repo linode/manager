@@ -39,7 +39,7 @@ import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import { ListView } from './ListView';
 
 import type { Action } from '../PowerActionsDialogOrDrawer';
-import type { Config } from '@linode/api-v4/lib/linodes/types';
+import type { Config, PermissionType } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type {
   AnyRouter,
@@ -77,6 +77,9 @@ export interface LinodeHandlers {
   onOpenResizeDialog: () => void;
 }
 
+type PermissionsSubset<T extends PermissionType> = T;
+type LinodesPermissions = PermissionsSubset<'create_linode'>;
+
 export interface LinodesLandingProps {
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
@@ -92,7 +95,7 @@ export interface LinodesLandingProps {
     orderBy: string;
     sortedData: LinodeWithMaintenance[] | null;
   };
-  permissions: Record<string, boolean>;
+  permissions: Record<LinodesPermissions, boolean>;
   regionFilter: RegionFilter;
   search: SearchParamOptions<AnyRouter, '/linodes', '/linodes'>['search'];
   someLinodesHaveScheduledMaintenance: boolean;

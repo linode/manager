@@ -1,5 +1,5 @@
 import { regionFactory } from '@linode/utilities';
-import { screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -33,26 +33,23 @@ describe('DestinationLinodeObjectStorageDetailsSummary', () => {
       <DestinationLinodeObjectStorageDetailsSummary {...details} />
     );
 
+    // Host:
     expect(screen.getByText('test host')).toBeVisible();
-
+    // Bucket:
     expect(screen.getByText('test bucket')).toBeVisible();
-
+    // Log Path:
     expect(screen.getByText('test/path')).toBeVisible();
-
+    // Region:
     await waitFor(() => {
       expect(screen.getByText('US, Chicago, IL')).toBeVisible();
     });
-
-    expect(
-      within(screen.getByText('Access Key ID:').closest('div')!).getByText(
-        '*****************'
-      )
-    ).toBeInTheDocument();
-
-    expect(
-      within(screen.getByText('Secret Access Key:').closest('div')!).getByText(
-        '*****************'
-      )
-    ).toBeInTheDocument();
+    // Access Key ID:
+    expect(screen.getByTestId('access-key-id')).toHaveTextContent(
+      '*****************'
+    );
+    // Secret Access Key:
+    expect(screen.getByTestId('secret-access-key')).toHaveTextContent(
+      '*****************'
+    );
   });
 });

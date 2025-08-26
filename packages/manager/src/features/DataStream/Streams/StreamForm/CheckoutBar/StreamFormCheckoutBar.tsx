@@ -5,17 +5,17 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { displayPrice } from 'src/components/DisplayPrice';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
-import { StyledHeader } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar.styles';
+import { StyledHeader } from 'src/features/DataStream/Streams/StreamForm/CheckoutBar/StreamFormCheckoutBar.styles';
 
-import type { CreateStreamAndDestinationForm } from 'src/features/DataStream/Streams/StreamCreate/types';
+import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
 export interface Props {
   createStream: () => void;
 }
 
-export const StreamCreateCheckoutBar = (props: Props) => {
+export const StreamFormCheckoutBar = (props: Props) => {
   const { createStream } = props;
-  const { control } = useFormContext<CreateStreamAndDestinationForm>();
+  const { control } = useFormContext<StreamAndDestinationFormType>();
   const destinationType = useWatch({ control, name: 'destination.type' });
   const formValues = useWatch({
     control,
