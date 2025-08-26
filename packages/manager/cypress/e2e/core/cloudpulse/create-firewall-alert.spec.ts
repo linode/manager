@@ -522,7 +522,7 @@ describe('Create Alert', () => {
         // Fill metric details for the second rule
 
         const egressTrafficRateMetricDetails = {
-          aggregationType: 'avg',
+          aggregationType: 'Avg',
           dataField: 'Available connections',
           operator: '=',
           ruleIndex: 1,
