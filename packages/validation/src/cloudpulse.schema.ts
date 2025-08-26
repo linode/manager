@@ -20,7 +20,7 @@ export const metricCriteria = object({
     .required(fieldErrorMessage),
   threshold: number()
     .required(fieldErrorMessage)
-    .positive('Enter a positive value.')
+    .min(0, 'Enter a positive value.')
     .typeError('The value should be a number.'),
   dimension_filters: array().of(dimensionFilters.defined()).optional(),
 });
