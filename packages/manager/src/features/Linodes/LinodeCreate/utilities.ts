@@ -65,6 +65,7 @@ export const getLinodeCreatePayload = (
     isShowingNewNetworkingUI,
     isAclpIntegration,
     isAclpAlertsPreferenceBeta,
+    isFromBackups,
   } = options;
 
   const values: CreateLinodeRequest = omitProps(formValues, [
@@ -99,9 +100,11 @@ export const getLinodeCreatePayload = (
       );
       values.firewall_id = undefined;
     } else {
-      values.interfaces = formValues.linodeInterfaces.map(
-        getLegacyInterfaceFromLinodeInterface
-      );
+      values.interfaces = isFromBackups
+        ? undefined
+        : formValues.linodeInterfaces.map(
+            getLegacyInterfaceFromLinodeInterface
+          );
     }
   } else {
     values.interfaces = getInterfacesPayload(

@@ -66,8 +66,7 @@ export const InterfaceType = ({ index }: Props) => {
   const createType = useGetLinodeCreateType();
   const isCreatingFromBackup = createType === 'Backups';
 
-  const disabled =
-    isCreatingFromBackup && interfaceGeneration !== 'linode';
+  const disabled = isCreatingFromBackup && interfaceGeneration !== 'linode';
 
   const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
