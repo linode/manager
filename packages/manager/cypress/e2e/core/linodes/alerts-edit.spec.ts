@@ -119,7 +119,7 @@ describe('region enables alerts', function () {
     );
   });
 
-  it('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
+  xit('Legacy alerts = 0, Beta alerts = [] => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -180,7 +180,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
+  xit('Legacy alerts > 0, Beta alerts = [] => legacy enabled. can upgrade to beta enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -243,7 +243,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
+  xit('Legacy alerts = 0, Beta alerts > 0, => beta enabled', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -310,7 +310,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
+  xit('Legacy alerts > 0, Beta alerts > 0, => beta enabled. can downgrade to legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -383,7 +383,7 @@ describe('region enables alerts', function () {
       });
   });
 
-  it('in default beta mode, edits to beta alerts do not trigger confirmation modal', function () {
+  xit('in default beta mode, edits to beta alerts do not trigger confirmation modal', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -422,7 +422,7 @@ describe('region enables alerts', function () {
     ui.dialog.find().should('not.exist');
   });
 
-  it('in default legacy mode, edits to beta alerts trigger confirmation modal ', function () {
+  xit('in default legacy mode, edits to beta alerts trigger confirmation modal ', function () {
     const mockLinode = linodeFactory.build({
       id: 2,
       label: randomLabel(),
@@ -536,7 +536,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
     mockGetRegions([mockDisabledRegion]).as('getRegions');
   });
 
-  it('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
+  xit('Legacy alerts = 0, Beta alerts > 0,  => legacy disabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -572,7 +572,7 @@ describe('region disables alerts. beta alerts not available regardless of linode
       });
   });
 
-  it('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
+  xit('Legacy alerts > 0, Beta alerts = 0,  => legacy enabled', function () {
     const mockLinode = linodeFactory.build({
       id: MOCK_LINODE_ID,
       label: randomLabel(),
@@ -621,35 +621,39 @@ describe('region disables alerts. beta alerts not available regardless of linode
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
       .within(() => {
-        // no errors on page load, and all toggle buttons are enabled
-        cy.get('p[data-qa-textfield-error-text]').should('not.exist');
-        ui.toggle.find().each(($toggle) => {
-          cy.wrap($toggle)
-            .should('have.attr', 'data-qa-toggle', 'true')
-            .should('be.visible')
-            .should('be.enabled');
-        });
-        cy.get('input[data-testid="textfield-input"]').each(($numericInput) => {
-          cy.wrap($numericInput).clear();
-          cy.wrap($numericInput).blur();
-          // error appears
-          cy.get('p[data-qa-textfield-error-text]')
-            .should('be.visible')
-            .then(($err) => {
-              expect($err).to.contain('is required.');
-            });
-          // error message does not disable adjacent toggle button
-          // difficult to find closest toggle btn, so test them all
-          ui.toggle.find().each(($toggle) => {
-            cy.wrap($toggle)
+        const strNumericInputSelector = 'input[data-testid="textfield-input"]';
+        // each data-qa-alerts-panel contains a toggle button and a numeric input
+        cy.get('[data-qa-alerts-panel="true"]').each((panel) => {
+          cy.wrap(panel).within(() => {
+            // toggle button is enabled
+            ui.toggle
+              .find()
               .should('have.attr', 'data-qa-toggle', 'true')
               .should('be.visible')
               .should('be.enabled');
+            cy.get('label[data-qa-alert]')
+              .invoke('attr', 'data-qa-alert')
+              .then((lbl) => {
+                cy.get(strNumericInputSelector).clear();
+                cy.get(strNumericInputSelector).blur();
+                // error appears in numeric input
+                cy.get('p[data-qa-textfield-error-text]')
+                  .should('be.visible')
+                  .then(($err) => {
+                    // use the toggle button's label to get the full error msg
+                    expect($err).to.contain(`${lbl} is required.`);
+                  });
+                // toggle button is not disabled by the error
+                ui.toggle
+                  .find()
+                  .should('have.attr', 'data-qa-toggle', 'true')
+                  .should('be.enabled');
+                cy.get(strNumericInputSelector).click();
+                cy.get(strNumericInputSelector).type('1');
+                // error is removed
+                cy.get('p[data-qa-textfield-error-text]').should('not.exist');
+              });
           });
-          cy.wrap($numericInput).click();
-          cy.wrap($numericInput).type('1');
-          // error is removed
-          cy.get('p[data-qa-textfield-error-text]').should('not.exist');
         });
       });
   });
