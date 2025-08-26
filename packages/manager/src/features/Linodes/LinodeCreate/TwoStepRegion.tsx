@@ -100,13 +100,13 @@ export const TwoStepRegion = (props: CombinedProps) => {
         />
       </Box>
       <Tabs
-        // onChange={(index: number) => {
-        //   if (index !== tabIndex) {
-        //     setTabIndex(index);
-        //     // Reset region selection when switching between site types
-        //     // onChange(undefined);
-        //   }
-        // }}
+        onChange={(index: number) => {
+          if (index !== tabIndex) {
+            setTabIndex(index);
+            // M3-9469: Reset region selection when switching between site types
+            onChange(undefined);
+          }
+        }}
       >
         <TabList>
           <Tab>Core</Tab>

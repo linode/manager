@@ -3,7 +3,6 @@ import {
   linodeTypeFactory,
   regionFactory,
 } from '@linode/utilities';
-import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -247,64 +246,6 @@ describe('Region', () => {
 
     expect(distributedRegionOption.closest('li')?.textContent).toContain(
       'The selected image cannot be deployed to a distributed region.'
-    );
-  });
-
-  it.only('test', async () => {
-    const distributedRegion = regionFactory.build({
-      capabilities: ['Linodes', 'Distributed Plans'],
-      site_type: 'distributed',
-    });
-    const coreRegion = regionFactory.build({
-      capabilities: ['Linodes'],
-      site_type: 'core',
-    });
-
-    server.use(
-      http.get('*/v4*/regions', () => {
-        return HttpResponse.json(
-          makeResourcePage([coreRegion, distributedRegion])
-        );
-      })
-    );
-
-    await renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Region />,
-      options: {
-        flags: {
-          gecko2: {
-            enabled: true,
-            la: true,
-            ga: false,
-          },
-        },
-      },
-    });
-
-    // Select a core region
-    const regionSelect = screen.getByLabelText('Region');
-    await userEvent.click(regionSelect);
-    const coreRegionOption = screen.getByText(
-      `US, ${coreRegion.label} (${coreRegion.id})`
-    );
-    await userEvent.click(coreRegionOption);
-    expect(regionSelect).toHaveAttribute(
-      'value',
-      `US, ${coreRegion.label} (${coreRegion.id})`
-    );
-
-    // Switch tabs
-    const [coreTab, distributedTab] = screen.getAllByRole('tab');
-    await userEvent.click(distributedTab);
-    await userEvent.click(coreTab);
-
-    // Previous Region value should be cleared
-    // const select2 = screen.getByLabelText('Region');
-    // expect(select2).toHaveAttribute('value', 'undefined');
-
-    expect(regionSelect).toHaveAttribute(
-      'value',
-      `US, ${coreRegion.label} (${coreRegion.id})`
     );
   });
 });
