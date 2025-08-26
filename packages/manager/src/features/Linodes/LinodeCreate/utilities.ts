@@ -46,6 +46,7 @@ const DEFAULT_OS = 'linode/ubuntu24.04';
 interface LinodeCreatePayloadOptions {
   isAclpAlertsPreferenceBeta?: boolean;
   isAclpIntegration?: boolean;
+  isFromBackups?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
 
