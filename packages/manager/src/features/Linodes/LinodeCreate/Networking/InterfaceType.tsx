@@ -1,5 +1,6 @@
 import { firewallQueries, useQueryClient } from '@linode/queries';
 import {
+  Box,
   FormControl,
   Radio,
   RadioGroup,
@@ -107,7 +108,16 @@ export const InterfaceType = ({ index }: Props) => {
 
   return (
     <FormControl>
-      <FormLabel id="network-connection-label">Network Connection</FormLabel>
+      <Box alignItems="center" display="flex" flexDirection="row">
+        <FormLabel id="network-connection-label">Network Connection</FormLabel>
+        {isCreatingFromBackup && (
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={{ p: 0, marginLeft: '8px' }}
+            text="You cannot use Configuration Profile Interfaces when deploying to a new Linode from a backup."
+          />
+        )}
+      </Box>
       <Typography id="network-connection-helper-text">
         The default interface used by this Linode to route network traffic.
         Additional interfaces can be added after the Linode is created.
