@@ -35,20 +35,27 @@ const renderActions = (
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
   const { databaseEngine, databaseID, onClose, open } = props;
 
-  const { error, isPending, mutateAsync } = useDatabaseCredentialsMutation(
-    databaseEngine,
-    databaseID
-  );
+  const {
+    error,
+    isPending,
+    mutateAsync,
+    reset: resetMutation,
+  } = useDatabaseCredentialsMutation(databaseEngine, databaseID);
 
   const onResetRootPassword = async () => {
     await mutateAsync();
     onClose();
   };
 
+  const handleOnClose = () => {
+    onClose();
+    resetMutation?.();
+  };
+
   return (
     <ConfirmationDialog
-      actions={renderActions(onClose, onResetRootPassword, isPending)}
-      onClose={onClose}
+      actions={renderActions(handleOnClose, onResetRootPassword, isPending)}
+      onClose={handleOnClose}
       open={open}
       title="Reset Root Password"
     >

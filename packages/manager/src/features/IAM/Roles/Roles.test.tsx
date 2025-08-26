@@ -8,10 +8,11 @@ import { RolesLanding } from './Roles';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountRoles: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
@@ -19,12 +20,18 @@ vi.mock('@linode/queries', async () => {
 });
 
 vi.mock('src/features/IAM/Shared/utilities', async () => {
-  const actual = await vi.importActual<any>(
-    'src/features/IAM/Shared/utilities'
-  );
+  const actual = await vi.importActual('src/features/IAM/Shared/utilities');
   return {
     ...actual,
     mapAccountPermissionsToRoles: vi.fn(),
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
   };
 });
 
@@ -46,6 +53,11 @@ describe('RolesLanding', () => {
 
   it('renders roles table when permissions are loaded', async () => {
     const mockPermissions = accountRolesFactory.build();
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: true,
+      },
+    });
     queryMocks.useAccountRoles.mockReturnValue({
       data: mockPermissions,
       isLoading: false,
@@ -54,5 +66,18 @@ describe('RolesLanding', () => {
     renderWithTheme(<RolesLanding />);
     // RolesTable has a textbox at the top
     expect(screen.getByRole('textbox')).toBeInTheDocument();
+  });
+
+  it('should show an error message if user does not have permissions', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: false,
+      },
+    });
+
+    renderWithTheme(<RolesLanding />);
+    expect(
+      screen.getByText('You do not have permission to view roles.')
+    ).toBeInTheDocument();
   });
 });

@@ -8,8 +8,8 @@ import type {
 } from './types';
 import type {
   AlertDefinitionScope,
-  AlertServiceType,
   AlertSeverityType,
+  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   DimensionFilter,
   EditAlertPayloadWithService,
@@ -49,7 +49,7 @@ export const filterFormValues = (
  */
 export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
-  serviceType: AlertServiceType,
+  serviceType: CloudPulseServiceType,
   severity: AlertSeverityType,
   alertId: number,
   scope: AlertDefinitionScope

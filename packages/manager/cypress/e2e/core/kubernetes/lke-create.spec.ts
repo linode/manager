@@ -17,8 +17,15 @@ import {
   dcPricingPlanPlaceholder,
 } from 'support/constants/dc-specific-pricing';
 import {
+  clusterPlans,
+  dedicatedNodeCount,
+  dedicatedType,
   latestEnterpriseTierKubernetesVersion,
   latestKubernetesVersion,
+  mockedLKEClusterTypes,
+  mockedLKEEnterprisePrices,
+  nanodeNodeCount,
+  nanodeType,
 } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -50,8 +57,6 @@ import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
-  lkeEnterpriseTypeFactory,
-  lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
 import {
@@ -62,11 +67,7 @@ import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kube
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import type { PriceType } from '@linode/api-v4/lib/types';
-import type { ExtendedType } from 'src/utilities/extendType';
 import type { LkePlanDescription } from 'support/api/lke';
-
-const dedicatedNodeCount = 4;
-const nanodeNodeCount = 3;
 
 const clusterRegion = chooseRegion({
   capabilities: ['Kubernetes'],
@@ -82,46 +83,7 @@ const nanodeMemoryPool = nodePoolFactory.build({
   nodes: kubeLinodeFactory.buildList(nanodeNodeCount),
   type: 'g6-standard-1',
 });
-const dedicatedType = dedicatedTypeFactory.build({
-  disk: 81920,
-  id: 'g6-dedicated-2',
-  label: 'Dedicated 4 GB',
-  memory: 4096,
-  price: {
-    hourly: 0.054,
-    monthly: 36.0,
-  },
-  region_prices: dcPricingMockLinodeTypes.find(
-    (type) => type.id === 'g6-dedicated-2'
-  )?.region_prices,
-  vcpus: 2,
-}) as ExtendedType;
-const nanodeType = linodeTypeFactory.build({
-  disk: 51200,
-  id: 'g6-standard-1',
-  label: 'Linode 2 GB',
-  memory: 2048,
-  price: {
-    hourly: 0.0095,
-    monthly: 12.0,
-  },
-  region_prices: dcPricingMockLinodeTypes.find(
-    (type) => type.id === 'g6-standard-1'
-  )?.region_prices,
-  vcpus: 1,
-}) as ExtendedType;
-const gpuType = linodeTypeFactory.build({
-  class: 'gpu',
-  id: 'g2-gpu-1',
-}) as ExtendedType;
-const highMemType = linodeTypeFactory.build({
-  class: 'highmem',
-  id: 'g7-highmem-1',
-}) as ExtendedType;
-const premiumType = linodeTypeFactory.build({
-  class: 'premium',
-  id: 'g7-premium-1',
-}) as ExtendedType;
+
 const mockedLKEClusterPrices: PriceType[] = [
   {
     id: 'lke-sa',
@@ -146,33 +108,7 @@ const mockedLKEHAClusterPrices: PriceType[] = [
     transfer: 0,
   },
 ];
-const mockedLKEEnterprisePrices = [
-  lkeHighAvailabilityTypeFactory.build(),
-  lkeEnterpriseTypeFactory.build(),
-];
-const clusterPlans: LkePlanDescription[] = [
-  {
-    nodeCount: dedicatedNodeCount,
-    planName: 'Dedicated 4 GB',
-    size: 4,
-    tab: 'Dedicated CPU',
-    type: 'dedicated',
-  },
-  {
-    nodeCount: nanodeNodeCount,
-    planName: 'Linode 2 GB',
-    size: 24,
-    tab: 'Shared CPU',
-    type: 'standard',
-  },
-];
-const mockedLKEClusterTypes = [
-  dedicatedType,
-  nanodeType,
-  gpuType,
-  highMemType,
-  premiumType,
-];
+
 const validEnterprisePlanTabs = [
   'Dedicated CPU',
   'Shared CPU',
@@ -373,7 +309,7 @@ describe('LKE Cluster Creation', () => {
       cy.contains('Kubernetes API Endpoint').should('be.visible');
       cy.contains('linodelke.net:443').should('be.visible');
 
-      cy.findAllByText(nodePoolLabel, { selector: 'h2' })
+      cy.findAllByText(nodePoolLabel, { selector: 'h3' })
         .should('have.length', similarNodePoolCount)
         .first()
         .should('be.visible');

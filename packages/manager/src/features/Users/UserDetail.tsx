@@ -9,14 +9,18 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';
 
 export const UserDetail = () => {
+  const { iamRbacPrimaryNavChanges } = useFlags();
   const { username } = useParams({
-    from: '/account/users/$username',
+    from: iamRbacPrimaryNavChanges
+      ? '/users/$username'
+      : '/account/users/$username',
   });
 
   const location = useLocation();
@@ -28,11 +32,15 @@ export const UserDetail = () => {
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
-      to: '/account/users/$username/profile',
+      to: iamRbacPrimaryNavChanges
+        ? '/users/$username/profile'
+        : '/account/users/$username/profile',
       title: 'User Profile',
     },
     {
-      to: '/account/users/$username/permissions',
+      to: iamRbacPrimaryNavChanges
+        ? '/users/$username/permissions'
+        : '/account/users/$username/permissions',
       title: 'User Permissions',
     },
   ]);

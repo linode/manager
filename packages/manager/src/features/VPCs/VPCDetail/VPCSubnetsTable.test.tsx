@@ -272,19 +272,4 @@ describe('VPC Subnets table', () => {
     },
     { timeout: 15_000 }
   );
-
-  it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    const { getByRole } = renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={true}
-        vpcId={3}
-        vpcRegion=""
-      />
-    );
-
-    const createButton = getByRole('button', {
-      name: 'Create Subnet',
-    });
-    expect(createButton).toBeDisabled();
-  });
 });

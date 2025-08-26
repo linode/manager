@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { Link } from 'react-router-dom';
-import type { LinkProps } from 'react-router-dom';
+
+import { Link } from 'src/components/Link';
 
 import {
   StyledDiv,
@@ -12,6 +11,7 @@ import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 
 import type { EditableProps, LabelProps } from './types';
+import type { LinkProps } from '@tanstack/react-router';
 
 export interface CrumbOverridesProps {
   label?: React.ReactNode | string;

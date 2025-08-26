@@ -2,7 +2,7 @@ import {
   useDatabaseMutation,
   useDatabaseTypesQuery,
   useRegionAvailabilityQuery,
-  useRegionQuery,
+  useRegionsQuery,
 } from '@linode/queries';
 import {
   Box,
@@ -27,10 +27,18 @@ import {
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import {
+  isDefaultDatabase,
+  useIsDatabasesEnabled,
+} from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 
+import {
+  RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
+  RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
+} from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGrid,
@@ -74,6 +82,7 @@ export const DatabaseResize = () => {
     error: resizeError,
     isPending: submitInProgress,
     mutateAsync: updateDatabase,
+    reset: resetMutation,
   } = useDatabaseMutation(database.engine, database.id);
 
   const {
@@ -82,22 +91,66 @@ export const DatabaseResize = () => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery({ platform: database.platform });
 
+  const shouldProvideRegions =
+    flags.databasePremium && isDefaultDatabase(database);
+
   // When databasePremium flag is enabled for a new database cluster, provide the database region ID to perform queries and enable additional behavior for the PlansPanel
-  const databaseRegion =
-    flags.databasePremium && database.platform === 'rdbms-default'
-      ? database.region
-      : '';
+  const databaseRegion = shouldProvideRegions ? database.region : '';
 
   const {
-    data: regionData,
-    error: regionError,
-    isLoading: regionLoading,
-  } = useRegionQuery(databaseRegion);
+    data: regionsData,
+    error: regionsError,
+    isLoading: regionsLoading,
+  } = useRegionsQuery();
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     databaseRegion,
     Boolean(flags.soldOutChips && flags.databasePremium && databaseRegion)
   );
+
+  const currentPlanType = dbTypes?.find(
+    (type: DatabaseType) => type.id === database.type
+  );
+
+  const isDisabledSharedTab = database.cluster_size === 2;
+
+  const premiumRestrictedTabsCopy =
+    currentPlanType?.class === 'premium'
+      ? RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT
+      : RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT;
+
+  const restrictPlanTypes = () => {
+    if (currentPlanType?.class === 'premium') {
+      return ['shared', 'dedicated'];
+    } else {
+      return ['premium'];
+    }
+  };
+
+  const disabledTabsConfig: {
+    disabledTabs: string[];
+    disabledTabsCopy: string;
+  } = React.useMemo(() => {
+    // For new database clusters, restrict plan types based on the current plan
+    if (isDefaultDatabase(database) && flags.databaseRestrictPlanResize) {
+      return {
+        disabledTabsCopy: premiumRestrictedTabsCopy,
+        disabledTabs: restrictPlanTypes(),
+      };
+    }
+    // Disable shared tab for legacy database clusters when cluster size is 2
+    if (!isNewDatabaseGA && isDisabledSharedTab) {
+      return {
+        disabledTabsCopy: RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
+        disabledTabs: ['shared'],
+      };
+    }
+
+    return {
+      disabledTabs: [],
+      disabledTabsCopy: '',
+    };
+  }, [database, flags, isNewDatabaseGA]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -267,7 +320,6 @@ export const DatabaseResize = () => {
     displayTypes,
     isNewDatabaseGA
   );
-  const isDisabledSharedTab = database.cluster_size === 2;
 
   const shouldSubmitBeDisabled = React.useMemo(() => {
     return !summaryText;
@@ -311,6 +363,11 @@ export const DatabaseResize = () => {
     setSelectedTab(index);
   };
 
+  const handleOnClose = () => {
+    setIsResizeConfirmationDialogOpen(false);
+    resetMutation?.();
+  };
+
   if (!isResizeEnabled) {
     navigate({
       to: `/databases/$engine/$databaseId/summary`,
@@ -322,11 +379,11 @@ export const DatabaseResize = () => {
     return null;
   }
 
-  if (typesLoading || regionLoading) {
+  if (typesLoading || regionsLoading) {
     return <CircleProgress />;
   }
 
-  if (typesError || regionError) {
+  if (typesError || regionsError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
@@ -349,17 +406,17 @@ export const DatabaseResize = () => {
           data-qa-select-plan
           disabled={disabled}
           disabledSmallerPlans={disabledPlans}
-          disabledTabs={
-            !isNewDatabaseGA && isDisabledSharedTab ? ['shared'] : []
-          }
+          disabledTabs={disabledTabsConfig.disabledTabs}
+          flow="database"
           handleTabChange={handleTabChange}
           header="Choose a Plan"
           isLegacyDatabase={!isNewDatabaseGA}
+          isResize
           onSelect={(selected: string) => setSelectedPlanId(selected)}
-          regionsData={regionData ? [regionData] : undefined}
+          regionsData={shouldProvideRegions ? regionsData : undefined}
           selectedId={selectedPlanId}
           selectedRegionID={databaseRegion}
-          tabDisabledMessage="Resizing a 2-node cluster is only allowed with Dedicated plans."
+          tabDisabledMessage={disabledTabsConfig.disabledTabsCopy}
           types={displayTypes}
         />
         {isNewDatabaseGA && (
@@ -420,7 +477,7 @@ export const DatabaseResize = () => {
         label={'Cluster Name'}
         loading={submitInProgress}
         onClick={onResize}
-        onClose={() => setIsResizeConfirmationDialogOpen(false)}
+        onClose={handleOnClose}
         open={isResizeConfirmationDialogOpen}
         title={`Resize Database Cluster ${database.label}?`}
       >

@@ -1,12 +1,17 @@
 import { useAccountRoles } from '@linode/queries';
-import { CircleProgress, Paper, Typography } from '@linode/ui';
+import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
 import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities';
 
+import { usePermissions } from '../hooks/usePermissions';
+
 export const RolesLanding = () => {
-  const { data: accountRoles, isLoading } = useAccountRoles();
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: accountRoles, isLoading } = useAccountRoles(
+    permissions?.is_account_admin
+  );
 
   const { roles } = React.useMemo(() => {
     if (!accountRoles) {
@@ -18,6 +23,12 @@ export const RolesLanding = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (!permissions?.is_account_admin) {
+    return (
+      <Notice variant="error">You do not have permission to view roles.</Notice>
+    );
   }
 
   return (

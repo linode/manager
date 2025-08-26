@@ -1,6 +1,6 @@
-import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
+import { loadScript } from '@linode/utilities';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -9,7 +9,7 @@ import { reportException } from 'src/exceptionReporting';
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
  */
 export const useAdobeAnalytics = () => {
-  const history = useHistory();
+  const location = useLocation();
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script
@@ -36,17 +36,14 @@ export const useAdobeAnalytics = () => {
 
   React.useEffect(() => {
     /**
-     * Send pageviews
+     * Send pageviews when location changes
      */
-    return history.listen(({ pathname }) => {
-      // Send Adobe Analytics page view events
-      if (window._satellite) {
-        window._satellite.track('page view', {
-          url: pathname,
-        });
-      }
-    });
-  }, [history]);
+    if (window._satellite) {
+      window._satellite.track('page view', {
+        url: location.pathname,
+      });
+    }
+  }, [location.pathname]); // Listen to location changes
 
   return null;
 };

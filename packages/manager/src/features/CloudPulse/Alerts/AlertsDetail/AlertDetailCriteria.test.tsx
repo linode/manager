@@ -26,7 +26,7 @@ describe('AlertDetailCriteria component tests', () => {
       },
     });
     const { getAllByText, getByText } = renderWithTheme(
-      <AlertDetailCriteria alertDetails={alertDetails} />
+      <AlertDetailCriteria alertDetails={alertDetails} serviceType="linode" />
     );
     const { rules } = alertDetails.rule_criteria;
     expect(getAllByText('Metric Threshold:').length).toBe(rules.length);
@@ -53,7 +53,7 @@ describe('AlertDetailCriteria component tests', () => {
       },
     });
     const { getByText, queryByText } = renderWithTheme(
-      <AlertDetailCriteria alertDetails={alert} />
+      <AlertDetailCriteria alertDetails={alert} serviceType="linode" />
     );
     expect(getByText('Criteria')).toBeInTheDocument(); // empty criteria should be there
     expect(queryByText('Metric Threshold:')).not.toBeInTheDocument();

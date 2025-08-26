@@ -12,16 +12,16 @@ import { UsersLandingTableBody } from './UsersLandingTableBody';
 import type { Order } from './UsersLandingTableHead';
 
 interface Props {
+  canListUsers: boolean | undefined;
   handleDelete: (username: string) => void;
   isProxyUser: boolean;
-  isRestrictedUser: boolean | undefined;
   order: Order;
 }
 
 export const ProxyUserTable = ({
   handleDelete,
   isProxyUser,
-  isRestrictedUser,
+  canListUsers,
   order,
 }: Props) => {
   const {
@@ -29,7 +29,7 @@ export const ProxyUserTable = ({
     error: proxyUserError,
     isLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled: isProxyUser && !isRestrictedUser,
+    enabled: isProxyUser && canListUsers,
     filters: { user_type: 'proxy' },
   });
 

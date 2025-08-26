@@ -62,9 +62,15 @@ const getAllFirewallDevices = (
 const getAllFirewallTemplates = () =>
   getAll<FirewallTemplate>(getTemplates)().then((data) => data.data);
 
-const getAllFirewallsRequest = () =>
-  getAll<Firewall>((passedParams, passedFilter) =>
-    getFirewalls(passedParams, passedFilter),
+const getAllFirewallsRequest = (
+  passedParams: Params = {},
+  passedFilter: Filter = {},
+) =>
+  getAll<Firewall>((params, filter) =>
+    getFirewalls(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
   )().then((data) => data.data);
 
 export const firewallQueries = createQueryKeys('firewalls', {
@@ -80,10 +86,10 @@ export const firewallQueries = createQueryKeys('firewalls', {
   }),
   firewalls: {
     contextQueries: {
-      all: {
-        queryFn: getAllFirewallsRequest,
-        queryKey: null,
-      },
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllFirewallsRequest(params, filter),
+        queryKey: [params, filter],
+      }),
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
           getFirewalls({ page: pageParam as number }, filter),
@@ -176,7 +182,7 @@ export const useAddFirewallDeviceMutation = () => {
 
       // Append the new entity to the Firewall object in the "all firewalls" store
       queryClient.setQueryData<Firewall[]>(
-        firewallQueries.firewalls._ctx.all.queryKey,
+        firewallQueries.firewalls._ctx.all().queryKey,
         (firewalls) => {
           if (!firewalls) {
             return undefined;
@@ -305,9 +311,13 @@ export const useFirewallQuery = (id: number, enabled: boolean = true) =>
     enabled,
   });
 
-export const useAllFirewallsQuery = (enabled: boolean = true) => {
+export const useAllFirewallsQuery = (
+  enabled: boolean = true,
+  params?: Params,
+  filter?: Filter,
+) => {
   return useQuery<Firewall[], APIError[]>({
-    ...firewallQueries.firewalls._ctx.all,
+    ...firewallQueries.firewalls._ctx.all(params, filter),
     enabled,
   });
 };
@@ -450,7 +460,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
       // Update the the Firewall object in the "all firewalls" store
       queryClient.setQueryData<Firewall[]>(
-        firewallQueries.firewalls._ctx.all.queryKey,
+        firewallQueries.firewalls._ctx.all().queryKey,
         (firewalls) => {
           if (!firewalls) {
             return undefined;

@@ -15,7 +15,8 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
       make_billing_payment: false,
-      update_account: false,
+      set_default_payment_method: false,
+      delete_payment_method: false,
     },
   })),
 }));
@@ -148,7 +149,8 @@ describe('Payment Method Row', () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         make_billing_payment: false,
-        update_account: true,
+        set_default_payment_method: false,
+        delete_payment_method: true,
       },
     });
     const { getByLabelText, getByText } = renderWithTheme(
@@ -174,7 +176,8 @@ describe('Payment Method Row', () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         make_billing_payment: true,
-        update_account: true,
+        set_default_payment_method: true,
+        delete_payment_method: false,
       },
     });
     const paymentMethod = paymentMethodFactory.build({
@@ -205,7 +208,8 @@ describe('Payment Method Row', () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         make_billing_payment: false,
-        update_account: false,
+        set_default_payment_method: false,
+        delete_payment_method: false,
       },
     });
     const { getByLabelText, getByText } = renderWithTheme(
@@ -231,7 +235,8 @@ describe('Payment Method Row', () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         make_billing_payment: true,
-        update_account: false,
+        set_default_payment_method: false,
+        delete_payment_method: false,
       },
     });
     const { getByLabelText, getByText } = renderWithTheme(

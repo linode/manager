@@ -16,7 +16,7 @@ import { convertToSeconds } from '../utilities';
 import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface MetricCriteriaProps {
   /**
@@ -26,7 +26,7 @@ interface MetricCriteriaProps {
   /**
    * serviceType used by the api to fetch the metric definitions
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
   /**
    * function used to pass the scrape interval value to the parent component
    * @param maxInterval number value that takes the maximum scrape interval from the list of selected metrics

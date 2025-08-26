@@ -101,7 +101,8 @@ export type AccountAdmin =
   | 'view_user_preferences'
   | AccountBillingAdmin
   | AccountFirewallAdmin
-  | AccountLinodeAdmin;
+  | AccountLinodeAdmin
+  | AccountOauthClientAdmin;
 
 /** Permissions associated with the "account_billing_admin" role. */
 export type AccountBillingAdmin =
@@ -357,3 +358,5 @@ export interface Roles {
 }
 
 export type IamAccessType = keyof IamAccountRoles;
+
+export type PickPermissions<T extends PermissionType> = T;

@@ -1,6 +1,5 @@
 import type { NodeRow } from './NodeRow';
-import type { PoolNodeResponse } from '@linode/api-v4';
-import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+import type { Linode, PoolNodeResponse } from '@linode/api-v4';
 
 /**
  * Checks whether prices are valid - 0 is valid, but undefined and null prices are invalid.
@@ -21,7 +20,7 @@ export const hasInvalidNodePoolPrice = (
  */
 export const nodeToRow = (
   node: PoolNodeResponse,
-  linodes: LinodeWithMaintenance[],
+  linodes: Linode[],
   shouldShowVpcIPAddressColumns: boolean
 ): NodeRow => {
   const foundLinode = linodes.find(

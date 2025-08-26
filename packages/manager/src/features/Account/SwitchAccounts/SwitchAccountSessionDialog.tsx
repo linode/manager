@@ -1,14 +1,13 @@
 import { ActionsPanel, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { sendSwitchAccountSessionExpiryEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export const SwitchAccountSessionDialog = React.memo(
   ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const actions = (
       <ActionsPanel
@@ -16,7 +15,7 @@ export const SwitchAccountSessionDialog = React.memo(
           label: 'Log in',
           onClick: () => {
             sendSwitchAccountSessionExpiryEvent('Log In');
-            history.push('/logout');
+            navigate({ to: '/logout' });
           },
         }}
         secondaryButtonProps={{
