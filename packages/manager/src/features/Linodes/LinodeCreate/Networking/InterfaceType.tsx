@@ -9,11 +9,12 @@ import {
 import { Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
@@ -56,6 +57,17 @@ export const InterfaceType = ({ index }: Props) => {
     control,
     name: `linodeInterfaces.${index}.purpose`,
   });
+
+  const interfaceGeneration = useWatch({
+    control,
+    name: 'interface_generation',
+  });
+
+  const createType = useGetLinodeCreateType();
+  const isCreatingFromBackup = createType === 'Backups';
+
+  const disabled =
+    isCreatingFromBackup && interfaceGeneration === 'legacy_config';
 
   const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
@@ -110,6 +122,7 @@ export const InterfaceType = ({ index }: Props) => {
           {interfaceTypes.map((interfaceType) => (
             <SelectionCard
               checked={field.value === interfaceType.purpose}
+              disabled={disabled}
               gridSize={{
                 md: 3,
                 sm: 12,
@@ -119,7 +132,10 @@ export const InterfaceType = ({ index }: Props) => {
               key={interfaceType.purpose}
               onClick={() => onChange(interfaceType.purpose)}
               renderIcon={() => (
-                <Radio checked={field.value === interfaceType.purpose} />
+                <Radio
+                  checked={field.value === interfaceType.purpose}
+                  disabled={disabled}
+                />
               )}
               renderVariant={() => (
                 <TooltipIcon
