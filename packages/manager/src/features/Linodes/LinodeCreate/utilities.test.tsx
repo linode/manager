@@ -72,20 +72,35 @@ describe('getLinodeCreatePayload', () => {
   });
 
   it('should remove interface from the payload if using legacy interfaces with the new UI and the linode is being created from backups', () => {
-    const values = createLinodeRequestFactory.build({
-      interface_generation: 'legacy_config',
-      interfaces: [{ purpose: 'public' }],
-    }) as LinodeCreateFormValues;
+    const values = {
+      ...createLinodeRequestFactory.build({
+        interface_generation: 'legacy_config',
+      }),
+      linodeInterfaces: [{ purpose: 'public', public: {} }],
+    } as LinodeCreateFormValues;
 
     expect(
       getLinodeCreatePayload(values, {
         isShowingNewNetworkingUI: true,
         isFromBackups: true,
-      })
-    ).toEqual({
-      ...values,
-      interfaces: undefined,
-    });
+      }).interfaces
+    ).toEqual(undefined);
+  });
+
+  it('should not remove interface from the payload when using new interfaces and creating from a backup', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        interface_generation: 'linode',
+      }),
+      linodeInterfaces: [{ purpose: 'public', public: {} }],
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: true,
+        isFromBackups: true,
+      }).interfaces
+    ).toEqual([{ public: {}, vpc: null, vlan: null }]);
   });
 });
 

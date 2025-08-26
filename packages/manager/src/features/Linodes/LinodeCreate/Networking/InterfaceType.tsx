@@ -146,7 +146,9 @@ export const InterfaceType = ({ index }: Props) => {
               onClick={() => onChange(interfaceType.purpose)}
               renderIcon={() => (
                 <Radio
-                  checked={disabled ? false : field.value === interfaceType.purpose}
+                  checked={
+                    disabled ? false : field.value === interfaceType.purpose
+                  }
                   disabled={disabled}
                 />
               )}
