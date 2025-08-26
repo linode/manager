@@ -46,7 +46,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
             render={({ field }) => (
               <Autocomplete
                 disableClearable
-                disabled={true}
+                disabled
                 label="Destination Type"
                 onBlur={field.onBlur}
                 onChange={(_, { value }) => {
