@@ -14,6 +14,7 @@ export const grantTypeMap = {
   longview: 'Longview Clients',
   nodebalancer: 'NodeBalancers',
   placementGroups: 'Placement Groups',
+  quotas: 'Quotas',
   stackscript: 'StackScripts',
   volume: 'Volumes',
   vpc: 'VPCs',
