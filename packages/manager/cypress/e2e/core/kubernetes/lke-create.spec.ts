@@ -205,7 +205,7 @@ describe('LKE Cluster Creation', () => {
 
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
-    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display if the 'standard' LKE tier is selected.
+    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display for a standard LKE cluster.
     cy.findByText('IP Stack').should('not.exist');
     cy.findByText('IPv4', { exact: true }).should('not.exist');
     cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
