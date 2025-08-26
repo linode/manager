@@ -5,15 +5,18 @@ import { describe, expect, it } from 'vitest';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { StreamCreateClusters } from './StreamCreateClusters';
+import { StreamFormClusters } from './StreamFormClusters';
 
 const renderComponentWithoutSelectedClusters = () => {
   renderWithThemeAndHookFormContext({
-    component: <StreamCreateClusters />,
+    component: <StreamFormClusters />,
     useFormOptions: {
       defaultValues: {
         stream: {
-          details: {},
+          details: {
+            cluster_ids: [],
+            is_auto_add_all_clusters_enabled: false,
+          },
         },
       },
     },
@@ -49,7 +52,7 @@ const expectCheckboxStateToBe = (
   }
 };
 
-describe('StreamCreateClusters', () => {
+describe('StreamFormClusters', () => {
   it('should render all clusters in table', async () => {
     renderComponentWithoutSelectedClusters();
 
@@ -159,12 +162,13 @@ describe('StreamCreateClusters', () => {
   describe('when form has already selected clusters', () => {
     it('should render table with properly selected clusters', async () => {
       renderWithThemeAndHookFormContext({
-        component: <StreamCreateClusters />,
+        component: <StreamFormClusters />,
         useFormOptions: {
           defaultValues: {
             stream: {
               details: {
                 cluster_ids: [3],
+                is_auto_add_all_clusters_enabled: false,
               },
             },
           },
