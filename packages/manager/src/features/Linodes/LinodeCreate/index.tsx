@@ -159,7 +159,6 @@ export const LinodeCreate = () => {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
       isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
-      isFromBackups: linodeCreateType === 'Backups',
     });
 
     try {

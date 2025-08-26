@@ -101,7 +101,6 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
           isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
           isAclpAlertsPreferenceBeta: isAlertsBetaMode,
-          isFromBackups: createType === 'Backups',
         })}
       />
     </Box>

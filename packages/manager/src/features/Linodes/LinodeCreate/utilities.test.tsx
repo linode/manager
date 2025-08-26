@@ -75,6 +75,7 @@ describe('getLinodeCreatePayload', () => {
     const values = {
       ...createLinodeRequestFactory.build({
         interface_generation: 'legacy_config',
+        backup_id: 1,
       }),
       linodeInterfaces: [{ purpose: 'public', public: {} }],
     } as LinodeCreateFormValues;
@@ -82,7 +83,6 @@ describe('getLinodeCreatePayload', () => {
     expect(
       getLinodeCreatePayload(values, {
         isShowingNewNetworkingUI: true,
-        isFromBackups: true,
       }).interfaces
     ).toEqual(undefined);
   });
@@ -91,6 +91,7 @@ describe('getLinodeCreatePayload', () => {
     const values = {
       ...createLinodeRequestFactory.build({
         interface_generation: 'linode',
+        backup_id: 1,
       }),
       linodeInterfaces: [{ purpose: 'public', public: {} }],
     } as LinodeCreateFormValues;
@@ -98,7 +99,6 @@ describe('getLinodeCreatePayload', () => {
     expect(
       getLinodeCreatePayload(values, {
         isShowingNewNetworkingUI: true,
-        isFromBackups: true,
       }).interfaces
     ).toEqual([{ public: {}, vpc: null, vlan: null }]);
   });

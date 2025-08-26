@@ -46,7 +46,6 @@ const DEFAULT_OS = 'linode/ubuntu24.04';
 interface LinodeCreatePayloadOptions {
   isAclpAlertsPreferenceBeta?: boolean;
   isAclpIntegration?: boolean;
-  isFromBackups?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
 
@@ -65,7 +64,6 @@ export const getLinodeCreatePayload = (
     isShowingNewNetworkingUI,
     isAclpIntegration,
     isAclpAlertsPreferenceBeta,
-    isFromBackups,
   } = options;
 
   const values: CreateLinodeRequest = omitProps(formValues, [
@@ -100,7 +98,7 @@ export const getLinodeCreatePayload = (
       );
       values.firewall_id = undefined;
     } else {
-      values.interfaces = isFromBackups
+      values.interfaces = formValues.backup_id
         ? undefined
         : formValues.linodeInterfaces.map(
             getLegacyInterfaceFromLinodeInterface
