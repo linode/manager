@@ -147,7 +147,11 @@ export const CloudPulseGroupByDrawer = React.memo(
                 return <NullComponent />;
               }
               return (
-                <ListItem key={key} {...rest} aria-disabled={isDisabled}>
+                <ListItem
+                  key={key}
+                  {...rest}
+                  aria-disabled={!isSelectAllORDeslectAllOption && isDisabled}
+                >
                   <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
                   <SelectedIcon visible={isSelected} />
                 </ListItem>
