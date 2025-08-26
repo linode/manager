@@ -255,7 +255,6 @@ export const defaultValues = async (
     isVMHostMaintenanceEnabled: boolean;
   }
 ): Promise<LinodeCreateFormValues> => {
-  //console.log('inside defaultValues, what is our createType', createType)
   const stackscriptId = params.stackScriptID ?? params.appID;
 
   let stackscript: null | StackScript = null;
