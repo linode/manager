@@ -85,7 +85,7 @@ describe('Node Pool Footer', () => {
     expect(
       await findByText('my-lke-e-firewall', { exact: false })
     ).toBeVisible();
-    expect(getByText('(ID: 123)')).toBeVisible();
+    expect(getByText('123')).toBeVisible();
   });
 
   it("does not show the node pool's firewall when undefined for a LKE Enterprise cluster ", async () => {
