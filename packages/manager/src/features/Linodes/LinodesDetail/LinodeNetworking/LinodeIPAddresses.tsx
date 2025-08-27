@@ -66,11 +66,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   );
 
   // TODO: Update to check share_ips, assign_ips, update_ip_rdns, and allocate_linode_ip_address permissions once available
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['update_linode'],
-    entityId: linodeID,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeID
+  );
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
   const { isUnreachablePublicIPv4, isUnreachablePublicIPv6, interfaceWithVPC } =

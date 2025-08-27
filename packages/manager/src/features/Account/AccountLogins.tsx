@@ -45,10 +45,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
 const AccountLogins = () => {
   const { classes } = useStyles();
   const flags = useFlags();
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['list_account_logins'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'list_account_logins',
+  ]);
   const pagination = usePaginationV2({
     currentRoute: flags?.iamRbacPrimaryNavChanges
       ? '/login-history'

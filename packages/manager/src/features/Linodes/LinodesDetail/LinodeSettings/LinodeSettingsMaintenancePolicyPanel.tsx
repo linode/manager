@@ -40,11 +40,11 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
   const { data: region } = useRegionQuery(linode?.region ?? '');
 
   // Check if user has permission to update linodes (needed for maintenance policy)
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['update_linode'],
-    entityId: linodeId,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
 
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;

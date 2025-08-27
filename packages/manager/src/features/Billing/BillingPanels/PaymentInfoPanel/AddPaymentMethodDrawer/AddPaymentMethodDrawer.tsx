@@ -54,10 +54,9 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   >(undefined);
   const isChildUser = profile?.user_type === 'child';
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_payment_method'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'create_payment_method',
+  ]);
 
   const isReadOnly = !permissions?.create_payment_method || isChildUser;
 

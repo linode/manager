@@ -121,14 +121,11 @@ export const EntityTransfersLanding = () => {
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
   const sentTransfersResults = sentTransfersData?.results ?? 0;
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: [
-      'accept_service_transfer',
-      'create_service_transfer',
-      'cancel_service_transfer',
-    ],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'accept_service_transfer',
+    'create_service_transfer',
+    'cancel_service_transfer',
+  ]);
 
   return (
     <div style={{ overflowX: 'hidden' }}>

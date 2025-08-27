@@ -19,10 +19,11 @@ import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['is_account_admin', 'update_user', 'delete_user'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_user',
+    'delete_user',
+  ]);
 
   const {
     data: user,

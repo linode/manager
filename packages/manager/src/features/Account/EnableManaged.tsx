@@ -32,11 +32,7 @@ interface ContentProps {
 export const ManagedContent = (props: ContentProps) => {
   const { isManaged, openConfirmationModal } = props;
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['enable_managed'],
-  });
-
+  const { data: permissions } = usePermissions('account', ['enable_managed']);
   if (isManaged) {
     return (
       <Typography>
@@ -76,10 +72,7 @@ export const EnableManaged = (props: Props) => {
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['enable_managed'],
-  });
+  const { data: permissions } = usePermissions('account', ['enable_managed']);
   const linodeCount = linodes?.results ?? 0;
 
   const handleClose = () => {

@@ -43,16 +43,15 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
       ],
     });
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['clone_linode'],
-    entityId: linodeId,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['clone_linode'],
+    linodeId
+  );
 
-  const { data: accountPermissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_linode'],
-  });
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
 
   const isCloneMode = createType === 'Clone Linode';
   const isDisabled = isCloneMode

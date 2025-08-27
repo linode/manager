@@ -33,10 +33,7 @@ export const UsersLanding = () => {
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const { data: profile } = useProfile();
   const theme = useTheme();
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_user'],
-  });
+  const { data: permissions } = usePermissions('account', ['create_user']);
   const pagination = usePaginationV2({
     currentRoute: '/iam/users',
     initialPage: 1,

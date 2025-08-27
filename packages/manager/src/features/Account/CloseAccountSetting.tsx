@@ -15,10 +15,7 @@ export const CloseAccountSetting = () => {
 
   const { data: profile } = useProfile();
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['cancel_account'],
-  });
+  const { data: permissions } = usePermissions('account', ['cancel_account']);
 
   // Disable the Close Account button for users with a Parent/Proxy/Child user type.
   const isCloseAccountDisabled = Boolean(profile?.user_type !== 'default');

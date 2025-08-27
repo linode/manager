@@ -56,15 +56,12 @@ const OAuthClients = () => {
     }
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: [
-      'create_oauth_client',
-      'update_oauth_client',
-      'delete_oauth_client',
-      'reset_oauth_client_secret',
-    ],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'create_oauth_client',
+    'update_oauth_client',
+    'delete_oauth_client',
+    'reset_oauth_client_secret',
+  ]);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);

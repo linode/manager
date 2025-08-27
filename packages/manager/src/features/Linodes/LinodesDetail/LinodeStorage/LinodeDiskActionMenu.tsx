@@ -31,17 +31,12 @@ export const LinodeDiskActionMenu = (props: Props) => {
     readOnly,
   } = props;
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: [
-      'update_linode',
-      'resize_linode',
-      'delete_linode',
-      'clone_linode',
-    ],
-    entityId: linodeId,
-    enabled: isOpen,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
+    linodeId,
+    isOpen
+  );
 
   const poweredOnTooltip =
     linodeStatus !== 'offline'

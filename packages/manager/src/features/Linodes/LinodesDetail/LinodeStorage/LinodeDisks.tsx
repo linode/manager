@@ -43,11 +43,11 @@ export const LinodeDisks = () => {
   const { data: linode } = useLinodeQuery(id);
   const { data: grants } = useGrants();
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['create_linode_disk'],
-    entityId: id,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['create_linode_disk'],
+    id
+  );
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);

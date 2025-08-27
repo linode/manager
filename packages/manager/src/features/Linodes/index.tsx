@@ -46,10 +46,7 @@ export const LinodesLandingWrapper = React.memo(() => {
     flags.gecko2?.la
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_linode'],
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
   const [regionFilter, setRegionFilter] = React.useState<RegionFilter>(
     storage.regionFilter.get() ?? regionFilterOptions[0].value
   );

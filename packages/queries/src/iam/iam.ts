@@ -51,17 +51,11 @@ export const useUserAccountPermissions = (enabled = true) => {
   });
 };
 
-type UseUserEntityPermissionsProps = {
-  enabled?: boolean;
-  entityId: number;
-  entityType: AccessType;
-};
-
-export const useUserEntityPermissions = ({
-  entityType,
-  entityId,
+export const useUserEntityPermissions = (
+  entityType: AccessType,
+  entityId: number,
   enabled = true,
-}: UseUserEntityPermissionsProps) => {
+) => {
   const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries

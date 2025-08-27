@@ -42,10 +42,9 @@ export const NetworkInterfaceType = () => {
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['update_account_settings'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const values = {
     interfaces_for_new_linodes:
       accountSettings?.interfaces_for_new_linodes ??

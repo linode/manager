@@ -43,11 +43,11 @@ export const LinodeRebuildForm = (props: Props) => {
 
   const [type, setType] = useState<LinodeRebuildType>('Image');
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['rebuild_linode'],
-    entityId: linode.id,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['rebuild_linode'],
+    linode.id
+  );
 
   const { data: isTypeToConfirmEnabled } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true

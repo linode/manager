@@ -74,10 +74,7 @@ export const AssignedRolesTable = () => {
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['is_account_admin'],
-  });
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/users/$username/roles',

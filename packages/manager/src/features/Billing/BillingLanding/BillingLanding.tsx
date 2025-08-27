@@ -28,10 +28,9 @@ export const BillingLanding = () => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['make_billing_payment'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'make_billing_payment',
+  ]);
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);

@@ -70,10 +70,7 @@ export const Region = React.memo(() => {
     Boolean(selectedLinode?.type)
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_linode'],
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const { data: regions } = useRegionsQuery();
 

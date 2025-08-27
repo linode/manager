@@ -49,10 +49,7 @@ export const AssignedEntitiesTable = () => {
     from: '/iam/users/$username',
   });
   const theme = useTheme();
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['is_account_admin'],
-  });
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
     strict: false,

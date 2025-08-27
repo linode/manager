@@ -45,11 +45,11 @@ export const SelectLinodeCard = ({
     Boolean(linode?.image)
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['shutdown_linode', 'clone_linode'],
-    entityId: linode.id,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['shutdown_linode', 'clone_linode'],
+    linode.id
+  );
 
   const iconStatus = getLinodeIconStatus(linode?.status);
   const shouldShowPowerButton =

@@ -27,11 +27,11 @@ export const FirewallDeviceLanding = React.memo(
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const { data: permissions } = usePermissions({
-      accessType: 'firewall',
-      permissionsToCheck: ['create_firewall_device', 'delete_firewall_device'],
-      entityId: firewallId,
-    });
+    const { data: permissions } = usePermissions(
+      'firewall',
+      ['create_firewall_device', 'delete_firewall_device'],
+      firewallId
+    );
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 

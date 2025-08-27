@@ -21,10 +21,9 @@ import { ContactInformation } from './BillingPanels/ContactInfoPanel/ContactInfo
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
 export const BillingDetail = () => {
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['list_billing_payments'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'list_billing_payments',
+  ]);
   const {
     data: paymentMethods,
     error: paymentMethodsError,

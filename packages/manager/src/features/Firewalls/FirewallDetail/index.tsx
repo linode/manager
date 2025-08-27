@@ -73,11 +73,11 @@ export const FirewallDetail = () => {
     firewallSettings &&
     getFirewallDefaultEntities(firewallId, firewallSettings);
 
-  const { data: permissions } = usePermissions({
-    accessType: 'firewall',
-    permissionsToCheck: ['update_firewall_rules', 'update_firewall'],
-    entityId: firewallId,
-  });
+  const { data: permissions } = usePermissions(
+    'firewall',
+    ['update_firewall_rules', 'update_firewall'],
+    firewallId
+  );
 
   const { data: allDevices } = useAllFirewallDevicesQuery(firewallId);
 

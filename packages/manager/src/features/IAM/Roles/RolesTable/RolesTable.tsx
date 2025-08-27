@@ -56,10 +56,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['is_account_admin'],
-  });
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
   const isAccountAdmin = permissions?.is_account_admin;
 
   const pagination = usePaginationV2({

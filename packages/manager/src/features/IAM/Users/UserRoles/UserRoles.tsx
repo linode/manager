@@ -22,10 +22,7 @@ import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['is_account_admin'],
-  });
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
   const theme = useTheme();
 
   const {

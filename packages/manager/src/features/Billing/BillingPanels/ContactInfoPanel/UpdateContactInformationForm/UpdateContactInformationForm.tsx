@@ -59,10 +59,10 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['acknowledge_account_agreement', 'update_account'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'acknowledge_account_agreement',
+    'update_account',
+  ]);
   const isAccountReadOnly = !permissions.update_account || isChildUser;
   const isAcknowledgeAgreementDisabled =
     !permissions.acknowledge_account_agreement || isChildUser;

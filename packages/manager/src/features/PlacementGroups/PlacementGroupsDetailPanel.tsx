@@ -53,10 +53,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     selectedRegion?.capabilities.includes('Placement Group')
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_linode'],
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
     handlePlacementGroupChange(placementGroup);

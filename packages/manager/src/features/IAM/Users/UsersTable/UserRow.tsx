@@ -26,10 +26,10 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['delete_user', 'is_account_admin'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'delete_user',
+    'is_account_admin',
+  ]);
 
   const canViewUser = permissions.is_account_admin;
 

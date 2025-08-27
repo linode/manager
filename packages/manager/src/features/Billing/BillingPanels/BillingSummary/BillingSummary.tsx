@@ -31,10 +31,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: notifications } = useNotificationsQuery();
   const { data: account } = useAccount();
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_promo_code'],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'create_promo_code',
+  ]);
 
   const { iamRbacPrimaryNavChanges } = useFlags();
 

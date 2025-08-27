@@ -45,14 +45,11 @@ export const PaymentMethodRow = (props: Props) => {
   const { mutateAsync: makePaymentMethodDefault } =
     useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: [
-      'make_billing_payment',
-      'set_default_payment_method',
-      'delete_payment_method',
-    ],
-  });
+  const { data: permissions } = usePermissions('account', [
+    'make_billing_payment',
+    'set_default_payment_method',
+    'delete_payment_method',
+  ]);
 
   const makeDefault = () => {
     makePaymentMethodDefault().catch((errors) =>

@@ -45,10 +45,7 @@ export const Security = () => {
     selectedRegion?.id ?? ''
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_linode'],
-  });
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   return (
     <Paper>

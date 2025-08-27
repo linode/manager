@@ -28,11 +28,11 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   const { linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['password_reset_linode'],
-    entityId: linodeId,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['password_reset_linode'],
+    linodeId
+  );
 
   const {
     data: disks,

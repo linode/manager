@@ -23,15 +23,12 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
+    useIsIAMEnabled: queryMocks.useIsIAMEnabled,
     useUserAccountPermissions: queryMocks.useUserAccountPermissions,
     useUserEntityPermissions: queryMocks.useUserEntityPermissions,
     useGrants: queryMocks.useGrants,
   };
 });
-
-vi.mock('./useIsIAMEnabled', () => ({
-  useIsIAMEnabled: queryMocks.useIsIAMEnabled,
-}));
 
 vi.mock('./adapters', () => ({
   fromGrants: vi.fn(
@@ -72,22 +69,18 @@ describe('usePermissions', () => {
     const flags = { iam: { beta: true, enabled: true } };
 
     renderHook(
-      () =>
-        usePermissions({
-          accessType: 'account',
-          permissionsToCheck: ['cancel_account', 'create_linode'],
-        }),
+      () => usePermissions('account', ['cancel_account', 'create_linode']),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }
     );
 
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
-      entityType: 'account',
-      entityId: undefined,
-      enabled: true,
-    });
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'account',
+      undefined,
+      true
+    );
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
   });
 
@@ -95,22 +88,17 @@ describe('usePermissions', () => {
     const flags = { iam: { beta: true, enabled: true } };
 
     renderHook(
-      () =>
-        usePermissions({
-          accessType: 'linode',
-          permissionsToCheck: ['reboot_linode', 'view_linode'],
-          entityId: 123,
-        }),
+      () => usePermissions('linode', ['reboot_linode', 'view_linode'], 123),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }
     );
 
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
-      entityType: 'linode',
-      entityId: 123,
-      enabled: true,
-    });
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'linode',
+      123,
+      true
+    );
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
   });
@@ -125,11 +113,7 @@ describe('usePermissions', () => {
 
     const flags = { iam: { beta: false, enabled: false } };
     renderHook(
-      () =>
-        usePermissions({
-          accessType: 'account',
-          permissionsToCheck: ['cancel_account', 'create_linode'],
-        }),
+      () => usePermissions('account', ['cancel_account', 'create_linode']),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }
@@ -137,60 +121,10 @@ describe('usePermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
-      entityType: 'account',
-      entityId: undefined,
-      enabled: false,
-    });
-  });
-
-  it('does not serve IAM permissions when limited availability only is true (uses grants)', () => {
-    const flags = { iam: { beta: true, enabled: true } };
-
-    renderHook(
-      () =>
-        usePermissions({
-          accessType: 'account',
-          permissionsToCheck: ['cancel_account', 'create_linode'],
-        }),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, { flags }),
-      }
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'account',
+      undefined,
+      false
     );
-
-    expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
-      entityType: 'account',
-      entityId: undefined,
-      enabled: false,
-    });
-  });
-
-  it('serves IAM permissions when limited availability only is true and IAM beta is false (Limited Availability)', () => {
-    queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMEnabled: true,
-      isIAMBeta: false,
-    });
-    const flags = { iam: { beta: false, enabled: true } };
-
-    renderHook(
-      () =>
-        usePermissions({
-          accessType: 'account',
-          permissionsToCheck: ['cancel_account', 'create_linode'],
-        }),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, { flags }),
-      }
-    );
-
-    expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
-      entityType: 'account',
-      entityId: undefined,
-      enabled: true,
-    });
   });
 });

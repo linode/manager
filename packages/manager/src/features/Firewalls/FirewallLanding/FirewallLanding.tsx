@@ -78,10 +78,7 @@ const FirewallLanding = () => {
     (firewall) => firewall.id === selectedFirewallId
   );
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['create_firewall'],
-  });
+  const { data: permissions } = usePermissions('account', ['create_firewall']);
 
   const openModal = (mode: Mode, id: number) => {
     setSelectedFirewallId(id);

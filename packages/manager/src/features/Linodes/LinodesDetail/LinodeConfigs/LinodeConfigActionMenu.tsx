@@ -22,17 +22,12 @@ export const ConfigActionMenu = (props: Props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: [
-      'reboot_linode',
-      'update_linode',
-      'clone_linode',
-      'delete_linode',
-    ],
-    entityId: linodeId,
-    enabled: isOpen,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['reboot_linode', 'update_linode', 'clone_linode', 'delete_linode'],
+    linodeId,
+    isOpen
+  );
 
   const actions: Action[] = [
     {

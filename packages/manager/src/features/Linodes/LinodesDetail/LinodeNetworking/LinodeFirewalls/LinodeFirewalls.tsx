@@ -27,11 +27,12 @@ interface LinodeFirewallsProps {
 
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
-  const { data: permissions } = usePermissions({
-    accessType: 'linode',
-    permissionsToCheck: ['apply_linode_firewalls'],
-    entityId: linodeID,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['apply_linode_firewalls'],
+    linodeID,
+    true
+  );
 
   const {
     data: attachedFirewallData,

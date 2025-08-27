@@ -24,10 +24,7 @@ export const UsernamePanel = ({ user, canUpdateUser }: Props) => {
 
   const { mutateAsync } = useUpdateUserMutation(user.username);
 
-  const { data: permissions } = usePermissions({
-    accessType: 'account',
-    permissionsToCheck: ['update_user'],
-  });
+  const { data: permissions } = usePermissions('account', ['update_user']);
 
   const {
     control,
