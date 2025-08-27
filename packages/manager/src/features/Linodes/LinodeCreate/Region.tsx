@@ -82,7 +82,7 @@ export const Region = React.memo(() => {
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(createType ?? 'OS');
 
-  const onChange = async (region?: RegionType) => {
+  const onChange = async (region: null | RegionType) => {
     const values = getValues();
     field.onChange(region?.id);
 
@@ -165,7 +165,7 @@ export const Region = React.memo(() => {
       const label = await getGeneratedLinodeLabel({
         queryClient,
         tab: createType ?? 'OS',
-        values: { ...values, region: region?.id },
+        values: { ...values, region: region.id },
       });
 
       setValue('label', label);

@@ -61,7 +61,7 @@ const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
 ];
 
 interface Props {
-  onChange: (region?: RegionType) => void;
+  onChange: (region: null | RegionType) => void;
 }
 
 type CombinedProps = Props & Omit<Partial<RegionSelectProps>, 'onChange'>;
@@ -100,11 +100,11 @@ export const TwoStepRegion = (props: CombinedProps) => {
         />
       </Box>
       <Tabs
-        onChange={(index: number) => {
+        onChange={(index) => {
           if (index !== tabIndex) {
             setTabIndex(index);
             // M3-9469: Reset region selection when switching between site types
-            onChange(undefined);
+            onChange(null);
           }
         }}
       >
