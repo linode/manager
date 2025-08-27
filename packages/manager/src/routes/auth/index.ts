@@ -1,4 +1,4 @@
-import { createRoute, redirect } from '@tanstack/react-router';
+import { createRoute } from '@tanstack/react-router';
 
 import { CancelLanding } from 'src/features/CancelLanding/CancelLanding';
 import { LoginAsCustomerCallback } from 'src/OAuth/LoginAsCustomerCallback';
@@ -7,22 +7,15 @@ import { OAuthCallback } from 'src/OAuth/OAuthCallback';
 
 import { rootRoute } from '../root';
 
+interface CancelLandingSearch {
+  survey_link?: string;
+}
+
 const cancelLandingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'cancel',
   component: CancelLanding,
-  onError() {
-    throw redirect({ to: '/' });
-  },
-  validateSearch(search) {
-    if (!search.survey_link) {
-      throw new Error('No survey in search params!');
-    }
-    if (typeof search.survey_link !== 'string') {
-      throw new Error('Expected survey_link to be a string but it was not...');
-    }
-    return { survey_link: search.survey_link };
-  },
+  validateSearch: (search: CancelLandingSearch) => search,
 });
 
 const logoutRoute = createRoute({
