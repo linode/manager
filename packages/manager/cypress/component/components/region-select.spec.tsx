@@ -29,7 +29,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -58,7 +58,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -88,7 +88,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -118,7 +118,7 @@ componentTests('RegionSelect', (mount) => {
               isGeckoLAEnabled={false}
               onChange={() => {}}
               regions={[region]}
-              value={undefined}
+              value={null}
             />
           </>
         );
@@ -152,7 +152,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -271,7 +271,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -289,7 +289,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={spyFn}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -359,7 +359,7 @@ componentTests('RegionSelect', (mount) => {
           isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
-          value={undefined}
+          value={null}
         />,
         {
           dcGetWell: true,
@@ -394,7 +394,7 @@ componentTests('RegionSelect', (mount) => {
           isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
-          value={undefined}
+          value={null}
         />
       );
 
@@ -424,7 +424,7 @@ componentTests('RegionSelect', (mount) => {
           isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
-          value={undefined}
+          value={null}
         />
       );
 
@@ -455,7 +455,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
         checkComponentA11y();
