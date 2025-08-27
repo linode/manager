@@ -16,6 +16,7 @@ describe('Node Pool Footer', () => {
     tags: [],
     poolId: 1,
     poolVersion: undefined,
+    poolFirewallId: 123,
     isLkeClusterRestricted: false,
   };
 
