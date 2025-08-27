@@ -3,6 +3,7 @@
  * TODO: M3-10365 - Add `postLa` smoke tests to this file.
  * TODO: M3-8838 - Delete this spec file once LKE-E is released to GA.
  */
+
 import {
   kubernetesClusterFactory,
   nodePoolFactory,
