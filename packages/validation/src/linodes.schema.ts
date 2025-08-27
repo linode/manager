@@ -139,13 +139,12 @@ const ipv4ConfigInterface = object().when('purpose', {
 
 const slaacSchema = object().shape({
   range: string()
-    .required()
+    .required('VPC IPv6 is required.')
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
       test: (value) => validateIPv6PrefixLengthIs64(value),
     }),
-  address: string().required(),
 });
 
 const VPCInterfaceIPv6RangeSchema = object({

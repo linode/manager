@@ -20,11 +20,14 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
   getLinodeInterfaceIPv4Ranges,
+  getLinodeInterfaceIPv6Ranges,
   getLinodeInterfacePrimaryIPv4,
 } from '../utils';
 import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
@@ -55,7 +58,9 @@ interface LinodeAndInterfaceData extends Linode {
   // Legacy: VPC IPv4 = interface.ipv4.vpc, VPC ranges = interface.ip_ranges
   // Linode Interface: VPC IPv4 = interface.vpc.ipv4.addresses[], VPC ranges = interface.vpc.ipv4.ranges
   vpcIPv4: null | string | undefined;
-  vpcRanges: string[] | undefined;
+  vpcIPv4Ranges: string[] | undefined;
+  vpcIPv6: null | string | undefined;
+  vpcIPv6Ranges: string[] | undefined;
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
@@ -71,6 +76,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
   }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
+
+    const flags = useFlags();
+    const isVPCIPv6Enabled = !!flags.vpcIpv6;
+    const showIPv6Content =
+      isVPCIPv6Enabled &&
+      Boolean(subnet?.ipv6?.length && subnet?.ipv6?.length > 0);
+
     const subnetId = subnet?.id;
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
@@ -157,8 +169,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                       configId: null,
                       vpcIPv4:
                         getLinodeInterfacePrimaryIPv4(vpcLinodeInterface),
-                      vpcRanges:
+                      vpcIPv4Ranges:
                         getLinodeInterfaceIPv4Ranges(vpcLinodeInterface),
+                      vpcIPv6: vpcLinodeInterface.vpc?.ipv6?.slaac[0].address,
+                      vpcIPv6Ranges:
+                        getLinodeInterfaceIPv6Ranges(vpcLinodeInterface),
                       interfaceId: vpcLinodeInterface.id,
                     };
                   }
@@ -185,7 +200,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                     configId: configWithVpcInterface.id,
                     interfaceId: vpcInterface.id,
                     vpcIPv4: vpcInterface.ipv4?.vpc,
-                    vpcRanges: vpcInterface?.ip_ranges,
+                    vpcIPv6: vpcInterface.ipv6?.slaac[0]?.address,
+                    vpcIPv4Ranges: vpcInterface?.ip_ranges,
+                    vpcIPv6Ranges: vpcInterface?.ipv6?.ranges.map(
+                      (rangeObj) => rangeObj.range
+                    ),
                   };
                 }
                 return null;
@@ -356,12 +375,21 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             )}
             <Box>
               <RemovableSelectionsListTable
+                displayVPCIPv6Data={showIPv6Content}
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
                 isRemovable={!singleLinodeToBeUnassigned}
                 noDataText="Select Linodes to be Unassigned from Subnet."
                 onRemove={handleRemoveLinode}
                 selectionData={selectedLinodesAndInterfaceData}
-                tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
+                tableHeaders={
+                  showIPv6Content
+                    ? [
+                        ...REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
+                        'VPC IPv6',
+                        'VPC IPv6 Ranges',
+                      ]
+                    : REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS
+                }
               />
               {selectedLinodesAndInterfaceData.length > 0 && (
                 <DownloadCSV
@@ -369,7 +397,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   csvRef={csvRef}
                   data={selectedLinodesAndInterfaceData}
                   filename={`linodes-unassigned-${formattedDate}.csv`}
-                  headers={SUBNET_LINODE_CSV_HEADERS}
+                  headers={
+                    showIPv6Content
+                      ? [
+                          ...SUBNET_LINODE_CSV_HEADERS,
+                          { key: 'vpcIPv6', label: 'IPv6 VPC' },
+                          { key: 'vpcIPv6Ranges', label: 'IPv6 VPC Ranges' },
+                        ]
+                      : SUBNET_LINODE_CSV_HEADERS
+                  }
                   onClick={downloadCSV}
                   sx={{
                     alignItems: 'flex-start',
