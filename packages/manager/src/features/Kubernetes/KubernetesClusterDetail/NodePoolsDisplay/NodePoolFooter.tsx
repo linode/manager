@@ -94,10 +94,10 @@ export const NodePoolFooter = (props: Props) => {
                   {firewall?.label ?? poolFirewallId}
                 </Link>{' '}
                 {firewall?.label && (
-                  <CopyTooltip
-                    copyableText
-                    text={`(ID: ${String(poolFirewallId)})`}
-                  />
+                  <span>
+                    (ID:{' '}
+                    <CopyTooltip copyableText text={String(poolFirewallId)} />)
+                  </span>
                 )}
               </Typography>
             )}

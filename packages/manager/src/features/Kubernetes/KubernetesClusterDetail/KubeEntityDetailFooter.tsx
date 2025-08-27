@@ -158,7 +158,9 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                 </Link>
                 &nbsp;
                 {vpcId && vpc?.label && (
-                  <CopyTooltip copyableText text={`(ID: ${String(vpcId)})`} />
+                  <span>
+                    (ID: <CopyTooltip copyableText text={String(vpcId)} />)
+                  </span>
                 )}
               </StyledListItem>
             )}
