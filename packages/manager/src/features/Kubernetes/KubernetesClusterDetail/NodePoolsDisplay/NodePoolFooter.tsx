@@ -90,7 +90,15 @@ export const NodePoolFooter = (props: Props) => {
               <b>Firewall:</b>{' '}
               <Link to={`/firewalls/${poolFirewallId}/rules`}>
                 {firewall?.label}
-              </Link>
+              </Link>{' '}
+              <CopyTooltip
+                copyableText
+                text={
+                  firewall?.label
+                    ? `(ID: ${String(poolFirewallId)})`
+                    : String(poolFirewallId)
+                }
+              />
             </Typography>
           )}
           {isDiskEncryptionFeatureEnabled && (
