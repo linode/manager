@@ -23,8 +23,7 @@ import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../constants';
-import { useNodePoolDisplayLabel } from '../../kubeUtils';
-import { hasInvalidNodePoolPrice } from './utils';
+import { hasInvalidNodePoolPrice, useNodePoolDisplayLabel } from './utils';
 
 import type {
   KubeNodePoolResponse,

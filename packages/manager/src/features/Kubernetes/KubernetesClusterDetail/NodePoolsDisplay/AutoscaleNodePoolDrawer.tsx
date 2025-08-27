@@ -22,7 +22,7 @@ import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../../constants';
-import { useNodePoolDisplayLabel } from '../../kubeUtils';
+import { useNodePoolDisplayLabel } from './utils';
 
 import type {
   AutoscaleSettings,

@@ -1,8 +1,7 @@
 import { Drawer } from '@linode/ui';
 import React from 'react';
 
-import { useNodePoolDisplayLabel } from 'src/features/Kubernetes/kubeUtils';
-
+import { useNodePoolDisplayLabel } from '../utils';
 import { ConfigureNodePoolForm } from './ConfigureNodePoolForm';
 
 import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';

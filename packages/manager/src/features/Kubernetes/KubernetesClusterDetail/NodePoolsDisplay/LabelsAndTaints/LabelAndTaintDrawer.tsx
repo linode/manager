@@ -11,9 +11,9 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { useNodePoolDisplayLabel } from 'src/features/Kubernetes/kubeUtils';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
+import { useNodePoolDisplayLabel } from '../utils';
 import { LabelInput } from './LabelInput';
 import { LabelTable } from './LabelTable';
 import { TaintInput } from './TaintInput';

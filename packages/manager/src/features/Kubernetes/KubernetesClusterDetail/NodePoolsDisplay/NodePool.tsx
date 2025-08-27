@@ -4,12 +4,10 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-import {
-  useIsLkeEnterpriseEnabled,
-  useNodePoolDisplayLabel,
-} from '../../kubeUtils';
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodePoolFooter } from './NodePoolFooter';
 import { NodeTable } from './NodeTable';
+import { useNodePoolDisplayLabel } from './utils';
 
 import type { StatusFilter } from './NodePoolsDisplay';
 import type {
