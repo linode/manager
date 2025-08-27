@@ -8,13 +8,9 @@ import {
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { addNodes } from 'support/util/lke';
+import { addNodes, minimumNodeNotice } from 'support/util/lke';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-// Warning that's shown when recommended minimum number of nodes is not met.
-const minimumNodeNotice =
-  'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
 
 describe('LKE Create Cluster', () => {
   beforeEach(() => {
