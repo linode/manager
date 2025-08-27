@@ -7,8 +7,8 @@ import { accountFactory, nodePoolFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ConfigureNodePoolForm } from './ConfigureNodePoolForm';
 import { getNodePoolVersionOptions } from './ConfigureNodePoolDrawer.utils';
+import { ConfigureNodePoolForm } from './ConfigureNodePoolForm';
 
 const flags = {
   lkeEnterprise: {
