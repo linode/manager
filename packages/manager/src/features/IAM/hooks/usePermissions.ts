@@ -1,8 +1,4 @@
-import {
-  type AccessType,
-  getUserEntityPermissions,
-  type PermissionType,
-} from '@linode/api-v4';
+import { getUserEntityPermissions } from '@linode/api-v4';
 import {
   useGrants,
   useProfile,
@@ -20,13 +16,25 @@ import {
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 
 import type {
+  AccessType,
+  AccountAdmin,
   AccountEntity,
   APIError,
   EntityType,
   GrantType,
+  PermissionType,
   Profile,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
+
+const BETA_ACCESS_TYPE_SCOPE: AccessType[] = ['account', 'linode', 'firewall'];
+const LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE = [
+  'create_image',
+  'upload_image',
+  'create_vpc',
+  'create_volume',
+  'create_nodebalancer',
+];
 
 export type PermissionsResult<T extends readonly PermissionType[]> = {
   data: Record<T[number], boolean>;
@@ -36,7 +44,6 @@ interface UsePermissionsProps<T extends readonly PermissionType[]> {
   accessType: AccessType;
   enabled?: boolean;
   entityId?: number;
-  limitedAvailabilityOnly?: boolean;
   permissionsToCheck: T;
 }
 
@@ -44,10 +51,9 @@ export const usePermissions = <T extends readonly PermissionType[]>({
   accessType,
   enabled = true,
   entityId,
-  limitedAvailabilityOnly = false,
   permissionsToCheck,
 }: UsePermissionsProps<T>): PermissionsResult<T> => {
-  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
   const { data: userAccountPermissions, ...restAccountPermissions } =
     useUserAccountPermissions(
@@ -64,27 +70,39 @@ export const usePermissions = <T extends readonly PermissionType[]>({
   const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
   /**
-   * The following logic serves the permission model assignment:
-   * - If the user is IAM enabled (via useIsIAMEnabled)
-   *   - During beta: only serve non-LA features (laOnly === false)
-   *   - After beta (LA phase): serve all features including LA-only ones
+   * BETA and LA features should use the new permission model.
+   * However, beta features are limited to a subset of AccessTypes and account permissions.
+   * - Use Beta Permissions if:
+   *   - The feature is beta
+   *   - The access type is in the BETA_ACCESS_TYPE_SCOPE
+   *   - The account permission is not in the LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE
+   * - Use LA Permissions if:
+   *   - The feature is not beta
    */
-  const shouldUseIamPermissions =
-    isIAMEnabled && (isIAMBeta ? limitedAvailabilityOnly === false : true);
+  const useBetaPermissions =
+    isIAMEnabled &&
+    isIAMBeta &&
+    BETA_ACCESS_TYPE_SCOPE.includes(accessType) &&
+    LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE.some(
+      (blacklistedPermission) =>
+        permissionsToCheck.includes(blacklistedPermission as AccountAdmin) // some of the account admin in the blacklist have not been added yet
+    ) === false;
+  const useLAPermissions = isIAMEnabled && !isIAMBeta;
 
-  const permissionMap = shouldUseIamPermissions
-    ? toPermissionMap(
-        permissionsToCheck,
-        usersPermissions!,
-        profile?.restricted
-      )
-    : fromGrants(
-        accessType,
-        permissionsToCheck,
-        grants!,
-        profile?.restricted,
-        entityId
-      );
+  const permissionMap =
+    useBetaPermissions || useLAPermissions
+      ? toPermissionMap(
+          permissionsToCheck,
+          usersPermissions!,
+          profile?.restricted
+        )
+      : fromGrants(
+          accessType,
+          permissionsToCheck,
+          grants!,
+          profile?.restricted,
+          entityId
+        );
 
   return {
     data: permissionMap,

@@ -152,7 +152,6 @@ describe('usePermissions', () => {
         usePermissions({
           accessType: 'account',
           permissionsToCheck: ['cancel_account', 'create_linode'],
-          limitedAvailabilityOnly: true,
         }),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -180,7 +179,6 @@ describe('usePermissions', () => {
         usePermissions({
           accessType: 'account',
           permissionsToCheck: ['cancel_account', 'create_linode'],
-          limitedAvailabilityOnly: true,
         }),
       {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
