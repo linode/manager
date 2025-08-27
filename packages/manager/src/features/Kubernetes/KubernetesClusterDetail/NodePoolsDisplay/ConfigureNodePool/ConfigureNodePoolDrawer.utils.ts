@@ -14,7 +14,7 @@ interface NodePoolVersionOptions {
  */
 export function getNodePoolVersionOptions(options: NodePoolVersionOptions) {
   // The only valid versions are the Node Pool's version and the Cluster's version
-  const versions = [options.clusterVersion, options.nodePoolVersion];
+  const versions = [options.nodePoolVersion, options.clusterVersion];
 
   // Filter out undefined versions. In some cases, Node Pool's `k8s_version` may be undefined
   const definedVersions = versions.filter((version) => version !== undefined);

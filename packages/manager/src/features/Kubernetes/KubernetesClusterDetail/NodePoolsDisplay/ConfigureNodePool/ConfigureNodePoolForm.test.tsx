@@ -8,6 +8,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureNodePoolForm } from './ConfigureNodePoolForm';
+import { getNodePoolVersionOptions } from './ConfigureNodePoolDrawer.utils';
 
 const flags = {
   lkeEnterprise: {
@@ -199,5 +200,25 @@ describe('ConfigureNodePoolForm', () => {
     await userEvent.click(getByRole('button', { name: 'Cancel' }));
 
     expect(onDone).toHaveBeenCalled();
+  });
+});
+
+describe('getNodePoolVersionOptions', () => {
+  it('Returns Autocomplete options given the required params ', () => {
+    expect(
+      getNodePoolVersionOptions({
+        clusterVersion: 'v1.0.0',
+        nodePoolVersion: 'v0.0.9',
+      })
+    ).toStrictEqual(['v0.0.9', 'v1.0.0']);
+  });
+
+  it('only returns one option if the versions are the same', () => {
+    expect(
+      getNodePoolVersionOptions({
+        clusterVersion: 'v0.0.9',
+        nodePoolVersion: 'v0.0.9',
+      })
+    ).toStrictEqual(['v0.0.9']);
   });
 });
