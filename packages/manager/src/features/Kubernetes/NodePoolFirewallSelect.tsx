@@ -47,7 +47,11 @@ export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
   return (
     <Stack>
       <FormControl error={Boolean(fieldState.error)} sx={{ mt: 0 }}>
-        <FormLabel id="node-pool-firewall-label" sx={{ m: 0, p: 0 }}>
+        <FormLabel
+          htmlFor="firewall-radio-group"
+          id="node-pool-firewall-label"
+          sx={{ m: 0, p: 0 }}
+        >
           Firewall
         </FormLabel>
         <RadioGroup
