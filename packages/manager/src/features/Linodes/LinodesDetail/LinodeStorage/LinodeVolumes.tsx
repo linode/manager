@@ -41,16 +41,11 @@ export const LinodeVolumes = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-  const { data: volumePermissions } = usePermissions('account', [
-    'create_volume',
-  ]);
   const { data: linodePermissions } = usePermissions(
     'linode',
     ['update_linode'],
     linode?.id
   );
-  const canAttachVolume =
-    volumePermissions?.create_volume || linodePermissions?.update_linode;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -211,10 +206,10 @@ export const LinodeVolumes = () => {
         <Typography variant="h3">Volumes</Typography>
         <Button
           buttonType="primary"
-          disabled={!canAttachVolume}
+          disabled={!linodePermissions?.update_linode}
           onClick={handleCreateVolume}
           tooltipText={
-            !canAttachVolume
+            !linodePermissions?.update_linode
               ? 'You do not have permission to create or attach a volume to this Linode.'
               : undefined
           }

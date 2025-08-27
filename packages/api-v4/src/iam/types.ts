@@ -296,15 +296,17 @@ export type LinodeViewer =
   | 'view_linode_stats';
 
 /** Permissions associated with the "volume_admin" role. */
-export type VolumeAdmin =
+export type VolumeAdmin = 'delete_volume' | VolumeContributor;
+
+/** Permissions associated with the "volume_contributor" role. */
+export type VolumeContributor =
   | 'attach_volume'
   | 'clone_volume'
-  | 'create_volume'
   | 'delete_volume'
   | 'detach_volume'
   | 'resize_volume'
   | 'update_volume'
-  | 'view_volume';
+  | VolumeViewer;
 
 /** Permissions associated with the "volume_viewer" role. */
 export type VolumeViewer = 'view_volume';

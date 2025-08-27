@@ -9,7 +9,6 @@ export const volumeGrantsToPermissions = (
   return {
     attach_volume: unrestricted || grantLevel === 'read_write',
     clone_volume: unrestricted || grantLevel === 'read_write',
-    create_volume: unrestricted || grantLevel === 'read_write',
     delete_volume: unrestricted || grantLevel === 'read_write',
     detach_volume: unrestricted || grantLevel === 'read_write',
     resize_volume: unrestricted || grantLevel === 'read_write',

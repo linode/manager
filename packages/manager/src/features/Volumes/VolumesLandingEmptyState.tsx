@@ -19,8 +19,6 @@ export const VolumesLandingEmptyState = () => {
   const navigate = useNavigate();
   const { data: permissions } = usePermissions('account', ['create_volume']);
 
-  const canCreateVolume = permissions?.create_volume;
-
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
@@ -28,7 +26,7 @@ export const VolumesLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create Volume',
-            disabled: !canCreateVolume,
+            disabled: !permissions?.create_volume,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',

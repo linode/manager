@@ -4,7 +4,6 @@ import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
 
 interface Props {
@@ -16,11 +15,6 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
 
   const { data: volumesData } = useLinodeVolumesQuery(linodeId);
   const { data: notifications } = useNotificationsQuery();
-  const { data: permissions } = usePermissions(
-    'volume',
-    ['update_volume'],
-    linodeId
-  );
 
   const volumeIdsEligibleForUpgrade = getUpgradeableVolumeIds(
     volumesData?.data ?? [],
@@ -56,18 +50,12 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
         </Stack>
         <Button
           buttonType="primary"
-          disabled={!permissions?.update_volume}
           onClick={() =>
             navigate({
               to: '/linodes/$linodeId/storage',
               params: { linodeId },
               search: { upgrade: true },
             })
-          }
-          tooltipText={
-            !permissions?.update_volume
-              ? 'You do not have permission to update volumes.'
-              : undefined
           }
         >
           Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
