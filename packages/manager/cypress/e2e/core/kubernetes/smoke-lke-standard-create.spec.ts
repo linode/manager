@@ -4,6 +4,7 @@
 
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory, kubernetesClusterFactory } from '@src/factories';
+import { minimumNodeNotice } from 'support/constants/lke';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateCluster } from 'support/intercepts/lke';
@@ -12,7 +13,7 @@ import {
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { addNodes, minimumNodeNotice } from 'support/util/lke';
+import { addNodes } from 'support/util/lke';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 

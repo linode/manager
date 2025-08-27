@@ -10,7 +10,10 @@ import {
   subnetFactory,
   vpcFactory,
 } from '@src/factories';
-import { latestEnterpriseTierKubernetesVersion } from 'support/constants/lke';
+import {
+  latestEnterpriseTierKubernetesVersion,
+  minimumNodeNotice,
+} from 'support/constants/lke';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateCluster,
@@ -22,7 +25,7 @@ import { mockGetClusters } from 'support/intercepts/lke';
 import {} from 'support/intercepts/profile';
 import { mockGetVPC } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
-import { addNodes, minimumNodeNotice } from 'support/util/lke';
+import { addNodes } from 'support/util/lke';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 

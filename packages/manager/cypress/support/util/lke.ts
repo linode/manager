@@ -62,7 +62,3 @@ export const addNodes = (plan: string) => {
       .click();
   });
 };
-
-// Warning that's shown when recommended minimum number of nodes is not met.
-export const minimumNodeNotice =
-  'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
