@@ -85,7 +85,7 @@ export const NodePoolFooter = (props: Props) => {
               <b>Version:</b> {poolVersion}
             </Typography>
           )}
-          {poolFirewallId && (
+          {clusterTier === 'enterprise' && poolFirewallId && (
             <Typography sx={{ textWrap: 'nowrap' }}>
               <b>Firewall:</b>{' '}
               <Link to={`/firewalls/${poolFirewallId}/rules`}>
