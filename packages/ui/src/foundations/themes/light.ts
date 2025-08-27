@@ -182,6 +182,7 @@ const genericLinkStyle = {
   background: 'none',
   border: 'none',
   color: Alias.Content.Text.Link.Default,
+  fontFamily: Font.FontFamily.Brand,
   cursor: 'pointer',
   minWidth: 0,
   padding: 0,
@@ -234,14 +235,6 @@ const visuallyHidden = {
 const graphTransparency = '0.7';
 
 const spacing = 8;
-
-const MuiTableHeadSvgStyles = {
-  svg: {
-    path: {
-      fill: Color.Brand[90],
-    },
-  },
-};
 
 const MuiTableZebraHoverStyles = {
   '&:not(.disabled-row)': {
@@ -1560,10 +1553,20 @@ export const lightTheme: ThemeOptions = {
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
-            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
-            ':hover': {
-              color: Color.Brand[60],
-              ...MuiTableHeadSvgStyles,
+            '&.MuiIconButton-isActive': {
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Active,
+                },
+              },
+            },
+            ':hover, :focus': {
+              color: Table.HeaderNested.Icon.Hover,
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Hover,
+                },
+              },
             },
           },
           borderBottom: `1px solid ${Border.Normal}`,
@@ -1642,16 +1645,20 @@ export const lightTheme: ThemeOptions = {
             color: Table.HeaderNested.Text,
           },
           ':hover, :focus': {
-            ...MuiTableHeadSvgStyles,
-            color: Color.Brand[90],
+            color: Table.HeaderNested.Icon.Hover,
             cursor: 'pointer',
+            svg: {
+              path: {
+                fill: Table.HeaderNested.Icon.Hover,
+              },
+            },
           },
           fontSize: Font.FontSize.Xs,
           svg: {
             height: '16px',
             margin: `0 ${Spacing.S4}`,
             path: {
-              fill: Table.HeaderNested.Icon,
+              fill: Table.HeaderNested.Icon.Default,
             },
             width: '16px',
           },

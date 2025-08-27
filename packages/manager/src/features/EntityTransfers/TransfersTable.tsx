@@ -1,3 +1,4 @@
+import { type PermissionType } from '@linode/api-v4';
 import { Accordion } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
@@ -16,11 +17,12 @@ import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
 
 import type {
+  APIError,
   EntityTransfer,
   TransferEntities,
-} from '@linode/api-v4/lib/entity-transfers';
-import type { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4/lib/types';
 
+type PermissionsSubset<T extends PermissionType> = T;
 interface Props {
   error: APIError[] | null;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
@@ -28,10 +30,17 @@ interface Props {
   isLoading: boolean;
   page: number;
   pageSize: number;
+  permissions?: Record<TransfersPermissions, boolean>;
   results: number;
   transfers?: EntityTransfer[];
   transferType: 'pending' | 'received' | 'sent';
 }
+
+export type TransfersPermissions = PermissionsSubset<
+  | 'accept_service_transfer'
+  | 'cancel_service_transfer'
+  | 'create_service_transfer'
+>;
 
 export const TransfersTable = React.memo((props: Props) => {
   const {
@@ -44,6 +53,7 @@ export const TransfersTable = React.memo((props: Props) => {
     results,
     transferType,
     transfers,
+    permissions,
   } = props;
 
   const [cancelPendingDialogOpen, setCancelPendingDialogOpen] =
@@ -155,6 +165,7 @@ export const TransfersTable = React.memo((props: Props) => {
                     }
                     handleTokenClick={handleTokenClick}
                     key={`${transferType}-${idx}`}
+                    permissions={permissions}
                     status={transfer.status}
                     token={transfer.token}
                     transferType={transferType}

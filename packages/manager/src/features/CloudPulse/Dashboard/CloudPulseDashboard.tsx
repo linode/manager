@@ -9,6 +9,7 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
@@ -33,6 +34,11 @@ export interface DashboardProperties {
    * time duration to fetch the metrics data in this widget
    */
   duration: DateTimeWithPreset;
+
+  /**
+   * Selected linode region for the dashboard
+   */
+  linodeRegion?: string;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -68,6 +74,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    linodeRegion,
   } = props;
 
   const { preferences } = useAclpPreference();
@@ -92,7 +99,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
   );
 
   const {
@@ -131,7 +138,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
-    return <CircleProgress />;
+    return (
+      <CircleProgress
+        sx={(theme) => ({
+          padding: theme.spacingFunction(16),
+        })}
+      />
+    );
   }
 
   if (!dashboard) {
@@ -147,6 +160,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       duration={duration}
       isJweTokenFetching={isJweTokenFetching}
       jweToken={jweToken}
+      linodeRegion={linodeRegion}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}

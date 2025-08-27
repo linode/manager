@@ -225,7 +225,7 @@ export const Contacts = () => {
           });
         }}
         open={isDeleteContactDialogOpen}
-        title={`Delete Contact ${selectedContact?.name || 'Unknown'}?`}
+        title={`Delete Contact${selectedContact ? ` ${selectedContact.name}` : ''}?`}
       >
         <Notice variant="warning">
           <Typography>

@@ -3,7 +3,6 @@ import {
   Box,
   CircleProgress,
   ErrorState,
-  Notice,
   StyledLinkButton,
   Typography,
 } from '@linode/ui';
@@ -12,10 +11,11 @@ import { useTheme } from '@mui/material/styles';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
+import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
@@ -166,16 +166,10 @@ const VPCDetail = () => {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="end">
-          <StyledActionButton
-            disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => handleEditVPC(vpc)}
-          >
+          <StyledActionButton onClick={() => handleEditVPC(vpc)}>
             Edit
           </StyledActionButton>
-          <StyledActionButton
-            disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => handleDeleteVPC(vpc)}
-          >
+          <StyledActionButton onClick={() => handleDeleteVPC(vpc)}>
             Delete
           </StyledActionButton>
         </Box>
@@ -234,14 +228,15 @@ const VPCDetail = () => {
         vpcError={error}
       />
       {isVPCLKEEnterpriseCluster && (
-        <Notice
+        <DismissibleBanner
           bgcolor={theme.palette.background.paper}
+          preferenceKey={`vpc-${vpc.id}`}
           spacingTop={24}
           style={{ padding: '8px 16px' }}
-          variant="warning"
+          variant="info"
         >
-          <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
-        </Notice>
+          <Typography>{LKE_ENTERPRISE_AUTOGEN_VPC_WARNING}</Typography>
+        </DismissibleBanner>
       )}
       <Box
         padding={`${theme.spacingFunction(16)} ${theme.spacingFunction(8)}`}

@@ -61,6 +61,7 @@ export type NavEntity =
   | 'Service Transfers'
   | 'Settings'
   | 'StackScripts'
+  | 'Users & Grants'
   | 'Volumes'
   | 'VPC';
 
@@ -105,7 +106,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.aclpAlerting?.recentActivity ||
       flags.aclpAlerting?.notificationChannels);
 
-  const isIAMRbacPrimaryNavChangesEnabled = flags?.iamRbacPrimaryNavChanges;
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = flags;
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
@@ -251,13 +252,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Identity & Access',
-                hide: !isIAMEnabled || isIAMRbacPrimaryNavChangesEnabled,
+                hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
                 to: '/iam',
                 isBeta: isIAMBeta,
               },
               {
                 display: 'Account',
-                hide: isIAMRbacPrimaryNavChangesEnabled,
+                hide: iamRbacPrimaryNavChanges,
                 to: '/account',
               },
               {
@@ -269,13 +270,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           },
         ];
 
-        if (isIAMRbacPrimaryNavChangesEnabled) {
+        if (iamRbacPrimaryNavChanges) {
           groups.splice(groups.length - 1, 0, {
             icon: <CoreUser />,
             links: [
               {
                 display: 'Billing',
-                to: '/account/billing', // TODO: replace with '/billing' when flat route is added
+                to: '/billing',
+              },
+              {
+                display: 'Users & Grants',
+                hide: isIAMEnabled,
+                to: '/users',
               },
               {
                 display: 'Identity & Access',
@@ -285,23 +291,24 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Quotas',
-                to: '/account/quotas', // TODO: replace with '/quotas' when flat route is added
+                hide: !limitsEvolution?.enabled,
+                to: '/quotas',
               },
               {
                 display: 'Login History',
-                to: '/account/login-history', // TODO: replace with '/login-history' when flat route is added
+                to: '/login-history',
               },
               {
                 display: 'Service Transfers',
-                to: '/account/service-transfers', // TODO: replace with '/service-transfers' when flat route is added
+                to: '/service-transfers',
               },
               {
                 display: 'Maintenance',
-                to: '/account/maintenance', // TODO: replace with '/maintenance' when flat route is added
+                to: '/maintenance',
               },
               {
                 display: 'Settings',
-                to: '/account/settings', // TODO: replace with '/settings' when flat route is added
+                to: '/settings',
               },
             ],
             name: 'Administration',
@@ -319,7 +326,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isACLPEnabled,
         isIAMBeta,
         isIAMEnabled,
-        isIAMRbacPrimaryNavChangesEnabled,
+        iamRbacPrimaryNavChanges,
+        limitsEvolution,
       ]
     );
 

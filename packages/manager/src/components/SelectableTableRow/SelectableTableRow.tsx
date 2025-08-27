@@ -13,6 +13,14 @@ interface SelectableTableRowProps {
    */
   children: JSX.Element[];
   /**
+   * An optional className to apply custom styles to the row.
+   */
+  className?: string;
+  /**
+   * A boolean indicating whether the row is currently disabled or not.
+   */
+  disabled?: boolean;
+  /**
    * A function to handle the toggle of the row's checked state.
    * This function will be called when the row is clicked to select or deselect it.
    */
@@ -25,10 +33,11 @@ interface SelectableTableRowProps {
 
 export const SelectableTableRow = React.memo(
   (props: SelectableTableRowProps) => {
-    const { handleToggleCheck, isChecked } = props;
+    const { handleToggleCheck, isChecked, disabled, className } = props;
 
     return (
       <TableRow
+        className={className}
         sx={(theme) => ({
           '& td': {
             padding: `0 ${theme.tokens.spacing.S12}`,
@@ -38,6 +47,7 @@ export const SelectableTableRow = React.memo(
         <StyledTableCell>
           <Checkbox
             checked={isChecked}
+            disabled={disabled}
             inputProps={{
               'aria-label': `Select all entities on page`,
             }}

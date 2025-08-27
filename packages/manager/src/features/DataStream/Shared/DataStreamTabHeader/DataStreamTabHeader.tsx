@@ -1,18 +1,27 @@
-import { Button } from '@linode/ui';
+import { Autocomplete, Button } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+
 import type { Theme } from '@mui/material/styles';
+import type { LabelValueOption } from 'src/features/DataStream/Shared/types';
 
 export interface DataStreamTabHeaderProps {
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
   entity?: string;
+  isSearching?: boolean;
   loading?: boolean;
   onButtonClick?: () => void;
+  onSearch?: (label: string) => void;
+  onSelect?: (status: string) => void;
+  searchValue?: string;
+  selectList?: LabelValueOption[];
+  selectValue?: string;
   spacingBottom?: 0 | 4 | 16 | 24;
 }
 
@@ -24,6 +33,12 @@ export const DataStreamTabHeader = ({
   loading,
   onButtonClick,
   spacingBottom = 24,
+  isSearching,
+  selectList,
+  onSelect,
+  selectValue,
+  searchValue,
+  onSearch,
 }: DataStreamTabHeaderProps) => {
   const theme = useTheme();
 
@@ -35,6 +50,7 @@ export const DataStreamTabHeader = ({
   const customSmMdBetweenBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.between(customBreakpoint, 'md')
   );
+  const searchLabel = `Search for a ${entity}`;
 
   return (
     <StyledLandingHeaderGrid
@@ -53,7 +69,10 @@ export const DataStreamTabHeader = ({
           display: 'flex',
           flexWrap: xsDown ? 'wrap' : 'nowrap',
           gap: 3,
-          justifyContent: 'flex-end',
+          justifyContent:
+            onSearch && searchValue !== undefined
+              ? 'space-between'
+              : 'flex-end',
           flex: '1 1 auto',
 
           marginLeft: customSmMdBetweenBreakpoint
@@ -61,15 +80,37 @@ export const DataStreamTabHeader = ({
             : customXsDownBreakpoint
               ? theme.spacingFunction(8)
               : undefined,
+          marginRight: customSmMdBetweenBreakpoint
+            ? theme.spacingFunction(16)
+            : customXsDownBreakpoint
+              ? theme.spacingFunction(8)
+              : undefined,
         }}
       >
-        {
-          // @TODO (DPS-34192) Search input - both streams and destinations
-        }
+        {onSearch && searchValue !== undefined && (
+          <DebouncedSearchTextField
+            clearable
+            hideLabel
+            isSearching={isSearching}
+            label={searchLabel}
+            onSearch={onSearch}
+            placeholder={searchLabel}
+            value={searchValue}
+          />
+        )}
         <StyledActions>
-          {
-            // @TODO (DPS-34193) Select status - only streams
-          }
+          {selectList && onSelect && (
+            <Autocomplete
+              label={'Status'}
+              noMarginTop
+              onChange={(_, option) => {
+                onSelect(option?.value ?? '');
+              }}
+              options={selectList}
+              placeholder="Select"
+              value={selectList.find(({ value }) => value === selectValue)}
+            />
+          )}
           {onButtonClick && (
             <Button
               buttonType="primary"
@@ -91,10 +132,42 @@ const StyledActions = styled('div')(({ theme }) => ({
   display: 'flex',
   gap: theme.spacingFunction(24),
   justifyContent: 'flex-end',
+  marginLeft: 'auto',
+
+  '& .MuiAutocomplete-root > .MuiBox-root': {
+    display: 'flex',
+
+    '& > .MuiBox-root': {
+      margin: '0',
+
+      '& > .MuiInputLabel-root': {
+        margin: 0,
+        marginRight: theme.spacingFunction(12),
+      },
+    },
+  },
 }));
 
 const StyledLandingHeaderGrid = styled(Grid)(({ theme }) => ({
   '&:not(:first-of-type)': {
     marginTop: theme.spacingFunction(24),
+  },
+
+  [theme.breakpoints.up('sm')]: {
+    '& .MuiFormControl-fullWidth': {
+      width: '180px',
+    },
+  },
+
+  [theme.breakpoints.up('md')]: {
+    '& .MuiFormControl-fullWidth': {
+      width: '235px',
+    },
+  },
+
+  [theme.breakpoints.up('lg')]: {
+    '& .MuiFormControl-fullWidth': {
+      width: '270px',
+    },
   },
 }));

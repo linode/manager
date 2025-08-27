@@ -3,7 +3,7 @@ import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews } from './models';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
-import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
@@ -18,7 +18,7 @@ interface ReusableDashboardFilterUtilProps {
   /**
    * The selected filter values
    */
-  filterValue: { [key: string]: FilterValueType };
+  filterValue: CloudPulseMetricsFilter;
   /**
    * The selected resource id
    */

@@ -65,7 +65,7 @@ export const createFirewallFromTemplate = async (options: {
   // Get firewalls and firewall template in parallel
   const [{ rules, slug }, firewalls] = await Promise.all([
     queryClient.ensureQueryData(firewallQueries.template(templateSlug)),
-    queryClient.fetchQuery(firewallQueries.firewalls._ctx.all), // must fetch fresh data if generating more than one firewall
+    queryClient.fetchQuery(firewallQueries.firewalls._ctx.all()), // must fetch fresh data if generating more than one firewall
   ]);
 
   if (updateProgress) {

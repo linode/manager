@@ -14,6 +14,7 @@ import {
   oauthCallbackRoute,
 } from './auth';
 import { betaRouteTree } from './betas';
+import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
 import { dataStreamRouteTree } from './datastream';
 import { domainsRouteTree } from './domains';
@@ -23,17 +24,23 @@ import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
+import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
+import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
+import { quotasRouteTree } from './quotas';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
+import { serviceTransfersRouteTree } from './serviceTransfers';
+import { settingsRouteTree } from './settings';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
+import { usersAndGrantsRouteTree } from './usersAndGrants';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
@@ -54,6 +61,7 @@ export const routeTree = rootRoute.addChildren([
   logoutRoute,
   oauthCallbackRoute,
   accountRouteTree,
+  billingRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
@@ -66,21 +74,33 @@ export const routeTree = rootRoute.addChildren([
   imagesRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
+  loginHistoryRouteTree,
   longviewRouteTree,
+  maintenanceRouteTree,
   managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
   profileRouteTree,
+  quotasRouteTree,
   searchRouteTree,
+  serviceTransfersRouteTree,
+  settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
+  usersAndGrantsRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
 ]);
 
 export const router = createRouter({
   context: {
+    accountSettings: undefined,
+    flags: {},
+    globalErrors: {},
+    isACLPEnabled: false,
+    isDatabasesEnabled: false,
+    isPlacementGroupsEnabled: false,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,

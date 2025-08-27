@@ -3,6 +3,13 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { DataStreamRoute } from './DataStreamRoute';
 
+import type { TableSearchParams } from 'src/routes/types';
+
+export interface StreamSearchParams extends TableSearchParams {
+  label?: string;
+  status?: string;
+}
+
 export const dataStreamRoute = createRoute({
   component: DataStreamRoute,
   getParentRoute: () => rootRoute,
@@ -24,6 +31,7 @@ const dataStreamLandingRoute = createRoute({
 const streamsRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'streams',
+  validateSearch: (search: StreamSearchParams) => search,
 }).lazy(() =>
   import('src/features/DataStream/dataStreamLandingLazyRoute').then(
     (m) => m.dataStreamLandingLazyRoute
@@ -35,13 +43,35 @@ const streamsCreateRoute = createRoute({
   path: 'streams/create',
 }).lazy(() =>
   import(
-    'src/features/DataStream/Streams/StreamCreate/streamCreateLazyRoute'
+    'src/features/DataStream/Streams/StreamForm/streamCreateLazyRoute'
   ).then((m) => m.streamCreateLazyRoute)
 );
+
+const streamsEditRoute = createRoute({
+  getParentRoute: () => dataStreamRoute,
+  params: {
+    parse: ({ streamId }: { streamId: string }) => ({
+      streamId: Number(streamId),
+    }),
+    stringify: ({ streamId }: { streamId: number }) => ({
+      streamId: String(streamId),
+    }),
+  },
+  path: 'streams/$streamId/edit',
+}).lazy(() =>
+  import('src/features/DataStream/Streams/StreamForm/streamEditLazyRoute').then(
+    (m) => m.streamEditLazyRoute
+  )
+);
+
+export interface DestinationSearchParams extends TableSearchParams {
+  label?: string;
+}
 
 const destinationsRoute = createRoute({
   getParentRoute: () => dataStreamRoute,
   path: 'destinations',
+  validateSearch: (search: DestinationSearchParams) => search,
 }).lazy(() =>
   import('src/features/DataStream/dataStreamLandingLazyRoute').then(
     (m) => m.dataStreamLandingLazyRoute
@@ -59,6 +89,6 @@ const destinationsCreateRoute = createRoute({
 
 export const dataStreamRouteTree = dataStreamRoute.addChildren([
   dataStreamLandingRoute,
-  streamsRoute.addChildren([streamsCreateRoute]),
+  streamsRoute.addChildren([streamsCreateRoute, streamsEditRoute]),
   destinationsRoute.addChildren([destinationsCreateRoute]),
 ]);
