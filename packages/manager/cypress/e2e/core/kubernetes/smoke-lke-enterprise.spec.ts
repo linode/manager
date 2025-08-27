@@ -26,7 +26,7 @@ import {} from 'support/intercepts/profile';
 import { mockGetVPC } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { addNodes } from 'support/util/lke';
-import { randomLabel, randomNumber } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 const mockCluster = kubernetesClusterFactory.build({
@@ -132,10 +132,6 @@ describe('LKE-E Cluster Create', () => {
         phase2Mtc: false,
       },
     }).as('getFeatureFlags');
-    const mockCluster = kubernetesClusterFactory.build({
-      id: randomNumber(10000, 99999),
-      label: randomLabel(),
-    });
 
     mockCreateCluster(mockCluster).as('createCluster');
     mockGetTieredKubernetesVersions('enterprise', [
