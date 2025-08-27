@@ -96,7 +96,7 @@ export const EntityTransfersCreate = () => {
           crumbOverrides: [
             {
               label: 'Service Transfers',
-              position: 2,
+              position: flags?.iamRbacPrimaryNavChanges ? 1 : 2,
             },
           ],
           labelOptions: { noCap: true },
