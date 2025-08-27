@@ -8,6 +8,9 @@ import { DateTimePicker } from './DateTimePicker';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
+/**
+ * @deprecated Use `import { DateTimeRangePicker } from '@linode/ui'` component instead.
+ */
 export interface DateTimeRangePickerProps {
   /** If true, disable the timezone drop down */
   disabledTimeZone?: boolean;
