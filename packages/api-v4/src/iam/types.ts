@@ -256,10 +256,11 @@ export type FirewallViewer =
   | 'view_firewall_rule_version';
 
 /** Permissions associated with the "vpc_admin" role. */
-export type VPCAdmin =
+export type VPCAdmin = 'delete_vpc' | 'delete_vpc_subnet' | VPCContributor;
+
+/** Permissions associated with the "vpc_contributor role. */
+export type VPCContributor =
   | 'create_vpc_subnet'
-  | 'delete_vpc'
-  | 'delete_vpc_subnet'
   | 'update_vpc'
   | 'update_vpc_subnet'
   | VPCViewer;

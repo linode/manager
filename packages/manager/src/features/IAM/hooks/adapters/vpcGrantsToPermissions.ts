@@ -8,13 +8,13 @@ export const vpcGrantsToPermissions = (
   const unrestricted = isRestricted === false; // explicit === false
   return {
     create_vpc: unrestricted || grantLevel === 'read_write',
-    create_vpc_subnet: unrestricted,
-    delete_vpc: unrestricted,
-    delete_vpc_subnet: unrestricted,
-    update_vpc: unrestricted,
-    update_vpc_subnet: unrestricted,
-    list_vpc_ip_addresses: unrestricted,
-    view_vpc: unrestricted,
-    view_vpc_subnet: unrestricted,
+    create_vpc_subnet: unrestricted || grantLevel === 'read_write',
+    delete_vpc: unrestricted || grantLevel === 'read_write',
+    delete_vpc_subnet: unrestricted || grantLevel === 'read_write',
+    update_vpc: unrestricted || grantLevel === 'read_write',
+    update_vpc_subnet: unrestricted || grantLevel === 'read_write',
+    list_vpc_ip_addresses: unrestricted || grantLevel === 'read_write',
+    view_vpc: unrestricted || grantLevel === 'read_write',
+    view_vpc_subnet: unrestricted || grantLevel === 'read_write',
   };
 };
