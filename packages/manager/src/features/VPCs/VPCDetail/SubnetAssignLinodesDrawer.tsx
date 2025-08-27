@@ -17,6 +17,7 @@ import {
   Drawer,
   FormControlLabel,
   Notice,
+  Stack,
   TextField,
   TooltipIcon,
   Typography,
@@ -26,12 +27,15 @@ import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
+import { Code } from 'src/components/Code/Code';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
+  PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP,
+  REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
@@ -85,7 +89,9 @@ interface LinodeAndInterfaceData extends Linode {
   // Legacy: VPC IPv4 = interface.ipv4.vpc, VPC ranges = interface.ip_ranges
   // Linode Interface: VPC IPv4 = interface.vpc.ipv4.addresses[], VPC ranges = interface.vpc.ipv4.ranges
   vpcIPv4: null | string | undefined;
-  vpcRanges: string[] | undefined;
+  vpcIPv4Ranges: string[] | undefined;
+  vpcIPv6: null | string | undefined;
+  vpcIPv6Ranges: string[] | undefined;
 }
 
 export const SubnetAssignLinodesDrawer = (
@@ -107,6 +113,10 @@ export const SubnetAssignLinodesDrawer = (
 
   const flags = useFlags();
   const isVPCIPv6Enabled = !!flags.vpcIpv6;
+  // Only show the "VPC IPv6" field, "Add IPv6 Range" button, and Dual Stack tooltip copy if this is a Dual Stack VPC
+  const showIPv6Content =
+    isVPCIPv6Enabled &&
+    Boolean(subnet?.ipv6?.length && subnet?.ipv6?.length > 0);
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
   const defaultFirewall = getDefaultFirewallForInterfacePurpose(
@@ -126,6 +136,9 @@ export const SubnetAssignLinodesDrawer = (
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignVPCIPAddresses, setAutoAssignVPCIPAddresses] =
     React.useState<boolean>(true);
+
+  const [allowPublicIPv6Access, setAllowPublicIPv6Access] =
+    React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -194,7 +207,9 @@ export const SubnetAssignLinodesDrawer = (
   const handleAssignLinode = async () => {
     const {
       chosenIPv4,
-      ipRanges,
+      chosenIPv6,
+      ipv4Ranges,
+      ipv6Ranges,
       selectedConfig,
       selectedLinode,
       selectedFirewall,
@@ -213,7 +228,10 @@ export const SubnetAssignLinodesDrawer = (
       firewallId: selectedFirewall,
       autoAssignVPCIPAddresses,
       chosenIPv4,
-      ipRanges,
+      chosenIPv6,
+      ipv4Ranges,
+      ipv6Ranges,
+      isIPv6Public: allowPublicIPv6Access,
       subnetId: subnet?.id,
       vpcId,
       isLinodeInterface,
@@ -221,6 +239,8 @@ export const SubnetAssignLinodesDrawer = (
     });
 
     try {
+      setAssignLinodesErrors({});
+
       let _newInterface;
 
       if ('purpose' in interfacePayload) {
@@ -270,12 +290,30 @@ export const SubnetAssignLinodesDrawer = (
         []
       );
 
+      const fieldsOfIPv6RangesErrors = updatedErrors.reduce(
+        (accum: any, _err: { field?: string }) => {
+          if (_err.field && _err.field.includes('vpc.ipv6.ranges[')) {
+            return [...accum, _err.field];
+          } else {
+            return [...accum];
+          }
+        },
+        []
+      );
+
       const errorMap = getErrorMap(
-        [...fieldsOfIPRangesErrors, 'ipv4.vpc', 'ip_ranges', 'firewall_id'],
+        [
+          ...fieldsOfIPRangesErrors,
+          ...fieldsOfIPv6RangesErrors,
+          'ipv4.vpc',
+          'ip_ranges',
+          'firewall_id',
+          'vpc.ipv6.slaac[0].range',
+        ],
         errors
       );
 
-      const ipRangesWithErrors = ipRanges.map((ipRange, idx) => {
+      const ipv4RangesWithErrors = ipv4Ranges.map((ipRange, idx) => {
         const errorForThisIdx = errorMap[`ip_ranges[${idx}]`];
         return {
           address: ipRange.address,
@@ -283,7 +321,16 @@ export const SubnetAssignLinodesDrawer = (
         };
       });
 
-      setFieldValue('ipRanges', ipRangesWithErrors);
+      const ipv6RangesWithErrors = ipv6Ranges.map((ipRange, idx) => {
+        const errorForThisIdx = errorMap[`vpc.ipv6.ranges[${idx}].range`];
+        return {
+          address: ipRange.address,
+          error: errorForThisIdx,
+        };
+      });
+
+      setFieldValue('ipv4Ranges', ipv4RangesWithErrors);
+      setFieldValue('ipv6Ranges', ipv6RangesWithErrors);
 
       const errorMessage = determineErrorMessage(configId, errorMap);
 
@@ -310,6 +357,10 @@ export const SubnetAssignLinodesDrawer = (
     setAutoAssignVPCIPAddresses(!autoAssignVPCIPAddresses);
   };
 
+  const handleAllowPublicIPv6AccessChange = () => {
+    setAllowPublicIPv6Access(!allowPublicIPv6Access);
+  };
+
   // Helper function to determine the error message based on the configId
   // A null configId means the selected Linode is using Linode Interfaces
   const determineErrorMessage = (
@@ -327,7 +378,9 @@ export const SubnetAssignLinodesDrawer = (
       enableReinitialize: true,
       initialValues: {
         chosenIPv4: '',
-        ipRanges: [] as ExtendedIP[],
+        chosenIPv6: '',
+        ipv4Ranges: [] as ExtendedIP[],
+        ipv6Ranges: [] as ExtendedIP[],
         selectedConfig: null as Config | null,
         selectedLinode: null as Linode | null,
         selectedFirewall: defaultFirewall as null | number,
@@ -339,9 +392,16 @@ export const SubnetAssignLinodesDrawer = (
   const isLinodeInterface =
     values.selectedLinode?.interface_generation === 'linode';
 
-  const handleIPRangeChange = React.useCallback(
+  const handleIPv4RangeChange = React.useCallback(
     (_ipRanges: ExtendedIP[]) => {
-      setFieldValue('ipRanges', _ipRanges);
+      setFieldValue('ipv4Ranges', _ipRanges);
+    },
+    [setFieldValue]
+  );
+
+  const handleIPv6RangeChange = React.useCallback(
+    (_ipv6Ranges: ExtendedIP[]) => {
+      setFieldValue('ipv6Ranges', _ipv6Ranges);
     },
     [setFieldValue]
   );
@@ -380,10 +440,24 @@ export const SubnetAssignLinodesDrawer = (
             ? getLinodeInterfacePrimaryIPv4(newInterface.current)
             : newInterface?.current?.ipv4?.vpc
           : '',
-        vpcRanges: newInterface?.current
+        vpcIPv6: newInterface?.current
+          ? 'vpc' in newInterface.current
+            ? newInterface.current.vpc?.ipv6?.slaac[0].address
+            : (newInterface?.current?.ipv6?.slaac[0].address ?? null)
+          : null,
+        vpcIPv4Ranges: newInterface?.current
           ? 'vpc' in newInterface.current
             ? getLinodeInterfaceIPv4Ranges(newInterface.current)
             : newInterface.current?.ip_ranges
+          : [],
+        vpcIPv6Ranges: newInterface?.current
+          ? 'vpc' in newInterface.current
+            ? newInterface.current.vpc?.ipv6?.ranges.map(
+                (rangeObj) => rangeObj.range
+              )
+            : newInterface.current?.ipv6?.ranges.map(
+                (rangeObj) => rangeObj.range
+              )
           : [],
       };
 
@@ -398,7 +472,9 @@ export const SubnetAssignLinodesDrawer = (
       setLinodeConfigs([]);
       setValues({
         chosenIPv4: '',
-        ipRanges: [],
+        chosenIPv6: '',
+        ipv4Ranges: [],
+        ipv6Ranges: [],
         selectedConfig: null,
         selectedLinode: null,
         selectedFirewall: defaultFirewall,
@@ -408,7 +484,8 @@ export const SubnetAssignLinodesDrawer = (
     subnet,
     isLinodeInterface,
     assignedLinodesAndInterfaceData,
-    values.ipRanges,
+    values.ipv4Ranges,
+    values.ipv6Ranges,
     values.selectedLinode,
     values.selectedConfig,
     linodeConfigs,
@@ -534,7 +611,7 @@ export const SubnetAssignLinodesDrawer = (
                 label={
                   <Typography>
                     Auto-assign{' '}
-                    {isVPCIPv6Enabled
+                    {showIPv6Content
                       ? 'VPC IP addresses'
                       : 'a VPC IPv4 address'}{' '}
                     for this Linode
@@ -542,20 +619,74 @@ export const SubnetAssignLinodesDrawer = (
                 }
                 sx={{ marginRight: 0 }}
               />
-              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
+              <TooltipIcon
+                status="info"
+                text={
+                  showIPv6Content ? (
+                    <Typography component="span">
+                      Automatically assign IPv4 and IPv6 addresses as the
+                      private IP addresses for this Linode in the VPC. A{' '}
+                      <Code>/52</Code> IPv6 network prefix is allocated for the
+                      VPC.
+                    </Typography>
+                  ) : (
+                    VPC_AUTO_ASSIGN_IPV4_TOOLTIP
+                  )
+                }
+              />
             </Box>
             {!autoAssignVPCIPAddresses && (
-              <TextField
-                disabled={userCannotAssignLinodes}
-                errorText={assignLinodesErrors['ipv4.vpc']}
-                label="VPC IPv4"
-                onChange={(e) => {
-                  setFieldValue('chosenIPv4', e.target.value);
-                  setAssignLinodesErrors({});
-                }}
-                sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
-                value={values.chosenIPv4}
-              />
+              <>
+                <TextField
+                  disabled={userCannotAssignLinodes}
+                  errorText={assignLinodesErrors['ipv4.vpc']}
+                  label="VPC IPv4"
+                  onChange={(e) => {
+                    setFieldValue('chosenIPv4', e.target.value);
+                    setAssignLinodesErrors({});
+                  }}
+                  sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
+                  value={values.chosenIPv4}
+                />
+                {showIPv6Content && (
+                  <>
+                    <TextField
+                      disabled={userCannotAssignLinodes}
+                      errorText={assignLinodesErrors['vpc.ipv6.slaac[0].range']}
+                      label="VPC IPv6"
+                      onChange={(e) => {
+                        setFieldValue('chosenIPv6', e.target.value);
+                        setAssignLinodesErrors({});
+                      }}
+                      sx={(theme) => ({
+                        marginBottom: theme.spacingFunction(8),
+                      })}
+                      value={values.chosenIPv6}
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={allowPublicIPv6Access}
+                          onChange={handleAllowPublicIPv6AccessChange}
+                          sx={{ ml: 0.4 }}
+                        />
+                      }
+                      disabled={userCannotAssignLinodes}
+                      label={
+                        <Stack alignItems="center" direction="row">
+                          <Typography>
+                            Allow public IPv6 access for this Linode
+                          </Typography>
+                          <TooltipIcon
+                            status="info"
+                            text={PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP}
+                          />
+                        </Stack>
+                      }
+                    />
+                  </>
+                )}
+              </>
             )}
             {linodeConfigs.length > 1 && !isLinodeInterface && (
               <>
@@ -579,7 +710,7 @@ export const SubnetAssignLinodesDrawer = (
                 />
               </>
             )}
-            {/* Display the 'Assign additional IPv4 ranges' section if
+            {/* Display the 'Assign additional [IPv4] ranges' section if
                 the Configuration Profile section has been populated, or
                 if it doesn't display b/c the linode has a single config
             */}
@@ -587,9 +718,14 @@ export const SubnetAssignLinodesDrawer = (
               linodeConfigs.length === 1 ||
               isLinodeInterface) && (
               <AssignIPRanges
-                handleIPRangeChange={handleIPRangeChange}
-                ipRanges={values.ipRanges}
+                handleIPRangeChange={handleIPv4RangeChange}
+                handleIPv6RangeChange={handleIPv6RangeChange}
+                includeDescriptionInTooltip={showIPv6Content}
                 ipRangesError={assignLinodesErrors['ip_ranges']}
+                ipv4Ranges={values.ipv4Ranges}
+                ipv6Ranges={values.ipv6Ranges}
+                ipv6RangesError={assignLinodesErrors['vpc.ipv6.ranges']}
+                showIPv6Fields={showIPv6Content}
                 sx={{
                   marginBottom: theme.spacingFunction(8),
                   marginTop:
@@ -643,6 +779,7 @@ export const SubnetAssignLinodesDrawer = (
           ))
         : null}
       <RemovableSelectionsListTable
+        displayVPCIPv6Data={showIPv6Content}
         headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndInterfaceData.length})`}
         noDataText={'No Linodes have been assigned.'}
         onRemove={(data) => {
@@ -651,7 +788,15 @@ export const SubnetAssignLinodesDrawer = (
         }}
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndInterfaceData}
-        tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
+        tableHeaders={
+          showIPv6Content
+            ? [
+                ...REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
+                'VPC IPv6',
+                'VPC IPv6 Ranges',
+              ]
+            : REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS
+        }
       />
       {assignedLinodesAndInterfaceData.length > 0 && (
         <DownloadCSV
@@ -659,7 +804,15 @@ export const SubnetAssignLinodesDrawer = (
           csvRef={csvRef}
           data={assignedLinodesAndInterfaceData}
           filename={`linodes-assigned-${formattedDate}.csv`}
-          headers={SUBNET_LINODE_CSV_HEADERS}
+          headers={
+            showIPv6Content
+              ? [
+                  ...SUBNET_LINODE_CSV_HEADERS,
+                  { key: 'vpcIPv6', label: 'IPv6 VPC' },
+                  { key: 'vpcIPv6Ranges', label: 'IPv6 VPC Ranges' },
+                ]
+              : SUBNET_LINODE_CSV_HEADERS
+          }
           onClick={downloadCSV}
           sx={{
             alignItems: 'flex-start',

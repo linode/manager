@@ -191,7 +191,7 @@ export interface ConfigInterfaceIPv4 {
 }
 
 export interface IPv6SLAAC {
-  address: string;
+  address?: string;
   range: string;
 }
 

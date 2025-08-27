@@ -114,8 +114,11 @@ export const getLinodeInterfaceIPv6Ranges = (iface: LinodeInterface) =>
 export const getVPCInterfacePayload = (inputs: {
   autoAssignVPCIPAddresses: boolean;
   chosenIPv4: string;
+  chosenIPv6: string;
   firewallId: null | number;
-  ipRanges: ExtendedIP[];
+  ipv4Ranges: ExtendedIP[];
+  ipv6Ranges?: ExtendedIP[];
+  isIPv6Public?: boolean;
   isLinodeInterface: boolean;
   subnetId: null | number | undefined;
   vpcId: number;
@@ -124,16 +127,23 @@ export const getVPCInterfacePayload = (inputs: {
   const {
     firewallId,
     chosenIPv4,
-    ipRanges,
+    chosenIPv6,
+    ipv4Ranges,
+    ipv6Ranges,
     subnetId,
     isLinodeInterface,
+    isIPv6Public = false,
     autoAssignVPCIPAddresses,
     vpcId,
-    // vpcIPv6FeatureEnabled,
+    vpcIPv6FeatureEnabled,
   } = inputs;
-  const filteredIPv4Ranges = ipRanges.filter(
+
+  const filteredIPv4Ranges = ipv4Ranges.filter(
     (ipRange) => ipRange.address !== ''
   );
+
+  const filteredIPv6Ranges =
+    ipv6Ranges?.filter((ipRange) => ipRange.address !== '') ?? [];
 
   if (isLinodeInterface) {
     return {
@@ -151,15 +161,19 @@ export const getVPCInterfacePayload = (inputs: {
             return { range: ipRange.address };
           }),
         },
-        // ipv6: vpcIPv6FeatureEnabled ? {
-        //   slaac: [
-        //     {
-        //       range: autoAssignVPCIPAddresses ? 'auto' : ,
-        //     }
-        //   ],
-        //   ranges: [],
-        //   is_public: ,
-        // } : undefined,
+        ipv6: vpcIPv6FeatureEnabled
+          ? {
+              slaac: [
+                {
+                  range: !autoAssignVPCIPAddresses ? chosenIPv6 : 'auto',
+                },
+              ],
+              ranges: filteredIPv6Ranges.map((ipRange) => {
+                return { range: ipRange.address };
+              }),
+              is_public: isIPv6Public,
+            }
+          : undefined,
       },
       public: null,
       vlan: null,
@@ -174,15 +188,19 @@ export const getVPCInterfacePayload = (inputs: {
       nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
       vpc: !autoAssignVPCIPAddresses ? chosenIPv4 : undefined,
     },
-    // ipv6: vpcIPv6FeatureEnabled ? {
-    //   is_public: ,
-    //   slaac: [
-    //     {
-    //       range: autoAssignVPCIPAddresses ? 'auto' : ,
-    //     }
-    //   ],
-    //   ranges: [],
-    // } : undefined,
+    ipv6: vpcIPv6FeatureEnabled
+      ? {
+          is_public: isIPv6Public,
+          slaac: [
+            {
+              range: !autoAssignVPCIPAddresses ? chosenIPv6 : 'auto',
+            },
+          ],
+          ranges: filteredIPv6Ranges.map((ipRange) => {
+            return { range: ipRange.address };
+          }),
+        }
+      : undefined,
     label: null,
     primary: true,
     purpose: 'vpc',

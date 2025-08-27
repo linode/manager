@@ -307,8 +307,9 @@ describe('Linode Interface utility functions', () => {
     const inputs = {
       autoAssignVPCIPAddresses: true,
       chosenIPv4: '10.0.0.3',
+      chosenIPv6: '2600:1401:4000::1726/64',
       firewallId: 1,
-      ipRanges: [],
+      ipv4Ranges: [],
       subnetId: 1,
       vpcId: 1,
     };

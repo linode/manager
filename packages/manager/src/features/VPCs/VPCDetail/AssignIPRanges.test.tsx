@@ -20,7 +20,8 @@ describe('AssignIPRanges', () => {
     const { getByText } = renderWithTheme(
       <AssignIPRanges
         handleIPRangeChange={handleIPRangeChangeMock}
-        ipRanges={ipRanges}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={ipRanges}
       />
     );
     expect(getByText(ASSIGN_IPV4_RANGES_TITLE)).toBeInTheDocument();
@@ -36,8 +37,9 @@ describe('AssignIPRanges', () => {
     const { getByText } = renderWithTheme(
       <AssignIPRanges
         handleIPRangeChange={handleIPRangeChangeMock}
-        ipRanges={ipRanges}
+        handleIPv6RangeChange={vi.fn()}
         ipRangesError={ipRangesError}
+        ipv4Ranges={ipRanges}
       />
     );
     expect(getByText('Error message')).toBeInTheDocument();
@@ -47,7 +49,8 @@ describe('AssignIPRanges', () => {
     const { getByText } = renderWithTheme(
       <AssignIPRanges
         handleIPRangeChange={handleIPRangeChangeMock}
-        ipRanges={ipRanges}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={ipRanges}
       />
     );
 
