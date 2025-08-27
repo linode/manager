@@ -30,10 +30,12 @@ export const VolumesActionMenu = (props: Props) => {
 
   const attached = volume.linode_id !== null;
 
-  const { data: permissions } = usePermissions(
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_volume',
+  ]);
+  const { data: volumePermissions } = usePermissions(
     'volume',
     [
-      'create_volume',
       'delete_volume',
       'view_volume',
       'resize_volume',
@@ -51,10 +53,10 @@ export const VolumesActionMenu = (props: Props) => {
       title: 'Show Config',
     },
     {
-      disabled: !permissions?.update_volume,
+      disabled: !volumePermissions?.update_volume,
       onClick: handlers.handleEdit,
       title: 'Edit',
-      tooltip: !permissions?.update_volume
+      tooltip: !volumePermissions?.update_volume
         ? getRestrictedResourceText({
             action: 'edit',
             isSingular: true,
@@ -63,15 +65,15 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
-      disabled: !permissions?.update_volume,
+      disabled: !volumePermissions?.update_volume,
       onClick: handlers.handleManageTags,
       title: 'Manage Tags',
     },
     {
-      disabled: !permissions?.resize_volume,
+      disabled: !volumePermissions?.resize_volume,
       onClick: handlers.handleResize,
       title: 'Resize',
-      tooltip: !permissions?.resize_volume
+      tooltip: !volumePermissions?.resize_volume
         ? getRestrictedResourceText({
             action: 'resize',
             isSingular: true,
@@ -80,10 +82,11 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
-      disabled: !permissions?.clone_volume,
+      disabled:
+        !volumePermissions?.clone_volume || !accountPermissions?.create_volume,
       onClick: handlers.handleClone,
       title: 'Clone',
-      tooltip: !permissions?.clone_volume
+      tooltip: !volumePermissions?.clone_volume
         ? getRestrictedResourceText({
             action: 'clone',
             isSingular: true,
@@ -95,10 +98,10 @@ export const VolumesActionMenu = (props: Props) => {
 
   if (!attached && isVolumesLanding) {
     actions.push({
-      disabled: !permissions?.attach_volume,
+      disabled: !volumePermissions?.attach_volume,
       onClick: handlers.handleAttach,
       title: 'Attach',
-      tooltip: !permissions?.attach_volume
+      tooltip: !volumePermissions?.attach_volume
         ? getRestrictedResourceText({
             action: 'attach',
             isSingular: true,
@@ -108,10 +111,10 @@ export const VolumesActionMenu = (props: Props) => {
     });
   } else {
     actions.push({
-      disabled: !permissions?.detach_volume,
+      disabled: !volumePermissions?.detach_volume,
       onClick: handlers.handleDetach,
       title: 'Detach',
-      tooltip: !permissions?.detach_volume
+      tooltip: !volumePermissions?.detach_volume
         ? getRestrictedResourceText({
             action: 'detach',
             isSingular: true,
@@ -122,10 +125,10 @@ export const VolumesActionMenu = (props: Props) => {
   }
 
   actions.push({
-    disabled: !permissions?.delete_volume || attached,
+    disabled: !volumePermissions?.delete_volume || attached,
     onClick: handlers.handleDelete,
     title: 'Delete',
-    tooltip: !permissions?.delete_volume
+    tooltip: !volumePermissions?.delete_volume
       ? getRestrictedResourceText({
           action: 'delete',
           isSingular: true,
