@@ -96,6 +96,15 @@ describe('Node Pool Footer', () => {
     expect(queryByText('Firewall:')).not.toBeInTheDocument();
   });
 
+  // This check handles the current API behavior for a default firewall (0). TODO: remove this once LKE-7686 is fixed.
+  it("does not show the node pool's firewall when 0 for a LKE Enterprise cluster ", async () => {
+    const { queryByText } = renderWithTheme(
+      <NodePoolFooter {...props} clusterTier="enterprise" poolFirewallId={0} />
+    );
+
+    expect(queryByText('Firewall:')).not.toBeInTheDocument();
+  });
+
   it("does not show the node pool's firewall for a standard LKE cluster", async () => {
     server.use(
       http.get('*/firewalls/*', () => {

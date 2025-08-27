@@ -85,22 +85,24 @@ export const NodePoolFooter = (props: Props) => {
               <b>Version:</b> {poolVersion}
             </Typography>
           )}
-          {clusterTier === 'enterprise' && poolFirewallId && (
-            <Typography sx={{ textWrap: 'nowrap' }}>
-              <b>Firewall:</b>{' '}
-              <Link to={`/firewalls/${poolFirewallId}/rules`}>
-                {firewall?.label}
-              </Link>{' '}
-              <CopyTooltip
-                copyableText
-                text={
-                  firewall?.label
-                    ? `(ID: ${String(poolFirewallId)})`
-                    : String(poolFirewallId)
-                }
-              />
-            </Typography>
-          )}
+          {clusterTier === 'enterprise' &&
+            poolFirewallId &&
+            poolFirewallId > 0 && ( // This check handles the current API behavior for a default firewall (0). TODO: remove this once LKE-7686 is fixed.
+              <Typography sx={{ textWrap: 'nowrap' }}>
+                <b>Firewall:</b>{' '}
+                <Link to={`/firewalls/${poolFirewallId}/rules`}>
+                  {firewall?.label}
+                </Link>{' '}
+                <CopyTooltip
+                  copyableText
+                  text={
+                    firewall?.label
+                      ? `(ID: ${String(poolFirewallId)})`
+                      : String(poolFirewallId)
+                  }
+                />
+              </Typography>
+            )}
           {isDiskEncryptionFeatureEnabled && (
             <NodePoolEncryptionStatus encryptionStatus={encryptionStatus} />
           )}
