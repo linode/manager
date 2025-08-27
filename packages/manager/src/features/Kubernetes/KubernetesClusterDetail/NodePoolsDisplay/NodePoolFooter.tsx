@@ -91,16 +91,14 @@ export const NodePoolFooter = (props: Props) => {
               <Typography sx={{ textWrap: 'nowrap' }}>
                 <b>Firewall:</b>{' '}
                 <Link to={`/firewalls/${poolFirewallId}/rules`}>
-                  {firewall?.label}
+                  {firewall?.label ?? poolFirewallId}
                 </Link>{' '}
-                <CopyTooltip
-                  copyableText
-                  text={
-                    firewall?.label
-                      ? `(ID: ${String(poolFirewallId)})`
-                      : String(poolFirewallId)
-                  }
-                />
+                {firewall?.label && (
+                  <CopyTooltip
+                    copyableText
+                    text={`(ID: ${String(poolFirewallId)})`}
+                  />
+                )}
               </Typography>
             )}
           {isDiskEncryptionFeatureEnabled && (
