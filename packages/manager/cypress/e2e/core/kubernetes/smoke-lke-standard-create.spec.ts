@@ -1,5 +1,10 @@
+/**
+ * Tests basic functionality for standard LKE creation.
+ */
+
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory, kubernetesClusterFactory } from '@src/factories';
+import { minimumNodeNotice } from 'support/constants/lke';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateCluster } from 'support/intercepts/lke';
@@ -8,55 +13,9 @@ import {
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+import { addNodes } from 'support/util/lke';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-/**
- * Performs a click operation on Cypress subject a given number of times.
- *
- * @param subject - Cypress subject to click.
- * @param count - Number of times to perform click.
- *
- * @returns Cypress chainable.
- */
-const multipleClick = (
-  subject: Cypress.Chainable,
-  count: number
-): Cypress.Chainable => {
-  if (count == 1) {
-    return subject.click();
-  }
-  return multipleClick(subject.click(), count - 1);
-};
-
-/**
- * Adds a random-sized node pool of the given plan.
- *
- * @param plan Name of plan for which to add nodes.
- */
-const addNodes = (plan: string) => {
-  const defaultNodes = 3;
-  const extraNodes = randomNumber(1, 5);
-
-  cy.get(`[data-qa-plan-row="${plan}"`).within(() => {
-    multipleClick(cy.get('[data-testid="increment-button"]'), extraNodes);
-    multipleClick(cy.get('[data-testid="decrement-button"]'), extraNodes + 1);
-
-    cy.get('[data-testid="textfield-input"]')
-      .invoke('val')
-      .should('eq', `${defaultNodes - 1}`);
-
-    ui.button
-      .findByTitle('Add')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-  });
-};
-
-// Warning that's shown when recommended minimum number of nodes is not met.
-const minimumNodeNotice =
-  'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
 
 describe('LKE Create Cluster', () => {
   beforeEach(() => {
