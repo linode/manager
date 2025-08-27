@@ -28,7 +28,7 @@ interface MaintenancePolicySelectProps {
   hideDefaultChip?: boolean;
   onChange: (policy: MaintenancePolicy) => void;
   textFieldProps?: Partial<TextFieldProps>;
-  value?: string;
+  value?: null | string;
 }
 
 export const MaintenancePolicySelect = (
