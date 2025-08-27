@@ -83,11 +83,11 @@ describe('usePermissions', () => {
     );
 
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
-      'account',
-      undefined,
-      true
-    );
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
+      entityType: 'account',
+      entityId: undefined,
+      enabled: true,
+    });
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
   });
 
@@ -106,11 +106,11 @@ describe('usePermissions', () => {
       }
     );
 
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
-      'linode',
-      123,
-      true
-    );
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
+      entityType: 'linode',
+      entityId: 123,
+      enabled: true,
+    });
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
   });
@@ -137,11 +137,11 @@ describe('usePermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
-      'account',
-      undefined,
-      false
-    );
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
+      entityType: 'account',
+      entityId: undefined,
+      enabled: false,
+    });
   });
 
   it('does not serve IAM permissions when limited availability only is true (uses grants)', () => {
@@ -160,11 +160,11 @@ describe('usePermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
-      'account',
-      undefined,
-      false
-    );
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
+      entityType: 'account',
+      entityId: undefined,
+      enabled: false,
+    });
   });
 
   it('serves IAM permissions when limited availability only is true and IAM beta is false (Limited Availability)', () => {
@@ -187,10 +187,10 @@ describe('usePermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
-      'account',
-      undefined,
-      true
-    );
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith({
+      entityType: 'account',
+      entityId: undefined,
+      enabled: true,
+    });
   });
 });

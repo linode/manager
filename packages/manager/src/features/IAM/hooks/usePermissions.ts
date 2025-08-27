@@ -61,7 +61,11 @@ export const usePermissions = <T extends readonly PermissionType[]>({
     );
 
   const { data: userEntityPermissions, ...restEntityPermissions } =
-    useUserEntityPermissions(accessType, entityId!, isIAMEnabled && enabled);
+    useUserEntityPermissions({
+      entityType: accessType,
+      entityId: entityId!,
+      enabled: isIAMEnabled && enabled,
+    });
 
   const usersPermissions =
     accessType === 'account' ? userAccountPermissions : userEntityPermissions;
