@@ -4,7 +4,9 @@
  * TODO: M3-8838 - Delete this spec file once LKE-E is released to GA.
  */
 
+import { regionFactory } from '@linode/utilities';
 import {
+  accountFactory,
   kubernetesClusterFactory,
   nodePoolFactory,
   subnetFactory,
@@ -14,6 +16,7 @@ import {
   latestEnterpriseTierKubernetesVersion,
   minimumNodeNotice,
 } from 'support/constants/lke';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateCluster,
@@ -23,11 +26,11 @@ import {
 } from 'support/intercepts/lke';
 import { mockGetClusters } from 'support/intercepts/lke';
 import {} from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVPC } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { addNodes } from 'support/util/lke';
 import { randomLabel } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 
 const mockCluster = kubernetesClusterFactory.build({
   id: 1,
@@ -44,16 +47,28 @@ const mockVPC = vpcFactory.build({
 
 const mockNodePools = [nodePoolFactory.build()];
 
-// Pick a valid region for LKE-E to avoid test flake.
-const mockRegion = chooseRegion({
-  capabilities: ['Kubernetes', 'Kubernetes Enterprise'],
-});
+// Mock a valid region for LKE-E to avoid test flake.
+const mockRegions = [
+  regionFactory.build({
+    capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise', 'VPCs'],
+    id: 'us-iad',
+    label: 'Washington, DC',
+  }),
+];
 
 /**
  * - Confirms VPC and IP Stack selections are shown with `phase2Mtc` feature flag is enabled.
  * - Confirms VPC and IP Stack selections are not shown in create flow with `phase2Mtc` feature flag is disabled.
  */
 describe('LKE-E Cluster Create', () => {
+  beforeEach(() => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
+  });
+
   it('Simple Page Check - Phase 2 MTC Flag ON', () => {
     mockAppendFeatureFlags({
       lkeEnterprise: {
@@ -68,6 +83,7 @@ describe('LKE-E Cluster Create', () => {
     mockGetTieredKubernetesVersions('enterprise', [
       latestEnterpriseTierKubernetesVersion,
     ]).as('getTieredKubernetesVersions');
+    mockGetRegions(mockRegions);
 
     cy.visitWithLogin('/kubernetes/create');
     cy.findByText('Add Node Pools').should('be.visible');
@@ -77,8 +93,8 @@ describe('LKE-E Cluster Create', () => {
 
     cy.findByText('LKE Enterprise').click();
 
-    ui.regionSelect.find().click().type(`${mockRegion.label}`);
-    ui.regionSelect.findItemByRegionId(mockRegion.id).click();
+    ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
+    ui.regionSelect.findItemByRegionId(mockRegions[0].id).click();
 
     cy.findByLabelText('Kubernetes Version').should('be.visible').click();
     cy.findByText(latestEnterpriseTierKubernetesVersion.id)
@@ -137,6 +153,7 @@ describe('LKE-E Cluster Create', () => {
     mockGetTieredKubernetesVersions('enterprise', [
       latestEnterpriseTierKubernetesVersion,
     ]).as('getTieredKubernetesVersions');
+    mockGetRegions(mockRegions);
 
     cy.visitWithLogin('/kubernetes/create');
     cy.findByText('Add Node Pools').should('be.visible');
@@ -146,8 +163,8 @@ describe('LKE-E Cluster Create', () => {
 
     cy.findByText('LKE Enterprise').click();
 
-    ui.regionSelect.find().click().type(`${mockRegion.label}`);
-    ui.regionSelect.findItemByRegionId(mockRegion.id).click();
+    ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
+    ui.regionSelect.findItemByRegionId(mockRegions[0].id).click();
 
     cy.findByLabelText('Kubernetes Version').should('be.visible').click();
     cy.findByText(latestEnterpriseTierKubernetesVersion.id)
@@ -198,6 +215,14 @@ describe('LKE-E Cluster Create', () => {
  * - Confirms cluster's linked VPC and Node Pool VPC IP columns are hidden when `phase2Mtc` flag is disabled.
  */
 describe('LKE-E Cluster Read', () => {
+  beforeEach(() => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
+  });
+
   it('Simple Page Check - Phase 2 MTC Flag ON', () => {
     mockAppendFeatureFlags({
       lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
