@@ -44,6 +44,10 @@ export const entityPermissionMapFrom = (
         entity?.permissions,
         profile?.restricted
       ) as PermissionMap;
+      const vpcPermissionsMap = vpcGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
 
       /** Add entity permissions to map */
       switch (grantType) {
@@ -60,11 +64,6 @@ export const entityPermissionMapFrom = (
           entityPermissionsMap[entity.id] = volumePermissionsMap;
           break;
         case 'vpc':
-          // eslint-disable-next-line no-case-declarations
-          const vpcPermissionsMap = vpcGrantsToPermissions(
-            entity?.permissions,
-            profile?.restricted
-          ) as PermissionMap;
           entityPermissionsMap[entity.id] = vpcPermissionsMap;
           break;
       }
@@ -86,6 +85,7 @@ export const fromGrants = (
   const linode = grants?.linode.find((f) => f.id === entityId);
   const volume = grants?.volume.find((f) => f.id === entityId);
   const nodebalancer = grants?.nodebalancer.find((f) => f.id === entityId);
+  const vpc = grants?.vpc.find((f) => f.id === entityId);
 
   let usersPermissionsMap = {} as PermissionMap;
 
@@ -122,8 +122,6 @@ export const fromGrants = (
       ) as PermissionMap;
       break;
     case 'vpc':
-      // eslint-disable-next-line no-case-declarations
-      const vpc = grants?.vpc.find((f) => f.id === entityId);
       usersPermissionsMap = vpcGrantsToPermissions(
         vpc?.permissions,
         isRestricted
