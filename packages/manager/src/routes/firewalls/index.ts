@@ -167,6 +167,15 @@ const firewallDetailNodebalancersRemoveNodebalancerRoute = createRoute({
   )
 );
 
+const firewallDetailMetricsRoute = createRoute({
+  getParentRoute: () => firewallsRoute,
+  path: '$id/metrics',
+}).lazy(() =>
+  import('src/features/Firewalls/FirewallDetail/firewallDetailLazyRoute').then(
+    (m) => m.firewallDetailLazyRoute
+  )
+);
+
 export const firewallsRouteTree = firewallsRoute.addChildren([
   firewallsIndexRoute,
   firewallDetailRoute.addChildren([
@@ -185,6 +194,7 @@ export const firewallsRouteTree = firewallsRoute.addChildren([
       firewallDetailNodebalancersAddNodebalancerRoute,
       firewallDetailNodebalancersRemoveNodebalancerRoute,
     ]),
+    firewallDetailMetricsRoute,
   ]),
   firewallCreateRoute,
 ]);

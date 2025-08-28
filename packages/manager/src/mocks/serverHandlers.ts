@@ -739,6 +739,10 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
+    const linodeWithFirewall = linodeFactory.build({
+      id: 1,
+      region: 'ap-west',
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -815,6 +819,7 @@ export const handlers = [
       }),
     ];
     const linodes = [
+      linodeWithFirewall,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -877,19 +882,63 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
-      // filter the linodes based on id or region
+      // Handle combined filter structure with +and containing id and region filters (for CloudPulse)
       if (andFilters?.length) {
-        filteredLinodes = filteredLinodes.filter((linode) => {
-          const filteredById = andFilters.every(
-            (filter: { id: number }) => filter.id === linode.id
-          );
-          const filteredByRegion = andFilters.every(
-            (filter: { region: string }) => filter.region === linode.region
-          );
+        // Check if this is a combined filter structure (multiple filter groups with +or arrays)
+        const hasCombinedFilter = andFilters.some(
+          (filterGroup: any) =>
+            filterGroup['+or'] && Array.isArray(filterGroup['+or'])
+        );
 
-          return filteredById || filteredByRegion;
-        });
+        if (hasCombinedFilter) {
+          // Handle combined filter structure for CloudPulse alerts
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            return andFilters.every((filterGroup: any) => {
+              // Handle id filter group
+              if (filterGroup['+or'] && Array.isArray(filterGroup['+or'])) {
+                const idFilters = filterGroup['+or'].filter(
+                  (f) => f.id !== undefined
+                );
+                const regionFilters = filterGroup['+or'].filter(
+                  (f) => f.region !== undefined
+                );
+
+                // Check if linode matches any id in the id filter group
+                const matchesId =
+                  idFilters.length === 0 ||
+                  idFilters.some((f) => Number(f.id) === linode.id);
+
+                // Check if linode matches any region in the region filter group
+                const matchesRegion =
+                  regionFilters.length === 0 ||
+                  regionFilters.some((f) => f.region === linode.region);
+
+                return matchesId && matchesRegion;
+              }
+
+              return false;
+            });
+          });
+        } else {
+          // Handle legacy andFilters for other use cases
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            const filteredById = andFilters.every(
+              (filter: { id: number }) => filter.id === linode.id
+            );
+            const filteredByRegion = andFilters.every(
+              (filter: { region: string }) => filter.region === linode.region
+            );
+
+            return filteredById || filteredByRegion;
+          });
+        }
       }
+
+      // The legacy id/region filtering logic has been removed here because it
+      // duplicated the work done above and incorrectly trimmed results when a
+      // newer "combined" filter structure (an array of "+or" groups inside
+      // "+and") was supplied. For legacy consumers the filtering is handled
+      // in the `else` branch above (lines ~922–934).
 
       // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
       if (orFilters?.length) {
