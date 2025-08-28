@@ -85,15 +85,14 @@ export const ConfigureNodePoolForm = (props: Props) => {
           )}
           <NodePoolConfigOptions
             clusterTier={clusterTier ?? 'standard'}
-            firewallSelectOptions={
-              nodePool.firewall_id !== 0
-                ? {
-                    disableDefaultFirewallRadio: true,
-                    defaultFirewallRadioTooltip:
-                      "You can't use this option once an existing Firewall has been selected.",
-                  }
-                : undefined
-            }
+            firewallSelectOptions={{
+              allowFirewallRemoval: clusterTier === 'standard',
+              ...(nodePool.firewall_id !== 0 && {
+                disableDefaultFirewallRadio: true,
+                defaultFirewallRadioTooltip:
+                  "You can't use this option once an existing Firewall has been selected.",
+              }),
+            }}
             versionFieldOptions={{
               show: true,
               versions,

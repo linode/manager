@@ -17,19 +17,24 @@ import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 import type { CreateNodePoolData } from '@linode/api-v4';
 
 export interface NodePoolFirewallSelectProps {
+  allowFirewallRemoval?: boolean;
   defaultFirewallRadioTooltip?: string;
   disableDefaultFirewallRadio?: boolean;
 }
 
 export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
-  const { defaultFirewallRadioTooltip, disableDefaultFirewallRadio } = props;
+  const {
+    defaultFirewallRadioTooltip,
+    disableDefaultFirewallRadio,
+    allowFirewallRemoval,
+  } = props;
   const { control } = useFormContext<CreateNodePoolData>();
   const { field, fieldState, formState } = useController({
     control,
     name: 'firewall_id',
     rules: {
       validate: (value) => {
-        if (isUsingOwnFirewall && !value && value !== 0) {
+        if (isUsingOwnFirewall && value === null) {
           if (disableDefaultFirewallRadio) {
             return 'You must select a Firewall.';
           }
@@ -71,8 +76,7 @@ export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
                 field.onChange(null);
               }
             } else {
-              // Setting `firewall_id` to `0` tells the API to use the default backend-generated firewall
-              field.onChange(0);
+              field.onChange(formState.defaultValues?.firewall_id);
             }
           }}
           value={isUsingOwnFirewall ? 'yes' : 'no'}
@@ -109,10 +113,18 @@ export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
       </FormControl>
       {isUsingOwnFirewall && (
         <FirewallSelect
+          disableClearable={!allowFirewallRemoval}
           errorText={fieldState.error?.message}
           noMarginTop
           onBlur={field.onBlur}
-          onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
+          onChange={(e, firewall) => {
+            if (firewall) {
+              field.onChange(firewall.id);
+            } else {
+              // `0` tells the backend to remove the firewall
+              field.onChange(0);
+            }
+          }}
           placeholder="Select firewall"
           value={field.value}
         />
