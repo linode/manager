@@ -392,7 +392,45 @@ export type ConfigDevice = DiskDevice | null | VolumeDevice;
 
 export interface Devices {
   sda: ConfigDevice;
+  sdaa?: ConfigDevice;
+  sdab?: ConfigDevice;
+  sdac?: ConfigDevice;
+  sdad?: ConfigDevice;
+  sdae?: ConfigDevice;
+  sdaf?: ConfigDevice;
+  sdag?: ConfigDevice;
+  sdah?: ConfigDevice;
+  sdai?: ConfigDevice;
+  sdaj?: ConfigDevice;
+  sdak?: ConfigDevice;
+  sdal?: ConfigDevice;
+  sdam?: ConfigDevice;
+  sdan?: ConfigDevice;
+  sdao?: ConfigDevice;
+  sdap?: ConfigDevice;
+  sdaq?: ConfigDevice;
+  sdar?: ConfigDevice;
+  sdas?: ConfigDevice;
+  sdat?: ConfigDevice;
+  sdau?: ConfigDevice;
+  sdav?: ConfigDevice;
+  sdaw?: ConfigDevice;
+  sdax?: ConfigDevice;
+  sday?: ConfigDevice;
+  sdaz?: ConfigDevice;
   sdb: ConfigDevice;
+  sdba?: ConfigDevice;
+  sdbb?: ConfigDevice;
+  sdbc?: ConfigDevice;
+  sdbd?: ConfigDevice;
+  sdbe?: ConfigDevice;
+  sdbf?: ConfigDevice;
+  sdbg?: ConfigDevice;
+  sdbh?: ConfigDevice;
+  sdbi?: ConfigDevice;
+  sdbj?: ConfigDevice;
+  sdbk?: ConfigDevice;
+  sdbl?: ConfigDevice;
   sdc: ConfigDevice;
   sdd: ConfigDevice;
   sde: ConfigDevice;
@@ -400,6 +438,23 @@ export interface Devices {
   sdg: ConfigDevice;
   sdh: ConfigDevice;
   sdi?: ConfigDevice;
+  sdj?: ConfigDevice;
+  sdk?: ConfigDevice;
+  sdl?: ConfigDevice;
+  sdm?: ConfigDevice;
+  sdn?: ConfigDevice;
+  sdo?: ConfigDevice;
+  sdp?: ConfigDevice;
+  sdq?: ConfigDevice;
+  sdr?: ConfigDevice;
+  sds?: ConfigDevice;
+  sdt?: ConfigDevice;
+  sdu?: ConfigDevice;
+  sdv?: ConfigDevice;
+  sdw?: ConfigDevice;
+  sdx?: ConfigDevice;
+  sdy?: ConfigDevice;
+  sdz?: ConfigDevice;
 }
 
 export type KernelArchitecture = 'i386' | 'x86_64';
@@ -683,7 +738,7 @@ export interface MigrateLinodeRequest {
 
 export type RescueRequestObject = Pick<
   Devices,
-  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg' | 'sdh' | 'sdi'
+  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'
 >;
 
 export interface LinodeCloneData {
