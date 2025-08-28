@@ -308,6 +308,7 @@ export const NodePoolsDisplay = (props: Props) => {
                 setSelectedNodeId(nodeId);
                 setIsRecycleNodeOpen(true);
               }}
+              poolFirewallId={thisPool.firewall_id}
               poolId={thisPool.id}
               poolVersion={thisPool.k8s_version}
               statusFilter={statusFilter}
