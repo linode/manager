@@ -56,7 +56,7 @@ describe('host & VM maintenance notification banner', () => {
 
     mockGetNotifications([]).as('getNotifications');
     const mockProfile = profileFactory.build({
-      timezone: 'GMT',
+      timezone: 'America/New_York',
     });
     mockGetProfile(mockProfile).as('getProfile');
   });
@@ -127,9 +127,9 @@ describe('host & VM maintenance notification banner', () => {
       cy.get('p')
         .invoke('text')
         .then((text) => {
-          // warning msg varries acc to linode label, emergency/scheduled, maintenance type, and date.
+          // warning msg varries acc to linode label, emergency/scheduled, maintenance type, and date. use EST tz for -6 hr offset
           expect(text.trim()).to.equal(
-            `Linode ${mockLinode.label} ${mockMaintenance.description} maintenance ${mockMaintenance.type.replace('_', ' ')} will begin 01/17/2022 at 23:45. For more details, view Account Maintenance.`
+            `Linode ${mockLinode.label} ${mockMaintenance.description} maintenance ${mockMaintenance.type.replace('_', ' ')} will begin 01/17/2022 at 18:45. For more details, view Account Maintenance.`
           );
         });
       cy.get('a')
