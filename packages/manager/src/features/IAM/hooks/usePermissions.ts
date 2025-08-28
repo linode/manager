@@ -47,20 +47,7 @@ export const usePermissions = <T extends readonly PermissionType[]>(
   enabled: boolean = true
 ): PermissionsResult<T> => {
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
-
-  const { data: userAccountPermissions, ...restAccountPermissions } =
-    useUserAccountPermissions(
-      isIAMEnabled && accessType === 'account' && enabled
-    );
-
-  const { data: userEntityPermissions, ...restEntityPermissions } =
-    useUserEntityPermissions(accessType, entityId!, isIAMEnabled && enabled);
-
-  const usersPermissions =
-    accessType === 'account' ? userAccountPermissions : userEntityPermissions;
-
   const { data: profile } = useProfile();
-  const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
   /**
    * BETA and LA features should use the new permission model.
@@ -81,21 +68,40 @@ export const usePermissions = <T extends readonly PermissionType[]>(
         permissionsToCheck.includes(blacklistedPermission as AccountAdmin) // some of the account admin in the blacklist have not been added yet
     ) === false;
   const useLAPermissions = isIAMEnabled && !isIAMBeta;
+  const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
 
-  const permissionMap =
-    useBetaPermissions || useLAPermissions
-      ? toPermissionMap(
-          permissionsToCheck,
-          usersPermissions!,
-          profile?.restricted
-        )
-      : fromGrants(
-          accessType,
-          permissionsToCheck,
-          grants!,
-          profile?.restricted,
-          entityId
-        );
+  const { data: grants } = useGrants(
+    (!isIAMEnabled || !shouldUsePermissionMap) && enabled
+  );
+
+  const { data: userAccountPermissions, ...restAccountPermissions } =
+    useUserAccountPermissions(
+      shouldUsePermissionMap && accessType === 'account' && enabled
+    );
+
+  const { data: userEntityPermissions, ...restEntityPermissions } =
+    useUserEntityPermissions(
+      accessType,
+      entityId!,
+      shouldUsePermissionMap && enabled
+    );
+
+  const usersPermissions =
+    accessType === 'account' ? userAccountPermissions : userEntityPermissions;
+
+  const permissionMap = shouldUsePermissionMap
+    ? toPermissionMap(
+        permissionsToCheck,
+        usersPermissions!,
+        profile?.restricted
+      )
+    : fromGrants(
+        accessType,
+        permissionsToCheck,
+        grants!,
+        profile?.restricted,
+        entityId
+      );
 
   return {
     data: permissionMap,
