@@ -41,9 +41,10 @@ describe('resize linode', () => {
           // Click "Resize Linode".
           // The Resize Linode button remains disabled while the Linode is provisioning,
           // so we have to wait for that to complete before the button becomes enabled.
+          // Waiting longer (7.5 mins) for Linode to boot
           ui.button
             .findByTitle('Resize Linode')
-            .should('be.enabled', { timeout: LINODE_CREATE_TIMEOUT })
+            .should('be.enabled', { timeout: 1.5 * LINODE_CREATE_TIMEOUT })
             .click();
         });
 
@@ -81,9 +82,10 @@ describe('resize linode', () => {
           // Click "Resize Linode".
           // The Resize Linode button remains disabled while the Linode is provisioning,
           // so we have to wait for that to complete before the button becomes enabled.
+          // Waiting longer (7.5 mins) for Linode to boot
           ui.button
             .findByTitle('Resize Linode')
-            .should('be.enabled', { timeout: LINODE_CREATE_TIMEOUT })
+            .should('be.enabled', { timeout: 1.5 * LINODE_CREATE_TIMEOUT })
             .click();
         });
 
@@ -182,9 +184,10 @@ describe('resize linode', () => {
           // Click "Resize Linode".
           // The Resize Linode button remains disabled while the Linode is provisioning,
           // so we have to wait for that to complete before the button becomes enabled.
+          // Waiting longer (7.5 mins) for Linode to boot
           ui.button
             .findByTitle('Resize Linode')
-            .should('be.enabled', { timeout: LINODE_CREATE_TIMEOUT })
+            .should('be.enabled', { timeout: 1.5 * LINODE_CREATE_TIMEOUT })
             .click();
         });
 
