@@ -1,9 +1,11 @@
 import {
   createDestinations,
   createStreams,
+  deleteDestination,
   deleteStream,
   getDestinations,
   getStreams,
+  updateDestination,
   updateStream,
 } from 'src/mocks/presets/crud/handlers/datastream';
 
@@ -18,6 +20,8 @@ export const datastreamCrudPreset: MockPresetCrud = {
     updateStream,
     getDestinations,
     createDestinations,
+    deleteDestination,
+    updateDestination,
   ],
   id: 'datastream:crud',
   label: 'Data Stream CRUD',
