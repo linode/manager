@@ -388,15 +388,17 @@ export interface VolumeDevice {
   volume_id: null | number;
 }
 
+export type ConfigDevice = DiskDevice | null | VolumeDevice;
+
 export interface Devices {
-  sda: DiskDevice | null | VolumeDevice;
-  sdb: DiskDevice | null | VolumeDevice;
-  sdc: DiskDevice | null | VolumeDevice;
-  sdd: DiskDevice | null | VolumeDevice;
-  sde: DiskDevice | null | VolumeDevice;
-  sdf: DiskDevice | null | VolumeDevice;
-  sdg: DiskDevice | null | VolumeDevice;
-  sdh: DiskDevice | null | VolumeDevice;
+  sda: ConfigDevice;
+  sdb: ConfigDevice;
+  sdc: ConfigDevice;
+  sdd: ConfigDevice;
+  sde: ConfigDevice;
+  sdf: ConfigDevice;
+  sdg: ConfigDevice;
+  sdh: ConfigDevice;
 }
 
 export type KernelArchitecture = 'i386' | 'x86_64';
