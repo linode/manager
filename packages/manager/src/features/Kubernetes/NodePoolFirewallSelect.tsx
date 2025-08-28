@@ -17,8 +17,18 @@ import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 import type { CreateNodePoolData } from '@linode/api-v4';
 
 export interface NodePoolFirewallSelectProps {
+  /**
+   * When standard LKE supports firewall, we will allow Firewalls to be add & removed
+   * Use this prop to allow/prevent Firwall from being removed on a Node Pool
+   */
   allowFirewallRemoval?: boolean;
+  /**
+   * An optional tooltip message that shows beside the "Use default firewall" radio label
+   */
   defaultFirewallRadioTooltip?: string;
+  /**
+   * Disables the "Use default firewall" option
+   */
   disableDefaultFirewallRadio?: boolean;
 }
 
