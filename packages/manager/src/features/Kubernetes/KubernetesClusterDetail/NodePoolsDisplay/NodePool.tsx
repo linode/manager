@@ -34,6 +34,7 @@ interface Props {
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
+  poolFirewallId: KubeNodePoolResponse['firewall_id'];
   poolId: number;
   poolVersion: KubeNodePoolResponse['k8s_version'];
   statusFilter: StatusFilter;
@@ -61,6 +62,7 @@ export const NodePool = (props: Props) => {
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     poolId,
+    poolFirewallId,
     poolVersion,
     statusFilter,
     tags,
@@ -162,6 +164,7 @@ export const NodePool = (props: Props) => {
         clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
         isLkeClusterRestricted={isLkeClusterRestricted}
+        poolFirewallId={poolFirewallId}
         poolId={poolId}
         poolVersion={poolVersion}
         tags={tags}
