@@ -13,12 +13,12 @@ import { TableRow } from 'src/components/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 
-import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';
+import { HighPerformanceVolumeIcon } from '../../Linodes/HighPerformanceVolumeIcon';
 import {
   getDerivedVolumeStatusFromStatusAndEvent,
   getEventProgress,
   volumeStatusIconMap,
-} from './utils';
+} from '../utils';
 import { VolumesActionMenu } from './VolumesActionMenu';
 
 import type { ActionHandlers } from './VolumesActionMenu';
