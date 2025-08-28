@@ -33,6 +33,7 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
+  | 'Account Settings'
   | 'Alerts'
   | 'Betas'
   | 'Billing'
@@ -59,7 +60,6 @@ export type NavEntity =
   | 'Placement Groups'
   | 'Quotas'
   | 'Service Transfers'
-  | 'Settings'
   | 'StackScripts'
   | 'Users & Grants'
   | 'Volumes'
@@ -307,8 +307,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/maintenance',
               },
               {
-                display: 'Settings',
-                to: '/settings',
+                display: 'Account Settings',
+                to: '/account-settings',
               },
             ],
             name: 'Administration',
