@@ -49,6 +49,7 @@ import {
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
 import {
+  generateVPCIPv6InputHelperText,
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
   getVPCInterfacePayload,
@@ -653,6 +654,9 @@ export const SubnetAssignLinodesDrawer = (
                     <TextField
                       disabled={userCannotAssignLinodes}
                       errorText={assignLinodesErrors['vpc.ipv6.slaac[0].range']}
+                      helperText={generateVPCIPv6InputHelperText(
+                        subnet?.ipv6?.[0].range ?? ''
+                      )}
                       label="VPC IPv6"
                       onChange={(e) => {
                         setFieldValue('chosenIPv6', e.target.value);
