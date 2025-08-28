@@ -1,8 +1,9 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, profileFactory } from '@linode/utilities';
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { mockGetNotifications } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinode, mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -54,6 +55,10 @@ describe('host & VM maintenance notification banner', () => {
     // suppress platform notifications to prevent other notification banners
 
     mockGetNotifications([]).as('getNotifications');
+    const mockProfile = profileFactory.build({
+      timezone: 'GMT',
+    });
+    mockGetProfile(mockProfile).as('getProfile');
   });
 
   it('maintenance notification banner on landing page for 1 linode', function () {
@@ -116,6 +121,7 @@ describe('host & VM maintenance notification banner', () => {
       '@getFeatureFlags',
       '@getNotifications',
       '@getMaintenances',
+      '@getProfile',
     ]);
     cy.findByTestId('linode-maintenance-banner').within(() => {
       cy.get('p')
