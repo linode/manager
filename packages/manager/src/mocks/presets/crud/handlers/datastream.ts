@@ -5,6 +5,7 @@ import { destinationFactory, streamFactory } from 'src/factories/datastream';
 import { mswDB } from 'src/mocks/indexedDB';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
+  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -239,6 +240,95 @@ export const createDestinations = (mockState: MockState) => [
       });
 
       return makeResponse(destination);
+    }
+  ),
+];
+
+export const updateDestination = (mockState: MockState) => [
+  http.put(
+    '*/v4beta/monitor/streams/destinations/:id',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
+      const id = Number(params.id);
+      const destination = await mswDB.get('destinations', id);
+
+      if (!destination) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      const [majorVersion, minorVersion] = destination.version.split('.');
+      const updatedDestination = {
+        ...destination,
+        ...payload,
+        version: `${majorVersion}.${+minorVersion + 1}`,
+        updated: DateTime.now().toISO(),
+      };
+
+      await mswDB.update('destinations', id, updatedDestination, mockState);
+
+      queueEvents({
+        event: {
+          action: 'destination_update',
+          entity: {
+            id: destination.id,
+            label: destination.label,
+            type: 'stream',
+            url: `/v4beta/monitor/streams/${destination.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse(updatedDestination);
+    }
+  ),
+];
+
+export const deleteDestination = (mockState: MockState) => [
+  http.delete(
+    '*/v4beta/monitor/streams/destinations/:id',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      const id = Number(params.id);
+      const destination = await mswDB.get('destinations', id);
+      const streams = await mswDB.getAll('streams');
+      const currentlyAttachedDestinations = new Set(
+        streams?.flatMap(({ destinations }) =>
+          destinations?.map(({ id }) => id)
+        )
+      );
+
+      if (!destination) {
+        return makeNotFoundResponse();
+      }
+
+      if (currentlyAttachedDestinations.has(id)) {
+        return makeErrorResponse(
+          `Destination with id ${id} is attached to a stream and cannot be deleted`,
+          409
+        );
+      }
+
+      await mswDB.delete('destinations', id, mockState);
+
+      queueEvents({
+        event: {
+          action: 'destination_delete',
+          entity: {
+            id: destination.id,
+            label: destination.label,
+            type: 'domain',
+            url: `/v4beta/monitor/streams/${destination.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse({});
     }
   ),
 ];

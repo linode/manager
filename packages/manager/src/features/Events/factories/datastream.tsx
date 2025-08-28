@@ -40,4 +40,20 @@ export const destination: PartialEventMap<'destination'> = {
       </>
     ),
   },
+  destination_delete: {
+    notification: (e) => (
+      <>
+        Destination <EventLink event={e} to="entity" /> has been{' '}
+        <strong>deleted</strong>.
+      </>
+    ),
+  },
+  destination_update: {
+    notification: (e) => (
+      <>
+        Destination <EventLink event={e} to="entity" /> has been{' '}
+        <strong>updated</strong>.
+      </>
+    ),
+  },
 };
