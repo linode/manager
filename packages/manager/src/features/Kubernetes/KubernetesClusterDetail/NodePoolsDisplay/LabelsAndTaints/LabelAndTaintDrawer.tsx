@@ -1,4 +1,3 @@
-import { useSpecificTypes } from '@linode/queries';
 import {
   ActionsPanel,
   Button,
@@ -13,8 +12,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { extendType } from 'src/utilities/extendType';
 
+import { useNodePoolDisplayLabel } from '../utils';
 import { LabelInput } from './LabelInput';
 import { LabelTable } from './LabelTable';
 import { TaintInput } from './TaintInput';
@@ -37,10 +36,10 @@ interface LabelsAndTaintsFormFields {
 export const LabelAndTaintDrawer = (props: Props) => {
   const { clusterId, nodePool, onClose, open } = props;
 
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
+
   const [shouldShowLabelForm, setShouldShowLabelForm] = React.useState(false);
   const [shouldShowTaintForm, setShouldShowTaintForm] = React.useState(false);
-
-  const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
 
   const { isPending, mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -109,15 +108,11 @@ export const LabelAndTaintDrawer = (props: Props) => {
     form.reset();
   };
 
-  const planType = typesQuery[0]?.data
-    ? extendType(typesQuery[0].data)
-    : undefined;
-
   return (
     <Drawer
       onClose={handleClose}
       open={open}
-      title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
+      title={`Labels and Taints: ${nodePoolLabel}`}
     >
       {formState.errors.root?.message ? (
         <Notice

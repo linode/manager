@@ -207,8 +207,6 @@ export const AddNodePoolDrawer = (props: Props) => {
                 name="update_strategy"
                 render={({ field }) => (
                   <NodePoolUpdateStrategySelect
-                    label="Update Strategy"
-                    noMarginTop
                     onChange={field.onChange}
                     value={field.value!}
                   />
