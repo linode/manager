@@ -184,6 +184,7 @@ const pathsOptions = [
   { label: '/dev/sdf', value: '/dev/sdf' },
   { label: '/dev/sdg', value: '/dev/sdg' },
   { label: '/dev/sdh', value: '/dev/sdh' },
+  { label: '/dev/sdi', value: '/dev/sdi' },
 ];
 
 const interfacesToState = (interfaces?: Interface[] | null) => {
@@ -243,7 +244,17 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[] | null) => {
   return filteredInterfaces as Interface[];
 };
 
-const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+const deviceSlots = [
+  'sda',
+  'sdb',
+  'sdc',
+  'sdd',
+  'sde',
+  'sdf',
+  'sdg',
+  'sdh',
+  'sdi',
+];
 const deviceCounterDefault = 1;
 
 // DiskID reserved on the back-end to indicate Finnix.
@@ -1277,6 +1288,7 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdf',
     '/dev/sdg',
     '/dev/sdh',
+    '/dev/sdi',
   ].includes(value) === false;
 
 const noticeForScenario = (scenarioText: string) => (

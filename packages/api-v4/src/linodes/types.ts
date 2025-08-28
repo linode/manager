@@ -399,6 +399,7 @@ export interface Devices {
   sdf: ConfigDevice;
   sdg: ConfigDevice;
   sdh: ConfigDevice;
+  sdi?: ConfigDevice;
 }
 
 export type KernelArchitecture = 'i386' | 'x86_64';
@@ -682,7 +683,7 @@ export interface MigrateLinodeRequest {
 
 export type RescueRequestObject = Pick<
   Devices,
-  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'
+  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg' | 'sdh' | 'sdi'
 >;
 
 export interface LinodeCloneData {

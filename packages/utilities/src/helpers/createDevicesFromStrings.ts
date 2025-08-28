@@ -13,6 +13,7 @@ export interface DevicesAsStrings {
   sdf?: string;
   sdg?: string;
   sdh?: string;
+  sdi?: string;
 }
 
 /**
@@ -47,4 +48,5 @@ export const createDevicesFromStrings = (
   sdf: createTypeRecord(devices.sdf),
   sdg: createTypeRecord(devices.sdg),
   sdh: createTypeRecord(devices.sdh),
+  sdi: createTypeRecord(devices.sdi),
 });
