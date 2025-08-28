@@ -71,6 +71,9 @@ export const accountGrantsToPermissions = (
     create_volume: unrestricted || globalGrants?.add_volumes,
     // AccountNodeBalancerAdmin
     create_nodebalancer: unrestricted || globalGrants?.add_nodebalancers,
+    // AccountImageAdmin
+    create_image: unrestricted || globalGrants?.add_images,
+    upload_image: unrestricted || globalGrants?.add_images,
     // AccountOAuthClientAdmin
     create_oauth_client: true,
     update_oauth_client: true,
