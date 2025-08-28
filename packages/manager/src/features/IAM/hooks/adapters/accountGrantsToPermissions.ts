@@ -67,6 +67,8 @@ export const accountGrantsToPermissions = (
     create_firewall: unrestricted || globalGrants?.add_firewalls,
     // AccountLinodeAdmin
     create_linode: unrestricted || globalGrants?.add_linodes,
+    // AccountVolumeAdmin
+    create_volume: unrestricted || globalGrants?.add_volumes,
     // AccountOAuthClientAdmin
     create_oauth_client: true,
     update_oauth_client: true,
