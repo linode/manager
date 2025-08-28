@@ -344,6 +344,8 @@ export const EventActionKeys = [
   'database_migrate',
   'database_upgrade',
   'destination_create',
+  'destination_delete',
+  'destination_update',
   'disk_create',
   'disk_delete',
   'disk_duplicate',

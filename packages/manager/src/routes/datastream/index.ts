@@ -83,12 +83,32 @@ const destinationsCreateRoute = createRoute({
   path: 'destinations/create',
 }).lazy(() =>
   import(
-    'src/features/DataStream/Destinations/DestinationCreate/destinationCreateLazyRoute'
+    'src/features/DataStream/Destinations/DestinationForm/destinationCreateLazyRoute'
   ).then((m) => m.destinationCreateLazyRoute)
+);
+
+const destinationsEditRoute = createRoute({
+  getParentRoute: () => dataStreamRoute,
+  params: {
+    parse: ({ destinationId }: { destinationId: string }) => ({
+      destinationId: Number(destinationId),
+    }),
+    stringify: ({ destinationId }: { destinationId: number }) => ({
+      destinationId: String(destinationId),
+    }),
+  },
+  path: 'destinations/$destinationId/edit',
+}).lazy(() =>
+  import(
+    'src/features/DataStream/Destinations/DestinationForm/destinationEditLazyRoute'
+  ).then((m) => m.destinationEditLazyRoute)
 );
 
 export const dataStreamRouteTree = dataStreamRoute.addChildren([
   dataStreamLandingRoute,
   streamsRoute.addChildren([streamsCreateRoute, streamsEditRoute]),
-  destinationsRoute.addChildren([destinationsCreateRoute]),
+  destinationsRoute.addChildren([
+    destinationsCreateRoute,
+    destinationsEditRoute,
+  ]),
 ]);

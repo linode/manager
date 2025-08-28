@@ -76,7 +76,7 @@ export const StreamFormDelivery = () => {
         render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
-            disabled={true}
+            disabled
             errorText={fieldState.error?.message}
             label="Destination Type"
             onBlur={field.onBlur}
