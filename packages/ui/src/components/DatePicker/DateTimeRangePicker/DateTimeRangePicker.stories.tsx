@@ -63,7 +63,7 @@ The **DateTimeRangePicker** component allows users to select a start and end dat
       },
     },
   },
-  title: 'Components/DatePicker/DateTimeRangePickerV2',
+  title: 'Components/DatePicker/DateTimeRangePicker',
 };
 
 export default meta;

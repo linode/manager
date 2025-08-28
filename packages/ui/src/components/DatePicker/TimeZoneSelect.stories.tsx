@@ -48,7 +48,7 @@ The **TimeZoneSelect** component provides a dropdown selection for choosing time
       },
     },
   },
-  title: 'Components/DatePicker/TimeZoneSelectV2',
+  title: 'Components/DatePicker/TimeZoneSelect',
 };
 
 export default meta;
