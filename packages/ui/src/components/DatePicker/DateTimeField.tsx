@@ -66,8 +66,6 @@ export const DateTimeField = ({
         </InputLabel>
         <MUIDateTimeField
           format={format}
-          // TODO: MUI bug - slotProps.htmlInput doesn't work for DateTimeField
-          // Using deprecated inputProps until MUI fixes their implementation
           inputProps={{
             'aria-errormessage': errorText ? errorTextId : undefined,
             'aria-invalid': Boolean(errorText),
@@ -86,7 +84,6 @@ export const DateTimeField = ({
           }}
           sx={{ marginTop: 1 }}
           value={value}
-          variant="standard"
           {...rest}
         />
         {errorText && (
