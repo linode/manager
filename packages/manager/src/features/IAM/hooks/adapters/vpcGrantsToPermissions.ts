@@ -13,8 +13,8 @@ export const vpcGrantsToPermissions = (
     delete_vpc_subnet: unrestricted || grantLevel === 'read_write',
     update_vpc: unrestricted || grantLevel === 'read_write',
     update_vpc_subnet: unrestricted || grantLevel === 'read_write',
-    list_vpc_ip_addresses: unrestricted || grantLevel === 'read_write',
-    view_vpc: unrestricted || grantLevel === 'read_write',
-    view_vpc_subnet: unrestricted || grantLevel === 'read_write',
+    list_vpc_ip_addresses: unrestricted || grantLevel !== null,
+    view_vpc: unrestricted || grantLevel !== null,
+    view_vpc_subnet: unrestricted || grantLevel !== null,
   };
 };
