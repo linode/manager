@@ -18,6 +18,8 @@ import { getVPCSubnets } from '../CreateAlert/Criteria/DimensionFilterValue/util
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import { resolveIds, transformCommaSeperatedDimensionValues } from './utils';
 
+const LINODE_DIMENSION_LABEL = 'linode_id';
+const VPC_SUBNET_DIMENSION_LABEL = 'vpc_subnet_id';
 interface AlertMetricAndDimensionsProp {
   /*
    * The rule criteria associated with the alert for which the dimension filters are needed to be displayed
@@ -35,50 +37,41 @@ const transformationAllowedOperators = ['eq', 'neq', 'in'];
 export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria, serviceType } = props;
-    const needsLinodesCheck = () => {
+    const isCheckRequired = (label: string) => {
       return (
         ruleCriteria.rules?.some((rule) =>
           rule.dimension_filters?.some(
             (dimension) =>
-              dimension.dimension_label === 'linode_id' &&
+              dimension.dimension_label === label &&
               transformationAllowedOperators.includes(dimension.operator ?? '')
           )
         ) ?? false
       );
     };
-
-    const needsVPCsCheck = () => {
-      return (
-        ruleCriteria.rules?.some((rule) =>
-          rule.dimension_filters?.some(
-            (dimension) =>
-              dimension.dimension_label === 'vpc_subnet_id' &&
-              transformationAllowedOperators.includes(dimension.operator ?? '')
-          )
-        ) ?? false
-      );
-    };
-
-    const needsLinodes = needsLinodesCheck();
-    const needsVPCs = needsVPCsCheck();
+    const isLinodeRequired = isCheckRequired(LINODE_DIMENSION_LABEL);
+    const isVPCRequired = isCheckRequired(VPC_SUBNET_DIMENSION_LABEL);
     // Initialize the query, but only run when needed
-    const { data: linodes } = useAllLinodesQuery({}, {}, needsLinodes);
+    const { data: linodes } = useAllLinodesQuery({}, {}, isLinodeRequired);
 
     const linodeMap = useMemo(
       () =>
         linodes?.reduce<Record<string, string>>((acc, linode) => {
-          acc[String(linode.id)] = linode.label;
-          return acc;
+          return {
+            ...acc,
+            [String(linode.id)]: linode.label,
+          };
         }, {}) ?? {},
       [linodes]
     );
 
-    const { data: vpcs } = useAllVPCsQuery({ enabled: needsVPCs });
+    const { data: vpcs } = useAllVPCsQuery({ enabled: isVPCRequired });
     const vpcSubnetMap = useMemo(() => {
       const subnets = getVPCSubnets(vpcs ?? []); // still returns Item<string, string>[]
       return subnets.reduce<Record<string, string>>((acc, { value, label }) => {
-        acc[value] = label;
-        return acc;
+        return {
+          ...acc,
+          [value]: label,
+        };
       }, {});
     }, [vpcs]);
 
@@ -127,13 +120,13 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => {
                     let resolvedValue = value;
                     if (
-                      dimensionFilterKey === 'linode_id' &&
+                      dimensionFilterKey === LINODE_DIMENSION_LABEL &&
                       transformationAllowedOperators.includes(dimensionOperator)
                     ) {
                       resolvedValue = resolveIds(value ?? '', linodeMap);
                     }
                     if (
-                      dimensionFilterKey === 'vpc_subnet_id' &&
+                      dimensionFilterKey === VPC_SUBNET_DIMENSION_LABEL &&
                       transformationAllowedOperators.includes(dimensionOperator)
                     ) {
                       resolvedValue = resolveIds(value ?? '', vpcSubnetMap);
