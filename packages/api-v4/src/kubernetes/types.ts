@@ -70,6 +70,12 @@ export interface KubeNodePoolResponse {
    * @note Only returned for LKE Enterprise clusters
    */
   k8s_version?: string;
+  /**
+   * A label/name for the Node Pool
+   *
+   * @default ""
+   */
+  label: string;
   labels: Label;
   nodes: PoolNodeResponse[];
   tags: string[];
@@ -112,6 +118,12 @@ export interface CreateNodePoolData {
    * @note This field may be required when creating a Node Pool on a LKE Enterprise cluster
    */
   k8s_version?: string;
+  /**
+   * An optional label/name for the Node Pool.
+   *
+   * @default ""
+   */
+  label?: string;
   /**
    * Key-value pairs added as labels to nodes in the node pool.
    */
