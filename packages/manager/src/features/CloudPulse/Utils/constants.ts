@@ -80,6 +80,13 @@ export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
 
+export const NO_REGION_MESSAGE: Record<string, string> = {
+  dbaas: 'No database clusters configured in any regions.',
+  linode: 'No Linodes configured in any regions.',
+  nodebalancer: 'No NodeBalancers configured in any regions.',
+  firewall: 'No firewalls configured in any Linode regions.',
+};
+
 export const HELPER_TEXT: Record<string, string> = {
   [PORT]: PORTS_HELPER_TEXT,
   [INTERFACE_ID]: INTERFACE_IDS_HELPER_TEXT,
@@ -88,13 +95,6 @@ export const HELPER_TEXT: Record<string, string> = {
 export const PLACEHOLDER_TEXT: Record<string, string> = {
   [PORT]: PORTS_PLACEHOLDER_TEXT,
   [INTERFACE_ID]: INTERFACE_IDS_PLACEHOLDER_TEXT,
-};
-
-export const NO_REGION_MESSAGE: Record<string, string> = {
-  dbaas: 'No database clusters configured in any regions.',
-  linode: 'No Linodes configured in any regions.',
-  nodebalancer: 'No NodeBalancers configured in any regions.',
-  firewall: 'No firewalls configured in any Linode regions.',
 };
 
 export const ORDER_BY_LABLE_ASC = {

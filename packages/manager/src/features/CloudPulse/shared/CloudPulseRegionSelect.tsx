@@ -184,7 +184,9 @@ export const CloudPulseRegionSelect = React.memo(
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegionsFromResources}
         value={
-          supportedRegionsFromResources?.length ? selectedRegion : undefined
+          supportedRegionsFromResources?.length
+            ? (selectedRegion ?? null)
+            : null
         }
       />
     );
