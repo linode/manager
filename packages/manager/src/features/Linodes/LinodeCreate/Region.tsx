@@ -82,10 +82,9 @@ export const Region = React.memo(() => {
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(createType ?? 'OS');
 
-  const onChange = async (region: RegionType) => {
+  const onChange = async (region: null | RegionType) => {
     const values = getValues();
-
-    field.onChange(region.id);
+    field.onChange(region?.id);
 
     if (values.hasSignedEUAgreement) {
       // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
@@ -114,14 +113,14 @@ export const Region = React.memo(() => {
 
     if (
       values.metadata?.user_data &&
-      !region.capabilities.includes('Metadata')
+      !region?.capabilities.includes('Metadata')
     ) {
       // Clear metadata only if the new region does not support it
       setValue('metadata.user_data', null);
     }
 
     // Handle maintenance policy based on region capabilities
-    if (region.capabilities.includes('Maintenance Policy')) {
+    if (region?.capabilities.includes('Maintenance Policy')) {
       // If the region supports maintenance policy, set it to the default value
       // or keep the current value if it's already set
       if (!values.maintenance_policy) {
@@ -140,20 +139,20 @@ export const Region = React.memo(() => {
     // Because distributed regions do not support some features,
     // we must disable those features here. Keep in mind, we should
     // prevent the user from enabling these features in their respective components.
-    if (region.site_type === 'distributed') {
+    if (region?.site_type === 'distributed') {
       setValue('backups_enabled', false);
       setValue('private_ip', false);
     }
 
     if (isDiskEncryptionFeatureEnabled) {
-      if (region.site_type === 'distributed') {
+      if (region?.site_type === 'distributed') {
         // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
         const defaultDiskEncryptionValue =
-          region.capabilities.includes('Disk Encryption') ||
-          region.capabilities.includes('LA Disk Encryption')
+          region?.capabilities.includes('Disk Encryption') ||
+          region?.capabilities.includes('LA Disk Encryption')
             ? 'enabled'
             : undefined;
 
@@ -161,7 +160,7 @@ export const Region = React.memo(() => {
       }
     }
 
-    if (!isLabelFieldDirty) {
+    if (!isLabelFieldDirty && region) {
       // Auto-generate the Linode label because the region is included in the generated label
       const label = await getGeneratedLinodeLabel({
         queryClient,
