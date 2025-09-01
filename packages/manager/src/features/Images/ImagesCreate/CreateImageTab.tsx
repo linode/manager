@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
+  useAllLinodesQuery,
   useCreateImageMutation,
-  useGrants,
   useLinodeQuery,
   useRegionsQuery,
 } from '@linode/queries';
@@ -28,11 +28,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  usePermissions,
+  useQueryWithPermissions,
+} from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
-import type { CreateImagePayload } from '@linode/api-v4';
+import type { CreateImagePayload, Linode } from '@linode/api-v4';
 
 export const CreateImageTab = () => {
   const {
@@ -67,11 +70,10 @@ export const CreateImageTab = () => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const { data: grants } = useGrants();
-
-  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
+  const { data: ImagePermissions } = usePermissions('account', [
+    'create_image',
+  ]);
+  const canCreateImage = ImagePermissions?.create_image;
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -104,6 +106,14 @@ export const CreateImageTab = () => {
   const { data: selectedLinode } = useLinodeQuery(
     selectedLinodeId ?? -1,
     selectedLinodeId !== null
+  );
+
+  // Build a list of linodes that the user has read/write access to via AIM RBAC permissions mapping
+  const query = useAllLinodesQuery();
+  const { data: allowedLinodes } = useQueryWithPermissions<Linode>(
+    query,
+    'linode',
+    ['view_linode', 'update_linode']
   );
 
   const {
@@ -147,16 +157,10 @@ export const CreateImageTab = () => {
   const linodeRegionSupportsImageStorage =
     selectedLinodeRegion?.capabilities.includes('Object Storage');
 
-  const linodeSelectHelperText = grants?.linode.some(
-    (grant) => grant.permissions === 'read_only'
-  )
-    ? 'You can only create Images from Linodes you have read/write access to.'
-    : undefined;
-
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
-        {isImageCreateRestricted && (
+        {!canCreateImage && (
           <Notice
             text={getRestrictedResourceText({
               action: 'create',
@@ -190,18 +194,13 @@ export const CreateImageTab = () => {
             </Typography>
 
             <LinodeSelect
-              disabled={isImageCreateRestricted}
-              getOptionDisabled={
-                grants
-                  ? (linode) =>
-                      grants.linode.some(
-                        (grant) =>
-                          grant.id === linode.id &&
-                          grant.permissions === 'read_only'
-                      )
-                  : undefined
+              disabled={!canCreateImage}
+              getOptionDisabled={(linode) => !allowedLinodes.includes(linode)}
+              helperText={
+                canCreateImage
+                  ? undefined
+                  : 'You can only create Images from Linodes you have read/write access to.'
               }
-              helperText={linodeSelectHelperText}
               noMarginTop
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
@@ -232,9 +231,7 @@ export const CreateImageTab = () => {
               render={({ field, fieldState }) => (
                 <Autocomplete
                   clearOnBlur
-                  disabled={
-                    isImageCreateRestricted || selectedLinodeId === null
-                  }
+                  disabled={!canCreateImage || selectedLinodeId === null}
                   errorText={
                     fieldState.error?.message ?? disksError?.[0].reason
                   }
@@ -275,7 +272,7 @@ export const CreateImageTab = () => {
               name="label"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={isImageCreateRestricted}
+                  disabled={!canCreateImage}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
@@ -297,7 +294,7 @@ export const CreateImageTab = () => {
                 render={({ field }) => (
                   <Checkbox
                     checked={field.value ?? false}
-                    disabled={isImageCreateRestricted}
+                    disabled={!canCreateImage}
                     onChange={field.onChange}
                     sx={{ ml: -1 }}
                     text={
@@ -327,7 +324,7 @@ export const CreateImageTab = () => {
               name="tags"
               render={({ field, fieldState }) => (
                 <TagsInput
-                  disabled={isImageCreateRestricted}
+                  disabled={!canCreateImage}
                   noMarginTop
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
@@ -345,7 +342,7 @@ export const CreateImageTab = () => {
               name="description"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={isImageCreateRestricted}
+                  disabled={!canCreateImage}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Description"
@@ -372,7 +369,7 @@ export const CreateImageTab = () => {
         >
           <Button
             buttonType="primary"
-            disabled={isImageCreateRestricted}
+            disabled={!canCreateImage}
             loading={formState.isSubmitting}
             type="submit"
           >
