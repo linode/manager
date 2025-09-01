@@ -125,34 +125,37 @@ const streamSchemaBase = object({
     .max(maxLength, maxLengthMessage)
     .required('Stream name is required.'),
   status: mixed<'active' | 'inactive'>().oneOf(['active', 'inactive']),
-  destinations: array().of(number().defined()).ensure().min(1).required(),
-  details: mixed<InferType<typeof streamDetailsSchema> | object>().when(
-    'type',
-    {
-      is: 'lke_audit_logs',
-      then: () => streamDetailsSchema.required(),
-      otherwise: detailsShouldBeEmpty,
-    },
-  ),
-});
-
-export const createStreamSchema = streamSchemaBase.shape({
   type: string()
     .oneOf(['audit_logs', 'lke_audit_logs'])
     .required('Stream type is required.'),
+  destinations: array().of(number().defined()).ensure().min(1).required(),
+  details: mixed<InferType<typeof streamDetailsSchema> | object>()
+    .when('type', {
+      is: 'lke_audit_logs',
+      then: () => streamDetailsSchema.required(),
+      otherwise: detailsShouldBeEmpty,
+    })
+    .required(),
 });
 
-export const createStreamAndDestinationFormSchema = object({
-  stream: createStreamSchema.shape({
+export const createStreamSchema = streamSchemaBase;
+
+export const updateStreamSchema = streamSchemaBase.shape({
+  status: mixed<'active' | 'inactive'>()
+    .oneOf(['active', 'inactive'])
+    .required(),
+});
+
+export const streamAndDestinationFormSchema = object({
+  stream: streamSchemaBase.shape({
     destinations: array().of(number()).ensure().min(1).required(),
-    details: mixed<InferType<typeof streamDetailsSchema> | object>().when(
-      'type',
-      {
+    details: mixed<InferType<typeof streamDetailsSchema> | object>()
+      .when('type', {
         is: 'lke_audit_logs',
         then: () => streamDetailsBase.required(),
         otherwise: detailsShouldBeEmpty,
-      },
-    ),
+      })
+      .required(),
   }),
   destination: createDestinationSchema.defined().when('stream.destinations', {
     is: (value: never[]) => value?.length === 1 && value[0] === undefined,
