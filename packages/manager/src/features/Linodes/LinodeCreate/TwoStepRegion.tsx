@@ -61,7 +61,7 @@ const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
 ];
 
 interface Props {
-  onChange: (region: RegionType) => void;
+  onChange: (region: null | RegionType) => void;
 }
 
 type CombinedProps = Props & Omit<Partial<RegionSelectProps>, 'onChange'>;
@@ -69,8 +69,10 @@ type CombinedProps = Props & Omit<Partial<RegionSelectProps>, 'onChange'>;
 export const TwoStepRegion = (props: CombinedProps) => {
   const { disabled, disabledRegions, errorText, onChange, value } = props;
 
+  const [tabIndex, setTabIndex] = React.useState(0);
+
   const [regionFilter, setRegionFilter] =
-    React.useState<RegionFilterValue>('distributed');
+    React.useState<RegionFilterValue>('distributed-ALL');
 
   const { data: regions } = useRegionsQuery();
   const createType = useGetLinodeCreateType();
@@ -97,7 +99,15 @@ export const TwoStepRegion = (props: CombinedProps) => {
           }
         />
       </Box>
-      <Tabs>
+      <Tabs
+        onChange={(index) => {
+          if (index !== tabIndex) {
+            setTabIndex(index);
+            // M3-9469: Reset region selection when switching between site types
+            onChange(null);
+          }
+        }}
+      >
         <TabList>
           <Tab>Core</Tab>
           <Tab>Distributed</Tab>
@@ -120,7 +130,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
-              value={value}
+              value={value ?? null}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
@@ -131,8 +141,8 @@ export const TwoStepRegion = (props: CombinedProps) => {
               </Typography>
             </Box>
             <Autocomplete
+              clearIcon={null}
               defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
-              disableClearable
               label="Geographical Area"
               onChange={(_, selectedOption) => {
                 if (selectedOption?.value) {
@@ -140,9 +150,11 @@ export const TwoStepRegion = (props: CombinedProps) => {
                 }
               }}
               options={GEOGRAPHICAL_AREA_OPTIONS}
-              value={GEOGRAPHICAL_AREA_OPTIONS.find(
-                (option) => option.value === regionFilter
-              )}
+              value={
+                GEOGRAPHICAL_AREA_OPTIONS.find(
+                  (option) => option.value === regionFilter
+                ) ?? null
+              }
             />
             <RegionSelect
               currentCapability="Linodes"
@@ -154,7 +166,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}
-              value={value}
+              value={value ?? null}
             />
           </SafeTabPanel>
         </TabPanels>
