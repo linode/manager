@@ -77,7 +77,7 @@ export const updateNodePool = (
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
         clusterID,
       )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
