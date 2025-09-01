@@ -27,21 +27,21 @@ export interface Props {
   clusterCreated: string;
   clusterTier: KubernetesTier;
   isLkeClusterRestricted: boolean;
+  nodePoolType: string;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   statusFilter: StatusFilter;
-  typeLabel: string;
 }
 
 export const NodeTable = React.memo((props: Props) => {
   const {
     clusterCreated,
     clusterTier,
+    nodePoolType,
     nodes,
     openRecycleNodeDialog,
     isLkeClusterRestricted,
     statusFilter,
-    typeLabel,
   } = props;
 
   const { data: profile } = useProfile();
@@ -215,7 +215,7 @@ export const NodeTable = React.memo((props: Props) => {
                         shouldShowVpcIPAddressColumns={
                           shouldShowVpcIPAddressColumns
                         }
-                        typeLabel={typeLabel}
+                        type={nodePoolType}
                       />
                     );
                   })}
