@@ -28,10 +28,6 @@ export interface KubernetesCluster {
   id: number;
   k8s_version: string;
   label: string;
-  /**
-   * Upcoming Feature, Beta - Datastream logs, name of the property to be confirmed
-   */
-  logGeneration?: boolean;
   region: string;
   /**
    * Upcoming Feature Notice - LKE-E:** this property may not be available to all customers
@@ -195,6 +191,10 @@ export interface ControlPlaneACLOptions {
 
 export interface ControlPlaneOptions {
   acl?: ControlPlaneACLOptions;
+  /**
+   * Upcoming Feature, Beta - Datastream logs
+   */
+  audit_logs_enabled?: boolean;
   high_availability?: boolean;
 }
 

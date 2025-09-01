@@ -24,19 +24,25 @@ const testClustersDetails = [
     label: 'gke-prod-europe-west1',
     id: 1,
     region: 'US, Atalanta, GA',
-    logGeneration: false,
+    control_plane: {
+      audit_logs_enabled: false,
+    },
   },
   {
     label: 'metrics-stream-cluster',
     id: 2,
     region: 'US, Chicago, IL',
-    logGeneration: true,
+    control_plane: {
+      audit_logs_enabled: true,
+    },
   },
   {
     label: 'prod-cluster-eu',
     id: 3,
     region: 'NL, Amsterdam',
-    logGeneration: true,
+    control_plane: {
+      audit_logs_enabled: true,
+    },
   },
 ];
 const clusters = kubernetesClusterFactory.buildList(3).map((cluster, idx) => ({

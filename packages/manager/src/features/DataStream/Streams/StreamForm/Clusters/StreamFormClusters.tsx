@@ -10,26 +10,18 @@ import {
 } from '@linode/ui';
 import { isNotNullOrUndefined, usePrevious } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
-import type { ControllerRenderProps } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
+import { StreamFormClusterTableContent } from 'src/features/DataStream/Streams/StreamForm/Clusters/StreamFormClustersTable';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 
+import type { OrderByKeys } from 'src/features/DataStream/Streams/StreamForm/Clusters/StreamFormClustersTable';
 import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
-
-type OrderByKeys = 'label' | 'logGeneration' | 'region';
 
 export const StreamFormClusters = () => {
   const { control, setValue, formState } =
@@ -65,8 +57,10 @@ export const StreamFormClusters = () => {
     },
   });
 
-  const idsWithLogGenerationEnabled = clusters?.data
-    .filter(({ logGeneration }) => logGeneration)
+  const idsWithLogsEnabled = clusters?.data
+    .filter(
+      ({ control_plane: { audit_logs_enabled: logsEnabled } }) => logsEnabled
+    )
     .map(({ id }) => id);
 
   const [isAutoAddAllClustersEnabled, clusterIds] = useWatch({
@@ -83,9 +77,7 @@ export const StreamFormClusters = () => {
   useEffect(() => {
     setValue(
       'stream.details.cluster_ids',
-      isAutoAddAllClustersEnabled
-        ? idsWithLogGenerationEnabled
-        : clusterIds || []
+      isAutoAddAllClustersEnabled ? idsWithLogsEnabled : clusterIds || []
     );
   }, []);
 
@@ -96,12 +88,12 @@ export const StreamFormClusters = () => {
     ) {
       setValue(
         'stream.details.cluster_ids',
-        isAutoAddAllClustersEnabled ? idsWithLogGenerationEnabled : []
+        isAutoAddAllClustersEnabled ? idsWithLogsEnabled : []
       );
     }
   }, [
     isAutoAddAllClustersEnabled,
-    idsWithLogGenerationEnabled,
+    idsWithLogsEnabled,
     previousIsAutoAddAllClustersEnabled,
     setValue,
   ]);
@@ -113,105 +105,6 @@ export const StreamFormClusters = () => {
       setOrderBy(newOrderBy);
       setOrder('asc');
     }
-  };
-
-  const getTableContent = (
-    field: ControllerRenderProps<
-      StreamAndDestinationFormType,
-      'stream.details.cluster_ids'
-    >
-  ) => {
-    const selectedIds = field.value || [];
-
-    const isAllSelected =
-      selectedIds.length === (idsWithLogGenerationEnabled?.length ?? 0);
-    const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
-
-    const toggleAllClusters = () =>
-      field.onChange(isAllSelected ? [] : idsWithLogGenerationEnabled);
-
-    const toggleCluster = (toggledId: number) => {
-      const updatedClusterIds = selectedIds.includes(toggledId)
-        ? selectedIds.filter((selectedId) => selectedId !== toggledId)
-        : [...selectedIds, toggledId];
-
-      field.onChange(updatedClusterIds);
-    };
-
-    return (
-      <>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ width: '5%' }}>
-              {!!clusters?.results && (
-                <Checkbox
-                  aria-label="Toggle all clusters"
-                  checked={isAllSelected}
-                  disabled={isAutoAddAllClustersEnabled}
-                  indeterminate={isIndeterminate}
-                  onChange={toggleAllClusters}
-                  sx={{ m: 0 }}
-                />
-              )}
-            </TableCell>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={() => handleOrderChange('label')}
-              label="label"
-              sx={{ width: '35%' }}
-            >
-              Cluster Name
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'region'}
-              direction={order}
-              handleClick={() => handleOrderChange('region')}
-              label="region"
-              sx={{ width: '35%' }}
-            >
-              Region
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'logGeneration'}
-              direction={order}
-              handleClick={() => handleOrderChange('logGeneration')}
-              label="logGeneration"
-              sx={{ width: '25%' }}
-            >
-              Log Generation
-            </TableSortCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {clusters?.results ? (
-            clusters.data.map(({ label, region, id, logGeneration }) => (
-              <TableRow key={id}>
-                <TableCell>
-                  <Checkbox
-                    aria-label={`Toggle ${label} cluster`}
-                    checked={selectedIds.includes(id)}
-                    disabled={isAutoAddAllClustersEnabled || !logGeneration}
-                    onBlur={field.onBlur}
-                    onChange={() => toggleCluster(id)}
-                  />
-                </TableCell>
-                <TableCell>{label}</TableCell>
-                <TableCell>{region}</TableCell>
-                <TableCell>
-                  <Box alignItems="center" display="flex">
-                    <StatusIcon status={logGeneration ? 'active' : 'error'} />
-                    {logGeneration ? 'Enabled' : 'Disabled'}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRowEmpty colSpan={4} message="No items to display." />
-          )}
-        </TableBody>
-      </>
-    );
   };
 
   return (
@@ -264,7 +157,17 @@ export const StreamFormClusters = () => {
               <Controller
                 control={control}
                 name="stream.details.cluster_ids"
-                render={({ field }) => getTableContent(field)}
+                render={({ field }) => (
+                  <StreamFormClusterTableContent
+                    clusters={clusters}
+                    field={field}
+                    idsWithLogsEnabled={idsWithLogsEnabled}
+                    isAutoAddAllClustersEnabled={isAutoAddAllClustersEnabled}
+                    onOrderChange={handleOrderChange}
+                    order={order}
+                    orderBy={orderBy}
+                  />
+                )}
               />
             </Table>
             <PaginationFooter
