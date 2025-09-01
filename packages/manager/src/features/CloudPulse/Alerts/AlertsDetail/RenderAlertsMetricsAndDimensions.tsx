@@ -1,4 +1,8 @@
-import { useAllLinodesQuery } from '@linode/queries';
+import {
+  type AlertDefinitionMetricCriteria,
+  type CloudPulseServiceType,
+} from '@linode/api-v4';
+import { useAllLinodesQuery, useAllVPCsQuery } from '@linode/queries';
 import { Divider } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
 import React, { useMemo } from 'react';
@@ -10,13 +14,9 @@ import {
   dimensionOperatorTypeMap,
   metricOperatorTypeMap,
 } from '../constants';
+import { getVPCSubnets } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
-import { transformCommaSeperatedDimensionValues } from './utils';
-
-import type {
-  AlertDefinitionMetricCriteria,
-  CloudPulseServiceType,
-} from '@linode/api-v4';
+import { resolveIds, transformCommaSeperatedDimensionValues } from './utils';
 
 interface AlertMetricAndDimensionsProp {
   /*
@@ -47,7 +47,20 @@ export const RenderAlertMetricsAndDimensions = React.memo(
       );
     };
 
+    const needsVPCsCheck = () => {
+      return (
+        ruleCriteria.rules?.some((rule) =>
+          rule.dimension_filters?.some(
+            (dimension) =>
+              dimension.dimension_label === 'vpc_subnet_id' &&
+              transformationAllowedOperators.includes(dimension.operator ?? '')
+          )
+        ) ?? false
+      );
+    };
+
     const needsLinodes = needsLinodesCheck();
+    const needsVPCs = needsVPCsCheck();
     // Initialize the query, but only run when needed
     const { data: linodes } = useAllLinodesQuery({}, {}, needsLinodes);
 
@@ -59,6 +72,15 @@ export const RenderAlertMetricsAndDimensions = React.memo(
         }, {}) ?? {},
       [linodes]
     );
+
+    const { data: vpcs } = useAllVPCsQuery({ enabled: needsVPCs });
+    const vpcSubnetMap = useMemo(() => {
+      const subnets = getVPCSubnets(vpcs ?? []); // still returns Item<string, string>[]
+      return subnets.reduce<Record<string, string>>((acc, { value, label }) => {
+        acc[value] = label;
+        return acc;
+      }, {});
+    }, [vpcs]);
 
     if (!ruleCriteria.rules?.length) {
       return <NullComponent />;
@@ -104,21 +126,18 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                     value,
                   }) => {
                     let resolvedValue = value;
-
-                    //  Special case: linode_id → resolve to labels
                     if (
                       dimensionFilterKey === 'linode_id' &&
-                      transformationAllowedOperators.includes(
-                        dimensionOperator
-                      ) &&
-                      value
+                      transformationAllowedOperators.includes(dimensionOperator)
                     ) {
-                      resolvedValue = value
-                        .split(',')
-                        .map((id) => linodeMap[id.trim()] ?? id.trim())
-                        .join(', ');
+                      resolvedValue = resolveIds(value ?? '', linodeMap);
                     }
-
+                    if (
+                      dimensionFilterKey === 'vpc_subnet_id' &&
+                      transformationAllowedOperators.includes(dimensionOperator)
+                    ) {
+                      resolvedValue = resolveIds(value ?? '', vpcSubnetMap);
+                    }
                     // Pass the resolved value into transformDimensionValue
                     const displayValue =
                       transformationAllowedOperators.includes(dimensionOperator)
