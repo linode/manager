@@ -243,6 +243,8 @@ export const LinodeConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
+  const availableMemory = linode?.specs.memory ?? 0;
+  const deviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
@@ -897,7 +899,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   values.devices?.[slot as keyof DevicesAsStrings] ?? ''
                 }
                 onChange={handleDevicesChanges}
-                slots={deviceSlots}
+                slots={deviceSlots.slice(0, deviceLimit)}
               />
               <FormControl fullWidth>
                 <Autocomplete
@@ -927,7 +929,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Button
                 buttonType="secondary"
                 compactX
-                disabled={deviceCounter >= deviceSlots.length - 1}
+                disabled={deviceCounter >= deviceLimit - 1}
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 sx={{
                   marginLeft: `1px`,
