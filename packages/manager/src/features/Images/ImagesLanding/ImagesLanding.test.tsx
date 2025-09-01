@@ -1,4 +1,4 @@
-import { grantsFactory, profileFactory } from '@linode/utilities';
+import { linodeFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -9,6 +9,30 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
+
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+  useIsResourceRestricted: vi.fn().mockReturnValue(false),
+  useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
+vi.mock('src/hooks/useIsResourceRestricted', () => ({
+  useIsResourceRestricted: queryMocks.useIsResourceRestricted,
+}));
+
+vi.mock('../utils.ts', async () => {
+  const actual = await vi.importActual('../utils');
+  return {
+    ...actual,
+    useLinodesPermissionsCheck: queryMocks.useLinodesPermissionsCheck,
+  };
+});
 
 beforeAll(() => mockMatchMedia());
 
@@ -171,6 +195,12 @@ describe('Images Landing Table', () => {
 
   it('should allow deploying to a new Linode', async () => {
     const image = imageFactory.build();
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: true },
+    });
+    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+      availableLinodes: [linodeFactory.build()],
+    });
 
     server.use(
       http.get('*/images', ({ request }) => {
@@ -233,17 +263,12 @@ describe('Images Landing Table', () => {
   });
 
   it('disables the create button if the user does not have permission to create images', async () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: false },
+    });
     const images = imageFactory.buildList(3);
 
     server.use(
-      http.get('*/v4/profile', () => {
-        const profile = profileFactory.build({ restricted: true });
-        return HttpResponse.json(profile);
-      }),
-      http.get('*/v4/profile/grants', () => {
-        const grants = grantsFactory.build({ global: { add_images: false } });
-        return HttpResponse.json(grants);
-      }),
       http.get('*/v4/images', () => {
         return HttpResponse.json(makeResourcePage(images));
       })
@@ -266,31 +291,19 @@ describe('Images Landing Table', () => {
   });
 
   it('disables the action menu buttons if user does not have permissions to edit images', async () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: false },
+    });
     const image = imageFactory.build({
       id: 'private/99999',
       label: 'vi-test-image',
     });
+    queryMocks.useIsResourceRestricted.mockReturnValue(true);
+    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+      availableLinodes: [],
+    });
 
     server.use(
-      http.get('*/v4/profile', () => {
-        const profile = profileFactory.build({ restricted: true });
-        return HttpResponse.json(profile);
-      }),
-      http.get('*/v4/profile/grants', () => {
-        const grants = grantsFactory.build({
-          global: {
-            add_linodes: false,
-          },
-          image: [
-            {
-              id: 99999,
-              label: 'vi-test-image',
-              permissions: 'read_only',
-            },
-          ],
-        });
-        return HttpResponse.json(grants);
-      }),
       http.get('*/images', ({ request }) => {
         const filter = request.headers.get('x-filter');
 

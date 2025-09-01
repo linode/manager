@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
-import { useImageAndLinodeGrantCheck } from '../utils';
+import { useLinodesPermissionsCheck } from '../utils';
 
 import type { APIError, Image } from '@linode/api-v4';
 
@@ -23,8 +23,7 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
   const navigate = useNavigate();
-  const { permissionedLinodes: availableLinodes } =
-    useImageAndLinodeGrantCheck();
+  const { availableLinodes } = useLinodesPermissionsCheck();
 
   const { control, formState, handleSubmit, reset } = useForm<{
     linodeId: number;

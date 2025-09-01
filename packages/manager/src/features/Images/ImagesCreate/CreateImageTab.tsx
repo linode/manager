@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
-  useAllLinodesQuery,
   useCreateImageMutation,
   useLinodeQuery,
   useRegionsQuery,
@@ -28,14 +27,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
-import type { CreateImagePayload, Linode } from '@linode/api-v4';
+import { useLinodesPermissionsCheck } from '../utils';
+
+import type { CreateImagePayload } from '@linode/api-v4';
 
 export const CreateImageTab = () => {
   const {
@@ -108,13 +106,7 @@ export const CreateImageTab = () => {
     selectedLinodeId !== null
   );
 
-  // Build a list of linodes that the user has read/write access to via AIM RBAC permissions mapping
-  const query = useAllLinodesQuery();
-  const { data: allowedLinodes } = useQueryWithPermissions<Linode>(
-    query,
-    'linode',
-    ['view_linode', 'update_linode']
-  );
+  const { availableLinodes } = useLinodesPermissionsCheck();
 
   const {
     data: disks,
@@ -195,7 +187,9 @@ export const CreateImageTab = () => {
 
             <LinodeSelect
               disabled={!canCreateImage}
-              getOptionDisabled={(linode) => !allowedLinodes.includes(linode)}
+              getOptionDisabled={(linode) =>
+                !availableLinodes.includes(linode.id)
+              }
               helperText={
                 canCreateImage
                   ? undefined

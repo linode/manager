@@ -36,7 +36,7 @@ export const ImagesLandingEmptyState = () => {
           },
           tooltipText: canCreateImage
             ? undefined
-            : 'You do not have permission to create images.',
+            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

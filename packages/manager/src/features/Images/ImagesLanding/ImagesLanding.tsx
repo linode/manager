@@ -344,7 +344,7 @@ export const ImagesLanding = () => {
         buttonDataAttrs={{
           tooltipText: canCreateImage
             ? false
-            : 'You do not have permission to create images.',
+            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
         }}
         disabledCreateButton={!canCreateImage}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"

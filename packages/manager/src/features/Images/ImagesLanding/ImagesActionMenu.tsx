@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import { useImageAndLinodeGrantCheck } from '../utils';
+import { useLinodesPermissionsCheck } from '../utils';
 
 import type { Event, Image } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -45,12 +45,10 @@ export const ImagesActionMenu = (props: Props) => {
     id: Number(id.split('/')[1]),
   });
 
-  const isAddLinodeRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
+  const { data: permissions } = usePermissions('image', ['create_image']);
+  const canCreateImage = permissions?.create_image;
 
-  const { permissionedLinodes: availableLinodes } =
-    useImageAndLinodeGrantCheck();
+  const { availableLinodes } = useLinodesPermissionsCheck();
 
   const isAvailableLinodesPresent = availableLinodes
     ? availableLinodes.length > 0
@@ -91,10 +89,10 @@ export const ImagesActionMenu = (props: Props) => {
           ]
         : []),
       {
-        disabled: isAddLinodeRestricted || isDisabled,
+        disabled: !canCreateImage || isDisabled,
         onClick: () => onDeploy?.(id),
         title: 'Deploy to New Linode',
-        tooltip: isAddLinodeRestricted
+        tooltip: !canCreateImage
           ? getRestrictedResourceText({
               action: 'create',
               isSingular: false,

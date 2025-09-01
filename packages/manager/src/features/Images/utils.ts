@@ -1,26 +1,27 @@
-import { useGrants, useProfile, useRegionsQuery } from '@linode/queries';
+import { useAllLinodesQuery, useRegionsQuery } from '@linode/queries';
 
 import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 
+import { useQueryWithPermissions } from '../IAM/hooks/usePermissions';
+
 import type { Event, Image, Linode } from '@linode/api-v4';
 
-export const useImageAndLinodeGrantCheck = () => {
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+/**
+ * Get a list of Linodes that the user has read/write access to via AIM RBAC permissions mapping
+ */
+export const useLinodesPermissionsCheck = (): {
+  availableLinodes: number[];
+} => {
+  const query = useAllLinodesQuery();
+  const { data: availableLinodes } = useQueryWithPermissions<Linode>(
+    query,
+    'linode',
+    ['view_linode', 'update_linode']
+  );
 
-  const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
-
-  // Unrestricted users can create Images from any disk;
-  // Restricted users need read_write on the Linode they're trying to Imagize
-  // (in addition to the global add_images grant).
-  const permissionedLinodes = profile?.restricted
-    ? (grants?.linode
-        .filter((thisGrant) => thisGrant.permissions === 'read_write')
-        .map((thisGrant) => thisGrant.id) ?? [])
-    : null;
-
-  return { canCreateImage, permissionedLinodes };
+  return {
+    availableLinodes: availableLinodes?.map((linode) => linode.id) ?? [],
+  };
 };
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
