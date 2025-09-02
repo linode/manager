@@ -319,7 +319,7 @@ export const getCloudPulseMetricRequest = (
       ? entityIds.map((id) => parseInt(id, 10))
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
-    group_by: groupBy,
+    group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: getTimeDurationFromPreset(preset),
     metrics: [
       {
