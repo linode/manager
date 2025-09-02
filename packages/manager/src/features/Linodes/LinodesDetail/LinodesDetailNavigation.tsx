@@ -112,7 +112,11 @@ const LinodesDetailNavigation = () => {
   ]);
 
   if (location.pathname === `/linodes/${linodeId}`) {
-    navigate({ to: '/linodes/$linodeId/metrics', params: { linodeId } });
+    navigate({
+      to: '/linodes/$linodeId/metrics',
+      params: { linodeId },
+      replace: true,
+    });
   }
 
   if (error) {
