@@ -14,9 +14,10 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
-
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
+  useAllStreamsQuery: vi.fn().mockReturnValue({}),
+  useStreamsQuery: vi.fn().mockReturnValue({}),
   useUpdateStreamMutation: vi.fn().mockReturnValue({
     mutateAsync: vi.fn(),
   }),
@@ -37,6 +38,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useStreamsQuery: queryMocks.useStreamsQuery,
+    useAllStreamsQuery: queryMocks.useAllStreamsQuery,
     useUpdateStreamMutation: queryMocks.useUpdateStreamMutation,
     useDeleteStreamMutation: queryMocks.useDeleteStreamMutation,
   };
@@ -59,14 +62,27 @@ describe('Streams Landing Table', () => {
 
   beforeEach(() => {
     mockMatchMedia();
-  });
-
-  it('should render streams landing tab header and table with items PaginationFooter', async () => {
     server.use(
       http.get('*/monitor/streams', () => {
         return HttpResponse.json(makeResourcePage(streams));
       })
     );
+  });
+
+  it('should render streams landing tab header and table with items PaginationFooter', async () => {
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+    });
+
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+    });
 
     await renderComponentAndWaitForLoadingComplete();
 
@@ -94,12 +110,34 @@ describe('Streams Landing Table', () => {
     expect(paginationFooterSelectPageSizeInput.value).toBe('Show 25');
   });
 
+  it('should render streams landing table with empty row when there are no search results', async () => {
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+    });
+
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    await renderComponentAndWaitForLoadingComplete();
+
+    const emptyRow = screen.getByText('No items to display.');
+    expect(emptyRow).toBeInTheDocument();
+  });
+
   it('should render streams landing empty state', async () => {
-    server.use(
-      http.get('*/monitor/streams', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
 
     await renderComponentAndWaitForLoadingComplete();
 
@@ -121,11 +159,19 @@ describe('Streams Landing Table', () => {
 
   describe('given action menu', () => {
     beforeEach(() => {
-      server.use(
-        http.get('*/monitor/streams', () => {
-          return HttpResponse.json(makeResourcePage(streams));
-        })
-      );
+      queryMocks.useAllStreamsQuery.mockReturnValue({
+        data: {
+          data: streams,
+          results: 31,
+        },
+      });
+
+      queryMocks.useStreamsQuery.mockReturnValue({
+        data: {
+          data: streams,
+          results: 31,
+        },
+      });
     });
 
     describe('when Edit clicked', () => {
