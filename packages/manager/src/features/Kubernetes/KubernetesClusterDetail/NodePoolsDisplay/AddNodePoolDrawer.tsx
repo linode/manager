@@ -69,7 +69,6 @@ export const AddNodePoolDrawer = (props: Props) => {
     defaultValues: {
       update_strategy: clusterTier === 'enterprise' ? 'on_recycle' : undefined,
     },
-    shouldFocusError: false,
   });
 
   const [type, count] = useWatch({
