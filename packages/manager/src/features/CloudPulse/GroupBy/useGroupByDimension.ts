@@ -48,15 +48,18 @@ export const useGlobalDimensions = (
     return { options: [], defaultValue: [], isLoading: true };
   }
   const metricDimensions = getMetricDimensions(metricDefinition?.data ?? []);
-  const commonDimensions = getCommonDimensions(metricDimensions);
+  const commonDimensions = [
+    defaultOption,
+    ...getCommonDimensions(metricDimensions),
+  ];
 
   const commonGroups = getCommonGroups(
     dashboard?.group_by ?? [],
     commonDimensions
   );
   return {
-    options: [defaultOption, ...commonDimensions],
-    defaultValue: [defaultOption, ...commonGroups],
+    options: commonDimensions,
+    defaultValue: commonGroups,
     isLoading: false,
   };
 };
