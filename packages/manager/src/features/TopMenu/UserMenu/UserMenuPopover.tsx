@@ -139,7 +139,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       },
       {
         display: 'Settings',
-        to: iamRbacPrimaryNavChanges ? '/settings' : '/account/settings',
+        to: iamRbacPrimaryNavChanges ? '/account-settings' : '/account/settings',
       },
     ],
     [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
