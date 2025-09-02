@@ -22,7 +22,11 @@ interface Props {
 export const EditImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
-  const { data: permissions } = usePermissions('account', ['update_image']);
+  const { data: permissions } = usePermissions(
+    'image',
+    ['update_image'],
+    Number(image?.id)
+  );
   const canUpdateImage = permissions?.update_image;
 
   const defaultValues = {

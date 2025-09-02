@@ -13,17 +13,12 @@ import ImagesLanding from './ImagesLanding';
 const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
   useQueryWithPermissions: vi.fn().mockReturnValue({}),
-  useIsResourceRestricted: vi.fn().mockReturnValue(false),
   useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
   useQueryWithPermissions: queryMocks.useQueryWithPermissions,
-}));
-
-vi.mock('src/hooks/useIsResourceRestricted', () => ({
-  useIsResourceRestricted: queryMocks.useIsResourceRestricted,
 }));
 
 vi.mock('../utils.ts', async () => {
@@ -39,6 +34,17 @@ beforeAll(() => mockMatchMedia());
 const loadingTestId = 'circle-progress';
 
 describe('Images Landing Table', () => {
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        update_image: true,
+        delete_image: true,
+        rebuild_linode: true,
+        create_linode: true,
+      },
+    });
+  });
+
   it('should render images landing table with items', async () => {
     server.use(
       http.get('*/images', () => {
@@ -195,9 +201,6 @@ describe('Images Landing Table', () => {
 
   it('should allow deploying to a new Linode', async () => {
     const image = imageFactory.build();
-    queryMocks.usePermissions.mockReturnValue({
-      data: { create_image: true },
-    });
     queryMocks.useLinodesPermissionsCheck.mockReturnValue({
       availableLinodes: [linodeFactory.build()],
     });
@@ -298,7 +301,6 @@ describe('Images Landing Table', () => {
       id: 'private/99999',
       label: 'vi-test-image',
     });
-    queryMocks.useIsResourceRestricted.mockReturnValue(true);
     queryMocks.useLinodesPermissionsCheck.mockReturnValue({
       availableLinodes: [],
     });

@@ -12,9 +12,8 @@ import type { Event, Image, Linode } from '@linode/api-v4';
 export const useLinodesPermissionsCheck = (): {
   availableLinodes: number[];
 } => {
-  const query = useAllLinodesQuery();
   const { data: availableLinodes } = useQueryWithPermissions<Linode>(
-    query,
+    useAllLinodesQuery(),
     'linode',
     ['view_linode', 'update_linode']
   );

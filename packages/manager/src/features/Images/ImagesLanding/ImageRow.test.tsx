@@ -34,6 +34,17 @@ describe('Image Table Row', () => {
     onRebuild: vi.fn(),
   };
 
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        update_image: true,
+        delete_image: true,
+        rebuild_linode: true,
+        create_linode: true,
+      },
+    });
+  });
+
   it('should render an image row with details', async () => {
     const image = imageFactory.build({
       regions: [
@@ -151,10 +162,6 @@ describe('Image Table Row', () => {
   });
 
   it('calls handlers when performing actions', async () => {
-    queryMocks.usePermissions.mockReturnValue({
-      data: { create_image: true },
-    });
-
     const image = imageFactory.build({
       regions: [{ region: 'us-east', status: 'available' }],
     });
