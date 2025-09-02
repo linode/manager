@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { accountFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
@@ -34,5 +36,51 @@ describe('AddNodePoolDrawer', () => {
     );
 
     expect(queryByText('GPU')).toBeNull();
+  });
+
+  it('should not display "Firewall" as an option by default', async () => {
+    const { queryByText } = renderWithTheme(
+      <AddNodePoolDrawer {...props} clusterTier="standard" />
+    );
+
+    expect(queryByText('Firewall')).toBeNull();
+  });
+
+  it('should display "Firewall" as an option for enterprise clusters if the postLA flag is on and the account has the capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Kubernetes Enterprise'],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { findByText, getByLabelText } = renderWithTheme(
+      <AddNodePoolDrawer {...props} clusterTier="enterprise" />,
+      {
+        flags: {
+          lkeEnterprise: {
+            enabled: true,
+            ga: false,
+            la: true,
+            postLa: true,
+            phase2Mtc: false,
+          },
+        },
+      }
+    );
+
+    expect(await findByText('Firewall')).toBeVisible();
+
+    const defaultOption = getByLabelText('Use default firewall');
+    const existingFirewallOption = getByLabelText('Select existing firewall');
+
+    expect(defaultOption).toBeInTheDocument();
+    expect(existingFirewallOption).toBeInTheDocument();
+
+    expect(defaultOption).toBeEnabled();
+    expect(existingFirewallOption).toBeEnabled();
   });
 });
