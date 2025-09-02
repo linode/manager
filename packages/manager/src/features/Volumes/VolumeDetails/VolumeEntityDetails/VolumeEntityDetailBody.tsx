@@ -110,7 +110,7 @@ export const VolumeEntityDetailBody = ({ volume }: Props) => {
                 {volume.linode_label}
               </Link>
             ) : (
-              <Typography data-qa-unattached>Unattached</Typography>
+              'Unattached'
             )}
           </Typography>
         </Box>
