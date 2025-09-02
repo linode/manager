@@ -41,6 +41,7 @@ describe('Images Landing Table', () => {
         delete_image: true,
         rebuild_linode: true,
         create_linode: true,
+        replicate_image: true,
       },
     });
   });

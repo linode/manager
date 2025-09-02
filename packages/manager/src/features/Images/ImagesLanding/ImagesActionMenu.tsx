@@ -40,7 +40,7 @@ export const ImagesActionMenu = (props: Props) => {
 
   const { data: imagePermissions } = usePermissions(
     'image',
-    ['update_image', 'delete_image'],
+    ['update_image', 'delete_image', 'replicate_image'],
     Number(id)
   );
   const { data: linodePermissions } = usePermissions('account', [
@@ -75,10 +75,10 @@ export const ImagesActionMenu = (props: Props) => {
       ...(onManageRegions && image.regions && image.regions.length > 0
         ? [
             {
-              disabled: !imagePermissions.update_image || isDisabled,
+              disabled: !imagePermissions.replicate_image || isDisabled,
               onClick: () => onManageRegions(image),
               title: 'Manage Replicas',
-              tooltip: !imagePermissions.update_image
+              tooltip: !imagePermissions.replicate_image
                 ? getRestrictedResourceText({
                     action: 'edit',
                     isSingular: true,
