@@ -11,6 +11,15 @@ import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => navigate),
+  userPermissions: vi.fn(() => ({
+    data: {
+      delete_nodebalancer: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -56,6 +65,11 @@ describe('NodeBalancerTableRow', () => {
   });
 
   it('deletes the NodeBalancer', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_nodebalancer: true,
+      },
+    });
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     const deleteButton = getByText('Delete');
