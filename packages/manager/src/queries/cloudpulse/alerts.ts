@@ -14,18 +14,30 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { invalidateAlerts } from 'src/features/CloudPulse/Alerts/Utils/utils';
+
 import { queryFactory } from './queries';
 
 import type {
   Alert,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
+  DeepPartial,
   DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
+  Linode,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
+
+// Create the payload transformer map with proper typing
+export const servicePayloadMap = {
+  linode: (payload: CloudPulseAlertsPayload): DeepPartial<Linode> => ({
+    alerts: payload,
+  }),
+  // Add other services
+};
 
 export const useCreateAlertDefinition = (serviceType: string) => {
   const queryClient = useQueryClient();
@@ -248,48 +260,12 @@ export const useServiceAlertsMutation = (
   entityId: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], CloudPulseAlertsPayload>({
+  return useMutation<Alert, APIError[], CloudPulseAlertsPayload>({
     mutationFn: (payload: CloudPulseAlertsPayload) => {
       return updateServiceAlerts(serviceType, entityId, payload);
     },
     onSuccess(_, payload) {
-      const allAlerts = queryClient.getQueryData<Alert[]>(
-        queryFactory.alerts._ctx.all().queryKey
-      );
-
-      // Get alerts previously enabled for this entity
-      const oldEnabledAlertIds =
-        allAlerts
-          ?.filter((alert) => alert.entity_ids.includes(entityId))
-          .map((alert) => alert.id) || [];
-
-      // Combine enabled user and system alert IDs from payload
-      const newEnabledAlertIds = [
-        ...(payload.user ?? []),
-        ...(payload.system ?? []),
-      ];
-
-      // Get unique list of all enabled alert IDs for cache invalidation
-      const alertIdsToInvalidate = Array.from(
-        new Set([...oldEnabledAlertIds, ...newEnabledAlertIds])
-      );
-
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.resources(serviceType).queryKey,
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.all().queryKey,
-      });
-
-      alertIdsToInvalidate.forEach((alertId) => {
-        queryClient.invalidateQueries({
-          queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
-            serviceType,
-            String(alertId)
-          ).queryKey,
-        });
-      });
+      invalidateAlerts(queryClient, serviceType, entityId, payload);
     },
   });
 };
