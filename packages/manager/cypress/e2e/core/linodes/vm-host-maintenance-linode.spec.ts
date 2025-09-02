@@ -72,7 +72,7 @@ describe('host & VM maintenance notification banner', () => {
       '@getNotifications',
       '@getMaintenances',
     ]);
-    cy.findByTestId('maintenance-banner-v2').within(() => {
+    cy.get('[data-qa-maintenance-banner-v2="true"]').within(() => {
       cy.get('p')
         .invoke('text')
         .then((text) => {
@@ -95,7 +95,7 @@ describe('host & VM maintenance notification banner', () => {
       '@getNotifications',
       '@getMaintenances',
     ]);
-    cy.findByTestId('maintenance-banner-v2').within(() => {
+    cy.get('[data-qa-maintenance-banner-v2="true"]').within(() => {
       cy.get('p')
         .invoke('text')
         .then((text) => {
@@ -123,7 +123,7 @@ describe('host & VM maintenance notification banner', () => {
       '@getMaintenances',
       '@getProfile',
     ]);
-    cy.findByTestId('linode-maintenance-banner').within(() => {
+    cy.get('[data-qa-maintenance-banner="true"]').within(() => {
       cy.get('p')
         .invoke('text')
         .then((text) => {
@@ -147,7 +147,7 @@ describe('host & VM maintenance notification banner', () => {
       '@getNotifications',
       '@getMaintenances',
     ]);
-    cy.findByTestId('maintenance-banner-v2').should('not.exist');
+    cy.get('[data-qa-maintenance-banner-v2="true"]').should('not.exist');
   });
 
   it('banner not present on details page if no pending maintenance', function () {
@@ -161,6 +161,6 @@ describe('host & VM maintenance notification banner', () => {
       '@getNotifications',
       '@getMaintenances',
     ]);
-    cy.findByTestId('linode-maintenance-banner').should('not.exist');
+    cy.get('[data-qa-maintenance-banner="true"]').should('not.exist');
   });
 });
