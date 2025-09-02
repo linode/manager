@@ -32,10 +32,14 @@ export const updateSSHKeySchema = object({
     .trim(),
 });
 
+export const emailSchema = string()
+  .required('Email address is required.')
+  .max(128, 'Email address must be 128 characters or less.')
+  .email('Must be a valid email address.')
+  .matches(EMAIL_VALIDATION_REGEX, `Invalid email address.`);
+
 export const updateProfileSchema = object({
-  email: string()
-    .email()
-    .matches(EMAIL_VALIDATION_REGEX, `Invalid email address. `),
+  email: emailSchema,
   timezone: string(),
   email_notifications: boolean(),
   authorized_keys: array().of(string()),

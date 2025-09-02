@@ -54,7 +54,7 @@ export const CreateUserDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Controller
           control={control}
           name="username"
@@ -81,6 +81,7 @@ export const CreateUserDrawer = (props: Props) => {
               data-qa-create-email
               errorText={fieldState.error?.message}
               label="Email"
+              onBlur={field.onBlur}
               onChange={field.onChange}
               required
               trimmed
@@ -88,7 +89,6 @@ export const CreateUserDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          rules={{ required: 'Email is required' }}
         />
 
         <Box sx={{ marginTop: 2 }}>
