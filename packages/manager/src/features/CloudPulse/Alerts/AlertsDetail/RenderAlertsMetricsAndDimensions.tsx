@@ -75,6 +75,41 @@ export const RenderAlertMetricsAndDimensions = React.memo(
       }, {});
     }, [vpcs]);
 
+    const getResolvedDimensionValue = (
+      dimensionFilterKey: string,
+      dimensionOperator: string,
+      value: null | string | undefined,
+      serviceType: CloudPulseServiceType,
+      linodeMap: Record<string, string>,
+      vpcSubnetMap: Record<string, string>
+    ): string => {
+      if (!value) return '';
+
+      let resolvedValue = value;
+
+      if (
+        dimensionFilterKey === LINODE_DIMENSION_LABEL &&
+        transformationAllowedOperators.includes(dimensionOperator)
+      ) {
+        resolvedValue = resolveIds(value, linodeMap);
+      }
+
+      if (
+        dimensionFilterKey === VPC_SUBNET_DIMENSION_LABEL &&
+        transformationAllowedOperators.includes(dimensionOperator)
+      ) {
+        resolvedValue = resolveIds(value, vpcSubnetMap);
+      }
+
+      return transformationAllowedOperators.includes(dimensionOperator)
+        ? transformCommaSeperatedDimensionValues(
+            resolvedValue,
+            serviceType,
+            dimensionFilterKey
+          )
+        : resolvedValue;
+    };
+
     if (!ruleCriteria.rules?.length) {
       return <NullComponent />;
     }
@@ -117,35 +152,18 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                     dimension_label: dimensionFilterKey,
                     operator: dimensionOperator,
                     value,
-                  }) => {
-                    let resolvedValue = value;
-                    if (
-                      dimensionFilterKey === LINODE_DIMENSION_LABEL &&
-                      transformationAllowedOperators.includes(dimensionOperator)
-                    ) {
-                      resolvedValue = resolveIds(value ?? '', linodeMap);
-                    }
-                    if (
-                      dimensionFilterKey === VPC_SUBNET_DIMENSION_LABEL &&
-                      transformationAllowedOperators.includes(dimensionOperator)
-                    ) {
-                      resolvedValue = resolveIds(value ?? '', vpcSubnetMap);
-                    }
-                    // Pass the resolved value into transformDimensionValue
-                    const displayValue =
-                      transformationAllowedOperators.includes(dimensionOperator)
-                        ? transformCommaSeperatedDimensionValues(
-                            resolvedValue,
-                            serviceType,
-                            dimensionFilterKey
-                          )
-                        : resolvedValue;
-                    return [
-                      dimensionLabel,
-                      dimensionOperatorTypeMap[dimensionOperator],
-                      displayValue,
-                    ];
-                  }
+                  }) => [
+                    dimensionLabel,
+                    dimensionOperatorTypeMap[dimensionOperator],
+                    getResolvedDimensionValue(
+                      dimensionFilterKey,
+                      operator,
+                      value,
+                      serviceType,
+                      linodeMap,
+                      vpcSubnetMap
+                    ),
+                  ]
                 )}
               />
             </GridLegacy>
