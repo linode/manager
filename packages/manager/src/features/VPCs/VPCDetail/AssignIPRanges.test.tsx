@@ -57,4 +57,44 @@ describe('AssignIPRanges', () => {
     const button = getByText('Add IPv4 Range');
     expect(button).toBeInTheDocument();
   });
+
+  it('has section titles reflective of dual stack when showIPv6Fields is true', () => {
+    const { getByText } = renderWithTheme(
+      <AssignIPRanges
+        handleIPRangeChange={vi.fn()}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={[]}
+        ipv6Ranges={[]}
+        showIPv6Fields={true}
+      />
+    );
+
+    const additionalIPRangesSectionTitle = getByText(
+      /Assign additional IP ranges/i
+    );
+    expect(additionalIPRangesSectionTitle).toBeInTheDocument();
+
+    const button = getByText('Add IPv6 Range');
+    expect(button).toBeInTheDocument();
+  });
+
+  it('does not have section titles reflective of dual stack when showIPv6Fields is false', () => {
+    const { queryByText } = renderWithTheme(
+      <AssignIPRanges
+        handleIPRangeChange={vi.fn()}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={[]}
+        ipv6Ranges={[]}
+        showIPv6Fields={false}
+      />
+    );
+
+    const additionalIPRangesSectionTitle = queryByText(
+      /Assign additional IP ranges/i
+    );
+    expect(additionalIPRangesSectionTitle).not.toBeInTheDocument();
+
+    const button = queryByText('Add IPv6 Range');
+    expect(button).not.toBeInTheDocument();
+  });
 });

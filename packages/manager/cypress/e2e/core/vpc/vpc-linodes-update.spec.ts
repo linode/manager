@@ -50,9 +50,10 @@ describe('VPC assign/unassign flows', () => {
   });
 
   beforeEach(() => {
-    // TODO - Remove mock once `nodebalancerVpc` feature flag is removed.
+    // TODO - Remove mock once `nodebalancerVpc` and `vpcIpv6  feature flags are removed.
     mockAppendFeatureFlags({
       nodebalancerVpc: false,
+      vpcIpv6: false,
     }).as('getFeatureFlags');
   });
 
