@@ -1,6 +1,8 @@
 import { accountGrantsToPermissions } from './accountGrantsToPermissions';
 import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
+import { nodeBalancerGrantsToPermissions } from './nodeBalancerGrantsToPermissions';
+import { volumeGrantsToPermissions } from './volumeGrantsToPermissions';
 
 import type { EntityBase } from '../usePermissions';
 import type {
@@ -24,22 +26,37 @@ export const entityPermissionMapFrom = (
   const entityPermissionsMap: EntityPermissionMap = {};
   if (grants) {
     grants[grantType]?.forEach((entity) => {
+      /** Entity Permissions Maps */
+      const firewallPermissionsMap = firewallGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+      const linodePermissionsMap = linodeGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+      const volumePermissionsMap = volumeGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+      const nodebalancerPermissionsMap = nodeBalancerGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
+
+      /** Add entity permissions to map */
       switch (grantType) {
         case 'firewall':
-          // eslint-disable-next-line no-case-declarations
-          const firewallPermissionsMap = firewallGrantsToPermissions(
-            entity?.permissions,
-            profile?.restricted
-          ) as PermissionMap;
           entityPermissionsMap[entity.id] = firewallPermissionsMap;
           break;
         case 'linode':
-          // eslint-disable-next-line no-case-declarations
-          const linodePermissionsMap = linodeGrantsToPermissions(
-            entity?.permissions,
-            profile?.restricted
-          ) as PermissionMap;
           entityPermissionsMap[entity.id] = linodePermissionsMap;
+          break;
+        case 'nodebalancer':
+          entityPermissionsMap[entity.id] = nodebalancerPermissionsMap;
+          break;
+        case 'volume':
+          entityPermissionsMap[entity.id] = volumePermissionsMap;
           break;
       }
     });
@@ -50,13 +67,20 @@ export const entityPermissionMapFrom = (
 /** Convert the existing Grant model to the new IAM RBAC model. */
 export const fromGrants = (
   accessType: AccessType,
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: readonly PermissionType[],
   grants?: Grants,
   isRestricted?: boolean,
   entityId?: number
 ): PermissionMap => {
+  /** Find the entity in the grants */
+  const firewall = grants?.firewall.find((f) => f.id === entityId);
+  const linode = grants?.linode.find((f) => f.id === entityId);
+  const volume = grants?.volume.find((f) => f.id === entityId);
+  const nodebalancer = grants?.nodebalancer.find((f) => f.id === entityId);
+
   let usersPermissionsMap = {} as PermissionMap;
 
+  /** Convert the entity permissions to the new IAM RBAC model */
   switch (accessType) {
     case 'account':
       usersPermissionsMap = accountGrantsToPermissions(
@@ -65,18 +89,26 @@ export const fromGrants = (
       ) as PermissionMap;
       break;
     case 'firewall':
-      // eslint-disable-next-line no-case-declarations
-      const firewall = grants?.firewall.find((f) => f.id === entityId);
       usersPermissionsMap = firewallGrantsToPermissions(
         firewall?.permissions,
         isRestricted
       ) as PermissionMap;
       break;
     case 'linode':
-      // eslint-disable-next-line no-case-declarations
-      const linode = grants?.linode.find((f) => f.id === entityId);
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
+        isRestricted
+      ) as PermissionMap;
+      break;
+    case 'nodebalancer':
+      usersPermissionsMap = nodeBalancerGrantsToPermissions(
+        nodebalancer?.permissions,
+        isRestricted
+      ) as PermissionMap;
+      break;
+    case 'volume':
+      usersPermissionsMap = volumeGrantsToPermissions(
+        volume?.permissions,
         isRestricted
       ) as PermissionMap;
       break;
@@ -97,7 +129,7 @@ export const fromGrants = (
 export const toEntityPermissionMap = (
   entities: EntityBase[] | undefined,
   entitiesPermissions: (PermissionType[] | undefined)[] | undefined,
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: readonly PermissionType[],
   isRestricted?: boolean
 ): EntityPermissionMap => {
   const entityPermissionsMap: EntityPermissionMap = {};
@@ -118,7 +150,7 @@ export const toEntityPermissionMap = (
 
 /** Combines the permissions a user wants to check with the permissions returned from the backend */
 export const toPermissionMap = (
-  permissionsToCheck: PermissionType[],
+  permissionsToCheck: readonly PermissionType[],
   usersPermissions: PermissionType[],
   isRestricted?: boolean
 ): PermissionMap => {
