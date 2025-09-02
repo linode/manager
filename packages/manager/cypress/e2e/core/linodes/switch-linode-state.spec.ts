@@ -8,7 +8,7 @@ import type { Linode } from '@linode/api-v4';
 
 authenticate();
 describe('switch linode state', () => {
-  before(() => {
+  beforeEach(() => {
     cleanUp(['linodes']);
     cy.tag('method:e2e');
   });
@@ -28,8 +28,11 @@ describe('switch linode state', () => {
       createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
     ).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+
+      cy.findByText(linode.label).scrollIntoView();
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Running', { timeout: LINODE_CREATE_TIMEOUT }).should(
             'be.visible'
@@ -54,8 +57,9 @@ describe('switch linode state', () => {
             .click();
         });
 
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Shutting Down').should('be.visible');
         });
@@ -114,8 +118,10 @@ describe('switch linode state', () => {
     cy.defer(() => createTestLinode({ booted: false })).then(
       (linode: Linode) => {
         cy.visitWithLogin('/linodes');
-        cy.get(`[data-qa-linode="${linode.label}"]`)
+        cy.findByText(linode.label).scrollIntoView();
+        cy.findByText(linode.label)
           .should('be.visible')
+          .closest('tr')
           .within(() => {
             cy.contains('Offline', { timeout: LINODE_CREATE_TIMEOUT }).should(
               'be.visible'
@@ -140,10 +146,14 @@ describe('switch linode state', () => {
               .click();
           });
 
-        cy.get(`[data-qa-linode="${linode.label}"]`)
+        cy.findByText(linode.label).scrollIntoView();
+        cy.findByText(linode.label)
           .should('be.visible')
+          .closest('tr')
           .within(() => {
-            cy.contains('Booting').should('be.visible');
+            cy.contains('Booting', { timeout: LINODE_CREATE_TIMEOUT }).should(
+              'be.visible'
+            );
             cy.contains('Running', { timeout: LINODE_CREATE_TIMEOUT }).should(
               'be.visible'
             );
@@ -205,8 +215,10 @@ describe('switch linode state', () => {
       createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
     ).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+      cy.findByText(linode.label).scrollIntoView();
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Running', { timeout: LINODE_CREATE_TIMEOUT }).should(
             'be.visible'
@@ -231,8 +243,9 @@ describe('switch linode state', () => {
             .click();
         });
 
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Rebooting').should('be.visible');
         });
