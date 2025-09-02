@@ -446,7 +446,7 @@ componentTests('RegionSelect', (mount) => {
     it('should display a tooltip for disabled regions', () => {
       const disabledRegion = 'US, Fremont, CA (us-west)';
       const disabledReason = `You've reached the limit of placement groups you can create in this region.`;
-      console.log(regions);
+
       mount(
         <RegionSelect
           currentCapability="Object Storage"
