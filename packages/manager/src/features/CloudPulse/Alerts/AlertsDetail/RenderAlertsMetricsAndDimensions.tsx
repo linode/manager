@@ -157,7 +157,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                     dimensionOperatorTypeMap[dimensionOperator],
                     getResolvedDimensionValue(
                       dimensionFilterKey,
-                      operator,
+                      dimensionOperator,
                       value,
                       serviceType,
                       linodeMap,
