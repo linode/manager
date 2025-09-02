@@ -4,72 +4,11 @@ type DiskRecord = Record<'disk_id', number>;
 
 type VolumeRecord = Record<'volume_id', number>;
 
-export interface DevicesAsStrings {
-  sda?: string;
-  sdaa?: string;
-  sdab?: string;
-  sdac?: string;
-  sdad?: string;
-  sdae?: string;
-  sdaf?: string;
-  sdag?: string;
-  sdah?: string;
-  sdai?: string;
-  sdaj?: string;
-  sdak?: string;
-  sdal?: string;
-  sdam?: string;
-  sdan?: string;
-  sdao?: string;
-  sdap?: string;
-  sdaq?: string;
-  sdar?: string;
-  sdas?: string;
-  sdat?: string;
-  sdau?: string;
-  sdav?: string;
-  sdaw?: string;
-  sdax?: string;
-  sday?: string;
-  sdaz?: string;
-  sdb?: string;
-  sdba?: string;
-  sdbb?: string;
-  sdbc?: string;
-  sdbd?: string;
-  sdbe?: string;
-  sdbf?: string;
-  sdbg?: string;
-  sdbh?: string;
-  sdbi?: string;
-  sdbj?: string;
-  sdbk?: string;
-  sdbl?: string;
-  sdc?: string;
-  sdd?: string;
-  sde?: string;
-  sdf?: string;
-  sdg?: string;
-  sdh?: string;
-  sdi?: string;
-  sdj?: string;
-  sdk?: string;
-  sdl?: string;
-  sdm?: string;
-  sdn?: string;
-  sdo?: string;
-  sdp?: string;
-  sdq?: string;
-  sdr?: string;
-  sds?: string;
-  sdt?: string;
-  sdu?: string;
-  sdv?: string;
-  sdw?: string;
-  sdx?: string;
-  sdy?: string;
-  sdz?: string;
-}
+type StringTypeMap<T> = {
+  [key in keyof T]?: string;
+};
+
+export type DevicesAsStrings = StringTypeMap<Devices>;
 
 /**
  * The `value` should be formatted as volume-123, disk-123, etc.,
