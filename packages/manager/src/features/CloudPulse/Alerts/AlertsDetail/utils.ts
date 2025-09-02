@@ -20,3 +20,22 @@ export const transformCommaSeperatedDimensionValues = (
     )
     .join(', ');
 };
+
+/**
+ * @param value The dimension value to be resolved.
+ * @param lookupMap The map used to resolve the dimension value.
+ * @returns string value with the resolved names for the dimension value.
+ */
+export const resolveIds = (
+  value: string,
+  lookupMap: Record<string, string>
+): string => {
+  if (!value) return '';
+  return value
+    .split(',')
+    .map((id) => {
+      const trimmedId = id.trim();
+      return lookupMap[trimmedId] ?? trimmedId;
+    })
+    .join(', ');
+};
