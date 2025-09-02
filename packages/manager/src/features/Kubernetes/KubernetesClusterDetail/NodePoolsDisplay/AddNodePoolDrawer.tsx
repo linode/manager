@@ -1,6 +1,5 @@
 import {
   type CreateNodePoolData,
-  isEmpty,
   type KubernetesTier,
   type Region,
 } from '@linode/api-v4';
@@ -55,8 +54,11 @@ export const AddNodePoolDrawer = (props: Props) => {
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const { data: types, isLoading: isTypesLoading } = useAllTypes(open);
 
-  const { isPending, mutateAsync: createPool } =
-    useCreateNodePoolMutation(clusterId);
+  const {
+    isPending,
+    mutateAsync: createPool,
+    error,
+  } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here and filter out nanodes
   const extendedTypes = filterCurrentTypes(types?.map(extendType)).filter(
@@ -96,17 +98,11 @@ export const AddNodePoolDrawer = (props: Props) => {
     }
   }, [open]);
 
-  const previousSubmitCount = React.useRef<number>(0);
-
   React.useEffect(() => {
-    if (
-      !isEmpty(form.formState.errors) &&
-      form.formState.submitCount > previousSubmitCount.current
-    ) {
-      scrollErrorIntoView();
+    if (error) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-    previousSubmitCount.current = form.formState.submitCount;
-  }, [form.formState]);
+  }, [error]);
 
   const updatePlanCount = (planId: string, newCount: number) => {
     form.setValue('type', newCount === 0 ? '' : planId);
@@ -181,7 +177,10 @@ export const AddNodePoolDrawer = (props: Props) => {
               }
               onSelect={(type) => form.setValue('type', type)}
               regionsData={regions ?? []}
-              resetValues={() => form.resetField('type')}
+              resetValues={() => {
+                form.setValue('type', '');
+                form.setValue('count', 0);
+              }}
               selectedId={type}
               selectedRegionId={clusterRegionId}
               selectedTier={clusterTier}
@@ -227,7 +226,7 @@ export const AddNodePoolDrawer = (props: Props) => {
               )}
               <Button
                 buttonType="primary"
-                disabled={shouldShowPricingInfo && hasInvalidPrice}
+                disabled={!type || hasInvalidPrice}
                 loading={form.formState.isSubmitting}
                 type="submit"
               >
