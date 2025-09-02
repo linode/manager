@@ -1,4 +1,3 @@
-import { useSpecificTypes } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -18,12 +17,12 @@ import { makeStyles } from 'tss-react/mui';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { extendType } from 'src/utilities/extendType';
 
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../../constants';
+import { useNodePoolDisplayLabel } from './utils';
 
 import type {
   AutoscaleSettings,
@@ -88,6 +87,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     open,
   } = props;
   const autoscaler = nodePool?.autoscaler;
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -95,12 +95,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     clusterId,
     nodePool?.id ?? -1
   );
-
-  const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
-
-  const planType = typesQuery[0]?.data
-    ? extendType(typesQuery[0].data)
-    : undefined;
 
   const {
     clearErrors,
@@ -189,7 +183,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     <Drawer
       onClose={handleClose}
       open={open}
-      title={`Autoscale Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
+      title={`Autoscale Pool: ${nodePoolLabel}`}
     >
       {errors.root?.message ? (
         <Notice spacingBottom={16} text={errors.root.message} variant="error" />
