@@ -117,7 +117,11 @@ export const CloudPulseGroupByDrawer = React.memo(
           </Typography>
           <Autocomplete
             data-testid="dimension-select"
-            helperText={`You can select upto ${groupBySelectionLimit} dimensions.`}
+            helperText={
+              options.length > 3
+                ? `You can select upto ${groupBySelectionLimit} dimensions.`
+                : undefined
+            }
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
             }
@@ -127,7 +131,7 @@ export const CloudPulseGroupByDrawer = React.memo(
               setSelectedValue(value);
             }}
             options={options}
-            placeholder="Select Dimnensions"
+            placeholder="Select Dimensions"
             renderOption={(props, option) => {
               const { key, ...rest } = props;
               const isSelectAllORDeslectAllOption =
