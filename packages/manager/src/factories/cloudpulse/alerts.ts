@@ -5,7 +5,9 @@ import type {
   AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
   CreateAlertDefinitionPayload,
+  Dimension,
   MetricCriteria,
+  MetricDefinition,
   TriggerCondition,
 } from '@linode/api-v4';
 
@@ -35,6 +37,7 @@ export const triggerConditionFactory =
     polling_interval_seconds: 300,
     trigger_occurrences: 5,
   });
+
 export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   aggregate_function: 'avg',
   dimension_filters: [
@@ -48,6 +51,44 @@ export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   operator: 'eq',
   threshold: 1000,
 });
+
+const firewallDimensions: Dimension[] = [
+  { label: 'VPC-Subnet', dimension_label: 'vpc_subnet_id', values: [] },
+  {
+    label: 'Interface Type',
+    dimension_label: 'interface_type',
+    values: ['vpc', 'public'],
+  },
+  { label: 'Interface', dimension_label: 'interface_id', values: [] },
+  { label: 'Linode', dimension_label: 'linode_id', values: [] },
+  { label: 'Linode Region', dimension_label: 'region_id', values: [] },
+];
+
+export const firewallMetricDefinitionFactory =
+  Factory.Sync.makeFactory<MetricDefinition>({
+    label: 'Firewall Metric',
+    metric: 'firewall_metric',
+    unit: 'metric_unit',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg', 'sum', 'max', 'min', 'count'],
+    dimensions: firewallDimensions,
+  });
+export const firewallMetricDefinitionsResponse: MetricDefinition[] = [
+  firewallMetricDefinitionFactory.build({
+    label: 'Current connections',
+    metric: 'fw_active_connections',
+    unit: 'count',
+    available_aggregate_functions: ['avg', 'max', 'min'],
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress packets accepted',
+    metric: 'fw_ingress_packets_accepted',
+    unit: 'packets_per_second',
+    available_aggregate_functions: ['sum'],
+  }),
+];
 
 export const ingressTrafficRateRulesFactory =
   Factory.Sync.makeFactory<MetricCriteria>({
@@ -184,7 +225,7 @@ export const currentConnectionsRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -205,7 +246,7 @@ export const availableConnectionsRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -226,7 +267,7 @@ export const ingressPacketsAcceptedRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -247,7 +288,7 @@ export const egressPacketsAcceptedRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -268,7 +309,7 @@ export const ingressBytesAcceptedRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -289,7 +330,7 @@ export const egressBytesAcceptedRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -310,7 +351,7 @@ export const ingressPacketsDroppedRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -331,7 +372,7 @@ export const egressPacketsDroppedRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -352,7 +393,7 @@ export const packetsDroppedConnectionTableFullRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -373,7 +414,7 @@ export const newIngressConnectionsRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
@@ -394,7 +435,7 @@ export const newEgressConnectionsRulesFactory =
     dimension_filters: [
       { dimension_label: 'region_id', operator: 'eq', value: '' },
       { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'linode_id', operator: 'eq', value: '' },
       { dimension_label: 'entity_id', operator: 'eq', value: '' },
       { dimension_label: 'interface_id', operator: 'eq', value: '' },
       {
