@@ -8,16 +8,24 @@
  * error messages or fallback behavior when necessary.
  */
 
-import { regionFactory } from '@linode/utilities';
+import {
+  linodeFactory,
+  nodeBalancerFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
+  mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -25,12 +33,15 @@ import { ui } from 'support/ui';
 import {
   accountFactory,
   dashboardFactory,
+  dashboardMetricFactory,
   databaseFactory,
+  firewallFactory,
   flagsFactory,
   widgetFactory,
 } from 'src/factories';
+import { NO_REGION_MESSAGE } from 'src/features/CloudPulse/Utils/constants';
 
-import type { Database } from '@linode/api-v4';
+import type { CloudPulseServiceType, Database } from '@linode/api-v4';
 
 const { dashboardName, id, metrics } = widgetDetails.dbaas;
 const serviceType = 'dbaas';
@@ -127,46 +138,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
 
     ui.regionSelect.find().click().clear();
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
-    // Expand the applied filters section
-    ui.button.findByTitle('Filters').should('be.visible').click();
-
-    // Verify that the applied filters
-    cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-        .should('be.visible')
-        .should('have.text', 'US, Chicago, IL');
-    });
-  });
-  // Reason: Not needed
-  it.skip('If the supportedRegionIds column is removed, all mocked regions will be considered supported by default', () => {
-    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
-    cy.visitWithLogin('metrics');
-    cy.wait('@getFeatureFlags');
-
-    // Selecting a dashboard from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
-
-    ui.autocompletePopper
-      .findByTitle(dashboardName)
-      .should('be.visible')
-      .click();
-
-    // Wait for the services and dashboard ,Region API calls to complete before proceeding
-    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
-
-    ui.regionSelect.find().click();
-    ui.autocompletePopper.find().within(() => {
-      cy.get('[data-option-index]').should('have.length', 2);
-    });
-
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
@@ -380,5 +351,204 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('be.visible')
         .should('have.text', 'US, Chicago, IL');
     });
+  });
+
+  it(`should show a region-unavailable message for ${serviceType} when no database clusters are available`, () => {
+    const { dashboardName, id } = widgetDetails.dbaas;
+    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
+    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
+    mockGetCloudPulseDashboard(id, dashboard);
+
+    cy.visitWithLogin('metrics');
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
+
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type('MySQL');
+
+    ui.autocompletePopper.findByTitle('MySQL').should('be.visible').click();
+    ui.regionSelect.find().click();
+
+    cy.get('[data-qa-autocomplete-popper="true"]')
+      .should('be.visible')
+      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+  });
+
+  it('should show a region-unavailable message for linode when no linodes are available', () => {
+    const { dashboardName, id, resource, serviceType } = widgetDetails.linode;
+    const dashboard = dashboardFactory.build({
+      label: dashboardName,
+      service_type: serviceType as CloudPulseServiceType,
+      id,
+      widgets: metrics.map(({ name, title, unit, yLabel }) => {
+        return widgetFactory.build({
+          label: title,
+          metric: name,
+          unit,
+          y_label: yLabel,
+          service_type: serviceType as CloudPulseServiceType,
+        });
+      }),
+    });
+
+    const mockLinode = linodeFactory.build({
+      id: 2,
+      label: resource,
+      region: 'us-ord',
+    });
+    mockGetLinodes([mockLinode]);
+    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
+    mockGetCloudPulseDashboard(id, dashboard);
+    cy.visitWithLogin('metrics');
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
+
+    ui.regionSelect.find().click();
+
+    cy.get('[data-qa-autocomplete-popper="true"]')
+      .should('be.visible')
+      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+  });
+
+  it('should show a region-unavailable message for nodeblancer when no linodes are available', () => {
+    const { dashboardName, id, resource, serviceType } =
+      widgetDetails.nodebalancer;
+    const mockLinode = linodeFactory.build({
+      id: 3,
+      label: resource,
+      region: 'us-east',
+    });
+    const mockNodeBalancer = nodeBalancerFactory.build({
+      label: resource,
+      region: 'us-east',
+    });
+    const dashboard = dashboardFactory.build({
+      label: dashboardName,
+      service_type: serviceType as CloudPulseServiceType,
+      id,
+      widgets: metrics.map(({ name, title, unit, yLabel }) => {
+        return widgetFactory.build({
+          label: title,
+          metric: name,
+          unit,
+          y_label: yLabel,
+          service_type: serviceType as CloudPulseServiceType,
+        });
+      }),
+    });
+    mockAppendFeatureFlags(flagsFactory.build());
+    mockGetAccount(accountFactory.build({}));
+    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
+    mockGetCloudPulseDashboard(id, dashboard);
+
+    mockGetRegions([mockRegion]);
+    mockGetLinodes([mockLinode]);
+    mockGetNodeBalancers([mockNodeBalancer]);
+    mockGetUserPreferences({});
+    cy.visitWithLogin('metrics');
+
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
+
+    ui.regionSelect.find().click();
+    cy.get('[data-qa-autocomplete-popper="true"]')
+      .should('be.visible')
+      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+  });
+
+  it('should show a region-unavailable message for firewall when no linodes are available', () => {
+    const { dashboardName, id, serviceType, firewalls } =
+      widgetDetails.firewall;
+
+    const metricDefinitions = metrics.map(({ name, title, unit }) =>
+      dashboardMetricFactory.build({
+        label: title,
+        metric: name,
+        unit,
+      })
+    );
+    const mockLinode = linodeFactory.build({
+      id: 1,
+      label: firewalls,
+      region: 'us-east',
+    });
+    const dashboard = dashboardFactory.build({
+      label: dashboardName,
+      service_type: serviceType as CloudPulseServiceType,
+      id,
+      widgets: metrics.map(({ name, title, unit, yLabel }) => {
+        return widgetFactory.build({
+          label: title,
+          metric: name,
+          unit,
+          y_label: yLabel,
+          service_type: serviceType as CloudPulseServiceType,
+        });
+      }),
+    });
+    const mockFirewalls = firewallFactory.build({ label: firewalls });
+
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
+    mockGetCloudPulseDashboard(id, dashboard);
+    mockGetLinodes([mockLinode]);
+    mockGetFirewalls([mockFirewalls]);
+    mockGetUserPreferences({});
+    mockGetRegions([mockRegion]);
+
+    // navigate to the metrics page
+    cy.visitWithLogin('/metrics');
+
+    // Wait for the services and dashboard API calls to complete before proceeding
+    cy.wait(['@fetchServices', '@fetchDashboard']);
+
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
+    ui.autocomplete
+      .findByLabel('Firewalls')
+      .should('be.visible')
+      .type(`${firewalls}{enter}`);
+
+    ui.autocomplete.findByLabel('Firewalls').click();
+
+    ui.regionSelect.find().click();
+
+    cy.get('[data-qa-autocomplete-popper="true"]')
+      .should('be.visible')
+      .and('have.text', NO_REGION_MESSAGE[serviceType]);
   });
 });
