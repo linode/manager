@@ -1,5 +1,5 @@
 import { useFirewallQuery } from '@linode/queries';
-import { Box, Divider, Stack, Typography } from '@linode/ui';
+import { Divider, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -66,19 +66,13 @@ export const NodePoolFooter = (props: Props) => {
 
   return (
     <NodePoolTableFooter>
-      <Box>
+      <Stack direction="column" width="100%">
         <Stack
           alignItems="center"
           columnGap={{ sm: 2, xs: 1.5 }}
           direction="row"
           divider={
-            <Divider
-              flexItem
-              orientation="vertical"
-              spacingBottom={0}
-              spacingTop={0}
-              sx={{ height: '20px' }}
-            />
+            <Divider flexItem orientation="vertical" sx={{ height: '20px' }} />
           }
           flexWrap={{ sm: 'unset', xs: 'wrap' }}
           rowGap={1}
@@ -111,13 +105,14 @@ export const NodePoolFooter = (props: Props) => {
             <NodePoolEncryptionStatus encryptionStatus={encryptionStatus} />
           )}
         </Stack>
-      </Box>
-      <TagCell
-        disabled={isLkeClusterRestricted}
-        tags={tags}
-        updateTags={updateTags}
-        view="inline"
-      />
+        <TagCell
+          disabled={isLkeClusterRestricted}
+          sx={{ justifyContent: 'flex-end' }}
+          tags={tags}
+          updateTags={updateTags}
+          view="inline"
+        />
+      </Stack>
     </NodePoolTableFooter>
   );
 };
