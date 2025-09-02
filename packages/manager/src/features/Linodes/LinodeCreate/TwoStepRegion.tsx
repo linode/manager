@@ -70,7 +70,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { disabled, disabledRegions, errorText, onChange, value } = props;
 
   const [regionFilter, setRegionFilter] =
-    React.useState<RegionFilterValue>('distributed');
+    React.useState<RegionFilterValue>('distributed-ALL');
 
   const { data: regions } = useRegionsQuery();
   const createType = useGetLinodeCreateType();
@@ -120,7 +120,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
-              value={value}
+              value={value ?? null}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
@@ -131,8 +131,8 @@ export const TwoStepRegion = (props: CombinedProps) => {
               </Typography>
             </Box>
             <Autocomplete
+              clearIcon={null}
               defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
-              disableClearable
               label="Geographical Area"
               onChange={(_, selectedOption) => {
                 if (selectedOption?.value) {
@@ -140,9 +140,11 @@ export const TwoStepRegion = (props: CombinedProps) => {
                 }
               }}
               options={GEOGRAPHICAL_AREA_OPTIONS}
-              value={GEOGRAPHICAL_AREA_OPTIONS.find(
-                (option) => option.value === regionFilter
-              )}
+              value={
+                GEOGRAPHICAL_AREA_OPTIONS.find(
+                  (option) => option.value === regionFilter
+                ) ?? null
+              }
             />
             <RegionSelect
               currentCapability="Linodes"
@@ -154,7 +156,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}
-              value={value}
+              value={value ?? null}
             />
           </SafeTabPanel>
         </TabPanels>
