@@ -72,7 +72,13 @@ export const NodePoolFooter = (props: Props) => {
           columnGap={{ sm: 2, xs: 1.5 }}
           direction="row"
           divider={
-            <Divider flexItem orientation="vertical" sx={{ height: '20px' }} />
+            <Divider
+              flexItem
+              orientation="vertical"
+              spacingBottom={0}
+              spacingTop={0}
+              sx={{ height: '20px' }}
+            />
           }
           flexWrap={{ sm: 'unset', xs: 'wrap' }}
           rowGap={1}
@@ -88,7 +94,7 @@ export const NodePoolFooter = (props: Props) => {
           {clusterTier === 'enterprise' &&
             poolFirewallId &&
             poolFirewallId > 0 && ( // This check handles the current API behavior for a default firewall (0). TODO: remove this once LKE-7686 is fixed.
-              <Typography sx={{ textWrap: 'nowrap' }}>
+              <Typography>
                 <b>Firewall:</b>{' '}
                 <Link to={`/firewalls/${poolFirewallId}/rules`}>
                   {firewall?.label ?? poolFirewallId}
