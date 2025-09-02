@@ -1,22 +1,17 @@
-import {
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
 import { streamFactory } from 'src/factories/delivery';
 import { StreamsLanding } from 'src/features/Delivery/Streams/StreamsLanding';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
-
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
+  useAllStreamsQuery: vi.fn().mockReturnValue({}),
+  useStreamsQuery: vi.fn().mockReturnValue({}),
   useUpdateStreamMutation: vi.fn().mockReturnValue({
     mutateAsync: vi.fn(),
   }),
@@ -37,6 +32,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useStreamsQuery: queryMocks.useStreamsQuery,
+    useAllStreamsQuery: queryMocks.useAllStreamsQuery,
     useUpdateStreamMutation: queryMocks.useUpdateStreamMutation,
     useDeleteStreamMutation: queryMocks.useDeleteStreamMutation,
   };
@@ -46,28 +43,34 @@ const stream = streamFactory.build({ id: 1 });
 const streams = [stream, ...streamFactory.buildList(30)];
 
 describe('Streams Landing Table', () => {
-  const renderComponentAndWaitForLoadingComplete = async () => {
+  const renderComponentAndWaitForLoadingComplete = () => {
     renderWithTheme(<StreamsLanding />, {
       initialRoute: '/logs/delivery/streams',
     });
-
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
   };
 
   beforeEach(() => {
     mockMatchMedia();
   });
 
-  it('should render streams landing tab header and table with items PaginationFooter', async () => {
-    server.use(
-      http.get('*/monitor/streams', () => {
-        return HttpResponse.json(makeResourcePage(streams));
-      })
-    );
+  it('should render streams landing tab header and table with items PaginationFooter', () => {
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+      isLoading: false,
+    });
 
-    await renderComponentAndWaitForLoadingComplete();
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+      isLoading: false,
+    });
+
+    renderComponentAndWaitForLoadingComplete();
 
     // search text input
     screen.getByPlaceholderText('Search for a Stream');
@@ -93,18 +96,55 @@ describe('Streams Landing Table', () => {
     expect(paginationFooterSelectPageSizeInput.value).toBe('Show 25');
   });
 
-  it('should render streams landing empty state', async () => {
-    server.use(
-      http.get('*/monitor/streams', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
+  it('should render streams landing table with empty row when there are no search results', () => {
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+    });
 
-    await renderComponentAndWaitForLoadingComplete();
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    renderComponentAndWaitForLoadingComplete();
+
+    const emptyRow = screen.getByText('No items to display.');
+    expect(emptyRow).toBeInTheDocument();
+  });
+
+  it('should render streams landing empty state', () => {
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    renderComponentAndWaitForLoadingComplete();
 
     screen.getByText((text) =>
       text.includes('Create a stream and configure delivery of cloud logs')
     );
+  });
+
+  it('should render loading state when fetching all streams', () => {
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: {
+        data: null,
+        results: 0,
+      },
+      isLoading: true,
+    });
+
+    renderComponentAndWaitForLoadingComplete();
+
+    const loadingElement = screen.queryByTestId(loadingTestId);
+    expect(loadingElement).toBeInTheDocument();
   });
 
   const clickOnActionMenu = async () => {
@@ -120,11 +160,19 @@ describe('Streams Landing Table', () => {
 
   describe('given action menu', () => {
     beforeEach(() => {
-      server.use(
-        http.get('*/monitor/streams', () => {
-          return HttpResponse.json(makeResourcePage(streams));
-        })
-      );
+      queryMocks.useAllStreamsQuery.mockReturnValue({
+        data: {
+          data: streams,
+          results: 31,
+        },
+      });
+
+      queryMocks.useStreamsQuery.mockReturnValue({
+        data: {
+          data: streams,
+          results: 31,
+        },
+      });
     });
 
     describe('when Edit clicked', () => {

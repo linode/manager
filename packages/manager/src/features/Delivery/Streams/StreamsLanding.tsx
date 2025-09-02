@@ -1,5 +1,6 @@
 import { streamStatus } from '@linode/api-v4';
 import {
+  useAllStreamsQuery,
   useDeleteStreamMutation,
   useStreamsQuery,
   useUpdateStreamMutation,
@@ -12,6 +13,7 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { DeliveryTabHeader } from 'src/features/Delivery/Shared/DeliveryTabHeader/DeliveryTabHeader';
 import { streamStatusOptions } from 'src/features/Delivery/Shared/types';
@@ -31,6 +33,8 @@ import type { Stream } from '@linode/api-v4';
 
 export const StreamsLanding = () => {
   const navigate = useNavigate();
+  const { isLoading: isLoadingAllStreams, data: allStreamsData } =
+    useAllStreamsQuery();
 
   const streamsUrl = '/logs/delivery/streams';
   const search = useSearch({
@@ -106,7 +110,7 @@ export const StreamsLanding = () => {
     navigate({ to: '/logs/delivery/streams/create' });
   };
 
-  if (isLoading) {
+  if (isLoadingAllStreams) {
     return <CircleProgress />;
   }
 
@@ -116,7 +120,7 @@ export const StreamsLanding = () => {
     );
   }
 
-  if (!streams?.data.length) {
+  if (!allStreamsData?.results) {
     return <StreamsLandingEmptyState navigateToCreate={navigateToCreate} />;
   }
 
@@ -205,65 +209,73 @@ export const StreamsLanding = () => {
         selectList={streamStatusOptions}
         selectValue={search?.status}
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-              sx={{ width: '30%' }}
-            >
-              Name
-            </TableSortCell>
-            <TableCell>Stream Type</TableCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'id'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="id"
-            >
-              ID
-            </TableSortCell>
-            <Hidden smDown>
-              <TableCell>Destination Type</TableCell>
-            </Hidden>
-            <Hidden lgDown>
-              <TableSortCell
-                active={orderBy === 'created'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="created"
-              >
-                Creation Time
-              </TableSortCell>
-            </Hidden>
-            <TableCell sx={{ width: '5%' }} />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {streams?.data.map((stream) => (
-            <StreamTableRow key={stream.id} stream={stream} {...handlers} />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={streams?.results || 0}
-        eventCategory="Streams Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+
+      {isLoading ? (
+        <CircleProgress />
+      ) : (
+        <>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'label'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="label"
+                  sx={{ width: '30%' }}
+                >
+                  Name
+                </TableSortCell>
+                <TableCell>Stream Type</TableCell>
+                <TableSortCell
+                  active={orderBy === 'status'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="status"
+                >
+                  Status
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'id'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="id"
+                >
+                  ID
+                </TableSortCell>
+                <Hidden smDown>
+                  <TableCell>Destination Type</TableCell>
+                </Hidden>
+                <Hidden lgDown>
+                  <TableSortCell
+                    active={orderBy === 'created'}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="created"
+                  >
+                    Creation Time
+                  </TableSortCell>
+                </Hidden>
+                <TableCell sx={{ width: '5%' }} />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {streams?.data.map((stream) => (
+                <StreamTableRow key={stream.id} stream={stream} {...handlers} />
+              ))}
+              {streams?.results === 0 && <TableRowEmpty colSpan={6} />}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={streams?.results || 0}
+            eventCategory="Streams Table"
+            handlePageChange={pagination.handlePageChange}
+            handleSizeChange={pagination.handlePageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+          />
+        </>
+      )}
     </>
   );
 };

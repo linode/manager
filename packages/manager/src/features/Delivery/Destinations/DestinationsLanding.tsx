@@ -1,4 +1,5 @@
 import {
+  useAllDestinationsQuery,
   useDeleteDestinationMutation,
   useDestinationsQuery,
 } from '@linode/queries';
@@ -11,6 +12,7 @@ import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableCell } from 'src/components/TableCell';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import {
   DESTINATIONS_TABLE_DEFAULT_ORDER,
@@ -29,6 +31,8 @@ import type { DestinationHandlers } from 'src/features/Delivery/Destinations/Des
 
 export const DestinationsLanding = () => {
   const navigate = useNavigate();
+  const { isLoading: isLoadingAllDestinations, data: allDestinationsData } =
+    useAllDestinationsQuery();
   const { mutateAsync: deleteDestination } = useDeleteDestinationMutation();
   const destinationsUrl = '/logs/delivery/destinations';
   const search = useSearch({
@@ -87,7 +91,7 @@ export const DestinationsLanding = () => {
     navigate({ to: '/logs/delivery/destinations/create' });
   };
 
-  if (isLoading) {
+  if (isLoadingAllDestinations) {
     return <CircleProgress />;
   }
 
@@ -97,7 +101,7 @@ export const DestinationsLanding = () => {
     );
   }
 
-  if (!destinations?.data.length) {
+  if (!allDestinationsData?.results) {
     return (
       <DestinationsLandingEmptyState navigateToCreate={navigateToCreate} />
     );
@@ -144,73 +148,80 @@ export const DestinationsLanding = () => {
         onSearch={onSearch}
         searchValue={search?.label ?? ''}
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-              sx={{ width: '30%' }}
-            >
-              Name
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'type'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="type"
-            >
-              Type
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'id'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="id"
-            >
-              ID
-            </TableSortCell>
-            <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'created'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="created"
-              >
-                Creation Time
-              </TableSortCell>
-            </Hidden>
-            <TableSortCell
-              active={orderBy === 'updated'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="updated"
-            >
-              Last Modified
-            </TableSortCell>
-            <TableCell sx={{ width: '5%' }} />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {destinations?.data.map((destination) => (
-            <DestinationTableRow
-              destination={destination}
-              key={destination.id}
-              {...handlers}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={destinations?.results || 0}
-        eventCategory="Destinations Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+      {isLoading ? (
+        <CircleProgress />
+      ) : (
+        <>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'label'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="label"
+                  sx={{ width: '30%' }}
+                >
+                  Name
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'type'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="type"
+                >
+                  Type
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'id'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="id"
+                >
+                  ID
+                </TableSortCell>
+                <Hidden smDown>
+                  <TableSortCell
+                    active={orderBy === 'created'}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="created"
+                  >
+                    Creation Time
+                  </TableSortCell>
+                </Hidden>
+                <TableSortCell
+                  active={orderBy === 'updated'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="updated"
+                >
+                  Last Modified
+                </TableSortCell>
+                <TableCell sx={{ width: '5%' }} />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {destinations?.data.map((destination) => (
+                <DestinationTableRow
+                  destination={destination}
+                  key={destination.id}
+                  {...handlers}
+                />
+              ))}
+              {destinations?.results === 0 && <TableRowEmpty colSpan={6} />}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={destinations?.results || 0}
+            eventCategory="Destinations Table"
+            handlePageChange={pagination.handlePageChange}
+            handleSizeChange={pagination.handlePageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+          />
+        </>
+      )}
     </>
   );
 };
