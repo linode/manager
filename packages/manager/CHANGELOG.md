@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-08-28] - v1.149.1
+
+### Fixed:
+
+- Broken entity link on Linodes list card view
+
 ## [2025-08-26] - v1.149.0
 
 ### Added:
