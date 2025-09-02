@@ -736,10 +736,7 @@ export interface MigrateLinodeRequest {
   region: string;
 }
 
-export type RescueRequestObject = Pick<
-  Devices,
-  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'
->;
+export type RescueRequestObject = Omit<Devices, 'sdbl'>;
 
 export interface LinodeCloneData {
   backups_enabled?: boolean | null;

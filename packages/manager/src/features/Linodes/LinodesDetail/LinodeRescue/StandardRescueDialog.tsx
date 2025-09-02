@@ -22,6 +22,7 @@ import * as React from 'react';
 
 import { useEventsPollingActions } from 'src/queries/events/events';
 
+import { deviceSlots } from '../LinodeConfigs/constants';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { DeviceSelection } from './DeviceSelection';
 import { RescueDescription } from './RescueDescription';
@@ -86,6 +87,10 @@ export const StandardRescueDialog = (props: Props) => {
     linodeId ?? -1,
     linodeId !== undefined && open
   );
+  const availableMemory = linode?.specs.memory ?? 0;
+  const overallDeviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
+  const rescueDeviceLimit = overallDeviceLimit - 2;
+
   const {
     data: disks,
     error: disksError,
@@ -191,7 +196,7 @@ export const StandardRescueDialog = (props: Props) => {
   };
 
   const incrementCounter = () => {
-    setCounter(clamp(1, 6, counter + 1));
+    setCounter(clamp(1, rescueDeviceLimit, counter + 1));
   };
 
   /** string format is type-id */
@@ -236,12 +241,12 @@ export const StandardRescueDialog = (props: Props) => {
               }
               onChange={onChange}
               rescue
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+              slots={deviceSlots.slice(0, overallDeviceLimit)}
             />
             <Button
               buttonType="secondary"
               compactX
-              disabled={disabled || counter >= 6}
+              disabled={disabled || counter >= rescueDeviceLimit}
               onClick={incrementCounter}
               sx={{ marginTop: theme.spacing() }}
             >
