@@ -1,5 +1,5 @@
 import { nodeBalancerFactory } from '@linode/utilities';
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -12,6 +12,15 @@ const queryMocks = vi.hoisted(() => ({
   useMatch: vi.fn().mockReturnValue({}),
   useNavigate: vi.fn(() => vi.fn()),
   useParams: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_nodebalancer: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -82,5 +91,40 @@ describe('NodeBalancersLanding', () => {
     expect(getByText('Ports')).toBeVisible();
     expect(getByText('IP Address')).toBeVisible();
     expect(getByText('Region')).toBeVisible();
+  });
+
+  it('should disable the "Create NodeBalancer" button if the user does not have permission', async () => {
+    const { getByRole } = renderWithTheme(<NodeBalancersLanding />);
+
+    await waitFor(() => {
+      const createNodeBalancerBtn = getByRole('button', {
+        name: 'Create NodeBalancer',
+      });
+
+      expect(createNodeBalancerBtn).toBeInTheDocument();
+      expect(createNodeBalancerBtn).toHaveAttribute('aria-disabled', 'true');
+    });
+  });
+
+  it('should enable the "Create NodeBalancer" button if the user has permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_nodebalancer: true,
+      },
+    });
+
+    const { getByRole } = renderWithTheme(<NodeBalancersLanding />);
+
+    await waitFor(() => {
+      const createNodeBalancerBtn = getByRole('button', {
+        name: 'Create NodeBalancer',
+      });
+
+      expect(createNodeBalancerBtn).toBeInTheDocument();
+      expect(createNodeBalancerBtn).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+    });
   });
 });
