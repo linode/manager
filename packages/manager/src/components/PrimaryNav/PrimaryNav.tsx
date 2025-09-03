@@ -121,7 +121,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     (preferences) => preferences?.collapsedSideNavProductFamilies
   );
 
-  const collapsedAccordions = collapsedSideNavPreference ?? [1, 2, 3, 4, 5, 6]; // by default, we collapse all categories if no preference is set;
+  const collapsedAccordions = collapsedSideNavPreference ?? [
+    1, 2, 3, 4, 5, 6, 7,
+  ]; // by default, we collapse all categories if no preference is set;
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
@@ -336,7 +338,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     );
 
   const accordionClicked = (index: number) => {
-    let updatedCollapsedAccordions: number[] = [0, 1, 2, 3, 4, 5];
+    let updatedCollapsedAccordions: number[] = [1, 2, 3, 4, 5, 6, 7];
     if (collapsedAccordions.includes(index)) {
       updatedCollapsedAccordions = collapsedAccordions.filter(
         (accIndex) => accIndex !== index
