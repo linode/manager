@@ -25,6 +25,11 @@ export interface TagCellProps {
   disabled?: boolean;
 
   /**
+   * Entity name to display on the tooltip when the "Add Button" is disabled.
+   */
+  entity?: string;
+
+  /**
    * An optional label to display in the overflow drawer header.
    */
   entityLabel?: string;
@@ -68,7 +73,7 @@ const checkOverflow = (el: HTMLElement) => {
 };
 
 export const TagCell = (props: TagCellProps) => {
-  const { disabled, sx, tags, updateTags, view } = props;
+  const { disabled, sx, tags, updateTags, view, entity } = props;
 
   const [addingTag, setAddingTag] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -98,11 +103,7 @@ export const TagCell = (props: TagCellProps) => {
       onClick={() => setAddingTag(true)}
       panel={props.panel}
       title="Add a tag"
-      tooltipText={`${
-        disabled
-          ? 'You must be an unrestricted User in order to add or modify tags on Linodes.'
-          : ''
-      }`}
+      tooltipText={`${disabled ? `You must be an unrestricted User in order to add or modify tags on a ${entity}.` : ''}`}
     >
       Add a tag
     </StyledTagButton>
