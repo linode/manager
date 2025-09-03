@@ -59,15 +59,15 @@ export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
 
 export const metricAggregationOptions: Item<string, MetricAggregationType>[] = [
   {
-    label: 'Average',
+    label: 'Avg',
     value: 'avg',
   },
   {
-    label: 'Minimum',
+    label: 'Min',
     value: 'min',
   },
   {
-    label: 'Maximum',
+    label: 'Max',
     value: 'max',
   },
   {
@@ -149,10 +149,10 @@ export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   lte: '<=',
 };
 export const aggregationTypeMap: Record<MetricAggregationType, string> = {
-  avg: 'Average',
+  avg: 'Avg',
   count: 'Count',
-  max: 'Maximum',
-  min: 'Minimum',
+  max: 'Max',
+  min: 'Min',
   sum: 'Sum',
 };
 export const dimensionOperatorTypeMap: Record<
@@ -160,9 +160,9 @@ export const dimensionOperatorTypeMap: Record<
   string
 > = {
   endswith: 'ends with',
-  eq: 'equals',
+  eq: 'equal',
   in: 'in',
-  neq: 'not equals',
+  neq: 'not equal',
   startswith: 'starts with',
 };
 
@@ -236,6 +236,7 @@ export const CONFIGS_ERROR_MESSAGE =
   'Enter valid configuration ID numbers as integers separated by commas.';
 
 export const CONFIG_ERROR_MESSAGE = 'Enter a valid configuration ID number.';
+export const CONFIG_HELPER_TEXT = 'Enter a configuration ID number.';
 export const CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
   'Use a single comma to separate IDs.';
 
@@ -243,3 +244,6 @@ export const CONFIG_IDS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 export const CONFIG_ID_PLACEHOLDER_TEXT = 'e.g., 12345';
 export const CONFIGS_ID_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
+
+export const INTERFACE_ID_ERROR_MESSAGE = 'Enter a valid interface ID number.';
+export const INTERFACE_ID_HELPER_TEXT = 'Enter an interface ID number.';

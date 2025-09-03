@@ -168,7 +168,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
       dimensions: [
         {
           dimension_label: 'Linode',
-          label: 'parent_vm_entity_id"',
+          label: 'linode_id"',
           values: [],
         },
         {
@@ -182,7 +182,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
           values: [],
         },
         {
-          dimension_label: 'parent_vm_entity_id',
+          dimension_label: 'linode_id',
           label: 'Parent VM Entity ID',
           values: [],
         },
@@ -234,7 +234,7 @@ const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
  * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Average").
+ * @param aggregationType - The aggregation type (e.g., "Avg").
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
@@ -439,7 +439,7 @@ describe('Create Alert', () => {
           cy.get('[data-testid="select_all_notice"]').click();
         // Fill metric details for the first rule
         const connectionsMetricDetails = {
-          aggregationType: 'Average',
+          aggregationType: 'Avg',
           dataField: 'Current connections',
           operator: '=',
           ruleIndex: 0,
@@ -522,7 +522,7 @@ describe('Create Alert', () => {
         // Fill metric details for the second rule
 
         const egressTrafficRateMetricDetails = {
-          aggregationType: 'Average',
+          aggregationType: 'Avg',
           dataField: 'Available connections',
           operator: '=',
           ruleIndex: 1,
