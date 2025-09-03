@@ -3,10 +3,30 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { subnetFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
 
+beforeAll(() => mockMatchMedia());
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      reboot_linode: true,
+      boot_linode: true,
+      shutdown_linode: true,
+      delete_linode_config_profile_interface: true,
+    },
+  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
+}));
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
 const props = {
   handlePowerActionsLinode: vi.fn(),
   handleUnassignLinode: vi.fn(),
@@ -88,5 +108,50 @@ describe('SubnetActionMenu', () => {
     const unassignButton = getByText('Unassign Linode');
     await userEvent.click(unassignButton);
     expect(props.handleUnassignLinode).toHaveBeenCalled();
+  });
+  it('should disable the "Unassign Linode" and "Power On" buttons when user does not have permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_linode_config_profile_interface: false,
+        reboot_linode: false,
+        boot_linode: false,
+        shutdown_linode: false,
+      },
+    });
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      <SubnetLinodeActionMenu {...props} isOffline={true} />
+    );
+    const actionMenu = getByLabelText(
+      `Action menu for Linodes in Subnet subnet-1`
+    );
+    await userEvent.click(actionMenu);
+
+    const unassignButton = getByTestId('Unassign Linode');
+    expect(unassignButton).toHaveAttribute('aria-disabled', 'true');
+
+    const powerOnButton = getByTestId('Power On');
+    expect(powerOnButton).toHaveAttribute('aria-disabled', 'true');
+  });
+  it('should enable the "Unassign Linode" and "Power On" buttons when user has permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_linode_config_profile_interface: true,
+        reboot_linode: true,
+        boot_linode: true,
+        shutdown_linode: false,
+      },
+    });
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      <SubnetLinodeActionMenu {...props} isOffline={true} />
+    );
+    const actionMenu = getByLabelText(
+      `Action menu for Linodes in Subnet subnet-1`
+    );
+    await userEvent.click(actionMenu);
+
+    const unassignButton = getByTestId('Unassign Linode');
+    expect(unassignButton).not.toHaveAttribute('aria-disabled', 'true');
+    const powerOnButton = getByTestId('Power On');
+    expect(powerOnButton).not.toHaveAttribute('aria-disabled', 'true');
   });
 });
