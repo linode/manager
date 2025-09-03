@@ -58,4 +58,18 @@ describe('AssignedEntities', () => {
       mockRole
     );
   });
+
+  it('renders a tooltip with the entity name when the name is longer than 30 characters', async () => {
+    const longName = 'this-is-a-long-entity-name-that-needs-to-be-truncated';
+    renderWithTheme(
+      <AssignedEntities
+        onButtonClick={handleClick}
+        onRemoveAssignment={handleRemove}
+        role={{ ...mockRole, entity_names: [longName] }}
+      />
+    );
+
+    await userEvent.hover(screen.getByTestId('entities'));
+    expect(await screen.findByRole('tooltip')).toHaveTextContent(longName);
+  });
 });
