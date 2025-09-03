@@ -117,7 +117,7 @@ export const SearchBar = () => {
       navigate({
         to: `/search`,
         search: {
-          query: encodeURIComponent(searchText),
+          query: searchText,
         },
       });
       handleClose();
@@ -138,7 +138,7 @@ export const SearchBar = () => {
         navigate({
           to: `/search`,
           search: {
-            query: encodeURIComponent(searchText),
+            query: searchText,
           },
         });
       }
