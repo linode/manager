@@ -382,10 +382,10 @@ export interface UpgradeInterfaceData {
 // ----------------------------------------------------------
 
 export interface DiskDevice {
-  disk_id: null | number;
+  disk_id: number;
 }
 export interface VolumeDevice {
-  volume_id: null | number;
+  volume_id: number;
 }
 
 export interface Devices {
