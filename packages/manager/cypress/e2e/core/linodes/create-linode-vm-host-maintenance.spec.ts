@@ -4,6 +4,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
 
 import { accountSettingsFactory } from 'src/factories';
@@ -76,16 +77,11 @@ describe('vmHostMaintenance feature flag', () => {
     // form prerequisites
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
     cy.get('[id="root-password"]').type(randomString(12));
-    cy.get('table[aria-label="List of Linode Plans"] tbody tr')
-      .first()
-      .within(() => {
-        cy.get('td')
-          .first()
-          .within(() => {
-            cy.get('input').should('be.enabled').click();
-          });
-      });
-
+    const mockPlan = {
+      planType: 'Shared CPU',
+      planLabel: 'Nanode 1 GB',
+    };
+    linodeCreatePage.selectPlan(mockPlan.planType, mockPlan.planLabel);
     cy.scrollTo('bottom');
     ui.button
       .findByTitle('View Code Snippets')
