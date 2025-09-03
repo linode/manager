@@ -57,7 +57,7 @@ export const WidgetGroupByRenderer = (props: WidgetGroupByRendererProps) => {
         setIsSelected(true);
       }
       handleChange(selectedValue.map(({ value }) => value));
-      onCancel();
+      setOpen(false);
     },
     [handleChange, onCancel]
   );
