@@ -147,19 +147,17 @@ describe('Metric component tests', () => {
     user.click(aggregationTypeInput);
 
     expect(
-      await container.findByRole('option', { name: 'Minimum' })
+      await container.findByRole('option', { name: 'Min' })
     ).toBeInTheDocument();
 
-    expect(
-      container.getByRole('option', { name: 'Average' })
-    ).toBeInTheDocument();
+    expect(container.getByRole('option', { name: 'Avg' })).toBeInTheDocument();
 
-    const option = await container.findByRole('option', { name: 'Average' });
+    const option = await container.findByRole('option', { name: 'Avg' });
 
     await user.click(option);
     expect(
       within(aggregationTypeContainer).getByRole('combobox')
-    ).toHaveAttribute('value', 'Average');
+    ).toHaveAttribute('value', 'Avg');
   });
 
   it('should render the Operator component', async () => {
