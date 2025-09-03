@@ -122,7 +122,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           <Link
             to={
               iamRbacPrimaryNavChanges
-                ? 'profile/preferences'
+                ? '/profile/preferences'
                 : '/profile/settings'
             }
           >

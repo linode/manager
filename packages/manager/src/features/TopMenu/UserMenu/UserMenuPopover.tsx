@@ -138,8 +138,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         to: iamRbacPrimaryNavChanges ? '/maintenance' : '/account/maintenance',
       },
       {
-        display: 'Settings',
-        to: iamRbacPrimaryNavChanges ? '/account-settings' : '/account/settings',
+        display: iamRbacPrimaryNavChanges ? 'Account Settings' : 'Settings',
+        to: iamRbacPrimaryNavChanges
+          ? '/account-settings'
+          : '/account/settings',
       },
     ],
     [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
