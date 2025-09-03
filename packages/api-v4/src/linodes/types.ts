@@ -391,7 +391,7 @@ export interface VolumeDevice {
 export type ConfigDevice = DiskDevice | null | VolumeDevice;
 
 export interface Devices {
-  sda: ConfigDevice;
+  sda?: ConfigDevice;
   sdaa?: ConfigDevice;
   sdab?: ConfigDevice;
   sdac?: ConfigDevice;
@@ -418,7 +418,7 @@ export interface Devices {
   sdax?: ConfigDevice;
   sday?: ConfigDevice;
   sdaz?: ConfigDevice;
-  sdb: ConfigDevice;
+  sdb?: ConfigDevice;
   sdba?: ConfigDevice;
   sdbb?: ConfigDevice;
   sdbc?: ConfigDevice;
@@ -431,12 +431,12 @@ export interface Devices {
   sdbj?: ConfigDevice;
   sdbk?: ConfigDevice;
   sdbl?: ConfigDevice;
-  sdc: ConfigDevice;
-  sdd: ConfigDevice;
-  sde: ConfigDevice;
-  sdf: ConfigDevice;
-  sdg: ConfigDevice;
-  sdh: ConfigDevice;
+  sdc?: ConfigDevice;
+  sdd?: ConfigDevice;
+  sde?: ConfigDevice;
+  sdf?: ConfigDevice;
+  sdg?: ConfigDevice;
+  sdh?: ConfigDevice;
   sdi?: ConfigDevice;
   sdj?: ConfigDevice;
   sdk?: ConfigDevice;

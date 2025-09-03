@@ -11,11 +11,16 @@ type StringTypeMap<T> = {
 export type DevicesAsStrings = StringTypeMap<Devices>;
 
 /**
- * The `value` should be formatted as volume-123, disk-123, etc.,
+ * Creates a device record from a string representation.
+ *
+ * Device slots are optional and may not exist
+ * in all contexts, so empty slots can be represented as `undefined`.
  */
-const createTypeRecord = (value?: string): DiskRecord | null | VolumeRecord => {
-  if (value === null || value === undefined || value === 'none') {
-    return null;
+const createTypeRecord = (
+  value?: string,
+): DiskRecord | null | undefined | VolumeRecord => {
+  if (value === undefined || value === null || value === 'none') {
+    return undefined;
   }
 
   // Given: volume-123
@@ -31,16 +36,6 @@ const createTypeRecord = (value?: string): DiskRecord | null | VolumeRecord => {
   return { [key]: idAsNumber } as DiskRecord | VolumeRecord; // -> { volume_id: 123 }
 };
 
-const createTypeRecordAllowUndefined = (
-  value?: string,
-): DiskRecord | null | undefined | VolumeRecord => {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  return createTypeRecord(value);
-};
-
 export const createDevicesFromStrings = (
   devices: DevicesAsStrings,
 ): Devices => ({
@@ -52,60 +47,60 @@ export const createDevicesFromStrings = (
   sdf: createTypeRecord(devices.sdf),
   sdg: createTypeRecord(devices.sdg),
   sdh: createTypeRecord(devices.sdh),
-  sdi: createTypeRecordAllowUndefined(devices.sdi),
-  sdj: createTypeRecordAllowUndefined(devices.sdj),
-  sdk: createTypeRecordAllowUndefined(devices.sdk),
-  sdl: createTypeRecordAllowUndefined(devices.sdl),
-  sdm: createTypeRecordAllowUndefined(devices.sdm),
-  sdn: createTypeRecordAllowUndefined(devices.sdn),
-  sdo: createTypeRecordAllowUndefined(devices.sdo),
-  sdp: createTypeRecordAllowUndefined(devices.sdp),
-  sdq: createTypeRecordAllowUndefined(devices.sdq),
-  sdr: createTypeRecordAllowUndefined(devices.sdr),
-  sds: createTypeRecordAllowUndefined(devices.sds),
-  sdt: createTypeRecordAllowUndefined(devices.sdt),
-  sdu: createTypeRecordAllowUndefined(devices.sdu),
-  sdv: createTypeRecordAllowUndefined(devices.sdv),
-  sdw: createTypeRecordAllowUndefined(devices.sdw),
-  sdx: createTypeRecordAllowUndefined(devices.sdx),
-  sdy: createTypeRecordAllowUndefined(devices.sdy),
-  sdz: createTypeRecordAllowUndefined(devices.sdz),
-  sdaa: createTypeRecordAllowUndefined(devices.sdaa),
-  sdab: createTypeRecordAllowUndefined(devices.sdab),
-  sdac: createTypeRecordAllowUndefined(devices.sdac),
-  sdad: createTypeRecordAllowUndefined(devices.sdad),
-  sdae: createTypeRecordAllowUndefined(devices.sdae),
-  sdaf: createTypeRecordAllowUndefined(devices.sdaf),
-  sdag: createTypeRecordAllowUndefined(devices.sdag),
-  sdah: createTypeRecordAllowUndefined(devices.sdah),
-  sdai: createTypeRecordAllowUndefined(devices.sdai),
-  sdaj: createTypeRecordAllowUndefined(devices.sdaj),
-  sdak: createTypeRecordAllowUndefined(devices.sdak),
-  sdal: createTypeRecordAllowUndefined(devices.sdal),
-  sdam: createTypeRecordAllowUndefined(devices.sdam),
-  sdan: createTypeRecordAllowUndefined(devices.sdan),
-  sdao: createTypeRecordAllowUndefined(devices.sdao),
-  sdap: createTypeRecordAllowUndefined(devices.sdap),
-  sdaq: createTypeRecordAllowUndefined(devices.sdaq),
-  sdar: createTypeRecordAllowUndefined(devices.sdar),
-  sdas: createTypeRecordAllowUndefined(devices.sdas),
-  sdat: createTypeRecordAllowUndefined(devices.sdat),
-  sdau: createTypeRecordAllowUndefined(devices.sdau),
-  sdav: createTypeRecordAllowUndefined(devices.sdav),
-  sdaw: createTypeRecordAllowUndefined(devices.sdaw),
-  sdax: createTypeRecordAllowUndefined(devices.sdax),
-  sday: createTypeRecordAllowUndefined(devices.sday),
-  sdaz: createTypeRecordAllowUndefined(devices.sdaz),
-  sdba: createTypeRecordAllowUndefined(devices.sdba),
-  sdbb: createTypeRecordAllowUndefined(devices.sdbb),
-  sdbc: createTypeRecordAllowUndefined(devices.sdbc),
-  sdbd: createTypeRecordAllowUndefined(devices.sdbd),
-  sdbe: createTypeRecordAllowUndefined(devices.sdbe),
-  sdbf: createTypeRecordAllowUndefined(devices.sdbf),
-  sdbg: createTypeRecordAllowUndefined(devices.sdbg),
-  sdbh: createTypeRecordAllowUndefined(devices.sdbh),
-  sdbi: createTypeRecordAllowUndefined(devices.sdbi),
-  sdbj: createTypeRecordAllowUndefined(devices.sdbj),
-  sdbk: createTypeRecordAllowUndefined(devices.sdbk),
-  sdbl: createTypeRecordAllowUndefined(devices.sdbl),
+  sdi: createTypeRecord(devices.sdi),
+  sdj: createTypeRecord(devices.sdj),
+  sdk: createTypeRecord(devices.sdk),
+  sdl: createTypeRecord(devices.sdl),
+  sdm: createTypeRecord(devices.sdm),
+  sdn: createTypeRecord(devices.sdn),
+  sdo: createTypeRecord(devices.sdo),
+  sdp: createTypeRecord(devices.sdp),
+  sdq: createTypeRecord(devices.sdq),
+  sdr: createTypeRecord(devices.sdr),
+  sds: createTypeRecord(devices.sds),
+  sdt: createTypeRecord(devices.sdt),
+  sdu: createTypeRecord(devices.sdu),
+  sdv: createTypeRecord(devices.sdv),
+  sdw: createTypeRecord(devices.sdw),
+  sdx: createTypeRecord(devices.sdx),
+  sdy: createTypeRecord(devices.sdy),
+  sdz: createTypeRecord(devices.sdz),
+  sdaa: createTypeRecord(devices.sdaa),
+  sdab: createTypeRecord(devices.sdab),
+  sdac: createTypeRecord(devices.sdac),
+  sdad: createTypeRecord(devices.sdad),
+  sdae: createTypeRecord(devices.sdae),
+  sdaf: createTypeRecord(devices.sdaf),
+  sdag: createTypeRecord(devices.sdag),
+  sdah: createTypeRecord(devices.sdah),
+  sdai: createTypeRecord(devices.sdai),
+  sdaj: createTypeRecord(devices.sdaj),
+  sdak: createTypeRecord(devices.sdak),
+  sdal: createTypeRecord(devices.sdal),
+  sdam: createTypeRecord(devices.sdam),
+  sdan: createTypeRecord(devices.sdan),
+  sdao: createTypeRecord(devices.sdao),
+  sdap: createTypeRecord(devices.sdap),
+  sdaq: createTypeRecord(devices.sdaq),
+  sdar: createTypeRecord(devices.sdar),
+  sdas: createTypeRecord(devices.sdas),
+  sdat: createTypeRecord(devices.sdat),
+  sdau: createTypeRecord(devices.sdau),
+  sdav: createTypeRecord(devices.sdav),
+  sdaw: createTypeRecord(devices.sdaw),
+  sdax: createTypeRecord(devices.sdax),
+  sday: createTypeRecord(devices.sday),
+  sdaz: createTypeRecord(devices.sdaz),
+  sdba: createTypeRecord(devices.sdba),
+  sdbb: createTypeRecord(devices.sdbb),
+  sdbc: createTypeRecord(devices.sdbc),
+  sdbd: createTypeRecord(devices.sdbd),
+  sdbe: createTypeRecord(devices.sdbe),
+  sdbf: createTypeRecord(devices.sdbf),
+  sdbg: createTypeRecord(devices.sdbg),
+  sdbh: createTypeRecord(devices.sdbh),
+  sdbi: createTypeRecord(devices.sdbi),
+  sdbj: createTypeRecord(devices.sdbj),
+  sdbk: createTypeRecord(devices.sdbk),
+  sdbl: createTypeRecord(devices.sdbl),
 });
