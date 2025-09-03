@@ -741,6 +741,9 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
+    const linodesWithFirewalls = linodeFactory.buildList(10, {
+      region: 'ap-west',
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -827,6 +830,7 @@ export const handlers = [
       id: 90909,
     });
     const linodes = [
+      ...linodesWithFirewalls,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
