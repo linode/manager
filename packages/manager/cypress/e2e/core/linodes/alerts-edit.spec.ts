@@ -2,8 +2,8 @@ import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAlertDefinition } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
+  interceptUpdateLinode,
   mockGetLinodeDetails,
-  mockUpdateLinode,
 } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -234,7 +234,7 @@ describe('region enables alerts', function () {
         // toggles in table are on but can be turned off
         assertLinodeAlertsEnabled(this.alertDefinitions);
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         ui.button
           .findByTitle('Save')
           .should('be.visible')
@@ -366,7 +366,7 @@ describe('region enables alerts', function () {
           .click({ multiple: true });
         ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         cy.scrollTo('bottom');
         // save changes
         ui.button
@@ -411,7 +411,7 @@ describe('region enables alerts', function () {
         // toggles in table are on but can be turned off
         assertLinodeAlertsEnabled(this.alertDefinitions);
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         ui.button
           .findByTitle('Save')
           .should('be.visible')
@@ -492,7 +492,7 @@ describe('region enables alerts', function () {
             });
           });
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         ui.button
           .findByTitle('Save')
           .should('be.visible')
