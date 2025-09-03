@@ -1,5 +1,5 @@
 import { useFirewallQuery } from '@linode/queries';
-import { Divider, Stack, Typography } from '@linode/ui';
+import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -66,7 +66,7 @@ export const NodePoolFooter = (props: Props) => {
 
   return (
     <NodePoolTableFooter>
-      <Stack direction="column" width="100%">
+      <Box>
         <Stack
           alignItems="center"
           columnGap={{ sm: 2, xs: 1.5 }}
@@ -74,7 +74,8 @@ export const NodePoolFooter = (props: Props) => {
           divider={
             <Divider flexItem orientation="vertical" sx={{ height: '20px' }} />
           }
-          flexWrap={{ sm: 'unset', xs: 'wrap' }}
+          flexWrap="wrap"
+          maxWidth="100%"
           rowGap={1}
         >
           <Typography sx={{ textWrap: 'nowrap' }}>
@@ -105,15 +106,15 @@ export const NodePoolFooter = (props: Props) => {
             <NodePoolEncryptionStatus encryptionStatus={encryptionStatus} />
           )}
         </Stack>
-        <TagCell
-          disabled={isLkeClusterRestricted}
-          entity="Node Pool"
-          sx={{ justifyContent: 'flex-end' }}
-          tags={tags}
-          updateTags={updateTags}
-          view="inline"
-        />
-      </Stack>
+      </Box>
+      <TagCell
+        disabled={isLkeClusterRestricted}
+        entity="Node Pool"
+        sx={{ flex: 1, minWidth: '200px', maxWidth: '100%' }}
+        tags={tags}
+        updateTags={updateTags}
+        view="inline"
+      />
     </NodePoolTableFooter>
   );
 };
