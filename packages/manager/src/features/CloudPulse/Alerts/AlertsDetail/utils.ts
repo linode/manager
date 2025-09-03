@@ -62,9 +62,9 @@ export const isCheckRequired = (
   return (
     ruleCriteria.rules?.some((rule) =>
       rule.dimension_filters?.some(
-        (dimension) =>
-          dimension.dimension_label === label &&
-          transformationAllowedOperators.includes(dimension.operator ?? '')
+        ({ operator, dimension_label: dimensionLabel }) =>
+          dimensionLabel === label &&
+          transformationAllowedOperators.includes(operator ?? '')
       )
     ) ?? false
   );
