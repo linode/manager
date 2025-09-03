@@ -1,13 +1,18 @@
-import { destinationType } from '@linode/api-v4';
+import { destinationType, streamStatus, streamType } from '@linode/api-v4';
 
-import type { CreateDestinationPayload } from '@linode/api-v4';
+import type {
+  CreateDestinationPayload,
+  UpdateDestinationPayload,
+} from '@linode/api-v4';
 
-export interface DestinationTypeOption {
+export type FormMode = 'create' | 'edit';
+
+export interface LabelValueOption {
   label: string;
   value: string;
 }
 
-export const destinationTypeOptions: DestinationTypeOption[] = [
+export const destinationTypeOptions: LabelValueOption[] = [
   {
     value: destinationType.CustomHttps,
     label: 'Custom HTTPS',
@@ -18,4 +23,28 @@ export const destinationTypeOptions: DestinationTypeOption[] = [
   },
 ];
 
-export type CreateDestinationForm = CreateDestinationPayload;
+export const streamTypeOptions: LabelValueOption[] = [
+  {
+    value: streamType.AuditLogs,
+    label: 'Audit Logs',
+  },
+  {
+    value: streamType.LKEAuditLogs,
+    label: 'Kubernetes Audit Logs',
+  },
+];
+
+export const streamStatusOptions: LabelValueOption[] = [
+  {
+    value: streamStatus.Active,
+    label: 'Enabled',
+  },
+  {
+    value: streamStatus.Inactive,
+    label: 'Disabled',
+  },
+];
+
+export type DestinationFormType =
+  | CreateDestinationPayload
+  | UpdateDestinationPayload;

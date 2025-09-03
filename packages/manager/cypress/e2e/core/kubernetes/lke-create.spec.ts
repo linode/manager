@@ -17,8 +17,15 @@ import {
   dcPricingPlanPlaceholder,
 } from 'support/constants/dc-specific-pricing';
 import {
+  clusterPlans,
+  dedicatedNodeCount,
+  dedicatedType,
   latestEnterpriseTierKubernetesVersion,
   latestKubernetesVersion,
+  mockedLKEClusterTypes,
+  mockedLKEEnterprisePrices,
+  nanodeNodeCount,
+  nanodeType,
 } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -50,8 +57,6 @@ import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
-  lkeEnterpriseTypeFactory,
-  lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
 import {
@@ -62,11 +67,7 @@ import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kube
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import type { PriceType } from '@linode/api-v4/lib/types';
-import type { ExtendedType } from 'src/utilities/extendType';
 import type { LkePlanDescription } from 'support/api/lke';
-
-const dedicatedNodeCount = 4;
-const nanodeNodeCount = 3;
 
 const clusterRegion = chooseRegion({
   capabilities: ['Kubernetes'],
@@ -82,46 +83,7 @@ const nanodeMemoryPool = nodePoolFactory.build({
   nodes: kubeLinodeFactory.buildList(nanodeNodeCount),
   type: 'g6-standard-1',
 });
-const dedicatedType = dedicatedTypeFactory.build({
-  disk: 81920,
-  id: 'g6-dedicated-2',
-  label: 'Dedicated 4 GB',
-  memory: 4096,
-  price: {
-    hourly: 0.054,
-    monthly: 36.0,
-  },
-  region_prices: dcPricingMockLinodeTypes.find(
-    (type) => type.id === 'g6-dedicated-2'
-  )?.region_prices,
-  vcpus: 2,
-}) as ExtendedType;
-const nanodeType = linodeTypeFactory.build({
-  disk: 51200,
-  id: 'g6-standard-1',
-  label: 'Linode 2 GB',
-  memory: 2048,
-  price: {
-    hourly: 0.0095,
-    monthly: 12.0,
-  },
-  region_prices: dcPricingMockLinodeTypes.find(
-    (type) => type.id === 'g6-standard-1'
-  )?.region_prices,
-  vcpus: 1,
-}) as ExtendedType;
-const gpuType = linodeTypeFactory.build({
-  class: 'gpu',
-  id: 'g2-gpu-1',
-}) as ExtendedType;
-const highMemType = linodeTypeFactory.build({
-  class: 'highmem',
-  id: 'g7-highmem-1',
-}) as ExtendedType;
-const premiumType = linodeTypeFactory.build({
-  class: 'premium',
-  id: 'g7-premium-1',
-}) as ExtendedType;
+
 const mockedLKEClusterPrices: PriceType[] = [
   {
     id: 'lke-sa',
@@ -146,33 +108,7 @@ const mockedLKEHAClusterPrices: PriceType[] = [
     transfer: 0,
   },
 ];
-const mockedLKEEnterprisePrices = [
-  lkeHighAvailabilityTypeFactory.build(),
-  lkeEnterpriseTypeFactory.build(),
-];
-const clusterPlans: LkePlanDescription[] = [
-  {
-    nodeCount: dedicatedNodeCount,
-    planName: 'Dedicated 4 GB',
-    size: 4,
-    tab: 'Dedicated CPU',
-    type: 'dedicated',
-  },
-  {
-    nodeCount: nanodeNodeCount,
-    planName: 'Linode 2 GB',
-    size: 24,
-    tab: 'Shared CPU',
-    type: 'standard',
-  },
-];
-const mockedLKEClusterTypes = [
-  dedicatedType,
-  nanodeType,
-  gpuType,
-  highMemType,
-  premiumType,
-];
+
 const validEnterprisePlanTabs = [
   'Dedicated CPU',
   'Shared CPU',
@@ -185,12 +121,18 @@ describe('LKE Cluster Creation', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise: {
+        enabled: true,
+        la: true,
+        postLa: false,
+        phase2Mtc: true,
+      },
     }).as('getFeatureFlags');
   });
 
   /*
    * - Confirms that users can create a cluster by completing the LKE create form.
+   * - Confirms that no IP Stack or VPC options are visible for standard tier clusters (LKE-E only).
    * - Confirms that LKE cluster is created.
    * - Confirms that user is redirected to new LKE cluster summary page.
    * - Confirms that correct information is shown on the LKE cluster summary page
@@ -263,6 +205,15 @@ describe('LKE Cluster Creation', () => {
 
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
+    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display for a standard LKE cluster.
+    cy.findByText('IP Stack').should('not.exist');
+    cy.findByText('IPv4', { exact: true }).should('not.exist');
+    cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
+    cy.findByText('Automatically generate a VPC for this cluster').should(
+      'not.exist'
+    );
+    cy.findByText('Use an existing VPC').should('not.exist');
+
     let monthPrice = 0;
 
     // Confirm the expected available plans display.
@@ -333,12 +284,19 @@ describe('LKE Cluster Creation', () => {
           .click();
       });
 
+    // Confirm request payload does not include LKE-E-specific values.
+    cy.wait('@createCluster').then((intercept) => {
+      const payload = intercept.request.body;
+      expect(payload.stack_type).to.be.undefined;
+      expect(payload.vpc_id).to.be.undefined;
+      expect(payload.subnet_id).to.be.undefined;
+    });
+
     // Wait for LKE cluster to be created and confirm that we are redirected
     // to the cluster summary page.
     cy.wait([
       '@getCluster',
       '@getClusterPools',
-      '@createCluster',
       '@getLKEClusterTypes',
       '@getDashboardUrl',
       '@getControlPlaneACL',

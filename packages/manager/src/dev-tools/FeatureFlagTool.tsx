@@ -46,6 +46,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },
   { flag: 'databasePremium', label: 'Database Premium' },
+  {
+    flag: 'databaseRestrictPlanResize',
+    label: 'Database Restrict Premium Plan Resize',
+  },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
   { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
@@ -57,6 +61,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'vmHostMaintenance',
     label: 'VM Host Maintenance Policy',
   },
+  { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
 

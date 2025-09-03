@@ -16,6 +16,8 @@ import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
+
 import type { EventStatus } from '@linode/api-v4';
 import type { RecPartial } from 'factory.ts';
 
@@ -121,7 +123,7 @@ const uploadImage = (label: string) => {
   // See also BAC-862.
   const region = chooseRegion({
     capabilities: ['Object Storage'],
-    exclude: ['au-mel', 'gb-lon', 'sg-sin-2'],
+    exclude: DISALLOWED_IMAGE_REGIONS,
   });
   const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
@@ -193,9 +195,10 @@ describe('machine image', () => {
         .findByTitle(`Action menu for Image ${initialLabel}`)
         .should('be.visible')
         .click();
+
+      ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
     });
 
-    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
     cy.wait('@getImage');
 
     mockUpdateImage(mockImage.id, mockImageUpdated).as('updateImage');
@@ -219,6 +222,10 @@ describe('machine image', () => {
       });
 
     cy.wait(['@getImages', '@updateImage']);
+
+    mockDeleteImage(mockImage.id).as('deleteImage');
+    mockGetCustomImages([]).as('getImages');
+
     cy.get(`[data-qa-image-cell="${mockImage.id}"]`).within(() => {
       cy.findByText(updatedLabel).should('be.visible');
       cy.findByText(initialLabel).should('not.exist');
@@ -226,18 +233,20 @@ describe('machine image', () => {
         .findByTitle(`Action menu for Image ${updatedLabel}`)
         .should('be.visible')
         .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     });
-
-    mockDeleteImage(mockImage.id).as('deleteImage');
-    mockGetCustomImages([]).as('getImages');
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog
       .findByTitle(`Delete Image ${updatedLabel}`)
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Image Label')
+          .should('be.visible')
+          .should('be.enabled')
+          .type(updatedLabel);
+
         ui.buttonGroup
-          .findButtonByTitle('Delete Image')
+          .findButtonByTitle('Delete')
           .should('be.visible')
           .should('be.enabled')
           .click();

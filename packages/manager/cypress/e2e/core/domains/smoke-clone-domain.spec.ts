@@ -64,8 +64,8 @@ describe('Clone a Domain', () => {
               .findByTitle(`Action menu for Domain ${domain.domain}`)
               .should('be.visible')
               .click();
+            ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
           });
-        ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
 
         // Cancel cloning when prompted to confirm.
         ui.drawer
@@ -88,8 +88,8 @@ describe('Clone a Domain', () => {
               .findByTitle(`Action menu for Domain ${domain.domain}`)
               .should('be.visible')
               .click();
+            ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
           });
-        ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
 
         // Confirm cloning.
         ui.drawer

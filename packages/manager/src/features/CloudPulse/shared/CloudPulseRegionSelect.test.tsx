@@ -1,5 +1,9 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import {
+  linodeFactory,
+  nodeBalancerFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -7,6 +11,7 @@ import * as React from 'react';
 import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { NO_REGION_MESSAGE } from '../Utils/constants';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
@@ -14,6 +19,8 @@ import type { Region } from '@linode/api-v4';
 import type { useRegionsQuery } from '@linode/queries';
 
 const props: CloudPulseRegionSelectProps = {
+  filterKey: 'region',
+  selectedEntities: [],
   handleRegionChange: vi.fn(),
   label: 'Region',
   selectedDashboard: undefined,
@@ -152,13 +159,6 @@ describe('CloudPulseRegionSelect', () => {
     });
     renderWithTheme(<CloudPulseRegionSelect {...props} />);
 
-    expect(queryMocks.useResourcesQuery).toHaveBeenLastCalledWith(
-      false,
-      undefined,
-      {},
-      {}
-    ); // use resources should have called with enabled false since the region call failed
-
     const errorMessage = screen.getByText('Failed to fetch Region.'); // should show regions failure only
 
     expect(errorMessage).not.toBeNull();
@@ -212,5 +212,77 @@ describe('CloudPulseRegionSelect', () => {
         name: 'US, Miami, FL (us-mia)',
       })
     ).toBeNull();
+  });
+
+  it('should render a Region Select component with correct info message when no regions are available for dbaas service type', async () => {
+    const user = userEvent.setup();
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: databaseInstanceFactory.buildList(3, {
+        region: 'ap-west',
+      }),
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        selectedDashboard={dashboardFactory.build({ service_type: 'dbaas' })}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText(NO_REGION_MESSAGE['dbaas'])).toBeVisible();
+  });
+
+  it('should render a Region Select component with correct info message when no regions are available for linode service type', async () => {
+    const user = userEvent.setup();
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(3, {
+        region: 'ap-west',
+      }),
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        selectedDashboard={dashboardFactory.build({ service_type: 'linode' })}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText(NO_REGION_MESSAGE['linode'])).toBeVisible();
+  });
+
+  it('should render a Region Select component with correct info message when no regions are available for nodebalancer service type', async () => {
+    const user = userEvent.setup();
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: nodeBalancerFactory.buildList(3, {
+        region: 'ap-west',
+      }),
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'nodebalancer',
+        })}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText(NO_REGION_MESSAGE['nodebalancer'])).toBeVisible();
+  });
+
+  it('should render a Region Select component with correct info message when no regions are available for firewall service type', async () => {
+    const user = userEvent.setup();
+    // There are no aclp supported regions for firewall service type as returned by useRegionsQuery above
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        selectedDashboard={dashboardFactory.build({ service_type: 'firewall' })}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText(NO_REGION_MESSAGE['firewall'])).toBeVisible();
   });
 });

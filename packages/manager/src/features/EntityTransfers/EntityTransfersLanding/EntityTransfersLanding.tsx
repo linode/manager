@@ -3,14 +3,15 @@ import { CircleProgress } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
 import { TransferControls } from './TransferControls';
 
-import type { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import type { EntityTransfer } from '@linode/api-v4';
 
 export const EntityTransfersLanding = () => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
@@ -20,12 +21,17 @@ export const EntityTransfersLanding = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const flags = useFlags();
+
+  const url = flags?.iamRbacPrimaryNavChanges
+    ? '/service-transfers'
+    : '/account/service-transfers';
 
   const handleCloseSuccessDialog = () => {
     setSuccessDialogOpen(false);
     setTransfer(undefined);
     navigate({
-      to: '/account/service-transfers',
+      to: url,
       state: (prev) => ({ ...prev, transfer: undefined }),
     });
   };
@@ -47,19 +53,19 @@ export const EntityTransfersLanding = () => {
 
   const paginationPendingTransfers = usePaginationV2({
     initialPage,
-    currentRoute: '/account/service-transfers',
+    currentRoute: url,
     preferenceKey: pendingTransfersTablePreferenceKey,
     queryParamsPrefix: pendingTransfersTablePreferenceKey,
   });
   const paginationReceivedTransfers = usePaginationV2({
     initialPage,
-    currentRoute: '/account/service-transfers',
+    currentRoute: url,
     preferenceKey: receivedTransfersTablePreferenceKey,
     queryParamsPrefix: receivedTransfersTablePreferenceKey,
   });
   const paginationSentTransfers = usePaginationV2({
     initialPage,
-    currentRoute: '/account/service-transfers',
+    currentRoute: url,
     preferenceKey: sentTransfersTablePreferenceKey,
     queryParamsPrefix: sentTransfersTablePreferenceKey,
   });
@@ -114,10 +120,15 @@ export const EntityTransfersLanding = () => {
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
   const sentTransfersResults = sentTransfersData?.results ?? 0;
 
+  const { data: permissions } = usePermissions('account', [
+    'accept_service_transfer',
+    'create_service_transfer',
+    'cancel_service_transfer',
+  ]);
+
   return (
     <div style={{ overflowX: 'hidden' }}>
-      <DocumentTitleSegment segment="Transfers" />
-      <TransferControls />
+      <TransferControls permissions={permissions} />
       <CreateTransferSuccessDialog
         isOpen={successDialogOpen}
         onClose={handleCloseSuccessDialog}
@@ -139,6 +150,7 @@ export const EntityTransfersLanding = () => {
               isLoading={pendingTransfersLoading}
               page={paginationPendingTransfers.page}
               pageSize={paginationPendingTransfers.pageSize}
+              permissions={permissions}
               results={pendingTransfersResults}
               transfers={pendingTransfers}
               transferType="pending"

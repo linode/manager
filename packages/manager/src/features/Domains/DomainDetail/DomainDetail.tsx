@@ -4,6 +4,7 @@ import {
   useUpdateDomainMutation,
 } from '@linode/queries';
 import {
+  Button,
   CircleProgress,
   ErrorState,
   Notice,
@@ -20,7 +21,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import { DeleteDomain } from '../DeleteDomain';
+import { DeleteDomainDialog } from '../DeleteDomainDialog';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 import { DomainRecords } from './DomainRecords/DomainRecords';
 
@@ -35,6 +36,7 @@ export const DomainDetail = () => {
   const {
     data: domain,
     error,
+    isFetching: isFetchingDomain,
     isLoading,
   } = useDomainQuery(domainId, !!domainId);
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
@@ -52,6 +54,8 @@ export const DomainDetail = () => {
   });
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
+  const [isDeleteDomainDialogOpen, setDeleteDomainDialogOpen] =
+    React.useState(false);
 
   const handleLabelChange = (label: string) => {
     setUpdateError(undefined);
@@ -140,17 +144,27 @@ export const DomainDetail = () => {
             </StyledTypography>
             <TagCell
               disabled={isDomainReadOnly}
+              entity="Domain"
               tags={domain.tags}
               updateTags={handleUpdateTags}
               view="panel"
             />
           </StyledPaper>
           <StyledDiv>
-            <DeleteDomain
+            <StyledButton
+              buttonType="outlined"
+              onClick={() => setDeleteDomainDialogOpen(true)}
+            >
+              Delete Domain
+            </StyledButton>
+            <DeleteDomainDialog
               domainError={error}
               domainId={domain.id}
               domainLabel={domain.domain}
+              isFetching={isFetchingDomain}
+              onClose={() => setDeleteDomainDialogOpen(false)}
               onSuccess={() => navigate({ to: '/domains' })}
+              open={isDeleteDomainDialogOpen}
             />
           </StyledDiv>
         </StyledTagSectionGrid>
@@ -207,5 +221,11 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   justifyContent: 'flex-end',
   [theme.breakpoints.down('lg')]: {
     marginLeft: theme.spacing(),
+  },
+}));
+
+const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    marginRight: theme.spacing(),
   },
 }));

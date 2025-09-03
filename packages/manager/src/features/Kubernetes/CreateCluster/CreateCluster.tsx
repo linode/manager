@@ -148,6 +148,7 @@ export const CreateCluster = () => {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
     isLkeEnterprisePhase2FeatureEnabled,
+    isLkeEnterprisePostLAFeatureEnabled,
   } = useIsLkeEnterpriseEnabled();
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
@@ -278,7 +279,7 @@ export const CreateCluster = () => {
     setSubmitting(true);
 
     const node_pools = nodePools.map(
-      pick(['type', 'count', 'update_strategy'])
+      pick(['type', 'count', 'update_strategy', 'firewall_id'])
     ) as CreateNodePoolData[];
 
     const vpcId = form.getValues('vpc_id');
@@ -347,7 +348,11 @@ export const CreateCluster = () => {
       : createKubernetesCluster;
 
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
-    if (isLkeEnterprisePhase2FeatureEnabled && selectedTier === 'enterprise') {
+    if (
+      (isLkeEnterprisePostLAFeatureEnabled ||
+        isLkeEnterprisePhase2FeatureEnabled) &&
+      selectedTier === 'enterprise'
+    ) {
       // Trigger the React Hook Form validation for BYO VPC selection.
       const isValid = await trigger();
       // Don't submit the form while RHF errors persist.
@@ -522,7 +527,7 @@ export const CreateCluster = () => {
                       ? 'Only regions that support LKE Enterprise clusters are listed.'
                       : undefined
                   }
-                  value={selectedRegion?.id}
+                  value={selectedRegion?.id || null}
                 />
               </Stack>
               <StyledDocsLinkContainer

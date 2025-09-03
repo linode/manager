@@ -1,11 +1,7 @@
 import { type Service } from '@linode/api-v4';
 import { Factory } from '@linode/utilities';
 
-import type {
-  CloudPulseServiceType,
-
-  ServiceAlert,
-} from '@linode/api-v4';
+import type { CloudPulseServiceType, ServiceAlert } from '@linode/api-v4';
 
 const serviceTypes: CloudPulseServiceType[] = [
   'linode',

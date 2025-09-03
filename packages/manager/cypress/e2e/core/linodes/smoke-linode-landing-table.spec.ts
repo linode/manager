@@ -69,9 +69,9 @@ const preferenceOverrides = {
 authenticate();
 describe('linode landing checks', () => {
   beforeEach(() => {
-    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
+      iamRbacPrimaryNavChanges: true,
     });
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
@@ -103,8 +103,9 @@ describe('linode landing checks', () => {
     cy.findByTestId('menu-item-Object Storage').should('be.visible');
     cy.findByTestId('menu-item-Longview').should('be.visible');
     cy.findByTestId('menu-item-Marketplace').should('be.visible');
-    cy.findByTestId('menu-item-Account').scrollIntoView();
-    cy.findByTestId('menu-item-Account').should('be.visible');
+    cy.findByTestId('menu-item-Billing').scrollIntoView();
+    cy.findByTestId('menu-item-Billing').should('be.visible');
+    cy.findByTestId('menu-item-Account Settings').should('be.visible');
     cy.findByTestId('menu-item-Help & Support').should('be.visible');
   });
 
@@ -474,9 +475,9 @@ describe('linode landing checks', () => {
 
 describe('linode landing checks for empty state', () => {
   beforeEach(() => {
-    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
+      iamRbacPrimaryNavChanges: true,
     });
     // Mock setup to display the Linode landing page in an empty state
     mockGetLinodes([]).as('getLinodes');
@@ -580,9 +581,9 @@ describe('linode landing checks for empty state', () => {
 
 describe('linode landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
-    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
+    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
+      iamRbacPrimaryNavChanges: true,
     });
     // Mock setup to display the Linode landing page in an non-empty state
     const mockLinodes: Linode[] = new Array(1)

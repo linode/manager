@@ -8,6 +8,7 @@ import {
   mockGetUserGrantsUnrestrictedAccess,
   mockGetUsers,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetProfile,
   mockGetProfileGrants,
@@ -79,6 +80,13 @@ const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
 };
 
 describe('Users landing page', () => {
+  beforeEach(() => {
+    // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: true,
+    }).as('getFeatureFlags');
+  });
+
   /*
    * Confirm the visibility and status of the "Child account access" column for the following users:
    *   - Unrestricted parent user (Enabled)
@@ -97,7 +105,7 @@ describe('Users landing page', () => {
     const mockUsers = initTestUsers(mockProfile, true);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm that "Child account access" column is present
@@ -130,7 +138,7 @@ describe('Users landing page', () => {
     initTestUsers(mockProfile, true);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
 
     // Confirm that "Child account access" column is present
     cy.findByText('Child Account Access').should('be.visible');
@@ -146,7 +154,7 @@ describe('Users landing page', () => {
     initTestUsers(mockProfile, false);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
 
     // Confirm that "Child account access" column is not present
     cy.findByText('Child Account Access').should('not.exist');
@@ -161,7 +169,7 @@ describe('Users landing page', () => {
     initTestUsers(mockProfile, false);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm that "Child account access" column is not present
@@ -178,7 +186,7 @@ describe('Users landing page', () => {
     initTestUsers(mockProfile, false);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm that "Child account access" column is not present
@@ -195,7 +203,7 @@ describe('Users landing page', () => {
     initTestUsers(mockProfile, false);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm that "Child account access" column is not present
@@ -224,7 +232,7 @@ describe('Users landing page', () => {
     mockGetProfile(mockProfile);
 
     // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm the "Parent User Settings" and "User Settings" sections are not present.
@@ -236,7 +244,7 @@ describe('Users landing page', () => {
    * Confirm the Users & Grants and User Permissions pages flow for a child account viewing a proxy user.
    * Confirm that "Parent User Settings" and "User Settings" sections are present on the Users & Grants page.
    * Confirm that proxy accounts are listed under "Parent User Settings".
-   * Confirm that clicking the "Manage Access" button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
+   * Confirm that clicking the "Manage Access" button navigates to the proxy user's User Permissions page at /users/:user/permissions.
    */
   it('tests the users landing flow for a child account viewing a proxy user', () => {
     const mockChildProfile = profileFactory.build({
@@ -267,7 +275,7 @@ describe('Users landing page', () => {
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
     // Navigate to Users & Grants page and confirm "Parent User Settings" and "User Settings" sections are visible.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
     cy.findByText(`${PARENT_USER} Settings`).should('be.visible');
     cy.findByText('User Settings').should('be.visible');
@@ -288,10 +296,10 @@ describe('Users landing page', () => {
           });
       });
 
-    // Confirm button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
+    // Confirm button navigates to the proxy user's User Permissions page at /users/:user/permissions.
     cy.url().should(
       'endWith',
-      `/account/users/${mockRestrictedProxyUser.username}/permissions`
+      `/users/${mockRestrictedProxyUser.username}/permissions`
     );
   });
 
@@ -314,7 +322,7 @@ describe('Users landing page', () => {
     mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm that the "Users & Grants" page initially lists the main user
@@ -449,7 +457,7 @@ describe('Users landing page', () => {
     mockAddUser(newUser).as('addUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     // Confirm that the "Users & Grants" page initially lists the main user
@@ -565,7 +573,7 @@ describe('Users landing page', () => {
     mockDeleteUser(additionalUser.username).as('deleteUser');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
 
     mockGetUsers([mockUser]).as('getUsers');

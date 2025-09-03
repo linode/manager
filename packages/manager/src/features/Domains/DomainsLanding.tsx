@@ -1,18 +1,11 @@
 import {
-  useDeleteDomainMutation,
   useDomainQuery,
   useDomainsQuery,
   useLinodesQuery,
   useProfile,
   useUpdateDomainMutation,
 } from '@linode/queries';
-import {
-  Button,
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { Button, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import {
@@ -33,7 +26,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -44,6 +36,7 @@ import {
   DOMAINS_TABLE_DEFAULT_ORDER_BY,
   DOMAINS_TABLE_PREFERENCE_KEY,
 } from './constants';
+import { DeleteDomainDialog } from './DeleteDomainDialog';
 import { DisableDomainDialog } from './DisableDomainDialog';
 import { DomainBanner } from './DomainBanner';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
@@ -122,12 +115,6 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
     error: domainError,
   } = useDomainQuery(params.domainId ?? -1, !!params.domainId);
 
-  const {
-    error: deleteError,
-    isPending: isDeleting,
-    mutateAsync: deleteDomain,
-  } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
-
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
   const navigateToDomains = () => {
@@ -178,12 +165,6 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       params: { action: 'delete', domainId: domain.id },
       search: (prev) => prev,
       to: `/domains/$domainId/$action`,
-    });
-  };
-
-  const removeDomain = () => {
-    deleteDomain().then(() => {
-      navigateToDomains();
     });
   };
 
@@ -364,35 +345,20 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         onClose={navigateToDomains}
         open={params.action === 'edit'}
       />
-      <TypeToConfirmDialog
-        entity={{
-          action: 'deletion',
-          error: domainError,
-          name: selectedDomain?.domain ?? 'Unknown',
-          primaryBtnText: 'Delete Domain',
-          type: 'Domain',
-        }}
-        errors={deleteError}
+      <DeleteDomainDialog
+        domainError={domainError}
+        domainId={selectedDomain?.id}
+        domainLabel={selectedDomain?.domain}
         isFetching={isFetchingDomain}
-        label="Domain Name"
-        loading={isDeleting}
-        onClick={removeDomain}
         onClose={navigateToDomains}
+        onSuccess={() => navigateToDomains()}
         open={params.action === 'delete'}
-        title={`Delete Domain ${selectedDomain?.domain ?? 'Unknown'}?`}
-      >
-        <Notice variant="warning">
-          <Typography>
-            <strong>Warning:</strong> Deleting this domain is permanent and
-            can’t be undone.
-          </Typography>
-        </Notice>
-      </TypeToConfirmDialog>
+      />
     </>
   );
 };
 
 const StyledButon = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
-  marginLeft: `-${theme.spacing()}`,
+  marginLeft: `-${theme.spacingFunction()}`,
   whiteSpace: 'nowrap',
 }));

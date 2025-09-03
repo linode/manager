@@ -81,6 +81,11 @@ export interface CloudPulseWidgetProperties {
   isJweTokenFetching: boolean;
 
   /**
+   * Selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
    * List of resources available of selected service type
    */
   resources: CloudPulseResources[];
@@ -150,6 +155,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     timeStamp,
     unit,
     widget: widgetProp,
+    linodeRegion,
   } = props;
 
   const timezone =
@@ -245,6 +251,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
+        linodeRegion,
       }),
       filters, // any additional dimension filters will be constructed and passed here
     },
@@ -269,6 +276,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       status,
       unit,
+      serviceType,
+      groupBy: widgetProp.group_by,
     });
 
     data = generatedData.dimensions;

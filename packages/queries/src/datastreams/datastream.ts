@@ -1,10 +1,14 @@
 import {
   createDestination,
   createStream,
+  deleteDestination,
+  deleteStream,
   getDestination,
   getDestinations,
   getStream,
   getStreams,
+  updateDestination,
+  updateStream,
 } from '@linode/api-v4';
 import { profileQueries } from '@linode/queries';
 import { getAll } from '@linode/utilities';
@@ -20,6 +24,8 @@ import type {
   Params,
   ResourcePage,
   Stream,
+  UpdateDestinationPayloadWithId,
+  UpdateStreamPayloadWithId,
 } from '@linode/api-v4';
 
 export const getAllDataStreams = (
@@ -83,14 +89,20 @@ export const useStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
     ...datastreamQueries.streams._ctx.paginated(params, filter),
   });
 
+export const useStreamQuery = (id: number) =>
+  useQuery<Stream, APIError[]>({ ...datastreamQueries.stream(id) });
+
 export const useCreateStreamMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Stream, APIError[], CreateStreamPayload>({
     mutationFn: createStream,
     onSuccess(stream) {
-      // Invalidate paginated lists
+      // Invalidate streams
       queryClient.invalidateQueries({
         queryKey: datastreamQueries.streams._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams._ctx.all._def,
       });
 
       // Set Stream in cache
@@ -102,6 +114,49 @@ export const useCreateStreamMutation = () => {
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
         queryKey: profileQueries.grants.queryKey,
+      });
+    },
+  });
+};
+
+export const useUpdateStreamMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Stream, APIError[], UpdateStreamPayloadWithId>({
+    mutationFn: ({ id, ...data }) => updateStream(id, data),
+    onSuccess(stream) {
+      // Invalidate streams
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams._ctx.all._def,
+      });
+
+      // Update stream in cache
+      queryClient.setQueryData(
+        datastreamQueries.stream(stream.id).queryKey,
+        stream,
+      );
+    },
+  });
+};
+
+export const useDeleteStreamMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>({
+    mutationFn: ({ id }) => deleteStream(id),
+    onSuccess(_, { id }) {
+      // Invalidate streams
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.streams._ctx.all._def,
+      });
+
+      // Remove stream from the cache
+      queryClient.removeQueries({
+        queryKey: datastreamQueries.stream(id).queryKey,
       });
     },
   });
@@ -123,14 +178,20 @@ export const useDestinationsQuery = (
     ...datastreamQueries.destinations._ctx.paginated(params, filter),
   });
 
+export const useDestinationQuery = (id: number) =>
+  useQuery<Destination, APIError[]>({ ...datastreamQueries.destination(id) });
+
 export const useCreateDestinationMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Destination, APIError[], CreateDestinationPayload>({
     mutationFn: createDestination,
     onSuccess(destination) {
-      // Invalidate paginated lists
+      // Invalidate destinations
       queryClient.invalidateQueries({
         queryKey: datastreamQueries.destinations._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.destinations._ctx.all._def,
       });
 
       // Set Destination in cache
@@ -142,6 +203,49 @@ export const useCreateDestinationMutation = () => {
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
         queryKey: profileQueries.grants.queryKey,
+      });
+    },
+  });
+};
+
+export const useUpdateDestinationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Destination, APIError[], UpdateDestinationPayloadWithId>({
+    mutationFn: ({ id, ...data }) => updateDestination(id, data),
+    onSuccess(destination) {
+      // Invalidate destinations
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.destinations._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.destinations._ctx.all._def,
+      });
+
+      // Update destination in cache
+      queryClient.setQueryData(
+        datastreamQueries.destination(destination.id).queryKey,
+        destination,
+      );
+    },
+  });
+};
+
+export const useDeleteDestinationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>({
+    mutationFn: ({ id }) => deleteDestination(id),
+    onSuccess(_, { id }) {
+      // Invalidate destinations
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.destinations._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: datastreamQueries.destinations._ctx.all._def,
+      });
+
+      // Remove stream from the cache
+      queryClient.removeQueries({
+        queryKey: datastreamQueries.destination(id).queryKey,
       });
     },
   });

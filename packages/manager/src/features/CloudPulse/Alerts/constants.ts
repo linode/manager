@@ -61,15 +61,15 @@ export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
 
 export const metricAggregationOptions: Item<string, MetricAggregationType>[] = [
   {
-    label: 'Average',
+    label: 'Avg',
     value: 'avg',
   },
   {
-    label: 'Minimum',
+    label: 'Min',
     value: 'min',
   },
   {
-    label: 'Maximum',
+    label: 'Max',
     value: 'max',
   },
   {
@@ -91,16 +91,16 @@ export const dimensionOperatorOptions: Item<
     value: 'eq',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'Not Equal',
     value: 'neq',
   },
   {
     label: 'Starts with',
     value: 'startswith',
+  },
+  {
+    label: 'Ends with',
+    value: 'endswith',
   },
   {
     label: 'In',
@@ -145,10 +145,10 @@ export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   lte: '<=',
 };
 export const aggregationTypeMap: Record<MetricAggregationType, string> = {
-  avg: 'Average',
+  avg: 'Avg',
   count: 'Count',
-  max: 'Maximum',
-  min: 'Minimum',
+  max: 'Max',
+  min: 'Min',
   sum: 'Sum',
 };
 export const dimensionOperatorTypeMap: Record<
