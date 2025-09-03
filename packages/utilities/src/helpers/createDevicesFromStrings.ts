@@ -4,6 +4,11 @@ type DiskRecord = Record<'disk_id', number>;
 
 type VolumeRecord = Record<'volume_id', number>;
 
+/**
+ * Maps the Devices type to have optional string values instead of device objects.
+ * This allows us to work with string representations like "volume-123" or "disk-456"
+ * before converting them to the proper API format.
+ */
 type StringTypeMap<T> = {
   [key in keyof T]?: string;
 };
