@@ -13,9 +13,9 @@ import {
 
 import { invalidateAlerts } from 'src/features/CloudPulse/Alerts/Utils/utils';
 
-import { ServicePayloadBuilder, servicePayloadMap, useServiceAlertsMutation } from './alerts';
+import { useServiceAlertsMutation } from './alerts';
 
-import type { Alert } from '@linode/api-v4/lib/cloudpulse';
+import type { Alert, LinodeAlerts } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 /**
@@ -38,9 +38,9 @@ type ServiceHookBuilder = {
   useHook: (
     ...args: ServiceHookArgs
   ) => UseMutationResult<
-    Alert | Linode,
+    AlertResponse<CloudPulseServiceType>,
     APIError[],
-    CloudPulseAlertsPayload | DeepPartial<Linode>
+    TransformedPayload<CloudPulseServiceType>
   >;
 };
 
@@ -48,33 +48,33 @@ type ServiceHookBuilder = {
  * Provides information about the mutation with onSuccess handler
  */
 type MutationWithOnSuccess = UseMutationResult<
-  Alert | Linode,
+  AlertResponse<CloudPulseServiceType>,
   APIError[],
-  CloudPulseAlertsPayload | DeepPartial<Linode>
+  TransformedPayload<CloudPulseServiceType>
 > & {
   onSuccess?: (
-    data: Alert | Linode,
-    variables: CloudPulseAlertsPayload | DeepPartial<Linode>
+    data: AlertResponse<CloudPulseServiceType>,
+    variables: TransformedPayload<CloudPulseServiceType>
   ) => void;
 };
 
 /**
  * CloudPulse‐specific mutation builder.
  */
-const aclpUseMutationHook: ServiceHookBuilder = {
+const defaultCloudPulseUseMutationBuilder: ServiceHookBuilder = {
   useHook: (
     ...args: ServiceHookArgs
   ): UseMutationResult<
-    Alert | Linode,
+    AlertResponse<CloudPulseServiceType>,
     APIError[],
-    CloudPulseAlertsPayload | DeepPartial<Linode>
+    TransformedPayload<CloudPulseServiceType>
   > => {
     const [serviceType, entityId] = args as [CloudPulseServiceType, string];
 
     return useServiceAlertsMutation(serviceType, entityId) as UseMutationResult<
-      Alert | Linode,
+      AlertResponse<CloudPulseServiceType>,
       APIError[],
-      CloudPulseAlertsPayload | DeepPartial<Linode>
+      TransformedPayload<CloudPulseServiceType>
     >;
   },
   buildArgs: (serviceType: CloudPulseServiceType, id: string) => [
@@ -91,43 +91,87 @@ const updateHookMap: Partial<
 > = {
   linode: {
     useHook: (id: number) =>
-      useLinodeUpdateMutation(id) as UseMutationResult<
-        Alert | Linode,
+      useLinodeUpdateMutation(id) satisfies UseMutationResult<
+        AlertResponse<'linode'>,
         APIError[],
-        CloudPulseAlertsPayload | DeepPartial<Linode>
+        TransformedPayload<'linode'>
       >,
     buildArgs: (_serviceType, entityId) => [Number(entityId)],
   },
 };
 
-export const useAlertsMutation = (
-  serviceType: CloudPulseServiceType,
-  entityId: string,
-  payloadType: ServicePayloadBuilder
+/**
+ * Payload transform overrides – map only special-case services.
+ */
+export interface PayloadTransformOverrides {
+  linode: (payload: LinodeAlerts) => DeepPartial<Linode>;
+  // Future overrides go here (e.g. dbaas, ...)
+}
+
+type ServicePayloadTransformerMap = {
+  [K in keyof PayloadTransformOverrides]: PayloadTransformOverrides[K];
+};
+
+export const servicePayloadTransformerMap: ServicePayloadTransformerMap = {
+  linode: (payload) => ({ alerts: payload }),
+};
+
+interface AlertTypeOverrides {
+  linode: {
+    payload: LinodeAlerts;
+    response: Linode;
+  };
+  // Future overrides go here (e.g. dbaas, ...)
+}
+
+type AlertPayload<T extends CloudPulseServiceType> =
+  T extends keyof AlertTypeOverrides
+    ? AlertTypeOverrides[T]['payload']
+    : CloudPulseAlertsPayload;
+
+type AlertResponse<T extends CloudPulseServiceType> =
+  T extends keyof AlertTypeOverrides
+    ? AlertTypeOverrides[T]['response']
+    : Alert;
+
+type TransformedPayload<T extends CloudPulseServiceType> =
+  T extends keyof PayloadTransformOverrides
+    ? ReturnType<PayloadTransformOverrides[T]>
+    : AlertPayload<T>;
+
+export const useAlertsMutation = <T extends CloudPulseServiceType>(
+  serviceType: T,
+  entityId: string
 ) => {
   const queryClient = useQueryClient();
 
-  // Obtain the update hook for the service
-  const serviceHookBuilder: ServiceHookBuilder =
-    updateHookMap[serviceType] ?? aclpUseMutationHook;
+  // Obtain the update hook for the service or fall back to the default CloudPulse
+  // alerts mutation builder.
+  const serviceHookBuilder =
+    updateHookMap[serviceType] ?? defaultCloudPulseUseMutationBuilder;
 
   // Create the service-specific mutation
   const serviceMutation = serviceHookBuilder.useHook(
     ...serviceHookBuilder.buildArgs(serviceType, entityId)
   );
 
-  // Wrap with the generic mutation
-  return useMutation<>({
-    mutationFn: (payload: ) =>
-      serviceMutation.mutateAsync(payload),
-
-    onSuccess: (data, payload) => {
+  return useMutation<AlertResponse<T>, APIError[], TransformedPayload<T>>({
+    mutationFn: (payload: TransformedPayload<T>) =>
+      // mutateAsync is well-typed for the specific service mutation.
+      // The explicit cast satisfies the generic parameter.
+      serviceMutation.mutateAsync(payload) as Promise<AlertResponse<T>>,
+    onSuccess: (data, payload: TransformedPayload<T>) => {
       // Forward the success handler (if present) from the underlying mutation.
-      (serviceMutation as MutationWithOnSuccess).onSuccess?.(
-        data,
-        servicePayloadMap[serviceType]?.(payload) ?? payload
-      );
-      invalidateAlerts(queryClient, serviceType, entityId, payload);
+      (serviceMutation as MutationWithOnSuccess).onSuccess?.(data, payload);
+
+      // Derive the original CloudPulseAlertsPayload for cache invalidation.
+      const invalidatePayload: CloudPulseAlertsPayload =
+        serviceType === 'linode'
+          ? // In the linode service, payload is DeepPartial<Linode>; extract its alerts.
+            ((payload as DeepPartial<Linode>).alerts as CloudPulseAlertsPayload)
+          : (payload as CloudPulseAlertsPayload);
+
+      invalidateAlerts(queryClient, serviceType, entityId, invalidatePayload);
     },
   });
 };

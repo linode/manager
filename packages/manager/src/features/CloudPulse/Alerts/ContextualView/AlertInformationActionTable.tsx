@@ -13,20 +13,24 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
-import { useAlertsMutation } from 'src/queries/cloudpulse/useAlertsMutation';
+import {
+  servicePayloadTransformerMap,
+  useAlertsMutation,
+} from 'src/queries/cloudpulse/useAlertsMutation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
+import { arraysEqual } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
 } from '@linode/api-v4';
-import { arraysEqual } from '../Utils/utils';
+import type { PayloadTransformOverrides } from 'src/queries/cloudpulse/useAlertsMutation';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -178,10 +182,15 @@ export const AlertInformationActionTable = (
   const handleConfirm = React.useCallback(
     (alertIds: CloudPulseAlertsPayload) => {
       setIsLoading(true);
-      updateAlerts({
+      const payload: CloudPulseAlertsPayload = {
         user: alertIds.user,
         system: alertIds.system,
-      })
+      };
+      updateAlerts(
+        servicePayloadTransformerMap[
+          serviceType as keyof PayloadTransformOverrides
+        ](payload)
+      )
         .then(() => {
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
