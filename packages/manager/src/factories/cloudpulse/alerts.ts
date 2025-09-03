@@ -153,7 +153,7 @@ export const firewallMetricDefinitionsResponse: MetricDefinition[] = [
   }),
 ];
 
-const firewallMetricRules =
+export const firewallMetricRulesFactory =
   Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
     label: 'Current connections',
     metric: 'fw_active_connections',
@@ -184,10 +184,10 @@ const firewallMetricRules =
   });
 
 export const firewallAlert = alertFactory.build({
-  id: 1,
+  id: 999,
   label: 'Firewall - testing',
   service_type: 'firewall',
   rule_criteria: {
-    rules: [firewallMetricRules.build()],
+    rules: [firewallMetricRulesFactory.build()],
   },
 });

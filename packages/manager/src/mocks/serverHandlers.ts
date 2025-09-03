@@ -2918,7 +2918,7 @@ export const handlers = [
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
-      if (params.id === '1') {
+      if (params.id === '999' && params.serviceType === 'firewall') {
         return HttpResponse.json(firewallAlert);
       }
       if (params.id !== undefined) {
