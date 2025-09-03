@@ -67,10 +67,11 @@ export const AssignedEntities = ({
         }}
         sx={{
           display: 'inline',
-          marginRight:
+          marginRight: theme.tokens.spacing.S8,
+          paddingRight:
             numHiddenItems > 0 && isLastVisibleItem(index)
               ? theme.tokens.spacing.S16
-              : theme.tokens.spacing.S8,
+              : 0,
         }}
       >
         <Tooltip
