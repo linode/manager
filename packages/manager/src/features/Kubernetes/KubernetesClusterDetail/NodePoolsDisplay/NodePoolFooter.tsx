@@ -108,6 +108,7 @@ export const NodePoolFooter = (props: Props) => {
       </Box>
       <TagCell
         disabled={isLkeClusterRestricted}
+        entity="Node Pool"
         tags={tags}
         updateTags={updateTags}
         view="inline"
