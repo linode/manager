@@ -104,6 +104,37 @@ export const CloudPulseGroupByDrawer = React.memo(
       onCancel();
     };
 
+    const renderOptions = (
+      props: React.HTMLAttributes<HTMLLIElement> & {
+        key: string;
+      },
+      option: GroupByOption
+    ) => {
+      const { key, ...rest } = props;
+      const isSelectAllORDeslectAllOption =
+        option.label === 'Select All ' || option.label === 'Deselect All ';
+      const isSelected = props['aria-selected'] === true;
+      const ListItem = isSelectAllORDeslectAllOption ? StyledListItem : 'li';
+      const isDisabled =
+        selectedValue.length >= groupBySelectionLimit && !isSelected;
+      const isHidden =
+        isSelectAllORDeslectAllOption && options.length > groupBySelectionLimit;
+
+      if (isHidden) {
+        return <NullComponent />;
+      }
+      return (
+        <ListItem
+          key={key}
+          {...rest}
+          aria-disabled={!isSelectAllORDeslectAllOption && isDisabled}
+        >
+          <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+          <SelectedIcon visible={isSelected} />
+        </ListItem>
+      );
+    };
+
     return (
       <Drawer onClose={(_) => handleClose()} open={open} title={title}>
         <Stack gap={4}>
@@ -137,35 +168,7 @@ export const CloudPulseGroupByDrawer = React.memo(
             }}
             options={options}
             placeholder="Select Dimensions"
-            renderOption={(props, option) => {
-              const { key, ...rest } = props;
-              const isSelectAllORDeslectAllOption =
-                option.label === 'Select All ' ||
-                option.label === 'Deselect All ';
-              const isSelected = props['aria-selected'] === true;
-              const ListItem = isSelectAllORDeslectAllOption
-                ? StyledListItem
-                : 'li';
-              const isDisabled =
-                selectedValue.length >= groupBySelectionLimit && !isSelected;
-              const isHidden =
-                isSelectAllORDeslectAllOption &&
-                options.length > groupBySelectionLimit;
-
-              if (isHidden) {
-                return <NullComponent />;
-              }
-              return (
-                <ListItem
-                  key={key}
-                  {...rest}
-                  aria-disabled={!isSelectAllORDeslectAllOption && isDisabled}
-                >
-                  <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
-                  <SelectedIcon visible={isSelected} />
-                </ListItem>
-              );
-            }}
+            renderOption={renderOptions}
             value={selectedValue}
           />
 
