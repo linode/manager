@@ -183,11 +183,14 @@ export const firewallMetricRulesFactory =
     ],
   });
 
-export const firewallAlert = alertFactory.build({
-  id: 999,
-  label: 'Firewall - testing',
-  service_type: 'firewall',
-  rule_criteria: {
-    rules: [firewallMetricRulesFactory.build()],
-  },
-});
+// export const firewallAlert = alertFactory.build({
+//   id: 999,
+//   label: 'Firewall - testing',
+//   service_type: 'firewall',
+//   type: 'user',
+//   created_by: 'user1',
+//   updated_by: 'user2',
+//   rule_criteria: {
+//     rules: [firewallMetricRulesFactory.build()],
+//   },
+// });

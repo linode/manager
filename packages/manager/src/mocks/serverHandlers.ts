@@ -55,11 +55,11 @@ import {
   domainRecordFactory,
   entityTransferFactory,
   eventFactory,
-  firewallAlert,
   firewallDeviceFactory,
   firewallEntityfactory,
   firewallFactory,
   firewallMetricDefinitionsResponse,
+  firewallMetricRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -741,9 +741,6 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
-    const linodesWithFirewall = linodeFactory.buildList(10, {
-      region: 'ap-west',
-    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -824,8 +821,12 @@ export const handlers = [
         id: 1006,
       }),
     ];
+    const linodeFirewall = linodeFactory.build({
+      region: 'ap-west',
+      label: 'Linode-firewall-test',
+      id: 90909,
+    });
     const linodes = [
-      ...linodesWithFirewall,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -878,6 +879,7 @@ export const handlers = [
       }),
       eventLinode,
       multipleIPLinode,
+      linodeFirewall,
     ];
 
     if (request.headers.get('x-filter')) {
@@ -1207,6 +1209,12 @@ export const handlers = [
               id: 123,
               label: 'Linode-123',
             }),
+          }),
+          firewallEntityfactory.build({
+            type: 'linode',
+            label: 'Linode-firewall-test',
+            parent_entity: null,
+            id: 90909,
           }),
         ],
       }),
@@ -2911,7 +2919,16 @@ export const handlers = [
         type: 'user',
         updated_by: 'user1',
       }),
-      firewallAlert,
+      alertFactory.build({
+        id: 999,
+        label: 'Firewall - testing',
+        service_type: 'firewall',
+        type: 'user',
+        created_by: 'user1',
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -2919,7 +2936,17 @@ export const handlers = [
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
       if (params.id === '999' && params.serviceType === 'firewall') {
-        return HttpResponse.json(firewallAlert);
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
       }
       if (params.id !== undefined) {
         return HttpResponse.json(
@@ -2944,6 +2971,19 @@ export const handlers = [
   http.put(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params, request }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
       const body: any = request.json();
       return HttpResponse.json(
         alertFactory.build({
