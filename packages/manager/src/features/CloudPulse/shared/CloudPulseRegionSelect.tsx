@@ -140,6 +140,9 @@ export const CloudPulseRegionSelect = React.memo(
         handleRegionChange(filterKey, defaultRegionId, [defaultRegionLabel]);
         setSelectedRegion(defaultRegionId);
       } else {
+        if (!disabled && filterKey === LINODE_REGION && selectedRegion) {
+          return;
+        }
         if (selectedRegion !== undefined) {
           setSelectedRegion('');
         }
