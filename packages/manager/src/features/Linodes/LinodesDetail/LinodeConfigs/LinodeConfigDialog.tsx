@@ -65,6 +65,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
 import { getSelectedDeviceOption } from '../utilities';
+import { deviceSlots, pathsOptions, pathsOptionsLabels } from './constants';
 import {
   StyledDivider,
   StyledFormControl,
@@ -175,17 +176,6 @@ const defaultLegacyInterfaceFieldValues: EditableFields = {
   interfaces: defaultInterfaceList,
 };
 
-const pathsOptions = [
-  { label: '/dev/sda', value: '/dev/sda' },
-  { label: '/dev/sdb', value: '/dev/sdb' },
-  { label: '/dev/sdc', value: '/dev/sdc' },
-  { label: '/dev/sdd', value: '/dev/sdd' },
-  { label: '/dev/sde', value: '/dev/sde' },
-  { label: '/dev/sdf', value: '/dev/sdf' },
-  { label: '/dev/sdg', value: '/dev/sdg' },
-  { label: '/dev/sdh', value: '/dev/sdh' },
-];
-
 const interfacesToState = (interfaces?: Interface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
@@ -243,7 +233,6 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[] | null) => {
   return filteredInterfaces as Interface[];
 };
 
-const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 const deviceCounterDefault = 1;
 
 // DiskID reserved on the back-end to indicate Finnix.
@@ -254,6 +243,12 @@ export const LinodeConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
+  const availableMemory = linode?.specs.memory ?? 0;
+  if (availableMemory < 0) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid memory value:', availableMemory);
+  }
+  const deviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
@@ -908,7 +903,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   values.devices?.[slot as keyof DevicesAsStrings] ?? ''
                 }
                 onChange={handleDevicesChanges}
-                slots={deviceSlots}
+                slots={deviceSlots.slice(0, deviceLimit)}
               />
               <FormControl fullWidth>
                 <Autocomplete
@@ -938,7 +933,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Button
                 buttonType="secondary"
                 compactX
-                disabled={deviceCounter >= deviceSlots.length - 1}
+                disabled={deviceCounter >= deviceLimit - 1}
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 sx={{
                   marginLeft: `1px`,
@@ -1268,16 +1263,7 @@ const DialogContent = (props: ConfigFormProps) => {
 };
 
 const isUsingCustomRoot = (value: string) =>
-  [
-    '/dev/sda',
-    '/dev/sdb',
-    '/dev/sdc',
-    '/dev/sdd',
-    '/dev/sde',
-    '/dev/sdf',
-    '/dev/sdg',
-    '/dev/sdh',
-  ].includes(value) === false;
+  pathsOptionsLabels.includes(value) === false;
 
 const noticeForScenario = (scenarioText: string) => (
   <Notice
