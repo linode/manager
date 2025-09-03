@@ -16,7 +16,7 @@ export const VolumeEntityDetail = ({ volume }: Props) => {
   return (
     <EntityDetail
       body={<VolumeEntityDetailBody volume={volume} />}
-      footer={<VolumeEntityDetailFooter tags={volume.tags} />}
+      footer={<VolumeEntityDetailFooter volume={volume} />}
       header={<VolumeEntityDetailHeader volume={volume} />}
     />
   );

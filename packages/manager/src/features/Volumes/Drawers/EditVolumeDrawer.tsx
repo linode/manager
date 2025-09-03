@@ -1,4 +1,4 @@
-import { useUpdateVolumeMutation } from '@linode/queries';
+import { useVolumeUpdateMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -39,7 +39,9 @@ export const EditVolumeDrawer = (props: Props) => {
   );
   const canUpdateVolume = permissions?.update_volume;
 
-  const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
+  const { mutateAsync: updateVolume } = useVolumeUpdateMutation(
+    volume?.id ?? -1
+  );
 
   const { isBlockStorageEncryptionFeatureEnabled } =
     useIsBlockStorageEncryptionFeatureEnabled();
@@ -62,7 +64,6 @@ export const EditVolumeDrawer = (props: Props) => {
         await updateVolume({
           label: values.label,
           tags: values.tags,
-          volumeId: volume?.id ?? -1,
         });
 
         onClose();

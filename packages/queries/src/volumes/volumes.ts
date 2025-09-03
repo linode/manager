@@ -228,14 +228,10 @@ export const useVolumesMigrateMutation = () => {
   });
 };
 
-interface UpdateVolumePayloadWithId extends UpdateVolumeRequest {
-  volumeId: number;
-}
-
-export const useUpdateVolumeMutation = () => {
+export const useVolumeUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>({
-    mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
+  return useMutation<Volume, APIError[], UpdateVolumeRequest>({
+    mutationFn: (data) => updateVolume(id, data),
     onSuccess(volume) {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
