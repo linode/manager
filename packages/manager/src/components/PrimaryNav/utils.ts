@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { FOOTER_HEIGHT } from 'src/features/Footer';
 import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 
 import type { LinkProps } from '@tanstack/react-router';
@@ -38,11 +39,12 @@ export const useIsPageScrollable = (
     if (!contentRef.current) {
       return;
     }
-    const documentHeight = document.documentElement.scrollHeight;
-    const viewportHeight = window.innerHeight;
-    const overflow = documentHeight - viewportHeight;
 
-    setIsPageScrollable(overflow > TOPMENU_HEIGHT);
+    const contentHeight = contentRef.current.scrollHeight;
+    const viewportHeight = document.documentElement.clientHeight;
+    setIsPageScrollable(
+      contentHeight + TOPMENU_HEIGHT + FOOTER_HEIGHT > viewportHeight
+    );
   }, [contentRef]);
 
   React.useEffect(() => {
