@@ -22,6 +22,7 @@ import {
 
 import { accountQueries } from '../account';
 import { queryPresets } from '../base';
+import { linodeQueries } from '../linodes';
 import { profileQueries } from '../profile';
 import { getAllVolumes, getAllVolumeTypes } from './requests';
 
@@ -38,7 +39,6 @@ import type {
   Volume,
   VolumeRequestPayload,
 } from '@linode/api-v4';
-import { linodeQueries } from '../linodes';
 
 export const volumeQueries = createQueryKeys('volumes', {
   linode: (linodeId: number) => ({
