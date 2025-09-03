@@ -6,7 +6,6 @@ import {
   PORTS_HELPER_TEXT,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
-  PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from 'src/features/CloudPulse/Utils/constants';
 
@@ -19,16 +18,16 @@ import {
   PORTS_TRAILING_COMMA_ERROR_MESSAGE,
 } from '../../../constants';
 
+const LENGTH_ERROR_MESSAGE = 'Value must be 100 characters or less.';
 const fieldErrorMessage = 'This field is required.';
 const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
 const LEADING_ZERO_PORT_REGEX = /^0\d+/;
 const CONFIG_NUMBER_REGEX = /^\d+$/;
 
 // Validation schema for a single input port
-const singlePortSchema = string().test(
-  'validate-single-port',
-  PORT_HELPER_TEXT,
-  function (value) {
+const singlePortSchema = string()
+  .max(100, LENGTH_ERROR_MESSAGE)
+  .test('validate-single-port', PORT_HELPER_TEXT, function (value) {
     if (!value || typeof value !== 'string') {
       return this.createError({ message: fieldErrorMessage });
     }
@@ -38,7 +37,6 @@ const singlePortSchema = string().test(
         message: PORTS_LEADING_ZERO_ERROR_MESSAGE,
       });
     }
-
     if (!DECIMAL_PORT_REGEX.test(value)) {
       return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
     }
@@ -48,14 +46,12 @@ const singlePortSchema = string().test(
     }
 
     return true;
-  }
-);
+  });
 
 // Validation schema for a multiple comma-separated ports
-const commaSeparatedPortListSchema = string().test(
-  'validate-port-list',
-  PORTS_HELPER_TEXT,
-  function (value) {
+const commaSeparatedPortListSchema = string()
+  .max(100, LENGTH_ERROR_MESSAGE)
+  .test('validate-port-list', PORTS_HELPER_TEXT, function (value) {
     if (!value || typeof value !== 'string') {
       return this.createError({ message: fieldErrorMessage });
     }
@@ -87,11 +83,6 @@ const commaSeparatedPortListSchema = string().test(
 
     const ports = rawSegments.map((p) => p.trim());
 
-    if (ports.length > 15) {
-      return this.createError({
-        message: PORTS_LIMIT_ERROR_MESSAGE,
-      });
-    }
     for (const port of ports) {
       const trimmedPort = port.trim();
 
@@ -111,10 +102,9 @@ const commaSeparatedPortListSchema = string().test(
     }
 
     return true;
-  }
-);
+  });
 const singleConfigSchema = string()
-  .max(100, 'Value must be 100 characters or less.')
+  .max(100, LENGTH_ERROR_MESSAGE)
   .test(
     'validate-single-config-schema',
     CONFIG_ERROR_MESSAGE,
@@ -131,7 +121,7 @@ const singleConfigSchema = string()
   );
 
 const multipleConfigSchema = string()
-  .max(100, 'Value must be 100 characters or less.')
+  .max(100, LENGTH_ERROR_MESSAGE)
   .test(
     'validate-multi-config-schema',
     CONFIGS_ERROR_MESSAGE,
@@ -204,6 +194,8 @@ export const getDimensionFilterValueSchema = ({
       operator === 'in' ? multipleConfigSchema : singleConfigSchema;
     return configSchema.concat(baseValueSchema);
   }
-
+  if (['endswith', 'startswith'].includes(operator)) {
+    return baseValueSchema.concat(string().max(100, LENGTH_ERROR_MESSAGE));
+  }
   return baseValueSchema;
 };
