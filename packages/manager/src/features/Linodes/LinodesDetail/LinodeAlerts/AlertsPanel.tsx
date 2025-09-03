@@ -309,6 +309,13 @@ export const AlertsPanel = (props: Props) => {
       const hasUnsavedChanges = formik.dirty;
       props.onUnsavedChangesUpdate(hasUnsavedChanges);
     }
+
+    return () => {
+      // Cleanup on unmount
+      if (props.onUnsavedChangesUpdate) {
+        props.onUnsavedChangesUpdate(false);
+      }
+    };
   }, [formik.dirty]);
 
   return (
