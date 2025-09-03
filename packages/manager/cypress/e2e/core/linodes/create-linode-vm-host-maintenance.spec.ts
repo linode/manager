@@ -1,41 +1,40 @@
-import { regionFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { randomString } from 'support/util/random';
+import { randomLabel, randomString } from 'support/util/random';
 
 import { accountSettingsFactory } from 'src/factories';
+const mockEnabledRegion = regionFactory.build({
+  capabilities: ['Linodes', 'Maintenance Policy'],
+});
+const mockDisabledRegion = regionFactory.build({
+  capabilities: ['Linodes'],
+});
 
-describe('vmHostMaintenance feature flag', function () {
+describe('vmHostMaintenance feature flag', () => {
   beforeEach(() => {
     mockGetAccountSettings(
       accountSettingsFactory.build({
         maintenance_policy: 'linode/power_off_on',
       })
     ).as('getAccountSettings');
-    const mockEnabledRegion = regionFactory.build({
-      capabilities: ['Linodes', 'Maintenance Policy'],
-    });
-    const mockDisabledRegion = regionFactory.build({
-      capabilities: ['Linodes'],
-    });
-    const mockRegions = [mockEnabledRegion, mockDisabledRegion];
-    cy.wrap(mockRegions).as('mockRegions');
-    mockGetRegions(mockRegions).as('getRegions');
+    mockGetRegions([mockEnabledRegion, mockDisabledRegion]).as('getRegions');
   });
 
-  it('Create flow when vmHostMaintenance feature flag is enabled', function () {
-    const enabledRegion = this.mockRegions[0];
-    const disabledRegion = this.mockRegions[1];
+  it('Create flow when vmHostMaintenance feature flag is enabled', () => {
     mockAppendFeatureFlags({
       vmHostMaintenance: {
         enabled: true,
       },
     }).as('getFeatureFlags');
-
-    interceptCreateLinode().as('createLinode');
+    const mockLinode = linodeFactory.build({
+      label: randomLabel(),
+      region: mockEnabledRegion.id,
+    });
+    mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getAccountSettings', '@getFeatureFlags', '@getRegions']);
@@ -47,42 +46,32 @@ describe('vmHostMaintenance feature flag', function () {
       .within(() => {
         cy.get('[data-qa-panel-summary="Host Maintenance Policy"]').click();
       });
-    cy.get('[data-qa-autocomplete="Maintenance Policy"]')
+    ui.autocomplete
+      .findByLabel('Maintenance Policy')
       .should('be.visible')
-      .within(() => {
-        cy.get('input[data-testid="textfield-input"]')
-          .should('be.visible')
-          .should('be.disabled');
-        cy.findByText('Select a region to choose a maintenance policy.').should(
-          'be.visible'
-        );
-      });
-
+      .should('be.disabled');
+    cy.findByText('Select a region to choose a maintenance policy.').should(
+      'be.visible'
+    );
     // user selects region that does not have the "Maintenance Policy" capability
     ui.regionSelect.find().click();
-    ui.regionSelect.find().type(`${disabledRegion.label}{enter}`);
-    cy.get('[data-qa-autocomplete="Maintenance Policy"]')
+    ui.regionSelect.find().type(`${mockDisabledRegion.label}{enter}`);
+    ui.autocomplete
+      .findByLabel('Maintenance Policy')
       .should('be.visible')
-      .within(() => {
-        cy.get('input[data-testid="textfield-input"]')
-          .should('be.visible')
-          .should('be.disabled');
-        cy.findByText(
-          'Maintenance policy is not available in the selected region.'
-        ).should('be.visible');
-      });
+      .should('be.disabled');
+    cy.findByText(
+      'Maintenance policy is not available in the selected region.'
+    ).should('be.visible');
 
     // user selects region that does have the "Maintenance Policy" capability
     ui.regionSelect.find().click();
     ui.regionSelect.find().clear();
-    ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
-    cy.get('[data-qa-autocomplete="Maintenance Policy"]')
+    ui.regionSelect.find().type(`${mockEnabledRegion.label}{enter}`);
+    ui.autocomplete
+      .findByLabel('Maintenance Policy')
       .should('be.visible')
-      .within(() => {
-        cy.get('input[data-testid="textfield-input"]')
-          .should('be.visible')
-          .should('be.enabled');
-      });
+      .should('be.enabled');
 
     // form prerequisites
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
@@ -141,8 +130,7 @@ describe('vmHostMaintenance feature flag', function () {
     });
   });
 
-  it('Create flow when vmHostMaintenance feature flag is disabled', function () {
-    const enabledRegion = this.mockRegions[0];
+  it('Create flow when vmHostMaintenance feature flag is disabled', () => {
     mockAppendFeatureFlags({
       vmHostMaintenance: {
         enabled: false,
@@ -152,7 +140,7 @@ describe('vmHostMaintenance feature flag', function () {
     cy.wait(['@getAccountSettings', '@getFeatureFlags', '@getRegions']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+    ui.regionSelect.find().type(`${mockEnabledRegion.label}{enter}`);
 
     // "Host Maintenance Policy" section is not present
     cy.get('[data-qa-panel="Host Maintenance Policy"]').should('not.exist');
