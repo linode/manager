@@ -38,12 +38,7 @@ export const useMutatePreferences = (replace = false) => {
         );
       return updateUserPreferences({ ...existingPreferences, ...data });
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData<ManagerPreferences>(
-        profileQueries.preferences.queryKey,
-        data,
-      );
-    },
+    onMutate: (data) => updatePreferenceData(data, replace, queryClient),
   });
 };
 

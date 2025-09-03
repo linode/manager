@@ -113,7 +113,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
-  const { data: collapsedSideNavPreference } = usePreferences(
+  const {
+    data: collapsedSideNavPreference,
+    error: preferencesError,
+    isLoading: preferencesLoading,
+  } = usePreferences(
     (preferences) => preferences?.collapsedSideNavProductFamilies
   );
 
@@ -398,6 +402,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   // When a user lands on a page and does not have any preference set,
   // we want to expand the accordion that contains the active link for convenience and discoverability
   React.useEffect(() => {
+    if (preferencesLoading || preferencesError) {
+      return;
+    }
+
     if (collapsedSideNavPreference) {
       return;
     }
@@ -421,6 +429,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     location.search,
     productFamilyLinkGroups,
     collapsedSideNavPreference,
+    preferencesLoading,
+    preferencesError,
   ]);
 
   let activeProductFamily = '';
