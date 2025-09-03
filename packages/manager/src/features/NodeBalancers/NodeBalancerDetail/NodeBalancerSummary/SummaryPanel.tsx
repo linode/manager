@@ -266,6 +266,7 @@ export const SummaryPanel = () => {
         </StyledTitle>
         <TagCell
           disabled={isNodeBalancerReadOnly}
+          entity="NodeBalancer"
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
           view="panel"
