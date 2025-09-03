@@ -661,10 +661,6 @@ export const invalidateAlerts = (
   );
 
   qc.invalidateQueries({
-    queryKey: queryFactory.resources(serviceType).queryKey,
-  });
-
-  qc.invalidateQueries({
     queryKey: queryFactory.alerts._ctx.all().queryKey,
   });
 
