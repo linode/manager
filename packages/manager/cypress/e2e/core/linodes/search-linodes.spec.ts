@@ -41,7 +41,7 @@ describe('Search Linodes', () => {
       // Press Enter to go to the search page
       cy.focused().type('{enter}');
 
-      // Verify the search field has the correct search query still
+      // Verify the search field still has the correct search query that the user typed
       ui.mainSearch
         .find()
         .findByRole('combobox')
