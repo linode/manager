@@ -38,10 +38,7 @@ export const KubernetesPlanSelectionTable = (
   } = props;
 
   return (
-    <Table
-      aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
-      spacingBottom={16}
-    >
+    <Table aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}>
       <TableHead>
         <TableRow>
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
