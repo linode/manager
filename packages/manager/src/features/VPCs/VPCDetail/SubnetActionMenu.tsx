@@ -40,7 +40,7 @@ export const SubnetActionMenu = (props: Props) => {
   const flags = useIsNodebalancerVPCEnabled();
 
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
-  const { hasFiltered: hasFilteredLinodes } = useQueryWithPermissions<Linode>(
+  const { data: linodes } = useQueryWithPermissions<Linode>(
     useAllLinodesQuery(),
     'linode',
     [
@@ -49,7 +49,7 @@ export const SubnetActionMenu = (props: Props) => {
     ]
   );
 
-  const canManageSubnetLinodes = permissions?.update_vpc && hasFilteredLinodes;
+  const canManageSubnetLinodes = permissions?.update_vpc && linodes?.length > 0;
 
   const actions: Action[] = [
     {

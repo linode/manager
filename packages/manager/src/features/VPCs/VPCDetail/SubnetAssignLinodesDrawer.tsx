@@ -4,8 +4,6 @@ import {
   getAllLinodeConfigs,
   useAllLinodesQuery,
   useFirewallSettingsQuery,
-  useGrants,
-  useProfile,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
@@ -31,6 +29,10 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
+import {
+  usePermissions,
+  useQueryWithPermissions,
+} from 'src/features/IAM/hooks/usePermissions';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
@@ -146,16 +148,18 @@ export const SubnetAssignLinodesDrawer = (
   const [allowPublicIPv6Access, setAllowPublicIPv6Access] =
     React.useState<boolean>(false);
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
+  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+  const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
+    useAllLinodesQuery(),
+    'linode',
+    [
+      'create_linode_config_profile_interface',
+      'delete_linode_config_profile_interface',
+    ]
+  );
 
-  // @TODO VPC: this logic for vpc grants/perms appears a lot - commenting a todo here in case we want to move this logic to a parent component
-  // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
-  // with permissions set to 'None'. Therefore, we're treating those as read_only as well
   const userCannotAssignLinodes =
-    Boolean(profile?.restricted) &&
-    (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
+    !permissions?.update_vpc && filteredLinodes?.length === 0;
 
   const downloadCSV = async () => {
     await getCSVData();
