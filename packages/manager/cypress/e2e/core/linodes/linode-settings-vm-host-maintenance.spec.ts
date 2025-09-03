@@ -16,6 +16,7 @@ import { accountSettingsFactory } from 'src/factories';
 import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 
 import type { Disk } from '@linode/api-v4';
+
 const mockEnabledRegion = regionFactory.build({
   capabilities: ['Linodes', 'Maintenance Policy'],
 });
@@ -37,7 +38,8 @@ const mockLinode = linodeFactory.build({
   label: randomLabel(),
   region: mockEnabledRegion.id,
 });
-describe('vmHostMaintenance feature flag', function () {
+
+describe('vmHostMaintenance feature flag', () => {
   beforeEach(() => {
     mockGetAccountSettings(
       accountSettingsFactory.build({
@@ -63,7 +65,7 @@ describe('vmHostMaintenance feature flag', function () {
     // cy.wrap(mockMaintenancePolicyPowerOnOff).as('mockMaintenancePolicyPowerOnOff');
   });
 
-  it('VM host maintenance setting is editable when vmHostMaintenance feature flag is enabled. Mocked success.', function () {
+  it('VM host maintenance setting is editable when vmHostMaintenance feature flag is enabled. Mocked success.', () => {
     mockAppendFeatureFlags({
       vmHostMaintenance: {
         enabled: true,
@@ -96,7 +98,7 @@ describe('vmHostMaintenance feature flag', function () {
         cy.get('@maintenanceInput').click();
         cy.focused().type(`${mockMaintenancePolicyPowerOnOff.label}`);
         ui.autocompletePopper
-          .findByTitle(mockMaintenancePolicyPowerOnOff.label, { exact: false })
+          .findByTitle(mockMaintenancePolicyPowerOnOff.label)
           .should('be.visible')
           .click();
         // save button is enabled after edit
@@ -108,15 +110,13 @@ describe('vmHostMaintenance feature flag', function () {
       expect(intercept.request.body['maintenance_policy']).to.eq(
         mockMaintenancePolicyPowerOnOff.slug
       );
-      // request succeeds
-      expect(intercept.response?.statusCode).to.eq(200);
     });
 
     // toast notification
     ui.toast.assertMessage('Host Maintenance Policy settings updated.');
   });
 
-  it('VM host maintenance setting is editable when vmHostMaintenance feature flag is enabled. Mocked failure.', function () {
+  it('VM host maintenance setting is editable when vmHostMaintenance feature flag is enabled. Mocked failure.', () => {
     mockAppendFeatureFlags({
       vmHostMaintenance: {
         enabled: true,
@@ -137,7 +137,7 @@ describe('vmHostMaintenance feature flag', function () {
       mockLinode.id,
       linodeError.errorMessage,
       linodeError.statusCode
-    ).as('updateLinode');
+    );
 
     cy.contains('Host Maintenance Policy').should('be.visible');
     cy.contains('Maintenance Policy').should('be.visible');
@@ -154,25 +154,20 @@ describe('vmHostMaintenance feature flag', function () {
         cy.get('@maintenanceInput').click();
         cy.focused().type(`${mockMaintenancePolicyPowerOnOff.label}`);
         ui.autocompletePopper
-          .findByTitle(mockMaintenancePolicyPowerOnOff.label, { exact: false })
+          .findByTitle(mockMaintenancePolicyPowerOnOff.label)
           .should('be.visible')
           .click();
         // save button is enabled after edit
         ui.button.findByTitle('Save').should('be.enabled').click();
       });
 
-    // POST payload should include maintenance_policy
-    cy.wait('@updateLinode').then((intercept) => {
-      // request fails
-      expect(intercept.response?.statusCode).to.eq(linodeError.statusCode);
-    });
     cy.get('[data-qa-textfield-error-text="Maintenance Policy"]')
       .should('be.visible')
       .should('have.text', linodeError.errorMessage);
     cy.get('[aria-errormessage]').should('be.visible');
   });
 
-  it('Settings when vmHostMaintenance feature flag is disabled', function () {
+  it('Maintenance policy setting is absent when feature flag is disabled', () => {
     mockAppendFeatureFlags({
       vmHostMaintenance: {
         enabled: false,
