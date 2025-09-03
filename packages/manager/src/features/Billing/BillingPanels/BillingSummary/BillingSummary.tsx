@@ -90,7 +90,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   React.useEffect(() => {
     if (!makePaymentRouteMatch) {
-      closePaymentDrawer();
+      if (paymentDrawerOpen) {
+        closePaymentDrawer();
+      }
       return;
     }
 
