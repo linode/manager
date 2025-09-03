@@ -30,7 +30,7 @@ export const ConfigRowDevice = ({ device, deviceKey, linodeId }: Props) => {
 
   return (
     <ListItem disableGutters disablePadding>
-      /dev/{deviceKey} - Unknown
+      /dev/{deviceKey} – Unknown
     </ListItem>
   );
 };

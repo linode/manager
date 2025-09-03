@@ -29,17 +29,15 @@ export const ConfigRow = React.memo((props: Props) => {
   const interfaces = config?.interfaces ?? [];
 
   const InterfaceList = (
-    <ul>
-      {interfaces.map((interfaceEntry, idx) => {
-        return (
-          <InterfaceListItem
-            idx={idx}
-            interfaceEntry={interfaceEntry}
-            key={interfaceEntry.label ?? 'public' + idx}
-          />
-        );
-      })}
-    </ul>
+    <List sx={{ '> li': { paddingY: 0.25 }, paddingY: 0.5 }}>
+      {interfaces.map((interfaceEntry, idx) => (
+        <InterfaceListItem
+          idx={idx}
+          interfaceEntry={interfaceEntry}
+          key={interfaceEntry.label ?? 'public' + idx}
+        />
+      ))}
+    </List>
   );
 
   const defaultInterfaceLabel = 'eth0 – Public Internet';

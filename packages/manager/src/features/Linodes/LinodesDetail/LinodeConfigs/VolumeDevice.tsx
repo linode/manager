@@ -15,7 +15,7 @@ export const VolumeDevice = ({ device, deviceKey }: Props) => {
 
   return (
     <ListItem disableGutters disablePadding>
-      /dev/{deviceKey} - {volume?.label ?? `Volume ${device.volume_id}`}
+      /dev/{deviceKey} – {volume?.label ?? `Volume ${device.volume_id}`}
     </ListItem>
   );
 };

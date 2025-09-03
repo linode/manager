@@ -18,7 +18,7 @@ export const DiskDevice = ({ linodeId, device, deviceKey }: Props) => {
 
   return (
     <ListItem disableGutters disablePadding>
-      /dev/{deviceKey} - {disk?.label ?? `Disk ${device.disk_id}`}
+      /dev/{deviceKey} – {disk?.label ?? `Disk ${device.disk_id}`}
     </ListItem>
   );
 };

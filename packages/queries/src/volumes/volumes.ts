@@ -38,6 +38,7 @@ import type {
   Volume,
   VolumeRequestPayload,
 } from '@linode/api-v4';
+import { linodeQueries } from '../linodes';
 
 export const volumeQueries = createQueryKeys('volumes', {
   linode: (linodeId: number) => ({
@@ -199,6 +200,11 @@ export const useCreateVolumeMutation = () => {
       if (volume.linode_id) {
         queryClient.invalidateQueries({
           queryKey: volumeQueries.linode(volume.linode_id)._ctx.volumes._def,
+        });
+        // Invalidate the Linode's configs because the volume will now be returned as a Config device
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(volume.linode_id)._ctx.configs
+            .queryKey,
         });
       }
       // If a restricted user creates an entity, we must make sure grants are up to date.
