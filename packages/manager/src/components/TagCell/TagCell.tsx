@@ -119,7 +119,9 @@ export const TagCell = (props: TagCellProps) => {
             height: 40,
             justifyContent: view === 'panel' ? 'flex-start' : 'flex-end',
             marginBottom: view === 'panel' ? 4 : 0,
-            width: '100%',
+            ...(addingTag && {
+              flexGrow: 1,
+            }),
           }}
         >
           {view === 'panel' && !addingTag && <AddButton panel />}
