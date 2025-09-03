@@ -160,9 +160,9 @@ export const dimensionOperatorTypeMap: Record<
   string
 > = {
   endswith: 'ends with',
-  eq: 'equals',
+  eq: 'equal',
   in: 'in',
-  neq: 'not equals',
+  neq: 'not equal',
   startswith: 'starts with',
 };
 
