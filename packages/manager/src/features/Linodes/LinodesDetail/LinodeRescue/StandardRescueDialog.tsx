@@ -75,6 +75,10 @@ export const StandardRescueDialog = (props: Props) => {
     linodeId !== undefined && open
   );
   const availableMemory = linode?.specs.memory ?? 0;
+  if (availableMemory < 0) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid memory value:', availableMemory);
+  }
   const overallDeviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
   const rescueDeviceLimit = overallDeviceLimit - 2;
 

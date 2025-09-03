@@ -244,6 +244,10 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId, open);
   const availableMemory = linode?.specs.memory ?? 0;
+  if (availableMemory < 0) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid memory value:', availableMemory);
+  }
   const deviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
