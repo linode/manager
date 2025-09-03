@@ -107,6 +107,7 @@ export const NodePoolFooter = (props: Props) => {
         </Stack>
         <TagCell
           disabled={isLkeClusterRestricted}
+          entity="Node Pool"
           sx={{ justifyContent: 'flex-end' }}
           tags={tags}
           updateTags={updateTags}
