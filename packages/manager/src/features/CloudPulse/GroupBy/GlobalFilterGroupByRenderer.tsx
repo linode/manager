@@ -37,7 +37,7 @@ export const GlobalFilterGroupByRenderer = (
         setIsSelected(true);
       }
       handleChange(selectedValue.map(({ value }) => value));
-      onCancel();
+      setOpen(false);
     },
     [handleChange]
   );

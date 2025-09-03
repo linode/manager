@@ -44,7 +44,7 @@ export const WidgetFilterGroupByRenderer = (
         setIsSelected(true);
       }
       handleChange(selectedValue.map(({ value }) => value));
-      onCancel();
+      setOpen(false);
     },
     [handleChange, onCancel]
   );
