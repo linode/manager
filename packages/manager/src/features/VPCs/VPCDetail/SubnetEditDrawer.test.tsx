@@ -1,9 +1,26 @@
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_vpc_subnet: true,
+    },
+  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
+}));
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
 describe('SubnetEditDrawer', () => {
   const props = {
     isFetching: false,
@@ -35,5 +52,33 @@ describe('SubnetEditDrawer', () => {
     const cancelBtn = getByText(/Cancel/);
     expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
+  });
+
+  it('should disable the Label input when user does not have update_vpc_subnet permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc_subnet: false,
+      },
+    });
+    const { getByRole } = renderWithTheme(<SubnetEditDrawer {...props} />);
+    const labelInput = getByRole('textbox', { name: 'Label' });
+    expect(labelInput).toBeDisabled();
+  });
+
+  it('should enable the Label input when user does not have update_vpc_subnet permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc_subnet: true,
+      },
+    });
+    const { getByRole, getByTestId } = renderWithTheme(
+      <SubnetEditDrawer {...props} />
+    );
+    const labelInput = getByRole('textbox', { name: 'Label' });
+    expect(labelInput).toBeEnabled();
+
+    await userEvent.type(labelInput, 'New label');
+    const saveButton = getByTestId('save-button');
+    expect(saveButton).toHaveAttribute('aria-disabled', 'false');
   });
 });

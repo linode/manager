@@ -286,7 +286,7 @@ describe('VPC Subnets table', () => {
     { timeout: 15_000 }
   );
 
-  it('should disabled "Create Subnet" button when user does not have create_vpc_subnet permission', async () => {
+  it('should disable "Create Subnet" button when user does not have create_vpc_subnet permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         create_vpc_subnet: false,

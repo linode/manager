@@ -1,13 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useGrants,
-  useProfile,
-  useUpdateSubnetMutation,
-} from '@linode/queries';
+import { useUpdateSubnetMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { APIError, ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
@@ -63,16 +61,11 @@ export const SubnetEditDrawer = (props: Props) => {
     }
   };
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
-
-  // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
-  // with permissions set to 'None'. Therefore, we're treating those as read_only as well
-  const readOnly =
-    Boolean(profile?.restricted) &&
-    (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc_subnet'],
+    vpcId
+  );
 
   return (
     <Drawer
@@ -85,7 +78,7 @@ export const SubnetEditDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
-      {readOnly && (
+      {!permissions.update_vpc_subnet && (
         <Notice
           text={`You don't have permissions to edit ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
@@ -97,7 +90,7 @@ export const SubnetEditDrawer = (props: Props) => {
           name="label"
           render={({ field, fieldState }) => (
             <TextField
-              disabled={readOnly}
+              disabled={!permissions.update_vpc_subnet}
               errorText={fieldState.error?.message}
               label="Label"
               name="label"
@@ -116,7 +109,7 @@ export const SubnetEditDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',
-            disabled: !isDirty || readOnly,
+            disabled: !isDirty || !permissions.update_vpc_subnet,
             label: 'Save',
             loading: isPending || isSubmitting,
             type: 'submit',
