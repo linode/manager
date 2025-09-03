@@ -119,7 +119,6 @@ export const TagCell = (props: TagCellProps) => {
             height: 40,
             justifyContent: view === 'panel' ? 'flex-start' : 'flex-end',
             marginBottom: view === 'panel' ? 4 : 0,
-            // is this change safe?
             ...(addingTag && {
               flexGrow: 1,
             }),
