@@ -8,7 +8,6 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
-import { isNotNullOrUndefined, usePrevious } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -58,9 +57,7 @@ export const StreamFormClusters = () => {
   });
 
   const idsWithLogsEnabled = clusters?.data
-    .filter(
-      ({ control_plane: { audit_logs_enabled: logsEnabled } }) => logsEnabled
-    )
+    .filter((cluster) => cluster.control_plane.audit_logs_enabled)
     .map(({ id }) => id);
 
   const [isAutoAddAllClustersEnabled, clusterIds] = useWatch({
@@ -70,33 +67,13 @@ export const StreamFormClusters = () => {
       'stream.details.cluster_ids',
     ],
   });
-  const previousIsAutoAddAllClustersEnabled = usePrevious(
-    isAutoAddAllClustersEnabled
-  );
 
   useEffect(() => {
     setValue(
       'stream.details.cluster_ids',
       isAutoAddAllClustersEnabled ? idsWithLogsEnabled : clusterIds || []
     );
-  }, []);
-
-  useEffect(() => {
-    if (
-      isNotNullOrUndefined(previousIsAutoAddAllClustersEnabled) &&
-      isAutoAddAllClustersEnabled !== previousIsAutoAddAllClustersEnabled
-    ) {
-      setValue(
-        'stream.details.cluster_ids',
-        isAutoAddAllClustersEnabled ? idsWithLogsEnabled : []
-      );
-    }
-  }, [
-    isAutoAddAllClustersEnabled,
-    idsWithLogsEnabled,
-    previousIsAutoAddAllClustersEnabled,
-    setValue,
-  ]);
+  }, [isLoading]);
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -130,7 +107,14 @@ export const StreamFormClusters = () => {
               <Checkbox
                 checked={field.value}
                 onBlur={field.onBlur}
-                onChange={(_, checked) => field.onChange(checked)}
+                onChange={(_, checked) => {
+                  field.onChange(checked);
+                  if (checked) {
+                    setValue('stream.details.cluster_ids', idsWithLogsEnabled);
+                  } else {
+                    setValue('stream.details.cluster_ids', []);
+                  }
+                }}
                 sxFormLabel={{ ml: -1 }}
                 text="Automatically include all existing and recently configured clusters."
               />
@@ -153,6 +137,13 @@ export const StreamFormClusters = () => {
             value={searchText}
           />
           <Box sx={{ mt: 2 }}>
+            {!isAutoAddAllClustersEnabled &&
+              formState.errors.stream?.details?.cluster_ids?.message && (
+                <Notice
+                  text={formState.errors.stream?.details?.cluster_ids?.message}
+                  variant="error"
+                />
+              )}
             <Table data-testid="clusters-table">
               <Controller
                 control={control}
@@ -178,13 +169,6 @@ export const StreamFormClusters = () => {
               page={page}
               pageSize={pageSize}
             />
-            {!isAutoAddAllClustersEnabled &&
-              formState.errors.stream?.details?.cluster_ids?.message && (
-                <Notice
-                  text={formState.errors.stream?.details?.cluster_ids?.message}
-                  variant="error"
-                />
-              )}
           </Box>
         </>
       )}

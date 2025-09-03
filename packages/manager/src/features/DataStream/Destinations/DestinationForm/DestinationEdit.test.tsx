@@ -4,7 +4,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import React from 'react';
-import { describe } from 'vitest';
+import { describe, expect } from 'vitest';
 
 import { destinationFactory } from 'src/factories/datastream';
 import { DestinationEdit } from 'src/features/DataStream/Destinations/DestinationForm/DestinationEdit';
@@ -43,9 +43,8 @@ describe('DestinationEdit', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     assertInputHasValue('Destination Type', 'Linode Object Storage');
     await waitFor(() => {

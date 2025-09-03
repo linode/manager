@@ -72,9 +72,8 @@ const renderComponentWithoutSelectedClusters = async () => {
   });
 
   const loadingElement = utils.queryByTestId(loadingTestId);
-  if (loadingElement) {
-    await waitForElementToBeRemoved(loadingElement);
-  }
+  expect(loadingElement).toBeInTheDocument();
+  await waitForElementToBeRemoved(loadingElement);
 
   return utils;
 };
@@ -196,9 +195,8 @@ describe('StreamFormClusters', () => {
       });
 
       const loadingElement = screen.queryByTestId(loadingTestId);
-      if (loadingElement) {
-        await waitForElementToBeRemoved(loadingElement);
-      }
+      expect(loadingElement).toBeInTheDocument();
+      await waitForElementToBeRemoved(loadingElement);
 
       const table = screen.getByRole('table');
       const headerCheckbox = within(table).getAllByRole('checkbox')[0];
