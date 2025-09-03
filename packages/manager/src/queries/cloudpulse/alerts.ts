@@ -22,22 +22,13 @@ import type {
   Alert,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
-  DeepPartial,
   DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
-  Linode,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
-// Create the payload transformer map with proper typing
-export const servicePayloadMap = {
-  linode: (payload: CloudPulseAlertsPayload): DeepPartial<Linode> => ({
-    alerts: payload,
-  }),
-  // Add other services
-};
 
 export const useCreateAlertDefinition = (serviceType: string) => {
   const queryClient = useQueryClient();
