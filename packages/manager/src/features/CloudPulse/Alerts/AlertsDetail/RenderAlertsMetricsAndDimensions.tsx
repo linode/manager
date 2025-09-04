@@ -118,14 +118,14 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    getResolvedDimensionValue(
+                    getResolvedDimensionValue({
                       dimensionFilterKey,
                       dimensionOperator,
-                      value,
-                      serviceType,
                       linodeMap,
-                      vpcSubnetMap
-                    ),
+                      serviceType,
+                      value,
+                      vpcSubnetMap,
+                    }),
                   ]
                 )}
               />
