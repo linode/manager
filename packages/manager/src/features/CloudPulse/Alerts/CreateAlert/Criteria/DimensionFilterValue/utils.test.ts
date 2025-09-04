@@ -143,7 +143,7 @@ describe('Utils', () => {
         {
           label: transformDimensionValue(
             'firewall',
-            'parent_vm_entity_id',
+            'linode_id',
             linodes[0].label
           ),
           value: linodes[0].id.toString(),
@@ -151,7 +151,7 @@ describe('Utils', () => {
         {
           label: transformDimensionValue(
             'firewall',
-            'parent_vm_entity_id',
+            'linode_id',
             linodes[1].label
           ),
           value: linodes[1].id.toString(),
