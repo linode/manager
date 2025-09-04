@@ -125,13 +125,12 @@ export const SubnetAssignLinodesDrawer = (
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+  // TODO: change update_linode to create_linode_config_profile_interface once it's available
+  // TODO: change delete_linode to delete_linode_config_profile_interface once it's available
   const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
     useAllLinodesQuery(),
     'linode',
-    [
-      'create_linode_config_profile_interface',
-      'delete_linode_config_profile_interface',
-    ]
+    ['update_linode', 'delete_linode']
   );
 
   const userCannotAssignLinodes =
