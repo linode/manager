@@ -41,7 +41,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Tech Stories:
 
 - Improve usePermissions hook type safety ([#12732](https://github.com/linode/manager/pull/12732))
-- MSW CRUD: Fix type error when using custom restricted profile preset and add grants preset support (#12756)
+- MSW CRUD: Fix type error when using custom restricted profile preset and add grants preset support ([#12756](https://github.com/linode/manager/pull/12756))
 - Update `jspdf` to 3.0.2 ([#12797](https://github.com/linode/manager/pull/12797))
 
 ### Tests:
