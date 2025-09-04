@@ -91,8 +91,13 @@ const assertStatusForUrlAtAlias = (
  *
  * @param filepath - Path to file to upload.
  * @param filename - Filename to assign to uploaded file.
+ * @param fileExists - Whether or not the file already exists in the bucket.
  */
-const uploadFile = (filepath: string, filename: string) => {
+const uploadFile = (
+  filepath: string,
+  filename: string,
+  fileExists: boolean = false
+) => {
   cy.fixture(filepath, null).then((contents) => {
     cy.get('[data-qa-drop-zone]').attachFile(
       {
@@ -103,6 +108,12 @@ const uploadFile = (filepath: string, filename: string) => {
         subjectType: 'drag-n-drop',
       }
     );
+    if (fileExists) {
+      cy.findByText(
+        'This file already exists. Are you sure you want to overwrite it?'
+      );
+      ui.button.findByTitle('Replace').should('be.visible').click();
+    }
   });
 };
 
@@ -208,11 +219,7 @@ describe('Object Storage Multicluster objects', () => {
       cy.wait('@uploadObject');
 
       // Re-upload file to confirm replace prompt behavior.
-      uploadFile(bucketFiles[1].path, bucketFiles[1].name);
-      cy.findByText(
-        'This file already exists. Are you sure you want to overwrite it?'
-      );
-      ui.button.findByTitle('Replace').should('be.visible').click();
+      uploadFile(bucketFiles[1].path, bucketFiles[1].name, true);
       cy.wait('@uploadObject');
 
       // Confirm that you cannot delete a bucket with objects in it.
