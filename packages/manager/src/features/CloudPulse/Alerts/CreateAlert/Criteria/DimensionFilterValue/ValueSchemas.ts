@@ -241,9 +241,10 @@ const multipleInterfacesSchema = string()
   );
 
 const baseValueSchema = string()
-  .required(fieldErrorMessage)
   .nullable()
-  .test('nonNull', fieldErrorMessage, (value) => value !== null);
+  .transform((value) => (value === null ? '' : value)) // normalize null to empty string to avoid the empty string case for TextField components
+  .required(fieldErrorMessage)
+  .test('nonEmpty', fieldErrorMessage, (value) => value !== '');
 
 interface GetValueSchemaParams {
   dimensionLabel: string;
