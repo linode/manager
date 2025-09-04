@@ -39,8 +39,8 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
@@ -112,11 +112,10 @@ export const SubnetAssignLinodesDrawer = (
   const formattedDate = useFormattedDate();
   const theme = useTheme();
 
-  const flags = useFlags();
-  const isVPCIPv6Enabled = !!flags.vpcIpv6;
+  const { isDualStackEnabled } = useVPCDualStack(subnet?.ipv6 ?? []);
   // Only show the "VPC IPv6" field, "Add IPv6 Range" button, and Dual Stack tooltip copy if this is a Dual Stack VPC
   const showIPv6Content =
-    isVPCIPv6Enabled &&
+    isDualStackEnabled &&
     Boolean(subnet?.ipv6?.length && subnet?.ipv6?.length > 0);
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
@@ -236,7 +235,7 @@ export const SubnetAssignLinodesDrawer = (
       subnetId: subnet?.id,
       vpcId,
       isLinodeInterface,
-      vpcIPv6FeatureEnabled: isVPCIPv6Enabled,
+      vpcIPv6FeatureEnabled: isDualStackEnabled,
     });
 
     try {
@@ -374,22 +373,29 @@ export const SubnetAssignLinodesDrawer = (
     return errorMap.none;
   };
 
-  const { dirty, handleSubmit, resetForm, setFieldValue, setValues, values } =
-    useFormik({
-      enableReinitialize: true,
-      initialValues: {
-        chosenIPv4: '',
-        chosenIPv6: '',
-        ipv4Ranges: [] as ExtendedIP[],
-        ipv6Ranges: [] as ExtendedIP[],
-        selectedConfig: null as Config | null,
-        selectedLinode: null as Linode | null,
-        selectedFirewall: defaultFirewall as null | number,
-      },
-      onSubmit: handleAssignLinode,
-      validateOnBlur: false,
-      validateOnChange: false,
-    });
+  const {
+    dirty,
+    handleSubmit,
+    isSubmitting,
+    resetForm,
+    setFieldValue,
+    setValues,
+    values,
+  } = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      chosenIPv4: '',
+      chosenIPv6: '',
+      ipv4Ranges: [] as ExtendedIP[],
+      ipv6Ranges: [] as ExtendedIP[],
+      selectedConfig: null as Config | null,
+      selectedLinode: null as Linode | null,
+      selectedFirewall: defaultFirewall as null | number,
+    },
+    onSubmit: handleAssignLinode,
+    validateOnBlur: false,
+    validateOnChange: false,
+  });
   const isLinodeInterface =
     values.selectedLinode?.interface_generation === 'linode';
 
@@ -766,6 +772,7 @@ export const SubnetAssignLinodesDrawer = (
                 linodeConfigs.length > 1 &&
                 !values.selectedConfig)
             }
+            loading={isSubmitting}
             type="submit"
           >
             Assign Linode

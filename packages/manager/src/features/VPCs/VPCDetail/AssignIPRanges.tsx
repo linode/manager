@@ -68,7 +68,6 @@ export const AssignIPRanges = (props: Props) => {
           <TooltipIcon
             status="info"
             sxTooltipIcon={{
-              marginLeft: theme.spacingFunction(8),
               padding: theme.spacingFunction(8),
             }}
             text={vpcRangesDescription}
@@ -78,6 +77,7 @@ export const AssignIPRanges = (props: Props) => {
         )}
       </Box>
       <MultipleIPInput
+        adjustSpacingForVPCDualStack={showIPv6Fields}
         buttonText="Add IPv4 Range"
         forVPCIPRanges
         ips={ipv4Ranges}
@@ -88,6 +88,7 @@ export const AssignIPRanges = (props: Props) => {
       />
       {showIPv6Fields && (
         <MultipleIPInput
+          adjustSpacingForVPCDualStack={showIPv6Fields}
           buttonText="Add IPv6 Range"
           forVPCIPRanges
           ips={ipv6Ranges ?? []}

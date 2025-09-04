@@ -21,8 +21,8 @@ import * as React from 'react';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
@@ -77,10 +77,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
 
-    const flags = useFlags();
-    const isVPCIPv6Enabled = !!flags.vpcIpv6;
+    const { isDualStackEnabled } = useVPCDualStack(subnet?.ipv6 ?? []);
     const showIPv6Content =
-      isVPCIPv6Enabled &&
+      isDualStackEnabled &&
       Boolean(subnet?.ipv6?.length && subnet?.ipv6?.length > 0);
 
     const subnetId = subnet?.id;
@@ -310,15 +309,14 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       }
     };
 
-    const { handleSubmit, resetForm } = useFormik<UpdateConfigInterfacePayload>(
-      {
+    const { handleSubmit, isSubmitting, resetForm } =
+      useFormik<UpdateConfigInterfacePayload>({
         enableReinitialize: true,
         initialValues: {},
         onSubmit: handleUnassignLinode,
         validateOnBlur: false,
         validateOnChange: false,
-      }
-    );
+      });
 
     const handleOnClose = () => {
       resetForm();
@@ -424,6 +422,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   'data-testid': 'unassign-submit-button',
                   disabled: interfacesToDelete.length === 0,
                   label: 'Unassign Linodes',
+                  loading: isSubmitting,
                   type: 'submit',
                 }}
                 secondaryButtonProps={{
