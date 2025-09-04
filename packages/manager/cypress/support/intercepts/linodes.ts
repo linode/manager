@@ -806,6 +806,49 @@ export const mockGetLinodeStatsError = (
  *
  * @returns Cypress chainable.
  */
-export const mockUpdateLinode = (linodeId: number): Cypress.Chainable<null> => {
+export const interceptUpdateLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
   return cy.intercept('PUT', apiMatcher(`linode/instances/${linodeId}`));
+};
+
+/**
+ * Intercepts PUT request to edit details of a linode
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param updatedLinode - a mock linode object
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinode = (
+  linodeId: number,
+  updatedLinode: Linode
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`linode/instances/${linodeId}`),
+    updatedLinode
+  );
+};
+
+/**
+ * Intercepts PUT request to edit details of a linode and mocks an error response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param updatedLinode - a mock linode object
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinodeError = (
+  linodeId: number,
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`linode/instances/${linodeId}`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };

@@ -150,9 +150,7 @@ describe('Metric component tests', () => {
       await container.findByRole('option', { name: 'Min' })
     ).toBeInTheDocument();
 
-    expect(
-      container.getByRole('option', { name: 'Avg' })
-    ).toBeInTheDocument();
+    expect(container.getByRole('option', { name: 'Avg' })).toBeInTheDocument();
 
     const option = await container.findByRole('option', { name: 'Avg' });
 
