@@ -43,11 +43,8 @@ interface Props {
 
 const RFC1918HelperText = (
   <Typography>
-    The VPC can use the entire RFC 1918 specified range for subnetting except:
-    <ul style={{ marginLeft: 0, marginBottom: 0 }}>
-      <li>192.168.128.0/17</li>
-      <li>172.16.0.0/12</li>
-    </ul>
+    The VPC can use the entire RFC 1918 specified range for subnetting except
+    for 192.168.128.0/17.
   </Typography>
 );
 
