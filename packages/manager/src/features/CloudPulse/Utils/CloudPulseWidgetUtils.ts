@@ -419,7 +419,8 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
       labels.push(dimensionValue);
     }
   });
-  return labels.filter(Boolean).join(' | ');
+  const label = labels.filter(Boolean).join(' | ');
+  return label || metric['metric_name'];
 };
 
 /**
