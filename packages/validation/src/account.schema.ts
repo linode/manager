@@ -99,7 +99,6 @@ const usernameSchema = string()
     // Check if all characters are ASCII (character codes 0-127)
     return [...value].every((char) => char.charCodeAt(0) <= 127);
   })
-  // ... existing code ...
   .test('no-whitespace', userNameErrors.spacesError, (value) => {
     if (!value) return true; // Allow empty values (required check handles this)
     return !/[ \t]/.test(value);
