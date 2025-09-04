@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import {
@@ -140,7 +141,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           >
             <StyledListItem sx={{ ...sxListItemFirstChild }}>
               <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
-              {clusterId}
+              <CopyTooltip copyableText text={String(clusterId)} />
             </StyledListItem>
             {isLkeEnterprisePhase2FeatureEnabled && vpc && (
               <StyledListItem
@@ -156,7 +157,11 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                   {vpc?.label ?? `${vpcId}`}
                 </Link>
                 &nbsp;
-                {vpcId && vpc?.label ? `(ID: ${vpcId})` : undefined}
+                {vpcId && vpc?.label && (
+                  <span>
+                    (ID: <CopyTooltip copyableText text={String(vpcId)} />)
+                  </span>
+                )}
               </StyledListItem>
             )}
             <StyledListItem>
@@ -212,6 +217,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           disabled={areClusterLinodesReadOnly}
+          entity="Kubernetes Cluster"
           entityLabel={clusterLabel}
           sx={{
             width: '100%',
