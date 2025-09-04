@@ -457,7 +457,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseDashboard(id, dashboard);
 
     mockGetRegions([mockRegion]);
-    // mockGetLinodes([mockLinode]);
     mockGetNodeBalancers([mockNodeBalancer]);
     mockGetUserPreferences({});
     cy.visitWithLogin('metrics');
