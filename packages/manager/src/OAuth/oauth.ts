@@ -159,7 +159,6 @@ export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
     const { nonce: generatedNonce } = generateNonce();
     nonce = generatedNonce;
   } catch (error) {
-    // If the Crypto API isn't available, we can't securely authenticate
     return null;
   }
 
