@@ -76,7 +76,11 @@ export const TransferControls = React.memo((props: Props) => {
               buttonType="primary"
               disabled={!permissions.accept_service_transfer || token === ''}
               onClick={() => setConfirmDialogOpen(true)}
-              tooltipText="Enter a service transfer token to review the details and accept the transfer."
+              tooltipText={
+                !permissions.accept_service_transfer
+                  ? 'You do not have permissions to accept a service transfer.'
+                  : 'Enter a service transfer token to review the details and accept the transfer.'
+              }
             >
               Review Details
             </StyledReviewButton>
