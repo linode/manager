@@ -57,6 +57,6 @@ describe('DestinationEdit', () => {
     });
     assertInputHasValue('Access Key ID', 'Access Id');
     assertInputHasValue('Secret Access Key', 'Access Secret');
-    assertInputHasValue('Log path', 'file');
+    assertInputHasValue('Log Path Prefix', 'file');
   });
 });

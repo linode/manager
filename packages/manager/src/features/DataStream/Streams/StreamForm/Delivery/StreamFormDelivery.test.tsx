@@ -185,7 +185,7 @@ describe('StreamFormDelivery', () => {
     await renderComponentAndAddNewDestinationName();
 
     // Type the test value inside the input
-    const logPathPrefixInput = screen.getByLabelText('Log path');
+    const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
     await userEvent.type(logPathPrefixInput, 'Test');
 
     expect(logPathPrefixInput.getAttribute('value')).toEqual('Test');
