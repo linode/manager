@@ -66,6 +66,7 @@ export const TransferControls = React.memo((props: Props) => {
             direction="row"
           >
             <StyledTextField
+              disabled={!permissions.accept_service_transfer}
               hideLabel
               label="Receive a Service Transfer"
               onChange={handleInputChange}
@@ -78,7 +79,7 @@ export const TransferControls = React.memo((props: Props) => {
               onClick={() => setConfirmDialogOpen(true)}
               tooltipText={
                 !permissions.accept_service_transfer
-                  ? 'You do not have permissions to accept a service transfer.'
+                  ? 'You do not have permissions to accept service transfers.'
                   : 'Enter a service transfer token to review the details and accept the transfer.'
               }
             >
