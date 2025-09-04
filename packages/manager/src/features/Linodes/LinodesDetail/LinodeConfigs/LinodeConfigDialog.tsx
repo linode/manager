@@ -44,10 +44,6 @@ import type { JSX } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import {
-  useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-} from 'src/features/Kubernetes/kubeUtils';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
@@ -55,7 +51,6 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -251,20 +246,6 @@ export const LinodeConfigDialog = (props: Props) => {
   const deviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
-
-  const { data: cluster } = useKubernetesClusterQuery({
-    enabled:
-      isLkeEnterpriseLAFeatureEnabled &&
-      Boolean(linode?.lke_cluster_id) &&
-      !isAPLAvailabilityLoading,
-    id: linode?.lke_cluster_id ?? -1,
-    isUsingBetaEndpoint,
-  });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -1092,8 +1073,6 @@ export const LinodeConfigDialog = (props: Props) => {
                       <React.Fragment key={`${idx}-interface`}>
                         {unrecommendedConfigNoticeSelector({
                           _interface: thisInterface,
-                          isLKEEnterpriseCluster:
-                            cluster?.tier === 'enterprise',
                           primaryInterfaceIndex,
                           thisIndex: idx,
                           values,
@@ -1274,23 +1253,22 @@ const noticeForScenario = (scenarioText: string) => (
 );
 
 /**
+ * Returns a JSX warning notice if the current network interface configuration
+ * is unrecommended and may lead to undesired or unsupported behavior.
  *
  * @param _interface the current config interface being passed in
  * @param primaryInterfaceIndex the index of the primary interface
  * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
  * @param values the values held in Formik state, having a type of `EditableFields`
- * @param isLKEEnterpriseCluster boolean indicating if the linode is associated with a LKE-E cluster
  * @returns JSX.Element | null
  */
 export const unrecommendedConfigNoticeSelector = ({
   _interface,
-  isLKEEnterpriseCluster,
   primaryInterfaceIndex,
   thisIndex,
   values,
 }: {
   _interface: ExtendedInterface;
-  isLKEEnterpriseCluster: boolean;
   primaryInterfaceIndex: null | number;
   thisIndex: number;
   values: EditableFields;
