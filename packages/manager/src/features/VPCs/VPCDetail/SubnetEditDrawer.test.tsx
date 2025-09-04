@@ -8,7 +8,7 @@ import { SubnetEditDrawer } from './SubnetEditDrawer';
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
-      update_vpc_subnet: true,
+      update_vpc: true,
     },
   })),
   useQueryWithPermissions: vi.fn().mockReturnValue({
@@ -54,10 +54,10 @@ describe('SubnetEditDrawer', () => {
     expect(cancelBtn).toBeVisible();
   });
 
-  it('should disable the Label input when user does not have update_vpc_subnet permission', () => {
+  it('should disable the Label input when user does not have update_vpc permission', () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_vpc_subnet: false,
+        update_vpc: false,
       },
     });
     const { getByRole } = renderWithTheme(<SubnetEditDrawer {...props} />);
@@ -65,10 +65,10 @@ describe('SubnetEditDrawer', () => {
     expect(labelInput).toBeDisabled();
   });
 
-  it('should enable the Label input when user does not have update_vpc_subnet permission', async () => {
+  it('should enable the Label input when user does not have update_vpc permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_vpc_subnet: true,
+        update_vpc: true,
       },
     });
     const { getByRole, getByTestId } = renderWithTheme(

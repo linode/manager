@@ -10,8 +10,8 @@ import { SubnetActionMenu } from './SubnetActionMenu';
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
-      create_linode_config_profile_interface: true,
-      delete_linode_config_profile_interface: true,
+      update_linode: true,
+      delete_linode: true,
       update_vpc: true,
     },
   })),
@@ -127,11 +127,11 @@ describe('SubnetActionMenu', () => {
     expect(props.handleAssignLinodes).toHaveBeenCalled();
   });
 
-  it('should disable the Assign Linodes button if user does not have create_linode_config_profile_interface permission', async () => {
+  it('should disable the Assign Linodes button if user does not have update_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        create_linode_config_profile_interface: false,
-        delete_linode_config_profile_interface: false,
+        update_linode: false,
+        delete_linode: false,
         update_vpc: false,
       },
     });
@@ -143,11 +143,11 @@ describe('SubnetActionMenu', () => {
     expect(assignButton).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should enable the Assign Linodes button if user has create_linode_config_profile_interface and update_vpc permissions', async () => {
+  it('should enable the Assign Linodes button if user has update_linode and update_vpc permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        create_linode_config_profile_interface: true,
-        delete_linode_config_profile_interface: false,
+        update_linode: true,
+        delete_linode: false,
         update_vpc: true,
       },
     });
@@ -162,8 +162,8 @@ describe('SubnetActionMenu', () => {
   it('should disable the Edit button if user does not have update_vpc permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        create_linode_config_profile_interface: false,
-        delete_linode_config_profile_interface: false,
+        update_linode: false,
+        delete_linode: false,
         update_vpc: false,
       },
     });
@@ -178,8 +178,8 @@ describe('SubnetActionMenu', () => {
   it('should enable the Edit button if user has update_vpc permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        create_linode_config_profile_interface: false,
-        delete_linode_config_profile_interface: false,
+        update_linode: false,
+        delete_linode: false,
         update_vpc: true,
       },
     });

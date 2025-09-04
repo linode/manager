@@ -60,12 +60,8 @@ export const SubnetEditDrawer = (props: Props) => {
       }
     }
   };
-
-  const { data: permissions } = usePermissions(
-    'vpc',
-    ['update_vpc_subnet'],
-    vpcId
-  );
+  // TODO: change 'update_vpc' to 'update_vpc_subnet' once it's available
+  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
 
   return (
     <Drawer
@@ -78,7 +74,7 @@ export const SubnetEditDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
-      {!permissions.update_vpc_subnet && (
+      {!permissions.update_vpc && (
         <Notice
           text={`You don't have permissions to edit ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
@@ -90,7 +86,7 @@ export const SubnetEditDrawer = (props: Props) => {
           name="label"
           render={({ field, fieldState }) => (
             <TextField
-              disabled={!permissions.update_vpc_subnet}
+              disabled={!permissions.update_vpc}
               errorText={fieldState.error?.message}
               label="Label"
               name="label"
@@ -109,7 +105,7 @@ export const SubnetEditDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',
-            disabled: !isDirty || !permissions.update_vpc_subnet,
+            disabled: !isDirty || !permissions.update_vpc,
             label: 'Save',
             loading: isPending || isSubmitting,
             type: 'submit',
