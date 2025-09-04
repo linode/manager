@@ -48,7 +48,7 @@ describe('Search Linodes', () => {
         .should('have.value', `id:${linode.id}`);
 
       // Verify we land on the search page
-      cy.url().should('endWith', '/search?query=tag%3Alke');
+      cy.url().should('endWith', `/search?query=id%3A${linode.id}`);
       cy.findByText(`Search Results for "id:${linode.id}"`).should(
         'be.visible'
       );
