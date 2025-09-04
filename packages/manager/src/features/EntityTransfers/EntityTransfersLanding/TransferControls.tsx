@@ -79,7 +79,7 @@ export const TransferControls = React.memo((props: Props) => {
               onClick={() => setConfirmDialogOpen(true)}
               tooltipText={
                 !permissions.accept_service_transfer
-                  ? 'You do not have permissions to receive service transfers.'
+                  ? 'You do not have permission to receive service transfers.'
                   : 'Enter a service transfer token to review the details and accept the transfer.'
               }
             >
