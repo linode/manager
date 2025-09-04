@@ -18,9 +18,9 @@
 
 ### Upcoming Features:
 
-- DELETE, PUT API endpoints for Streams ([#12645](https://github.com/linode/manager/pull/12645))
+- Add DELETE, PUT API endpoints for Streams ([#12645](https://github.com/linode/manager/pull/12645))
 - ACLP Alert: Add `regions` property in `CreateAlertDefinitionPayload` and `EditAlertDefinitionPayload` ([#12745](https://github.com/linode/manager/pull/12745))
-- DELETE, PUT API endpoints for Destinations ([#12749](https://github.com/linode/manager/pull/12749))
+- Add DELETE, PUT API endpoints for Destinations ([#12749](https://github.com/linode/manager/pull/12749))
 
 ## [2025-08-26] - v0.147.0
 

@@ -2,7 +2,7 @@
 
 ### Tests:
 
-- Mock IntersectionObserver in testSetup.ts ([#12777](https://github.com/linode/manager/pull/12777))
+- Add Mock IntersectionObserver in testSetup.ts ([#12777](https://github.com/linode/manager/pull/12777))
 
 ## [2025-08-12] - v0.7.0
 
