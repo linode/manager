@@ -10,11 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Type-to-confirm to Image deletion dialog ([#12740](https://github.com/linode/manager/pull/12740))
 - Volumes IAM RBAC permissions ([#12744](https://github.com/linode/manager/pull/12744))
-- Volume details page ([#12757](https://github.com/linode/manager/pull/12757))
-- Add a notification banner for Account Settings if user doesn't have permission to see ([#12774](https://github.com/linode/manager/pull/12774))
+- Notification banner for Account Settings if user doesn't have permission to see ([#12774](https://github.com/linode/manager/pull/12774))
 - Linked Node Pool firewall in Node Pool footer for LKE-E clusters ([#12779](https://github.com/linode/manager/pull/12779))
-- IAM RBAC: Implements IAM RBAC permissions for NodeBalancer ([#12780](https://github.com/linode/manager/pull/12780))
-- IAM RBAC: Implements IAM RBAC permissions for NodeBalancer summary tab ([#12790](https://github.com/linode/manager/pull/12790))
+- IAM RBAC: Implement IAM RBAC permissions for NodeBalancer ([#12780](https://github.com/linode/manager/pull/12780))
+- IAM RBAC: Implement IAM RBAC permissions for NodeBalancer summary tab ([#12790](https://github.com/linode/manager/pull/12790))
 - Additional device slots to Linode Config and Rescue Dialog to match new API limits ([#12791](https://github.com/linode/manager/pull/12791))
 
 ### Changed:
@@ -22,17 +21,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - IAM RBAC: change docs links to be relevant to content on page ([#12743](https://github.com/linode/manager/pull/12743))
 - Support IAM/RBAC permission segmentation for BETA/LA features ([#12764](https://github.com/linode/manager/pull/12764))
 - Aggregation Function labels from Average,Minimum,Maximum to Avg,Min,Max in ACLP-Alerting service ([#12787](https://github.com/linode/manager/pull/12787))
-- Updated jspdf to 3.0.2 ([#12797](https://github.com/linode/manager/pull/12797))
 - Add data-pendo-id attribute to TabbedPanel for Linode Plan tab tracking ([#12806](https://github.com/linode/manager/pull/12806))
 
 ### Fixed:
 
-- Add automatic redirect for empty paginated Access Keys pages ([#12598](https://github.com/linode/manager/pull/12598))
-- Replace undefined with null in Autocomplete values to fix MUI errors ([#12706](https://github.com/linode/manager/pull/12706))
+- Empty paginated Access Keys pages ([#12598](https://github.com/linode/manager/pull/12598))
+- MUI Autocomplete console errors ([#12706](https://github.com/linode/manager/pull/12706))
 - IAM - Cross browser AssignedRoles entities chips truncation ([#12720](https://github.com/linode/manager/pull/12720))
-- Reset selected region when switching between Core and Distributed tabs ([#12767](https://github.com/linode/manager/pull/12767))
+- Selected region not being reset when switching between Core and Distributed tabs ([#12767](https://github.com/linode/manager/pull/12767))
 - Jumping UI on LKE Create HA Control Plane when enabling Akamai App Platform ([#12768](https://github.com/linode/manager/pull/12768))
-- Profile preferences across sessions ([#12795](https://github.com/linode/manager/pull/12795))
+- Profile preferences not retained across sessions ([#12795](https://github.com/linode/manager/pull/12795))
 - Make a Payment and Add Payment drawers not closing when browser back button is clicked ([#12796](https://github.com/linode/manager/pull/12796))
 - Node Pool footer layout ([#12798](https://github.com/linode/manager/pull/12798))
 
@@ -43,27 +41,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Tech Stories:
 
 - Improve usePermissions hook type safety ([#12732](https://github.com/linode/manager/pull/12732))
-- MSW CRUD: Fix type error when using custom restricted profile preset and add grants preset support ([#12756](https://github.com/linode/manager/pull/12756))
+- MSW CRUD: Fix type error when using custom restricted profile preset and add grants preset support (#12756)
+- Update `jspdf` to 3.0.2 ([#12797](https://github.com/linode/manager/pull/12797))
 
 ### Tests:
 
 - Fix Linode resize test failures ([#12727](https://github.com/linode/manager/pull/12727))
-- Tests for Host & VM Maintenance in Linode create page ([#12734](https://github.com/linode/manager/pull/12734))
-- Fix for flakey test in alerts-listing-page.spec.ts ([#12736](https://github.com/linode/manager/pull/12736))
+- Add tests for Host & VM Maintenance in Linode create page ([#12734](https://github.com/linode/manager/pull/12734))
+- Fix for flaky test in alerts-listing-page.spec.ts ([#12736](https://github.com/linode/manager/pull/12736))
 - Fix LKE Create Smoke Test Flake ([#12738](https://github.com/linode/manager/pull/12738))
 - Add Cypress error handling test coverage for LKE-E Phase 2 (BYO VPC, IP Stack) ([#12755](https://github.com/linode/manager/pull/12755))
 - Fix Cypress test result summary duration accuracy ([#12765](https://github.com/linode/manager/pull/12765))
-- Test for empty string in numeric input validation ([#12769](https://github.com/linode/manager/pull/12769))
+- Add test for empty string in numeric input validation ([#12769](https://github.com/linode/manager/pull/12769))
 - Add Cypress test coverage for standard cluster creation with LKE-E phase2Mtc flag enabled ([#12770](https://github.com/linode/manager/pull/12770))
 - Add Cypress LKE-E 'phase2Mtc' feature flag smoke tests ([#12773](https://github.com/linode/manager/pull/12773))
-- Mock IntersectionObserver in testSetup.ts and check disabled tooltip in region select component tests ([#12777](https://github.com/linode/manager/pull/12777))
-- Tests for Host & VM Maintenance Linode details page changes ([#12786](https://github.com/linode/manager/pull/12786))
+- Add mock IntersectionObserver in testSetup.ts and check disabled tooltip in region select component tests ([#12777](https://github.com/linode/manager/pull/12777))
+- Add tests for Host & VM Maintenance Linode details page changes ([#12786](https://github.com/linode/manager/pull/12786))
 - Fix disk deletion test following API release changes ([#12794](https://github.com/linode/manager/pull/12794))
 
 ### Upcoming Features:
 
+- Volume details page ([#12757](https://github.com/linode/manager/pull/12757))
 - DataStreams: add actions with handlers in Streams list, add Edit Stream component ([#12645](https://github.com/linode/manager/pull/12645))
-- Configure Node Pool Drawer to Kubernetes Cluster details page ([#12710](https://github.com/linode/manager/pull/12710))
+- Add Configure Node Pool Drawer to Kubernetes Cluster details page ([#12710](https://github.com/linode/manager/pull/12710))
 - CloudPulse - Alerts: Update handler in `AlertReusableComponenr.tsx`, reset state in `AlertInformationActionTable.tsx`, update query in `alerts.ts` ([#12730](https://github.com/linode/manager/pull/12730))
 - ACLP: Order of each legend row label value is based on group by sequence ([#12742](https://github.com/linode/manager/pull/12742))
 - ACLP Alert: Add `EntityScopeSelection` drop down in Alert creation and edit form([#12745](https://github.com/linode/manager/pull/12745))
