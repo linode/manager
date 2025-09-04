@@ -74,7 +74,6 @@ export const AssignedEntities = ({
         }}
       >
         <Tooltip
-          arrow={true}
           placement="top"
           title={entity.name.length > 30 ? entity.name : null}
         >
