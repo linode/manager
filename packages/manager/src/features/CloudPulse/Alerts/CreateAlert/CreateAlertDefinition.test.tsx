@@ -160,7 +160,7 @@ describe('AlertDefinition Create', () => {
 
       await user.click(submitButton);
 
-      expect(container.getAllByText('Enter a positive value.').length).toBe(2);
+      expect(container.getAllByText('Enter a positive value.').length).toBe(1);
 
       const thresholdInput = container.getByLabelText('Threshold');
       const triggerOccurrences = container.getByTestId('trigger-occurences');
