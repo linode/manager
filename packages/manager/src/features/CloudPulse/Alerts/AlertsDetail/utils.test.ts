@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { firewallMetricRulesFactory } from 'src/factories';
 
-import { transformationAllowedOperators } from './constants';
 import {
   getResolvedDimensionValue,
   isCheckRequired,
