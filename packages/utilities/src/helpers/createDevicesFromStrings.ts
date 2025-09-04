@@ -17,9 +17,11 @@ export type DevicesAsStrings = StringTypeMap<Devices>;
  * Device slots are optional and may not exist
  * in all contexts, so empty slots can be represented as `undefined`.
  */
-const createTypeRecord = (value?: string): DiskDevice | null | VolumeDevice => {
+const createTypeRecord = (
+  value?: string,
+): DiskDevice | null | undefined | VolumeDevice => {
   if (value === null || value === undefined || value === 'none') {
-    return null;
+    return undefined;
   }
 
   // Given: volume-123
