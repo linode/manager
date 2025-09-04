@@ -1,3 +1,8 @@
+import {
+  type CreateNodePoolData,
+  type KubernetesTier,
+  type Region,
+} from '@linode/api-v4';
 import { useAllTypes, useRegionsQuery } from '@linode/queries';
 import { Box, Button, Drawer, Notice, Stack, Typography } from '@linode/ui';
 import {
@@ -7,10 +12,9 @@ import {
   scrollErrorIntoView,
 } from '@linode/utilities';
 import React from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
-// import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
@@ -25,15 +29,8 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
-import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
-import { NodePoolUpdateStrategySelect } from '../../NodePoolUpdateStrategySelect';
+import { NodePoolConfigOptions } from '../../KubernetesPlansPanel/NodePoolConfigOptions';
 import { hasInvalidNodePoolPrice } from './utils';
-
-import type {
-  CreateNodePoolData,
-  KubernetesTier,
-  Region,
-} from '@linode/api-v4';
 
 export interface Props {
   clusterId: number;
@@ -54,14 +51,13 @@ export const AddNodePoolDrawer = (props: Props) => {
     open,
   } = props;
 
-  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const { data: types, isLoading: isTypesLoading } = useAllTypes(open);
 
   const {
-    error,
     isPending,
     mutateAsync: createPool,
+    error,
   } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here and filter out nanodes
@@ -93,7 +89,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     type && count && isNumber(pricePerNode) ? count * pricePerNode : undefined;
 
   const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
-  const shouldShowPricingInfo = type && count > 0;
+  const shouldShowPricingInfo = Boolean(type) && count > 0;
 
   React.useEffect(() => {
     if (open) {
@@ -145,119 +141,100 @@ export const AddNodePoolDrawer = (props: Props) => {
       open={open}
       slotProps={{
         paper: {
-          sx: { maxWidth: '790px !important' },
+          sx: { maxWidth: '810px !important' },
         },
       }}
       title={`Add a Node Pool: ${clusterLabel}`}
       wide
     >
-      {form.formState.errors.root?.message && (
-        <Notice spacingBottom={0} spacingTop={12} variant="error">
-          <ErrorMessage
-            entity={{ id: clusterId, type: 'lkecluster_id' }}
-            message={form.formState.errors.root?.message}
-          />
-        </Notice>
-      )}
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <KubernetesPlansPanel
-          copy={getPlansPanelCopy()}
-          getTypeCount={(plan) => {
-            if (plan === type) {
-              return count;
-            }
-            return 0;
-          }}
-          hasSelectedRegion={hasSelectedRegion}
-          isPlanPanelDisabled={isPlanPanelDisabled}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          isSubmitting={isPending}
-          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
-          onSelect={(type) => form.setValue('type', type)}
-          regionsData={regions ?? []}
-          resetValues={() => form.reset()}
-          selectedId={type}
-          selectedRegionId={clusterRegionId}
-          selectedTier={clusterTier}
-          types={extendedTypes}
-          updatePlanCount={updatePlanCount}
-        />
-        {count > 0 && count < 3 && (
-          <Notice
-            spacingBottom={16}
-            spacingTop={8}
-            text={nodeWarning}
-            variant="warning"
-          />
-        )}
-        {hasInvalidPrice && shouldShowPricingInfo && (
-          <Notice
-            spacingBottom={16}
-            spacingTop={8}
-            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
-            variant="error"
-          />
-        )}
-        {isLkeEnterprisePostLAFeatureEnabled &&
-          clusterTier === 'enterprise' && (
-            <Stack spacing={2}>
-              <Typography variant="h3">Configuration</Typography>
-              <Controller
-                control={form.control}
-                name="update_strategy"
-                render={({ field }) => (
-                  <NodePoolUpdateStrategySelect
-                    onChange={field.onChange}
-                    value={field.value!}
-                  />
-                )}
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Stack spacing={2}>
+            {form.formState.errors.root?.message && (
+              <Notice variant="error">
+                <ErrorMessage
+                  entity={{ id: clusterId, type: 'lkecluster_id' }}
+                  message={form.formState.errors.root?.message}
+                />
+              </Notice>
+            )}
+            <KubernetesPlansPanel
+              copy={getPlansPanelCopy()}
+              error={form.formState.errors.type?.message}
+              getTypeCount={(plan) => {
+                if (plan === type) {
+                  return count;
+                }
+                return 0;
+              }}
+              hasSelectedRegion={hasSelectedRegion}
+              isPlanPanelDisabled={isPlanPanelDisabled}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+              isSubmitting={isPending}
+              notice={
+                <PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />
+              }
+              onSelect={(type) => form.setValue('type', type)}
+              regionsData={regions ?? []}
+              resetValues={() => {
+                form.setValue('type', '');
+                form.setValue('count', 0);
+              }}
+              selectedId={type}
+              selectedRegionId={clusterRegionId}
+              selectedTier={clusterTier}
+              types={extendedTypes}
+              updatePlanCount={updatePlanCount}
+            />
+            {count > 0 && count < 3 && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={0}
+                text={nodeWarning}
+                variant="warning"
               />
-              {/*
-              <Controller
-                control={form.control}
-                name="firewall_id"
-                render={({ field, fieldState }) => (
-                  <FirewallSelect
-                    errorText={fieldState.error?.message}
-                    onChange={(e, firewall) =>
-                      field.onChange(firewall?.id ?? null)
-                    }
-                    value={field.value ?? null}
-                  />
-                )}
+            )}
+            {hasInvalidPrice && shouldShowPricingInfo && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={0}
+                text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+                variant="error"
               />
-              */}
-            </Stack>
-          )}
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="row"
-          justifyContent={shouldShowPricingInfo ? 'space-between' : 'flex-end'}
-          mt={3}
-        >
-          {shouldShowPricingInfo && (
-            <Typography>
-              This pool will add{' '}
-              <strong>
-                ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month (
-                {pluralize('node', 'nodes', count)} at $
-                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-                /month)
-              </strong>{' '}
-              to this cluster.
-            </Typography>
-          )}
-          <Button
-            buttonType="primary"
-            disabled={!type || hasInvalidPrice}
-            loading={form.formState.isSubmitting}
-            type="submit"
-          >
-            Add pool
-          </Button>
-        </Box>
-      </form>
+            )}
+            <NodePoolConfigOptions clusterTier={clusterTier} />
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              justifyContent={
+                shouldShowPricingInfo ? 'space-between' : 'flex-end'
+              }
+            >
+              {shouldShowPricingInfo && (
+                <Typography>
+                  This pool will add{' '}
+                  <strong>
+                    ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month
+                    ({pluralize('node', 'nodes', count)} at $
+                    {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+                    /month)
+                  </strong>{' '}
+                  to this cluster.
+                </Typography>
+              )}
+              <Button
+                buttonType="primary"
+                disabled={!type || hasInvalidPrice}
+                loading={form.formState.isSubmitting}
+                type="submit"
+              >
+                Add pool
+              </Button>
+            </Box>
+          </Stack>
+        </form>
+      </FormProvider>
     </Drawer>
   );
 };

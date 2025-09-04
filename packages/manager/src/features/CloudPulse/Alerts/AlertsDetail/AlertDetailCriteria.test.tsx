@@ -32,7 +32,7 @@ describe('AlertDetailCriteria component tests', () => {
     expect(getAllByText('Metric Threshold:').length).toBe(rules.length);
     expect(getAllByText('Dimension Filter:').length).toBe(rules.length);
     expect(getByText('Criteria')).toBeInTheDocument();
-    expect(getAllByText('Average').length).toBe(2);
+    expect(getAllByText('Avg').length).toBe(2);
     expect(getAllByText('CPU Usage').length).toBe(2);
     expect(getAllByText('bytes').length).toBe(2);
     expect(getAllByText(metricOperatorTypeMap['gt']).length).toBe(2);

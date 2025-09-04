@@ -79,7 +79,7 @@ export const NodePoolConfigOptions = (props: Props) => {
             render={({ field }) => (
               <NodePoolUpdateStrategySelect
                 onChange={field.onChange}
-                value={field.value}
+                value={field.value ?? undefined}
               />
             )}
           />

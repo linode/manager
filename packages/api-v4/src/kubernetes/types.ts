@@ -110,7 +110,7 @@ export interface CreateNodePoolData {
    *
    * @note Only supported on LKE Enterprise clusters
    */
-  firewall_id?: number;
+  firewall_id?: null | number;
   /**
    * The LKE version that the node pool should use.
    *
@@ -127,12 +127,12 @@ export interface CreateNodePoolData {
   /**
    * Key-value pairs added as labels to nodes in the node pool.
    */
-  labels?: Label;
-  tags?: string[];
+  labels?: Label | null;
+  tags?: null | string[];
   /**
    * Kubernetes taints to add to node pool nodes.
    */
-  taints?: Taint[];
+  taints?: null | Taint[];
   /**
    * The Linode Type for all of the nodes in the Node Pool.
    */
@@ -144,7 +144,7 @@ export interface CreateNodePoolData {
    * @note Only supported on LKE Enterprise clusters
    * @default on_recycle
    */
-  update_strategy?: NodePoolUpdateStrategy;
+  update_strategy?: NodePoolUpdateStrategy | null;
 }
 
 export type UpdateNodePoolData = Partial<CreateNodePoolData>;
