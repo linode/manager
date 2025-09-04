@@ -261,24 +261,27 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   });
 
   it('should validate UI elements and alert details', () => {
-    // Validate navigation links and buttons
-    cy.findByText('Alerts').should('be.visible');
+    // filter to main content area to avoid confusion w/ 'Alerts' nav link in left sidebar
+    cy.get('main').within(() => {
+      // Validate breadcrumb and buttons
+      cy.findByText('Alerts', { exact: false }).should('be.visible');
 
-    cy.findByText('Definitions')
-      .should('be.visible')
-      .and('have.attr', 'href', alertDefinitionsUrl);
-    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
+      cy.findByText('Definitions')
+        .should('be.visible')
+        .and('have.attr', 'href', alertDefinitionsUrl);
+      ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
-    // Validate table headers
-    cy.get('[data-qa="alert-table"]').within(() => {
-      expectedHeaders.forEach((header) => {
-        cy.findByText(header).should('have.text', header);
+      // Validate table headers
+      cy.get('[data-qa="alert-table"]').within(() => {
+        expectedHeaders.forEach((header) => {
+          cy.findByText(header).should('have.text', header);
+        });
       });
-    });
 
-    // Validate alert details
-    mockAlerts.forEach((alert) => {
-      validateAlertDetails(alert);
+      // Validate alert details
+      mockAlerts.forEach((alert) => {
+        validateAlertDetails(alert);
+      });
     });
   });
 
