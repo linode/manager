@@ -64,20 +64,12 @@ describe('isCheckRequired', () => {
   const ruleCriteria = { rules: [firewallMetricRulesFactory.build()] };
 
   it('should return true if the label is present with an allowed operator', () => {
-    const result = isCheckRequired(
-      ruleCriteria,
-      'linode_id',
-      transformationAllowedOperators
-    );
+    const result = isCheckRequired(ruleCriteria, 'linode_id');
     expect(result).toBe(true);
   });
 
   it('should return false if the label is not present', () => {
-    const result = isCheckRequired(
-      ruleCriteria,
-      '',
-      transformationAllowedOperators
-    );
+    const result = isCheckRequired(ruleCriteria, '');
     expect(result).toBe(false);
   });
 });
@@ -98,8 +90,7 @@ describe('getResolvedDimensionValue', () => {
       '123,456',
       'firewall',
       linodeMap,
-      vpcSubnetMap,
-      transformationAllowedOperators
+      vpcSubnetMap
     );
     expect(linodeResult).toBe('linode-a, linode-b');
     const vpcResult = getResolvedDimensionValue(
@@ -108,8 +99,7 @@ describe('getResolvedDimensionValue', () => {
       'subnet-1',
       'firewall',
       linodeMap,
-      vpcSubnetMap,
-      transformationAllowedOperators
+      vpcSubnetMap
     );
     expect(vpcResult).toBe('VPC-1_subnet-1');
   });
@@ -121,8 +111,7 @@ describe('getResolvedDimensionValue', () => {
       'linode-c, linode-d',
       'firewall',
       linodeMap,
-      vpcSubnetMap,
-      transformationAllowedOperators
+      vpcSubnetMap
     );
     expect(result).toBe('linode-c, linode-d');
   });
@@ -134,8 +123,7 @@ describe('getResolvedDimensionValue', () => {
       null,
       'firewall',
       linodeMap,
-      vpcSubnetMap,
-      transformationAllowedOperators
+      vpcSubnetMap
     );
     expect(nullResult).toBe('');
   });

@@ -1,6 +1,7 @@
 import { transformDimensionValue } from '../Utils/utils';
 import {
   LINODE_DIMENSION_LABEL,
+  transformationAllowedOperators,
   VPC_SUBNET_DIMENSION_LABEL,
 } from './constants';
 
@@ -56,8 +57,7 @@ export const resolveIds = (
  */
 export const isCheckRequired = (
   ruleCriteria: { rules: AlertDefinitionMetricCriteria[] },
-  label: string,
-  transformationAllowedOperators: DimensionFilterOperatorType[]
+  label: string
 ) => {
   return (
     ruleCriteria.rules?.some((rule) =>
@@ -77,7 +77,6 @@ export const isCheckRequired = (
  * @param serviceType Service type of the alert.
  * @param linodeMap linode id to label map
  * @param vpcSubnetMap vpc subent id to label map.
- * @param transformationAllowedOperators The list of operators that allow transformation.
  * @returns string value with the resolved names for the dimension value and transformed.
  */
 export const getResolvedDimensionValue = (
@@ -86,8 +85,7 @@ export const getResolvedDimensionValue = (
   value: null | string | undefined,
   serviceType: CloudPulseServiceType,
   linodeMap: Record<string, string>,
-  vpcSubnetMap: Record<string, string>,
-  transformationAllowedOperators: DimensionFilterOperatorType[]
+  vpcSubnetMap: Record<string, string>
 ): string => {
   if (!value) return '';
 

@@ -17,7 +17,6 @@ import {
 import { getVPCSubnets } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
 import {
   LINODE_DIMENSION_LABEL,
-  transformationAllowedOperators,
   VPC_SUBNET_DIMENSION_LABEL,
 } from './constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
@@ -42,13 +41,11 @@ export const RenderAlertMetricsAndDimensions = React.memo(
 
     const isLinodeRequired = isCheckRequired(
       ruleCriteria,
-      LINODE_DIMENSION_LABEL,
-      transformationAllowedOperators
+      LINODE_DIMENSION_LABEL
     );
     const isVPCRequired = isCheckRequired(
       ruleCriteria,
-      VPC_SUBNET_DIMENSION_LABEL,
-      transformationAllowedOperators
+      VPC_SUBNET_DIMENSION_LABEL
     );
     // Initialize the query, but only run when needed
     const { data: linodes } = useAllLinodesQuery({}, {}, isLinodeRequired);
@@ -127,8 +124,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                       value,
                       serviceType,
                       linodeMap,
-                      vpcSubnetMap,
-                      transformationAllowedOperators
+                      vpcSubnetMap
                     ),
                   ]
                 )}
