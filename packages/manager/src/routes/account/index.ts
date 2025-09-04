@@ -142,7 +142,7 @@ const accountSettingsRoute = createRoute({
   beforeLoad: ({ context }) => {
     if (context?.flags?.iamRbacPrimaryNavChanges) {
       throw redirect({
-        to: `/settings`,
+        to: `/account-settings`,
         replace: true,
       });
     }
