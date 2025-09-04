@@ -40,13 +40,13 @@ export const SubnetActionMenu = (props: Props) => {
   const flags = useIsNodebalancerVPCEnabled();
 
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+
+  // TODO: change 'update_linode' to 'create_linode_config_profile_interface' once it's available
+  // TODO: change 'delete_linode' to 'delete_linode_config_profile_interface' once it's available
   const { data: linodes } = useQueryWithPermissions<Linode>(
     useAllLinodesQuery(),
     'linode',
-    [
-      'create_linode_config_profile_interface',
-      'delete_linode_config_profile_interface',
-    ]
+    ['update_linode', 'delete_linode']
   );
 
   const canManageSubnetLinodes = permissions?.update_vpc && linodes?.length > 0;

@@ -78,10 +78,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const subnetId = subnet?.id;
 
+    // TODO: change to 'delete_linode_config_profile_interface' once it's available
     const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
       useAllLinodesQuery(),
       'linode',
-      ['delete_linode_config_profile_interface']
+      ['delete_linode']
     );
 
     const queryClient = useQueryClient();
@@ -125,6 +126,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       });
     }, [linodes, subnetLinodeIds]);
 
+    // TODO: Should we also check update_vpc permissions here or update_vpc_subnet once it's ready?
     const userCanUnassignLinodes = React.useMemo(() => {
       return filteredLinodes.some((linode) =>
         (findAssignedLinodes() ?? []).find(
@@ -340,7 +342,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
-        {!userCanUnassignLinodes && (
+        {!userCanUnassignLinodes && findAssignedLinodes.length > 0 && (
           <Notice
             text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
             variant="error"

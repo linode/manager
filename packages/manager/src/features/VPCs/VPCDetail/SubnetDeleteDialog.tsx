@@ -27,11 +27,8 @@ export const SubnetDeleteDialog = (props: Props) => {
     reset,
   } = useDeleteSubnetMutation(vpcId, subnet?.id ?? -1);
 
-  const { data: permissions } = usePermissions(
-    'vpc',
-    ['delete_vpc_subnet'],
-    vpcId
-  );
+  // TODO: change 'update_vpc' to 'delete_vpc_subnet' once it's available
+  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
 
   React.useEffect(() => {
     if (open) {
@@ -49,7 +46,7 @@ export const SubnetDeleteDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
-      disableTypeToConfirmInput={!permissions.delete_vpc_subnet}
+      disableTypeToConfirmInput={!permissions.update_vpc}
       entity={{
         action: 'deletion',
         name: subnet?.label,
@@ -67,7 +64,7 @@ export const SubnetDeleteDialog = (props: Props) => {
       open={open}
       title={`Delete Subnet ${subnet?.label}`}
     >
-      {!permissions.delete_vpc_subnet && (
+      {!permissions.update_vpc && (
         <Notice
           text={`You don't have permissions to delete ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"

@@ -14,7 +14,7 @@ const queryMocks = vi.hoisted(() => ({
       reboot_linode: true,
       boot_linode: true,
       shutdown_linode: true,
-      delete_linode_config_profile_interface: true,
+      delete_linode: true,
     },
   })),
   useQueryWithPermissions: vi.fn().mockReturnValue({
@@ -112,7 +112,7 @@ describe('SubnetActionMenu', () => {
   it('should disable the "Unassign Linode" and "Power On" buttons when user does not have permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        delete_linode_config_profile_interface: false,
+        delete_linode: false,
         reboot_linode: false,
         boot_linode: false,
         shutdown_linode: false,
@@ -135,7 +135,7 @@ describe('SubnetActionMenu', () => {
   it('should enable the "Unassign Linode" and "Power On" buttons when user has permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        delete_linode_config_profile_interface: true,
+        delete_linode: true,
         reboot_linode: true,
         boot_linode: true,
         shutdown_linode: false,
