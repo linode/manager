@@ -26,7 +26,11 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   checkPassive: true,
   checkPath: '',
   configIdx: 0,
-  disabled: false,
+  permissions: {
+    update_nodebalancer: true,
+    delete_nodebalancer: true,
+    create_nodebalancer_config: true,
+  },
   healthCheckAttempts: 2,
   healthCheckInterval: 5,
   healthCheckTimeout: 3,

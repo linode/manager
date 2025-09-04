@@ -3,6 +3,7 @@ import type {
   APIError,
   NodeBalancerConfigNode,
   NodeBalancerProxyProtocol,
+  PermissionType,
   Protocol,
   Stickiness,
   UpdateNodeBalancerConfig,
@@ -48,56 +49,57 @@ export interface NodeBalancerConfigPanelProps {
   disabled?: boolean;
   errors?: APIError[];
   forEdit?: boolean;
-
   healthCheckAttempts: number;
+
   healthCheckInterval: number;
-
   healthCheckTimeout: number;
-  healthCheckType: 'connection' | 'http' | 'http_body' | 'none';
 
+  healthCheckType: 'connection' | 'http' | 'http_body' | 'none';
   nodeBalancerRegion?: string;
+
   nodeBalancerSubnetId?: number;
   nodeBalancerVpcId?: number;
   nodeMessage?: string;
-
   nodes: NodeBalancerConfigNodeFields[];
+
   onAlgorithmChange: (v: string) => void;
-
   onCheckBodyChange: (v: string) => void;
+
   onCheckPassiveChange: (v: boolean) => void;
-
   onCheckPathChange: (v: string) => void;
-  onDelete?: any;
 
+  onDelete?: any;
   onHealthCheckAttemptsChange: (v: number | string) => void;
 
   onHealthCheckIntervalChange: (v: number | string) => void;
-  onHealthCheckTimeoutChange: (v: number | string) => void;
 
+  onHealthCheckTimeoutChange: (v: number | string) => void;
   onHealthCheckTypeChange: (v: string) => void;
+
   onNodeAddressChange: (
     nodeIdx: number,
     value: string,
     subnetId?: number
   ) => void;
-
   onNodeLabelChange: (nodeIdx: number, value: string) => void;
+
   onNodeModeChange?: (nodeIdx: number, value: string) => void;
-
   onNodePortChange: (nodeIdx: number, value: string) => void;
+
   onNodeWeightChange: (nodeIdx: number, value: string) => void;
-
   onPortChange: (v: number | string) => void;
+
   onPrivateKeyChange: (v: string) => void;
-
   onProtocolChange: (v: Protocol) => void;
+
   onProxyProtocolChange: (v: NodeBalancerProxyProtocol) => void;
-
   onSave?: () => void;
-  onSessionStickinessChange: (v: Stickiness) => void;
 
+  onSessionStickinessChange: (v: Stickiness) => void;
   onSslCertificateChange: (v: string) => void;
+
   onUdpCheckPortChange: (v: number) => void;
+  permissions?: Record<NodeBalancerConfigurationsPermissions, boolean>;
 
   port: number;
   privateKey: string;
@@ -109,3 +111,8 @@ export interface NodeBalancerConfigPanelProps {
   submitting?: boolean;
   udpCheckPort: number;
 }
+
+type PermissionsSubset<T extends PermissionType> = T;
+export type NodeBalancerConfigurationsPermissions = PermissionsSubset<
+  'create_nodebalancer_config' | 'delete_nodebalancer' | 'update_nodebalancer'
+>;

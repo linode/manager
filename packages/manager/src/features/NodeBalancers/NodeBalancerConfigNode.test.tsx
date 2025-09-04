@@ -14,7 +14,11 @@ const node = {
 
 const props: NodeBalancerConfigNodeProps = {
   configIdx: 1,
-  disabled: false,
+  permissions: {
+    update_nodebalancer: true,
+    delete_nodebalancer: true,
+    create_nodebalancer_config: true,
+  },
   disallowRemoval: false,
   hideModeSelect: false,
   idx: 1,
@@ -73,5 +77,20 @@ describe('NodeBalancerConfigNode', () => {
 
     await userEvent.click(getByText('Remove'));
     expect(props.removeNode).toHaveBeenCalled();
+  });
+
+  it('should disable "Remove" if user does not have delete_nodebalancer permission', () => {
+    const { queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode
+        {...props}
+        permissions={{
+          create_nodebalancer_config: false,
+          delete_nodebalancer: false,
+          update_nodebalancer: false,
+        }}
+      />
+    );
+
+    expect(queryByText('Remove')).toBeDisabled();
   });
 });

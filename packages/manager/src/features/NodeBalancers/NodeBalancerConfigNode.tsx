@@ -16,12 +16,14 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 
-import type { NodeBalancerConfigNodeFields } from './types';
+import type {
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigurationsPermissions,
+} from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
   configIdx: number;
-  disabled: boolean;
   disallowRemoval: boolean;
   hideModeSelect: boolean;
   idx: number;
@@ -38,6 +40,7 @@ export interface NodeBalancerConfigNodeProps {
   onNodeModeChange: (nodeId: number, mode: NodeBalancerConfigNodeMode) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  permissions?: Record<NodeBalancerConfigurationsPermissions, boolean>;
   removeNode: (nodeIndex: number) => void;
 }
 
@@ -61,7 +64,7 @@ export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
       configIdx,
-      disabled,
+      permissions,
       disallowRemoval,
       hideModeSelect,
       idx,
@@ -115,7 +118,7 @@ export const NodeBalancerConfigNode = React.memo(
             >
               <TextField
                 data-qa-backend-ip-label
-                disabled={disabled}
+                disabled={!permissions?.update_nodebalancer}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.label}
                 inputId={`node-label-${configIdx}-${idx}`}
@@ -156,7 +159,7 @@ export const NodeBalancerConfigNode = React.memo(
               }}
             >
               <ConfigNodeIPSelect
-                disabled={disabled}
+                disabled={!permissions?.update_nodebalancer}
                 errorText={nodesErrorMap.address}
                 handleChange={onNodeAddressChange}
                 inputId={`ip-select-node-${configIdx}-${idx}`}
@@ -176,7 +179,7 @@ export const NodeBalancerConfigNode = React.memo(
             >
               <TextField
                 data-qa-backend-ip-port
-                disabled={disabled}
+                disabled={!permissions?.update_nodebalancer}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.port}
                 inputProps={{ 'data-node-idx': idx }}
@@ -196,7 +199,7 @@ export const NodeBalancerConfigNode = React.memo(
             >
               <TextField
                 data-qa-backend-ip-weight
-                disabled={disabled}
+                disabled={!permissions?.update_nodebalancer}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.weight}
                 inputProps={{ 'data-node-idx': idx }}
@@ -216,7 +219,7 @@ export const NodeBalancerConfigNode = React.memo(
                 }}
               >
                 <Select
-                  disabled={disabled}
+                  disabled={!permissions?.update_nodebalancer}
                   errorText={nodesErrorMap.mode}
                   label="Mode"
                   onChange={(_, option) => onNodeModeChange(idx, option.value)}
@@ -231,7 +234,10 @@ export const NodeBalancerConfigNode = React.memo(
             )}
             {!disallowRemoval && (
               <Box alignSelf="flex-end">
-                <Button disabled={disabled} onClick={() => removeNode(idx)}>
+                <Button
+                  disabled={!permissions?.delete_nodebalancer}
+                  onClick={() => removeNode(idx)}
+                >
                   Remove
                 </Button>
               </Box>
