@@ -203,7 +203,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             textFieldProps={{
               helperText,
             }}
-            value={selectedRegion}
+            value={selectedRegion ?? null}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

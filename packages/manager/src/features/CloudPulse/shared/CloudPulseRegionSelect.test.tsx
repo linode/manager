@@ -8,7 +8,11 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
+import {
+  dashboardFactory,
+  databaseInstanceFactory,
+  firewallFactory,
+} from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NO_REGION_MESSAGE } from '../Utils/constants';
@@ -31,6 +35,7 @@ const props: CloudPulseRegionSelectProps = {
 const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
   useResourcesQuery: vi.fn().mockReturnValue({}),
+  useAllLinodesQuery: vi.fn().mockReturnValue({}),
 }));
 
 const allRegions: Region[] = [
@@ -80,6 +85,7 @@ const allRegions: Region[] = [
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
+  useAllLinodesQuery: queryMocks.useAllLinodesQuery,
 }));
 
 vi.mock('src/queries/cloudpulse/resources', async () => {
@@ -284,5 +290,98 @@ describe('CloudPulseRegionSelect', () => {
     );
     await user.click(screen.getByRole('button', { name: 'Open' }));
     expect(screen.getByText(NO_REGION_MESSAGE['firewall'])).toBeVisible();
+  });
+
+  it('Should show the correct linode region in the dropdown for firewall service type when savePreferences is true', async () => {
+    const user = userEvent.setup();
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'ap-west',
+          label: 'IN, Mumbai',
+          capabilities: [capabilityServiceTypeMapping['firewall']],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: [
+        firewallFactory.build({
+          id: 1,
+          entities: [{ id: 1, type: 'linode' }],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [
+        linodeFactory.build({
+          id: 1,
+          region: 'ap-west',
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        filterKey="associated_entity_region"
+        savePreferences={true}
+        selectedDashboard={dashboardFactory.build({ service_type: 'firewall' })}
+        selectedEntities={['1']}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(
+      screen.getByRole('option', { name: 'IN, Mumbai (ap-west)' })
+    ).toBeVisible();
+  });
+
+  it('Should select the first region automatically from the linode regions if savePreferences is false', async () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'ap-west',
+          label: 'IN, Mumbai',
+          capabilities: [capabilityServiceTypeMapping['firewall']],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: [
+        firewallFactory.build({
+          id: 1,
+          entities: [{ id: 1, type: 'linode' }],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [
+        linodeFactory.build({
+          id: 1,
+          region: 'ap-west',
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        filterKey="associated_entity_region"
+        savePreferences={false}
+        selectedDashboard={dashboardFactory.build({ service_type: 'firewall' })}
+        selectedEntities={['1']}
+      />
+    );
+    expect(screen.getByDisplayValue('IN, Mumbai (ap-west)')).toBeVisible();
   });
 });
