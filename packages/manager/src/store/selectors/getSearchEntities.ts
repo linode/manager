@@ -2,11 +2,16 @@ import { pluralize } from '@linode/utilities';
 import { readableBytes } from '@linode/utilities';
 
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
+import {
+  getDestinationDescription,
+  getStreamDescription,
+} from 'src/features/DataStream/dataStreamUtils';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 
 import type {
   DatabaseInstance,
+  Destination,
   Domain,
   Firewall,
   Image,
@@ -15,6 +20,7 @@ import type {
   NodeBalancer,
   ObjectStorageBucket,
   StackScript,
+  Stream,
   Volume,
 } from '@linode/api-v4';
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
@@ -194,4 +200,27 @@ export const stackscriptToSearchableItem = (
   entityType: 'stackscript',
   label: stackscript.label,
   value: stackscript.id,
+});
+
+export const streamToSearchableItem = (stream: Stream): SearchableItem => ({
+  data: {
+    description: getStreamDescription(stream),
+    path: `/datastream/streams/${stream.id}/edit`,
+    status: stream.status,
+  },
+  entityType: 'stream',
+  label: stream.label,
+  value: stream.id,
+});
+
+export const destinationToSearchableItem = (
+  destination: Destination
+): SearchableItem => ({
+  data: {
+    description: getDestinationDescription(destination),
+    path: `/datastream/destinations/${destination.id}/edit`,
+  },
+  entityType: 'destination',
+  label: destination.label,
+  value: destination.id,
 });

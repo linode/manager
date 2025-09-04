@@ -21,6 +21,7 @@ export interface SearchableItem {
 export type SearchableEntityType =
   | 'bucket'
   | 'database'
+  | 'destination'
   | 'domain'
   | 'firewall'
   | 'image'
@@ -28,6 +29,7 @@ export type SearchableEntityType =
   | 'linode'
   | 'nodebalancer'
   | 'stackscript'
+  | 'stream'
   | 'volume';
 
 // These are the properties on our entities we'd like to search
@@ -36,6 +38,7 @@ export type SearchField = 'ips' | 'label' | 'tags' | 'type' | 'value';
 export interface SearchResultsByEntity {
   bucket: SearchableItem[];
   database: SearchableItem[];
+  destination: SearchableItem[];
   domain: SearchableItem[];
   firewall: SearchableItem[];
   image: SearchableItem[];
@@ -43,5 +46,6 @@ export interface SearchResultsByEntity {
   linode: SearchableItem[];
   nodebalancer: SearchableItem[];
   stackscript: SearchableItem[];
+  stream: SearchableItem[];
   volume: SearchableItem[];
 }

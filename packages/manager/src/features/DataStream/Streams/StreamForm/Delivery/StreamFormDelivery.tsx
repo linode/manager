@@ -48,13 +48,13 @@ export const StreamFormDelivery = () => {
     React.useState<boolean>(false);
 
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
-  const destinationNameOptions: DestinationName[] = (destinations || []).map(
-    ({ id, label, type }) => ({
-      id,
-      label,
-      type,
-    })
-  );
+  const destinationNameOptions: DestinationName[] = (
+    destinations?.data || []
+  ).map(({ id, label, type }) => ({
+    id,
+    label,
+    type,
+  }));
 
   const selectedDestinationType = useWatch({
     control,
@@ -153,7 +153,7 @@ export const StreamFormDelivery = () => {
           )}
           {!!selectedDestinations?.length && (
             <DestinationLinodeObjectStorageDetailsSummary
-              {...(destinations?.find(
+              {...(destinations?.data?.find(
                 ({ id }) => id === selectedDestinations[0]
               )?.details as LinodeObjectStorageDetails)}
             />
