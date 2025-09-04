@@ -49,7 +49,8 @@ describe('generateOAuthAuthorizeEndpoint', () => {
   it('includes the LOGIN_ROOT from the env', async () => {
     const url = await generateOAuthAuthorizeEndpoint('/linodes');
 
-    expect(url.startsWith('https://login.fake.linode.com')).toBe(true);
+    expect(url).not.toBeNull();
+    expect(url!.startsWith('https://login.fake.linode.com')).toBe(true);
   });
 
   it('includes the redirect_uri based on the APP_ROOT from the env and the returnTo path', async () => {
