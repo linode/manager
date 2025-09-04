@@ -1,4 +1,4 @@
-import { Box, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 export const StyledTitle = styled(Typography, { label: 'StyledTitle' })(
@@ -21,23 +21,4 @@ export const StyledContainer = styled('div', {
 })(() => ({
   marginLeft: -6,
   position: 'relative',
-}));
-
-export const StyledClampedContent = styled('div', {
-  label: 'StyledClampedContent',
-})<{ showAll?: boolean }>(({ showAll }) => ({
-  '& p:last-child': {
-    borderRight: 0,
-  },
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: showAll ? 'unset' : 2,
-  display: '-webkit-box',
-  overflow: 'hidden',
-}));
-
-export const StyledBox = styled(Box, {
-  label: 'StyledBox',
-})(({ theme }) => ({
-  font: theme.tokens.alias.Typography.Label.Semibold.Xs,
-  paddingLeft: theme.tokens.spacing.S6,
 }));

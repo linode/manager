@@ -2,7 +2,7 @@ import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
 import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
+import { useCalculateHiddenItems } from '../../Shared/TuncatedList';
 
 import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';

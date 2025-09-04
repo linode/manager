@@ -1,12 +1,9 @@
-import { LinkButton, Typography } from '@linode/ui';
-import { debounce } from '@mui/material';
+import { Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
+import { TruncatedList } from '../TuncatedList';
 import {
-  StyledBox,
-  StyledClampedContent,
   StyledContainer,
   StyledPermissionItem,
   StyledTitle,
@@ -20,23 +17,6 @@ type Props = {
 };
 
 export const Permissions = React.memo(({ permissions }: Props) => {
-  const [showAll, setShowAll] = React.useState(false);
-
-  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
-    useCalculateHiddenItems(permissions, showAll);
-
-  const handleResize = React.useMemo(
-    () => debounce(() => calculateHiddenItems(), 100),
-    [calculateHiddenItems]
-  );
-
-  React.useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [handleResize]);
-
   return (
     <Grid container data-testid="parent" direction="column">
       <StyledTitle>Permissions</StyledTitle>
@@ -46,34 +26,29 @@ export const Permissions = React.memo(({ permissions }: Props) => {
           to understand what access is granted by this role.
         </Typography>
       ) : (
-        <StyledContainer data-testid="container">
-          <StyledClampedContent ref={containerRef} showAll={showAll}>
-            {permissions.map((permission: PermissionType, index: number) => (
-              <StyledPermissionItem
-                data-testid="permission"
-                key={permission}
-                ref={(el: HTMLSpanElement) => {
-                  itemRefs.current[index] = el;
-                }}
-              >
+        <StyledContainer
+          data-testid="container"
+          sx={{
+            '& .permissions-list': {
+              margin: 0,
+              padding: 0,
+              display: 'flex',
+              listStyleType: 'none',
+              flexWrap: 'wrap',
+              maxHeight: '3.2em',
+              '&.expanded': {
+                maxHeight: 'none',
+              },
+            },
+          }}
+        >
+          <TruncatedList className="permissions-list">
+            {permissions.map((permission: PermissionType) => (
+              <StyledPermissionItem data-testid="permission" key={permission}>
                 {permission}
               </StyledPermissionItem>
             ))}
-          </StyledClampedContent>
-
-          {(numHiddenItems > 0 || showAll) && (
-            <StyledBox>
-              <LinkButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowAll(!showAll);
-                }}
-                type="button"
-              >
-                {showAll ? 'Hide' : `Expand (+${numHiddenItems})`}
-              </LinkButton>
-            </StyledBox>
-          )}
+          </TruncatedList>
         </StyledContainer>
       )}
     </Grid>
