@@ -80,39 +80,6 @@ export const CloudPulseRegionSelect = React.memo(
       : undefined;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
-    React.useEffect(() => {
-      if (!savePreferences) {
-        return; // early exit if savePreferences is false
-      }
-      if (disabled && !selectedRegion) {
-        return; // no need to do anything
-      }
-      // If component is not disabled, regions have loaded, preferences should be saved,
-      // and there's no selected region — attempt to preselect from defaultValue.
-      if (
-        !disabled &&
-        regions &&
-        savePreferences &&
-        selectedRegion === undefined
-      ) {
-        // Try to find the region corresponding to the saved default value
-        const region = defaultValue
-          ? regions.find((regionObj) => regionObj.id === defaultValue)
-          : undefined;
-        // Notify parent and set internal state
-        handleRegionChange(filterKey, region?.id, region ? [region.label] : []);
-        setSelectedRegion(region?.id);
-      } else {
-        if (selectedRegion !== undefined) {
-          setSelectedRegion('');
-        }
-        handleRegionChange(filterKey, undefined, []);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      xFilter, // Reacts to filter changes (to reset region)
-      regions, // Function to call on change
-    ]);
 
     const {
       values: linodeRegions,
@@ -144,6 +111,56 @@ export const CloudPulseRegionSelect = React.memo(
               ({ region }) => region === id
             )
           );
+
+    const dependencyKey = JSON.stringify(
+      [...supportedLinodeRegions].sort((a, b) => a.id.localeCompare(b.id))
+    );
+
+    React.useEffect(() => {
+      if (disabled && !selectedRegion) {
+        return; // no need to do anything
+      }
+      // If component is not disabled, regions have loaded, preferences should be saved,
+      // and there's no selected region — attempt to preselect from defaultValue.
+      if (
+        !disabled &&
+        regions &&
+        savePreferences &&
+        selectedRegion === undefined
+      ) {
+        // Try to find the region corresponding to the saved default value
+        const region = defaultValue
+          ? regions.find((regionObj) => regionObj.id === defaultValue)
+          : undefined;
+        // Notify parent and set internal state
+        handleRegionChange(filterKey, region?.id, region ? [region.label] : []);
+        setSelectedRegion(region?.id);
+      } else if (
+        filterKey === LINODE_REGION &&
+        !savePreferences &&
+        supportedRegionsFromResources?.length &&
+        selectedRegion === undefined
+      ) {
+        // Select the first region from the supported regions if savePreferences is false
+        const defaultRegionId = supportedRegionsFromResources[0].id;
+        const defaultRegionLabel = supportedRegionsFromResources[0].label;
+        handleRegionChange(filterKey, defaultRegionId, [defaultRegionLabel]);
+        setSelectedRegion(defaultRegionId);
+      } else {
+        if (!disabled && filterKey === LINODE_REGION && selectedRegion) {
+          return;
+        }
+        if (selectedRegion !== undefined) {
+          setSelectedRegion('');
+        }
+        handleRegionChange(filterKey, undefined, []);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+      xFilter, // Reacts to filter changes (to reset region)
+      regions, // Function to call on change
+      dependencyKey, // Reacts to linode region changes
+    ]);
 
     return (
       <RegionSelect
