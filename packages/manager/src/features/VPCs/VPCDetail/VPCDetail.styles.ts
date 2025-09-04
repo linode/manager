@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 export const StyledActionButton = styled(Button, {
   label: 'StyledActionButton',
 })(({ theme }) => ({
-  '&:hover': {
+  '&:not([aria-disabled="true"]):hover': {
     backgroundColor: theme.color.blue,
     color: theme.tokens.color.Neutrals.White,
   },
