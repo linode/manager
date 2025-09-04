@@ -148,12 +148,16 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'textfield',
       inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
       placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
       helperText: CONFIG_ERROR_MESSAGE,
     },
     startswith_endswith: {
       type: 'textfield',
       inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
       placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
       helperText: CONFIG_ERROR_MESSAGE,
     },

@@ -11,7 +11,7 @@ import GlobalSettings from '../Account/GlobalSettings';
 
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
-export const SettingsLanding = () => {
+export const AccountSettingsLanding = () => {
   const flags = useFlags();
   const location = useLocation();
 
@@ -23,14 +23,14 @@ export const SettingsLanding = () => {
   }
 
   const landingHeaderProps: LandingHeaderProps = {
-    title: 'Settings',
+    title: 'Account Settings',
   };
 
   return (
     <>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
-      <DocumentTitleSegment segment="Settings" />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
+      <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <GlobalSettings />
     </>
