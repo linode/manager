@@ -4,8 +4,8 @@ import * as React from 'react';
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { gettingStartedGuides } from 'src/features/VPCs/VPCLanding/VPCLandingEmptyStateData';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
@@ -13,16 +13,14 @@ import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 export const VPCEmptyState = () => {
   const navigate = useNavigate();
 
-  const isVPCCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_vpcs',
-  });
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
 
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create VPC',
-          disabled: isVPCCreationRestricted,
+          disabled: !permissions.create_vpc,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
