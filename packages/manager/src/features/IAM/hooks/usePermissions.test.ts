@@ -23,10 +23,19 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    useIsIAMEnabled: queryMocks.useIsIAMEnabled,
     useUserAccountPermissions: queryMocks.useUserAccountPermissions,
     useUserEntityPermissions: queryMocks.useUserEntityPermissions,
     useGrants: queryMocks.useGrants,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/useIsIAMEnabled', async () => {
+  const actual = await vi.importActual(
+    'src/features/IAM/hooks/useIsIAMEnabled'
+  );
+  return {
+    ...actual,
+    useIsIAMEnabled: queryMocks.useIsIAMEnabled,
   };
 });
 
@@ -118,6 +127,85 @@ describe('usePermissions', () => {
         wrapper: (ui) => wrapWithTheme(ui, { flags }),
       }
     );
+
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
+    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'account',
+      undefined,
+      false
+    );
+  });
+
+  it('returns correct map when IAM beta is false', () => {
+    queryMocks.useIsIAMEnabled.mockReturnValue({
+      isIAMEnabled: true,
+      isIAMBeta: false,
+    });
+    const flags = { iam: { beta: false, enabled: true } };
+
+    renderHook(() => usePermissions('account', ['create_linode']), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'account',
+      undefined,
+      true
+    );
+  });
+
+  it('returns correct map when beta is true and neither the access type nor the permissions are in the limited availability scope', () => {
+    const flags = { iam: { beta: true, enabled: true } };
+    queryMocks.useIsIAMEnabled.mockReturnValue({
+      isIAMEnabled: true,
+      isIAMBeta: true,
+    });
+
+    renderHook(() => usePermissions('linode', ['update_linode'], 123), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'linode',
+      123,
+      true
+    );
+  });
+
+  it('returns correct map when beta is true and the access type is in the limited availability scope', () => {
+    const flags = { iam: { beta: true, enabled: true } };
+    queryMocks.useIsIAMEnabled.mockReturnValue({
+      isIAMEnabled: true,
+      isIAMBeta: true,
+    });
+
+    renderHook(() => usePermissions('volume', ['resize_volume'], 123), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
+    expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
+    expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
+      'volume',
+      123,
+      false
+    );
+  });
+
+  it('returns correct map when beta is true and one of the permissions is in the limited availability scope', () => {
+    const flags = { iam: { beta: true, enabled: true } };
+    queryMocks.useIsIAMEnabled.mockReturnValue({
+      isIAMEnabled: true,
+      isIAMBeta: true,
+    });
+
+    renderHook(() => usePermissions('account', ['create_volume']), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
