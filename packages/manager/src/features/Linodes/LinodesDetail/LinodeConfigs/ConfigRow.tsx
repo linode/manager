@@ -5,7 +5,7 @@ import React from 'react';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { ConfigRowDevice } from './ConfigRowDevice';
+import { ConfigRowDevice } from './ConfigRowDevices/ConfigRowDevice';
 import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
 

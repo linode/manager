@@ -1,8 +1,8 @@
 import { ListItem } from '@linode/ui';
 import React from 'react';
 
+import { isDiskDevice, isVolumeDevice } from '../utilities';
 import { DiskDevice } from './DiskDevice';
-import { isDiskDevice, isVolumeDevice } from './utilities';
 import { VolumeDevice } from './VolumeDevice';
 
 import type { Devices } from '@linode/api-v4';
