@@ -47,6 +47,7 @@ export const CloudPulseModifyAlertRegions = React.memo(
               <AlertRegions
                 errorText={fieldState.error?.message}
                 handleChange={handleRegionsChange}
+                scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher}
                 value={field.value}
               />
