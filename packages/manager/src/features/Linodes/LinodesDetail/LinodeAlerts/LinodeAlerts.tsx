@@ -32,14 +32,17 @@ const LinodeAlerts = () => {
 
   return (
     <Box>
-      {(
+      {aclpServices?.linode?.alerts?.enabled &&
+        isAclpAlertsSupportedRegionLinode && (
           <AclpPreferenceToggle
             isAlertsBetaMode={isAlertsBetaMode.get}
             onAlertsModeChange={isAlertsBetaMode.set}
             type="alerts"
           />
         )}
-      {(
+      {aclpServices?.linode?.alerts?.enabled &&
+      isAclpAlertsSupportedRegionLinode &&
+      isAlertsBetaMode.get ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId.toString()}
@@ -47,6 +50,9 @@ const LinodeAlerts = () => {
           isLegacyAlertAvailable={!isLinodeAclpSubscribed}
           serviceType="linode"
         />
+      ) : (
+        // Legacy Alerts View
+        <AlertsPanel isReadOnly={!permissions.update_linode} linodeId={id} />
       )}
     </Box>
   );
