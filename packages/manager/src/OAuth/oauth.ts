@@ -159,6 +159,7 @@ export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
     const { nonce: generatedNonce } = generateNonce();
     nonce = generatedNonce;
   } catch (error) {
+    // Intentionally ignoring crypto API errors
     return null;
   }
 
