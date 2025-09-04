@@ -2966,6 +2966,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
+            scope: pickRandom(['account', 'region', 'entity']),
           })
         );
       }
