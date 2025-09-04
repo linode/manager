@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { ProfileRoute } from './ProfileRoute';
@@ -92,7 +92,38 @@ const profileReferralsRoute = createRoute({
   )
 );
 
+/**
+ * The new route /profile/preferences aligns with the Profile tab, which has been renamed to Preferences (My Settings).
+ * After the transition, and as part of the cleanup, we will be removing /profile/settings (profileSettingsRoute).
+ */
+
+const profilePreferencesRoute = createRoute({
+  beforeLoad: ({ context }) => {
+    if (!context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/profile/settings`,
+        replace: true,
+      });
+    }
+  },
+  getParentRoute: () => profileRoute,
+  path: 'preferences',
+  validateSearch: (search: ProfileSettingsSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Profile/Settings/settingsLazyRoute').then(
+    (m) => m.preferencesLazyRoute
+  )
+);
+
 const profileSettingsRoute = createRoute({
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/profile/preferences`,
+        replace: true,
+      });
+    }
+  },
   getParentRoute: () => profileRoute,
   path: 'settings',
   validateSearch: (search: ProfileSettingsSearchParams) => search,
@@ -109,6 +140,7 @@ export const profileRouteTree = profileRoute.addChildren([
   profileLishSettingsRoute,
   profileAPITokensRoute,
   profileOAuthClientsRoute,
+  profilePreferencesRoute,
   profileReferralsRoute,
   profileSettingsRoute,
 ]);
