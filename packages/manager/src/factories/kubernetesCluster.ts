@@ -19,6 +19,7 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
 });
 
 export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
+  label: '',
   autoscaler: {
     enabled: false,
     max: 1,

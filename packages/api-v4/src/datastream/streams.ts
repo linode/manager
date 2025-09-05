@@ -1,4 +1,4 @@
-import { createStreamSchema } from '@linode/validation';
+import { createStreamSchema, updateStreamSchema } from '@linode/validation';
 
 import { BETA_API_ROOT } from '../constants';
 import Request, {
@@ -10,7 +10,7 @@ import Request, {
 } from '../request';
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
-import type { CreateStreamPayload, Stream } from './types';
+import type { CreateStreamPayload, Stream, UpdateStreamPayload } from './types';
 
 /**
  * Returns all the information about a specified Stream.
@@ -46,4 +46,28 @@ export const createStream = (data: CreateStreamPayload) =>
     setData(data, createStreamSchema),
     setURL(`${BETA_API_ROOT}/monitor/streams`),
     setMethod('POST'),
+  );
+
+/**
+ * Updates a Stream.
+ *
+ * @param streamId { number } The ID of the Stream.
+ * @param data { object } Options for type, status, etc.
+ */
+export const updateStream = (streamId: number, data: UpdateStreamPayload) =>
+  Request<Stream>(
+    setData(data, updateStreamSchema),
+    setURL(`${BETA_API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
+    setMethod('PUT'),
+  );
+
+/**
+ * Deletes a Stream.
+ *
+ * @param streamId { number } The ID of the Stream.
+ */
+export const deleteStream = (streamId: number) =>
+  Request<{}>(
+    setURL(`${BETA_API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
+    setMethod('DELETE'),
   );

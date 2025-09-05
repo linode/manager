@@ -15,9 +15,9 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 import { useIsNodebalancerVPCEnabled } from '../../utils';
@@ -42,11 +42,11 @@ export const SummaryPanel = () => {
   );
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
-  const isNodeBalancerReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'nodebalancer',
-    id: nodebalancer?.id,
-  });
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    ['update_nodebalancer'],
+    nodebalancer?.id
+  );
 
   const flags = useIsNodebalancerVPCEnabled();
 
@@ -265,7 +265,8 @@ export const SummaryPanel = () => {
           Tags
         </StyledTitle>
         <TagCell
-          disabled={isNodeBalancerReadOnly}
+          disabled={!permissions.update_nodebalancer}
+          entity="NodeBalancer"
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
           view="panel"
