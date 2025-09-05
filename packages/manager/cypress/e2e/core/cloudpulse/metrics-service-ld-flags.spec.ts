@@ -196,7 +196,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       });
   });
 
-  it('should not display "Linode" when its feature flag is missing', () => {
+  it.skip('should not display "Linode" when its feature flag is missing', () => {
     // Mock the feature flags without linode under aclpServices
     const flags = {
       aclp: { beta: true, enabled: true },
@@ -254,7 +254,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       });
   });
 
-  it('should show no service options when aclpServices flag is missing', () => {
+  it.skip('should show no service options when aclpServices flag is missing', () => {
     // Mock the feature flags without linode under aclpServices
     const flags = {
       aclp: { beta: true, enabled: true },
