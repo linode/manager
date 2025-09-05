@@ -71,11 +71,11 @@ describe('LKE-E Cluster Create', () => {
 
   it('Simple Page Check - Phase 2 MTC Flag ON', () => {
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: false,
-        phase2Mtc: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
       },
     }).as('getFeatureFlags');
 
@@ -141,11 +141,11 @@ describe('LKE-E Cluster Create', () => {
 
   it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: false,
-        phase2Mtc: false,
+        phase2Mtc: { byoVPC: true, dualStack: true },
       },
     }).as('getFeatureFlags');
 
@@ -225,7 +225,11 @@ describe('LKE-E Cluster Read', () => {
 
   it('Simple Page Check - Phase 2 MTC Flag ON', () => {
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     }).as('getFeatureFlags');
 
     mockGetClusters([mockCluster]).as('getClusters');
@@ -254,7 +258,11 @@ describe('LKE-E Cluster Read', () => {
 
   it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: false },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     }).as('getFeatureFlags');
 
     mockGetClusters([mockCluster]).as('getClusters');

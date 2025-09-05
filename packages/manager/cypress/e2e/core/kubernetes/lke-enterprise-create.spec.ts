@@ -63,11 +63,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
   beforeEach(() => {
     // TODO LKE-E: Remove feature flag mocks once we're in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: false,
-        phase2Mtc: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
       },
     }).as('getFeatureFlags');
     mockGetAccount(

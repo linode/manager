@@ -85,7 +85,7 @@ interface AclpFlag {
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
-  phase2Mtc: boolean;
+  phase2Mtc: { byoVPC: boolean; dualStack: boolean };
   postLa: boolean;
 }
 
@@ -165,7 +165,7 @@ export interface Flags {
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
   linodeInterfaces: BaseFeatureFlag;
-  lkeEnterprise: LkeEnterpriseFlag;
+  lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;

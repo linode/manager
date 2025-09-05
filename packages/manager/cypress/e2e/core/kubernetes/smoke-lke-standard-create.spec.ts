@@ -21,7 +21,11 @@ describe('LKE Create Cluster', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     }).as('getFeatureFlags');
   });
 

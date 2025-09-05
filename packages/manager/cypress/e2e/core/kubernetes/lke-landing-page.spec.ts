@@ -218,7 +218,7 @@ describe('LKE landing page', () => {
 
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true },
+      lkeEnterprise2: { enabled: true, la: true },
     });
 
     const cluster = kubernetesClusterFactory.build({
@@ -311,7 +311,7 @@ describe('LKE landing page', () => {
 
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true },
+      lkeEnterprise2: { enabled: true, la: true },
     });
 
     const cluster = kubernetesClusterFactory.build({
