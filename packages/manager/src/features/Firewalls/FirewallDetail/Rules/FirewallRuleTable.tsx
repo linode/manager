@@ -14,7 +14,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Box, Typography } from '@linode/ui';
+import { Box, LinkButton, Typography } from '@linode/ui';
 import { Autocomplete } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
@@ -40,7 +40,6 @@ import { CustomKeyboardSensor } from 'src/utilities/CustomKeyboardSensor';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import {
-  MoreStyledLinkButton,
   StyledButtonDiv,
   StyledDragIndicator,
   StyledErrorDiv,
@@ -361,12 +360,12 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       <TableCell aria-label={`Label: ${label}`}>
         <StyledDragIndicator aria-label="Drag indicator icon" />
         {label || (
-          <MoreStyledLinkButton
+          <LinkButton
             disabled={disabled}
             onClick={() => handleOpenRuleDrawerForEditing(index)}
           >
             Add a label
-          </MoreStyledLinkButton>
+          </LinkButton>
         )}
       </TableCell>
       <Hidden lgDown>

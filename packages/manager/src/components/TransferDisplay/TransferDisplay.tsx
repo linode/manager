@@ -1,5 +1,5 @@
 import { useAccountNetworkTransfer, useRegionsQuery } from '@linode/queries';
-import { Box, CircleProgress, StyledLinkButton, Typography } from '@linode/ui';
+import { Box, CircleProgress, LinkButton, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { StyledTransferDisplayContainer } from './TransferDisplay.styles';
@@ -43,13 +43,13 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
         ) : (
           <>
             <Typography>
-              <StyledLinkButton
+              <LinkButton
                 aria-label="Show the Monthly Network Transfer Pool"
                 data-testid="open-transfer-display-modal-button"
                 onClick={() => setModalOpen(true)}
               >
                 Monthly Network Transfer Pool
-              </StyledLinkButton>
+              </LinkButton>
               &nbsp;usage:
             </Typography>
             <Typography data-testid="transfer-pool-pct-display">

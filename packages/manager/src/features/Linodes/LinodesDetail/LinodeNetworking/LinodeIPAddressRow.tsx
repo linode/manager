@@ -5,12 +5,12 @@ import {
   usePreferences,
 } from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 

@@ -3,7 +3,13 @@ import {
   useAccountRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Drawer,
+  LinkButton,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,7 +19,6 @@ import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 

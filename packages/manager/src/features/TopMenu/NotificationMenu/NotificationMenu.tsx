@@ -5,11 +5,10 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import Bell from 'src/assets/icons/notification.svg';
-import { LinkButton } from 'src/components/LinkButton';
+import { Link } from 'src/components/Link';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
 import {
   notificationCenterContext as _notificationContext,
@@ -31,7 +30,6 @@ export const NotificationMenu = () => {
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const notificationContext = React.useContext(_notificationContext);
-  const navigate = useNavigate();
 
   const { data } = useEventsInfiniteQuery();
 
@@ -148,14 +146,9 @@ export const NotificationMenu = () => {
         <Box>
           <Box display="flex" justifyContent="space-between" px={2}>
             <Typography variant="h3">Events</Typography>
-            <LinkButton
-              onClick={() => {
-                navigate({ to: '/events' });
-                handleClose();
-              }}
-            >
+            <Link onClick={() => handleClose()} to="/events">
               View all events
-            </LinkButton>
+            </Link>
           </Box>
           <Divider spacingBottom={0} />
 

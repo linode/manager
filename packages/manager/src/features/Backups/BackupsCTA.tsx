@@ -5,10 +5,15 @@ import {
   usePreferences,
   useProfile,
 } from '@linode/queries';
-import { Box, CloseIcon, IconButton, Notice, Typography } from '@linode/ui';
+import {
+  Box,
+  CloseIcon,
+  IconButton,
+  LinkButton,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
-
-import { LinkButton } from 'src/components/LinkButton';
 
 import { BackupDrawer } from './BackupDrawer';
 

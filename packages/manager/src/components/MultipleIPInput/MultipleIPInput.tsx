@@ -3,6 +3,7 @@ import {
   CloseIcon,
   IconButton,
   InputLabel,
+  LinkButton,
   Notice,
   Stack,
   TextField,
@@ -13,7 +14,6 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 
 import type { InputBaseProps } from '@mui/material/InputBase';
@@ -204,7 +204,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const addIPButton =
     forVPCIPv4Ranges || isLinkStyled ? (
       <StyledLinkButtonBox sx={{ marginTop: isLinkStyled ? '8px' : '12px' }}>
-        <LinkButton isDisabled={disabled} onClick={addNewInput}>
+        <LinkButton disabled={disabled} onClick={addNewInput}>
           {buttonText}
         </LinkButton>
       </StyledLinkButtonBox>

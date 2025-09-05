@@ -2,8 +2,8 @@ import {
   Box,
   CircleProgress,
   ErrorState,
+  LinkButton,
   Paper,
-  StyledLinkButton,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
@@ -93,9 +93,9 @@ export const LongviewList = React.memo((props: Props) => {
           {userCanCreateLongviewClient ? (
             <React.Fragment>
               You have no Longview clients configured.{' '}
-              <StyledLinkButton onClick={createLongviewClient}>
+              <LinkButton onClick={createLongviewClient}>
                 Click here to add one.
-              </StyledLinkButton>
+              </LinkButton>
             </React.Fragment>
           ) : (
             'You have no Longview clients configured.'
