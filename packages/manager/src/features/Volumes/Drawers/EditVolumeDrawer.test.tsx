@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditVolumeDrawer } from './EditVolumeDrawer';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const encryptionLabelText = 'Encrypt Volume';
 
 describe('EditVolumeDrawer', () => {

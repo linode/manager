@@ -68,6 +68,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
               <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
               <FormControlLabel
                 control={<Radio />}
+                // disabled={!isLkeEnterprisePhase2DualStackFeatureEnabled}
                 label="IPv4 + IPv6 (dual-stack)"
                 value="ipv4-ipv6"
               />
