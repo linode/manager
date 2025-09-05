@@ -9,10 +9,32 @@ import type { TestResult } from '../results/test-result';
  * @returns Length of time for all suites to run, in seconds.
  */
 export const getTestLength = (suites: TestSuites[]): number => {
-  const unroundedLength = suites.reduce((acc: number, cur: TestSuites) => {
-    return acc + (cur.time ?? 0);
-  }, 0);
-  return Math.round(unroundedLength * 1000) / 1000;
+  const testDurations: {[key: number]: number} = suites.reduce((acc: {[key: number]: number}, cur: TestSuites) => {
+    const suite = cur.testsuite?.[0];
+    if (!suite) {
+      return acc;
+    }
+
+    const runnerIndex = (() => {
+      if (!suite.properties) {
+        return 1;
+      }
+      const indexProperty = suite.properties.find((property) => {
+        return property.name === 'runner_index';
+      });
+
+      if (!indexProperty) {
+        return 1;
+      }
+      return Number(indexProperty.value);
+    })();
+
+    acc[runnerIndex] = (acc[runnerIndex] || 0) + (cur.time ?? 0);
+    return acc;
+  }, {});
+
+  const highestDuration = Math.max(...Object.values(testDurations));
+  return Math.round(highestDuration * 1000) / 1000;
 };
 
 /**

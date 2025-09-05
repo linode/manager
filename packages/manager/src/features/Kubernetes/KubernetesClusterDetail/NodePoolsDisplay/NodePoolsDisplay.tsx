@@ -1,4 +1,3 @@
-import { useSpecificTypes } from '@linode/queries';
 import {
   Box,
   Button,
@@ -18,12 +17,12 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscaleNodePoolDrawer } from './AutoscaleNodePoolDrawer';
+import { ConfigureNodePoolDrawer } from './ConfigureNodePool/ConfigureNodePoolDrawer';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { LabelAndTaintDrawer } from './LabelsAndTaints/LabelAndTaintDrawer';
 import { NodePool } from './NodePool';
@@ -66,6 +65,7 @@ export interface Props {
   clusterLabel: string;
   clusterRegionId: string;
   clusterTier: KubernetesTier;
+  clusterVersion: string;
   isLkeClusterRestricted: boolean;
 }
 
@@ -76,6 +76,7 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterLabel,
     clusterRegionId,
     clusterTier,
+    clusterVersion,
     isLkeClusterRestricted,
   } = props;
 
@@ -90,6 +91,8 @@ export const NodePoolsDisplay = (props: Props) => {
   const [selectedPoolId, setSelectedPoolId] = useState(-1);
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
+  const [isConfigureNodePoolDrawerOpen, setIsConfigureNodePoolDrawerOpen] =
+    useState(false);
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
   const [isLabelsAndTaintsDrawerOpen, setIsLabelsAndTaintsDrawerOpen] =
     useState(false);
@@ -103,9 +106,6 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(5);
   const _pools = pools?.slice(0, numPoolsToDisplay);
-
-  const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
-  const types = extendTypesQueryResult(typesQuery);
 
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
 
@@ -121,6 +121,11 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const handleOpenAddDrawer = () => {
     setAddDrawerOpen(true);
+  };
+
+  const handleOpenConfigureNodePoolDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsConfigureNodePoolDrawerOpen(true);
   };
 
   const handleOpenAutoscaleDrawer = (poolId: number) => {
@@ -267,14 +272,8 @@ export const NodePoolsDisplay = (props: Props) => {
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
         {_pools?.map((thisPool) => {
-          const { count, disk_encryption, id, nodes, tags } = thisPool;
-
-          const thisPoolType = types?.find(
-            (thisType) => thisType.id === thisPool.type
-          );
-
-          const typeLabel = thisPoolType?.formattedLabel ?? 'Unknown type';
-
+          const { count, disk_encryption, id, nodes, tags, label, type } =
+            thisPool;
           return (
             <NodePool
               accordionExpanded={
@@ -290,11 +289,13 @@ export const NodePoolsDisplay = (props: Props) => {
               encryptionStatus={disk_encryption}
               handleAccordionClick={() => handleAccordionClick(id)}
               handleClickAutoscale={handleOpenAutoscaleDrawer}
+              handleClickConfigureNodePool={handleOpenConfigureNodePoolDrawer}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isLkeClusterRestricted={isLkeClusterRestricted}
               isOnlyNodePool={pools?.length === 1}
               key={id}
+              label={label}
               nodes={nodes ?? []}
               openDeletePoolDialog={(id) => {
                 setSelectedPoolId(id);
@@ -304,15 +305,16 @@ export const NodePoolsDisplay = (props: Props) => {
                 setSelectedPoolId(id);
                 setIsRecycleAllPoolNodesOpen(true);
               }}
-              openRecycleNodeDialog={(nodeId, linodeLabel) => {
+              openRecycleNodeDialog={(nodeId) => {
                 setSelectedNodeId(nodeId);
                 setIsRecycleNodeOpen(true);
               }}
+              poolFirewallId={thisPool.firewall_id}
               poolId={thisPool.id}
               poolVersion={thisPool.k8s_version}
               statusFilter={statusFilter}
               tags={tags}
-              typeLabel={typeLabel}
+              type={type}
             />
           );
         })}
@@ -329,6 +331,14 @@ export const NodePoolsDisplay = (props: Props) => {
         clusterTier={clusterTier}
         onClose={() => setAddDrawerOpen(false)}
         open={addDrawerOpen}
+      />
+      <ConfigureNodePoolDrawer
+        clusterId={clusterID}
+        clusterTier={clusterTier}
+        clusterVersion={clusterVersion}
+        nodePool={selectedPool}
+        onClose={() => setIsConfigureNodePoolDrawerOpen(false)}
+        open={isConfigureNodePoolDrawerOpen}
       />
       <LabelAndTaintDrawer
         clusterId={clusterID}

@@ -9,7 +9,7 @@ import { customAccountPreset } from './extra/account/customAccount';
 import { customEventsPreset } from './extra/account/customEvents';
 import { customMaintenancePreset } from './extra/account/customMaintenance';
 import { customNotificationsPreset } from './extra/account/customNotifications';
-import { customProfilePreset } from './extra/account/customProfile';
+import { customProfileAndGrantsPreset } from './extra/account/customProfileAndGrants';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
 import { apiResponseTimePreset } from './extra/api/api';
@@ -45,7 +45,7 @@ export const baselineMockPresets: MockPresetBaseline[] = [
 export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
   customAccountPreset,
-  customProfilePreset,
+  customProfileAndGrantsPreset,
   customEventsPreset,
   customUserAccountPermissionsPreset,
   customUserEntityPermissionsPreset,

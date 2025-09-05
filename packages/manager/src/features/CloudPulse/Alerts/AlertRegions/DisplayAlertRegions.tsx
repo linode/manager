@@ -58,6 +58,10 @@ interface DisplayAlertRegionProps {
    */
   regions?: AlertRegion[];
   /**
+   * Callback to scroll till the element required on page change change or sorting change
+   */
+  scrollToElement: () => void;
+  /**
    * To indicate whether to show only selected regions or not.
    */
   showSelected?: boolean;
@@ -73,7 +77,22 @@ export const DisplayAlertRegions = React.memo(
       showSelected,
       handleSelectAll,
       mode,
+      scrollToElement,
     } = props;
+
+    const scrollToGivenElement = React.useCallback(() => {
+      requestAnimationFrame(() => {
+        scrollToElement();
+      });
+    }, [scrollToElement]);
+
+    const handlePageNumberChange = React.useCallback(
+      (handlePageChange: (page: number) => void, pageNumber: number) => {
+        handlePageChange(pageNumber); // Moves to the requested page number
+        scrollToGivenElement();
+      },
+      [scrollToGivenElement]
+    );
 
     return (
       <Paginate data={regions ?? []}>
@@ -166,8 +185,14 @@ export const DisplayAlertRegions = React.memo(
             <PaginationFooter
               count={count}
               eventCategory="Regions Table"
-              handlePageChange={handlePageChange}
-              handleSizeChange={handlePageSizeChange}
+              handlePageChange={(page) => {
+                handlePageNumberChange(handlePageChange, page);
+              }}
+              handleSizeChange={(pageSize) => {
+                handlePageSizeChange(pageSize);
+                handlePageNumberChange(handlePageChange, 1);
+                scrollToGivenElement();
+              }}
               page={page}
               pageSize={pageSize}
             />

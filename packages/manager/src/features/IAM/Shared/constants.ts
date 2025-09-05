@@ -22,6 +22,15 @@ export const IAM_DOCS_LINK =
 export const ROLES_LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-available-roles';
 
+export const USER_DETAILS_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-manage-access';
+
+export const USER_ROLES_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-manage-access#check-and-update-users-role-assignment';
+
+export const USER_ENTITIES_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-manage-access#check-and-update-users-entity-assignment';
+
 export const PAID_ENTITY_TYPES = [
   'database',
   'linode',

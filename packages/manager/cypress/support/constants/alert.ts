@@ -32,10 +32,10 @@ export const severityMap: Record<AlertSeverityType, string> = {
 };
 
 export const aggregationTypeMap: Record<MetricAggregationType, string> = {
-  avg: 'Average',
+  avg: 'Avg',
   count: 'Count',
-  max: 'Maximum',
-  min: 'Minimum',
+  max: 'Max',
+  min: 'Min',
   sum: 'Sum',
 };
 

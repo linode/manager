@@ -9,7 +9,7 @@ import { ExtraPresetMaintenance } from './ExtraPresetMaintenance';
 import { ExtraPresetNotifications } from './ExtraPresetNotifications';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
-import { ExtraPresetProfile } from './ExtraPresetProfile';
+import { ExtraPresetProfileAndGrants } from './ExtraPresetProfileAndGrants';
 import { ExtraPresetUserAccountPermissions } from './ExtraPresetUserAccountPermissions';
 import { ExtraPresetUserEntityPermissions } from './ExtraPresetUserEntityPermissions';
 
@@ -17,6 +17,7 @@ import type {
   Account,
   AccountMaintenance,
   Event,
+  Grants,
   Notification,
   PermissionType,
   Profile,
@@ -25,6 +26,7 @@ import type {
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
   customEventsData?: Event[] | null;
+  customGrantsData?: Grants | null;
   customMaintenanceData?: AccountMaintenance[] | null;
   customNotificationsData?: Notification[] | null;
   customProfileData?: null | Profile;
@@ -33,6 +35,7 @@ export interface ExtraPresetOptionsProps {
   handlers: string[];
   onCustomAccountChange?: (data: Account | null | undefined) => void;
   onCustomEventsChange?: (data: Event[] | null | undefined) => void;
+  onCustomGrantsChange?: (data: Grants | null | undefined) => void;
   onCustomMaintenanceChange?: (
     data: AccountMaintenance[] | null | undefined
   ) => void;
@@ -59,6 +62,7 @@ export const ExtraPresetOptions = ({
   customAccountData,
   customProfileData,
   customEventsData,
+  customGrantsData,
   customMaintenanceData,
   customNotificationsData,
   customUserAccountPermissionsData,
@@ -67,6 +71,7 @@ export const ExtraPresetOptions = ({
   onCustomAccountChange,
   onCustomProfileChange,
   onCustomEventsChange,
+  onCustomGrantsChange,
   onCustomMaintenanceChange,
   onCustomNotificationsChange,
   onCustomUserAccountPermissionsChange,
@@ -120,11 +125,13 @@ export const ExtraPresetOptions = ({
                 onTogglePreset={onTogglePreset}
               />
             )}
-            {currentGroupType === 'profile' && (
-              <ExtraPresetProfile
+            {currentGroupType === 'profile & grants' && (
+              <ExtraPresetProfileAndGrants
+                customGrantsData={customGrantsData}
                 customProfileData={customProfileData}
                 handlers={handlers}
-                onFormChange={onCustomProfileChange}
+                onFormChangeGrants={onCustomGrantsChange}
+                onFormChangeProfile={onCustomProfileChange}
                 onTogglePreset={onTogglePreset}
               />
             )}

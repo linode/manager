@@ -10,17 +10,14 @@ interface DimensionFilterAutocompleteProps {
    * Whether the autocomplete input should be disabled.
    */
   disabled: boolean;
-
   /**
    * Optional error message to display beneath the input.
    */
   errorText?: string;
-
   /**
    * Handler function called on input blur.
    */
   fieldOnBlur: () => void;
-
   /**
    * Callback triggered when the user selects a new value(s).
    */
@@ -30,7 +27,14 @@ interface DimensionFilterAutocompleteProps {
    * Current raw string value (or null) from the form state.
    */
   fieldValue: null | string;
-
+  /**
+   * boolean to control display of API error messages
+   */
+  isError: boolean;
+  /**
+   * boolean to control showing loading state
+   */
+  isLoading: boolean;
   /**
    * To control single-select/multi-select in the Autocomplete.
    */
@@ -43,7 +47,6 @@ interface DimensionFilterAutocompleteProps {
    * Placeholder text to display when no selection is made.
    */
   placeholderText: string;
-
   /**
    * The full list of selectable options for the autocomplete input.
    */
@@ -64,6 +67,8 @@ export const DimensionFilterAutocomplete = (
     values,
     disabled,
     fieldOnBlur,
+    isError,
+    isLoading,
     placeholderText,
     errorText,
     fieldValue,
@@ -74,10 +79,13 @@ export const DimensionFilterAutocomplete = (
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
-      errorText={errorText}
+      errorText={
+        errorText ?? (isError ? 'Failed to fetch the values.' : undefined)
+      }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
       limitTags={1}
+      loading={!disabled && isLoading && !isError}
       multiple={multiple}
       onBlur={fieldOnBlur}
       onChange={(_, selected, operation) => {

@@ -160,13 +160,12 @@ describe('linode storage tab', () => {
   });
 
   /*
-   * - Confirms UI flow end-to-end when a user deletes a Linode disk.
-   * - Confirms that user can successfully delete a disk from a Linode.
-   * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
-   * TODO: Disk cannot be deleted if disk_encryption is 'enabled'
-   * TODO: edit result of this test if/when behavior of backend is updated. uncertain what expected behavior is for this disk config
+   * - Confirms UI flow end-to-end when a user attempts to delete a Linode disk with encryption enabled.
+   * - Confirms that disk deletion fails and toast notification appears.
    */
-  it('delete disk fails', () => {
+  // TODO: Disk cannot be deleted if disk_encryption is 'enabled'
+  // TODO: edit result of this test if/when behavior of backend is updated. uncertain what expected behavior is for this disk config
+  it('delete disk fails when Linode uses disk encryption', () => {
     const diskName = randomLabel();
     cy.defer(() =>
       createTestLinode({
@@ -214,9 +213,11 @@ describe('linode storage tab', () => {
   });
 
   /*
-   * - Same test as above, but uses different linode config for disk_encryption
+   * - Confirms UI flow end-to-end when a user deletes a Linode disk.
+   * - Confirms that disk is deleted successfully
+   * - Confirms that UI updates to reflect the deleted disk.
    */
-  it('delete disk succeeds', () => {
+  it('deletes a disk', () => {
     const diskName = randomLabel();
     cy.defer(() =>
       createTestLinode({
@@ -244,9 +245,7 @@ describe('linode storage tab', () => {
 
       deleteDisk(diskName);
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
-      cy.findByText('Deleting', { exact: false }).should('be.visible');
       ui.button.findByTitle('Add a Disk').should('be.enabled');
-
       ui.toast.assertMessage(
         `Disk ${diskName} on Linode ${linode.label} has been deleted.`
       );

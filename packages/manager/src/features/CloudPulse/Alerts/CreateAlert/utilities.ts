@@ -7,7 +7,6 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type {
-  AlertDefinitionScope,
   AlertSeverityType,
   CloudPulseServiceType,
   CreateAlertDefinitionPayload,
@@ -31,9 +30,11 @@ export const filterFormValues = (
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
+  const regions = formValues.regions;
   return {
     ...values,
     entity_ids: entityIds,
+    regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
@@ -51,8 +52,7 @@ export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
   serviceType: CloudPulseServiceType,
   severity: AlertSeverityType,
-  alertId: number,
-  scope: AlertDefinitionScope
+  alertId: number
 ): EditAlertPayloadWithService => {
   const values = omitProps(formValues, [
     'serviceType',
@@ -63,15 +63,16 @@ export const filterEditFormValues = (
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
+  const regions = formValues.regions;
   return {
     ...values,
     alertId,
     entity_ids: entityIds,
+    regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     serviceType,
     severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
-    scope,
   };
 };
 

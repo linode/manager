@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { useLinodeIPsQuery, usePreferences } from '@linode/queries';
+import {
+  useLinodeIPsQuery,
+  usePreferences,
+  useTypeQuery,
+} from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -29,7 +33,7 @@ interface NodeRowProps extends NodeRow {
   isLkeClusterRestricted: boolean;
   linodeError?: APIError[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  typeLabel: string;
+  type: string;
 }
 
 export const NodeRow = React.memo((props: NodeRowProps) => {
@@ -43,9 +47,11 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     nodeId,
     nodeStatus,
     openRecycleNodeDialog,
-    typeLabel,
+    type,
     shouldShowVpcIPAddressColumns,
   } = props;
+
+  const { data: linodeType } = useTypeQuery(type);
 
   const { data: ips, error: ipsError } = useLinodeIPsQuery(
     instanceId ?? -1,
@@ -80,7 +86,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
         ? 'active'
         : 'inactive';
 
-  const labelText = label ?? typeLabel;
+  const labelText = label ?? linodeType?.label ?? type;
 
   const statusText =
     nodeStatus === 'not_ready'

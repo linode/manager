@@ -1,4 +1,4 @@
-import { nodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
+import { CreateNodePoolSchema, EditNodePoolSchema } from '@linode/validation';
 
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
@@ -61,7 +61,7 @@ export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
     setURL(
       `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`,
     ),
-    setData(data, nodePoolSchema),
+    setData(data, CreateNodePoolSchema),
   );
 
 /**
@@ -77,11 +77,11 @@ export const updateNodePool = (
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
         clusterID,
       )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
-    setData(data, nodePoolSchema),
+    setData(data, EditNodePoolSchema),
   );
 
 /**

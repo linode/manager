@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { TextField } from '@linode/ui';
 import React, { useMemo } from 'react';
 
@@ -8,17 +9,19 @@ import {
   valueFieldConfig,
 } from './constants';
 import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
+import { useFetchOptions } from './useFetchOptions';
 import { getOperatorGroup, getStaticOptions } from './utils';
 
 import type { OperatorGroup, ValueFieldConfig } from './constants';
 import type {
+  AlertDefinitionScope,
   CloudPulseServiceType,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
 
 interface ValueFieldRendererProps {
   /**
-   * The dimension label extracted from the Dimension Data.
+   * The dimension_label extracted from the Dimension Data.
    */
   dimensionLabel: null | string;
 
@@ -56,6 +59,10 @@ interface ValueFieldRendererProps {
    */
   operator: DimensionFilterOperatorType | null;
   /**
+   * Scope of fetching: account (all entities) or entity (filtered subset) or region (entities bound to selected region).
+   */
+  scope?: AlertDefinitionScope | null;
+  /**
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
@@ -74,8 +81,10 @@ interface ValueFieldRendererProps {
 export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const {
     serviceType,
+    scope,
     dimensionLabel,
     disabled,
+    entities,
     errorText,
     name,
     onBlur,
@@ -98,7 +107,16 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     // 3. No dimension-specific config & values present → use *
     dimensionConfig = valueFieldConfig['*'];
   }
+  const { data: regions } = useRegionsQuery();
   const config = dimensionConfig[operatorGroup];
+  const customFetchItems = useFetchOptions({
+    dimensionLabel,
+    regions,
+    entities,
+    serviceType,
+    type: 'alerts',
+    scope,
+  });
   const staticOptions = useMemo(
     () =>
       getStaticOptions(
@@ -136,7 +154,9 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     const autocompletePlaceholder = config.multiple
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
-    const items = staticOptions;
+    const { values, isLoading, isError } = config.useCustomFetch
+      ? customFetchItems
+      : { values: staticOptions, isLoading: false, isError: false };
     return (
       <DimensionFilterAutocomplete
         disabled={disabled}
@@ -144,10 +164,12 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
         fieldOnBlur={onBlur}
         fieldOnChange={onChange}
         fieldValue={value}
+        isError={isError}
+        isLoading={isLoading}
         multiple={config.multiple}
         name={name}
         placeholderText={config.placeholder ?? autocompletePlaceholder}
-        values={items}
+        values={values}
       />
     );
   }

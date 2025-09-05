@@ -30,6 +30,11 @@ import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay'
 
 export interface LabelNameOptionsProps {
   /**
+   * array of group by fields
+   */
+  groupBy: string[];
+
+  /**
    * Boolean to check if metric name should be hidden
    */
   hideMetricName?: boolean;
@@ -61,6 +66,11 @@ export interface LabelNameOptionsProps {
 }
 
 interface GraphDataOptionsProps {
+  /**
+   * array of group by fields
+   */
+  groupBy: string[];
+
   /**
    * label for the graph title
    */
@@ -121,6 +131,10 @@ interface MetricRequestProps {
 
 export interface DimensionNameProperties {
   /**
+   * array of group by fields
+   */
+  groupBy: string[];
+  /**
    * Boolean to check if metric name should be hidden
    */
   hideMetricName?: boolean;
@@ -168,7 +182,8 @@ interface GraphData {
  * @returns parameters which will be necessary to populate graph & legends
  */
 export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
-  const { label, metricsList, resources, serviceType, status, unit } = props;
+  const { label, metricsList, resources, serviceType, status, unit, groupBy } =
+    props;
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
@@ -205,6 +220,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           unit,
           hideMetricName,
           serviceType,
+          groupBy,
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
@@ -331,6 +347,7 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
     unit,
     hideMetricName = false,
     serviceType,
+    groupBy,
   } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
@@ -338,7 +355,13 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
     return `${label} (${unit})`;
   }
 
-  return getDimensionName({ metric, resources, hideMetricName, serviceType });
+  return getDimensionName({
+    metric,
+    resources,
+    hideMetricName,
+    serviceType,
+    groupBy,
+  });
 };
 
 /**
@@ -347,30 +370,53 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
  */
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { metric, resources, hideMetricName = false, serviceType } = props;
-  return Object.entries(metric)
-    .map(([key, value]) => {
-      if (key === 'entity_id') {
-        return mapResourceIdToName(value, resources);
+  const {
+    metric,
+    resources,
+    hideMetricName = false,
+    serviceType,
+    groupBy,
+  } = props;
+  const labels: string[] = new Array(groupBy.length).fill('');
+  Object.entries(metric).forEach(([key, value]) => {
+    if (key === 'entity_id') {
+      const resourceName = mapResourceIdToName(value, resources);
+      const index = groupBy.indexOf(key);
+      if (index !== -1) {
+        labels[index] = resourceName;
+      } else {
+        labels.push(resourceName);
       }
+      return;
+    }
 
-      if (key === 'linode_id') {
-        return (
-          resources.find((resource) => resource.entities?.[value] !== undefined)
-            ?.entities?.[value] ?? value
-        );
+    if (key === 'linode_id') {
+      const linodeLabel =
+        resources.find((resource) => resource.entities?.[value] !== undefined)
+          ?.entities?.[value] ?? value;
+      const index = groupBy.indexOf('linode_id');
+      if (index !== -1) {
+        labels[index] = linodeLabel;
+      } else {
+        labels.push(linodeLabel);
       }
+      return;
+    }
 
-      if (key === 'metric_name' && hideMetricName) {
-        return '';
-      }
+    if (key === 'metric_name' && hideMetricName) {
+      return;
+    }
 
-      return (
-        DIMENSION_TRANSFORM_CONFIG[serviceType]?.[key]?.(value) ?? value ?? ''
-      );
-    })
-    .filter(Boolean)
-    .join(' | ');
+    const dimensionValue =
+      DIMENSION_TRANSFORM_CONFIG[serviceType]?.[key]?.(value) ?? value ?? '';
+    const index = groupBy.indexOf(key);
+    if (index !== -1) {
+      labels[index] = dimensionValue;
+    } else {
+      labels.push(dimensionValue);
+    }
+  });
+  return labels.filter(Boolean).join(' | ');
 };
 
 /**
