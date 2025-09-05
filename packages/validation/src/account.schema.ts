@@ -144,7 +144,9 @@ export const UpdateUserEmailSchema = object({
 });
 
 export const UpdateUserSchema = object({
-  username: usernameSchema,
+  username: string()
+    .min(3, userNameErrors.lengthError)
+    .max(32, userNameErrors.lengthError),
   email: string().email('Must be a valid email address.'),
   restricted: boolean(),
 });
