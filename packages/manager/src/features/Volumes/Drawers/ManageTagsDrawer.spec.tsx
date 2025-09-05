@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ManageTagsDrawer } from './ManageTagsDrawer';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const testTags = ['first-tag', 'second-tag'];
 
 describe('ManageTagsDrawer', () => {

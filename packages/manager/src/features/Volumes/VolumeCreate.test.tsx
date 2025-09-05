@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumeCreate } from './VolumeCreate';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const encryptVolumeSectionHeader = 'Encrypt Volume';
 
 describe('VolumeCreate', () => {
