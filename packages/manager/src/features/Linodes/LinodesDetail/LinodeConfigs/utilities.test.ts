@@ -1,6 +1,14 @@
 import { linodeConfigInterfaceFactory } from '@linode/utilities';
 
-import { getPrimaryInterfaceIndex } from './utilities';
+import { getPrimaryInterfaceIndex, useGetDeviceLimit } from './utilities';
+
+const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn(),
+}));
+
+vi.mock('src/hooks/useFlags', () => ({
+  useFlags: queryMocks.useFlags,
+}));
 
 describe('getPrimaryInterfaceIndex', () => {
   it('returns null if there are no interfaces', () => {
@@ -32,5 +40,29 @@ describe('getPrimaryInterfaceIndex', () => {
     ];
 
     expect(getPrimaryInterfaceIndex(interfaces)).toBe(null);
+  });
+});
+
+describe('useGetDeviceLimit', () => {
+  it('should always return 8 as the device limit', () => {
+    queryMocks.useFlags.mockReturnValue({
+      blockStorageVolumeLimit: false,
+    });
+
+    expect(useGetDeviceLimit(131072)).toEqual(8);
+    expect(useGetDeviceLimit(65536)).toEqual(8);
+    expect(useGetDeviceLimit(16384)).toEqual(8);
+    expect(useGetDeviceLimit(1024)).toEqual(8);
+  });
+
+  it('should calculate the correct device limit', () => {
+    queryMocks.useFlags.mockReturnValue({
+      blockStorageVolumeLimit: true,
+    });
+
+    expect(useGetDeviceLimit(131072)).toEqual(64);
+    expect(useGetDeviceLimit(65536)).toEqual(64);
+    expect(useGetDeviceLimit(16384)).toEqual(16);
+    expect(useGetDeviceLimit(1024)).toEqual(8);
   });
 });
