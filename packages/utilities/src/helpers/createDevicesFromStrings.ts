@@ -1,8 +1,4 @@
-import type { Devices } from '@linode/api-v4/lib/linodes';
-
-type DiskRecord = Record<'disk_id', number>;
-
-type VolumeRecord = Record<'volume_id', number>;
+import type { Devices, DiskDevice, VolumeDevice } from '@linode/api-v4';
 
 /**
  * Maps the Devices type to have optional string values instead of device objects.
@@ -23,8 +19,8 @@ export type DevicesAsStrings = StringTypeMap<Devices>;
  */
 const createTypeRecord = (
   value?: string,
-): DiskRecord | null | undefined | VolumeRecord => {
-  if (value === undefined || value === null || value === 'none') {
+): DiskDevice | null | undefined | VolumeDevice => {
+  if (value === null || value === undefined || value === 'none') {
     return undefined;
   }
 
@@ -38,7 +34,11 @@ const createTypeRecord = (
   const key = `${type}_id` as const; // -> `volume_id`
   const idAsNumber = Number(id); // -> 123
 
-  return { [key]: idAsNumber } as DiskRecord | VolumeRecord; // -> { volume_id: 123 }
+  if (key === 'volume_id') {
+    return { [key]: idAsNumber } as VolumeDevice; // -> { volume_id: 123 }
+  }
+
+  return { [key]: idAsNumber } as DiskDevice; // -> { disk_id: 123 }
 };
 
 export const createDevicesFromStrings = (
