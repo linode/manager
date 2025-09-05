@@ -48,7 +48,7 @@ export const lkeClusterCreatePage = {
   /**
    * This function assumes that the `apl` and `aplGeneralAvailability` feature flags are both enabled.
    */
-  selectEnableApl: (enableApl: boolean) => {
+  setEnableApl: (enableApl: boolean) => {
     cy.findByTestId('application-platform-form').within(() => {
       const expectedCheckboxLabel = enableApl
         ? 'Yes, enable Akamai App Platform'
@@ -63,7 +63,7 @@ export const lkeClusterCreatePage = {
    *
    * @param enableHighAvailability - Whether or not to enable High Availability for the cluster.
    */
-  selectEnableHighAvailability: (enableHighAvailability: boolean) => {
+  setEnableHighAvailability: (enableHighAvailability: boolean) => {
     cy.findByTestId('ha-control-plane-form').within(() => {
       enableHighAvailability
         ? cy
@@ -80,7 +80,7 @@ export const lkeClusterCreatePage = {
    *
    * @param enableAcl - Whether or not to enable Control Plane ACL for the cluster.
    */
-  selectEnableControlPlaneAcl: (enableAcl: boolean) => {
+  setEnableControlPlaneAcl: (enableAcl: boolean) => {
     cy.findByTestId('control-plane-ipacl-form').within(() => {
       enableAcl
         ? cy.findByLabelText('Enable Control Plane ACL').check()

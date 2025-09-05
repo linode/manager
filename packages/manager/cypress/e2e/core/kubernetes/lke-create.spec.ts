@@ -1655,8 +1655,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
     lkeClusterCreatePage.setLabel(mockCluster.label);
     lkeClusterCreatePage.selectClusterTier('standard');
     lkeClusterCreatePage.selectRegionById(mockCluster.region, mockRegions);
-    lkeClusterCreatePage.selectEnableApl(false);
-    lkeClusterCreatePage.selectEnableHighAvailability(false);
+    lkeClusterCreatePage.setEnableApl(false);
+    lkeClusterCreatePage.setEnableHighAvailability(false);
 
     // Configure a node pool with the default pool size of 3.
     // Additionally assert that LKE-E specific options are absent in the drawer,
@@ -1800,8 +1800,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
     // Now switch to a standard LKE cluster, assert the state of the UI and
     // outgoing API request after the user makes this switch.
     lkeClusterCreatePage.selectClusterTier('standard');
-    lkeClusterCreatePage.selectEnableApl(false);
-    lkeClusterCreatePage.selectEnableHighAvailability(true);
+    lkeClusterCreatePage.setEnableApl(false);
+    lkeClusterCreatePage.setEnableHighAvailability(true);
 
     lkeClusterCreatePage.withinOrderSummary(() => {
       cy.findByText('LKE Enterprise').should('not.exist');

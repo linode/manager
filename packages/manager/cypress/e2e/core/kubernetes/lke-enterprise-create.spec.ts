@@ -634,12 +634,12 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
     lkeClusterCreatePage.setLabel(mockCluster.label);
     lkeClusterCreatePage.selectClusterTier('standard');
     lkeClusterCreatePage.selectPlanTab('Shared CPU');
-    lkeClusterCreatePage.selectEnableApl(false);
+    lkeClusterCreatePage.setEnableApl(false);
 
     // Initially select a region and HA control plane that
     // selection which isn't supported under LKE-E.
     lkeClusterCreatePage.selectRegionById(mockFirstRegion.id, mockRegions);
-    lkeClusterCreatePage.selectEnableHighAvailability(false);
+    lkeClusterCreatePage.setEnableHighAvailability(false);
 
     // Change selection from a standard cluster to an Enterprise LKE cluster,
     // confirm that region selection has been reset, then switch back to standard
