@@ -41,6 +41,13 @@ interface Props {
   regions: Region[];
 }
 
+const RFC1918HelperText = (
+  <Typography>
+    The VPC can use the entire RFC 1918 specified range for subnetting except
+    for 192.168.128.0/17.
+  </Typography>
+);
+
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, isDrawer, regions } = props;
   const flags = useFlags();
@@ -170,10 +177,12 @@ export const VPCTopSectionContent = (props: Props) => {
                           padding: '8px',
                         }}
                         text={
-                          <Typography>
-                            The VPC uses IPv4 addresses only. The VPC can use
-                            the entire RFC 1918 specified range for subnetting.
-                          </Typography>
+                          <Stack spacing={2}>
+                            <Typography>
+                              The VPC uses IPv4 addresses only.
+                            </Typography>
+                            {RFC1918HelperText}
+                          </Stack>
                         }
                         width={250}
                       />
@@ -215,10 +224,7 @@ export const VPCTopSectionContent = (props: Props) => {
                             <Typography>
                               The VPC supports both IPv4 and IPv6 addresses.
                             </Typography>
-                            <Typography>
-                              For IPv4, the VPC can use the entire RFC 1918
-                              specified range for subnetting.
-                            </Typography>
+                            {RFC1918HelperText}
                             <Typography>
                               For IPv6, the VPC is assigned an IPv6 prefix
                               length of <Code>/52</Code> by default.
