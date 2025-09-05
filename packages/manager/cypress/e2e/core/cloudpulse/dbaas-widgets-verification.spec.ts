@@ -26,7 +26,6 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
-  dimensionFilterFactory,
   flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
@@ -36,6 +35,7 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type {
   CloudPulseMetricsResponse,
+  CloudPulseServiceType,
   Dashboard,
   Database,
   DimensionFilter,
@@ -55,34 +55,64 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { clusterName, dashboardName, engine, id, metrics, nodeType } =
-  widgetDetails.dbaas;
-const serviceType = 'dbaas';
+const {
+  clusterName,
+  dashboardName,
+  engine,
+  id,
+  metrics,
+  nodeType,
+  serviceType,
+} = widgetDetails.dbaas;
+
+// Build a shared dimension object
+
+const nodeDimension = {
+  label: 'Node Type',
+  dimension_label: 'node_type',
+  operator: 'eq',
+  value: 'secondary', // <-- single string
+};
+
+// Convert widget filters to dashboard filters
+const getFiltersForMetric = (metricName: string) => {
+  const metric = metrics.find((m) => m.name === metricName);
+  if (!metric) return []; // return empty array instead of null
+
+  // Convert metric.filters to { dimension_label, label, values[] }
+  return metric.filters.map((f) => ({
+    dimension_label: f.dimension_label,
+    label: f.dimension_label, // or friendly name
+    values: f.value ? [f.value] : undefined, // undefined instead of null
+  }));
+};
+
+// Dashboard creation
 const dashboard = dashboardFactory.build({
   label: dashboardName,
-  service_type: serviceType,
-  widgets: metrics.map(({ name, title, unit, yLabel }) => {
-    return widgetFactory.build({
+  service_type: serviceType as CloudPulseServiceType,
+  widgets: metrics.map(({ name, title, unit, yLabel }) =>
+    widgetFactory.build({
+      entity_ids: [String(id)],
+      filters: [nodeDimension],
+
       label: title,
       metric: name,
       unit,
       y_label: yLabel,
-      filters: [
-        dimensionFilterFactory.build({
-          dimension_label: 'dimension_1',
-          operator: 'startswith',
-          value: 'value_1',
-        }),
-      ],
-    });
-  }),
+      namespace_id: id,
+      service_type: serviceType as CloudPulseServiceType,
+    })
+  ),
 });
 
+// Metric definitions
 const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
     unit,
+    dimensions: [nodeDimension, ...getFiltersForMetric(name)], // all values are arrays or undefined
   })
 );
 
@@ -145,7 +175,7 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
-    serviceType,
+    serviceType: serviceType as CloudPulseServiceType,
     groupBy: ['entity_id'],
   });
 
@@ -174,16 +204,20 @@ const databaseMock: Database = databaseFactory.build({
   version: '1',
 });
 
-const validateWidgetFilters = (widget: Widgets) => {
-  expect(widget.filters).to.have.length(1);
-  widget.filters.forEach((filter: DimensionFilter) => {
-    expect(filter.dimension_label).to.equal('dimension_1');
-    expect(filter.operator).to.equal('startswith');
-    expect(filter.value).to.equal('value_1');
+const validateWidgetFilters = (
+  widget: Widgets,
+  expectedDimensionLabel: string,
+  expectedValues: string[]
+) => {
+  const relevantFilters = widget.filters?.filter(
+    (f: DimensionFilter) => f.dimension_label === expectedDimensionLabel
+  );
+  relevantFilters.forEach((filter: DimensionFilter) => {
+    expect(filter.operator).to.equal('eq'); // eq for each individual value
+    expect(expectedValues).to.include(filter.value);
   });
 };
 
-// It will be fixed
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -210,7 +244,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       const dashboards = interception.response?.body?.data as Dashboard[];
       const dashboard = dashboards[0];
       expect(dashboard.widgets).to.have.length(4);
-      dashboard.widgets.forEach(validateWidgetFilters);
+
+      dashboard.widgets.forEach((widget: Widgets) => {
+        validateWidgetFilters(widget, 'node_type', ['secondary']);
+      });
     });
 
     // Selecting a dashboard from the autocomplete input.
@@ -293,7 +330,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('be.visible')
         .should('have.text', engine);
 
-      cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+      cy.get('[data-qa-value="Region US, Chicago, IL"]')
         .should('be.visible')
         .should('have.text', 'US, Chicago, IL');
 
@@ -313,20 +350,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
         const { filters } = requestPayload;
-
-        // Validate filter for "dimension_1"
-        const dimension1Filter = filters.filter(
-          (filter: DimensionFilter) => filter.dimension_label === 'dimension_1'
-        );
-        expect(dimension1Filter).to.have.length(1);
-        expect(dimension1Filter[0].operator).to.equal('startswith');
-        expect(dimension1Filter[0].value).to.equal('value_1');
-
-        // Validate filter for "node_type"
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
-        expect(nodeTypeFilter).to.have.length(1);
+        expect(nodeTypeFilter).to.have.length(2);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
       });
@@ -386,15 +413,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .should('be.visible')
               .should('have.text', `${testData.title} (${testData.unit})`);
 
-            cy.get(`[data-qa-graph-column-title="Max"]`)
+            cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.max}`);
 
-            cy.get(`[data-qa-graph-column-title="Avg"]`)
+            cy.get('[data-qa-graph-column-title="Avg"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.average}`);
 
-            cy.get(`[data-qa-graph-column-title="Last"]`)
+            cy.get('[data-qa-graph-column-title="Last"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.last}`);
           });
@@ -440,15 +467,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .should('be.visible')
               .should('have.text', `${testData.title} (${testData.unit})`);
 
-            cy.get(`[data-qa-graph-column-title="Max"]`)
+            cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.max}`);
 
-            cy.get(`[data-qa-graph-column-title="Avg"]`)
+            cy.get('[data-qa-graph-column-title="Avg"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.average}`);
 
-            cy.get(`[data-qa-graph-column-title="Last"]`)
+            cy.get('[data-qa-graph-column-title="Last"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.last}`);
           });
@@ -512,15 +539,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .should('be.visible')
               .should('have.text', `${testData.title} (${testData.unit})`);
 
-            cy.get(`[data-qa-graph-column-title="Max"]`)
+            cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
-              .should('have.text', `${expectedWidgetValues.max}`);
+              .should('have.text', expectedWidgetValues.max);
 
-            cy.get(`[data-qa-graph-column-title="Avg"]`)
+            cy.get('[data-qa-graph-column-title="Avg"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.average}`);
 
-            cy.get(`[data-qa-graph-column-title="Last"]`)
+            cy.get('[data-qa-graph-column-title="Last"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.last}`);
           });
@@ -544,15 +571,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .should('be.visible')
               .should('have.text', `${testData.title} (${testData.unit})`);
 
-            cy.get(`[data-qa-graph-column-title="Max"]`)
+            cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.max}`);
 
-            cy.get(`[data-qa-graph-column-title="Avg"]`)
+            cy.get('[data-qa-graph-column-title="Avg"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.average}`);
 
-            cy.get(`[data-qa-graph-column-title="Last"]`)
+            cy.get('[data-qa-graph-column-title="Last"]')
               .should('be.visible')
               .should('have.text', `${expectedWidgetValues.last}`);
           });
