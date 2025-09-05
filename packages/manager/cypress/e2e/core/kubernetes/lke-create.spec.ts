@@ -1625,6 +1625,11 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
         phase2Mtc: false,
       },
     });
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    );
   });
 
   /*
