@@ -1591,6 +1591,12 @@ describe('LKE Cluster Creation with LKE-E', () => {
   });
 });
 
+/*
+ * Tests for standard LKE create flow when the `lkeEnterprise.postLa` feature flag is enabled.
+ * The main distinguishing change introduced by this feature flag is a new flow when adding node pools:
+ * Node pool size is specified inside of a configuration drawer instead of directly in the plan table,
+ * and additional node pool options have been added exclusively for LKE Enterprise clusters.
+ */
 describe('LKE cluster creation with LKE-E Post-LA', () => {
   const mockRegions = [
     ...regionFactory.buildList(3, {
@@ -1643,17 +1649,19 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
 
     cy.visitWithLogin('/kubernetes/create');
 
+    // Configure a standard LKE cluster.
     lkeClusterCreatePage.setLabel(mockCluster.label);
     lkeClusterCreatePage.selectClusterTier('standard');
     lkeClusterCreatePage.selectRegionById(mockCluster.region, mockRegions);
     lkeClusterCreatePage.selectEnableApl(false);
     lkeClusterCreatePage.selectEnableHighAvailability(false);
+
+    // Configure a node pool with the default pool size of 3.
+    // Additionally assert that LKE-E specific options are absent in the drawer,
+    // and that the order summary section updates to reflect the user's selection.
     lkeClusterCreatePage.selectPlanTab('Shared CPU');
     lkeClusterCreatePage.selectNodePoolPlan(mockPlan.formattedLabel);
-
     lkeClusterCreatePage.withinNodePoolDrawer(mockPlan.formattedLabel, () => {
-      // Leave default node pool count of 3.
-      // Assert that LKE-E specific options are absent.
       cy.findByLabelText('Update Strategy').should('not.exist');
       cy.findByLabelText('Firewall').should('not.exist');
 
@@ -1673,7 +1681,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
         });
     });
 
-    // Confirm that node pool size can be configured, and UI updates upon submit.
+    // Confirm that node pool size can be configured, and that the order summary
+    // UI updates upon clicking the "Update Pool" button.
     lkeClusterCreatePage.withinNodePoolDrawer(mockPlan.formattedLabel, () => {
       cy.findByLabelText('Add 1')
         .should('be.visible')
@@ -1694,6 +1703,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
           cy.findByText('4 Nodes').should('be.visible');
         });
 
+      // Create the LKE cluster and confirm that the outgoing API request contains
+      // the expected payload data.
       ui.button
         .findByTitle('Create Cluster')
         .should('be.visible')
@@ -1754,8 +1765,14 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
     lkeClusterCreatePage.selectClusterTier('enterprise');
     lkeClusterCreatePage.selectRegionById(mockCluster.region, mockRegions);
     lkeClusterCreatePage.selectPlanTab('Shared CPU');
-    lkeClusterCreatePage.selectNodePoolPlan(mockPlan.formattedLabel);
 
+    // Confirm that order summary updates to reflect that Enterprise tier is selected,
+    // then configure a node pool.
+    lkeClusterCreatePage.withinOrderSummary(() => {
+      cy.findByText('LKE Enterprise').should('be.visible');
+    });
+
+    lkeClusterCreatePage.selectNodePoolPlan(mockPlan.formattedLabel);
     lkeClusterCreatePage.withinNodePoolDrawer(mockPlan.formattedLabel, () => {
       // Confirm that LKE-E specific options are present.
 
@@ -1778,7 +1795,46 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
         .click();
     });
 
-    //cy.wait(1000000000);
+    // Now switch to a standard LKE cluster, assert the state of the UI and
+    // outgoing API request after the user makes this switch.
+    lkeClusterCreatePage.selectClusterTier('standard');
+    lkeClusterCreatePage.selectEnableApl(false);
+    lkeClusterCreatePage.selectEnableHighAvailability(true);
+
+    lkeClusterCreatePage.withinOrderSummary(() => {
+      cy.findByText('LKE Enterprise').should('not.exist');
+
+      // Create the LKE cluster and assert that the outgoing API request contains
+      // the expected payload data.
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+    cy.wait('@createCluster').then((xhr) => {
+      const body = xhr.request.body;
+      expect(body['label']).to.equal(mockCluster.label);
+      expect(body['region']).to.equal(mockCluster.region);
+      expect(body['tier']).to.equal('standard');
+      expect(body['control_plane']['acl']['enabled']).to.be.false;
+      expect(body['control_plane']['high_availability']).to.be.true;
+      expect(body['apl_enabled']).to.be.false;
+
+      const nodePools = body['node_pools'];
+      expect(nodePools).to.be.an('array');
+      expect(nodePools).to.have.length(1);
+      expect(nodePools[0]).to.be.an('object');
+      expect(nodePools[0]['type']).to.equal(mockPlan.id);
+      expect(nodePools[0]['count']).to.equal(3);
+
+      // TODO M3-10590 - Uncomment and adjust according to chosen resolution.
+      // expect(nodePools[0]['update_strategy']).to.be.undefined;
+      // expect(nodePools[0]['firewall_id']).to.be.undefined;
+    });
+
+    cy.url().should('endWith', `kubernetes/clusters/${mockCluster.id}/summary`);
   });
 });
 
