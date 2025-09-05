@@ -144,6 +144,7 @@ export interface Flags {
   apl: boolean;
   aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
+  blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;

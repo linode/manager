@@ -23,6 +23,7 @@ import * as React from 'react';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
 import { deviceSlots } from '../LinodeConfigs/constants';
+import { useGetDeviceLimit } from '../LinodeConfigs/utilities';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { DeviceSelection } from './DeviceSelection';
 import { RescueDescription } from './RescueDescription';
@@ -79,7 +80,7 @@ export const StandardRescueDialog = (props: Props) => {
     // eslint-disable-next-line no-console
     console.warn('Invalid memory value:', availableMemory);
   }
-  const overallDeviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
+  const overallDeviceLimit = useGetDeviceLimit(availableMemory);
   const rescueDeviceLimit = overallDeviceLimit - 2;
 
   const {
