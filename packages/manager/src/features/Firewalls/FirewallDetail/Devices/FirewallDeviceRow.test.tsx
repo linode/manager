@@ -25,7 +25,7 @@ describe('FirewallDeviceRow', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       })
     );

@@ -121,11 +121,11 @@ describe('LKE Cluster Creation', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: false,
-        phase2Mtc: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
       },
     }).as('getFeatureFlags');
   });
@@ -399,7 +399,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
     mockAppendFeatureFlags({
       apl: true,
       aplGeneralAvailability: true,
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise2: { enabled: true, la: true, postLa: false },
     }).as('getFeatureFlags');
     mockCreateCluster(mockedLKECluster).as('createCluster');
     mockGetCluster(mockedLKECluster).as('getCluster');
@@ -499,7 +499,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise2: { enabled: true, la: true, postLa: false },
     }).as('getFeatureFlags');
   });
 
@@ -624,7 +624,7 @@ describe('LKE Cluster Creation with ACL', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise2: { enabled: true, la: true, postLa: false },
     }).as('getFeatureFlags');
   });
 
@@ -1241,7 +1241,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
    */
   it('does not show the LKE-E flow with the feature flag off', () => {
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: false, la: false, postLa: false },
+      lkeEnterprise2: { enabled: false, la: false, postLa: false },
     }).as('getFeatureFlags');
     cy.visitWithLogin('/kubernetes/clusters');
 
@@ -1260,7 +1260,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
     beforeEach(() => {
       // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true, postLa: false },
+        lkeEnterprise2: { enabled: true, la: true, postLa: false },
       }).as('getFeatureFlags');
     });
 

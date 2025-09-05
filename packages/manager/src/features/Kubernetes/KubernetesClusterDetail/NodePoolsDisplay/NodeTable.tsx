@@ -47,10 +47,12 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: profile } = useProfile();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
-  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterprisePhase2DualStackFeatureEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const shouldShowVpcIPAddressColumns =
-    isLkeEnterprisePhase2FeatureEnabled && clusterTier === 'enterprise';
+    isLkeEnterprisePhase2DualStackFeatureEnabled &&
+    clusterTier === 'enterprise';
   const numColumns = shouldShowVpcIPAddressColumns ? 6 : 4;
 
   const rowData = nodes.map((thisNode) =>

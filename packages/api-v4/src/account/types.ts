@@ -69,6 +69,8 @@ export const accountCapabilities = [
   'Disk Encryption',
   'Kubernetes',
   'Kubernetes Enterprise',
+  'Kubernetes Enterprise BYO VPC',
+  'Kubernetes Enterprise Dual Stack',
   'Linodes',
   'Linode Interfaces',
   'LKE HA Control Planes',

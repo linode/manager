@@ -47,12 +47,12 @@ describe('AddNodePoolDrawer', () => {
   describe('Firewall', () => {
     // LKE-E Post LA must be enabled for the Firewall option to show up
     const flags = {
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         ga: false,
         la: true,
         postLa: true,
-        phase2Mtc: false,
+        phase2Mtc: { byoVPC: false, dualStack: false },
       },
     };
 

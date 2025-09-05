@@ -129,7 +129,7 @@ describe('Security', () => {
 
   it('should show Linode disk encryption if the flag is on and the account has the capability', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(
           accountFactory.build({ capabilities: ['Disk Encryption'] })
         );
@@ -158,7 +158,7 @@ describe('Security', () => {
     const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/v4*/regions', () => {
@@ -188,7 +188,7 @@ describe('Security', () => {
     const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/v4*/regions', () => {

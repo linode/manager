@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloneVolumeDrawer } from './CloneVolumeDrawer';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const encryptionLabelText = 'Encrypt Volume';
 
 describe('CloneVolumeDrawer', () => {

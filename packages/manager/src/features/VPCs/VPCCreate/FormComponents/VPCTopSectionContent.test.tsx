@@ -45,7 +45,7 @@ describe('VPC Top Section form content', () => {
       capabilities: ['VPC Dual Stack'],
     });
 
-    server.use(http.get('*/v4/account', () => HttpResponse.json(account)));
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
     renderWithThemeAndHookFormContext({
       component: <VPCTopSectionContent {...props} />,
@@ -79,7 +79,7 @@ describe('VPC Top Section form content', () => {
       capabilities: ['VPC Dual Stack', 'VPC IPv6 Large Prefixes'],
     });
 
-    server.use(http.get('*/v4/account', () => HttpResponse.json(account)));
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
     renderWithThemeAndHookFormContext({
       component: <VPCTopSectionContent {...props} />,
@@ -119,7 +119,7 @@ describe('VPC Top Section form content', () => {
       capabilities: ['VPC Dual Stack'],
     });
 
-    server.use(http.get('*/v4/account', () => HttpResponse.json(account)));
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
     renderWithThemeAndHookFormContext({
       component: <VPCTopSectionContent {...props} />,
