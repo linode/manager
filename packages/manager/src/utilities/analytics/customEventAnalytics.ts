@@ -471,16 +471,3 @@ export const sendSupportTicketExitEvent = (label: 'Cancel' | 'Close') => {
     label: `Click:${label}`,
   });
 };
-
-// StreamCreate.tsx
-// @TODO (DPS-34191) add this event to Pendo
-export const sendCreateStreamEvent = (
-  eventLabel: string,
-  eventAction?: string
-): void => {
-  sendEvent({
-    action: eventAction || 'Create Stream',
-    category: 'Create Stream',
-    label: eventLabel,
-  });
-};

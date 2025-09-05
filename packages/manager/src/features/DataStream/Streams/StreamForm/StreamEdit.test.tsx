@@ -3,8 +3,9 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { describe } from 'vitest';
+import { describe, expect } from 'vitest';
 
 import { destinationFactory, streamFactory } from 'src/factories/datastream';
 import { StreamEdit } from 'src/features/DataStream/Streams/StreamForm/StreamEdit';
@@ -81,4 +82,193 @@ describe('StreamEdit', () => {
     // Log Path:
     expect(screen.getByText('file')).toBeVisible();
   });
+
+  describe(
+    'given Test Connection and Edit Stream buttons',
+    { timeout: 10000 },
+    () => {
+      const testConnectionButtonText = 'Test Connection';
+      const editStreamButtonText = 'Edit Stream';
+
+      const fillOutNewDestinationForm = async () => {
+        const destinationNameInput = screen.getByLabelText('Destination Name');
+        await userEvent.type(destinationNameInput, 'Test destination name');
+        const createNewTestDestination = await screen.findByText(
+          'Test destination name',
+          { exact: false }
+        );
+        await userEvent.click(createNewTestDestination);
+      };
+
+      describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
+        describe('and creating new destination', () => {
+          const editStreamSpy = vi.fn();
+          const createDestinationSpy = vi.fn();
+          const verifyDestinationSpy = vi.fn();
+
+          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
+            server.use(
+              http.get('*/monitor/streams/destinations', () => {
+                return HttpResponse.json(makeResourcePage(mockDestinations));
+              }),
+              http.post('*/monitor/streams/destinations/verify', () => {
+                verifyDestinationSpy();
+                return HttpResponse.json({});
+              }),
+              http.post('*/monitor/streams/destinations', () => {
+                createDestinationSpy();
+                return HttpResponse.json(mockDestinations[0]);
+              }),
+              http.get(`*/monitor/streams/${streamId}`, () => {
+                return HttpResponse.json(mockStream);
+              }),
+              http.put(`*/monitor/streams/${streamId}`, () => {
+                editStreamSpy();
+                return HttpResponse.json({});
+              })
+            );
+
+            renderWithThemeAndHookFormContext({
+              component: <StreamEdit />,
+            });
+
+            const loadingElement = screen.queryByTestId(loadingTestId);
+            await waitForElementToBeRemoved(loadingElement);
+            await fillOutNewDestinationForm();
+
+            const testConnectionButton = screen.getByRole('button', {
+              name: testConnectionButtonText,
+            });
+            const editStreamButton = screen.getByRole('button', {
+              name: editStreamButtonText,
+            });
+            expect(editStreamButton).toBeDisabled();
+
+            // Test connection
+            await userEvent.click(testConnectionButton);
+            expect(verifyDestinationSpy).toHaveBeenCalled();
+
+            await waitFor(() => {
+              expect(editStreamButton).toBeEnabled();
+            });
+
+            // Edit stream
+            await userEvent.click(editStreamButton);
+
+            expect(createDestinationSpy).toHaveBeenCalled();
+            await waitFor(() => {
+              expect(editStreamSpy).toHaveBeenCalled();
+            });
+          });
+        });
+
+        describe('and selected existing destination', () => {
+          const editStreamSpy = vi.fn();
+          const createDestinationSpy = vi.fn();
+          const verifyDestinationSpy = vi.fn();
+
+          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
+            server.use(
+              http.get('*/monitor/streams/destinations', () => {
+                return HttpResponse.json(makeResourcePage(mockDestinations));
+              }),
+              http.post('*/monitor/streams/destinations/verify', () => {
+                verifyDestinationSpy();
+                return HttpResponse.json({});
+              }),
+              http.post('*/monitor/streams/destinations', () => {
+                createDestinationSpy();
+                return HttpResponse.json(mockDestinations[0]);
+              }),
+              http.get(`*/monitor/streams/${streamId}`, () => {
+                return HttpResponse.json(mockStream);
+              }),
+              http.put(`*/monitor/streams/${streamId}`, () => {
+                editStreamSpy();
+                return HttpResponse.json({});
+              })
+            );
+
+            renderWithThemeAndHookFormContext({
+              component: <StreamEdit />,
+            });
+            const loadingElement = screen.queryByTestId(loadingTestId);
+            await waitForElementToBeRemoved(loadingElement);
+
+            // Change name and leave existing destination
+            const streamNameInput = screen.getByLabelText('Name');
+            await userEvent.type(streamNameInput, 'Test');
+
+            const testConnectionButton = screen.getByRole('button', {
+              name: testConnectionButtonText,
+            });
+            const editStreamButton = screen.getByRole('button', {
+              name: editStreamButtonText,
+            });
+
+            // Edit stream button should not be disabled with existing destination selected
+            expect(editStreamButton).toBeEnabled();
+
+            // Test connection
+            await userEvent.click(testConnectionButton);
+            expect(verifyDestinationSpy).toHaveBeenCalled();
+
+            await waitFor(() => {
+              expect(editStreamButton).toBeEnabled();
+            });
+
+            // Edit stream
+            await userEvent.click(editStreamButton);
+
+            // New destination should not be created with existing destination selected
+            expect(createDestinationSpy).not.toHaveBeenCalled();
+            await waitFor(() => {
+              expect(editStreamSpy).toHaveBeenCalled();
+            });
+          });
+        });
+      });
+
+      describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
+        const verifyDestinationSpy = vi.fn();
+
+        it('should not enable Edit Stream button', async () => {
+          server.use(
+            http.get('*/monitor/streams/destinations', () => {
+              return HttpResponse.json(makeResourcePage(mockDestinations));
+            }),
+            http.post('*/monitor/streams/destinations/verify', () => {
+              verifyDestinationSpy();
+              return HttpResponse.error();
+            }),
+            http.get(`*/monitor/streams/${streamId}`, () => {
+              return HttpResponse.json(mockStream);
+            })
+          );
+
+          renderWithThemeAndHookFormContext({
+            component: <StreamEdit />,
+          });
+          const loadingElement = screen.queryByTestId(loadingTestId);
+          await waitForElementToBeRemoved(loadingElement);
+
+          const testConnectionButton = screen.getByRole('button', {
+            name: testConnectionButtonText,
+          });
+          const editStreamButton = screen.getByRole('button', {
+            name: editStreamButtonText,
+          });
+
+          await fillOutNewDestinationForm();
+
+          expect(editStreamButton).toBeDisabled();
+
+          await userEvent.click(testConnectionButton);
+
+          expect(verifyDestinationSpy).toHaveBeenCalled();
+          expect(editStreamButton).toBeDisabled();
+        });
+      });
+    }
+  );
 });

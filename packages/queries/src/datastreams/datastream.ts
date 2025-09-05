@@ -9,6 +9,7 @@ import {
   getStreams,
   updateDestination,
   updateStream,
+  verifyDestination,
 } from '@linode/api-v4';
 import { profileQueries } from '@linode/queries';
 import { getAll } from '@linode/utilities';
@@ -309,5 +310,11 @@ export const useDeleteDestinationMutation = () => {
         queryKey: datastreamQueries.destination(id).queryKey,
       });
     },
+  });
+};
+
+export const useVerifyDestinationQuery = () => {
+  return useMutation<Destination, APIError[], CreateDestinationPayload>({
+    mutationFn: verifyDestination,
   });
 };

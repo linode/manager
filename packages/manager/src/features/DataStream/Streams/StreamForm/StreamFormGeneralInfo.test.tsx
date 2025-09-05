@@ -16,7 +16,7 @@ describe('StreamFormGeneralInfo', () => {
       });
 
       // Type test value inside the input
-      const nameInput = screen.getByPlaceholderText('Stream name...');
+      const nameInput = screen.getByPlaceholderText('Stream name');
       await userEvent.type(nameInput, 'Test');
 
       await waitFor(() => {
@@ -56,23 +56,13 @@ describe('StreamFormGeneralInfo', () => {
   });
 
   describe('when in edit mode and with streamId prop', () => {
-    const streamId = '123';
-    it('should render ID', () => {
-      renderWithThemeAndHookFormContext({
-        component: <StreamFormGeneralInfo mode="edit" streamId={streamId} />,
-      });
-
-      // ID:
-      expect(screen.getByText(streamId)).toBeVisible();
-    });
-
     it('should render Name input and allow to type text', async () => {
       renderWithThemeAndHookFormContext({
-        component: <StreamFormGeneralInfo mode="edit" streamId={streamId} />,
+        component: <StreamFormGeneralInfo mode="edit" />,
       });
 
       // Type test value inside the input
-      const nameInput = screen.getByPlaceholderText('Stream name...');
+      const nameInput = screen.getByPlaceholderText('Stream name');
       await userEvent.type(nameInput, 'Test');
 
       await waitFor(() => {
@@ -82,7 +72,7 @@ describe('StreamFormGeneralInfo', () => {
 
     it('should render disabled Stream type input', async () => {
       renderWithThemeAndHookFormContext({
-        component: <StreamFormGeneralInfo mode="edit" streamId={streamId} />,
+        component: <StreamFormGeneralInfo mode="edit" />,
         useFormOptions: {
           defaultValues: {
             stream: {

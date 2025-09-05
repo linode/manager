@@ -148,7 +148,7 @@ export const updateStreamSchema = streamSchemaBase.shape({
 
 export const streamAndDestinationFormSchema = object({
   stream: streamSchemaBase.shape({
-    destinations: array().of(number()).ensure().min(1).required(),
+    destinations: array().of(number()).required(),
     details: mixed<InferType<typeof streamDetailsSchema> | object>()
       .when('type', {
         is: 'lke_audit_logs',
@@ -158,7 +158,7 @@ export const streamAndDestinationFormSchema = object({
       .required(),
   }),
   destination: destinationSchema.defined().when('stream.destinations', {
-    is: (value: never[]) => value?.length === 1 && value[0] === undefined,
+    is: (value: never[]) => !value?.length,
     then: (schema) => schema,
     otherwise: (schema) =>
       schema.shape({

@@ -6,6 +6,7 @@ import type {
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
+export type FormType = 'destination' | 'stream';
 
 export interface LabelValueOption {
   label: string;
