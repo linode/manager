@@ -1,14 +1,9 @@
 import { linodeConfigInterfaceFactory } from '@linode/utilities';
+import { renderHook } from '@testing-library/react';
+
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { getPrimaryInterfaceIndex, useGetDeviceLimit } from './utilities';
-
-const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn(),
-}));
-
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: queryMocks.useFlags,
-}));
 
 describe('getPrimaryInterfaceIndex', () => {
   it('returns null if there are no interfaces', () => {
@@ -44,25 +39,34 @@ describe('getPrimaryInterfaceIndex', () => {
 });
 
 describe('useGetDeviceLimit', () => {
-  it('should always return 8 as the device limit', () => {
-    queryMocks.useFlags.mockReturnValue({
-      blockStorageVolumeLimit: false,
-    });
+  it.each([131072, 65536, 16384, 1024])(
+    'should always return 8 as the device limit',
+    (value) => {
+      const { result } = renderHook(() => useGetDeviceLimit(value), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui.children, {
+            flags: { blockStorageVolumeLimit: false },
+          }),
+      });
+      expect(result.current).toEqual(8);
+    }
+  );
 
-    expect(useGetDeviceLimit(131072)).toEqual(8);
-    expect(useGetDeviceLimit(65536)).toEqual(8);
-    expect(useGetDeviceLimit(16384)).toEqual(8);
-    expect(useGetDeviceLimit(1024)).toEqual(8);
-  });
-
-  it('should calculate the correct device limit', () => {
-    queryMocks.useFlags.mockReturnValue({
-      blockStorageVolumeLimit: true,
-    });
-
-    expect(useGetDeviceLimit(131072)).toEqual(64);
-    expect(useGetDeviceLimit(65536)).toEqual(64);
-    expect(useGetDeviceLimit(16384)).toEqual(16);
-    expect(useGetDeviceLimit(1024)).toEqual(8);
-  });
+  it.each([
+    [131072, 64],
+    [65536, 64],
+    [16384, 16],
+    [1024, 8],
+  ])(
+    'should calculate the correct device limit for %d ram to be %d',
+    (value, expected) => {
+      const { result } = renderHook(() => useGetDeviceLimit(value), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui.children, {
+            flags: { blockStorageVolumeLimit: true },
+          }),
+      });
+      expect(result.current).toEqual(expected);
+    }
+  );
 });
