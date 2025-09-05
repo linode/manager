@@ -15,6 +15,9 @@ describe('host & VM maintenance notification banner', () => {
       vmHostMaintenance: {
         enabled: true,
       },
+      iamRbacPrimaryNavChanges: {
+        enabled: true,
+      },
     }).as('getFeatureFlags');
     const mockLinodes = [
       linodeFactory.build({
@@ -80,9 +83,7 @@ describe('host & VM maintenance notification banner', () => {
             '1 Linode has upcoming scheduled maintenance. For more details, view Account Maintenance.'
           );
         });
-      cy.get('a')
-        .should('be.visible')
-        .and('have.attr', 'href', '/account/maintenance');
+      cy.get('a').should('be.visible').and('have.attr', 'href', '/maintenance');
     });
   });
 
@@ -103,9 +104,7 @@ describe('host & VM maintenance notification banner', () => {
             '2 Linodes have upcoming scheduled maintenance. For more details, view Account Maintenance.'
           );
         });
-      cy.get('a')
-        .should('be.visible')
-        .and('have.attr', 'href', '/account/maintenance');
+      cy.get('a').should('be.visible').and('have.attr', 'href', '/maintenance');
     });
   });
 
