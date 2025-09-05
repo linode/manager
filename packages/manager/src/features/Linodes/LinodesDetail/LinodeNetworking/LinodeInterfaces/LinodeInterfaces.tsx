@@ -2,6 +2,8 @@ import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
 import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
@@ -19,6 +21,14 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const { interfaceId } = useParams({
     strict: false,
   });
+
+  // TODO: update these permissions if applicable. Currently using update_linode as I don't see
+  // linode interface related permissions, only config interface ones
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
 
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -68,15 +78,23 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       >
         <Typography variant="h3">Network Interfaces</Typography>
         <Stack direction="row" spacing={1}>
-          <Button onClick={() => setIsSettingsDrawerOpen(true)}>
+          <Button
+            disabled={!permissions.update_linode}
+            onClick={() => setIsSettingsDrawerOpen(true)}
+          >
             Interface Settings
           </Button>
-          <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
+          <Button
+            buttonType="primary"
+            disabled={!permissions.update_linode}
+            onClick={() => setIsAddDrawerOpen(true)}
+          >
             Add Network Interface
           </Button>
         </Stack>
       </Paper>
       <LinodeInterfacesTable
+        disabled={!permissions.update_linode}
         handlers={{ onDelete, onEdit, onShowDetails }}
         linodeId={linodeId}
       />
