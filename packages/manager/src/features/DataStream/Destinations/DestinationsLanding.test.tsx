@@ -13,6 +13,8 @@ const loadingTestId = 'circle-progress';
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
+  useAllDestinationsQuery: vi.fn().mockReturnValue({}),
+  useDestinationsQuery: vi.fn().mockReturnValue({}),
   useDeleteDestinationMutation: vi.fn().mockReturnValue({
     mutateAsync: vi.fn(),
   }),
@@ -30,6 +32,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useDestinationsQuery: queryMocks.useDestinationsQuery,
+    useAllDestinationsQuery: queryMocks.useAllDestinationsQuery,
     useDeleteDestinationMutation: queryMocks.useDeleteDestinationMutation,
   };
 });
@@ -51,14 +55,28 @@ describe('Destinations Landing Table', () => {
 
   beforeEach(() => {
     mockMatchMedia();
-  });
-
-  it('should render destinations landing tab header and table with items PaginationFooter', async () => {
     server.use(
       http.get('*/monitor/streams/destinations', () => {
         return HttpResponse.json(makeResourcePage(destinations));
       })
     );
+  });
+
+  it('should render destinations landing tab header and table with items PaginationFooter', async () => {
+    queryMocks.useAllDestinationsQuery.mockReturnValue({
+      data: {
+        data: destinations,
+        results: 31,
+      },
+    });
+
+    queryMocks.useDestinationsQuery.mockReturnValue({
+      data: {
+        data: destinations,
+        results: 31,
+      },
+    });
+
     await renderComponentAndWaitForLoadingComplete();
 
     // search text input
@@ -81,12 +99,34 @@ describe('Destinations Landing Table', () => {
     expect(paginationFooterSelectPageSizeInput.value).toBe('Show 25');
   });
 
+  it('should render destinations landing table with empty row when there are no search results', async () => {
+    queryMocks.useAllDestinationsQuery.mockReturnValue({
+      data: {
+        data: destinations,
+        results: 31,
+      },
+    });
+
+    queryMocks.useDestinationsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    await renderComponentAndWaitForLoadingComplete();
+
+    const emptyRow = screen.getByText('No items to display.');
+    expect(emptyRow).toBeInTheDocument();
+  });
+
   it('should render destinations landing empty state', async () => {
-    server.use(
-      http.get('*/monitor/streams/destinations', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
+    queryMocks.useAllDestinationsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
 
     await renderComponentAndWaitForLoadingComplete();
 
@@ -108,11 +148,19 @@ describe('Destinations Landing Table', () => {
 
   describe('given action menu', () => {
     beforeEach(() => {
-      server.use(
-        http.get('*/monitor/streams/destinations', () => {
-          return HttpResponse.json(makeResourcePage(destinations));
-        })
-      );
+      queryMocks.useAllDestinationsQuery.mockReturnValue({
+        data: {
+          data: destinations,
+          results: 31,
+        },
+      });
+
+      queryMocks.useDestinationsQuery.mockReturnValue({
+        data: {
+          data: destinations,
+          results: 31,
+        },
+      });
     });
 
     describe('when Edit clicked', () => {
