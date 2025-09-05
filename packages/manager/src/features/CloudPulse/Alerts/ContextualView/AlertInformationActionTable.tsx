@@ -30,7 +30,6 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
 } from '@linode/api-v4';
-import type { PayloadTransformOverrides } from 'src/queries/cloudpulse/useAlertsMutation';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -186,10 +185,9 @@ export const AlertInformationActionTable = (
         user: alertIds.user,
         system: alertIds.system,
       };
+      // call updateAlerts mutation with the transformed payload based on the service type
       updateAlerts(
-        servicePayloadTransformerMap[
-          serviceType as keyof PayloadTransformOverrides
-        ](payload)
+        servicePayloadTransformerMap[serviceType]?.(payload) ?? payload
       )
         .then(() => {
           enqueueSnackbar('Your settings for alerts have been saved.', {

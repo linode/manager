@@ -40,7 +40,7 @@ type ServiceHookBuilder = {
   ) => UseMutationResult<
     AlertResponse<CloudPulseServiceType>,
     APIError[],
-    TransformedPayload<CloudPulseServiceType>
+    AlertPayload<CloudPulseServiceType>
   >;
 };
 
@@ -50,13 +50,65 @@ type ServiceHookBuilder = {
 type MutationWithOnSuccess = UseMutationResult<
   AlertResponse<CloudPulseServiceType>,
   APIError[],
-  TransformedPayload<CloudPulseServiceType>
+  AlertPayload<CloudPulseServiceType>
 > & {
   onSuccess?: (
     data: AlertResponse<CloudPulseServiceType>,
-    variables: TransformedPayload<CloudPulseServiceType>
+    variables: AlertPayload<CloudPulseServiceType>
   ) => void;
 };
+
+/**
+ * Type of the service payload transformer map
+ */
+export type ServicePayloadTransformerMap = Partial<{
+  [K in CloudPulseServiceType]: AlertPayloadTransformerFn<K>;
+}>;
+
+/**
+ * Service payload transformer map
+ */
+export const servicePayloadTransformerMap: ServicePayloadTransformerMap = {
+  linode: (basePayload: LinodeAlerts) => ({ alerts: basePayload }),
+  // Future transformers go here (e.g. dbaas, ...)
+};
+
+/**
+ * The alert type overrides for a given service type.
+ * It contains the payload transformer function type and the response type.
+ * This is used for types only, not to be used anywhere else.
+ */
+interface AlertTypeOverrides {
+  linode: {
+    payloadTransformerFn: (payload: LinodeAlerts) => DeepPartial<Linode>;
+    response: Linode;
+  };
+  // Future overrides go here (e.g. dbaas, ...)
+}
+
+/**
+ * The type of the payload transformer function for a given service type.
+ */
+type AlertPayloadTransformerFn<T extends CloudPulseServiceType> =
+  T extends keyof AlertTypeOverrides
+    ? AlertTypeOverrides[T]['payloadTransformerFn']
+    : (payload: CloudPulseAlertsPayload) => CloudPulseAlertsPayload;
+
+/**
+ * The payload type for a given service type.
+ */
+type AlertPayload<T extends CloudPulseServiceType> =
+  T extends keyof AlertTypeOverrides
+    ? ReturnType<AlertPayloadTransformerFn<T>>
+    : CloudPulseAlertsPayload;
+
+/**
+ * The mutation response type for a given service type.
+ */
+type AlertResponse<T extends CloudPulseServiceType> =
+  T extends keyof AlertTypeOverrides
+    ? AlertTypeOverrides[T]['response']
+    : Alert;
 
 /**
  * CloudPulse‐specific mutation builder.
@@ -67,14 +119,14 @@ const defaultCloudPulseUseMutationBuilder: ServiceHookBuilder = {
   ): UseMutationResult<
     AlertResponse<CloudPulseServiceType>,
     APIError[],
-    TransformedPayload<CloudPulseServiceType>
+    AlertPayload<CloudPulseServiceType>
   > => {
     const [serviceType, entityId] = args as [CloudPulseServiceType, string];
 
     return useServiceAlertsMutation(serviceType, entityId) as UseMutationResult<
       AlertResponse<CloudPulseServiceType>,
       APIError[],
-      TransformedPayload<CloudPulseServiceType>
+      AlertPayload<CloudPulseServiceType>
     >;
   },
   buildArgs: (serviceType: CloudPulseServiceType, id: string) => [
@@ -94,50 +146,11 @@ const updateHookMap: Partial<
       useLinodeUpdateMutation(id) satisfies UseMutationResult<
         AlertResponse<'linode'>,
         APIError[],
-        TransformedPayload<'linode'>
+        AlertPayload<'linode'>
       >,
     buildArgs: (_serviceType, entityId) => [Number(entityId)],
   },
 };
-
-/**
- * Payload transform overrides – map only special-case services.
- */
-export interface PayloadTransformOverrides {
-  linode: (payload: LinodeAlerts) => DeepPartial<Linode>;
-  // Future overrides go here (e.g. dbaas, ...)
-}
-
-type ServicePayloadTransformerMap = {
-  [K in keyof PayloadTransformOverrides]: PayloadTransformOverrides[K];
-};
-
-export const servicePayloadTransformerMap: ServicePayloadTransformerMap = {
-  linode: (payload) => ({ alerts: payload }),
-};
-
-interface AlertTypeOverrides {
-  linode: {
-    payload: LinodeAlerts;
-    response: Linode;
-  };
-  // Future overrides go here (e.g. dbaas, ...)
-}
-
-type AlertPayload<T extends CloudPulseServiceType> =
-  T extends keyof AlertTypeOverrides
-    ? AlertTypeOverrides[T]['payload']
-    : CloudPulseAlertsPayload;
-
-type AlertResponse<T extends CloudPulseServiceType> =
-  T extends keyof AlertTypeOverrides
-    ? AlertTypeOverrides[T]['response']
-    : Alert;
-
-type TransformedPayload<T extends CloudPulseServiceType> =
-  T extends keyof PayloadTransformOverrides
-    ? ReturnType<PayloadTransformOverrides[T]>
-    : AlertPayload<T>;
 
 export const useAlertsMutation = <T extends CloudPulseServiceType>(
   serviceType: T,
@@ -155,12 +168,12 @@ export const useAlertsMutation = <T extends CloudPulseServiceType>(
     ...serviceHookBuilder.buildArgs(serviceType, entityId)
   );
 
-  return useMutation<AlertResponse<T>, APIError[], TransformedPayload<T>>({
-    mutationFn: (payload: TransformedPayload<T>) =>
+  return useMutation<AlertResponse<T>, APIError[], AlertPayload<T>>({
+    mutationFn: (payload: AlertPayload<T>) =>
       // mutateAsync is well-typed for the specific service mutation.
       // The explicit cast satisfies the generic parameter.
       serviceMutation.mutateAsync(payload) as Promise<AlertResponse<T>>,
-    onSuccess: (data, payload: TransformedPayload<T>) => {
+    onSuccess: (data, payload: AlertPayload<T>) => {
       // Forward the success handler (if present) from the underlying mutation.
       (serviceMutation as MutationWithOnSuccess).onSuccess?.(data, payload);
 
