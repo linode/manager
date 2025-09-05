@@ -64,7 +64,11 @@ describe('LKE-E Cluster Create', () => {
   beforeEach(() => {
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
   });
@@ -145,7 +149,7 @@ describe('LKE-E Cluster Create', () => {
         enabled: true,
         la: true,
         postLa: false,
-        phase2Mtc: { byoVPC: true, dualStack: true },
+        phase2Mtc: { byoVPC: false, dualStack: false },
       },
     }).as('getFeatureFlags');
 
@@ -218,7 +222,11 @@ describe('LKE-E Cluster Read', () => {
   beforeEach(() => {
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
   });
@@ -261,7 +269,7 @@ describe('LKE-E Cluster Read', () => {
       lkeEnterprise2: {
         enabled: true,
         la: true,
-        phase2Mtc: { byoVPC: true, dualStack: true },
+        phase2Mtc: { byoVPC: false, dualStack: false },
       },
     }).as('getFeatureFlags');
 

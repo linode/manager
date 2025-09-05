@@ -72,7 +72,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
     }).as('getFeatureFlags');
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
 
