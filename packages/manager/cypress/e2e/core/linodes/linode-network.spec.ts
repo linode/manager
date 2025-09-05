@@ -342,8 +342,6 @@ describe('Linode Interfaces enabled', () => {
       interface_generation: 'linode',
     });
 
-    //const mockLinodeInterface = linodeInterfaceFactoryPublic.build();
-
     const mockLinodeIPv4 = ipAddressFactory.build({
       linode_id: mockLinode.id,
       public: true,
@@ -366,7 +364,6 @@ describe('Linode Interfaces enabled', () => {
 
     beforeEach(() => {
       mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-      //mockGetLinodeFirewalls(mockLinode.id, mockLinodeFirewalls);
       mockGetLinodeIPAddresses(mockLinode.id, mockLinodeIPs).as('getLinodeIPs');
       mockGetLinodeInterfaces(mockLinode.id, { interfaces: [] }).as(
         'getInterfaces'
@@ -379,13 +376,13 @@ describe('Linode Interfaces enabled', () => {
      */
     it('hides Firewall table and IP address buttons', () => {
       cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+      // @TODO CONNIE RN
     });
 
     it('allows the user to add a public network interface with a firewall', () => {
       const mockLinodeInterface = linodeInterfaceFactoryPublic.build();
       const selectedMockFirewall = mockFirewalls[1];
 
-      //mockGetLinodeInterfaces(mockLinode.id, { interfaces: [] }).as('getInterfaces');
       mockGetFirewalls(mockFirewalls).as('getFirewalls');
       mockCreateLinodeInterface(mockLinode.id, mockLinodeInterface).as(
         'createInterface'
