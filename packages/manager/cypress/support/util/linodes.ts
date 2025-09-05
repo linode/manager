@@ -108,7 +108,7 @@ export const createTestLinode = async (
 
   let regionId = createRequestPayload?.region;
   if (!regionId) {
-    regionId = chooseRegion().id;
+    regionId = chooseRegion({ capabilities: ['Linodes', 'Vlans'] }).id;
   }
 
   const securityMethodPayload: Partial<CreateLinodeRequest> =

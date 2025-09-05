@@ -138,7 +138,7 @@ export const VPCTopSectionContent = (props: Props) => {
       />
       {isDualStackEnabled && (
         <Box marginTop={2}>
-          <FormLabel>Networking IP Stack </FormLabel>
+          <FormLabel>IP Stack </FormLabel>
           <Controller
             control={control}
             name="ipv6"
@@ -189,7 +189,7 @@ export const VPCTopSectionContent = (props: Props) => {
                       sm: 12,
                       xs: 12,
                     }}
-                    heading="IPv4 + IPv6 (Dual Stack)"
+                    heading="IPv4 + IPv6 (dual-stack)"
                     onClick={() => {
                       field.onChange([
                         {

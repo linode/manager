@@ -1,5 +1,6 @@
 import { firewallQueries, useQueryClient } from '@linode/queries';
 import {
+  Box,
   FormControl,
   Radio,
   RadioGroup,
@@ -9,11 +10,12 @@ import {
 import { Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
@@ -57,6 +59,16 @@ export const InterfaceType = ({ index }: Props) => {
     name: `linodeInterfaces.${index}.purpose`,
   });
 
+  const interfaceGeneration = useWatch({
+    control,
+    name: 'interface_generation',
+  });
+
+  const createType = useGetLinodeCreateType();
+  const isCreatingFromBackup = createType === 'Backups';
+
+  const disabled = isCreatingFromBackup && interfaceGeneration !== 'linode';
+
   const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
     field.onChange(value);
@@ -96,7 +108,20 @@ export const InterfaceType = ({ index }: Props) => {
 
   return (
     <FormControl>
-      <FormLabel id="network-connection-label">Network Connection</FormLabel>
+      <Box alignItems="center" display="flex" flexDirection="row">
+        <FormLabel id="network-connection-label">Network Connection</FormLabel>
+        {disabled && (
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={{
+              padding: 0,
+              marginLeft: '8px',
+              marginBottom: '8px',
+            }}
+            text="You cannot use Configuration Profile Interfaces when deploying to a new Linode from a backup."
+          />
+        )}
+      </Box>
       <Typography id="network-connection-helper-text">
         The default interface used by this Linode to route network traffic.
         Additional interfaces can be added after the Linode is created.
@@ -109,7 +134,8 @@ export const InterfaceType = ({ index }: Props) => {
         <Grid container spacing={2}>
           {interfaceTypes.map((interfaceType) => (
             <SelectionCard
-              checked={field.value === interfaceType.purpose}
+              checked={disabled ? false : field.value === interfaceType.purpose}
+              disabled={disabled}
               gridSize={{
                 md: 3,
                 sm: 12,
@@ -119,7 +145,12 @@ export const InterfaceType = ({ index }: Props) => {
               key={interfaceType.purpose}
               onClick={() => onChange(interfaceType.purpose)}
               renderIcon={() => (
-                <Radio checked={field.value === interfaceType.purpose} />
+                <Radio
+                  checked={
+                    disabled ? false : field.value === interfaceType.purpose
+                  }
+                  disabled={disabled}
+                />
               )}
               renderVariant={() => (
                 <TooltipIcon
