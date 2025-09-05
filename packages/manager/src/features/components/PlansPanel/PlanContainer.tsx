@@ -21,7 +21,6 @@ export interface PlanSelectionFilterOptionsTable {
 }
 
 export interface PlanSelectionDividers {
-  flag: boolean;
   planType: LinodeTypeClass;
   tables: PlanSelectionFilterOptionsTable[];
 }
@@ -87,7 +86,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
    */
   const planSelectionDividers: PlanSelectionDividers[] = [
     {
-      flag: Boolean(flags.gpuv2?.planDivider),
       planType: 'gpu',
       tables: [
         {
@@ -96,9 +94,14 @@ export const PlanContainer = (props: PlanContainerProps) => {
             plan.label.includes('Ada'),
         },
         {
+          header: 'NVIDIA RTX PRO 6000 Blackwell Server Edition',
+          planFilter: (plan: PlanWithAvailability) =>
+            plan.label.includes('Blackwell'),
+        },
+        {
           header: 'NVIDIA Quadro RTX 6000',
           planFilter: (plan: PlanWithAvailability) =>
-            !plan.label.includes('Ada'),
+            !plan.label.includes('Ada') && !plan.label.includes('Blackwell'),
         },
       ],
     },
@@ -170,8 +173,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
           />
         ) : (
           planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag
+            planType === planSelectionDivider.planType
               ? planSelectionDivider.tables.map((table) => {
                   const filteredPlans = table.planFilter
                     ? plans.filter(table.planFilter)
@@ -194,8 +196,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid size={12}>
           {planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag ? (
+            planType === planSelectionDivider.planType ? (
               planSelectionDivider.tables.map((table, idx) => {
                 const filteredPlans = table.planFilter
                   ? plans.filter(table.planFilter)
