@@ -61,7 +61,9 @@ export const getPrimaryInterfaceIndex = (interfaces: Interface[]) => {
  */
 export const useGetDeviceLimit = (ram: number) => {
   const flags = useFlags();
-  return flags.blockStorageVolumeLimit
-    ? Math.max(DEFAULT_DEVICE_LIMIT, Math.min(ram / 1024, 64))
-    : DEFAULT_DEVICE_LIMIT;
+  if (flags.blockStorageVolumeLimit) {
+    return Math.max(DEFAULT_DEVICE_LIMIT, Math.min(ram / 1024, 64));
+  }
+
+  return DEFAULT_DEVICE_LIMIT;
 };
