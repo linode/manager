@@ -44,6 +44,7 @@ import type { JSX } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
+import { DEFAULT_DEVICE_LIMIT } from 'src/constants';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
@@ -51,6 +52,7 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -234,6 +236,7 @@ const deviceCounterDefault = 1;
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
+  const flags = useFlags();
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { config, linodeId, onClose, open } = props;
 
@@ -243,7 +246,9 @@ export const LinodeConfigDialog = (props: Props) => {
     // eslint-disable-next-line no-console
     console.warn('Invalid memory value:', availableMemory);
   }
-  const deviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
+  const deviceLimit = flags.blockStorageVolumeLimit
+    ? Math.max(DEFAULT_DEVICE_LIMIT, Math.min(availableMemory / 1024, 64))
+    : DEFAULT_DEVICE_LIMIT;
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
