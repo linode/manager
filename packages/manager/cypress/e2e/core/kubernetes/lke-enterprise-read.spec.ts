@@ -126,7 +126,10 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
     });
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+        ],
       })
     ).as('getAccount');
   });
@@ -207,7 +210,11 @@ describe('LKE-E Node Pools', () => {
     });
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise Dual Stack',
+          'Kubernetes Enterprise BYO VPC',
+        ],
       })
     ).as('getAccount');
 
