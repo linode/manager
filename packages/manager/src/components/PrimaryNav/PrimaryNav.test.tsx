@@ -375,7 +375,7 @@ describe('PrimaryNav', () => {
         screen.getByRole('link', { name: 'Maintenance' })
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: 'Settings' })
+        screen.getByRole('link', { name: 'Account Settings' })
       ).toBeInTheDocument();
       expect(screen.queryByRole('link', { name: 'Account' })).toBeNull();
     });
@@ -438,14 +438,15 @@ describe('PrimaryNav', () => {
         screen.queryByRole('link', { name: 'Service Transfers' })
       ).toBeNull();
       expect(screen.queryByRole('link', { name: 'Maintenance' })).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Settings' })).toBeNull();
       expect(
         screen.queryByRole('link', { name: 'Account' })
       ).toBeInTheDocument();
       expect(
         screen.queryByRole('link', { name: 'Identity & Access' })
       ).toBeInTheDocument();
-      expect(screen.queryByRole('link', { name: 'Settings' })).toBeNull();
+      expect(
+        screen.queryByRole('link', { name: 'Account Settings' })
+      ).toBeNull();
     });
   });
 

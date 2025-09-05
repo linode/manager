@@ -7,7 +7,6 @@ import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -87,7 +86,6 @@ const GlobalSettings = () => {
 
   return (
     <div>
-      <DocumentTitleSegment segment="Settings" />
       <Stack spacing={2}>
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
         {isLinodeInterfacesEnabled && <NetworkInterfaceType />}

@@ -74,7 +74,8 @@ export const NodePoolFooter = (props: Props) => {
           divider={
             <Divider flexItem orientation="vertical" sx={{ height: '20px' }} />
           }
-          flexWrap={{ sm: 'unset', xs: 'wrap' }}
+          flexWrap="wrap"
+          maxWidth="100%"
           rowGap={1}
         >
           <Typography sx={{ textWrap: 'nowrap' }}>
@@ -88,7 +89,7 @@ export const NodePoolFooter = (props: Props) => {
           {clusterTier === 'enterprise' &&
             poolFirewallId &&
             poolFirewallId > 0 && ( // This check handles the current API behavior for a default firewall (0). TODO: remove this once LKE-7686 is fixed.
-              <Typography sx={{ textWrap: 'nowrap' }}>
+              <Typography>
                 <b>Firewall:</b>{' '}
                 <Link to={`/firewalls/${poolFirewallId}/rules`}>
                   {firewall?.label ?? poolFirewallId}
@@ -108,6 +109,8 @@ export const NodePoolFooter = (props: Props) => {
       </Box>
       <TagCell
         disabled={isLkeClusterRestricted}
+        entity="Node Pool"
+        sx={{ flex: 1, minWidth: '200px', maxWidth: '100%' }}
         tags={tags}
         updateTags={updateTags}
         view="inline"
