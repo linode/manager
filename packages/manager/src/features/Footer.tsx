@@ -7,6 +7,8 @@ import { DEVELOPERS_LINK, FEEDBACK_LINK } from 'src/constants';
 
 import packageJson from '../../package.json';
 
+export const FOOTER_HEIGHT = 45;
+
 export const Footer = React.memo(() => {
   return (
     <footer role="contentinfo">
