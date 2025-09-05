@@ -39,7 +39,9 @@ export const emailSchema = string()
   .matches(EMAIL_VALIDATION_REGEX, `Invalid email address.`);
 
 export const updateProfileSchema = object({
-  email: emailSchema,
+  email: string()
+    .email()
+    .matches(EMAIL_VALIDATION_REGEX, `Invalid email address. `),
   timezone: string(),
   email_notifications: boolean(),
   authorized_keys: array().of(string()),
