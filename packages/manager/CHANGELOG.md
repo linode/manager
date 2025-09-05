@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Linked Node Pool firewall in Node Pool footer for LKE-E clusters ([#12779](https://github.com/linode/manager/pull/12779))
 - IAM RBAC: Implement IAM RBAC permissions for NodeBalancer ([#12780](https://github.com/linode/manager/pull/12780))
 - IAM RBAC: Implement IAM RBAC permissions for NodeBalancer summary tab ([#12790](https://github.com/linode/manager/pull/12790))
-- Additional device slots to Linode Config and Rescue Dialog to match new API limits ([#12791](https://github.com/linode/manager/pull/12791))
 
 ### Changed:
 
@@ -76,6 +75,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ACLP-Metrics,Alerts: enforce validation for 100 characters for TextField components ([#12771](https://github.com/linode/manager/pull/12771))
 - Disable legacy interface selection for Linode Interfaces when creating a Linode from backups ([#12772](https://github.com/linode/manager/pull/12772))
 - UX feedback: Change /settings to /account-settings and profile/settings to profile/preferences ([#12785](https://github.com/linode/manager/pull/12785))
+- Add additional device slots to Linode Config and Rescue Dialog to match new API limits ([#12791](https://github.com/linode/manager/pull/12791))
 - Add Firewall option to the Add Node Pool Drawer for LKE Enterprise Kubernetes Clusters ([#12793](https://github.com/linode/manager/pull/12793))
 - CloudPulse-Metrics: Update CloudPulseRegionSelect.tsx to handle default linode region selection in firewalls contextual view ([#12805](https://github.com/linode/manager/pull/12805))
 
