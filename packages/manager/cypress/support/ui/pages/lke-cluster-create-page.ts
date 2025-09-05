@@ -104,7 +104,7 @@ export const lkeClusterCreatePage = {
    * Assumes that the tab for the desired plan has already been selected. See
    * also `addNodePoolPlan` to select plans when `postLa` is disabled.
    *
-   *
+   * @param planName - Name of the plan (as shown in Cloud's UI) to select.
    */
   selectNodePoolPlan: (planName: string) => {
     cy.findByText(planName)
@@ -132,6 +132,26 @@ export const lkeClusterCreatePage = {
         cy.get('input[name="Quantity"]').type(`{selectall}{del}${size}`);
         cy.get('input[name="Quantity"]').should('have.value', `${size}`);
       });
+  },
+
+  /**
+   * Sets whether or not to bypass ACL IP address requirement.
+   *
+   * If `true`, the "Provide an ACL later" checkbox will be checked. Otherwise,
+   * the checkbox will be unchecked if needed.
+   *
+   * Assumes that the user has already enabled Control Plane ACL.
+   *
+   * @param bypassAcl - Whether or not to bypass the ACL IP address requirement.
+   */
+  setEnableBypassAcl: (bypassAcl: boolean) => {
+    const checkboxLabel =
+      'Provide an ACL later. The control plane will be unreachable until an ACL is defined.';
+    cy.findByText(checkboxLabel).scrollIntoView();
+    cy.findByText(checkboxLabel).should('be.visible');
+    bypassAcl
+      ? cy.findByLabelText(checkboxLabel).check()
+      : cy.findByLabelText(checkboxLabel).uncheck();
   },
 
   /**
