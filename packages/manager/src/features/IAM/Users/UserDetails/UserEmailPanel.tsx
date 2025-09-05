@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutateProfile, useProfile } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
+import { UpdateUserEmailSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -27,6 +29,7 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
     handleSubmit,
     setError,
   } = useForm({
+    resolver: yupResolver(UpdateUserEmailSchema),
     defaultValues: { email: user.email },
     values: { email: user.email },
   });
@@ -53,7 +56,7 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
 
   return (
     <Paper>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Controller
           control={control}
           name="email"
