@@ -73,35 +73,42 @@ export const AssignedEntities = ({
               : theme.tokens.spacing.S8,
         }}
       >
-        <Chip
-          data-testid="entities"
-          deleteIcon={<CloseIcon data-testid="CloseIcon" />}
-          label={
-            entity.name.length > 20
-              ? `${entity.name.slice(0, 20)}...`
-              : entity.name
-          }
-          onDelete={() => onRemoveAssignment(entity, role)}
-          sx={{
-            backgroundColor:
-              theme.name === 'light'
-                ? theme.tokens.color.Ultramarine[20]
-                : theme.tokens.color.Neutrals.Black,
-            color: theme.tokens.alias.Content.Text.Primary.Default,
-            '& .MuiChip-deleteIcon': {
+        <Tooltip
+          placement="top"
+          title={entity.name.length > 30 ? entity.name : null}
+        >
+          <Chip
+            data-testid="entities"
+            deleteIcon={<CloseIcon data-testid="CloseIcon" />}
+            label={
+              entity.name.length > 30
+                ? `${entity.name.slice(0, 20)}...`
+                : entity.name
+            }
+            onDelete={() => onRemoveAssignment(entity, role)}
+            sx={{
+              backgroundColor:
+                theme.name === 'light'
+                  ? theme.tokens.color.Ultramarine[20]
+                  : theme.tokens.color.Neutrals.Black,
               color: theme.tokens.alias.Content.Text.Primary.Default,
-            },
-            position: 'relative',
-            '&::after': {
-              content:
-                numHiddenItems > 0 && isLastVisibleItem(index) ? '"..."' : '""',
-              position: 'absolute',
-              top: 0,
-              right: -16,
-              width: 14,
-            },
-          }}
-        />
+              '& .MuiChip-deleteIcon': {
+                color: theme.tokens.alias.Content.Text.Primary.Default,
+              },
+              position: 'relative',
+              '&::after': {
+                content:
+                  numHiddenItems > 0 && isLastVisibleItem(index)
+                    ? '"..."'
+                    : '""',
+                position: 'absolute',
+                top: 0,
+                right: -16,
+                width: 14,
+              },
+            }}
+          />
+        </Tooltip>
       </Box>
     )
   );
