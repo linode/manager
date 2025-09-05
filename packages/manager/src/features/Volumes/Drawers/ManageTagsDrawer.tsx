@@ -1,4 +1,4 @@
-import { useUpdateVolumeMutation } from '@linode/queries';
+import { useVolumeUpdateMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -26,7 +26,9 @@ export const ManageTagsDrawer = (props: Props) => {
   );
   const canUpdateVolume = permissions?.update_volume;
 
-  const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
+  const { mutateAsync: updateVolume } = useVolumeUpdateMutation(
+    volume?.id ?? -1
+  );
 
   const {
     control,
@@ -40,16 +42,12 @@ export const ManageTagsDrawer = (props: Props) => {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await updateVolume({
-        label: volume?.label ?? '',
-        tags: values.tags,
-        volumeId: volume?.id ?? -1,
-      });
+      await updateVolume({ tags: values.tags });
 
       onClose();
     } catch (errors) {
       errors.forEach((error: APIError) => {
-        if (error.field == 'tags') {
+        if (error.field === 'tags') {
           setError('tags', {
             message: error.reason,
           });
