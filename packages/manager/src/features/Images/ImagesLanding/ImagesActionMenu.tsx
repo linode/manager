@@ -41,7 +41,7 @@ export const ImagesActionMenu = (props: Props) => {
   const { data: imagePermissions } = usePermissions(
     'image',
     ['update_image', 'delete_image', 'replicate_image'],
-    Number(id)
+    id
   );
   const { data: linodePermissions } = usePermissions('account', [
     'create_linode',

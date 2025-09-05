@@ -78,11 +78,15 @@ export const fromGrants = (
   permissionsToCheck: readonly PermissionType[],
   grants?: Grants,
   isRestricted?: boolean,
-  entityId?: number
+  entityId?: number | string
 ): PermissionMap => {
+  // image IDs are stored as strings containing a private or public prefix. ex: "private/123456"
+  // we need to extract the image ID from the string tp match the integer ID from the grants
+  const imageId =
+    typeof entityId === 'string' ? entityId.split('/')[1] : entityId;
   /** Find the entity in the grants */
   const firewall = grants?.firewall.find((f) => f.id === entityId);
-  const image = grants?.image.find((f) => f.id === entityId);
+  const image = grants?.image.find((f) => f.id.toString() === imageId);
   const linode = grants?.linode.find((f) => f.id === entityId);
   const volume = grants?.volume.find((f) => f.id === entityId);
   const nodebalancer = grants?.nodebalancer.find((f) => f.id === entityId);

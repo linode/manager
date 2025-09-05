@@ -43,7 +43,7 @@ export type PermissionsResult<T extends readonly PermissionType[]> = {
 export const usePermissions = <T extends readonly PermissionType[]>(
   accessType: AccessType,
   permissionsToCheck: T,
-  entityId?: number,
+  entityId?: number | string,
   enabled: boolean = true
 ): PermissionsResult<T> => {
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
