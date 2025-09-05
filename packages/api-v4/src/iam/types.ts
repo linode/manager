@@ -1,4 +1,4 @@
-import type { EntityType } from 'src/entities/types';
+import type { EntityType } from '../entities/types';
 
 export type AccountType = 'account';
 

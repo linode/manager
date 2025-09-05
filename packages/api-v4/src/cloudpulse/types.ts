@@ -196,6 +196,7 @@ export interface CreateAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: MetricCriteria[];
   };
@@ -337,10 +338,10 @@ export interface EditAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label?: string;
+  regions?: string[];
   rule_criteria?: {
     rules: MetricCriteria[];
   };
-  scope?: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];

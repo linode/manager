@@ -1159,6 +1159,9 @@ export const handlers = [
               label: 'Linode-123',
             }),
           }),
+          firewallEntityfactory.build({
+            type: 'linode',
+          }),
         ],
       }),
     ];
@@ -2882,6 +2885,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
+            scope: pickRandom(['account', 'region', 'entity']),
           })
         );
       }
@@ -3309,7 +3313,7 @@ export const handlers = [
       dashboardLabel = 'NodeBalancer Service I/O Statistics';
     } else if (id === '4') {
       serviceType = 'firewall';
-      dashboardLabel = 'Linode Service I/O Statistics';
+      dashboardLabel = 'Firewall Service I/O Statistics';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
@@ -3317,7 +3321,7 @@ export const handlers = [
 
     const response = {
       created: '2024-04-29T17:09:29',
-      id: params.id,
+      id: Number(params.id),
       label: dashboardLabel,
       service_type: serviceType,
       type: 'standard',

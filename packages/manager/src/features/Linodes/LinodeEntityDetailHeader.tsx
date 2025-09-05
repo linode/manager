@@ -121,7 +121,11 @@ export const LinodeEntityDetailHeader = (
   return (
     <EntityHeader
       isSummaryView={isSummaryView}
-      title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
+      title={
+        <StyledLink params={{ linodeId }} to="/linodes/$linodeId">
+          {linodeLabel}
+        </StyledLink>
+      }
       variant={variant}
     >
       <Box
