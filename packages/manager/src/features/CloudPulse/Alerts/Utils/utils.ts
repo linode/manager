@@ -651,7 +651,7 @@ export const invalidateAlerts = (
   payload: CloudPulseAlertsPayload
 ) => {
   const allAlerts = qc.getQueryData<Alert[]>(
-    queryFactory.alerts._ctx.all().queryKey
+    queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
   );
 
   // Get alerts previously enabled for this entity
@@ -673,6 +673,11 @@ export const invalidateAlerts = (
 
   qc.invalidateQueries({
     queryKey: queryFactory.alerts._ctx.all().queryKey,
+  });
+
+  qc.invalidateQueries({
+    queryKey:
+      queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
   });
 
   alertIdsToInvalidate.forEach((alertId) => {
