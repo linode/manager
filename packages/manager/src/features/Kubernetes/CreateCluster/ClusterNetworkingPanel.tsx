@@ -40,6 +40,8 @@ export const ClusterNetworkingPanel = (props: Props) => {
 
   const { data: region } = useRegionQuery(selectedRegionId ?? '');
   const regionSupportsVPCs = region?.capabilities.includes('VPCs') ?? false;
+  const regionSupportsDualStackVPCs =
+    region?.capabilities.includes('VPC Dual Stack') ?? false;
 
   const {
     data: vpcs,
@@ -68,7 +70,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
               <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
               <FormControlLabel
                 control={<Radio />}
-                // disabled={!isLkeEnterprisePhase2DualStackFeatureEnabled}
+                disabled={!regionSupportsDualStackVPCs} // Not all regions support VPC IPv6
                 label="IPv4 + IPv6 (dual-stack)"
                 value="ipv4-ipv6"
               />
