@@ -1,4 +1,9 @@
-import { isEmpty, streamType } from '@linode/api-v4';
+import {
+  type Destination,
+  isEmpty,
+  type Stream,
+  streamType,
+} from '@linode/api-v4';
 import { omitProps } from '@linode/ui';
 
 import {
@@ -39,4 +44,12 @@ export const getStreamPayloadDetails = (
   }
 
   return payloadDetails;
+};
+
+export const getStreamDescription = (stream: Stream) => {
+  return `${getStreamTypeOption(stream.type)?.label}`;
+};
+
+export const getDestinationDescription = (destination: Destination) => {
+  return `${getDestinationTypeOption(destination.type)?.label}`;
 };
