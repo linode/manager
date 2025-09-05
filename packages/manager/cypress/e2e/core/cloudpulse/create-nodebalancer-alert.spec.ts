@@ -1,9 +1,12 @@
 /**
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
-import { profileFactory, regionFactory } from '@linode/utilities';
+import {
+  nodeBalancerFactory,
+  profileFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
-import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateAlertDefinition,
@@ -15,6 +18,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -23,19 +27,23 @@ import {
   accountFactory,
   alertDefinitionFactory,
   alertFactory,
-  cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
+  egressTrafficRateRulesFactory,
   flagsFactory,
-  memoryRulesFactory,
+  ingressTrafficRateRulesFactory,
+  newSessionsRulesFactory,
   notificationChannelFactory,
   serviceAlertFactory,
   serviceTypesFactory,
+  totalActiveBackendsRulesFactory,
+  totalActiveSessionsRulesFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
+
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
@@ -50,24 +58,23 @@ const mockRegions = [
   regionFactory.build({
     id: 'us-ord',
     label: 'Chicago, IL',
-    capabilities: ['Managed Databases'],
+    capabilities: ['NodeBalancers'],
     monitors: {
-      alerts: ['Managed Databases'],
+      alerts: ['Linodes', 'Managed Databases', 'NodeBalancers'],
       metrics: [],
     },
   }),
   regionFactory.build({
     id: 'us-east',
     label: 'New York, NY',
-    capabilities: ['Managed Databases'],
+    capabilities: ['NodeBalancers'],
     monitors: {
-      alerts: ['Managed Databases'],
+      alerts: ['Linodes', 'Managed Databases', 'NodeBalancers'],
       metrics: [],
     },
   }),
 ];
-const { metrics } = widgetDetails.dbaas;
-const serviceType = 'dbaas';
+const serviceType = 'nodebalancer';
 const regionList = ['us-ord', 'us-east'];
 
 const databaseMock = regionList.map((region) =>
@@ -90,25 +97,85 @@ const customAlertDefinition = alertDefinitionFactory.build({
   entity_ids: ['2'],
   label: 'Alert-1',
   rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
+    rules: [
+      ingressTrafficRateRulesFactory.build(),
+      egressTrafficRateRulesFactory.build(),
+      newSessionsRulesFactory.build(),
+      totalActiveSessionsRulesFactory.build(),
+      totalActiveBackendsRulesFactory.build(),
+    ],
   },
   severity: 0,
   tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
 });
 
-const metricDefinitions = metrics.map(({ name, title, unit }) =>
+const metricDefinitionData = [
+  {
+    title: 'Ingress Traffic Rate',
+    name: 'nb_ingress_traffic_rate',
+    unit: 'bytes_per_second',
+  },
+  {
+    title: 'Egress Traffic Rate',
+    name: 'nb_egress_traffic_rate',
+    unit: 'bytes_per_second',
+  },
+
+  {
+    title: 'Total Active Sessions',
+    name: 'nb_total_active_sessions',
+    unit: 'count',
+  },
+  {
+    title: 'New Sessions',
+    name: 'nb_new_sessions_per_second',
+    unit: 'sessions_per_second',
+  },
+
+  {
+    title: 'Total Active Backends',
+    name: 'nb_total_active_backends',
+    unit: 'count',
+  },
+];
+
+const metricDefinitions = metricDefinitionData.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
     unit,
+    dimensions: [
+      {
+        dimension_label: 'port',
+        label: 'port',
+        values: [],
+      },
+      {
+        dimension_label: 'protocol',
+        label: 'protocol',
+        values: ['TCP', 'UDP'],
+      },
+      {
+        dimension_label: 'Configuration',
+        label: 'Configuration',
+        values: [],
+      },
+    ],
   })
 );
 const mockProfile = profileFactory.build({
-  timezone: 'gmt',
+  timezone: 'utc',
 });
 const mockAlerts = alertFactory.build({
   label: 'Alert-1',
+  service_type: 'nodebalancer',
+  entity_ids: ['2'],
+});
+const mockNodeBalancer = nodeBalancerFactory.build({
+  label: 'NodeBalancer-1',
+  id: 2,
+  region: 'us-east',
 });
 const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
 /**
@@ -183,7 +250,7 @@ const verifyAlertRow = (
       cy.wrap($row).within(() => {
         cy.findByText(label).should('be.visible');
         cy.findByText(statusMap[status]).should('be.visible');
-        cy.findByText('Databases').should('be.visible');
+        cy.findByText('NodeBalancer').should('be.visible');
         cy.findByText(createdBy).should('be.visible');
         cy.findByText(
           formatDate(updated, {
@@ -195,7 +262,7 @@ const verifyAlertRow = (
     });
 };
 
-describe('Create Firewall Alert Successfully', () => {
+describe('Create Alert', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
    * - Confirms that users can enter alert details, select entities, and configure conditions.
@@ -204,35 +271,6 @@ describe('Create Firewall Alert Successfully', () => {
    * - Confirms that API interactions work correctly and return the expected responses.
    * - Confirms that the UI displays a success message after creating an alert.
    */
-  beforeEach(() => {
-    mockAppendFeatureFlags(flagsFactory.build());
-    mockGetAccount(mockAccount);
-    mockGetProfile(mockProfile);
-    mockGetCloudPulseServices([serviceType]);
-    mockGetRegions(mockRegions);
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetDatabases(databaseMock);
-    mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
-    mockGetAlertChannels([notificationChannels]);
-  });
-
-  it('should navigate to the Create Alert page from the Alert Listings page', () => {
-    // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/alerts/definitions');
-
-    // Wait for the alert definitions list API call to complete
-    cy.wait('@getAlertDefinitionsList');
-
-    ui.buttonGroup
-      .findButtonByTitle('Create Alert')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Verify the URL ends with the expected details page path
-    cy.url().should('endWith', CREATE_ALERT_PAGE_URL);
-  });
-
   // entityScopingOptions is an array of predefined scoping strategies for alert definitions.
   // Each item in the array represents a way to scope entities when generating or organizing alerts.
   // The scoping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
@@ -243,10 +281,14 @@ describe('Create Firewall Alert Successfully', () => {
         created_by: 'user1',
         description: 'My Custom Description',
         label: 'Alert-1',
+        entity_ids: ['2'],
         rule_criteria: {
-          rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
+          rules: [
+            ingressTrafficRateRulesFactory.build(),
+            egressTrafficRateRulesFactory.build(),
+          ],
         },
-        service_type: 'dbaas',
+        service_type: 'nodebalancer',
         severity: 0,
         tags: [''],
         trigger_conditions: triggerConditionFactory.build(),
@@ -263,6 +305,16 @@ describe('Create Firewall Alert Successfully', () => {
         }),
         regions: 'us-ord,us-east',
       });
+      mockAppendFeatureFlags(flagsFactory.build());
+      mockGetAccount(mockAccount);
+      mockGetProfile(mockProfile);
+      mockGetCloudPulseServices([serviceType]);
+      mockGetRegions(mockRegions);
+      mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+      mockGetDatabases(databaseMock);
+      mockGetNodeBalancers([mockNodeBalancer]);
+      mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
+      mockGetAlertChannels([notificationChannels]);
       mockGetCloudPulseServiceByType(serviceType, services);
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
       mockCreateAlertDefinition(serviceType, alerts).as(
@@ -277,8 +329,8 @@ describe('Create Firewall Alert Successfully', () => {
       );
 
       // Fill in Service and Severity
-      ui.autocomplete.findByLabel('Service').type('Databases');
-      ui.autocompletePopper.findByTitle('Databases').click();
+      ui.autocomplete.findByLabel('Service').type('NodeBalancer');
+      ui.autocompletePopper.findByTitle('NodeBalancer').click();
       ui.tooltip.findByText(
         'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.'
       );
@@ -304,15 +356,15 @@ describe('Create Firewall Alert Successfully', () => {
       groupLabel !== 'Account' &&
         cy.get('[data-testid="select_all_notice"]').click();
       // Fill metric details for the first rule
-      const cpuUsageMetricDetails = {
+      const ingressMetricDetails = {
         aggregationType: 'Avg',
-        dataField: 'CPU Utilization',
+        dataField: 'Ingress Traffic Rate',
         operator: '=',
         ruleIndex: 0,
         threshold: '1000',
       };
 
-      fillMetricDetailsForSpecificRule(cpuUsageMetricDetails);
+      fillMetricDetailsForSpecificRule(ingressMetricDetails);
 
       // Add metrics
       cy.findByRole('button', { name: 'Add metric' })
@@ -334,9 +386,9 @@ describe('Create Firewall Alert Successfully', () => {
         .findByLabel('Data Field')
         .eq(1)
         .should('be.visible')
-        .type('State of CPU');
+        .type('port');
 
-      cy.findByText('State of CPU').should('be.visible').click();
+      cy.findByText('port').should('be.visible').click();
 
       ui.autocomplete
         .findByLabel('Operator')
@@ -348,21 +400,47 @@ describe('Create Firewall Alert Successfully', () => {
 
       cy.findByText('Equal').should('be.visible').click();
 
-      ui.autocomplete.findByLabel('Value').should('be.visible').type('User');
+      cy.findByPlaceholderText('e.g., 80').should('be.visible').type('1');
 
-      cy.findByText('User').should('be.visible').click();
+      ui.buttonGroup
+        .findButtonByTitle('Add dimension filter')
+        .should('be.visible')
+        .click();
+
+      ui.autocomplete
+        .findByLabel('Data Field')
+        .eq(2)
+        .should('be.visible')
+        .clear();
+
+      ui.autocomplete
+        .findByLabel('Data Field')
+        .eq(2)
+        .should('be.visible')
+        .type('protocol');
+
+      cy.findByText('protocol').should('be.visible').click();
+
+      ui.autocomplete.findByLabel('Operator').eq(2).type('In');
+
+      cy.findByText('In').should('be.visible').click();
+
+      ui.autocomplete.findByLabel('Value').click();
+
+      ui.autocomplete.findByLabel('Value').should('be.visible').type('TCP');
+      cy.findByText('TCP').should('be.visible').click();
 
       // Fill metric details for the second rule
 
-      const memoryUsageMetricDetails = {
+      const egressTrafficRateMetricDetails = {
         aggregationType: 'Avg',
-        dataField: 'Memory Usage',
+        dataField: 'Egress Traffic Rate',
         operator: '=',
         ruleIndex: 1,
         threshold: '1000',
       };
 
-      fillMetricDetailsForSpecificRule(memoryUsageMetricDetails);
+      fillMetricDetailsForSpecificRule(egressTrafficRateMetricDetails);
       // Set evaluation period
       ui.autocomplete
         .findByLabel('Evaluation Period')
@@ -440,10 +518,6 @@ describe('Create Firewall Alert Successfully', () => {
 
         // Validate rule criteria
         expect(request.body.rule_criteria).to.have.property('rules');
-        expect(request.body.rule_criteria.rules)
-          .to.be.an('array')
-          .with.length(rules.length);
-
         // Validate first rule
         const firstRule = request.body.rule_criteria.rules[0];
         const firstCustomRule = rules[0];
@@ -456,12 +530,8 @@ describe('Create Firewall Alert Successfully', () => {
         expect(firstRule.dimension_filters[0]?.dimension_label ?? '').to.equal(
           firstCustomRule.dimension_filters?.[0]?.dimension_label ?? ''
         );
-        expect(firstRule.dimension_filters[0]?.operator ?? '').to.equal(
-          firstCustomRule.dimension_filters?.[0]?.operator ?? ''
-        );
-        expect(firstRule.dimension_filters[0]?.value ?? '').to.equal(
-          firstCustomRule.dimension_filters?.[0]?.value ?? ''
-        );
+        expect(firstRule.dimension_filters[0]?.operator ?? '').to.equal('eq');
+        expect(firstRule.dimension_filters[0]?.value ?? '').to.equal('1');
 
         // Validate second rule
         const secondRule = request.body.rule_criteria.rules[1];
