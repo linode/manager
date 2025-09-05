@@ -158,8 +158,9 @@ export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
   try {
     const { nonce: generatedNonce } = generateNonce();
     nonce = generatedNonce;
-  } catch (error) {
+  } catch {
     // Intentionally ignoring crypto API errors
+    // eslint-disable-next-line sonarjs/no-ignored-exceptions
     return null;
   }
 
