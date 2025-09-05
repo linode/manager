@@ -118,7 +118,11 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
   beforeEach(() => {
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     });
     mockGetAccount(
       accountFactory.build({
@@ -195,7 +199,11 @@ describe('LKE-E Node Pools', () => {
   it('shows VPC IPv4 and IPv6 columns for an LKE-E cluster', () => {
     mockAppendFeatureFlags({
       // TODO LKE-E: Remove once feature is in GA
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     });
     mockGetAccount(
       accountFactory.build({
