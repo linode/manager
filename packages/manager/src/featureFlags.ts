@@ -102,7 +102,6 @@ export interface CloudPulseResourceTypeMapFlag {
 
 interface GpuV2 {
   egressBanner: boolean;
-  planDivider: boolean;
   transferBanner: boolean;
 }
 
