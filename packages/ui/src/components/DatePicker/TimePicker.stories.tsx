@@ -46,7 +46,7 @@ The **TimePicker** component provides an easy way to input time values using MUI
       },
     },
   },
-  title: 'Components/DatePicker/TimePickerV2',
+  title: 'Components/DatePicker/TimePicker',
 };
 
 export default meta;
