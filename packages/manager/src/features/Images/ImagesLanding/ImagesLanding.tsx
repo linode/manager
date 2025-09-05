@@ -27,10 +27,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
@@ -84,10 +83,10 @@ export const ImagesLanding = () => {
   const search = useSearch({ from: '/images' });
   const { query } = search;
   const navigate = useNavigate();
-  const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
   const queryClient = useQueryClient();
+
+  const { data: permissions } = usePermissions('account', ['create_image']);
+  const canCreateImage = permissions?.create_image;
 
   /**
    * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
@@ -343,13 +342,11 @@ export const ImagesLanding = () => {
           removeCrumbX: 1,
         }}
         buttonDataAttrs={{
-          tooltipText: getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          }),
+          tooltipText: canCreateImage
+            ? false
+            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
         }}
-        disabledCreateButton={isCreateImageRestricted}
+        disabledCreateButton={!canCreateImage}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
         onButtonClick={() =>

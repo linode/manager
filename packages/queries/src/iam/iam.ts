@@ -53,7 +53,7 @@ export const useUserAccountPermissions = (enabled = true) => {
 
 export const useUserEntityPermissions = (
   entityType: AccessType,
-  entityId: number,
+  entityId: number | string,
   enabled = true,
 ) => {
   const { data: profile } = useProfile();

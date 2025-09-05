@@ -2,10 +2,9 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import { useImageAndLinodeGrantCheck } from '../utils';
+import { useLinodesPermissionsCheck } from '../utils';
 
 import type { Event, Image } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -39,18 +38,17 @@ export const ImagesActionMenu = (props: Props) => {
     onRebuild,
   } = handlers;
 
-  const isImageReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'image',
-    id: Number(id.split('/')[1]),
-  });
+  const { data: imagePermissions } = usePermissions(
+    'image',
+    ['update_image', 'delete_image', 'replicate_image'],
+    id
+  );
+  const { data: linodePermissions } = usePermissions('account', [
+    'create_linode',
+    'rebuild_linode',
+  ]);
 
-  const isAddLinodeRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
-  });
-
-  const { permissionedLinodes: availableLinodes } =
-    useImageAndLinodeGrantCheck();
+  const { availableLinodes } = useLinodesPermissionsCheck();
 
   const isAvailableLinodesPresent = availableLinodes
     ? availableLinodes.length > 0
@@ -61,10 +59,10 @@ export const ImagesActionMenu = (props: Props) => {
     const isAvailable = !isDisabled;
     return [
       {
-        disabled: isImageReadOnly || isDisabled,
+        disabled: !imagePermissions.update_image || isDisabled,
         onClick: () => onEdit?.(image),
         title: 'Edit',
-        tooltip: isImageReadOnly
+        tooltip: !imagePermissions.update_image
           ? getRestrictedResourceText({
               action: 'edit',
               isSingular: true,
@@ -77,10 +75,10 @@ export const ImagesActionMenu = (props: Props) => {
       ...(onManageRegions && image.regions && image.regions.length > 0
         ? [
             {
-              disabled: isImageReadOnly || isDisabled,
+              disabled: !imagePermissions.replicate_image || isDisabled,
               onClick: () => onManageRegions(image),
               title: 'Manage Replicas',
-              tooltip: isImageReadOnly
+              tooltip: !imagePermissions.replicate_image
                 ? getRestrictedResourceText({
                     action: 'edit',
                     isSingular: true,
@@ -91,10 +89,10 @@ export const ImagesActionMenu = (props: Props) => {
           ]
         : []),
       {
-        disabled: isAddLinodeRestricted || isDisabled,
+        disabled: !linodePermissions.create_linode || isDisabled,
         onClick: () => onDeploy?.(id),
         title: 'Deploy to New Linode',
-        tooltip: isAddLinodeRestricted
+        tooltip: !linodePermissions.create_linode
           ? getRestrictedResourceText({
               action: 'create',
               isSingular: false,
@@ -105,24 +103,28 @@ export const ImagesActionMenu = (props: Props) => {
             : undefined,
       },
       {
-        disabled: !isAvailableLinodesPresent || isDisabled,
+        disabled:
+          !linodePermissions.rebuild_linode ||
+          !isAvailableLinodesPresent ||
+          isDisabled,
         onClick: () => onRebuild?.(image),
         title: 'Rebuild an Existing Linode',
-        tooltip: !isAvailableLinodesPresent
-          ? getRestrictedResourceText({
-              action: 'rebuild',
-              isSingular: false,
-              resourceType: 'Linodes',
-            })
-          : isDisabled
-            ? 'Image is not yet available for use.'
-            : undefined,
+        tooltip:
+          !linodePermissions.rebuild_linode || !isAvailableLinodesPresent
+            ? getRestrictedResourceText({
+                action: 'rebuild',
+                isSingular: false,
+                resourceType: 'Linodes',
+              })
+            : isDisabled
+              ? 'Image is not yet available for use.'
+              : undefined,
       },
       {
-        disabled: isImageReadOnly,
+        disabled: !imagePermissions.delete_image,
         onClick: () => onDelete?.(image),
         title: isAvailable ? 'Delete' : 'Cancel',
-        tooltip: isImageReadOnly
+        tooltip: !imagePermissions.delete_image
           ? getRestrictedResourceText({
               action: 'delete',
               isSingular: true,

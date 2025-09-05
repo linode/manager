@@ -14,6 +14,16 @@ import type { Handlers } from './ImagesActionMenu';
 
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({}),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 describe('Image Table Row', () => {
   const handlers: Handlers = {
     onCancelFailed: vi.fn(),
@@ -23,6 +33,18 @@ describe('Image Table Row', () => {
     onManageRegions: vi.fn(),
     onRebuild: vi.fn(),
   };
+
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        update_image: true,
+        delete_image: true,
+        rebuild_linode: true,
+        create_linode: true,
+        replicate_image: true,
+      },
+    });
+  });
 
   it('should render an image row with details', async () => {
     const image = imageFactory.build({
@@ -143,6 +165,9 @@ describe('Image Table Row', () => {
   it('calls handlers when performing actions', async () => {
     const image = imageFactory.build({
       regions: [{ region: 'us-east', status: 'available' }],
+    });
+    queryMocks.useQueryWithPermissions.mockReturnValue({
+      data: [image],
     });
 
     const { getByLabelText, getByText } = renderWithTheme(

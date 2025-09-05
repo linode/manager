@@ -3,8 +3,7 @@ import * as React from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -16,16 +15,15 @@ import {
 
 export const ImagesLandingEmptyState = () => {
   const navigate = useNavigate();
-  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
+  const { data: permissions } = usePermissions('account', ['create_image']);
+  const canCreateImage = permissions?.create_image;
 
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Image',
-          disabled: isImagesReadOnly,
+          disabled: !canCreateImage,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -36,11 +34,9 @@ export const ImagesLandingEmptyState = () => {
               to: '/images/create',
             });
           },
-          tooltipText: getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          }),
+          tooltipText: canCreateImage
+            ? undefined
+            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
