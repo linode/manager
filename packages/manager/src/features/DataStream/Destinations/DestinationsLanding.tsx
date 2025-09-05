@@ -152,6 +152,7 @@ export const DestinationsLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '30%' }}
             >
               Name
             </TableSortCell>
