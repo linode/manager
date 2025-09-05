@@ -213,7 +213,6 @@ describe('LKE-E Node Pools', () => {
         capabilities: [
           'Kubernetes Enterprise',
           'Kubernetes Enterprise Dual Stack',
-          'Kubernetes Enterprise BYO VPC',
         ],
       })
     ).as('getAccount');
@@ -223,7 +222,6 @@ describe('LKE-E Node Pools', () => {
     mockGetClusterPools(mockClusterWithVPC.id, mockNodePools).as(
       'getNodePools'
     );
-    mockGetVPC(mockVPC).as('getVPC');
     mockGetProfile(mockProfile).as('getProfile');
     mockGetLinodes(mockLinodes).as('getLinodes');
     mockGetLinodeIPAddresses(mockLinodes[0].id, mockLinodeIPs).as(
@@ -231,13 +229,7 @@ describe('LKE-E Node Pools', () => {
     );
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockClusterWithVPC.id}/summary`);
-    cy.wait([
-      '@getCluster',
-      '@getNodePools',
-      '@getVersions',
-      '@getProfile',
-      '@getVPC',
-    ]);
+    cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getProfile']);
 
     // Confirm VPC IP columns are present in the table header
     cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {
