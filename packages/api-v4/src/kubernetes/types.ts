@@ -191,6 +191,10 @@ export interface ControlPlaneACLOptions {
 
 export interface ControlPlaneOptions {
   acl?: ControlPlaneACLOptions;
+  /**
+   * Upcoming Feature, Beta - Datastream logs
+   */
+  audit_logs_enabled?: boolean;
   high_availability?: boolean;
 }
 
