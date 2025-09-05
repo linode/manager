@@ -1593,7 +1593,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
 /*
  * Tests for standard LKE create flow when the `lkeEnterprise.postLa` feature flag is enabled.
- * The main distinguishing change introduced by this feature flag is a new flow when adding node pools:
+ * The main change introduced by this feature flag is a new flow when adding node pools:
  * Node pool size is specified inside of a configuration drawer instead of directly in the plan table,
  * and additional node pool options have been added exclusively for LKE Enterprise clusters.
  */
@@ -1607,10 +1607,12 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
     }),
   ];
 
-  const mockPlan = extendType(linodeTypeFactory.build());
+  const mockPlan = extendType(linodeTypeFactory.build({ class: 'standard' }));
   const mockPlans = [
     mockPlan,
-    ...linodeTypeFactory.buildList(10).map((plan) => extendType(plan)),
+    ...linodeTypeFactory
+      .buildList(10, { class: 'standard' })
+      .map((plan) => extendType(plan)),
   ];
 
   beforeEach(() => {
@@ -1626,7 +1628,7 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
   });
 
   /*
-   * - Confirm that a user can create a standard LKE cluster when the LKE-E Post-LA feature is enabled.
+   * - Confirms that a user can create a standard LKE cluster when the LKE-E Post-LA feature is enabled.
    * - Confirms that user can add and configure node pools via the Configure Node Pools drawer.
    * - Confirms that LKE-E-specific node pool options are absent when configuring pools for standard clusters.
    * - Confirms that outgoing cluster create API request contains the expected payload data.
@@ -1737,9 +1739,9 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
   });
 
   /*
-   * - Confirm that regular LKE cluster creation works when a user initially configures an LKE-E cluster.
+   * - Confirms that regular LKE cluster creation works when a user initially configures an LKE-E cluster.
    * - Configures an LKE-E cluster with LKE-E specific choices, then switches to a regular cluster before proceeding.
-   * - Confirm that outgoing cluster request respects user selection, cluster is created as expected.
+   * - Confirms that outgoing cluster request respects user selection, cluster is created as expected.
    */
   it('can switch to a standard cluster after configuring an LKE-E cluster with LKE-E Post-LA feature enabled', () => {
     const mockCluster = kubernetesClusterFactory.build({
