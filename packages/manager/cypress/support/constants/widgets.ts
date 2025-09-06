@@ -22,6 +22,7 @@ export const widgetDetails = {
         filters: [
           { dimension_label: 'device', operator: 'eq', value: 'loop0' },
           { dimension_label: 'direction', operator: 'eq', value: 'write' },
+          { dimension_label: 'Linode', operator: 'eq', value: '1' },
         ],
       },
       {

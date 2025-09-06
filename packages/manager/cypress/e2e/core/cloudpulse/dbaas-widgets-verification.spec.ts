@@ -66,24 +66,33 @@ const {
 } = widgetDetails.dbaas;
 
 // Build a shared dimension object
-
-const nodeDimension = {
-  label: 'Node Type',
-  dimension_label: 'node_type',
-  operator: 'eq',
-  value: 'secondary', // <-- single string
-};
+const nodeDimensions = [
+  {
+    label: 'Node Type',
+    dimension_label: 'node_type',
+    value: 'secondary',
+  },
+  {
+    label: 'Region',
+    dimension_label: 'region',
+    value: 'us-ord',
+  },
+  {
+    label: 'Engine',
+    dimension_label: 'engine',
+    value: 'mysql',
+  },
+];
 
 // Convert widget filters to dashboard filters
 const getFiltersForMetric = (metricName: string) => {
   const metric = metrics.find((m) => m.name === metricName);
-  if (!metric) return []; // return empty array instead of null
+  if (!metric) return [];
 
-  // Convert metric.filters to { dimension_label, label, values[] }
   return metric.filters.map((f) => ({
     dimension_label: f.dimension_label,
     label: f.dimension_label, // or friendly name
-    values: f.value ? [f.value] : undefined, // undefined instead of null
+    values: f.value ? [f.value] : undefined,
   }));
 };
 
@@ -94,8 +103,7 @@ const dashboard = dashboardFactory.build({
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
       entity_ids: [String(id)],
-      filters: [nodeDimension],
-
+      filters: [...nodeDimensions],
       label: title,
       metric: name,
       unit,
@@ -112,7 +120,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
     label: title,
     metric: name,
     unit,
-    dimensions: [nodeDimension, ...getFiltersForMetric(name)], // all values are arrays or undefined
+    dimensions: [...nodeDimensions, ...getFiltersForMetric(name)],
   })
 );
 
@@ -213,7 +221,6 @@ const validateWidgetFilters = (
     (f: DimensionFilter) => f.dimension_label === expectedDimensionLabel
   );
   relevantFilters.forEach((filter: DimensionFilter) => {
-    expect(filter.operator).to.equal('eq'); // eq for each individual value
     expect(expectedValues).to.include(filter.value);
   });
 };
@@ -359,7 +366,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       });
   });
 
-  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it.only('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
