@@ -2,6 +2,7 @@
  * @file Integration Tests for CloudPulse Dbass Dashboard.
  */
 import { linodeFactory, regionFactory } from '@linode/utilities';
+import { json } from 'stream/consumers';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -66,7 +67,7 @@ const {
 } = widgetDetails.dbaas;
 
 // Build a shared dimension object
-const nodeDimensions = [
+const dimensions = [
   {
     label: 'Node Type',
     dimension_label: 'node_type',
@@ -99,11 +100,12 @@ const getFiltersForMetric = (metricName: string) => {
 // Dashboard creation
 const dashboard = dashboardFactory.build({
   label: dashboardName,
+  group_by: ['entity_id'],
   service_type: serviceType as CloudPulseServiceType,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
       entity_ids: [String(id)],
-      filters: [...nodeDimensions],
+      filters: [...dimensions],
       label: title,
       metric: name,
       unit,
@@ -120,7 +122,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
     label: title,
     metric: name,
     unit,
-    dimensions: [...nodeDimensions, ...getFiltersForMetric(name)],
+    dimensions: [...dimensions, ...getFiltersForMetric(name)],
   })
 );
 
@@ -269,7 +271,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    // Select a time duration from the autocomplete input.
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
     cy.get('@startDateInput').clear();
@@ -349,9 +350,57 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('be.visible')
         .should('have.text', clusterName);
     });
-
     // Wait for all metrics query requests to resolve.
-    cy.get('@getMetrics.all')
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
+      (calls) => {
+        const interceptions = calls as unknown as Interception[];
+
+        expect(interceptions).to.have.length(4);
+
+        interceptions.forEach((interception) => {
+          const { body: requestPayload } = interception.request;
+          const { filters } = requestPayload;
+
+          const nodeTypeFilter = filters.filter(
+            (filter: DimensionFilter) => filter.dimension_label === 'node_type'
+          );
+
+          expect(nodeTypeFilter).to.have.length(2);
+          expect(nodeTypeFilter[0].operator).to.equal('eq');
+          expect(nodeTypeFilter[0].value).to.equal('secondary');
+        });
+      }
+    );
+  });
+  it('should apply group by at the dashboard level and verify the metrics API calls', () => {
+    // 1) Click on "Group By" control at dashboard level
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'refreshMetrics'
+    );
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
+
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Use the alias safely
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    // 2) Select a group by option (example: "Node Type")
+    ui.autocomplete
+      .findByLabel('Select Dimensions')
+      .should('be.visible')
+      .type('Node Type');
+
+    ui.autocompletePopper.findByTitle('Node Type').should('be.visible').click();
+
+    cy.get('body').type('{esc}');
+
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    cy.get('@refreshMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
@@ -363,10 +412,52 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         expect(nodeTypeFilter).to.have.length(2);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
+        expect(requestPayload.group_by).to.have.ordered.members([
+          'entity_id',
+          'node_type',
+        ]);
+      });
+  });
+  it('should unselect all group bys and verify the metrics API calls', () => {
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'refreshMetrics'
+    );
+
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
+
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Use the alias safely
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    cy.get('[data-qa-autocomplete="Select Dimensions"]').within(() => {
+      cy.get('button[aria-label="Clear"]').should('be.visible').click({});
+    });
+
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    cy.get('@refreshMetrics.all')
+      .should('have.length', 4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        expect(requestPayload.group_by).to.be.oneOf([null, undefined, []]);
+        const { filters } = requestPayload;
+        const nodeTypeFilter = filters.filter(
+          (filter: DimensionFilter) => filter.dimension_label === 'node_type'
+        );
+
+        expect(nodeTypeFilter).to.have.length(2);
+        expect(nodeTypeFilter[0].operator).to.equal('eq');
+        expect(nodeTypeFilter[0].value).to.equal('secondary');
       });
   });
 
-  it.only('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
