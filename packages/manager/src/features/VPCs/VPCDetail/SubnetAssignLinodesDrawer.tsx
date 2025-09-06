@@ -657,11 +657,14 @@ export const SubnetAssignLinodesDrawer = (
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
+                noMarginTop={showIPv6Content}
                 onChange={(e) => {
                   setFieldValue('chosenIPv4', e.target.value);
                   setAssignLinodesErrors({});
                 }}
-                sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
+                style={{
+                  marginBottom: showIPv6Content ? theme.spacingFunction(24) : 0,
+                }}
                 value={values.chosenIPv4}
               />
             )}
@@ -714,13 +717,11 @@ export const SubnetAssignLinodesDrawer = (
                       subnet?.ipv6?.[0].range ?? ''
                     )}
                     label="VPC IPv6"
+                    noMarginTop
                     onChange={(e) => {
                       setFieldValue('chosenIPv6', e.target.value);
                       setAssignLinodesErrors({});
                     }}
-                    sx={(theme) => ({
-                      marginBottom: theme.spacingFunction(8),
-                    })}
                     value={values.chosenIPv6}
                   />
                 )}
