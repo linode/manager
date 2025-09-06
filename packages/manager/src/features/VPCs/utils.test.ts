@@ -12,6 +12,7 @@ import {
 } from 'src/factories/subnets';
 
 import {
+  generateVPCIPv6InputHelperText,
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
   getUniqueLinodesFromSubnets,
@@ -305,10 +306,13 @@ describe('Linode Interface utility functions', () => {
 
   describe('getVPCInterfacePayload', () => {
     const inputs = {
-      autoAssignIPv4: true,
-      chosenIP: '10.0.0.3',
+      allowPublicIPv4Access: true,
+      autoAssignVPCIPv4Address: true,
+      autoAssignVPCIPv6Address: true,
+      chosenIPv4: '10.0.0.3',
+      chosenIPv6: '2600:1401:4000::1726/64',
       firewallId: 1,
-      ipRanges: [],
+      ipv4Ranges: [],
       subnetId: 1,
       vpcId: 1,
     };
@@ -379,5 +383,20 @@ describe('transformLinodeInterfaceErrorsToFormikErrors', () => {
         reason: 'address 2 is invalid.',
       },
     ]);
+  });
+});
+
+describe('generateVPCIPv6InputHelperText', () => {
+  it('returns null when subnetIPv6Range is falsy', () => {
+    expect(generateVPCIPv6InputHelperText(undefined)).toBeNull();
+    expect(generateVPCIPv6InputHelperText('')).toBeNull();
+  });
+
+  it('returns helper text that correctly represents the number of fixed hextets', () => {
+    const result = generateVPCIPv6InputHelperText('2600:3c03::/64');
+    expect(result).toBe('The first 4 hextets of 2600:3c03::/64 are fixed.');
+
+    const result2 = generateVPCIPv6InputHelperText('2600:3c03::/56');
+    expect(result2).toBe('The first 3.5 hextets of 2600:3c03::/56 are fixed.');
   });
 });
