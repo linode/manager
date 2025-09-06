@@ -112,13 +112,15 @@ export const getLinodeInterfaceIPv6Ranges = (iface: LinodeInterface) =>
 // TODO: update this when converting to react-hook-form
 // gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload
 export const getVPCInterfacePayload = (inputs: {
-  autoAssignVPCIPAddresses: boolean;
+  allowPublicIPv4Access: boolean;
+  allowPublicIPv6Access?: boolean;
+  autoAssignVPCIPv4Address: boolean;
+  autoAssignVPCIPv6Address: boolean;
   chosenIPv4: string;
   chosenIPv6: string;
   firewallId: null | number;
   ipv4Ranges: ExtendedIP[];
   ipv6Ranges?: ExtendedIP[];
-  isIPv6Public?: boolean;
   isLinodeInterface: boolean;
   subnetId: null | number | undefined;
   vpcId: number;
@@ -132,8 +134,10 @@ export const getVPCInterfacePayload = (inputs: {
     ipv6Ranges,
     subnetId,
     isLinodeInterface,
-    isIPv6Public = false,
-    autoAssignVPCIPAddresses,
+    allowPublicIPv4Access,
+    allowPublicIPv6Access = false,
+    autoAssignVPCIPv4Address,
+    autoAssignVPCIPv6Address,
     vpcId,
     vpcIPv6FeatureEnabled,
   } = inputs;
@@ -153,8 +157,8 @@ export const getVPCInterfacePayload = (inputs: {
         ipv4: {
           addresses: [
             {
-              nat_1_1_address: 'auto', // 'auto' in all cases here to match legacy interface behavior - helps the user towards a functional configuration & hides complexity per stakeholder feedback
-              address: !autoAssignVPCIPAddresses ? chosenIPv4 : 'auto',
+              nat_1_1_address: allowPublicIPv4Access ? 'auto' : null, // 'auto' keyword to enable the Linode's assigned public IPv4 address; null to block creation of 1:1 NAT
+              address: !autoAssignVPCIPv4Address ? chosenIPv4 : 'auto',
             },
           ],
           ranges: filteredIPv4Ranges.map((ipRange) => {
@@ -165,13 +169,13 @@ export const getVPCInterfacePayload = (inputs: {
           ? {
               slaac: [
                 {
-                  range: !autoAssignVPCIPAddresses ? chosenIPv6 : 'auto',
+                  range: !autoAssignVPCIPv6Address ? chosenIPv6 : 'auto',
                 },
               ],
               ranges: filteredIPv6Ranges.map((ipRange) => {
                 return { range: ipRange.address };
               }),
-              is_public: isIPv6Public,
+              is_public: allowPublicIPv6Access,
             }
           : undefined,
       },
@@ -185,15 +189,15 @@ export const getVPCInterfacePayload = (inputs: {
     ip_ranges: filteredIPv4Ranges.map((ipRange) => ipRange.address),
     ipam_address: null,
     ipv4: {
-      nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
-      vpc: !autoAssignVPCIPAddresses ? chosenIPv4 : undefined,
+      nat_1_1: allowPublicIPv4Access ? 'any' : '', // 'any' keyword to enable the Linode's assigned public IPv4 address; empty string to block creation of 1:1 NAT
+      vpc: !autoAssignVPCIPv4Address ? chosenIPv4 : undefined,
     },
     ipv6: vpcIPv6FeatureEnabled
       ? {
-          is_public: isIPv6Public,
+          is_public: allowPublicIPv6Access,
           slaac: [
             {
-              range: !autoAssignVPCIPAddresses ? chosenIPv6 : 'auto',
+              range: !autoAssignVPCIPv6Address ? chosenIPv6 : 'auto',
             },
           ],
           ranges: filteredIPv6Ranges.map((ipRange) => {

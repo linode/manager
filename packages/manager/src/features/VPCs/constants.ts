@@ -44,6 +44,9 @@ export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
 
 export const ASSIGN_IP_RANGES_TITLE = 'Assign additional IP ranges';
 
+export const PUBLIC_IPV4_ACCESS_CHECKBOX_TOOLTIP =
+  'Allow IPv4 access to the internet using 1:1 NAT on the VPC interface.';
+
 export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP =
   "To enable IPv6 internet access, assign a globally routed IPv6 prefix to the subnet and enable the interface's Public setting.";
 

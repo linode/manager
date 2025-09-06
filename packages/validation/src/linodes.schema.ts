@@ -97,7 +97,9 @@ const ipv4ConfigInterface = object().when('purpose', {
       .shape({
         vpc: IPv4,
         nat_1_1: lazy((value) =>
-          value === 'any' ? string().notRequired().nullable() : IPv4,
+          value === 'any' || value === ''
+            ? string().notRequired().nullable()
+            : IPv4,
         ),
       })
       .when('ipv6', {
@@ -330,7 +332,9 @@ export const UpdateConfigInterfaceSchema = object({
     .shape({
       vpc: IPv4,
       nat_1_1: lazy((value) =>
-        value === 'any' ? string().notRequired().nullable() : IPv4,
+        value === 'any' || value === ''
+          ? string().notRequired().nullable()
+          : IPv4,
       ),
     }),
   ipv6: object().notRequired().nullable().shape({

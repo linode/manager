@@ -306,7 +306,9 @@ describe('Linode Interface utility functions', () => {
 
   describe('getVPCInterfacePayload', () => {
     const inputs = {
-      autoAssignVPCIPAddresses: true,
+      allowPublicIPv4Access: true,
+      autoAssignVPCIPv4Address: true,
+      autoAssignVPCIPv6Address: true,
       chosenIPv4: '10.0.0.3',
       chosenIPv6: '2600:1401:4000::1726/64',
       firewallId: 1,
