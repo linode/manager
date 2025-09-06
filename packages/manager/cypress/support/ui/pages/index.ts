@@ -12,4 +12,5 @@
  */
 
 export * from './linode-create-page';
+export * from './lke-cluster-create-page';
 export * from './vpc-create-drawer';
