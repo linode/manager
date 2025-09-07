@@ -2,7 +2,6 @@
  * @file Integration Tests for CloudPulse Dbass Dashboard.
  */
 import { linodeFactory, regionFactory } from '@linode/utilities';
-import { json } from 'stream/consumers';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -228,6 +227,11 @@ const validateWidgetFilters = (
 };
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
+  afterEach(() => {
+    cy.clearLocalStorage();
+    cy.clearCookies();
+  });
+
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
@@ -373,7 +377,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     );
   });
   it('should apply group by at the dashboard level and verify the metrics API calls', () => {
-    // 1) Click on "Group By" control at dashboard level
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
@@ -456,7 +459,128 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         expect(nodeTypeFilter[0].value).to.equal('secondary');
       });
   });
+  it('should apply group by at widget level only  and verify the metrics API calls', () => {
+    // validate the widget level granularity selection and its metrics
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
 
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Use the alias safely
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    cy.get('[data-qa-autocomplete="Select Dimensions"]').within(() => {
+      cy.get('button[aria-label="Clear"]').should('be.visible').click({});
+    });
+
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    const widgetSelector = '[data-qa-widget="CPU Utilization"]';
+    cy.get(widgetSelector)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+          .scrollIntoView()
+          .should('be.visible')
+          .click();
+      });
+
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Group By');
+
+    cy.get('[data-testid="drawer"]')
+      .find('p')
+      .and('have.text', 'CPU Utilization');
+
+    ui.autocomplete
+      .findByLabel('Select Dimensions')
+      .should('be.visible')
+      .type('cpu');
+
+    ui.autocompletePopper.findByTitle('cpu').should('be.visible').click();
+
+    ui.autocomplete
+      .findByLabel('Select Dimensions')
+      .should('be.visible')
+      .type('state');
+
+    ui.autocompletePopper.findByTitle('state').should('be.visible').click();
+
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'getGroupBy'
+    );
+
+    cy.get('body').type('{esc}');
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+    cy.wait('@getGroupBy').then((interception: Interception) => {
+      const { body: requestPayload } = interception.request;
+      expect(requestPayload.group_by).to.have.ordered.members(['cpu', 'state']);
+    });
+  });
+
+  it('should apply group by at both dashboard and widget level and verify the metrics API calls', () => {
+    // validate the widget level granularity selection and its metrics
+    // group by of dashbaord is coming for mock
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .find('h2')
+        .should('have.text', `${testData.title} (${testData.unit})`);
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+            .scrollIntoView()
+            .should('be.visible')
+            .click();
+        });
+
+      cy.get('[data-testid="drawer-title"]')
+        .should('be.visible')
+        .and('have.text', 'Group By');
+
+      cy.get('[data-testid="drawer"]')
+        .find('p')
+        .and('have.text', testData.title);
+
+      testData.filters.forEach((filter) => {
+        ui.autocomplete
+          .findByLabel('Select Dimensions')
+          .should('be.visible')
+          .type(filter.dimension_label);
+        ui.autocompletePopper
+          .findByTitle(filter.dimension_label)
+          .should('be.visible')
+          .click();
+
+        mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+          'getGranularityMetrics'
+        );
+      });
+      cy.get('body').type('{esc}');
+      cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+      cy.log('starting ---', testData.title);
+      cy.wait('@getGranularityMetrics').then((interception: Interception) => {
+        expect(interception).to.have.property('response');
+        const expectedGroupBy = [
+          'entity_id',
+          ...testData.filters.map((f) => f.dimension_label),
+        ];
+
+        const { body: requestPayload } = interception.request;
+        expect(requestPayload.group_by).to.have.ordered.members(
+          expectedGroupBy
+        );
+      });
+    });
+  });
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
