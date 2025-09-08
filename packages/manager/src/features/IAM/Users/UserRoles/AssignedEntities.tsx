@@ -1,8 +1,8 @@
-import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
-import { debounce, useTheme } from '@mui/material';
+import { Box, Chip, CloseIcon, Tooltip } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../Shared/TuncatedList';
+import { TruncatedList } from '../../Shared/TuncatedList';
 
 import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';
@@ -13,34 +13,8 @@ interface Props {
   role: ExtendedRoleView;
 }
 
-export const AssignedEntities = ({
-  onButtonClick,
-  onRemoveAssignment,
-  role,
-}: Props) => {
+export const AssignedEntities = ({ onRemoveAssignment, role }: Props) => {
   const theme = useTheme();
-
-  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
-    useCalculateHiddenItems(role.entity_names!);
-
-  const handleResize = React.useMemo(
-    () => debounce(() => calculateHiddenItems(), 250),
-    [calculateHiddenItems]
-  );
-
-  React.useEffect(() => {
-    // Double RAF for good measure - see https://stackoverflow.com/questions/44145740/how-does-double-requestanimationframe-work
-    const rafId = requestAnimationFrame(() => {
-      requestAnimationFrame(() => calculateHiddenItems());
-    });
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [calculateHiddenItems, handleResize]);
 
   const combinedEntities: CombinedEntity[] = React.useMemo(
     () =>
@@ -51,27 +25,13 @@ export const AssignedEntities = ({
     [role.entity_names, role.entity_ids]
   );
 
-  const isLastVisibleItem = React.useCallback(
-    (index: number) => {
-      return combinedEntities.length - numHiddenItems - 1 === index;
-    },
-    [combinedEntities.length, numHiddenItems]
-  );
-
   const items = combinedEntities?.map(
     (entity: CombinedEntity, index: number) => (
       <Box
         key={entity.id}
-        ref={(el: HTMLDivElement) => {
-          itemRefs.current[index] = el;
-        }}
         sx={{
           display: 'inline',
           marginRight: theme.tokens.spacing.S8,
-          paddingRight:
-            numHiddenItems > 0 && isLastVisibleItem(index)
-              ? theme.tokens.spacing.S16
-              : 0,
         }}
       >
         <Tooltip
@@ -97,16 +57,6 @@ export const AssignedEntities = ({
                 color: theme.tokens.alias.Content.Text.Primary.Default,
               },
               position: 'relative',
-              '&::after': {
-                content:
-                  numHiddenItems > 0 && isLastVisibleItem(index)
-                    ? '"..."'
-                    : '""',
-                position: 'absolute',
-                top: 0,
-                right: -16,
-                width: 14,
-              },
             }}
           />
         </Tooltip>
@@ -115,23 +65,17 @@ export const AssignedEntities = ({
   );
 
   return (
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        position: 'relative',
-      }}
-    >
-      <Box
-        ref={containerRef}
-        sx={{
+    <Box>
+      <TruncatedList
+        listContainerSx={{
+          width: '100%',
           overflow: 'hidden',
-          height: 24,
+          maxHeight: 24,
         }}
       >
         {items}
-      </Box>
-      {numHiddenItems > 0 && (
+      </TruncatedList>
+      {/* {numHiddenItems > 0 && (
         <Box
           sx={{
             alignItems: 'center',
@@ -159,7 +103,7 @@ export const AssignedEntities = ({
             </Button>
           </Tooltip>
         </Box>
-      )}
+      )} */}
     </Box>
   );
 };

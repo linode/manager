@@ -1,78 +1,17 @@
-import { StyledLinkButton } from '@linode/ui';
-
-import type { PermissionType } from '@linode/api-v4';
-import type { SxProps, Theme } from '@mui/material';
-
-/**
- * Custom hook to calculate hidden items
- */
-export const useCalculateHiddenItems = (
-  items: PermissionType[] | string[],
-  showAll?: boolean
-) => {
-  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const itemRefs = useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
-
-  const calculateHiddenItems = React.useCallback(() => {
-    if (showAll) {
-      setNumHiddenItems(0);
-      return;
-    }
-
-    if (!containerRef.current || !itemRefs.current) {
-      return;
-    }
-
-    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
-
-    const itemsArray = Array.from(itemRefs.current);
-
-    const firstHiddenIndex = itemsArray.findIndex(
-      (item: HTMLDivElement | HTMLSpanElement) => {
-        if (!item) {
-          return false;
-        }
-        const rect = item.getBoundingClientRect();
-        return rect.top >= containerBottom;
-      }
-    );
-
-    const numHiddenItems =
-      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
-
-    setNumHiddenItems(numHiddenItems);
-  }, [showAll]);
-
-  useLayoutEffect(() => {
-    let rafId: number;
-
-    const run = () => {
-      const container = containerRef.current;
-      if (!container || container.offsetHeight === 0) {
-        rafId = requestAnimationFrame(run);
-        return;
-      }
-
-      calculateHiddenItems();
-    };
-
-    rafId = requestAnimationFrame(run);
-
-    return () => cancelAnimationFrame(rafId);
-  }, [items, calculateHiddenItems]);
-
-  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
-};
-
+import { Box, StyledLinkButton } from '@linode/ui';
 import React, { useLayoutEffect, useRef } from 'react';
 import { useCallback } from 'react';
 
+import { StyledTruncatedList } from './TruncatedListStyles';
+
+import type { SxProps, Theme } from '@mui/material';
+
 export interface TruncatedListProps {
   children?: React.ReactNode;
-  className?: string;
   collapseText?: string;
+  dataTestId?: string;
   expandText?: string;
+  listContainerSx?: SxProps<Theme>;
   overflowButtonSx?: SxProps<Theme>;
 }
 
@@ -95,9 +34,10 @@ const rectContainsRect = (parent: DOMRect, child: DOMRect) => {
 export const TruncatedList = (props: TruncatedListProps) => {
   const {
     children,
-    className,
     collapseText = 'Hide',
+    dataTestId,
     expandText = 'Expand',
+    listContainerSx,
   } = props;
   const [showAll, setShowAll] = React.useState(false);
 
@@ -238,7 +178,12 @@ export const TruncatedList = (props: TruncatedListProps) => {
 
   if (showAll) {
     return (
-      <ul className={`${className ?? ''} expanded`} ref={expandedRef}>
+      <StyledTruncatedList
+        className="expanded"
+        data-testid={dataTestId}
+        ref={expandedRef}
+        sx={listContainerSx}
+      >
         {childArray.map((item, i) => (
           <li key={i}>{item}</li>
         ))}
@@ -247,7 +192,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
           hiddenItemsCount={0}
           onClick={handleToggle}
         />
-      </ul>
+      </StyledTruncatedList>
     );
   }
 
@@ -265,19 +210,25 @@ export const TruncatedList = (props: TruncatedListProps) => {
   ));
 
   return (
-    <ul className={className ?? ''} ref={containerRef}>
-      {showAll ? null : (
-        <>
-          {items}
-          <li hidden>
-            <OverflowButton
-              buttonCopy={expandText}
-              hiddenItemsCount={0}
-              onClick={handleToggle}
-            />
-          </li>
-        </>
-      )}
-    </ul>
+    <Box>
+      <StyledTruncatedList
+        data-testid={dataTestId}
+        ref={containerRef}
+        sx={listContainerSx}
+      >
+        {showAll ? null : (
+          <>
+            {items}
+            <li hidden>
+              <OverflowButton
+                buttonCopy={expandText}
+                hiddenItemsCount={0}
+                onClick={handleToggle}
+              />
+            </li>
+          </>
+        )}
+      </StyledTruncatedList>
+    </Box>
   );
 };

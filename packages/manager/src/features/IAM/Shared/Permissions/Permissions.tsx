@@ -3,11 +3,7 @@ import { Grid } from '@mui/material';
 import * as React from 'react';
 
 import { TruncatedList } from '../TuncatedList';
-import {
-  StyledContainer,
-  StyledPermissionItem,
-  StyledTitle,
-} from './Permissions.style';
+import { StyledPermissionItem, StyledTitle } from './Permissions.style';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 
@@ -26,30 +22,18 @@ export const Permissions = React.memo(({ permissions }: Props) => {
           to understand what access is granted by this role.
         </Typography>
       ) : (
-        <StyledContainer
-          data-testid="container"
-          sx={{
-            '& .permissions-list': {
-              margin: 0,
-              padding: 0,
-              display: 'flex',
-              listStyleType: 'none',
-              flexWrap: 'wrap',
-              maxHeight: '3.2em',
-              '&.expanded': {
-                maxHeight: 'none',
-              },
-            },
-          }}
+        <TruncatedList
+          dataTestId="container"
+          listContainerSx={(theme) => ({
+            marginLeft: `-${theme.spacingFunction(6)}`,
+          })}
         >
-          <TruncatedList className="permissions-list">
-            {permissions.map((permission: PermissionType) => (
-              <StyledPermissionItem data-testid="permission" key={permission}>
-                {permission}
-              </StyledPermissionItem>
-            ))}
-          </TruncatedList>
-        </StyledContainer>
+          {permissions.map((permission: PermissionType) => (
+            <StyledPermissionItem data-testid="permission" key={permission}>
+              {permission}
+            </StyledPermissionItem>
+          ))}
+        </TruncatedList>
       )}
     </Grid>
   );
