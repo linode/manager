@@ -157,13 +157,13 @@ export const CloudPulseGroupByDrawer = React.memo(
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
             }
-            label="Select Dimensions"
+            label="Dimensions"
             multiple
             onChange={(_event, value) => {
               setSelectedValue(value);
             }}
             options={options}
-            placeholder="Select Dimensions"
+            placeholder={selectedValue.length > 0 ? '' : 'Select Dimensions'}
             renderOption={renderOptions}
             value={selectedValue}
           />
