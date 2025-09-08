@@ -1,8 +1,19 @@
 import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
-import { Box, Button, Paper, Select, Stack, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Button,
+  NewFeatureChip,
+  Paper,
+  Select,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import { usePermissions } from '../IAM/hooks/usePermissions';
 
@@ -40,6 +51,7 @@ const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting
 export const NetworkInterfaceType = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
+  const flags = useFlags();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
   const { data: permissions } = usePermissions('account', [
@@ -79,8 +91,15 @@ export const NetworkInterfaceType = () => {
         <Stack mt={1}>
           <Typography variant="body1">
             Choose whether to use Configuration Profile Interfaces or Linode
-            Interfaces (BETA) when creating new Linodes or upgrading existing
-            ones.
+            Interfaces
+            {flags.linodeInterfaces?.beta ? (
+              <BetaChip sx={{ mx: 0.5 }} />
+            ) : flags.linodeInterfaces?.new ? (
+              <NewFeatureChip sx={{ mx: 0.5 }} />
+            ) : (
+              ' '
+            )}
+            when creating new Linodes or upgrading existing ones.
           </Typography>
           <Controller
             control={control}
