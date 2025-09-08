@@ -26,8 +26,8 @@
     "lib"
   ],
   "scripts": {
-    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
-    "build": "concurrently --raw \"tsc\" \"tsup\"",
+    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsdown --watch\"",
+    "build": "concurrently --raw \"tsc\" \"tsdown\"",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
     "concurrently": "^9.0.1",
-    "tsup": "^8.4.0"
+    "tsdown": "^0.14.2"
   },
   "keywords": [
     "linode",

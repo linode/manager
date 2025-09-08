@@ -1,9 +1,8 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Region } from './types';
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
-import type { RegionAvailability } from './types';
+import type { Region, RegionAvailability } from './types';
 
 /**
  * getRegions
@@ -37,8 +36,6 @@ export const getRegion = (regionId: string) =>
     setURL(`${BETA_API_ROOT}/regions/${encodeURIComponent(regionId)}`),
     setMethod('GET'),
   );
-
-export { Region };
 
 /**
  * getRegionAvailabilities
