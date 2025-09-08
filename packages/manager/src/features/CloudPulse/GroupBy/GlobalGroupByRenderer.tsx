@@ -56,6 +56,7 @@ export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
         <IconButton
           aria-label="Group By Dashboard Metrics"
           color="inherit"
+          data-qa-selected={isSelected}
           data-testid="group-by"
           disabled={!selectedDashboard || isLoading}
           onClick={() => setOpen(true)}
@@ -79,7 +80,7 @@ export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
           open={open}
           options={options}
           serviceType={selectedDashboard.service_type}
-          subtitle={`Dashboard: ${selectedDashboard.label}`}
+          subtitle={selectedDashboard.label}
           title="Global Group By"
         />
       )}

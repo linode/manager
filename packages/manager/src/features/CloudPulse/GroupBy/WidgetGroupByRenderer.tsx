@@ -73,6 +73,7 @@ export const WidgetGroupByRenderer = (props: WidgetGroupByRendererProps) => {
         <IconButton
           aria-label="Group By Dashboard Metrics"
           color="inherit"
+          data-qa-selected={isSelected}
           data-testid="group-by"
           disabled={isDisabled}
           onClick={() => setOpen(true)}
