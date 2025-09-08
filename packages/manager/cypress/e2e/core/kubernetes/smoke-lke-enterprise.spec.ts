@@ -57,8 +57,8 @@ const mockRegions = [
 ];
 
 /**
- * - Confirms VPC and IP Stack selections are shown with `phase2Mtc` feature flag is enabled.
- * - Confirms VPC and IP Stack selections are not shown in create flow with `phase2Mtc` feature flag is disabled.
+ * - Confirms VPC and IP Stack selections are shown with the respective `phase2Mtc` feature flags enabled.
+ * - Confirms VPC and IP Stack selections are not shown in create flow with their respective `phase2Mtc` feature flags disabled.
  */
 describe('LKE-E Cluster Create', () => {
   beforeEach(() => {
@@ -73,7 +73,151 @@ describe('LKE-E Cluster Create', () => {
     ).as('getAccount');
   });
 
-  it('Simple Page Check - Phase 2 MTC Flag ON', () => {
+  it('Simple Page Check - Phase 2 MTC BYO VPC Flag ON', () => {
+    mockAppendFeatureFlags({
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        postLa: false,
+        phase2Mtc: { byoVPC: true, dualStack: false },
+      },
+    }).as('getFeatureFlags');
+
+    mockCreateCluster(mockCluster).as('createCluster');
+    mockGetTieredKubernetesVersions('enterprise', [
+      latestEnterpriseTierKubernetesVersion,
+    ]).as('getTieredKubernetesVersions');
+    mockGetRegions(mockRegions);
+
+    cy.visitWithLogin('/kubernetes/create');
+    cy.findByText('Add Node Pools').should('be.visible');
+
+    cy.findByLabelText('Cluster Label').click();
+    cy.focused().type(mockCluster.label);
+
+    cy.findByText('LKE Enterprise').click();
+
+    ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
+    ui.regionSelect.findItemByRegionId(mockRegions[0].id).click();
+
+    cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+    cy.findByText(latestEnterpriseTierKubernetesVersion.id)
+      .should('be.visible')
+      .click();
+
+    // Confirms LKE-E Phase 2 VPC options do not display with the Dual Stack flag OFF.
+    cy.findByText('IP Stack').should('not.exist');
+    cy.findByText('IPv4', { exact: true }).should('not.exist');
+    cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
+
+    // Confirms LKE-E Phase 2 VPC options display with the BYO VPC flag ON.
+    cy.findByText('Automatically generate a VPC for this cluster').should(
+      'be.visible'
+    );
+    cy.findByText('Use an existing VPC').should('be.visible');
+
+    cy.findByText('Shared CPU').should('be.visible').click();
+    addNodes('Linode 2 GB');
+
+    // Bypass ACL validation
+    cy.get('input[name="acl-acknowledgement"]').check();
+
+    // Confirm change is reflected in checkout bar.
+    cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+      cy.findByText('Linode 2 GB Plan').should('be.visible');
+      cy.findByTitle('Remove Linode 2GB Node Pool').should('be.visible');
+
+      cy.get('[data-qa-notice="true"]').within(() => {
+        cy.findByText(minimumNodeNotice).should('be.visible');
+      });
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+    cy.wait('@createCluster');
+    cy.url().should(
+      'endWith',
+      `/kubernetes/clusters/${mockCluster.id}/summary`
+    );
+  });
+
+  it('Simple Page Check - Phase 2 MTC Dual Stack Flag ON', () => {
+    mockAppendFeatureFlags({
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        postLa: false,
+        phase2Mtc: { byoVPC: false, dualStack: true },
+      },
+    }).as('getFeatureFlags');
+
+    mockCreateCluster(mockCluster).as('createCluster');
+    mockGetTieredKubernetesVersions('enterprise', [
+      latestEnterpriseTierKubernetesVersion,
+    ]).as('getTieredKubernetesVersions');
+    mockGetRegions(mockRegions);
+
+    cy.visitWithLogin('/kubernetes/create');
+    cy.findByText('Add Node Pools').should('be.visible');
+
+    cy.findByLabelText('Cluster Label').click();
+    cy.focused().type(mockCluster.label);
+
+    cy.findByText('LKE Enterprise').click();
+
+    ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
+    ui.regionSelect.findItemByRegionId(mockRegions[0].id).click();
+
+    cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+    cy.findByText(latestEnterpriseTierKubernetesVersion.id)
+      .should('be.visible')
+      .click();
+
+    // Confirms LKE-E Phase 2 IP Stack displays with the Dual Stack flag ON.
+    cy.findByText('IP Stack').should('be.visible');
+    cy.findByText('IPv4', { exact: true }).should('be.visible');
+    cy.findByText('IPv4 + IPv6 (dual-stack)').should('be.visible');
+
+    // Confirms LKE-E Phase 2 VPC options do not display with the BYO VPC flag OFF.
+    cy.findByText('Automatically generate a VPC for this cluster').should(
+      'not.exist'
+    );
+    cy.findByText('Use an existing VPC').should('not.exist');
+
+    cy.findByText('Shared CPU').should('be.visible').click();
+    addNodes('Linode 2 GB');
+
+    // Bypass ACL validation
+    cy.get('input[name="acl-acknowledgement"]').check();
+
+    // Confirm change is reflected in checkout bar.
+    cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+      cy.findByText('Linode 2 GB Plan').should('be.visible');
+      cy.findByTitle('Remove Linode 2GB Node Pool').should('be.visible');
+
+      cy.get('[data-qa-notice="true"]').within(() => {
+        cy.findByText(minimumNodeNotice).should('be.visible');
+      });
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+    cy.wait('@createCluster');
+    cy.url().should(
+      'endWith',
+      `/kubernetes/clusters/${mockCluster.id}/summary`
+    );
+  });
+
+  it('Simple Page Check - Phase 2 MTC Flags Both ON', () => {
     mockAppendFeatureFlags({
       lkeEnterprise2: {
         enabled: true,
@@ -105,7 +249,7 @@ describe('LKE-E Cluster Create', () => {
       .should('be.visible')
       .click();
 
-    // Confirms LKE-E Phase 2 IP Stack and VPC options display with the flag ON.
+    // Confirms LKE-E Phase 2 IP Stack and VPC options display with both flags ON.
     cy.findByText('IP Stack').should('be.visible');
     cy.findByText('IPv4', { exact: true }).should('be.visible');
     cy.findByText('IPv4 + IPv6 (dual-stack)').should('be.visible');
@@ -143,7 +287,7 @@ describe('LKE-E Cluster Create', () => {
     );
   });
 
-  it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
+  it('Simple Page Check - Phase 2 MTC Flags Both OFF', () => {
     mockAppendFeatureFlags({
       lkeEnterprise2: {
         enabled: true,
@@ -175,7 +319,7 @@ describe('LKE-E Cluster Create', () => {
       .should('be.visible')
       .click();
 
-    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display with the flag OFF.
+    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display with both flags OFF.
     cy.findByText('IP Stack').should('not.exist');
     cy.findByText('IPv4', { exact: true }).should('not.exist');
     cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
@@ -231,7 +375,69 @@ describe('LKE-E Cluster Read', () => {
     ).as('getAccount');
   });
 
-  it('Simple Page Check - Phase 2 MTC Flag ON', () => {
+  it('Simple Page Check - Phase 2 MTC BYO VPC Flag ON', () => {
+    mockAppendFeatureFlags({
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: false },
+      },
+    }).as('getFeatureFlags');
+
+    mockGetClusters([mockCluster]).as('getClusters');
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+    mockGetVPC(mockVPC).as('getVPC');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+    cy.wait(['@getCluster', '@getVPC', '@getNodePools']);
+
+    // Confirm linked VPC is present
+    cy.get('[data-qa-kube-entity-footer]').within(() => {
+      cy.contains('VPC:').should('exist');
+      cy.findByTestId('assigned-lke-cluster-label').should(
+        'contain.text',
+        mockVPC.label
+      );
+    });
+
+    // Confirm VPC IP columns are not present in the node table header
+    cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {
+      cy.contains('th', 'VPC IPv4').should('not.exist');
+      cy.contains('th', 'VPC IPv6').should('not.exist');
+    });
+  });
+
+  it('Simple Page Check - Phase 2 MTC Dual Stack Flag ON', () => {
+    mockAppendFeatureFlags({
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: false, dualStack: true },
+      },
+    }).as('getFeatureFlags');
+
+    mockGetClusters([mockCluster]).as('getClusters');
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+    cy.wait(['@getCluster', '@getNodePools']);
+
+    // Confirm linked VPC is not present
+    cy.get('[data-qa-kube-entity-footer]').within(() => {
+      cy.contains('VPC:').should('not.exist');
+      cy.findByTestId('assigned-lke-cluster-label').should('not.exist');
+    });
+
+    // Confirm VPC IP columns are present in the node table header
+    cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {
+      cy.contains('th', 'VPC IPv4').should('be.visible');
+      cy.contains('th', 'VPC IPv6').should('be.visible');
+    });
+  });
+
+  it('Simple Page Check - Phase 2 MTC Flags Both ON', () => {
     mockAppendFeatureFlags({
       lkeEnterprise2: {
         enabled: true,
@@ -264,7 +470,7 @@ describe('LKE-E Cluster Read', () => {
     });
   });
 
-  it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
+  it('Simple Page Check - Phase 2 MTC Flags Both OFF', () => {
     mockAppendFeatureFlags({
       lkeEnterprise2: {
         enabled: true,
