@@ -362,7 +362,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   onAggregateFuncChange={handleAggregateFunctionChange}
                 />
               )}
-              <Box sx={{ display: { lg: 'flex', xs: 'none' }, gap: 2 }}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
                 <WidgetFilterGroupByRenderer
                   dashboardId={dashboardId}
                   handleChange={handleGroupByChange}
