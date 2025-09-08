@@ -1,6 +1,6 @@
 import { isEmpty } from '@linode/api-v4';
 
-import type { Interface } from '@linode/api-v4';
+import type { DiskDevice, Interface, VolumeDevice } from '@linode/api-v4';
 
 /**
  * Gets the index of the primary Linode interface
@@ -46,4 +46,16 @@ export const getPrimaryInterfaceIndex = (interfaces: Interface[]) => {
   // If we haven't been able to find the primary interface by this point, the Linode doesn't have one.
   // As an example, this is the case when a Linode only has a VLAN interface.
   return null;
+};
+
+export const isDiskDevice = (
+  device: DiskDevice | VolumeDevice
+): device is DiskDevice => {
+  return 'disk_id' in device && device.disk_id !== null;
+};
+
+export const isVolumeDevice = (
+  device: DiskDevice | VolumeDevice
+): device is VolumeDevice => {
+  return 'volume_id' in device && device.volume_id !== null;
 };

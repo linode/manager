@@ -81,40 +81,45 @@ export const CloudPulseRegionSelect = React.memo(
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
-    const {
-      values: linodeRegions,
-      isLoading: isLinodeRegionIdLoading,
-      isError: isLinodeRegionIdError,
-    } = useFetchOptions({
+    const linodeRegionIds = useFetchOptions({
       dimensionLabel: filterKey,
       entities: selectedEntities,
       regions,
       serviceType,
       type: 'metrics',
-    });
-    const linodeRegionIds = linodeRegions.map(
-      (option: Item<string, string>) => option.value
-    );
+    }).map((option: Item<string, string>) => option.value);
 
-    const supportedLinodeRegions =
-      regions?.filter((region) => linodeRegionIds?.includes(region.id)) ?? [];
+    const supportedLinodeRegions = React.useMemo(() => {
+      return (
+        regions?.filter((region) => linodeRegionIds?.includes(region.id)) ?? []
+      );
+    }, [regions, linodeRegionIds]);
 
     const supportedRegions = React.useMemo<Region[]>(() => {
       return filterRegionByServiceType('metrics', regions, serviceType);
     }, [regions, serviceType]);
 
-    const supportedRegionsFromResources =
-      filterKey === LINODE_REGION
-        ? supportedLinodeRegions
-        : supportedRegions.filter(({ id }) =>
-            filterUsingDependentFilters(resources, xFilter)?.some(
-              ({ region }) => region === id
-            )
-          );
+    const supportedRegionsFromResources = React.useMemo(() => {
+      if (filterKey === LINODE_REGION) {
+        return supportedLinodeRegions;
+      }
+      return supportedRegions.filter(({ id }) =>
+        filterUsingDependentFilters(resources, xFilter)?.some(
+          ({ region }) => region === id
+        )
+      );
+    }, [
+      filterKey,
+      supportedLinodeRegions,
+      supportedRegions,
+      resources,
+      xFilter,
+    ]);
 
-    const dependencyKey = JSON.stringify(
-      [...supportedLinodeRegions].sort((a, b) => a.id.localeCompare(b.id))
-    );
+    const dependencyKey = supportedLinodeRegions
+      .map((region) => region.id)
+      .sort()
+      .join(',');
 
     React.useEffect(() => {
       if (disabled && !selectedRegion) {

@@ -13,7 +13,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -38,11 +38,11 @@ export const NodeBalancerDetail = () => {
     isLoading,
   } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const isNodeBalancerReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'nodebalancer',
-    id: nodebalancer?.id,
-  });
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    ['update_nodebalancer'],
+    nodebalancer?.id
+  );
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -90,13 +90,14 @@ export const NodeBalancerDetail = () => {
           },
           pathname: `/nodebalancers/${nodebalancer.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_nodebalancer}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         spacingBottom={4}
         title={nodebalancer.label}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-      {isNodeBalancerReadOnly && (
+      {!permissions.update_nodebalancer && (
         <Notice
           text={getRestrictedResourceText({
             resourceType: 'NodeBalancers',
