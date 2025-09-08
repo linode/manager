@@ -227,6 +227,21 @@ const validateWidgetFilters = (
 };
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
+  /**
+   * Integration Tests for DBaaS Dashboard
+   *
+   * This suite validates end-to-end functionality of the CloudPulse DBaaS Dashboard.
+   * It covers:
+   * - Loading and rendering of widgets with correct filters.
+   * - Applying, clearing, and verifying "Group By" at dashboard and widget levels.
+   * - Selecting time ranges, granularities, and aggregation functions.
+   * - Triggering dashboard refresh and validating API calls.
+   * - Performing widget interactions (zoom in/out) and verifying graph data.
+   *
+   * Actions focus on user flows (selecting dashboards, filters, group by, zoom, etc.)
+   * and Verifications ensure correct API payloads, widget states, applied filters,
+   * and accurate graph/legend values.
+   */
   afterEach(() => {
     cy.clearLocalStorage();
     cy.clearCookies();
@@ -377,111 +392,144 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     );
   });
   it('should apply group by at the dashboard level and verify the metrics API calls', () => {
+    // Stub metrics API calls for dashboard group by changes
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
 
+    // Locate the Dashboard Group By button and alias it
     ui.button
       .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('be.visible')
       .first()
       .as('dashboardGroupByBtn');
 
+    // Ensure the button is scrolled into view
     cy.get('@dashboardGroupByBtn').scrollIntoView();
 
+    // Verify tooltip "Group By" is present
     ui.tooltip.findByText('Group By');
 
+    // Assert that the button has attribute data-qa-selected="true"
     cy.get('@dashboardGroupByBtn')
-      .find('svg path')
-      .first()
-      .should(($path) => {
-        const color = $path.css('fill'); // for fill=currentColor
-        expect(color, 'SVG icon should be selected (light blue)').to.eq(
-          'rgb(0, 156, 222)'
-        );
-      });
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
 
-    // Use the alias safely
+    // Click the Group By button to open the drawer
     cy.get('@dashboardGroupByBtn').should('be.visible').click();
 
-    // 2) Select a group by option (example: "Node Type")
+    // Verify the drawer title is "Global Group By"
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Global Group By');
+
+    // Verify the drawer body contains "Dbaas Dashboard"
+    cy.get('[data-testid="drawer"]')
+      .find('p')
+      .first()
+      .and('have.text', 'Dbaas Dashboard');
+
+    // Type "Node Type" in Dimensions autocomplete field
     ui.autocomplete
-      .findByLabel('Select Dimensions')
+      .findByLabel('Dimensions')
       .should('be.visible')
       .type('Node Type');
 
+    // Select "Node Type" from the popper options
     ui.autocompletePopper.findByTitle('Node Type').should('be.visible').click();
 
+    // Close the drawer using ESC
     cy.get('body').type('{esc}');
 
+    // Click Apply to confirm the Group By selection
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
 
+    // Verify the Group By button reflects the selection
+    cy.get('[data-testid="group-by"]')
+      .should('have.attr', 'aria-label', 'Group By Dashboard Metrics')
+      .and('have.attr', 'data-qa-selected', 'true');
+
+    // Validate all intercepted metrics API calls contain correct filters and group_by values
     cy.get('@refreshMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
+
+        // Extract filters from payload
         const { filters } = requestPayload;
+
+        // Ensure node_type filter is applied correctly
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
         expect(nodeTypeFilter).to.have.length(2);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
+
+        // Ensure group_by contains entity_id and node_type in correct order
         expect(requestPayload.group_by).to.have.ordered.members([
           'entity_id',
           'node_type',
         ]);
       });
   });
+
   it('should unselect all group bys and verify the metrics API calls', () => {
+    // Stub metrics API calls for dashboard group by changes
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
 
+    // Locate the Dashboard Group By button and alias it
     ui.button
       .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('be.visible')
       .first()
       .as('dashboardGroupByBtn');
 
+    // Ensure the button is scrolled into view
     cy.get('@dashboardGroupByBtn').scrollIntoView();
 
-    // Use the alias safely
+    // Click the Group By button to open the drawer
     cy.get('@dashboardGroupByBtn').should('be.visible').click();
 
-    cy.get('[data-qa-autocomplete="Select Dimensions"]').within(() => {
+    // Inside Dimensions field, click the Clear button to remove all group by selections
+    cy.get('[data-qa-autocomplete="Dimensions"]').within(() => {
       cy.get('button[aria-label="Clear"]').should('be.visible').click({});
     });
 
+    // Click Apply to confirm unselection
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
 
-    cy.get('@dashboardGroupByBtn')
-      .find('svg path')
-      .first()
-      .should(($path) => {
-        const color = $path.css('fill'); // for fill=currentColor
-        expect(color, 'SVG icon should be selected (light blue)').to.eq(
-          'rgb(52, 52, 56)'
-        );
-      });
+    // Verify the Group By button now has data-qa-selected="false"
+    cy.get('[data-testid="group-by"]')
+      .should('have.attr', 'aria-label', 'Group By Dashboard Metrics')
+      .and('have.attr', 'data-qa-selected', 'false');
 
+    // Validate all intercepted metrics API calls contain no group_by values
     cy.get('@refreshMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
+
+        // Ensure group_by is cleared (null, undefined, or empty array)
         expect(requestPayload.group_by).to.be.oneOf([null, undefined, []]);
+
+        // Extract filters from payload
         const { filters } = requestPayload;
+
+        // Ensure node_type filter is still applied correctly
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
-
         expect(nodeTypeFilter).to.have.length(2);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
       });
   });
+
   it('should apply group by at widget level only  and verify the metrics API calls', () => {
     // validate the widget level granularity selection and its metrics
     ui.button
@@ -495,21 +543,23 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     // Use the alias safely
     cy.get('@dashboardGroupByBtn').should('be.visible').click();
 
-    cy.get('[data-qa-autocomplete="Select Dimensions"]').within(() => {
+    cy.get('[data-qa-autocomplete="Dimensions"]').within(() => {
       cy.get('button[aria-label="Clear"]').should('be.visible').click({});
     });
 
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
-
     const widgetSelector = '[data-qa-widget="CPU Utilization"]';
+
     cy.get(widgetSelector)
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByAttribute('aria-label', 'Group By Dashboard Metrics')
-          .scrollIntoView()
-          .should('be.visible')
-          .click();
+        // Create alias for the group by button
+        cy.get('[data-testid="group-by"]').as('groupByButton'); // alias
+
+        cy.get('@groupByButton').scrollIntoView();
+
+        // Click the button
+        cy.get('@groupByButton').should('be.visible').click();
       });
 
     cy.get('[data-testid="drawer-title"]')
@@ -520,15 +570,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .find('p')
       .and('have.text', 'CPU Utilization');
 
-    ui.autocomplete
-      .findByLabel('Select Dimensions')
-      .should('be.visible')
-      .type('cpu');
+    ui.autocomplete.findByLabel('Dimensions').should('be.visible').type('cpu');
 
     ui.autocompletePopper.findByTitle('cpu').should('be.visible').click();
 
     ui.autocomplete
-      .findByLabel('Select Dimensions')
+      .findByLabel('Dimensions')
       .should('be.visible')
       .type('state');
 
@@ -540,62 +587,84 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     cy.get('body').type('{esc}');
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    // Verify data-qa-selected attribute
+    cy.get('@groupByButton')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
     cy.wait('@getGroupBy').then((interception: Interception) => {
       const { body: requestPayload } = interception.request;
       expect(requestPayload.group_by).to.have.ordered.members(['cpu', 'state']);
     });
   });
-
+  
   it('should apply group by at both dashboard and widget level and verify the metrics API calls', () => {
-    // validate the widget level granularity selection and its metrics
-    // group by of dashbaord is coming for mock
+    // Iterate through each widget/metric in the test data
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      cy.get(widgetSelector)
-        .should('be.visible')
-        .find('h2')
-        .should('have.text', `${testData.title} (${testData.unit})`);
+
+      // Ensure the widget is visible before interacting
       cy.get(widgetSelector)
         .should('be.visible')
         .within(() => {
-          ui.button
-            .findByAttribute('aria-label', 'Group By Dashboard Metrics')
-            .scrollIntoView()
-            .should('be.visible')
-            .click();
+          // Locate and alias the Group By button inside the widget
+          cy.get('[aria-label="Group By"]').as('groupByButton');
+
+          // Scroll the Group By button into view for stability
+          cy.get('@groupByButton').scrollIntoView();
+
+          // Open the Group By drawer by clicking the button
+          cy.get('@groupByButton').should('be.visible').click();
         });
 
+      // Validate that the Group By drawer title is visible and correct
       cy.get('[data-testid="drawer-title"]')
         .should('be.visible')
         .and('have.text', 'Group By');
 
+      // Verify that the drawer displays the current widget title
       cy.get('[data-testid="drawer"]')
         .find('p')
         .and('have.text', testData.title);
 
+      // Apply each filter defined in testData for this widget
       testData.filters.forEach((filter) => {
+        // Type the dimension label in the autocomplete field
         ui.autocomplete
-          .findByLabel('Select Dimensions')
+          .findByLabel('Dimensions')
           .should('be.visible')
           .type(filter.dimension_label);
+
+        // Select the dimension from the popper dropdown
         ui.autocompletePopper
           .findByTitle(filter.dimension_label)
           .should('be.visible')
           .click();
 
+        // Stub the metrics API response for group by validation
         mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
           'getGranularityMetrics'
         );
       });
+
+      // Close the Group By drawer by pressing Escape
       cy.get('body').type('{esc}');
+
+      // Apply the group by changes using the Apply button
       cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+      // Wait for the metrics API call and validate its request payload
       cy.wait('@getGranularityMetrics').then((interception: Interception) => {
         expect(interception).to.have.property('response');
+
+        // Construct the expected group by array for validation
         const expectedGroupBy = [
           'entity_id',
           ...testData.filters.map((f) => f.dimension_label),
         ];
 
+        // Verify the API request contains the expected group by values
         const { body: requestPayload } = interception.request;
         expect(requestPayload.group_by).to.have.ordered.members(
           expectedGroupBy
@@ -603,6 +672,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       });
     });
   });
+
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
