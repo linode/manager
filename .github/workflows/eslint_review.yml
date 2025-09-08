@@ -18,6 +18,7 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
+          node-version-file: "package.json"
           cache: "pnpm"
       - run: pnpm install
       - uses: abailly-akamai/action-eslint@8ad68ba04fa60924ef7607b07deb5989f38f5ed6 # v1.0.2
