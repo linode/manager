@@ -31,7 +31,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
     readOnly,
   } = props;
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'linode',
     ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
     linodeId,
@@ -106,6 +106,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Disk ${disk.label}`}
+      loading={isLoading}
       onOpen={() => setIsOpen(true)}
     />
   );
