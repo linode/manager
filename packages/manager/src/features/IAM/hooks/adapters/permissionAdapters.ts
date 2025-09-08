@@ -3,6 +3,7 @@ import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
 import { nodeBalancerGrantsToPermissions } from './nodeBalancerGrantsToPermissions';
 import { volumeGrantsToPermissions } from './volumeGrantsToPermissions';
+import { vpcGrantsToPermissions } from './vpcGrantsToPermissions';
 
 import type { EntityBase } from '../usePermissions';
 import type {
@@ -43,6 +44,10 @@ export const entityPermissionMapFrom = (
         entity?.permissions,
         profile?.restricted
       ) as PermissionMap;
+      const vpcPermissionsMap = vpcGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
 
       /** Add entity permissions to map */
       switch (grantType) {
@@ -57,6 +62,9 @@ export const entityPermissionMapFrom = (
           break;
         case 'volume':
           entityPermissionsMap[entity.id] = volumePermissionsMap;
+          break;
+        case 'vpc':
+          entityPermissionsMap[entity.id] = vpcPermissionsMap;
           break;
       }
     });
@@ -77,6 +85,7 @@ export const fromGrants = (
   const linode = grants?.linode.find((f) => f.id === entityId);
   const volume = grants?.volume.find((f) => f.id === entityId);
   const nodebalancer = grants?.nodebalancer.find((f) => f.id === entityId);
+  const vpc = grants?.vpc.find((f) => f.id === entityId);
 
   let usersPermissionsMap = {} as PermissionMap;
 
@@ -109,6 +118,12 @@ export const fromGrants = (
     case 'volume':
       usersPermissionsMap = volumeGrantsToPermissions(
         volume?.permissions,
+        isRestricted
+      ) as PermissionMap;
+      break;
+    case 'vpc':
+      usersPermissionsMap = vpcGrantsToPermissions(
+        vpc?.permissions,
         isRestricted
       ) as PermissionMap;
       break;

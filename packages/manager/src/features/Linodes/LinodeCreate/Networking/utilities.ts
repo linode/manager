@@ -192,11 +192,11 @@ export const getDefaultFirewallForInterfacePurpose = (
   }
 
   if (purpose === 'public') {
-    return firewallSettings.default_firewall_ids.public_interface;
+    return firewallSettings.default_firewall_ids?.public_interface;
   }
 
   if (purpose === 'vpc') {
-    return firewallSettings.default_firewall_ids.vpc_interface;
+    return firewallSettings.default_firewall_ids?.vpc_interface;
   }
 
   return null;
