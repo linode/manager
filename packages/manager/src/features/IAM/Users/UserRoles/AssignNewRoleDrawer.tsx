@@ -23,6 +23,8 @@ import {
 } from '../../Shared/constants';
 import {
   getAllRoles,
+  isAccountRole,
+  isEntityRole,
   mergeAssignedRolesIntoExistingRoles,
 } from '../../Shared/utilities';
 
@@ -30,11 +32,16 @@ import type { AssignNewRoleFormValues } from '../../Shared/utilities';
 import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
+  assignedRoles?: IamUserRoles;
   onClose: () => void;
   open: boolean;
 }
 
-export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
+export const AssignNewRoleDrawer = ({
+  assignedRoles,
+  onClose,
+  open,
+}: Props) => {
   const theme = useTheme();
   const { username } = useParams({
     from: '/iam/users/$username',
@@ -69,8 +76,28 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     if (!accountRoles) {
       return [];
     }
-    return getAllRoles(accountRoles);
-  }, [accountRoles]);
+    return getAllRoles(accountRoles).filter((role) => {
+      // for each role type, check if:
+      // 1. the role is not already assigned to the user
+      // 2. the role is not already in the form's roles array
+      if (isAccountRole(role)) {
+        return (
+          !assignedRoles?.account_access.includes(role.value) &&
+          !roles.some((r) => r.role?.value === role.value)
+        );
+      }
+
+      if (isEntityRole(role)) {
+        return !assignedRoles?.entity_access.some(
+          (entity) =>
+            entity.roles.includes(role.value) &&
+            !roles.some((r) => r.role?.value === role.value)
+        );
+      }
+
+      return true;
+    });
+  }, [accountRoles, assignedRoles, roles]);
 
   const { mutateAsync: updateUserRoles, isPending } =
     useUserRolesMutation(username);
