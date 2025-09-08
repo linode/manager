@@ -125,6 +125,7 @@ describe('SubnetLinodeRow', () => {
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
+            canUpdateVPC={true}
             handlePowerActionsLinode={handlePowerActionsLinode}
             handleUnassignLinode={handleUnassignLinode}
             isVPCLKEEnterpriseCluster={false}
@@ -300,6 +301,7 @@ describe('SubnetLinodeRow', () => {
     const { getByRole, getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
+          canUpdateVPC={true}
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}

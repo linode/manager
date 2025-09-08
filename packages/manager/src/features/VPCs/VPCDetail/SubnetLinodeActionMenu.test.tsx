@@ -35,6 +35,7 @@ const props = {
   isOffline: false,
   isRebootNeeded: false,
   showPowerButton: true,
+  canUpdateVPC: true,
 };
 
 describe('SubnetActionMenu', () => {
