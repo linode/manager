@@ -4,6 +4,7 @@ import {
   Box,
   FormControl,
   FormControlLabel,
+  NewFeatureChip,
   Radio,
   RadioGroup,
   Stack,
@@ -13,6 +14,7 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
@@ -33,6 +35,8 @@ export const InterfaceGeneration = () => {
   >({
     name: 'interface_generation',
   });
+
+  const flags = useFlags();
 
   const { data: accountSettings } = useAccountSettings();
 
@@ -70,7 +74,8 @@ export const InterfaceGeneration = () => {
                     <Typography sx={(theme) => ({ font: theme.font.bold })}>
                       Linode Interfaces
                     </Typography>
-                    <BetaChip />
+                    {flags.linodeInterfaces?.beta && <BetaChip />}
+                    {flags.linodeInterfaces?.new && <NewFeatureChip />}
                   </Stack>
                   <Typography>
                     Linode Interfaces are the preferred option for VPCs and are
