@@ -72,3 +72,6 @@ export const VPC_DETAILS_ROUTE = '/vpcs/$vpcId';
 export const VPC_CREATE_ROUTE = '/vpcs/create';
 export const SUBNET_ACTION_PATH =
   '/vpcs/$vpcId/subnets/$subnetId/$subnetAction';
+
+export const RFC1918HelperText =
+  'The VPC can use the entire RFC 1918 specified range for subnetting except for 192.168.128.0/17.';
