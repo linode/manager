@@ -489,9 +489,6 @@ importers:
       factory.ts:
         specifier: ^0.5.1
         version: 0.5.2
-      glob:
-        specifier: ^10.3.1
-        version: 10.4.5
       globals:
         specifier: ^16.0.0
         version: 16.0.0
