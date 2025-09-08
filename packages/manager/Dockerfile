@@ -49,7 +49,7 @@ ARG CYPRESS_VERSION
 ARG NODE_VERSION
 ARG CHROME_VERSION
 
-RUN pnpm bun
+RUN npm install -g pnpm bun
 
 USER node
 WORKDIR /home/node/app
