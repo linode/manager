@@ -1,6 +1,15 @@
 import { transformDimensionValue } from '../Utils/utils';
+import {
+  LINODE_DIMENSION_LABEL,
+  transformationAllowedOperators,
+  VPC_SUBNET_DIMENSION_LABEL,
+} from './constants';
 
-import type { CloudPulseServiceType } from '@linode/api-v4';
+import type {
+  AlertDefinitionMetricCriteria,
+  CloudPulseServiceType,
+  DimensionFilterOperatorType,
+} from '@linode/api-v4';
 /**
  * @param value The dimension value to be transformed.
  * @param serviceType The service type of the alert required for the transformation.
@@ -38,4 +47,69 @@ export const resolveIds = (
       return lookupMap[trimmedId] ?? trimmedId;
     })
     .join(', ');
+};
+
+/**
+ * @param ruleCriteria The rule criteria containing the alert definition metric criteria.
+ * @param label The dimension label to check within the criteria.
+ * @param transformationAllowedOperators The list of operators that allow transformation.
+ * @returns boolean indicating if the check is required.
+ */
+export const isCheckRequired = (
+  ruleCriteria: { rules: AlertDefinitionMetricCriteria[] },
+  label: string
+) => {
+  return (
+    ruleCriteria.rules?.some((rule) =>
+      rule.dimension_filters?.some(
+        ({ operator, dimension_label: dimensionLabel }) =>
+          dimensionLabel === label &&
+          transformationAllowedOperators.includes(operator ?? '')
+      )
+    ) ?? false
+  );
+};
+
+/**
+ * @param dimensionFilterKey The dimension label extracted from the Dimension Data.
+ * @param dimensionOperator The dimension filter operator.
+ * @param value The dimension filter value to be resolved and transformed.
+ * @param serviceType Service type of the alert.
+ * @param linodeMap linode id to label map
+ * @param vpcSubnetMap vpc subent id to label map.
+ * @returns string value with the resolved names for the dimension value and transformed.
+ */
+export const getResolvedDimensionValue = (
+  dimensionFilterKey: string,
+  dimensionOperator: DimensionFilterOperatorType,
+  value: null | string | undefined,
+  serviceType: CloudPulseServiceType,
+  linodeMap: Record<string, string>,
+  vpcSubnetMap: Record<string, string>
+): string => {
+  if (!value) return '';
+
+  let resolvedValue = value;
+
+  if (
+    dimensionFilterKey === LINODE_DIMENSION_LABEL &&
+    transformationAllowedOperators.includes(dimensionOperator)
+  ) {
+    resolvedValue = resolveIds(value, linodeMap);
+  }
+
+  if (
+    dimensionFilterKey === VPC_SUBNET_DIMENSION_LABEL &&
+    transformationAllowedOperators.includes(dimensionOperator)
+  ) {
+    resolvedValue = resolveIds(value, vpcSubnetMap);
+  }
+
+  return transformationAllowedOperators.includes(dimensionOperator)
+    ? transformCommaSeperatedDimensionValues(
+        resolvedValue,
+        serviceType,
+        dimensionFilterKey
+      )
+    : resolvedValue;
 };

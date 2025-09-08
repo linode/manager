@@ -506,3 +506,33 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   updated: new Date().toISOString(),
   updated_by: 'system',
 });
+
+export const firewallMetricRulesFactory =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Current connections',
+    metric: 'fw_active_connections',
+    unit: 'count',
+    aggregate_function: 'avg',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'VPC-Subnet',
+        dimension_label: 'vpc_subnet_id',
+        operator: 'in',
+        value: '1,2',
+      },
+      {
+        label: 'Linode',
+        dimension_label: 'linode_id',
+        operator: 'in',
+        value: '1,2',
+      },
+      {
+        label: 'Linode Region',
+        dimension_label: 'region_id',
+        operator: 'in',
+        value: 'pl-labkrk-2,ap-west',
+      },
+    ],
+  });
