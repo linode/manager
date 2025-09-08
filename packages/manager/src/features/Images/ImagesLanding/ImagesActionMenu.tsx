@@ -29,6 +29,8 @@ export const ImagesActionMenu = (props: Props) => {
 
   const { description, id, label, status } = image;
 
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   const {
     onCancelFailed,
     onDelete,
@@ -38,10 +40,11 @@ export const ImagesActionMenu = (props: Props) => {
     onRebuild,
   } = handlers;
 
-  const { data: imagePermissions } = usePermissions(
+  const { data: imagePermissions, isLoading } = usePermissions(
     'image',
     ['update_image', 'delete_image', 'replicate_image'],
-    id
+    id,
+    isOpen
   );
   const { data: linodePermissions } = usePermissions('account', [
     'create_linode',
@@ -152,6 +155,10 @@ export const ImagesActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Image ${image.label}`}
+      loading={isLoading}
+      onOpen={() => {
+        setIsOpen(true);
+      }}
     />
   );
 };
