@@ -29,7 +29,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
-import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
+import {
+  RFC1918HelperText,
+  VPC_CREATE_FORM_VPC_HELPER_TEXT,
+} from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
@@ -40,13 +43,6 @@ interface Props {
   isDrawer?: boolean;
   regions: Region[];
 }
-
-const RFC1918HelperText = (
-  <Typography>
-    The VPC can use the entire RFC 1918 specified range for subnetting except
-    for 192.168.128.0/17.
-  </Typography>
-);
 
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, isDrawer, regions } = props;
@@ -181,7 +177,7 @@ export const VPCTopSectionContent = (props: Props) => {
                             <Typography>
                               The VPC uses IPv4 addresses only.
                             </Typography>
-                            {RFC1918HelperText}
+                            <Typography>{RFC1918HelperText}</Typography>
                           </Stack>
                         }
                         width={250}
@@ -224,7 +220,7 @@ export const VPCTopSectionContent = (props: Props) => {
                             <Typography>
                               The VPC supports both IPv4 and IPv6 addresses.
                             </Typography>
-                            {RFC1918HelperText}
+                            <Typography>{RFC1918HelperText}</Typography>
                             <Typography>
                               For IPv6, the VPC is assigned an IPv6 prefix
                               length of <Code>/52</Code> by default.
