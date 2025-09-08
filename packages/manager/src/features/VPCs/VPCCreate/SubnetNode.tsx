@@ -38,10 +38,10 @@ export const SubnetNode = (props: Props) => {
       }`
     : undefined;
 
-  const numberOfAvailableIPv4Linodes = numberOfAvailIPs
-    ? numberOfAvailIPs - RESERVED_IP_NUMBER
-    : 0;
-
+  const numberOfAvailableIPv4Linodes =
+    numberOfAvailIPs && numberOfAvailIPs > 4
+      ? numberOfAvailIPs - RESERVED_IP_NUMBER
+      : 0;
   const showRemoveButton = !(isCreateVPCDrawer && idx === 0);
 
   return (
