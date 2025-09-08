@@ -380,6 +380,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
+
     ui.button
       .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('be.visible')
@@ -387,6 +388,18 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .as('dashboardGroupByBtn');
 
     cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    ui.tooltip.findByText('Group By');
+
+    cy.get('@dashboardGroupByBtn')
+      .find('svg path')
+      .first()
+      .should(($path) => {
+        const color = $path.css('fill'); // for fill=currentColor
+        expect(color, 'SVG icon should be selected (light blue)').to.eq(
+          'rgb(0, 156, 222)'
+        );
+      });
 
     // Use the alias safely
     cy.get('@dashboardGroupByBtn').should('be.visible').click();
@@ -442,6 +455,16 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
 
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    cy.get('@dashboardGroupByBtn')
+      .find('svg path')
+      .first()
+      .should(($path) => {
+        const color = $path.css('fill'); // for fill=currentColor
+        expect(color, 'SVG icon should be selected (light blue)').to.eq(
+          'rgb(52, 52, 56)'
+        );
+      });
 
     cy.get('@refreshMetrics.all')
       .should('have.length', 4)
@@ -566,7 +589,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       });
       cy.get('body').type('{esc}');
       cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
-      cy.log('starting ---', testData.title);
       cy.wait('@getGranularityMetrics').then((interception: Interception) => {
         expect(interception).to.have.property('response');
         const expectedGroupBy = [
