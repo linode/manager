@@ -20,8 +20,6 @@
     }
   },
   "types": "./lib/index.d.ts",
-  "browser": "./lib/index.global.js",
-  "unpkg": "./lib/index.global.js",
   "files": [
     "lib"
   ],
