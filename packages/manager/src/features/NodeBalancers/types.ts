@@ -99,7 +99,7 @@ export interface NodeBalancerConfigPanelProps {
   onSslCertificateChange: (v: string) => void;
 
   onUdpCheckPortChange: (v: number) => void;
-  permissions?: Record<NodeBalancerConfigurationsPermissions, boolean>;
+  permissions?: Partial<Record<NodeBalancerConfigurationsPermissions, boolean>>;
 
   port: number;
   privateKey: string;
@@ -114,5 +114,9 @@ export interface NodeBalancerConfigPanelProps {
 
 type PermissionsSubset<T extends PermissionType> = T;
 export type NodeBalancerConfigurationsPermissions = PermissionsSubset<
-  'create_nodebalancer_config' | 'delete_nodebalancer' | 'update_nodebalancer'
+  | 'create_firewall'
+  | 'create_nodebalancer'
+  | 'create_nodebalancer_config'
+  | 'delete_nodebalancer'
+  | 'update_nodebalancer'
 >;

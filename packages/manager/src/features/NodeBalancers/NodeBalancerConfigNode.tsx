@@ -40,7 +40,7 @@ export interface NodeBalancerConfigNodeProps {
   onNodeModeChange: (nodeId: number, mode: NodeBalancerConfigNodeMode) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  permissions?: Record<NodeBalancerConfigurationsPermissions, boolean>;
+  permissions?: Partial<Record<NodeBalancerConfigurationsPermissions, boolean>>;
   removeNode: (nodeIndex: number) => void;
 }
 
@@ -90,6 +90,10 @@ export const NodeBalancerConfigNode = React.memo(
       node.errors
     );
 
+    const disabled =
+      permissions?.update_nodebalancer === false ||
+      permissions?.create_nodebalancer === false;
+
     return (
       <React.Fragment>
         <Grid data-qa-node size={12}>
@@ -118,7 +122,7 @@ export const NodeBalancerConfigNode = React.memo(
             >
               <TextField
                 data-qa-backend-ip-label
-                disabled={!permissions?.update_nodebalancer}
+                disabled={disabled}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.label}
                 inputId={`node-label-${configIdx}-${idx}`}
@@ -159,7 +163,7 @@ export const NodeBalancerConfigNode = React.memo(
               }}
             >
               <ConfigNodeIPSelect
-                disabled={!permissions?.update_nodebalancer}
+                disabled={disabled}
                 errorText={nodesErrorMap.address}
                 handleChange={onNodeAddressChange}
                 inputId={`ip-select-node-${configIdx}-${idx}`}
@@ -179,7 +183,7 @@ export const NodeBalancerConfigNode = React.memo(
             >
               <TextField
                 data-qa-backend-ip-port
-                disabled={!permissions?.update_nodebalancer}
+                disabled={disabled}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.port}
                 inputProps={{ 'data-node-idx': idx }}
@@ -199,7 +203,7 @@ export const NodeBalancerConfigNode = React.memo(
             >
               <TextField
                 data-qa-backend-ip-weight
-                disabled={!permissions?.update_nodebalancer}
+                disabled={disabled}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.weight}
                 inputProps={{ 'data-node-idx': idx }}
@@ -219,7 +223,7 @@ export const NodeBalancerConfigNode = React.memo(
                 }}
               >
                 <Select
-                  disabled={!permissions?.update_nodebalancer}
+                  disabled={disabled}
                   errorText={nodesErrorMap.mode}
                   label="Mode"
                   onChange={(_, option) => onNodeModeChange(idx, option.value)}
@@ -235,7 +239,10 @@ export const NodeBalancerConfigNode = React.memo(
             {!disallowRemoval && (
               <Box alignSelf="flex-end">
                 <Button
-                  disabled={!permissions?.delete_nodebalancer}
+                  disabled={
+                    permissions?.delete_nodebalancer === false ||
+                    permissions?.create_nodebalancer === false
+                  }
                   onClick={() => removeNode(idx)}
                 >
                   Remove

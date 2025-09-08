@@ -30,6 +30,7 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
     update_nodebalancer: true,
     delete_nodebalancer: true,
     create_nodebalancer_config: true,
+    create_nodebalancer: true,
   },
   healthCheckAttempts: 2,
   healthCheckInterval: 5,
@@ -340,5 +341,117 @@ describe('NodeBalancerConfigPanel', () => {
     await userEvent.type(checkPortField, '8080');
 
     expect(onChange).toHaveBeenCalledWith(8080);
+  });
+
+  it('should enable all fields for create mode if user has create_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={false}
+        permissions={{
+          create_nodebalancer: true,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).not.toHaveAttribute('aria-disabled', true);
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).not.toHaveAttribute('aria-disabled', true);
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).not.toHaveAttribute('aria-disabled', true);
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).not.toHaveAttribute('aria-disabled', true);
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', true);
+  });
+
+  it('should disable all fields for create mode if user does not have create_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={false}
+        permissions={{
+          create_nodebalancer: false,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).toBeDisabled();
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).toBeDisabled();
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).toBeDisabled();
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).toBeDisabled();
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).toBeDisabled();
+  });
+
+  it('should enable all fields for edit mode if user has update_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={true}
+        permissions={{
+          update_nodebalancer: true,
+          delete_nodebalancer: true,
+          create_nodebalancer_config: true,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).not.toHaveAttribute('aria-disabled', true);
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).not.toHaveAttribute('aria-disabled', true);
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).not.toHaveAttribute('aria-disabled', true);
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).not.toHaveAttribute('aria-disabled', true);
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', true);
+  });
+
+  it('should disable all fields for edit mode if user does not have update_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={true}
+        permissions={{
+          update_nodebalancer: false,
+          delete_nodebalancer: false,
+          create_nodebalancer_config: false,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).toBeDisabled();
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).toBeDisabled();
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).toBeDisabled();
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).toBeDisabled();
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).toBeDisabled();
   });
 });

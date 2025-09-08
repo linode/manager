@@ -80,7 +80,7 @@ interface Props {
   nodeBalancerRegion: string;
   nodeBalancerSubnetId?: number;
   nodeBalancerVpcId?: number;
-  permissions: Record<NodeBalancerConfigurationsPermissions, boolean>;
+  permissions: Partial<Record<NodeBalancerConfigurationsPermissions, boolean>>;
   queryClient: QueryClient;
 }
 

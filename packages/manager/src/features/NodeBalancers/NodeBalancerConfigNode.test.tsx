@@ -18,6 +18,7 @@ const props: NodeBalancerConfigNodeProps = {
     update_nodebalancer: true,
     delete_nodebalancer: true,
     create_nodebalancer_config: true,
+    create_nodebalancer: true,
   },
   disallowRemoval: false,
   hideModeSelect: false,
@@ -79,8 +80,29 @@ describe('NodeBalancerConfigNode', () => {
     expect(props.removeNode).toHaveBeenCalled();
   });
 
-  it('should disable "Remove" if user does not have delete_nodebalancer permission', () => {
-    const { queryByText } = renderWithTheme(
+  it('should enable all fields if user has update_nodebalancer permission for edit mode', () => {
+    const { getByLabelText, queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode
+        {...props}
+        permissions={{
+          create_nodebalancer_config: true,
+          delete_nodebalancer: true,
+          update_nodebalancer: true,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).not.toHaveAttribute('aria-disabled', true);
+
+    const labelField = getByLabelText('Label');
+    expect(labelField).not.toHaveAttribute('aria-disabled', true);
+
+    expect(queryByText('Remove')).not.toHaveAttribute('aria-disabled', true);
+  });
+
+  it('should disable all fields if user does not have update_nodebalancer permission for edit mode', () => {
+    const { getByLabelText, queryByText } = renderWithTheme(
       <NodeBalancerConfigNode
         {...props}
         permissions={{
@@ -90,6 +112,50 @@ describe('NodeBalancerConfigNode', () => {
         }}
       />
     );
+
+    const portField = getByLabelText('Port');
+    expect(portField).toBeDisabled();
+
+    const labelField = getByLabelText('Label');
+    expect(labelField).toBeDisabled();
+
+    expect(queryByText('Remove')).toBeDisabled();
+  });
+
+  it('should enable all fields if user has create_nodebalancer permission for create mode', () => {
+    const { getByLabelText, queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode
+        {...props}
+        permissions={{
+          create_nodebalancer: true,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).not.toHaveAttribute('aria-disabled', true);
+
+    const labelField = getByLabelText('Label');
+    expect(labelField).not.toHaveAttribute('aria-disabled', true);
+
+    expect(queryByText('Remove')).not.toHaveAttribute('aria-disabled', true);
+  });
+
+  it('should disable all fields if user does not have create_nodebalancer permission for create mode', () => {
+    const { getByLabelText, queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode
+        {...props}
+        permissions={{
+          create_nodebalancer: false,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).toBeDisabled();
+
+    const labelField = getByLabelText('Label');
+    expect(labelField).toBeDisabled();
 
     expect(queryByText('Remove')).toBeDisabled();
   });

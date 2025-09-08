@@ -58,6 +58,10 @@ export const NodeBalancerConfigPanel = (
     submitting,
   } = props;
 
+  const disabled = forEdit
+    ? !permissions?.update_nodebalancer
+    : !permissions?.create_nodebalancer;
+
   const onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPortChange(e.target.value);
 
@@ -140,14 +144,14 @@ export const NodeBalancerConfigPanel = (
   };
 
   const addNode = () => {
-    if (props.disabled) {
+    if (disabled) {
       return;
     }
     props.addNode();
   };
 
   const removeNode = (nodeIndex: number) => {
-    if (props.disabled) {
+    if (disabled) {
       return;
     }
     const { removeNode } = props;
@@ -218,7 +222,7 @@ export const NodeBalancerConfigPanel = (
         >
           <TextField
             data-qa-port
-            disabled={!permissions?.update_nodebalancer}
+            disabled={disabled}
             errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.port || errorMap.configs}
             helperText="The unique inbound port that this NodeBalancer configuration will listen on."
@@ -238,7 +242,7 @@ export const NodeBalancerConfigPanel = (
           }}
         >
           <Select
-            disabled={!permissions?.update_nodebalancer}
+            disabled={disabled}
             errorText={errorMap.protocol}
             helperText="Load balancing protocols: UDP and TCP (Layer 4); HTTP and HTTPS (Layer 7)."
             id={`protocol-${configIdx}`}
@@ -265,7 +269,7 @@ export const NodeBalancerConfigPanel = (
           <Autocomplete
             autoHighlight
             disableClearable
-            disabled={!permissions?.update_nodebalancer}
+            disabled={disabled}
             errorText={errorMap.algorithm}
             helperText="Controls how new connections are allocated across backend nodes."
             id={`algorithm-${configIdx}`}
@@ -306,7 +310,7 @@ export const NodeBalancerConfigPanel = (
           <Autocomplete
             autoHighlight
             disableClearable
-            disabled={!permissions?.update_nodebalancer}
+            disabled={disabled}
             errorText={errorMap.stickiness}
             helperText="Routes subsequent requests from the client to the same backend."
             id={`session-stickiness-${configIdx}`}
@@ -346,7 +350,7 @@ export const NodeBalancerConfigPanel = (
             }}
           >
             <Select
-              disabled={!permissions?.update_nodebalancer}
+              disabled={disabled}
               errorText={errorMap.proxy_protocol}
               helperText={
                 <>
@@ -387,7 +391,7 @@ export const NodeBalancerConfigPanel = (
               <TextField
                 data-qa-cert-field
                 data-testid="ssl-certificate"
-                disabled={!permissions?.update_nodebalancer}
+                disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_cert}
                 expand
@@ -408,7 +412,7 @@ export const NodeBalancerConfigPanel = (
               <TextField
                 data-qa-private-key-field
                 data-testid="private-key"
-                disabled={!permissions?.update_nodebalancer}
+                disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_key}
                 expand
@@ -425,13 +429,8 @@ export const NodeBalancerConfigPanel = (
       </Grid>
       <Divider spacingBottom={24} spacingTop={24} />
       <Grid container spacing={2}>
-        <ActiveCheck errorMap={errorMap} {...props} />
-        {protocol !== 'udp' && (
-          <PassiveCheck
-            {...props}
-            disabled={!permissions?.update_nodebalancer}
-          />
-        )}
+        <ActiveCheck errorMap={errorMap} {...props} disabled={disabled} />
+        {protocol !== 'udp' && <PassiveCheck {...props} disabled={disabled} />}
       </Grid>
       <Divider spacingBottom={24} spacingTop={24} />
       <Grid container spacing={2}>
@@ -477,7 +476,11 @@ export const NodeBalancerConfigPanel = (
             ))}
             <Button
               buttonType="outlined"
-              disabled={!permissions?.create_nodebalancer_config}
+              disabled={
+                forEdit
+                  ? !permissions?.create_nodebalancer_config
+                  : !permissions?.create_nodebalancer
+              }
               onClick={addNode}
             >
               Add a Node
@@ -508,7 +511,9 @@ export const NodeBalancerConfigPanel = (
           }
           secondaryButtonProps={{
             'data-testid': 'delete-config',
-            disabled: !permissions?.delete_nodebalancer,
+            disabled: forEdit
+              ? !permissions?.delete_nodebalancer
+              : !permissions?.create_nodebalancer,
             label: 'Delete',
             onClick: props.onDelete,
           }}
