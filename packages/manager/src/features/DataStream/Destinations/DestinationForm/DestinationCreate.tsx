@@ -63,7 +63,7 @@ export const DestinationCreate = () => {
         return enqueueSnackbar(
           getAPIErrorOrDefault(
             error,
-            `There was an issue creating your destination`
+            'There was an issue creating your destination'
           )[0].reason,
           {
             variant: 'error',

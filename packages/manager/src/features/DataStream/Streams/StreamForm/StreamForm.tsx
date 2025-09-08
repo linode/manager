@@ -47,7 +47,7 @@ export const StreamForm = (props: StreamFormProps) => {
   } = useVerifyDestination();
 
   const form = useFormContext<StreamAndDestinationFormType>();
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, trigger } = form;
 
   const selectedStreamType = useWatch({
     control,
@@ -138,6 +138,14 @@ export const StreamForm = (props: StreamFormProps) => {
     }
   };
 
+  const handleTestConnection = async () => {
+    const isValid = await trigger(['destination']);
+
+    if (isValid) {
+      await verifyDestination(destination);
+    }
+  };
+
   return (
     <form>
       <Grid container spacing={2}>
@@ -160,9 +168,7 @@ export const StreamForm = (props: StreamFormProps) => {
             isTesting={isVerifyingDestination}
             mode={mode}
             onSubmit={handleSubmit(onSubmit)}
-            onTestConnection={handleSubmit(() =>
-              verifyDestination(destination)
-            )}
+            onTestConnection={handleTestConnection}
           />
         </Grid>
       </Grid>

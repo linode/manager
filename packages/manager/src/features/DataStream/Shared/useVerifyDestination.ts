@@ -36,9 +36,9 @@ export const useVerifyDestination = () => {
   };
 
   return {
-    verifyDestination,
-    isPending,
     destinationVerified,
+    isPending,
     setDestinationVerified,
+    verifyDestination,
   };
 };

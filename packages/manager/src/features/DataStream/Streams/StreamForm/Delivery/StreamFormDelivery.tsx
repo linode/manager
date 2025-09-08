@@ -42,7 +42,8 @@ const controlPaths = {
 
 export const StreamFormDelivery = () => {
   const theme = useTheme();
-  const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
+  const { control, setValue, clearErrors } =
+    useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
 
   const [creatingNewDestination, setCreatingNewDestination] =
@@ -124,6 +125,8 @@ export const StreamFormDelivery = () => {
               const selectedDestination = id ? findDestination(id) : undefined;
               if (selectedDestination) {
                 setValue('destination.details', selectedDestination.details);
+              } else {
+                clearErrors('destination.details');
               }
 
               field.onChange(newValue?.label || newValue);

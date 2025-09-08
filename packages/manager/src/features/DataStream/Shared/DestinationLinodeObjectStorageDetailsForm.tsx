@@ -84,7 +84,10 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
             isGeckoLAEnabled={isGeckoLAEnabled}
             label="Region"
             onBlur={field.onBlur}
-            onChange={(_, region) => field.onChange(region.id)}
+            onChange={(_, region) => {
+              field.onChange(region.id);
+              field.onBlur();
+            }}
             regionFilter="core"
             regions={regions ?? []}
             value={field.value}

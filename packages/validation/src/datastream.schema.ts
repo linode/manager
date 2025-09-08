@@ -122,6 +122,7 @@ const detailsShouldBeEmpty = (schema: MixedSchema) =>
 
 const streamSchemaBase = object({
   label: string()
+    .min(3, 'Stream name must have at least 3 characters')
     .max(maxLength, maxLengthMessage)
     .required('Stream name is required.'),
   status: mixed<'active' | 'inactive'>().oneOf(['active', 'inactive']),
@@ -148,7 +149,7 @@ export const updateStreamSchema = streamSchemaBase.shape({
 
 export const streamAndDestinationFormSchema = object({
   stream: streamSchemaBase.shape({
-    destinations: array().of(number()).required(),
+    destinations: array().of(number().required()).required(),
     details: mixed<InferType<typeof streamDetailsSchema> | object>()
       .when('type', {
         is: 'lke_audit_logs',
