@@ -81,7 +81,11 @@ export const CloudPulseRegionSelect = React.memo(
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
-    const linodeRegionIds = useFetchOptions({
+    const {
+      values: linodeRegions,
+      isLoading: isLinodeRegionIdLoading,
+      isError: isLinodeRegionIdError,
+    } = useFetchOptions({
       dimensionLabel: filterKey,
       entities: selectedEntities,
       regions,
@@ -91,9 +95,9 @@ export const CloudPulseRegionSelect = React.memo(
 
     const supportedLinodeRegions = React.useMemo(() => {
       return (
-        regions?.filter((region) => linodeRegionIds?.includes(region.id)) ?? []
+        regions?.filter((region) => linodeRegions?.includes(region.id)) ?? []
       );
-    }, [regions, linodeRegionIds]);
+    }, [regions, linodeRegions]);
 
     const supportedRegions = React.useMemo<Region[]>(() => {
       return filterRegionByServiceType('metrics', regions, serviceType);
