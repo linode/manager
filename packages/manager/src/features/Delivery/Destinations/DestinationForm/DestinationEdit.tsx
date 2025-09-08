@@ -5,7 +5,7 @@ import {
   useUpdateDestinationMutation,
 } from '@linode/queries';
 import { Box, CircleProgress, ErrorState } from '@linode/ui';
-import { destinationSchema } from '@linode/validation';
+import { destinationFormSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -56,7 +56,7 @@ export const DestinationEdit = () => {
       },
     },
     mode: 'onBlur',
-    resolver: yupResolver(destinationSchema),
+    resolver: yupResolver(destinationFormSchema),
   });
 
   useEffect(() => {

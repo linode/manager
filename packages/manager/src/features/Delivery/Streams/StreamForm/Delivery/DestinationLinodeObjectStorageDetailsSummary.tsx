@@ -1,9 +1,17 @@
+import { streamType } from '@linode/api-v4';
 import { useRegionsQuery } from '@linode/queries';
+import { TooltipIcon } from '@linode/ui';
 import React from 'react';
 
+import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
 import { LabelValue } from 'src/features/Delivery/Shared/LabelValue';
 
 import type { LinodeObjectStorageDetails } from '@linode/api-v4';
+
+const sxTooltipIcon = {
+  marginLeft: '4px',
+  padding: '0px',
+};
 
 export const DestinationLinodeObjectStorageDetailsSummary = (
   props: LinodeObjectStorageDetails
@@ -28,7 +36,16 @@ export const DestinationLinodeObjectStorageDetailsSummary = (
         label="Secret Access Key"
         value="*****************"
       />
-      <LabelValue label="Log Path" value={path} />
+      <LabelValue label="Log Path" value={path}>
+        {!path && (
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={sxTooltipIcon}
+            text={`Default paths: ${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/{account}/{partition}/{%Y/%m/%d/};
+            ${getStreamTypeOption(streamType.AuditLogs)?.label} - {stream_type}/{log_type}/{account}/{%Y/%m/%d/}`}
+          />
+        )}
+      </LabelValue>
     </>
   );
 };
