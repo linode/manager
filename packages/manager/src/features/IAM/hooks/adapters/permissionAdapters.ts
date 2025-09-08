@@ -83,7 +83,9 @@ export const fromGrants = (
   // image IDs are stored as strings containing a private or public prefix. ex: "private/123456"
   // we need to extract the image ID from the string tp match the integer ID from the grants
   const imageId =
-    typeof entityId === 'string' ? entityId.split('/')[1] : entityId;
+    typeof entityId === 'string' && entityId.includes('/')
+      ? entityId.split('/')[1]
+      : entityId;
   /** Find the entity in the grants */
   const firewall = grants?.firewall.find((f) => f.id === entityId);
   const image = grants?.image.find((f) => f.id.toString() === imageId);
