@@ -41,7 +41,7 @@ CMD pnpm start:manager:ci
 #
 # Uses Cypress factory image. For more information, see:
 # https://github.com/cypress-io/cypress-docker-images/tree/master/factory#usage
-FROM ${IMAGE_REGISTRY}/cypress/factory:5.2.1 AS e2e-build
+FROM ${IMAGE_REGISTRY}/cypress/factory:6.0.1 AS e2e-build
 ARG CYPRESS_VERSION
 ARG NODE_VERSION
 # Add Chrome apt repo
