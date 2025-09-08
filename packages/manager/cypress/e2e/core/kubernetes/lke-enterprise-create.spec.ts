@@ -100,6 +100,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
           'Kubernetes',
           'Kubernetes Enterprise',
           'VPCs',
+          'VPC Dual Stack',
         ],
         id: 'us-iad',
         label: 'Washington, DC',
