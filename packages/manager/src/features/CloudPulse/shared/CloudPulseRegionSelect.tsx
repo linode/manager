@@ -91,7 +91,10 @@ export const CloudPulseRegionSelect = React.memo(
       regions,
       serviceType,
       type: 'metrics',
-    }).map((option: Item<string, string>) => option.value);
+    });
+    const linodeRegionIds = linodeRegions.map(
+      (option: Item<string, string>) => option.value
+    );
 
     const supportedLinodeRegions = React.useMemo(() => {
       return (
