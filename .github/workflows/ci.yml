@@ -34,7 +34,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter ${{ matrix.package }} lint
@@ -49,7 +48,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
@@ -69,7 +67,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v4
@@ -89,7 +86,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -113,7 +109,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
 
@@ -154,7 +149,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -177,7 +171,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/search test
@@ -192,7 +185,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/ui test
@@ -208,7 +200,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -228,7 +219,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -248,7 +238,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -272,7 +261,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/ui typecheck
@@ -288,7 +276,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -308,7 +295,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -328,7 +314,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -352,7 +337,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -381,7 +365,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
@@ -419,7 +402,6 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
           cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:

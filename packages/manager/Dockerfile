@@ -3,7 +3,7 @@
 ARG IMAGE_REGISTRY=docker.io
 
 # Node.js version to use.
-ARG NODE_VERSION=20.17.0
+ARG NODE_VERSION=22.19.0
 
 # Cypress version.
 ARG CYPRESS_VERSION=14.3.0
