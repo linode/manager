@@ -1,6 +1,10 @@
 import { linodeConfigInterfaceFactory } from '@linode/utilities';
 
-import { getPrimaryInterfaceIndex } from './utilities';
+import {
+  getPrimaryInterfaceIndex,
+  isDiskDevice,
+  isVolumeDevice,
+} from './utilities';
 
 describe('getPrimaryInterfaceIndex', () => {
   it('returns null if there are no interfaces', () => {
@@ -32,5 +36,35 @@ describe('getPrimaryInterfaceIndex', () => {
     ];
 
     expect(getPrimaryInterfaceIndex(interfaces)).toBe(null);
+  });
+});
+
+describe('isDiskDevice', () => {
+  it('returns true if the device defines a disk id', () => {
+    expect(isDiskDevice({ disk_id: 2, volume_id: null })).toBe(true);
+  });
+
+  it('returns false if the device does not define a disk id', () => {
+    expect(isDiskDevice({ disk_id: null, volume_id: 1 })).toBe(false);
+  });
+
+  it('returns false if the device is malformed', () => {
+    // @ts-expect-error testing an invalid device
+    expect(isDiskDevice({ disk_id: null, volume_id: null })).toBe(false);
+  });
+});
+
+describe('isVolumeDevice', () => {
+  it('returns true if the device defines a volume id', () => {
+    expect(isVolumeDevice({ disk_id: null, volume_id: 1 })).toBe(true);
+  });
+
+  it('returns false if the device does not define a volume id', () => {
+    expect(isVolumeDevice({ disk_id: 5, volume_id: null })).toBe(false);
+  });
+
+  it('returns false if the device is malformed', () => {
+    // @ts-expect-error testing an invalid device
+    expect(isVolumeDevice({ disk_id: null, volume_id: null })).toBe(false);
   });
 });
