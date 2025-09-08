@@ -32,7 +32,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
     isLkeEnterprisePhase2DualStackFeatureEnabled,
   } = useIsLkeEnterpriseEnabled();
 
-  const { control, resetField, clearErrors } = useFormContext();
+  const { control, resetField, clearErrors, getValues } = useFormContext();
   const [selectedVPCId] = useWatch({
     control,
     name: ['vpc_id'],
@@ -53,6 +53,13 @@ export const ClusterNetworkingPanel = (props: Props) => {
   });
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
 
+  if (!regionSupportsDualStackVPCs) {
+    // Only reset if the current stack type value if not already 'ipv4' to prevent an infinite loop.
+    if (getValues('stack_type') !== 'ipv4') {
+      resetField('stack_type', { defaultValue: 'ipv4' });
+    }
+  }
+
   return isLkeEnterprisePhase2BYOVPCFeatureEnabled ||
     isLkeEnterprisePhase2DualStackFeatureEnabled ? (
     <Stack divider={<Divider />} spacing={3}>
@@ -70,7 +77,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
               <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
               <FormControlLabel
                 control={<Radio />}
-                disabled={!regionSupportsDualStackVPCs} // Not all regions support VPC IPv6
+                disabled={region && !regionSupportsDualStackVPCs} // Not all regions support VPC IPv6
                 label="IPv4 + IPv6 (dual-stack)"
                 value="ipv4-ipv6"
               />
