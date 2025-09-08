@@ -7,7 +7,6 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type {
-  AlertDefinitionScope,
   AlertSeverityType,
   CloudPulseServiceType,
   CreateAlertDefinitionPayload,
@@ -53,8 +52,7 @@ export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
   serviceType: CloudPulseServiceType,
   severity: AlertSeverityType,
-  alertId: number,
-  scope: AlertDefinitionScope
+  alertId: number
 ): EditAlertPayloadWithService => {
   const values = omitProps(formValues, [
     'serviceType',
@@ -75,8 +73,6 @@ export const filterEditFormValues = (
     serviceType,
     severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
-    type: formValues.type,
-    scope,
   };
 };
 

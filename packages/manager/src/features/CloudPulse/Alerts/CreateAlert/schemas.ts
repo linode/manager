@@ -9,7 +9,7 @@ import { array, lazy, mixed, number, object, string } from 'yup';
 import { getDimensionFilterValueSchema } from './Criteria/DimensionFilterValue/ValueSchemas';
 
 import type { AlertSeverityType, CloudPulseServiceType } from '@linode/api-v4';
-import type { AlertDefinitionScope, AlertDefinitionType } from '@linode/api-v4';
+import type { AlertDefinitionScope } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -72,7 +72,7 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 
 export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    entity_ids: array().of(string().defined()),
+    entity_ids: array().of(string().defined()).optional(),
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)
@@ -88,11 +88,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
     trigger_conditions: triggerConditionSchema,
-    type: mixed<AlertDefinitionType>()
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    regions: array().of(string().defined()),
+    regions: array().of(string().defined()).optional(),
     scope: mixed<AlertDefinitionScope>()
       .required(fieldErrorMessage)
       .nullable()
