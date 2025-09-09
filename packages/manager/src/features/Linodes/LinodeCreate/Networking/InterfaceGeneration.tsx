@@ -74,8 +74,11 @@ export const InterfaceGeneration = () => {
                     <Typography sx={(theme) => ({ font: theme.font.bold })}>
                       Linode Interfaces
                     </Typography>
-                    {flags.linodeInterfaces?.beta && <BetaChip />}
-                    {flags.linodeInterfaces?.new && <NewFeatureChip />}
+                    {flags.linodeInterfaces?.beta ? (
+                      <BetaChip />
+                    ) : flags.linodeInterfaces?.new ? (
+                      <NewFeatureChip />
+                    ) : null}
                   </Stack>
                   <Typography>
                     Linode Interfaces are the preferred option for VPCs and are
