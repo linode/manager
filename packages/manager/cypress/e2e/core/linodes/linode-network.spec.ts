@@ -23,11 +23,12 @@ import {
   mockCreateLinodeInterface,
   mockGetLinodeDetails,
   mockGetLinodeFirewalls,
+  mockGetLinodeInterface,
   mockGetLinodeInterfaces,
   mockGetLinodeIPAddresses,
 } from 'support/intercepts/linodes';
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
-import { mockGetVPCs } from 'support/intercepts/vpc';
+import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 
 import type { IPRange, LinodeIPsResponse } from '@linode/api-v4';
@@ -453,7 +454,7 @@ describe('Linode Interfaces enabled', () => {
         });
     });
 
-    describe('Adding Linode Interfaces', () => {
+    describe('Adding a Linode Interface', () => {
       it('allows the user to add a VLAN interface', () => {
         const mockLinodeInterface = linodeInterfaceFactoryVlan.build();
 
@@ -736,6 +737,163 @@ describe('Linode Interfaces enabled', () => {
 
             // Verify the interface type shows
             cy.findByText('VPC').should('be.visible');
+          });
+      });
+    });
+
+    describe('Interface Details drawer', () => {
+      it('confirms the details drawer for a public interface', () => {
+        const linodeInterface = linodeInterfaceFactoryPublic.build();
+        mockGetLinodeInterfaces(mockLinode.id, {
+          interfaces: [linodeInterface],
+        }).as('getInterfaces');
+        mockGetLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          linodeInterface
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+        // Open up the detail drawer
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for Public Interface (${linodeInterface.id})`
+              )
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.actionMenuItem
+              .findByTitle('Details')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm drawer content
+        ui.drawer
+          .findByTitle(`Network Interface Details (ID: ${linodeInterface.id})`)
+          .within(() => {
+            cy.findByText('IPv4 Default Route').should('be.visible');
+            cy.findByText('IPv6 Default Route').should('be.visible');
+            cy.findByText('Type').should('be.visible');
+            cy.findByText('Public').should('be.visible');
+            cy.findByText('IPv4 Addresses').should('be.visible');
+            cy.findByText(
+              `${linodeInterface.public?.ipv4.addresses[0].address} (Primary)`
+            ).should('be.visible');
+          });
+      });
+
+      it('confirms the details drawer for a VLAN interface', () => {
+        const linodeInterface = linodeInterfaceFactoryVlan.build();
+        mockGetLinodeInterfaces(mockLinode.id, {
+          interfaces: [linodeInterface],
+        }).as('getInterfaces');
+        mockGetLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          linodeInterface
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+        // Open up the detail drawer
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for VLAN Interface (${linodeInterface.id})`
+              )
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.actionMenuItem
+              .findByTitle('Details')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm drawer content
+        ui.drawer
+          .findByTitle(`Network Interface Details (ID: ${linodeInterface.id})`)
+          .within(() => {
+            cy.findByText('Type').should('be.visible');
+            cy.findByText('VLAN').should('be.visible');
+            cy.findByText('VLAN Label').should('be.visible');
+            cy.findByText(`${linodeInterface.vlan?.vlan_label}`).should(
+              'be.visible'
+            );
+            cy.findByText('IPAM Address').should('be.visible');
+            cy.findByText(`${linodeInterface.vlan?.ipam_address}`).should(
+              'be.visible'
+            );
+          });
+      });
+
+      it('confirms the details drawer for a VPC interface', () => {
+        const linodeInterface = linodeInterfaceFactoryVPC.build();
+        const mockSubnet = subnetFactory.build({
+          id: linodeInterface.vpc?.subnet_id,
+        });
+        const mockVPC = vpcFactory.build({
+          id: linodeInterface.vpc?.vpc_id,
+          subnets: [mockSubnet],
+        });
+
+        mockGetVPC(mockVPC);
+        mockGetLinodeInterfaces(mockLinode.id, {
+          interfaces: [linodeInterface],
+        }).as('getInterfaces');
+        mockGetLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          linodeInterface
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+        // Open up the details drawer
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for VPC Interface (${linodeInterface.id})`
+              )
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.actionMenuItem
+              .findByTitle('Details')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm drawer content
+        ui.drawer
+          .findByTitle(`Network Interface Details (ID: ${linodeInterface.id})`)
+          .within(() => {
+            cy.findByText('IPv4 Default Route').should('be.visible');
+            cy.findByText('Type').should('be.visible');
+            cy.findByText('VPC').should('be.visible');
+            cy.findByText('VPC Label').should('be.visible');
+            cy.findByText(`${mockVPC.label}`).should('be.visible');
+            cy.findByText('Subnet Label').should('be.visible');
+            cy.findByText(`${mockSubnet.label}`).should('be.visible');
+            cy.findByText('IPv4 Addresses').should('be.visible');
           });
       });
     });
