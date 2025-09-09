@@ -83,7 +83,7 @@ export const AssignIPRanges = (props: Props) => {
         ips={ipv4Ranges}
         onChange={handleIPRangeChange}
         // eslint-disable-next-line sonarjs/no-hardcoded-ip
-        placeholder="10.0.0.0/24"
+        placeholder={showIPv6Fields ? undefined : '10.0.0.0/24'}
         title="" // Empty string so a title isn't displayed for each IP input
       />
       {showIPv6Fields && (
@@ -93,8 +93,6 @@ export const AssignIPRanges = (props: Props) => {
           forVPCIPRanges
           ips={ipv6Ranges ?? []}
           onChange={handleIPv6RangeChange}
-          // eslint-disable-next-line sonarjs/no-hardcoded-ip
-          placeholder="2600:1401:4000::1726/64"
           title="" // Empty string so a title isn't displayed for each IP input
         />
       )}
