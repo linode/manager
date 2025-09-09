@@ -32,7 +32,7 @@ export interface LabelNameOptionsProps {
   /**
    * array of group by fields
    */
-  groupBy: string[];
+  groupBy?: string[];
 
   /**
    * Boolean to check if metric name should be hidden
@@ -69,7 +69,7 @@ interface GraphDataOptionsProps {
   /**
    * array of group by fields
    */
-  groupBy: string[];
+  groupBy?: string[];
 
   /**
    * label for the graph title
@@ -113,6 +113,8 @@ interface MetricRequestProps {
    */
   entityIds: string[];
 
+  groupBy?: string[];
+
   /**
    * selected linode region for the widget
    */
@@ -133,7 +135,7 @@ export interface DimensionNameProperties {
   /**
    * array of group by fields
    */
-  groupBy: string[];
+  groupBy?: string[];
   /**
    * Boolean to check if metric name should be hidden
    */
@@ -304,7 +306,8 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget, linodeRegion } = props;
+  const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
+    props;
   const preset = duration.preset;
 
   return {
@@ -316,7 +319,7 @@ export const getCloudPulseMetricRequest = (
       ? entityIds.map((id) => parseInt(id, 10))
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
-    group_by: widget.group_by,
+    group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: getTimeDurationFromPreset(preset),
     metrics: [
       {
@@ -375,7 +378,7 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
     resources,
     hideMetricName = false,
     serviceType,
-    groupBy,
+    groupBy = [],
   } = props;
   const labels: string[] = new Array(groupBy.length).fill('');
   Object.entries(metric).forEach(([key, value]) => {
@@ -416,7 +419,8 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
       labels.push(dimensionValue);
     }
   });
-  return labels.filter(Boolean).join(' | ');
+  const label = labels.filter(Boolean).join(' | ');
+  return (label || metric['metric_name']) ?? '';
 };
 
 /**
