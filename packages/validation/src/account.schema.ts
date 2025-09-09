@@ -1,5 +1,7 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
+import { emailSchema } from './profile.schema';
+
 export const updateAccountSchema = object({
   email: string().max(128, 'Email must be 128 characters or less.'),
   address_1: string().max(64, 'Address must be 64 characters or less.'),
@@ -88,52 +90,57 @@ export const userNameErrors = {
   nonAsciiError: 'Username must only use ASCII characters.',
 };
 
-export const CreateUserSchema = object({
-  username: string()
-    .required('Username is required.')
-    .min(3, userNameErrors.lengthError)
-    .max(32, userNameErrors.lengthError)
-    .test('ascii-only', userNameErrors.nonAsciiError, (value) => {
-      if (!value) return false;
-      try {
-        return btoa(value).length > 0; // Simple ASCII check
-      } catch {
-        return false;
-      }
-    })
-    .test(
-      'no-consecutive-separators',
-      userNameErrors.consecutiveError,
-      (value) => {
-        if (!value) return true; // Allow empty values (required check handles this)
-        return !value.includes('__') && !value.includes('--');
-      },
-    )
-    .test('valid-characters', userNameErrors.charsError, (value) => {
-      if (!value) return false;
-
-      // Check first and last characters (letters or numbers)
-      const firstChar = value[0];
-      const lastChar = value[value.length - 1];
-      const isAlphaNum = /[a-zA-Z0-9]/;
-
-      if (!isAlphaNum.test(firstChar) || !isAlphaNum.test(lastChar)) {
-        return false;
-      }
-
-      // Check all characters are valid (letters, numbers, dashes, underscores)
-      return /^[a-zA-Z0-9_-]+$/.test(value);
-    })
-    .test('no-whitespace', userNameErrors.spacesError, (value) => {
+const usernameSchema = string()
+  .required('Username is required.')
+  .min(3, userNameErrors.lengthError)
+  .max(32, userNameErrors.lengthError)
+  .test('ascii-only', userNameErrors.nonAsciiError, (value) => {
+    if (!value) return false;
+    // Check if all characters are ASCII (character codes 0-127)
+    return [...value].every((char) => char.charCodeAt(0) <= 127);
+  })
+  .test('no-whitespace', userNameErrors.spacesError, (value) => {
+    if (!value) return true; // Allow empty values (required check handles this)
+    return !/[ \t]/.test(value);
+  })
+  .test(
+    'no-consecutive-separators',
+    userNameErrors.consecutiveError,
+    (value) => {
       if (!value) return true; // Allow empty values (required check handles this)
-      return !/[ \t]/.test(value);
-    }),
-  email: string()
-    .required('Email address is required.')
-    .email('Must be a valid email address.'),
+      return !value.includes('__') && !value.includes('--');
+    },
+  )
+  .test('valid-characters', userNameErrors.charsError, (value) => {
+    if (!value) return false;
+
+    // Check first and last characters (letters or numbers)
+    const firstChar = value[0];
+    const lastChar = value[value.length - 1];
+    const isAlphaNum = /[a-zA-Z0-9]/;
+
+    if (!isAlphaNum.test(firstChar) || !isAlphaNum.test(lastChar)) {
+      return false;
+    }
+
+    // Check all characters are valid (letters, numbers, dashes, underscores)
+    return /^[a-zA-Z0-9_-]+$/.test(value);
+  });
+
+export const CreateUserSchema = object({
+  username: usernameSchema,
+  email: emailSchema,
   restricted: boolean().required(
     'You must indicate if this user should have restricted access.',
   ),
+});
+
+export const UpdateUserNameSchema = object({
+  username: usernameSchema,
+});
+
+export const UpdateUserEmailSchema = object({
+  email: emailSchema,
 });
 
 export const UpdateUserSchema = object({
