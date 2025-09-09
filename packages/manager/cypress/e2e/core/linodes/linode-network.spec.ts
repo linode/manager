@@ -337,6 +337,17 @@ describe('Linode Interfaces enabled', () => {
           ui.button.findByTitle('Delete').should('be.visible');
         });
     });
+
+    /**
+     * - Confirms the Networking Interface table doesn't exist for config-based interfaces
+     */
+    it('does not show the Linode Interface networking table', () => {
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+      cy.findByLabelText('Linode Interfaces').should('not.exist');
+      cy.findByText('Add Network Interface').should('not.exist');
+      cy.findByText('Interface Settings').should('not.exist');
+    });
   });
 
   describe('Linode with Linode-based interfaces', () => {
