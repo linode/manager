@@ -64,12 +64,12 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
       return [];
     }
 
-    return getAllRoles(accountRoles)
-      .filter(
-        (el) =>
-          el.entity_type === role?.entity_type && el.access === role?.access
-      )
-      .filter((el) => el.value !== role?.name);
+    return getAllRoles(accountRoles).filter(
+      (el) =>
+        el.entity_type === role?.entity_type &&
+        el.access === role?.access &&
+        el.value !== role?.name
+    );
   }, [accountRoles, role]);
 
   const {
