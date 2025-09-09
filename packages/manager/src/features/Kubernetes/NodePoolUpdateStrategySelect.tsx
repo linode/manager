@@ -4,17 +4,19 @@ import React from 'react';
 import { UPDATE_STRATEGY_OPTIONS } from './constants';
 
 interface Props {
+  label?: string;
+  noMarginTop?: boolean;
   onChange: (value: string | undefined) => void;
   value: string | undefined;
 }
 
 export const NodePoolUpdateStrategySelect = (props: Props) => {
-  const { onChange, value } = props;
+  const { onChange, value, noMarginTop, label } = props;
   return (
     <Autocomplete
       disableClearable
-      label="Update Strategy"
-      noMarginTop
+      label={label ?? 'Node Pool Update Strategy'}
+      noMarginTop={noMarginTop}
       onChange={(e, updateStrategy) => onChange(updateStrategy?.value)}
       options={UPDATE_STRATEGY_OPTIONS}
       placeholder="Select an Update Strategy"

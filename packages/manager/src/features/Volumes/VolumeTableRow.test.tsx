@@ -34,30 +34,7 @@ const handlers: ActionHandlers = {
   handleUpgrade: vi.fn(),
 };
 
-const queryMocks = vi.hoisted(() => ({
-  usePermissions: vi.fn(),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
-  return {
-    ...actual,
-    usePermissions: queryMocks.usePermissions,
-  };
-});
-
 describe('Volume table row', () => {
-  beforeEach(() => {
-    queryMocks.usePermissions.mockReturnValue({
-      update_volume: true,
-      attach_volume: true,
-      create_volume: true,
-      delete_volume: true,
-      resize_volume: true,
-      clone_volume: true,
-    });
-  });
-
   it("should show the attached Linode's label if present", async () => {
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(

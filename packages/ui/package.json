@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.20.0",
+  "version": "0.19.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",

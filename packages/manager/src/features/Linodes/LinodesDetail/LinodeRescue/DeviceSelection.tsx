@@ -93,8 +93,8 @@ export const DeviceSelection = (props: Props) => {
         <FormControl fullWidth>
           <Autocomplete
             disabled
-            id="rescueDevice"
-            label={`dev/${slots[slots.length - 1]}`}
+            id="rescueDevice_sdh"
+            label="/dev/sdh"
             noMarginTop
             onChange={() => null}
             options={[]}

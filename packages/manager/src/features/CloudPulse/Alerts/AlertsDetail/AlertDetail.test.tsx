@@ -16,10 +16,7 @@ const alertDetails = alertFactory.build({ service_type: 'linode' });
 const notificationChannels = notificationChannelFactory.buildList(3);
 
 const linodes = linodeFactory.buildList(3);
-const regions = regionFactory.buildList(1).map((region, index) => ({
-  ...region,
-  id: index < 3 ? linodes[index].region : region.id,
-}));
+const regions = regionFactory.buildList(3);
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
@@ -67,16 +64,6 @@ vi.mock('@tanstack/react-router', async () => {
 beforeEach(() => {
   queryMocks.useAlertDefinitionQuery.mockReturnValue({
     data: alertDetails,
-    isError: false,
-    isFetching: false,
-  });
-  queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodes,
-    isError: false,
-    isFetching: false,
-  });
-  queryMocks.useRegionsQuery.mockReturnValue({
-    data: regions,
     isError: false,
     isFetching: false,
   });

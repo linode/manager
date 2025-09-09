@@ -6,7 +6,6 @@ import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
   Linode,
-  VPC,
 } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 
@@ -118,7 +117,11 @@ export const getFirewallLinodes = (
 ): Item<string, string>[] => {
   if (!linodes) return [];
   return linodes.map((linode) => ({
-    label: transformDimensionValue('firewall', 'linode_id', linode.label),
+    label: transformDimensionValue(
+      'firewall',
+      'parent_vm_entity_id',
+      linode.label
+    ),
     value: String(linode.id),
   }));
 };
@@ -136,20 +139,4 @@ export const getLinodeRegions = (linodes: Linode[]): Item<string, string>[] => {
     label: transformDimensionValue('firewall', 'region_id', region),
     value: region,
   }));
-};
-
-/**
- *
- * @param vpcs List of VPCs
- * @returns a flat list of VPC subnets with transformed labels
- */
-export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
-  if (!vpcs) return [];
-
-  return vpcs.flatMap(({ label: vpcLabel, subnets }) =>
-    subnets.map(({ id: subnetId, label: subnetLabel }) => ({
-      label: `${vpcLabel}_${subnetLabel}`,
-      value: String(subnetId),
-    }))
-  );
 };

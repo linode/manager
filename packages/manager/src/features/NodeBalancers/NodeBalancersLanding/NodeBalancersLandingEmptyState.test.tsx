@@ -1,21 +1,13 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
-  userPermissions: vi.fn(() => ({
-    data: {
-      create_nodebalancer: false,
-    },
-  })),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -26,39 +18,29 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/hooks/useRestrictedGlobalGrantCheck');
+
 // Note: An integration test confirming the helper text and enabled Create NodeBalancer button already exists, so we're just checking for a disabled create button here
 describe('NodeBalancersLandingEmptyState', () => {
-  it('should disable the "Create NodeBalancer" button if the user does not have permission', async () => {
-    const { getByRole } = renderWithTheme(<NodeBalancerLandingEmptyState />);
-
-    await waitFor(() => {
-      const createNodeBalancerBtn = getByRole('button', {
-        name: 'Create NodeBalancer',
-      });
-
-      expect(createNodeBalancerBtn).toBeInTheDocument();
-      expect(createNodeBalancerBtn).toHaveAttribute('aria-disabled', 'true');
-    });
+  afterEach(() => {
+    vi.resetAllMocks();
   });
 
-  it('should enable the "Create NodeBalancer" button if the user has permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        create_nodebalancer: true,
-      },
-    });
+  it('disables the Create NodeBalancer button if user does not have permissions to create a NodeBalancer', async () => {
+    // disables the create button
+    vi.mocked(useRestrictedGlobalGrantCheck).mockReturnValue(true);
 
-    const { getByRole } = renderWithTheme(<NodeBalancerLandingEmptyState />);
+    const { getByText } = renderWithTheme(<NodeBalancerLandingEmptyState />);
 
     await waitFor(() => {
-      const createNodeBalancerBtn = getByRole('button', {
-        name: 'Create NodeBalancer',
-      });
+      const createNodeBalancerButton = getByText('Create NodeBalancer').closest(
+        'button'
+      );
 
-      expect(createNodeBalancerBtn).toBeInTheDocument();
-      expect(createNodeBalancerBtn).not.toHaveAttribute(
-        'aria-disabled',
-        'true'
+      expect(createNodeBalancerButton).toBeDisabled();
+      expect(createNodeBalancerButton).toHaveAttribute(
+        'data-qa-tooltip',
+        "You don't have permissions to create NodeBalancers. Please contact your account administrator to request the necessary permissions."
       );
     });
   });

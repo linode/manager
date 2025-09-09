@@ -13,22 +13,6 @@ export const stream: PartialEventMap<'stream'> = {
       </>
     ),
   },
-  stream_delete: {
-    notification: (e) => (
-      <>
-        Stream <EventLink event={e} to="entity" /> has been{' '}
-        <strong>deleted</strong>.
-      </>
-    ),
-  },
-  stream_update: {
-    notification: (e) => (
-      <>
-        Stream <EventLink event={e} to="entity" /> has been{' '}
-        <strong>updated</strong>.
-      </>
-    ),
-  },
 };
 
 export const destination: PartialEventMap<'destination'> = {
@@ -37,22 +21,6 @@ export const destination: PartialEventMap<'destination'> = {
       <>
         Destination <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
-      </>
-    ),
-  },
-  destination_delete: {
-    notification: (e) => (
-      <>
-        Destination <EventLink event={e} to="entity" /> has been{' '}
-        <strong>deleted</strong>.
-      </>
-    ),
-  },
-  destination_update: {
-    notification: (e) => (
-      <>
-        Destination <EventLink event={e} to="entity" /> has been{' '}
-        <strong>updated</strong>.
       </>
     ),
   },

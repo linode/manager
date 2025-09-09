@@ -147,7 +147,6 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           // but for the sake of the user experience, we choose to disable the "Add a tag" button in the UI because
           // restricted users can't see account tags using GET /v4/tags
           disabled={!permissions.is_account_admin}
-          entity="Linode"
           entityLabel={linodeLabel}
           sx={{
             width: '100%',

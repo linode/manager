@@ -121,18 +121,12 @@ describe('LKE Cluster Creation', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: {
-        enabled: true,
-        la: true,
-        postLa: false,
-        phase2Mtc: true,
-      },
+      lkeEnterprise: { enabled: true, la: true, postLa: false },
     }).as('getFeatureFlags');
   });
 
   /*
    * - Confirms that users can create a cluster by completing the LKE create form.
-   * - Confirms that no IP Stack or VPC options are visible for standard tier clusters (LKE-E only).
    * - Confirms that LKE cluster is created.
    * - Confirms that user is redirected to new LKE cluster summary page.
    * - Confirms that correct information is shown on the LKE cluster summary page
@@ -205,15 +199,6 @@ describe('LKE Cluster Creation', () => {
 
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
-    // Confirms LKE-E Phase 2 IP Stack and VPC options do not display for a standard LKE cluster.
-    cy.findByText('IP Stack').should('not.exist');
-    cy.findByText('IPv4', { exact: true }).should('not.exist');
-    cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
-    cy.findByText('Automatically generate a VPC for this cluster').should(
-      'not.exist'
-    );
-    cy.findByText('Use an existing VPC').should('not.exist');
-
     let monthPrice = 0;
 
     // Confirm the expected available plans display.
@@ -284,19 +269,12 @@ describe('LKE Cluster Creation', () => {
           .click();
       });
 
-    // Confirm request payload does not include LKE-E-specific values.
-    cy.wait('@createCluster').then((intercept) => {
-      const payload = intercept.request.body;
-      expect(payload.stack_type).to.be.undefined;
-      expect(payload.vpc_id).to.be.undefined;
-      expect(payload.subnet_id).to.be.undefined;
-    });
-
     // Wait for LKE cluster to be created and confirm that we are redirected
     // to the cluster summary page.
     cy.wait([
       '@getCluster',
       '@getClusterPools',
+      '@createCluster',
       '@getLKEClusterTypes',
       '@getDashboardUrl',
       '@getControlPlaneACL',

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import type { Volume } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -30,22 +30,11 @@ export const VolumesActionMenu = (props: Props) => {
 
   const attached = volume.linode_id !== null;
 
-  const { data: accountPermissions } = usePermissions('account', [
-    'create_volume',
-  ]);
-  const { data: volumePermissions } = usePermissions(
-    'volume',
-    [
-      'delete_volume',
-      'view_volume',
-      'resize_volume',
-      'clone_volume',
-      'attach_volume',
-      'detach_volume',
-      'update_volume',
-    ],
-    volume.id
-  );
+  const isVolumeReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'volume',
+    id: volume.id,
+  });
 
   const actions: Action[] = [
     {
@@ -53,10 +42,10 @@ export const VolumesActionMenu = (props: Props) => {
       title: 'Show Config',
     },
     {
-      disabled: !volumePermissions?.update_volume,
+      disabled: isVolumeReadOnly,
       onClick: handlers.handleEdit,
       title: 'Edit',
-      tooltip: !volumePermissions?.update_volume
+      tooltip: isVolumeReadOnly
         ? getRestrictedResourceText({
             action: 'edit',
             isSingular: true,
@@ -65,15 +54,15 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
-      disabled: !volumePermissions?.update_volume,
+      disabled: isVolumeReadOnly,
       onClick: handlers.handleManageTags,
       title: 'Manage Tags',
     },
     {
-      disabled: !volumePermissions?.resize_volume,
+      disabled: isVolumeReadOnly,
       onClick: handlers.handleResize,
       title: 'Resize',
-      tooltip: !volumePermissions?.resize_volume
+      tooltip: isVolumeReadOnly
         ? getRestrictedResourceText({
             action: 'resize',
             isSingular: true,
@@ -82,11 +71,10 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
-      disabled:
-        !volumePermissions?.clone_volume || !accountPermissions?.create_volume,
+      disabled: isVolumeReadOnly,
       onClick: handlers.handleClone,
       title: 'Clone',
-      tooltip: !volumePermissions?.clone_volume
+      tooltip: isVolumeReadOnly
         ? getRestrictedResourceText({
             action: 'clone',
             isSingular: true,
@@ -98,10 +86,10 @@ export const VolumesActionMenu = (props: Props) => {
 
   if (!attached && isVolumesLanding) {
     actions.push({
-      disabled: !volumePermissions?.attach_volume,
+      disabled: isVolumeReadOnly,
       onClick: handlers.handleAttach,
       title: 'Attach',
-      tooltip: !volumePermissions?.attach_volume
+      tooltip: isVolumeReadOnly
         ? getRestrictedResourceText({
             action: 'attach',
             isSingular: true,
@@ -111,10 +99,10 @@ export const VolumesActionMenu = (props: Props) => {
     });
   } else {
     actions.push({
-      disabled: !volumePermissions?.detach_volume,
+      disabled: isVolumeReadOnly,
       onClick: handlers.handleDetach,
       title: 'Detach',
-      tooltip: !volumePermissions?.detach_volume
+      tooltip: isVolumeReadOnly
         ? getRestrictedResourceText({
             action: 'detach',
             isSingular: true,
@@ -125,10 +113,10 @@ export const VolumesActionMenu = (props: Props) => {
   }
 
   actions.push({
-    disabled: !volumePermissions?.delete_volume || attached,
+    disabled: isVolumeReadOnly || attached,
     onClick: handlers.handleDelete,
     title: 'Delete',
-    tooltip: !volumePermissions?.delete_volume
+    tooltip: isVolumeReadOnly
       ? getRestrictedResourceText({
           action: 'delete',
           isSingular: true,

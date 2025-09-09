@@ -56,7 +56,7 @@ describe('LinodeConfigs', () => {
 
   it('should show the Network Interfaces column for legacy config Linodes', async () => {
     queryMocks.useLinodeQuery.mockReturnValue({
-      data: linodeFactory.build(),
+      data: linodeFactory.build,
     });
 
     const { queryByText } = renderWithTheme(<LinodeConfigs />);

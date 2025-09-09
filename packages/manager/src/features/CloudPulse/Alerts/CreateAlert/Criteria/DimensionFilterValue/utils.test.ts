@@ -139,14 +139,21 @@ describe('Utils', () => {
     const linodes: Linode[] = linodeFactory.buildList(2);
 
     it('should return linode options with transformed labels', () => {
-      // checking for same label as linode_id dimension filter should not have any transformation
       expect(getFirewallLinodes(linodes)).toEqual([
         {
-          label: linodes[0].label,
+          label: transformDimensionValue(
+            'firewall',
+            'parent_vm_entity_id',
+            linodes[0].label
+          ),
           value: linodes[0].id.toString(),
         },
         {
-          label: linodes[1].label,
+          label: transformDimensionValue(
+            'firewall',
+            'parent_vm_entity_id',
+            linodes[1].label
+          ),
           value: linodes[1].id.toString(),
         },
       ]);

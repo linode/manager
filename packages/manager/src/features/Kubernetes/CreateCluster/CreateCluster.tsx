@@ -527,7 +527,7 @@ export const CreateCluster = () => {
                       ? 'Only regions that support LKE Enterprise clusters are listed.'
                       : undefined
                   }
-                  value={selectedRegion?.id || null}
+                  value={selectedRegion?.id}
                 />
               </Stack>
               <StyledDocsLinkContainer

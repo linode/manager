@@ -5,7 +5,6 @@ import type { JSX } from 'react';
 
 import { FormGroup } from 'src/components/FormGroup';
 import { Link } from 'src/components/Link';
-import { useFlags } from 'src/hooks/useFlags';
 
 import type { TextFieldProps, TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material';
@@ -52,8 +51,6 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
   const { data: typeToConfirmPreference } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true
   );
-
-  const { iamRbacPrimaryNavChanges } = useFlags();
 
   /*
     There is an edge case where preferences?.type_to_confirm is undefined
@@ -118,17 +115,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           sx={{ marginTop: 1 }}
         >
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
-          section of{' '}
-          <Link
-            to={
-              iamRbacPrimaryNavChanges
-                ? '/profile/preferences'
-                : '/profile/settings'
-            }
-          >
-            {iamRbacPrimaryNavChanges ? 'Preferences' : 'My Settings'}
-          </Link>
-          .
+          section of <Link to="/profile/settings">My Settings</Link>.
         </Typography>
       ) : null}
     </>

@@ -100,7 +100,6 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           <StyledTabList>
             {tabs.map((tab, idx) => (
               <StyledTab
-                data-pendo-id={tab.title}
                 disabled={tab.disabled}
                 key={`tabs-${tab.title}-${idx}`}
               >

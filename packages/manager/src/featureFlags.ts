@@ -189,7 +189,6 @@ export interface Flags {
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
-  volumeSummaryPage: boolean;
   vpcIpv6: boolean;
 }
 
