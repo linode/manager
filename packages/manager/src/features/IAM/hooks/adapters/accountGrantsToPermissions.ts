@@ -74,6 +74,8 @@ export const accountGrantsToPermissions = (
     // AccountImageAdmin
     create_image: unrestricted || globalGrants?.add_images,
     upload_image: unrestricted || globalGrants?.add_images,
+    // AccountVPCAdmin
+    create_vpc: unrestricted || globalGrants?.add_vpcs,
     // AccountOAuthClientAdmin
     create_oauth_client: true,
     update_oauth_client: true,

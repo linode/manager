@@ -49,7 +49,7 @@ describe('TransferControls', () => {
     expect(makeServiceTransferBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should disable "Review Details" button if the user does not have accept_service_transfer permission', async () => {
+  it('should disable "Review Details" button and transfer textfield if the user does not have accept_service_transfer permission', async () => {
     const { getByRole } = renderWithTheme(
       <TransferControls permissions={queryMocks.userPermissions().data} />
     );
@@ -58,6 +58,15 @@ describe('TransferControls', () => {
       name: 'Review Details',
     });
     expect(reviewBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(reviewBtn).toHaveAttribute(
+      'data-qa-tooltip',
+      'You do not have permission to receive service transfers.'
+    );
+
+    const tokenTextfield = getByRole('textbox', {
+      name: 'Receive a Service Transfer',
+    });
+    expect(tokenTextfield).toBeDisabled();
   });
 
   it('should enable "Review Details" button if the user has accept_service_transfer permission', async () => {
@@ -72,6 +81,13 @@ describe('TransferControls', () => {
       <TransferControls permissions={queryMocks.userPermissions().data} />
     );
 
+    const reviewBtnBeforeInput = getByRole('button', {
+      name: 'Review Details',
+    });
+    expect(reviewBtnBeforeInput).toHaveAttribute(
+      'data-qa-tooltip',
+      'Enter a service transfer token to review the details and accept the transfer.'
+    );
     const input = getByPlaceholderText('Enter a token');
     await userEvent.type(input, 'test-token');
 
