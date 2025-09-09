@@ -60,19 +60,19 @@ export const KubernetesPlanContainer = (
       planType: 'gpu',
       tables: [
         {
-          header: 'NVIDIA RTX 4000 Ada',
-          planFilter: (plan: PlanWithAvailability) =>
-            plan.label.includes('Ada'),
-        },
-        {
           header: 'NVIDIA RTX PRO 6000 Blackwell Server Edition',
           planFilter: (plan: PlanWithAvailability) =>
             plan.label.includes('Blackwell'),
         },
         {
+          header: 'NVIDIA RTX 4000 Ada',
+          planFilter: (plan: PlanWithAvailability) =>
+            plan.label.includes('Ada'),
+        },
+        {
           header: 'NVIDIA Quadro RTX 6000',
           planFilter: (plan: PlanWithAvailability) =>
-            !plan.label.includes('Ada'),
+            !plan.label.includes('Ada') && !plan.label.includes('Blackwell'),
         },
       ],
     },

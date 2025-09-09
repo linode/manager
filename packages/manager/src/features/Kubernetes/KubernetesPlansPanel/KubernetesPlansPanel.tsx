@@ -96,7 +96,10 @@ export const KubernetesPlansPanel = (props: Props) => {
       !type.id.includes('nanode-edge') &&
       // Filter out GPU types for enterprise; otherwise, return the rest of the types.
       // TODO: remove this once GPU plans are supported in LKE-E (Q3 2025)
-      (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true)
+      (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true) &&
+      // Filter out Blackwell plans for kubernetes (for now)
+      !type.id.includes('blackwell') &&
+      !flags.kubernetesBlackwellPlans
     );
   });
 
