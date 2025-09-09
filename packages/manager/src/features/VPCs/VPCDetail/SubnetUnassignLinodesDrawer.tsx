@@ -82,8 +82,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
       useAllLinodesQuery(),
       'linode',
-      ['delete_linode']
+      ['delete_linode'],
+      open
     );
+    // const userCanUnassignLinodes = filteredLinodes?.length > 0;
 
     const queryClient = useQueryClient();
     const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
@@ -126,7 +128,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       });
     }, [linodes, subnetLinodeIds]);
 
-    // TODO: Should we also check update_vpc permissions here or update_vpc_subnet once it's ready?
     const userCanUnassignLinodes = React.useMemo(() => {
       return filteredLinodes.some((linode) =>
         (findAssignedLinodes() ?? []).find(

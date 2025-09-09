@@ -1,14 +1,10 @@
-import { useAllLinodesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 
-import type { Linode, Subnet } from '@linode/api-v4';
+import type { Subnet } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface SubnetActionHandlers {
@@ -41,24 +37,14 @@ export const SubnetActionMenu = (props: Props) => {
 
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
 
-  // TODO: change 'update_linode' to 'create_linode_config_profile_interface' once it's available
-  // TODO: change 'delete_linode' to 'delete_linode_config_profile_interface' once it's available
-  const { data: linodes } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery(),
-    'linode',
-    ['update_linode', 'delete_linode']
-  );
-
-  const canManageSubnetLinodes = permissions?.update_vpc && linodes?.length > 0;
-
   const actions: Action[] = [
     {
       onClick: () => {
         handleAssignLinodes(subnet);
       },
       title: 'Assign Linodes',
-      disabled: !canManageSubnetLinodes,
-      tooltip: !canManageSubnetLinodes
+      disabled: !permissions?.update_vpc,
+      tooltip: !permissions?.update_vpc
         ? 'You do not have permission to assign Linode to this subnet.'
         : undefined,
     },
@@ -67,8 +53,8 @@ export const SubnetActionMenu = (props: Props) => {
         handleUnassignLinodes(subnet);
       },
       title: 'Unassign Linodes',
-      disabled: !canManageSubnetLinodes,
-      tooltip: !canManageSubnetLinodes
+      disabled: !permissions?.update_vpc,
+      tooltip: !permissions?.update_vpc
         ? 'You do not have permission to unassign Linode from this subnet.'
         : undefined,
     },
