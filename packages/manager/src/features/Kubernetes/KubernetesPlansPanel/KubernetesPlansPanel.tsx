@@ -98,8 +98,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       // TODO: remove this once GPU plans are supported in LKE-E (Q3 2025)
       (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true) &&
       // Filter out Blackwell plans for kubernetes (for now)
-      !type.id.includes('blackwell') &&
-      !flags.kubernetesBlackwellPlans
+      !(type.id.includes('blackwell') && !flags.kubernetesBlackwellPlans)
     );
   });
 
