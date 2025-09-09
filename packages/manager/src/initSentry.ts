@@ -88,7 +88,9 @@ export const initSentry = () => {
   }
 };
 
-const beforeSend = (sentryEvent: SentryErrorEvent): null | SentryErrorEvent => {
+export const beforeSend = (
+  sentryEvent: SentryErrorEvent
+): null | SentryErrorEvent => {
   const normalizedErrorMessage = normalizeErrorMessage(sentryEvent.message);
 
   const userAgent = sentryEvent.request?.headers?.['User-Agent'];
