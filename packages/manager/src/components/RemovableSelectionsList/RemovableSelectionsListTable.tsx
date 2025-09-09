@@ -22,6 +22,10 @@ export type RemovableItem = {
 
 export interface RemovableSelectionsListTableProps {
   /**
+   * If false, do not include VPC IPv6 and VPC IPv6 Ranges cells
+   */
+  displayVPCIPv6Data?: boolean;
+  /**
    * The descriptive text to display above the list
    */
   headerText: string;
@@ -58,6 +62,7 @@ export const RemovableSelectionsListTable = (
 ) => {
   const {
     headerText,
+    displayVPCIPv6Data = false,
     isRemovable = true,
     noDataText,
     onRemove,
@@ -85,8 +90,20 @@ export const RemovableSelectionsListTable = (
           </TableCell>
           <TableCell>{selection.vpcIPv4 ?? null}</TableCell>
           <TableCell>
-            {determineNoneSingleOrMultipleWithChip(selection.vpcRanges ?? [])}
+            {determineNoneSingleOrMultipleWithChip(
+              selection.vpcIPv4Ranges ?? []
+            )}
           </TableCell>
+          {displayVPCIPv6Data && (
+            <>
+              <TableCell>{selection.vpcIPv6 ?? null}</TableCell>
+              <TableCell>
+                {determineNoneSingleOrMultipleWithChip(
+                  selection.vpcIPv6Ranges ?? []
+                )}
+              </TableCell>
+            </>
+          )}
           <TableCell>
             {isRemovable && (
               <IconButton
