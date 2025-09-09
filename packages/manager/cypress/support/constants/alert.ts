@@ -11,8 +11,8 @@ export const dimensionOperatorTypeMap: Record<
   string
 > = {
   endswith: 'ends with',
-  eq: 'equals',
-  neq: 'not equals',
+  eq: 'equal',
+  neq: 'not equal',
   startswith: 'starts with',
   in: 'in',
 };
