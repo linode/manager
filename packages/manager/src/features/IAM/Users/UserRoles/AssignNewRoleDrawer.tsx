@@ -77,21 +77,14 @@ export const AssignNewRoleDrawer = ({
       return [];
     }
     return getAllRoles(accountRoles).filter((role) => {
-      // for each role type, check if:
-      // 1. the role is not already assigned to the user
-      // 2. the role is not already in the form's roles array
+      // exclude account and entities roles that are already assigned to the user
       if (isAccountRole(role)) {
-        return (
-          !assignedRoles?.account_access.includes(role.value) &&
-          !roles.some((r) => r.role?.value === role.value)
-        );
+        return !assignedRoles?.account_access.includes(role.value);
       }
 
       if (isEntityRole(role)) {
-        return !assignedRoles?.entity_access.some(
-          (entity) =>
-            entity.roles.includes(role.value) &&
-            !roles.some((r) => r.role?.value === role.value)
+        return !assignedRoles?.entity_access.some((entity) =>
+          entity.roles.includes(role.value)
         );
       }
 
