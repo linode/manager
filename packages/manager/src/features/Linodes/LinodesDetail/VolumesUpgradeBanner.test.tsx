@@ -7,25 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumesUpgradeBanner } from './VolumesUpgradeBanner';
 
-const queryMocks = vi.hoisted(() => ({
-  usePermissions: vi.fn(),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
-  return {
-    ...actual,
-    usePermissions: queryMocks.usePermissions,
-  };
-});
-
 describe('VolumesUpgradeBanner', () => {
-  beforeEach(() => {
-    queryMocks.usePermissions.mockReturnValue({
-      update_volume: true,
-    });
-  });
-
   it('should render if there is an upgradable volume', async () => {
     const volume = volumeFactory.build();
     const notification = notificationFactory.build({

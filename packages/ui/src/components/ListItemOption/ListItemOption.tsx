@@ -44,8 +44,7 @@ export const ListItemOption = <T,>({
   const disabledReason = disabledOptions?.reason;
 
   // Used to control the Tooltip
-  const [isDisabledItemFocused, setIsDisabledItemFocused] = useState(false);
-  const [isDisabledItemInView, setIsDisabledItemInView] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const listItemRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
@@ -54,36 +53,24 @@ export const ListItemOption = <T,>({
       return;
     }
     if (!isOptionDisabled) {
-      // We don't need to setup the observers for options that are enabled. They won't have a tooltip
+      // We don't need to setup the mutation observer for options that are enabled. They won't have a tooltip
       return;
     }
 
-    const intersectionObserver = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        setIsDisabledItemInView(true);
-      } else {
-        setIsDisabledItemInView(false);
-      }
-    });
-    intersectionObserver.observe(listItemRef.current);
-
-    const mutationObserver = new MutationObserver(() => {
+    const observer = new MutationObserver(() => {
       const className = listItemRef.current?.className;
       const hasFocusedClass = className?.includes('Mui-focused') ?? false;
       if (hasFocusedClass) {
-        setIsDisabledItemFocused(true);
+        setIsFocused(true);
       } else if (!hasFocusedClass) {
-        setIsDisabledItemFocused(false);
+        setIsFocused(false);
       }
     });
 
-    mutationObserver.observe(listItemRef.current, {
-      attributeFilter: ['class'],
-    });
+    observer.observe(listItemRef.current, { attributeFilter: ['class'] });
 
     return () => {
-      mutationObserver.disconnect();
-      intersectionObserver.disconnect();
+      observer.disconnect();
     };
   }, [isOptionDisabled]);
 
@@ -122,7 +109,7 @@ export const ListItemOption = <T,>({
   if (isOptionDisabled) {
     return (
       <Tooltip
-        open={isDisabledItemFocused && isDisabledItemInView}
+        open={isFocused}
         slotProps={{
           tooltip: {
             sx: {

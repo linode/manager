@@ -1,4 +1,4 @@
-import type { EntityType } from '../entities/types';
+import type { EntityType } from 'src/entities/types';
 
 export type AccountType = 'account';
 
@@ -102,9 +102,7 @@ export type AccountAdmin =
   | AccountBillingAdmin
   | AccountFirewallAdmin
   | AccountLinodeAdmin
-  | AccountNodeBalancerAdmin
-  | AccountOauthClientAdmin
-  | AccountVolumeAdmin;
+  | AccountOauthClientAdmin;
 
 /** Permissions associated with the "account_billing_admin" role. */
 export type AccountBillingAdmin =
@@ -142,20 +140,6 @@ export type AccountLinodeAdmin = AccountLinodeCreator | LinodeAdmin;
 
 /** Permissions associated with the "account_linode_creator" role. */
 export type AccountLinodeCreator = 'create_linode';
-
-/** Permissions associated with the "account_nodebalancer_admin" role. */
-export type AccountNodeBalancerAdmin =
-  | AccountNodeBalancerCreator
-  | NodeBalancerAdmin;
-
-/** Permissions associated with the "account_nodebalancer_creator" role. */
-export type AccountNodeBalancerCreator = 'create_nodebalancer';
-
-/** Permissions associated with the "account_volume_admin" role. */
-export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
-
-/** Permissions associated with the "account_volume_creator" role. */
-export type AccountVolumeCreator = 'create_volume';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';
@@ -223,8 +207,7 @@ export type AccountViewer =
   | AccountOauthClientViewer
   | AccountProfileViewer
   | FirewallViewer
-  | LinodeViewer
-  | VolumeViewer;
+  | LinodeViewer;
 
 /** Permissions associated with the "firewall_admin role. */
 export type FirewallAdmin =
@@ -304,50 +287,45 @@ export type LinodeViewer =
   | 'view_linode_network_transfer'
   | 'view_linode_stats';
 
-/** Permissions associated with the "nodebalancer_admin" role. */
-// TODO: UIE-9154 - verify mapping for Nodebalancer as this is not migrated yet
-export type NodeBalancerAdmin =
-  | 'delete_nodebalancer'
-  | 'delete_nodebalancer_config'
-  | 'delete_nodebalancer_config_node'
-  | NodeBalancerContributor;
+/** Facade roles represent the existing Grant model for entities that are not yet migrated to IAM */
+export type AccountRoleFacade =
+  | 'account_database_creator'
+  | 'account_domain_creator'
+  | 'account_image_creator'
+  | 'account_ip_admin'
+  | 'account_ip_viewer'
+  | 'account_lkecluster_creator'
+  | 'account_longview_creator'
+  | 'account_longview_subscription_admin'
+  | 'account_nodebalancer_creator'
+  | 'account_placement_group_creator'
+  | 'account_stackscript_creator'
+  | 'account_vlan_admin'
+  | 'account_vlan_viewer'
+  | 'account_volume_creator'
+  | 'account_vpc_creator';
 
-/** Permissions associated with the "nodebalancer_contributor" role. */
-export type NodeBalancerContributor =
-  | 'create_nodebalancer_config'
-  | 'create_nodebalancer_config_node'
-  | 'rebuild_nodebalancer_config'
-  | 'update_nodebalancer'
-  | 'update_nodebalancer_config'
-  | 'update_nodebalancer_config_node'
-  | 'update_nodebalancer_firewalls'
-  | NodeBalancerViewer;
-
-/** Permissions associated with the "nodebalancer_viewer" role. */
-export type NodeBalancerViewer =
-  | 'list_nodebalancer_config_nodes'
-  | 'list_nodebalancer_configs'
-  | 'list_nodebalancer_firewalls'
-  | 'view_nodebalancer'
-  | 'view_nodebalancer_config'
-  | 'view_nodebalancer_config_node'
-  | 'view_nodebalancer_statistics';
-
-/** Permissions associated with the "volume_admin" role. */
-export type VolumeAdmin = 'delete_volume' | VolumeContributor;
-
-/** Permissions associated with the "volume_contributor" role. */
-export type VolumeContributor =
-  | 'attach_volume'
-  | 'clone_volume'
-  | 'delete_volume'
-  | 'detach_volume'
-  | 'resize_volume'
-  | 'update_volume'
-  | VolumeViewer;
-
-/** Permissions associated with the "volume_viewer" role. */
-export type VolumeViewer = 'view_volume';
+/** Facade roles represent the existing Grant model for entities that are not yet migrated to IAM */
+export type EntityRoleFacade =
+  | 'database_admin'
+  | 'database_viewer'
+  | 'domain_admin'
+  | 'domain_viewer'
+  | 'image_admin'
+  | 'image_viewer'
+  | 'lkecluster_admin'
+  | 'lkecluster_viewer'
+  | 'longview_admin'
+  | 'longview_viewer'
+  | 'nodebalancer_admin'
+  | 'nodebalancer_viewer'
+  | 'placement_group_admin'
+  | 'placement_group_viewer'
+  | 'stackscript_admin'
+  | 'stackscript_viewer'
+  | 'volume_admin'
+  | 'volume_viewer'
+  | 'vpc_admin';
 
 /** Union of all permissions */
 export type PermissionType = AccountAdmin;

@@ -258,6 +258,6 @@ export const pages: Page[] = [
       },
     ],
     name: 'Settings',
-    url: '/account-settings',
+    url: `/settings`,
   },
 ];

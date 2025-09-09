@@ -16,8 +16,6 @@ import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
-
 import type { EventStatus } from '@linode/api-v4';
 import type { RecPartial } from 'factory.ts';
 
@@ -123,7 +121,7 @@ const uploadImage = (label: string) => {
   // See also BAC-862.
   const region = chooseRegion({
     capabilities: ['Object Storage'],
-    exclude: DISALLOWED_IMAGE_REGIONS,
+    exclude: ['au-mel', 'gb-lon', 'sg-sin-2'],
   });
   const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
@@ -240,13 +238,8 @@ describe('machine image', () => {
       .findByTitle(`Delete Image ${updatedLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Image Label')
-          .should('be.visible')
-          .should('be.enabled')
-          .type(updatedLabel);
-
         ui.buttonGroup
-          .findButtonByTitle('Delete')
+          .findButtonByTitle('Delete Image')
           .should('be.visible')
           .should('be.enabled')
           .click();

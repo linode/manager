@@ -1,14 +1,3 @@
-## [2025-09-09] - v0.74.0
-
-### Added:
-
-- Additional device slots to `devices` schema ([#12791](https://github.com/linode/manager/pull/12791))
-- Node Pool schemas `CreateNodePoolSchema` and `EditNodePoolSchema` ([#12793](https://github.com/linode/manager/pull/12793))
-
-### Removed:
-
-- General Node Pool schema `nodePoolSchema` ([#12793](https://github.com/linode/manager/pull/12793))
-
 ## [2025-08-26] - v0.73.0
 
 ### Changed:

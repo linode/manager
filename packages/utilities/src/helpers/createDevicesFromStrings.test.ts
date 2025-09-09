@@ -6,7 +6,16 @@ describe('LinodeRescue', () => {
   describe('createRescueDevicesPostObject', () => {
     it('Returns the minimum requirement.', () => {
       const result = createDevicesFromStrings({});
-      const expected = {};
+      const expected = {
+        sda: null,
+        sdb: null,
+        sdc: null,
+        sdd: null,
+        sde: null,
+        sdf: null,
+        sdg: null,
+        sdh: null,
+      };
 
       expect(result).toEqual(expected);
     });
@@ -17,7 +26,13 @@ describe('LinodeRescue', () => {
       });
       const expected = {
         sda: { disk_id: 123 },
+        sdb: null,
+        sdc: null,
         sdd: { disk_id: 456 },
+        sde: null,
+        sdf: null,
+        sdg: null,
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
@@ -29,8 +44,14 @@ describe('LinodeRescue', () => {
         sde: 'volume-456',
       });
       const expected = {
+        sda: null,
         sdb: { volume_id: 123 },
+        sdc: null,
+        sdd: null,
         sde: { volume_id: 456 },
+        sdf: null,
+        sdg: null,
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
@@ -42,7 +63,14 @@ describe('LinodeRescue', () => {
         sdd: 'disk-456',
       });
       const expected = {
+        sda: null,
+        sdb: null,
+        sdc: null,
         sdd: { disk_id: 456 },
+        sde: null,
+        sdf: null,
+        sdg: null,
+        sdh: null,
       };
       expect(result).toEqual(expected);
     });

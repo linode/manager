@@ -25,11 +25,10 @@ import {
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
-import { EntityScopeRenderer } from './EntityScopeRenderer';
-import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -56,6 +55,7 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
+  entity_ids: [],
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
@@ -64,8 +64,7 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
-  entity_ids: [],
-  scope: null,
+  scope: 'entity',
 };
 
 const overrides: CrumbOverridesProps[] = [
@@ -117,7 +116,7 @@ export const CreateAlertDefinition = () => {
     serviceTypeWatcher ?? '',
     !!serviceTypeWatcher
   );
-  const scopeWatcher = useWatch({ control, name: 'scope' });
+
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -216,11 +215,7 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <AlertEntityScopeSelect
-              name="scope"
-              serviceType={serviceTypeWatcher}
-            />
-            <EntityScopeRenderer scope={scopeWatcher} />
+            <CloudPulseModifyAlertResources name="entity_ids" />
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}

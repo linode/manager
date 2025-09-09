@@ -21,7 +21,6 @@ export const PanelView: StoryObj<TagCellProps> = {
         <Box sx={{ height: 300 }}>
           <TagCell
             {...args}
-            entity="Entity"
             tags={tags}
             updateTags={handleUpdateTags}
             view={args.view ?? 'panel'}
@@ -46,7 +45,6 @@ export const InlineView: StoryObj<TagCellProps> = {
         <Box sx={{ height: 300 }}>
           <TagCell
             {...args}
-            entity="Entity"
             tags={tags}
             updateTags={handleUpdateTags}
             view={args.view ?? 'inline'}

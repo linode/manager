@@ -222,7 +222,7 @@ export const DatabaseBackups = () => {
                   option.value === value.value
                 }
                 label=""
-                onChange={(_, newTime) => setSelectedTime(newTime ?? null)}
+                onChange={(_, newTime) => setSelectedTime(newTime)}
                 options={TIME_OPTIONS}
                 placeholder="Choose a time"
                 renderOption={(props, option) => {
@@ -238,7 +238,7 @@ export const DatabaseBackups = () => {
                     'data-qa-time-select': true,
                   },
                 }}
-                value={selectedTime ?? null}
+                value={selectedTime}
               />
             </FormControl>
           </GridLegacy>

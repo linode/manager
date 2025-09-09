@@ -18,11 +18,11 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { SupportLink } from 'src/components/SupportLink';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
+import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
-import { ScopeContentRenderer } from './ScopeContentRenderer';
 
 import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
@@ -100,7 +100,14 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { service_type: alertServiceType, status, label } = alertDetails;
+  const {
+    class: alertClass,
+    entity_ids: entityIds,
+    service_type: alertServiceType,
+    type,
+    status,
+    label,
+  } = alertDetails;
 
   return (
     <>
@@ -151,10 +158,21 @@ export const AlertDetail = () => {
               />
             </Box>
           </Box>
-          <ScopeContentRenderer
-            alert={alertDetails}
+          <Box
+            data-qa-section="Resources"
             maxHeight={sectionMaxHeight}
-          />
+            sx={{
+              ...getAlertBoxStyles(theme),
+              overflow: 'auto',
+            }}
+          >
+            <AlertResources
+              alertClass={alertClass}
+              alertResourceIds={entityIds}
+              alertType={type}
+              serviceType={alertServiceType}
+            />
+          </Box>
           <Box
             data-qa-section="Notification Channels"
             sx={{

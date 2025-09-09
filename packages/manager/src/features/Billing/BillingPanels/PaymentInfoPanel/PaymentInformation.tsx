@@ -98,8 +98,6 @@ const PaymentInformation = (props: Props) => {
   React.useEffect(() => {
     if (addPaymentMethodRouteMatch) {
       openAddDrawer();
-    } else {
-      closeAddDrawer();
     }
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
