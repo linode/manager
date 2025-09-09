@@ -51,7 +51,7 @@ export interface LabelNameOptionsProps {
   /**
    * label for the current metric
    */
-  metricLabel: string | undefined;
+  metricLabel?: string;
 
   /**
    * list of CloudPulseResources available
@@ -82,7 +82,7 @@ interface GraphDataOptionsProps {
   /**
    * label for the current metric
    */
-  metricLabel: string | undefined;
+  metricLabel?: string;
 
   /**
    * data that will be displayed on graph
@@ -155,7 +155,7 @@ export interface DimensionNameProperties {
   /**
    * label for the current metric
    */
-  metricLabel: string | undefined;
+  metricLabel?: string;
 
   /**
    * resources list of CloudPulseResources available
