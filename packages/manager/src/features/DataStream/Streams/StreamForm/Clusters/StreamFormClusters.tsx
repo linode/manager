@@ -22,6 +22,12 @@ import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 import type { OrderByKeys } from 'src/features/DataStream/Streams/StreamForm/Clusters/StreamFormClustersTable';
 import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
+const controlPaths = {
+  isAutoAddAllClustersEnabled:
+    'stream.details.is_auto_add_all_clusters_enabled',
+  clusterIds: 'stream.details.cluster_ids',
+} as const;
+
 export const StreamFormClusters = () => {
   const { control, setValue, formState } =
     useFormContext<StreamAndDestinationFormType>();
@@ -62,15 +68,12 @@ export const StreamFormClusters = () => {
 
   const [isAutoAddAllClustersEnabled, clusterIds] = useWatch({
     control,
-    name: [
-      'stream.details.is_auto_add_all_clusters_enabled',
-      'stream.details.cluster_ids',
-    ],
+    name: [controlPaths.isAutoAddAllClustersEnabled, controlPaths.clusterIds],
   });
 
   useEffect(() => {
     setValue(
-      'stream.details.cluster_ids',
+      controlPaths.clusterIds,
       isAutoAddAllClustersEnabled ? idsWithLogsEnabled : clusterIds || []
     );
   }, [isLoading]);
@@ -102,7 +105,7 @@ export const StreamFormClusters = () => {
             automatically with newly configured clusters.
           </Notice>
           <Controller
-            name={'stream.details.is_auto_add_all_clusters_enabled'}
+            name={controlPaths.isAutoAddAllClustersEnabled}
             render={({ field }) => (
               <Checkbox
                 checked={field.value}
@@ -110,9 +113,9 @@ export const StreamFormClusters = () => {
                 onChange={(_, checked) => {
                   field.onChange(checked);
                   if (checked) {
-                    setValue('stream.details.cluster_ids', idsWithLogsEnabled);
+                    setValue(controlPaths.clusterIds, idsWithLogsEnabled);
                   } else {
-                    setValue('stream.details.cluster_ids', []);
+                    setValue(controlPaths.clusterIds, []);
                   }
                 }}
                 sxFormLabel={{ ml: -1 }}
@@ -147,7 +150,7 @@ export const StreamFormClusters = () => {
             <Table data-testid="clusters-table">
               <Controller
                 control={control}
-                name="stream.details.cluster_ids"
+                name={controlPaths.clusterIds}
                 render={({ field }) => (
                   <StreamFormClusterTableContent
                     clusters={clusters}
