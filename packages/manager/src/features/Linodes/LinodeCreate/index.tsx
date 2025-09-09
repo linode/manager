@@ -29,7 +29,10 @@ import {
   useVMHostMaintenanceEnabled,
 } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
+import {
+  getLinodeCreateType,
+  useGetLinodeCreateType,
+} from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
@@ -146,8 +149,10 @@ export const LinodeCreate = () => {
     handleTabChange(index);
 
     if (index !== tabIndex) {
+      const newTab = tabs[index];
+      const newLinodeCreateType = getLinodeCreateType(newTab.to);
       // Get the default values for the new tab and reset the form
-      defaultValues(linodeCreateType, search, queryClient, {
+      defaultValues(newLinodeCreateType, search, queryClient, {
         isLinodeInterfacesEnabled,
         isVMHostMaintenanceEnabled,
       }).then(form.reset);

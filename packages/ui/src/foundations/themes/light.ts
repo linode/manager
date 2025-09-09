@@ -982,7 +982,7 @@ export const lightTheme: ThemeOptions = {
             color: Component.Label.Text,
             opacity: 0.5,
           },
-          '&$error': {
+          '&.Mui-error': {
             color: Component.Label.Text,
           },
           '&.Mui-focused': {

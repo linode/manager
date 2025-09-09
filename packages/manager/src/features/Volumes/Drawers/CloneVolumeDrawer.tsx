@@ -1,8 +1,4 @@
-import {
-  useCloneVolumeMutation,
-  useGrants,
-  useVolumeTypesQuery,
-} from '@linode/queries';
+import { useCloneVolumeMutation, useVolumeTypesQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -18,6 +14,7 @@ import * as React from 'react';
 
 import { BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -42,22 +39,25 @@ const initialValues = { label: '' };
 export const CloneVolumeDrawer = (props: Props) => {
   const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_volume',
+  ]);
+  const { data: volumePermissions } = usePermissions(
+    'volume',
+    ['clone_volume'],
+    volume?.id
+  );
+  const canCloneVolume =
+    volumePermissions?.clone_volume && accountPermissions?.create_volume;
+
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const { data: grants } = useGrants();
   const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const { isBlockStorageEncryptionFeatureEnabled } =
     useIsBlockStorageEncryptionFeatureEnabled();
-
-  // Even if a restricted user has the ability to create Volumes, they
-  // can't clone a Volume they only have read only permission on.
-  const isReadOnly =
-    grants !== undefined &&
-    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
-      'read_only';
 
   const isInvalidPrice = !types || isError;
 
@@ -104,7 +104,7 @@ export const CloneVolumeDrawer = (props: Props) => {
       title="Clone Volume"
     >
       <form onSubmit={handleSubmit}>
-        {isReadOnly && (
+        {!canCloneVolume && (
           <Notice
             spacingBottom={12}
             text="You don't have permission to clone this volume."
@@ -118,7 +118,7 @@ export const CloneVolumeDrawer = (props: Props) => {
           be available in {volume?.region}.
         </Typography>
         <TextField
-          disabled={isReadOnly}
+          disabled={!canCloneVolume}
           errorText={touched.label ? errors.label : undefined}
           label="Label"
           name="label"
@@ -149,7 +149,7 @@ export const CloneVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isReadOnly || isInvalidPrice,
+            disabled: !canCloneVolume || isInvalidPrice,
             label: 'Clone Volume',
             loading: isSubmitting,
             tooltipText:

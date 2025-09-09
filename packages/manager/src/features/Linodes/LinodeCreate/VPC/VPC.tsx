@@ -71,6 +71,8 @@ export const VPC = () => {
       : 'Assign this Linode to an existing VPC.';
 
   const createType = useGetLinodeCreateType();
+  const isCreatingFromBackup = createType === 'Backups';
+  const disabled = !regionSupportsVPCs || isCreatingFromBackup;
 
   const vpcFormEventOptions: LinodeCreateFormEventOptions = {
     createType: createType ?? 'OS',
@@ -82,7 +84,16 @@ export const VPC = () => {
   return (
     <Paper data-testid="vpc-panel">
       <Stack spacing={2}>
-        <Typography variant="h2">VPC</Typography>
+        <Box alignItems="center" display="flex" flexDirection="row">
+          <Typography variant="h2">VPC</Typography>
+          {isCreatingFromBackup && (
+            <TooltipIcon
+              status="info"
+              sxTooltipIcon={{ p: 0, marginLeft: '8px' }}
+              text="You cannot assign a VPC when deploying to a new Linode from a backup."
+            />
+          )}
+        </Box>
         <Typography>
           {copy}{' '}
           <Link
@@ -104,7 +115,7 @@ export const VPC = () => {
             name="interfaces.0.vpc_id"
             render={({ field, fieldState }) => (
               <Autocomplete
-                disabled={!regionSupportsVPCs}
+                disabled={disabled}
                 errorText={error?.[0].reason ?? fieldState.error?.message}
                 helperText={
                   !regionId

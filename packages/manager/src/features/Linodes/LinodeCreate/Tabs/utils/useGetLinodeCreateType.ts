@@ -28,6 +28,10 @@ export const linodesCreateTypes = Array.from(linodesCreateTypesMap.keys());
 export const useGetLinodeCreateType = () => {
   const { pathname } = useLocation() as { pathname: LinkProps['to'] };
 
+  return getLinodeCreateType(pathname);
+};
+
+export const getLinodeCreateType = (pathname: LinkProps['to']) => {
   switch (pathname) {
     case '/linodes/create/backups':
       return 'Backups';

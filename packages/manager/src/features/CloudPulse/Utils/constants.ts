@@ -58,7 +58,8 @@ export const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
 export const PORTS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 
-export const PORTS_LIMIT_ERROR_MESSAGE = 'Enter a maximum of 15 port numbers';
+export const PORTS_LIMIT_ERROR_MESSAGE =
+  'Port list must be 100 characters or less.';
 
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
@@ -75,12 +76,15 @@ export const INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 
 export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
-  'Enter a maximum of 15 interface ID numbers';
+  'Interface IDs list must be 100 characters or less.';
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
+
 export const NO_REGION_MESSAGE: Record<string, string> = {
   dbaas: 'No database clusters configured in any regions.',
-  linode: 'No linodes configured in any regions.',
+  linode: 'No Linodes configured in any regions.',
+  nodebalancer: 'No NodeBalancers configured in any regions.',
+  firewall: 'No firewalls configured in any Linode regions.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {

@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import { accountAvailabilityFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 import { mockGetAccountAvailability } from 'support/intercepts/account';
@@ -29,7 +30,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -58,7 +59,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -88,7 +89,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -118,7 +119,7 @@ componentTests('RegionSelect', (mount) => {
               isGeckoLAEnabled={false}
               onChange={() => {}}
               regions={[region]}
-              value={undefined}
+              value={null}
             />
           </>
         );
@@ -152,7 +153,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -271,7 +272,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -289,7 +290,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={spyFn}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
 
@@ -359,7 +360,7 @@ componentTests('RegionSelect', (mount) => {
           isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
-          value={undefined}
+          value={null}
         />,
         {
           dcGetWell: true,
@@ -394,7 +395,7 @@ componentTests('RegionSelect', (mount) => {
           isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
-          value={undefined}
+          value={null}
         />
       );
 
@@ -424,7 +425,7 @@ componentTests('RegionSelect', (mount) => {
           isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
-          value={undefined}
+          value={null}
         />
       );
 
@@ -441,6 +442,53 @@ componentTests('RegionSelect', (mount) => {
           .should('be.visible');
       });
     });
+
+    it('should display a tooltip for disabled regions', () => {
+      const disabledRegion = 'US, Fremont, CA (us-west)';
+      const disabledReason = `You've reached the limit of placement groups you can create in this region.`;
+
+      mount(
+        <RegionSelect
+          currentCapability="Object Storage"
+          disabledRegions={{
+            'us-west': {
+              reason: <Typography>{disabledReason}</Typography>,
+              tooltipWidth: 300,
+            },
+          }}
+          isGeckoLAEnabled={false}
+          onChange={() => {}}
+          regions={[
+            ...regions,
+            regionFactory.build({
+              id: 'us-west',
+              label: 'US, Fremont, CA',
+              capabilities: ['Object Storage'],
+            }),
+          ]}
+          value={null}
+        />
+      );
+
+      ui.button
+        .findByAttribute('title', 'Open')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.findByText(disabledRegion).as('regionItem').scrollIntoView();
+
+      cy.get('@regionItem').should('be.visible');
+
+      cy.findByText(disabledRegion)
+        .closest('li')
+        .should('have.attr', 'data-qa-disabled-item', 'true');
+
+      cy.findByText(disabledRegion).closest('li').click();
+      cy.findByRole('tooltip')
+        .should('be.visible')
+        .and('contain.text', disabledReason);
+    });
   });
 
   visualTests((mount) => {
@@ -455,7 +503,7 @@ componentTests('RegionSelect', (mount) => {
             isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
-            value={undefined}
+            value={null}
           />
         );
         checkComponentA11y();

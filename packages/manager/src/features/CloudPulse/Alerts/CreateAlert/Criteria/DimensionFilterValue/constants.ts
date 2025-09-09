@@ -1,14 +1,21 @@
-import { PORTS_HELPER_TEXT } from 'src/features/CloudPulse/Utils/constants';
+import {
+  INTERFACE_IDS_HELPER_TEXT,
+  INTERFACE_IDS_PLACEHOLDER_TEXT,
+  PORTS_HELPER_TEXT,
+} from 'src/features/CloudPulse/Utils/constants';
 
 import {
-  CONFIG_ERROR_MESSAGE,
+  CONFIG_HELPER_TEXT,
   CONFIG_ID_PLACEHOLDER_TEXT,
   CONFIGS_HELPER_TEXT,
   CONFIGS_ID_PLACEHOLDER_TEXT,
+  INTERFACE_ID_HELPER_TEXT,
   PORT_HELPER_TEXT,
   PORT_PLACEHOLDER_TEXT,
   PORTS_PLACEHOLDER_TEXT,
 } from '../../../constants';
+
+import type { Item } from '../../../constants';
 
 export const MULTISELECT_PLACEHOLDER_TEXT = 'Select Values';
 export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a Value';
@@ -144,18 +151,63 @@ export const valueFieldConfig: ValueFieldConfigMap = {
       inputType: 'number',
     },
   },
+  linode_id: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: true,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: true,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+    },
+  },
+  region_id: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: true,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      placeholder: 'e.g., us-ord',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: true,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+    },
+  },
   config_id: {
     eq_neq: {
       type: 'textfield',
       inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
       placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
-      helperText: CONFIG_ERROR_MESSAGE,
+      helperText: CONFIG_HELPER_TEXT,
     },
     startswith_endswith: {
       type: 'textfield',
       inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
       placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
-      helperText: CONFIG_ERROR_MESSAGE,
+      helperText: CONFIG_HELPER_TEXT,
     },
     in: {
       type: 'textfield',
@@ -166,6 +218,55 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     '*': {
       type: 'textfield',
       inputType: 'number',
+    },
+  },
+  interface_id: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
+      placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
+      helperText: INTERFACE_ID_HELPER_TEXT,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
+      placeholder: CONFIG_ID_PLACEHOLDER_TEXT,
+      helperText: INTERFACE_ID_HELPER_TEXT,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: INTERFACE_IDS_PLACEHOLDER_TEXT,
+      helperText: INTERFACE_IDS_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'number',
+    },
+  },
+  vpc_subnet_id: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: true,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      placeholder: 'e.g., VPC-label_subnet-label',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: true,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
     },
   },
   emptyValue: {
@@ -205,3 +306,9 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     },
   },
 };
+
+export interface FetchOptions {
+  isError: boolean;
+  isLoading: boolean;
+  values: Item<string, string>[];
+}
