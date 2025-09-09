@@ -420,7 +420,7 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
     }
   });
   const label = labels.filter(Boolean).join(' | ');
-  return label || metric['metric_name'];
+  return (label || metric['metric_name']) ?? '';
 };
 
 /**
