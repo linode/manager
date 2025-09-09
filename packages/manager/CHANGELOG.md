@@ -22,7 +22,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Support IAM/RBAC permission segmentation for BETA/LA features ([#12764](https://github.com/linode/manager/pull/12764))
 - Aggregation Function labels from Average,Minimum,Maximum to Avg,Min,Max in ACLP-Alerting service ([#12787](https://github.com/linode/manager/pull/12787))
 - Add data-pendo-id attribute to TabbedPanel for Linode Plan tab tracking ([#12806](https://github.com/linode/manager/pull/12806))
-- Update self-hosted Pendo agent script to support data-pendo-id attribute ([#12828](https://github.com/linode/manager/pull/12828))
 
 ### Fixed:
 
