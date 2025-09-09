@@ -15,14 +15,41 @@ import NullComponent from 'src/components/NullComponent';
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
 export interface GroupByDrawerProps {
+  /**
+   * Default selected group by options
+   */
   defaultValue?: GroupByOption[];
+  /**
+   * Optional message to display in the drawer
+   */
   message?: string;
+  /**
+   * Callback function triggered when apply button is clicked
+   */
   onApply: (value: GroupByOption[]) => void;
+  /**
+   * Callback function triggered when cancel button is clicked
+   */
   onCancel: () => void;
+  /**
+   * Controls whether the drawer is open
+   */
   open?: boolean;
+  /**
+   * Available group by options to select from
+   */
   options: GroupByOption[];
+  /**
+   * Type of cloud service being monitored
+   */
   serviceType: CloudPulseServiceType;
+  /**
+   * Optional subtitle for the drawer
+   */
   subtitle?: string;
+  /**
+   * Title for the drawer
+   */
   title: string;
 }
 
