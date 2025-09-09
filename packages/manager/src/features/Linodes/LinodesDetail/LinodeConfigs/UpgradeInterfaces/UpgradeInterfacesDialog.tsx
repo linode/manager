@@ -1,9 +1,8 @@
-import { BetaChip, Dialog, NewFeatureChip } from '@linode/ui';
+import { Dialog } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
-
+import { LinodeInterfaceFeatureChip } from '../../LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
 import { ErrorDialogContent } from './DialogContents/ErrorDialogContent';
 import { PromptDialogContent } from './DialogContents/PromptDialogContent';
@@ -25,8 +24,6 @@ export const initialState: UpgradeInterfacesDialogState = {
 
 export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
   const { linodeId, onClose, open } = props;
-
-  const flags = useFlags();
 
   const isDesktopSize = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
@@ -64,13 +61,7 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
         },
       }}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
-      titleSuffix={
-        flags.linodeInterfaces?.beta ? (
-          <BetaChip />
-        ) : flags.linodeInterfaces?.new ? (
-          <NewFeatureChip />
-        ) : undefined
-      }
+      titleSuffix={<LinodeInterfaceFeatureChip />}
     >
       {dialogState.step === 'prompt' && (
         <PromptDialogContent {...dialogProps} state={dialogState} />
