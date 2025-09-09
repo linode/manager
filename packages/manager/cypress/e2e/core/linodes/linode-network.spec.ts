@@ -376,18 +376,26 @@ describe('Linode Interfaces enabled', () => {
      */
     it('hides Firewall table and IP address buttons', () => {
       cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
-      
+
+      cy.findByLabelText('Linode Firewalls').should('not.exist');
+      cy.findByText('Add Firewall').should('not.exist');
+
+      cy.findByLabelText('Linode IP Addresses').should('be.visible');
+      cy.findByText('Add an IP Address').should('not.exist');
+      cy.findByText(mockLinodeIPv4.address)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Public – IPv4').should('be.visible');
+          cy.findByText('Delete').should('not.exist');
+        });
     });
 
-    it('confirms the Network Interfaces table functions as expected', () => {
-
-    });
+    it('confirms the Network Interfaces table functions as expected', () => {});
 
     describe('Adding Linode Interfaces', () => {
-      it('allows the user to add a VLAN interface', () => {
+      it('allows the user to add a VLAN interface', () => {});
 
-      });
-  
       it('allows the user to add a public network interface with a firewall', () => {
         const mockLinodeInterface = linodeInterfaceFactoryPublic.build();
         const selectedMockFirewall = mockFirewalls[1];

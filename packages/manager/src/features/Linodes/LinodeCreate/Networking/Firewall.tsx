@@ -52,7 +52,7 @@ export const Firewall = () => {
             }
             text={
               flags.secureVmCopy?.linodeCreate?.text ??
-              'All accounts must apply an compliant firewall to all their Linodes.'
+              'All accounts must apply a compliant firewall to all their Linodes.'
             }
           />
         )}
