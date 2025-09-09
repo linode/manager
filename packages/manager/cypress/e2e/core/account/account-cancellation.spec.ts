@@ -178,51 +178,14 @@ describe('Account cancellation', () => {
     mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
     mockGetProfileGrants(mockGrants).as('getGrants');
-    mockCancelAccountError('Unauthorized', 403).as('cancelAccount');
-
-    // Navigate to Account Settings page, click "Close Account" button.
 
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile', '@getGrants']);
 
-    cy.findByTestId('close-account')
-      .should('be.visible')
-      .within(() => {
-        cy.findByTestId('close-account-button')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Fill out cancellation dialog and attempt submission.
-    ui.dialog
-      .findByTitle(cancellationDialogTitle)
-      .should('be.visible')
-      .within(() => {
-        // Check both boxes but verify submit remains disabled without email
-        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
-        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
-
-        ui.button
-          .findByTitle('Close Account')
-          .should('be.visible')
-          .should('be.disabled');
-
-        cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
-          .should('be.visible')
-          .should('be.enabled')
-          .type(mockProfile.email);
-
-        ui.button
-          .findByTitle('Close Account')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm that API unauthorized error message is displayed.
-        cy.wait('@cancelAccount');
-        cy.findByText('Unauthorized').should('be.visible');
-      });
+    cy.findByText(
+      "You don't have permissions to edit this Account. Please contact your account administrator to request the necessary permissions.",
+      { exact: false }
+    ).should('be.visible');
   });
 });
 
