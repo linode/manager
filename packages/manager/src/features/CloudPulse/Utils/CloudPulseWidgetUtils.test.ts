@@ -70,7 +70,6 @@ describe('getLabelName method', () => {
     resources: [{ id: '123', label: 'linode-1' }],
     serviceType: 'linode',
     unit: '%',
-    groupBy: ['entity_id'],
   };
 
   it('returns resource label when all data is valid', () => {
@@ -122,7 +121,6 @@ it('test generateGraphData with metrics data', () => {
     status: 'success',
     unit: '%',
     serviceType: 'linode',
-    groupBy: ['entity_id'],
   });
 
   expect(result.areas[0].dataKey).toBe('linode-1');
@@ -150,7 +148,6 @@ describe('getDimensionName method', () => {
     serviceType: 'linode',
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
-    groupBy: ['entity_id'],
   };
 
   it('returns resource label when all data is valid', () => {

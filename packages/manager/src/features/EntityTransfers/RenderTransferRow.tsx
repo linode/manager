@@ -18,8 +18,7 @@ import {
 } from './RenderTransferRow.styles';
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
 
-import type { TransfersPermissions } from './TransfersTable';
-import type { TransferEntities } from '@linode/api-v4';
+import type { PermissionType, TransferEntities } from '@linode/api-v4';
 interface Props {
   created: string;
   entities: TransferEntities;
@@ -29,7 +28,7 @@ interface Props {
     entities: TransferEntities
   ) => void;
   handleTokenClick: (token: string, entities: TransferEntities) => void;
-  permissions?: Record<TransfersPermissions, boolean>;
+  permissions?: Record<PermissionType, boolean>;
   status?: string;
   token: string;
   transferType?: 'pending' | 'received' | 'sent';

@@ -70,12 +70,6 @@ export interface KubeNodePoolResponse {
    * @note Only returned for LKE Enterprise clusters
    */
   k8s_version?: string;
-  /**
-   * A label/name for the Node Pool
-   *
-   * @default ""
-   */
-  label: string;
   labels: Label;
   nodes: PoolNodeResponse[];
   tags: string[];
@@ -110,7 +104,7 @@ export interface CreateNodePoolData {
    *
    * @note Only supported on LKE Enterprise clusters
    */
-  firewall_id?: null | number;
+  firewall_id?: number;
   /**
    * The LKE version that the node pool should use.
    *
@@ -119,20 +113,14 @@ export interface CreateNodePoolData {
    */
   k8s_version?: string;
   /**
-   * An optional label/name for the Node Pool.
-   *
-   * @default ""
-   */
-  label?: string;
-  /**
    * Key-value pairs added as labels to nodes in the node pool.
    */
-  labels?: Label | null;
-  tags?: null | string[];
+  labels?: Label;
+  tags?: string[];
   /**
    * Kubernetes taints to add to node pool nodes.
    */
-  taints?: null | Taint[];
+  taints?: Taint[];
   /**
    * The Linode Type for all of the nodes in the Node Pool.
    */
@@ -144,7 +132,7 @@ export interface CreateNodePoolData {
    * @note Only supported on LKE Enterprise clusters
    * @default on_recycle
    */
-  update_strategy?: NodePoolUpdateStrategy | null;
+  update_strategy?: NodePoolUpdateStrategy;
 }
 
 export type UpdateNodePoolData = Partial<CreateNodePoolData>;

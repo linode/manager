@@ -5,7 +5,7 @@ import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -17,10 +17,9 @@ import {
 
 export const NodeBalancerLandingEmptyState = () => {
   const navigate = useNavigate();
-
-  const { data: permissions } = usePermissions('account', [
-    'create_nodebalancer',
-  ]);
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_nodebalancers',
+  });
 
   return (
     <React.Fragment>
@@ -29,7 +28,7 @@ export const NodeBalancerLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create NodeBalancer',
-            disabled: !permissions.create_nodebalancer,
+            disabled: isRestricted,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',

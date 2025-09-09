@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
-import type { TransfersPermissions } from './TransfersTable';
+import type { PermissionType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onCancelClick: () => void;
-  permissions?: Record<TransfersPermissions, boolean>;
+  permissions?: Partial<Record<PermissionType, boolean>>;
 }
 
 export const TransfersPendingActionMenu = (props: Props) => {

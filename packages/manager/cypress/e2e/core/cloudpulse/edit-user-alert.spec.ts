@@ -205,7 +205,7 @@ describe('Integration Tests for Edit Alert', () => {
 
     // Assert rule values 1
     assertRuleValues(0, {
-      aggregationType: 'Avg',
+      aggregationType: 'Average',
       dataField: 'CPU Utilization',
       operator: '=',
       threshold: '1000',
@@ -213,7 +213,7 @@ describe('Integration Tests for Edit Alert', () => {
 
     // Assert rule values 2
     assertRuleValues(1, {
-      aggregationType: 'Avg',
+      aggregationType: 'Average',
       dataField: 'Memory Usage',
       operator: '=',
       threshold: '1000',
@@ -295,8 +295,8 @@ describe('Integration Tests for Edit Alert', () => {
     cy.get('[data-testid="rule_criteria.rules.0-id"]').within(() => {
       ui.autocomplete.findByLabel('Data Field').type('Disk I/O');
       ui.autocompletePopper.findByTitle('Disk I/O').click();
-      ui.autocomplete.findByLabel('Aggregation Type').type('Min');
-      ui.autocompletePopper.findByTitle('Min').click();
+      ui.autocomplete.findByLabel('Aggregation Type').type('Minimum');
+      ui.autocompletePopper.findByTitle('Minimum').click();
       ui.autocomplete.findByLabel('Operator').type('>');
       ui.autocompletePopper.findByTitle('>').click();
       cy.get('[data-qa-threshold]').should('be.visible').clear();

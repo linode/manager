@@ -1,10 +1,3 @@
-## [2025-09-09] - v0.13.0
-
-### Upcoming Features:
-
-- Add queries for Streams DELETE, PUT API endpoints ([#12645](https://github.com/linode/manager/pull/12645))
-- Add queries for Destinations DELETE, PUT API endpoints ([#12749](https://github.com/linode/manager/pull/12749))
-
 ## [2025-08-26] - v0.12.0
 
 ### Added:

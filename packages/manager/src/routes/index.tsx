@@ -6,7 +6,6 @@ import React from 'react';
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
-import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
 import { cloudPulseAlertsRouteTree } from './alerts';
 import {
   cancelLandingRoute,
@@ -38,6 +37,7 @@ import { quotasRouteTree } from './quotas';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
 import { serviceTransfersRouteTree } from './serviceTransfers';
+import { settingsRouteTree } from './settings';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { usersAndGrantsRouteTree } from './usersAndGrants';
@@ -56,7 +56,6 @@ const indexRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
-  accountSettingsRouteTree,
   cancelLandingRoute,
   loginAsCustomerCallbackRoute,
   logoutRoute,

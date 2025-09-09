@@ -78,7 +78,6 @@ export const ImageRow = (props: Props) => {
           <Stack alignItems="center" direction="row" gap={1}>
             {type === 'manual' &&
               status !== 'creating' &&
-              status !== 'pending_upload' &&
               !image.capabilities.includes('distributed-sites') && (
                 <TooltipIcon
                   icon={<UnlockIcon height="18px" width="18px" />}

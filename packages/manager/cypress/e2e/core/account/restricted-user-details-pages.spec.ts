@@ -187,7 +187,7 @@ describe('restricted user details pages', () => {
       .and('be.disabled')
       .trigger('mouseover');
     ui.tooltip.findByText(
-      'You must be an unrestricted User in order to add or modify tags on a Linode.'
+      'You must be an unrestricted User in order to add or modify tags on Linodes.'
     );
   });
 

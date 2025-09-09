@@ -93,6 +93,7 @@ describe('LinodeConfigDialog', () => {
     it('should return a <Notice /> with NATTED_PUBLIC_IP_HELPER_TEXT under the appropriate conditions', () => {
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterface,
+        isLKEEnterpriseCluster: false,
         primaryInterfaceIndex: editableFields.interfaces.findIndex(
           (element) => element.primary === true
         ),
@@ -113,6 +114,7 @@ describe('LinodeConfigDialog', () => {
 
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterfaceWithoutNAT,
+        isLKEEnterpriseCluster: false,
         primaryInterfaceIndex: editableFields.interfaces.findIndex(
           (element) => element.primary === true
         ),
@@ -138,6 +140,7 @@ describe('LinodeConfigDialog', () => {
 
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterfacePrimaryWithoutNAT,
+        isLKEEnterpriseCluster: false,
         primaryInterfaceIndex:
           editableFieldsWithSingleInterface.interfaces.findIndex(
             (element) => element.primary === true
@@ -159,6 +162,7 @@ describe('LinodeConfigDialog', () => {
 
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: publicInterface,
+        isLKEEnterpriseCluster: false,
         primaryInterfaceIndex:
           editableFieldsWithoutVPCInterface.interfaces.findIndex(
             (element) => element.primary === true

@@ -27,7 +27,6 @@ import {
 } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
-import type { SelectDeselectAll } from '../constants';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
@@ -55,7 +54,7 @@ export interface AlertResourcesProp {
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
-  alertResourceIds?: string[];
+  alertResourceIds: string[];
 
   /**
    * The type of the alert system | user
@@ -98,11 +97,13 @@ export interface AlertResourcesProp {
   serviceType?: CloudPulseServiceType;
 }
 
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
+
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertClass,
     alertLabel,
-    alertResourceIds = [],
+    alertResourceIds,
     alertType,
     errorText,
     handleResourcesSelection,

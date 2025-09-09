@@ -15,9 +15,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { useIsNodebalancerVPCEnabled } from '../utils';
@@ -35,10 +35,9 @@ export const NodeBalancersLanding = () => {
     initialPage: 1,
     preferenceKey,
   });
-
-  const { data: permissions } = usePermissions('account', [
-    'create_nodebalancer',
-  ]);
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_nodebalancers',
+  });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -102,7 +101,7 @@ export const NodeBalancersLanding = () => {
             resourceType: 'NodeBalancers',
           }),
         }}
-        disabledCreateButton={!permissions.create_nodebalancer}
+        disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         entity="NodeBalancer"
         onButtonClick={() => navigate({ to: '/nodebalancers/create' })}
