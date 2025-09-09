@@ -154,11 +154,12 @@ export const SubnetAssignLinodesDrawer = (
   const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
     useAllLinodesQuery(),
     'linode',
-    ['update_linode', 'delete_linode']
+    ['update_linode', 'delete_linode'],
+    open
   );
 
-  const userCannotAssignLinodes =
-    !permissions?.update_vpc && filteredLinodes?.length === 0;
+  const userCanAssignLinodes =
+    permissions?.update_vpc && filteredLinodes?.length > 0;
 
   const downloadCSV = async () => {
     await getCSVData();
@@ -589,7 +590,7 @@ export const SubnetAssignLinodesDrawer = (
         subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
       })`}
     >
-      {userCannotAssignLinodes && (
+      {!userCanAssignLinodes && (
         <Notice
           text={`You don't have permissions to assign Linodes to ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
@@ -603,7 +604,7 @@ export const SubnetAssignLinodesDrawer = (
         <Typography>{REGIONAL_LINODE_MESSAGE}</Typography>
         <LinodeSelect
           checkIsOptionEqualToValue
-          disabled={userCannotAssignLinodes}
+          disabled={!userCanAssignLinodes}
           label="Linode"
           onSelectionChange={(selected) => {
             setFieldValue('selectedLinode', selected);
@@ -636,7 +637,7 @@ export const SubnetAssignLinodesDrawer = (
                   />
                 }
                 data-testid="vpc-ipv4-checkbox"
-                disabled={userCannotAssignLinodes}
+                disabled={!userCanAssignLinodes}
                 label={<Typography>Auto-assign VPC IPv4 address</Typography>}
                 sx={{ marginRight: 0 }}
               />
@@ -657,7 +658,7 @@ export const SubnetAssignLinodesDrawer = (
             </Box>
             {!autoAssignVPCIPv4Address && (
               <TextField
-                disabled={userCannotAssignLinodes}
+                disabled={!userCanAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
                 noMarginTop={showIPv6Content}
@@ -740,7 +741,7 @@ export const SubnetAssignLinodesDrawer = (
                   .
                 </Typography>
                 <Autocomplete
-                  disabled={userCannotAssignLinodes}
+                  disabled={!userCanAssignLinodes}
                   label={'Configuration profile'}
                   onChange={(_, value: Config) => {
                     setFieldValue('selectedConfig', value);
@@ -804,7 +805,7 @@ export const SubnetAssignLinodesDrawer = (
           <Button
             buttonType="primary"
             disabled={
-              userCannotAssignLinodes ||
+              !userCanAssignLinodes ||
               !dirty ||
               !values.selectedLinode ||
               (!isLinodeInterface &&

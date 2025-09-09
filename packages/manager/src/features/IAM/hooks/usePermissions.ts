@@ -153,7 +153,8 @@ export type QueryWithPermissionsResult<T> = {
 export const useQueryWithPermissions = <T extends EntityBase>(
   useQueryResult: UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
-  permissionsToCheck: PermissionType[]
+  permissionsToCheck: PermissionType[],
+  enabled = true
 ): QueryWithPermissionsResult<T> => {
   const {
     data: allEntities,
@@ -165,8 +166,13 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
   const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(allEntities, entityType, profile, isIAMEnabled);
-  const { data: grants } = useGrants(!isIAMEnabled);
+    useEntitiesPermissions<T>(
+      allEntities,
+      entityType,
+      profile,
+      isIAMEnabled && enabled
+    );
+  const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
   const entityPermissionsMap = isIAMEnabled
     ? toEntityPermissionMap(
