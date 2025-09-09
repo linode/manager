@@ -743,7 +743,26 @@ describe('Linode Interfaces enabled', () => {
 
     describe('Interface Details drawer', () => {
       it('confirms the details drawer for a public interface', () => {
-        const linodeInterface = linodeInterfaceFactoryPublic.build();
+        const linodeInterface = linodeInterfaceFactoryPublic.build({
+          public: {
+            ipv6: {
+              ranges: [
+                {
+                  range: '2600:3c06:e001:149::/64',
+                  route_target: null,
+                },
+                {
+                  range: '2600:3c06:e001:149::/56',
+                  route_target: null,
+                },
+              ],
+              shared: [],
+              slaac: [
+                { address: '2600:3c06::2000:13ff:fe6b:31b0', prefix: '64' },
+              ],
+            },
+          },
+        });
         mockGetLinodeInterfaces(mockLinode.id, {
           interfaces: [linodeInterface],
         }).as('getInterfaces');
@@ -787,6 +806,15 @@ describe('Linode Interfaces enabled', () => {
             cy.findByText(
               `${linodeInterface.public?.ipv4.addresses[0].address} (Primary)`
             ).should('be.visible');
+            cy.findByText('2600:3c06::2000:13ff:fe6b:31b0 (SLAAC)').should(
+              'be.visible'
+            );
+            cy.findByText('2600:3c06:e001:149::/64 (Range)').should(
+              'be.visible'
+            );
+            cy.findByText('2600:3c06:e001:149::/56 (Range)').should(
+              'be.visible'
+            );
           });
       });
 
