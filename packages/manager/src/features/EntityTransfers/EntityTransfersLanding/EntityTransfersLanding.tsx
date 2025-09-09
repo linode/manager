@@ -3,6 +3,7 @@ import { CircleProgress } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -128,6 +129,7 @@ export const EntityTransfersLanding = () => {
 
   return (
     <div style={{ overflowX: 'hidden' }}>
+      <DocumentTitleSegment segment="Transfers" />
       <TransferControls permissions={permissions} />
       <CreateTransferSuccessDialog
         isOpen={successDialogOpen}

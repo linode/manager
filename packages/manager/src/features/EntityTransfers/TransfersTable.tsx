@@ -22,7 +22,6 @@ import type {
   TransferEntities,
 } from '@linode/api-v4/lib/types';
 
-type PermissionsSubset<T extends PermissionType> = T;
 interface Props {
   error: APIError[] | null;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
@@ -30,17 +29,11 @@ interface Props {
   isLoading: boolean;
   page: number;
   pageSize: number;
-  permissions?: Record<TransfersPermissions, boolean>;
+  permissions?: Record<PermissionType, boolean>;
   results: number;
   transfers?: EntityTransfer[];
   transferType: 'pending' | 'received' | 'sent';
 }
-
-export type TransfersPermissions = PermissionsSubset<
-  | 'accept_service_transfer'
-  | 'cancel_service_transfer'
-  | 'create_service_transfer'
->;
 
 export const TransfersTable = React.memo((props: Props) => {
   const {

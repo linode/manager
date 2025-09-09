@@ -33,7 +33,6 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
-  | 'Account Settings'
   | 'Alerts'
   | 'Betas'
   | 'Billing'
@@ -60,6 +59,7 @@ export type NavEntity =
   | 'Placement Groups'
   | 'Quotas'
   | 'Service Transfers'
+  | 'Settings'
   | 'StackScripts'
   | 'Users & Grants'
   | 'Volumes'
@@ -113,17 +113,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
-  const {
-    data: collapsedSideNavPreference,
-    error: preferencesError,
-    isLoading: preferencesLoading,
-  } = usePreferences(
+  const { data: collapsedSideNavPreference } = usePreferences(
     (preferences) => preferences?.collapsedSideNavProductFamilies
   );
 
-  const collapsedAccordions = collapsedSideNavPreference ?? [
-    1, 2, 3, 4, 5, 6, 7,
-  ]; // by default, we collapse all categories if no preference is set;
+  const collapsedAccordions = collapsedSideNavPreference ?? [1, 2, 3, 4, 5, 6]; // by default, we collapse all categories if no preference is set;
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
@@ -313,8 +307,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/maintenance',
               },
               {
-                display: 'Account Settings',
-                to: '/account-settings',
+                display: 'Settings',
+                to: '/settings',
               },
             ],
             name: 'Administration',
@@ -338,7 +332,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     );
 
   const accordionClicked = (index: number) => {
-    let updatedCollapsedAccordions: number[] = [1, 2, 3, 4, 5, 6, 7];
+    let updatedCollapsedAccordions: number[] = [0, 1, 2, 3, 4, 5];
     if (collapsedAccordions.includes(index)) {
       updatedCollapsedAccordions = collapsedAccordions.filter(
         (accIndex) => accIndex !== index
@@ -404,10 +398,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   // When a user lands on a page and does not have any preference set,
   // we want to expand the accordion that contains the active link for convenience and discoverability
   React.useEffect(() => {
-    if (preferencesLoading || preferencesError) {
-      return;
-    }
-
     if (collapsedSideNavPreference) {
       return;
     }
@@ -431,8 +421,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     location.search,
     productFamilyLinkGroups,
     collapsedSideNavPreference,
-    preferencesLoading,
-    preferencesError,
   ]);
 
   let activeProductFamily = '';

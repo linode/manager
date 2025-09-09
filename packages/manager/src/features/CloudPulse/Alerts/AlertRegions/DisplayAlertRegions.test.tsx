@@ -24,7 +24,6 @@ describe('DisplayAlertRegions', () => {
         handleSelectAll={handleSelectAll}
         handleSelectionChange={handleChange}
         regions={regions}
-        scrollToElement={vi.fn()}
       />
     );
 
@@ -41,7 +40,6 @@ describe('DisplayAlertRegions', () => {
         handleSelectAll={handleSelectAll}
         handleSelectionChange={handleChange}
         regions={regions}
-        scrollToElement={vi.fn()}
       />
     );
 
@@ -61,7 +59,6 @@ describe('DisplayAlertRegions', () => {
         handleSelectAll={handleSelectAll}
         handleSelectionChange={handleChange}
         regions={regions}
-        scrollToElement={vi.fn()}
       />
     );
     const row = screen.getByTestId(`region-row-${regions[0].id}`);

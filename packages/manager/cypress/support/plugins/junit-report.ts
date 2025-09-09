@@ -27,8 +27,6 @@ const getCommonJunitConfig = (
   testSuite: string,
   config: Cypress.PluginConfigOptions
 ) => {
-  const runnerIndex = Number(config.env['CY_TEST_SPLIT_RUN_INDEX']) || 1;
-
   if (config.env[envVarName]) {
     if (!config.reporterOptions) {
       config.reporterOptions = {};
@@ -40,9 +38,6 @@ const getCommonJunitConfig = (
       testsuitesTitle: testSuiteName,
       jenkinsMode: true,
       suiteTitleSeparatedBy: '→',
-      properties: {
-        runner_index: runnerIndex,
-      },
     };
   }
   return config;

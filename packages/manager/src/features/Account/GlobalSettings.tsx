@@ -3,15 +3,15 @@ import {
   useAllLinodesQuery,
   useMutateAccountSettings,
 } from '@linode/queries';
-import { CircleProgress, ErrorState, Notice, Stack } from '@linode/ui';
+import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BackupDrawer } from '../Backups';
-import { usePermissions } from '../IAM/hooks/usePermissions';
 import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
 import { DefaultFirewalls } from './DefaultFirewalls';
@@ -20,10 +20,7 @@ import { MaintenancePolicy } from './MaintenancePolicy';
 import { NetworkHelper } from './NetworkHelper';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 import { ObjectStorageSettings } from './ObjectStorageSettings';
-import {
-  getRestrictedResourceText,
-  useVMHostMaintenanceEnabled,
-} from './utils';
+import { useVMHostMaintenanceEnabled } from './utils';
 
 import type { APIError } from '@linode/api-v4';
 
@@ -40,10 +37,6 @@ const GlobalSettings = () => {
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const { data: linodes } = useAllLinodesQuery();
-
-  const { data: permissions } = usePermissions('account', [
-    'view_account_settings',
-  ]);
 
   const hasLinodesWithoutBackups =
     linodes?.some((linode) => !linode.backups.enabled) ?? false;
@@ -70,17 +63,6 @@ const GlobalSettings = () => {
     return <CircleProgress />;
   }
 
-  if (!permissions.view_account_settings) {
-    return (
-      <Notice
-        text={getRestrictedResourceText({
-          resourceType: 'Account',
-        })}
-        variant="warning"
-      />
-    );
-  }
-
   if (accountSettingsError) {
     return (
       <ErrorState
@@ -105,6 +87,7 @@ const GlobalSettings = () => {
 
   return (
     <div>
+      <DocumentTitleSegment segment="Settings" />
       <Stack spacing={2}>
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
         {isLinodeInterfacesEnabled && <NetworkInterfaceType />}

@@ -43,25 +43,8 @@ const streamsCreateRoute = createRoute({
   path: 'streams/create',
 }).lazy(() =>
   import(
-    'src/features/DataStream/Streams/StreamForm/streamCreateLazyRoute'
+    'src/features/DataStream/Streams/StreamCreate/streamCreateLazyRoute'
   ).then((m) => m.streamCreateLazyRoute)
-);
-
-const streamsEditRoute = createRoute({
-  getParentRoute: () => dataStreamRoute,
-  params: {
-    parse: ({ streamId }: { streamId: string }) => ({
-      streamId: Number(streamId),
-    }),
-    stringify: ({ streamId }: { streamId: number }) => ({
-      streamId: String(streamId),
-    }),
-  },
-  path: 'streams/$streamId/edit',
-}).lazy(() =>
-  import('src/features/DataStream/Streams/StreamForm/streamEditLazyRoute').then(
-    (m) => m.streamEditLazyRoute
-  )
 );
 
 export interface DestinationSearchParams extends TableSearchParams {
@@ -83,32 +66,12 @@ const destinationsCreateRoute = createRoute({
   path: 'destinations/create',
 }).lazy(() =>
   import(
-    'src/features/DataStream/Destinations/DestinationForm/destinationCreateLazyRoute'
+    'src/features/DataStream/Destinations/DestinationCreate/destinationCreateLazyRoute'
   ).then((m) => m.destinationCreateLazyRoute)
-);
-
-const destinationsEditRoute = createRoute({
-  getParentRoute: () => dataStreamRoute,
-  params: {
-    parse: ({ destinationId }: { destinationId: string }) => ({
-      destinationId: Number(destinationId),
-    }),
-    stringify: ({ destinationId }: { destinationId: number }) => ({
-      destinationId: String(destinationId),
-    }),
-  },
-  path: 'destinations/$destinationId/edit',
-}).lazy(() =>
-  import(
-    'src/features/DataStream/Destinations/DestinationForm/destinationEditLazyRoute'
-  ).then((m) => m.destinationEditLazyRoute)
 );
 
 export const dataStreamRouteTree = dataStreamRoute.addChildren([
   dataStreamLandingRoute,
-  streamsRoute.addChildren([streamsCreateRoute, streamsEditRoute]),
-  destinationsRoute.addChildren([
-    destinationsCreateRoute,
-    destinationsEditRoute,
-  ]),
+  streamsRoute.addChildren([streamsCreateRoute]),
+  destinationsRoute.addChildren([destinationsCreateRoute]),
 ]);

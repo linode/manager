@@ -6,7 +6,7 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { useIsNodebalancerVPCEnabled } from '../utils';
 
@@ -24,11 +24,11 @@ export const NodeBalancerActionMenu = (props: Props) => {
 
   const { nodeBalancerId } = props;
 
-  const { data: permissions } = usePermissions(
-    'nodebalancer',
-    ['delete_nodebalancer'],
-    nodeBalancerId
-  );
+  const isNodeBalancerReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'nodebalancer',
+    id: nodeBalancerId,
+  });
 
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
@@ -56,7 +56,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
       title: 'Settings',
     },
     {
-      disabled: !permissions.delete_nodebalancer,
+      disabled: isNodeBalancerReadOnly,
       onClick: () => {
         navigate({
           params: {
@@ -66,7 +66,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
         });
       },
       title: 'Delete',
-      tooltip: !permissions.delete_nodebalancer
+      tooltip: isNodeBalancerReadOnly
         ? getRestrictedResourceText({
             action: 'delete',
             resourceType: 'NodeBalancers',

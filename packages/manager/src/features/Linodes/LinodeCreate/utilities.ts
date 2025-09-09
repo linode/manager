@@ -98,11 +98,9 @@ export const getLinodeCreatePayload = (
       );
       values.firewall_id = undefined;
     } else {
-      values.interfaces = formValues.backup_id
-        ? undefined
-        : formValues.linodeInterfaces.map(
-            getLegacyInterfaceFromLinodeInterface
-          );
+      values.interfaces = formValues.linodeInterfaces.map(
+        getLegacyInterfaceFromLinodeInterface
+      );
     }
   } else {
     values.interfaces = getInterfacesPayload(

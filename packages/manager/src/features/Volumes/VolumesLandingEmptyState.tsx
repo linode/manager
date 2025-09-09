@@ -4,8 +4,8 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { StyledBucketIcon } from 'src/features/ObjectStorage/BucketLanding/StylesBucketIcon';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -17,7 +17,10 @@ import {
 
 export const VolumesLandingEmptyState = () => {
   const navigate = useNavigate();
-  const { data: permissions } = usePermissions('account', ['create_volume']);
+
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_volumes',
+  });
 
   return (
     <>
@@ -26,7 +29,7 @@ export const VolumesLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create Volume',
-            disabled: !permissions?.create_volume,
+            disabled: isRestricted,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',

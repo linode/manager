@@ -30,10 +30,7 @@ import type {
   UploadImageResponse,
 } from '@linode/api-v4';
 import type { EventHandlerData } from '@linode/queries';
-import type {
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
 export const getAllImages = (
   passedParams: Params = {},
@@ -136,15 +133,11 @@ export const useUpdateImageMutation = () => {
   });
 };
 
-export const useDeleteImageMutation = (
-  options: UseMutationOptions<{}, APIError[], { imageId: string }>,
-) => {
+export const useDeleteImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { imageId: string }>({
     mutationFn: ({ imageId }) => deleteImage(imageId),
-    ...options,
-    onSuccess(response, variables, context) {
-      options.onSuccess?.(response, variables, context);
+    onSuccess(_, variables) {
       queryClient.invalidateQueries({
         queryKey: imageQueries.paginated._def,
       });

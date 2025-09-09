@@ -5,9 +5,7 @@ import type {
   AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
   CreateAlertDefinitionPayload,
-  Dimension,
   MetricCriteria,
-  MetricDefinition,
   TriggerCondition,
 } from '@linode/api-v4';
 
@@ -114,71 +112,3 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   updated_by: 'system',
   scope: 'entity',
 });
-
-const firewallDimensions: Dimension[] = [
-  { label: 'VPC-Subnet', dimension_label: 'vpc_subnet_id', values: [] },
-  {
-    label: 'Interface Type',
-    dimension_label: 'interface_type',
-    values: ['vpc', 'public'],
-  },
-  { label: 'Interface', dimension_label: 'interface_id', values: [] },
-  { label: 'Linode', dimension_label: 'linode_id', values: [] },
-  { label: 'Linode Region', dimension_label: 'region_id', values: [] },
-];
-
-export const firewallMetricDefinitionFactory =
-  Factory.Sync.makeFactory<MetricDefinition>({
-    label: 'Firewall Metric',
-    metric: 'firewall_metric',
-    unit: 'metric_unit',
-    metric_type: 'gauge',
-    scrape_interval: '300s',
-    is_alertable: true,
-    available_aggregate_functions: ['avg', 'sum', 'max', 'min', 'count'],
-    dimensions: firewallDimensions,
-  });
-export const firewallMetricDefinitionsResponse: MetricDefinition[] = [
-  firewallMetricDefinitionFactory.build({
-    label: 'Current connections',
-    metric: 'fw_active_connections',
-    unit: 'count',
-    available_aggregate_functions: ['avg', 'max', 'min'],
-  }),
-  firewallMetricDefinitionFactory.build({
-    label: 'Ingress packets accepted',
-    metric: 'fw_ingress_packets_accepted',
-    unit: 'packets_per_second',
-    available_aggregate_functions: ['sum'],
-  }),
-];
-
-export const firewallMetricRulesFactory =
-  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
-    label: 'Current connections',
-    metric: 'fw_active_connections',
-    unit: 'count',
-    aggregate_function: 'avg',
-    operator: 'gt',
-    threshold: 1000,
-    dimension_filters: [
-      {
-        label: 'VPC-Subnet',
-        dimension_label: 'vpc_subnet_id',
-        operator: 'in',
-        value: '1,2',
-      },
-      {
-        label: 'Linode',
-        dimension_label: 'linode_id',
-        operator: 'in',
-        value: '1,2',
-      },
-      {
-        label: 'Linode Region',
-        dimension_label: 'region_id',
-        operator: 'in',
-        value: 'pl-labkrk-2',
-      },
-    ],
-  });

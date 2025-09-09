@@ -144,7 +144,6 @@ export const DomainDetail = () => {
             </StyledTypography>
             <TagCell
               disabled={isDomainReadOnly}
-              entity="Domain"
               tags={domain.tags}
               updateTags={handleUpdateTags}
               view="panel"

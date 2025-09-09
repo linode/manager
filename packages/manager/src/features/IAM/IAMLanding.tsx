@@ -8,7 +8,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
-import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
+import { IAM_DOCS_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
   const location = useLocation();
@@ -29,7 +29,7 @@ export const IdentityAccessLanding = React.memo(() => {
     breadcrumbProps: {
       pathname: '/iam',
     },
-    docsLink: tabIndex === 0 ? IAM_DOCS_LINK : ROLES_LEARN_MORE_LINK,
+    docsLink: IAM_DOCS_LINK,
     entity: 'Identity and Access',
     title: 'Identity and Access',
   };

@@ -5,18 +5,16 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
-import { DestinationActionMenu } from 'src/features/DataStream/Destinations/DestinationActionMenu';
 
-import type { DestinationHandlers } from './DestinationActionMenu';
 import type { Destination } from '@linode/api-v4';
 
-interface DestinationTableRowProps extends DestinationHandlers {
+interface DestinationTableRowProps {
   destination: Destination;
 }
 
 export const DestinationTableRow = React.memo(
   (props: DestinationTableRowProps) => {
-    const { destination, onDelete, onEdit } = props;
+    const { destination } = props;
 
     return (
       <TableRow key={destination.id}>
@@ -32,13 +30,6 @@ export const DestinationTableRow = React.memo(
         </Hidden>
         <TableCell>
           <DateTimeDisplay value={destination.updated} />
-        </TableCell>
-        <TableCell actionCell>
-          <DestinationActionMenu
-            destination={destination}
-            onDelete={onDelete}
-            onEdit={onEdit}
-          />
         </TableCell>
       </TableRow>
     );

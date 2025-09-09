@@ -50,7 +50,7 @@ export const BucketRegions = (props: Props) => {
       placeholder="Select a Region"
       regions={availableStorageRegions ?? []}
       required={required}
-      value={selectedRegion ?? null}
+      value={selectedRegion}
     />
   );
 };

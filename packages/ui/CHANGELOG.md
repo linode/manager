@@ -1,16 +1,12 @@
-## [2025-09-09] - v0.20.0
-
-### Fixed:
-
-- Disabled list option tooltip behavior in selects ([#12777](https://github.com/linode/manager/pull/12777))
-
 ## [2025-08-26] - v0.19.0
+
 
 ### Changed:
 
 - Update sort icon tokens to use separate Default, Hover, and Active tokens for each table header type ([#12728](https://github.com/linode/manager/pull/12728))
 
 ## [2025-08-12] - v0.18.0
+
 
 ### Changed:
 
@@ -24,17 +20,20 @@
 
 ## [2025-07-29] - v0.17.0
 
+
 ### Changed:
 
 - Textfield styles and color to match ADS ([#12496](https://github.com/linode/manager/pull/12496))
-- Add qa-ids to `DateTimeRangePicker.tsx` and `TimeZoneSelect.tsx` files, update `Presets.tsx` to calculate date according to selected timezone ([#12497](https://github.com/linode/manager/pull/12497))
+- Add qa-ids to `DateTimeRangePicker.tsx` and `TimeZoneSelect.tsx` files, update `Presets.tsx` to calculate date according to selected timezone  ([#12497](https://github.com/linode/manager/pull/12497))
 - Use gap for TableSortLabel spacing of text and icons ([#12512](https://github.com/linode/manager/pull/12512))
 
 ### Fixed:
 
 - `TextField` not respecting `inputProps.id` and `InputProps.id` ([#12502](https://github.com/linode/manager/pull/12502))
 
+
 ## [2025-07-15] - v0.16.0
+
 
 ### Added:
 
@@ -48,6 +47,7 @@
 - Require `selected` prop in `ListItemOptionProps` type ([#12481](https://github.com/linode/manager/pull/12481))
 
 ## [2025-07-01] - v0.15.0
+
 
 ### Changed:
 
@@ -70,6 +70,7 @@
 - Add new maintenance policy icons and update TooltipIcon tokens ([#12398](https://github.com/linode/manager/pull/12398))
 
 ## [2025-06-17] - v0.14.0
+
 
 ### Changed:
 

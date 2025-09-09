@@ -20,15 +20,6 @@ const queryMocks = vi.hoisted(() => ({
     .fn()
     .mockReturnValue({ data: undefined }),
   useParams: vi.fn().mockReturnValue({}),
-  userPermissions: vi.fn(() => ({
-    data: {
-      update_nodebalancer: false,
-    },
-  })),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -196,32 +187,5 @@ describe('SummaryPanel', () => {
         '/kubernetes/clusters/1/summary'
       );
     });
-  });
-
-  it('should disable "Add a tag" if user does not have permission', () => {
-    const { getByText } = renderWithTheme(<SummaryPanel />, {
-      flags: { nodebalancerVpc: true },
-    });
-
-    // Tags panel
-    expect(getByText('Tags')).toBeVisible();
-    expect(getByText('Add a tag')).toBeVisible();
-    expect(getByText('Add a tag')).toHaveAttribute('aria-disabled', 'true');
-  });
-
-  it('should enable "Add a tag" if user has permission', () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        update_nodebalancer: true,
-      },
-    });
-    const { getByText } = renderWithTheme(<SummaryPanel />, {
-      flags: { nodebalancerVpc: true },
-    });
-
-    // Tags panel
-    expect(getByText('Tags')).toBeVisible();
-    expect(getByText('Add a tag')).toBeVisible();
-    expect(getByText('Add a tag')).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

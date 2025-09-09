@@ -1,14 +1,8 @@
-import { streamStatus } from '@linode/api-v4';
-import {
-  useDeleteStreamMutation,
-  useStreamsQuery,
-  useUpdateStreamMutation,
-} from '@linode/queries';
+import { useStreamsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -24,14 +18,9 @@ import { StreamsLandingEmptyState } from 'src/features/DataStream/Streams/Stream
 import { StreamTableRow } from 'src/features/DataStream/Streams/StreamTableRow';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import type { Handlers as StreamHandlers } from './StreamActionMenu';
-import type { Stream } from '@linode/api-v4';
 
 export const StreamsLanding = () => {
   const navigate = useNavigate();
-
   const streamsUrl = '/datastream/streams';
   const search = useSearch({
     from: '/datastream/streams',
@@ -52,9 +41,6 @@ export const StreamsLanding = () => {
     },
     preferenceKey: `streams-order`,
   });
-
-  const { mutateAsync: updateStream } = useUpdateStreamMutation();
-  const { mutateAsync: deleteStream } = useDeleteStreamMutation();
 
   const filter = {
     ['+order']: order,
@@ -120,78 +106,6 @@ export const StreamsLanding = () => {
     return <StreamsLandingEmptyState navigateToCreate={navigateToCreate} />;
   }
 
-  const handleEdit = ({ id }: Stream) => {
-    navigate({ to: `/datastream/streams/${id}/edit` });
-  };
-
-  const handleDelete = ({ id, label }: Stream) => {
-    deleteStream({
-      id,
-    })
-      .then(() => {
-        return enqueueSnackbar(`Stream  ${label} deleted successfully`, {
-          variant: 'success',
-        });
-      })
-      .catch((error) => {
-        return enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            `There was an issue deleting your stream`
-          )[0].reason,
-          {
-            variant: 'error',
-          }
-        );
-      });
-  };
-
-  const handleDisableOrEnable = ({
-    id,
-    destinations,
-    details,
-    label,
-    type,
-    status,
-  }: Stream) => {
-    updateStream({
-      id,
-      destinations: destinations.map(({ id: destinationId }) => destinationId),
-      details,
-      label,
-      type,
-      status:
-        status === streamStatus.Active
-          ? streamStatus.Inactive
-          : streamStatus.Active,
-    })
-      .then(() => {
-        return enqueueSnackbar(
-          `Stream  ${label} ${status === streamStatus.Active ? 'disabled' : 'enabled'}`,
-          {
-            variant: 'success',
-          }
-        );
-      })
-      .catch((error) => {
-        return enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            `There was an issue ${status === streamStatus.Active ? 'disabling' : 'enabling'} your stream`
-          )[0].reason,
-          {
-            variant: 'error',
-          }
-        );
-      });
-  };
-
-  const handlers: StreamHandlers = {
-    onDisableOrEnable: handleDisableOrEnable,
-    onEdit: handleEdit,
-    onDelete: handleDelete,
-  };
-
   return (
     <>
       <DataStreamTabHeader
@@ -213,11 +127,9 @@ export const StreamsLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
-              sx={{ width: '30%' }}
             >
               Name
             </TableSortCell>
-            <TableCell>Stream Type</TableCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
@@ -234,10 +146,8 @@ export const StreamsLanding = () => {
             >
               ID
             </TableSortCell>
+            <TableCell>Destination Type</TableCell>
             <Hidden smDown>
-              <TableCell>Destination Type</TableCell>
-            </Hidden>
-            <Hidden lgDown>
               <TableSortCell
                 active={orderBy === 'created'}
                 direction={order}
@@ -247,12 +157,11 @@ export const StreamsLanding = () => {
                 Creation Time
               </TableSortCell>
             </Hidden>
-            <TableCell sx={{ width: '5%' }} />
           </TableRow>
         </TableHead>
         <TableBody>
           {streams?.data.map((stream) => (
-            <StreamTableRow key={stream.id} stream={stream} {...handlers} />
+            <StreamTableRow key={stream.id} stream={stream} />
           ))}
         </TableBody>
       </Table>

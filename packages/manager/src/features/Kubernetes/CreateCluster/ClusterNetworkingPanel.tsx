@@ -59,11 +59,11 @@ export const ClusterNetworkingPanel = (props: Props) => {
             onChange={(e) => field.onChange(e.target.value)}
             value={field.value ?? null}
           >
-            <FormLabel htmlFor="stack_type">IP Stack</FormLabel>
+            <FormLabel>IP Version</FormLabel>
             <FormControlLabel control={<Radio />} label="IPv4" value="ipv4" />
             <FormControlLabel
               control={<Radio />}
-              label="IPv4 + IPv6 (dual-stack)"
+              label="IPv4 + IPv6"
               value="ipv4-ipv6"
             />
           </RadioGroup>
@@ -83,6 +83,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
         </Typography>
         <RadioGroup
           aria-label="Bring your own VPC"
+          data-testid="isUsingOwnVpc"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setIsUsingOwnVpc(e.target.value === 'yes');
 

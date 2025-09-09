@@ -210,7 +210,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
               </Typography>
             )}
           </Box>
-          <NodePoolConfigOptions clusterTier={selectedTier} />
+
+          {selectedTier === 'enterprise' && <NodePoolConfigOptions />}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': isAddMode ? 'add' : 'update',

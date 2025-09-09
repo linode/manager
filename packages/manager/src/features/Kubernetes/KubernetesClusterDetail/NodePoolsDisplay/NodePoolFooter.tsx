@@ -1,11 +1,9 @@
-import { useFirewallQuery } from '@linode/queries';
 import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
@@ -23,7 +21,6 @@ export interface Props {
   clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus;
   isLkeClusterRestricted: boolean;
-  poolFirewallId: KubeNodePoolResponse['firewall_id'];
   poolId: number;
   poolVersion: KubeNodePoolResponse['k8s_version'];
   tags: string[];
@@ -36,7 +33,6 @@ export const NodePoolFooter = (props: Props) => {
     encryptionStatus,
     isLkeClusterRestricted,
     poolId,
-    poolFirewallId,
     tags,
     clusterId,
   } = props;
@@ -46,11 +42,6 @@ export const NodePoolFooter = (props: Props) => {
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
     poolId
-  );
-
-  const { data: firewall } = useFirewallQuery(
-    poolFirewallId ?? -1,
-    Boolean(poolFirewallId)
   );
 
   const { isDiskEncryptionFeatureEnabled } =
@@ -74,34 +65,17 @@ export const NodePoolFooter = (props: Props) => {
           divider={
             <Divider flexItem orientation="vertical" sx={{ height: '20px' }} />
           }
-          flexWrap="wrap"
-          maxWidth="100%"
+          flexWrap={{ sm: 'unset', xs: 'wrap' }}
           rowGap={1}
         >
           <Typography sx={{ textWrap: 'nowrap' }}>
-            <b>Pool ID:</b> <CopyTooltip copyableText text={String(poolId)} />
+            <b>Pool ID</b> <CopyTooltip copyableText text={String(poolId)} />
           </Typography>
           {clusterTier === 'enterprise' && poolVersion && (
             <Typography sx={{ textWrap: 'nowrap' }}>
-              <b>Version:</b> {poolVersion}
+              <b>Version</b> {poolVersion}
             </Typography>
           )}
-          {clusterTier === 'enterprise' &&
-            poolFirewallId &&
-            poolFirewallId > 0 && ( // This check handles the current API behavior for a default firewall (0). TODO: remove this once LKE-7686 is fixed.
-              <Typography>
-                <b>Firewall:</b>{' '}
-                <Link to={`/firewalls/${poolFirewallId}/rules`}>
-                  {firewall?.label ?? poolFirewallId}
-                </Link>{' '}
-                {firewall?.label && (
-                  <span>
-                    (ID:{' '}
-                    <CopyTooltip copyableText text={String(poolFirewallId)} />)
-                  </span>
-                )}
-              </Typography>
-            )}
           {isDiskEncryptionFeatureEnabled && (
             <NodePoolEncryptionStatus encryptionStatus={encryptionStatus} />
           )}
@@ -109,8 +83,6 @@ export const NodePoolFooter = (props: Props) => {
       </Box>
       <TagCell
         disabled={isLkeClusterRestricted}
-        entity="Node Pool"
-        sx={{ flex: 1, minWidth: '200px', maxWidth: '100%' }}
         tags={tags}
         updateTags={updateTags}
         view="inline"

@@ -1,4 +1,4 @@
-import { useAttachVolumeMutation } from '@linode/queries';
+import { useAttachVolumeMutation, useGrants } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   ActionsPanel,
@@ -16,7 +16,6 @@ import { number, object } from 'yup';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -47,13 +46,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const { data: permissions } = usePermissions(
-    'volume',
-    ['attach_volume'],
-    volume?.id
-  );
-
-  const canAttachVolume = permissions?.attach_volume;
+  const { data: grants } = useGrants();
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
 
@@ -93,6 +86,11 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     overwrite: 'Overwrite',
   };
 
+  const isReadOnly =
+    grants !== undefined &&
+    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
+      'read_only';
+
   const hasErrorFor = getAPIErrorFor(
     errorResources,
     error === null ? undefined : error
@@ -109,7 +107,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
       title={`Attach Volume ${volume?.label}`}
     >
       <form onSubmit={formik.handleSubmit}>
-        {!canAttachVolume && (
+        {isReadOnly && (
           <Notice
             text="You don't have permission to attach this volume."
             variant="error"
@@ -118,7 +116,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         {generalError && <Notice text={generalError} variant="error" />}
         <LinodeSelect
           clearable={false}
-          disabled={!canAttachVolume}
+          disabled={isReadOnly}
           errorText={
             formik.touched.linode_id && formik.errors.linode_id
               ? formik.errors.linode_id
@@ -139,7 +137,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
           </FormHelperText>
         )}
         <StyledConfigSelect
-          disabled={!canAttachVolume || formik.values.linode_id === -1}
+          disabled={isReadOnly || formik.values.linode_id === -1}
           error={
             formik.touched.config_id && formik.errors.config_id
               ? formik.errors.config_id
@@ -173,7 +171,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: !canAttachVolume,
+            disabled: isReadOnly,
             label: 'Attach',
             loading: formik.isSubmitting,
             type: 'submit',

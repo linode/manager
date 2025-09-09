@@ -78,7 +78,7 @@ export type MockPresetExtraGroupId =
   | 'Maintenance'
   | 'Managed'
   | 'Notifications'
-  | 'Profile & Grants'
+  | 'Profile'
   | 'Regions'
   | 'User Permissions';
 
@@ -88,7 +88,7 @@ export type MockPresetExtraGroupType =
   | 'events'
   | 'maintenance'
   | 'notifications'
-  | 'profile & grants'
+  | 'profile'
   | 'select'
   | 'userPermissions';
 
@@ -102,7 +102,7 @@ export type MockPresetExtraId =
   | 'limits:lke-limits'
   | 'maintenance:custom'
   | 'notifications:custom'
-  | 'profile-grants:custom'
+  | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy'

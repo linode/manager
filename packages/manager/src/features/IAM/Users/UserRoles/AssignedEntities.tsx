@@ -24,15 +24,13 @@ export const AssignedEntities = ({
     useCalculateHiddenItems(role.entity_names!);
 
   const handleResize = React.useMemo(
-    () => debounce(() => calculateHiddenItems(), 250),
+    () => debounce(() => calculateHiddenItems(), 100),
     [calculateHiddenItems]
   );
 
   React.useEffect(() => {
-    // Double RAF for good measure - see https://stackoverflow.com/questions/44145740/how-does-double-requestanimationframe-work
-    const rafId = requestAnimationFrame(() => {
-      requestAnimationFrame(() => calculateHiddenItems());
-    });
+    // Ensure calculateHiddenItems runs after layout stabilization on initial render
+    const rafId = requestAnimationFrame(() => calculateHiddenItems());
 
     window.addEventListener('resize', handleResize);
 
@@ -51,27 +49,14 @@ export const AssignedEntities = ({
     [role.entity_names, role.entity_ids]
   );
 
-  const isLastVisibleItem = React.useCallback(
-    (index: number) => {
-      return combinedEntities.length - numHiddenItems - 1 === index;
-    },
-    [combinedEntities.length, numHiddenItems]
-  );
-
   const items = combinedEntities?.map(
     (entity: CombinedEntity, index: number) => (
-      <Box
+      <div
         key={entity.id}
         ref={(el: HTMLDivElement) => {
           itemRefs.current[index] = el;
         }}
-        sx={{
-          display: 'inline',
-          marginRight:
-            numHiddenItems > 0 && isLastVisibleItem(index)
-              ? theme.tokens.spacing.S16
-              : theme.tokens.spacing.S8,
-        }}
+        style={{ display: 'inline-block', marginRight: 8 }}
       >
         <Chip
           data-testid="entities"
@@ -91,18 +76,9 @@ export const AssignedEntities = ({
             '& .MuiChip-deleteIcon': {
               color: theme.tokens.alias.Content.Text.Primary.Default,
             },
-            position: 'relative',
-            '&::after': {
-              content:
-                numHiddenItems > 0 && isLastVisibleItem(index) ? '"..."' : '""',
-              position: 'absolute',
-              top: 0,
-              right: -16,
-              width: 14,
-            },
           }}
         />
-      </Box>
+      </div>
     )
   );
 
@@ -111,18 +87,19 @@ export const AssignedEntities = ({
       sx={{
         alignItems: 'center',
         display: 'flex',
-        position: 'relative',
       }}
     >
-      <Box
+      <div
         ref={containerRef}
-        sx={{
+        style={{
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 1,
+          display: '-webkit-box',
           overflow: 'hidden',
-          height: 24,
         }}
       >
         {items}
-      </Box>
+      </div>
       {numHiddenItems > 0 && (
         <Box
           sx={{
