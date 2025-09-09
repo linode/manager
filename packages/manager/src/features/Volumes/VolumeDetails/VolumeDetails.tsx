@@ -3,7 +3,6 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -12,6 +11,7 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { VolumeDetailsHeader } from './VolumeDetailsHeader';
 import { VolumeEntityDetail } from './VolumeEntityDetails/VolumeEntityDetail';
 
 export const VolumeDetails = () => {
@@ -40,14 +40,7 @@ export const VolumeDetails = () => {
 
   return (
     <>
-      <LandingHeader
-        breadcrumbProps={{
-          pathname: `/volumes/${volume.label}`,
-        }}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
-        entity="Volume"
-        spacingBottom={16}
-      />
+      <VolumeDetailsHeader volume={volume} />
 
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
