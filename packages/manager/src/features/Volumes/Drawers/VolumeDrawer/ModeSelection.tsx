@@ -1,6 +1,8 @@
 import { FormControlLabel, Radio, RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
 type Mode = 'attach' | 'create';
 
 interface Props {
@@ -9,6 +11,8 @@ interface Props {
 }
 
 export const ModeSelection = ({ mode, onChange }: Props) => {
+  const { data: permissions } = usePermissions('account', ['create_volume']);
+
   return (
     <RadioGroup
       aria-label="mode"
@@ -19,6 +23,7 @@ export const ModeSelection = ({ mode, onChange }: Props) => {
       <FormControlLabel
         control={<Radio />}
         data-qa-radio="Create and Attach Volume"
+        disabled={!permissions.create_volume}
         label="Create and Attach Volume"
         value="create"
       />

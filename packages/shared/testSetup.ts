@@ -7,3 +7,10 @@ expect.extend(matchers);
 afterEach(() => {
   cleanup();
 });
+
+// @ts-expect-error Mock IntersectionObserver for tests
+global.IntersectionObserver = class IntersectionObserver {
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+};

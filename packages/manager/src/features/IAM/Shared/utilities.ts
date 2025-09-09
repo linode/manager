@@ -513,7 +513,7 @@ export const mergeAssignedRolesIntoExistingRoles = (
         selectedPlusExistingRoles.entity_access.push({
           id: e.value,
           roles: [r.role?.value as EntityRoleType],
-          type: r.role?.entity_type,
+          type: r.role?.entity_type as AccessType,
         });
       }
     });

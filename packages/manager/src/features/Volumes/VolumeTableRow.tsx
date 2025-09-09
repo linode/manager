@@ -10,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';
@@ -53,6 +54,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
   const { data: regions } = useRegionsQuery();
   const { data: notifications } = useNotificationsQuery();
   const { data: inProgressEvents } = useInProgressEvents();
+  const { volumeSummaryPage } = useFlags();
 
   const isVolumesLanding = !isDetailsPageRow;
 
@@ -124,20 +126,39 @@ export const VolumeTableRow = React.memo((props: Props) => {
             wrap: 'nowrap',
           }}
         >
-          <Box
-            sx={(theme) => ({
-              alignItems: 'center',
-              display: 'flex',
-              gap: theme.spacing(),
-            })}
-          >
-            {volume.label}
-            {linodeCapabilities && (
-              <HighPerformanceVolumeIcon
-                linodeCapabilities={linodeCapabilities}
-              />
-            )}
-          </Box>
+          {volumeSummaryPage ? (
+            <Link to={`/volumes/${volume.id}`}>
+              <Box
+                sx={(theme) => ({
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: theme.spacingFunction(8),
+                })}
+              >
+                {volume.label}
+                {linodeCapabilities && (
+                  <HighPerformanceVolumeIcon
+                    linodeCapabilities={linodeCapabilities}
+                  />
+                )}
+              </Box>
+            </Link>
+          ) : (
+            <Box
+              sx={(theme) => ({
+                alignItems: 'center',
+                display: 'flex',
+                gap: theme.spacingFunction(8),
+              })}
+            >
+              {volume.label}
+              {linodeCapabilities && (
+                <HighPerformanceVolumeIcon
+                  linodeCapabilities={linodeCapabilities}
+                />
+              )}
+            </Box>
+          )}
 
           {isEligibleForUpgradeToNVMe && (
             <Chip

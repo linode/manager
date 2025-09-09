@@ -130,6 +130,7 @@ const getWidgetLegendRowValuesFromResponse = (
     status: 'success',
     unit,
     serviceType,
+    groupBy: ['entity_id'],
   });
 
   // Destructure metrics data from the first legend row

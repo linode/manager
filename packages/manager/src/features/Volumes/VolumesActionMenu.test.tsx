@@ -26,7 +26,30 @@ const props: Props = {
   volume,
 };
 
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn(),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 describe('Volume action menu', () => {
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      update_volume: true,
+      attach_volume: true,
+      create_volume: true,
+      delete_volume: true,
+      resize_volume: true,
+      clone_volume: true,
+    });
+  });
+
   it('should include basic Volume actions', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <VolumesActionMenu {...props} />

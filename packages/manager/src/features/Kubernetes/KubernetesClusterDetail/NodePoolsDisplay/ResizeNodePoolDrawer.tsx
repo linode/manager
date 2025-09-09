@@ -1,4 +1,4 @@
-import { useSpecificTypes } from '@linode/queries';
+import { useTypeQuery } from '@linode/queries';
 import {
   ActionsPanel,
   CircleProgress,
@@ -17,14 +17,13 @@ import {
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from 'src/features/Kubernetes/constants';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { extendType } from 'src/utilities/extendType';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../constants';
-import { hasInvalidNodePoolPrice } from './utils';
+import { hasInvalidNodePoolPrice, useNodePoolDisplayLabel } from './utils';
 
 import type {
   KubeNodePoolResponse,
@@ -69,11 +68,12 @@ export const ResizeNodePoolDrawer = (props: Props) => {
   } = props;
   const { classes } = useStyles();
 
-  const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
-  const isLoadingTypes = typesQuery[0]?.isLoading ?? false;
-  const planType = typesQuery[0]?.data
-    ? extendType(typesQuery[0].data)
-    : undefined;
+  const nodePoolLabel = useNodePoolDisplayLabel(nodePool, { suffix: 'Plan' });
+
+  const { data: planType, isLoading: isLoadingTypes } = useTypeQuery(
+    nodePool?.type ?? '',
+    Boolean(nodePool)
+  );
 
   const {
     error,
@@ -142,7 +142,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     <Drawer
       onClose={onClose}
       open={open}
-      title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
+      title={`Resize Pool: ${nodePoolLabel}`}
     >
       {isLoadingTypes ? (
         <CircleProgress />

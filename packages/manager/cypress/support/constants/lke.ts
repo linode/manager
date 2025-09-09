@@ -121,3 +121,7 @@ export const clusterPlans: LkePlanDescription[] = [
     type: 'standard',
   },
 ];
+
+// Warning that's shown when recommended minimum number of nodes is not met.
+export const minimumNodeNotice =
+  'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
