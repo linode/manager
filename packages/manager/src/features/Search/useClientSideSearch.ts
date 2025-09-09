@@ -1,11 +1,13 @@
 import {
   useAllAccountStackScriptsQuery,
   useAllDatabasesQuery,
+  useAllDestinationsQuery,
   useAllDomainsQuery,
   useAllFirewallsQuery,
   useAllImagesQuery,
   useAllLinodesQuery,
   useAllNodeBalancersQuery,
+  useAllStreamsQuery,
   useAllVolumesQuery,
 } from '@linode/queries';
 
@@ -15,6 +17,7 @@ import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
   bucketToSearchableItem,
   databaseToSearchableItem,
+  destinationToSearchableItem,
   domainToSearchableItem,
   firewallToSearchableItem,
   imageToSearchableItem,
@@ -22,6 +25,7 @@ import {
   linodeToSearchableItem,
   nodeBalToSearchableItem,
   stackscriptToSearchableItem,
+  streamToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
@@ -87,6 +91,16 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: stackscriptsError,
     isLoading: stackscriptsLoading,
   } = useAllAccountStackScriptsQuery(enabled);
+  const {
+    data: streams,
+    error: streamsError,
+    isLoading: streamsLoading,
+  } = useAllStreamsQuery({}, {}, enabled);
+  const {
+    data: destinations,
+    error: destinationsError,
+    isLoading: destinationsLoading,
+  } = useAllDestinationsQuery({}, {}, enabled);
 
   const searchableDomains = domains?.map(domainToSearchableItem) ?? [];
   const searchableVolumes = volumes?.map(volumeToSearchableItem) ?? [];
@@ -101,6 +115,9 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     objectStorageBuckets?.buckets.map(bucketToSearchableItem) ?? [];
   const searchableClusters =
     clusters?.map(kubernetesClusterToSearchableItem) ?? [];
+  const searchableStreams = streams?.data?.map(streamToSearchableItem) ?? [];
+  const searchableDestinations =
+    destinations?.data?.map(destinationToSearchableItem) ?? [];
 
   const searchableItems = [
     ...searchableLinodes,
@@ -113,6 +130,8 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     ...searchableFirewalls,
     ...searchableDatabases,
     ...searchableStackScripts,
+    ...searchableStreams,
+    ...searchableDestinations,
   ];
 
   const isLoading =
@@ -124,11 +143,14 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     domainsLoading ||
     volumesLoading ||
     firewallsLoading ||
-    stackscriptsLoading;
+    stackscriptsLoading ||
+    streamsLoading ||
+    destinationsLoading;
 
   const entityErrors: Record<SearchableEntityType, null | string> = {
     bucket: bucketsError?.message ?? null,
     database: databasesError?.[0].reason ?? null,
+    destination: destinationsError?.[0].reason ?? null,
     domain: domainsError?.[0].reason ?? null,
     firewall: firewallsError?.[0].reason ?? null,
     image: imagesError?.[0].reason ?? null,
@@ -136,6 +158,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     linode: linodesError?.[0].reason ?? null,
     nodebalancer: nodebalancersError?.[0].reason ?? null,
     stackscript: stackscriptsError?.[0].reason ?? null,
+    stream: streamsError?.[0].reason ?? null,
     volume: volumesError?.[0].reason ?? null,
   };
 

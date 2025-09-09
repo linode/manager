@@ -66,7 +66,6 @@ const initialValues: CreateAlertDefinitionForm = {
   trigger_conditions: triggerConditionInitialValues,
   entity_ids: [],
   scope: null,
-  type: 'user',
 };
 
 const overrides: CrumbOverridesProps[] = [

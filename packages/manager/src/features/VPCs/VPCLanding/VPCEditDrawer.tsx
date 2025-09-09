@@ -1,9 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useGrants, useProfile, useUpdateVPCMutation } from '@linode/queries';
+import { useUpdateVPCMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { APIError, UpdateVPCPayload, VPC } from '@linode/api-v4';
 
@@ -18,16 +20,7 @@ interface Props {
 export const VPCEditDrawer = (props: Props) => {
   const { isFetching, onClose, open, vpc, vpcError } = props;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
-
-  // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
-  // with permissions set to 'None'. Therefore, we're treating those as read_only as well
-  const readOnly =
-    Boolean(profile?.restricted) &&
-    (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
+  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpc?.id);
 
   const {
     isPending,
@@ -78,7 +71,7 @@ export const VPCEditDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
-      {readOnly && (
+      {!permissions.update_vpc && (
         <Notice
           text={`You don't have permissions to edit ${vpc?.label}. Please contact an account administrator for details.`}
           variant="error"
@@ -91,7 +84,7 @@ export const VPCEditDrawer = (props: Props) => {
           render={({ field, fieldState }) => (
             <TextField
               data-testid="label"
-              disabled={readOnly}
+              disabled={!permissions.update_vpc}
               errorText={fieldState.error?.message}
               label="Label"
               name="label"
@@ -107,7 +100,7 @@ export const VPCEditDrawer = (props: Props) => {
           render={({ field, fieldState }) => (
             <TextField
               data-testid="description"
-              disabled={readOnly}
+              disabled={!permissions.update_vpc}
               errorText={fieldState.error?.message}
               label="Description"
               multiline
@@ -121,7 +114,7 @@ export const VPCEditDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',
-            disabled: !isDirty || readOnly,
+            disabled: !isDirty || !permissions.update_vpc,
             label: 'Save',
             loading: isPending || isSubmitting,
             type: 'submit',
