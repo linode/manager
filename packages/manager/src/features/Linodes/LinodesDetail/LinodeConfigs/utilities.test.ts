@@ -1,9 +1,6 @@
 import { linodeConfigInterfaceFactory } from '@linode/utilities';
-import { renderHook } from '@testing-library/react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-
-import { getPrimaryInterfaceIndex, useGetDeviceLimit } from './utilities';
+import { getPrimaryInterfaceIndex } from './utilities';
 
 describe('getPrimaryInterfaceIndex', () => {
   it('returns null if there are no interfaces', () => {
@@ -36,37 +33,4 @@ describe('getPrimaryInterfaceIndex', () => {
 
     expect(getPrimaryInterfaceIndex(interfaces)).toBe(null);
   });
-});
-
-describe('useGetDeviceLimit', () => {
-  it.each([131072, 65536, 16384, 1024])(
-    'should always return 8 as the device limit',
-    (value) => {
-      const { result } = renderHook(() => useGetDeviceLimit(value), {
-        wrapper: (ui) =>
-          wrapWithTheme(ui.children, {
-            flags: { blockStorageVolumeLimit: false },
-          }),
-      });
-      expect(result.current).toEqual(8);
-    }
-  );
-
-  it.each([
-    [131072, 64],
-    [65536, 64],
-    [16384, 16],
-    [1024, 8],
-  ])(
-    'should calculate the correct device limit for %d ram to be %d',
-    (value, expected) => {
-      const { result } = renderHook(() => useGetDeviceLimit(value), {
-        wrapper: (ui) =>
-          wrapWithTheme(ui.children, {
-            flags: { blockStorageVolumeLimit: true },
-          }),
-      });
-      expect(result.current).toEqual(expected);
-    }
-  );
 });

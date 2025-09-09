@@ -68,7 +68,7 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
-import { getPrimaryInterfaceIndex, useGetDeviceLimit } from './utilities';
+import { getPrimaryInterfaceIndex } from './utilities';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
 import type {
@@ -243,7 +243,7 @@ export const LinodeConfigDialog = (props: Props) => {
     // eslint-disable-next-line no-console
     console.warn('Invalid memory value:', availableMemory);
   }
-  const deviceLimit = useGetDeviceLimit(availableMemory);
+  const deviceLimit = Math.max(8, Math.min(availableMemory / 1024, 64));
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
