@@ -22,7 +22,7 @@ export const ConfigActionMenu = (props: Props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'linode',
     ['reboot_linode', 'update_linode', 'clone_linode', 'delete_linode'],
     linodeId,
@@ -76,6 +76,7 @@ export const ConfigActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Linode Config ${props.label}`}
+      loading={isLoading}
       onOpen={() => setIsOpen(true)}
     />
   );
