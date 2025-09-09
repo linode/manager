@@ -75,10 +75,6 @@ async function generateCodeVerifierAndChallenge() {
 }
 
 function generateNonce() {
-  if (!window.crypto?.randomUUID) {
-    throw new Error('Crypto API not available');
-  }
-
   const nonce = window.crypto.randomUUID();
   storage.authentication.nonce.set(nonce);
   return { nonce };
@@ -149,21 +145,12 @@ export async function logout() {
  * Generates an authorization URL for purposes of authorizating with the Login server
  *
  * @param returnTo the path in Cloud Manager to return to
- * @returns a URL that we will redirect the user to in order to authenticate, or null if crypto API unavailable
+ * @returns a URL that we will redirect the user to in order to authenticate
  * @example "https://login.fake.linode.com/oauth/authorize?client_id=9l424eefake9h4fead4d09&code_challenge=GDke2FgbFIlc1LICA5jXbUuvY1dThEDDtOI8roA17Io&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fcloud.fake.linode.com%2Foauth%2Fcallback%3FreturnTo%3D%2Flinodes&response_type=code&scope=*&state=99b64f1f-0174-4c7b-a3ab-d6807de5f524"
  */
 export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
   // Generate and store the nonce and code challenge for verification later
-  let nonce;
-  try {
-    const { nonce: generatedNonce } = generateNonce();
-    nonce = generatedNonce;
-  } catch {
-    // Intentionally ignoring crypto API errors
-    // eslint-disable-next-line sonarjs/no-ignored-exceptions
-    return null;
-  }
-
+  const { nonce } = generateNonce();
   const { codeChallenge } = await generateCodeVerifierAndChallenge();
 
   const query = new URLSearchParams({
@@ -188,10 +175,6 @@ export async function redirectToLogin() {
   const returnTo = `${window.location.pathname}${window.location.search}`;
 
   const authorizeUrl = await generateOAuthAuthorizeEndpoint(returnTo);
-
-  if (!authorizeUrl) {
-    return; //  Exit early if secure authentication is not available, i.e. no Crypto API
-  }
 
   window.location.assign(authorizeUrl);
 }
