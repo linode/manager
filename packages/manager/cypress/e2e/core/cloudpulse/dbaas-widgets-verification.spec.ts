@@ -598,7 +598,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       expect(requestPayload.group_by).to.have.ordered.members(['cpu', 'state']);
     });
   });
-  
+
   it('should apply group by at both dashboard and widget level and verify the metrics API calls', () => {
     // Iterate through each widget/metric in the test data
     metrics.forEach((testData) => {
