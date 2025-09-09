@@ -25,6 +25,7 @@ interface ScopeOption {
   value: AlertDefinitionScope;
 }
 interface AlertEntityScopeSelectProps {
+  disabled?: boolean;
   formMode?: AlertFormMode;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
@@ -33,7 +34,7 @@ interface AlertEntityScopeSelectProps {
   serviceType: CloudPulseServiceType | null;
 }
 export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
-  const { name, serviceType, formMode = 'create' } = props;
+  const { name, serviceType, formMode = 'create', disabled } = props;
   const { isLoading, data } = useCloudPulseServiceByServiceType(
     serviceType ?? '',
     serviceType !== null
@@ -90,7 +91,7 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
           <Autocomplete
             data-testid="entity-grouping"
             disableClearable={options.length !== 0}
-            disabled={!serviceType || isLoading}
+            disabled={!serviceType || isLoading || disabled}
             errorText={fieldState.error?.message}
             getOptionLabel={(option) => option.label}
             label="Scope"
