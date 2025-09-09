@@ -61,13 +61,6 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 };
 
-// @ts-expect-error Mock IntersectionObserver for tests
-global.IntersectionObserver = class IntersectionObserver {
-  disconnect() {}
-  observe() {}
-  unobserve() {}
-};
-
 /**
  ***************************************
  *  Custom matchers & matchers overrides

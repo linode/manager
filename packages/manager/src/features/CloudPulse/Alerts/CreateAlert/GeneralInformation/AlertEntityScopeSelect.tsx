@@ -25,7 +25,6 @@ interface ScopeOption {
   value: AlertDefinitionScope;
 }
 interface AlertEntityScopeSelectProps {
-  disabled?: boolean;
   formMode?: AlertFormMode;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
@@ -34,7 +33,7 @@ interface AlertEntityScopeSelectProps {
   serviceType: CloudPulseServiceType | null;
 }
 export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
-  const { name, serviceType, formMode = 'create', disabled } = props;
+  const { name, serviceType, formMode = 'create' } = props;
   const { isLoading, data } = useCloudPulseServiceByServiceType(
     serviceType ?? '',
     serviceType !== null
@@ -91,7 +90,7 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
           <Autocomplete
             data-testid="entity-grouping"
             disableClearable={options.length !== 0}
-            disabled={!serviceType || isLoading || disabled}
+            disabled={!serviceType || isLoading}
             errorText={fieldState.error?.message}
             getOptionLabel={(option) => option.label}
             label="Scope"
@@ -100,8 +99,13 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
             onChange={(_, selectedValue) => {
               const value = selectedValue?.value;
               field.onChange(value);
-              setValue('regions', value === 'region' ? [] : undefined);
-              setValue('entity_ids', value === 'entity' ? [] : undefined);
+
+              /*
+                TODO: This will be uncommented in future PRs when regions support is added.
+
+               setValue('regions', value === 'region' ? [] : undefined);
+               setValue('entity_ids', value === 'entity' ? [] : undefined);
+              */
             }}
             options={options}
             placeholder="Select a scope"

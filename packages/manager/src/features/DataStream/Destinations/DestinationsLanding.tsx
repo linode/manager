@@ -1,16 +1,11 @@
-import {
-  useDeleteDestinationMutation,
-  useDestinationsQuery,
-} from '@linode/queries';
+import { useDestinationsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { TableCell } from 'src/components/TableCell';
 import { TableSortCell } from 'src/components/TableSortCell';
 import {
   DESTINATIONS_TABLE_DEFAULT_ORDER,
@@ -22,14 +17,9 @@ import { DestinationTableRow } from 'src/features/DataStream/Destinations/Destin
 import { DataStreamTabHeader } from 'src/features/DataStream/Shared/DataStreamTabHeader/DataStreamTabHeader';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import type { Destination } from '@linode/api-v4';
-import type { DestinationHandlers } from 'src/features/DataStream/Destinations/DestinationActionMenu';
 
 export const DestinationsLanding = () => {
   const navigate = useNavigate();
-  const { mutateAsync: deleteDestination } = useDeleteDestinationMutation();
   const destinationsUrl = '/datastream/destinations';
   const search = useSearch({
     from: destinationsUrl,
@@ -103,37 +93,6 @@ export const DestinationsLanding = () => {
     );
   }
 
-  const handleEdit = ({ id }: Destination) => {
-    navigate({ to: `/datastream/destinations/${id}/edit` });
-  };
-
-  const handleDelete = ({ id, label }: Destination) => {
-    deleteDestination({
-      id,
-    })
-      .then(() => {
-        return enqueueSnackbar(`Destination  ${label} deleted successfully`, {
-          variant: 'success',
-        });
-      })
-      .catch((error) => {
-        return enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            `There was an issue deleting your destination`
-          )[0].reason,
-          {
-            variant: 'error',
-          }
-        );
-      });
-  };
-
-  const handlers: DestinationHandlers = {
-    onEdit: handleEdit,
-    onDelete: handleDelete,
-  };
-
   return (
     <>
       <DataStreamTabHeader
@@ -189,7 +148,6 @@ export const DestinationsLanding = () => {
             >
               Last Modified
             </TableSortCell>
-            <TableCell sx={{ width: '5%' }} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -197,7 +155,6 @@ export const DestinationsLanding = () => {
             <DestinationTableRow
               destination={destination}
               key={destination.id}
-              {...handlers}
             />
           ))}
         </TableBody>

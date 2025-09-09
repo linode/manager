@@ -70,38 +70,6 @@ describe('getLinodeCreatePayload', () => {
       placement_group: undefined,
     });
   });
-
-  it('should remove interface from the payload if using legacy interfaces with the new UI and the linode is being created from backups', () => {
-    const values = {
-      ...createLinodeRequestFactory.build({
-        interface_generation: 'legacy_config',
-        backup_id: 1,
-      }),
-      linodeInterfaces: [{ purpose: 'public', public: {} }],
-    } as LinodeCreateFormValues;
-
-    expect(
-      getLinodeCreatePayload(values, {
-        isShowingNewNetworkingUI: true,
-      }).interfaces
-    ).toEqual(undefined);
-  });
-
-  it('should not remove interface from the payload when using new interfaces and creating from a backup', () => {
-    const values = {
-      ...createLinodeRequestFactory.build({
-        interface_generation: 'linode',
-        backup_id: 1,
-      }),
-      linodeInterfaces: [{ purpose: 'public', public: {} }],
-    } as LinodeCreateFormValues;
-
-    expect(
-      getLinodeCreatePayload(values, {
-        isShowingNewNetworkingUI: true,
-      }).interfaces
-    ).toEqual([{ public: {}, vpc: null, vlan: null }]);
-  });
 });
 
 describe('getInterfacesPayload', () => {

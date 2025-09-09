@@ -304,7 +304,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               dependentFilters: resource_ids?.length
-                ? { [RESOURCE_ID]: resource_ids.map(String) }
+                ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
               shouldDisable: isError || isLoading,
             },
@@ -351,7 +351,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               isServiceAnalyticsIntegration,
               preferences,
-              dependentFilters: dependentFilterReference.current,
+              dependentFilters: resource_ids?.length
+                ? { [RESOURCE_ID]: resource_ids }
+                : dependentFilterReference.current,
               shouldDisable: isError || isLoading,
             },
             handleTextFilterChange

@@ -62,7 +62,7 @@ export interface RegionSelectProps<
   /**
    * The ID of the selected region.
    */
-  value: null | string;
+  value: string | undefined;
   width?: number;
 }
 

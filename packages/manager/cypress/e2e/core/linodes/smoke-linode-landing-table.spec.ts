@@ -105,7 +105,7 @@ describe('linode landing checks', () => {
     cy.findByTestId('menu-item-Marketplace').should('be.visible');
     cy.findByTestId('menu-item-Billing').scrollIntoView();
     cy.findByTestId('menu-item-Billing').should('be.visible');
-    cy.findByTestId('menu-item-Account Settings').should('be.visible');
+    cy.findByTestId('menu-item-Settings').should('be.visible');
     cy.findByTestId('menu-item-Help & Support').should('be.visible');
   });
 

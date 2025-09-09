@@ -120,7 +120,7 @@ const mockAlerts = alertFactory.build({
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
  * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Avg").
+ * @param aggregationType - The aggregation type (e.g., "Average").
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
@@ -242,7 +242,7 @@ describe('Create Alert', () => {
 
     // Fill metric details for the first rule
     const cpuUsageMetricDetails = {
-      aggregationType: 'Avg',
+      aggregationType: 'Average',
       dataField: 'CPU Utilization',
       operator: '=',
       ruleIndex: 0,
@@ -288,7 +288,7 @@ describe('Create Alert', () => {
     // Fill metric details for the second rule
 
     const memoryUsageMetricDetails = {
-      aggregationType: 'Avg',
+      aggregationType: 'Average',
       dataField: 'Memory Usage',
       operator: '=',
       ruleIndex: 1,

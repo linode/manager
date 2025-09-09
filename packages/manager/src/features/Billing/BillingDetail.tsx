@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -55,6 +56,7 @@ export const BillingDetail = () => {
 
   return (
     <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+      <DocumentTitleSegment segment={`Account & Billing`} />
       <Grid
         columnSpacing={2}
         container

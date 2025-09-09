@@ -88,7 +88,7 @@ export const MaintenancePolicy = () => {
                   : MAINTENANCE_POLICY_SELECT_REGION_TEXT
                 : undefined,
             }}
-            value={field.value ?? null}
+            value={field.value ?? undefined}
           />
         )}
       />

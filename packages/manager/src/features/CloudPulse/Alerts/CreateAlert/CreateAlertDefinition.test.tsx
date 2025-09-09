@@ -89,24 +89,29 @@ beforeEach(() => {
 
 describe('AlertDefinition Create', () => {
   it('should render input components', async () => {
-    await renderWithTheme(<CreateAlertDefinition />);
+    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
+      <CreateAlertDefinition />
+    );
 
-    expect(screen.getByText('1. General Information')).toBeVisible();
-    expect(screen.getByLabelText('Name')).toBeVisible();
-    expect(screen.getByLabelText('Description (optional)')).toBeVisible();
-    expect(screen.getByLabelText('Severity')).toBeVisible();
-    expect(screen.getByLabelText('Service')).toBeVisible();
-    expect(screen.getByText('2. Account/Region/Entity')).toBeVisible();
-    expect(screen.getByText('No scope selected')).toBeVisible();
-    expect(screen.getByText('3. Criteria')).toBeVisible();
-    expect(screen.getByText('Metric Threshold')).toBeVisible();
-    expect(screen.getByLabelText('Data Field')).toBeVisible();
-    expect(screen.getByLabelText('Aggregation Type')).toBeVisible();
-    expect(screen.getByLabelText('Operator')).toBeVisible();
-    expect(screen.getByLabelText('Threshold')).toBeVisible();
-    expect(screen.getByText('4. Notification Channels')).toBeVisible();
-    expect(screen.getByLabelText('Evaluation Period')).toBeVisible();
-    expect(screen.getByLabelText('Polling Interval')).toBeVisible();
+    expect(getByText('1. General Information')).toBeVisible();
+    expect(getByLabelText('Name')).toBeVisible();
+    expect(getByLabelText('Description (optional)')).toBeVisible();
+    expect(getByLabelText('Severity')).toBeVisible();
+    expect(getByLabelText('Service')).toBeVisible();
+    expect(getByText('2. Entities')).toBeVisible();
+    await expect(
+      getByPlaceholderText('Search for a Region or Entity')
+    ).toBeInTheDocument();
+    await expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
+    expect(getByText('3. Criteria')).toBeVisible();
+    expect(getByText('Metric Threshold')).toBeVisible();
+    expect(getByLabelText('Data Field')).toBeVisible();
+    expect(getByLabelText('Aggregation Type')).toBeVisible();
+    expect(getByLabelText('Operator')).toBeVisible();
+    expect(getByLabelText('Threshold')).toBeVisible();
+    expect(getByText('4. Notification Channels')).toBeVisible();
+    expect(getByLabelText('Evaluation Period')).toBeVisible();
+    expect(getByLabelText('Polling Interval')).toBeVisible();
   });
 
   it('should be able to enter a value in the textbox', async () => {
@@ -189,7 +194,7 @@ describe('AlertDefinition Create', () => {
     );
 
     await user.click(submitButton!);
-    expect(container.getAllByText(errorMessage).length).toBe(12);
+    expect(container.getAllByText(errorMessage).length).toBe(11);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });

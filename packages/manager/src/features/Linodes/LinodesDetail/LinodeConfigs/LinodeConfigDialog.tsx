@@ -44,6 +44,10 @@ import type { JSX } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
+import {
+  useIsLkeEnterpriseEnabled,
+  useKubernetesBetaEndpoint,
+} from 'src/features/Kubernetes/kubeUtils';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
@@ -51,6 +55,7 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -60,7 +65,6 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
 import { getSelectedDeviceOption } from '../utilities';
-import { deviceSlots, pathsOptions, pathsOptionsLabels } from './constants';
 import {
   StyledDivider,
   StyledFormControl,
@@ -68,7 +72,7 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
-import { getPrimaryInterfaceIndex, useGetDeviceLimit } from './utilities';
+import { getPrimaryInterfaceIndex } from './utilities';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
 import type {
@@ -171,6 +175,17 @@ const defaultLegacyInterfaceFieldValues: EditableFields = {
   interfaces: defaultInterfaceList,
 };
 
+const pathsOptions = [
+  { label: '/dev/sda', value: '/dev/sda' },
+  { label: '/dev/sdb', value: '/dev/sdb' },
+  { label: '/dev/sdc', value: '/dev/sdc' },
+  { label: '/dev/sdd', value: '/dev/sdd' },
+  { label: '/dev/sde', value: '/dev/sde' },
+  { label: '/dev/sdf', value: '/dev/sdf' },
+  { label: '/dev/sdg', value: '/dev/sdg' },
+  { label: '/dev/sdh', value: '/dev/sdh' },
+];
+
 const interfacesToState = (interfaces?: Interface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
@@ -228,6 +243,7 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[] | null) => {
   return filteredInterfaces as Interface[];
 };
 
+const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 const deviceCounterDefault = 1;
 
 // DiskID reserved on the back-end to indicate Finnix.
@@ -238,14 +254,22 @@ export const LinodeConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
-  const availableMemory = linode?.specs.memory ?? 0;
-  if (availableMemory < 0) {
-    // eslint-disable-next-line no-console
-    console.warn('Invalid memory value:', availableMemory);
-  }
-  const deviceLimit = useGetDeviceLimit(availableMemory);
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
+    useKubernetesBetaEndpoint();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    enabled:
+      isLkeEnterpriseLAFeatureEnabled &&
+      Boolean(linode?.lke_cluster_id) &&
+      !isAPLAvailabilityLoading,
+    id: linode?.lke_cluster_id ?? -1,
+    isUsingBetaEndpoint,
+  });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -884,7 +908,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   values.devices?.[slot as keyof DevicesAsStrings] ?? ''
                 }
                 onChange={handleDevicesChanges}
-                slots={deviceSlots.slice(0, deviceLimit)}
+                slots={deviceSlots}
               />
               <FormControl fullWidth>
                 <Autocomplete
@@ -914,7 +938,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Button
                 buttonType="secondary"
                 compactX
-                disabled={deviceCounter >= deviceLimit - 1}
+                disabled={deviceCounter >= deviceSlots.length - 1}
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 sx={{
                   marginLeft: `1px`,
@@ -1073,6 +1097,8 @@ export const LinodeConfigDialog = (props: Props) => {
                       <React.Fragment key={`${idx}-interface`}>
                         {unrecommendedConfigNoticeSelector({
                           _interface: thisInterface,
+                          isLKEEnterpriseCluster:
+                            cluster?.tier === 'enterprise',
                           primaryInterfaceIndex,
                           thisIndex: idx,
                           values,
@@ -1242,7 +1268,16 @@ const DialogContent = (props: ConfigFormProps) => {
 };
 
 const isUsingCustomRoot = (value: string) =>
-  pathsOptionsLabels.includes(value) === false;
+  [
+    '/dev/sda',
+    '/dev/sdb',
+    '/dev/sdc',
+    '/dev/sdd',
+    '/dev/sde',
+    '/dev/sdf',
+    '/dev/sdg',
+    '/dev/sdh',
+  ].includes(value) === false;
 
 const noticeForScenario = (scenarioText: string) => (
   <Notice
@@ -1253,22 +1288,23 @@ const noticeForScenario = (scenarioText: string) => (
 );
 
 /**
- * Returns a JSX warning notice if the current network interface configuration
- * is unrecommended and may lead to undesired or unsupported behavior.
  *
  * @param _interface the current config interface being passed in
  * @param primaryInterfaceIndex the index of the primary interface
  * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
  * @param values the values held in Formik state, having a type of `EditableFields`
+ * @param isLKEEnterpriseCluster boolean indicating if the linode is associated with a LKE-E cluster
  * @returns JSX.Element | null
  */
 export const unrecommendedConfigNoticeSelector = ({
   _interface,
+  isLKEEnterpriseCluster,
   primaryInterfaceIndex,
   thisIndex,
   values,
 }: {
   _interface: ExtendedInterface;
+  isLKEEnterpriseCluster: boolean;
   primaryInterfaceIndex: null | number;
   thisIndex: number;
   values: EditableFields;

@@ -32,7 +32,7 @@ describe('NodeTable', () => {
     nodes,
     openRecycleNodeDialog: vi.fn(),
     statusFilter: 'all',
-    nodePoolType: 'g6-standard-1',
+    typeLabel: 'g6-standard-1',
   };
 
   it('includes label, status, and IP columns', async () => {

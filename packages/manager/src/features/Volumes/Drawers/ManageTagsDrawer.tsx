@@ -1,10 +1,9 @@
-import { useUpdateVolumeMutation } from '@linode/queries';
+import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { APIError, Volume } from '@linode/api-v4';
 
@@ -19,14 +18,14 @@ interface Props {
 export const ManageTagsDrawer = (props: Props) => {
   const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
-  const { data: permissions } = usePermissions(
-    'volume',
-    ['update_volume'],
-    volume?.id
-  );
-  const canUpdateVolume = permissions?.update_volume;
+  const { data: grants } = useGrants();
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
+
+  const isReadOnly =
+    grants !== undefined &&
+    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
+      'read_only';
 
   const {
     control,
@@ -77,7 +76,7 @@ export const ManageTagsDrawer = (props: Props) => {
       title="Manage Volume Tags"
     >
       <form onSubmit={onSubmit}>
-        {!canUpdateVolume && (
+        {isReadOnly && (
           <Notice
             spacingBottom={0}
             text="You don't have permission to edit this volume."
@@ -91,7 +90,7 @@ export const ManageTagsDrawer = (props: Props) => {
           name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              disabled={!canUpdateVolume}
+              disabled={isReadOnly}
               label="Tags"
               name="tags"
               onChange={(selected) =>
@@ -105,7 +104,7 @@ export const ManageTagsDrawer = (props: Props) => {
 
         <ActionsPanel
           primaryButtonProps={{
-            disabled: !canUpdateVolume || !isDirty,
+            disabled: isReadOnly || !isDirty,
             label: 'Save Changes',
             loading: isSubmitting,
             type: 'submit',

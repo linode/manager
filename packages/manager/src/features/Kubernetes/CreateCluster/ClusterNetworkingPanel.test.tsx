@@ -49,9 +49,9 @@ describe('ClusterNetworkingPanel', () => {
     });
 
     // Confirm stack type section
-    expect(getByText('IP Stack')).toBeVisible();
+    expect(getByText('IP Version')).toBeVisible();
     expect(getByText('IPv4')).toBeVisible();
-    expect(getByText('IPv4 + IPv6 (dual-stack)')).toBeVisible();
+    expect(getByText('IPv4 + IPv6')).toBeVisible();
 
     // Confirm VPC section
     expect(getByText('VPC')).toBeVisible();
@@ -71,9 +71,7 @@ describe('ClusterNetworkingPanel', () => {
 
     // Confirm stack type default
     expect(getByRole('radio', { name: 'IPv4' })).toBeChecked();
-    expect(
-      getByRole('radio', { name: 'IPv4 + IPv6 (dual-stack)' })
-    ).not.toBeChecked();
+    expect(getByRole('radio', { name: 'IPv4 + IPv6' })).not.toBeChecked();
 
     // Confirm VPC default
     expect(

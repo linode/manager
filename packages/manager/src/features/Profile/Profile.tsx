@@ -8,13 +8,11 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 export const Profile = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
@@ -42,14 +40,12 @@ export const Profile = () => {
       title: 'OAuth Apps',
     },
     {
-      to: iamRbacPrimaryNavChanges
-        ? `/profile/preferences`
-        : `/profile/referrals`,
-      title: iamRbacPrimaryNavChanges ? 'Preferences' : 'Referrals',
+      to: `/profile/referrals`,
+      title: 'Referrals',
     },
     {
-      to: iamRbacPrimaryNavChanges ? `/profile/referrals` : `/profile/settings`,
-      title: iamRbacPrimaryNavChanges ? 'Referrals' : 'My Settings',
+      to: `/profile/settings`,
+      title: 'My Settings',
     },
   ]);
 

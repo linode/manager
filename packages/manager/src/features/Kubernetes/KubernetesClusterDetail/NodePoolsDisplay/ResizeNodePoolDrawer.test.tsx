@@ -1,23 +1,27 @@
-import { linodeTypeFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { nodePoolFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { nodePoolFactory, typeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 import type { Props } from './ResizeNodePoolDrawer';
 
-const type = linodeTypeFactory.build({
-  id: 'fake-linode-type-id',
-  label: 'Linode 2GB',
-});
 const pool = nodePoolFactory.build({
-  type: type.id,
+  type: 'g6-standard-1',
 });
 const smallPool = nodePoolFactory.build({ count: 2 });
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useSpecificTypes: vi
+      .fn()
+      .mockReturnValue([{ data: typeFactory.build({ label: 'Linode 1 GB' }) }]),
+  };
+});
 
 const props: Props = {
   clusterTier: 'standard',
@@ -29,31 +33,10 @@ const props: Props = {
 };
 
 describe('ResizeNodePoolDrawer', () => {
-  // @TODO enable this test when we begin surfacing Node Pool `label` in the UI (ECE-353)
-  it.skip("should render a title containing the Node Pool's label when the node pool has a label", async () => {
-    const nodePool = nodePoolFactory.build({ label: 'my-mock-node-pool-1' });
-
-    const { getByText } = renderWithTheme(
-      <ResizeNodePoolDrawer {...props} nodePool={nodePool} />
-    );
-
-    expect(getByText('Resize Pool: my-mock-node-pool-1')).toBeVisible();
-  });
-
-  it("should render a title containing the Node Pool's type initially when the node pool does not have a label", () => {
-    const { getByText } = renderWithTheme(<ResizeNodePoolDrawer {...props} />);
-
-    expect(getByText('Resize Pool: fake-linode-type-id Plan')).toBeVisible();
-  });
-
-  it("should render a title containing the Node Pool's type's label once the type data has loaded when the node pool does not have a label", async () => {
-    server.use(
-      http.get('*/v4*/linode/types/:id', () => HttpResponse.json(type))
-    );
-
+  it("should render the pool's type and size", async () => {
     const { findByText } = renderWithTheme(<ResizeNodePoolDrawer {...props} />);
 
-    expect(await findByText('Resize Pool: Linode 2 GB Plan')).toBeVisible();
+    await findByText(/linode 1 GB/i);
   });
 
   it('should display a warning if the user tries to resize a node pool to < 3 nodes', async () => {
