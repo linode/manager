@@ -40,12 +40,3 @@ export const accountSettingsRouteTree = accountSettingsRoute.addChildren([
   accountSettingsIndexRoute,
   accountSettingsCatchAllRoute,
 ]);
-
-// This supports redirecting from /settings to /account-settings(which renamed from 'settings' to 'account-settings' ).
-export const settingsRouteTree = createRoute({
-  getParentRoute: () => rootRoute,
-  path: 'settings',
-  beforeLoad: () => {
-    throw redirect({ to: '/account-settings' });
-  },
-});

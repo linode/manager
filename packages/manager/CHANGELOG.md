@@ -33,7 +33,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Profile preferences not retained across sessions ([#12795](https://github.com/linode/manager/pull/12795))
 - Make a Payment and Add Payment drawers not closing when browser back button is clicked ([#12796](https://github.com/linode/manager/pull/12796))
 - Node Pool footer layout ([#12798](https://github.com/linode/manager/pull/12798))
-- Redirects /settings to /account-settings ([#12841](https://github.com/linode/manager/pull/12841))
 
 ### Removed:
 
