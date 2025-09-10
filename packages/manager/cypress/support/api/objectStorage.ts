@@ -99,9 +99,12 @@ export const deleteAllTestBuckets = async () => {
 
   const deleteBucketsPromises = buckets.map(
     async (bucket: ObjectStorageBucket) => {
-      await deleteAllTestBucketObjects(bucket.cluster, bucket.label);
+      await deleteAllTestBucketObjects(
+        bucket.region || bucket.cluster,
+        bucket.label
+      );
       return deleteBucket({
-        cluster: bucket.cluster,
+        cluster: bucket.region || bucket.cluster,
         label: bucket.label,
       });
     }

@@ -97,7 +97,9 @@ const ipv4ConfigInterface = object().when('purpose', {
       .shape({
         vpc: IPv4,
         nat_1_1: lazy((value) =>
-          value === 'any' ? string().notRequired().nullable() : IPv4,
+          value === 'any' || value === ''
+            ? string().notRequired().nullable()
+            : IPv4,
         ),
       })
       .when('ipv6', {
@@ -139,13 +141,12 @@ const ipv4ConfigInterface = object().when('purpose', {
 
 const slaacSchema = object().shape({
   range: string()
-    .required()
+    .required('VPC IPv6 is required.')
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
       test: (value) => validateIPv6PrefixLengthIs64(value),
     }),
-  address: string().required(),
 });
 
 const VPCInterfaceIPv6RangeSchema = object({
@@ -331,7 +332,9 @@ export const UpdateConfigInterfaceSchema = object({
     .shape({
       vpc: IPv4,
       nat_1_1: lazy((value) =>
-        value === 'any' ? string().notRequired().nullable() : IPv4,
+        value === 'any' || value === ''
+          ? string().notRequired().nullable()
+          : IPv4,
       ),
     }),
   ipv6: object().notRequired().nullable().shape({
@@ -457,17 +460,75 @@ export const CreateSnapshotSchema = object({
 const device = object({
   disk_id: number().nullable(),
   volume_id: number().nullable(),
-}).nullable();
+})
+  .nullable()
+  .notRequired();
 
 const devices = object({
   sda: device,
+  sdaa: device,
+  sdab: device,
+  sdac: device,
+  sdad: device,
+  sdae: device,
+  sdaf: device,
+  sdag: device,
+  sdah: device,
+  sdai: device,
+  sdaj: device,
+  sdak: device,
+  sdal: device,
+  sdam: device,
+  sdan: device,
+  sdao: device,
+  sdap: device,
+  sdaq: device,
+  sdar: device,
+  sdas: device,
+  sdat: device,
+  sdau: device,
+  sdav: device,
+  sdaw: device,
+  sdax: device,
+  sday: device,
+  sdaz: device,
   sdb: device,
+  sdba: device,
+  sdbb: device,
+  sdbc: device,
+  sdbd: device,
+  sdbe: device,
+  sdbf: device,
+  sdbg: device,
+  sdbh: device,
+  sdbi: device,
+  sdbj: device,
+  sdbk: device,
+  sdbl: device,
   sdc: device,
   sdd: device,
   sde: device,
   sdf: device,
   sdg: device,
   sdh: device,
+  sdi: device,
+  sdj: device,
+  sdk: device,
+  sdl: device,
+  sdm: device,
+  sdn: device,
+  sdo: device,
+  sdp: device,
+  sdq: device,
+  sdr: device,
+  sds: device,
+  sdt: device,
+  sdu: device,
+  sdv: device,
+  sdw: device,
+  sdx: device,
+  sdy: device,
+  sdz: device,
 });
 
 const helpers = object({

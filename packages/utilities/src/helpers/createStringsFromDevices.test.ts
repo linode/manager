@@ -25,9 +25,9 @@ describe('LinodeRescue', () => {
         sda: null,
         sdb: null,
         sdc: null,
-        sdd: { disk_id: 456 },
+        sdd: { disk_id: 456, volume_id: null },
         sde: null,
-        sdf: { disk_id: 123 },
+        sdf: { disk_id: 123, volume_id: null },
         sdg: null,
         sdh: null,
       });
@@ -39,10 +39,10 @@ describe('LinodeRescue', () => {
     it('should return IDs prepended by `volume-` for volumes', () => {
       const result = createStringsFromDevices({
         sda: null,
-        sdb: { volume_id: 123 },
+        sdb: { volume_id: 123, disk_id: null },
         sdc: null,
         sdd: null,
-        sde: { volume_id: 456 },
+        sde: { volume_id: 456, disk_id: null },
         sdf: null,
         sdg: null,
         sdh: null,

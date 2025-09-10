@@ -217,6 +217,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           disabled={areClusterLinodesReadOnly}
+          entity="Kubernetes Cluster"
           entityLabel={clusterLabel}
           sx={{
             width: '100%',

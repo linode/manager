@@ -81,4 +81,50 @@ describe('MaintenanceBannerV2', () => {
       )
     ).not.toBeInTheDocument();
   });
+
+  it('does not show Account Maintenance link when pathname is /maintenance', () => {
+    const mockMaintenance = [
+      accountMaintenanceFactory.build({
+        type: 'reboot',
+        entity: { type: 'linode', id: 123 },
+        reason: 'Scheduled maintenance',
+        status: 'pending',
+        description: 'scheduled',
+      }),
+    ];
+
+    queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
+      data: mockMaintenance,
+    });
+
+    const { queryByTestId } = renderWithTheme(<MaintenanceBannerV2 />, {
+      initialRoute: '/maintenance',
+    });
+
+    // Should show the maintenance banner but not the maintenance link section
+    expect(queryByTestId('maintenance-link-section')).not.toBeInTheDocument();
+  });
+
+  it('shows Account Maintenance link when pathname is not /maintenance', () => {
+    const mockMaintenance = [
+      accountMaintenanceFactory.build({
+        type: 'reboot',
+        entity: { type: 'linode', id: 123 },
+        reason: 'Scheduled maintenance',
+        status: 'pending',
+        description: 'scheduled',
+      }),
+    ];
+
+    queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
+      data: mockMaintenance,
+    });
+
+    const { getByTestId } = renderWithTheme(<MaintenanceBannerV2 />, {
+      initialRoute: '/dashboard',
+    });
+
+    // Should show the maintenance banner AND the maintenance link section
+    getByTestId('maintenance-link-section');
+  });
 });
