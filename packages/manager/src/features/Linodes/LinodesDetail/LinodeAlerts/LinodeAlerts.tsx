@@ -83,7 +83,6 @@ const LinodeAlerts = () => {
               },
             }}
             secondaryButtonProps={{
-              buttonType: 'outlined',
               label: 'Cancel',
               onClick: () => {
                 handleCancelNavigation();
