@@ -44,9 +44,7 @@ import {
   triggerConditionFactory,
 } from 'src/factories';
 import {
-  ACCOUNT_GROUP_INFO_MESSAGE,
   entityGroupingOptions,
-  REGION_GROUP_INFO_MESSAGE,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -211,119 +209,6 @@ describe('Integration Tests for Edit Alert', () => {
           .find('input')
           .should('have.value', rule[key]);
       });
-    });
-  };
-
-  const scopeActions: Record<string, () => void> = {
-    // Region-level alert validations
-    Region: () => {
-      cy.get('[data-qa="region-tabls"]').within(() => {
-        const expectedRegions = [
-          'US, Chicago, IL (us-ord)',
-          'US, Newark (us-east)',
-        ];
-
-        expectedRegions.forEach((region) => {
-          cy.contains('tr', region).should('exist');
-        });
-      });
-
-      cy.get('[data-qa-notice="true"]')
-        .find('[data-testid="alert_message_notice"]')
-        .should('have.text', REGION_GROUP_INFO_MESSAGE);
-    },
-    // Account-level alert validations
-    Account: () => {
-      cy.get('[data-qa-notice="true"]')
-        .find('[data-testid="alert_message_notice"]')
-        .should('have.text', ACCOUNT_GROUP_INFO_MESSAGE);
-    },
-    // Entity-level alert validations
-    Entity: () => {
-      const searchPlaceholder = 'Search for a Region or Entity';
-      cy.get('[data-qa-section="Resources"]').within(() => {
-        // Validate headings
-        ui.heading
-          .findByText('entity')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('have.text', 'Entity');
-
-        ui.heading
-          .findByText('region')
-          .should('be.visible')
-          .should('have.text', 'Region');
-
-        // Validate search inputs
-        cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
-        cy.findByPlaceholderText('Select Regions').should('be.visible');
-
-        // Assert row count
-        cy.get('[data-qa-alert-row]').should('have.length', 4);
-
-        // Validate entity-region mapping
-        const regionMap = new Map(regions.map((r) => [r.id, r.label]));
-
-        cy.get('[data-qa-alert-row]')
-          .should('have.length', 4)
-          .each((row, index) =>
-            validateAlertRow(row, index, databases, regionMap)
-          );
-
-        // Entity search
-        cy.findByPlaceholderText(searchPlaceholder).type(databases[0].label);
-
-        cy.get('[data-qa-alert-table="true"]')
-          .find('[data-qa-alert-row]')
-          .should('have.length', 1);
-
-        cy.findByText(databases[0].label).should('be.visible');
-        [1, 2, 3].forEach((i) =>
-          cy.findByText(databases[i].label).should('not.exist')
-        );
-
-        // Region filter
-        cy.findByPlaceholderText(searchPlaceholder).clear();
-        ui.regionSelect
-          .find()
-          .click()
-          .type(`${regions[0].label}{enter}`)
-          .click();
-
-        cy.get('[data-qa-alert-table="true"]')
-          .find('[data-qa-alert-row]')
-          .should('have.length', 2);
-
-        [0, 2].forEach((i) =>
-          cy.get(`[data-qa-alert-cell="${i}_region"]`).should('not.exist')
-        );
-
-        [1, 3].forEach((i) =>
-          cy.get(`[data-qa-alert-cell="${i}_region"]`).should('be.visible')
-        );
-      });
-    },
-  };
-  const validateAlertRow = (
-    row: JQuery<HTMLElement>,
-    index: number,
-    databases: Database[], // Replace with the correct type
-    regionMap: Map<string, string>
-  ) => {
-    const db = databases[index];
-    const rowNumber = index + 1;
-    const regionLabel = regionMap.get(db.region) || 'Unknown Region';
-
-    cy.wrap(row).within(() => {
-      cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
-        'have.text',
-        db.label
-      );
-
-      cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
-        'have.text',
-        `US, ${regionLabel} (${db.region})`
-      );
     });
   };
 
