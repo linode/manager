@@ -1,43 +1,47 @@
 <h3 align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./packages/manager/src/assets/logo/akamai-logo-white-text.svg">
-    <source media="(prefers-color-scheme: light)" srcset="./packages/manager/src/assets/logo/akamai-logo-navy-text.svg">
-    <img alt="Akamai Logo" src="./packages/manager/src/assets/logo/akamai-logo-navy-text.svg" width="200">
-  </picture>
+  <img src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-color.svg" width="200" />
   <br />
   <br />
-  Akamai Cloud Manager
+  Akamai Connected Cloud Manager
 </h3>
 
-  
+<p align="center">
+  <img alt="Linode Manager Code Coverage" src="https://cloud-manager-coverage.us-east-1.linodeobjects.com/badges.svg?v=1" />
+</p>
 
 <p align="center">
   <a href="https://github.com/linode/manager/actions/workflows/ci.yml">
     <img src="https://github.com/linode/manager/actions/workflows/ci.yml/badge.svg?branch=develop" alt="CI Build Stats on develop" />
   </a>
-  <img alt="Linode Manager Code Coverage" src="https://cloud-manager-coverage.us-east-1.linodeobjects.com/badges.svg?v=1" />
   <a href="https://cloud.linode.com">
   <img alt="Website" src="https://img.shields.io/website?down_color=red&down_message=outage&label=cloud.linode.com&up_color=green&up_message=up&url=https%3A%2F%2Fcloud.linode.com" />
+  </a>
+  <a href="https://github.com/linode/manager/releases">
+    <img src="https://img.shields.io/github/package-json/v/linode/manager?filename=packages%2Fmanager%2Fpackage.json&label=cloud.linode.com" alt="Cloud Manager Version" />
   </a>
   <a href="https://design.linode.com">
     <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg" alt="Storybook" />
   </a>
 </p>
 <p align="center">
-  <a href="https://github.com/linode/manager/releases">
-    <img src="https://img.shields.io/github/package-json/v/linode/manager?filename=packages%2Fmanager%2Fpackage.json&label=cloud.linode.com" alt="Cloud Manager Version" />
-  </a>
   <a href="https://www.npmjs.com/package/@linode/api-v4">
     <img src="https://img.shields.io/npm/v/@linode/api-v4?label=%40linode%2Fapi-v4" alt="@linode/api-v4 version" />
+  </a>
+  <a href="https://bundlephobia.com/package/@linode/api-v4">
+    <img alt="api-v4 bundle size" src="https://img.shields.io/bundlephobia/min/@linode/api-v4?label=api-v4 size">
   </a>
   <a href="https://www.npmjs.com/package/@linode/validation">
     <img src="https://img.shields.io/npm/v/@linode/validation?label=%40linode%2Fvalidation" alt="@linode/validation version" />
   </a>
+  <a href="https://bundlephobia.com/package/@linode/validation">
+    <img alt="validation bundle size" src="https://img.shields.io/bundlephobia/min/@linode/validation?label=validation size">
+  </a>
+  
 </p>
 
 ## Overview
 
-This repository is home to the Akamai **[Cloud Manager](https://cloud.linode.com)** and related Typescript packages:
+This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related Typescript packages:
 - [`@linode/api-v4`](packages/api-v4/)
 - [`@linode/queries`](packages/queries/)
 - [`@linode/search`](packages/search/)

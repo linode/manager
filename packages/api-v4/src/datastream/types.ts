@@ -126,3 +126,10 @@ export interface CreateDestinationPayload {
   label: string;
   type: DestinationType;
 }
+
+export type UpdateDestinationPayload = CreateDestinationPayload;
+
+export interface UpdateDestinationPayloadWithId
+  extends UpdateDestinationPayload {
+  id: number;
+}

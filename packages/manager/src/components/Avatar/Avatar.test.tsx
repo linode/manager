@@ -60,14 +60,15 @@ describe('Avatar', () => {
     expect(getByTestId('avatar-letter')).toHaveTextContent('T');
   });
 
-  it.each(['Akamai', 'lke-service-account-123'])(
-    'should render an svg instead of first letter for system and service account users',
-    (username) => {
-      const { getByTestId, queryByTestId } = renderWithTheme(
+  it('should render an svg instead of first letter for system users', async () => {
+    const systemUsernames = ['Akamai', 'lke-service-account-123'];
+
+    systemUsernames.forEach((username, i) => {
+      const { getAllByRole, queryByTestId } = renderWithTheme(
         <Avatar {...mockProps} username={username} />
       );
-      expect(getByTestId('akamai-wave-icon')).toBeVisible();
+      expect(getAllByRole('img')[i]).toBeVisible();
       expect(queryByTestId('avatar-letter')).toBe(null);
-    }
-  );
+    });
+  });
 });

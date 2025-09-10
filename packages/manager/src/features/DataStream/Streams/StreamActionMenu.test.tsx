@@ -10,7 +10,7 @@ import type { StreamStatus } from '@linode/api-v4';
 
 const fakeHandler = vi.fn();
 
-describe('Stream action menu', () => {
+describe('StreamActionMenu', () => {
   const renderComponent = (status: StreamStatus) => {
     renderWithTheme(
       <StreamActionMenu

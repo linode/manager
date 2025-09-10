@@ -129,12 +129,7 @@ export const AddNotificationChannelDrawer = (
                     isNotificationChannelsLoading &&
                     !isNotificationChannelsError
                   }
-                  errorText={
-                    fieldState.error?.message ??
-                    (isNotificationChannelsError
-                      ? 'Error in fetching the data.'
-                      : '')
-                  }
+                  errorText={fieldState.error?.message}
                   label="Type"
                   onBlur={field.onBlur}
                   onChange={(
@@ -167,7 +162,12 @@ export const AddNotificationChannelDrawer = (
                   <Autocomplete
                     data-testid="channel-label"
                     disabled={!selectedChannelTypeTemplate}
-                    errorText={fieldState.error?.message}
+                    errorText={
+                      fieldState.error?.message ??
+                      (isNotificationChannelsError
+                        ? 'Error in fetching the data.'
+                        : '')
+                    }
                     key={channelTypeWatcher}
                     label="Channel"
                     onBlur={field.onBlur}

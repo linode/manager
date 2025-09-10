@@ -1,6 +1,6 @@
 # Shared Feature Component Library
 
-`@linode/shared` contains definitions for React-based feature components and hooks that are used frequently across Akamai Cloud Manager.
+`@linode/shared` contains definitions for React-based feature components and hooks that are used frequently across Akamai Connected Cloud Manager.
 
 In contrast to the other libraries, [`@linode/ui`](../ui/) and [`@linode/utilities`](../utilities/) in this repository, components and hooks in this package make use of [`@linode/api-v4`](../api-v4/), [`@linode/queries`](../queries/) and other dependencies to implement common, opinionated and complex components to enable a seamless experience for users as they navigate between features of the app.
 

@@ -1,29 +1,26 @@
-import { Box, ErrorState, Stack, Typography, useTheme } from '@linode/ui';
-import CheckIcon from '@mui/icons-material/CheckCircle';
+import { Box, ErrorState, StyledLinkButton, Typography } from '@linode/ui';
+import Warning from '@mui/icons-material/CheckCircle';
 import { useNavigate } from '@tanstack/react-router';
-import React from 'react';
+import * as React from 'react';
 
+import Logo from 'src/assets/logo/akamai-logo.svg';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-
-import { AkamaiLogo } from '../AkamaiLogo';
-import { LinkButton } from '../LinkButton';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 export const AccountActivationLanding = () => {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const [supportDrawerIsOpen, toggleSupportDrawer] =
     React.useState<boolean>(false);
 
   const handleTicketSubmitSuccess = (
-    ticketId: number,
+    ticketID: number,
     attachmentErrors?: AttachmentError[]
   ) => {
     navigate({
       to: '/support/tickets/$ticketId',
-      params: { ticketId },
+      params: { ticketId: ticketID },
       state: (prev) => ({
         ...prev,
         attachmentErrors,
@@ -38,29 +35,33 @@ export const AccountActivationLanding = () => {
       alignItems="center"
       display="flex"
       flexDirection="column"
-      height="calc(100vh - 200px)"
+      height="100%"
       justifyContent="center"
     >
-      <AkamaiLogo sx={{ width: '200px', height: '75px' }} />
+      <Logo width={215} />
       <ErrorState
-        compact
-        CustomIcon={CheckIcon}
-        CustomIconStyles={{ color: theme.palette.success.dark }}
+        CustomIcon={Warning}
+        CustomIconStyles={{ color: '#63A701' }}
         errorText={
-          <Stack alignItems="center" textAlign="center">
+          <React.Fragment>
             <Typography
               sx={(theme) => ({ marginBottom: theme.spacingFunction(16) })}
               variant="h2"
             >
               Your account is currently being reviewed.
             </Typography>
-            <Typography sx={{ maxWidth: { lg: '60%' } }}>
+            <Typography
+              sx={{
+                margin: '0 auto',
+                maxWidth: '60%',
+              }}
+            >
               Thanks for signing up! You&rsquo;ll receive an email from us once
               our review is complete, so hang tight. If you have questions
               during this process{' '}
-              <LinkButton onClick={() => toggleSupportDrawer(true)}>
+              <StyledLinkButton onClick={() => toggleSupportDrawer(true)}>
                 please open a Support ticket
-              </LinkButton>
+              </StyledLinkButton>
               .
             </Typography>
             <SupportTicketDialog
@@ -71,7 +72,7 @@ export const AccountActivationLanding = () => {
               open={supportDrawerIsOpen}
               prefilledTitle="Help me activate my account"
             />
-          </Stack>
+          </React.Fragment>
         }
       />
     </Box>

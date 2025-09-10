@@ -45,11 +45,27 @@ export const AssignSelectedRolesDrawer = ({
 }: Props) => {
   const theme = useTheme();
 
+  const values = {
+    roles: selectedRoles.map((r) => ({
+      role: {
+        access: r.access,
+        entity_type: r.entity_type,
+        label: r.name,
+        value: r.name,
+      },
+      entities: null,
+    })),
+    username: null,
+  };
+
+  const form = useForm<AssignNewRoleFormValues>({
+    defaultValues: values,
+    values,
+  });
+
   const [usernameInput, setUsernameInput] = useState<string>('');
   const debouncedUsernameInput = useDebouncedValue(usernameInput);
-
-  const [username, setUsername] = useState<null | string>('');
-
+  const username = form.watch('username');
   const userSearchFilter = debouncedUsernameInput
     ? {
         ['+or']: [
@@ -79,29 +95,11 @@ export const AssignSelectedRolesDrawer = ({
     }));
   }, [accountUsers]);
 
+  const { handleSubmit, reset, control, formState, setError } = form;
+
   const { data: accountRoles } = useAccountRoles();
 
   const { data: existingRoles } = useUserRoles(username ?? '');
-
-  const values = {
-    roles: selectedRoles.map((r) => ({
-      role: {
-        access: r.access,
-        entity_type: r.entity_type,
-        label: r.name,
-        value: r.name,
-      },
-      entities: null,
-    })),
-    username: null,
-  };
-
-  const form = useForm<AssignNewRoleFormValues>({
-    defaultValues: values,
-    values,
-  });
-
-  const { handleSubmit, reset, control, formState, setError } = form;
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
@@ -139,8 +137,7 @@ export const AssignSelectedRolesDrawer = ({
 
   const handleClose = () => {
     reset();
-    setUsername(null);
-    setUsernameInput('');
+
     onClose();
   };
 
@@ -193,10 +190,13 @@ export const AssignSelectedRolesDrawer = ({
                   loading={isLoadingAccountUsers || isFetchingAccountUsers}
                   noMarginTop
                   onChange={(_, option) => {
-                    setUsername(option?.label || null);
-                    onChange(username);
+                    onChange(option?.label || null);
+                    // Form now has the username, so we can clear the input
+                    // This will prevent refetching all users with an existing user as a filter
+                    setUsernameInput('');
                   }}
                   onInputChange={(_, value) => {
+                    // We set an input state separately for when we query the API
                     setUsernameInput(value);
                   }}
                   options={getUserOptions() || []}

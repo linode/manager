@@ -1,38 +1,52 @@
-import React from 'react';
+import { fireEvent } from '@testing-library/react';
+import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CancelLanding } from './CancelLanding';
 
+const realLocation = window.location;
+
+beforeAll(() => {
+  window.location = realLocation;
+});
+
+afterEach(() => {
+  window.location = realLocation;
+});
+
 describe('CancelLanding', () => {
-  const options = {
-    initialEntries: ['/cancel?survey_link=https://linode.com/fake-survey'],
-    initialRoute: '/cancel',
-  };
-
-  it("renders text explaining that the user's account is closed", () => {
-    const { getByText } = renderWithTheme(<CancelLanding />, options);
-
-    expect(
-      getByText('Your account is closed.', { exact: false })
-    ).toBeVisible();
+  it('does not render the body when there is no survey_link in the state', () => {
+    const { queryByTestId } = renderWithTheme(<CancelLanding />, {
+      initialEntries: ['/cancel'],
+      initialRoute: '/cancel',
+    });
+    expect(queryByTestId('body')).toBe(null);
   });
 
-  it('renders text asking the user to complete a survey', () => {
-    const { getByText } = renderWithTheme(<CancelLanding />, options);
-
-    expect(
-      getByText('Would you mind taking a brief survey?', { exact: false })
-    ).toBeVisible();
+  it('renders the body when there is a survey_link in the state', () => {
+    const { queryByTestId } = renderWithTheme(<CancelLanding />, {
+      initialEntries: ['/cancel?survey_link=https://linode.com'],
+      initialRoute: '/cancel',
+    });
+    expect(queryByTestId('body')).toBeInTheDocument();
   });
 
-  it('renders a link to the survey', () => {
-    const { getByRole } = renderWithTheme(<CancelLanding />, options);
+  it('navigates to the survey link when the button is clicked', () => {
+    // Mock window.location.assign.
+    // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+    const mockAssign = vi.fn();
+    delete (window as Partial<Window>).location;
 
-    const link = getByRole('link');
+    window.location = { ...realLocation, assign: mockAssign };
 
-    expect(link).toBeVisible();
-    expect(link).toHaveTextContent('Take our exit survey');
-    expect(link).toHaveAttribute('href', 'https://linode.com/fake-survey');
+    const surveyLink = 'https://linode.com';
+    const { getByTestId } = renderWithTheme(<CancelLanding />, {
+      initialEntries: ['/cancel?survey_link=' + encodeURIComponent(surveyLink)],
+      initialRoute: '/cancel',
+    });
+    const button = getByTestId('survey-button');
+    fireEvent.click(button);
+    expect(mockAssign).toHaveBeenCalledWith(surveyLink);
   });
 });

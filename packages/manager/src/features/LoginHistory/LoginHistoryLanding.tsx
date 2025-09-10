@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import { PlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
@@ -28,9 +27,8 @@ export const LoginHistoryLanding = () => {
 
   return (
     <>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
-      <DocumentTitleSegment segment="Login History" />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <AccountLogins />
     </>

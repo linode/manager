@@ -3,9 +3,9 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
+import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
-import AkamaiWaveIcon from 'src/assets/logo/akamai-wave.svg';
 import { Link } from 'src/components/Link';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { useFlags } from 'src/hooks/useFlags';
@@ -21,13 +21,13 @@ interface Props {
 const icons: Record<TPAProvider, any> = {
   github: GitHubIcon,
   google: GoogleIcon,
-  password: AkamaiWaveIcon,
+  password: AkamaiWaveOnlyIcon,
 };
 
 const linode = {
   displayName: 'Cloud Manager',
   href: '',
-  icon: AkamaiWaveIcon,
+  icon: AkamaiWaveOnlyIcon,
   name: 'password' as TPAProvider,
 };
 

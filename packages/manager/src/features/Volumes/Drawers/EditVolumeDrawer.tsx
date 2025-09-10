@@ -1,4 +1,4 @@
-import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
+import { useVolumeUpdateMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -13,6 +13,7 @@ import React from 'react';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -31,17 +32,19 @@ interface Props {
 export const EditVolumeDrawer = (props: Props) => {
   const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
-  const { data: grants } = useGrants();
+  const { data: permissions } = usePermissions(
+    'volume',
+    ['update_volume'],
+    volume?.id
+  );
+  const canUpdateVolume = permissions?.update_volume;
 
-  const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
+  const { mutateAsync: updateVolume } = useVolumeUpdateMutation(
+    volume?.id ?? -1
+  );
 
   const { isBlockStorageEncryptionFeatureEnabled } =
     useIsBlockStorageEncryptionFeatureEnabled();
-
-  const isReadOnly =
-    grants !== undefined &&
-    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
-      'read_only';
 
   const {
     dirty,
@@ -61,7 +64,6 @@ export const EditVolumeDrawer = (props: Props) => {
         await updateVolume({
           label: values.label,
           tags: values.tags,
-          volumeId: volume?.id ?? -1,
         });
 
         onClose();
@@ -91,7 +93,7 @@ export const EditVolumeDrawer = (props: Props) => {
       title="Edit Volume"
     >
       <form onSubmit={handleSubmit}>
-        {isReadOnly && (
+        {!canUpdateVolume && (
           <Notice
             spacingBottom={0}
             text="You don't have permission to edit this volume."
@@ -101,7 +103,7 @@ export const EditVolumeDrawer = (props: Props) => {
         {error && <Notice text={error} variant="error" />}
 
         <TextField
-          disabled={isReadOnly}
+          disabled={!canUpdateVolume}
           errorText={errors.label}
           label="Label"
           name="label"
@@ -129,7 +131,7 @@ export const EditVolumeDrawer = (props: Props) => {
 
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isReadOnly || !dirty,
+            disabled: !canUpdateVolume || !dirty,
             label: 'Save Changes',
             loading: isSubmitting,
             type: 'submit',
