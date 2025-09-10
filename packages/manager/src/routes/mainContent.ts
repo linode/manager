@@ -13,10 +13,17 @@ export const mainContentRoute = createRoute({
   getParentRoute: () => rootRoute,
   async beforeLoad(ctx) {
     if (ctx.location.pathname === '/') {
-      const accountSettings = await ctx.context.queryClient.ensureQueryData(
-        accountQueries.settings
-      );
-      throw redirect({ to: accountSettings.managed ? '/managed' : '/linodes' })
+      try {
+        const accountSettings = await ctx.context.queryClient.ensureQueryData(
+          accountQueries.settings
+        );
+        throw redirect({
+          to: accountSettings.managed ? '/managed' : '/linodes',
+        });
+      // eslint-disable-next-line sonarjs/no-ignored-exceptions
+      } catch (error) {
+        throw redirect({ to: '/linodes' });
+      }
     }
   },
   path: '/',
