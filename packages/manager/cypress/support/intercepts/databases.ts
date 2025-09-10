@@ -15,6 +15,8 @@ import type {
   DatabaseEngineConfig,
   DatabaseType,
   Engine,
+  Region,
+  RegionAvailability,
 } from '@linode/api-v4';
 
 /**
@@ -381,6 +383,25 @@ export const mockGetDatabaseEngines = (
     'GET',
     apiMatcher('databases/engines*'),
     paginateResponse(engines)
+  );
+};
+
+// /**
+//  * Intercepts GET request to fetch availability in a region and mocks response.
+//  *
+//  * @param regionId - Database region id
+//  * @param regionAvailability - region availability list
+//  *
+//  * @returns Cypress chainable.
+//  */
+export const mockGetRegionAvailability = (
+  regionId: Region['id'],
+  regionAvailability: RegionAvailability[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`regions/${regionId}/availability`),
+    makeResponse(regionAvailability)
   );
 };
 
