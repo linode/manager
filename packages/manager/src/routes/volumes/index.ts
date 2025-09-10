@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { VolumesRoot } from './VolumesRoot';
 
 import type { TableSearchParams } from '../types';
@@ -25,7 +25,7 @@ export interface VolumesSearchParams extends TableSearchParams {
 
 const volumesRoute = createRoute({
   component: VolumesRoot,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'volumes',
 });
 

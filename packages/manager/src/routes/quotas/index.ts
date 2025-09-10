@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { QuotasRoute } from './QuotasRoute';
 
 const quotasRoute = createRoute({
   component: QuotasRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'quotas',
 });
 

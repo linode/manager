@@ -4,6 +4,7 @@ import { rootRoute } from '../root';
 import { DataStreamRoute } from './DataStreamRoute';
 
 import type { TableSearchParams } from 'src/routes/types';
+import { mainContentRoute } from '../mainContent';
 
 export interface StreamSearchParams extends TableSearchParams {
   label?: string;
@@ -12,7 +13,7 @@ export interface StreamSearchParams extends TableSearchParams {
 
 export const dataStreamRoute = createRoute({
   component: DataStreamRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'datastream',
 });
 

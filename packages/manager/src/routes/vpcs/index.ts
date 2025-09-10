@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { VPCRoute } from './VPCRoute';
 
 import type { TableSearchParams } from '../types';
@@ -33,7 +33,7 @@ export type SubnetLinodeAction =
 
 const vpcsRoute = createRoute({
   component: VPCRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'vpcs',
 });
 

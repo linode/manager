@@ -1,11 +1,11 @@
 import { createRoute } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { CloudPulseMetricsRoute } from './CloudPulseMetricsRoute';
 
 const cloudPulseMetricsRoute = createRoute({
   component: CloudPulseMetricsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'metrics',
 });
 

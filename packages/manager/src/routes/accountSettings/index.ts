@@ -1,7 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { mainContentRoute } from '../mainContent';
-import { rootRoute } from '../root';
 import { AccountSettingsRoute } from './AccountSettingsRoute';
 
 const accountSettingsRoute = createRoute({
@@ -44,7 +43,7 @@ export const accountSettingsRouteTree = accountSettingsRoute.addChildren([
 
 // This supports redirecting from /settings to /account-settings(which renamed from 'settings' to 'account-settings' ).
 export const settingsRouteTree = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'settings',
   beforeLoad: () => {
     throw redirect({ to: '/account-settings' });

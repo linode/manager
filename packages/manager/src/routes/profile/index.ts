@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { ProfileRoute } from './ProfileRoute';
 
 interface ProfileDisplaySettingsSearchParams {
@@ -19,7 +19,7 @@ interface ProfileSettingsSearchParams {
 
 const profileRoute = createRoute({
   component: ProfileRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'profile',
 }).lazy(() =>
   import('src/features/Profile/profileLazyRoute').then(

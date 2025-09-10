@@ -1,6 +1,6 @@
 import { createRoute } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 
 import type { TableSearchParams } from '../types';
 
@@ -17,7 +17,7 @@ export interface PlacementGroupLinodesSearchParams extends TableSearchParams {
 }
 
 const placementGroupsLandingRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: '/placement-groups',
   validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
@@ -27,7 +27,7 @@ const placementGroupsLandingRoute = createRoute({
 );
 
 const placementGroupsDetailRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => placementGroupsLandingRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),

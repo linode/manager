@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { MaintenanceRoute } from './MaintenanceRoute';
 
 const maintenanceRoute = createRoute({
   component: MaintenanceRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'maintenance',
 });
 

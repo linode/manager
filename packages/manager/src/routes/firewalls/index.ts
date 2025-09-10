@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { FirewallsRoute } from './FirewallsRoute';
 
 import type { TableSearchParams } from '../types';
@@ -12,7 +12,7 @@ export interface FirewallsSearchParams extends TableSearchParams {
 
 const firewallsRoute = createRoute({
   component: FirewallsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'firewalls',
 });
 

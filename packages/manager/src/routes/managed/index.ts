@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { ManagedRoute } from './ManagedRoute';
 
 import type { TableSearchParams } from '../types';
@@ -11,7 +11,7 @@ export interface ManagedSearchParams extends TableSearchParams {
 
 const managedRoute = createRoute({
   component: ManagedRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'managed',
 });
 

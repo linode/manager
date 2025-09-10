@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { CloudPulseAlertsRoute } from './CloudPulseAlertsRoute';
 
 const cloudPulseAlertsRoute = createRoute({
   component: CloudPulseAlertsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'alerts',
 });
 

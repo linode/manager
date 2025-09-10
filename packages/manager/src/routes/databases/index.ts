@@ -4,6 +4,7 @@ import { rootRoute } from '../root';
 import { DatabasesRoute } from './DatabasesRoute';
 
 import type { Engine } from '@linode/api-v4';
+import { mainContentRoute } from '../mainContent';
 
 interface DatabaseParams {
   databaseId: number;
@@ -12,7 +13,7 @@ interface DatabaseParams {
 
 const databasesRoute = createRoute({
   component: DatabasesRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'databases',
 });
 

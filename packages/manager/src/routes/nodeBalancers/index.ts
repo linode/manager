@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { NodeBalancersRoute } from './NodeBalancersRoute';
 
 const nodeBalancersRoute = createRoute({
   component: NodeBalancersRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'nodebalancers',
 });
 

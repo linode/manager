@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { LoginHistoryRoute } from './LoginHistoryRoute';
 
 const loginHistoryRoute = createRoute({
   component: LoginHistoryRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'login-history',
 });
 

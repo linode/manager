@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { ObjectStorageRoute } from './ObjectStorageRoute';
 
 export interface ObjectStorageDetailSearchParams {
@@ -9,7 +9,7 @@ export interface ObjectStorageDetailSearchParams {
 
 export const objectStorageRoute = createRoute({
   component: ObjectStorageRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'object-storage',
 });
 

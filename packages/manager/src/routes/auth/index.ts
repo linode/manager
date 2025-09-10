@@ -5,6 +5,7 @@ import { LoginAsCustomerCallback } from 'src/OAuth/LoginAsCustomerCallback';
 import { Logout } from 'src/OAuth/Logout';
 import { OAuthCallback } from 'src/OAuth/OAuthCallback';
 
+import { mainContentRoute } from '../mainContent';
 import { rootRoute } from '../root';
 
 interface CancelLandingSearch {
@@ -12,14 +13,14 @@ interface CancelLandingSearch {
 }
 
 const cancelLandingRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'cancel',
   component: CancelLanding,
   validateSearch: (search: CancelLandingSearch) => search,
 });
 
 const logoutRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'logout',
   component: Logout,
 });

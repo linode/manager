@@ -1,11 +1,11 @@
 import { createRoute } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { BetasRoute } from './BetasRoute';
 
 const betasRoute = createRoute({
   component: BetasRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'betas',
 });
 

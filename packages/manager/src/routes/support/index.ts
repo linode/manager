@@ -2,6 +2,7 @@ import { createRoute, redirect } from '@tanstack/react-router';
 
 import { SupportSearchLandingWrapper } from 'src/features/Help/SupportSearchLanding/SupportSearchLandingWrapper';
 
+import { mainContentRoute } from '../mainContent';
 import { rootRoute } from '../root';
 import { SupportTicketsRoute } from './SupportRoute';
 
@@ -19,7 +20,7 @@ export interface SupportState {
 
 const supportRoute = createRoute({
   component: SupportTicketsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'support',
 });
 

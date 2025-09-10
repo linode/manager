@@ -1,11 +1,11 @@
 import { createRoute } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { SearchRoute } from './SearchRoute';
 
 const searchRoute = createRoute({
   component: SearchRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'search',
   validateSearch: (params) => ({ query: String(params.query) }),
 });

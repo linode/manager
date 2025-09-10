@@ -4,7 +4,7 @@ import { StackScriptCreate } from 'src/features/StackScripts/StackScriptCreate/S
 import { StackScriptEdit } from 'src/features/StackScripts/StackScriptEdit';
 import { StackScriptDetail } from 'src/features/StackScripts/StackScriptsDetail';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { StackScriptsRoute } from './StackscriptsRoute';
 
 import type { TableSearchParams } from '../types';
@@ -15,7 +15,7 @@ interface StackScriptsSearchParams extends TableSearchParams {
 
 const stackScriptsRoute = createRoute({
   component: StackScriptsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'stackscripts',
   validateSearch: (search: StackScriptsSearchParams) => search,
 });

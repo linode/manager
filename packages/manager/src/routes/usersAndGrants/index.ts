@@ -2,12 +2,12 @@ import { createRoute, redirect } from '@tanstack/react-router';
 
 import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { UsersAndGrantsRoute } from './UsersAndGrantsRoute';
 
 const usersAndGrantsRoute = createRoute({
   component: UsersAndGrantsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'users',
 });
 

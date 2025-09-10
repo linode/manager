@@ -2,6 +2,7 @@ import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { BillingRoute } from './BillingRoute';
+import { mainContentRoute } from '../mainContent';
 
 interface BillingSearch {
   action?: 'add-payment-method' | 'edit' | 'make-payment';
@@ -12,7 +13,7 @@ interface BillingSearch {
 
 const billingRoute = createRoute({
   component: BillingRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'billing',
   validateSearch: (search: BillingSearch) => search,
 });

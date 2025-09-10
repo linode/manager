@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
@@ -36,7 +36,7 @@ export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
 
 const imagesRoute = createRoute({
   component: ImagesRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'images',
   validateSearch: (search: ImagesSearchParams) => search,
 });

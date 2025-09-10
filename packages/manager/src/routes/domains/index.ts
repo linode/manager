@@ -4,6 +4,7 @@ import { rootRoute } from '../root';
 import { DomainsRoute } from './DomainsRoute';
 
 import type { TableSearchParams } from '../types';
+import { mainContentRoute } from '../mainContent';
 
 export type DomainsSearchParams = TableSearchParams;
 
@@ -22,7 +23,7 @@ export type DomainAction = (typeof domainAction)[keyof typeof domainAction];
 
 const domainsRoute = createRoute({
   component: DomainsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'domains',
 });
 

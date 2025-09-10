@@ -6,6 +6,7 @@ import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../types';
+import { mainContentRoute } from '../mainContent';
 
 interface IamEntitiesSearchParams {
   selectedRole?: string;
@@ -17,7 +18,7 @@ interface IamUsersSearchParams extends TableSearchParams {
 
 const iamRoute = createRoute({
   component: IAMRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   validateSearch: (search: IamUsersSearchParams) => search,
   path: 'iam',
 });

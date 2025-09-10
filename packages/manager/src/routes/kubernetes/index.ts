@@ -1,6 +1,6 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { KubernetesRoute } from './KubernetesRoute';
 
 export const kubernetesRoute = createRoute({
@@ -12,7 +12,7 @@ export const kubernetesRoute = createRoute({
     }
   },
   component: KubernetesRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'kubernetes',
 });
 

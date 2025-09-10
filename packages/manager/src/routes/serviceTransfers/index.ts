@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { ServiceTransfersRoute } from './ServiceTransfersRoute';
 
 const serviceTransfersRoute = createRoute({
   component: ServiceTransfersRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'service-transfers',
 });
 
