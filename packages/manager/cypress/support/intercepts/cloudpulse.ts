@@ -139,37 +139,7 @@ export const mockGetCloudPulseDashboards = (
 //   );
 // };
 
-export const mockCreateCloudPulseMetrics1 = (
-  serviceType: string,
-  mockResponse: CloudPulseMetricsResponse
-): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'POST',
-    `**/monitor/services/${serviceType}/metrics`,
-    (req) => {
-      const requestedMetric = req.body?.metrics?.[0]?.name;
 
-      const response = {
-        ...mockResponse,
-        data: {
-          result: mockResponse.data?.result.map((r) => ({
-            ...r,
-            metric: {
-              ...r.metric, // keep all other properties from mockResponse.metric
-              metric_name: requestedMetric, // override metric_name dynamically
-            },
-          })),
-          result_type: mockResponse.data?.result_type ?? 'matrix',
-        },
-      };
-
-      req.reply({
-        statusCode: 200,
-        body: response,
-      });
-    }
-  );
-};
 export const mockCreateCloudPulseMetrics = (
   serviceType: string,
   mockResponse: CloudPulseMetricsResponse,
@@ -200,7 +170,6 @@ export const mockCreateCloudPulseMetrics = (
     }
   );
 };
-
 
 /**
  * Mocks the API response for fetching a dashboard.
