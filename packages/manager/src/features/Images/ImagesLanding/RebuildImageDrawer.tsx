@@ -23,7 +23,7 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
   const navigate = useNavigate();
-  const { availableLinodes } = useLinodesPermissionsCheck();
+  const { availableLinodes } = useLinodesPermissionsCheck(open);
 
   const { control, formState, handleSubmit, reset } = useForm<{
     linodeId: number;

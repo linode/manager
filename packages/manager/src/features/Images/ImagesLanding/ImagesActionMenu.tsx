@@ -4,8 +4,6 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import { useLinodesPermissionsCheck } from '../utils';
-
 import type { Event, Image } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -25,20 +23,13 @@ interface Props {
 }
 
 export const ImagesActionMenu = (props: Props) => {
-  const { event, handlers, image } = props;
+  const { handlers, image } = props;
 
-  const { description, id, label, status } = image;
+  const { id, status } = image;
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const {
-    onCancelFailed,
-    onDelete,
-    onDeploy,
-    onEdit,
-    onManageRegions,
-    onRebuild,
-  } = handlers;
+  const { onDelete, onDeploy, onEdit, onManageRegions, onRebuild } = handlers;
 
   const { data: imagePermissions, isLoading } = usePermissions(
     'image',
@@ -51,15 +42,10 @@ export const ImagesActionMenu = (props: Props) => {
     'rebuild_linode',
   ]);
 
-  const { availableLinodes } = useLinodesPermissionsCheck();
-
-  const isAvailableLinodesPresent = availableLinodes
-    ? availableLinodes.length > 0
-    : true;
-
   const actions: Action[] = React.useMemo(() => {
     const isDisabled = status && status !== 'available';
     const isAvailable = !isDisabled;
+
     return [
       {
         disabled: !imagePermissions.update_image || isDisabled,
@@ -106,22 +92,18 @@ export const ImagesActionMenu = (props: Props) => {
             : undefined,
       },
       {
-        disabled:
-          !linodePermissions.rebuild_linode ||
-          !isAvailableLinodesPresent ||
-          isDisabled,
+        disabled: !linodePermissions.rebuild_linode || isDisabled,
         onClick: () => onRebuild?.(image),
         title: 'Rebuild an Existing Linode',
-        tooltip:
-          !linodePermissions.rebuild_linode || !isAvailableLinodesPresent
-            ? getRestrictedResourceText({
-                action: 'rebuild',
-                isSingular: false,
-                resourceType: 'Linodes',
-              })
-            : isDisabled
-              ? 'Image is not yet available for use.'
-              : undefined,
+        tooltip: !linodePermissions.rebuild_linode
+          ? getRestrictedResourceText({
+              action: 'rebuild',
+              isSingular: false,
+              resourceType: 'Linodes',
+            })
+          : isDisabled
+            ? 'Image is not yet available for use.'
+            : undefined,
       },
       {
         disabled: !imagePermissions.delete_image,
@@ -138,17 +120,15 @@ export const ImagesActionMenu = (props: Props) => {
     ];
   }, [
     status,
-    event,
     id,
-    label,
-    description,
-    onCancelFailed,
     onEdit,
     image,
     onManageRegions,
     onDeploy,
     onRebuild,
     onDelete,
+    imagePermissions,
+    linodePermissions,
   ]);
 
   return (

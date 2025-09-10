@@ -68,10 +68,10 @@ export const CreateImageTab = () => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const { data: ImagePermissions } = usePermissions('account', [
+  const { data: imagePermissions } = usePermissions('account', [
     'create_image',
   ]);
-  const canCreateImage = ImagePermissions?.create_image;
+  const canCreateImage = imagePermissions?.create_image;
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -106,7 +106,9 @@ export const CreateImageTab = () => {
     selectedLinodeId !== null
   );
 
-  const { availableLinodes } = useLinodesPermissionsCheck();
+  const { availableLinodes } = useLinodesPermissionsCheck(
+    Boolean(imagePermissions.create_image)
+  );
 
   const {
     data: disks,

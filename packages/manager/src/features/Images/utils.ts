@@ -9,17 +9,22 @@ import type { Event, Image, Linode } from '@linode/api-v4';
 /**
  * Get a list of Linodes that the user has read/write access to via AIM RBAC permissions mapping
  */
-export const useLinodesPermissionsCheck = (): {
+export const useLinodesPermissionsCheck = (
+  enabled: boolean
+): {
   availableLinodes: number[];
+  isLoading: boolean;
 } => {
-  const { data: availableLinodes } = useQueryWithPermissions<Linode>(
+  const { data: availableLinodes, isLoading } = useQueryWithPermissions<Linode>(
     useAllLinodesQuery(),
     'linode',
-    ['view_linode', 'update_linode']
+    ['view_linode', 'update_linode'],
+    enabled
   );
 
   return {
     availableLinodes: availableLinodes?.map((linode) => linode.id) ?? [],
+    isLoading,
   };
 };
 

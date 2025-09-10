@@ -49,6 +49,11 @@ export const usePermissions = <T extends readonly PermissionType[]>(
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
   const { data: profile } = useProfile();
 
+  const _entityId =
+    typeof entityId === 'string' && entityId.includes('/')
+      ? entityId.split('/')[1]
+      : entityId;
+
   /**
    * BETA and LA features should use the new permission model.
    * However, beta features are limited to a subset of AccessTypes and account permissions.
@@ -82,7 +87,7 @@ export const usePermissions = <T extends readonly PermissionType[]>(
   const { data: userEntityPermissions, ...restEntityPermissions } =
     useUserEntityPermissions(
       accessType,
-      entityId!,
+      _entityId!,
       shouldUsePermissionMap && enabled
     );
 
@@ -100,7 +105,7 @@ export const usePermissions = <T extends readonly PermissionType[]>(
         permissionsToCheck,
         grants!,
         profile?.restricted,
-        entityId
+        _entityId
       );
 
   return {
@@ -153,7 +158,8 @@ export type QueryWithPermissionsResult<T> = {
 export const useQueryWithPermissions = <T extends EntityBase>(
   useQueryResult: UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
-  permissionsToCheck: PermissionType[]
+  permissionsToCheck: PermissionType[],
+  enabled?: boolean
 ): QueryWithPermissionsResult<T> => {
   const {
     data: allEntities,
@@ -165,7 +171,12 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
   const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(allEntities, entityType, profile, isIAMEnabled);
+    useEntitiesPermissions<T>(
+      allEntities,
+      entityType,
+      profile,
+      isIAMEnabled && enabled
+    );
   const { data: grants } = useGrants(!isIAMEnabled);
 
   const entityPermissionsMap = isIAMEnabled

@@ -25,7 +25,8 @@ export const EditImageDrawer = (props: Props) => {
   const { data: permissions } = usePermissions(
     'image',
     ['update_image'],
-    image?.id
+    image?.id,
+    open
   );
   const canUpdateImage = permissions?.update_image;
 
