@@ -393,9 +393,11 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   });
   it('should apply group by at the dashboard level and verify the metrics API calls', () => {
     // Stub metrics API calls for dashboard group by changes
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
-      'refreshMetrics'
-    );
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
+      entity_id: '1',
+      node_id: `${nodeType}-1`,
+      node_type: nodeType,
+    }).as('refreshMetrics');
 
     // Locate the Dashboard Group By button and alias it
     ui.button
@@ -722,10 +724,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
@@ -776,10 +778,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
@@ -848,10 +850,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
@@ -880,10 +882,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get('[data-qa-graph-column-title="Max"]')
               .should('be.visible')
