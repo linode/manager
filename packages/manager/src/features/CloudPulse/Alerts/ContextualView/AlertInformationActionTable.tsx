@@ -16,6 +16,7 @@ import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
 import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { compareArrays } from '../../Utils/FilterBuilder';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
@@ -57,10 +58,13 @@ export interface AlertInformationActionTableProps {
 
   /**
    * Called when an alert is toggled on or off.
-   * Only use in create flow.
    * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -104,9 +108,13 @@ export interface AlertRowPropsOptions {
 
   /**
    * Callback function to handle alert toggle
-   * Only use in create flow.
+   * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 }
 
 export const AlertInformationActionTable = (
@@ -135,8 +143,13 @@ export const AlertInformationActionTable = (
   const isEditMode = !!entityId;
   const isCreateMode = !isEditMode;
 
-  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
-    useContextualAlertsState(alerts, entityId);
+  const {
+    enabledAlerts,
+    setEnabledAlerts,
+    hasUnsavedChanges,
+    initialState,
+    resetToInitialState,
+  } = useContextualAlertsState(alerts, entityId);
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
     serviceType,
@@ -145,7 +158,7 @@ export const AlertInformationActionTable = (
 
   // To send initial state of alerts through toggle handler function
   React.useEffect(() => {
-    if (onToggleAlert) {
+    if (!isEditMode && onToggleAlert) {
       onToggleAlert(enabledAlerts);
     }
   }, []);
@@ -165,6 +178,8 @@ export const AlertInformationActionTable = (
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
+          // Reset the state to sync with the updated alerts from API
+          resetToInitialState();
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {
@@ -176,7 +191,7 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar]
+    [updateAlerts, enqueueSnackbar, resetToInitialState]
   );
 
   const handleToggleAlert = React.useCallback(
@@ -199,15 +214,19 @@ export const AlertInformationActionTable = (
           alertIds.push(alert.id);
         }
 
-        // Only call onToggleAlert in create flow
+        const hasNewUnsavedChanges =
+          !compareArrays(newPayload.system ?? [], initialState.system ?? []) ||
+          !compareArrays(newPayload.user ?? [], initialState.user ?? []);
+
+        // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
-          onToggleAlert(newPayload);
+          onToggleAlert(newPayload, hasNewUnsavedChanges);
         }
 
         return newPayload;
       });
     },
-    [onToggleAlert, setEnabledAlerts]
+    [initialState, onToggleAlert, setEnabledAlerts]
   );
 
   const handleCustomPageChange = React.useCallback(

@@ -181,6 +181,7 @@ describe('Account cancellation', () => {
     mockCancelAccountError('Unauthorized', 403).as('cancelAccount');
 
     // Navigate to Account Settings page, click "Close Account" button.
+
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile', '@getGrants']);
 

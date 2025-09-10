@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { accountFactory } from 'src/factories';
+import { accountFactory, firewallFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -16,13 +16,14 @@ describe('Node Pool Footer', () => {
     tags: [],
     poolId: 1,
     poolVersion: undefined,
+    poolFirewallId: undefined,
     isLkeClusterRestricted: false,
   };
 
   it('shows the Pool ID', async () => {
     const { getByText } = renderWithTheme(<NodePoolFooter {...props} />);
 
-    expect(getByText('Pool ID')).toBeVisible();
+    expect(getByText('Pool ID:')).toBeVisible();
     expect(getByText(props.poolId)).toBeVisible();
   });
 
@@ -47,7 +48,7 @@ describe('Node Pool Footer', () => {
       />
     );
 
-    expect(getByText('Version')).toBeVisible();
+    expect(getByText('Version:')).toBeVisible();
     expect(getByText('v1.31.8+lke5')).toBeVisible();
   });
 
@@ -60,8 +61,65 @@ describe('Node Pool Footer', () => {
       />
     );
 
-    expect(queryByText('Version')).not.toBeInTheDocument();
+    expect(queryByText('Version:')).not.toBeInTheDocument();
     expect(queryByText('v1.31.8+lke5')).not.toBeInTheDocument();
+  });
+
+  it("shows the node pool's firewall for an LKE Enterprise cluster", async () => {
+    server.use(
+      http.get('*/firewalls/*', () => {
+        return HttpResponse.json(
+          firewallFactory.build({ id: 123, label: 'my-lke-e-firewall' })
+        );
+      })
+    );
+    const { getByText, findByText } = renderWithTheme(
+      <NodePoolFooter
+        {...props}
+        clusterTier="enterprise"
+        poolFirewallId={123}
+      />
+    );
+
+    expect(getByText('Firewall:')).toBeVisible();
+    expect(
+      await findByText('my-lke-e-firewall', { exact: false })
+    ).toBeVisible();
+    expect(getByText('123')).toBeVisible();
+  });
+
+  it("does not show the node pool's firewall when undefined for a LKE Enterprise cluster ", async () => {
+    const { queryByText } = renderWithTheme(
+      <NodePoolFooter {...props} clusterTier="enterprise" />
+    );
+
+    expect(queryByText('Firewall:')).not.toBeInTheDocument();
+  });
+
+  // This check handles the current API behavior for a default firewall (0). TODO: remove this once LKE-7686 is fixed.
+  it("does not show the node pool's firewall when 0 for a LKE Enterprise cluster ", async () => {
+    const { queryByText } = renderWithTheme(
+      <NodePoolFooter {...props} clusterTier="enterprise" poolFirewallId={0} />
+    );
+
+    expect(queryByText('Firewall:')).not.toBeInTheDocument();
+  });
+
+  it("does not show the node pool's firewall for a standard LKE cluster", async () => {
+    server.use(
+      http.get('*/firewalls/*', () => {
+        return HttpResponse.json(
+          firewallFactory.build({ id: 123, label: 'my-lke-e-firewall' })
+        );
+      })
+    );
+    const { queryByText } = renderWithTheme(
+      <NodePoolFooter {...props} clusterTier="standard" poolFirewallId={123} />
+    );
+
+    expect(queryByText('Firewall:')).not.toBeInTheDocument();
+    expect(queryByText('my-lke-e-firewall')).not.toBeInTheDocument();
+    expect(queryByText('123')).not.toBeInTheDocument();
   });
 
   it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', async () => {

@@ -58,6 +58,8 @@ import {
   firewallDeviceFactory,
   firewallEntityfactory,
   firewallFactory,
+  firewallMetricDefinitionsResponse,
+  firewallMetricRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -739,6 +741,9 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
+    const linodesWithFirewalls = linodeFactory.buildList(10, {
+      region: 'ap-west',
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -813,8 +818,19 @@ export const handlers = [
         region: 'us-east',
         id: 1005,
       }),
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-3',
+        region: 'us-iad',
+        id: 1006,
+      }),
     ];
+    const linodeFirewall = linodeFactory.build({
+      region: 'ap-west',
+      label: 'Linode-firewall-test',
+      id: 90909,
+    });
     const linodes = [
+      ...linodesWithFirewalls,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -867,6 +883,7 @@ export const handlers = [
       }),
       eventLinode,
       multipleIPLinode,
+      linodeFirewall,
     ];
 
     if (request.headers.get('x-filter')) {
@@ -877,19 +894,62 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
-      // filter the linodes based on id or region
       if (andFilters?.length) {
-        filteredLinodes = filteredLinodes.filter((linode) => {
-          const filteredById = andFilters.every(
-            (filter: { id: number }) => filter.id === linode.id
-          );
-          const filteredByRegion = andFilters.every(
-            (filter: { region: string }) => filter.region === linode.region
-          );
+        // Check if this is a combined filter structure (multiple filter groups with +or arrays)
+        const hasCombinedFilter = andFilters.some(
+          (filterGroup: any) =>
+            filterGroup['+or'] && Array.isArray(filterGroup['+or'])
+        );
 
-          return filteredById || filteredByRegion;
-        });
+        if (hasCombinedFilter) {
+          // Handle combined filter structure for CloudPulse alerts
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            return andFilters.every((filterGroup: any) => {
+              // Handle id filter group
+              if (filterGroup['+or'] && Array.isArray(filterGroup['+or'])) {
+                const idFilters = filterGroup['+or'].filter(
+                  (f) => f.id !== undefined
+                );
+                const regionFilters = filterGroup['+or'].filter(
+                  (f) => f.region !== undefined
+                );
+
+                // Check if linode matches any id in the id filter group
+                const matchesId =
+                  idFilters.length === 0 ||
+                  idFilters.some((f) => Number(f.id) === linode.id);
+
+                // Check if linode matches any region in the region filter group
+                const matchesRegion =
+                  regionFilters.length === 0 ||
+                  regionFilters.some((f) => f.region === linode.region);
+
+                return matchesId && matchesRegion;
+              }
+
+              return false;
+            });
+          });
+        } else {
+          // Handle legacy andFilters for other use cases
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            const filteredById = andFilters.every(
+              (filter: { id: number }) => filter.id === linode.id
+            );
+            const filteredByRegion = andFilters.every(
+              (filter: { region: string }) => filter.region === linode.region
+            );
+
+            return filteredById || filteredByRegion;
+          });
+        }
       }
+
+      // The legacy id/region filtering logic has been removed here because it
+      // duplicated the work done above and incorrectly trimmed results when a
+      // newer "combined" filter structure (an array of "+or" groups inside
+      // "+and") was supplied. For legacy consumers the filtering is handled
+      // in the `else` branch above (lines ~922–934).
 
       // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
       if (orFilters?.length) {
@@ -939,19 +999,58 @@ export const handlers = [
         }),
       ];
       const linodeAclpSupportedRegionDetails = [
+        /** Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook. */
+
+        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region (mock Linode ID: 1004)
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
-          alerts: { user: [100, 101], system: [200] },
+          alerts: {
+            user: [21, 22, 23, 24, 25],
+            system: [19, 20],
+            cpu: 0,
+            io: 0,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 0,
+          },
         }),
+        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region (mock Linode ID: 1005)
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
-          alerts: { user: [], system: [] },
+          alerts: {
+            user: [],
+            system: [],
+            cpu: 10,
+            io: 10000,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 80,
+          },
+        }),
+        // 3. Example: Linode in an ACLP-supported region with NO enabled alerts (mock Linode ID: 1006)
+        // - Whether this Linode is ACLP-subscribed depends on the ACLP release stage:
+        //   a. Beta stage: NOT subscribed to ACLP
+        //   b. GA stage: Subscribed to ACLP
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-3',
+          region: 'us-iad',
+          alerts: {
+            user: [],
+            system: [],
+            cpu: 0,
+            io: 0,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 0,
+          },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -986,6 +1085,8 @@ export const handlers = [
           return linodeAclpSupportedRegionDetails[0];
         case 1005:
           return linodeAclpSupportedRegionDetails[1];
+        case 1006:
+          return linodeAclpSupportedRegionDetails[2];
         default:
           return linodeDetail;
       }
@@ -1112,6 +1213,12 @@ export const handlers = [
               id: 123,
               label: 'Linode-123',
             }),
+          }),
+          firewallEntityfactory.build({
+            type: 'linode',
+            label: 'Linode-firewall-test',
+            parent_entity: null,
+            id: 90909,
           }),
         ],
       }),
@@ -2733,11 +2840,19 @@ export const handlers = [
       alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
-          ...alertFactory.buildList(20, {
+          ...alertFactory.buildList(18, {
             rule_criteria: {
               rules: alertRulesFactory.buildList(2),
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+          }),
+          // Mocked 2 alert definitions associated with mock Linode ID '1004' (aclp-supported-region-linode-1)
+          ...alertFactory.buildList(2, {
+            rule_criteria: {
+              rules: alertRulesFactory.buildList(2),
+            },
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            entity_ids: ['1004'],
           }),
           ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
@@ -2808,12 +2923,35 @@ export const handlers = [
         type: 'user',
         updated_by: 'user1',
       }),
+      alertFactory.build({
+        id: 999,
+        label: 'Firewall - testing',
+        service_type: 'firewall',
+        type: 'user',
+        created_by: 'user1',
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
       if (params.id !== undefined) {
         return HttpResponse.json(
           alertFactory.build({
@@ -2828,6 +2966,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
+            scope: pickRandom(['account', 'region', 'entity']),
           })
         );
       }
@@ -2837,6 +2976,19 @@ export const handlers = [
   http.put(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params, request }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
       const body: any = request.json();
       return HttpResponse.json(
         alertFactory.build({
@@ -3228,6 +3380,9 @@ export const handlers = [
           },
         ],
       };
+      if (params.serviceType === 'firewall') {
+        return HttpResponse.json({ data: firewallMetricDefinitionsResponse });
+      }
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
       }
@@ -3255,7 +3410,7 @@ export const handlers = [
       dashboardLabel = 'NodeBalancer Service I/O Statistics';
     } else if (id === '4') {
       serviceType = 'firewall';
-      dashboardLabel = 'Linode Service I/O Statistics';
+      dashboardLabel = 'Firewall Service I/O Statistics';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
@@ -3263,7 +3418,7 @@ export const handlers = [
 
     const response = {
       created: '2024-04-29T17:09:29',
-      id: params.id,
+      id: Number(params.id),
       label: dashboardLabel,
       service_type: serviceType,
       type: 'standard',
