@@ -150,6 +150,45 @@ export type QueryWithPermissionsResult<T> = {
   'data' | 'error' | 'isError' | 'isLoading'
 >;
 
+function useFilteredByPermissions<T extends EntityBase>(
+  items: T[] | undefined,
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[],
+  enabled: boolean
+) {
+  const { data: profile } = useProfile();
+  const { isIAMEnabled } = useIsIAMEnabled();
+  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
+    useEntitiesPermissions<T>(
+      items,
+      entityType,
+      profile,
+      isIAMEnabled && enabled
+    );
+  const { data: grants } = useGrants(!isIAMEnabled && enabled);
+
+  const entityPermissionsMap = isIAMEnabled
+    ? toEntityPermissionMap(
+        items,
+        entityPermissions,
+        permissionsToCheck,
+        profile?.restricted
+      )
+    : entityPermissionMapFrom(grants, entityType as GrantType, profile);
+
+  const entities: T[] | undefined = items?.filter((entity: T) => {
+    const permissions = entityPermissionsMap[entity.id];
+    return (
+      !profile?.restricted ||
+      permissionsToCheck.every((permission) => permissions[permission])
+    );
+  });
+  return {
+    data: entities || [],
+    isLoading: areEntityPermissionsLoading,
+  } as const;
+}
+
 export const useQueryWithPermissions = <T extends EntityBase>(
   useQueryResult: UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
@@ -163,40 +202,38 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     isError: isEntitiesError,
     ...restQueryResult
   } = useQueryResult;
-  const { data: profile } = useProfile();
-  const { isIAMEnabled } = useIsIAMEnabled();
-  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(
-      allEntities,
-      entityType,
-      profile,
-      isIAMEnabled && enabled
-    );
-  const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
-  const entityPermissionsMap = isIAMEnabled
-    ? toEntityPermissionMap(
-        allEntities,
-        entityPermissions,
-        permissionsToCheck,
-        profile?.restricted
-      )
-    : entityPermissionMapFrom(grants, entityType as GrantType, profile);
-
-  const entities: T[] | undefined = allEntities?.filter((entity: T) => {
-    const permissions = entityPermissionsMap[entity.id];
-    return (
-      !profile?.restricted ||
-      permissionsToCheck.every((permission) => permissions[permission])
-    );
-  });
-
+  const { data: entities, isLoading } = useFilteredByPermissions<T>(
+    allEntities,
+    entityType,
+    permissionsToCheck,
+    enabled
+  );
   return {
     data: entities || [],
     error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
     isError: isEntitiesError,
-    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
+    isLoading: areEntitiesLoading || isLoading,
     ...restQueryResult,
+  } as const;
+};
+
+export const useArrayWithPermissions = <T extends EntityBase>(
+  entityArray: T[],
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[]
+) => {
+  const { data: entities, isLoading } = useFilteredByPermissions<T>(
+    entityArray,
+    entityType,
+    permissionsToCheck,
+    true
+  );
+
+  return {
+    data: entities || [],
+    hasFiltered: entityArray.length !== entities?.length,
+    isLoading,
   } as const;
 };
