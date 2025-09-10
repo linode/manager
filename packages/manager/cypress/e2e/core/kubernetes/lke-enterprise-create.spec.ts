@@ -9,6 +9,9 @@ import {
   latestKubernetesVersion,
   mockedLKEClusterTypes,
   mockedLKEEnterprisePrices,
+  mockTieredEnterpriseVersions,
+  mockTieredStandardVersions,
+  mockTieredVersions,
 } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -33,8 +36,6 @@ import {
   accountFactory,
   firewallFactory,
   kubernetesClusterFactory,
-  kubernetesEnterpriseTierVersionFactory,
-  kubernetesStandardTierVersionFactory,
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
@@ -413,12 +414,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
  * and additional node pool options have been added exclusively for LKE Enterprise clusters.
  */
 describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
-  const mockStandardVersions =
-    kubernetesStandardTierVersionFactory.buildList(2);
-  const mockEnterpriseVersions =
-    kubernetesEnterpriseTierVersionFactory.buildList(2);
-  const mockVersions = [...mockStandardVersions, ...mockEnterpriseVersions];
-
   const mockRegionsNoEnterprise = regionFactory.buildList(3, {
     capabilities: ['Linodes', 'Kubernetes'],
   });
@@ -466,9 +461,9 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     );
-    mockGetKubernetesVersions(mockVersions.map((version) => version.id));
-    mockGetTieredKubernetesVersions('standard', mockStandardVersions);
-    mockGetTieredKubernetesVersions('enterprise', mockEnterpriseVersions);
+    mockGetKubernetesVersions(mockTieredVersions.map((version) => version.id));
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
+    mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
   });
 
   /*
