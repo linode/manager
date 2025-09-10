@@ -6,7 +6,7 @@ import React from 'react';
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
-import { accountSettingsRouteTree } from './accountSettings';
+import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
 import { cloudPulseAlertsRouteTree } from './alerts';
 import {
   cancelLandingRoute,
@@ -86,6 +86,7 @@ export const routeTree = rootRoute.addChildren([
   quotasRouteTree,
   searchRouteTree,
   serviceTransfersRouteTree,
+  settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
   usersAndGrantsRouteTree,

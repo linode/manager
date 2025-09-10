@@ -120,10 +120,31 @@ describe('Account Linode Managed', () => {
     visitUrlWithManagedDisabled('/account/settings');
     cy.wait(['@getAccount', '@getProfile', '@getGrants']);
 
-    cy.findByText(
-      "You don't have permissions to edit this Account. Please contact your account administrator to request the necessary permissions.",
-      { exact: false }
-    ).should('be.visible');
+    ui.button
+      .findByTitle('Add Linode Managed')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.dialog
+      .findByTitle('Just to confirm...')
+      .should('be.visible')
+      .within(() => {
+        cy.get('h6')
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).to.equal(linodeEnabledMessageText(0));
+          });
+        // Confirm that submit button is enabled.
+        ui.button
+          .findByTitle('Add Linode Managed')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.wait('@enableLinodeManaged');
+        // Confirm that Cloud Manager displays a notice about Linode managed is unauthorized.
+        cy.findByText(errorMessage, { exact: false }).should('be.visible');
+      });
   });
 
   /*
