@@ -1,14 +1,11 @@
-import {
-  useAttachVolumeMutation,
-  useGrants,
-  useVolumeQuery,
-} from '@linode/queries';
+import { useAttachVolumeMutation, useVolumeQuery } from '@linode/queries';
 import { ActionsPanel, Notice } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -19,7 +16,6 @@ import { ConfigSelect } from './ConfigSelect';
 import { VolumeSelect } from './VolumeSelect';
 
 import type { Linode } from '@linode/api-v4';
-import type { Grant } from '@linode/api-v4/lib/account';
 
 interface Props {
   linode: Linode;
@@ -46,17 +42,9 @@ const initialValues = { config_id: -1, volume_id: -1 };
 export const LinodeVolumeAttachForm = (props: Props) => {
   const { linode, onClose, setClientLibraryCopyVisible } = props;
 
-  const { data: grants } = useGrants();
-
   const { enqueueSnackbar } = useSnackbar();
 
   const { checkForNewEvents } = useEventsPollingActions();
-
-  const linodeGrant = grants?.linode.find(
-    (grant: Grant) => grant.id === linode.id
-  );
-
-  const isReadOnly = linodeGrant?.permissions === 'read_only';
 
   const { mutateAsync: attachVolume } = useAttachVolumeMutation();
 
@@ -102,6 +90,13 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     values.volume_id !== -1
   );
 
+  const { data: permissions } = usePermissions(
+    'volume',
+    ['attach_volume'],
+    volume?.id
+  );
+  const canAttachVolume = permissions?.attach_volume;
+
   const linodeRequiresClientLibraryUpdate =
     volume?.encryption === 'enabled' &&
     Boolean(!linode.capabilities?.includes('Block Storage Encryption'));
@@ -113,7 +108,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {isReadOnly && (
+      {!canAttachVolume && (
         <Notice
           text={
             "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
@@ -123,7 +118,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       )}
       {error && <Notice text={error} variant="error" />}
       <VolumeSelect
-        disabled={isReadOnly}
+        disabled={!canAttachVolume}
         error={touched.volume_id ? errors.volume_id : undefined}
         name="volume_id"
         onBlur={handleBlur}
@@ -132,7 +127,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
         value={values.volume_id}
       />
       <ConfigSelect
-        disabled={isReadOnly}
+        disabled={!canAttachVolume}
         error={touched.config_id ? errors.config_id : undefined}
         linodeId={linode.id}
         name="config_id"
@@ -142,7 +137,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled: isReadOnly || linodeRequiresClientLibraryUpdate,
+          disabled: !canAttachVolume || linodeRequiresClientLibraryUpdate,
           label: 'Attach Volume',
           loading: isSubmitting,
           type: 'submit',

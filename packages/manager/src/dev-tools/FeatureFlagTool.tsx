@@ -26,6 +26,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
+  { flag: 'blockStorageVolumeLimit', label: 'Block Storage Volume Limit' },
   { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
@@ -61,6 +62,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'vmHostMaintenance',
     label: 'VM Host Maintenance Policy',
   },
+  { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
 

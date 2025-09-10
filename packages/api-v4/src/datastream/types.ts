@@ -103,14 +103,33 @@ interface CustomHeader {
 
 export interface CreateStreamPayload {
   destinations: number[];
-  details?: StreamDetails;
+  details: StreamDetails;
   label: string;
   status?: StreamStatus;
   type: StreamType;
+}
+
+export interface UpdateStreamPayload {
+  destinations: number[];
+  details: StreamDetails;
+  label: string;
+  status: StreamStatus;
+  type: StreamType;
+}
+
+export interface UpdateStreamPayloadWithId extends UpdateStreamPayload {
+  id: number;
 }
 
 export interface CreateDestinationPayload {
   details: CustomHTTPsDetails | LinodeObjectStorageDetails;
   label: string;
   type: DestinationType;
+}
+
+export type UpdateDestinationPayload = CreateDestinationPayload;
+
+export interface UpdateDestinationPayloadWithId
+  extends UpdateDestinationPayload {
+  id: number;
 }
