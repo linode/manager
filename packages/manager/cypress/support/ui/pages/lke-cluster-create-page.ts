@@ -104,7 +104,7 @@ export const lkeClusterCreatePage = {
    * Assumes that the tab for the desired plan has already been selected. See
    * also `addNodePoolPlan` to select plans when `postLa` is disabled.
    *
-   * @param planName - Name of the plan (as shown in Cloud's UI) to select.
+   * @param planName - Name of the plan to select (as shown in Cloud's UI) .
    */
   selectNodePoolPlan: (planName: string) => {
     cy.findByText(planName)
@@ -119,18 +119,27 @@ export const lkeClusterCreatePage = {
       });
   },
 
+  // TODO M3-8838: Delete `addNodePool` function once `lkeEnterprise` feature flag is retired.
   /**
    * Adds a node pool of the given plan and size.
    *
    * Assumes that the `lkeEnterprise.postLa` feature flag is disabled.
+   *
+   * @param planName - Name of the plan to select (as shown in Cloud's UI).
+   * @param size - The desired number of nodes for the node pool.
    */
   addNodePool: (planName: string, size: number) => {
     cy.findByText(planName)
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.get('input[name="Quantity"]').type(`{selectall}{del}${size}`);
+        cy.get('input[name="Quantity"]').type(`{selectall}${size}`);
         cy.get('input[name="Quantity"]').should('have.value', `${size}`);
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
   },
 
