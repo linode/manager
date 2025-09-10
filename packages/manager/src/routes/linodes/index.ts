@@ -1,11 +1,11 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { mainContentRoute } from '../mainContent';
 import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
 
 import type { StackScriptTabType } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
 import type { linodesCreateTypes } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
-import { mainContentRoute } from '../mainContent';
 
 interface LinodeDetailSearchParams {
   delete?: boolean;
