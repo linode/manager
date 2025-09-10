@@ -128,18 +128,6 @@ export const mockGetCloudPulseDashboards = (
  * @param {any} mockResponse - The mock response to return for the intercepted request.
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
-// export const mockCreateCloudPulseMetrics = (
-//   serviceType: string,
-//   mockResponse: CloudPulseMetricsResponse
-// ): Cypress.Chainable<null> => {
-//   return cy.intercept(
-//     'POST',
-//     `**/monitor/services/${serviceType}/metrics`,
-//     makeResponse(mockResponse)
-//   );
-// };
-
-
 export const mockCreateCloudPulseMetrics = (
   serviceType: string,
   mockResponse: CloudPulseMetricsResponse,
