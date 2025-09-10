@@ -399,6 +399,19 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       node_type: nodeType,
     }).as('refreshMetrics');
 
+    // Validate legend rows (pre "Group By")
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
+          cy.get(graphRowTitle)
+            .should('be.visible')
+            .and('have.text', `${testData.title}`);
+        });
+    });
+
     // Locate the Dashboard Group By button and alias it
     ui.button
       .findByAttribute('aria-label', 'Group By Dashboard Metrics')
@@ -447,7 +460,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
 
     // Verify the Group By button reflects the selection
-    cy.get('[data-testid="group-by"]')
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('have.attr', 'aria-label', 'Group By Dashboard Metrics')
       .and('have.attr', 'data-qa-selected', 'true');
 
@@ -475,6 +489,20 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           'node_type',
         ]);
       });
+
+    // Validate legend rows (post "Group By")
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          cy.get(
+            '[data-qa-graph-row-title="mysql-cluster | Secondary | Secondary-1"]'
+          )
+            .should('be.visible')
+            .and('have.text', 'mysql-cluster | Secondary | Secondary-1');
+        });
+    });
   });
 
   it('should unselect all group bys and verify the metrics API calls', () => {
@@ -505,8 +533,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
 
     // Verify the Group By button now has data-qa-selected="false"
-    cy.get('[data-testid="group-by"]')
-      .should('have.attr', 'aria-label', 'Group By Dashboard Metrics')
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .and('have.attr', 'data-qa-selected', 'false');
 
     // Validate all intercepted metrics API calls contain no group_by values
@@ -556,7 +584,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .within(() => {
         // Create alias for the group by button
-        cy.get('[data-testid="group-by"]').as('groupByButton'); // alias
+        ui.button
+          .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+          .as('groupByButton'); // alias
 
         cy.get('@groupByButton').scrollIntoView();
 
