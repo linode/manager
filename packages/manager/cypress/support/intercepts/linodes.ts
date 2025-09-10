@@ -15,6 +15,7 @@ import type {
   Linode,
   LinodeInterface,
   LinodeInterfaces,
+  LinodeInterfaceSettings,
   LinodeIPsResponse,
   LinodeType,
   Stats,
@@ -681,6 +682,44 @@ export const mockGetLinodeInterfaces = (
     'GET',
     apiMatcher(`linode/instances/${linodeId}/interfaces`),
     interfaces
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's Interface Settings.
+ *
+ * @param linodeId - ID of Linode to get interfaces associated with it
+ * @param settings - the mocked Linode Settings
+ *
+ * @returns Cypress Chainable.
+ */
+export const mockGetLinodeInterfaceSettings = (
+  linodeId: number,
+  settings: LinodeInterfaceSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/interfaces/settings`),
+    settings
+  );
+};
+
+/**
+ * Intercepts PUT request to edit Linode's interface settings
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param updatedLinode - the mocked Linode Settings
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinodeInterfaceSettings = (
+  linodeId: number,
+  settings: LinodeInterfaceSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`linode/instances/${linodeId}/interfaces/settings`),
+    settings
   );
 };
 

@@ -2,6 +2,7 @@ import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVlan,
   linodeInterfaceFactoryVPC,
+  linodeInterfaceSettingsFactory,
 } from '@linode/utilities';
 import { linodeFactory } from '@linode/utilities';
 import {
@@ -26,7 +27,9 @@ import {
   mockGetLinodeFirewalls,
   mockGetLinodeInterface,
   mockGetLinodeInterfaces,
+  mockGetLinodeInterfaceSettings,
   mockGetLinodeIPAddresses,
+  mockUpdateLinodeInterfaceSettings,
 } from 'support/intercepts/linodes';
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
@@ -523,6 +526,110 @@ describe('Linode Interfaces enabled', () => {
       cy.findByText('No Network Interfaces exist on this Linode.').should(
         'be.visible'
       );
+    });
+
+    it('confirms the Interface Settings form', () => {
+      const vpcInterface = linodeInterfaceFactoryVPC.build({ id: 1 });
+      const publicInterface = linodeInterfaceFactoryPublic.build({ id: 2 });
+      const interfaceSettings = linodeInterfaceSettingsFactory.build({
+        default_route: {
+          ipv4_interface_id: publicInterface.id,
+          ipv6_interface_id: publicInterface.id,
+        },
+      });
+      const updatedInterfaceSettings = linodeInterfaceSettingsFactory.build({
+        default_route: {
+          ipv4_interface_id: vpcInterface.id,
+          ipv6_interface_id: publicInterface.id,
+        },
+      });
+
+      mockGetLinodeInterfaces(mockLinode.id, {
+        interfaces: [vpcInterface, publicInterface],
+      }).as('getInterfaces');
+      mockGetLinodeInterfaceSettings(mockLinode.id, interfaceSettings);
+      mockUpdateLinodeInterfaceSettings(
+        mockLinode.id,
+        updatedInterfaceSettings
+      );
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+      ui.button
+        .findByTitle('Interface Settings')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // Verify the Interface Setting Drawer's contents
+      ui.drawer
+        .findByTitle('Interface Settings')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Default Route Selection').should('be.visible');
+
+          // Confirm drawer reflects current Default Route values
+          ui.autocomplete
+            .findByLabel('Default IPv4 Route')
+            .should('be.visible')
+            .should('have.value', 'Public Interface (ID: 2)');
+
+          ui.autocomplete
+            .findByLabel('Default IPv6 Route')
+            .should('be.visible')
+            .should('have.value', 'Public Interface (ID: 2)');
+
+          cy.findByText('Enable Network Helper')
+            .should('be.visible')
+            .should('be.enabled');
+          ui.button
+            .findByTitle('Save')
+            .should('be.visible')
+            .should('not.be.enabled');
+
+          // Update Default IPv4 Route
+          ui.autocomplete
+            .findByLabel('Default IPv4 Route')
+            .type('VPC Interface (ID: 1)');
+
+          ui.autocompletePopper
+            .findByTitle('VPC Interface (ID: 1)', { exact: false })
+            .should('be.visible')
+            .click();
+
+          // Confirm save button becomes enabled once changes are made
+          ui.button
+            .findByTitle('Save')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // confirm toast upon success
+      ui.toast.findByMessage('Successfully updated interface settings.');
+
+      // re-open drawer
+      ui.button
+        .findByTitle('Interface Settings')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // confirm settings have updated
+      ui.drawer
+        .findByTitle('Interface Settings')
+        .should('be.visible')
+        .within(() => {
+          ui.autocomplete
+            .findByLabel('Default IPv4 Route')
+            .should('be.visible')
+            .should('have.value', 'VPC Interface (ID: 1)');
+
+          ui.autocomplete
+            .findByLabel('Default IPv6 Route')
+            .should('be.visible')
+            .should('have.value', 'Public Interface (ID: 2)');
+        });
     });
 
     describe('Adding a Linode Interface', () => {
