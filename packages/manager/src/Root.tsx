@@ -6,9 +6,11 @@ import '@fontsource/nunito-sans/700.css';
 import '@fontsource/nunito-sans/800.css';
 import '@fontsource/nunito-sans/400-italic.css';
 import {
+  useAccountSettings,
   useMutatePreferences,
   usePreferences,
   useProfile,
+  useQueryClient,
 } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
@@ -41,14 +43,20 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
+import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
+import { useFlags } from './hooks/useFlags';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
 import { useEventsPoller } from './queries/events/events';
+import { router } from './routes';
+import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -124,8 +132,6 @@ export const Root = () => {
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const globalErrors = useGlobalErrors();
-
   const NotificationProvider = notificationCenterContext.Provider;
   const contextValue = useNotificationContext();
 
@@ -144,6 +150,7 @@ export const Root = () => {
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
+  useSetupFeatureFlags();
   const { data: profile } = useProfile();
   const username = profile?.username || '';
 
@@ -152,6 +159,28 @@ export const Root = () => {
   );
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
+
+  const queryClient = useQueryClient();
+  const globalErrors = useGlobalErrors();
+
+  const { data: accountSettings } = useAccountSettings();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const { isACLPEnabled } = useIsACLPEnabled();
+  const flags = useFlags();
+
+  // Update the router's context
+  router.update({
+    context: {
+      accountSettings,
+      flags,
+      globalErrors,
+      isACLPEnabled,
+      isDatabasesEnabled,
+      isPlacementGroupsEnabled,
+      queryClient,
+    },
+  });
 
   /**
    * this is the case where the user has successfully completed signup

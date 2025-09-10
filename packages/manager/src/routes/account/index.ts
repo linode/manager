@@ -2,9 +2,8 @@ import { createRoute, redirect } from '@tanstack/react-router';
 
 import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
-import { rootRoute } from '../root';
-import { AccountRoute } from './AccountRoute';
 import { mainContentRoute } from '../mainContent';
+import { AccountRoute } from './AccountRoute';
 
 interface AccountBillingSearch {
   action?: 'add-payment-method' | 'edit' | 'make-payment';

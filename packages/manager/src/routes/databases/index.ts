@@ -1,10 +1,9 @@
 import { createRoute } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { DatabasesRoute } from './DatabasesRoute';
 
 import type { Engine } from '@linode/api-v4';
-import { mainContentRoute } from '../mainContent';
 
 interface DatabaseParams {
   databaseId: number;

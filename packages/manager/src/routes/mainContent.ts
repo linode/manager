@@ -1,8 +1,8 @@
-import { createRoute, redirect } from "@tanstack/react-router";
+import { createRoute } from '@tanstack/react-router';
 
-import { Root } from "src/Root";
+import { Root } from 'src/Root';
 
-import { rootRoute } from "./root";
+import { rootRoute } from './root';
 
 export const mainContentRoute = createRoute({
   component: Root,

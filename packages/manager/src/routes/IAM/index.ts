@@ -2,11 +2,10 @@ import { createRoute, redirect } from '@tanstack/react-router';
 
 import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../types';
-import { mainContentRoute } from '../mainContent';
 
 interface IamEntitiesSearchParams {
   selectedRole?: string;

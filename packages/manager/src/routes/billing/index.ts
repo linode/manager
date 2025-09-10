@@ -1,8 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
-import { BillingRoute } from './BillingRoute';
 import { mainContentRoute } from '../mainContent';
+import { BillingRoute } from './BillingRoute';
 
 interface BillingSearch {
   action?: 'add-payment-method' | 'edit' | 'make-payment';

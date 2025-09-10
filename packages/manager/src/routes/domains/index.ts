@@ -1,10 +1,9 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { DomainsRoute } from './DomainsRoute';
 
 import type { TableSearchParams } from '../types';
-import { mainContentRoute } from '../mainContent';
 
 export type DomainsSearchParams = TableSearchParams;
 

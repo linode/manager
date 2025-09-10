@@ -1,10 +1,9 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { rootRoute } from '../root';
+import { mainContentRoute } from '../mainContent';
 import { DataStreamRoute } from './DataStreamRoute';
 
 import type { TableSearchParams } from 'src/routes/types';
-import { mainContentRoute } from '../mainContent';
 
 export interface StreamSearchParams extends TableSearchParams {
   label?: string;

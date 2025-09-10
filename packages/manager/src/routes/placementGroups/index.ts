@@ -31,7 +31,7 @@ const placementGroupsDetailRoute = createRoute({
   parseParams: (params) => ({
     id: Number(params.id),
   }),
-  path: 'placement-groups/$id',
+  path: '$id',
   validateSearch: (search: PlacementGroupLinodesSearchParams) => search,
 }).lazy(() =>
   import(

@@ -1,10 +1,9 @@
 import { NotFound } from '@linode/ui';
 import { QueryClient } from '@tanstack/react-query';
-import { createRoute, createRouter, redirect } from '@tanstack/react-router';
+import { createRouter } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
-import { Root } from 'src/Root';
 
 import { accountRouteTree } from './account';
 import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
