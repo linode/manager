@@ -155,19 +155,12 @@ export type QueryWithPermissionsResult<T> = {
   'data' | 'error' | 'isError' | 'isLoading'
 >;
 
-export const useQueryWithPermissions = <T extends EntityBase>(
-  useQueryResult: UseQueryResult<T[], APIError[]>,
+function useFilteredByPermissions<T extends EntityBase>(
+  items: T[] | undefined,
   entityType: EntityType,
   permissionsToCheck: PermissionType[],
-  enabled?: boolean
-): QueryWithPermissionsResult<T> => {
-  const {
-    data: allEntities,
-    error: allEntitiesError,
-    isLoading: areEntitiesLoading,
-    isError: isEntitiesError,
-    ...restQueryResult
-  } = useQueryResult;
+  enabled: boolean
+) {
   const { data: profile } = useProfile();
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
@@ -194,7 +187,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
 
   const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
     useEntitiesPermissions<T>(
-      allEntities,
+      items,
       entityType,
       profile,
       shouldUsePermissionMap && enabled
@@ -205,14 +198,14 @@ export const useQueryWithPermissions = <T extends EntityBase>(
 
   const entityPermissionsMap = shouldUsePermissionMap
     ? toEntityPermissionMap(
-        allEntities,
+        items,
         entityPermissions,
         permissionsToCheck,
         profile?.restricted
       )
     : entityPermissionMapFrom(grants, entityType as GrantType, profile);
 
-  const entities: T[] | undefined = allEntities?.filter((entity: T) => {
+  const entities: T[] | undefined = items?.filter((entity: T) => {
     const permissions = entityPermissionsMap[entity.id] ?? {};
     return (
       !profile?.restricted ||
@@ -220,13 +213,57 @@ export const useQueryWithPermissions = <T extends EntityBase>(
         permissionsToCheck.every((permission) => permissions[permission]))
     );
   });
+  return {
+    data: entities || [],
+    isLoading: areEntityPermissionsLoading,
+  } as const;
+}
 
+export const useQueryWithPermissions = <T extends EntityBase>(
+  useQueryResult: UseQueryResult<T[], APIError[]>,
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[],
+  enabled = true
+): QueryWithPermissionsResult<T> => {
+  const {
+    data: allEntities,
+    error: allEntitiesError,
+    isLoading: areEntitiesLoading,
+    isError: isEntitiesError,
+    ...restQueryResult
+  } = useQueryResult;
+
+  const { data: entities, isLoading } = useFilteredByPermissions<T>(
+    allEntities,
+    entityType,
+    permissionsToCheck,
+    enabled
+  );
   return {
     data: entities || [],
     error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
     isError: isEntitiesError,
-    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
+    isLoading: areEntitiesLoading || isLoading,
     ...restQueryResult,
+  } as const;
+};
+
+export const useArrayWithPermissions = <T extends EntityBase>(
+  entityArray: T[],
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[]
+) => {
+  const { data: entities, isLoading } = useFilteredByPermissions<T>(
+    entityArray,
+    entityType,
+    permissionsToCheck,
+    true
+  );
+
+  return {
+    data: entities || [],
+    hasFiltered: entityArray.length !== entities?.length,
+    isLoading,
   } as const;
 };

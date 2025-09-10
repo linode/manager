@@ -696,7 +696,7 @@ export const SubnetAssignLinodesDrawer = (
                       />
                     }
                     data-testid="vpc-ipv6-checkbox"
-                    disabled={userCannotAssignLinodes}
+                    disabled={!userCanAssignLinodes}
                     label={
                       <Typography>Auto-assign VPC IPv6 address</Typography>
                     }
@@ -715,7 +715,7 @@ export const SubnetAssignLinodesDrawer = (
                 </Box>
                 {!autoAssignVPCIPv6Address && (
                   <TextField
-                    disabled={userCannotAssignLinodes}
+                    disabled={!userCanAssignLinodes}
                     errorText={assignLinodesErrors['vpc.ipv6.slaac[0].range']}
                     helperText={generateVPCIPv6InputHelperText(
                       subnet?.ipv6?.[0].range ?? ''
@@ -764,7 +764,7 @@ export const SubnetAssignLinodesDrawer = (
               }
               showIPv6Content={showIPv6Content}
               sx={{ margin: `${theme.spacingFunction(16)} 0` }}
-              userCannotAssignLinodes={userCannotAssignLinodes}
+              userCannotAssignLinodes={!userCanAssignLinodes}
             />
             {/* Display the 'Assign additional [IPv4] ranges' section if
                 the Configuration Profile section has been populated, or
