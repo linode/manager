@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-09-10] - v1.150.1
+
+
+### Fixed:
+
+- Fix the error "Something went wrong" on firewall create ([#12859](https://github.com/linode/manager/pull/12859))
+
 ## [2025-09-09] - v1.150.0
 
 ### Added:
