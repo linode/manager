@@ -2865,6 +2865,13 @@ export const handlers = [
             scope: 'region',
             regions: ['us-east'],
           }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'entity',
+            regions: ['us-east'],
+            entity_ids: ['5', '6'],
+          }),
         ],
       });
     }
