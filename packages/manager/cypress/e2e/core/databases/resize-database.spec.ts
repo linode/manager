@@ -13,10 +13,10 @@ import {
   mockGetDatabase,
   mockGetDatabaseCredentials,
   mockGetDatabaseTypes,
-  mockGetRegionAvailability,
   mockResize,
   mockResizeProvisioningDatabase,
 } from 'support/intercepts/databases';
+import { mockGetRegionAvailability } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomIp, randomNumber, randomString } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
