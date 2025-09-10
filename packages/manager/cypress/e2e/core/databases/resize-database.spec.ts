@@ -1,7 +1,11 @@
 /**
  * @file DBaaS integration tests for resize operations.
  */
-import { ClusterSize, RegionAvailability } from '@linode/api-v4';
+import {
+  ClusterSize,
+  DatabaseStatus,
+  RegionAvailability,
+} from '@linode/api-v4';
 import { accountFactory } from '@src/factories';
 import {
   databaseConfigurationsResize,
@@ -21,7 +25,7 @@ import { ui } from 'support/ui';
 import { randomIp, randomNumber, randomString } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
 
-import { databaseFactory, possibleStatuses } from 'src/factories/databases';
+import { databaseFactory } from 'src/factories/databases';
 
 import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
@@ -256,12 +260,8 @@ describe('Resizing existing clusters', () => {
         /*
          * - Tests active/provisioning/resizing databases resize UI flows using mocked data.
          */
-        possibleStatuses.forEach((dbstatus) => {
-          if (
-            dbstatus == 'active' ||
-            dbstatus == 'provisioning' ||
-            dbstatus == 'resizing'
-          ) {
+        ['active', 'provisioning', 'resizing'].forEach(
+          (dbstatus: DatabaseStatus) => {
             /*
              * - Confirms that users can resize an existing database.
              * - Confirms that users can scale up/down to available plans as per used_disk_space.
@@ -527,7 +527,7 @@ describe('Resizing existing clusters', () => {
               }
             });
           }
-        });
+        );
 
         /*
          * - Tests active database resize UI flows using mocked data.
@@ -646,12 +646,8 @@ describe('Resizing existing clusters', () => {
          * - Confirms that users cannot resize database  for suspended DBs.
          * - Confirms that users cannot resize database  for resuming DBs.
          */
-        possibleStatuses.forEach((dbstatus) => {
-          if (
-            dbstatus == 'suspending' ||
-            dbstatus == 'suspended' ||
-            dbstatus == 'resuming'
-          ) {
+        ['suspending', 'suspended', 'resuming'].forEach(
+          (dbstatus: DatabaseStatus) => {
             it(`Cannot resize database clusters while they are in ${dbstatus} state`, () => {
               const initialLabel = configuration.label;
               const allowedIp = randomIp();
@@ -733,7 +729,7 @@ describe('Resizing existing clusters', () => {
               }
             });
           }
-        });
+        );
       });
     }
   );
