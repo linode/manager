@@ -55,12 +55,13 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const { data: accountPermissions } = usePermissions('account', [
     'create_linode',
   ]);
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'linode',
     [
       'shutdown_linode',
@@ -74,7 +75,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       'delete_linode',
       'generate_linode_lish_token',
     ],
-    linodeId
+    linodeId,
+    isOpen
   );
 
   const handlePowerAction = () => {
@@ -256,7 +258,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-      onOpen={sendLinodeActionEvent}
+      loading={isLoading}
+      onOpen={() => {
+        sendLinodeActionEvent();
+        setIsOpen(true);
+      }}
     />
   );
 };

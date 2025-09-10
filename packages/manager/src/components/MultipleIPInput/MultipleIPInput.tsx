@@ -60,6 +60,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export interface MultipeIPInputProps {
   /**
+   * Tightens spacing when used in VPC Dual Stack contexts.
+   * @default false
+   */
+  adjustSpacingForVPCDualStack?: boolean;
+
+  /**
    * Text displayed on the button.
    */
   buttonText?: string;
@@ -90,7 +96,7 @@ export interface MultipeIPInputProps {
    * Indicates if the input is for VPC IPv4 ranges.
    * @default false
    */
-  forVPCIPv4Ranges?: boolean;
+  forVPCIPRanges?: boolean;
 
   /**
    * Helper text for additional guidance.
@@ -147,12 +153,13 @@ export interface MultipeIPInputProps {
 
 export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const {
+    adjustSpacingForVPCDualStack,
     buttonText,
     className,
     disabled,
     error,
     forDatabaseAccessControls,
-    forVPCIPv4Ranges,
+    forVPCIPRanges,
     helperText,
     ips,
     isLinkStyled,
@@ -202,8 +209,17 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   }
 
   const addIPButton =
-    forVPCIPv4Ranges || isLinkStyled ? (
-      <StyledLinkButtonBox sx={{ marginTop: isLinkStyled ? '8px' : '12px' }}>
+    forVPCIPRanges || isLinkStyled ? (
+      <StyledLinkButtonBox
+        sx={{
+          marginTop:
+            adjustSpacingForVPCDualStack && ips.length === 0
+              ? '0px'
+              : isLinkStyled
+                ? '8px'
+                : '12px',
+        }}
+      >
         <LinkButton disabled={disabled} onClick={addNewInput}>
           {buttonText}
         </LinkButton>
@@ -222,7 +238,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
 
   return (
     <div className={cx(classes.root, className)}>
-      {tooltip ? (
+      {tooltip && title ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
           <TooltipIcon
@@ -236,12 +252,16 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           />
         </div>
       ) : (
-        <InputLabel>
-          {title}
-          {required ? (
-            <span className={classes.required}> (required)</span>
-          ) : null}
-        </InputLabel>
+        // There are a couple of instances in the codebase where an empty string is passed as the title so a title isn't displayed.
+        // Having this check ensures we don't render an empty label element (which can still impact spacing) in those cases.
+        title && (
+          <InputLabel>
+            {title}
+            {required ? (
+              <span className={classes.required}> (required)</span>
+            ) : null}
+          </InputLabel>
+        )
       )}
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
@@ -257,7 +277,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
             spacing={2}
             sx={{
               justifyContent: 'center',
-              maxWidth: forVPCIPv4Ranges ? '415px' : undefined,
+              maxWidth: forVPCIPRanges ? '415px' : undefined,
             }}
           >
             <Grid size={11}>
@@ -284,7 +304,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
              * used in DBaaS or for Linode VPC interfaces
              */}
             <Grid size={1}>
-              {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
+              {(idx > 0 || forDatabaseAccessControls || forVPCIPRanges) && (
                 <IconButton
                   aria-disabled={disabled}
                   className={classes.button}
