@@ -27,6 +27,7 @@ const queryMocks = vi.hoisted(() => ({
     isLoading: false,
     isError: false,
   }),
+  useArrayWithPermissions: vi.fn().mockReturnValue([]),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -48,6 +49,7 @@ vi.mock('@linode/queries', async () => {
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
   useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+  useArrayWithPermissions: queryMocks.useArrayWithPermissions,
 }));
 const loadingTestId = 'circle-progress';
 

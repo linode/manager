@@ -124,7 +124,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       'linode',
       ['delete_linode']
     );
-    const userCanUnassignLinodes = filteredLinodes.length > 0;
+    const userCanUnassignLinodes = filteredLinodes?.length > 0;
 
     React.useEffect(() => {
       if (linodes) {
