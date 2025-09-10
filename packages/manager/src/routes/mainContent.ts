@@ -1,12 +1,15 @@
 import { accountQueries } from '@linode/queries';
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { SplashScreen } from 'src/components/SplashScreen';
 import { Root } from 'src/Root';
 
 import { rootRoute } from './root';
 
 export const mainContentRoute = createRoute({
   component: Root,
+  wrapInSuspense: true,
+  pendingComponent: SplashScreen,
   getParentRoute: () => rootRoute,
   async beforeLoad(ctx) {
     if (ctx.location.pathname === '/') {
