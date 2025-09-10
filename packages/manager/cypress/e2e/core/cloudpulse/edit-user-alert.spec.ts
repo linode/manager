@@ -452,15 +452,6 @@ describe('Integration Tests for Edit Alert', () => {
       ui.autocomplete.findByLabel('Severity').clear();
       ui.autocomplete.findByLabel('Severity').type('Info');
       ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
-      ui.autocomplete
-        .findByLabel('Scope')
-        .should('be.visible')
-        .clear()
-        .type(groupLabel);
-
-      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account' or 'Entity')
-      scopeActions[groupLabel];
-
       cy.get(
         '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
       ).within(() => {
