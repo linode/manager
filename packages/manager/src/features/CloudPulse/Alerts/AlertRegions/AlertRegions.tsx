@@ -49,6 +49,55 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
+
+  // const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
+  // const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+  //   if (serviceType === 'firewall') {
+  //     return undefined;
+  //   }
+
+  //   const regionFilter: Filter = supportedRegionIds
+  //     ? {
+  //         '+or': supportedRegionIds.map((regionId) => ({
+  //           region: regionId,
+  //         })),
+  //       }
+  //     : {};
+
+  //   // if service type is other than dbaas, return only region filter
+  //   if (serviceType !== 'dbaas') {
+  //     return regionFilter;
+  //   }
+
+  //   // Always include platform filter for 'dbaas'
+  //   const platformFilter: Filter = { platform: 'rdbms-default' };
+
+  //   // If alertType is not 'system' or alertClass is not defined, return only platform filter
+  //   if (alertType !== 'system' || !alertClass) {
+  //     return platformFilter;
+  //   }
+
+  //   // Dynamically exclude 'dedicated' if alertClass is 'shared'
+  //   const filteredTypes =
+  //     alertClass === 'shared'
+  //       ? Object.keys(databaseTypeClassMap).filter(
+  //           (type) => type !== 'dedicated'
+  //         )
+  //       : [alertClass];
+
+  //   // Apply type filter only for DBaaS user alerts with a valid alertClass based on above filtered types
+  //   const typeFilter: Filter = {
+  //     '+or': filteredTypes.map((dbType) => ({
+  //       type: {
+  //         '+contains': dbType,
+  //       },
+  //     })),
+  //   };
+
+  //   // Combine all the filters
+  //   return { ...platformFilter, '+and': [typeFilter, regionFilter] };
+  // }, [alertClass, alertType, serviceType, supportedRegionIds]);
+
   const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,

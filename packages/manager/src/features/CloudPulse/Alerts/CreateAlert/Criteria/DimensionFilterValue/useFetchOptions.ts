@@ -36,10 +36,6 @@ interface FetchOptionsProps {
    */
   scope?: AlertDefinitionScope | null;
   /**
-   * User selected regions list in the region scope
-   */
-  selectedRegions?: string[];
-  /**
    * Service to apply specific transformations to dimension values.
    */
   serviceType?: CloudPulseServiceType | null;
@@ -54,15 +50,7 @@ interface FetchOptionsProps {
  * Handles fetching and transforming data for edge-cases.
  */
 export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
-  const {
-    dimensionLabel,
-    regions,
-    entities,
-    serviceType,
-    type,
-    scope,
-    selectedRegions,
-  } = props;
+  const { dimensionLabel, regions, entities, serviceType, type, scope } = props;
 
   const supportedRegionIds =
     (serviceType &&
@@ -97,13 +85,7 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     filterLabels.includes(dimensionLabel ?? ''),
     'firewall',
     {},
-    scope === 'region' && selectedRegions?.length
-      ? {
-          '+or': selectedRegions.map((region) => ({
-            region,
-          })),
-        }
-      : {}
+    {}
   );
   // Decide firewall resource IDs based on scope
   const filteredFirewallResourcesIds = useMemo(() => {

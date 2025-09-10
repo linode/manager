@@ -95,7 +95,6 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     operator,
     value,
     values,
-    selectedRegions,
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
@@ -119,7 +118,6 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     entities,
     serviceType,
     type: 'alerts',
-    selectedRegions,
     scope,
   });
   const staticOptions = useMemo(

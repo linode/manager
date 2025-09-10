@@ -116,7 +116,7 @@ describe('getResolvedDimensionValue', () => {
   });
 
   it('should return empty string if value is null or undefined', () => {
-    const nullResult = getResolvedDimensionValue(
+    const emptyResult = getResolvedDimensionValue(
       'linode_id',
       'in',
       null,
@@ -124,6 +124,6 @@ describe('getResolvedDimensionValue', () => {
       linodeMap,
       vpcSubnetMap
     );
-    expect(nullResult).toBe('');
+    expect(emptyResult).toBe('');
   });
 });
