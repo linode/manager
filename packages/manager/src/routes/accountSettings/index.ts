@@ -1,11 +1,12 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { mainContentRoute } from '../mainContent';
 import { rootRoute } from '../root';
 import { AccountSettingsRoute } from './AccountSettingsRoute';
 
 const accountSettingsRoute = createRoute({
   component: AccountSettingsRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'account-settings',
 });
 

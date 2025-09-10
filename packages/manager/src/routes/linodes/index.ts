@@ -5,6 +5,7 @@ import { LinodesRoute } from './LinodesRoute';
 
 import type { StackScriptTabType } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
 import type { linodesCreateTypes } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
+import { mainContentRoute } from '../mainContent';
 
 interface LinodeDetailSearchParams {
   delete?: boolean;
@@ -27,7 +28,7 @@ export interface LinodeCreateSearchParams {
 
 export const linodesRoute = createRoute({
   component: LinodesRoute,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => mainContentRoute,
   path: 'linodes',
 });
 

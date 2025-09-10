@@ -4,6 +4,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
+import { Root } from 'src/Root';
 
 import { accountRouteTree } from './account';
 import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
@@ -27,6 +28,7 @@ import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
+import { mainContentRoute } from './mainContent';
 import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
@@ -44,54 +46,45 @@ import { usersAndGrantsRouteTree } from './usersAndGrants';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
-const indexRoute = createRoute({
-  beforeLoad: ({ context }) => {
-    const { accountSettings } = context;
-    const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-    throw redirect({ to: defaultRoot });
-  },
-  getParentRoute: () => rootRoute,
-  path: '/',
-});
-
 export const routeTree = rootRoute.addChildren([
-  indexRoute,
-  accountSettingsRouteTree,
-  cancelLandingRoute,
   loginAsCustomerCallbackRoute,
-  logoutRoute,
   oauthCallbackRoute,
-  accountRouteTree,
-  billingRouteTree,
-  betaRouteTree,
-  cloudPulseAlertsRouteTree,
-  cloudPulseMetricsRouteTree,
-  databasesRouteTree,
-  dataStreamRouteTree,
-  domainsRouteTree,
-  eventsRouteTree,
-  iamRouteTree,
-  firewallsRouteTree,
-  imagesRouteTree,
-  kubernetesRouteTree,
-  linodesRouteTree,
-  loginHistoryRouteTree,
-  longviewRouteTree,
-  maintenanceRouteTree,
-  managedRouteTree,
-  nodeBalancersRouteTree,
-  objectStorageRouteTree,
-  placementGroupsRouteTree,
-  profileRouteTree,
-  quotasRouteTree,
-  searchRouteTree,
-  serviceTransfersRouteTree,
-  settingsRouteTree,
-  stackScriptsRouteTree,
-  supportRouteTree,
-  usersAndGrantsRouteTree,
-  volumesRouteTree,
-  vpcsRouteTree,
+  mainContentRoute.addChildren([
+    accountSettingsRouteTree,
+    cancelLandingRoute,
+    logoutRoute,
+    accountRouteTree,
+    billingRouteTree,
+    betaRouteTree,
+    cloudPulseAlertsRouteTree,
+    cloudPulseMetricsRouteTree,
+    databasesRouteTree,
+    dataStreamRouteTree,
+    domainsRouteTree,
+    eventsRouteTree,
+    iamRouteTree,
+    firewallsRouteTree,
+    imagesRouteTree,
+    kubernetesRouteTree,
+    linodesRouteTree,
+    loginHistoryRouteTree,
+    longviewRouteTree,
+    maintenanceRouteTree,
+    managedRouteTree,
+    nodeBalancersRouteTree,
+    objectStorageRouteTree,
+    placementGroupsRouteTree,
+    profileRouteTree,
+    quotasRouteTree,
+    searchRouteTree,
+    serviceTransfersRouteTree,
+    settingsRouteTree,
+    stackScriptsRouteTree,
+    supportRouteTree,
+    usersAndGrantsRouteTree,
+    volumesRouteTree,
+    vpcsRouteTree,
+  ]),
 ]);
 
 export const router = createRouter({

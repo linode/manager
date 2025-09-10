@@ -41,8 +41,7 @@ export const handleError = (
     error.response &&
     error.response.status === 401 &&
     !store.getState().pendingUpload &&
-    !isRedirectingToLogin &&
-    window.location.pathname !== '/oauth/callback'
+    !isRedirectingToLogin
   ) {
     isRedirectingToLogin = true;
     clearAuthDataFromLocalStorage();
@@ -135,15 +134,6 @@ export const isSuccessfulGETProfileResponse = (
 
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use(async (config) => {
-    if (
-      window.location.pathname === '/oauth/callback' ||
-      window.location.pathname === '/admin/callback'
-    ) {
-      throw new Error(
-        'API calls blocked during authentication callback processing'
-      );
-    }
-
     const url = getURL(config);
 
     const headers = new AxiosHeaders(config.headers);
