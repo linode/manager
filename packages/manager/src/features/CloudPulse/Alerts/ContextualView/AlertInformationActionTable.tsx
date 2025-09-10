@@ -1,6 +1,7 @@
 import { type Alert, type APIError } from '@linode/api-v4';
 import { Box, Button, TooltipIcon } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
@@ -23,7 +24,7 @@ import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
-import { arraysEqual } from '../Utils/utils';
+import { arraysEqual, invalidateAlerts } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type {
@@ -155,10 +156,7 @@ export const AlertInformationActionTable = (
   } = useContextualAlertsState(alerts, entityId);
 
   // Mutation to update alerts as per service type
-  const { mutateAsync: updateAlerts } = useAlertsMutation(
-    serviceType,
-    entityId ?? ''
-  );
+  const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
   // To send initial state of alerts through toggle handler function
   React.useEffect(() => {
@@ -170,6 +168,8 @@ export const AlertInformationActionTable = (
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
+
+  const qc = useQueryClient();
 
   const handleConfirm = React.useCallback(
     (alertIds: CloudPulseAlertsPayload) => {
@@ -188,6 +188,7 @@ export const AlertInformationActionTable = (
           });
           // Reset the state to sync with the updated alerts from API
           resetToInitialState();
+          invalidateAlerts(qc, serviceType, entityId ?? '', payload);
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {

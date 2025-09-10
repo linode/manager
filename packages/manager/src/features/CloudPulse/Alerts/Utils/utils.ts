@@ -31,7 +31,7 @@ import type {
   MonitoringCapabilities,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { useQueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 import type {
   AclpAlertServiceTypeConfig,
   AclpServices,
@@ -645,7 +645,7 @@ export const transformDimensionValue = (
  * @param payload The payload
  */
 export const invalidateAlerts = (
-  qc: ReturnType<typeof useQueryClient>,
+  qc: QueryClient,
   serviceType: string,
   entityId: string,
   payload: CloudPulseAlertsPayload
