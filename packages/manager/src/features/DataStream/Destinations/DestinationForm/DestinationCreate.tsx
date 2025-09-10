@@ -60,15 +60,15 @@ export const DestinationCreate = () => {
         );
       })
       .catch((error) => {
-        return enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            'There was an issue creating your destination'
-          )[0].reason,
-          {
-            variant: 'error',
-          }
-        );
+        const { field, reason } = getAPIErrorOrDefault(
+          error,
+          'There was an issue creating your destination'
+        )[0];
+
+        const message = field ? `${field}: ${reason}` : reason;
+        return enqueueSnackbar(message, {
+          variant: 'error',
+        });
       });
   };
 

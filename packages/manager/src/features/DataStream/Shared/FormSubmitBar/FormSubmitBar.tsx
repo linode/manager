@@ -8,7 +8,7 @@ import { StyledHeader } from 'src/features/DataStream/Shared/FormSubmitBar/FormS
 import type { DestinationType } from '@linode/api-v4';
 import type { FormMode, FormType } from 'src/features/DataStream/Shared/types';
 
-type StreamFormSubmitBarProps = {
+interface StreamFormSubmitBarProps {
   blockSubmit?: boolean;
   connectionTested: boolean;
   destinationType?: DestinationType;
@@ -18,7 +18,7 @@ type StreamFormSubmitBarProps = {
   mode: FormMode;
   onSubmit: () => void;
   onTestConnection: () => void;
-};
+}
 
 export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
   const {
