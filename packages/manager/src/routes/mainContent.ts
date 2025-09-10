@@ -1,4 +1,5 @@
-import { createRoute } from '@tanstack/react-router';
+import { accountQueries } from '@linode/queries';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { Root } from 'src/Root';
 
@@ -7,5 +8,13 @@ import { rootRoute } from './root';
 export const mainContentRoute = createRoute({
   component: Root,
   getParentRoute: () => rootRoute,
+  async beforeLoad(ctx) {
+    if (ctx.location.pathname === '/') {
+      const accountSettings = await ctx.context.queryClient.ensureQueryData(
+        accountQueries.settings
+      );
+      throw redirect({ to: accountSettings.managed ? '/managed' : '/linodes' })
+    }
+  },
   path: '/',
 });
