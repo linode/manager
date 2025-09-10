@@ -32,6 +32,12 @@ interface MetricDimension {
   [metric: string]: Dimension[];
 }
 
+/**
+ *
+ * @param dashboardId The ID of the dashboard being queried
+ * @param serviceType The type of cloud service (e.g., 'linode', 'dbaas')
+ * @returns A GroupByDimension object containing available options, default values, and loading state
+ */
 export const useGlobalDimensions = (
   dashboardId: number | undefined,
   serviceType: CloudPulseServiceType | undefined
@@ -81,12 +87,20 @@ export const getCommonGroups = (
   });
 };
 
+/**
+ *
+ * @param dashboardId The ID of the dashboard being queried
+ * @param serviceType The type of cloud service (e.g., 'linode', 'dbaas')
+ * @param globalDimensions - Common dimensions that are already selected at the dashboard level
+ * @param metric - The specific metric for which to retrieve available dimensions
+ * @returns A GroupByDimension object containing available options, default values, and loading state
+ */
 export const useWidgetDimension = (
   dashboardId: number | undefined,
   serviceType: CloudPulseServiceType | undefined,
   globalDimensions: GroupByOption[],
   metric: string | undefined
-) => {
+): GroupByDimension => {
   const { data: dashboard, isLoading: dashboardLoading } =
     useCloudPulseDashboardByIdQuery(dashboardId);
   const { data: metricDefinition, isLoading: metricLoading } =
@@ -159,7 +173,7 @@ export const getCommonDimensions = (
   // Get dimensions from first metric
   const firstMetricDimensions = metricDimensions[metrics[0]];
 
-  // Find dimensions that exist in all metrics
+  // filter dimensions that exist in all metrics
   return firstMetricDimensions
     .filter(({ dimension_label: queried }) => {
       return metrics.every((metric) => {
