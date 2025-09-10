@@ -18,6 +18,8 @@ describe('separate results by entity', () => {
     expect(results).toHaveProperty('bucket');
     expect(results).toHaveProperty('firewall');
     expect(results).toHaveProperty('database');
+    expect(results).toHaveProperty('destination');
+    expect(results).toHaveProperty('stream');
   });
 
   it('the value of each entity type is an array', () => {
@@ -30,6 +32,8 @@ describe('separate results by entity', () => {
     expect(results.bucket).toBeInstanceOf(Array);
     expect(results.firewall).toBeInstanceOf(Array);
     expect(results.database).toBeInstanceOf(Array);
+    expect(results.destination).toBeInstanceOf(Array);
+    expect(results.stream).toBeInstanceOf(Array);
   });
 
   it('returns empty results if there is no data', () => {
@@ -37,6 +41,7 @@ describe('separate results by entity', () => {
     expect(newResults).toEqual({
       bucket: [],
       database: [],
+      destination: [],
       domain: [],
       firewall: [],
       image: [],
@@ -44,6 +49,7 @@ describe('separate results by entity', () => {
       linode: [],
       nodebalancer: [],
       stackscript: [],
+      stream: [],
       volume: [],
     });
   });
