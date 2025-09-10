@@ -1,3 +1,5 @@
+import { ErrorEvent } from '@sentry/react';
+
 import { beforeSend, normalizeErrorMessage } from './initSentry';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -24,21 +26,22 @@ describe('normalizeErrorMessage', () => {
 
 describe('beforeSend', () => {
   it('should return null when user agent contains Catchpoint', () => {
-    const mockSentryEvent = {
+    const mockSentryEvent: ErrorEvent = {
       message: 'Some error occurred',
       request: {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; Catchpoint)',
         },
       },
+      type: undefined,
     };
 
-    const result = beforeSend(mockSentryEvent as any);
+    const result = beforeSend(mockSentryEvent);
     expect(result).toBeNull();
   });
 
   it('should process normal events when user agent does not contain Catchpoint', () => {
-    const mockSentryEvent = {
+    const mockSentryEvent: ErrorEvent = {
       message: 'Some error occurred',
       request: {
         headers: {
@@ -46,9 +49,10 @@ describe('beforeSend', () => {
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         },
       },
+      type: undefined,
     };
 
-    const result = beforeSend(mockSentryEvent as any);
+    const result = beforeSend(mockSentryEvent);
     expect(result).not.toBeNull();
     expect(result?.message).toBe('Some error occurred');
   });
