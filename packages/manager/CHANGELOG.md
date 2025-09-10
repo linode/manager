@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Fix the error "Something went wrong" on firewall create ([#12859](https://github.com/linode/manager/pull/12859))
+- "Something went wrong" error on firewall create ([#12859](https://github.com/linode/manager/pull/12859))
 
 ## [2025-09-09] - v1.150.0
 
