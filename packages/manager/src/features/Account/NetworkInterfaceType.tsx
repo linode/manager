@@ -5,7 +5,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../IAM/hooks/usePermissions';
-import { LinodeInterfaceFeatureChip } from '../Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
+import { LinodeInterfaceFeatureStatusChip } from '../Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type {
   AccountSettings,
@@ -81,7 +81,7 @@ export const NetworkInterfaceType = () => {
           <Typography variant="body1">
             Choose whether to use Configuration Profile Interfaces or Linode
             Interfaces
-            <LinodeInterfaceFeatureChip fallback=" " sx={{ mx: 0.5 }} />
+            <LinodeInterfaceFeatureStatusChip fallback=" " sx={{ mx: 0.5 }} />
             when creating new Linodes or upgrading existing ones.
           </Typography>
           <Controller

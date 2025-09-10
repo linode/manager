@@ -13,7 +13,7 @@ import { useController } from 'react-hook-form';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 
-import { LinodeInterfaceFeatureChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
+import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
@@ -71,7 +71,7 @@ export const InterfaceGeneration = () => {
                     <Typography sx={(theme) => ({ font: theme.font.bold })}>
                       Linode Interfaces
                     </Typography>
-                    <LinodeInterfaceFeatureChip />
+                    <LinodeInterfaceFeatureStatusChip />
                   </Stack>
                   <Typography>
                     Linode Interfaces are the preferred option for VPCs and are

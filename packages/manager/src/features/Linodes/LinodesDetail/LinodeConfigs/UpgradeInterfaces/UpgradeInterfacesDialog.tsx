@@ -2,7 +2,7 @@ import { Dialog } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
-import { LinodeInterfaceFeatureChip } from '../../LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
+import { LinodeInterfaceFeatureStatusChip } from '../../LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
 import { ErrorDialogContent } from './DialogContents/ErrorDialogContent';
 import { PromptDialogContent } from './DialogContents/PromptDialogContent';
@@ -61,7 +61,7 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
         },
       }}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
-      titleSuffix={<LinodeInterfaceFeatureChip />}
+      titleSuffix={<LinodeInterfaceFeatureStatusChip />}
     >
       {dialogState.step === 'prompt' && (
         <PromptDialogContent {...dialogProps} state={dialogState} />
