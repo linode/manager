@@ -21,6 +21,7 @@ import {
 } from 'support/intercepts/firewalls';
 import {
   mockCreateLinodeInterface,
+  mockDeleteLinodeInterface,
   mockGetLinodeDetails,
   mockGetLinodeFirewalls,
   mockGetLinodeInterface,
@@ -463,6 +464,65 @@ describe('Linode Interfaces enabled', () => {
             .should('be.visible')
             .should('be.enabled');
         });
+    });
+
+    it('confirms deletion of a an interface works as expected', () => {
+      const mockLinodeInterface = linodeInterfaceFactoryPublic.build();
+      mockGetLinodeInterfaces(mockLinode.id, {
+        interfaces: [mockLinodeInterface],
+      }).as('getInterfaces');
+      mockGetLinodeInterface(
+        mockLinode.id,
+        mockLinodeInterface.id,
+        mockLinodeInterface
+      );
+      mockDeleteLinodeInterface(mockLinode.id, mockLinodeInterface.id);
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+      cy.findByText('No Network Interfaces exist on this Linode.').should(
+        'not.exist'
+      );
+
+      cy.findByText(mockLinodeInterface.mac_address)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          ui.actionMenu
+            .findByTitle(
+              `Action menu for Public Interface (${mockLinodeInterface.id})`
+            )
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          ui.actionMenuItem
+            .findByTitle('Delete')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      mockGetLinodeInterfaces(mockLinode.id, {
+        interfaces: [],
+      }).as('getInterfaces');
+
+      ui.dialog
+        .findByTitle(`Delete Public Interface (ID: ${mockLinodeInterface.id})?`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(
+            'Are you sure you want to delete this Public interface?'
+          );
+          ui.button
+            .findByTitle('Delete')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.findByText('No Network Interfaces exist on this Linode.').should(
+        'be.visible'
+      );
     });
 
     describe('Adding a Linode Interface', () => {
@@ -933,6 +993,47 @@ describe('Linode Interfaces enabled', () => {
             cy.findByText('Subnet Label').should('be.visible');
             cy.findByText(`${mockSubnet.label}`).should('be.visible');
             cy.findByText('IPv4 Addresses').should('be.visible');
+          });
+      });
+    });
+
+    describe('Editing a Linode Interface', () => {
+      it('confirms VLAN interfaces cannot be edited', () => {
+        const linodeInterface = linodeInterfaceFactoryVlan.build();
+        mockGetLinodeInterfaces(mockLinode.id, {
+          interfaces: [linodeInterface],
+        }).as('getInterfaces');
+        mockGetLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          linodeInterface
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+
+        // Confirm edit drawer is disabled
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for VLAN Interface (${linodeInterface.id})`
+              )
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.actionMenuItem
+              .findByTitle('Edit')
+              .should('be.visible')
+              .should('not.be.enabled');
+
+            ui.tooltip
+              .findByText('VLAN interfaces cannot be edited.')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
           });
       });
     });
