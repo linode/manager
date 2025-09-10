@@ -168,10 +168,6 @@ describe('Object Storage Multicluster objects', () => {
         bucketFiles[0].name
       ).as('uploadObject');
 
-      cy.intercept({ url: '**', middleware: true }, (req) => {
-        console.log('Intercepted:', req.url);
-      });
-
       // Navigate to new bucket page, upload and delete an object.
       cy.visitWithLogin(bucketPage);
       ui.entityHeader.find().within(() => {
