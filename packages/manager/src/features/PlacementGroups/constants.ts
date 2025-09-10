@@ -10,7 +10,7 @@ export const PLACEMENT_GROUP_LINODES_ERROR_MESSAGE =
 export const PLACEMENT_GROUP_TOOLTIP_TEXT = `The Placement Group Type and Region you selected determine the maximum number of Linodes per placement group.`;
 
 export const PLACEMENT_GROUP_SELECT_TOOLTIP_COPY = `
-Add your Linode to a group to best meet your needs. 
+Add your Linode to a group to best meet your needs.
 You may want to group Linodes closer together to help improve performance, or further apart to enable high-availability configurations.`;
 
 export const PLACEMENT_GROUP_HAS_NO_CAPACITY =

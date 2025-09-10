@@ -16,9 +16,14 @@ export interface PlacementGroupLinodesSearchParams extends TableSearchParams {
   query?: string;
 }
 
-const placementGroupsLandingRoute = createRoute({
+const placementGroupsRoute = createRoute({
   getParentRoute: () => mainContentRoute,
-  path: '/placement-groups',
+  path: 'placement-groups',
+});
+
+const placementGroupsLandingRoute = createRoute({
+  getParentRoute: () => placementGroupsRoute,
+  path: '/',
   validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
   import(
@@ -27,7 +32,7 @@ const placementGroupsLandingRoute = createRoute({
 );
 
 const placementGroupsDetailRoute = createRoute({
-  getParentRoute: () => placementGroupsLandingRoute,
+  getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
@@ -39,6 +44,7 @@ const placementGroupsDetailRoute = createRoute({
   ).then((m) => m.placementGroupsDetailLazyRoute)
 );
 
-export const placementGroupsRouteTree = placementGroupsLandingRoute.addChildren(
-  [placementGroupsDetailRoute]
-);
+export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
+  placementGroupsLandingRoute,
+  placementGroupsDetailRoute,
+]);

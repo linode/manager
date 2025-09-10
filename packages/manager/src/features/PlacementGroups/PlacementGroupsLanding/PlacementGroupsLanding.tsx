@@ -53,7 +53,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     }),
   });
   const search = useSearch({
-    from: PLACEMENT_GROUPS_LANDING_ROUTE,
+    from: '/placement-groups/',
   });
   const { query } = search;
   const theme = useTheme();
