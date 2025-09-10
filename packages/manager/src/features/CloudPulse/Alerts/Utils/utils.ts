@@ -330,14 +330,11 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions: triggerConditions,
-    type,
-    scope,
     regions,
   }: Alert,
   serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
   return {
-    scope,
     alertId: id,
     channel_ids: alertChannels.map((channel) => channel.id),
     description: description || undefined,
@@ -354,7 +351,6 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions: triggerConditions,
-    type,
     regions,
   };
 };
@@ -415,6 +411,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
       .of(string().defined())
+      .optional()
       .max(
         maxSelectionCount,
         `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`

@@ -70,6 +70,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: {
       ...filteredAlertDefinitionValues,
       serviceType,
+      scope: alertDetails.scope,
     },
     mode: 'onBlur',
     resolver: yupResolver(
@@ -101,8 +102,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       values,
       serviceType,
       alertDetails.severity,
-      alertId,
-      alertDetails.scope
+      alertId
     );
     try {
       await editAlert(editPayload);
@@ -190,6 +190,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <AlertEntityScopeSelect
+            disabled
             formMode="edit"
             name="scope"
             serviceType={serviceType}

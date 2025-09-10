@@ -13,7 +13,12 @@ import {
 import { profileQueries } from '@linode/queries';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import type {
   APIError,
@@ -27,6 +32,7 @@ import type {
   UpdateDestinationPayloadWithId,
   UpdateStreamPayloadWithId,
 } from '@linode/api-v4';
+import type { GetAllData } from '@linode/utilities';
 
 export const getAllDataStreams = (
   passedParams: Params = {},
@@ -34,7 +40,7 @@ export const getAllDataStreams = (
 ) =>
   getAll<Stream>((params, filter) =>
     getStreams({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
-  )().then((data) => data.data);
+  )();
 
 export const getAllDestinations = (
   passedParams: Params = {},
@@ -45,7 +51,7 @@ export const getAllDestinations = (
       { ...params, ...passedParams },
       { ...filter, ...passedFilter },
     ),
-  )().then((data) => data.data);
+  )();
 
 export const datastreamQueries = createQueryKeys('datastream', {
   stream: (id: number) => ({
@@ -57,6 +63,11 @@ export const datastreamQueries = createQueryKeys('datastream', {
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllDataStreams(params, filter),
         queryKey: [params, filter],
+      }),
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getStreams({ page: pageParam as number }, filter),
+        queryKey: [filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getStreams(params, filter),
@@ -75,6 +86,11 @@ export const datastreamQueries = createQueryKeys('datastream', {
         queryFn: () => getAllDestinations(params, filter),
         queryKey: [params, filter],
       }),
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getDestinations({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDestinations(params, filter),
         queryKey: [params, filter],
@@ -88,6 +104,31 @@ export const useStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
   useQuery<ResourcePage<Stream>, APIError[]>({
     ...datastreamQueries.streams._ctx.paginated(params, filter),
   });
+
+export const useAllStreamsQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled = true,
+) =>
+  useQuery<GetAllData<Stream>, APIError[]>({
+    ...datastreamQueries.streams._ctx.all(params, filter),
+    enabled,
+  });
+
+export const useStreamsInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Stream>, APIError[]>({
+    ...datastreamQueries.streams._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useStreamQuery = (id: number) =>
   useQuery<Stream, APIError[]>({ ...datastreamQueries.stream(id) });
@@ -165,9 +206,11 @@ export const useDeleteStreamMutation = () => {
 export const useAllDestinationsQuery = (
   params: Params = {},
   filter: Filter = {},
+  enabled = true,
 ) =>
-  useQuery<Destination[], APIError[]>({
+  useQuery<GetAllData<Destination>, APIError[]>({
     ...datastreamQueries.destinations._ctx.all(params, filter),
+    enabled,
   });
 
 export const useDestinationsQuery = (
@@ -177,6 +220,24 @@ export const useDestinationsQuery = (
   useQuery<ResourcePage<Destination>, APIError[]>({
     ...datastreamQueries.destinations._ctx.paginated(params, filter),
   });
+
+export const useDestinationsInfiniteQuery = (
+  filter: Filter,
+  enabled: boolean,
+) => {
+  return useInfiniteQuery<ResourcePage<Destination>, APIError[]>({
+    ...datastreamQueries.destinations._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useDestinationQuery = (id: number) =>
   useQuery<Destination, APIError[]>({ ...datastreamQueries.destination(id) });
