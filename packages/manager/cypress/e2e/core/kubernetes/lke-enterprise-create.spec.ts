@@ -446,7 +446,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 });
 
 /*
- * Tests for the LKE-E create flow when the `lkeEnterprise.postLa` feature flag is enabled.
+ * Tests for the LKE-E create flow when the `lkeEnterprise2.postLa` feature flag is enabled.
  * The main change introduced by this feature flag is a new flow when adding node pools:
  * Node pool size is specified inside of a configuration drawer instead of directly in the plan table,
  * and additional node pool options have been added exclusively for LKE Enterprise clusters.
@@ -487,11 +487,11 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
 
   beforeEach(() => {
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: true,
-        phase2Mtc: false,
+        phase2Mtc: { byoVPC: false, dualStack: false },
       },
     });
     mockGetAccount(
