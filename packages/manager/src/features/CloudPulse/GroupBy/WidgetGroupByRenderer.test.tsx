@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   useWidgetDimension: vi.fn(),
 }));
 
-vi.mock('./useGroupByDimension', () => {
+vi.mock('./utils', () => {
   return {
     ...mocks,
   };
@@ -111,6 +111,8 @@ describe('Widget Group By Renderer', () => {
       options: widgetGroupBy,
       defaultValue,
     });
+
+    console.log(widgetGroupBy);
     renderWithTheme(component);
 
     const groupByIcon = screen.getByTestId('group-by');
