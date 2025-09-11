@@ -4,13 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2025-09-10] - v1.150.1
-
+## [2025-09-11] - v1.150.1
 
 ### Fixed:
 
 - "Something went wrong" error on firewall create ([#12859](https://github.com/linode/manager/pull/12859))
-- Restricted user with account access unable to access billing page on new session ([#12861](https://github.com/linode/manager/pull/12861))
 
 ## [2025-09-09] - v1.150.0
 
