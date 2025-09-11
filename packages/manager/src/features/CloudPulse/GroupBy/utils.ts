@@ -8,7 +8,7 @@ import type {
   MetricDefinition,
 } from '@linode/api-v4';
 
-const defaultOption: GroupByOption = {
+export const defaultOption: GroupByOption = {
   label: 'Entity Id',
   value: 'entity_id',
 };
@@ -76,7 +76,7 @@ export const useGlobalDimensions = (
  * @param commonDimensions The available common dimensions across all metrics
  * @returns An array of GroupByOption objects that exist in both the dashboard config and common dimensions
  */
-const getCommonGroups = (
+export const getCommonGroups = (
   groupBy: string[],
   commonDimensions: GroupByOption[]
 ): GroupByOption[] => {
@@ -146,7 +146,7 @@ export const useWidgetDimension = (
  * @param metricDefinition List of metric definitions, each containing a metric name and its associated dimensions.
  * @returns transform dimension object with metric as key and dimensions as value
  */
-const getMetricDimensions = (
+export const getMetricDimensions = (
   metricDefinition: MetricDefinition[]
 ): MetricDimension => {
   return metricDefinition.reduce((acc, { metric, dimensions }) => {
@@ -162,7 +162,7 @@ const getMetricDimensions = (
  * @param metricDimensions An object where keys are metric names and values are arrays of dimensions associated with those metrics.
  * @returns list of common dimensions across all metrics
  */
-const getCommonDimensions = (
+export const getCommonDimensions = (
   metricDimensions: MetricDimension
 ): GroupByOption[] => {
   const metrics = Object.keys(metricDimensions);
