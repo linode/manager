@@ -29,14 +29,19 @@ export const useInitialRequests = () => {
       return;
     }
 
+    const profile = await queryClient.ensureQueryData(profileQueries.profile());
+
     try {
-      // Initial Requests: Things we want immediately (before rendering the app)
-      await Promise.all([
-        queryClient.prefetchQuery(accountQueries.account),
+      const requests = [
         queryClient.prefetchQuery(accountQueries.settings),
-        queryClient.prefetchQuery(profileQueries.profile()),
         queryClient.prefetchQuery(profileQueries.preferences),
-      ]);
+      ];
+
+      if (!profile?.restricted) {
+        requests.push(queryClient.prefetchQuery(accountQueries.account));
+      }
+
+      await Promise.all(requests);
     } finally {
       setIsLoading(false);
     }

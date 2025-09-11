@@ -17,12 +17,14 @@ import type {
   Token,
 } from '@linode/api-v4';
 
-export const useAccount = (enabled: boolean = true) => {
+export const useAccount = (enabled?: boolean) => {
+  const { data: profile } = useProfile();
+
   return useQuery<Account, APIError[]>({
     ...accountQueries.account,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
-    enabled,
+    enabled: enabled ?? profile?.restricted === false,
   });
 };
 
