@@ -15,6 +15,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
 import {
+  invalidateAlerts,
   servicePayloadTransformerMap,
   useAlertsMutation,
 } from 'src/queries/cloudpulse/useAlertsMutation';
@@ -24,7 +25,7 @@ import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
-import { arraysEqual, invalidateAlerts } from '../Utils/utils';
+import { arraysEqual } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type {
@@ -176,7 +177,7 @@ export const AlertInformationActionTable = (
     setIsDialogOpen(false);
   };
 
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
 
   const handleConfirm = React.useCallback(
     (alertIds: CloudPulseAlertsPayload) => {
@@ -195,7 +196,7 @@ export const AlertInformationActionTable = (
           });
           // Reset the state to sync with the updated alerts from API
           resetToInitialState();
-          invalidateAlerts(qc, serviceType, entityId ?? '', payload);
+          invalidateAlerts(queryClient, serviceType, entityId, payload);
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {

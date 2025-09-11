@@ -13,8 +13,6 @@ import {
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
-import { queryFactory } from 'src/queries/cloudpulse/queries';
-
 import {
   DIMENSION_TRANSFORM_CONFIG,
   TRANSFORMS,
@@ -26,12 +24,8 @@ import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect
 import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type {
-  CloudPulseAlertsPayload,
-  MonitoringCapabilities,
-} from '@linode/api-v4';
+import type { MonitoringCapabilities } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { QueryClient } from '@tanstack/react-query';
 import type {
   AclpAlertServiceTypeConfig,
   AclpServices,
@@ -627,66 +621,20 @@ export const transformDimensionValue = (
 };
 
 /**
- * Invalidates the alerts cache
- * @param qc The query client
- * @param serviceType The service type
- * @param entityId The entity id
- * @param payload The payload
- */
-export const invalidateAlerts = (
-  qc: QueryClient,
-  serviceType: string,
-  entityId: string,
-  payload: CloudPulseAlertsPayload
-) => {
-  const allAlerts = qc.getQueryData<Alert[]>(
-    queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
-  );
-
-  // Get alerts previously enabled for this entity
-  const oldEnabledAlertIds =
-    allAlerts
-      ?.filter((alert) => alert.entity_ids.includes(entityId))
-      .map((alert) => alert.id) || [];
-
-  // Combine enabled user and system alert IDs from payload
-  const newEnabledAlertIds = [
-    ...(payload.user ?? []),
-    ...(payload.system ?? []),
-  ];
-
-  // Get unique list of all enabled alert IDs for cache invalidation
-  const alertIdsToInvalidate = Array.from(
-    new Set([...oldEnabledAlertIds, ...newEnabledAlertIds])
-  );
-
-  qc.invalidateQueries({
-    queryKey: queryFactory.alerts._ctx.all().queryKey,
-  });
-
-  qc.invalidateQueries({
-    queryKey:
-      queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
-  });
-
-  alertIdsToInvalidate.forEach((alertId) => {
-    qc.invalidateQueries({
-      queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
-        serviceType,
-        String(alertId)
-      ).queryKey,
-    });
-  });
-};
-
-/**
  * Checks if two arrays are equal, ignores the order of the elements
  * @param a The first array
  * @param b The second array
  * @returns True if the arrays are equal, false otherwise
  */
-export const arraysEqual = (a: number[] | undefined, b: number[] | undefined) =>
-  compareArrays(
-    [...(a ?? [])].sort((x, y) => x - y),
-    [...(b ?? [])].sort((x, y) => x - y)
+export const arraysEqual = (
+  a: number[] | undefined,
+  b: number[] | undefined
+) => {
+  if (a === undefined && b === undefined) return true;
+  if (a === undefined || b === undefined) return false;
+
+  return compareArrays(
+    [...a].sort((x, y) => x - y),
+    [...b].sort((x, y) => x - y)
   );
+};
