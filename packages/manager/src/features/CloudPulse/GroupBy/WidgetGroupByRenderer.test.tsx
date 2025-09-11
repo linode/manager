@@ -112,7 +112,6 @@ describe('Widget Group By Renderer', () => {
       defaultValue,
     });
 
-    console.log(widgetGroupBy);
     renderWithTheme(component);
 
     const groupByIcon = screen.getByTestId('group-by');
