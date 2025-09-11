@@ -50,9 +50,8 @@ describe('StreamEdit', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     await waitFor(() => {
       assertInputHasValue('Name', 'Data Stream 123');

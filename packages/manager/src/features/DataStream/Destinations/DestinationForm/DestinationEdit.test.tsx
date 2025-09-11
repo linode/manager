@@ -44,9 +44,8 @@ describe('DestinationEdit', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     assertInputHasValue('Destination Type', 'Linode Object Storage');
     await waitFor(() => {

@@ -5,6 +5,7 @@ import type { CloudPulseServiceType } from '@linode/api-v4';
 
 // Transform functions to transform the dimension value
 export const TRANSFORMS: TransformFunctionMap = {
+  original: (value: string) => value,
   capitalize: (value: string) => capitalize(value),
   uppercase: (value: string) => value.toUpperCase(),
   lowercase: (value: string) => value.toLowerCase(),
@@ -28,6 +29,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
   },
   firewall: {
     interface_type: TRANSFORMS.uppercase,
+    linode_id: TRANSFORMS.original,
   },
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,

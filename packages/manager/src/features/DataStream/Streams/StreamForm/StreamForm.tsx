@@ -18,7 +18,7 @@ import { useVerifyDestination } from 'src/features/DataStream/Shared/useVerifyDe
 import { StreamFormDelivery } from 'src/features/DataStream/Streams/StreamForm/Delivery/StreamFormDelivery';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { StreamFormClusters } from './StreamFormClusters';
+import { StreamFormClusters } from './Clusters/StreamFormClusters';
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
 
 import type { FormMode } from 'src/features/DataStream/Shared/types';

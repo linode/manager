@@ -144,7 +144,7 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
           )}
         />
         <PathSample
-          value="text-cloud/logs/audit/02/26/2026" // TODO: Generate sample path value in DPS-33654
+          value="text-cloud/logs/audit/02/26/2026" // TODO: Generate sample path value in DPS-34666
         />
       </Box>
     </>

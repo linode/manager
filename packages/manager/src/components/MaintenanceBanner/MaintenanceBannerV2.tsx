@@ -32,7 +32,11 @@ export const MaintenanceBannerV2 = () => {
 
   return (
     maintenanceLinodes.size > 0 && (
-      <Notice data-testid="maintenance-banner" variant="warning">
+      <Notice
+        data-qa-maintenance-banner-v2="true"
+        data-testid="maintenance-banner"
+        variant="warning"
+      >
         <Typography>
           <strong>
             {pluralize('Linode', 'Linodes', maintenanceLinodes.size)}
