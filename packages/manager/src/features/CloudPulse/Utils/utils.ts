@@ -5,6 +5,7 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { arraysEqual } from '../Alerts/Utils/utils';
 import {
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -19,7 +20,6 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
-import { compareArrays } from './FilterBuilder';
 
 import type {
   Alert,
@@ -131,8 +131,8 @@ export const useContextualAlertsState = (
   // Check if the enabled alerts have changed from the initial state
   const hasUnsavedChanges = React.useMemo(() => {
     return (
-      !compareArrays(enabledAlerts.system ?? [], initialState.system ?? []) ||
-      !compareArrays(enabledAlerts.user ?? [], initialState.user ?? [])
+      !arraysEqual(enabledAlerts.system, initialState.system) ||
+      !arraysEqual(enabledAlerts.user, initialState.user)
     );
   }, [enabledAlerts, initialState]);
 

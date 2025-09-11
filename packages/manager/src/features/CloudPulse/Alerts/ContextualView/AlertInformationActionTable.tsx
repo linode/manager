@@ -13,10 +13,9 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
-import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
+import { useAlertsMutation } from 'src/queries/cloudpulse/useAlertsMutation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { compareArrays } from '../../Utils/FilterBuilder';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
@@ -27,6 +26,7 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
 } from '@linode/api-v4';
+import { arraysEqual } from '../Utils/utils';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -151,7 +151,8 @@ export const AlertInformationActionTable = (
     resetToInitialState,
   } = useContextualAlertsState(alerts, entityId);
 
-  const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
+  // Mutation to update alerts as per service type
+  const { mutateAsync: updateAlerts } = useAlertsMutation(
     serviceType,
     entityId ?? ''
   );
@@ -222,8 +223,8 @@ export const AlertInformationActionTable = (
         }
 
         const hasNewUnsavedChanges =
-          !compareArrays(newPayload.system ?? [], initialState.system ?? []) ||
-          !compareArrays(newPayload.user ?? [], initialState.user ?? []);
+          !arraysEqual(newPayload.system, initialState.system) ||
+          !arraysEqual(newPayload.user, initialState.user);
 
         // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
