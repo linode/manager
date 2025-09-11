@@ -31,15 +31,15 @@ export const ImagesActionMenu = (props: Props) => {
 
   const { onDelete, onDeploy, onEdit, onManageRegions, onRebuild } = handlers;
 
-  const { data: imagePermissions, isLoading } = usePermissions(
-    'image',
-    ['update_image', 'delete_image', 'replicate_image'],
-    id,
-    isOpen
-  );
-  const { data: linodePermissions } = usePermissions('account', [
+  const { data: imagePermissions, isLoading: isImagePermissionsLoading } =
+    usePermissions(
+      'image',
+      ['update_image', 'delete_image', 'replicate_image'],
+      id,
+      isOpen
+    );
+  const { data: linodeAccountPermissions } = usePermissions('account', [
     'create_linode',
-    'rebuild_linode',
   ]);
 
   const actions: Action[] = React.useMemo(() => {
@@ -78,10 +78,10 @@ export const ImagesActionMenu = (props: Props) => {
           ]
         : []),
       {
-        disabled: !linodePermissions.create_linode || isDisabled,
+        disabled: !linodeAccountPermissions.create_linode || isDisabled,
         onClick: () => onDeploy?.(id),
         title: 'Deploy to New Linode',
-        tooltip: !linodePermissions.create_linode
+        tooltip: !linodeAccountPermissions.create_linode
           ? getRestrictedResourceText({
               action: 'create',
               isSingular: false,
@@ -92,18 +92,10 @@ export const ImagesActionMenu = (props: Props) => {
             : undefined,
       },
       {
-        disabled: !linodePermissions.rebuild_linode || isDisabled,
+        disabled: isDisabled,
         onClick: () => onRebuild?.(image),
         title: 'Rebuild an Existing Linode',
-        tooltip: !linodePermissions.rebuild_linode
-          ? getRestrictedResourceText({
-              action: 'rebuild',
-              isSingular: false,
-              resourceType: 'Linodes',
-            })
-          : isDisabled
-            ? 'Image is not yet available for use.'
-            : undefined,
+        tooltip: isDisabled ? 'Image is not yet available for use.' : undefined,
       },
       {
         disabled: !imagePermissions.delete_image,
@@ -128,14 +120,14 @@ export const ImagesActionMenu = (props: Props) => {
     onRebuild,
     onDelete,
     imagePermissions,
-    linodePermissions,
+    linodeAccountPermissions,
   ]);
 
   return (
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Image ${image.label}`}
-      loading={isLoading}
+      loading={isImagePermissionsLoading}
       onOpen={() => {
         setIsOpen(true);
       }}
