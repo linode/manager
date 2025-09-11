@@ -7,8 +7,10 @@ import {
 import { useLinodeUpdateMutation } from '@linode/queries';
 
 import { useServiceAlertsMutation } from './alerts';
+import { queryFactory } from './queries';
 
-import type { LinodeAlerts } from '@linode/api-v4/lib/cloudpulse';
+import type { Alert, LinodeAlerts } from '@linode/api-v4/lib/cloudpulse';
+import type { QueryClient } from '@linode/queries';
 
 /**
  * The alert type overrides for a given service type.
@@ -49,8 +51,8 @@ export const servicePayloadTransformerMap: ServicePayloadTransformerMap = {
  * @param entityId entity id
  * @returns alerts mutation
  */
-export const useAlertsMutation = <T extends CloudPulseServiceType>(
-  serviceType: T,
+export const useAlertsMutation = (
+  serviceType: CloudPulseServiceType,
   entityId: string
 ) => {
   // linode api alerts mutation
@@ -69,4 +71,57 @@ export const useAlertsMutation = <T extends CloudPulseServiceType>(
     default:
       return updateServiceAlerts;
   }
+};
+
+/**
+ * Invalidates the alerts cache
+ * @param qc The query client
+ * @param serviceType The service type
+ * @param entityId The entity id
+ * @param payload The payload
+ */
+export const invalidateAlerts = (
+  qc: QueryClient,
+  serviceType: string,
+  entityId: string | undefined,
+  payload: CloudPulseAlertsPayload
+) => {
+  if (!entityId) return;
+
+  const allAlerts = qc.getQueryData<Alert[]>(
+    queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
+  );
+
+  // Get alerts previously enabled for this entity
+  const oldEnabledAlertIds =
+    allAlerts
+      ?.filter((alert) => alert.entity_ids.includes(entityId))
+      .map((alert) => alert.id) || [];
+
+  // Combine enabled user and system alert IDs from payload
+  const newEnabledAlertIds = [
+    ...(payload.user ?? []),
+    ...(payload.system ?? []),
+  ];
+
+  // Get unique list of all enabled alert IDs for cache invalidation
+  const alertIdsToInvalidate = [...oldEnabledAlertIds, ...newEnabledAlertIds];
+
+  qc.invalidateQueries({
+    queryKey: queryFactory.alerts._ctx.all().queryKey,
+  });
+
+  qc.invalidateQueries({
+    queryKey:
+      queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+  });
+
+  alertIdsToInvalidate.forEach((alertId) => {
+    qc.invalidateQueries({
+      queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+        serviceType,
+        String(alertId)
+      ).queryKey,
+    });
+  });
 };
