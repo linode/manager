@@ -8,7 +8,7 @@ import type {
   MetricDefinition,
 } from '@linode/api-v4';
 
-const defaultOption: GroupByOption = {
+export const defaultOption: GroupByOption = {
   label: 'Entity Id',
   value: 'entity_id',
 };
@@ -32,6 +32,12 @@ interface MetricDimension {
   [metric: string]: Dimension[];
 }
 
+/**
+ *
+ * @param dashboardId The ID of the dashboard being queried
+ * @param serviceType The type of cloud service (e.g., 'linode', 'dbaas')
+ * @returns A GroupByDimension object containing available options, default values, and loading state
+ */
 export const useGlobalDimensions = (
   dashboardId: number | undefined,
   serviceType: CloudPulseServiceType | undefined
@@ -64,7 +70,13 @@ export const useGlobalDimensions = (
   };
 };
 
-const getCommonGroups = (
+/**
+ *
+ * @param groupBy Default group by list from dashboard
+ * @param commonDimensions The available common dimensions across all metrics
+ * @returns An array of GroupByOption objects that exist in both the dashboard config and common dimensions
+ */
+export const getCommonGroups = (
   groupBy: string[],
   commonDimensions: GroupByOption[]
 ): GroupByOption[] => {
@@ -75,12 +87,20 @@ const getCommonGroups = (
   });
 };
 
+/**
+ *
+ * @param dashboardId The ID of the dashboard being queried
+ * @param serviceType The type of cloud service (e.g., 'linode', 'dbaas')
+ * @param globalDimensions - Common dimensions that are already selected at the dashboard level
+ * @param metric - The specific metric for which to retrieve available dimensions
+ * @returns A GroupByDimension object containing available options, default values, and loading state
+ */
 export const useWidgetDimension = (
   dashboardId: number | undefined,
   serviceType: CloudPulseServiceType | undefined,
   globalDimensions: GroupByOption[],
   metric: string | undefined
-) => {
+): GroupByDimension => {
   const { data: dashboard, isLoading: dashboardLoading } =
     useCloudPulseDashboardByIdQuery(dashboardId);
   const { data: metricDefinition, isLoading: metricLoading } =
@@ -121,7 +141,12 @@ export const useWidgetDimension = (
   };
 };
 
-const getMetricDimensions = (
+/**
+ *
+ * @param metricDefinition List of metric definitions, each containing a metric name and its associated dimensions.
+ * @returns transform dimension object with metric as key and dimensions as value
+ */
+export const getMetricDimensions = (
   metricDefinition: MetricDefinition[]
 ): MetricDimension => {
   return metricDefinition.reduce((acc, { metric, dimensions }) => {
@@ -132,7 +157,12 @@ const getMetricDimensions = (
   }, {});
 };
 
-const getCommonDimensions = (
+/**
+ *
+ * @param metricDimensions An object where keys are metric names and values are arrays of dimensions associated with those metrics.
+ * @returns list of common dimensions across all metrics
+ */
+export const getCommonDimensions = (
   metricDimensions: MetricDimension
 ): GroupByOption[] => {
   const metrics = Object.keys(metricDimensions);
@@ -143,7 +173,7 @@ const getCommonDimensions = (
   // Get dimensions from first metric
   const firstMetricDimensions = metricDimensions[metrics[0]];
 
-  // Find dimensions that exist in all metrics
+  // filter dimensions that exist in all metrics
   return firstMetricDimensions
     .filter(({ dimension_label: queried }) => {
       return metrics.every((metric) => {

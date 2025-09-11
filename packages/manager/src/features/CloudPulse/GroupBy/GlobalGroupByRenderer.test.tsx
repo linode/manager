@@ -21,8 +21,8 @@ const mockGroupByOptions: GroupByOption[] = [
   { value: 'option3', label: 'Option 3' },
 ];
 
-vi.mock('./useGroupByDimension', async () => {
-  const actual = await vi.importActual('./useGroupByDimension');
+vi.mock('./utils', async () => {
+  const actual = await vi.importActual('./utils');
 
   return {
     ...actual,

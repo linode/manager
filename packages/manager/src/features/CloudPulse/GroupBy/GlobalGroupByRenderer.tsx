@@ -6,7 +6,7 @@ import GroupByIcon from 'src/assets/icons/group-by.svg';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { CloudPulseGroupByDrawer } from './CloudPulseGroupByDrawer';
 import { GLOBAL_GROUP_BY_MESSAGE } from './constants';
-import { useGlobalDimensions } from './useGroupByDimension';
+import { useGlobalDimensions } from './utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { Dashboard } from '@linode/api-v4';
