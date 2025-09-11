@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - "Something went wrong" error on firewall create ([#12859](https://github.com/linode/manager/pull/12859))
+- Restricted user with account access unable to access billing page on new session ([#12861](https://github.com/linode/manager/pull/12861))
 
 ## [2025-09-09] - v1.150.0
 
