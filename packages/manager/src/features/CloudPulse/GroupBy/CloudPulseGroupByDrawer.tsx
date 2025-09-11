@@ -137,7 +137,7 @@ export const CloudPulseGroupByDrawer = React.memo(
     };
 
     return (
-      <Drawer onClose={(_) => handleClose()} open={true} title={title}>
+      <Drawer onClose={(_) => handleClose()} open={open} title={title}>
         <Stack gap={4}>
           <Typography
             component="p"
