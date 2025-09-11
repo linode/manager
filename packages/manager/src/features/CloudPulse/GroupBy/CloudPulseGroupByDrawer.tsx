@@ -119,7 +119,7 @@ export const CloudPulseGroupByDrawer = React.memo(
         selectedValue.length >= GROUP_BY_SELECTION_LIMIT && !isSelected;
       const isHidden =
         isSelectAllORDeselectAllOption &&
-        options.length > groupBySelectionLimit;
+        options.length > GROUP_BY_SELECTION_LIMIT;
 
       if (isHidden) {
         return <NullComponent />;
@@ -156,7 +156,7 @@ export const CloudPulseGroupByDrawer = React.memo(
             data-testid="dimension-select"
             helperText={
               options.length > 3
-                ? `You can select up to ${groupBySelectionLimit} dimensions.`
+                ? `You can select up to ${GROUP_BY_SELECTION_LIMIT} dimensions.`
                 : undefined
             }
             isOptionEqualToValue={(option, value) =>
