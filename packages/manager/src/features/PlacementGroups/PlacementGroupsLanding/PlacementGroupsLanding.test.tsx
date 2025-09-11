@@ -34,7 +34,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByRole } = renderWithTheme(<PlacementGroupsLanding />, {
-      initialRoute: '/placement-groups',
+      initialRoute: '/placement-groups/',
     });
 
     expect(getByRole('progressbar')).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
-      initialRoute: '/placement-groups',
+      initialRoute: '/placement-groups/',
     });
 
     expect(getByText(/not found/i)).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
-      initialRoute: '/placement-groups',
+      initialRoute: '/placement-groups/',
     });
 
     expect(getByText(/create placement group/i)).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
-      initialRoute: '/placement-groups',
+      initialRoute: '/placement-groups/',
     });
 
     expect(getByText(/group 1/i)).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
-      initialRoute: '/placement-groups',
+      initialRoute: '/placement-groups/',
     });
 
     expect(getByText(headers.description)).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
-      initialRoute: '/placement-groups',
+      initialRoute: '/placement-groups/',
     });
 
     expect(getByText('Getting Started Guides')).toBeInTheDocument();

@@ -10,6 +10,7 @@ import {
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 
+import { SplashScreen } from './components/SplashScreen';
 import { router } from './routes';
 
 export const App = withDocumentTitleProvider(
@@ -26,7 +27,7 @@ export const App = withDocumentTitleProvider(
     }, [ldClient]);
 
     if (isLoadingFlags) {
-      return <p>loading feature flags</p>
+      return <SplashScreen />;
     }
 
     return (
