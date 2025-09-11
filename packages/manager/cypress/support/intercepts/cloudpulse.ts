@@ -130,12 +130,32 @@ export const mockGetCloudPulseDashboards = (
  */
 export const mockCreateCloudPulseMetrics = (
   serviceType: string,
-  mockResponse: CloudPulseMetricsResponse
+  mockResponse: CloudPulseMetricsResponse,
+  overrideMetric?: Record<string, string> // full metric object override
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
     `**/monitor/services/${serviceType}/metrics`,
-    makeResponse(mockResponse)
+    (req) => {
+      const requestedMetric: string =
+        req.body?.metrics?.[0]?.name ?? 'unknown_metric';
+
+      const response: CloudPulseMetricsResponse = {
+        ...mockResponse,
+        data: {
+          ...mockResponse.data,
+          result: (mockResponse.data?.result ?? []).map((r) => ({
+            ...r,
+            metric: {
+              ...(overrideMetric ?? {}),
+              metric_name: requestedMetric, // always ensure metric_name is set
+            },
+          })),
+        },
+      };
+
+      req.reply({ statusCode: 200, body: response });
+    }
   );
 };
 
