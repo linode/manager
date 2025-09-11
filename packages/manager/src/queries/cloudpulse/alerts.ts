@@ -14,9 +14,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { invalidateAlerts } from 'src/features/CloudPulse/Alerts/Utils/utils';
-
 import { queryFactory } from './queries';
+import { invalidateAlerts } from './useAlertsMutation';
 
 import type {
   Alert,
@@ -28,7 +27,6 @@ import type {
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-
 
 export const useCreateAlertDefinition = (serviceType: string) => {
   const queryClient = useQueryClient();

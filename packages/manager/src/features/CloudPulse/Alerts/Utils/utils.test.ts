@@ -451,7 +451,7 @@ describe('arraysEqual', () => {
     expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
   });
   it('should return false when arrays are not equal', () => {
-    expect(arraysEqual([1, 2, 3], [1, 2, 4])).toBe(false);
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
   });
   it('should return true when arrays have same elements but in different order', () => {
     expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);

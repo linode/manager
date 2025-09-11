@@ -6,7 +6,6 @@ import {
 } from '@linode/api-v4';
 import { useLinodeUpdateMutation } from '@linode/queries';
 
-import { useServiceAlertsMutation } from './alerts';
 import { queryFactory } from './queries';
 
 import type { Alert, LinodeAlerts } from '@linode/api-v4/lib/cloudpulse';
@@ -59,17 +58,18 @@ export const useAlertsMutation = (
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     Number(entityId)
   );
-  // cloudpulse api alerts mutation
-  const { mutateAsync: updateServiceAlerts } = useServiceAlertsMutation(
-    serviceType,
-    entityId
-  );
+  // cloudpulse api alerts mutation to be used when service requests update through aclp api
+  // const { mutateAsync: updateServiceAlerts } = useServiceAlertsMutation(
+  //   serviceType,
+  //   entityId
+  // );
 
   switch (serviceType) {
     case 'linode':
       return updateLinode;
     default:
-      return updateServiceAlerts;
+      return (_payload: CloudPulseAlertsPayload) =>
+        Promise.reject(new Error('Error encountered'));
   }
 };
 
@@ -81,14 +81,14 @@ export const useAlertsMutation = (
  * @param payload The payload
  */
 export const invalidateAlerts = (
-  qc: QueryClient,
+  queryClient: QueryClient,
   serviceType: string,
   entityId: string | undefined,
   payload: CloudPulseAlertsPayload
 ) => {
   if (!entityId) return;
 
-  const allAlerts = qc.getQueryData<Alert[]>(
+  const allAlerts = queryClient.getQueryData<Alert[]>(
     queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
   );
 
@@ -107,17 +107,17 @@ export const invalidateAlerts = (
   // Get unique list of all enabled alert IDs for cache invalidation
   const alertIdsToInvalidate = [...oldEnabledAlertIds, ...newEnabledAlertIds];
 
-  qc.invalidateQueries({
+  queryClient.invalidateQueries({
     queryKey: queryFactory.alerts._ctx.all().queryKey,
   });
 
-  qc.invalidateQueries({
+  queryClient.invalidateQueries({
     queryKey:
       queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
   });
 
   alertIdsToInvalidate.forEach((alertId) => {
-    qc.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
         serviceType,
         String(alertId)
