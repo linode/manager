@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   useWidgetDimension: vi.fn(),
 }));
 
-vi.mock('./useGroupByDimension', () => {
+vi.mock('./utils', () => {
   return {
     ...mocks,
   };
