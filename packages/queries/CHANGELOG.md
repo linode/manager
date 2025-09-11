@@ -1,3 +1,9 @@
+## [2025-09-11] - v0.13.1
+
+### Fixed:
+
+- Restricted user with account access unable to access billing page on new session ([#12861](https://github.com/linode/manager/pull/12861))
+
 ## [2025-09-09] - v0.13.0
 
 ### Upcoming Features:
