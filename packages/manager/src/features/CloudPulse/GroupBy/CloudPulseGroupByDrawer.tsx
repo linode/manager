@@ -142,14 +142,11 @@ export const CloudPulseGroupByDrawer = React.memo(
           <Typography
             component="p"
             sx={(theme) => ({ marginTop: -1, font: theme.font.normal })}
-            variant="h2"
+            variant="h3"
           >
             {subtitle}
           </Typography>
-          <Typography
-            sx={(theme) => ({ font: theme.font.normal })}
-            variant="h2"
-          >
+          <Typography sx={(theme) => ({ font: theme.font.normal })}>
             {message}
           </Typography>
           <Autocomplete
