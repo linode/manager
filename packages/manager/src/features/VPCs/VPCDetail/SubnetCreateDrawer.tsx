@@ -82,9 +82,11 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const ipv4 = watch('ipv4');
   const numberOfAvailableIPv4IPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
-  const numberOfAvailableIPv4Linodes = numberOfAvailableIPv4IPs
-    ? numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
-    : 0;
+
+  const numberOfAvailableIPv4Linodes =
+    numberOfAvailableIPv4IPs && numberOfAvailableIPv4IPs > 4
+      ? numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
+      : 0;
 
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {

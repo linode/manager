@@ -455,22 +455,22 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       cy.get('[data-qa-item="Polling Interval"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should('have.text', '10 minutes');
+        .should('have.text', '10 min');
 
       // Validating contents of Evaluation Periods
       cy.get('[data-qa-item="Evaluation Period"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should('have.text', '5 minutes');
+        .should('have.text', '5 min');
 
       // Validating contents of Trigger Alert
       cy.get('[data-qa-chip="All"]')
         .should('be.visible')
         .should('have.text', 'All');
 
-      cy.get('[data-qa-chip="5 minutes"]')
+      cy.get('[data-qa-chip="5 min"]')
         .should('be.visible')
-        .should('have.text', '5 minutes');
+        .should('have.text', '5 min');
 
       cy.get('[data-qa-item="criteria are met for"]')
         .should('be.visible')

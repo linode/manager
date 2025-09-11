@@ -59,6 +59,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regions ?? [],
@@ -66,10 +67,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   );
 
   // TODO: Update to check share_ips, assign_ips, update_ip_rdns, and allocate_linode_ip_address permissions once available
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
     'linode',
     ['update_linode'],
-    linodeID
+    linodeID,
+    isOpen
   );
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
@@ -212,6 +214,8 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               },
             ]}
             ariaLabel="Linode IP Address Actions"
+            loading={isPermissionsLoading}
+            onOpen={() => setIsOpen(true)}
           />
         ) : (
           <Stack direction="row" spacing={1}>
