@@ -236,6 +236,11 @@ export const DatabaseBackups = () => {
                     : undefined
                 }
                 format="HH:mm:ss"
+                key={
+                  versionOption === 'dateTime'
+                    ? 'time-picker-active'
+                    : 'time-picker-disabled'
+                }
                 label=""
                 maxTime={configureMaxTime()}
                 minTime={configureMinTime()}
