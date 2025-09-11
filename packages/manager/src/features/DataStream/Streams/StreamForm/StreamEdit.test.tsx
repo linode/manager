@@ -4,7 +4,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import React from 'react';
-import { describe } from 'vitest';
+import { describe, expect } from 'vitest';
 
 import { destinationFactory, streamFactory } from 'src/factories/datastream';
 import { StreamEdit } from 'src/features/DataStream/Streams/StreamForm/StreamEdit';
@@ -49,9 +49,8 @@ describe('StreamEdit', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     await waitFor(() => {
       assertInputHasValue('Name', 'Data Stream 123');

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
+import MonitorIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import {
@@ -38,7 +38,7 @@ export const DestinationsLandingEmptyState = (
         ]}
         gettingStartedGuidesData={gettingStartedGuides}
         headers={headers}
-        icon={ComputeIcon}
+        icon={MonitorIcon}
         linkAnalyticsEvent={linkAnalyticsEvent}
       />
     </>

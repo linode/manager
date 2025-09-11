@@ -2,7 +2,7 @@ import { destinationType } from '@linode/api-v4';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { beforeEach, describe } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { destinationFactory } from 'src/factories/datastream';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -37,9 +37,8 @@ describe('StreamFormDelivery', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     const destinationTypeAutocomplete =
       screen.getByLabelText('Destination Type');
@@ -62,9 +61,8 @@ describe('StreamFormDelivery', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     const destinationNameAutocomplete =
       screen.getByLabelText('Destination Name');
@@ -93,9 +91,8 @@ describe('StreamFormDelivery', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
 
     const destinationNameAutocomplete =
       screen.getByLabelText('Destination Name');
