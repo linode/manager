@@ -7,7 +7,6 @@ import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 const sxTooltipIcon = {
   marginLeft: '4px',
@@ -27,25 +26,28 @@ interface PathSampleProps {
 export const PathSample = (props: PathSampleProps) => {
   const { value } = props;
   const fileName = 'akamai_log-000166-1756015362-319597.gz';
-  const { control } = useFormContext();
+  const sampleClusterId = useMemo(
+    // eslint-disable-next-line sonarjs/pseudo-random
+    () => Math.floor(Math.random() * 90000) + 10000,
+    []
+  );
 
+  const { control } = useFormContext();
   const streamTypeFormValue = useWatch({
     control,
     name: 'stream.type',
   });
-  const { data: profile } = useProfile();
-  const { data: clusters } = useKubernetesClustersQuery({
-    filter: {},
-    isUsingBetaEndpoint: true,
-    params: {
-      page: 1,
-      page_size: 1,
-    },
+
+  const clusterId = useWatch({
+    control,
+    name: 'stream.details.cluster_ids[0]',
   });
+
+  const { data: profile } = useProfile();
   const [month, day, year] = new Date().toLocaleDateString().split('/');
 
   const setStreamType = (): StreamType => {
-    return streamTypeFormValue ?? streamType.LKEAuditLogs;
+    return streamTypeFormValue ?? streamType.AuditLogs;
   };
 
   const streamTypeValue = useMemo(setStreamType, [streamTypeFormValue]);
@@ -54,15 +56,16 @@ export const PathSample = (props: PathSampleProps) => {
     let partition = '';
 
     if (streamTypeValue === streamType.LKEAuditLogs) {
-      partition = `${clusters?.data[0].id ?? ''}/`;
+      partition = `${clusterId ?? sampleClusterId}/`;
     }
+
     return `/${streamTypeValue}/${logType[streamTypeValue]}/${profile?.uid}/${partition}${year}/${month}/${day}`;
   };
 
   const defaultPath = useMemo(createSamplePath, [
     profile,
-    clusters,
     streamTypeValue,
+    clusterId,
   ]);
 
   return (
