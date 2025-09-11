@@ -137,7 +137,7 @@ export const CloudPulseGroupByDrawer = React.memo(
     };
 
     return (
-      <Drawer onClose={(_) => handleClose()} open={open} title={title}>
+      <Drawer onClose={(_) => handleClose()} open={true} title={title}>
         <Stack gap={4}>
           <Typography
             component="p"
@@ -146,9 +146,7 @@ export const CloudPulseGroupByDrawer = React.memo(
           >
             {subtitle}
           </Typography>
-          <Typography sx={(theme) => ({ font: theme.font.normal })}>
-            {message}
-          </Typography>
+          <Typography>{message}</Typography>
           <Autocomplete
             data-testid="dimension-select"
             helperText={
