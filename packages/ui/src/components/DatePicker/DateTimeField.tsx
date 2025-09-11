@@ -13,7 +13,7 @@ import type { DateTimeFieldProps as MUIDateTimeFieldProps } from '@mui/x-date-pi
 import type { DateTime } from 'luxon';
 
 interface DateTimeFieldProps
-  extends Omit<MUIDateTimeFieldProps<DateTime>, 'onChange' | 'value'> {
+  extends Omit<MUIDateTimeFieldProps, 'onChange' | 'value'> {
   errorText?: string;
   format?:
     | 'dd-MM-yyyy HH:mm'
