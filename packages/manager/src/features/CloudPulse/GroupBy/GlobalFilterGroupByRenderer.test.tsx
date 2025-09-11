@@ -4,7 +4,7 @@ import React from 'react';
 import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { GlobalGroupByRenderer } from './GlobalGroupByRenderer';
+import { GlobalFilterGroupByRenderer } from './GlobalFilterGroupByRenderer';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 
@@ -38,7 +38,7 @@ describe('Global Group By Renderer Component', () => {
       defaultValue: [],
     });
     renderWithTheme(
-      <GlobalGroupByRenderer
+      <GlobalFilterGroupByRenderer
         handleChange={handleChange}
         selectedDashboard={undefined}
       />
@@ -55,7 +55,7 @@ describe('Global Group By Renderer Component', () => {
       defaultValue: [],
     });
     renderWithTheme(
-      <GlobalGroupByRenderer
+      <GlobalFilterGroupByRenderer
         handleChange={handleChange}
         selectedDashboard={dashboard}
       />
@@ -72,7 +72,7 @@ describe('Global Group By Renderer Component', () => {
       defaultValue: [],
     });
     renderWithTheme(
-      <GlobalGroupByRenderer
+      <GlobalFilterGroupByRenderer
         handleChange={handleChange}
         selectedDashboard={dashboard}
       />
@@ -96,7 +96,7 @@ describe('Global Group By Renderer Component', () => {
       defaultValue: [],
     });
     renderWithTheme(
-      <GlobalGroupByRenderer
+      <GlobalFilterGroupByRenderer
         handleChange={handleChange}
         selectedDashboard={dashboard}
       />
@@ -118,7 +118,7 @@ describe('Global Group By Renderer Component', () => {
       defaultValue,
     });
     renderWithTheme(
-      <GlobalGroupByRenderer
+      <GlobalFilterGroupByRenderer
         handleChange={handleChange}
         selectedDashboard={dashboard}
       />
