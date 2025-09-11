@@ -632,6 +632,7 @@ export const arraysEqual = (
 ) => {
   if (a === undefined && b === undefined) return true;
   if (a === undefined || b === undefined) return false;
+  if (a.length !== b.length) return false;
 
   return compareArrays(
     [...a].sort((x, y) => x - y),
