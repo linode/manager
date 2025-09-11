@@ -15,14 +15,17 @@ const CustomTabs = () => {
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Tab 1',
+      // @ts-expect-error now sure how this wasn't erroring before
       to: '/tab-1',
     },
     {
       title: 'Tab 2',
+      // @ts-expect-error now sure how this wasn't erroring before
       to: '/tab-2',
     },
     {
       title: 'Tab 3',
+      // @ts-expect-error now sure how this wasn't erroring before
       to: '/tab-3',
     },
   ]);
