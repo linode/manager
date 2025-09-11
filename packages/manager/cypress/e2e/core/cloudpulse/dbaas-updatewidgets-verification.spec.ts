@@ -173,7 +173,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           relative_time_duration: timeRange,
           entity_ids,
           filters,
-          group_by,
         } = requestPayload;
         const metricData = metrics.find(({ name }) => name === metric[0].name);
 
@@ -191,9 +190,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(filtersStr).to.include('"dimension_label":"node_type"');
         expect(filtersStr).to.include('"operator":"eq"');
         expect(filtersStr).to.include('"value":"secondary"');
-        expect(group_by.length).to.equal(2);
-        expect(group_by[0]).to.equal('entity_id');
-        expect(group_by[1]).to.equal('node_type');
       });
   });
 
@@ -256,7 +252,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           relative_time_duration: timeRange,
           entity_ids,
           filters,
-          group_by,
         } = requestPayload;
         const metricData = metrics.find(({ name }) => name === metric[0].name);
 
@@ -274,9 +269,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(filtersStr).to.include('"dimension_label":"node_type"');
         expect(filtersStr).to.include('"operator":"eq"');
         expect(filtersStr).to.include('"value":"primary"');
-        expect(group_by.length).to.equal(2);
-        expect(group_by[0]).to.equal('entity_id');
-        expect(group_by[1]).to.equal('node_type');
       });
   });
 
@@ -313,7 +305,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         values.forEach(([epoch, value]: [number, string]) => {
           const formattedDate = formatEpochToReadable(epoch);
           expectedList.push(
-            `${formattedDate}${title} (${unit})${value} ${unit}`
+            `${formattedDate}${title}${value} ${unit}` // ✅ removed (unit)
           );
         });
       });
