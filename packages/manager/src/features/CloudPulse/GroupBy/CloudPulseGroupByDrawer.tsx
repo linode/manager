@@ -111,14 +111,15 @@ export const CloudPulseGroupByDrawer = React.memo(
       option: GroupByOption
     ) => {
       const { key, ...rest } = props;
-      const isSelectAllORDeslectAllOption =
+      const isSelectAllORDeselectAllOption =
         option.label === 'Select All ' || option.label === 'Deselect All ';
       const isSelected = props['aria-selected'] === true;
-      const ListItem = isSelectAllORDeslectAllOption ? StyledListItem : 'li';
+      const ListItem = isSelectAllORDeselectAllOption ? StyledListItem : 'li';
       const isDisabled =
         selectedValue.length >= groupBySelectionLimit && !isSelected;
       const isHidden =
-        isSelectAllORDeslectAllOption && options.length > groupBySelectionLimit;
+        isSelectAllORDeselectAllOption &&
+        options.length > groupBySelectionLimit;
 
       if (isHidden) {
         return <NullComponent />;
@@ -127,7 +128,7 @@ export const CloudPulseGroupByDrawer = React.memo(
         <ListItem
           key={key}
           {...rest}
-          aria-disabled={!isSelectAllORDeslectAllOption && isDisabled}
+          aria-disabled={!isSelectAllORDeselectAllOption && isDisabled}
         >
           <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
           <SelectedIcon visible={isSelected} />
@@ -155,7 +156,7 @@ export const CloudPulseGroupByDrawer = React.memo(
             data-testid="dimension-select"
             helperText={
               options.length > 3
-                ? `You can select upto ${groupBySelectionLimit} dimensions.`
+                ? `You can select up to ${groupBySelectionLimit} dimensions.`
                 : undefined
             }
             isOptionEqualToValue={(option, value) =>
