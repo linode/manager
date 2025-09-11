@@ -11,7 +11,6 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
-import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -29,13 +28,12 @@ export const BillingDetail = () => {
     error: paymentMethodsError,
     isLoading: paymentMethodsLoading,
   } = useAllPaymentMethodsQuery(permissions?.list_billing_payments ?? false);
-  const { isIAMEnabled } = useIsIAMEnabled();
 
   const {
     data: account,
     error: accountError,
     isLoading: accountLoading,
-  } = useAccount(!isIAMEnabled);
+  } = useAccount();
 
   const { data: profile } = useProfile();
 
