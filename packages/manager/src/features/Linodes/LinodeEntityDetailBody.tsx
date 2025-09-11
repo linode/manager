@@ -138,13 +138,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
+  const { isAPLAvailabilityLoading } = useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
     enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
     id: linodeLkeClusterId ?? -1,
-    isUsingBetaEndpoint,
   });
 
   return (
