@@ -84,6 +84,7 @@ describe('NodeBalancerConfigNode', () => {
     const { getByLabelText, queryByText } = renderWithTheme(
       <NodeBalancerConfigNode
         {...props}
+        forEdit={true}
         permissions={{
           create_nodebalancer_config: true,
           delete_nodebalancer: true,
@@ -105,6 +106,7 @@ describe('NodeBalancerConfigNode', () => {
     const { getByLabelText, queryByText } = renderWithTheme(
       <NodeBalancerConfigNode
         {...props}
+        forEdit={true}
         permissions={{
           create_nodebalancer_config: false,
           delete_nodebalancer: false,

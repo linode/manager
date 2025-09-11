@@ -25,6 +25,7 @@ import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 export interface NodeBalancerConfigNodeProps {
   configIdx: number;
   disallowRemoval: boolean;
+  forEdit?: boolean;
   hideModeSelect: boolean;
   idx: number;
   node: NodeBalancerConfigNodeFields;
@@ -78,6 +79,7 @@ export const NodeBalancerConfigNode = React.memo(
       onNodePortChange,
       onNodeWeightChange,
       removeNode,
+      forEdit,
     } = props;
 
     if (node.modifyStatus === 'delete') {
@@ -90,9 +92,9 @@ export const NodeBalancerConfigNode = React.memo(
       node.errors
     );
 
-    const disabled =
-      permissions?.update_nodebalancer === false ||
-      permissions?.create_nodebalancer === false;
+    const disabled = forEdit
+      ? !permissions?.update_nodebalancer
+      : !permissions?.create_nodebalancer;
 
     return (
       <React.Fragment>
@@ -240,8 +242,9 @@ export const NodeBalancerConfigNode = React.memo(
               <Box alignSelf="flex-end">
                 <Button
                   disabled={
-                    permissions?.delete_nodebalancer === false ||
-                    permissions?.create_nodebalancer === false
+                    forEdit
+                      ? !permissions?.delete_nodebalancer
+                      : !permissions?.create_nodebalancer
                   }
                   onClick={() => removeNode(idx)}
                 >
