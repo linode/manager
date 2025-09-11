@@ -1,5 +1,6 @@
 import '@reach/tabs/styles.css';
 import { RouterProvider } from '@tanstack/react-router';
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 
 import {
@@ -13,6 +14,21 @@ import { router } from './routes';
 
 export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
+    const [isLoadingFlags, setIsLoadingFlags] = React.useState(true);
+    const ldClient = useLDClient();
+
+    React.useEffect(() => {
+      if (ldClient) {
+        ldClient
+          .waitForInitialization(5)
+          .finally(() => setIsLoadingFlags(false));
+      }
+    }, [ldClient]);
+
+    if (isLoadingFlags) {
+      return <p>loading feature flags</p>
+    }
+
     return (
       <ErrorBoundaryFallback>
         {/** Accessibility helper */}
@@ -27,7 +43,10 @@ export const App = withDocumentTitleProvider(
           </span>
         </div>
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
-        <RouterProvider router={router} />
+        <RouterProvider
+          context={{ flags: ldClient?.allFlags() }}
+          router={router}
+        />
       </ErrorBoundaryFallback>
     );
   })
