@@ -52,9 +52,8 @@ describe('Streams Landing Table', () => {
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    expect(loadingElement).toBeInTheDocument();
+    await waitForElementToBeRemoved(loadingElement);
   };
 
   beforeEach(() => {

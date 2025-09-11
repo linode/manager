@@ -8,7 +8,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { StreamFormSubmitBar } from 'src/features/DataStream/Streams/StreamForm/CheckoutBar/StreamFormSubmitBar';
 import { StreamFormDelivery } from 'src/features/DataStream/Streams/StreamForm/Delivery/StreamFormDelivery';
 
-import { StreamFormClusters } from './StreamFormClusters';
+import { StreamFormClusters } from './Clusters/StreamFormClusters';
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
 
 import type { FormMode } from 'src/features/DataStream/Shared/types';

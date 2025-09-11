@@ -43,7 +43,10 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
 
 export const kubernetesClusterFactory =
   Factory.Sync.makeFactory<KubernetesCluster>({
-    control_plane: { high_availability: true },
+    control_plane: {
+      audit_logs_enabled: true,
+      high_availability: true,
+    },
     created: '2020-04-08T16:58:21',
     id: Factory.each((id) => id),
     k8s_version: '1.21',
