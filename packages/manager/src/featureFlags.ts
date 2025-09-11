@@ -102,7 +102,6 @@ export interface CloudPulseResourceTypeMapFlag {
 
 interface GpuV2 {
   egressBanner: boolean;
-  planDivider: boolean;
   transferBanner: boolean;
 }
 
@@ -144,6 +143,7 @@ export interface Flags {
   apl: boolean;
   aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
+  blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
@@ -161,6 +161,7 @@ export interface Flags {
   iam: BetaFeatureFlag;
   iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
+  kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
