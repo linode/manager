@@ -88,13 +88,15 @@ export const StreamForm = (props: StreamFormProps) => {
         );
         form.setValue('stream.destinations', [id]);
       } catch (error) {
-        enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            'There was an issue creating your destination'
-          )[0].reason,
-          { variant: 'error' }
-        );
+        const { field, reason } = getAPIErrorOrDefault(
+          error,
+          'There was an issue creating your destination'
+        )[0];
+
+        const message = field ? `${field}: ${reason}` : reason;
+        enqueueSnackbar(message, {
+          variant: 'error',
+        });
         return;
       }
     }
@@ -128,13 +130,15 @@ export const StreamForm = (props: StreamFormProps) => {
 
       navigate({ to: '/datastream/streams' });
     } catch (error) {
-      enqueueSnackbar(
-        getAPIErrorOrDefault(
-          error,
-          `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`
-        )[0].reason,
-        { variant: 'error' }
-      );
+      const { field, reason } = getAPIErrorOrDefault(
+        error,
+        `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`
+      )[0];
+
+      const message = field ? `${field}: ${reason}` : reason;
+      enqueueSnackbar(message, {
+        variant: 'error',
+      });
     }
   };
 
