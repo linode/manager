@@ -63,9 +63,10 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     (cellName: string) =>
       plans?.some((plan) => {
         const showTooltipForGPUPlans =
-          flags.gpuv2?.transferBanner &&
-          plan.class === 'gpu' &&
-          filterOptions?.header?.includes('Ada');
+          (flags.gpuv2?.transferBanner &&
+            plan.class === 'gpu' &&
+            filterOptions?.header?.includes('Ada')) ||
+          filterOptions?.header?.includes('Blackwell');
         return (
           (showTooltipForGPUPlans || plan.class === 'accelerated') &&
           cellName === 'Transfer'
