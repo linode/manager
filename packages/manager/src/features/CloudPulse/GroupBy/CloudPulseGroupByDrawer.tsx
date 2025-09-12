@@ -111,14 +111,14 @@ export const CloudPulseGroupByDrawer = React.memo(
       option: GroupByOption
     ) => {
       const { key, ...rest } = props;
-      const isSelectAllORDeslectAllOption =
+      const isSelectAllORDeselectAllOption =
         option.label === 'Select All ' || option.label === 'Deselect All ';
       const isSelected = props['aria-selected'] === true;
-      const ListItem = isSelectAllORDeslectAllOption ? StyledListItem : 'li';
+      const ListItem = isSelectAllORDeselectAllOption ? StyledListItem : 'li';
       const isDisabled =
         selectedValue.length >= GROUP_BY_SELECTION_LIMIT && !isSelected;
       const isHidden =
-        isSelectAllORDeslectAllOption &&
+        isSelectAllORDeselectAllOption &&
         options.length > GROUP_BY_SELECTION_LIMIT;
 
       if (isHidden) {
@@ -128,7 +128,7 @@ export const CloudPulseGroupByDrawer = React.memo(
         <ListItem
           key={key}
           {...rest}
-          aria-disabled={!isSelectAllORDeslectAllOption && isDisabled}
+          aria-disabled={!isSelectAllORDeselectAllOption && isDisabled}
         >
           <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
           <SelectedIcon visible={isSelected} />
@@ -142,21 +142,16 @@ export const CloudPulseGroupByDrawer = React.memo(
           <Typography
             component="p"
             sx={(theme) => ({ marginTop: -1, font: theme.font.normal })}
-            variant="h2"
+            variant="h3"
           >
             {subtitle}
           </Typography>
-          <Typography
-            sx={(theme) => ({ font: theme.font.normal })}
-            variant="h2"
-          >
-            {message}
-          </Typography>
+          <Typography>{message}</Typography>
           <Autocomplete
             data-testid="dimension-select"
             helperText={
               options.length > 3
-                ? `You can select upto ${GROUP_BY_SELECTION_LIMIT} dimensions.`
+                ? `You can select up to ${GROUP_BY_SELECTION_LIMIT} dimensions.`
                 : undefined
             }
             isOptionEqualToValue={(option, value) =>
