@@ -90,7 +90,7 @@ export const getUserAccountPermissions = (username: string) =>
 export const getUserEntityPermissions = (
   username: string,
   entityType: AccessType,
-  entityId: number,
+  entityId: number | string,
 ) =>
   Request<PermissionType[]>(
     setURL(

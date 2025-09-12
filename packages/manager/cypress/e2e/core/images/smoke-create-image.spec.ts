@@ -149,7 +149,9 @@ describe('create image (using mocks)', () => {
       }),
     ];
 
-    const mockLinode = linodeFactory.build();
+    const mockLinode = linodeFactory.build({
+      id: 123,
+    });
 
     mockGetProfile(mockProfile);
     mockGetProfileGrants(mockGrants);
