@@ -71,7 +71,7 @@ const mockRegion = regionFactory.build({
 });
 
 const extendedMockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
+  capabilities: ['Managed Databases', 'Cloud Firewall'],
   id: 'us-east',
   label: 'Newark,NL',
 });
@@ -359,6 +359,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
+    mockGetDatabases([]).as('getDatabases');
 
     cy.visitWithLogin('metrics');
     ui.autocomplete
@@ -428,14 +429,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .and('have.text', NO_REGION_MESSAGE[serviceType]);
   });
 
-  it('should show a region-unavailable message for nodeblancer when no linodes are available', () => {
+  it('should show a region-unavailable message for nodeblancer when no nodeblancers are available', () => {
     const { dashboardName, id, resource, serviceType } =
       widgetDetails.nodebalancer;
-    const mockLinode = linodeFactory.build({
-      id: 3,
-      label: resource,
-      region: 'us-east',
-    });
     const mockNodeBalancer = nodeBalancerFactory.build({
       label: resource,
       region: 'us-east',
@@ -461,7 +457,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseDashboard(id, dashboard);
 
     mockGetRegions([mockRegion]);
-    mockGetLinodes([mockLinode]);
     mockGetNodeBalancers([mockNodeBalancer]);
     mockGetUserPreferences({});
     cy.visitWithLogin('metrics');
@@ -482,7 +477,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .and('have.text', NO_REGION_MESSAGE[serviceType]);
   });
 
-  it('should show a region-unavailable message for firewall when no linodes are available', () => {
+  it('should show a region-unavailable message for firewall when no linodes-region are available', () => {
     const { dashboardName, id, serviceType, firewalls } =
       widgetDetails.firewall;
 

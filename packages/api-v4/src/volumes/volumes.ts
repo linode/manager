@@ -152,7 +152,7 @@ export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) =>
   );
 
 export interface UpdateVolumeRequest {
-  label: string;
+  label?: string;
   tags?: string[];
 }
 

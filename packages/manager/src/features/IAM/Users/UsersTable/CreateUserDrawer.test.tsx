@@ -116,11 +116,11 @@ describe('CreateUserDrawer - Username Validation', () => {
   });
 
   it('should display error for username with spaces', async () => {
-    await testUsernameValidation('test user', userNameErrors.charsError);
+    await testUsernameValidation('test user', userNameErrors.spacesError);
   });
 
   it('should display error for username with tabs', async () => {
-    await testUsernameValidation('test\tuser', userNameErrors.charsError);
+    await testUsernameValidation('test\tuser', userNameErrors.spacesError);
   });
 
   it('should display error for username with special characters', async () => {
@@ -128,7 +128,7 @@ describe('CreateUserDrawer - Username Validation', () => {
   });
 
   it('should display error for non-ASCII characters', async () => {
-    await testUsernameValidation('tëstuser', userNameErrors.charsError);
+    await testUsernameValidation('tëstuser', userNameErrors.nonAsciiError);
   });
 
   describe('Valid usernames', () => {

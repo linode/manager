@@ -361,14 +361,21 @@ const DiskEncryptionSchema = string()
   .notRequired();
 
 export const alertsSchema = object({
+  // Legacy numeric-threshold alerts. All fields are now optional so that the
+  // same schema can validate partial updates.
   cpu: number()
-    .required('CPU Usage is required.')
     .min(0, 'Must be between 0 and 4800')
-    .max(4800, 'Must be between 0 and 4800'),
-  network_in: number().required('Incoming Traffic is required.'),
-  network_out: number().required('Outbound Traffic is required.'),
-  transfer_quota: number().required('Transfer Quota is required.'),
-  io: number().required('Disk I/O Rate is required.'),
+    .max(4800, 'Must be between 0 and 4800')
+    .notRequired(),
+  network_in: number().notRequired(),
+  network_out: number().notRequired(),
+  transfer_quota: number().notRequired(),
+  io: number().notRequired(),
+
+  // ACLP alerts ‑ arrays of alert-definition IDs. Optional so the same payload
+  // can mix legacy and ACLP shapes when only one set is present.
+  system_alerts: array().of(number().defined()).notRequired(),
+  user_alerts: array().of(number().defined()).notRequired(),
 });
 
 const schedule = object({
@@ -457,17 +464,75 @@ export const CreateSnapshotSchema = object({
 const device = object({
   disk_id: number().nullable(),
   volume_id: number().nullable(),
-}).nullable();
+})
+  .nullable()
+  .notRequired();
 
 const devices = object({
   sda: device,
+  sdaa: device,
+  sdab: device,
+  sdac: device,
+  sdad: device,
+  sdae: device,
+  sdaf: device,
+  sdag: device,
+  sdah: device,
+  sdai: device,
+  sdaj: device,
+  sdak: device,
+  sdal: device,
+  sdam: device,
+  sdan: device,
+  sdao: device,
+  sdap: device,
+  sdaq: device,
+  sdar: device,
+  sdas: device,
+  sdat: device,
+  sdau: device,
+  sdav: device,
+  sdaw: device,
+  sdax: device,
+  sday: device,
+  sdaz: device,
   sdb: device,
+  sdba: device,
+  sdbb: device,
+  sdbc: device,
+  sdbd: device,
+  sdbe: device,
+  sdbf: device,
+  sdbg: device,
+  sdbh: device,
+  sdbi: device,
+  sdbj: device,
+  sdbk: device,
+  sdbl: device,
   sdc: device,
   sdd: device,
   sde: device,
   sdf: device,
   sdg: device,
   sdh: device,
+  sdi: device,
+  sdj: device,
+  sdk: device,
+  sdl: device,
+  sdm: device,
+  sdn: device,
+  sdo: device,
+  sdp: device,
+  sdq: device,
+  sdr: device,
+  sds: device,
+  sdt: device,
+  sdu: device,
+  sdv: device,
+  sdw: device,
+  sdx: device,
+  sdy: device,
+  sdz: device,
 });
 
 const helpers = object({
@@ -596,8 +661,8 @@ const CreateVlanInterfaceSchema = object({
 });
 
 const AclpAlertsPayloadSchema = object({
-  system: array().of(number().defined()).required(),
-  user: array().of(number().defined()).required(),
+  system_alerts: array().of(number().defined()).required(),
+  user_alerts: array().of(number().defined()).required(),
 });
 
 export const CreateVPCInterfaceSchema = object({

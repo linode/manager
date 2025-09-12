@@ -1008,8 +1008,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
           alerts: {
-            user: [21, 22, 23, 24, 25],
-            system: [19, 20],
+            user_alerts: [21, 22, 23, 24, 25],
+            system_alerts: [19, 20],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -1024,8 +1024,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 10,
             io: 10000,
             network_in: 0,
@@ -1043,8 +1043,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-3',
           region: 'us-iad',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -2866,6 +2866,13 @@ export const handlers = [
             scope: 'region',
             regions: ['us-east'],
           }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'entity',
+            regions: ['us-east'],
+            entity_ids: ['5', '6'],
+          }),
         ],
       });
     }
@@ -2972,7 +2979,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
-            scope: pickRandom(['account', 'entity', 'region']),
+            scope: pickRandom(['account', 'region', 'entity']),
           })
         );
       }

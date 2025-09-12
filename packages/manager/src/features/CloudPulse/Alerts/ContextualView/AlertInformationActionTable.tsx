@@ -1,6 +1,7 @@
 import { type Alert, type APIError } from '@linode/api-v4';
 import { Box, Button, TooltipIcon } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
@@ -13,14 +14,18 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
-import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
+import {
+  invalidateAlerts,
+  servicePayloadTransformerMap,
+  useAlertsMutation,
+} from 'src/queries/cloudpulse/useAlertsMutation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { compareArrays } from '../../Utils/FilterBuilder';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
+import { arraysEqual } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type {
@@ -142,6 +147,8 @@ export const AlertInformationActionTable = (
 
   const isEditMode = !!entityId;
   const isCreateMode = !isEditMode;
+  const payloadAlertType = (alert: Alert) =>
+    alert.type === 'system' ? 'system_alerts' : 'user_alerts';
 
   const {
     enabledAlerts,
@@ -151,10 +158,8 @@ export const AlertInformationActionTable = (
     resetToInitialState,
   } = useContextualAlertsState(alerts, entityId);
 
-  const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
-    serviceType,
-    entityId ?? ''
-  );
+  // Mutation to update alerts as per service type
+  const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
   // To send initial state of alerts through toggle handler function
   React.useEffect(() => {
@@ -167,19 +172,26 @@ export const AlertInformationActionTable = (
     setIsDialogOpen(false);
   };
 
+  const queryClient = useQueryClient();
+
   const handleConfirm = React.useCallback(
     (alertIds: CloudPulseAlertsPayload) => {
       setIsLoading(true);
-      updateAlerts({
-        user: alertIds.user,
-        system: alertIds.system,
-      })
+      const payload: CloudPulseAlertsPayload = {
+        user_alerts: alertIds.user_alerts,
+        system_alerts: alertIds.system_alerts,
+      };
+      // call updateAlerts mutation with the transformed payload based on the service type
+      updateAlerts(
+        servicePayloadTransformerMap[serviceType]?.(payload) ?? payload
+      )
         .then(() => {
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
           // Reset the state to sync with the updated alerts from API
           resetToInitialState();
+          invalidateAlerts(queryClient, serviceType, entityId, payload);
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {
@@ -198,11 +210,11 @@ export const AlertInformationActionTable = (
     (alert: Alert) => {
       setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
         const newPayload = {
-          system: [...(prev.system ?? [])],
-          user: [...(prev.user ?? [])],
+          system_alerts: [...(prev.system_alerts ?? [])],
+          user_alerts: [...(prev.user_alerts ?? [])],
         };
 
-        const alertIds = newPayload[alert.type];
+        const alertIds = newPayload[payloadAlertType(alert)];
         const isCurrentlyEnabled = alertIds.includes(alert.id);
 
         if (isCurrentlyEnabled) {
@@ -215,8 +227,8 @@ export const AlertInformationActionTable = (
         }
 
         const hasNewUnsavedChanges =
-          !compareArrays(newPayload.system ?? [], initialState.system ?? []) ||
-          !compareArrays(newPayload.user ?? [], initialState.user ?? []);
+          !arraysEqual(newPayload.system_alerts, initialState.system_alerts) ||
+          !arraysEqual(newPayload.user_alerts, initialState.user_alerts);
 
         // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
@@ -307,10 +319,9 @@ export const AlertInformationActionTable = (
                           if (!(isEditMode || isCreateMode)) {
                             return null;
                           }
-
-                          const status = enabledAlerts[alert.type]?.includes(
-                            alert.id
-                          );
+                          const status = enabledAlerts[
+                            payloadAlertType(alert)
+                          ]?.includes(alert.id);
 
                           return (
                             <AlertInformationActionRow
