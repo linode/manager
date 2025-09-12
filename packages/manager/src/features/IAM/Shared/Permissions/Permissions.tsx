@@ -1,4 +1,5 @@
 import { Typography } from '@linode/ui';
+import { sortByString } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
@@ -13,6 +14,10 @@ type Props = {
 };
 
 export const Permissions = React.memo(({ permissions }: Props) => {
+  const sortedPermissions = permissions.sort((a, b) => {
+    return sortByString(a, b, 'asc');
+  });
+
   return (
     <Grid container data-testid="parent" direction="column">
       <StyledTitle>Permissions</StyledTitle>
@@ -28,7 +33,7 @@ export const Permissions = React.memo(({ permissions }: Props) => {
             marginLeft: `-${theme.spacingFunction(6)}`,
           })}
         >
-          {permissions.map((permission: PermissionType) => (
+          {sortedPermissions.map((permission: PermissionType) => (
             <StyledPermissionItem data-testid="permission" key={permission}>
               {permission}
             </StyledPermissionItem>

@@ -1,6 +1,7 @@
 import { Box, StyledLinkButton } from '@linode/ui';
 import React, { useLayoutEffect, useRef } from 'react';
 import { useCallback } from 'react';
+import { debounce } from 'throttle-debounce';
 
 import { StyledTruncatedList } from './TruncatedListStyles';
 
@@ -178,19 +179,21 @@ export const TruncatedList = (props: TruncatedListProps) => {
 
     let isInitialObservation = true;
 
-    const resizeObserver = new ResizeObserver(() => {
-      if (isInitialObservation) {
-        isInitialObservation = false;
-        truncate();
-        return;
-      }
+    const resizeObserver = new ResizeObserver(
+      debounce(150, () => {
+        if (isInitialObservation) {
+          isInitialObservation = false;
+          truncate();
+          return;
+        }
 
-      // Only reset to collapsed on actual resize events, not initial observation
-      if (showAll) {
-        setShowAll(false);
-      }
-      truncate();
-    });
+        // Only reset to collapsed on actual resize events, not initial observation
+        if (showAll) {
+          setShowAll(false);
+        }
+        truncate();
+      })
+    );
 
     resizeObserver.observe(container);
     truncate();

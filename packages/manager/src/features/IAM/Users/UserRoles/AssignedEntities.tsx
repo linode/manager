@@ -1,4 +1,5 @@
 import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
+import { sortByString } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -29,7 +30,11 @@ export const AssignedEntities = ({
     [role.entity_names, role.entity_ids]
   );
 
-  const items = combinedEntities?.map((entity: CombinedEntity) => (
+  const sortedEntities = combinedEntities?.sort((a, b) => {
+    return sortByString(a.name, b.name, 'asc');
+  });
+
+  const items = sortedEntities?.map((entity: CombinedEntity) => (
     <Box
       key={entity.id}
       sx={{
