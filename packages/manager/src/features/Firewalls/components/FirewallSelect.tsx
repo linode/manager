@@ -61,7 +61,7 @@ export const FirewallSelect = <DisableClearable extends boolean>(
 
   return (
     <Autocomplete<Firewall, false, DisableClearable>
-      aria-label="Firewall"
+      aria-label={label === '' ? 'Firewall' : undefined}
       errorText={errorText ?? error?.[0].reason}
       label={label ?? 'Firewall'}
       loading={isLoading || loading}
