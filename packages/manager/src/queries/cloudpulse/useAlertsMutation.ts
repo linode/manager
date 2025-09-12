@@ -58,11 +58,6 @@ export const useAlertsMutation = (
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     Number(entityId)
   );
-  // cloudpulse api alerts mutation to be used when service requests update through aclp api
-  // const { mutateAsync: updateServiceAlerts } = useServiceAlertsMutation(
-  //   serviceType,
-  //   entityId
-  // );
 
   switch (serviceType) {
     case 'linode':
