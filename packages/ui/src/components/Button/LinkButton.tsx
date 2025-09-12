@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 const StyledLinkButton = styled('button', {
-  label: 'StyledLinkButton',
+  label: 'LinkButton',
 })(({ theme }) => ({
   font: 'inherit',
   ...theme.applyLinkStyles,
