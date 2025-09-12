@@ -27,7 +27,7 @@ export const Alerts = ({
   const { field } = useController({
     control,
     name: 'alerts',
-    defaultValue: { system: [], user: [] },
+    defaultValue: { system_alerts: [], user_alerts: [] },
   });
 
   const handleToggleAlert = (updatedAlerts: CloudPulseAlertsPayload) => {
