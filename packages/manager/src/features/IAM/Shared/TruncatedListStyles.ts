@@ -13,4 +13,19 @@ export const StyledTruncatedList = styled(List, {
   '&.expanded': {
     maxHeight: 'none',
   },
+  '& .visible-overflow-button': {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'end',
+  },
+  '& .last-visible-before-overflow': {
+    position: 'relative',
+    '&::after': {
+      content: "'...'",
+      display: 'inline',
+      top: 2,
+      position: 'absolute',
+      right: -3,
+    },
+  },
 }));

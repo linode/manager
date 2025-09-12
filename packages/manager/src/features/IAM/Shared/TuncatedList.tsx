@@ -7,17 +7,18 @@ import { StyledTruncatedList } from './TruncatedListStyles';
 import type { SxProps, Theme } from '@mui/material';
 
 export interface TruncatedListProps {
+  addEllipsis?: boolean;
   children?: React.ReactNode;
   collapseText?: string;
+  customOverflowButton?: (hiddenItemsCount: number) => React.ReactNode;
   dataTestId?: string;
   expandText?: string;
+  justifyOverflowButtonRight?: boolean;
   listContainerSx?: SxProps<Theme>;
-  overflowButtonSx?: SxProps<Theme>;
 }
 
 type OverflowButtonProps = {
   buttonCopy: string;
-  buttonSx?: SxProps<Theme>;
   hiddenItemsCount: number;
   onClick: () => void;
 };
@@ -33,10 +34,13 @@ const rectContainsRect = (parent: DOMRect, child: DOMRect) => {
 
 export const TruncatedList = (props: TruncatedListProps) => {
   const {
+    addEllipsis = false,
     children,
     collapseText = 'Hide',
+    customOverflowButton,
     dataTestId,
     expandText = 'Expand',
+    justifyOverflowButtonRight = false,
     listContainerSx,
   } = props;
   const [showAll, setShowAll] = React.useState(false);
@@ -47,12 +51,18 @@ export const TruncatedList = (props: TruncatedListProps) => {
   const OverflowButton = React.memo((props: OverflowButtonProps) => {
     const { hiddenItemsCount, onClick, buttonCopy } = props;
 
+    if (customOverflowButton) {
+      return customOverflowButton(hiddenItemsCount);
+    }
+
     return (
       <StyledLinkButton
         onClick={onClick}
         sx={(theme) => ({
           font: theme.tokens.alias.Typography.Label.Semibold.Xs,
           paddingLeft: theme.tokens.spacing.S6,
+          position: 'relative',
+          top: showAll ? -1 : 0,
         })}
       >
         {buttonCopy} {!showAll && `(+${hiddenItemsCount})`}
@@ -69,22 +79,27 @@ export const TruncatedList = (props: TruncatedListProps) => {
       return;
     }
 
-    const litsItems = Array.from(
+    const listItems = Array.from(
       containerRef.current.children
     ) as HTMLElement[];
 
     containerRef.current.style.overflow = showAll ? 'visible' : 'hidden';
 
     // Initially hide all overflow indicators
-    for (let i = 0; i < litsItems.length; ++i) {
-      litsItems[i].hidden = i % 2 === 0;
+    for (let i = 0; i < listItems.length; ++i) {
+      listItems[i].hidden = i % 2 === 0;
+      if (i % 2 === 0 && justifyOverflowButtonRight) {
+        listItems[i].classList.remove('visible-overflow-button');
+      } else if (addEllipsis) {
+        listItems[i].classList.remove('last-visible-before-overflow');
+      }
     }
 
-    if (litsItems.length === 1) {
+    if (listItems.length === 1) {
       return;
     }
 
-    const itemEl = litsItems[litsItems.length - 2];
+    const itemEl = listItems[listItems.length - 2];
     if (
       rectContainsRect(
         containerRef.current.getBoundingClientRect(),
@@ -94,7 +109,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
       return;
     }
 
-    const numBreakpoints = Math.floor((litsItems.length - 1) / 2);
+    const numBreakpoints = Math.floor((listItems.length - 1) / 2);
     let left = 0;
     let right = numBreakpoints - 1;
     let numItemsShowingWithTruncation: null | number = null;
@@ -104,14 +119,14 @@ export const TruncatedList = (props: TruncatedListProps) => {
 
       // show all items before the activeBreakpoint
       for (let i = 0; i < middle; i += 1) {
-        litsItems[i * 2 + 1].hidden = false;
+        listItems[i * 2 + 1].hidden = false;
       }
       // hide all items after the activeBreakpoint
       for (let i = middle; i < numBreakpoints; i += 1) {
-        litsItems[i * 2 + 1].hidden = true;
+        listItems[i * 2 + 1].hidden = true;
       }
 
-      const breakpointEl = litsItems[middle * 2];
+      const breakpointEl = listItems[middle * 2];
       breakpointEl.hidden = false;
 
       if (
@@ -135,16 +150,27 @@ export const TruncatedList = (props: TruncatedListProps) => {
 
     // show all items before the activeBreakpoint
     for (let i = 0; i < numItemsShowingWithTruncation; i += 1) {
-      litsItems[i * 2 + 1].hidden = false;
+      listItems[i * 2 + 1].hidden = false;
     }
     // hide all items after activeBreakpoint
     for (let i = numItemsShowingWithTruncation; i < numBreakpoints; i += 1) {
-      litsItems[i * 2 + 1].hidden = true;
+      listItems[i * 2 + 1].hidden = true;
     }
 
-    const breakpointEl = litsItems[numItemsShowingWithTruncation * 2];
+    const breakpointEl = listItems[numItemsShowingWithTruncation * 2];
     breakpointEl.hidden = false;
-  }, [showAll]);
+    if (justifyOverflowButtonRight) {
+      breakpointEl.classList.add('visible-overflow-button'); // Add class to the visible one
+    }
+    if (numItemsShowingWithTruncation > 0) {
+      const lastVisibleContentIndex =
+        (numItemsShowingWithTruncation - 1) * 2 + 1;
+      const lastVisibleContentEl = listItems[lastVisibleContentIndex];
+      if (lastVisibleContentEl && addEllipsis) {
+        lastVisibleContentEl.classList.add('last-visible-before-overflow');
+      }
+    }
+  }, [showAll, justifyOverflowButtonRight, addEllipsis]);
 
   useLayoutEffect(() => {
     const container = showAll ? expandedRef.current : containerRef.current;
