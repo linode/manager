@@ -1,5 +1,5 @@
 import { useProfile, useRegionsQuery } from '@linode/queries';
-import { Box, StyledLinkButton, Typography } from '@linode/ui';
+import { Box, LinkButton, Typography } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -111,10 +111,7 @@ export const VolumeEntityDetailBody = ({ volume, detachHandler }: Props) => {
                 >
                   {volume.linode_label}
                 </Link>
-                |
-                <StyledLinkButton onClick={detachHandler}>
-                  Detach
-                </StyledLinkButton>
+                | <LinkButton onClick={detachHandler}>Detach</LinkButton>
               </Box>
             ) : (
               'Unattached'

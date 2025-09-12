@@ -1,4 +1,4 @@
-import { Button, StyledLinkButton, Typography } from '@linode/ui';
+import { Button, LinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
@@ -15,7 +15,7 @@ export const StyledSizeColumn = styled(TableCell, {
   width: '10%',
 }));
 
-export const StyledTryAgainButton = styled(StyledLinkButton, {
+export const StyledTryAgainButton = styled(LinkButton, {
   label: 'StyledTryAgain',
 })(() => ({
   textDecoration: 'underline',

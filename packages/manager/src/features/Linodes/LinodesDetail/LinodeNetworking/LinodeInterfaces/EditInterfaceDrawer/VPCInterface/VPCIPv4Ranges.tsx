@@ -6,10 +6,10 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';

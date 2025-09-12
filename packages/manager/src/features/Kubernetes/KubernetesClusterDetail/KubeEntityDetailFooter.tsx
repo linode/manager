@@ -1,5 +1,5 @@
 import { useProfile, useVPCQuery } from '@linode/queries';
-import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
+import { Box, CircleProgress, LinkButton } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -173,7 +173,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                   <CircleProgress noPadding size="sm" />
                 </Box>
               ) : (
-                <StyledLinkButton
+                <LinkButton
                   disabled={isClusterReadOnly}
                   onClick={() => setControlPlaneACLDrawerOpen(true)}
                   sx={(theme) => ({
@@ -187,7 +187,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                   })}
                 >
                   {buttonCopyACL}
-                </StyledLinkButton>
+                </LinkButton>
               )}
             </StyledListItem>
             <StyledListItem>

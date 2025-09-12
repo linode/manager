@@ -2,8 +2,8 @@ import {
   Box,
   CloseIcon,
   IconButton,
+  LinkButton,
   Stack,
-  StyledLinkButton,
   Typography,
 } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
@@ -102,7 +102,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
       </Box>
       {isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool && (
         <StyledLinkButtonBox>
-          <StyledLinkButton
+          <LinkButton
             onClick={() =>
               handleConfigurePool({
                 drawerMode: 'edit',
@@ -113,7 +113,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
             }
           >
             Edit Configuration
-          </StyledLinkButton>
+          </LinkButton>
         </StyledLinkButtonBox>
       )}
     </Stack>

@@ -1,10 +1,4 @@
-import {
-  Box,
-  CircleProgress,
-  Stack,
-  StyledLinkButton,
-  Typography,
-} from '@linode/ui';
+import { Box, CircleProgress, LinkButton, Stack, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
@@ -225,7 +219,7 @@ export const KubeConfigDisplay = (props: Props) => {
           Kubeconfig:
         </Typography>
         <div className={classes.kubeconfigElements}>
-          <StyledLinkButton
+          <LinkButton
             aria-label={`Download kubeconfig for ${clusterLabel}`}
             className={classes.kubeconfigElement}
             disabled={isClusterReadOnly}
@@ -246,8 +240,8 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
-          </StyledLinkButton>
-          <StyledLinkButton
+          </LinkButton>
+          <LinkButton
             aria-label="View kubeconfig details"
             className={classes.kubeconfigElement}
             disabled={isClusterReadOnly}
@@ -267,8 +261,8 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               View
             </Typography>
-          </StyledLinkButton>
-          <StyledLinkButton
+          </LinkButton>
+          <LinkButton
             aria-label="Copy kubeconfig token"
             className={classes.kubeconfigElement}
             disabled={isClusterReadOnly}
@@ -297,8 +291,8 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               Copy Token
             </Box>
-          </StyledLinkButton>
-          <StyledLinkButton
+          </LinkButton>
+          <LinkButton
             aria-label="Reset kubeconfig"
             className={classes.kubeconfigElement}
             disabled={isClusterReadOnly}
@@ -318,7 +312,7 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               Reset
             </Typography>
-          </StyledLinkButton>
+          </LinkButton>
         </div>
       </Box>
     </Stack>
