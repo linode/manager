@@ -598,9 +598,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .and('have.text', 'Group By');
 
-    cy.get('[data-testid="drawer"]')
-      .find('p')
-      .and('have.text', 'CPU Utilization');
+    cy.get('[data-qa-id="groupby-drawer-subtitle"]').and(
+      'have.text',
+      'CPU Utilization'
+    );
 
     ui.autocomplete.findByLabel('Dimensions').should('be.visible').type('cpu');
 
@@ -656,9 +657,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .and('have.text', 'Group By');
 
       // Verify that the drawer displays the current widget title
-      cy.get('[data-testid="drawer"]')
-        .find('p')
-        .and('have.text', testData.title);
+      cy.get('[ data-qa-id="groupby-drawer-subtitle"]').and(
+        'have.text',
+        testData.title
+      );
 
       // Apply each filter defined in testData for this widget
       testData.filters.forEach((filter) => {

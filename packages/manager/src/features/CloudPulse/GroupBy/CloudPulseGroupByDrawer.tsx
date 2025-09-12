@@ -141,6 +141,7 @@ export const CloudPulseGroupByDrawer = React.memo(
         <Stack gap={4}>
           <Typography
             component="p"
+            data-qa-id="groupby-drawer-subtitle"
             sx={(theme) => ({ marginTop: -1, font: theme.font.normal })}
             variant="h3"
           >
