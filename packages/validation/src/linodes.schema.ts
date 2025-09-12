@@ -377,8 +377,8 @@ export const alertsSchema = object({
 
   // ACLP alerts ‑ arrays of alert-definition IDs. Optional so the same payload
   // can mix legacy and ACLP shapes when only one set is present.
-  system: array().of(number().defined()).notRequired(),
-  user: array().of(number().defined()).notRequired(),
+  system_alerts: array().of(number().defined()).notRequired(),
+  user_alerts: array().of(number().defined()).notRequired(),
 });
 
 const schedule = object({
@@ -664,8 +664,8 @@ const CreateVlanInterfaceSchema = object({
 });
 
 const AclpAlertsPayloadSchema = object({
-  system: array().of(number().defined()).required(),
-  user: array().of(number().defined()).required(),
+  system_alerts: array().of(number().defined()).required(),
+  user_alerts: array().of(number().defined()).required(),
 });
 
 export const CreateVPCInterfaceSchema = object({

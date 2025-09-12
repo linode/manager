@@ -388,10 +388,10 @@ export interface CloudPulseAlertsPayload {
    * Array of enabled system alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  system?: number[];
+  system_alerts?: number[];
   /**
    * Array of enabled user alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  user?: number[];
+  user_alerts?: number[];
 }

@@ -147,6 +147,8 @@ export const AlertInformationActionTable = (
 
   const isEditMode = !!entityId;
   const isCreateMode = !isEditMode;
+  const payloadAlertType = (alert: Alert) =>
+    alert.type === 'system' ? 'system_alerts' : 'user_alerts';
 
   const {
     enabledAlerts,
@@ -183,8 +185,8 @@ export const AlertInformationActionTable = (
     (alertIds: CloudPulseAlertsPayload) => {
       setIsLoading(true);
       const payload: CloudPulseAlertsPayload = {
-        user: alertIds.user,
-        system: alertIds.system,
+        user_alerts: alertIds.user_alerts,
+        system_alerts: alertIds.system_alerts,
       };
       // call updateAlerts mutation with the transformed payload based on the service type
       updateAlerts(
@@ -215,11 +217,11 @@ export const AlertInformationActionTable = (
     (alert: Alert) => {
       setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
         const newPayload = {
-          system: [...(prev.system ?? [])],
-          user: [...(prev.user ?? [])],
+          system_alerts: [...(prev.system_alerts ?? [])],
+          user_alerts: [...(prev.user_alerts ?? [])],
         };
 
-        const alertIds = newPayload[alert.type];
+        const alertIds = newPayload[payloadAlertType(alert)];
         const isCurrentlyEnabled = alertIds.includes(alert.id);
 
         if (isCurrentlyEnabled) {
@@ -232,8 +234,8 @@ export const AlertInformationActionTable = (
         }
 
         const hasNewUnsavedChanges =
-          !arraysEqual(newPayload.system, initialState.system) ||
-          !arraysEqual(newPayload.user, initialState.user);
+          !arraysEqual(newPayload.system_alerts, initialState.system_alerts) ||
+          !arraysEqual(newPayload.user_alerts, initialState.user_alerts);
 
         // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
@@ -324,10 +326,9 @@ export const AlertInformationActionTable = (
                           if (!(isEditMode || isCreateMode)) {
                             return null;
                           }
-
-                          const status = enabledAlerts[alert.type]?.includes(
-                            alert.id
-                          );
+                          const status = enabledAlerts[
+                            payloadAlertType(alert)
+                          ]?.includes(alert.id);
 
                           return (
                             <AlertInformationActionRow

@@ -95,8 +95,8 @@ export const invalidateAlerts = (
 
   // Combine enabled user and system alert IDs from payload
   const newEnabledAlertIds = [
-    ...(payload.user ?? []),
-    ...(payload.system ?? []),
+    ...(payload.user_alerts ?? []),
+    ...(payload.system_alerts ?? []),
   ];
 
   // Get unique list of all enabled alert IDs for cache invalidation

@@ -1008,8 +1008,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
           alerts: {
-            user: [21, 22, 23, 24, 25],
-            system: [19, 20],
+            user_alerts: [21, 22, 23, 24, 25],
+            system_alerts: [19, 20],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -1024,8 +1024,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 10,
             io: 10000,
             network_in: 0,
@@ -1043,8 +1043,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-3',
           region: 'us-iad',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 0,
             io: 0,
             network_in: 0,
