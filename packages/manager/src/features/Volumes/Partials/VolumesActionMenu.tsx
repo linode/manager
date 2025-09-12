@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
@@ -21,14 +22,14 @@ export interface ActionHandlers {
 
 export interface Props {
   handlers: ActionHandlers;
+  isVolumeDetails?: boolean;
   isVolumesLanding: boolean;
   volume: Volume;
 }
 
 export const VolumesActionMenu = (props: Props) => {
-  const { handlers, isVolumesLanding, volume } = props;
-
-  const attached = volume.linode_id !== null;
+  const { handlers, isVolumesLanding, isVolumeDetails, volume } = props;
+  const isAttached = volume.linode_id !== null;
 
   const { data: accountPermissions } = usePermissions('account', [
     'create_volume',
@@ -47,12 +48,12 @@ export const VolumesActionMenu = (props: Props) => {
     volume.id
   );
 
-  const actions: Action[] = [
-    {
+  const ACTIONS = {
+    SHOW_CONFIG: {
       onClick: handlers.handleDetails,
       title: 'Show Config',
     },
-    {
+    EDIT: {
       disabled: !volumePermissions?.update_volume,
       onClick: handlers.handleEdit,
       title: 'Edit',
@@ -64,12 +65,12 @@ export const VolumesActionMenu = (props: Props) => {
           })
         : undefined,
     },
-    {
+    MANAGE_TAGS: {
       disabled: !volumePermissions?.update_volume,
       onClick: handlers.handleManageTags,
       title: 'Manage Tags',
     },
-    {
+    RESIZE: {
       disabled: !volumePermissions?.resize_volume,
       onClick: handlers.handleResize,
       title: 'Resize',
@@ -81,7 +82,7 @@ export const VolumesActionMenu = (props: Props) => {
           })
         : undefined,
     },
-    {
+    CLONE: {
       disabled:
         !volumePermissions?.clone_volume || !accountPermissions?.create_volume,
       onClick: handlers.handleClone,
@@ -94,10 +95,7 @@ export const VolumesActionMenu = (props: Props) => {
           })
         : undefined,
     },
-  ];
-
-  if (!attached && isVolumesLanding) {
-    actions.push({
+    ATTACH: {
       disabled: !volumePermissions?.attach_volume,
       onClick: handlers.handleAttach,
       title: 'Attach',
@@ -108,9 +106,8 @@ export const VolumesActionMenu = (props: Props) => {
             resourceType: 'Volumes',
           })
         : undefined,
-    });
-  } else {
-    actions.push({
+    },
+    DETACH: {
       disabled: !volumePermissions?.detach_volume,
       onClick: handlers.handleDetach,
       title: 'Detach',
@@ -121,28 +118,64 @@ export const VolumesActionMenu = (props: Props) => {
             resourceType: 'Volumes',
           })
         : undefined,
-    });
+    },
+    DELETE: {
+      disabled: !volumePermissions?.delete_volume || isAttached,
+      onClick: handlers.handleDelete,
+      title: 'Delete',
+      tooltip: !volumePermissions?.delete_volume
+        ? getRestrictedResourceText({
+            action: 'delete',
+            isSingular: true,
+            resourceType: 'Volumes',
+          })
+        : isAttached
+          ? 'Your volume must be detached before it can be deleted.'
+          : undefined,
+    },
+  };
+
+  const actions: Action[] = [];
+
+  if (!isVolumeDetails) {
+    actions.push(
+      ACTIONS.SHOW_CONFIG,
+      ACTIONS.EDIT,
+      ACTIONS.MANAGE_TAGS,
+      ACTIONS.RESIZE
+    );
   }
 
-  actions.push({
-    disabled: !volumePermissions?.delete_volume || attached,
-    onClick: handlers.handleDelete,
-    title: 'Delete',
-    tooltip: !volumePermissions?.delete_volume
-      ? getRestrictedResourceText({
-          action: 'delete',
-          isSingular: true,
-          resourceType: 'Volumes',
-        })
-      : attached
-        ? 'Your volume must be detached before it can be deleted.'
-        : undefined,
-  });
+  actions.push(ACTIONS.CLONE);
+
+  const inlineActions: Action[] = [ACTIONS.SHOW_CONFIG, ACTIONS.RESIZE];
+
+  if (!isAttached && isVolumesLanding) {
+    actions.push(ACTIONS.ATTACH);
+  } else {
+    actions.push(ACTIONS.DETACH);
+  }
+
+  actions.push(ACTIONS.DELETE);
 
   return (
-    <ActionMenu
-      actionsList={actions}
-      ariaLabel={`Action menu for Volume ${volume.label}`}
-    />
+    <div>
+      {isVolumeDetails &&
+        inlineActions.map((action) => {
+          return (
+            <InlineMenuAction
+              actionText={action.title}
+              disabled={action.disabled}
+              key={action.title}
+              onClick={action.onClick}
+              tooltip={action.tooltip}
+            />
+          );
+        })}
+      <ActionMenu
+        actionsList={actions}
+        ariaLabel={`Action menu for Volume ${volume.label}`}
+      />
+    </div>
   );
 };

@@ -11,11 +11,13 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { VolumeDrawers } from '../VolumeDrawers/VolumeDrawers';
 import { VolumeDetailsHeader } from './VolumeDetailsHeader';
 import { VolumeEntityDetail } from './VolumeEntityDetails/VolumeEntityDetail';
 
 export const VolumeDetails = () => {
   const navigate = useNavigate();
+
   const { volumeSummaryPage } = useFlags();
   const { volumeId } = useParams({ from: '/volumes/$volumeId' });
   const { data: volume, isLoading, error } = useVolumeQuery(volumeId);
@@ -34,8 +36,15 @@ export const VolumeDetails = () => {
     return <CircleProgress />;
   }
 
+  const navigateToVolumeSummary = () => {
+    navigate({
+      search: (prev) => prev,
+      to: `/volumes/${volume.id}/summary`,
+    });
+  };
+
   if (location.pathname === `/volumes/${volumeId}`) {
-    navigate({ to: `/volumes/${volumeId}/summary` });
+    navigateToVolumeSummary();
   }
 
   return (
@@ -52,6 +61,8 @@ export const VolumeDetails = () => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
+
+      <VolumeDrawers onCloseHandler={navigateToVolumeSummary} />
     </>
   );
 };

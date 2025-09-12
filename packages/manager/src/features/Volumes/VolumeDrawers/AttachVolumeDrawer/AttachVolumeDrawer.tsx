@@ -20,7 +20,7 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
+import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
 
 import type { Volume } from '@linode/api-v4';
 

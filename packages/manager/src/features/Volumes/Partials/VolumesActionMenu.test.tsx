@@ -1,3 +1,4 @@
+import { within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -113,5 +114,47 @@ describe('Volume action menu', () => {
     await userEvent.click(actionMenuButton);
 
     expect(getByText('Delete')).toBeVisible();
+  });
+
+  describe('Volume details version', () => {
+    it('should display basic actions outside the elipsis', () => {
+      const { getByText } = renderWithTheme(
+        <VolumesActionMenu {...props} isVolumeDetails={true} />
+      );
+
+      for (const action of ['Show Config', 'Resize']) {
+        expect(getByText(action)).toBeVisible();
+      }
+    });
+
+    it('should not display basic actions inside the elipsis', () => {
+      const { getByLabelText } = renderWithTheme(
+        <VolumesActionMenu {...props} isVolumeDetails={true} />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Volume ${volume.label}`
+      );
+
+      const { queryByText } = within(actionMenuButton);
+
+      for (const action of ['Show Config', 'Resize']) {
+        expect(queryByText(action)).not.toBeInTheDocument();
+      }
+    });
+
+    it('should not display Manage Tags action', async () => {
+      const { getByLabelText, queryByText } = renderWithTheme(
+        <VolumesActionMenu {...props} isVolumeDetails={true} />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Volume ${volume.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      expect(queryByText('Manage Tags')).not.toBeInTheDocument();
+    });
   });
 });
