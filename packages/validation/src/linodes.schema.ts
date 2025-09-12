@@ -361,14 +361,21 @@ const DiskEncryptionSchema = string()
   .notRequired();
 
 export const alertsSchema = object({
+  // Legacy numeric-threshold alerts. All fields are now optional so that the
+  // same schema can validate partial updates.
   cpu: number()
-    .required('CPU Usage is required.')
     .min(0, 'Must be between 0 and 4800')
-    .max(4800, 'Must be between 0 and 4800'),
-  network_in: number().required('Incoming Traffic is required.'),
-  network_out: number().required('Outbound Traffic is required.'),
-  transfer_quota: number().required('Transfer Quota is required.'),
-  io: number().required('Disk I/O Rate is required.'),
+    .max(4800, 'Must be between 0 and 4800')
+    .notRequired(),
+  network_in: number().notRequired(),
+  network_out: number().notRequired(),
+  transfer_quota: number().notRequired(),
+  io: number().notRequired(),
+
+  // ACLP alerts ‑ arrays of alert-definition IDs. Optional so the same payload
+  // can mix legacy and ACLP shapes when only one set is present.
+  system_alerts: array().of(number().defined()).notRequired(),
+  user_alerts: array().of(number().defined()).notRequired(),
 });
 
 const schedule = object({
@@ -654,8 +661,8 @@ const CreateVlanInterfaceSchema = object({
 });
 
 const AclpAlertsPayloadSchema = object({
-  system: array().of(number().defined()).required(),
-  user: array().of(number().defined()).required(),
+  system_alerts: array().of(number().defined()).required(),
+  user_alerts: array().of(number().defined()).required(),
 });
 
 export const CreateVPCInterfaceSchema = object({
