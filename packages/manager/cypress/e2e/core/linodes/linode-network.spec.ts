@@ -29,13 +29,18 @@ import {
   mockGetLinodeInterfaces,
   mockGetLinodeInterfaceSettings,
   mockGetLinodeIPAddresses,
+  mockUpdateLinodeInterface,
   mockUpdateLinodeInterfaceSettings,
 } from 'support/intercepts/linodes';
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 
-import type { IPRange, LinodeIPsResponse } from '@linode/api-v4';
+import type {
+  FirewallDevice,
+  IPRange,
+  LinodeIPsResponse,
+} from '@linode/api-v4';
 
 describe('IP Addresses', () => {
   // TODO M3-9775: Set mock linode interface type to legacy once Linode Interfaces is GA.
@@ -606,7 +611,7 @@ describe('Linode Interfaces enabled', () => {
         });
 
       // confirm toast upon success
-      ui.toast.findByMessage('Successfully updated interface settings.');
+      ui.toast.assertMessage('Successfully updated interface settings.');
 
       // re-open drawer
       ui.button
@@ -1141,6 +1146,385 @@ describe('Linode Interfaces enabled', () => {
               .should('be.visible')
               .should('be.enabled')
               .click();
+          });
+      });
+
+      /**
+       * - Confirms adding an IPv4 address and marking it as primary
+       * - Confirms adding an IPv6 /56 range
+       * - Confirms adding an IPv6 /64 range
+       * - Confirms updating a firewall
+       */
+      it('confirms editing a public interface', () => {
+        const linodeInterface = linodeInterfaceFactoryPublic.build();
+        const updatedLinodeInterface = linodeInterfaceFactoryPublic.build({
+          id: linodeInterface.id,
+          public: {
+            ipv4: {
+              addresses: [
+                {
+                  address: '10.0.0.1',
+                  primary: true,
+                },
+              ],
+              shared: [],
+            },
+            ipv6: {
+              ranges: [
+                {
+                  range: '2600:3c06:e001:149::/64',
+                  route_target: null,
+                },
+                {
+                  range: '2600:3c06:e001:149::/56',
+                  route_target: null,
+                },
+              ],
+              shared: [],
+              slaac: [],
+            },
+          },
+        });
+        const selectedFirewall = mockFirewalls[1];
+        const mockFirewallDevice = {
+          id: linodeInterface.id,
+          entity: {
+            id: linodeInterface.id,
+            label: mockLinode.label,
+            parent_entity: null,
+            type: 'linode_interface',
+            url: '',
+          },
+          created: '',
+          updated: '',
+        };
+
+        mockGetLinodeInterfaces(mockLinode.id, {
+          interfaces: [linodeInterface],
+        }).as('getInterfaces');
+        mockGetLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          linodeInterface
+        );
+        mockGetFirewalls(mockFirewalls);
+        mockUpdateLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          updatedLinodeInterface
+        );
+        mockGetLinodeInterfaceFirewalls(mockLinode.id, linodeInterface.id, []);
+        mockAddFirewallDevice(
+          selectedFirewall.id,
+          mockFirewallDevice as FirewallDevice
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for Public Interface (${linodeInterface.id})`
+              )
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.actionMenuItem
+              .findByTitle('Edit')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        ui.drawer
+          .findByTitle(`Edit Network Interface (ID: ${linodeInterface.id})`)
+          .should('be.visible')
+          .within(() => {
+            // IPv4 Section
+            cy.findByText('IPv4 Addresses');
+
+            // Confirm primary chip exists for first public IPv4 address
+            cy.findByText('10.0.0.0')
+              .closest('tr')
+              .within(() => {
+                cy.findByText('Primary').should('be.visible');
+              });
+
+            // Allocate IPv4 address, then reset form and confirm no changes saved
+            ui.button
+              .findByTitle('Add IPv4 Address')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+            cy.findByText('IP allocated on save').should('be.visible');
+            ui.button
+              .findByTitle('Reset')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+            cy.findByText('IP allocated on save').should('not.exist');
+
+            // Allocate public IPv4 address and make it primary
+            ui.button
+              .findByTitle('Add IPv4 Address')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.button
+              .findByTitle('Make Primary')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            // Confirm primary chip no longer is visible for first public IPv4 address
+            // Remove first IPv4 address
+            cy.findByText('10.0.0.0')
+              .closest('tr')
+              .within(() => {
+                cy.findByText('Primary').should('not.exist');
+                ui.button
+                  .findByTitle('Remove')
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+              });
+
+            cy.findByText('10.0.0.0').should('not.exist');
+
+            cy.findByText('IP allocated on save')
+              .should('be.visible')
+              .closest('tr')
+              .within(() => {
+                cy.findByText('Primary').should('be.visible');
+              });
+
+            // IPv6 Section
+            cy.findByText('IPv6 Ranges').should('be.visible');
+            cy.findByText(
+              'No IPv6 ranges are assigned to this interface.'
+            ).should('be.visible');
+
+            // Add IPv6 /64 range and confirm result
+            ui.button
+              .findByTitle('Add IPv6 /64 Range')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+            cy.findByText('/64 range allocated on save').should('be.visible');
+
+            // Add /56 range and confirm result
+            ui.button
+              .findByTitle('Add IPv6 /56 Range')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+            cy.findByText('/56 range allocated on save').should('be.visible');
+
+            // Select a Firewall
+            ui.autocomplete.findByLabel('Firewall').click();
+            ui.autocompletePopper.findByTitle(selectedFirewall.label).click();
+
+            mockGetLinodeInterfaceFirewalls(mockLinode.id, linodeInterface.id, [
+              selectedFirewall,
+            ]);
+
+            ui.button
+              .findByTitle('Save')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm toast
+        ui.toast.assertMessage('Interface successfully updated.');
+
+        // Reopen Edit drawer and confirm changes
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for Public Interface (${linodeInterface.id})`
+              )
+              .click();
+
+            ui.actionMenuItem.findByTitle('Edit').click();
+          });
+
+        ui.drawer
+          .findByTitle(`Edit Network Interface (ID: ${linodeInterface.id})`)
+          .should('be.visible')
+          .within(() => {
+            // Confirm IPs
+            cy.findByText('10.0.0.1').should('be.visible');
+            cy.findByText('2600:3c06:e001:149::/64').should('be.visible');
+            cy.findByText('2600:3c06:e001:149::/56').should('be.visible');
+            ui.autocomplete
+              .findByLabel('Firewall')
+              .should('have.value', selectedFirewall.label);
+          });
+      });
+
+      /**
+       * - Confirms auto-assigning an IPv4 address
+       * - Confirms IPv4 ranges can be added
+       * - Confirms updating a firewall
+       */
+      it('confirms editing a VPC interface', () => {
+        const linodeInterface = linodeInterfaceFactoryVPC.build({
+          vpc: {
+            ipv4: {
+              addresses: [
+                {
+                  address: '10.0.0.0',
+                  primary: true,
+                },
+              ],
+              ranges: [],
+            },
+          },
+        });
+        const updatedLinodeInterface = linodeInterfaceFactoryVPC.build({
+          id: linodeInterface.id,
+          vpc: {
+            ipv4: {
+              addresses: [
+                {
+                  address: '10.0.0.0',
+                  primary: true,
+                },
+              ],
+              ranges: [{ range: '10.0.0.1' }],
+            },
+          },
+        });
+        const selectedFirewall = mockFirewalls[1];
+        const mockFirewallDevice = {
+          id: linodeInterface.id,
+          entity: {
+            id: linodeInterface.id,
+            label: mockLinode.label,
+            parent_entity: null,
+            type: 'linode_interface',
+            url: '',
+          },
+          created: '',
+          updated: '',
+        };
+
+        mockGetLinodeInterfaces(mockLinode.id, {
+          interfaces: [linodeInterface],
+        }).as('getInterfaces');
+        mockGetLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          linodeInterface
+        );
+        mockGetFirewalls(mockFirewalls);
+        mockUpdateLinodeInterface(
+          mockLinode.id,
+          linodeInterface.id,
+          updatedLinodeInterface
+        );
+        mockGetLinodeInterfaceFirewalls(mockLinode.id, linodeInterface.id, []);
+        mockAddFirewallDevice(
+          selectedFirewall.id,
+          mockFirewallDevice as FirewallDevice
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for VPC Interface (${linodeInterface.id})`
+              )
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.actionMenuItem
+              .findByTitle('Edit')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        ui.drawer
+          .findByTitle(`Edit Network Interface (ID: ${linodeInterface.id})`)
+          .should('be.visible')
+          .within(() => {
+            // confirm VPC IPv4 address and public IPv4 address checkboxes exist
+            cy.findByLabelText('VPC IPv4 Address').should('be.visible');
+            cy.findByText('Auto-assign a VPC IPv4 Address')
+              .should('be.visible')
+              .should('be.enabled');
+            cy.findByText(
+              'Assign a public IPv4 address for this Linode'
+            ).should('be.visible');
+
+            // Add an IPv4 range
+            ui.button
+              .findByTitle('Add IPv4 Range')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            cy.findByLabelText('VPC IPv4 Range 0').type('10.0.0.1');
+            // Select a Firewall
+            ui.autocomplete.findByLabel('Firewall').click();
+            ui.autocompletePopper.findByTitle(selectedFirewall.label).click();
+
+            mockGetLinodeInterfaceFirewalls(mockLinode.id, linodeInterface.id, [
+              selectedFirewall,
+            ]);
+
+            ui.button
+              .findByTitle('Save')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm toast
+        ui.toast.assertMessage('Interface successfully updated.');
+
+        // Reopen Edit drawer and confirm changes
+        cy.findByText(linodeInterface.mac_address)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(
+                `Action menu for VPC Interface (${linodeInterface.id})`
+              )
+              .click();
+
+            ui.actionMenuItem.findByTitle('Edit').click();
+          });
+
+        ui.drawer
+          .findByTitle(`Edit Network Interface (ID: ${linodeInterface.id})`)
+          .should('be.visible')
+          .within(() => {
+            cy.findByLabelText('VPC IPv4 Range 0').should(
+              'have.value',
+              '10.0.0.1'
+            );
+            cy.findByLabelText('VPC IPv4 Address').should(
+              'have.value',
+              '10.0.0.0'
+            );
+            ui.autocomplete
+              .findByLabel('Firewall')
+              .should('have.value', selectedFirewall.label);
           });
       });
     });

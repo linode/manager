@@ -745,6 +745,26 @@ export const mockGetLinodeInterface = (
 };
 
 /**
+ * Intercepts PUT request to edit Linode's interface settings
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param updatedLinode - the mocked Linode Settings
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinodeInterface = (
+  linodeId: number,
+  interfaceId: number,
+  linodeInterface: LinodeInterface
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`linode/instances/${linodeId}/interfaces/${interfaceId}`),
+    linodeInterface
+  );
+};
+
+/**
  * Intercepts DELETE request to delete linode interface and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.
