@@ -56,7 +56,8 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     vpcId,
   } = props;
 
-  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterprisePhase2BYOVPCFeatureEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const enabledACL = aclData?.acl.enabled ?? false;
   const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
@@ -69,7 +70,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   const { data: vpc } = useVPCQuery(
     vpcId ?? -1,
-    isLkeEnterprisePhase2FeatureEnabled && Boolean(vpcId)
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled && Boolean(vpcId)
   );
 
   const { mutateAsync: updateKubernetesCluster } =
@@ -143,7 +144,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
               <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
               <CopyTooltip copyableText text={String(clusterId)} />
             </StyledListItem>
-            {isLkeEnterprisePhase2FeatureEnabled && vpc && (
+            {isLkeEnterprisePhase2BYOVPCFeatureEnabled && vpc && (
               <StyledListItem
                 sx={{
                   alignItems: 'center',
