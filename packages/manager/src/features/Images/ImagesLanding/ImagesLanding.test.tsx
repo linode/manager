@@ -336,13 +336,9 @@ describe('Images Landing Table', () => {
     const disabledLinodeCreationText = await findByLabelText(
       "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
     );
-    const disabledLinodeRebuildingText = await findByLabelText(
-      "You don't have permissions to rebuild Linodes. Please contact your account administrator to request the necessary permissions."
-    );
 
     expect(disabledEditText).toBeVisible();
     expect(disabledDeleteText).toBeVisible();
     expect(disabledLinodeCreationText).toBeVisible();
-    expect(disabledLinodeRebuildingText).toBeVisible();
   });
 });

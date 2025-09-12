@@ -1,32 +1,8 @@
-import { useAllLinodesQuery, useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 
 import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 
-import { useQueryWithPermissions } from '../IAM/hooks/usePermissions';
-
 import type { Event, Image, Linode } from '@linode/api-v4';
-
-/**
- * Get a list of Linodes that the user has read/write access to via AIM RBAC permissions mapping
- */
-export const useLinodesPermissionsCheck = (
-  enabled: boolean
-): {
-  availableLinodes: number[];
-  isLoading: boolean;
-} => {
-  const { data: availableLinodes, isLoading } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery(),
-    'linode',
-    ['view_linode', 'update_linode'],
-    enabled
-  );
-
-  return {
-    availableLinodes: availableLinodes?.map((linode) => linode.id) ?? [],
-    isLoading,
-  };
-};
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);

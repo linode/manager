@@ -189,7 +189,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     : entityPermissionMapFrom(grants, entityType as GrantType, profile);
 
   const entities: T[] | undefined = allEntities?.filter((entity: T) => {
-    const permissions = entityPermissionsMap[entity.id];
+    const permissions = entityPermissionsMap[entity.id] ?? {};
     return (
       !profile?.restricted ||
       permissionsToCheck.every((permission) => permissions[permission])

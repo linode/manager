@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
+  useAllLinodesQuery,
   useCreateImageMutation,
   useLinodeQuery,
   useRegionsQuery,
@@ -27,13 +28,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import {
+  usePermissions,
+  useQueryWithPermissions,
+} from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
-import { useLinodesPermissionsCheck } from '../utils';
-
-import type { CreateImagePayload } from '@linode/api-v4';
+import type { CreateImagePayload, Linode } from '@linode/api-v4';
 
 export const CreateImageTab = () => {
   const {
@@ -106,9 +108,13 @@ export const CreateImageTab = () => {
     selectedLinodeId !== null
   );
 
-  const { availableLinodes } = useLinodesPermissionsCheck(
+  const { data: linodes, isLoading } = useQueryWithPermissions<Linode>(
+    useAllLinodesQuery(),
+    'linode',
+    ['view_linode', 'update_linode'],
     Boolean(imagePermissions.create_image)
   );
+  const availableLinodes = linodes?.map((linode) => linode.id);
 
   const {
     data: disks,
@@ -197,6 +203,7 @@ export const CreateImageTab = () => {
                   ? undefined
                   : 'You can only create Images from Linodes you have read/write access to.'
               }
+              loading={isLoading}
               noMarginTop
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
