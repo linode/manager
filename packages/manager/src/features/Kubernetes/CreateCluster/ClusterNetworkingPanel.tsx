@@ -71,6 +71,12 @@ export const ClusterNetworkingPanel = (props: Props) => {
             <RadioGroup
               {...field}
               onChange={(e) => field.onChange(e.target.value)}
+              sx={{
+                '&.MuiFormGroup-root': {
+                  marginBottom: 0,
+                  marginTop: 0,
+                },
+              }}
               value={field.value ?? null}
             >
               <FormLabel htmlFor="stack_type">IP Stack</FormLabel>
@@ -106,6 +112,12 @@ export const ClusterNetworkingPanel = (props: Props) => {
               if (!isUsingOwnVpc) {
                 clearErrors(['vpc_id', 'subnet_id']);
               }
+            }}
+            sx={{
+              '&.MuiFormGroup-root': {
+                marginBottom: 0,
+                marginTop: 0,
+              },
             }}
             value={isUsingOwnVpc}
           >
@@ -143,7 +155,6 @@ export const ClusterNetworkingPanel = (props: Props) => {
                     }
                     label="VPC"
                     loading={isLoading}
-                    noMarginTop
                     noOptionsText="There are no VPCs in the selected region."
                     onBlur={field.onBlur}
                     onChange={(e, vpc) => {

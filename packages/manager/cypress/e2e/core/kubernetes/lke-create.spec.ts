@@ -1796,10 +1796,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
 
       // Select the existing mock firewall.
       cy.findByText('Select existing firewall').click();
-      cy.get('[data-qa-autocomplete="Firewall"]').within(() => {
-        cy.findByLabelText('Firewall').type(mockFirewall.label);
-        ui.autocompletePopper.findByTitle(mockFirewall.label).click();
-      });
+      cy.get('[aria-label="Firewall"]').type(mockFirewall.label);
+      ui.autocompletePopper.findByTitle(mockFirewall.label).click();
 
       ui.button
         .findByTitle('Add Pool')
