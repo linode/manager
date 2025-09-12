@@ -40,6 +40,7 @@ function checkActionMenu(tableAlias: string, mockImages: any[]) {
           cy.get('ul[role="menu"]')
             .find('li')
             .not(':contains("Deploy to New Linode")')
+            .not(':contains("Rebuild an Existing Linode")')
             .each(($li) => {
               cy.wrap($li).should('be.visible').and('be.disabled');
             });
