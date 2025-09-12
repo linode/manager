@@ -5,7 +5,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { filterRegionByServiceType } from '../../../Utils/utils';
 import {
-  getFilteredFirewallResources,
+  getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
   getVPCSubnets,
@@ -83,21 +83,23 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     isError: isResourcesError,
   } = useResourcesQuery(
     filterLabels.includes(dimensionLabel ?? ''),
-    'firewall',
-    {},
-    {}
+    'firewall'
   );
   // Decide firewall resource IDs based on scope
-  const filteredFirewallResourcesIds = useMemo(() => {
-    if (scope === 'account') {
-      return (firewallResources ?? []).map((r) => r.id);
-    }
-    return getFilteredFirewallResources(firewallResources, entities);
+  const filteredFirewallParentEntityIds = useMemo(() => {
+    const selectedEntities =
+      scope && scope === 'account'
+        ? firewallResources?.map((r) => r.id)
+        : entities;
+    return getFilteredFirewallParentEntities(
+      firewallResources,
+      selectedEntities
+    );
   }, [scope, firewallResources, entities]);
 
   const idFilter = {
-    '+or': filteredFirewallResourcesIds.length
-      ? filteredFirewallResourcesIds.map((id) => ({ id }))
+    '+or': filteredFirewallParentEntityIds.length
+      ? filteredFirewallParentEntityIds.map((id) => ({ id }))
       : [{ id: '' }],
   };
 
@@ -114,7 +116,7 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     {},
     combinedFilter,
     filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallResourcesIds.length > 0 &&
+      filteredFirewallParentEntityIds.length > 0 &&
       supportedRegionIds?.length > 0
   );
 
