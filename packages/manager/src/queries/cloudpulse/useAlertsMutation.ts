@@ -75,7 +75,7 @@ export const useAlertsMutation = (
  * @param entityId The entity id
  * @param payload The payload
  */
-export const invalidateAlerts = (
+export const invalidateAclpAlerts = (
   queryClient: QueryClient,
   serviceType: string,
   entityId: string | undefined,
