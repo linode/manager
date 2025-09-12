@@ -34,7 +34,7 @@ const setup = (capabilities: AccountCapability[], flags: any) => {
   const account = accountFactory.build({ capabilities });
 
   server.use(
-    http.get('*/v4/account', () => {
+    http.get('*/v4*/account', () => {
       return HttpResponse.json(account);
     })
   );
@@ -158,7 +158,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V1 restricted user non-beta', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -203,7 +203,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V1 & V2 restricted user existing beta', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -248,7 +248,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V2 restricted user new beta', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -293,7 +293,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V2 restricted user GA', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );

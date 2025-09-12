@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeVolumes } from './LinodeVolumes';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const linodeInstanceEndpoint = '*/linode/instances/:id';
 const linodeVolumesEndpoint = '*/linode/instances/:id/volumes';
 

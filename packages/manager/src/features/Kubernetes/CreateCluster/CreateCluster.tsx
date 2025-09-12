@@ -147,7 +147,8 @@ export const CreateCluster = () => {
   const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
-    isLkeEnterprisePhase2FeatureEnabled,
+    isLkeEnterprisePhase2DualStackFeatureEnabled,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled,
     isLkeEnterprisePostLAFeatureEnabled,
   } = useIsLkeEnterpriseEnabled();
 
@@ -157,7 +158,9 @@ export const CreateCluster = () => {
     useForm<CreateClusterFormValues>({
       defaultValues: {
         nodePools: [],
-        stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
+        stack_type: isLkeEnterprisePhase2DualStackFeatureEnabled
+          ? 'ipv4'
+          : null,
       },
       shouldUnregister: true,
     });
@@ -334,7 +337,10 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    if (isLkeEnterprisePhase2FeatureEnabled) {
+    if (
+      isLkeEnterprisePhase2DualStackFeatureEnabled ||
+      isLkeEnterprisePhase2BYOVPCFeatureEnabled
+    ) {
       payload = {
         ...payload,
         vpc_id: vpcId,
@@ -350,7 +356,7 @@ export const CreateCluster = () => {
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (
       (isLkeEnterprisePostLAFeatureEnabled ||
-        isLkeEnterprisePhase2FeatureEnabled) &&
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled) &&
       selectedTier === 'enterprise'
     ) {
       // Trigger the React Hook Form validation for BYO VPC selection.

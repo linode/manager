@@ -35,7 +35,7 @@ vi.mock('@linode/queries', async () => {
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const databaseInstancesEndpoint = '*/databases/instances';
 
 const managedDBBetaCapability = 'Managed Databases Beta';

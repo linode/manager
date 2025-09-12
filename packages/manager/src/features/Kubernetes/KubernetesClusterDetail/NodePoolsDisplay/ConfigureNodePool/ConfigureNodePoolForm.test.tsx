@@ -11,12 +11,12 @@ import { getNodePoolVersionOptions } from './ConfigureNodePoolDrawer.utils';
 import { ConfigureNodePoolForm } from './ConfigureNodePoolForm';
 
 const flags = {
-  lkeEnterprise: {
+  lkeEnterprise2: {
     postLa: true,
     enabled: true,
     la: true,
     ga: false,
-    phase2Mtc: false,
+    phase2Mtc: { byoVPC: false, dualStack: false },
   },
 };
 
