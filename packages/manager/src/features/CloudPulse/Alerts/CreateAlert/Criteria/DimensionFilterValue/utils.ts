@@ -138,6 +138,11 @@ export const getLinodeRegions = (linodes: Linode[]): Item<string, string>[] => {
   }));
 };
 
+/**
+ *
+ * @param vpcs List of VPCs
+ * @returns a flat list of VPC subnets with transformed labels
+ */
 export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
   if (!vpcs) return [];
 
