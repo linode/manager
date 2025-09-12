@@ -53,6 +53,17 @@ interface BaseFeatureFlag {
   enabled: boolean;
 }
 
+interface LinodeInterfacesFlag extends BaseFeatureFlag {
+  /**
+   * Shows a Beta chip for UI elements related to Linode Interfaces
+   */
+  beta?: boolean;
+  /**
+   * Shows a New chip for UI elements related to Linode Interfaces
+   */
+  new?: boolean;
+}
+
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
   new: boolean;
@@ -165,7 +176,7 @@ export interface Flags {
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
-  linodeInterfaces: BaseFeatureFlag;
+  linodeInterfaces: LinodeInterfacesFlag;
   lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
