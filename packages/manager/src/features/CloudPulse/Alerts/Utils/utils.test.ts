@@ -252,7 +252,10 @@ describe('useContextualAlertsState', () => {
   it('should return empty initial state when no entityId provided', () => {
     const alerts = alertFactory.buildList(3);
     const { result } = renderHook(() => useContextualAlertsState(alerts));
-    expect(result.current.initialState).toEqual({ system: [], user: [] });
+    expect(result.current.initialState).toEqual({
+      system_alerts: [],
+      user_alerts: [],
+    });
   });
 
   it('should include alerts that match entityId or account/region level alerts in initial states', () => {
@@ -285,9 +288,9 @@ describe('useContextualAlertsState', () => {
       useContextualAlertsState(alerts, entityId)
     );
 
-    expect(result.current.initialState.system).toContain(1);
-    expect(result.current.initialState.system).toContain(3);
-    expect(result.current.initialState.user).toContain(2);
+    expect(result.current.initialState.system_alerts).toContain(1);
+    expect(result.current.initialState.system_alerts).toContain(3);
+    expect(result.current.initialState.user_alerts).toContain(2);
   });
 
   it('should detect unsaved changes when alerts are modified', () => {
@@ -310,7 +313,7 @@ describe('useContextualAlertsState', () => {
     act(() => {
       result.current.setEnabledAlerts((prev) => ({
         ...prev,
-        system: [...(prev.system ?? []), 999],
+        system_alerts: [...(prev.system_alerts ?? []), 999],
       }));
     });
 

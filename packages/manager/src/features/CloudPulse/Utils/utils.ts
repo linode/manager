@@ -93,8 +93,8 @@ export const useContextualAlertsState = (
   const calculateInitialState = React.useCallback(
     (alerts: Alert[], entityId?: string): CloudPulseAlertsPayload => {
       const initialStates: CloudPulseAlertsPayload = {
-        system: [],
-        user: [],
+        system_alerts: [],
+        user_alerts: [],
       };
 
       alerts.forEach((alert) => {
@@ -107,7 +107,9 @@ export const useContextualAlertsState = (
           : isAccountOrRegion;
 
         if (shouldInclude) {
-          initialStates[alert.type]?.push(alert.id);
+          const payloadAlertType =
+            alert.type === 'system' ? 'system_alerts' : 'user_alerts';
+          initialStates[payloadAlertType]?.push(alert.id);
         }
       });
 
@@ -131,8 +133,8 @@ export const useContextualAlertsState = (
   // Check if the enabled alerts have changed from the initial state
   const hasUnsavedChanges = React.useMemo(() => {
     return (
-      !arraysEqual(enabledAlerts.system, initialState.system) ||
-      !arraysEqual(enabledAlerts.user, initialState.user)
+      !arraysEqual(enabledAlerts.system_alerts, initialState.system_alerts) ||
+      !arraysEqual(enabledAlerts.user_alerts, initialState.user_alerts)
     );
   }, [enabledAlerts, initialState]);
 
