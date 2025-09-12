@@ -61,7 +61,6 @@ interface ValueFieldRendererProps {
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
-
   /**
    * The currently selected value for the input field.
    */
