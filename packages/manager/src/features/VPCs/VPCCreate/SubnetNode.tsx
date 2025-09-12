@@ -114,6 +114,7 @@ export const SubnetNode = (props: Props) => {
           <Grid size={1}>
             <StyledButton
               aria-label={`Remove Subnet ${label !== '' ? label : idx}`}
+              disabled={disabled}
               onClick={() => remove(idx)}
             >
               <CloseIcon data-testid={`delete-subnet-${idx}`} />

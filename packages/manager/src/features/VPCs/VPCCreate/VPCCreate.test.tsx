@@ -6,6 +6,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCCreate from './VPCCreate';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_vpc: true,
+    },
+  })),
+}));
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 beforeEach(() => {
   // ignores the console errors in these tests as they're supposed to happen
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -73,5 +84,41 @@ describe('VPC create page', () => {
     const subnetIP = getAllByTestId('textfield-input');
     expect(subnetIP[4]).toBeInTheDocument();
     expect(subnetIP[4]).toHaveValue('10.0.0.0/24');
+  });
+
+  it('should disable inputs if user does not have create_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_vpc: false,
+      },
+    });
+    const { getByLabelText, getByText } = renderWithTheme(<VPCCreate />);
+
+    expect(getByLabelText('Region')).toBeDisabled();
+    expect(getByLabelText('VPC Label')).toBeDisabled();
+    const description = screen.getByRole('textbox', { name: /description/i });
+    expect(description).toBeDisabled();
+    expect(getByLabelText('Subnet Label')).toBeDisabled();
+    expect(getByLabelText('Subnet IP Address Range')).toBeDisabled();
+    expect(getByText('Add another Subnet')).toBeDisabled();
+    expect(getByText('Create VPC')).toBeDisabled();
+  });
+
+  it('should enable inputs if user has create_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_vpc: true,
+      },
+    });
+    const { getByLabelText, getByText } = renderWithTheme(<VPCCreate />);
+
+    expect(getByLabelText('Region')).toBeEnabled();
+    expect(getByLabelText('VPC Label')).toBeEnabled();
+    const description = screen.getByRole('textbox', { name: /description/i });
+    expect(description).toBeEnabled();
+    expect(getByLabelText('Subnet Label')).toBeEnabled();
+    expect(getByLabelText('Subnet IP Address Range')).toBeEnabled();
+    expect(getByText('Add another Subnet')).toBeEnabled();
+    expect(getByText('Create VPC')).toBeEnabled();
   });
 });
