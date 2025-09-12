@@ -819,9 +819,6 @@ export const lightTheme: ThemeOptions = {
           '&:focus': {
             outline: `1px dotted ${Color.Neutrals[60]}`,
           },
-          '&:last-child': {
-            marginRight: 0,
-          },
           alignItems: 'center',
           borderRadius: 4,
           color: Content.Text.Primary.Default,

@@ -1,7 +1,8 @@
-import { BetaChip, Dialog } from '@linode/ui';
+import { Dialog } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
+import { LinodeInterfaceFeatureStatusChip } from '../../LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
 import { ErrorDialogContent } from './DialogContents/ErrorDialogContent';
 import { PromptDialogContent } from './DialogContents/PromptDialogContent';
@@ -60,7 +61,7 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
         },
       }}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
-      titleSuffix={<BetaChip />}
+      titleSuffix={<LinodeInterfaceFeatureStatusChip />}
     >
       {dialogState.step === 'prompt' && (
         <PromptDialogContent {...dialogProps} state={dialogState} />
