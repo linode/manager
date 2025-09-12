@@ -36,6 +36,7 @@ interface FetchOptionsProps {
    */
   type: 'alerts' | 'metrics';
 }
+
 /**
  * Custom hook to return selectable options based on the dimension type.
  * Handles fetching and transforming data for edge-cases.
@@ -51,7 +52,7 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
       )) ||
     [];
 
-  // Create a filter for regions based on suppoerted region IDs
+  // Create a filter for regions based on supported region IDs
   const regionFilter: Filter = {
     '+or':
       supportedRegionIds && supportedRegionIds.length > 0
@@ -76,11 +77,10 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     'firewall'
   );
 
-  // Filter firewall resources by the given entities list
-  const filteredFirewallResourcesIds = useMemo(
-    () => getFilteredFirewallResources(firewallResources, entities),
-    [firewallResources, entities]
-  );
+  // Decide firewall resource IDs based on scope
+  const filteredFirewallResourcesIds = useMemo(() => {
+    return getFilteredFirewallResources(firewallResources, entities);
+  }, [firewallResources, entities]);
 
   const idFilter = {
     '+or': filteredFirewallResourcesIds.length
@@ -91,6 +91,7 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
   const combinedFilter: Filter = {
     '+and': [idFilter, regionFilter].filter(Boolean) as Filter[],
   };
+
   // Fetch all linodes with the combined filter
   const {
     data: linodes,

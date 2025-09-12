@@ -59,6 +59,7 @@ import {
   firewallEntityfactory,
   firewallFactory,
   firewallMetricDefinitionsResponse,
+  firewallMetricRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -740,6 +741,9 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
+    const linodesWithFirewalls = linodeFactory.buildList(10, {
+      region: 'ap-west',
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -820,7 +824,13 @@ export const handlers = [
         id: 1006,
       }),
     ];
+    const linodeFirewall = linodeFactory.build({
+      region: 'ap-west',
+      label: 'Linode-firewall-test',
+      id: 90909,
+    });
     const linodes = [
+      ...linodesWithFirewalls,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -873,6 +883,7 @@ export const handlers = [
       }),
       eventLinode,
       multipleIPLinode,
+      linodeFirewall,
     ];
 
     if (request.headers.get('x-filter')) {
@@ -883,19 +894,62 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
-      // filter the linodes based on id or region
       if (andFilters?.length) {
-        filteredLinodes = filteredLinodes.filter((linode) => {
-          const filteredById = andFilters.every(
-            (filter: { id: number }) => filter.id === linode.id
-          );
-          const filteredByRegion = andFilters.every(
-            (filter: { region: string }) => filter.region === linode.region
-          );
+        // Check if this is a combined filter structure (multiple filter groups with +or arrays)
+        const hasCombinedFilter = andFilters.some(
+          (filterGroup: any) =>
+            filterGroup['+or'] && Array.isArray(filterGroup['+or'])
+        );
 
-          return filteredById || filteredByRegion;
-        });
+        if (hasCombinedFilter) {
+          // Handle combined filter structure for CloudPulse alerts
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            return andFilters.every((filterGroup: any) => {
+              // Handle id filter group
+              if (filterGroup['+or'] && Array.isArray(filterGroup['+or'])) {
+                const idFilters = filterGroup['+or'].filter(
+                  (f) => f.id !== undefined
+                );
+                const regionFilters = filterGroup['+or'].filter(
+                  (f) => f.region !== undefined
+                );
+
+                // Check if linode matches any id in the id filter group
+                const matchesId =
+                  idFilters.length === 0 ||
+                  idFilters.some((f) => Number(f.id) === linode.id);
+
+                // Check if linode matches any region in the region filter group
+                const matchesRegion =
+                  regionFilters.length === 0 ||
+                  regionFilters.some((f) => f.region === linode.region);
+
+                return matchesId && matchesRegion;
+              }
+
+              return false;
+            });
+          });
+        } else {
+          // Handle legacy andFilters for other use cases
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            const filteredById = andFilters.every(
+              (filter: { id: number }) => filter.id === linode.id
+            );
+            const filteredByRegion = andFilters.every(
+              (filter: { region: string }) => filter.region === linode.region
+            );
+
+            return filteredById || filteredByRegion;
+          });
+        }
       }
+
+      // The legacy id/region filtering logic has been removed here because it
+      // duplicated the work done above and incorrectly trimmed results when a
+      // newer "combined" filter structure (an array of "+or" groups inside
+      // "+and") was supplied. For legacy consumers the filtering is handled
+      // in the `else` branch above (lines ~922–934).
 
       // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
       if (orFilters?.length) {
@@ -1162,6 +1216,9 @@ export const handlers = [
           }),
           firewallEntityfactory.build({
             type: 'linode',
+            label: 'Linode-firewall-test',
+            parent_entity: null,
+            id: 90909,
           }),
         ],
       }),
@@ -2877,12 +2934,35 @@ export const handlers = [
         type: 'user',
         updated_by: 'user1',
       }),
+      alertFactory.build({
+        id: 999,
+        label: 'Firewall - testing',
+        service_type: 'firewall',
+        type: 'user',
+        created_by: 'user1',
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
       if (params.id !== undefined) {
         return HttpResponse.json(
           alertFactory.build({
@@ -2907,6 +2987,19 @@ export const handlers = [
   http.put(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params, request }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
       const body: any = request.json();
       return HttpResponse.json(
         alertFactory.build({
@@ -3304,7 +3397,7 @@ export const handlers = [
         ],
       };
       if (params.serviceType === 'firewall') {
-        return HttpResponse.json({ data: [firewallMetricDefinitionsResponse] });
+        return HttpResponse.json({ data: firewallMetricDefinitionsResponse });
       }
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
