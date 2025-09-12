@@ -49,7 +49,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
 
   return isLkeEnterprisePhase2FeatureEnabled ? (
-    <Stack divider={<Divider />} spacing={3}>
+    <Stack divider={<Divider />} spacing={4}>
       <Controller
         control={control}
         name="stack_type"
@@ -57,6 +57,12 @@ export const ClusterNetworkingPanel = (props: Props) => {
           <RadioGroup
             {...field}
             onChange={(e) => field.onChange(e.target.value)}
+            sx={{
+              '&.MuiFormGroup-root': {
+                marginBottom: 0,
+                marginTop: 0,
+              },
+            }}
             value={field.value ?? null}
           >
             <FormLabel htmlFor="stack_type">IP Stack</FormLabel>
@@ -69,7 +75,7 @@ export const ClusterNetworkingPanel = (props: Props) => {
           </RadioGroup>
         )}
       />
-      <Stack marginTop={3}>
+      <Stack marginTop={4}>
         <Typography
           sx={(theme) => ({
             font: theme.tokens.alias.Typography.Label.Bold.S,
@@ -89,6 +95,11 @@ export const ClusterNetworkingPanel = (props: Props) => {
             if (!isUsingOwnVpc) {
               clearErrors(['vpc_id', 'subnet_id']);
             }
+          }}
+          sx={{
+            '&.MuiFormGroup-root': {
+              marginBottom: 0,
+            },
           }}
           value={isUsingOwnVpc}
         >
@@ -126,7 +137,6 @@ export const ClusterNetworkingPanel = (props: Props) => {
                   }
                   label="VPC"
                   loading={isLoading}
-                  noMarginTop
                   noOptionsText="There are no VPCs in the selected region."
                   onBlur={field.onBlur}
                   onChange={(e, vpc) => {

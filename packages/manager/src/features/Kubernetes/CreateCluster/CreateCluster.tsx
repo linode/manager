@@ -493,7 +493,7 @@ export const CreateCluster = () => {
             />
             {isLkeEnterpriseLAFlagEnabled && (
               <>
-                <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
+                <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
                 <ClusterTierPanel
                   handleClusterTierSelection={handleClusterTierSelection}
                   isUserRestricted={isCreateClusterRestricted}
@@ -501,7 +501,7 @@ export const CreateCluster = () => {
                 />
               </>
             )}
-            <Divider sx={{ marginTop: 4 }} />
+            <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
             <StyledStackWithTabletBreakpoint>
               <Stack>
                 <RegionSelect
@@ -539,7 +539,7 @@ export const CreateCluster = () => {
                 />
               </StyledDocsLinkContainer>
             </StyledStackWithTabletBreakpoint>
-            <Divider sx={{ marginTop: 4 }} />
+            <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
             <StyledStackWithTabletBreakpoint>
               <Stack>
                 <Select
@@ -567,7 +567,7 @@ export const CreateCluster = () => {
             </StyledStackWithTabletBreakpoint>
             {showAPL && (
               <>
-                <Divider sx={{ marginTop: 4 }} />
+                <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
                 <StyledStackWithTabletBreakpoint>
                   <Stack>
                     <ApplicationPlatform
@@ -581,8 +581,8 @@ export const CreateCluster = () => {
             )}
             <Divider
               sx={{
-                marginBottom: selectedTier === 'enterprise' ? 2 : 1,
-                marginTop: showAPL ? 1 : 4,
+                marginBottom: selectedTier === 'enterprise' ? 4 : 2,
+                marginTop: showAPL ? 2 : 4,
               }}
             />
             {selectedTier !== 'enterprise' && (
@@ -610,7 +610,10 @@ export const CreateCluster = () => {
             )}
             <>
               <Divider
-                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+                sx={{
+                  marginTop: selectedTier === 'enterprise' ? 4 : 2,
+                  marginBottom: 2,
+                }}
               />
               <ControlPlaneACLPane
                 enableControlPlaneACL={controlPlaneACL}
@@ -642,7 +645,7 @@ export const CreateCluster = () => {
               />
             </>
 
-            <Divider sx={{ marginBottom: 4 }} />
+            <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
             <NodePoolPanel
               apiError={errorMap.node_pools}
               handleConfigurePool={handleOpenNodePoolConfigDrawer}
