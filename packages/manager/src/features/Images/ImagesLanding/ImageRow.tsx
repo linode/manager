@@ -1,12 +1,11 @@
 import { useProfile } from '@linode/queries';
-import { Stack, TooltipIcon } from '@linode/ui';
+import { LinkButton, Stack, TooltipIcon } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import UnlockIcon from 'src/assets/icons/unlock.svg';
-import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
