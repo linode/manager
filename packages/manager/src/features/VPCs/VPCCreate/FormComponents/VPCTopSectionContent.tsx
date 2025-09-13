@@ -24,6 +24,7 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -66,6 +67,8 @@ export const VPCTopSectionContent = (props: Props) => {
 
   const subnets = useWatch({ control, name: 'subnets' });
   const vpcIPv6 = useWatch({ control, name: 'ipv6' });
+
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
 
   const { isDualStackEnabled, isDualStackSelected, isEnterpriseCustomer } =
     useVPCDualStack(vpcIPv6);
@@ -150,6 +153,7 @@ export const VPCTopSectionContent = (props: Props) => {
                 <Grid container spacing={2}>
                   <SelectionCard
                     checked={!isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
                     gridSize={{
                       md: isDrawer ? 12 : 3,
                       sm: 12,
@@ -165,7 +169,12 @@ export const VPCTopSectionContent = (props: Props) => {
                         })
                       );
                     }}
-                    renderIcon={() => <Radio checked={!isDualStackSelected} />}
+                    renderIcon={() => (
+                      <Radio
+                        checked={!isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
                     renderVariant={() => (
                       <TooltipIcon
                         status="info"
@@ -189,6 +198,7 @@ export const VPCTopSectionContent = (props: Props) => {
                   />
                   <SelectionCard
                     checked={isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
                     gridSize={{
                       md: isDrawer ? 12 : 3,
                       sm: 12,
@@ -208,7 +218,12 @@ export const VPCTopSectionContent = (props: Props) => {
                         })
                       );
                     }}
-                    renderIcon={() => <Radio checked={isDualStackSelected} />}
+                    renderIcon={() => (
+                      <Radio
+                        checked={isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
                     renderVariant={() => (
                       <TooltipIcon
                         status="info"
@@ -263,12 +278,14 @@ export const VPCTopSectionContent = (props: Props) => {
                 <FormControlLabel
                   checked={vpcIPv6 && vpcIPv6[0].range === '/52'}
                   control={<Radio />}
+                  disabled={!permissions?.create_vpc}
                   label="/52"
                   value="/52"
                 />
                 <FormControlLabel
                   checked={vpcIPv6 && vpcIPv6[0].range === '/48'}
                   control={<Radio />}
+                  disabled={!permissions?.create_vpc}
                   label="/48"
                   value="/48"
                 />
