@@ -86,7 +86,6 @@ export const TruncatedList = (props: TruncatedListProps) => {
 
     containerRef.current.style.overflow = showAll ? 'visible' : 'hidden';
 
-    // Initially hide all overflow indicators
     for (let i = 0; i < listItems.length; ++i) {
       listItems[i].hidden = i % 2 === 0;
       if (i % 2 === 0 && justifyOverflowButtonRight) {
@@ -118,11 +117,9 @@ export const TruncatedList = (props: TruncatedListProps) => {
     while (left <= right) {
       const middle = Math.floor((left + right) / 2);
 
-      // show all items before the activeBreakpoint
       for (let i = 0; i < middle; i += 1) {
         listItems[i * 2 + 1].hidden = false;
       }
-      // hide all items after the activeBreakpoint
       for (let i = middle; i < numBreakpoints; i += 1) {
         listItems[i * 2 + 1].hidden = true;
       }
@@ -149,20 +146,20 @@ export const TruncatedList = (props: TruncatedListProps) => {
       return;
     }
 
-    // show all items before the activeBreakpoint
     for (let i = 0; i < numItemsShowingWithTruncation; i += 1) {
       listItems[i * 2 + 1].hidden = false;
     }
-    // hide all items after activeBreakpoint
     for (let i = numItemsShowingWithTruncation; i < numBreakpoints; i += 1) {
       listItems[i * 2 + 1].hidden = true;
     }
 
     const breakpointEl = listItems[numItemsShowingWithTruncation * 2];
     breakpointEl.hidden = false;
+
     if (justifyOverflowButtonRight) {
       breakpointEl.classList.add('visible-overflow-button'); // Add class to the visible one
     }
+
     if (numItemsShowingWithTruncation > 0) {
       const lastVisibleContentIndex =
         (numItemsShowingWithTruncation - 1) * 2 + 1;
@@ -214,7 +211,12 @@ export const TruncatedList = (props: TruncatedListProps) => {
         sx={listContainerSx}
       >
         {childArray.map((item, i) => (
-          <li key={i}>{item}</li>
+          <li
+            data-testid={`${dataTestId ?? 'truncated-list'}-list-item`}
+            key={i}
+          >
+            {item}
+          </li>
         ))}
         <OverflowButton
           buttonCopy={collapseText}
@@ -234,7 +236,9 @@ export const TruncatedList = (props: TruncatedListProps) => {
           onClick={handleToggle}
         />
       </li>
-      <li>{item}</li>
+      <li data-testid={`${dataTestId ?? 'truncated-list'}-list-item`}>
+        {item}
+      </li>
     </React.Fragment>
   ));
 
