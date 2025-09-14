@@ -1,4 +1,4 @@
-import { Box, StyledLinkButton } from '@linode/ui';
+import { Box, LinkButton } from '@linode/ui';
 import React, { useLayoutEffect, useRef } from 'react';
 import { useCallback } from 'react';
 import { debounce } from 'throttle-debounce';
@@ -57,7 +57,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
     }
 
     return (
-      <StyledLinkButton
+      <LinkButton
         onClick={onClick}
         sx={(theme) => ({
           font: theme.tokens.alias.Typography.Label.Semibold.Xs,
@@ -67,7 +67,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
         })}
       >
         {buttonCopy} {!showAll && `(+${hiddenItemsCount})`}
-      </StyledLinkButton>
+      </LinkButton>
     );
   });
 
