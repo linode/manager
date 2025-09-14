@@ -15,10 +15,3 @@ export const StyledPermissionItem = styled(Typography, {
   display: 'inline-block',
   padding: `0px ${theme.tokens.spacing.S6} ${theme.tokens.spacing.S2}`,
 }));
-
-export const StyledContainer = styled('div', {
-  label: 'StyledContainer',
-})(() => ({
-  // marginLeft: -6,
-  // position: 'relative',
-}));
