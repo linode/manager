@@ -171,8 +171,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const { data: profile } = useProfile();
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
-  // Convert EntityType to AccessType for permission logic
-  const accessType = entityType as AccessType;
+  const accessType = entityType;
 
   /**
    * Apply the same Beta/LA permission logic as usePermissions.
