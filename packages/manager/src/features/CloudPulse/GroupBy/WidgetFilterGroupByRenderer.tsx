@@ -61,7 +61,7 @@ export const WidgetFilterGroupByRenderer = (
       handleChange(selectedValue.map(({ value }) => value));
       setOpen(false);
     },
-    [handleChange, onCancel]
+    [handleChange]
   );
 
   const isDisabled =
