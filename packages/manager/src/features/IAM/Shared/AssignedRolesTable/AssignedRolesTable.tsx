@@ -398,6 +398,7 @@ export const AssignedRolesTable = () => {
         TableRowHead={RoleTableRowHead}
       />
       <AssignNewRoleDrawer
+        assignedRoles={assignedRoles}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
       />
