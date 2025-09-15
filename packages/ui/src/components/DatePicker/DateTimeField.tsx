@@ -1,3 +1,4 @@
+import { CalendarIcon, CloseIcon, IconButton } from '@linode/ui';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTimeField as MUIDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -6,6 +7,7 @@ import React from 'react';
 import { convertToKebabCase } from '../../utilities';
 import { Box } from '../Box/Box';
 import { FormHelperText } from '../FormHelperText';
+import { InputAdornment } from '../InputAdornment/InputAdornment';
 import { InputLabel } from '../InputLabel/InputLabel';
 
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -14,6 +16,7 @@ import type { DateTime } from 'luxon';
 
 interface DateTimeFieldProps
   extends Omit<MUIDateTimeFieldProps, 'onChange' | 'value'> {
+  disabled?: boolean;
   errorText?: string;
   format?:
     | 'dd-MM-yyyy HH:mm'
@@ -35,6 +38,7 @@ export const DateTimeField = ({
   format = 'yyyy-MM-dd hh:mm a', // Default format includes time
   inputRef,
   label,
+  disabled,
   onChange,
   onClick,
   sx,
@@ -52,6 +56,10 @@ export const DateTimeField = ({
     }
   };
 
+  const handleClear = () => {
+    onChange(null);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box display="flex" flexDirection="column" sx={sx}>
@@ -65,8 +73,10 @@ export const DateTimeField = ({
           {label}
         </InputLabel>
         <MUIDateTimeField
+          disabled={disabled}
           format={format}
           inputProps={{
+            // slotProps.htmlInput does not appear to be working for DateTimeField
             'aria-errormessage': errorText ? errorTextId : undefined,
             'aria-invalid': Boolean(errorText),
             'aria-labelledby': validInputId,
@@ -79,7 +89,34 @@ export const DateTimeField = ({
             textField: {
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),
+              disabled,
               helperText: '',
+              InputProps: {
+                // Nesting slotProps.input here does not appear to work
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {value ? (
+                      <IconButton
+                        disabled={disabled}
+                        disableRipple
+                        onClick={handleClear}
+                        size="small"
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        disabled={disabled}
+                        disableRipple
+                        onClick={onClick}
+                        size="small"
+                      >
+                        <CalendarIcon />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                ),
+              },
             },
           }}
           sx={{ marginTop: 1 }}

@@ -8,6 +8,7 @@ import {
   Color,
   Component,
   Content,
+  DateRangeField,
   Dropdown,
   Font,
   GlobalHeader,
@@ -755,6 +756,80 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           color: Search.Filled.Icon,
+        },
+      },
+    },
+    MuiPickersInputBase: {
+      styleOverrides: {
+        root: {
+          '&.MuiPickersInputBase-adornedEnd': {
+            '.MuiInputAdornment-positionEnd': {
+              marginLeft: Spacing.S12,
+            },
+            '&.Mui-focused, &:active, &:focus, &.Mui-focused:hover': {
+              svg: {
+                color: DateRangeField.Focus.Icon,
+              },
+            },
+            svg: {
+              color: DateRangeField.Default.Icon,
+            },
+          },
+        },
+      },
+    },
+    MuiPickersOutlinedInput: {
+      styleOverrides: {
+        root: {
+          background: DateRangeField.Default.Background,
+          '&:hover': {
+            '& .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: DateRangeField.Hover.Border,
+            },
+          },
+          '&.Mui-focused, &:active, &:focus, &.Mui-focused:hover': {
+            '& .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: DateRangeField.Focus.Border,
+            },
+            '& .MuiPickersInputBase-sectionsContainer': {
+              color: DateRangeField.Filled.Text,
+            },
+          },
+          '&.Mui-error': {
+            '& .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: DateRangeField.Error.Border,
+            },
+          },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover':
+            {
+              '& .MuiPickersOutlinedInput-notchedOutline': {
+                borderColor: DateRangeField.Disabled.Border,
+                color: DateRangeField.Disabled.Text,
+              },
+              '& .MuiPickersInputBase-sectionsContainer': {
+                'span[aria-valuenow]:not([aria-valuenow="Empty"])': {
+                  color: DateRangeField.Disabled.Text,
+                },
+              },
+              backgroundColor: DateRangeField.Disabled.Background,
+            },
+        },
+        sectionsContainer: {
+          color: DateRangeField.Default.Text,
+          font: Typography.Label.Regular.Placeholder,
+
+          /**
+           * Our design calls for filled text to be normal, not italic.
+           * There is no css property for this, so we need to target the aria-valuenow attribute.
+           * The same applies for the sectionAfter.
+           */
+          'span[aria-valuenow]:not([aria-valuenow="Empty"]), span[aria-valuenow]:not([aria-valuenow="Empty"]) ~ .MuiPickersInputBase-sectionAfter':
+            {
+              color: DateRangeField.Filled.Text,
+            },
+        },
+        notchedOutline: {
+          borderColor: DateRangeField.Default.Border,
         },
       },
     },
