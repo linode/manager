@@ -1078,9 +1078,15 @@ export const lightTheme: ThemeOptions = {
     },
     MuiPickersSectionList: {
       styleOverrides: {
-        root: {
-          font: Typography.Label.Regular.S,
-          lineHeight: Font.LineHeight.Xxs, // Important for picker height (34px)
+        section: {
+          '&&': {
+            lineHeight: Font.LineHeight.Xxs, // Important for picker height (34px)
+          },
+        },
+        sectionContent: {
+          '&&': {
+            lineHeight: Font.LineHeight.Xxs, // Important for picker height (34px)
+          },
         },
       },
     },
@@ -1132,6 +1138,7 @@ export const lightTheme: ThemeOptions = {
           color: DateRangeField.Default.Text,
           font: Typography.Label.Regular.Placeholder,
           fontStyle: 'italic',
+          width: 'inherit', // Override MUI width of 182px
 
           /**
            * Our design calls for filled text to be normal, not italic.

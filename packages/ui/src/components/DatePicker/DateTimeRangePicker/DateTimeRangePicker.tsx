@@ -360,7 +360,7 @@ export const DateTimeRangePicker = ({
               </Box>
               <Box
                 display="flex"
-                gap={2}
+                gap={() => theme.spacingFunction(8)}
                 justifyContent="space-between"
                 paddingBottom={2}
               >
@@ -379,6 +379,7 @@ export const DateTimeRangePicker = ({
                       });
                     }
                   }}
+                  sx={{ flex: 1 }}
                   value={startDate}
                 />
                 <TimePicker
@@ -396,6 +397,7 @@ export const DateTimeRangePicker = ({
                       });
                     }
                   }}
+                  sx={{ flex: 1 }}
                   value={endDate}
                 />
                 <TimeZoneSelect
