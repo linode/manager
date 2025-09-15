@@ -27,14 +27,15 @@ export const NodeBalancerFirewallsActionMenu = (props: Props) => {
     nodeBalancerId
   );
 
-  const disabledProps =
-    !firewallPermissions.delete_firewall_device &&
-    !nodeBalancerPermissions.update_nodebalancer
-      ? {
-          disabled: true,
-          tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
-        }
-      : {};
+  const disabledProps = !(
+    firewallPermissions.delete_firewall_device &&
+    nodeBalancerPermissions.update_nodebalancer
+  )
+    ? {
+        disabled: true,
+        tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
+      }
+    : {};
 
   const action: Action = {
     onClick: () => {
@@ -51,6 +52,7 @@ export const NodeBalancerFirewallsActionMenu = (props: Props) => {
       disabled={action.disabled}
       key={action.title}
       onClick={action.onClick}
+      tooltip={action.tooltip}
     />
   );
 };
