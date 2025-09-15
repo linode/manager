@@ -14,6 +14,7 @@ import { getOperatorGroup, getStaticOptions } from './utils';
 
 import type { OperatorGroup, ValueFieldConfig } from './constants';
 import type {
+  AlertDefinitionScope,
   CloudPulseServiceType,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
@@ -52,11 +53,18 @@ interface ValueFieldRendererProps {
    * Callback fired when the value changes.
    */
   onChange: (value: string | string[]) => void;
-
   /**
    * The operator used in the current filter. Used to determine the type of input to show.
    */
   operator: DimensionFilterOperatorType | null;
+  /**
+   * Scope of fetching: account (all entities) or entity (filtered subset) or region (entities bound to selected region).
+   */
+  scope?: AlertDefinitionScope | null;
+  /**
+   * List of selected regions in the region scope
+   */
+  selectedRegions?: string[];
   /**
    * Service type of the alert
    */
@@ -75,6 +83,7 @@ interface ValueFieldRendererProps {
 export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const {
     serviceType,
+    scope,
     dimensionLabel,
     disabled,
     entities,
@@ -108,6 +117,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     entities,
     serviceType,
     type: 'alerts',
+    scope,
   });
   const staticOptions = useMemo(
     () =>

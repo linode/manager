@@ -61,6 +61,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
+
   const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,

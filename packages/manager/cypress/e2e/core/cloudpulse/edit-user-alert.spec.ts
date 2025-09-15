@@ -113,7 +113,7 @@ const notificationChannels = notificationChannelFactory.build({
   type: 'custom',
 });
 const mockProfile = profileFactory.build({
-  timezone: 'gmt',
+  timezone: 'UTC',
 });
 const services = serviceTypesFactory.build({
   service_type: 'dbaas',
@@ -184,7 +184,7 @@ describe('Integration Tests for Edit Alert', () => {
   const assertAlertRow = (label: string, updated: string): void => {
     const formattedDate = formatDate(updated, {
       format: 'MMM dd, yyyy, h:mm a',
-      timezone: 'GMT',
+      timezone: 'UTC',
     });
 
     cy.findByText(label)
