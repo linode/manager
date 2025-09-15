@@ -1,6 +1,6 @@
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { useProfile } from '@linode/queries';
-import { ActionsPanel, Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { ActionsPanel, LinkButton, Notice, Typography } from '@linode/ui';
 import { capitalize, pluralize, useDialog } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -105,9 +105,9 @@ export const MigrationNotification = React.memo((props: Props) => {
             ? migrationScheduledText()
             : notificationMessage}
           {` `}
-          <StyledLinkButton onClick={() => openDialog(linodeID)}>
+          <LinkButton onClick={() => openDialog(linodeID)}>
             {capitalize(migrationActionDescription)}
-          </StyledLinkButton>
+          </LinkButton>
           .
         </Typography>
       </Notice>
