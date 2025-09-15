@@ -1,12 +1,13 @@
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import ChevronLeftIcon from '../../../assets/icons/chevron-left.svg';
+import ChevronRightIcon from '../../../assets/icons/chevron-right.svg';
 import { Box } from '../../Box/Box';
 import { IconButton } from '../../IconButton';
 import { Stack } from '../../Stack/Stack';
 import { Typography } from '../../Typography/Typography';
-import { DayBox } from './Calendar.styles';
+import { DayBox, DayBoxInner } from './Calendar.styles';
 
 import type { DateTime } from 'luxon';
 
@@ -33,12 +34,12 @@ export const Calendar = ({
   const endOfMonth = month.endOf('month');
   const startDay = startOfMonth.weekday % 7;
   const totalDaysInMonth = endOfMonth.day;
-  const totalGridCells = 42; // Always 6 rows (6 × 7)
+  // Calculate dynamic grid size based on actual content
   const days = [];
 
   // Fill leading empty slots before the first day of the month
   for (let i = 0; i < startDay; i++) {
-    days.push(<Box key={`empty-${i}`} sx={{ height: 40, width: 40 }} />);
+    days.push(<Box key={`empty-${i}`} sx={{ height: 32, width: 32 }} />);
   }
 
   // Fill actual days of the month
@@ -51,26 +52,62 @@ export const Calendar = ({
       endDate.isValid &&
       currentDay >= startDate &&
       currentDay <= endDate;
-    const isStartOrEnd =
-      (startDate && startDate.isValid && currentDay.equals(startDate)) ||
-      (endDate && endDate.isValid && currentDay.equals(endDate));
+    const isStart =
+      startDate && startDate.isValid && currentDay.hasSame(startDate, 'day');
+    const isEnd =
+      endDate && endDate.isValid && currentDay.hasSame(endDate, 'day');
+
+    // Determine visual boundaries for cross-month date ranges
+    // This ensures rounded edges appear at the first/last visible dates in each month
+    const prevDay = day > 1 ? month.set({ day: day - 1 }) : null;
+    const nextDay = day < totalDaysInMonth ? month.set({ day: day + 1 }) : null;
+
+    // Check if adjacent days in this month are also selected
+    const prevDaySelected =
+      prevDay &&
+      startDate &&
+      endDate &&
+      startDate.isValid &&
+      endDate.isValid &&
+      prevDay >= startDate &&
+      prevDay <= endDate;
+
+    const nextDaySelected =
+      nextDay &&
+      startDate &&
+      endDate &&
+      startDate.isValid &&
+      endDate.isValid &&
+      nextDay >= startDate &&
+      nextDay <= endDate;
+
+    // Visual start: actual start OR first selected day in this month
+    const isVisualStart = isStart || (isSelected && !prevDaySelected);
+    // Visual end: actual end OR last selected day in this month
+    const isVisualEnd = isEnd || (isSelected && !nextDaySelected);
 
     days.push(
       <DayBox
+        isEnd={isVisualEnd}
         isSelected={isSelected}
-        isStartOrEnd={isStartOrEnd}
+        isStart={isVisualStart}
         key={`${month.month} ${day}`}
         onClick={() => onDateClick(currentDay, focusedField)}
       >
-        {day}
+        <DayBoxInner isEnd={isEnd} isSelected={isSelected} isStart={isStart}>
+          {day}
+        </DayBoxInner>
       </DayBox>,
     );
   }
 
-  // Fill trailing empty slots after the last day of the month
-  const remainingCells = totalGridCells - days.length;
+  // Only add trailing empty slots to complete the last row (avoid entirely empty rows)
+  const currentCells = days.length;
+  const totalCellsNeeded = Math.ceil(currentCells / 7) * 7; // Round up to complete rows
+  const remainingCells = totalCellsNeeded - currentCells;
+
   for (let i = 0; i < remainingCells; i++) {
-    days.push(<Box key={`empty-after-${i}`} sx={{ height: 40, width: 40 }} />);
+    days.push(<Box key={`empty-after-${i}`} sx={{ height: 32, width: 32 }} />);
   }
 
   return (
@@ -80,48 +117,77 @@ export const Calendar = ({
         alignItems="center"
         direction="row"
         display="flex"
-        gap={1 / 2}
-        justifyContent="space-between"
-        marginBottom={3}
-        paddingTop={2}
-        spacing={1}
+        gap={(theme) => theme.spacingFunction(8)}
+        paddingBottom={(theme) => theme.spacingFunction(8)}
+        paddingLeft={(theme) => theme.spacingFunction(22)}
+        paddingRight={(theme) => theme.spacingFunction(22)}
+        sx={(theme) => ({
+          borderBottom: `1px solid ${theme.tokens.component.Calendar.Border}`,
+        })}
         textAlign={direction}
       >
-        {direction === 'left' && (
-          <Box sx={{ flexGrow: 1 }}>
+        <NavigationSpacer>
+          {direction === 'left' && (
             <IconButton
               disableRipple
               onClick={() => setMonth(month.minus({ months: 1 }))}
               size="medium"
+              sx={(theme) => ({
+                color: theme.tokens.component.Calendar.Icon,
+              })}
             >
               <ChevronLeftIcon />
             </IconButton>
-          </Box>
-        )}
+          )}
+        </NavigationSpacer>
         {/* Display Month & Year */}
 
-        <Typography sx={{ flexGrow: 3 }}>
+        <Typography
+          sx={(theme) => ({
+            flexGrow: 1,
+            textAlign: 'center',
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+          })}
+        >
           {month.toFormat('MMMM yyyy')}
         </Typography>
 
-        {direction === 'right' && (
-          <Box sx={{ flexGrow: 1 }}>
+        <NavigationSpacer>
+          {direction === 'right' && (
             <IconButton
               disableRipple
               onClick={() => setMonth(month.plus({ months: 1 }))}
               size="medium"
+              sx={(theme) => ({
+                color: theme.tokens.component.Calendar.Icon,
+              })}
             >
               <ChevronRightIcon />
             </IconButton>
-          </Box>
-        )}
+          )}
+        </NavigationSpacer>
       </Stack>
 
       {/* Calendar Grid */}
-      <Box display="grid" gridTemplateColumns="repeat(7, 40px)">
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(7, 32px)"
+        paddingLeft={(theme) => theme.spacingFunction(12)}
+        paddingRight={(theme) => theme.spacingFunction(12)}
+        rowGap={(theme) => theme.spacingFunction(2)}
+      >
         {/* Weekday Labels */}
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, index) => (
-          <Typography align="center" key={`weekday-${index}`}>
+          <Typography
+            align="center"
+            key={`weekday-${index}`}
+            sx={(theme) => ({
+              color: theme.tokens.component.Calendar.Text.Default,
+              font: theme.tokens.alias.Typography.Label.Bold.Xs,
+              paddingTop: theme.spacingFunction(12),
+              paddingBottom: theme.spacingFunction(12),
+            })}
+          >
             {d}
           </Typography>
         ))}
@@ -130,3 +196,7 @@ export const Calendar = ({
     </Box>
   );
 };
+
+const NavigationSpacer = styled(Box, { label: 'NavigationSpacer' })(() => ({
+  width: '36px', // Maintains consistent spacing when navigation buttons are hidden
+}));

@@ -91,7 +91,7 @@ export const Presets = ({
     },
     {
       getRange: () => ({ endDate: null, startDate: null }),
-      label: 'reset',
+      label: 'Reset',
     },
   ];
 

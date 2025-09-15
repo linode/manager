@@ -101,6 +101,10 @@ export const DateTimeField = ({
                         disableRipple
                         onClick={handleClear}
                         size="small"
+                        sx={{
+                          // To avoid layout shift since close icon is smaller
+                          width: '30px',
+                        }}
                       >
                         <CloseIcon />
                       </IconButton>

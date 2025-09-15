@@ -336,7 +336,7 @@ export const DateTimeRangePicker = ({
               />
             )}
             <Box>
-              <Box display="flex" gap={2}>
+              <Box display="flex" sx={{ padding: theme.spacingFunction(8) }}>
                 <Calendar
                   direction="left"
                   endDate={endDate}
@@ -379,7 +379,13 @@ export const DateTimeRangePicker = ({
                       });
                     }
                   }}
-                  sx={{ flex: 1 }}
+                  sx={{
+                    flex: 1,
+                    // Allows timezone selector to expand as needed
+                    '& .MuiPickersInputBase-sectionsContainer': {
+                      width: 'inherit',
+                    },
+                  }}
                   value={startDate}
                 />
                 <TimePicker
@@ -397,7 +403,13 @@ export const DateTimeRangePicker = ({
                       });
                     }
                   }}
-                  sx={{ flex: 1 }}
+                  sx={{
+                    flex: 1,
+                    // Allows timezone selector to expand as needed
+                    '& .MuiPickersInputBase-sectionsContainer': {
+                      width: 'inherit',
+                    },
+                  }}
                   value={endDate}
                 />
                 <TimeZoneSelect

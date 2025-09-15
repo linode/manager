@@ -1138,7 +1138,6 @@ export const lightTheme: ThemeOptions = {
           color: DateRangeField.Default.Text,
           font: Typography.Label.Regular.Placeholder,
           fontStyle: 'italic',
-          width: 'inherit', // Override MUI width of 182px
 
           /**
            * Our design calls for filled text to be normal, not italic.
