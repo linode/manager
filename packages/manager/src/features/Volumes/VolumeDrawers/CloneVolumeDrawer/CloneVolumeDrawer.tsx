@@ -22,7 +22,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
-import { PricePanel } from './VolumeDrawer/PricePanel';
+import { PricePanel } from '../VolumeDrawer/PricePanel';
 
 import type { APIError, Volume } from '@linode/api-v4';
 

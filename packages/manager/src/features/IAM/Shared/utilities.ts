@@ -90,13 +90,24 @@ const getDoesRolesMatchQuery = (
     queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
   );
 };
-
 export interface RolesType {
   access: IamAccessType;
   entity_type: AccessType;
   label: string;
-  value: string;
+  value: AccountRoleType | EntityRoleType;
 }
+
+export const isAccountRole = (
+  role: RolesType
+): role is RolesType & { access: 'account_access'; value: AccountRoleType } => {
+  return role.access === 'account_access';
+};
+
+export const isEntityRole = (
+  role: RolesType
+): role is RolesType & { access: 'entity_access'; value: EntityRoleType } => {
+  return role.access === 'entity_access';
+};
 
 export interface ExtendedRole extends Roles {
   access: IamAccessType;

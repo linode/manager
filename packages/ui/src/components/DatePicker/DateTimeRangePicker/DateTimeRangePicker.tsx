@@ -365,6 +365,7 @@ export const DateTimeRangePicker = ({
                 paddingBottom={2}
               >
                 <TimePicker
+                  key={`start-time-picker-${timeZone}`}
                   label="Start Time"
                   onChange={(newTime: DateTime | null) => {
                     if (newTime) {
@@ -389,6 +390,7 @@ export const DateTimeRangePicker = ({
                   value={startDate}
                 />
                 <TimePicker
+                  key={`end-time-picker}-${timeZone}`}
                   label="End Time"
                   onChange={(newTime: DateTime | null) => {
                     if (newTime) {

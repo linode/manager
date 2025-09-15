@@ -5,12 +5,12 @@ import { accountFactory, volumeFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { EditVolumeDrawer } from './EditVolumeDrawer';
+import { CloneVolumeDrawer } from './CloneVolumeDrawer';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const encryptionLabelText = 'Encrypt Volume';
 
-describe('EditVolumeDrawer', () => {
+describe('CloneVolumeDrawer', () => {
   /* @TODO BSE: Remove feature flagging/conditionality once BSE is fully rolled out */
 
   it('should display a disabled checkbox for volume encryption if the user has the account capability and the feature flag is on', async () => {
@@ -25,7 +25,7 @@ describe('EditVolumeDrawer', () => {
     );
 
     const { getByLabelText } = renderWithTheme(
-      <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
+      <CloneVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: true },
       }
@@ -49,7 +49,7 @@ describe('EditVolumeDrawer', () => {
     );
 
     const { queryByRole } = renderWithTheme(
-      <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
+      <CloneVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: false },
       }
@@ -70,7 +70,7 @@ describe('EditVolumeDrawer', () => {
     );
 
     const { queryByRole } = renderWithTheme(
-      <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
+      <CloneVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: true },
       }
