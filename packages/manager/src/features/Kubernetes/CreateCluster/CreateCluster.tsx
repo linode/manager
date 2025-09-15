@@ -176,8 +176,11 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
-  // LKE-E does not support APL at this time.
-  const isAPLSupported = showAPL && selectedTier === 'standard';
+  // APL is supported for standard clusters, and for enterprise clusters when the APL_LKE_E flag is enabled
+  const isAPLSupported =
+    showAPL &&
+    (selectedTier === 'standard' ||
+      (selectedTier === 'enterprise' && flags.aplLkeE));
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -198,6 +201,11 @@ export const CreateCluster = () => {
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
+
+      // If switching to standard tier and APL is enabled, enable HA
+      if (aplEnabled) {
+        setHighAvailability(true);
+      }
     }
 
     // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
@@ -577,6 +585,7 @@ export const CreateCluster = () => {
                 <StyledStackWithTabletBreakpoint>
                   <Stack>
                     <ApplicationPlatform
+                      isEnterpriseTier={selectedTier === 'enterprise'}
                       isSectionDisabled={!isAPLSupported}
                       setAPL={setAplEnabled}
                       setHighAvailability={setHighAvailability}
