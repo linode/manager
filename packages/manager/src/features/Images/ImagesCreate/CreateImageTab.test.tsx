@@ -12,6 +12,9 @@ import { CreateImageTab } from './CreateImageTab';
 
 const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
+  usePermissions: vi.fn().mockReturnValue({}),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+  useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -22,7 +25,21 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 describe('CreateImageTab', () => {
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: true },
+    });
+    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+      availableLinodes: [linodeFactory.build().id],
+    });
+  });
+
   it('should render fields, titles, and buttons in their default state', async () => {
     const { getByLabelText, getByText } = renderWithTheme(<CreateImageTab />);
 
@@ -94,6 +111,13 @@ describe('CreateImageTab', () => {
     const disk = linodeDiskFactory.build();
     const image = imageFactory.build();
 
+    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+      availableLinodes: [linode.id],
+    });
+    queryMocks.useQueryWithPermissions.mockReturnValue({
+      data: [linode],
+    });
+
     server.use(
       http.get('*/v4*/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
@@ -141,6 +165,13 @@ describe('CreateImageTab', () => {
     const region = regionFactory.build({ capabilities: [] });
     const linode = linodeFactory.build({ region: region.id });
 
+    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+      availableLinodes: [linode.id],
+    });
+    queryMocks.useQueryWithPermissions.mockReturnValue({
+      data: [linode],
+    });
+
     server.use(
       http.get('*/v4*/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
@@ -174,6 +205,13 @@ describe('CreateImageTab', () => {
     const disk1 = linodeDiskFactory.build();
     const disk2 = linodeDiskFactory.build();
     const image = imageFactory.build();
+
+    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+      availableLinodes: [linode.id],
+    });
+    queryMocks.useQueryWithPermissions.mockReturnValue({
+      data: [linode],
+    });
 
     server.use(
       http.get('*/v4*/linode/instances', () => {

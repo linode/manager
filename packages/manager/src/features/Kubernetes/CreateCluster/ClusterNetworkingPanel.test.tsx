@@ -9,7 +9,8 @@ const queryMocks = vi.hoisted(() => ({
   useRegionQuery: vi.fn().mockReturnValue({ data: { capabilities: ['VPCs'] } }),
   useAllVPCsQuery: vi.fn().mockReturnValue({ data: [], isLoading: false }),
   useIsLkeEnterpriseEnabled: vi.fn(() => ({
-    isLkeEnterprisePhase2FeatureEnabled: true,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+    isLkeEnterprisePhase2DualStackFeatureEnabled: true,
   })),
 }));
 

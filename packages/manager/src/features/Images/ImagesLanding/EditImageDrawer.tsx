@@ -8,8 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import Lock from 'src/assets/icons/lock.svg';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-
-import { useImageAndLinodeGrantCheck } from '../utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 
@@ -23,7 +22,13 @@ interface Props {
 export const EditImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
-  const { canCreateImage } = useImageAndLinodeGrantCheck();
+  const { data: permissions } = usePermissions(
+    'image',
+    ['update_image'],
+    image?.id,
+    open
+  );
+  const canUpdateImage = permissions?.update_image;
 
   const defaultValues = {
     description: image?.description ?? undefined,
@@ -84,7 +89,7 @@ export const EditImageDrawer = (props: Props) => {
       open={open}
       title="Edit Image"
     >
-      {!canCreateImage && (
+      {!canUpdateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."
           variant="error"
@@ -115,7 +120,7 @@ export const EditImageDrawer = (props: Props) => {
         name="label"
         render={({ field, fieldState }) => (
           <TextField
-            disabled={!canCreateImage}
+            disabled={!canUpdateImage}
             error={Boolean(fieldState.error)}
             errorText={fieldState.error?.message}
             label="Label"
@@ -131,7 +136,7 @@ export const EditImageDrawer = (props: Props) => {
         name="description"
         render={({ field, fieldState }) => (
           <TextField
-            disabled={!canCreateImage}
+            disabled={!canUpdateImage}
             error={Boolean(fieldState.error)}
             errorText={fieldState.error?.message}
             label="Description"
@@ -149,7 +154,7 @@ export const EditImageDrawer = (props: Props) => {
         name="tags"
         render={({ field, fieldState }) => (
           <TagsInput
-            disabled={!canCreateImage}
+            disabled={!canUpdateImage}
             label="Tags"
             onChange={(tags) => field.onChange(tags.map((tag) => tag.value))}
             tagError={fieldState.error?.message}
@@ -162,13 +167,13 @@ export const EditImageDrawer = (props: Props) => {
 
       <ActionsPanel
         primaryButtonProps={{
-          disabled: !canCreateImage || !formState.isDirty,
+          disabled: !canUpdateImage || !formState.isDirty,
           label: 'Save Changes',
           loading: formState.isSubmitting,
           onClick: onSubmit,
         }}
         secondaryButtonProps={{
-          disabled: !canCreateImage,
+          disabled: !canUpdateImage,
           label: 'Cancel',
           onClick: handleClose,
         }}
