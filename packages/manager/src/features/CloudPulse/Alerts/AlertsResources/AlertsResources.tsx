@@ -180,7 +180,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isError: isResourcesError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
-    Boolean(serviceType) && supportedRegionIds && supportedRegionIds.length > 0, // Enable query only if serviceType and supportedRegionIds are available
+    Boolean(serviceType && supportedRegionIds?.length), // Enable query only if serviceType and supportedRegionIds are available
     serviceType,
     {},
     xFilterToBeApplied
