@@ -198,7 +198,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
     return () => {
       resizeObserver.unobserve(container);
     };
-  }, [truncate, showAll]);
+  }, [truncate, showAll, children]);
 
   const childArray = React.Children.toArray(children);
 
