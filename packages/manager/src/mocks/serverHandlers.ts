@@ -1340,6 +1340,11 @@ export const handlers = [
         region: 'us-mia',
         s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
+      objectStorageBucketFactoryGen2.build({
+        endpoint_type: 'E3',
+        region: 'ap-west',
+        s3_endpoint: 'ap-west-1.linodeobjects.com',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
@@ -1448,6 +1453,18 @@ export const handlers = [
       label: `obj-bucket-${randomBucketNumber}`,
       region,
     });
+    if (region === 'ap-west') {
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `${region}-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+          label: `obj-bucket-${randomBucketNumber}`,
+          region,
+        })
+      );
+    }
 
     return HttpResponse.json({
       data: buckets.slice(
@@ -3048,6 +3065,12 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Object Storage',
+          service_type: 'objectstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3132,6 +3155,16 @@ export const handlers = [
           id: 4,
           label: 'Firewall Dashboard',
           service_type: 'firewall',
+        })
+      );
+    }
+
+    if (params.serviceType === 'objectstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 6,
+          label: 'Object Storage Dashboard',
+          service_type: 'objectstorage',
         })
       );
     }
@@ -3422,6 +3455,9 @@ export const handlers = [
     } else if (id === '4') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
+    } else if (id === '6') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Object Storage Service I/O Statistics';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

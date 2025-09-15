@@ -14,7 +14,8 @@ export const useResourcesQuery = (
   useQuery<any[], unknown, CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),
     enabled,
-    select: (resources) => {
+    retry: resourceType === 'objectstorage' ? false : 3,
+    select: (resources: any[]) => {
       return resources.map((resource) => {
         const entities: Record<string, string> = {};
 
@@ -33,13 +34,20 @@ export const useResourcesQuery = (
             }
           });
         }
+        const id =
+          resourceType === 'objectstorage'
+            ? resource.hostname
+            : String(resource.id);
+        const label =
+          resourceType === 'objectstorage' ? resource.hostname : resource.label;
         return {
           engineType: resource.engine,
-          id: String(resource.id),
-          label: resource.label,
+          id,
+          label,
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
           tags: resource.tags,
+          endpoint: resource.s3_endpoint,
           entities,
           clusterSize: resource.cluster_size,
         };

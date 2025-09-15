@@ -1,6 +1,7 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
 import {
+  ENDPOINT,
   INTERFACE_IDS_PLACEHOLDER_TEXT,
   LINODE_REGION,
   RESOURCE_ID,
@@ -315,6 +316,55 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   serviceType: 'firewall',
 };
 
+export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['objectstorage'],
+    filters: [
+      {
+        configuration: {
+          filterKey: 'region',
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'Region',
+          priority: 1,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Region',
+      },
+      {
+        configuration: {
+          dependency: ['region'],
+          filterKey: ENDPOINT,
+          filterType: 'string',
+          isFilterable: false,
+          isMetricsFilter: false,
+          isMultiSelect: true,
+          name: 'Endpoints',
+          priority: 2,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Endpoints',
+      },
+      {
+        configuration: {
+          dependency: ['region', ENDPOINT],
+          filterKey: RESOURCE_ID,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          isMultiSelect: true,
+          name: 'Buckets',
+          neededInViews: [CloudPulseAvailableViews.central],
+          placeholder: 'Select Buckets',
+          priority: 3,
+        },
+        name: 'Buckets',
+      },
+    ],
+    serviceType: 'objectstorage',
+  };
+
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -322,4 +372,5 @@ export const FILTER_CONFIG: Readonly<
   [2, LINODE_CONFIG],
   [3, NODEBALANCER_CONFIG],
   [4, FIREWALL_CONFIG],
+  [6, OBJECTSTORAGE_CONFIG_BUCKET],
 ]);

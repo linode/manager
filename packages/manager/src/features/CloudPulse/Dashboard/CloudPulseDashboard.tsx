@@ -81,10 +81,17 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     savePref,
     groupBy,
     linodeRegion,
+    region,
   } = props;
 
   const { preferences } = useAclpPreference();
-  const getJweTokenPayload = (): JWETokenPayLoad => {
+
+  const getJweTokenPayload = (
+    dashboardId: number | undefined
+  ): JWETokenPayLoad => {
+    if (!dashboardId || dashboardId === 6) {
+      return { entity_ids: undefined };
+    }
     return {
       entity_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
@@ -122,7 +129,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isFetching: isJweTokenFetching,
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
-    getJweTokenPayload(),
+    getJweTokenPayload(dashboard?.id),
     Boolean(resources) && !isDashboardLoading && !isDashboardApiError
   );
 
@@ -169,6 +176,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
+      region={region}
       resourceList={resourceList}
       resources={resources}
       savePref={savePref}
