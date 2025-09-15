@@ -47,7 +47,7 @@
     "@xterm/xterm": "^5.5.0",
     "akamai-cds-react-components": "0.0.1-alpha.14",
     "algoliasearch": "^4.14.3",
-    "axios": "~1.8.3",
+    "axios": "~1.12.0",
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",
