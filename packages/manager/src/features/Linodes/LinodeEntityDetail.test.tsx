@@ -205,7 +205,7 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/linode/instances/:linodeId', () => {
@@ -238,7 +238,7 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/linode/instances/:linodeId', () => {
@@ -275,7 +275,7 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/linode/instances/:linodeId', () => {
