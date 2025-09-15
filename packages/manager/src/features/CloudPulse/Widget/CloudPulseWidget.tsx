@@ -380,7 +380,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             showDot
             showLegend={data.length !== 0}
             timezone={timezone}
-            unit={currentUnit}
+            unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
             variant={variant}
             xAxis={{ tickFormat, tickGap: 60 }}
           />

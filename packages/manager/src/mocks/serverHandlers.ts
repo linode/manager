@@ -3191,7 +3191,7 @@ export const handlers = [
             metric: 'system_memory_usage_by_resource',
             metric_type: 'gauge',
             scrape_interval: '30s',
-            unit: 'byte',
+            unit: 'Bps ',
           },
           {
             available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
@@ -3445,7 +3445,7 @@ export const handlers = [
           label: 'Memory Usage',
           metric: 'system_memory_usage_by_resource',
           size: 12,
-          unit: 'Bytes',
+          unit: 'Bps',
           group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
