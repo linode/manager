@@ -143,7 +143,10 @@ export const DatabaseBackups = () => {
     return isOnMaxDate ? today : undefined;
   };
 
-  const handleOnVersionOptionChange = (_: any, value: VersionOption) => {
+  const handleOnVersionOptionChange = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    value: VersionOption
+  ) => {
     setVersionOption(value);
     setSelectedDate(null);
     // Resetting state used for time picker
