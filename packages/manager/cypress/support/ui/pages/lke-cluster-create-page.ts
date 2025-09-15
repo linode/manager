@@ -18,7 +18,7 @@ export const lkeClusterCreatePage = {
   /**
    * Selects the LKE cluster tier.
    *
-   * This function assumes that the `lkeEnterprise` feature flag is enabled or
+   * This function assumes that the `lkeEnterprise2` feature flag is enabled or
    * is mocked to be enabled.
    *
    * @param clusterTier - LKE cluster tier; either `'standard'` or `'enterprise'`.
@@ -100,7 +100,7 @@ export const lkeClusterCreatePage = {
   /**
    * Selects the given node pool plan for configuration.
    *
-   * Assumes that the `lkeEnterprise.postLa` feature flag is enabled.
+   * Assumes that the `lkeEnterprise2.postLa` feature flag is enabled.
    * Assumes that the tab for the desired plan has already been selected. See
    * also `addNodePoolPlan` to select plans when `postLa` is disabled.
    *
@@ -119,11 +119,11 @@ export const lkeClusterCreatePage = {
       });
   },
 
-  // TODO M3-8838: Delete `addNodePool` function once `lkeEnterprise` feature flag is retired.
+  // TODO M3-8838: Delete `addNodePool` function once `lkeEnterprise2` feature flag is retired.
   /**
    * Adds a node pool of the given plan and size.
    *
-   * Assumes that the `lkeEnterprise.postLa` feature flag is disabled.
+   * Assumes that the `lkeEnterprise2.postLa` feature flag is disabled.
    *
    * @param planName - Name of the plan to select (as shown in Cloud's UI).
    * @param size - The desired number of nodes for the node pool.
