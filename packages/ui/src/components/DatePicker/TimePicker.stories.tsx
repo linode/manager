@@ -13,7 +13,7 @@ const meta: Meta<typeof TimePicker> = {
     format: {
       control: 'select',
       description: 'Format in which time should be displayed.',
-      options: ['HH:mm', 'hh:mm a'], // 24-hour & 12-hour formats
+      options: ['HH:mm', 'hh:mm a', 'hh:mm:ss'], // 24-hour & 12-hour formats
     },
     label: {
       control: 'text',
