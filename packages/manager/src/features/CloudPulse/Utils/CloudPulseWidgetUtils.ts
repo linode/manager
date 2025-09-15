@@ -112,6 +112,11 @@ interface GraphDataOptionsProps {
 
 interface MetricRequestProps {
   /**
+   * id of the selected dashboard
+   */
+  dashboardId: number;
+
+  /**
    * time duration for the metrics data
    */
   duration: DateTimeWithPreset;
@@ -127,6 +132,11 @@ interface MetricRequestProps {
    * selected linode region for the widget
    */
   linodeRegion?: string;
+
+  /**
+   * selected region for the widget
+   */
+  region?: string;
 
   /**
    * list of CloudPulse resources available
@@ -326,18 +336,23 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
-    props;
+  const {
+    duration,
+    entityIds,
+    resources,
+    widget,
+    groupBy,
+    linodeRegion,
+    dashboardId,
+    region,
+  } = props;
   const preset = duration.preset;
-
-  return {
+  const metricsRequest: CloudPulseMetricsRequest = {
     absolute_time_duration:
       preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
         ? undefined
         : { end: duration.end, start: duration.start },
-    entity_ids: resources
-      ? entityIds.map((id) => parseInt(id, 10))
-      : widget.entity_ids.map((id) => parseInt(id, 10)),
+    entity_ids: getEntityIds(resources, entityIds, widget, dashboardId),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: getTimeDurationFromPreset(preset),
@@ -356,6 +371,35 @@ export const getCloudPulseMetricRequest = (
           },
     associated_entity_region: linodeRegion,
   };
+
+  if (dashboardId === 6) {
+    return {
+      ...metricsRequest,
+      entity_region: region,
+    };
+  }
+  return metricsRequest;
+};
+
+/**
+ *
+ * @param resources list of CloudPulse resources
+ * @param entityIds list of entity ids
+ * @param widget widget
+ * @returns transformed entity ids
+ */
+export const getEntityIds = (
+  resources: CloudPulseResources[],
+  entityIds: string[],
+  widget: Widgets,
+  dashboardId: number
+) => {
+  if (dashboardId === 6) {
+    return entityIds;
+  }
+  return resources
+    ? entityIds.map((id) => parseInt(id, 10))
+    : widget.entity_ids.map((id) => parseInt(id, 10));
 };
 
 /**

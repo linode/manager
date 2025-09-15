@@ -7,8 +7,8 @@ export type CloudPulseServiceType =
   | 'dbaas'
   | 'firewall'
   | 'linode'
-  | 'nodebalancer';
-
+  | 'nodebalancer'
+  | 'objectstorage';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -133,7 +133,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  entity_ids: number[];
+  entity_ids: number[] | undefined;
 }
 
 export interface JWEToken {
@@ -148,7 +148,8 @@ export interface Metric {
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   associated_entity_region?: string;
-  entity_ids: number[];
+  entity_ids: number[] | string[];
+  entity_region?: string;
   filters?: Filters[];
   group_by?: string[];
   metrics: Metric[];
@@ -376,6 +377,7 @@ export const capabilityServiceTypeMapping: Record<
   dbaas: 'Managed Databases',
   nodebalancer: 'NodeBalancers',
   firewall: 'Cloud Firewall',
+  objectstorage: 'Object Storage',
 };
 
 /**

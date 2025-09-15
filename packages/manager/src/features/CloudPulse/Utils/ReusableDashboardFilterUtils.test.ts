@@ -95,6 +95,29 @@ it('test checkMandatoryFiltersSelected method for role', () => {
   expect(result).toBe(true);
 });
 
+it('checkMandatoryFiltersSelected method should return false if no region is selected for dashboard id 5', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, id: 5 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+  });
+  expect(result).toBe(false);
+});
+
+it('checkMandatoryFiltersSelected method should return true if region is selected for dashboard id 5', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, id: 5 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+    region: 'ap-west',
+  });
+  expect(result).toBe(true);
+});
+
 it('test constructDimensionFilters method', () => {
   mockDashboard.service_type = 'dbaas';
   const result = constructDimensionFilters({
