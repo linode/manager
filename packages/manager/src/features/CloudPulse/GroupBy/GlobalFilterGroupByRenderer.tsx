@@ -13,12 +13,11 @@ import type { Dashboard } from '@linode/api-v4';
 
 interface GlobalFilterGroupByRendererProps {
   /**
-   * Handler function called when the group by selection changes.
-   * @param selectedValue - Array of selected group by values.
+   * Callback to handle the selected values
    */
   handleChange: (selectedValue: string[]) => void;
   /**
-   * The currently selected dashboard, if any.
+   * Currently selected dashboard
    */
   selectedDashboard?: Dashboard;
 }

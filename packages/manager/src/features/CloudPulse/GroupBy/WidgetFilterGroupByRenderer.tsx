@@ -13,23 +13,23 @@ import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface WidgetFilterGroupByRendererProps {
   /**
-   * Unique identifier for the dashboard
+   * Id of the selected dashboard
    */
   dashboardId: number;
   /**
-   * Callback function triggered when the selection changes
+   * Callback function to handle the selected values
    */
   handleChange: (selectedValue: string[]) => void;
   /**
-   * Display label for the widget
+   * Label for the widget metric
    */
   label: string;
   /**
-   * Metric name to be used for data retrieval
+   * Name of the metric
    */
   metric: string;
   /**
-   * Type of cloud service being monitored
+   * Service type of the selected dashboard
    */
   serviceType: CloudPulseServiceType;
 }
