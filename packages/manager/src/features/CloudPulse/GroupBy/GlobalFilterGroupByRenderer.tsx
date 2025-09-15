@@ -64,7 +64,7 @@ export const GlobalFilterGroupByRenderer = (
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            marginTop: { md: theme.spacing(3.5) },
+            marginTop: { md: theme.spacingFunction(28) },
             color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
           })}
         >
