@@ -532,7 +532,7 @@ export const firewallMetricRulesFactory =
         label: 'Linode Region',
         dimension_label: 'region_id',
         operator: 'in',
-        value: 'pl-labkrk-2,ap-west',
+        value: 'pl-labkrk-2',
       },
     ],
   });

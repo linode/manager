@@ -42,7 +42,7 @@ describe('resolveIds', () => {
     '789': 'linode-c',
   };
 
-  it('should resolve single  ID', () => {
+  it('should resolve single ID', () => {
     const value = '123';
 
     const result = resolveIds(value, linodeMap);
@@ -82,48 +82,50 @@ describe('getResolvedDimensionValue', () => {
     'subnet-1': 'VPC-1_subnet-1',
     'subnet-2': 'VPC-1_subnet-2',
   };
+
   it('should return correct transformed value', () => {
-    const linodeResult = getResolvedDimensionValue(
-      'linode_id',
-      'in',
-      '123,456',
-      'firewall',
+    const linodeResult = getResolvedDimensionValue({
+      dimensionFilterKey: 'linode_id',
+      dimensionOperator: 'in',
+      value: '123,456',
+      serviceType: 'firewall',
       linodeMap,
-      vpcSubnetMap
-    );
+      vpcSubnetMap,
+    });
     expect(linodeResult).toBe('linode-a, linode-b');
-    const vpcResult = getResolvedDimensionValue(
-      'vpc_subnet_id',
-      'in',
-      'subnet-1',
-      'firewall',
+
+    const vpcResult = getResolvedDimensionValue({
+      dimensionFilterKey: 'vpc_subnet_id',
+      dimensionOperator: 'in',
+      value: 'subnet-1',
+      serviceType: 'firewall',
       linodeMap,
-      vpcSubnetMap
-    );
+      vpcSubnetMap,
+    });
     expect(vpcResult).toBe('VPC-1_subnet-1');
   });
 
   it('should not transform value if operator is not in allowed list', () => {
-    const result = getResolvedDimensionValue(
-      'linode_id',
-      'startswith',
-      'linode-c, linode-d',
-      'firewall',
+    const result = getResolvedDimensionValue({
+      dimensionFilterKey: 'linode_id',
+      dimensionOperator: 'startswith',
+      value: 'linode-c, linode-d',
+      serviceType: 'firewall',
       linodeMap,
-      vpcSubnetMap
-    );
+      vpcSubnetMap,
+    });
     expect(result).toBe('linode-c, linode-d');
   });
 
   it('should return empty string if value is null or undefined', () => {
-    const emptyResult = getResolvedDimensionValue(
-      'linode_id',
-      'in',
-      null,
-      'firewall',
+    const nullResult = getResolvedDimensionValue({
+      dimensionFilterKey: 'linode_id',
+      dimensionOperator: 'in',
+      value: null,
+      serviceType: 'firewall',
       linodeMap,
-      vpcSubnetMap
-    );
-    expect(emptyResult).toBe('');
+      vpcSubnetMap,
+    });
+    expect(nullResult).toBe('');
   });
 });

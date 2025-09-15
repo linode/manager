@@ -69,24 +69,46 @@ export const isCheckRequired = (
     ) ?? false
   );
 };
-
+export interface ResolvedDimensionValueProps {
+  /**
+   *  The dimension label extracted from the Dimension Data.
+   */
+  dimensionFilterKey: string;
+  /**
+   * The dimension filter operator.
+   */
+  dimensionOperator: DimensionFilterOperatorType;
+  /**
+   * linode id to label map
+   */
+  linodeMap: Record<string, string>;
+  /**
+   * Service type of the alert.
+   */
+  serviceType: CloudPulseServiceType;
+  /**
+   * The dimension filter value to be resolved and transformed.
+   */
+  value: null | string | undefined;
+  /**
+   * vpc subent id to label map.
+   */
+  vpcSubnetMap: Record<string, string>;
+}
 /**
- * @param dimensionFilterKey The dimension label extracted from the Dimension Data.
- * @param dimensionOperator The dimension filter operator.
- * @param value The dimension filter value to be resolved and transformed.
- * @param serviceType Service type of the alert.
- * @param linodeMap linode id to label map
- * @param vpcSubnetMap vpc subent id to label map.
  * @returns string value with the resolved names for the dimension value and transformed.
  */
 export const getResolvedDimensionValue = (
-  dimensionFilterKey: string,
-  dimensionOperator: DimensionFilterOperatorType,
-  value: null | string | undefined,
-  serviceType: CloudPulseServiceType,
-  linodeMap: Record<string, string>,
-  vpcSubnetMap: Record<string, string>
+  props: ResolvedDimensionValueProps
 ): string => {
+  const {
+    dimensionFilterKey,
+    dimensionOperator,
+    linodeMap,
+    serviceType,
+    value,
+    vpcSubnetMap,
+  } = props;
   if (!value) return '';
 
   let resolvedValue = value;
