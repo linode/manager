@@ -84,7 +84,7 @@ describe('Create Firewall Drawer', () => {
       capabilities: ['Linode Interfaces'],
     });
 
-    server.use(http.get('*/v4/account', () => HttpResponse.json(account)));
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
     const { getByLabelText, findByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />,

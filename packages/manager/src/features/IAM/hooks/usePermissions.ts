@@ -43,11 +43,16 @@ export type PermissionsResult<T extends readonly PermissionType[]> = {
 export const usePermissions = <T extends readonly PermissionType[]>(
   accessType: AccessType,
   permissionsToCheck: T,
-  entityId?: number,
+  entityId?: number | string,
   enabled: boolean = true
 ): PermissionsResult<T> => {
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
   const { data: profile } = useProfile();
+
+  const _entityId =
+    typeof entityId === 'string' && entityId.includes('/')
+      ? entityId.split('/')[1]
+      : entityId;
 
   /**
    * BETA and LA features should use the new permission model.
@@ -82,7 +87,7 @@ export const usePermissions = <T extends readonly PermissionType[]>(
   const { data: userEntityPermissions, ...restEntityPermissions } =
     useUserEntityPermissions(
       accessType,
-      entityId!,
+      _entityId!,
       shouldUsePermissionMap && enabled
     );
 
@@ -100,7 +105,7 @@ export const usePermissions = <T extends readonly PermissionType[]>(
         permissionsToCheck,
         grants!,
         profile?.restricted,
-        entityId
+        _entityId
       );
 
   return {
@@ -153,7 +158,8 @@ export type QueryWithPermissionsResult<T> = {
 export const useQueryWithPermissions = <T extends EntityBase>(
   useQueryResult: UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
-  permissionsToCheck: PermissionType[]
+  permissionsToCheck: PermissionType[],
+  enabled?: boolean
 ): QueryWithPermissionsResult<T> => {
   const {
     data: allEntities,
@@ -165,7 +171,12 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
   const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(allEntities, entityType, profile, isIAMEnabled);
+    useEntitiesPermissions<T>(
+      allEntities,
+      entityType,
+      profile,
+      isIAMEnabled && enabled
+    );
   const { data: grants } = useGrants(!isIAMEnabled);
 
   const entityPermissionsMap = isIAMEnabled
@@ -178,7 +189,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     : entityPermissionMapFrom(grants, entityType as GrantType, profile);
 
   const entities: T[] | undefined = allEntities?.filter((entity: T) => {
-    const permissions = entityPermissionsMap[entity.id];
+    const permissions = entityPermissionsMap[entity.id] ?? {};
     return (
       !profile?.restricted ||
       (permissions &&
