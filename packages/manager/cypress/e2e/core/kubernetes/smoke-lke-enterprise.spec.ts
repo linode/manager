@@ -429,7 +429,16 @@ describe('LKE-E Cluster Read', () => {
     mockGetVPC(mockVPC).as('getVPC');
   });
 
+  /*
+   * Smoke tests to confirm the state of the LKE cluster details page when the
+   * LKE-E "phase2Mtc" feature flag is enabled.
+   */
   describe('Phase 2 MTC feature flag', () => {
+    /*
+     * - Confirms the state of the LKE cluster details page when the "phase2Mtc" feature is enabled.
+     * - Confirms that attached VPC label is displayed in the cluster summary.
+     * - Confirms that IPv4 and IPv6 node pool table column is present.
+     */
     it('Simple Page Check - Phase 2 MTC Flag ON', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
@@ -454,6 +463,11 @@ describe('LKE-E Cluster Read', () => {
       });
     });
 
+    /*
+     * - Confirms the state of the LKE cluster details page when the "phase2Mtc" feature is disabled.
+     * - Confirms that no VPC label is shown in the cluster summary.
+     * - Confirms that IPv4 and IPv6 node pool table columns are absent.
+     */
     it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: { enabled: true, la: true, phase2Mtc: false },
@@ -476,7 +490,15 @@ describe('LKE-E Cluster Read', () => {
     });
   });
 
+  /*
+   * Smoke tests to confirm the state of the LKE cluster details page when the
+   * LKE-E "postLa" feature flag is enabled and disabled.
+   */
   describe('Post-LA feature flags', () => {
+    /*
+     * - Confirms the state of the LKE cluster details page when the "postLa" feature flag is enabled.
+     * - Confirms that update strategy and firewall options are present in the Add Node Pool drawer.
+     */
     it('Simple Page Check - Post-LA Flag ON', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: {
@@ -505,6 +527,10 @@ describe('LKE-E Cluster Read', () => {
         });
     });
 
+    /*
+     * - Confirms the state of the LKE cluster details page when the "postLa" feature flag is disabled.
+     * - Confirms that update strategy and firewall options are absent in the Add Node Pool drawer.
+     */
     it('Simple Page Check - Post-LA Flag OFF', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: {
@@ -533,7 +559,16 @@ describe('LKE-E Cluster Read', () => {
     });
   });
 
+  /*
+   * Smoke tests to confirm the state of the LKE cluster details page when the
+   * 'phase2Mtc' and 'postLa' LKE-E feature flags are both enabled.
+   */
   describe('Phase 2 MTC & Post-LA feature flags', () => {
+    /*
+     * - Confirms the state of LKE details page when "phase2Mtc" and "postLa" are both enabled.
+     * - Confirms that update strategy and Firewall options are present in Add Node Pool drawer.
+     * - Confirms that attached VPC is shown in the summary, and IPv4 and IPv6 node pool table columns are present.
+     */
     it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: {
