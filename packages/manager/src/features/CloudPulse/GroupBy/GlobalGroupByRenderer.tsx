@@ -5,52 +5,35 @@ import GroupByIcon from 'src/assets/icons/group-by.svg';
 
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { CloudPulseGroupByDrawer } from './CloudPulseGroupByDrawer';
-import { WIDGET_GROUP_BY_MESSAGE } from './constants';
-import { useGlobalDimensions, useWidgetDimension } from './utils';
+import { GLOBAL_GROUP_BY_MESSAGE } from './constants';
+import { useGlobalDimensions } from './utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
-import type { CloudPulseServiceType } from '@linode/api-v4';
+import type { Dashboard } from '@linode/api-v4';
 
-interface WidgetFilterGroupByRendererProps {
+interface GlobalGroupByRendererProps {
   /**
-   * Id of the selected dashboard
-   */
-  dashboardId: number;
-  /**
-   * Callback function to handle the selected values
+   * Handler function called when the group by selection changes.
+   * @param selectedValue - Array of selected group by values.
    */
   handleChange: (selectedValue: string[]) => void;
   /**
-   * Label for the widget metric
+   * The currently selected dashboard, if any.
    */
-  label: string;
-  /**
-   * Name of the metric
-   */
-  metric: string;
-  /**
-   * Service type of the selected dashboard
-   */
-  serviceType: CloudPulseServiceType;
+  selectedDashboard?: Dashboard;
 }
 
-export const WidgetFilterGroupByRenderer = (
-  props: WidgetFilterGroupByRendererProps
-) => {
-  const { metric, dashboardId, serviceType, label, handleChange } = props;
+export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
+  const { selectedDashboard, handleChange } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
-  const { isLoading: globalDimensionLoading, options: globalDimensions } =
-    useGlobalDimensions(dashboardId, serviceType);
-  const {
-    isLoading: widgetDimensionLoading,
-    options: widgetDimensions,
-    defaultValue,
-  } = useWidgetDimension(dashboardId, serviceType, globalDimensions, metric);
+  const { options, defaultValue, isLoading } = useGlobalDimensions(
+    selectedDashboard?.id,
+    selectedDashboard?.service_type
+  );
+
   const [open, setOpen] = React.useState(false);
-  const onCancel = React.useCallback(() => {
-    setOpen(false);
-  }, []);
+
   const onApply = React.useCallback(
     (selectedValue: GroupByOption[]) => {
       if (selectedValue.length === 0) {
@@ -64,11 +47,9 @@ export const WidgetFilterGroupByRenderer = (
     [handleChange]
   );
 
-  const isDisabled =
-    globalDimensionLoading ||
-    widgetDimensionLoading ||
-    widgetDimensions.length === 0;
-
+  const onCancel = React.useCallback(() => {
+    setOpen(false);
+  }, []);
   return (
     <>
       <CloudPulseTooltip placement="bottom-end" title="Group By">
@@ -77,32 +58,32 @@ export const WidgetFilterGroupByRenderer = (
           color="inherit"
           data-qa-selected={isSelected}
           data-testid="group-by"
-          disabled={isDisabled}
+          disabled={!selectedDashboard || isLoading}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
+            marginTop: { md: theme.spacing(3.5) },
             color: isSelected
               ? theme.tokens.component.Button.Primary.Hover.Background
               : 'inherit',
-            padding: 0,
           })}
         >
           <GroupByIcon height="24px" width="24px" />
         </IconButton>
       </CloudPulseTooltip>
 
-      {!isDisabled && (
+      {!isLoading && selectedDashboard && (
         <CloudPulseGroupByDrawer
           defaultValue={defaultValue}
-          message={WIDGET_GROUP_BY_MESSAGE}
+          message={GLOBAL_GROUP_BY_MESSAGE}
           onApply={onApply}
           onCancel={onCancel}
           open={open}
-          options={widgetDimensions}
-          serviceType={serviceType}
-          subtitle={label}
-          title="Group By"
+          options={options}
+          serviceType={selectedDashboard.service_type}
+          subtitle={selectedDashboard.label}
+          title="Global Group By"
         />
       )}
     </>
