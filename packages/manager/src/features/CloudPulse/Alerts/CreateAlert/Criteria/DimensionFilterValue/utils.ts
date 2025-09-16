@@ -90,12 +90,12 @@ export const getStaticOptions = (
 };
 
 /**
- * Filters firewall resources and returns matching entity IDs.
+ * Filters firewall resources and returns matching parent entity IDs.
  * @param firewallResources - List of firewall resource objects.
  * @param entities - List of target firewall entity IDs.
  * @returns - Flattened array of matching entity IDs.
  */
-export const getFilteredFirewallResources = (
+export const getFilteredFirewallParentEntities = (
   firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
 ): string[] => {
