@@ -55,6 +55,9 @@ import type { Database } from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
 const regionList = ['us-ord', 'us-east'];
+const now = new Date();
+
+const updated = `${now.toISOString().substring(0, 11)}10:41:00.000Z`;
 
 // Mock alert details
 const alertDetails = alertFactory.build({
@@ -71,11 +74,12 @@ const alertDetails = alertFactory.build({
   tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
   type: 'user',
-  updated: new Date().toISOString(),
+  updated,
   scope: 'entity',
   regions: regionList,
 });
-const { description, id, label, service_type, updated } = alertDetails;
+
+const { description, id, label, service_type } = alertDetails;
 
 // Mock regions
 const regions = [
@@ -83,11 +87,13 @@ const regions = [
     capabilities: ['Managed Databases'],
     id: 'us-ord',
     label: 'Chicago, IL',
+    monitors: { alerts: ['Managed Databases'] },
   }),
   regionFactory.build({
     capabilities: ['Managed Databases'],
     id: 'us-east',
     label: 'Newark',
+    monitors: { alerts: ['Managed Databases'] },
   }),
 ];
 
@@ -145,19 +151,8 @@ describe('Integration Tests for Edit Alert', () => {
     mockGetProfile(mockProfile);
     mockGetRegions(regions);
     mockGetCloudPulseServiceByType('dbaas', services);
-    mockGetCloudPulseServices([alertDetails.service_type]);
-    mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
-    mockGetAlertDefinitions(service_type, id, alertDetails).as(
-      'getAlertDefinitions'
-    );
-    mockGetDatabases(databases).as('getDatabases');
-    mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
-      'updateDefinitions'
-    );
-    mockCreateAlertDefinition(service_type, alertDetails).as(
-      'createAlertDefinition'
-    );
     mockGetCloudPulseMetricDefinitions(service_type, metricDefinitions);
+    mockGetDatabases(databases).as('getDatabases');
     mockGetAlertChannels([notificationChannels]);
   });
 
@@ -189,6 +184,7 @@ describe('Integration Tests for Edit Alert', () => {
       timezone: 'GMT',
     });
 
+    cy.log(' formattedDate date in assertAlertRow ', formattedDate);
     cy.findByText(label)
       .closest('tr')
       .within(() => {
@@ -241,78 +237,69 @@ describe('Integration Tests for Edit Alert', () => {
     // Entity-level alert validations
     Entity: () => {
       const searchPlaceholder = 'Search for a Region or Entity';
-      cy.get('[data-qa-section="Resources"]').within(() => {
-        // Validate headings
-        ui.heading
-          .findByText('entity')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('have.text', 'Entity');
+      // Validate headings
+      ui.heading
+        .findByText('entity')
+        .scrollIntoView()
+        .should('be.visible')
+        .should('have.text', 'Entity');
 
-        ui.heading
-          .findByText('region')
-          .should('be.visible')
-          .should('have.text', 'Region');
+      ui.heading
+        .findByText('region')
+        .should('be.visible')
+        .should('have.text', 'Region');
 
-        // Validate search inputs
-        cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
-        cy.findByPlaceholderText('Select Regions').should('be.visible');
+      // Validate search inputs
+      cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
+      cy.findByPlaceholderText('Select Regions').should('be.visible');
 
-        // Assert row count
-        cy.get('[data-qa-alert-row]').should('have.length', 4);
+      // Assert row count
+      cy.get('[data-qa-alert-row]').should('have.length', 5);
 
-        // Validate entity-region mapping
-        const regionMap = new Map(regions.map((r) => [r.id, r.label]));
+      // Validate entity-region mapping
+      const regionMap = new Map(
+        regions.map((r) => [r.id, `US, ${r.label} (${r.id})`])
+      );
 
-        cy.get('[data-qa-alert-row]')
-          .should('have.length', 4)
-          .each((row, index) =>
-            validateAlertRow(row, index, databases, regionMap)
-          );
-
-        // Entity search
-        cy.findByPlaceholderText(searchPlaceholder).type(databases[0].label);
-
-        cy.get('[data-qa-alert-table="true"]')
-          .find('[data-qa-alert-row]')
-          .should('have.length', 1);
-
-        cy.findByText(databases[0].label).should('be.visible');
-        [1, 2, 3].forEach((i) =>
-          cy.findByText(databases[i].label).should('not.exist')
+      cy.get('[data-qa-alert-row]')
+        .should('have.length', 5)
+        .each((row, index) =>
+          validateAlertRow(row, index, databases, regionMap)
         );
 
-        // Region filter
-        cy.findByPlaceholderText(searchPlaceholder).clear();
-        ui.regionSelect
-          .find()
-          .click()
-          .type(`${regions[0].label}{enter}`)
-          .click();
+      // Entity search
+      cy.findByPlaceholderText(searchPlaceholder).type(databases[0].label);
 
-        cy.get('[data-qa-alert-table="true"]')
-          .find('[data-qa-alert-row]')
-          .should('have.length', 2);
+      cy.get('[data-qa-alert-table="true"]')
+        .find('[data-qa-alert-row]')
+        .should('have.length', 1);
 
-        [0, 2].forEach((i) =>
-          cy.get(`[data-qa-alert-cell="${i}_region"]`).should('not.exist')
-        );
+      cy.findByText(databases[0].label).should('be.visible');
+      [1, 2, 3].forEach((i) =>
+        cy.findByText(databases[i].label).should('not.exist')
+      );
 
-        [1, 3].forEach((i) =>
-          cy.get(`[data-qa-alert-cell="${i}_region"]`).should('be.visible')
-        );
-      });
+      // Region filter
+      cy.findByPlaceholderText(searchPlaceholder).clear();
+      ui.regionSelect.find().click().type(`${regions[0].label}{enter}`).click();
+
+      // Filtered table should have exactly 1 row
+      cy.get('[data-qa-alert-table="true"]')
+        .find('[data-qa-alert-row]')
+        .should('have.length', 1)
+        .first() // get the only row
+        .within(() => {
+          cy.get('[data-qa-alert-cell$="_region"]').should('be.visible');
+        });
     },
   };
   const validateAlertRow = (
     row: JQuery<HTMLElement>,
-    index: number,
-    databases: Database[], // Replace with the correct type
+    rowNumber: number,
+    databases: Database[],
     regionMap: Map<string, string>
   ) => {
-    const db = databases[index];
-    const rowNumber = index + 1;
-    const regionLabel = regionMap.get(db.region) || 'Unknown Region';
+    const db = databases[rowNumber];
 
     cy.wrap(row).within(() => {
       cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
@@ -320,14 +307,30 @@ describe('Integration Tests for Edit Alert', () => {
         db.label
       );
 
+      cy.get(`[data-qa-alert-cell="${rowNumber}_database engine"]`).should(
+        'have.text',
+        'MySQL'
+      );
+
       cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
         'have.text',
-        `US, ${regionLabel} (${db.region})`
+        regionMap.get(db.region)
       );
     });
   };
 
   it('should correctly display the details of the alert in the Edit Alert page', () => {
+    mockGetCloudPulseServices([alertDetails.service_type]);
+    mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+    mockGetAlertDefinitions(service_type, id, alertDetails).as(
+      'getAlertDefinitions'
+    );
+    mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
+      'updateDefinitions'
+    );
+    mockCreateAlertDefinition(service_type, alertDetails).as(
+      'createAlertDefinition'
+    );
     cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
@@ -434,16 +437,26 @@ describe('Integration Tests for Edit Alert', () => {
         tags: [''],
         trigger_conditions: triggerConditionFactory.build(),
         type: 'user',
-        updated: new Date().toISOString(),
+        updated,
         scope: value,
+        id: 1,
         regions: regionList,
       });
       mockGetRegions(regions);
+      mockGetCloudPulseServiceByType('dbaas', services);
+      mockGetCloudPulseServices([alertDetails.service_type]);
       mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+      mockGetAlertDefinitions(service_type, id, alertDetails).as(
+        'getAlertDefinitions'
+      );
+      mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
+        'updateDefinitions'
+      );
+      mockCreateAlertDefinition(service_type, alertDetails).as(
+        'createAlertDefinition'
+      );
       cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
       cy.wait('@getAlertDefinitions');
-
-      // Make changes to alert form
       cy.findByLabelText('Name').clear();
       cy.findByLabelText('Name').type('Alert-2');
       cy.findByLabelText('Description (optional)').clear();
@@ -453,7 +466,7 @@ describe('Integration Tests for Edit Alert', () => {
       ui.autocomplete.findByLabel('Severity').type('Info');
       ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
       // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account' or 'Entity')
-      scopeActions[groupLabel];
+      scopeActions[groupLabel]();
 
       cy.get(
         '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
