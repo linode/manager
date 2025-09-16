@@ -63,6 +63,10 @@ interface ValueFieldRendererProps {
    */
   scope?: AlertDefinitionScope | null;
   /**
+   * List of selected regions under the region scope
+   */
+  selectedRegions?: string[];
+  /**
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
