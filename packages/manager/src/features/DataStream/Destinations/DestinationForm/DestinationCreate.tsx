@@ -3,6 +3,7 @@ import { destinationType } from '@linode/api-v4';
 import { useCreateDestinationMutation } from '@linode/queries';
 import { destinationSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -14,7 +15,8 @@ import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { DestinationFormType } from 'src/features/DataStream/Shared/types';
 
 export const DestinationCreate = () => {
-  const { mutateAsync: createDestination } = useCreateDestinationMutation();
+  const { mutateAsync: createDestination, isPending: isCreatingDestination } =
+    useCreateDestinationMutation();
   const navigate = useNavigate();
 
   const landingHeaderProps: LandingHeaderProps = {
@@ -44,10 +46,31 @@ export const DestinationCreate = () => {
   });
 
   const onSubmit = () => {
-    const payload = form.getValues();
-    createDestination(payload).then(() => {
-      navigate({ to: '/datastream/destinations' });
-    });
+    const destination = form.getValues();
+
+    createDestination(destination)
+      .then(() => {
+        navigate({ to: '/datastream/destinations' });
+        return enqueueSnackbar(
+          `Destination  ${destination.label} created successfully`,
+          {
+            variant: 'success',
+          }
+        );
+      })
+      .catch((errors) => {
+        for (const error of errors) {
+          if (error.field) {
+            form.setError(error.field, { message: error.reason });
+          } else {
+            form.setError('root', { message: error.reason });
+          }
+        }
+
+        return enqueueSnackbar('There was an issue creating your destination', {
+          variant: 'error',
+        });
+      });
   };
 
   return (
@@ -55,7 +78,11 @@ export const DestinationCreate = () => {
       <DocumentTitleSegment segment="Create Destination" />
       <LandingHeader {...landingHeaderProps} />
       <FormProvider {...form}>
-        <DestinationForm mode="create" onSubmit={onSubmit} />
+        <DestinationForm
+          isSubmitting={isCreatingDestination}
+          mode="create"
+          onSubmit={onSubmit}
+        />
       </FormProvider>
     </>
   );

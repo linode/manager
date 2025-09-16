@@ -23,11 +23,13 @@ export const NodeBalancerActionMenu = (props: Props) => {
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const { nodeBalancerId } = props;
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'nodebalancer',
     ['delete_nodebalancer'],
-    nodeBalancerId
+    nodeBalancerId,
+    isOpen
   );
 
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
@@ -94,6 +96,8 @@ export const NodeBalancerActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
+      loading={isLoading}
+      onOpen={() => setIsOpen(true)}
     />
   );
 };
