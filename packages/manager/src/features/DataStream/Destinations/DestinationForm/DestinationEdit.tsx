@@ -25,7 +25,8 @@ export const DestinationEdit = () => {
   const { destinationId } = useParams({
     from: '/datastream/destinations/$destinationId/edit',
   });
-  const { mutateAsync: updateDestination } = useUpdateDestinationMutation();
+  const { mutateAsync: updateDestination, isPending: isUpdatingDestination } =
+    useUpdateDestinationMutation();
   const {
     data: destination,
     isLoading,
@@ -44,7 +45,7 @@ export const DestinationEdit = () => {
       ],
     },
     removeCrumbX: 2,
-    title: 'Edit Destination',
+    title: `Edit Destination ${destinationId}`,
   };
 
   const form = useForm<DestinationFormType>({
@@ -67,16 +68,16 @@ export const DestinationEdit = () => {
   }, [destination, form]);
 
   const onSubmit = () => {
-    const payload = {
+    const destination = {
       id: destinationId,
       ...form.getValues(),
     };
 
-    updateDestination(payload)
+    updateDestination(destination)
       .then(() => {
         navigate({ to: '/datastream/destinations' });
         return enqueueSnackbar(
-          `Destination  ${payload.label} edited successfully`,
+          `Destination  ${destination.label} edited successfully`,
           {
             variant: 'success',
           }
@@ -113,7 +114,7 @@ export const DestinationEdit = () => {
       {!isLoading && !error && (
         <FormProvider {...form}>
           <DestinationForm
-            destinationId={`${destinationId}`}
+            isSubmitting={isUpdatingDestination}
             mode="edit"
             onSubmit={onSubmit}
           />

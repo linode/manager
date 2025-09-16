@@ -84,3 +84,15 @@ export const deleteDestination = (destinationId: number) =>
     ),
     setMethod('DELETE'),
   );
+
+/**
+ * Verifies if a provided Destination is valid.
+ *
+ * @param data { object } Data for type, label, etc.
+ */
+export const verifyDestination = (data: CreateDestinationPayload) =>
+  Request<Destination>(
+    setData(data, destinationSchema),
+    setURL(`${BETA_API_ROOT}/monitor/streams/destinations/verify`),
+    setMethod('POST'),
+  );
