@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import {
@@ -31,59 +31,70 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 
 describe('SelectFirewallPanel', () => {
   it('should render', async () => {
-    const wrapper = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       <SelectFirewallPanel
         entityType={undefined}
         handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
+        permissions={{ create_firewall: true, create_nodebalancer: true }}
         selectedFirewallId={-1}
       />
     );
 
-    await waitFor(() => {
-      expect(wrapper.getByTestId(testId)).toBeInTheDocument();
-    });
+    const id = getByTestId(testId);
+    expect(id).toBeInTheDocument();
   });
 
   it('should open a Create Firewall drawer when the link is clicked in Linode Create', async () => {
-    const wrapper = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       <SelectFirewallPanel
         entityType="linode"
         handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
+        permissions={{ create_firewall: true, create_nodebalancer: true }}
         selectedFirewallId={-1}
       />
     );
 
-    const createFirewallLink = wrapper.getByText('Create Firewall');
+    const createFirewallLink = getByText('Create Firewall');
 
-    fireEvent.click(createFirewallLink);
+    await userEvent.click(createFirewallLink);
 
-    await waitFor(() => {
-      expect(
-        wrapper.getByLabelText(LINODE_CREATE_FLOW_TEXT)
-      ).toBeInTheDocument();
-    });
+    const labelText = getByLabelText(LINODE_CREATE_FLOW_TEXT);
+    expect(labelText).toBeInTheDocument();
   });
 
   it('should open a Create Firewall drawer when the link is clicked in NodeBalancer Create', async () => {
-    const wrapper = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       <SelectFirewallPanel
         entityType="nodebalancer"
         handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
+        permissions={{ create_firewall: true, create_nodebalancer: true }}
         selectedFirewallId={-1}
       />
     );
 
-    const createFirewallLink = wrapper.getByText('Create Firewall');
+    const createFirewallLink = getByText('Create Firewall');
 
-    fireEvent.click(createFirewallLink);
+    await userEvent.click(createFirewallLink);
 
-    await waitFor(() => {
-      expect(
-        wrapper.getByLabelText(NODEBALANCER_CREATE_FLOW_TEXT)
-      ).toBeInTheDocument();
-    });
+    const labelText = getByLabelText(NODEBALANCER_CREATE_FLOW_TEXT);
+    expect(labelText).toBeInTheDocument();
+  });
+
+  it('should disable "Create Firewall" link if user does not have create_firewall permission', async () => {
+    const { getByText } = renderWithTheme(
+      <SelectFirewallPanel
+        entityType="nodebalancer"
+        handleFirewallChange={vi.fn()}
+        helperText={<span>Testing</span>}
+        permissions={{ create_firewall: false, create_nodebalancer: true }}
+        selectedFirewallId={-1}
+      />
+    );
+
+    const createFirewallLink = getByText('Create Firewall');
+    expect(createFirewallLink).toBeDisabled();
   });
 });
