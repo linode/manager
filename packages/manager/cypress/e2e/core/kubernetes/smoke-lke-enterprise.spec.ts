@@ -82,6 +82,12 @@ describe('LKE-E Cluster Create', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     ).as('getAccount');
+    mockGetRegions([mockRegion]);
+    mockGetLinodeTypes([mockPlan]);
+    mockGetLinodeType(mockPlan);
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
+    mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
+    mockCreateCluster(mockCluster).as('createCluster');
   });
 
   /*
@@ -96,17 +102,6 @@ describe('LKE-E Cluster Create', () => {
    * are available for LKE-E clusters as well.
    */
   describe('Post-LA feature flag', () => {
-    beforeEach(() => {
-      mockGetRegions([mockRegion]);
-      mockGetLinodeTypes([mockPlan]);
-      mockGetLinodeType(mockPlan);
-      mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
-      mockGetTieredKubernetesVersions(
-        'enterprise',
-        mockTieredEnterpriseVersions
-      );
-    });
-
     /*
      * - Confirms the state of the LKE create page when the LKE-E "postLa" flag is enabled.
      * - Confirms that node pools are configured via new drawer.
@@ -233,16 +228,18 @@ describe('LKE-E Cluster Create', () => {
       );
       cy.findByText('Use an existing VPC').should('be.visible');
 
-      cy.findByText('Shared CPU').should('be.visible').click();
-      addNodes('Linode 2 GB');
+      cy.findByText('Dedicated CPU').should('be.visible').click();
+      addNodes(mockPlan.formattedLabel);
 
       // Bypass ACL validation
       cy.get('input[name="acl-acknowledgement"]').check();
 
       // Confirm change is reflected in checkout bar.
       cy.get('[data-testid="kube-checkout-bar"]').within(() => {
-        cy.findByText('Linode 2 GB Plan').should('be.visible');
-        cy.findByTitle('Remove Linode 2GB Node Pool').should('be.visible');
+        cy.findByText(`${mockPlan.formattedLabel} Plan`).should('be.visible');
+        cy.findByTitle(`Remove ${mockPlan.label} Node Pool`).should(
+          'be.visible'
+        );
 
         cy.get('[data-qa-notice="true"]').within(() => {
           cy.findByText(minimumNodeNotice).should('be.visible');
@@ -272,12 +269,6 @@ describe('LKE-E Cluster Create', () => {
         },
       }).as('getFeatureFlags');
 
-      mockCreateCluster(mockCluster).as('createCluster');
-      mockGetTieredKubernetesVersions('enterprise', [
-        latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetRegions(mockRegions);
-
       cy.visitWithLogin('/kubernetes/create');
       cy.findByText('Add Node Pools').should('be.visible');
 
@@ -305,16 +296,18 @@ describe('LKE-E Cluster Create', () => {
       );
       cy.findByText('Use an existing VPC').should('not.exist');
 
-      cy.findByText('Shared CPU').should('be.visible').click();
-      addNodes('Linode 2 GB');
+      cy.findByText('Dedicated CPU').should('be.visible').click();
+      addNodes(mockPlan.formattedLabel);
 
       // Bypass ACL validation
       cy.get('input[name="acl-acknowledgement"]').check();
 
       // Confirm change is reflected in checkout bar.
       cy.get('[data-testid="kube-checkout-bar"]').within(() => {
-        cy.findByText('Linode 2 GB Plan').should('be.visible');
-        cy.findByTitle('Remove Linode 2GB Node Pool').should('be.visible');
+        cy.findByText(`${mockPlan.formattedLabel} Plan`).should('be.visible');
+        cy.findByTitle(`Remove ${mockPlan.label} Node Pool`).should(
+          'be.visible'
+        );
 
         cy.get('[data-qa-notice="true"]').within(() => {
           cy.findByText(minimumNodeNotice).should('be.visible');
@@ -336,17 +329,6 @@ describe('LKE-E Cluster Create', () => {
   });
 
   describe('Phase 2 MTC & Post-LA feature flags', () => {
-    beforeEach(() => {
-      mockGetRegions([mockRegion]);
-      mockGetLinodeTypes([mockPlan]);
-      mockGetLinodeType(mockPlan);
-      mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
-      mockGetTieredKubernetesVersions(
-        'enterprise',
-        mockTieredEnterpriseVersions
-      );
-    });
-
     it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: {
