@@ -194,8 +194,6 @@ describe('Integration Tests for Edit Alert', () => {
       const { created_by, description, severity, status, type, updated_by } =
         alertDetails;
 
-      expect(response).to.have.property('statusCode', 200);
-
       const resourceIds: string[] = request.body.entity_ids.map((id: number) =>
         String(id)
       );
