@@ -183,8 +183,6 @@ describe('Integration Tests for Edit Alert', () => {
       format: 'MMM dd, yyyy, h:mm a',
       timezone: 'GMT',
     });
-
-    cy.log(' formattedDate date in assertAlertRow ', formattedDate);
     cy.findByText(label)
       .closest('tr')
       .within(() => {
