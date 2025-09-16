@@ -1239,12 +1239,10 @@ describe('LKE cluster updates', () => {
     });
 
     it('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
-      const clusterRegion = extendRegion(
-        regionFactory.build({
-          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-          id: 'us-east',
-        })
-      );
+      const clusterRegion = regionFactory.build({
+        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+        id: 'us-east',
+      });
       const mockCluster = kubernetesClusterFactory.build({
         k8s_version: latestKubernetesVersion,
         region: clusterRegion.id,
@@ -1272,19 +1270,12 @@ describe('LKE cluster updates', () => {
       mockGetRegions([clusterRegion]).as('getRegions');
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
       mockGetClusterPools(mockCluster.id, []).as('getNodePools');
       mockGetLinodeTypes([type]).as('getTypes');
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
 
-      cy.wait([
-        '@getAccount',
-        '@getCluster',
-        '@getNodePools',
-        '@getRegions',
-        '@getVersions',
-      ]);
+      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getRegions']);
 
       ui.button
         .findByTitle('Add a Node Pool')
