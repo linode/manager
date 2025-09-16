@@ -1,6 +1,6 @@
 import { streamType } from '@linode/api-v4';
 import { useRegionsQuery } from '@linode/queries';
-import { TooltipIcon } from '@linode/ui';
+import { Stack, TooltipIcon, Typography } from '@linode/ui';
 import React from 'react';
 
 import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
@@ -41,8 +41,13 @@ export const DestinationLinodeObjectStorageDetailsSummary = (
           <TooltipIcon
             status="info"
             sxTooltipIcon={sxTooltipIcon}
-            text={`Default paths: ${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/{account}/{partition}/{%Y/%m/%d/};
-            ${getStreamTypeOption(streamType.AuditLogs)?.label} - {stream_type}/{log_type}/{account}/{%Y/%m/%d/}`}
+            text={
+              <Stack spacing={2}>
+                <Typography>Default paths:</Typography>
+                <Typography>{`${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{partition}/ {%Y/%m/%d/}`}</Typography>
+                <Typography>{`${getStreamTypeOption(streamType.AuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{%Y/%m/%d/}`}</Typography>
+              </Stack>
+            }
           />
         )}
       </LabelValue>

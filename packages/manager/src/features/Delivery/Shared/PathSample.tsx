@@ -1,6 +1,6 @@
 import { streamType, type StreamType } from '@linode/api-v4';
 import { useProfile } from '@linode/queries';
-import { Box, InputLabel, TooltipIcon } from '@linode/ui';
+import { Box, InputLabel, Stack, TooltipIcon, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -68,20 +68,37 @@ export const PathSample = (props: PathSampleProps) => {
     clusterId,
   ]);
 
+  const getPath = () => {
+    if (value === '/') {
+      return `/${fileName}`;
+    }
+
+    const path = `${value || defaultPath}/${fileName}`;
+
+    if (!path.startsWith('/')) {
+      return `/${path}`;
+    }
+
+    return path;
+  };
+
   return (
     <Box display="flex" flexDirection="column">
       <InputLabel>
-        Destination object name sample
+        Sample Destination Object Name
         <TooltipIcon
           status="info"
           sxTooltipIcon={sxTooltipIcon}
-          text={`Default paths: ${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/{account}/{partition}/{%Y/%m/%d/};
-            ${getStreamTypeOption(streamType.AuditLogs)?.label} - {stream_type}/{log_type}/{account}/{%Y/%m/%d/}`}
+          text={
+            <Stack spacing={2}>
+              <Typography>Default paths:</Typography>
+              <Typography>{`${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{partition}/ {%Y/%m/%d/}`}</Typography>
+              <Typography>{`${getStreamTypeOption(streamType.AuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{%Y/%m/%d/}`}</Typography>
+            </Stack>
+          }
         />
       </InputLabel>
-      <StyledValue>
-        {value || defaultPath}/{fileName}
-      </StyledValue>
+      <StyledValue>{getPath()}</StyledValue>
     </Box>
   );
 };
