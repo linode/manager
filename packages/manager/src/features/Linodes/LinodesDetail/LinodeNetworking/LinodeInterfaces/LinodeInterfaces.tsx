@@ -117,19 +117,18 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         }
         open={Boolean(interfaceId)}
       />
-      <HistoryDialog
-        linodeId={linodeId}
-        onClose={() =>
-          navigate({
-            to: '/linodes/$linodeId/networking',
-            params: { linodeId },
-            search: () => {
-              return {};
-            },
-          })
-        }
-        open={location.pathname.includes('networking/history')}
-      />
+      {isHistoryTableEnabled && (
+        <HistoryDialog
+          linodeId={linodeId}
+          onClose={() =>
+            navigate({
+              to: '/linodes/$linodeId/networking',
+              params: { linodeId },
+            })
+          }
+          open={location.pathname.includes('networking/history')}
+        />
+      )}
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
