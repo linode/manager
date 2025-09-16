@@ -125,6 +125,7 @@ export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
         <FirewallSelect
           disableClearable={!allowFirewallRemoval}
           errorText={fieldState.error?.message}
+          label=""
           noMarginTop
           onBlur={field.onBlur}
           onChange={(e, firewall) => {

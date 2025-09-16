@@ -2,7 +2,7 @@ import { linodeFactory } from '@linode/utilities';
 
 import { transformDimensionValue } from '../../../Utils/utils';
 import {
-  getFilteredFirewallResources,
+  getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
   getOperatorGroup,
@@ -107,7 +107,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('getFilteredFirewallResources', () => {
+  describe('getFilteredFirewallParentEntities', () => {
     const resources: CloudPulseResources[] = [
       {
         id: '1',
@@ -122,16 +122,16 @@ describe('Utils', () => {
     ];
 
     it('should return matched resources by entity IDs', () => {
-      expect(getFilteredFirewallResources(resources, ['1'])).toEqual(['a']);
+      expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual(['a']);
     });
 
     it('should return empty array if no match', () => {
-      expect(getFilteredFirewallResources(resources, ['3'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([]);
     });
 
     it('should handle undefined inputs', () => {
-      expect(getFilteredFirewallResources(undefined, ['1'])).toEqual([]);
-      expect(getFilteredFirewallResources(resources, undefined)).toEqual([]);
+      expect(getFilteredFirewallParentEntities(undefined, ['1'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, undefined)).toEqual([]);
     });
   });
 
@@ -139,21 +139,14 @@ describe('Utils', () => {
     const linodes: Linode[] = linodeFactory.buildList(2);
 
     it('should return linode options with transformed labels', () => {
+      // checking for same label as linode_id dimension filter should not have any transformation
       expect(getFirewallLinodes(linodes)).toEqual([
         {
-          label: transformDimensionValue(
-            'firewall',
-            'parent_vm_entity_id',
-            linodes[0].label
-          ),
+          label: linodes[0].label,
           value: linodes[0].id.toString(),
         },
         {
-          label: transformDimensionValue(
-            'firewall',
-            'parent_vm_entity_id',
-            linodes[1].label
-          ),
+          label: linodes[1].label,
           value: linodes[1].id.toString(),
         },
       ]);

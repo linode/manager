@@ -378,7 +378,6 @@ describe('displays specific linode plans for GPU', () => {
     mockAppendFeatureFlags({
       gpuv2: {
         egressBanner: true,
-        planDivider: true,
         transferBanner: true,
       },
     }).as('getFeatureFlags');
@@ -428,7 +427,6 @@ describe('displays specific kubernetes plans for GPU', () => {
     mockAppendFeatureFlags({
       gpuv2: {
         egressBanner: true,
-        planDivider: true,
         transferBanner: true,
       },
     }).as('getFeatureFlags');

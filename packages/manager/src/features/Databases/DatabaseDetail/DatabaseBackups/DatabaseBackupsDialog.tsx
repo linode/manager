@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { toDatabaseFork, toFormatedDate } from '../../utilities';
+import { toDatabaseFork, toFormattedDate } from '../../utilities';
 
 import type { Database } from '@linode/api-v4/lib/databases';
 import type { DialogProps } from '@linode/ui';
@@ -18,7 +18,7 @@ interface Props extends Omit<DialogProps, 'title'> {
   onClose: () => void;
   open: boolean;
   selectedDate?: DateTime | null;
-  selectedTime?: number;
+  selectedTime?: DateTime | null;
 }
 
 export const DatabaseBackupDialog = (props: Props) => {
@@ -27,7 +27,7 @@ export const DatabaseBackupDialog = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [isRestoring, setIsRestoring] = useState(false);
 
-  const formatedDate = toFormatedDate(selectedDate, selectedTime);
+  const formattedDate = toFormattedDate(selectedDate, selectedTime);
 
   const { error, mutateAsync: restore } = useRestoreFromBackupMutation(
     database.engine,
@@ -55,10 +55,10 @@ export const DatabaseBackupDialog = (props: Props) => {
     <Dialog
       onClose={onClose}
       open={open}
-      subtitle={formatedDate && `From ${formatedDate} (UTC)`}
+      subtitle={formattedDate && `From ${formattedDate} (UTC)`}
       title={`Restore ${database.label}`}
     >
-      <Typography sx={(theme) => ({ marginBottom: theme.spacing(4) })}>
+      <Typography sx={(theme) => ({ marginBottom: theme.spacingFunction(32) })}>
         Restoring a backup creates a fork from this backup. If you proceed and
         the fork is created successfully, you should remove the original
         database cluster. Failing to do so will lead to additional billing
