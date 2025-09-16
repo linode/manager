@@ -16,7 +16,6 @@ import { getStreamPayloadDetails } from 'src/features/DataStream/dataStreamUtils
 import { FormSubmitBar } from 'src/features/DataStream/Shared/FormSubmitBar/FormSubmitBar';
 import { useVerifyDestination } from 'src/features/DataStream/Shared/useVerifyDestination';
 import { StreamFormDelivery } from 'src/features/DataStream/Streams/StreamForm/Delivery/StreamFormDelivery';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { StreamFormClusters } from './Clusters/StreamFormClusters';
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
@@ -87,14 +86,16 @@ export const StreamForm = (props: StreamFormProps) => {
           { variant: 'success' }
         );
         form.setValue('stream.destinations', [id]);
-      } catch (error) {
-        const { field, reason } = getAPIErrorOrDefault(
-          error,
-          'There was an issue creating your destination'
-        )[0];
+      } catch (errors) {
+        for (const error of errors) {
+          if (error.field) {
+            form.setError(error.field, { message: error.reason });
+          } else {
+            form.setError('root', { message: error.reason });
+          }
+        }
 
-        const message = field ? `${field}: ${reason}` : reason;
-        enqueueSnackbar(message, {
+        enqueueSnackbar('There was an issue creating your destination', {
           variant: 'error',
         });
         return;
@@ -129,16 +130,21 @@ export const StreamForm = (props: StreamFormProps) => {
       }
 
       navigate({ to: '/datastream/streams' });
-    } catch (error) {
-      const { field, reason } = getAPIErrorOrDefault(
-        error,
-        `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`
-      )[0];
+    } catch (errors) {
+      for (const error of errors) {
+        if (error.field) {
+          form.setError(error.field, { message: error.reason });
+        } else {
+          form.setError('root', { message: error.reason });
+        }
+      }
 
-      const message = field ? `${field}: ${reason}` : reason;
-      enqueueSnackbar(message, {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`,
+        {
+          variant: 'error',
+        }
+      );
     }
   };
 

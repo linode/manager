@@ -10,7 +10,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { DestinationForm } from 'src/features/DataStream/Destinations/DestinationForm/DestinationForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { DestinationFormType } from 'src/features/DataStream/Shared/types';
@@ -59,14 +58,16 @@ export const DestinationCreate = () => {
           }
         );
       })
-      .catch((error) => {
-        const { field, reason } = getAPIErrorOrDefault(
-          error,
-          'There was an issue creating your destination'
-        )[0];
+      .catch((errors) => {
+        for (const error of errors) {
+          if (error.field) {
+            form.setError(error.field, { message: error.reason });
+          } else {
+            form.setError('root', { message: error.reason });
+          }
+        }
 
-        const message = field ? `${field}: ${reason}` : reason;
-        return enqueueSnackbar(message, {
+        return enqueueSnackbar('There was an issue creating your destination', {
           variant: 'error',
         });
       });
