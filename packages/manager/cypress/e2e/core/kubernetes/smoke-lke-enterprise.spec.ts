@@ -64,11 +64,7 @@ const mockNodePools = [nodePoolFactory.build()];
 // Mock a valid region for LKE-E to avoid test flake.
 const mockRegion = regionFactory.build({
   capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise', 'VPCs'],
-  // id: 'us-iad',
-  // label: 'Washington, DC',
 });
-
-const mockRegions = [mockRegion];
 
 /**
  * - Confirms VPC and IP Stack selections are shown with `phase2Mtc` feature flag is enabled.
@@ -198,7 +194,7 @@ describe('LKE-E Cluster Create', () => {
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
       ]).as('getTieredKubernetesVersions');
-      mockGetRegions(mockRegions);
+      mockGetRegions([mockRegion]);
 
       cy.visitWithLogin('/kubernetes/create');
       cy.findByText('Add Node Pools').should('be.visible');
@@ -208,10 +204,8 @@ describe('LKE-E Cluster Create', () => {
 
       cy.findByText('LKE Enterprise').click();
 
-      ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
-      ui.regionSelect
-        .findItemByRegionId(mockRegions[0].id, mockRegions)
-        .click();
+      ui.regionSelect.find().click().type(`${mockRegion.label}`);
+      ui.regionSelect.findItemByRegionId(mockRegion.id, [mockRegion]).click();
 
       cy.findByLabelText('Kubernetes Version').should('be.visible').click();
       cy.findByText(latestEnterpriseTierKubernetesVersion.id)
@@ -276,10 +270,8 @@ describe('LKE-E Cluster Create', () => {
 
       cy.findByText('LKE Enterprise').click();
 
-      ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
-      ui.regionSelect
-        .findItemByRegionId(mockRegions[0].id, mockRegions)
-        .click();
+      ui.regionSelect.find().click().type(`${mockRegion.label}`);
+      ui.regionSelect.findItemByRegionId(mockRegion.id, [mockRegion]).click();
 
       cy.findByLabelText('Kubernetes Version').should('be.visible').click();
       cy.findByText(latestEnterpriseTierKubernetesVersion.id)
