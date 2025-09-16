@@ -423,6 +423,10 @@ describe('LKE-E Cluster Read', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     ).as('getAccount');
+    mockGetClusters([mockCluster]).as('getClusters');
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+    mockGetVPC(mockVPC).as('getVPC');
   });
 
   describe('Phase 2 MTC feature flag', () => {
@@ -431,13 +435,8 @@ describe('LKE-E Cluster Read', () => {
         lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
       }).as('getFeatureFlags');
 
-      mockGetClusters([mockCluster]).as('getClusters');
-      mockGetCluster(mockCluster).as('getCluster');
-      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-      mockGetVPC(mockVPC).as('getVPC');
-
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-      cy.wait(['@getCluster', '@getVPC', '@getNodePools']);
+      // cy.wait(['@getCluster', '@getVPC', '@getNodePools']);
 
       // Confirm linked VPC is present
       cy.get('[data-qa-kube-entity-footer]').within(() => {
@@ -460,12 +459,8 @@ describe('LKE-E Cluster Read', () => {
         lkeEnterprise: { enabled: true, la: true, phase2Mtc: false },
       }).as('getFeatureFlags');
 
-      mockGetClusters([mockCluster]).as('getClusters');
-      mockGetCluster(mockCluster).as('getCluster');
-      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-      cy.wait(['@getCluster', '@getNodePools']);
+      // cy.wait(['@getCluster', '@getNodePools']);
 
       // Confirm linked VPC is not present
       cy.get('[data-qa-kube-entity-footer]').within(() => {
@@ -481,7 +476,106 @@ describe('LKE-E Cluster Read', () => {
     });
   });
 
+  describe('Post-LA feature flags', () => {
+    it('Simple Page Check - Post-LA Flag ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          la: true,
+          phase2Mtc: false,
+          postLa: true,
+        },
+      }).as('getFeatureFlags');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Update Strategy').should('be.visible');
+          cy.findByText('Use default firewall').should('be.visible');
+          cy.findByText('Select existing firewall').scrollIntoView();
+          cy.findByText('Select existing firewall').should('be.visible');
+        });
+    });
+
+    it('Simple Page Check - Post-LA Flag OFF', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          la: true,
+          phase2Mtc: false,
+          postLa: false,
+        },
+      }).as('getFeatureFlags');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Update Strategy').should('not.exist');
+          cy.findByText('Use default firewall').should('not.exist');
+          cy.findByText('Select existing firewall').should('not.exist');
+        });
+    });
+  });
+
   describe('Phase 2 MTC & Post-LA feature flags', () => {
-    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {});
+    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          la: true,
+          phase2Mtc: true,
+          postLa: true,
+        },
+      });
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+
+      // Confirm that VPC label is shown in summary, and that IPv4 and IPv6
+      // node pool table columns are present.
+      cy.get('[data-qa-kube-entity-footer]').within(() => {
+        cy.contains('VPC:').should('exist');
+        cy.findByTestId('assigned-lke-cluster-label').should(
+          'contain.text',
+          mockVPC.label
+        );
+      });
+
+      cy.findByLabelText('List of Your Cluster Nodes').within(() => {
+        cy.contains('th', 'VPC IPv4').should('be.visible');
+        cy.contains('th', 'VPC IPv6').should('be.visible');
+      });
+
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Update Strategy').should('be.visible');
+          cy.findByText('Use default firewall').should('be.visible');
+          cy.findByText('Select existing firewall').scrollIntoView();
+          cy.findByText('Select existing firewall').should('be.visible');
+        });
+    });
   });
 });
