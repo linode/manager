@@ -150,14 +150,14 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         queryKey: [filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
-        queryFn: getKubernetesClusters(params, filter),
+        queryFn: () => getKubernetesClusters(params, filter),
         queryKey: [params, filter],
       }),
     },
     queryKey: null,
   },
   tieredVersions: (tier: string) => ({
-    queryFn: getAllKubernetesTieredVersions(tier),
+    queryFn: () => getAllKubernetesTieredVersions(tier),
     queryKey: [tier],
   }),
   types: {
