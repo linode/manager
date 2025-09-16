@@ -95,9 +95,9 @@ it('test checkMandatoryFiltersSelected method for role', () => {
   expect(result).toBe(true);
 });
 
-it('checkMandatoryFiltersSelected method should return false if no region is selected for dashboard id 5', () => {
+it('checkMandatoryFiltersSelected method should return false if no region is selected for dashboard id 6', () => {
   const result = checkMandatoryFiltersSelected({
-    dashboardObj: { ...mockDashboard, id: 5 },
+    dashboardObj: { ...mockDashboard, id: 6 },
     filterValue: {},
     resource: 1,
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
@@ -106,9 +106,9 @@ it('checkMandatoryFiltersSelected method should return false if no region is sel
   expect(result).toBe(false);
 });
 
-it('checkMandatoryFiltersSelected method should return true if region is selected for dashboard id 5', () => {
+it('checkMandatoryFiltersSelected method should return true if region is selected for dashboard id 6', () => {
   const result = checkMandatoryFiltersSelected({
-    dashboardObj: { ...mockDashboard, id: 5 },
+    dashboardObj: { ...mockDashboard, id: 6 },
     filterValue: {},
     resource: 1,
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },

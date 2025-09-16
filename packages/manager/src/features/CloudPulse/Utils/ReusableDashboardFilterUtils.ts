@@ -30,7 +30,7 @@ interface ReusableDashboardFilterUtilProps {
   /**
    * The selected resource id
    */
-  resource: number;
+  resource: number | string;
   /**
    * The selected time duration
    */
