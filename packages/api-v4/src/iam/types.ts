@@ -101,6 +101,7 @@ export type AccountAdmin =
   | 'view_user_preferences'
   | AccountBillingAdmin
   | AccountFirewallAdmin
+  | AccountImageAdmin
   | AccountLinodeAdmin
   | AccountNodeBalancerAdmin
   | AccountOauthClientAdmin
@@ -163,6 +164,15 @@ export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
 
 /** Permissions associated with the "account_volume_creator" role. */
 export type AccountVolumeCreator = 'create_volume';
+
+/** Permissions associated with the "account_image_admin" role. */
+export type AccountImageAdmin = AccountImageCreator | ImageAdmin;
+
+/** Permissions associated with the "account_image_creator" role. */
+export type AccountImageCreator =
+  | 'create_image'
+  | 'list_images'
+  | 'upload_image';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';
@@ -371,6 +381,18 @@ export type VolumeContributor =
 
 /** Permissions associated with the "volume_viewer" role. */
 export type VolumeViewer = 'view_volume';
+
+export type ImageAdmin =
+  | 'delete_image'
+  | 'replicate_image'
+  | ImageContributor
+  | ImageViewer;
+
+/** Permissions associated with the "image_contributor" role. */
+export type ImageContributor = 'update_image' | ImageViewer;
+
+/** Permissions associated with the "image_viewer" role. */
+export type ImageViewer = 'view_image';
 
 /** Union of all permissions */
 export type PermissionType = AccountAdmin;

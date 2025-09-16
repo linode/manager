@@ -1,3 +1,4 @@
+import { useAllLinodesQuery } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import { ActionsPanel, Divider, Drawer, Notice, Stack } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
@@ -5,11 +6,10 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
-import { useImageAndLinodeGrantCheck } from '../utils';
-
-import type { APIError, Image } from '@linode/api-v4';
+import type { APIError, Image, Linode } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
@@ -23,8 +23,13 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
   const navigate = useNavigate();
-  const { permissionedLinodes: availableLinodes } =
-    useImageAndLinodeGrantCheck();
+  const { data: linodes, isLoading } = useQueryWithPermissions<Linode>(
+    useAllLinodesQuery(),
+    'linode',
+    ['rebuild_linode', 'view_linode'],
+    open
+  );
+  const availableLinodes = linodes?.map((linode) => linode.id);
 
   const { control, formState, handleSubmit, reset } = useForm<{
     linodeId: number;
@@ -58,7 +63,7 @@ export const RebuildImageDrawer = (props: Props) => {
   return (
     <Drawer
       error={imageError}
-      isFetching={isFetching}
+      isFetching={isFetching || isLoading}
       onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"
