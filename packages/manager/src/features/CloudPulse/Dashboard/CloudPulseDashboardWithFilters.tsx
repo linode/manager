@@ -35,7 +35,7 @@ export interface CloudPulseDashboardWithFiltersProp {
   /**
    * The resource id for which the metrics will be listed
    */
-  resource: number;
+  resource: number | string;
 }
 
 export const CloudPulseDashboardWithFilters = React.memo(

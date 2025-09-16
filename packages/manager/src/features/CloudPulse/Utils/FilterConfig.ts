@@ -4,6 +4,7 @@ import {
   ENDPOINT,
   INTERFACE_IDS_PLACEHOLDER_TEXT,
   LINODE_REGION,
+  REGION,
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
@@ -322,7 +323,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
     filters: [
       {
         configuration: {
-          filterKey: 'region',
+          filterKey: REGION,
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
@@ -334,7 +335,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
       },
       {
         configuration: {
-          dependency: ['region'],
+          dependency: [REGION],
           filterKey: ENDPOINT,
           filterType: 'string',
           isFilterable: false,
@@ -348,7 +349,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
       },
       {
         configuration: {
-          dependency: ['region', ENDPOINT],
+          dependency: [REGION, ENDPOINT],
           filterKey: RESOURCE_ID,
           filterType: 'string',
           isFilterable: true,

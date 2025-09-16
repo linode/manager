@@ -82,7 +82,7 @@ export interface CloudPulseDashboardFilterBuilderProps {
   /**
    * selected resource ids
    */
-  resource_ids?: number[];
+  resource_ids?: (number | string)[];
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -328,12 +328,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               config,
               dashboard,
               dependentFilters: resource_ids?.length
-                ? { [RESOURCE_ID]: resource_ids }
+                ? { [RESOURCE_ID]: resource_ids as number[] }
                 : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
               resource_ids: resource_ids?.length
-                ? resource_ids
+                ? (resource_ids as number[])
                 : (
                     dependentFilterReference.current[RESOURCE_ID] as string[]
                   )?.map((id: string) => Number(id)),
@@ -362,7 +362,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               config,
               dashboard,
               dependentFilters: resource_ids?.length
-                ? { [RESOURCE_ID]: resource_ids }
+                ? { [RESOURCE_ID]: resource_ids as number[] }
                 : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,

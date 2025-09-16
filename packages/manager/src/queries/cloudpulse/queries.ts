@@ -153,15 +153,17 @@ export const queryFactory = createQueryKeys(key, {
 
 const getAllBuckets = async () => {
   const endpoints = await getAllObjectStorageEndpoints();
-  // Filter out the endpoints that are not GEN2
-  const endpointsGen2 = endpoints.filter(
-    (endpoint) =>
-      endpoint.endpoint_type !== 'E0' && endpoint.endpoint_type !== 'E1'
-  );
+
   // Get all the buckets from the endpoints
-  const allBuckets = await getAllBucketsFromEndpoints(endpointsGen2);
+  const allBuckets = await getAllBucketsFromEndpoints(endpoints);
+
+  // Throw the error if we encounter any error for any single call.
   if (allBuckets.errors.length) {
     throw new Error('Unable to fetch the data.');
   }
-  return allBuckets.buckets;
+
+  // Filter the E0, E1 endpoint_type out and return the buckets
+  return allBuckets.buckets.filter(
+    (bucket) => bucket.endpoint_type !== 'E0' && bucket.endpoint_type !== 'E1'
+  );
 };
