@@ -313,6 +313,13 @@ export const DateTimeRangePicker = ({
           onClose={handleClose}
           open={open}
           role="dialog"
+          slotProps={{
+            paper: {
+              sx: {
+                overflow: 'inherit', // Allow timezone to overflow
+              },
+            },
+          }}
           sx={(theme) => ({
             boxShadow: 3,
             zIndex: 1300,

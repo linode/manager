@@ -771,11 +771,12 @@ export const darkTheme: ThemeOptions = {
             '.MuiInputAdornment-positionEnd': {
               marginLeft: Spacing.S12,
             },
-            '&.Mui-focused, &:active, &:focus, &.Mui-focused:hover': {
-              svg: {
-                color: DateRangeField.Focus.Icon,
+            '&.Mui-focused, & :active, & :focus, &.Mui-focused:hover, & :hover':
+              {
+                svg: {
+                  color: DateRangeField.Focus.Icon,
+                },
               },
-            },
             svg: {
               color: DateRangeField.Default.Icon,
             },

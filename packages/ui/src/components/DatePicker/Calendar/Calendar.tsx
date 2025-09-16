@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import ChevronLeftIcon from '../../../assets/icons/chevron-left.svg';
@@ -9,16 +10,16 @@ import { Stack } from '../../Stack/Stack';
 import { Typography } from '../../Typography/Typography';
 import { DayBox, DayBoxInner } from './Calendar.styles';
 
-import type { DateTime } from 'luxon';
+import type { DateTime as DateTimeType } from 'luxon';
 
 interface CalendarProps {
   direction: 'left' | 'right';
-  endDate: DateTime | null;
+  endDate: DateTimeType | null;
   focusedField: 'end' | 'start';
-  month: DateTime;
-  onDateClick: (date: DateTime, field: 'end' | 'start') => void;
-  setMonth: (date: DateTime) => void;
-  startDate: DateTime | null;
+  month: DateTimeType;
+  onDateClick: (date: DateTimeType, field: 'end' | 'start') => void;
+  setMonth: (date: DateTimeType) => void;
+  startDate: DateTimeType | null;
 }
 
 export const Calendar = ({
@@ -34,6 +35,7 @@ export const Calendar = ({
   const endOfMonth = month.endOf('month');
   const startDay = startOfMonth.weekday % 7;
   const totalDaysInMonth = endOfMonth.day;
+  const today = DateTime.now();
   // Calculate dynamic grid size based on actual content
   const days = [];
 
@@ -56,6 +58,7 @@ export const Calendar = ({
       startDate && startDate.isValid && currentDay.hasSame(startDate, 'day');
     const isEnd =
       endDate && endDate.isValid && currentDay.hasSame(endDate, 'day');
+    const isToday = currentDay.hasSame(today, 'day');
 
     // Determine visual boundaries for cross-month date ranges
     // This ensures rounded edges appear at the first/last visible dates in each month
@@ -81,10 +84,18 @@ export const Calendar = ({
       nextDay >= startDate &&
       nextDay <= endDate;
 
-    // Visual start: actual start OR first selected day in this month
-    const isVisualStart = isStart || (isSelected && !prevDaySelected);
-    // Visual end: actual end OR last selected day in this month
-    const isVisualEnd = isEnd || (isSelected && !nextDaySelected);
+    // Check if this is the start/end of a week (Sunday/Saturday)
+    const isWeekStart = currentDay.weekday === 7; // Sunday
+    const isWeekEnd = currentDay.weekday === 6; // Saturday
+
+    // Visual start: actual start OR first selected day in this month OR week start
+    const isVisualStart =
+      isStart ||
+      (isSelected && !prevDaySelected) ||
+      (isSelected && isWeekStart);
+    // Visual end: actual end OR last selected day in this month OR week end
+    const isVisualEnd =
+      isEnd || (isSelected && !nextDaySelected) || (isSelected && isWeekEnd);
 
     days.push(
       <DayBox
@@ -94,7 +105,7 @@ export const Calendar = ({
         key={`${month.month} ${day}`}
         onClick={() => onDateClick(currentDay, focusedField)}
       >
-        <DayBoxInner isEnd={isEnd} isSelected={isSelected} isStart={isStart}>
+        <DayBoxInner isEnd={isEnd} isStart={isStart} isToday={isToday}>
           {day}
         </DayBoxInner>
       </DayBox>,

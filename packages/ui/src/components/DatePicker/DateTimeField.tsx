@@ -1,4 +1,4 @@
-import { CalendarIcon, CloseIcon, IconButton } from '@linode/ui';
+import { CalendarIcon, CloseIcon, IconButton, styled } from '@linode/ui';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTimeField as MUIDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -90,6 +90,7 @@ export const DateTimeField = ({
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),
               disabled,
+              onClick,
               helperText: '',
               InputProps: {
                 // Nesting slotProps.input here does not appear to work
@@ -101,10 +102,6 @@ export const DateTimeField = ({
                         disableRipple
                         onClick={handleClear}
                         size="small"
-                        sx={{
-                          // To avoid layout shift since close icon is smaller
-                          width: '30px',
-                        }}
                       >
                         <CloseIcon />
                       </IconButton>
@@ -115,7 +112,7 @@ export const DateTimeField = ({
                         onClick={onClick}
                         size="small"
                       >
-                        <CalendarIcon />
+                        <StyledCalendarIcon />
                       </IconButton>
                     )}
                   </InputAdornment>
@@ -143,3 +140,10 @@ export const DateTimeField = ({
     </LocalizationProvider>
   );
 };
+
+const StyledCalendarIcon = styled(CalendarIcon, {
+  label: 'StyledCalendarIcon',
+})(() => ({
+  width: '16px',
+  height: '16px',
+}));

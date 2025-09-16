@@ -2,10 +2,17 @@ import { styled } from '@mui/material/styles';
 
 import { Box } from '../../Box/Box';
 
-interface DayBoxProps {
+interface DayBoxBaseProps {
   isEnd: boolean | null;
-  isSelected: boolean | null;
   isStart: boolean | null;
+}
+
+interface DayBoxProps extends DayBoxBaseProps {
+  isSelected: boolean | null;
+}
+
+interface DayBoxInnerProps extends DayBoxBaseProps {
+  isToday?: boolean;
 }
 
 export const DayBox = styled(Box, {
@@ -32,33 +39,29 @@ export const DayBox = styled(Box, {
 export const DayBoxInner = styled(Box, {
   label: 'DayBoxInner',
   shouldForwardProp: (prop) =>
-    prop !== 'isSelected' && prop !== 'isStart' && prop !== 'isEnd',
-})<DayBoxProps>(({ isSelected, isStart, isEnd, theme }) => ({
+    prop !== 'isStart' && prop !== 'isEnd' && prop !== 'isToday',
+})<DayBoxInnerProps>(({ isStart, isEnd, theme, isToday }) => ({
   '&:hover': {
-    backgroundColor: theme.tokens.component.Calendar.DateRange.Background.Hover,
-    color:
-      isStart && isEnd
-        ? theme.tokens.component.Calendar.SelectedItem.Text
-        : theme.tokens.component.Calendar.HoverItem.Text,
+    backgroundColor:
+      theme.tokens.component.Calendar.SelectedItem.Background.Hover,
+    color: theme.tokens.component.Calendar.SelectedItem.Text,
   },
   alignItems: 'center',
   backgroundColor:
     isStart || isEnd
       ? theme.tokens.component.Calendar.SelectedItem.Background.Default
-      : isSelected
-        ? theme.tokens.component.Calendar.DateRange.Background.Default
-        : 'transparent',
+      : 'transparent',
   borderRadius: '50%',
   color:
     isStart || isEnd
       ? theme.tokens.component.Calendar.SelectedItem.Text
-      : isSelected
-        ? theme.tokens.component.Calendar.DateRange.Text
-        : theme.tokens.component.Calendar.Text.Default,
+      : theme.tokens.component.Calendar.Text.Default,
   cursor: 'pointer',
   display: 'flex',
   font:
-    isStart || isEnd ? theme.tokens.alias.Typography.Label.Bold.S : 'inherit',
+    isStart || isEnd || isToday
+      ? theme.tokens.alias.Typography.Label.Bold.S
+      : 'inherit',
   height: 32,
   justifyContent: 'center',
   transition: 'background-color 0.2s ease',
