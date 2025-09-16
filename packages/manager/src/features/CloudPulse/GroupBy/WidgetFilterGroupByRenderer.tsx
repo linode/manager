@@ -82,7 +82,9 @@ export const WidgetFilterGroupByRenderer = (
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
+            color: isSelected
+              ? theme.tokens.component.Button.Primary.Hover.Background
+              : 'inherit',
             padding: 0,
           })}
         >
