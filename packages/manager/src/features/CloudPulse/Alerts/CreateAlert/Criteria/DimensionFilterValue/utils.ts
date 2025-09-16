@@ -95,7 +95,7 @@ export const getStaticOptions = (
  * @param entities - List of target firewall entity IDs.
  * @returns - Flattened array of matching entity IDs.
  */
-export const getFilteredFirewallResources = (
+export const getFilteredFirewallParentEntities = (
   firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
 ): string[] => {

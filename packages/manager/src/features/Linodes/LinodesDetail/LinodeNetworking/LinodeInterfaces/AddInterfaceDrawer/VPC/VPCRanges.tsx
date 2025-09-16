@@ -7,6 +7,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import React from 'react';
 import {
   Controller,
@@ -15,7 +16,6 @@ import {
   useWatch,
 } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import {
   DualStackVPCRangesDescription,
   VPCRangesDescription,

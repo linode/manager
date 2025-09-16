@@ -1,6 +1,7 @@
 import {
   CloseIcon,
   IconButton,
+  LinkButton,
   Stack,
   TextField,
   TooltipIcon,
@@ -14,7 +15,6 @@ import {
   useWatch,
 } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import {
   DualStackVPCRangesDescription,
   VPCRangesDescription,

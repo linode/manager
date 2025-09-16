@@ -3,9 +3,9 @@ import {
   Box,
   Button,
   CircleProgress,
+  LinkButton,
   Notice,
   Stack,
-  StyledLinkButton,
   Typography,
 } from '@linode/ui';
 import React, { useState } from 'react';
@@ -116,7 +116,7 @@ export const ChildAccountList = React.memo(
     const renderChildAccounts = childAccounts?.map((childAccount, idx) => {
       const euuid = childAccount.euuid;
       return (
-        <StyledLinkButton
+        <LinkButton
           disabled={isSwitchingChildAccounts}
           key={`child-account-link-button-${idx}`}
           onClick={(event) => {
@@ -134,7 +134,7 @@ export const ChildAccountList = React.memo(
           })}
         >
           {childAccount.company}
-        </StyledLinkButton>
+        </LinkButton>
       );
     });
 

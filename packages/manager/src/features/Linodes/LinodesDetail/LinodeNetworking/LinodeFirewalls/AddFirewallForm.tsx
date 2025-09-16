@@ -1,5 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAddFirewallDeviceMutation } from '@linode/queries';
+import {
+  useAddFirewallDeviceMutation,
+  useAllFirewallsQuery,
+} from '@linode/queries';
 import { ActionsPanel, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -10,8 +13,9 @@ import { number, object } from 'yup';
 import { Link } from 'src/components/Link';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import type { FirewallDeviceEntityType } from '@linode/api-v4';
+import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 
 interface Values {
   firewallId: number;
@@ -34,6 +38,12 @@ export const AddFirewallForm = (props: Props) => {
   const entityLabel = formattedTypes[entityType] ?? entityType;
 
   const { mutateAsync } = useAddFirewallDeviceMutation();
+
+  const { data: availableFirewalls } = useQueryWithPermissions<Firewall>(
+    useAllFirewallsQuery(),
+    'firewall',
+    ['create_firewall_device']
+  );
 
   const form = useForm<Values>({
     resolver: yupResolver(schema) as Resolver<Values>,
@@ -66,6 +76,7 @@ export const AddFirewallForm = (props: Props) => {
               errorText={fieldState.error?.message}
               label="Firewall"
               onChange={(e, value) => field.onChange(value?.id)}
+              options={availableFirewalls}
               placeholder="Select a Firewall"
               textFieldProps={{
                 inputRef: field.ref,
