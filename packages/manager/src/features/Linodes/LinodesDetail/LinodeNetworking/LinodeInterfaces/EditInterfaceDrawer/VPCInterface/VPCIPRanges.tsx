@@ -7,23 +7,29 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
 import {
   DualStackVPCRangesDescription,
   VPCRangesDescription,
 } from 'src/features/VPCs/components/VPCRangesDescription';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
-interface Props {
-  showIPv6Content: boolean;
-}
-
-export const VPCIPRanges = (props: Props) => {
-  const { showIPv6Content } = props;
+export const VPCIPRanges = () => {
   const { control, setFocus } = useFormContext<ModifyLinodeInterfacePayload>();
+
+  const { isDualStackEnabled } = useVPCDualStack();
+  const vpcIpv6 = useWatch({ control, name: 'vpc.ipv6' });
+  const isDualStackVPC = isDualStackEnabled && Boolean(vpcIpv6);
+
   const {
     fields: iPv4Fields,
     remove: removeIPv4,
@@ -44,13 +50,13 @@ export const VPCIPRanges = (props: Props) => {
 
   return (
     <Stack spacing={1}>
-      {!showIPv6Content && (
+      {!isDualStackVPC && (
         <Stack>
           <Typography variant="h3">Assign additional IPv4 ranges</Typography>
           <VPCRangesDescription />
         </Stack>
       )}
-      {showIPv6Content && (
+      {isDualStackVPC && (
         <Stack alignItems="center" direction="row" spacing={1}>
           <Typography variant="h3">Assign additional IP ranges</Typography>
           <TooltipIcon
@@ -105,7 +111,7 @@ export const VPCIPRanges = (props: Props) => {
           Add IPv4 Range
         </LinkButton>
       </Stack>
-      {showIPv6Content &&
+      {isDualStackVPC &&
         iPv6Fields.map((field, index) => (
           <Stack
             alignItems="flex-start"
@@ -146,7 +152,7 @@ export const VPCIPRanges = (props: Props) => {
             </IconButton>
           </Stack>
         ))}
-      {showIPv6Content && (
+      {isDualStackVPC && (
         <Stack direction="row">
           <LinkButton onClick={() => appendIPv6({ range: '' })}>
             Add IPv6 Range

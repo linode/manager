@@ -43,7 +43,7 @@ export const VPCIPv6Address = (props: Props) => {
     <Stack spacing={1}>
       <Controller
         control={control}
-        name={`vpc.ipv6.slaac.0.range`}
+        name="vpc.ipv6.slaac.0.range"
         render={({ field, fieldState }) => (
           <Stack rowGap={1}>
             <Stack direction="row">

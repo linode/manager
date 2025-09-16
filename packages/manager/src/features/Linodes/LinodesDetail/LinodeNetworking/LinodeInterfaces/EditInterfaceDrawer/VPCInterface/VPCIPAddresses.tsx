@@ -17,7 +17,7 @@ interface Props {
   linodeInterface: LinodeInterface;
 }
 
-export const VPCIPv4Addresses = (props: Props) => {
+export const VPCIPAddresses = (props: Props) => {
   const { linodeInterface } = props;
   const {
     control,
@@ -26,7 +26,7 @@ export const VPCIPv4Addresses = (props: Props) => {
 
   const vpcIPv6 = useWatch({ control, name: 'vpc.ipv6' });
   const { isDualStackEnabled } = useVPCDualStack();
-  const isDualStackVPC = isDualStackEnabled && vpcIPv6 !== null;
+  const isDualStackVPC = isDualStackEnabled && Boolean(vpcIPv6);
 
   /**
    * We currently enforce a hard limit of one IPv4 address per VPC interface.
@@ -47,21 +47,15 @@ export const VPCIPv4Addresses = (props: Props) => {
           <ErrorMessage message={errors.vpc?.ipv4?.addresses?.message} />
         </Notice>
       )}
-      <Stack spacing={2}>
-        {fields.map((field, index) => (
-          <VPCIPv4Address
-            index={index}
-            isDualStackVPC={isDualStackVPC}
-            key={field.id}
-            linodeInterface={linodeInterface}
-          />
-        ))}
-      </Stack>
-      {isDualStackVPC && (
-        <Stack spacing={2}>
-          <VPCIPv6Address linodeInterface={linodeInterface} />
-        </Stack>
-      )}
+      {fields.map((field, index) => (
+        <VPCIPv4Address
+          index={index}
+          isDualStackVPC={isDualStackVPC}
+          key={field.id}
+          linodeInterface={linodeInterface}
+        />
+      ))}
+      {isDualStackVPC && <VPCIPv6Address linodeInterface={linodeInterface} />}
     </Stack>
   );
 };

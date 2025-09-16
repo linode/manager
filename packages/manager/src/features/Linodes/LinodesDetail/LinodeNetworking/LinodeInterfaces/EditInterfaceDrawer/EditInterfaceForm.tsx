@@ -1,16 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useGrants,
-  useProfile,
-  useUpdateLinodeInterfaceMutation,
-} from '@linode/queries';
+import { useUpdateLinodeInterfaceMutation } from '@linode/queries';
 import { Button, Divider, Notice, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { PublicAccess } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/EditInterfaceDrawer/VPCInterface/PublicAccess';
-import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import { getLinodeInterfaceType } from '../utilities';
 import { EditInterfaceFirewall } from './EditInterfaceFirewall';
@@ -20,7 +15,7 @@ import {
 } from './EditInterfaceForm.utils';
 import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
-import { VPCIPv4Addresses } from './VPCInterface/VPCIPAddresses';
+import { VPCIPAddresses } from './VPCInterface/VPCIPAddresses';
 import { VPCIPRanges } from './VPCInterface/VPCIPRanges';
 
 import type { EditLinodeInterfaceFormValues } from './EditInterfaceForm.utils';
@@ -104,23 +99,6 @@ export const EditInterfaceForm = (props: Props) => {
 
   const interfaceType = getLinodeInterfaceType(linodeInterface);
 
-  const { isDualStackEnabled } = useVPCDualStack();
-  const isDualStackVPC =
-    isDualStackEnabled && linodeInterface.vpc?.ipv6 !== null;
-
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const vpcPermissions = grants?.vpc.find(
-    (v) => v.id === linodeInterface.vpc?.vpc_id
-  );
-
-  // @TODO VPC: this logic for vpc grants/perms appears a lot - commenting a todo here in case we want to move this logic to a parent component
-  // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
-  // with permissions set to 'None'. Therefore, we're treating those as read_only as well
-  const userCannotAssignLinodes =
-    Boolean(profile?.restricted) &&
-    (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
-
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -158,12 +136,9 @@ export const EditInterfaceForm = (props: Props) => {
             )}
             {interfaceType === 'VPC' && (
               <Stack divider={<Divider />} spacing={3}>
-                <VPCIPv4Addresses linodeInterface={linodeInterface} />
-                <PublicAccess
-                  showIPv6Content={isDualStackVPC}
-                  userCannotAssignLinodes={userCannotAssignLinodes}
-                />
-                <VPCIPRanges showIPv6Content={isDualStackVPC} />
+                <VPCIPAddresses linodeInterface={linodeInterface} />
+                <PublicAccess />
+                <VPCIPRanges />
               </Stack>
             )}
             <EditInterfaceFirewall
