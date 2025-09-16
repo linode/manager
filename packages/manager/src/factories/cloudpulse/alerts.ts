@@ -75,102 +75,24 @@ export const ingressTrafficRateRulesFactory =
     operator: 'eq',
     threshold: 1000, // adjust as per your alert threshold
   });
+
 export const egressTrafficRateRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      {
-        dimension_label: 'port',
-        operator: 'eq',
-        value: '',
-      },
-      {
-        dimension_label: 'protocol',
-        operator: 'in',
-        value: 'TCP,UDP',
-      },
-      {
-        dimension_label: 'config_id',
-        operator: 'eq',
-        value: '',
-      },
-    ],
+  ingressTrafficRateRulesFactory.extend({
     metric: 'nb_egress_traffic_rate',
-    operator: 'eq',
-    threshold: 1000, // adjust as per your alert threshold
   });
-export const newSessionsRulesFactory = Factory.Sync.makeFactory<MetricCriteria>(
-  {
-    aggregate_function: 'avg',
-    dimension_filters: [
-      {
-        dimension_label: 'port',
-        operator: 'eq',
-        value: '',
-      },
-      {
-        dimension_label: 'protocol',
-        operator: 'in',
-        value: 'TCP,UDP',
-      },
-      {
-        dimension_label: 'config_id',
-        operator: 'eq',
-        value: '',
-      },
-    ],
-    metric: 'nb_new_sessions_per_second',
-    operator: 'eq',
-    threshold: 1000, // adjust threshold based on your session rate expectations
-  }
-);
+
+export const newSessionsRulesFactory = ingressTrafficRateRulesFactory.extend({
+  metric: 'nb_new_sessions_per_second',
+});
+
 export const totalActiveSessionsRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      {
-        dimension_label: 'port',
-        operator: 'eq',
-        value: '',
-      },
-      {
-        dimension_label: 'protocol',
-        operator: 'in',
-        value: 'TCP,UDP',
-      },
-      {
-        dimension_label: 'config_id',
-        operator: 'eq',
-        value: '',
-      },
-    ],
+  ingressTrafficRateRulesFactory.extend({
     metric: 'nb_total_active_sessions',
-    operator: 'eq',
-    threshold: 1000, // adjust as needed
   });
+
 export const totalActiveBackendsRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      {
-        dimension_label: 'port',
-        operator: 'eq',
-        value: '',
-      },
-      {
-        dimension_label: 'protocol',
-        operator: 'in',
-        value: 'TCP,UDP',
-      },
-      {
-        dimension_label: 'config_id',
-        operator: 'eq',
-        value: '',
-      },
-    ],
+  ingressTrafficRateRulesFactory.extend({
     metric: 'nb_total_active_backends',
-    operator: 'eq',
-    threshold: 1000, // adjust as needed
   });
 
 export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
@@ -201,68 +123,19 @@ export const currentConnectionsRulesFactory =
     threshold: 1000,
   });
 
-export const availableConnectionsRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'available_connections',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const availableConnectionsRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'available_connections',
+};
+export const ingressPacketsAcceptedRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'ingress_packets_accepted',
+};
 
-export const ingressPacketsAcceptedRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'ingress_packets_accepted',
-    operator: 'eq',
-    threshold: 1000,
-  });
-
-export const egressPacketsAcceptedRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'egress_packets_accepted',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const egressPacketsAcceptedRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'egress_packets_accepted',
+};
 
 export const ingressBytesAcceptedRulesFactory =
   Factory.Sync.makeFactory<MetricCriteria>({
@@ -285,131 +158,35 @@ export const ingressBytesAcceptedRulesFactory =
     threshold: 1000,
   });
 
-export const egressBytesAcceptedRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'egress_bytes_accepted',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const egressBytesAcceptedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'egress_bytes_accepted',
+};
 
-export const ingressPacketsDroppedRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'ingress_packets_dropped',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const ingressPacketsDroppedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'ingress_packets_dropped',
+};
 
-export const egressPacketsDroppedRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'egress_packets_dropped',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const egressPacketsDroppedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'egress_packets_dropped',
+};
 
-export const packetsDroppedConnectionTableFullRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'packets_dropped_connection_table_full',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const packetsDroppedConnectionTableFullRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'packets_dropped_connection_table_full',
+};
 
-export const newIngressConnectionsRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'new_ingress_connections',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const newIngressConnectionsRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'new_ingress_connections',
+};
 
-export const newEgressConnectionsRulesFactory =
-  Factory.Sync.makeFactory<MetricCriteria>({
-    aggregate_function: 'avg',
-    dimension_filters: [
-      { dimension_label: 'region_id', operator: 'eq', value: '' },
-      { dimension_label: 'customer_id', operator: 'eq', value: '' },
-      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'entity_id', operator: 'eq', value: '' },
-      { dimension_label: 'interface_id', operator: 'eq', value: '' },
-      {
-        dimension_label: 'interface_type',
-        operator: 'in',
-        value: 'vpc,public',
-      },
-      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
-    ],
-    metric: 'new_egress_connections',
-    operator: 'eq',
-    threshold: 1000,
-  });
+export const newEgressConnectionsRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'new_egress_connections',
+};
 
 export const alertDefinitionFactory =
   Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
