@@ -213,7 +213,7 @@ describe('StreamFormClusters', () => {
     });
   });
 
-  it('should disable all table checkboxes if "Automatically include all..." checkbox is selected', async () => {
+  it('should disable all table checkboxes if "Automatically include all" checkbox is selected', async () => {
     await renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
     const autoIncludeAllCheckbox = screen.getByText(
@@ -238,7 +238,7 @@ describe('StreamFormClusters', () => {
     expect(prodClusterCheckbox).toBeDisabled();
   });
 
-  it('should select and deselect all clusters with "Automatically include all..." checkbox', async () => {
+  it('should select and deselect all clusters with "Automatically include all" checkbox', async () => {
     await renderComponentWithoutSelectedClusters();
     const checkboxes = screen.getAllByRole('checkbox');
     const [autoIncludeAllCheckbox, headerTableCheckbox] = checkboxes;
@@ -250,7 +250,7 @@ describe('StreamFormClusters', () => {
 
     expect(autoIncludeAllCheckbox).not.toBeChecked();
 
-    // Select "Automatically include all..." checkbox
+    // Select "Automatically include all" checkbox
     await userEvent.click(autoIncludeAllCheckbox);
     expect(autoIncludeAllCheckbox).toBeChecked();
     expect(headerTableCheckbox).toBeChecked();
@@ -258,7 +258,7 @@ describe('StreamFormClusters', () => {
     expect(metricsStreamCheckbox).toBeChecked();
     expect(prodClusterCheckbox).toBeChecked();
 
-    // Unselect "Automatically include all..." checkbox
+    // Unselect "Automatically include all" checkbox
     await userEvent.click(autoIncludeAllCheckbox);
     expect(autoIncludeAllCheckbox).not.toBeChecked();
     expect(headerTableCheckbox).not.toBeChecked();

@@ -10,7 +10,7 @@ import {
 } from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
@@ -38,16 +38,17 @@ const controlPaths = {
   host: 'destination.details.host',
   path: 'destination.details.path',
   region: 'destination.details.region',
-};
+} as const;
 
 export const StreamFormDelivery = () => {
   const theme = useTheme();
-  const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
-
-  const [showDestinationForm, setShowDestinationForm] =
-    React.useState<boolean>(false);
-
+  const { control, setValue, clearErrors } =
+    useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
+
+  const [creatingNewDestination, setCreatingNewDestination] =
+    useState<boolean>(false);
+
   const destinationNameOptions: DestinationName[] = (
     destinations?.data || []
   ).map(({ id, label, type }) => ({
@@ -67,6 +68,9 @@ export const StreamFormDelivery = () => {
   });
 
   const destinationNameFilterOptions = createFilterOptions<DestinationName>();
+
+  const findDestination = (id: number) =>
+    destinations?.data?.find((destination) => destination.id === id);
 
   const getDestinationForm = () => (
     <>
@@ -115,12 +119,18 @@ export const StreamFormDelivery = () => {
             label="Destination Name"
             onBlur={field.onBlur}
             onChange={(_, newValue) => {
-              setValue(
-                'stream.destinations',
-                newValue?.id ? [newValue?.id] : []
-              );
+              const id = newValue?.id;
+
+              setValue('stream.destinations', id ? [id] : []);
+              const selectedDestination = id ? findDestination(id) : undefined;
+              if (selectedDestination) {
+                setValue('destination.details', selectedDestination.details);
+              } else {
+                clearErrors('destination.details');
+              }
+
               field.onChange(newValue?.label || newValue);
-              setShowDestinationForm(!!newValue?.create);
+              setCreatingNewDestination(!!newValue?.create);
             }}
             options={destinationNameOptions.filter(
               ({ type }) => type === selectedDestinationType
@@ -146,16 +156,15 @@ export const StreamFormDelivery = () => {
       />
       {selectedDestinationType === destinationType.LinodeObjectStorage && (
         <>
-          {showDestinationForm && (
+          {creatingNewDestination && !selectedDestinations?.length && (
             <DestinationLinodeObjectStorageDetailsForm
               controlPaths={controlPaths}
             />
           )}
-          {!!selectedDestinations?.length && (
+          {selectedDestinations?.[0] && (
             <DestinationLinodeObjectStorageDetailsSummary
-              {...(destinations?.data?.find(
-                ({ id }) => id === selectedDestinations[0]
-              )?.details as LinodeObjectStorageDetails)}
+              {...(findDestination(selectedDestinations[0])
+                ?.details as LinodeObjectStorageDetails)}
             />
           )}
         </>

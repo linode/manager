@@ -332,3 +332,12 @@ export const deleteDestination = (mockState: MockState) => [
     }
   ),
 ];
+
+export const verifyDestination = () => [
+  http.post(
+    '*/v4beta/monitor/streams/destinations/verify',
+    async (): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      return makeResponse({}, 200);
+    }
+  ),
+];

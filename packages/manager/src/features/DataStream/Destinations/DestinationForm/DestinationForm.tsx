@@ -1,15 +1,17 @@
 import { destinationType } from '@linode/api-v4';
-import { Autocomplete, Box, Button, Paper, TextField } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { Autocomplete, Paper, TextField } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import { useEffect } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
-import { LabelValue } from 'src/features/DataStream/Shared/LabelValue';
+import { FormSubmitBar } from 'src/features/DataStream/Shared/FormSubmitBar/FormSubmitBar';
 import { destinationTypeOptions } from 'src/features/DataStream/Shared/types';
+import { useVerifyDestination } from 'src/features/DataStream/Shared/useVerifyDestination';
 
 import type {
   DestinationFormType,
@@ -17,85 +19,89 @@ import type {
 } from 'src/features/DataStream/Shared/types';
 
 type DestinationFormProps = {
-  destinationId?: string;
+  isSubmitting: boolean;
   mode: FormMode;
   onSubmit: SubmitHandler<DestinationFormType>;
 };
 
 export const DestinationForm = (props: DestinationFormProps) => {
-  const { mode, onSubmit, destinationId } = props;
-  const theme = useTheme();
+  const { mode, isSubmitting, onSubmit } = props;
+
+  const {
+    verifyDestination,
+    isPending: isVerifyingDestination,
+    destinationVerified,
+    setDestinationVerified,
+  } = useVerifyDestination();
 
   const { control, handleSubmit } = useFormContext<DestinationFormType>();
-
-  const selectedDestinationType = useWatch({
+  const destination = useWatch({
     control,
-    name: 'type',
-  });
+  }) as DestinationFormType;
+
+  useEffect(() => {
+    setDestinationVerified(false);
+  }, [destination, setDestinationVerified]);
 
   return (
-    <>
-      <Paper>
-        <form id="destinationForm" onSubmit={handleSubmit(onSubmit)}>
-          {destinationId && (
-            <LabelValue compact={true} label="ID" value={destinationId} />
-          )}
-          <Controller
-            control={control}
-            name="type"
-            render={({ field }) => (
-              <Autocomplete
-                disableClearable
-                disabled
-                label="Destination Type"
-                onBlur={field.onBlur}
-                onChange={(_, { value }) => {
-                  field.onChange(value);
-                }}
-                options={destinationTypeOptions}
-                value={getDestinationTypeOption(field.value)}
-              />
+    <form id="destinationForm">
+      <Grid container spacing={2}>
+        <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
+          <Paper>
+            <Controller
+              control={control}
+              name="type"
+              render={({ field }) => (
+                <Autocomplete
+                  disableClearable
+                  disabled
+                  label="Destination Type"
+                  onBlur={field.onBlur}
+                  onChange={(_, { value }) => {
+                    field.onChange(value);
+                  }}
+                  options={destinationTypeOptions}
+                  value={getDestinationTypeOption(field.value)}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="label"
+              render={({ field, fieldState }) => (
+                <TextField
+                  aria-required
+                  errorText={fieldState.error?.message}
+                  label="Destination Name"
+                  onBlur={field.onBlur}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  placeholder="Destination Name"
+                  value={field.value}
+                />
+              )}
+            />
+            {destination.type === destinationType.LinodeObjectStorage && (
+              <DestinationLinodeObjectStorageDetailsForm />
             )}
-            rules={{ required: true }}
-          />
-          <Controller
-            control={control}
-            name="label"
-            render={({ field, fieldState }) => (
-              <TextField
-                aria-required
-                errorText={fieldState.error?.message}
-                label="Destination Name"
-                onBlur={field.onBlur}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                placeholder="Destination Name..."
-                value={field.value}
-              />
+          </Paper>
+        </Grid>
+        <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
+          <FormSubmitBar
+            blockSubmit={true}
+            connectionTested={destinationVerified}
+            formType={'destination'}
+            isSubmitting={isSubmitting}
+            isTesting={isVerifyingDestination}
+            mode={mode}
+            onSubmit={handleSubmit(onSubmit)}
+            onTestConnection={handleSubmit(() =>
+              verifyDestination(destination)
             )}
-            rules={{ required: true }}
           />
-          {selectedDestinationType === destinationType.LinodeObjectStorage && (
-            <DestinationLinodeObjectStorageDetailsForm />
-          )}
-        </form>
-      </Paper>
-      <Box
-        alignItems="center"
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="flex-end"
-      >
-        <Button
-          buttonType="primary"
-          form="destinationForm"
-          sx={{ mt: theme.spacingFunction(16) }}
-          type="submit"
-        >
-          {mode === 'edit' ? 'Edit' : 'Create'} Destination
-        </Button>
-      </Box>
-    </>
+        </Grid>
+      </Grid>
+    </form>
   );
 };

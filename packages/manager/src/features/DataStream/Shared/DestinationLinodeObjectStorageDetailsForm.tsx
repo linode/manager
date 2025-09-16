@@ -51,11 +51,10 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Host..."
+            placeholder="Host"
             value={field.value}
           />
         )}
-        rules={{ required: true }}
       />
       <Controller
         control={control}
@@ -69,11 +68,10 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Bucket..."
+            placeholder="Bucket"
             value={field.value}
           />
         )}
-        rules={{ required: true }}
       />
       <Controller
         control={control}
@@ -86,7 +84,10 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
             isGeckoLAEnabled={isGeckoLAEnabled}
             label="Region"
             onBlur={field.onBlur}
-            onChange={(_, region) => field.onChange(region.id)}
+            onChange={(_, region) => {
+              field.onChange(region.id);
+              field.onBlur();
+            }}
             regionFilter="core"
             regions={regions ?? []}
             value={field.value}
@@ -103,7 +104,7 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
             label="Access Key ID"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
-            placeholder="Access Key ID..."
+            placeholder="Access Key ID"
             value={field.value}
           />
         )}
@@ -118,7 +119,7 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
             label="Secret Access Key"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
-            placeholder="Secret Access Key..."
+            placeholder="Secret Access Key"
             value={field.value}
           />
         )}
@@ -136,7 +137,7 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
               label="Log Path Prefix"
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
-              placeholder="Log Path Prefix..."
+              placeholder="Log Path Prefix"
               sx={{ width: 416 }}
               value={field.value}
             />

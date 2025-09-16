@@ -2,6 +2,7 @@ import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -20,16 +21,19 @@ interface StreamTableRowProps extends StreamHandlers {
 
 export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
   const { stream, onDelete, onDisableOrEnable, onEdit } = props;
+  const { id, status } = stream;
 
   return (
-    <TableRow key={stream.id}>
-      <TableCell>{stream.label}</TableCell>
+    <TableRow key={id}>
+      <TableCell>
+        <Link to={`/datastream/streams/${id}/edit`}>{stream.label}</Link>
+      </TableCell>
       <TableCell>{getStreamTypeOption(stream.type)?.label}</TableCell>
       <TableCell statusCell>
-        <StatusIcon status={stream.status} />
-        {humanizeStreamStatus(stream.status)}
+        <StatusIcon status={status} />
+        {humanizeStreamStatus(status)}
       </TableCell>
-      <TableCell>{stream.id}</TableCell>
+      <TableCell>{id}</TableCell>
       <Hidden smDown>
         <TableCell>
           {getDestinationTypeOption(stream.destinations[0]?.type)?.label}

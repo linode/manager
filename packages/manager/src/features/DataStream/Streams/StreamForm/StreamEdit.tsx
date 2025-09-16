@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { destinationType, streamType } from '@linode/api-v4';
-import { useStreamQuery, useUpdateStreamMutation } from '@linode/queries';
+import { useAllDestinationsQuery, useStreamQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import { streamAndDestinationFormSchema } from '@linode/validation';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -13,19 +13,39 @@ import {
   LandingHeader,
   type LandingHeaderProps,
 } from 'src/components/LandingHeader';
-import { getStreamPayloadDetails } from 'src/features/DataStream/dataStreamUtils';
 import { StreamForm } from 'src/features/DataStream/Streams/StreamForm/StreamForm';
 
-import type { UpdateStreamPayloadWithId } from '@linode/api-v4';
 import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
 export const StreamEdit = () => {
-  const navigate = useNavigate();
   const { streamId } = useParams({
     from: '/datastream/streams/$streamId/edit',
   });
-  const { mutateAsync: updateStream } = useUpdateStreamMutation();
-  const { data: stream, isLoading, error } = useStreamQuery(Number(streamId));
+  const {
+    data: destinations,
+    isLoading: isLoadingDestinations,
+    error: errorDestinations,
+  } = useAllDestinationsQuery();
+  const {
+    data: stream,
+    isLoading: isLoadingStream,
+    error: errorStream,
+  } = useStreamQuery(Number(streamId));
+
+  const landingHeaderProps: LandingHeaderProps = {
+    breadcrumbProps: {
+      pathname: '/datastream/streams/edit',
+      crumbOverrides: [
+        {
+          label: 'DataStream',
+          linkTo: '/datastream/streams',
+          position: 1,
+        },
+      ],
+    },
+    removeCrumbX: 2,
+    title: `Edit Stream ${streamId}`,
+  };
 
   const form = useForm<StreamAndDestinationFormType>({
     defaultValues: {
@@ -55,77 +75,49 @@ export const StreamEdit = () => {
             }
           : {};
 
+      const streamsDestinationIds = stream.destinations.map(({ id }) => id);
       form.reset({
         stream: {
           ...stream,
           details,
-          destinations: stream.destinations.map(({ id }) => id),
+          destinations: streamsDestinationIds,
         },
-        destination: stream.destinations?.[0],
+        destination: destinations?.data?.find(
+          ({ id }) => id === streamsDestinationIds[0]
+        ),
       });
     }
-  }, [stream, form]);
-
-  const landingHeaderProps: LandingHeaderProps = {
-    breadcrumbProps: {
-      pathname: '/datastream/streams/edit',
-      crumbOverrides: [
-        {
-          label: 'DataStream',
-          linkTo: '/datastream/streams',
-          position: 1,
-        },
-      ],
-    },
-    removeCrumbX: 2,
-    title: 'Edit Stream',
-  };
-
-  const onSubmit = () => {
-    const {
-      stream: { label, type, destinations, details },
-    } = form.getValues();
-
-    // TODO: DPS-33120 create destination call if new destination created
-
-    const payload: UpdateStreamPayloadWithId = {
-      id: stream!.id,
-      label,
-      type: stream!.type,
-      status: stream!.status,
-      destinations: destinations as number[], // TODO: remove type assertion after DPS-33120
-      details: getStreamPayloadDetails(type, details),
-    };
-
-    updateStream(payload).then(() => {
-      navigate({ to: '/datastream/streams' });
-    });
-  };
+  }, [stream, destinations, form]);
 
   return (
     <>
       <DocumentTitleSegment segment="Edit Stream" />
       <LandingHeader {...landingHeaderProps} />
-      {isLoading && (
+      {(isLoadingStream || isLoadingDestinations) && (
         <Box display="flex" justifyContent="center">
           <CircleProgress size="md" />
         </Box>
       )}
-      {error && (
+      {errorStream && (
         <ErrorState
           compact
           errorText="There was an error retrieving stream. Please reload and try again."
         />
       )}
-      {!isLoading && !error && (
-        <FormProvider {...form}>
-          <StreamForm
-            mode="edit"
-            onSubmit={onSubmit}
-            streamId={`${streamId}`}
-          />
-        </FormProvider>
+      {errorDestinations && (
+        <ErrorState
+          compact
+          errorText="There was an error retrieving destinations. Please reload and try again."
+        />
       )}
+      {!isLoadingStream &&
+        !isLoadingDestinations &&
+        !errorStream &&
+        !errorDestinations && (
+          <FormProvider {...form}>
+            <StreamForm mode="edit" streamId={streamId} />
+          </FormProvider>
+        )}
     </>
   );
 };
