@@ -12,7 +12,8 @@ import {
   renderWithThemeAndHookFormContext,
 } from 'src/utilities/testHelpers';
 
-describe('StreamFormCheckoutBar', () => {
+// Skipped until StreamFormCheckoutBar will be used again
+describe.skip('StreamFormCheckoutBar', () => {
   const getDeliveryPriceContext = () => screen.getByText(/\/unit/i).textContent;
   const createStream = () => {};
 
