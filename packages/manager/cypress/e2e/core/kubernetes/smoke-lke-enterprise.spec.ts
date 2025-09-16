@@ -15,28 +15,31 @@ import {
 import {
   latestEnterpriseTierKubernetesVersion,
   minimumNodeNotice,
-  mockTieredStandardVersions,
   mockTieredEnterpriseVersions,
+  mockTieredStandardVersions,
 } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
+  mockGetLinodeType,
+  mockGetLinodeTypes,
+} from 'support/intercepts/linodes';
+import {
   mockCreateCluster,
   mockGetCluster,
   mockGetClusterPools,
+  mockGetClusters,
   mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
-import { mockGetClusters } from 'support/intercepts/lke';
 import {} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVPC } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
+import { lkeClusterCreatePage } from 'support/ui/pages';
 import { addNodes } from 'support/util/lke';
 import { randomLabel } from 'support/util/random';
 
-import { lkeClusterCreatePage } from 'support/ui/pages';
 import { extendType } from 'src/utilities/extendType';
-import { mockGetLinodeType, mockGetLinodeTypes } from 'support/intercepts/linodes';
 
 const mockCluster = kubernetesClusterFactory.build({
   id: 1,
@@ -45,9 +48,11 @@ const mockCluster = kubernetesClusterFactory.build({
   tier: 'enterprise',
 });
 
-const mockPlan = extendType(linodeTypeFactory.build({
-  class: 'dedicated',
-}));
+const mockPlan = extendType(
+  linodeTypeFactory.build({
+    class: 'dedicated',
+  })
+);
 
 const mockVPC = vpcFactory.build({
   id: 123,
@@ -60,8 +65,8 @@ const mockNodePools = [nodePoolFactory.build()];
 // Mock a valid region for LKE-E to avoid test flake.
 const mockRegion = regionFactory.build({
   capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise', 'VPCs'],
-  id: 'us-iad',
-  label: 'Washington, DC',
+  // id: 'us-iad',
+  // label: 'Washington, DC',
 });
 
 const mockRegions = [mockRegion];
@@ -91,42 +96,77 @@ describe('LKE-E Cluster Create', () => {
    * are available for LKE-E clusters as well.
    */
   describe('Post-LA feature flag', () => {
-    // beforeEach(() => {
-    //   mockAppendFeatureFlags({
-    //     lkeEnterprise: {
-    //       enabled: true,
-    //       la: true,
-    //       postLa: true,
-    //       phase2Mtc: false,
-    //     }
-    //   });
-    // });
-
-    it('Simple Page Check - Post LA Flag ON', () => {
-
+    beforeEach(() => {
+      mockGetRegions([mockRegion]);
+      mockGetLinodeTypes([mockPlan]);
+      mockGetLinodeType(mockPlan);
+      mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
+      mockGetTieredKubernetesVersions(
+        'enterprise',
+        mockTieredEnterpriseVersions
+      );
     });
 
+    /*
+     * - Confirms the state of the LKE create page when the LKE-E "postLa" flag is enabled.
+     * - Confirms that node pools are configured via new drawer.
+     */
+    it('Simple Page Check - Post LA Flag ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          la: true,
+          postLa: true,
+          phase2Mtc: false,
+        },
+      });
 
-    it.only('Simple Page Check - Post LA Flag OFF', () => {
+      cy.visitWithLogin('/kubernetes/create');
+
+      lkeClusterCreatePage.setLabel(randomLabel());
+      lkeClusterCreatePage.selectRegionById(mockRegion.id, [mockRegion]);
+      lkeClusterCreatePage.selectPlanTab('Dedicated CPU');
+      lkeClusterCreatePage.selectNodePoolPlan(mockPlan.formattedLabel);
+
+      // Confirm that the "Configure Node Pool" drawer appears.
+      lkeClusterCreatePage.withinNodePoolDrawer(mockPlan.formattedLabel, () => {
+        ui.button
+          .findByTitle('Add Pool')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+      // Confirm that "Edit Configuration" button is shown for each node pool
+      // in the order summary section.
+      lkeClusterCreatePage.withinOrderSummary(() => {
+        cy.contains(mockPlan.formattedLabel)
+          .closest('[data-testid="node-pool-summary"]')
+          .within(() => {
+            cy.findByText('Edit Configuration').should('be.visible');
+          });
+      });
+    });
+
+    /*
+     * - Confirms the state of the LKE create page when the LKE-E "postLa" flag is disabled.
+     * - Confirms that node pools are added directly via the plan table.
+     */
+    it('Simple Page Check - Post LA Flag OFF', () => {
       mockAppendFeatureFlags({
         lkeEnterprise: {
           enabled: true,
           la: true,
           postLa: false,
           phase2Mtc: false,
-        }
+        },
       });
 
       cy.visitWithLogin('/kubernetes/create');
-      mockGetRegions([mockRegion]);
-      mockGetLinodeTypes([mockPlan]);
-      mockGetLinodeType(mockPlan);
-      mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
-      mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
 
       lkeClusterCreatePage.setLabel(randomLabel());
       lkeClusterCreatePage.selectRegionById(mockRegion.id, [mockRegion]);
-      lkeClusterCreatePage.selectPlanTab('Dedicated');
+      lkeClusterCreatePage.selectPlanTab('Dedicated CPU');
 
       // Add a node pool with a custom number of nodes, confirm that
       // it gets added to the summary as expected.
@@ -137,8 +177,12 @@ describe('LKE-E Cluster Create', () => {
           .closest('[data-testid="node-pool-summary"]')
           .within(() => {
             // Confirm that fields to edit the node pool size are present and enabled.
-            cy.findByLabelText('Subtract 1').should('be.visible').should('be.enabled');
-            cy.findByLabelText('Add 1').should('be.visible').should('be.enabled');
+            cy.findByLabelText('Subtract 1')
+              .should('be.visible')
+              .should('be.enabled');
+            cy.findByLabelText('Add 1')
+              .should('be.visible')
+              .should('be.enabled');
             cy.findByLabelText('Edit Quantity').should('have.value', '5');
           });
       });
@@ -171,7 +215,9 @@ describe('LKE-E Cluster Create', () => {
       cy.findByText('LKE Enterprise').click();
 
       ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
-      ui.regionSelect.findItemByRegionId(mockRegions[0].id).click();
+      ui.regionSelect
+        .findItemByRegionId(mockRegions[0].id, mockRegions)
+        .click();
 
       cy.findByLabelText('Kubernetes Version').should('be.visible').click();
       cy.findByText(latestEnterpriseTierKubernetesVersion.id)
@@ -241,7 +287,9 @@ describe('LKE-E Cluster Create', () => {
       cy.findByText('LKE Enterprise').click();
 
       ui.regionSelect.find().click().type(`${mockRegions[0].label}`);
-      ui.regionSelect.findItemByRegionId(mockRegions[0].id).click();
+      ui.regionSelect
+        .findItemByRegionId(mockRegions[0].id, mockRegions)
+        .click();
 
       cy.findByLabelText('Kubernetes Version').should('be.visible').click();
       cy.findByText(latestEnterpriseTierKubernetesVersion.id)
@@ -288,8 +336,78 @@ describe('LKE-E Cluster Create', () => {
   });
 
   describe('Phase 2 MTC & Post-LA feature flags', () => {
-    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
+    beforeEach(() => {
+      mockGetRegions([mockRegion]);
+      mockGetLinodeTypes([mockPlan]);
+      mockGetLinodeType(mockPlan);
+      mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
+      mockGetTieredKubernetesVersions(
+        'enterprise',
+        mockTieredEnterpriseVersions
+      );
+    });
 
+    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise: {
+          enabled: true,
+          la: true,
+          postLa: true,
+          phase2Mtc: true,
+        },
+      });
+
+      cy.visitWithLogin('/kubernetes/create');
+
+      lkeClusterCreatePage.setLabel(randomLabel());
+      lkeClusterCreatePage.selectClusterTier('enterprise');
+      lkeClusterCreatePage.selectRegionById(mockRegion.id, [mockRegion]);
+      lkeClusterCreatePage.selectPlanTab('Dedicated CPU');
+
+      // Confirm that IP stack selection and VPC options are present.
+      cy.findByText('IPv4')
+        .should('be.visible')
+        .closest('input')
+        .should('be.enabled');
+
+      cy.findByText('IPv4 + IPv6 (dual-stack)')
+        .should('be.visible')
+        .closest('input')
+        .should('be.enabled');
+
+      cy.findByText('Automatically generate a VPC for this cluster')
+        .should('be.visible')
+        .closest('input')
+        .should('be.enabled');
+
+      cy.findByText('Use an existing VPC')
+        .should('be.visible')
+        .closest('input')
+        .should('be.enabled');
+
+      // Confirm that node pools are configured via new drawer rather than directly within table.
+      lkeClusterCreatePage.selectNodePoolPlan(mockPlan.formattedLabel);
+      lkeClusterCreatePage.withinNodePoolDrawer(mockPlan.formattedLabel, () => {
+        // Confirm that Enterprise-tier specific options are present.
+        cy.findByText('Update Strategy').should('be.visible');
+        cy.findByText('Use default firewall').should('be.visible');
+        cy.findByText('Select existing firewall').should('be.visible');
+
+        ui.button
+          .findByTitle('Add Pool')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+      lkeClusterCreatePage.withinOrderSummary(() => {
+        cy.contains(mockPlan.formattedLabel)
+          .closest('[data-testid="node-pool-summary"]')
+          .within(() => {
+            cy.findByText('3 Nodes').should('be.visible');
+            cy.findByText('Edit Configuration').should('be.visible');
+          });
+      });
     });
   });
 });
@@ -364,8 +482,6 @@ describe('LKE-E Cluster Read', () => {
   });
 
   describe('Phase 2 MTC & Post-LA feature flags', () => {
-    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
-
-    });
+    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {});
   });
 });
