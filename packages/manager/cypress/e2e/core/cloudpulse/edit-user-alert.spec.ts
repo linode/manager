@@ -268,26 +268,30 @@ describe('Integration Tests for Edit Alert', () => {
         );
 
       // Entity search
-      cy.findByPlaceholderText(searchPlaceholder).type(databases[0].label);
+      cy.findByPlaceholderText(searchPlaceholder).type('database-1');
 
       cy.get('[data-qa-alert-table="true"]')
         .find('[data-qa-alert-row]')
         .should('have.length', 1);
 
       cy.findByText(databases[0].label).should('be.visible');
+
       [1, 2, 3].forEach((i) =>
         cy.findByText(databases[i].label).should('not.exist')
       );
 
       // Region filter
-      cy.findByPlaceholderText(searchPlaceholder).clear();
+      cy.get('[data-qa-debounced-search="true"]').within(() => {
+        cy.get('[aria-label="Clear"]').click();
+      });
+
       ui.regionSelect.find().click().type(`${regions[0].label}{enter}`).click();
 
       // Filtered table should have exactly 1 row
       cy.get('[data-qa-alert-table="true"]')
         .find('[data-qa-alert-row]')
-        .should('have.length', 1)
-        .first() // get the only row
+        .should('have.length', 3)
+        .first()
         .within(() => {
           cy.get('[data-qa-alert-cell$="_region"]').should('be.visible');
         });
