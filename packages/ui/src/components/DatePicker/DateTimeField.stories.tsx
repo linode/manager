@@ -50,7 +50,7 @@ The **DateTimeField** component provides a user-friendly way to input date and t
       },
     },
   },
-  title: 'Components/DatePicker/DateTimeFieldV2',
+  title: 'Components/DatePicker/DateTimeField',
 };
 
 export default meta;

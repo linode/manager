@@ -39,6 +39,7 @@ type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   created: string;
+  group_by?: string[];
   id: number;
   label: string;
   service_type: CloudPulseServiceType;
