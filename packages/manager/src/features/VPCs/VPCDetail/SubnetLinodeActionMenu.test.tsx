@@ -15,6 +15,7 @@ const queryMocks = vi.hoisted(() => ({
       boot_linode: true,
       shutdown_linode: true,
       delete_linode: true,
+      update_vpc: true,
     },
   })),
   useQueryWithPermissions: vi.fn().mockReturnValue({
@@ -117,6 +118,7 @@ describe('SubnetActionMenu', () => {
         reboot_linode: false,
         boot_linode: false,
         shutdown_linode: false,
+        update_vpc: false,
       },
     });
     const { getByLabelText, getByTestId } = renderWithTheme(
@@ -140,6 +142,7 @@ describe('SubnetActionMenu', () => {
         reboot_linode: true,
         boot_linode: true,
         shutdown_linode: false,
+        update_vpc: true,
       },
     });
     const { getByLabelText, getByTestId } = renderWithTheme(

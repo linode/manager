@@ -94,7 +94,7 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const { data: permissions } = usePermissions(
     'vpc',
-    ['create_vpc_subnet', 'update_vpc'],
+    ['create_vpc_subnet'],
     vpcId
   );
 
@@ -359,7 +359,6 @@ export const VPCSubnetsTable = (props: Props) => {
               {subnet.linodes.length > 0 ? (
                 subnet.linodes.map((linodeInfo) => (
                   <SubnetLinodeRow
-                    canUpdateVPC={permissions.update_vpc}
                     handlePowerActionsLinode={handlePowerActionsLinode}
                     handleUnassignLinode={handleSubnetUnassignLinode}
                     isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
@@ -368,6 +367,7 @@ export const VPCSubnetsTable = (props: Props) => {
                     subnet={subnet}
                     subnetId={subnet.id}
                     subnetInterfaces={linodeInfo.interfaces}
+                    vpcId={vpcId}
                   />
                 ))
               ) : (

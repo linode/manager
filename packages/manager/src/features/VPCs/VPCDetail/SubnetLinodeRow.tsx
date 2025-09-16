@@ -44,7 +44,6 @@ import type {
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  canUpdateVPC?: boolean;
   handlePowerActionsLinode: (
     linode: Linode,
     action: Action,
@@ -57,6 +56,7 @@ interface Props {
   subnet: Subnet;
   subnetId: number;
   subnetInterfaces: SubnetLinodeInterfaceData[];
+  vpcId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
@@ -69,7 +69,7 @@ export const SubnetLinodeRow = (props: Props) => {
     subnet,
     subnetId,
     subnetInterfaces,
-    canUpdateVPC,
+    vpcId,
   } = props;
 
   const flags = useFlags();
@@ -269,7 +269,6 @@ export const SubnetLinodeRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell noWrap>
         <SubnetLinodeActionMenu
-          canUpdateVPC={canUpdateVPC}
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isOffline={isOffline}
@@ -277,6 +276,7 @@ export const SubnetLinodeRow = (props: Props) => {
           linode={linode}
           showPowerButton={showPowerButton}
           subnet={subnet}
+          vpcId={vpcId}
         />
       </TableCell>
     </TableRow>
