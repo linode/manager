@@ -3,7 +3,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { WidgetGroupByRenderer } from './WidgetGroupByRenderer';
+import { WidgetFilterGroupByRenderer } from './WidgetFilterGroupByRenderer';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { CloudPulseServiceType } from '@linode/api-v4';
@@ -39,7 +39,7 @@ const widgetGroupBy: GroupByOption[] = [
   { value: 'value-3', label: 'Value 3' },
 ];
 
-const component = <WidgetGroupByRenderer {...props} />;
+const component = <WidgetFilterGroupByRenderer {...props} />;
 
 describe('Widget Group By Renderer', () => {
   beforeAll(() => {

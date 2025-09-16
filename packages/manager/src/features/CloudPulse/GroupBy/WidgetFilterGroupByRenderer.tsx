@@ -6,16 +6,31 @@ import GroupByIcon from 'src/assets/icons/group-by.svg';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { CloudPulseGroupByDrawer } from './CloudPulseGroupByDrawer';
 import { WIDGET_GROUP_BY_MESSAGE } from './constants';
-import { useGlobalDimensions, useWidgetDimension } from './useGroupByDimension';
+import { useGlobalDimensions, useWidgetDimension } from './utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface WidgetFilterGroupByRendererProps {
+  /**
+   * Unique identifier for the dashboard
+   */
   dashboardId: number;
+  /**
+   * Callback function triggered when the selection changes
+   */
   handleChange: (selectedValue: string[]) => void;
+  /**
+   * Display label for the widget
+   */
   label: string;
+  /**
+   * Metric name to be used for data retrieval
+   */
   metric: string;
+  /**
+   * Type of cloud service being monitored
+   */
   serviceType: CloudPulseServiceType;
 }
 
@@ -44,7 +59,7 @@ export const WidgetFilterGroupByRenderer = (
         setIsSelected(true);
       }
       handleChange(selectedValue.map(({ value }) => value));
-      onCancel();
+      setOpen(false);
     },
     [handleChange, onCancel]
   );
@@ -60,6 +75,7 @@ export const WidgetFilterGroupByRenderer = (
         <IconButton
           aria-label="Group By Dashboard Metrics"
           color="inherit"
+          data-qa-selected={isSelected}
           data-testid="group-by"
           disabled={isDisabled}
           onClick={() => setOpen(true)}
