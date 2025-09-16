@@ -11,19 +11,20 @@ import { useGlobalDimensions } from './utils';
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { Dashboard } from '@linode/api-v4';
 
-interface GlobalGroupByRendererProps {
+interface GlobalFilterGroupByRendererProps {
   /**
-   * Handler function called when the group by selection changes.
-   * @param selectedValue - Array of selected group by values.
+   * Callback to handle the selected values
    */
   handleChange: (selectedValue: string[]) => void;
   /**
-   * The currently selected dashboard, if any.
+   * Currently selected dashboard
    */
   selectedDashboard?: Dashboard;
 }
 
-export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
+export const GlobalFilterGroupByRenderer = (
+  props: GlobalFilterGroupByRendererProps
+) => {
   const { selectedDashboard, handleChange } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
@@ -63,8 +64,10 @@ export const GlobalGroupByRenderer = (props: GlobalGroupByRendererProps) => {
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            marginTop: { md: theme.spacing(3.5) },
-            color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
+            marginTop: { md: theme.spacingFunction(28) },
+            color: isSelected
+              ? theme.tokens.component.Button.Primary.Hover.Background
+              : 'inherit',
           })}
         >
           <GroupByIcon height="24px" width="24px" />

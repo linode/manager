@@ -11,30 +11,32 @@ import { useGlobalDimensions, useWidgetDimension } from './utils';
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
-interface WidgetGroupByRendererProps {
+interface WidgetFilterGroupByRendererProps {
   /**
-   * Unique identifier for the dashboard
+   * Id of the selected dashboard
    */
   dashboardId: number;
   /**
-   * Callback function triggered when the selection changes
+   * Callback function to handle the selected values
    */
   handleChange: (selectedValue: string[]) => void;
   /**
-   * Display label for the widget
+   * Label for the widget metric
    */
   label: string;
   /**
-   * Metric name to be used for data retrieval
+   * Name of the metric
    */
   metric: string;
   /**
-   * Type of cloud service being monitored
+   * Service type of the selected dashboard
    */
   serviceType: CloudPulseServiceType;
 }
 
-export const WidgetGroupByRenderer = (props: WidgetGroupByRendererProps) => {
+export const WidgetFilterGroupByRenderer = (
+  props: WidgetFilterGroupByRendererProps
+) => {
   const { metric, dashboardId, serviceType, label, handleChange } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
@@ -59,7 +61,7 @@ export const WidgetGroupByRenderer = (props: WidgetGroupByRendererProps) => {
       handleChange(selectedValue.map(({ value }) => value));
       setOpen(false);
     },
-    [handleChange, onCancel]
+    [handleChange]
   );
 
   const isDisabled =
@@ -80,7 +82,9 @@ export const WidgetGroupByRenderer = (props: WidgetGroupByRendererProps) => {
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
+            color: isSelected
+              ? theme.tokens.component.Button.Primary.Hover.Background
+              : 'inherit',
             padding: 0,
           })}
         >
