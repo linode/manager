@@ -133,7 +133,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  entity_ids: number[] | undefined;
+  entity_ids?: number[];
 }
 
 export interface JWEToken {

@@ -92,7 +92,7 @@ export interface CloudPulseWidgetProperties {
   linodeRegion?: string;
 
   /**
-   * selected region for the widget
+   * Selected region for the widget
    */
   region?: string;
 
@@ -278,7 +278,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
-      url: 'https://mr-devcloud.cloud-observability-dev.akadns.net/v2beta/monitor/services/',
+      url: flags.aclpReadEndpoint!,
     }
   );
   let data: DataSet[] = [];

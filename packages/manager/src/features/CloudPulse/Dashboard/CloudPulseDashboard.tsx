@@ -90,7 +90,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     dashboardId: number | undefined
   ): JWETokenPayLoad => {
     if (!dashboardId || dashboardId === 6) {
-      return { entity_ids: undefined };
+      return {};
     }
     return {
       entity_ids: resources?.map((resource) => Number(resource)) ?? [],
