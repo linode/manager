@@ -131,7 +131,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
-    if (serviceType === 'firewall' || supportedRegionIds?.length === 0) {
+    if (serviceType === 'firewall' || !supportedRegionIds?.length) {
       return undefined;
     }
 
