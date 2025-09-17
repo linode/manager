@@ -360,6 +360,15 @@ export const getTextFilterProperties = (
   };
 };
 
+/**
+ * This function helps in building the properties needed for endpoints selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters of endpoints key
+ * @param handleEndpointsChange - the callback when we select new endpoints
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ * @returns CloudPulseEndpointsSelectProps
+ */
 export const getEndpointsProperties = (
   props: CloudPulseFilterProperties,
   handleEndpointsChange: (endpoints: string[], savePref?: boolean) => void
