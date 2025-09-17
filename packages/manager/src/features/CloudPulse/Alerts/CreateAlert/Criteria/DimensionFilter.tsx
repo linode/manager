@@ -35,6 +35,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
   });
 
   const dimensionFilterWatcher = useWatch({ control, name });
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
@@ -57,7 +58,10 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
       <Button
         compactX
         data-qa-buttons="true"
-        disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
+        disabled={
+          serviceTypeWatcher === null ||
+          (dimensionFilterWatcher && dimensionFilterWatcher.length === 5)
+        }
         onClick={() =>
           append({
             dimension_label: null,
