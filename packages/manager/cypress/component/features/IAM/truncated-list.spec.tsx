@@ -1,4 +1,4 @@
-import { TruncatedList } from '@src/features/IAM/Shared/TuncatedList';
+import { TruncatedList } from '@src/features/IAM/Shared/TruncatedList';
 import * as React from 'react';
 import { checkComponentA11y } from 'support/util/accessibility';
 import { componentTests } from 'support/util/components';

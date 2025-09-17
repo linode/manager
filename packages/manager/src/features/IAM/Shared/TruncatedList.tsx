@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { useCallback } from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { StyledTruncatedList } from './TruncatedListStyles';
+import { StyledTruncatedList } from './TruncatedList.styles';
 
 import type { SxProps, Theme } from '@mui/material';
 
@@ -24,12 +24,15 @@ type OverflowButtonProps = {
   onClick: () => void;
 };
 
-const rectContainsRect = (parent: DOMRect, child: DOMRect) => {
+/**
+ * Checks if a child rectangle is fully contained within a parent rectangle.
+ */
+const rectFullyContains = (parentRect: DOMRect, childRect: DOMRect) => {
   return (
-    child.top >= parent.top &&
-    child.bottom <= parent.bottom &&
-    child.left >= parent.left &&
-    child.right <= parent.right
+    childRect.top >= parentRect.top &&
+    childRect.bottom <= parentRect.bottom &&
+    childRect.left >= parentRect.left &&
+    childRect.right <= parentRect.right
   );
 };
 
@@ -62,8 +65,6 @@ export const TruncatedList = (props: TruncatedListProps) => {
         sx={(theme) => ({
           font: theme.tokens.alias.Typography.Label.Semibold.Xs,
           paddingLeft: theme.tokens.spacing.S6,
-          position: 'relative',
-          top: showAll ? -1 : 0,
         })}
       >
         {buttonCopy} {!showAll && `(+${hiddenItemsCount})`}
@@ -101,7 +102,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
 
     const itemEl = listItems[listItems.length - 2];
     if (
-      rectContainsRect(
+      rectFullyContains(
         containerRef.current.getBoundingClientRect(),
         itemEl.getBoundingClientRect()
       )
@@ -128,7 +129,7 @@ export const TruncatedList = (props: TruncatedListProps) => {
       breakpointEl.hidden = false;
 
       if (
-        rectContainsRect(
+        rectFullyContains(
           containerRef.current.getBoundingClientRect(),
           breakpointEl.getBoundingClientRect()
         )
@@ -218,11 +219,13 @@ export const TruncatedList = (props: TruncatedListProps) => {
             {item}
           </li>
         ))}
-        <OverflowButton
-          buttonCopy={collapseText}
-          hiddenItemsCount={0}
-          onClick={handleToggle}
-        />
+        <li>
+          <OverflowButton
+            buttonCopy={collapseText}
+            hiddenItemsCount={0}
+            onClick={handleToggle}
+          />
+        </li>
       </StyledTruncatedList>
     );
   }

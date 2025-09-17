@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 
 export const StyledTruncatedList = styled(List, {
   label: 'StyledTruncatedList',
-})(() => ({
+})(({ theme }) => ({
   margin: 0,
   padding: 0,
   display: 'flex',
@@ -27,5 +27,11 @@ export const StyledTruncatedList = styled(List, {
       position: 'absolute',
       right: -3,
     },
+  },
+  // Show right border on all visible items except the last visible one
+  // - The item does not have the hidden attribute
+  // - There exists a following visible <li>
+  '& li:not([hidden]):has(~ li:not([hidden])) > span': {
+    borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
   },
 }));

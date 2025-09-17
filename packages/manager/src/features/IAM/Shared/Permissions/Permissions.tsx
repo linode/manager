@@ -3,7 +3,7 @@ import { sortByString } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
-import { TruncatedList } from '../TuncatedList';
+import { TruncatedList } from '../TruncatedList';
 import { StyledPermissionItem, StyledTitle } from './Permissions.style';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';

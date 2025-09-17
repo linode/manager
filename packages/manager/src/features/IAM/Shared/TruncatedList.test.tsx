@@ -3,7 +3,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TruncatedList } from './TuncatedList';
+import { TruncatedList } from './TruncatedList';
 
 import type { PermissionType } from '@linode/api-v4';
 

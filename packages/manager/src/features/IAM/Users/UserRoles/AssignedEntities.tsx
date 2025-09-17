@@ -3,7 +3,7 @@ import { sortByString } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { TruncatedList } from '../../Shared/TuncatedList';
+import { TruncatedList } from '../../Shared/TruncatedList';
 
 import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';

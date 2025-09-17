@@ -8,10 +8,9 @@ export const StyledTitle = styled(Typography, { label: 'StyledTitle' })(
   })
 );
 
-export const StyledPermissionItem = styled(Typography, {
+export const StyledPermissionItem = styled('span', {
   label: 'StyledPermissionItem',
 })(({ theme }) => ({
-  borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
   display: 'inline-block',
   padding: `0px ${theme.tokens.spacing.S6} ${theme.tokens.spacing.S2}`,
 }));
