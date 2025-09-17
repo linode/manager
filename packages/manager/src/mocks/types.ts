@@ -121,7 +121,7 @@ export interface MockPresetExtra extends MockPresetBase {
 export type MockPresetCrudGroup = {
   id:
     | 'CloudNATs'
-    | 'DataStream'
+    | 'Delivery'
     | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
@@ -136,7 +136,7 @@ export type MockPresetCrudGroup = {
 };
 export type MockPresetCrudId =
   | 'cloudnats:crud'
-  | 'datastream:crud'
+  | 'delivery:crud'
   | 'domains:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
