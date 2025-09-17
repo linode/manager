@@ -2,7 +2,7 @@ import { linodeFactory } from '@linode/utilities';
 
 import { transformDimensionValue } from '../../../Utils/utils';
 import {
-  getFilteredFirewallResources,
+  getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
   getOperatorGroup,
@@ -107,7 +107,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('getFilteredFirewallResources', () => {
+  describe('getFilteredFirewallParentEntities', () => {
     const resources: CloudPulseResources[] = [
       {
         id: '1',
@@ -122,16 +122,16 @@ describe('Utils', () => {
     ];
 
     it('should return matched resources by entity IDs', () => {
-      expect(getFilteredFirewallResources(resources, ['1'])).toEqual(['a']);
+      expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual(['a']);
     });
 
     it('should return empty array if no match', () => {
-      expect(getFilteredFirewallResources(resources, ['3'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([]);
     });
 
     it('should handle undefined inputs', () => {
-      expect(getFilteredFirewallResources(undefined, ['1'])).toEqual([]);
-      expect(getFilteredFirewallResources(resources, undefined)).toEqual([]);
+      expect(getFilteredFirewallParentEntities(undefined, ['1'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, undefined)).toEqual([]);
     });
   });
 

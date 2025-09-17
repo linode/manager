@@ -43,7 +43,7 @@ export const NodeBalancerConfigPanel = (
   const {
     algorithm,
     configIdx,
-    disabled,
+    permissions,
     errors,
     forEdit,
     nodeMessage,
@@ -57,6 +57,10 @@ export const NodeBalancerConfigPanel = (
     sslCertificate,
     submitting,
   } = props;
+
+  const disabled = forEdit
+    ? !permissions?.update_nodebalancer
+    : !permissions?.create_nodebalancer;
 
   const onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPortChange(e.target.value);
@@ -140,14 +144,14 @@ export const NodeBalancerConfigPanel = (
   };
 
   const addNode = () => {
-    if (props.disabled) {
+    if (disabled) {
       return;
     }
     props.addNode();
   };
 
   const removeNode = (nodeIndex: number) => {
-    if (props.disabled) {
+    if (disabled) {
       return;
     }
     const { removeNode } = props;
@@ -425,8 +429,8 @@ export const NodeBalancerConfigPanel = (
       </Grid>
       <Divider spacingBottom={24} spacingTop={24} />
       <Grid container spacing={2}>
-        <ActiveCheck errorMap={errorMap} {...props} />
-        {protocol !== 'udp' && <PassiveCheck {...props} />}
+        <ActiveCheck errorMap={errorMap} {...props} disabled={disabled} />
+        {protocol !== 'udp' && <PassiveCheck {...props} disabled={disabled} />}
       </Grid>
       <Divider spacingBottom={24} spacingTop={24} />
       <Grid container spacing={2}>
@@ -453,8 +457,8 @@ export const NodeBalancerConfigPanel = (
             {nodes?.map((node, nodeIdx) => (
               <NodeBalancerConfigNode
                 configIdx={configIdx}
-                disabled={Boolean(disabled)}
                 disallowRemoval={!forEdit && nodeIdx === 0} // Prevent the user from removing the first node on the create flow.
+                forEdit={forEdit}
                 hideModeSelect={protocol === 'udp'} // UDP does not support the "mode" option on nodes
                 idx={nodeIdx}
                 key={`nb-node-${nodeIdx}`}
@@ -467,10 +471,19 @@ export const NodeBalancerConfigPanel = (
                 onNodeModeChange={onNodeModeChange}
                 onNodePortChange={onNodePortChange}
                 onNodeWeightChange={onNodeWeightChange}
+                permissions={permissions}
                 removeNode={removeNode}
               />
             ))}
-            <Button buttonType="outlined" disabled={disabled} onClick={addNode}>
+            <Button
+              buttonType="outlined"
+              disabled={
+                forEdit
+                  ? !permissions?.create_nodebalancer_config
+                  : !permissions?.create_nodebalancer
+              }
+              onClick={addNode}
+            >
               Add a Node
             </Button>
           </Grid>
@@ -490,7 +503,7 @@ export const NodeBalancerConfigPanel = (
             forEdit
               ? {
                   'data-testid': 'save-config',
-                  disabled,
+                  disabled: !permissions?.update_nodebalancer,
                   label: 'Save',
                   loading: submitting,
                   onClick: onSave,
@@ -499,7 +512,9 @@ export const NodeBalancerConfigPanel = (
           }
           secondaryButtonProps={{
             'data-testid': 'delete-config',
-            disabled,
+            disabled: forEdit
+              ? !permissions?.delete_nodebalancer
+              : !permissions?.create_nodebalancer,
             label: 'Delete',
             onClick: props.onDelete,
           }}

@@ -53,6 +53,17 @@ interface BaseFeatureFlag {
   enabled: boolean;
 }
 
+interface LinodeInterfacesFlag extends BaseFeatureFlag {
+  /**
+   * Shows a Beta chip for UI elements related to Linode Interfaces
+   */
+  beta?: boolean;
+  /**
+   * Shows a New chip for UI elements related to Linode Interfaces
+   */
+  new?: boolean;
+}
+
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
   new: boolean;
@@ -85,7 +96,7 @@ interface AclpFlag {
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
-  phase2Mtc: boolean;
+  phase2Mtc: { byoVPC: boolean; dualStack: boolean };
   postLa: boolean;
 }
 
@@ -165,8 +176,9 @@ export interface Flags {
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
-  linodeInterfaces: BaseFeatureFlag;
+  linodeInterfaces: LinodeInterfacesFlag;
   lkeEnterprise: LkeEnterpriseFlag;
+  lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
@@ -280,7 +292,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
-  | 'DataStream'
+  | 'Delivery'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'
