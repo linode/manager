@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { displayPrice } from 'src/components/DisplayPrice';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
-import { StyledHeader } from 'src/features/DataStream/Streams/StreamForm/CheckoutBar/StreamFormCheckoutBar.styles';
+import { StyledHeader } from 'src/features/DataStream/Shared/FormSubmitBar/FormSubmitBar.styles';
 
 import type { StreamAndDestinationFormType } from 'src/features/DataStream/Streams/StreamForm/types';
 
