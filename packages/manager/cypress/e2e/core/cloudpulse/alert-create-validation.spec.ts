@@ -37,6 +37,7 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+  monitors: { alerts: ['Managed Databases'] },
 });
 const { metrics, serviceType } = widgetDetails.dbaas;
 const databaseMock = databaseFactory.buildList(10, {
@@ -181,11 +182,14 @@ describe('Create Alert - Error Messages Validation', () => {
       .findByText('You can add up to 5 dimension filters.')
       .should('be.visible');
 
-    // Step 3.4: Remove one dimension filter and ensure the button becomes enabled again.
-    cy.get('[data-testid="clear-icon"]').first().click();
     ui.buttonGroup
       .findButtonByTitle('Add dimension filter')
-      .should('be.enabled');
+      .should('be.disabled');
+
+    ui.autocomplete.findByLabel('Service').type('Databases');
+
+    ui.autocompletePopper.findByTitle('Databases').click();
+
     ui.tooltip
       .findByText('You can add up to 5 dimension filters.')
       .should('not.exist');
