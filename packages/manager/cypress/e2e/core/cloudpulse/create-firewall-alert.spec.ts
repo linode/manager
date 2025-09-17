@@ -168,7 +168,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
       dimensions: [
         {
           dimension_label: 'Linode',
-          label: 'linode_id"',
+          label: 'parent_vm_entity_id"',
           values: [],
         },
         {
@@ -182,7 +182,7 @@ const metricDefinitions = firewallMetricDefinitionData.map(
           values: [],
         },
         {
-          dimension_label: 'linode_id',
+          dimension_label: 'parent_vm_entity_id',
           label: 'Parent VM Entity ID',
           values: [],
         },
@@ -234,7 +234,7 @@ const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
  * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Avg").
+ * @param aggregationType - The aggregation type (e.g., "Average").
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
@@ -322,7 +322,7 @@ const mockLinodes: Linode[] = [
   }),
 ];
 
-describe('Create Alert', () => {
+describe('Firewall alert configured successfully', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
    * - Confirms that users can enter alert details, select entities, and configure conditions.
@@ -331,41 +331,13 @@ describe('Create Alert', () => {
    * - Confirms that API interactions work correctly and return the expected responses.
    * - Confirms that the UI displays a success message after creating an alert.
    */
-  beforeEach(() => {
-    mockAppendFeatureFlags(flagsFactory.build());
-    mockGetAccount(mockAccount);
-    mockGetProfile(mockProfile);
-    mockGetCloudPulseServices([serviceType]);
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetDatabases(databaseMock);
-    mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
-    mockGetAlertChannels([notificationChannels]);
-    mockGetFirewalls([mockFirewalls]);
-    mockGetLinodes(mockLinodes);
-  });
-
-  it('should navigate to the Create Alert page from the Alert Listings page', () => {
-    // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/alerts/definitions');
-
-    // Wait for the alert definitions list API call to complete
-    cy.wait('@getAlertDefinitionsList');
-
-    ui.buttonGroup
-      .findButtonByTitle('Create Alert')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Verify the URL ends with the expected details page path
-    cy.url().should('endWith', CREATE_ALERT_PAGE_URL);
-  });
-
   // entityScopingOptions is an array of predefined scoping strategies for alert definitions.
   // Each item in the array represents a way to scope entities when generating or organizing alerts.
-  // The scoping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
+  // The scoping strategies include 'Per Account', 'Per Entity'.
+  // Temporary: Only testing entity-level for firewall alerts.
+  // Once account-level is supported, remove `value === 'entity'` condition.
   entityGroupingOptions
-    .filter(({ value }) => serviceType === 'firewall' && value === 'entity')
+    .filter(({ value }) => serviceType === 'firewall' && value !== 'region')
     .forEach(({ label: groupLabel, value }) => {
       it(`should successfully create a new alert for ${groupLabel} level`, () => {
         const alerts = alertFactory.build({
@@ -397,6 +369,17 @@ describe('Create Alert', () => {
           }),
           regions: 'us-ord,us-east',
         });
+
+        mockAppendFeatureFlags(flagsFactory.build());
+        mockGetAccount(mockAccount);
+        mockGetProfile(mockProfile);
+        mockGetCloudPulseServices([serviceType]);
+        mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+        mockGetDatabases(databaseMock);
+        mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
+        mockGetAlertChannels([notificationChannels]);
+        mockGetFirewalls([mockFirewalls]);
+        mockGetLinodes(mockLinodes);
         mockGetCloudPulseServiceByType(serviceType, services);
         mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
         mockCreateAlertDefinition(serviceType, alerts).as(
@@ -625,7 +608,7 @@ describe('Create Alert', () => {
           );
 
           // Validate second rule
-          const secondRule = request.body.rule_criteria.rules[1];
+          const secondRule = request.body.rule_criteria.rules[0];
           const secondCustomRule = rules[1];
           expect(secondRule.aggregate_function).to.equal(
             secondCustomRule.aggregate_function

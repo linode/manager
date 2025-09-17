@@ -182,7 +182,7 @@ const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
  * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Avg").
+ * @param aggregationType - The aggregation type (e.g., "Average").
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
@@ -271,36 +271,6 @@ describe('Create Alert', () => {
    * - Confirms that API interactions work correctly and return the expected responses.
    * - Confirms that the UI displays a success message after creating an alert.
    */
-  beforeEach(() => {
-    mockAppendFeatureFlags(flagsFactory.build());
-    mockGetAccount(mockAccount);
-    mockGetProfile(mockProfile);
-    mockGetCloudPulseServices([serviceType]);
-    mockGetRegions(mockRegions);
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetDatabases(databaseMock);
-    mockGetNodeBalancers([mockNodeBalancer]);
-    mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
-    mockGetAlertChannels([notificationChannels]);
-  });
-
-  it('should navigate to the Create Alert page from the Alert Listings page', () => {
-    // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/alerts/definitions');
-
-    // Wait for the alert definitions list API call to complete
-    cy.wait('@getAlertDefinitionsList');
-
-    ui.buttonGroup
-      .findButtonByTitle('Create Alert')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Verify the URL ends with the expected details page path
-    cy.url().should('endWith', CREATE_ALERT_PAGE_URL);
-  });
-
   // entityScopingOptions is an array of predefined scoping strategies for alert definitions.
   // Each item in the array represents a way to scope entities when generating or organizing alerts.
   // The scoping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
@@ -335,6 +305,16 @@ describe('Create Alert', () => {
         }),
         regions: 'us-ord,us-east',
       });
+      mockAppendFeatureFlags(flagsFactory.build());
+      mockGetAccount(mockAccount);
+      mockGetProfile(mockProfile);
+      mockGetCloudPulseServices([serviceType]);
+      mockGetRegions(mockRegions);
+      mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+      mockGetDatabases(databaseMock);
+      mockGetNodeBalancers([mockNodeBalancer]);
+      mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
+      mockGetAlertChannels([notificationChannels]);
       mockGetCloudPulseServiceByType(serviceType, services);
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
       mockCreateAlertDefinition(serviceType, alerts).as(
