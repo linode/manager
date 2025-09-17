@@ -20,10 +20,6 @@ import type {
 
 export interface CloudPulseEndpoints {
   /**
-   * The endpoint which is 's3_endpoint' in the response from the API
-   */
-  endpoint: string;
-  /**
    * The label of the endpoint which is 's3_endpoint' in the response from the API
    */
   label: string;
@@ -103,14 +99,13 @@ export const CloudPulseEndpointsSelect = React.memo(
           endpoint.s3_endpoint !== null
             ? [
                 {
-                  endpoint: endpoint.s3_endpoint,
                   label: endpoint.s3_endpoint,
                   region: endpoint.region,
                 },
               ]
             : []
         )
-        .sort((a, b) => a.endpoint.localeCompare(b.endpoint));
+        .sort((a, b) => a.label.localeCompare(b.label));
       return validEndpoints;
     }, [endpoints]);
 
