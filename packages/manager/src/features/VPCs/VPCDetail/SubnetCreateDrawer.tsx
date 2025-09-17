@@ -46,6 +46,7 @@ export const SubnetCreateDrawer = (props: Props) => {
     vpcId
   );
 
+  const canCreateSubnet = permissions?.create_vpc_subnet;
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
     vpc?.subnets?.map((subnet: Subnet) => subnet.ipv4 ?? '') ?? []
@@ -108,7 +109,7 @@ export const SubnetCreateDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
-      {!permissions.create_vpc_subnet && (
+      {!canCreateSubnet && (
         <Notice
           spacingBottom={8}
           spacingTop={16}
@@ -126,7 +127,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter a subnet label"
-                disabled={!permissions.create_vpc_subnet}
+                disabled={!canCreateSubnet}
                 errorText={fieldState.error?.message}
                 label="Subnet Label"
                 onBlur={field.onBlur}
@@ -142,7 +143,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter an IPv4"
-                disabled={!permissions.create_vpc_subnet}
+                disabled={!canCreateSubnet}
                 errorText={fieldState.error?.message}
                 label={
                   shouldDisplayIPv6
@@ -193,7 +194,7 @@ export const SubnetCreateDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-subnet-drawer-button',
-            disabled: !isDirty || !permissions.create_vpc_subnet,
+            disabled: !isDirty || !canCreateSubnet,
             label: 'Create Subnet',
             loading: isPending || isSubmitting,
             type: 'submit',

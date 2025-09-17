@@ -36,15 +36,15 @@ export const SubnetActionMenu = (props: Props) => {
   const flags = useIsNodebalancerVPCEnabled();
 
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
-
+  const canUpdateVPC = permissions?.update_vpc;
   const actions: Action[] = [
     {
       onClick: () => {
         handleAssignLinodes(subnet);
       },
       title: 'Assign Linodes',
-      disabled: !permissions?.update_vpc,
-      tooltip: !permissions?.update_vpc
+      disabled: !canUpdateVPC,
+      tooltip: !canUpdateVPC
         ? 'You do not have permission to assign Linode to this subnet.'
         : undefined,
     },
@@ -53,8 +53,8 @@ export const SubnetActionMenu = (props: Props) => {
         handleUnassignLinodes(subnet);
       },
       title: 'Unassign Linodes',
-      disabled: !permissions?.update_vpc,
-      tooltip: !permissions?.update_vpc
+      disabled: !canUpdateVPC,
+      tooltip: !canUpdateVPC
         ? 'You do not have permission to unassign Linode from this subnet.'
         : undefined,
     },
@@ -64,15 +64,14 @@ export const SubnetActionMenu = (props: Props) => {
       },
       title: 'Edit',
       // TODO: change to 'update_vpc_subnet' once it's available
-      disabled: !permissions?.update_vpc,
-      tooltip: !permissions?.update_vpc
+      disabled: !canUpdateVPC,
+      tooltip: !canUpdateVPC
         ? 'You do not have permission to edit this subnet.'
         : undefined,
     },
     {
       // TODO: change to 'delete_vpc_subnet' once it's available
-      disabled:
-        numLinodes !== 0 || numNodebalancers !== 0 || !permissions?.update_vpc,
+      disabled: numLinodes !== 0 || numNodebalancers !== 0 || !canUpdateVPC,
       onClick: () => {
         handleDelete(subnet);
       },
@@ -80,7 +79,7 @@ export const SubnetActionMenu = (props: Props) => {
       tooltip:
         numLinodes > 0 || numNodebalancers > 0
           ? `${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'} assigned to a subnet must be unassigned before the subnet can be deleted.`
-          : !permissions.update_vpc
+          : !canUpdateVPC
             ? 'You do not have permission to delete this subnet.'
             : undefined,
     },

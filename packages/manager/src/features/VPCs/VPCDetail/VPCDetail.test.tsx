@@ -27,7 +27,6 @@ const queryMocks = vi.hoisted(() => ({
     isLoading: false,
     isError: false,
   }),
-  useArrayWithPermissions: vi.fn().mockReturnValue([]),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -54,7 +53,6 @@ vi.mock('@tanstack/react-router', async () => {
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
   useQueryWithPermissions: queryMocks.useQueryWithPermissions,
-  useArrayWithPermissions: queryMocks.useArrayWithPermissions,
 }));
 beforeAll(() => mockMatchMedia());
 
