@@ -37,7 +37,7 @@ export const StreamEdit = () => {
       pathname: '/logs/delivery/streams/edit',
       crumbOverrides: [
         {
-          label: 'DataStream',
+          label: 'Delivery',
           linkTo: '/logs/delivery/streams',
           position: 1,
         },

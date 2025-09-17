@@ -5,7 +5,7 @@ import type { InferType, MixedSchema, Schema } from 'yup';
 const maxLength = 255;
 const maxLengthMessage = 'Length must be 255 characters or less.';
 
-// DataSteam Destination
+// Logs Delivery Destination
 
 const authenticationDetailsSchema = object({
   basic_authentication_user: string()
@@ -92,7 +92,7 @@ export const destinationSchema = object().shape({
     }),
 });
 
-// DataSteam Stream
+// Logs Delivery Stream
 
 const streamDetailsBase = object({
   cluster_ids: array()

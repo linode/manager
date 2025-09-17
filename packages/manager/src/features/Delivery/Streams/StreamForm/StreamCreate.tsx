@@ -11,7 +11,7 @@ import {
 } from 'src/components/LandingHeader';
 import { StreamForm } from 'src/features/Delivery/Streams/StreamForm/StreamForm';
 
-import type { StreamAndDestinationFormType} from 'src/features/Delivery/Streams/StreamForm/types';
+import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 export const StreamCreate = () => {
   const landingHeaderProps: LandingHeaderProps = {
@@ -19,7 +19,7 @@ export const StreamCreate = () => {
       pathname: '/logs/delivery/streams/create',
       crumbOverrides: [
         {
-          label: 'DataStream',
+          label: 'Delivery',
           linkTo: '/logs/delivery/streams',
           position: 1,
         },

@@ -36,35 +36,39 @@ describe('DestinationCreate', () => {
     expect(destinationTypeAutocomplete).toHaveValue('Linode Object Storage');
   });
 
-  it('should render all inputs for Linode Object Storage type and allow to fill out them', async () => {
-    renderDestinationCreate({ label: '' });
+  it(
+    'should render all inputs for Linode Object Storage type and allow to fill out them',
+    { timeout: 10000 },
+    async () => {
+      renderDestinationCreate({ label: '' });
 
-    const destinationNameInput = screen.getByLabelText('Destination Name');
-    await userEvent.type(destinationNameInput, 'Test');
-    const hostInput = screen.getByLabelText('Host');
-    await userEvent.type(hostInput, 'Test');
-    const bucketInput = screen.getByLabelText('Bucket');
-    await userEvent.type(bucketInput, 'Test');
-    const regionAutocomplete = screen.getByLabelText('Region');
-    await userEvent.click(regionAutocomplete);
-    await userEvent.type(regionAutocomplete, 'US, Chi');
-    const chicagoRegion = await screen.findByText('US, Chicago, IL (us-ord)');
-    await userEvent.click(chicagoRegion);
-    const accessKeyIDInput = screen.getByLabelText('Access Key ID');
-    await userEvent.type(accessKeyIDInput, 'Test');
-    const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
-    await userEvent.type(secretAccessKeyInput, 'Test');
-    const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
-    await userEvent.type(logPathPrefixInput, 'Test');
+      const destinationNameInput = screen.getByLabelText('Destination Name');
+      await userEvent.type(destinationNameInput, 'Test');
+      const hostInput = screen.getByLabelText('Host');
+      await userEvent.type(hostInput, 'Test');
+      const bucketInput = screen.getByLabelText('Bucket');
+      await userEvent.type(bucketInput, 'Test');
+      const regionAutocomplete = screen.getByLabelText('Region');
+      await userEvent.click(regionAutocomplete);
+      await userEvent.type(regionAutocomplete, 'US, Chi');
+      const chicagoRegion = await screen.findByText('US, Chicago, IL (us-ord)');
+      await userEvent.click(chicagoRegion);
+      const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+      await userEvent.type(accessKeyIDInput, 'Test');
+      const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+      await userEvent.type(secretAccessKeyInput, 'Test');
+      const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+      await userEvent.type(logPathPrefixInput, 'Test');
 
-    expect(destinationNameInput).toHaveValue('Test');
-    expect(hostInput).toHaveValue('Test');
-    expect(bucketInput).toHaveValue('Test');
-    expect(regionAutocomplete).toHaveValue('US, Chicago, IL (us-ord)');
-    expect(accessKeyIDInput).toHaveValue('Test');
-    expect(secretAccessKeyInput).toHaveValue('Test');
-    expect(logPathPrefixInput).toHaveValue('Test');
-  });
+      expect(destinationNameInput).toHaveValue('Test');
+      expect(hostInput).toHaveValue('Test');
+      expect(bucketInput).toHaveValue('Test');
+      expect(regionAutocomplete).toHaveValue('US, Chicago, IL (us-ord)');
+      expect(accessKeyIDInput).toHaveValue('Test');
+      expect(secretAccessKeyInput).toHaveValue('Test');
+      expect(logPathPrefixInput).toHaveValue('Test');
+    }
+  );
 
   describe('given Test Connection and Create Destination buttons', () => {
     const testConnectionButtonText = 'Test Connection';

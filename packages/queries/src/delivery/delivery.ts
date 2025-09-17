@@ -35,7 +35,7 @@ import type {
 } from '@linode/api-v4';
 import type { GetAllData } from '@linode/utilities';
 
-export const getAllDataStreams = (
+export const getAllStreams = (
   passedParams: Params = {},
   passedFilter: Filter = {},
 ) =>
@@ -62,7 +62,7 @@ export const deliveryQueries = createQueryKeys('delivery', {
   streams: {
     contextQueries: {
       all: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getAllDataStreams(params, filter),
+        queryFn: () => getAllStreams(params, filter),
         queryKey: [params, filter],
       }),
       infinite: (filter: Filter) => ({
