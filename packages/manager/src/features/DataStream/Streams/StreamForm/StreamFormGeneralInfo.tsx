@@ -7,7 +7,6 @@ import {
   getStreamTypeOption,
   isFormInEditMode,
 } from 'src/features/DataStream/dataStreamUtils';
-import { LabelValue } from 'src/features/DataStream/Shared/LabelValue';
 import { streamTypeOptions } from 'src/features/DataStream/Shared/types';
 
 import type { StreamAndDestinationFormType } from './types';
@@ -15,11 +14,10 @@ import type { FormMode } from 'src/features/DataStream/Shared/types';
 
 type StreamFormGeneralInfoProps = {
   mode: FormMode;
-  streamId?: string;
 };
 
 export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
-  const { mode, streamId } = props;
+  const { mode } = props;
 
   const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
 
@@ -34,7 +32,6 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
   return (
     <Paper>
       <Typography variant="h2">General Information</Typography>
-      {streamId && <LabelValue compact={true} label="ID" value={streamId} />}
       <Controller
         control={control}
         name="stream.label"
@@ -47,11 +44,10 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Stream name..."
+            placeholder="Stream name"
             value={field.value}
           />
         )}
-        rules={{ required: true }}
       />
       <Controller
         control={control}
@@ -71,7 +67,6 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
             value={getStreamTypeOption(field.value)}
           />
         )}
-        rules={{ required: true }}
       />
     </Paper>
   );

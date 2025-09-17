@@ -2,6 +2,7 @@ import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
@@ -17,14 +18,19 @@ interface DestinationTableRowProps extends DestinationHandlers {
 export const DestinationTableRow = React.memo(
   (props: DestinationTableRowProps) => {
     const { destination, onDelete, onEdit } = props;
+    const { id } = destination;
 
     return (
-      <TableRow key={destination.id}>
-        <TableCell>{destination.label}</TableCell>
+      <TableRow key={id}>
+        <TableCell>
+          <Link to={`/datastream/destinations/${id}/edit`}>
+            {destination.label}
+          </Link>
+        </TableCell>
         <TableCell>
           {getDestinationTypeOption(destination.type)?.label}
         </TableCell>
-        <TableCell>{destination.id}</TableCell>
+        <TableCell>{id}</TableCell>
         <Hidden smDown>
           <TableCell>
             <DateTimeDisplay value={destination.created} />
