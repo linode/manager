@@ -1,4 +1,5 @@
 import {
+  linodeInterfaceFactoryDualStackVPC,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVlan,
   linodeInterfaceFactoryVPC,
@@ -44,7 +45,7 @@ describe('InterfaceDetailsContent', () => {
   });
 
   it('shows the information for a DualStack (IPv4 & IPv6) VPC Interface', () => {
-    const vpcInterface = linodeInterfaceFactoryVPC.build();
+    const vpcInterface = linodeInterfaceFactoryDualStackVPC.build();
     renderWithTheme(<InterfaceDetailsContent {...vpcInterface} />);
 
     expect(screen.getByText('Type')).toBeVisible();
