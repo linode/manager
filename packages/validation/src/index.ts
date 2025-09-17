@@ -3,7 +3,7 @@ export * from './buckets.schema';
 export * from './cloudnats.schema';
 export * from './cloudpulse.schema';
 export * from './databases.schema';
-export * from './datastream.schema';
+export * from './delivery.schema';
 export * from './domains.schema';
 export * from './firewalls.schema';
 export * from './images.schema';
