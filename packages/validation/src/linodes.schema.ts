@@ -24,6 +24,29 @@ const validateIP = (ipAddress?: null | string) => {
   return true;
 };
 
+/**
+ * Validates that a legacy alerts field is not undefined and has a value of type 'number'.
+ * @param label - The label of the field.
+ * @returns  Name, message to display, and test function.
+ */
+const validateNonEmptyLegacyAlertsField = (
+  label:
+    | 'CPU Usage'
+    | 'Disk I/O Rate'
+    | 'Incoming Traffic'
+    | 'Outbound Traffic'
+    | 'Transfer Quota',
+) => ({
+  name: 'Non empty or undefined field',
+  message: `${label} is required.`,
+  test: (value: unknown) => {
+    if (value === undefined || typeof value !== 'number') {
+      return false;
+    }
+    return true;
+  },
+});
+
 const test_vpcsValidateIP = (value?: null | string) => {
   // Since the field is optional, return true here to prevent an incorrect test failure.
   if (value === undefined || value === null) {
@@ -369,11 +392,20 @@ export const alertsSchema = object({
   cpu: number()
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800')
-    .notRequired(),
-  network_in: number().notRequired(),
-  network_out: number().notRequired(),
-  transfer_quota: number().notRequired(),
-  io: number().notRequired(),
+    .notRequired()
+    .test(validateNonEmptyLegacyAlertsField('CPU Usage')),
+  network_in: number()
+    .notRequired()
+    .test(validateNonEmptyLegacyAlertsField('Incoming Traffic')),
+  network_out: number()
+    .notRequired()
+    .test(validateNonEmptyLegacyAlertsField('Outbound Traffic')),
+  transfer_quota: number()
+    .notRequired()
+    .test(validateNonEmptyLegacyAlertsField('Transfer Quota')),
+  io: number()
+    .notRequired()
+    .test(validateNonEmptyLegacyAlertsField('Disk I/O Rate')),
 
   // ACLP alerts ‑ arrays of alert-definition IDs. Optional so the same payload
   // can mix legacy and ACLP shapes when only one set is present.
