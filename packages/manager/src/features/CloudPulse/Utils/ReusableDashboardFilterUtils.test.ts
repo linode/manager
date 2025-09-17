@@ -22,11 +22,13 @@ it('test getDashboardProperties method', () => {
     },
     resource: 1,
     groupBy: [],
+    region: 'us-east',
   });
 
   expect(result).toBeDefined();
   expect(result.dashboardId).toEqual(mockDashboard.id);
   expect(result.resources).toEqual(['1']);
+  expect(result.region).toEqual('us-east');
 });
 
 it('test checkMandatoryFiltersSelected method for time duration and resource', () => {
