@@ -71,6 +71,8 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     initialValues,
     onSubmit: submitForm,
     validationSchema: updatePrivateNetworkSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
   }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
 
   const hasVPCConfigured = !!database?.private_network?.vpc_id;
@@ -79,8 +81,12 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     values.private_network.subnet_id !== database?.private_network?.subnet_id ||
     values.private_network.public_access !==
       database?.private_network?.public_access;
+  const hasValidSelection =
+    !!values.private_network.vpc_id &&
+    !!values.private_network.subnet_id &&
+    hasConfigChanged;
 
-  const isSaveDisabled = !dirty || !isValid || !hasConfigChanged;
+  const isSaveDisabled = !dirty || !isValid || !hasValidSelection;
 
   const {
     error: manageNetworkingError,
@@ -91,6 +97,13 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
 
   const handleOnClose = () => {
     onClose();
+    resetForm();
+    resetMutation?.();
+  };
+
+  /** Resets the form after opening the unassign VPC dialog */
+  const handleOnUnassign = () => {
+    onUnassign();
     resetForm();
     resetMutation?.();
   };
@@ -124,7 +137,7 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
               buttonType="outlined"
               disabled={!hasVPCConfigured}
               loading={false}
-              onClick={onUnassign}
+              onClick={handleOnUnassign}
             >
               Unassign VPC
             </Button>
