@@ -362,22 +362,3 @@ export const useLkeStandardOrEnterpriseVersions = (
     versionsError: enterpriseTierVersionsError || versionsError,
   };
 };
-
-export const useKubernetesBetaEndpoint = () => {
-  const {
-    isLoading: isAPLAvailabilityLoading,
-    showAPL,
-    isAPLGeneralAvailability,
-  } = useAPLAvailability();
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  // Use beta endpoint if either:
-  // 1. LKE Enterprise is enabled
-  // 2. APL is supported but not in GA
-  const isUsingBetaEndpoint =
-    (showAPL && !isAPLGeneralAvailability) || isLkeEnterpriseLAFeatureEnabled;
-
-  return {
-    isAPLAvailabilityLoading,
-    isUsingBetaEndpoint,
-  };
-};
