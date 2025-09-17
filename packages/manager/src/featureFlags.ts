@@ -292,7 +292,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
-  | 'DataStream'
+  | 'Delivery'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'
