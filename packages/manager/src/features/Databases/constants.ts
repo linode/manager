@@ -41,6 +41,18 @@ export const RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT =
 export const RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT =
   'Resizing a 2-node cluster is only allowed with Dedicated plans.';
 
+export const BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT =
+  'Select a time from the past.';
+
+export const BACKUPS_MIN_TIME_EXCEEDED_VALIDATON_TEXT =
+  'No backup available for this point in time. Select a later time.';
+
+export const BACKUPS_INVALID_TIME_VALIDATON_TEXT =
+  'Specify the exact time in the format: hh:mm:ss.';
+
+export const BACKUPS_UNABLE_TO_RESTORE_TEXT =
+  'You can restore a backup after the first backup is completed.';
+
 // Links
 export const LEARN_MORE_LINK_LEGACY =
   'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';
