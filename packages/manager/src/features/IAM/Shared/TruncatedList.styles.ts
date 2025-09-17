@@ -28,10 +28,12 @@ export const StyledTruncatedList = styled(List, {
       right: -3,
     },
   },
-  // Show right border on all visible items except the last visible one
+  // Show right border on all visible items except the last visible one (@supports is really here to get around our test environment limitations - :has is widely supported)
   // - The item does not have the hidden attribute
   // - There exists a following visible <li>
-  '& li:not([hidden]):has(~ li:not([hidden])) > span': {
-    borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
+  '@supports (selector(:has(*)))': {
+    '& li:not([hidden]):has(~ li:not([hidden])) > span': {
+      borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
+    },
   },
 }));
