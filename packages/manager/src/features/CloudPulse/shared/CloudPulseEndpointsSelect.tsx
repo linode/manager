@@ -20,7 +20,7 @@ import type {
 
 export interface CloudPulseEndpoints {
   /**
-   * The endpoint of the endpoint which is 's3_endpoint' in the response from the API
+   * The endpoint which is 's3_endpoint' in the response from the API
    */
   endpoint: string;
   /**
@@ -35,11 +35,11 @@ export interface CloudPulseEndpoints {
 
 export interface CloudPulseEndpointsSelectProps {
   /**
-   * The default value of the endpoints
+   * The default value of the endpoints filter
    */
   defaultValue?: Partial<FilterValue>;
   /**
-   * Whether the endpoints are disabled
+   * Whether the endpoints filter is disabled
    */
   disabled?: boolean;
   /**
@@ -51,7 +51,7 @@ export interface CloudPulseEndpointsSelectProps {
    */
   label: string;
   /**
-   * The placeholder of the endpoints
+   * The placeholder of the endpoints filter
    */
   placeholder?: string;
   /**

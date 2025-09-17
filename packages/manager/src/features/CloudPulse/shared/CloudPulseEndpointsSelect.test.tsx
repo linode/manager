@@ -44,7 +44,7 @@ describe('CloudPulseEndpointsSelect component tests', () => {
     expect(screen.getByPlaceholderText('Select Endpoints')).toBeVisible();
   });
 
-  it('should render disabled component if the props are undefined or regions and service type does not have any endpoints', () => {
+  it('should render disabled component if the props are undefined', () => {
     renderWithTheme(
       <CloudPulseEndpointsSelect
         disabled
