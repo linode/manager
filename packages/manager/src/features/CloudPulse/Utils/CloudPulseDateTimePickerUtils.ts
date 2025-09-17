@@ -9,8 +9,8 @@ export const defaultTimeDuration = (timezone?: string): DateTimeWithPreset => {
 
   return {
     end: date.toISO() ?? '',
-    preset: 'last 30 minutes',
-    start: date.minus({ minutes: 30 }).toISO() ?? '',
+    preset: 'last hour',
+    start: date.minus({ hours: 1 }).toISO() ?? '',
     timeZone: timezone,
   };
 };
