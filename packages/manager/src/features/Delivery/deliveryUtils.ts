@@ -15,19 +15,19 @@ import {
 } from 'src/features/Delivery/Shared/types';
 
 import type {
+  AutocompleteOption,
   DestinationDetailsForm,
   FormMode,
-  LabelValueOption,
 } from 'src/features/Delivery/Shared/types';
 
 export const getDestinationTypeOption = (
   destinationTypeValue: string
-): LabelValueOption | undefined =>
+): AutocompleteOption | undefined =>
   destinationTypeOptions.find(({ value }) => value === destinationTypeValue);
 
 export const getStreamTypeOption = (
   streamTypeValue: string
-): LabelValueOption | undefined =>
+): AutocompleteOption | undefined =>
   streamTypeOptions.find(({ value }) => value === streamTypeValue);
 
 export const isFormInEditMode = (mode: FormMode) => mode === 'edit';

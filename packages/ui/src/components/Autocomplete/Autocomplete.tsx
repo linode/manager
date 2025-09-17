@@ -72,7 +72,7 @@ export interface EnhancedAutocompleteProps<
  * />
  */
 export const Autocomplete = <
-  T extends { label: string },
+  T extends { label: string; pendoId?: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
   FreeSolo extends boolean | undefined = undefined,
@@ -186,7 +186,12 @@ export const Autocomplete = <
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
-          <ListItem {...props} data-qa-option key={props.key}>
+          <ListItem
+            {...props}
+            data-pendo-id={option.pendoId}
+            data-qa-option
+            key={props.key}
+          >
             <>
               <Box
                 sx={{

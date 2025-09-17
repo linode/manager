@@ -7,19 +7,19 @@ import * as React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 
 import type { Theme } from '@mui/material/styles';
-import type { LabelValueOption } from 'src/features/Delivery/Shared/types';
+import type { AutocompleteOption } from 'src/features/Delivery/Shared/types';
 
 export interface DeliveryTabHeaderProps {
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
-  entity?: string;
+  entity: string;
   isSearching?: boolean;
   onButtonClick?: () => void;
   onSearch?: (label: string) => void;
   onSelect?: (status: string) => void;
   searchValue?: string;
-  selectList?: LabelValueOption[];
+  selectList?: AutocompleteOption[];
   selectValue?: string;
   spacingBottom?: 0 | 4 | 16 | 24;
 }
@@ -88,6 +88,7 @@ export const DeliveryTabHeader = ({
         {onSearch && searchValue !== undefined && (
           <DebouncedSearchTextField
             clearable
+            data-pendo-id={`Logs Delivery ${entity}s-Search`}
             hideLabel
             isSearching={isSearching}
             label={searchLabel}
@@ -99,6 +100,7 @@ export const DeliveryTabHeader = ({
         <StyledActions>
           {selectList && onSelect && (
             <Autocomplete
+              data-pendo-id={`Logs Delivery ${entity}s-Status`}
               label={'Status'}
               noMarginTop
               onChange={(_, option) => {
@@ -112,6 +114,7 @@ export const DeliveryTabHeader = ({
           {onButtonClick && (
             <Button
               buttonType="primary"
+              data-pendo-id={`Logs Delivery ${entity}s-Create ${entity}`}
               disabled={disabledCreateButton}
               onClick={onButtonClick}
               {...buttonDataAttrs}

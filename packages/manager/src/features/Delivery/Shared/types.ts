@@ -9,12 +9,13 @@ import type {
 export type FormMode = 'create' | 'edit';
 export type FormType = 'destination' | 'stream';
 
-export interface LabelValueOption {
+export interface AutocompleteOption {
   label: string;
+  pendoId?: string;
   value: string;
 }
 
-export const destinationTypeOptions: LabelValueOption[] = [
+export const destinationTypeOptions: AutocompleteOption[] = [
   {
     value: destinationType.CustomHttps,
     label: 'Custom HTTPS',
@@ -25,7 +26,7 @@ export const destinationTypeOptions: LabelValueOption[] = [
   },
 ];
 
-export const streamTypeOptions: LabelValueOption[] = [
+export const streamTypeOptions: AutocompleteOption[] = [
   {
     value: streamType.AuditLogs,
     label: 'Audit Logs',
@@ -36,14 +37,16 @@ export const streamTypeOptions: LabelValueOption[] = [
   },
 ];
 
-export const streamStatusOptions: LabelValueOption[] = [
+export const streamStatusOptions: AutocompleteOption[] = [
   {
     value: streamStatus.Active,
     label: 'Active',
+    pendoId: 'Logs Delivery Streams-Status Active',
   },
   {
     value: streamStatus.Inactive,
     label: 'Inactive',
+    pendoId: 'Logs Delivery Streams-Status Inactive',
   },
 ];
 
