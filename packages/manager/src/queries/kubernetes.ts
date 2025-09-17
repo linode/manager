@@ -230,14 +230,9 @@ export const useKubernetesClusterMutation = (id: number) => {
         queryClient.invalidateQueries({
           queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
         });
-        // queryClient.setQueryData<KubernetesCluster>(
-        //   kubernetesQueries.cluster(id).queryKey,
-        //   data
-        // );
-        // Temporary cache update logic for APL
-        queryClient.setQueriesData<KubernetesCluster>(
-          { queryKey: kubernetesQueries.cluster(id)._ctx.cluster.queryKey },
-          (oldData) => ({ ...oldData, ...data })
+        queryClient.setQueryData<KubernetesCluster>(
+          kubernetesQueries.cluster(id).queryKey,
+          data
         );
       },
     }

@@ -1094,7 +1094,6 @@ describe('LKE Cluster Creation with ACL', () => {
         '@getCluster',
         '@getClusterPools',
         '@createCluster',
-        '@getLKEEnterpriseClusterTypes',
         '@getLinodeTypes',
         '@getApiEndpoints',
         '@getControlPlaneACL',
@@ -1535,7 +1534,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         '@getCluster',
         '@getClusterPools',
         '@createCluster',
-        '@getLKEEnterpriseClusterTypes',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);
