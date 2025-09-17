@@ -59,6 +59,10 @@ interface LinodeInterfacesFlag extends BaseFeatureFlag {
    */
   beta?: boolean;
   /**
+   * Enables the Interface History Table
+   */
+  interface_history?: boolean;
+  /**
    * Shows a New chip for UI elements related to Linode Interfaces
    */
   new?: boolean;
