@@ -4,6 +4,8 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import type { AccountEntity, Filter, Params } from '@linode/api-v4';
 
+// TODO: Temporary—use getAll since API can’t filter yet.
+// Switch to paginated + API filtering (X-Filter) when supported.
 const getAllAccountEntitiesRequest = (
   _params: Params = {},
   _filter: Filter = {}
