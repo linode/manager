@@ -20,6 +20,7 @@ import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
+import { CloudPulseWidgetFilter } from './components/CloudPulseWidgetFilter';
 import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -39,6 +40,7 @@ import type {
   DataSet,
 } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+import { DimensionFilters } from './components/DimensionFilterRenderer';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -371,6 +373,11 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   metric={widget.metric}
                   serviceType={serviceType}
                 />
+                <DimensionFilters
+                  dataFieldDisabled={false }
+                  dimensionOptions={availableMetrics?.dimensions ?? []}
+                />
+                
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}
