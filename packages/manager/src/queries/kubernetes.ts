@@ -440,7 +440,7 @@ export const useKubernetesTieredVersionsQuery = (
  */
 export const useAllKubernetesClustersQuery = ({ enabled = false }) => {
   return useQuery<KubernetesCluster[], APIError[]>({
-    ...kubernetesQueries.lists,
+    ...kubernetesQueries.lists._ctx.all,
     enabled,
   });
 };
