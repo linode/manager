@@ -66,10 +66,6 @@ const mockRegion = regionFactory.build({
   capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise', 'VPCs'],
 });
 
-/**
- * - Confirms VPC and IP Stack selections are shown with `phase2Mtc` feature flag is enabled.
- * - Confirms VPC and IP Stack selections are not shown in create flow with `phase2Mtc` feature flag is disabled.
- */
 describe('LKE-E Cluster Create', () => {
   beforeEach(() => {
     mockGetAccount(
@@ -183,6 +179,11 @@ describe('LKE-E Cluster Create', () => {
     });
   });
 
+  /**
+   * - Confirms that VPC options are shown when the `phase2Mtc.byoVPC` feature is enabled.
+   * - Confirms that IP stack selections are shown when the `phase2Mtc.dualStack` feature is enabled.
+   * - Confrims that VPC options and IP stack selections are absent when respective `phase2Mtc` options are disabled.
+   */
   describe('Phase 2 MTC feature flag', () => {
     it('Simple Page Check - Phase 2 MTC BYO VPC Flag ON', () => {
       mockAppendFeatureFlags({
