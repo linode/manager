@@ -32,8 +32,8 @@ export const FilterIconWithBadge: React.FC<FilterIconWithBadgeProps> = ({
           boxSizing: 'border-box',
           fontSize: 10,
           lineHeight: 1,
-          color: theme.bg.white,
-          backgroundColor: theme.color.red,
+          color: theme.tokens.color.Neutrals.White,
+          backgroundColor: theme.palette.error.dark,
         },
       })}
     >

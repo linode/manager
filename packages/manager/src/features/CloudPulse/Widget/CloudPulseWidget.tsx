@@ -18,7 +18,10 @@ import {
   SIZE,
   TIME_GRANULARITY,
 } from '../Utils/constants';
-import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
+import {
+  constructAdditionalRequestFilters,
+  constructWidgetDimensionFilters,
+} from '../Utils/FilterBuilder';
 import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
 import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
@@ -182,13 +185,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
-  const filters: Filters[] | undefined =
-    additionalFilters?.length || widget?.filters?.length
+  const filters: Filters[] | undefined = React.useMemo(() => {
+    return additionalFilters?.length ||
+      widget?.filters?.length ||
+      dimensionFilters?.length
       ? [
           ...constructAdditionalRequestFilters(additionalFilters ?? []),
           ...(widget.filters ?? []),
+          ...(constructWidgetDimensionFilters(dimensionFilters ?? []) ?? []),
         ]
       : undefined;
+  }, [additionalFilters, widget, dimensionFilters]);
 
   /**
    *

@@ -94,12 +94,12 @@ export const CloudPulseDimensionFilterRenderer = (
             sx={{ justifyContent: 'start', width: '160px' }}
             tooltipText="You can add up to 5 dimension filters."
           >
-            Add dimension filter
+            Add Filter
           </Button>
         </Box>
         <ActionsPanel
           primaryButtonProps={{
-            label: 'Submit',
+            label: 'Apply',
             type: 'submit',
           }}
           secondaryButtonProps={{

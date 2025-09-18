@@ -18,9 +18,8 @@ interface CloudPulseDimensionFilterIconProps {
 export const CloudPulseDimensionFilterIcon = (
   props: CloudPulseDimensionFilterIconProps
 ) => {
-  const [isSelected] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
   const { dimensionOptions, selectedDimensions, handleSelectionChange } = props;
+  const [open, setOpen] = React.useState(false);
 
   const handleChangeInSelection = (selectedValue: DimensionFilterForm[]) => {
     handleSelectionChange(selectedValue);
@@ -29,18 +28,20 @@ export const CloudPulseDimensionFilterIcon = (
 
   return (
     <>
-      <CloudPulseTooltip placement="bottom-end" title="Group By">
+      <CloudPulseTooltip placement="bottom-end" title="Dimension Filter">
         <IconButton
-          aria-label="Group By Dashboard Metrics"
+          aria-label="Widget Dimension Filter"
           color="inherit"
-          data-qa-selected={isSelected}
-          data-testid="group-by"
+          data-qa-selected={selectedDimensions?.length}
+          data-testid="dimension-filter"
           disabled={dimensionOptions.length === 0}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
+            color: selectedDimensions?.length
+              ? theme.color.buttonPrimaryHover
+              : 'inherit',
             padding: 0,
           })}
         >

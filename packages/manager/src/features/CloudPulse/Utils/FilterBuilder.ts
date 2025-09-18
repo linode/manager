@@ -35,6 +35,7 @@ import type {
   Filters,
   TimeDuration,
 } from '@linode/api-v4';
+import { DimensionFilterForm } from '../Alerts/CreateAlert/types';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -528,6 +529,34 @@ export const constructAdditionalRequestFilters = (
         value: Array.isArray(filter.filterValue)
           ? filter.filterValue.join(',')
           : String(filter.filterValue),
+      });
+    }
+  }
+  return filters;
+};
+
+/**
+ * @param dimensionFilters The selected dimension filters from the dimension filter component
+ * @returns The list of filters for the metric API call, based the additional custom select components
+ */
+export const constructWidgetDimensionFilters = (
+  dimensionFilters: DimensionFilterForm[]
+): Filters[] => {
+  const filters: Filters[] = [];
+  for (const filter of dimensionFilters) {
+    if (
+      filter &&
+      filter.dimension_label &&
+      filter.value &&
+      (!Array.isArray(filter.value) || filter.value.length > 0) // Check for empty array
+    ) {
+      // push to the filters
+      filters.push({
+        dimension_label: filter.dimension_label,
+        operator: Array.isArray(filter.value) ? 'in' : 'eq',
+        value: Array.isArray(filter.value)
+          ? filter.value.join(',')
+          : String(filter.value),
       });
     }
   }
