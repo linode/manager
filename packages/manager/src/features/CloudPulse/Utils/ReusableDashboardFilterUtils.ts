@@ -20,6 +20,10 @@ interface ReusableDashboardFilterUtilProps {
    */
   filterValue: CloudPulseMetricsFilter;
   /**
+   * The selected grouping criteria
+   */
+  groupBy: string[];
+  /**
    * The selected resource id
    */
   resource: number;
@@ -36,17 +40,19 @@ interface ReusableDashboardFilterUtilProps {
 export const getDashboardProperties = (
   props: ReusableDashboardFilterUtilProps
 ): DashboardProperties => {
-  const { dashboardObj, filterValue, resource, timeDuration } = props;
+  const { dashboardObj, filterValue, resource, timeDuration, groupBy } = props;
   return {
     additionalFilters: constructDimensionFilters({
       dashboardObj,
       filterValue,
       resource,
+      groupBy,
     }),
     dashboardId: dashboardObj.id,
     duration: timeDuration ?? defaultTimeDuration(),
     resources: [String(resource)],
     savePref: false,
+    groupBy,
   };
 };
 
