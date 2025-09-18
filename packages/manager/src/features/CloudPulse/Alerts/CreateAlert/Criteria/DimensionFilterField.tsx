@@ -80,6 +80,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     control,
     name: 'serviceType',
   });
+  const scopeWatcher = useWatch({
+    control,
+    name: 'scope',
+  });
+  const selectedRegionsWatcher = useWatch({ control, name: 'regions' });
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -171,6 +176,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               onBlur={field.onBlur}
               onChange={field.onChange}
               operator={dimensionOperatorWatcher}
+              scope={scopeWatcher}
+              selectedRegions={selectedRegionsWatcher}
               serviceType={serviceType}
               value={field.value}
               values={selectedDimension?.values ?? []}

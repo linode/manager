@@ -13,7 +13,7 @@ import {
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { addNodes } from 'support/util/lke';
+import { lkeClusterCreatePage } from 'support/ui/pages/lke-cluster-create-page';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -21,7 +21,12 @@ describe('LKE Create Cluster', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, postLa: false },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+        postLa: true,
+      },
     }).as('getFeatureFlags');
   });
 
@@ -32,34 +37,59 @@ describe('LKE Create Cluster', () => {
     });
     mockCreateCluster(mockCluster).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
-    cy.findByText('Add Node Pools').should('be.visible');
 
-    cy.findByLabelText('Cluster Label').click();
-    cy.focused().type(mockCluster.label);
-
+    const mockPlanName = 'Linode 2 GB';
     const lkeRegion = chooseRegion({
       capabilities: ['Kubernetes'],
     });
 
-    ui.regionSelect.find().click().type(`${lkeRegion.label}`);
-    ui.regionSelect.findItemByRegionId(lkeRegion.id).click();
+    // Configure an LKE cluster.
+    lkeClusterCreatePage.setLabel(mockCluster.label);
+    lkeClusterCreatePage.selectRegionById(lkeRegion.id);
+    lkeClusterCreatePage.setEnableHighAvailability(true);
+    lkeClusterCreatePage.selectPlanTab('Shared CPU');
+    lkeClusterCreatePage.selectNodePoolPlan(mockPlanName);
 
-    cy.findByLabelText('Kubernetes Version').should('be.visible').click();
-    cy.findByText('1.32').should('be.visible').click();
+    // Create a node pool then confirm the order summary UI updates to reflect node pool selection.
+    cy.findByText('Add Node Pools').should('be.visible');
 
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+    lkeClusterCreatePage.withinNodePoolDrawer(mockPlanName, () => {
+      ui.button
+        .findByTitle('Add Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
 
-    cy.findByText('Shared CPU').should('be.visible').click();
-    addNodes('Linode 2 GB');
+    lkeClusterCreatePage.withinOrderSummary(() => {
+      cy.contains(mockPlanName)
+        .closest('[data-testid="node-pool-summary"]')
+        .within(() => {
+          cy.findByText('Linode 2 GB Plan').should('be.visible');
+          cy.findByTitle('Remove Linode 2GB Node Pool').should('exist');
+          cy.findByText('3 Nodes').should('be.visible');
+          cy.findByText('Edit Configuration').should('be.visible').click();
+        });
+    });
 
-    // Confirm change is reflected in checkout bar.
-    cy.get('[data-testid="kube-checkout-bar"]').within(() => {
-      cy.findByText('Linode 2 GB Plan').should('be.visible');
-      cy.findByTitle('Remove Linode 2GB Node Pool').should('be.visible');
-
+    // Update the node pool's count and confirm warning exists in drawer.
+    lkeClusterCreatePage.withinNodePoolDrawer(mockPlanName, () => {
+      cy.get('[data-testid="decrement-button"]').click();
+      cy.get('[data-testid="decrement-button"]').click();
       cy.get('[data-qa-notice="true"]').within(() => {
-        cy.findByText(minimumNodeNotice).should('be.visible');
+        cy.findByText(minimumNodeNotice).should('exist');
       });
+
+      ui.button
+        .findByTitle('Update Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+    // Confirm warning exists in checkout and submit.
+    lkeClusterCreatePage.withinOrderSummary(() => {
+      cy.findByText(minimumNodeNotice).should('exist');
 
       ui.button
         .findByTitle('Create Cluster')

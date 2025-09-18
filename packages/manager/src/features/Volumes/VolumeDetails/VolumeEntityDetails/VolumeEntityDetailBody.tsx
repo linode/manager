@@ -1,5 +1,5 @@
 import { useProfile, useRegionsQuery } from '@linode/queries';
-import { Box, Typography } from '@linode/ui';
+import { Box, LinkButton, Typography } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -16,10 +16,11 @@ import { volumeStatusIconMap } from '../../utils';
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  detachHandler: () => void;
   volume: Volume;
 }
 
-export const VolumeEntityDetailBody = ({ volume }: Props) => {
+export const VolumeEntityDetailBody = ({ volume, detachHandler }: Props) => {
   const theme = useTheme();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -103,12 +104,15 @@ export const VolumeEntityDetailBody = ({ volume }: Props) => {
           <Typography>Attached To</Typography>
           <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {volume.linode_id !== null ? (
-              <Link
-                className="link secondaryLink"
-                to={`/linodes/${volume.linode_id}/storage`}
-              >
-                {volume.linode_label}
-              </Link>
+              <Box sx={{ display: 'flex', gap: theme.spacingFunction(8) }}>
+                <Link
+                  className="link secondaryLink"
+                  to={`/linodes/${volume.linode_id}/storage`}
+                >
+                  {volume.linode_label}
+                </Link>
+                | <LinkButton onClick={detachHandler}>Detach</LinkButton>
+              </Box>
             ) : (
               'Unattached'
             )}

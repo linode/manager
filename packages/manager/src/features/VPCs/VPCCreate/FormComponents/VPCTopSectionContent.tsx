@@ -24,12 +24,16 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
-import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
+import {
+  RFC1918HelperText,
+  VPC_CREATE_FORM_VPC_HELPER_TEXT,
+} from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
@@ -63,6 +67,8 @@ export const VPCTopSectionContent = (props: Props) => {
 
   const subnets = useWatch({ control, name: 'subnets' });
   const vpcIPv6 = useWatch({ control, name: 'ipv6' });
+
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
 
   const { isDualStackEnabled, isDualStackSelected, isEnterpriseCustomer } =
     useVPCDualStack(vpcIPv6);
@@ -147,6 +153,7 @@ export const VPCTopSectionContent = (props: Props) => {
                 <Grid container spacing={2}>
                   <SelectionCard
                     checked={!isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
                     gridSize={{
                       md: isDrawer ? 12 : 3,
                       sm: 12,
@@ -162,7 +169,12 @@ export const VPCTopSectionContent = (props: Props) => {
                         })
                       );
                     }}
-                    renderIcon={() => <Radio checked={!isDualStackSelected} />}
+                    renderIcon={() => (
+                      <Radio
+                        checked={!isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
                     renderVariant={() => (
                       <TooltipIcon
                         status="info"
@@ -170,10 +182,12 @@ export const VPCTopSectionContent = (props: Props) => {
                           padding: '8px',
                         }}
                         text={
-                          <Typography>
-                            The VPC uses IPv4 addresses only. The VPC can use
-                            the entire RFC 1918 specified range for subnetting.
-                          </Typography>
+                          <Stack spacing={2}>
+                            <Typography>
+                              The VPC uses IPv4 addresses only.
+                            </Typography>
+                            <Typography>{RFC1918HelperText}</Typography>
+                          </Stack>
                         }
                         width={250}
                       />
@@ -184,6 +198,7 @@ export const VPCTopSectionContent = (props: Props) => {
                   />
                   <SelectionCard
                     checked={isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
                     gridSize={{
                       md: isDrawer ? 12 : 3,
                       sm: 12,
@@ -203,7 +218,12 @@ export const VPCTopSectionContent = (props: Props) => {
                         })
                       );
                     }}
-                    renderIcon={() => <Radio checked={isDualStackSelected} />}
+                    renderIcon={() => (
+                      <Radio
+                        checked={isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
                     renderVariant={() => (
                       <TooltipIcon
                         status="info"
@@ -215,10 +235,7 @@ export const VPCTopSectionContent = (props: Props) => {
                             <Typography>
                               The VPC supports both IPv4 and IPv6 addresses.
                             </Typography>
-                            <Typography>
-                              For IPv4, the VPC can use the entire RFC 1918
-                              specified range for subnetting.
-                            </Typography>
+                            <Typography>{RFC1918HelperText}</Typography>
                             <Typography>
                               For IPv6, the VPC is assigned an IPv6 prefix
                               length of <Code>/52</Code> by default.
@@ -261,12 +278,14 @@ export const VPCTopSectionContent = (props: Props) => {
                 <FormControlLabel
                   checked={vpcIPv6 && vpcIPv6[0].range === '/52'}
                   control={<Radio />}
+                  disabled={!permissions?.create_vpc}
                   label="/52"
                   value="/52"
                 />
                 <FormControlLabel
                   checked={vpcIPv6 && vpcIPv6[0].range === '/48'}
                   control={<Radio />}
+                  disabled={!permissions?.create_vpc}
                   label="/48"
                   value="/48"
                 />

@@ -1,3 +1,18 @@
+## [2025-09-23] - v0.75.0
+
+### Changed:
+
+- ACLP-alerting: Allowing 0 for the metric threshold value ([#12803](https://github.com/linode/manager/pull/12803))
+
+### Fixed:
+
+- Username & email ASCII & chars limit validation + improved messages ([#12788](https://github.com/linode/manager/pull/12788))
+
+### Upcoming Features:
+
+- Remove `address` from slaacSchema as it is a read-only field ([#12778](https://github.com/linode/manager/pull/12778))
+- Rename Datastream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
 ## [2025-09-09] - v0.74.0
 
 ### Added:
