@@ -12,7 +12,6 @@ import type { DimensionFilterForm } from 'src/features/CloudPulse/Alerts/CreateA
 interface CloudPulseDimensionFilterIconProps {
   dimensionOptions: Dimension[];
   handleSelectionChange: (selectedDimensions: DimensionFilterForm[]) => void;
-  isDisabled: boolean;
   selectedDimensions?: DimensionFilterForm[];
 }
 
@@ -21,12 +20,7 @@ export const CloudPulseDimensionFilterIcon = (
 ) => {
   const [isSelected] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const {
-    isDisabled,
-    dimensionOptions,
-    selectedDimensions,
-    handleSelectionChange,
-  } = props;
+  const { dimensionOptions, selectedDimensions, handleSelectionChange } = props;
 
   const handleChangeInSelection = (selectedValue: DimensionFilterForm[]) => {
     handleSelectionChange(selectedValue);
@@ -41,7 +35,7 @@ export const CloudPulseDimensionFilterIcon = (
           color="inherit"
           data-qa-selected={isSelected}
           data-testid="group-by"
-          disabled={isDisabled}
+          disabled={dimensionOptions.length === 0}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
@@ -50,7 +44,7 @@ export const CloudPulseDimensionFilterIcon = (
             padding: 0,
           })}
         >
-          <FilterIconWithBadge count={selectedDimensions?.length} size={24} />
+          <FilterIconWithBadge count={selectedDimensions?.length} />
         </IconButton>
       </CloudPulseTooltip>
       <CloudPulseDimensionFilterDrawer

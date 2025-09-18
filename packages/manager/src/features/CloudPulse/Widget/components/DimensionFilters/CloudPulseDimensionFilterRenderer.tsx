@@ -36,7 +36,13 @@ export const CloudPulseDimensionFilterRenderer = (
     props;
   const formMethods = useForm<OnlyDimensionFilterForm>({
     defaultValues: {
-      dimension_filters: selectedDimensions || [],
+      dimension_filters: selectedDimensions || [
+        {
+          dimension_label: null,
+          operator: null,
+          value: null,
+        },
+      ],
     },
     mode: 'onBlur',
   });

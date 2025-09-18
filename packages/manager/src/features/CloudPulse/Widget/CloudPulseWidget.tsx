@@ -12,7 +12,12 @@ import {
   generateGraphData,
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
-import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
+import {
+  AGGREGATE_FUNCTION,
+  GLOBAL_DIMENSION_FILTER_LIST,
+  SIZE,
+  TIME_GRANULARITY,
+} from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
 import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
@@ -308,6 +313,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const end = DateTime.fromISO(duration.end, { zone: 'GMT' });
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
+  const filteredDimensions = React.useMemo(() => {
+    return availableMetrics?.dimensions.filter(
+      (dimension) =>
+        !GLOBAL_DIMENSION_FILTER_LIST[serviceType].includes(
+          dimension.dimension_label
+        )
+    );
+  }, [availableMetrics, serviceType]);
   return (
     <GridLegacy container item lg={widget.size} xs={12}>
       <Stack
@@ -377,9 +390,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   serviceType={serviceType}
                 />
                 <CloudPulseDimensionFilterIcon
-                  dimensionOptions={availableMetrics?.dimensions ?? []}
+                  dimensionOptions={filteredDimensions ?? []}
                   handleSelectionChange={setDimensionFilters}
-                  isDisabled={false}
                   selectedDimensions={dimensionFilters}
                 />
                 <ZoomIcon
