@@ -33,32 +33,13 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
 
   const { control } = useFormContext<LinodeCreateFormValues>();
 
-  const [stackscriptData] = useWatch({
-    control,
-    name: ['stackscript_data'],
-  });
+  const { data: allTypes } = useAllTypes();
 
   const rawClusterData = parseClusterData(stackscriptData);
 
-  const { data: allTypes } = useAllTypes();
-
-  const labelToIdMap = React.useMemo(() => {
-    if (!allTypes) return {};
-    return allTypes.reduce<Record<string, string>>((acc, type) => {
-      acc[type.label] = type.id;
-      return acc;
-    }, {});
-  }, [allTypes]);
-
-  const typeIds = rawClusterData
-    .map((c) => labelToIdMap[c.typeId ?? ''])
-    .filter((id): id is string => Boolean(id));
-
-  const clusterTypeQueries = useSpecificTypes(typeIds);
-
-  const clusterData = rawClusterData.map((cluster, i) => ({
+  const clusterData = rawClusterData.map((cluster) => ({
     ...cluster,
-    typeData: clusterTypeQueries[i]?.data,
+    typeData: allTypes?.find((t) => t.label === cluster.typeId),
   }));
 
   const [
