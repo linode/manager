@@ -10,11 +10,13 @@ const mockHandleAnyFilterChange = vi.fn();
 const mockHandleDashboardChange = vi.fn();
 const mockHandleTimeDurationChange = vi.fn();
 const mockHandleToggleAppliedFilter = vi.fn();
+const mockHandleGroupByChange = vi.fn();
 const setup = () => {
   renderWithTheme(
     <GlobalFilters
       handleAnyFilterChange={mockHandleAnyFilterChange}
       handleDashboardChange={mockHandleDashboardChange}
+      handleGroupByChange={mockHandleGroupByChange}
       handleTimeDurationChange={mockHandleTimeDurationChange}
       handleToggleAppliedFilter={mockHandleToggleAppliedFilter}
     />
