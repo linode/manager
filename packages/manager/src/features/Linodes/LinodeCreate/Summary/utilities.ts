@@ -14,7 +14,7 @@ interface ClusterData {
   prefix: string;
   size?: string;
   typeData?: LinodeType;
-  typeId?: string;
+  typeLabel?: string;
 }
 
 export const getLinodePrice = (options: LinodePriceOptions) => {
@@ -49,16 +49,6 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
     }
 
     return `${totalClusterSize} Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(clusterTotalMonthlyPrice)}/month $${renderMonthlyPriceToCorrectDecimalPlace(clusterTotalHourlyPrice)}/hr`;
-
-    // this instance
-    const totalMonthlyPrice = renderMonthlyPriceToCorrectDecimalPlace(
-      price.monthly * Number(clusterSize) + clusterTotalMonthlyPrice
-    );
-    const totalHourlyPrice = renderMonthlyPriceToCorrectDecimalPlace(
-      price.hourly * Number(clusterSize) + clusterTotalHourlyPrice
-    );
-
-    return `${totalClusterSize} Nodes - $${totalMonthlyPrice}/month $${totalHourlyPrice}/hr`;
   }
 
   return `$${renderMonthlyPriceToCorrectDecimalPlace(price.monthly)}/month`;
@@ -67,7 +57,7 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
 export type ClusterDataTypes = {
   prefix: string;
   size?: string;
-  typeId?: string;
+  typeLabel?: string;
 };
 
 export function parseClusterData(
@@ -91,7 +81,7 @@ export function parseClusterData(
     if (kind === 'size') {
       cluster.size = value as string;
     } else if (kind === 'type') {
-      cluster.typeId = value as string;
+      cluster.typeLabel = value as string;
     }
   }
   return result;

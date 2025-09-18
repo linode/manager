@@ -2,7 +2,6 @@ import {
   useAllTypes,
   useImageQuery,
   useRegionsQuery,
-  useSpecificTypes,
   useTypeQuery,
 } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
@@ -35,13 +34,6 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
 
   const { data: allTypes } = useAllTypes();
 
-  const rawClusterData = parseClusterData(stackscriptData);
-
-  const clusterData = rawClusterData.map((cluster) => ({
-    ...cluster,
-    typeData: allTypes?.find((t) => t.label === cluster.typeId),
-  }));
-
   const [
     label,
     regionId,
@@ -54,6 +46,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     vlanLabel,
     vpcId,
     diskEncryption,
+    stackscriptData,
     clusterSize,
     clusterName,
     linodeInterfaces,
@@ -73,6 +66,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'interfaces.1.label',
       'interfaces.0.vpc_id',
       'disk_encryption',
+      'stackscript_data',
       'stackscript_data.cluster_size',
       'stackscript_data.cluster_name',
       'linodeInterfaces',
@@ -80,6 +74,13 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'alerts',
     ],
   });
+
+  const rawClusterData = parseClusterData(stackscriptData);
+
+  const clusterData = rawClusterData.map((cluster) => ({
+    ...cluster,
+    typeData: allTypes?.find((t) => t.label === cluster.typeLabel),
+  }));
 
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
