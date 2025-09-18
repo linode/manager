@@ -59,8 +59,8 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import { SIZE_FIELD_WIDTH } from './constants';
-import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
-import { SizeField } from './Drawers/VolumeDrawer/SizeField';
+import { ConfigSelect } from './VolumeDrawers/VolumeDrawer/ConfigSelect';
+import { SizeField } from './VolumeDrawers/VolumeDrawer/SizeField';
 
 import type { APIError, Region, VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';

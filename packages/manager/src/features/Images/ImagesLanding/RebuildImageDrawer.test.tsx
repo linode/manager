@@ -22,6 +22,7 @@ const mockNavigate = vi.fn();
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => mockNavigate),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -32,7 +33,17 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 describe('RebuildImageDrawer', () => {
+  beforeEach(() => {
+    vi.mocked(queryMocks.useQueryWithPermissions).mockReturnValue({
+      loading: false,
+    });
+  });
+
   it('should render', async () => {
     const { getByText } = renderWithTheme(<RebuildImageDrawer {...props} />);
 

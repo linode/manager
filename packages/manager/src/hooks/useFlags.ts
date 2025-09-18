@@ -16,8 +16,6 @@ export { useLDClient } from 'launchdarkly-react-client-sdk';
  *
  * const flags = useFlags();
  */
-// export default ldUseFlags as () => FlagSet;
-
 export const useFlags = () => {
   const flags = ldUseFlags() as FlagSet;
 

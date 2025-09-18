@@ -15,6 +15,16 @@ const props = {
   open: true,
 };
 
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({}),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 const mockUpdateImage = vi.fn();
 vi.mock('@linode/api-v4', async () => {
   return {
@@ -24,6 +34,15 @@ vi.mock('@linode/api-v4', async () => {
       return Promise.resolve(props.image);
     },
   };
+});
+
+beforeEach(() => {
+  queryMocks.usePermissions.mockReturnValue({
+    data: { update_image: true },
+  });
+  queryMocks.useQueryWithPermissions.mockReturnValue({
+    data: [props.image],
+  });
 });
 
 describe('EditImageDrawer', () => {

@@ -29,7 +29,7 @@ describe('NetworkInterfaces', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => HttpResponse.json(account)),
+      http.get('*/v4*/account', () => HttpResponse.json(account)),
       http.get('*/v4beta/networking/firewalls/settings', () =>
         HttpResponse.json(firewallSettingsFactory.build())
       ),
@@ -71,7 +71,7 @@ describe('NetworkInterfaces', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => HttpResponse.json(account)),
+      http.get('*/v4*/account', () => HttpResponse.json(account)),
       http.get('*/v4beta/networking/firewalls/settings', () =>
         HttpResponse.json(firewallSettingsFactory.build())
       ),

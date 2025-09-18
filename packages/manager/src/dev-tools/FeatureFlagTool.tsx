@@ -33,7 +33,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
-  { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
+  { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
   { flag: 'mtc2025', label: 'MTC 2025' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },

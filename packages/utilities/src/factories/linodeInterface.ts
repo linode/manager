@@ -4,6 +4,7 @@ import { Factory } from './factoryProxy';
 
 import type {
   LinodeInterface,
+  LinodeInterfaceHistory,
   LinodeInterfaceSettings,
   UpgradeInterfaceData,
 } from '@linode/api-v4';
@@ -116,4 +117,14 @@ export const linodeInterfaceFactoryPublic =
     version: 1,
     vlan: null,
     vpc: null,
+  });
+
+export const linodeInterfaceHistoryFactory =
+  Factory.Sync.makeFactory<LinodeInterfaceHistory>({
+    created: '2025-03-19T03:58:04',
+    interface_data: linodeInterfaceFactoryPublic.build(),
+    interface_history_id: Factory.each((i) => i),
+    interface_id: Factory.each((i) => i),
+    linode_id: Factory.each((i) => i),
+    version: Factory.each((i) => i),
   });

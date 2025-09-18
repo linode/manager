@@ -155,7 +155,12 @@ const iconCircleAnimation = {
 
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
-  '&:hover': {
+  '&:disabled': {
+    color: Alias.Content.Text.Link.Disabled,
+    cursor: 'not-allowed',
+  },
+  '&:hover:not(:disabled)': {
+    backgroundColor: 'transparent',
     color: Alias.Content.Text.Link.Hover,
     textDecoration: 'underline',
   },

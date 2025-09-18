@@ -147,7 +147,8 @@ export const CreateCluster = () => {
   const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
-    isLkeEnterprisePhase2FeatureEnabled,
+    isLkeEnterprisePhase2DualStackFeatureEnabled,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled,
     isLkeEnterprisePostLAFeatureEnabled,
   } = useIsLkeEnterpriseEnabled();
 
@@ -157,7 +158,9 @@ export const CreateCluster = () => {
     useForm<CreateClusterFormValues>({
       defaultValues: {
         nodePools: [],
-        stack_type: isLkeEnterprisePhase2FeatureEnabled ? 'ipv4' : null,
+        stack_type: isLkeEnterprisePhase2DualStackFeatureEnabled
+          ? 'ipv4'
+          : null,
       },
       shouldUnregister: true,
     });
@@ -334,7 +337,10 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    if (isLkeEnterprisePhase2FeatureEnabled) {
+    if (
+      isLkeEnterprisePhase2DualStackFeatureEnabled ||
+      isLkeEnterprisePhase2BYOVPCFeatureEnabled
+    ) {
       payload = {
         ...payload,
         vpc_id: vpcId,
@@ -350,7 +356,7 @@ export const CreateCluster = () => {
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (
       (isLkeEnterprisePostLAFeatureEnabled ||
-        isLkeEnterprisePhase2FeatureEnabled) &&
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled) &&
       selectedTier === 'enterprise'
     ) {
       // Trigger the React Hook Form validation for BYO VPC selection.
@@ -493,7 +499,7 @@ export const CreateCluster = () => {
             />
             {isLkeEnterpriseLAFlagEnabled && (
               <>
-                <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
+                <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
                 <ClusterTierPanel
                   handleClusterTierSelection={handleClusterTierSelection}
                   isUserRestricted={isCreateClusterRestricted}
@@ -501,7 +507,7 @@ export const CreateCluster = () => {
                 />
               </>
             )}
-            <Divider sx={{ marginTop: 4 }} />
+            <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
             <StyledStackWithTabletBreakpoint>
               <Stack>
                 <RegionSelect
@@ -539,7 +545,7 @@ export const CreateCluster = () => {
                 />
               </StyledDocsLinkContainer>
             </StyledStackWithTabletBreakpoint>
-            <Divider sx={{ marginTop: 4 }} />
+            <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
             <StyledStackWithTabletBreakpoint>
               <Stack>
                 <Select
@@ -567,7 +573,7 @@ export const CreateCluster = () => {
             </StyledStackWithTabletBreakpoint>
             {showAPL && (
               <>
-                <Divider sx={{ marginTop: 4 }} />
+                <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
                 <StyledStackWithTabletBreakpoint>
                   <Stack>
                     <ApplicationPlatform
@@ -581,8 +587,8 @@ export const CreateCluster = () => {
             )}
             <Divider
               sx={{
-                marginBottom: selectedTier === 'enterprise' ? 2 : 1,
-                marginTop: showAPL ? 1 : 4,
+                marginBottom: selectedTier === 'enterprise' ? 4 : 2,
+                marginTop: showAPL ? 2 : 4,
               }}
             />
             {selectedTier !== 'enterprise' && (
@@ -610,7 +616,10 @@ export const CreateCluster = () => {
             )}
             <>
               <Divider
-                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+                sx={{
+                  marginTop: selectedTier === 'enterprise' ? 4 : 2,
+                  marginBottom: 2,
+                }}
               />
               <ControlPlaneACLPane
                 enableControlPlaneACL={controlPlaneACL}
@@ -642,7 +651,7 @@ export const CreateCluster = () => {
               />
             </>
 
-            <Divider sx={{ marginBottom: 4 }} />
+            <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
             <NodePoolPanel
               apiError={errorMap.node_pools}
               handleConfigurePool={handleOpenNodePoolConfigDrawer}

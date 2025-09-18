@@ -1,4 +1,4 @@
-import { Box, ErrorState, StyledLinkButton, Typography } from '@linode/ui';
+import { Box, ErrorState, LinkButton, Typography } from '@linode/ui';
 import Warning from '@mui/icons-material/CheckCircle';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -59,9 +59,9 @@ export const AccountActivationLanding = () => {
               Thanks for signing up! You&rsquo;ll receive an email from us once
               our review is complete, so hang tight. If you have questions
               during this process{' '}
-              <StyledLinkButton onClick={() => toggleSupportDrawer(true)}>
+              <LinkButton onClick={() => toggleSupportDrawer(true)}>
                 please open a Support ticket
-              </StyledLinkButton>
+              </LinkButton>
               .
             </Typography>
             <SupportTicketDialog

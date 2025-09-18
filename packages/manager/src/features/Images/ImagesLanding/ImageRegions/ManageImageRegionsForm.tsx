@@ -116,15 +116,10 @@ export const ManageImageReplicasForm = (props: Props) => {
       <Notice spacingTop={16} variant="info">
         <Typography fontSize="inherit">
           As part of our limited promotional period, image replicas are free of
-          charge until Q4 2025. Starting in Q4, replicas will be subject to our
-          standard monthly rate of &#36;0.10/GB. When replicas become billable,
-          your monthly charge will be calculated using the value in the All
-          Replicas column.{' '}
-          <Link
-            to={
-              'https://www.linode.com/blog/compute/image-service-improvements-akamai-cdn/'
-            }
-          >
+          charge. In 2026, replicas will be subject to our standard monthly rate
+          of $0.10/GB. When replicas become billable, your monthly charge will
+          be calculated using the value in the All Replicas column.{' '}
+          <Link to="https://www.linode.com/blog/compute/image-service-improvements-akamai-cdn">
             Learn more
           </Link>
           .

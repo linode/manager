@@ -112,24 +112,42 @@ export const getLinodeInterfaceIPv6Ranges = (iface: LinodeInterface) =>
 // TODO: update this when converting to react-hook-form
 // gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload
 export const getVPCInterfacePayload = (inputs: {
-  autoAssignIPv4: boolean;
-  chosenIP: string;
+  allowPublicIPv4Access: boolean;
+  allowPublicIPv6Access?: boolean;
+  autoAssignVPCIPv4Address: boolean;
+  autoAssignVPCIPv6Address: boolean;
+  chosenIPv4: string;
+  chosenIPv6: string;
   firewallId: null | number;
-  ipRanges: ExtendedIP[];
+  ipv4Ranges: ExtendedIP[];
+  ipv6Ranges?: ExtendedIP[];
   isLinodeInterface: boolean;
   subnetId: null | number | undefined;
   vpcId: number;
+  vpcIPv6FeatureEnabled?: boolean;
 }): CreateLinodeInterfacePayload | InterfacePayload => {
   const {
     firewallId,
-    chosenIP,
-    ipRanges,
+    chosenIPv4,
+    chosenIPv6,
+    ipv4Ranges,
+    ipv6Ranges,
     subnetId,
     isLinodeInterface,
-    autoAssignIPv4,
+    allowPublicIPv4Access,
+    allowPublicIPv6Access = false,
+    autoAssignVPCIPv4Address,
+    autoAssignVPCIPv6Address,
     vpcId,
+    vpcIPv6FeatureEnabled,
   } = inputs;
-  const filteredIPRanges = ipRanges.filter((ipRange) => ipRange.address !== '');
+
+  const filteredIPv4Ranges = ipv4Ranges.filter(
+    (ipRange) => ipRange.address !== ''
+  );
+
+  const filteredIPv6Ranges =
+    ipv6Ranges?.filter((ipRange) => ipRange.address !== '') ?? [];
 
   if (isLinodeInterface) {
     return {
@@ -139,14 +157,27 @@ export const getVPCInterfacePayload = (inputs: {
         ipv4: {
           addresses: [
             {
-              nat_1_1_address: 'auto', // 'auto' in all cases here to match legacy interface behavior - helps the user towards a functional configuration & hides complexity per stakeholder feedback
-              address: !autoAssignIPv4 ? chosenIP : 'auto',
+              nat_1_1_address: allowPublicIPv4Access ? 'auto' : null, // 'auto' keyword to enable the Linode's assigned public IPv4 address; null to block creation of 1:1 NAT
+              address: !autoAssignVPCIPv4Address ? chosenIPv4 : 'auto',
             },
           ],
-          ranges: filteredIPRanges.map((ipRange) => {
+          ranges: filteredIPv4Ranges.map((ipRange) => {
             return { range: ipRange.address };
           }),
         },
+        ipv6: vpcIPv6FeatureEnabled
+          ? {
+              slaac: [
+                {
+                  range: !autoAssignVPCIPv6Address ? chosenIPv6 : 'auto',
+                },
+              ],
+              ranges: filteredIPv6Ranges.map((ipRange) => {
+                return { range: ipRange.address };
+              }),
+              is_public: allowPublicIPv6Access,
+            }
+          : undefined,
       },
       public: null,
       vlan: null,
@@ -155,12 +186,25 @@ export const getVPCInterfacePayload = (inputs: {
   }
 
   return {
-    ip_ranges: filteredIPRanges.map((ipRange) => ipRange.address),
+    ip_ranges: filteredIPv4Ranges.map((ipRange) => ipRange.address),
     ipam_address: null,
     ipv4: {
-      nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
-      vpc: !autoAssignIPv4 ? chosenIP : undefined,
+      nat_1_1: allowPublicIPv4Access ? 'any' : '', // 'any' keyword to enable the Linode's assigned public IPv4 address; empty string to block creation of 1:1 NAT
+      vpc: !autoAssignVPCIPv4Address ? chosenIPv4 : undefined,
     },
+    ipv6: vpcIPv6FeatureEnabled
+      ? {
+          is_public: allowPublicIPv6Access,
+          slaac: [
+            {
+              range: !autoAssignVPCIPv6Address ? chosenIPv6 : 'auto',
+            },
+          ],
+          ranges: filteredIPv6Ranges.map((ipRange) => {
+            return { range: ipRange.address };
+          }),
+        }
+      : undefined,
     label: null,
     primary: true,
     purpose: 'vpc',
@@ -195,4 +239,16 @@ export const transformLinodeInterfaceErrorsToFormikErrors = (
   }
 
   return errors;
+};
+
+export const generateVPCIPv6InputHelperText = (subnetIPv6Range?: string) => {
+  if (!subnetIPv6Range) {
+    return null;
+  }
+
+  const [, ipv6Mask] = subnetIPv6Range.split('/');
+
+  const fixedHextets = Number(ipv6Mask) / 16;
+
+  return `The first ${fixedHextets} hextets of ${subnetIPv6Range} are fixed.`;
 };

@@ -1,6 +1,5 @@
 import { useAccountSettings } from '@linode/queries';
 import {
-  BetaChip,
   Box,
   FormControl,
   FormControlLabel,
@@ -13,6 +12,8 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
+
+import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
@@ -70,7 +71,7 @@ export const InterfaceGeneration = () => {
                     <Typography sx={(theme) => ({ font: theme.font.bold })}>
                       Linode Interfaces
                     </Typography>
-                    <BetaChip />
+                    <LinodeInterfaceFeatureStatusChip />
                   </Stack>
                   <Typography>
                     Linode Interfaces are the preferred option for VPCs and are

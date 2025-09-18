@@ -255,8 +255,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 <AssignIPRanges
                   handleIPRangeChange={handleIPv4RangeChange}
                   includeDescriptionInTooltip
-                  ipRanges={additionalIPv4RangesForVPC}
                   ipRangesError={vpcIPRangesError}
+                  ipv4Ranges={additionalIPv4RangesForVPC}
                 />
               </>
             )}

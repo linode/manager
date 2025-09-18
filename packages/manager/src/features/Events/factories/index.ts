@@ -3,7 +3,7 @@ export * from './backup';
 export * from './community';
 export * from './credit';
 export * from './database';
-export * from './datastream';
+export * from './delivery';
 export * from './disk';
 export * from './dns';
 export * from './domain';
