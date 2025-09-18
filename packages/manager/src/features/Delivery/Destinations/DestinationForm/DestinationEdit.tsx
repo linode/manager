@@ -17,6 +17,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { DestinationForm } from 'src/features/Delivery/Destinations/DestinationForm/DestinationForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import type { UpdateDestinationPayloadWithId } from '@linode/api-v4';
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { DestinationFormType } from 'src/features/Delivery/Shared/types';
 
@@ -53,6 +54,7 @@ export const DestinationEdit = () => {
       type: destinationType.LinodeObjectStorage,
       details: {
         region: '',
+        path: '',
       },
     },
     mode: 'onBlur',
@@ -63,12 +65,20 @@ export const DestinationEdit = () => {
     if (destination) {
       form.reset({
         ...destination,
+        ...('path' in destination.details
+          ? {
+              details: {
+                ...destination.details,
+                path: destination.details.path || '',
+              },
+            }
+          : {}),
       });
     }
   }, [destination, form]);
 
   const onSubmit = () => {
-    const destination = {
+    const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
       ...form.getValues(),
     };
