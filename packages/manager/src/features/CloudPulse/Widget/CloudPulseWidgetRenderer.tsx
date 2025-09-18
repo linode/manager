@@ -30,6 +30,7 @@ interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard: Dashboard;
   duration: DateTimeWithPreset;
+  groupBy: string[];
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   linodeRegion?: string;
@@ -65,6 +66,7 @@ export const RenderWidgets = React.memo(
       resourceList,
       resources,
       savePref,
+      groupBy,
       linodeRegion,
     } = props;
 
@@ -84,7 +86,12 @@ export const RenderWidgets = React.memo(
         serviceType: dashboard.service_type,
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
-        widget: { ...widget, time_granularity: autoIntervalOption },
+        dashboardId: dashboard.id,
+        widget: {
+          ...widget,
+          time_granularity: autoIntervalOption,
+          group_by: groupBy.length === 0 ? undefined : groupBy,
+        },
       };
       if (savePref) {
         graphProp.widget = setPreferredWidgetPlan(graphProp.widget);
@@ -188,6 +195,7 @@ export const RenderWidgets = React.memo(
       'duration',
       'resources',
       'additionalFilters',
+      'groupBy',
     ];
 
     for (const key of keysToCompare) {

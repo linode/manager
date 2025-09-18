@@ -36,6 +36,11 @@ export interface DashboardProperties {
   duration: DateTimeWithPreset;
 
   /**
+   * list of fields to group the metrics data by
+   */
+  groupBy: string[];
+
+  /**
    * Selected linode region for the dashboard
    */
   linodeRegion?: string;
@@ -74,11 +79,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    groupBy,
     linodeRegion,
   } = props;
 
   const { preferences } = useAclpPreference();
-
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
       entity_ids: resources?.map((resource) => Number(resource)) ?? [],
@@ -152,12 +157,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       'No visualizations are available at this moment. Create Dashboards to list here.'
     );
   }
-
   return (
     <RenderWidgets
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}
+      groupBy={groupBy}
       isJweTokenFetching={isJweTokenFetching}
       jweToken={jweToken}
       linodeRegion={linodeRegion}
