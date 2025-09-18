@@ -25,6 +25,7 @@ export type Capabilities =
   | 'Premium Plans'
   | 'StackScripts'
   | 'Vlans'
+  | 'VPC Dual Stack'
   | 'VPCs';
 
 export interface MonitoringCapabilities {

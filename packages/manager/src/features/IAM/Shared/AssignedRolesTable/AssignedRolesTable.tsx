@@ -256,6 +256,7 @@ export const AssignedRolesTable = () => {
             <Typography
               sx={{
                 font: theme.tokens.alias.Typography.Label.Bold.S,
+                marginBottom: theme.tokens.spacing.S4,
               }}
             >
               Description
@@ -397,6 +398,7 @@ export const AssignedRolesTable = () => {
         TableRowHead={RoleTableRowHead}
       />
       <AssignNewRoleDrawer
+        assignedRoles={assignedRoles}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
       />

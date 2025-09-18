@@ -58,11 +58,11 @@ describe('Kubernetes cluster action menu', () => {
       <ClusterChips cluster={mockEnterpriseCluster} />,
       {
         flags: {
-          lkeEnterprise: {
+          lkeEnterprise2: {
             enabled: true,
             ga: false,
             la: true,
-            phase2Mtc: false,
+            phase2Mtc: { byoVPC: false, dualStack: false },
             postLa: false,
           },
         },
@@ -84,11 +84,11 @@ describe('Kubernetes cluster action menu', () => {
       <ClusterChips cluster={mockEnterpriseCluster} />,
       {
         flags: {
-          lkeEnterprise: {
+          lkeEnterprise2: {
             enabled: false,
             ga: false,
             la: true,
-            phase2Mtc: false,
+            phase2Mtc: { byoVPC: false, dualStack: false },
             postLa: false,
           },
         },
@@ -110,11 +110,11 @@ describe('Kubernetes cluster action menu', () => {
       <ClusterChips cluster={mockStandardCluster} />,
       {
         flags: {
-          lkeEnterprise: {
+          lkeEnterprise2: {
             enabled: true,
             ga: false,
             la: true,
-            phase2Mtc: false,
+            phase2Mtc: { byoVPC: false, dualStack: false },
             postLa: false,
           },
         },

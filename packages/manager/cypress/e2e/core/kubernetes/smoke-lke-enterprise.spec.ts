@@ -74,7 +74,11 @@ describe('LKE-E Cluster Create', () => {
   beforeEach(() => {
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
     mockGetRegions([mockRegion]);
@@ -103,11 +107,11 @@ describe('LKE-E Cluster Create', () => {
      */
     it('Simple Page Check - Post LA Flag ON', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
           postLa: true,
-          phase2Mtc: false,
+          phase2Mtc: { byoVPC: false, dualStack: false },
         },
       });
 
@@ -144,11 +148,11 @@ describe('LKE-E Cluster Create', () => {
      */
     it('Simple Page Check - Post LA Flag OFF', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
           postLa: false,
-          phase2Mtc: false,
+          phase2Mtc: { byoVPC: false, dualStack: false },
         },
       });
 
@@ -180,21 +184,15 @@ describe('LKE-E Cluster Create', () => {
   });
 
   describe('Phase 2 MTC feature flag', () => {
-    it('Simple Page Check - Phase 2 MTC Flag ON', () => {
+    it('Simple Page Check - Phase 2 MTC BYO VPC Flag ON', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
           postLa: false,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: false },
         },
       }).as('getFeatureFlags');
-
-      mockCreateCluster(mockCluster).as('createCluster');
-      mockGetTieredKubernetesVersions('enterprise', [
-        latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetRegions([mockRegion]);
 
       cy.visitWithLogin('/kubernetes/create');
       cy.findByText('Add Node Pools').should('be.visible');
@@ -212,7 +210,143 @@ describe('LKE-E Cluster Create', () => {
         .should('be.visible')
         .click();
 
-      // Confirms LKE-E Phase 2 IP Stack and VPC options display with the flag ON.
+      // Confirms LKE-E Phase 2 VPC options do not display with the Dual Stack flag OFF.
+      cy.findByText('IP Stack').should('not.exist');
+      cy.findByText('IPv4', { exact: true }).should('not.exist');
+      cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
+
+      // Confirms LKE-E Phase 2 VPC options display with the BYO VPC flag ON.
+      cy.findByText('Automatically generate a VPC for this cluster').should(
+        'be.visible'
+      );
+      cy.findByText('Use an existing VPC').should('be.visible');
+
+      cy.findByText('Dedicated CPU').should('be.visible').click();
+      addNodes(mockPlan.formattedLabel);
+
+      // Bypass ACL validation
+      cy.get('input[name="acl-acknowledgement"]').check();
+
+      // Confirm change is reflected in checkout bar.
+      cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+        cy.findByText(`${mockPlan.formattedLabel} Plan`).should('be.visible');
+        cy.findByTitle(`Remove ${mockPlan.label} Node Pool`).should(
+          'be.visible'
+        );
+
+        cy.get('[data-qa-notice="true"]').within(() => {
+          cy.findByText(minimumNodeNotice).should('be.visible');
+        });
+
+        ui.button
+          .findByTitle('Create Cluster')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+      cy.wait('@createCluster');
+      cy.url().should(
+        'endWith',
+        `/kubernetes/clusters/${mockCluster.id}/summary`
+      );
+    });
+
+    it('Simple Page Check - Phase 2 MTC Dual Stack Flag ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise2: {
+          enabled: true,
+          la: true,
+          postLa: false,
+          phase2Mtc: { byoVPC: false, dualStack: true },
+        },
+      }).as('getFeatureFlags');
+
+      cy.visitWithLogin('/kubernetes/create');
+      cy.findByText('Add Node Pools').should('be.visible');
+
+      cy.findByLabelText('Cluster Label').click();
+      cy.focused().type(mockCluster.label);
+
+      cy.findByText('LKE Enterprise').click();
+
+      ui.regionSelect.find().click().type(`${mockRegion.label}`);
+      ui.regionSelect.findItemByRegionId(mockRegion.id, [mockRegion]).click();
+
+      cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+      cy.findByText(latestEnterpriseTierKubernetesVersion.id)
+        .should('be.visible')
+        .click();
+
+      // Confirms LKE-E Phase 2 IP Stack displays with the Dual Stack flag ON.
+      cy.findByText('IP Stack').should('be.visible');
+      cy.findByText('IPv4', { exact: true }).should('be.visible');
+      cy.findByText('IPv4 + IPv6 (dual-stack)').should('be.visible');
+
+      // Confirms LKE-E Phase 2 VPC options do not display with the BYO VPC flag OFF.
+      cy.findByText('Automatically generate a VPC for this cluster').should(
+        'not.exist'
+      );
+      cy.findByText('Use an existing VPC').should('not.exist');
+
+      cy.findByText('Dedicated CPU').should('be.visible').click();
+      addNodes(mockPlan.formattedLabel);
+
+      // Bypass ACL validation
+      cy.get('input[name="acl-acknowledgement"]').check();
+
+      // Confirm change is reflected in checkout bar.
+      cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+        cy.findByText(`${mockPlan.formattedLabel} Plan`).should('be.visible');
+        cy.findByTitle(`Remove ${mockPlan.label} Node Pool`).should(
+          'be.visible'
+        );
+
+        cy.get('[data-qa-notice="true"]').within(() => {
+          cy.findByText(minimumNodeNotice).should('be.visible');
+        });
+
+        ui.button
+          .findByTitle('Create Cluster')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+      cy.wait('@createCluster');
+      cy.url().should(
+        'endWith',
+        `/kubernetes/clusters/${mockCluster.id}/summary`
+      );
+    });
+
+    it('Simple Page Check - Phase 2 MTC Flags Both ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise2: {
+          enabled: true,
+          la: true,
+          postLa: false,
+          phase2Mtc: { byoVPC: true, dualStack: true },
+        },
+      }).as('getFeatureFlags');
+
+      cy.visitWithLogin('/kubernetes/create');
+      cy.findByText('Add Node Pools').should('be.visible');
+
+      cy.findByLabelText('Cluster Label').click();
+      cy.focused().type(mockCluster.label);
+
+      cy.findByText('LKE Enterprise').click();
+
+      ui.regionSelect.find().click().type(`${mockRegion.label}`);
+      ui.regionSelect.findItemByRegionId(mockRegion.id, [mockRegion]).click();
+
+      cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+      cy.findByText(latestEnterpriseTierKubernetesVersion.id)
+        .should('be.visible')
+        .click();
+
+      // Confirms LKE-E Phase 2 IP Stack and VPC options display with both flags ON.
       cy.findByText('IP Stack').should('be.visible');
       cy.findByText('IPv4', { exact: true }).should('be.visible');
       cy.findByText('IPv4 + IPv6 (dual-stack)').should('be.visible');
@@ -252,13 +386,13 @@ describe('LKE-E Cluster Create', () => {
       );
     });
 
-    it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
+    it('Simple Page Check - Phase 2 MTC Flags Both OFF', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
           postLa: false,
-          phase2Mtc: false,
+          phase2Mtc: { byoVPC: false, dualStack: false },
         },
       }).as('getFeatureFlags');
 
@@ -278,7 +412,7 @@ describe('LKE-E Cluster Create', () => {
         .should('be.visible')
         .click();
 
-      // Confirms LKE-E Phase 2 IP Stack and VPC options do not display with the flag OFF.
+      // Confirms LKE-E Phase 2 IP Stack and VPC options do not display with both flags OFF.
       cy.findByText('IP Stack').should('not.exist');
       cy.findByText('IPv4', { exact: true }).should('not.exist');
       cy.findByText('IPv4 + IPv6 (dual-stack)').should('not.exist');
@@ -320,13 +454,13 @@ describe('LKE-E Cluster Create', () => {
   });
 
   describe('Phase 2 MTC & Post-LA feature flags', () => {
-    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
+    it('Simple Page Check - Phase 2 MTC Flags and Post-LA Flag ON', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
           postLa: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
         },
       });
 
@@ -393,7 +527,11 @@ describe('LKE-E Cluster Read', () => {
   beforeEach(() => {
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
     mockGetClusters([mockCluster]).as('getClusters');
@@ -408,17 +546,84 @@ describe('LKE-E Cluster Read', () => {
    */
   describe('Phase 2 MTC feature flag', () => {
     /*
-     * - Confirms the state of the LKE cluster details page when the "phase2Mtc" feature is enabled.
+     * - Confirms the state of the LKE cluster details page when the Phase 2 BYO VPC feature is enabled.
      * - Confirms that attached VPC label is displayed in the cluster summary.
-     * - Confirms that IPv4 and IPv6 node pool table column is present.
+     * - Confirms that VPC IP columns are not present when Phase 2 dual stack flag is disabled.
      */
-    it('Simple Page Check - Phase 2 MTC Flag ON', () => {
+    it('Simple Page Check - Phase 2 MTC BYO VPC Flag ON', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+        lkeEnterprise2: {
+          enabled: true,
+          la: true,
+          phase2Mtc: { byoVPC: true, dualStack: false },
+        },
       }).as('getFeatureFlags');
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-      // cy.wait(['@getCluster', '@getVPC', '@getNodePools']);
+      cy.wait(['@getCluster', '@getVPC', '@getNodePools']);
+
+      // Confirm linked VPC is present
+      cy.get('[data-qa-kube-entity-footer]').within(() => {
+        cy.contains('VPC:').should('exist');
+        cy.findByTestId('assigned-lke-cluster-label').should(
+          'contain.text',
+          mockVPC.label
+        );
+      });
+
+      // Confirm VPC IP columns are not present in the node table header
+      cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {
+        cy.contains('th', 'VPC IPv4').should('not.exist');
+        cy.contains('th', 'VPC IPv6').should('not.exist');
+      });
+    });
+
+    /*
+     * - Confirms the state of the LKE cluster details page when the Phase 2 dual stack feature is enabled.
+     * - Confirms that VPC node pool table IP columns are present.
+     * - Confirms that attached VPC label is absent in the cluster summary when the BYO VPC feature is disabled.
+     */
+    it('Simple Page Check - Phase 2 MTC Dual Stack Flag ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise2: {
+          enabled: true,
+          la: true,
+          phase2Mtc: { byoVPC: false, dualStack: true },
+        },
+      }).as('getFeatureFlags');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools']);
+
+      // Confirm linked VPC is not present
+      cy.get('[data-qa-kube-entity-footer]').within(() => {
+        cy.contains('VPC:').should('not.exist');
+        cy.findByTestId('assigned-lke-cluster-label').should('not.exist');
+      });
+
+      // Confirm VPC IP columns are present in the node table header
+      cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {
+        cy.contains('th', 'VPC IPv4').should('be.visible');
+        cy.contains('th', 'VPC IPv6').should('be.visible');
+      });
+    });
+
+    /*
+     * - Confirms the state of the LKE cluster details page when the Phase 2 dual stack and BYO VPC features are enabled.
+     * - Confirms that VPC node pool table IP columns are present.
+     * - Confirms that attached VPC label is displayed in the cluster summary.
+     */
+    it('Simple Page Check - Phase 2 MTC Flags Both ON', () => {
+      mockAppendFeatureFlags({
+        lkeEnterprise2: {
+          enabled: true,
+          la: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
+        },
+      }).as('getFeatureFlags');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getVPC', '@getNodePools']);
 
       // Confirm linked VPC is present
       cy.get('[data-qa-kube-entity-footer]').within(() => {
@@ -441,13 +646,17 @@ describe('LKE-E Cluster Read', () => {
      * - Confirms that no VPC label is shown in the cluster summary.
      * - Confirms that IPv4 and IPv6 node pool table columns are absent.
      */
-    it('Simple Page Check - Phase 2 MTC Flag OFF', () => {
+    it('Simple Page Check - Phase 2 MTC Flags Both OFF', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true, phase2Mtc: false },
+        lkeEnterprise2: {
+          enabled: true,
+          la: true,
+          phase2Mtc: { byoVPC: false, dualStack: false },
+        },
       }).as('getFeatureFlags');
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-      // cy.wait(['@getCluster', '@getNodePools']);
+      cy.wait(['@getCluster', '@getNodePools']);
 
       // Confirm linked VPC is not present
       cy.get('[data-qa-kube-entity-footer]').within(() => {
@@ -474,11 +683,11 @@ describe('LKE-E Cluster Read', () => {
      */
     it('Simple Page Check - Post-LA Flag ON', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
-          phase2Mtc: false,
           postLa: true,
+          phase2Mtc: { byoVPC: false, dualStack: false },
         },
       }).as('getFeatureFlags');
 
@@ -493,9 +702,9 @@ describe('LKE-E Cluster Read', () => {
         .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
+          cy.findByText('Update Strategy').scrollIntoView();
           cy.findByText('Update Strategy').should('be.visible');
           cy.findByText('Use default firewall').should('be.visible');
-          cy.findByText('Select existing firewall').scrollIntoView();
           cy.findByText('Select existing firewall').should('be.visible');
         });
     });
@@ -506,10 +715,10 @@ describe('LKE-E Cluster Read', () => {
      */
     it('Simple Page Check - Post-LA Flag OFF', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
-          phase2Mtc: false,
+          phase2Mtc: { byoVPC: false, dualStack: false },
           postLa: false,
         },
       }).as('getFeatureFlags');
@@ -542,12 +751,12 @@ describe('LKE-E Cluster Read', () => {
      * - Confirms that update strategy and Firewall options are present in Add Node Pool drawer.
      * - Confirms that attached VPC is shown in the summary, and IPv4 and IPv6 node pool table columns are present.
      */
-    it('Simple Page Check - Phase 2 MTC Flag and Post-LA Flag ON', () => {
+    it('Simple Page Check - Phase 2 MTC Flags and Post-LA Flag ON', () => {
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: true,
         },
       });
@@ -579,9 +788,9 @@ describe('LKE-E Cluster Read', () => {
         .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
+          cy.findByText('Update Strategy').scrollIntoView();
           cy.findByText('Update Strategy').should('be.visible');
           cy.findByText('Use default firewall').should('be.visible');
-          cy.findByText('Select existing firewall').scrollIntoView();
           cy.findByText('Select existing firewall').should('be.visible');
         });
     });
