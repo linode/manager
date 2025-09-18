@@ -436,7 +436,11 @@ export const VPCSubnetsTable = (props: Props) => {
           sx={{
             marginBottom: theme.spacingFunction(16),
           }}
-          tooltipText={'You do not have permission to create a VPC subnet.'}
+          tooltipText={
+            !permissions.create_vpc_subnet
+              ? 'You do not have permission to create a VPC subnet.'
+              : ''
+          }
         >
           Create Subnet
         </Button>

@@ -176,14 +176,22 @@ const VPCDetail = () => {
           <StyledActionButton
             disabled={!permissions.update_vpc}
             onClick={() => handleEditVPC(vpc)}
-            tooltipText={'You do not have permission to edit this VPC.'}
+            tooltipText={
+              !permissions.update_vpc
+                ? 'You do not have permission to edit this VPC.'
+                : ''
+            }
           >
             Edit
           </StyledActionButton>
           <StyledActionButton
             disabled={!permissions.delete_vpc}
             onClick={() => handleDeleteVPC(vpc)}
-            tooltipText={'You do not have permission to delete this VPC.'}
+            tooltipText={
+              !permissions.delete_vpc
+                ? 'You do not have permission to delete this VPC.'
+                : ''
+            }
           >
             Delete
           </StyledActionButton>
