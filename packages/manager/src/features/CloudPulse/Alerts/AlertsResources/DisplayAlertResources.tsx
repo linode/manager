@@ -25,9 +25,14 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
+   * The endpoint associated with the object storage instance
+   */
+  endpoint?: string;
+  /**
    * The region associated with the instance
    */
   engineType?: string;
+
   /**
    * The id of the instance
    */
@@ -42,7 +47,6 @@ export interface AlertInstance {
    * The region associated with the instance
    */
   region: string;
-
   /**
    * The list of tags associated with the instance
    */

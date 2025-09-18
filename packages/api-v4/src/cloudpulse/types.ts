@@ -9,6 +9,7 @@ export type CloudPulseServiceType =
   | 'linode'
   | 'nodebalancer'
   | 'objectstorage';
+
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
