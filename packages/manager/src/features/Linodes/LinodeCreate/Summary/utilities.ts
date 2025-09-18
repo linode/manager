@@ -35,30 +35,20 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
 
   if (isCluster) {
     let totalClusterSize = Number(clusterSize);
-    let clusterTotalMonthlyPrice = 0;
-    let clusterTotalHourlyPrice = 0;
+    let clusterTotalMonthlyPrice = price.monthly * Number(clusterSize);
+    let clusterTotalHourlyPrice = price.hourly * Number(clusterSize);
 
     if (hasClusterData) {
-      // cluster monthly
-      clusterData.forEach((item) => {
-        const price = getLinodeRegionPrice(item.typeData, regionId);
-        const sizeMultiplier = parseInt(item.size ?? '0', 10);
-        clusterTotalMonthlyPrice += (price?.monthly ?? 0) * sizeMultiplier;
-      });
-
-      // cluster hourly
-      clusterData.forEach((item) => {
-        const price = getLinodeRegionPrice(item.typeData, regionId);
-        const sizeMultiplier = parseInt(item.size ?? '0', 10);
-        clusterTotalHourlyPrice += (price?.hourly ?? 0) * sizeMultiplier;
-      });
-
-      // total cluster size
-      clusterData.forEach((item) => {
-        const sizeMultiplier = parseInt(item.size ?? '0', 10);
-        totalClusterSize += sizeMultiplier;
-      });
+      for (const clusterPool of clusterData) {
+        const price = getLinodeRegionPrice(clusterPool.typeData, regionId);
+        const numberOfNodesInPool = parseInt(clusterPool.size ?? '0', 10);
+        clusterTotalMonthlyPrice += (price?.monthly ?? 0) * numberOfNodesInPool;
+        clusterTotalHourlyPrice += (price?.hourly ?? 0) * numberOfNodesInPool;
+        totalClusterSize += numberOfNodesInPool;
+      }
     }
+
+    return `${totalClusterSize} Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(clusterTotalMonthlyPrice)}/month $${renderMonthlyPriceToCorrectDecimalPlace(clusterTotalHourlyPrice)}/hr`;
 
     // this instance
     const totalMonthlyPrice = renderMonthlyPriceToCorrectDecimalPlace(
