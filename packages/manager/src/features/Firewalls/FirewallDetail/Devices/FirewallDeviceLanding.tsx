@@ -160,6 +160,7 @@ export const FirewallDeviceLanding = React.memo(
           />
         ) : (
           <AddNodebalancerDrawer
+            disabled={isCreateDeviceDisabled}
             helperText={helperText}
             onClose={handleClose}
             open={location.pathname.endsWith('add')}
