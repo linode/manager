@@ -20,9 +20,10 @@ import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
-import { CloudPulseWidgetFilter } from './components/CloudPulseWidgetFilter';
+import { CloudPulseDimensionFilterIcon } from './components/DimensionFilters/CloudPulseDimensionFilterIcon';
 import { ZoomIcon } from './components/Zoomer';
 
+import type { DimensionFilterForm } from '../Alerts/CreateAlert/types';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
@@ -40,7 +41,6 @@ import type {
   DataSet,
 } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
-import { DimensionFilters } from './components/DimensionFilterRenderer';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -146,6 +146,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
   const [groupBy, setGroupBy] = React.useState<string[]>([]);
+  const [dimensionFilters, setDimensionFilters] = React.useState<
+    DimensionFilterForm[] | undefined
+  >(undefined);
 
   const theme = useTheme();
 
@@ -373,11 +376,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   metric={widget.metric}
                   serviceType={serviceType}
                 />
-                <DimensionFilters
-                  dataFieldDisabled={false }
+                <CloudPulseDimensionFilterIcon
                   dimensionOptions={availableMetrics?.dimensions ?? []}
+                  handleSelectionChange={setDimensionFilters}
+                  isDisabled={false}
+                  selectedDimensions={dimensionFilters}
                 />
-                
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}
