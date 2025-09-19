@@ -301,19 +301,29 @@ describe('restricted user details pages', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    ['Edit', 'Manage Tags', 'Resize', 'Clone', 'Attach', 'Delete'].forEach(
-      (menuItem: string) => {
+    [
+      'Show Config',
+      'Edit',
+      'Manage Tags',
+      'Resize',
+      'Clone',
+      'Attach',
+      'Delete',
+    ].forEach((menuItem: string) => {
+      if (menuItem === 'Show Config') {
+        ui.actionMenuItem.findByTitle(menuItem).should('not.be.disabled');
+      } else {
         ui.actionMenuItem.findByTitle(menuItem).should('be.disabled');
+        // Optionally check tooltip for disabled items
 
-        if (menuItem !== 'Manage Tags') {
-          const tooltipMessage = `You don't have permissions to ${menuItem.toLocaleLowerCase()} this Volume. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`;
-          ui.button
-            .findByAttribute('aria-label', tooltipMessage)
-            .trigger('mouseover');
-          ui.tooltip.findByText(tooltipMessage);
-        }
+        const tooltipMessage = `You don't have permissions to ${menuItem === 'Manage Tags' ? 'edit' : menuItem.toLocaleLowerCase()} this Volume. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`;
+        ui.button
+          .findByAttribute('aria-label', tooltipMessage)
+          .first()
+          .trigger('mouseover');
+        ui.tooltip.findByText(tooltipMessage);
       }
-    );
+    });
   });
 
   databaseConfigurations.forEach(
