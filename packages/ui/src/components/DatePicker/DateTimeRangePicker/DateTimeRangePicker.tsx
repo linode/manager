@@ -13,8 +13,10 @@ import { Presets } from '../DateRangePicker/Presets';
 import { DateTimeField } from '../DateTimeField';
 import { TimePicker } from '../TimePicker';
 import { TimeZoneSelect } from '../TimeZoneSelect';
+import { PRESET_LABELS } from '../utils';
 
 import type { SxProps } from '@mui/material/styles';
+
 export interface DateTimeRangePickerProps {
   /** Properties for the end date field */
   endDateProps?: {
@@ -111,7 +113,7 @@ export const DateTimeRangePicker = ({
     startDateProps?.value ?? null,
   );
   const [selectedPreset, setSelectedPreset] = useState<null | string>(
-    presetsProps?.defaultValue ?? 'reset',
+    presetsProps?.defaultValue ?? PRESET_LABELS.RESET,
   );
   const [endDate, setEndDate] = useState<DateTime | null>(
     endDateProps?.value ?? null,
@@ -234,7 +236,7 @@ export const DateTimeRangePicker = ({
   };
 
   const handleDateSelection = (date: DateTime) => {
-    setSelectedPreset('reset'); // Reset preset selection on manual date selection
+    setSelectedPreset(PRESET_LABELS.RESET); // Reset preset selection on manual date selection
 
     if (focusedField === 'start') {
       setStartDate(date);
@@ -338,6 +340,7 @@ export const DateTimeRangePicker = ({
             {presetsProps?.enablePresets && (
               <Presets
                 onPresetSelect={handlePresetSelect}
+                presetLabels={PRESET_LABELS}
                 selectedPreset={selectedPreset}
                 timeZone={timeZone}
               />
@@ -448,3 +451,6 @@ export const DateTimeRangePicker = ({
     </LocalizationProvider>
   );
 };
+
+// Expose the constant via a static property on the component
+DateTimeRangePicker.PRESET_LABELS = PRESET_LABELS;

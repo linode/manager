@@ -6,6 +6,7 @@ import { StyledActionButton } from '../../Button/StyledActionButton';
 import { Stack } from '../../Stack';
 import { Typography } from '../../Typography/Typography';
 
+import type { PRESET_LABELS } from '../utils';
 import type { Theme } from '@mui/material/styles';
 
 interface PresetsProps {
@@ -14,12 +15,14 @@ interface PresetsProps {
     endDate: DateTime | null,
     presetLabel: null | string,
   ) => void;
+  presetLabels: typeof PRESET_LABELS;
   selectedPreset: null | string;
   timeZone?: string;
 }
 
 export const Presets = ({
   onPresetSelect,
+  presetLabels,
   selectedPreset,
   timeZone = 'UTC',
 }: PresetsProps) => {
@@ -31,42 +34,42 @@ export const Presets = ({
         endDate: today.setZone(timeZone),
         startDate: today.minus({ minutes: 30 }).setZone(timeZone),
       }),
-      label: 'Last 30 minutes',
+      label: presetLabels.LAST_30_MINUTES,
     },
     {
       getRange: () => ({
         endDate: today.setZone(timeZone),
         startDate: today.minus({ hours: 1 }).setZone(timeZone),
       }),
-      label: 'Last hour',
+      label: presetLabels.LAST_HOUR,
     },
     {
       getRange: () => ({
         endDate: today.setZone(timeZone),
         startDate: today.minus({ hours: 12 }).setZone(timeZone),
       }),
-      label: 'Last 12 hours',
+      label: presetLabels.LAST_12_HOURS,
     },
     {
       getRange: () => ({
         endDate: today.setZone(timeZone),
         startDate: today.minus({ days: 1 }).setZone(timeZone),
       }),
-      label: 'Last day',
+      label: presetLabels.LAST_DAY,
     },
     {
       getRange: () => ({
         endDate: today.setZone(timeZone),
         startDate: today.minus({ days: 6 }).setZone(timeZone),
       }),
-      label: 'Last 7 days',
+      label: presetLabels.LAST_7_DAYS,
     },
     {
       getRange: () => ({
         endDate: today.setZone(timeZone),
         startDate: today.minus({ days: 30 }).setZone(timeZone),
       }),
-      label: 'Last 30 days',
+      label: presetLabels.LAST_30_DAYS,
     },
     {
       getRange: () => ({
@@ -75,7 +78,7 @@ export const Presets = ({
           .startOf('month')
           .setZone(timeZone, { keepLocalTime: true }),
       }),
-      label: 'This month',
+      label: presetLabels.THIS_MONTH,
     },
     {
       getRange: () => {
@@ -87,11 +90,11 @@ export const Presets = ({
           endDate: lastMonth.endOf('month'),
         };
       },
-      label: 'Last month',
+      label: presetLabels.LAST_MONTH,
     },
     {
       getRange: () => ({ endDate: null, startDate: null }),
-      label: 'Reset',
+      label: presetLabels.RESET,
     },
   ];
 

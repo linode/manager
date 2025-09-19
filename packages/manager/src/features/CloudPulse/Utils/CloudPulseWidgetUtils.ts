@@ -1,4 +1,5 @@
 import { Alias } from '@linode/design-language-system';
+import { DateTimeRangePicker } from '@linode/ui';
 import { getMetrics } from '@linode/utilities';
 
 import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
@@ -309,7 +310,9 @@ export const getCloudPulseMetricRequest = (
 
   return {
     absolute_time_duration:
-      preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
+      preset !== DateTimeRangePicker.PRESET_LABELS.RESET &&
+      preset !== DateTimeRangePicker.PRESET_LABELS.THIS_MONTH &&
+      preset !== DateTimeRangePicker.PRESET_LABELS.LAST_MONTH
         ? undefined
         : { end: duration.end, start: duration.start },
     entity_ids: resources
@@ -459,19 +462,23 @@ export const getTimeDurationFromPreset = (
   preset?: string
 ): TimeDuration | undefined => {
   switch (preset) {
-    case 'last 7 days':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_7_DAYS:
       return { unit: 'days', value: 7 };
-    case 'last 12 hours':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_12_HOURS:
       return { unit: 'hr', value: 12 };
-    case 'last 30 days':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_30_DAYS:
       return { unit: 'days', value: 30 };
-    case 'last 30 minutes':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_30_MINUTES:
       return { unit: 'min', value: 30 };
-    case 'last day':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_DAY:
       return { unit: 'days', value: 1 };
-    case 'last hour': {
+    case DateTimeRangePicker.PRESET_LABELS.LAST_HOUR:
       return { unit: 'hr', value: 1 };
-    }
+    case DateTimeRangePicker.PRESET_LABELS.LAST_MONTH:
+    case DateTimeRangePicker.PRESET_LABELS.RESET:
+    case DateTimeRangePicker.PRESET_LABELS.THIS_MONTH:
+      // These presets use absolute_time_duration instead of relative_time_duration
+      return undefined;
     default:
       return undefined;
   }
