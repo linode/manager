@@ -29,10 +29,11 @@ export const DayBox = styled(Box, {
   };
 
   return {
-    backgroundColor: isSelected
-      ? theme.tokens.component.Calendar.DateRange.Background.Default
-      : 'transparent',
-    borderRadius: isSelected ? getBorderRadius() : '0',
+    backgroundColor:
+      isSelected || isStart || isEnd
+        ? theme.tokens.component.Calendar.DateRange.Background.Default
+        : 'transparent',
+    borderRadius: isSelected || isStart || isEnd ? getBorderRadius() : '0',
   };
 });
 

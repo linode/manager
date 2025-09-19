@@ -66,6 +66,7 @@ export const Calendar = ({
     const nextDay = day < totalDaysInMonth ? month.set({ day: day + 1 }) : null;
 
     // Check if adjacent days in this month are also selected
+    // This is used to determine visual boundaries for background connections
     const prevDaySelected =
       prevDay &&
       startDate &&
@@ -75,14 +76,21 @@ export const Calendar = ({
       prevDay >= startDate &&
       prevDay <= endDate;
 
+    // Check if the next day is selected in any way:
+    // 1. Part of the same range (between start and end dates)
+    // 2. The start date itself (for single date selections)
+    // 3. The end date itself (for single date selections)
+    // This ensures adjacent selected dates connect visually, even if they're separate selections
     const nextDaySelected =
       nextDay &&
-      startDate &&
-      endDate &&
-      startDate.isValid &&
-      endDate.isValid &&
-      nextDay >= startDate &&
-      nextDay <= endDate;
+      ((startDate &&
+        endDate &&
+        startDate.isValid &&
+        endDate.isValid &&
+        nextDay >= startDate &&
+        nextDay <= endDate) ||
+        (startDate && startDate.isValid && nextDay.hasSame(startDate, 'day')) ||
+        (endDate && endDate.isValid && nextDay.hasSame(endDate, 'day')));
 
     // Check if this is the start/end of a week (Sunday/Saturday)
     const isWeekStart = currentDay.weekday === 7; // Sunday
@@ -99,6 +107,7 @@ export const Calendar = ({
 
     days.push(
       <DayBox
+        aria-selected={Boolean(isSelected || isStart || isEnd)}
         isEnd={isVisualEnd}
         isSelected={isSelected}
         isStart={isVisualStart}
