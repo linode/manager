@@ -2,6 +2,7 @@ import { useSubnetQuery } from '@linode/queries';
 import {
   Checkbox,
   FormControlLabel,
+  Notice,
   Stack,
   TextField,
   TooltipIcon,
@@ -11,6 +12,7 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Code } from 'src/components/Code/Code';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
@@ -25,7 +27,10 @@ interface Props {
 
 export const VPCIPv6Address = (props: Props) => {
   const { linodeInterface } = props;
-  const { control } = useFormContext<ModifyLinodeInterfacePayload>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<ModifyLinodeInterfacePayload>();
 
   const { isDualStackEnabled } = useVPCDualStack();
 
@@ -39,8 +44,15 @@ export const VPCIPv6Address = (props: Props) => {
     )
   );
 
+  const error = errors.vpc?.ipv6?.message;
+
   return (
     <Stack spacing={1}>
+      {error && (
+        <Notice variant="error">
+          <ErrorMessage message={error} />
+        </Notice>
+      )}
       <Controller
         control={control}
         name="vpc.ipv6.slaac.0.range"
@@ -50,7 +62,7 @@ export const VPCIPv6Address = (props: Props) => {
               <FormControlLabel
                 checked={field.value === 'auto'}
                 control={<Checkbox />}
-                label="Auto-assign a VPC IPv6 Address"
+                label="Auto-assign VPC IPv6 address"
                 onChange={(e, checked) =>
                   field.onChange(
                     checked ? 'auto' : linodeInterface.vpc?.ipv6?.slaac[0].range
@@ -75,7 +87,7 @@ export const VPCIPv6Address = (props: Props) => {
                 helperText={generateVPCIPv6InputHelperText(
                   subnet?.ipv6?.[0].range ?? ''
                 )}
-                label="VPC IPv6 Address"
+                label="VPC IPv6"
                 noMarginTop
                 onChange={field.onChange}
                 value={field.value}

@@ -50,7 +50,7 @@ export const VPCIPv4Address = (props: Props) => {
                 <FormControlLabel
                   checked={field.value === 'auto'}
                   control={<Checkbox />}
-                  label="Auto-assign a VPC IPv4 Address"
+                  label="Auto-assign VPC IPv4 address"
                   onChange={(e, checked) =>
                     field.onChange(
                       checked
@@ -79,7 +79,7 @@ export const VPCIPv4Address = (props: Props) => {
               {field.value !== 'auto' && (
                 <TextField
                   errorText={fieldState.error?.message}
-                  label="VPC IPv4 Address"
+                  label="VPC IPv4 address"
                   noMarginTop
                   onChange={field.onChange}
                   // eslint-disable-next-line sonarjs/no-hardcoded-ip
