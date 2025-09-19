@@ -695,10 +695,10 @@ export const getFilters = (
  * @param dependentFilters The selected dependent filters that will be used to filter the resources
  * @returns The filtered resources
  */
-export function filterUsingDependentFilters<CloudPulseResources>(
+export const filterUsingDependentFilters = (
   data?: CloudPulseResources[],
   dependentFilters?: CloudPulseMetricsFilter
-): CloudPulseResources[] | undefined {
+): CloudPulseResources[] | undefined => {
   if (!dependentFilters || !data) {
     return data;
   }
