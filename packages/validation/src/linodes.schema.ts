@@ -396,6 +396,8 @@ export const alertsSchema = object({
   network_out: legacyAlertsFieldSchema('Outbound Traffic'),
   transfer_quota: legacyAlertsFieldSchema('Transfer Quota'),
   io: legacyAlertsFieldSchema('Disk I/O Rate'),
+  system_alerts: array().of(number().defined()).notRequired(),
+  user_alerts: array().of(number().defined()).notRequired(),
 });
 
 const schedule = object({
