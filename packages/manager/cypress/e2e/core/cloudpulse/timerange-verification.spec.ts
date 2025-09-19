@@ -279,7 +279,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       cy.get(`[aria-label="${startHour} hours"]`).click();
     });
 
-
     cy.findByLabelText('Select minutes')
       .as('selectMinutes')
       .scrollIntoView({ duration: 500, easing: 'linear' });
@@ -287,7 +286,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@selectMinutes').within(() => {
       cy.get(`[aria-label="${startMinute} minutes"]`).click();
     });
-
 
     cy.findByLabelText('Select meridiem')
       .as('startMeridiemSelect')
