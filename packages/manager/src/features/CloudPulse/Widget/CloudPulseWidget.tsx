@@ -400,6 +400,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   dimensionOptions={filteredDimensions ?? []}
                   handleSelectionChange={setDimensionFilters}
                   selectedDimensions={dimensionFilters}
+                  selectedEntities={entityIds}
+                  widgetMetricName={availableMetrics?.label ?? ''}
                 />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}

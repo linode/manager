@@ -32,12 +32,23 @@ interface CloudPulseDimensionFilterProps {
    * @returns void
    */
   onFilterDelete: () => void;
+
+  /**
+   * The selected entities for the dimension filter
+   */
+  selectedEntities?: string[];
 }
 
 export const CloudPulseDimensionFilter = (
   props: CloudPulseDimensionFilterProps
 ) => {
-  const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
+  const {
+    dataFieldDisabled,
+    dimensionOptions,
+    name,
+    onFilterDelete,
+    selectedEntities,
+  } = props;
 
   const { control, setValue } = useFormContext<OnlyDimensionFilterForm>();
 
@@ -91,17 +102,17 @@ export const CloudPulseDimensionFilter = (
       flexWrap="wrap"
       spacing={2}
     >
-      <GridLegacy item md={3} xs={12}>
+      <GridLegacy item md={3.5} xs={12}>
         <Controller
           control={control}
           name={`${name}.dimension_label`}
           render={({ field, fieldState }) => (
             <Autocomplete
-              data-qa-dimension-filter={`${name}-data-field`}
-              data-testid="data-field"
+              data-qa-dimension-filter={`${name}-dimension-field`}
+              data-testid="dimension-field"
               disabled={dataFieldDisabled}
               errorText={fieldState.error?.message}
-              label="Data Field"
+              label="Dimension"
               onBlur={field.onBlur}
               onChange={(
                 _,
@@ -111,7 +122,7 @@ export const CloudPulseDimensionFilter = (
                 handleDataFieldChange(newValue, operation);
               }}
               options={dataFieldOptions}
-              placeholder="Select a Data Field"
+              placeholder="Select a Dimension"
               value={
                 dataFieldOptions.find(
                   (option) => option.value === field.value
@@ -121,7 +132,7 @@ export const CloudPulseDimensionFilter = (
           )}
         />
       </GridLegacy>
-      <GridLegacy item lg={3} md={4} xs={12}>
+      <GridLegacy item md={3.5} xs={12}>
         <Controller
           control={control}
           name={`${name}.operator`}
@@ -154,7 +165,7 @@ export const CloudPulseDimensionFilter = (
           )}
         />
       </GridLegacy>
-      <GridLegacy item lg={3} md={4} xs={12}>
+      <GridLegacy item md={3.5} xs={12}>
         <Controller
           control={control}
           name={`${name}.value`}
@@ -162,7 +173,7 @@ export const CloudPulseDimensionFilter = (
             <ValueFieldRenderer
               dimensionLabel={dimensionFieldWatcher}
               disabled={!dimensionFieldWatcher}
-              entities={[]}
+              entities={selectedEntities}
               errorText={fieldState.error?.message}
               name={name}
               onBlur={field.onBlur}

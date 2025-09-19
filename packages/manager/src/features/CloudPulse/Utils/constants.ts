@@ -128,5 +128,5 @@ export const GLOBAL_DIMENSION_FILTER_LIST: Record<
   linode: [],
   dbaas: ['node_type'],
   nodebalancer: ['port'],
-  firewall: [],
+  firewall: ['interface_type', 'interface_id', 'region_id'],
 };

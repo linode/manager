@@ -553,7 +553,7 @@ export const constructWidgetDimensionFilters = (
       // push to the filters
       filters.push({
         dimension_label: filter.dimension_label,
-        operator: Array.isArray(filter.value) ? 'in' : 'eq',
+        operator: filter.operator ?? 'eq',
         value: Array.isArray(filter.value)
           ? filter.value.join(',')
           : String(filter.value),
