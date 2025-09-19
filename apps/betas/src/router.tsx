@@ -5,20 +5,27 @@ import { BetasLanding } from './BetasLanding';
 
 const rootRoute = createRootRoute();
 
-const betaLandingRoute = createRoute({
+const betasRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/betas',
+})
+
+const betaLandingRoute = createRoute({
+  getParentRoute: () => betasRoute,
+  path: '/',
   component: BetasLanding,
 })
 
 const betaSignupRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: 'signup/$betaId',
+  getParentRoute: () => betasRoute,
+  path: '/signup/$betaId',
   component: BetaSignup,
 })
 export const routeTree = rootRoute.addChildren([
-  betaLandingRoute,
-  betaSignupRoute,
+  betasRoute.addChildren([
+    betaLandingRoute,
+    betaSignupRoute,
+  ]),
 ]);
 
 export const router = createRouter({ routeTree, defaultNotFoundComponent: () => <p>Not found!!</p> })

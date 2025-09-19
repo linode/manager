@@ -13,7 +13,7 @@ import * as React from "react";
 
 export const BetaSignup = () => {
   const navigate = useNavigate();
-  const { betaId } = useParams({ from: "/signup/$betaId" });
+  const { betaId } = useParams({ from: "/betas/signup/$betaId" });
 
   const { data: beta, error, isPending } = useBetaQuery(betaId, !!betaId);
 
@@ -24,7 +24,7 @@ export const BetaSignup = () => {
 
   const enroll = async (betaId: string) => {
     createAccountBeta({ id: betaId }).then(() => {
-      navigate({ to: "/" });
+      navigate({ to: "/betas" });
     });
   };
 
@@ -270,7 +270,7 @@ export const BetaSignup = () => {
             "data-testid": "cancel",
             label: "Cancel",
             onClick: () => {
-              navigate({ to: "/" });
+              navigate({ to: "/betas" });
             },
           }}
           />

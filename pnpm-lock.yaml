@@ -130,6 +130,9 @@ importers:
       vite:
         specifier: ^6.3.6
         version: 6.3.6(@types/node@22.18.1)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1)
+      vite-plugin-svgr:
+        specifier: ^3.2.0
+        version: 3.3.0(rollup@4.50.1)(typescript@5.8.3)(vite@6.3.6(@types/node@22.18.1)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
 
   packages/api-v4:
     dependencies:

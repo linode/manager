@@ -5,6 +5,6 @@ import { rootRoute } from '../root';
 export const betaRouteTree = createRoute({
   getParentRoute: () => rootRoute,
   preload: false,
-  path: 'betas',
+  path: 'betas/*',
   component: lazyRouteComponent(() => import('betas/app')),
 });
