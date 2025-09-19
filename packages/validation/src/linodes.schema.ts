@@ -29,23 +29,23 @@ const validateIP = (ipAddress?: null | string) => {
  * @param label - The label of the field.
  * @returns  Name, message to display, and test function.
  */
-const validateNonEmptyLegacyAlertsField = (
+const legacyAlertsFieldSchema = (
   label:
     | 'CPU Usage'
     | 'Disk I/O Rate'
     | 'Incoming Traffic'
     | 'Outbound Traffic'
     | 'Transfer Quota',
-) => ({
-  name: 'Non empty or undefined field',
-  message: `${label} is required.`,
-  test: (value: unknown) => {
-    if (value === undefined || typeof value !== 'number') {
-      return false;
-    }
-    return true;
-  },
-});
+) =>
+  // If system_alerts and user_alerts are undefined, then it is legacy alerts context.
+  // If it is legacy alerts context, then the field is required.
+  number().when(['system_alerts', 'user_alerts'], {
+    is: (systemAlerts?: number[], userAlerts?: number[]) => {
+      return systemAlerts === undefined && userAlerts === undefined;
+    },
+    then: (schema) => schema.required(`${label} is required.`),
+    otherwise: (schema) => schema.notRequired(),
+  });
 
 const test_vpcsValidateIP = (value?: null | string) => {
   // Since the field is optional, return true here to prevent an incorrect test failure.
@@ -389,28 +389,13 @@ const DiskEncryptionSchema = string()
 export const alertsSchema = object({
   // Legacy numeric-threshold alerts. All fields are now optional so that the
   // same schema can validate partial updates.
-  cpu: number()
+  cpu: legacyAlertsFieldSchema('CPU Usage')
     .min(0, 'Must be between 0 and 4800')
-    .max(4800, 'Must be between 0 and 4800')
-    .notRequired()
-    .test(validateNonEmptyLegacyAlertsField('CPU Usage')),
-  network_in: number()
-    .notRequired()
-    .test(validateNonEmptyLegacyAlertsField('Incoming Traffic')),
-  network_out: number()
-    .notRequired()
-    .test(validateNonEmptyLegacyAlertsField('Outbound Traffic')),
-  transfer_quota: number()
-    .notRequired()
-    .test(validateNonEmptyLegacyAlertsField('Transfer Quota')),
-  io: number()
-    .notRequired()
-    .test(validateNonEmptyLegacyAlertsField('Disk I/O Rate')),
-
-  // ACLP alerts ‑ arrays of alert-definition IDs. Optional so the same payload
-  // can mix legacy and ACLP shapes when only one set is present.
-  system_alerts: array().of(number().defined()).notRequired(),
-  user_alerts: array().of(number().defined()).notRequired(),
+    .max(4800, 'Must be between 0 and 4800'),
+  network_in: legacyAlertsFieldSchema('Incoming Traffic'),
+  network_out: legacyAlertsFieldSchema('Outbound Traffic'),
+  transfer_quota: legacyAlertsFieldSchema('Transfer Quota'),
+  io: legacyAlertsFieldSchema('Disk I/O Rate'),
 });
 
 const schedule = object({
