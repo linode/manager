@@ -266,22 +266,22 @@ describe('getTimeDurationFromPreset method', () => {
   });
 
   describe('getEntityIds method', () => {
-    it('should return entity ids for dashboard id 6', () => {
+    it('should return entity ids for linode service type', () => {
       const result = getEntityIds(
         [{ id: '123', label: 'linode-1' }],
         ['123'],
         widgetFactory.build(),
-        2
+        'linode'
       );
       expect(result).toEqual([123]);
     });
 
-    it('should return entity ids for dashboard id 2', () => {
+    it('should return entity ids for objectstorage service type', () => {
       const result = getEntityIds(
         [{ id: 'bucket-1', label: 'bucket-name-1' }],
         ['bucket-1'],
         widgetFactory.build(),
-        6
+        'objectstorage'
       );
       expect(result).toEqual(['bucket-1']);
     });

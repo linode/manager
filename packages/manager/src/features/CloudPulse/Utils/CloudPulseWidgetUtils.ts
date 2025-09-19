@@ -112,11 +112,6 @@ interface GraphDataOptionsProps {
 
 interface MetricRequestProps {
   /**
-   * id of the selected dashboard
-   */
-  dashboardId: number;
-
-  /**
    * time duration for the metrics data
    */
   duration: DateTimeWithPreset;
@@ -142,6 +137,11 @@ interface MetricRequestProps {
    * list of CloudPulse resources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the widget
+   */
+  serviceType: CloudPulseServiceType;
 
   /**
    * widget filters for metrics data
@@ -343,16 +343,16 @@ export const getCloudPulseMetricRequest = (
     widget,
     groupBy,
     linodeRegion,
-    dashboardId,
     region,
+    serviceType,
   } = props;
   const preset = duration.preset;
-  const metricsRequest: CloudPulseMetricsRequest = {
+  return {
     absolute_time_duration:
       preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
         ? undefined
         : { end: duration.end, start: duration.start },
-    entity_ids: getEntityIds(resources, entityIds, widget, dashboardId),
+    entity_ids: getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: getTimeDurationFromPreset(preset),
@@ -370,15 +370,8 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
     associated_entity_region: linodeRegion,
+    entity_region: serviceType === 'objectstorage' ? region : undefined,
   };
-
-  if (dashboardId === 6) {
-    return {
-      ...metricsRequest,
-      entity_region: region,
-    };
-  }
-  return metricsRequest;
 };
 
 /**
@@ -392,9 +385,9 @@ export const getEntityIds = (
   resources: CloudPulseResources[],
   entityIds: string[],
   widget: Widgets,
-  dashboardId: number
+  serviceType: CloudPulseServiceType
 ) => {
-  if (dashboardId === 6) {
+  if (serviceType === 'objectstorage') {
     return entityIds;
   }
   return resources
