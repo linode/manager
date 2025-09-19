@@ -626,8 +626,8 @@ describe('filterEndpointsUsingRegion', () => {
       filterEndpointsUsingRegion(undefined, { region: 'us-east' })
     ).toEqual(undefined);
   });
-  it('should return data as is if region filter is undefined', () => {
-    expect(filterEndpointsUsingRegion(mockData, undefined)).toEqual(mockData);
+  it('should return undefined if region filter is undefined', () => {
+    expect(filterEndpointsUsingRegion(mockData, undefined)).toEqual(undefined);
   });
   it('should return endpoints based on region if region filter is provided', () => {
     expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(

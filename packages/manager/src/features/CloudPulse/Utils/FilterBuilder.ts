@@ -738,9 +738,9 @@ export const filterEndpointsUsingRegion = (
 
   const regionFromFilter = regionFilter?.region;
 
-  // If no region filter is provided, return data as-is
+  // If no region filter is provided, return undefined as region is mandatory filter
   if (!regionFromFilter) {
-    return data;
+    return undefined;
   }
 
   return data.filter(({ region }) => region === regionFromFilter);
