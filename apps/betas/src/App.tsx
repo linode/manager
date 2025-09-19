@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function App() {
+export default function App() {
   const [count, setCount] = useState(0)
 
   return (
@@ -8,6 +8,7 @@ export function App() {
       <button onClick={() => setCount((count) => count + 1)}>
         count is {count}
       </button>
+      <p>testing banks</p>
     </div>
   )
 }

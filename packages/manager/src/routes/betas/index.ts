@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { BetasRoute } from './BetasRoute';
@@ -27,7 +27,14 @@ const betaSignupRoute = createRoute({
   )
 );
 
-export const betaRouteTree = betasRoute.addChildren([
-  betaLandingRoute,
-  betaSignupRoute,
-]);
+// export const betaRouteTree = betasRoute.addChildren([
+//   betaLandingRoute,
+//   betaSignupRoute,
+// ]);
+
+export const betaRouteTree = createRoute({
+  getParentRoute: () => rootRoute,
+  // preload: true,
+  path: "betas",
+  component: lazyRouteComponent(() => import("betas/app"))
+});
