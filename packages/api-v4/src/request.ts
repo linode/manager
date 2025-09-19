@@ -16,6 +16,8 @@ export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4',
 });
 
+console.log("Created Axios Client", baseRequest)
+
 baseRequest.interceptors.request.use((config) => {
   const isRunningInNode = typeof process === 'object';
 

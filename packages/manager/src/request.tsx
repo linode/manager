@@ -1,4 +1,4 @@
-import { baseRequest } from '@linode/api-v4/lib/request';
+import { baseRequest } from '@linode/api-v4';
 import { AxiosHeaders } from 'axios';
 
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
@@ -135,6 +135,7 @@ export const isSuccessfulGETProfileResponse = (
 
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use(async (config) => {
+    console.log("intercepting", config.url)
     if (
       window.location.pathname === '/oauth/callback' ||
       window.location.pathname === '/admin/callback'

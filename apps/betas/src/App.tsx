@@ -1,14 +1,16 @@
-import { useState } from 'react'
+import { RouterProvider } from '@tanstack/react-router'
+import { router } from './router'
+import { QueryClient, QueryClientProvider } from '@linode/queries'
+import { light, ThemeProvider } from '@linode/ui';
+
+const queryClient = new QueryClient();
 
 export default function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div>
-      <button onClick={() => setCount((count) => count + 1)}>
-        count is {count}
-      </button>
-      <p>testing banks</p>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={light}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }

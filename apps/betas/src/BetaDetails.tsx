@@ -2,9 +2,6 @@ import { Button, Stack, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Link } from 'src/components/Link';
-
 import type { AccountBeta, Beta } from '@linode/api-v4';
 
 interface Props {
@@ -29,13 +26,13 @@ const BetaDetails = (props: Props) => {
   const startDate = !enrolled ? (
     <Typography>
       <strong>Start Date: </strong>
-      <DateTimeDisplay displayTime={false} value={started} />
+      {new Date(started).toLocaleDateString()}
     </Typography>
   ) : null;
   const endDate = ended ? (
     <Typography>
       <strong>End Date: </strong>
-      <DateTimeDisplay displayTime={false} value={ended} />
+      {new Date(ended).toLocaleDateString()}
     </Typography>
   ) : null;
 
@@ -65,16 +62,16 @@ const BetaDetails = (props: Props) => {
           <Button
             buttonType="primary"
             onClick={() => {
-              navigate({ params: { betaId: id }, to: '/betas/signup/$betaId' });
+              navigate({ params: { betaId: id }, to: '/signup/$betaId' });
             }}
           >
             Sign Up
           </Button>
         )}
         {more_info ? (
-          <Link external to={more_info}>
+          <a href={more_info}>
             More Info
-          </Link>
+          </a>
         ) : null}
       </Stack>
     </Stack>

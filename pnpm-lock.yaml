@@ -90,9 +90,24 @@ importers:
 
   apps/betas:
     dependencies:
+      '@linode/api-v4':
+        specifier: workspace:*
+        version: link:../../packages/api-v4
+      '@linode/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
+      '@linode/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@linode/utilities':
+        specifier: workspace:*
+        version: link:../../packages/utilities
       '@module-federation/vite':
         specifier: ^1.8.1
         version: 1.8.1(rollup@4.50.1)
+      '@tanstack/react-router':
+        specifier: ^1.111.11
+        version: 1.111.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: 19.1.0
         version: 19.1.0

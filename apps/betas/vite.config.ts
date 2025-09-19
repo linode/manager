@@ -1,7 +1,6 @@
 import react from '@vitejs/plugin-react-swc'
 import { defineConfig } from 'vite'
 import { federation } from '@module-federation/vite';
-import { dependencies } from './package.json';
 
 export default defineConfig({
   server: {
@@ -16,7 +15,9 @@ export default defineConfig({
       },
       shared: {
         react: {
-          requiredVersion: dependencies.react,
+          singleton: true,
+        },
+        '@linode/api-v4/': {
           singleton: true,
         },
       },

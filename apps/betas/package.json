@@ -12,8 +12,13 @@
   },
   "dependencies": {
     "@module-federation/vite": "^1.8.1",
+    "@tanstack/react-router": "^1.111.11",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "@linode/queries": "workspace:*",
+    "@linode/ui": "workspace:*",
+    "@linode/utilities": "workspace:*",
+    "@linode/api-v4": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "19.1.6",

@@ -4,7 +4,6 @@ import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
 
-import { dependencies } from './package.json';
 import { urlCanParsePolyfill } from './src/polyfills/urlCanParse';
 
 // ESM-friendly alternative to `__dirname`.
@@ -28,7 +27,9 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       shared: {
         react: {
-          requiredVersion: dependencies.react,
+          singleton: true,
+        },
+        '@linode/api-v4/': {
           singleton: true,
         },
       },
