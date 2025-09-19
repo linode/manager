@@ -548,12 +548,13 @@ export const constructWidgetDimensionFilters = (
       filter &&
       filter.dimension_label &&
       filter.value &&
+      filter.operator &&
       (!Array.isArray(filter.value) || filter.value.length > 0) // Check for empty array
     ) {
       // push to the filters
       filters.push({
         dimension_label: filter.dimension_label,
-        operator: filter.operator ?? 'eq',
+        operator: filter.operator,
         value: Array.isArray(filter.value)
           ? filter.value.join(',')
           : String(filter.value),
