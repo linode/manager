@@ -79,6 +79,7 @@ describe('CloudPulseEndpointsSelect component tests', () => {
         label="Endpoints"
         region={'us-east'}
         serviceType="objectstorage"
+        xFilter={{ region: 'us-east' }}
       />
     );
 
@@ -117,6 +118,7 @@ describe('CloudPulseEndpointsSelect component tests', () => {
         label="Endpoints"
         region={'us-east'}
         serviceType={'objectstorage'}
+        xFilter={{ region: 'us-east' }}
       />
     );
 
@@ -166,6 +168,7 @@ describe('CloudPulseEndpointsSelect component tests', () => {
         label="Endpoints"
         region={'us-east'}
         serviceType={'objectstorage'}
+        xFilter={{ region: 'us-east' }}
       />
     );
 
