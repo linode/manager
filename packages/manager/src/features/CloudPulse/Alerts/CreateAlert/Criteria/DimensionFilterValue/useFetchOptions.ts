@@ -5,15 +5,19 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { filterRegionByServiceType } from '../../../Utils/utils';
 import {
-  getFilteredFirewallResources,
+  getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
   getVPCSubnets,
 } from './utils';
 
 import type { FetchOptions } from './constants';
-import type { CloudPulseServiceType, Filter, Region } from '@linode/api-v4';
-
+import type {
+  AlertDefinitionScope,
+  CloudPulseServiceType,
+  Filter,
+  Region,
+} from '@linode/api-v4';
 interface FetchOptionsProps {
   /**
    * The dimension label determines the filtering logic and return type.
@@ -27,6 +31,10 @@ interface FetchOptionsProps {
    * List of regions to filter on.
    */
   regions?: Region[];
+  /**
+   * Scope of fetching: account (all resources) or entity (filtered subset).
+   */
+  scope?: AlertDefinitionScope | null;
   /**
    * Service to apply specific transformations to dimension values.
    */
@@ -42,7 +50,7 @@ interface FetchOptionsProps {
  * Handles fetching and transforming data for edge-cases.
  */
 export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
-  const { dimensionLabel, regions, entities, serviceType, type } = props;
+  const { dimensionLabel, regions, entities, serviceType, type, scope } = props;
 
   const supportedRegionIds =
     (serviceType &&
@@ -67,6 +75,7 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     'region_id',
     'associated_entity_region',
   ];
+
   // Fetch all firewall resources when dimension requires it
   const {
     data: firewallResources,
@@ -76,15 +85,21 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     filterLabels.includes(dimensionLabel ?? ''),
     'firewall'
   );
-
   // Decide firewall resource IDs based on scope
-  const filteredFirewallResourcesIds = useMemo(() => {
-    return getFilteredFirewallResources(firewallResources, entities);
-  }, [firewallResources, entities]);
+  const filteredFirewallParentEntityIds = useMemo(() => {
+    const selectedEntities =
+      scope && scope === 'account'
+        ? firewallResources?.map((r) => r.id)
+        : entities;
+    return getFilteredFirewallParentEntities(
+      firewallResources,
+      selectedEntities
+    );
+  }, [scope, firewallResources, entities]);
 
   const idFilter = {
-    '+or': filteredFirewallResourcesIds.length
-      ? filteredFirewallResourcesIds.map((id) => ({ id }))
+    '+or': filteredFirewallParentEntityIds.length
+      ? filteredFirewallParentEntityIds.map((id) => ({ id }))
       : [{ id: '' }],
   };
 
@@ -101,9 +116,10 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     {},
     combinedFilter,
     filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallResourcesIds.length > 0 &&
+      filteredFirewallParentEntityIds.length > 0 &&
       supportedRegionIds?.length > 0
   );
+
   // Extract linodes from filtered firewall resources
   const firewallLinodes = useMemo(
     () => getFirewallLinodes(linodes ?? []),
@@ -125,6 +141,7 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
   });
 
   const vpcSubnets = useMemo(() => getVPCSubnets(vpcs ?? []), [vpcs]);
+
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
     case 'associated_entity_region':

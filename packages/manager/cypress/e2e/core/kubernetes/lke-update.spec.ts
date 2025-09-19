@@ -274,7 +274,7 @@ describe('LKE cluster updates', () => {
 
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true },
+        lkeEnterprise2: { enabled: true, la: true },
       });
 
       const mockCluster = kubernetesClusterFactory.build({
@@ -535,7 +535,7 @@ describe('LKE cluster updates', () => {
       ).as('getAccount');
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true },
+        lkeEnterprise2: { enabled: true, la: true },
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -687,7 +687,7 @@ describe('LKE cluster updates', () => {
       ).as('getAccount');
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true },
+        lkeEnterprise2: { enabled: true, la: true },
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -994,7 +994,7 @@ describe('LKE cluster updates', () => {
       });
 
       mockAppendFeatureFlags({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           postLa: true,
         },

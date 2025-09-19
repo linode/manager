@@ -741,7 +741,7 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
-    const linodesWithFirewalls = linodeFactory.buildList(10, {
+    const linodesWithFirewall = linodeFactory.buildList(10, {
       region: 'ap-west',
     });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
@@ -830,7 +830,7 @@ export const handlers = [
       id: 90909,
     });
     const linodes = [
-      ...linodesWithFirewalls,
+      ...linodesWithFirewall,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -1216,7 +1216,7 @@ export const handlers = [
           }),
           firewallEntityfactory.build({
             type: 'linode',
-            label: 'Linode-firewall-test',
+            label: 'Linode-fireall-test',
             parent_entity: null,
             id: 90909,
           }),
@@ -2956,6 +2956,7 @@ export const handlers = [
         label: 'Firewall - testing',
         service_type: 'firewall',
         type: 'user',
+        scope: 'account',
         created_by: 'user1',
         rule_criteria: {
           rules: [firewallMetricRulesFactory.build()],
@@ -2970,6 +2971,7 @@ export const handlers = [
       if (params.id === '999' && params.serviceType === 'firewall') {
         return HttpResponse.json(
           alertFactory.build({
+            scope: 'account',
             id: 999,
             label: 'Firewall - testing',
             service_type: 'firewall',
@@ -3008,6 +3010,7 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             id: 999,
+            scope: 'account',
             label: 'Firewall - testing',
             service_type: 'firewall',
             type: 'user',

@@ -89,7 +89,9 @@ describe('create a database cluster, mocked data', () => {
         const clusterCpuType =
           configuration.linodeType.indexOf('-dedicated-') !== -1
             ? 'Dedicated CPU'
-            : 'Shared CPU';
+            : configuration.linodeType.indexOf('-premium-') !== -1
+              ? 'Premium CPU'
+              : 'Shared CPU';
 
         // Function to validate Action Menu on the landing page as per db cluster status
         const validateActionItems = (state: string) => {

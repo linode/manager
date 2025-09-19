@@ -6,7 +6,7 @@ import * as React from 'react';
 import Reload from 'src/assets/icons/refresh.svg';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { GlobalGroupByRenderer } from '../GroupBy/GlobalGroupByRenderer';
+import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
@@ -149,7 +149,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 <Reload height="24px" width="24px" />
               </IconButton>
             </CloudPulseTooltip>
-            <GlobalGroupByRenderer
+            <GlobalFilterGroupByRenderer
               handleChange={handleGroupByChange}
               selectedDashboard={selectedDashboard}
             />

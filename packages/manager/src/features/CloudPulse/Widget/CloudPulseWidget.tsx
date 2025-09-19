@@ -7,7 +7,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
-import { WidgetGroupByRenderer } from '../GroupBy/WidgetGroupByRenderer';
+import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
@@ -372,7 +372,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 />
               )}
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <WidgetGroupByRenderer
+                <WidgetFilterGroupByRenderer
                   dashboardId={dashboardId}
                   handleChange={handleGroupByChange}
                   label={widget.label}

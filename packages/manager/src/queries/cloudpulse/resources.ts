@@ -15,7 +15,10 @@ export const useResourcesQuery = (
     ...queryFactory.resources(resourceType, params, filters),
     enabled,
     retry: resourceType === 'objectstorage' ? false : 3,
-    select: (resources: any[]) => {
+    select: (resources) => {
+      if (!enabled) {
+        return []; // Return empty array if the query is not enabled
+      }
       return resources.map((resource) => {
         const entities: Record<string, string> = {};
 

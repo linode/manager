@@ -1,11 +1,11 @@
 import { Box, Paper, Stack, Typography } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController } from 'react-hook-form';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
@@ -113,7 +113,7 @@ export const Firewall = () => {
           />
           <Box>
             <LinkButton
-              isDisabled={!permissions.create_firewall}
+              disabled={!permissions.create_firewall}
               onClick={() => {
                 setIsDrawerOpen(true);
                 sendLinodeCreateFormInputEvent({
