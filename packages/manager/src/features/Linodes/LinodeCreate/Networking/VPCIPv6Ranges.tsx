@@ -1,6 +1,7 @@
 import {
   CloseIcon,
   IconButton,
+  LinkButton,
   Notice,
   Stack,
   TextField,
@@ -9,9 +10,7 @@ import {
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { VPCIPv6RangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
-// import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -61,8 +60,6 @@ export const VPCIPv6Ranges = ({ disabled, interfaceIndex }: Props) => {
                   label={`IP Range ${index}`}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
-                  // eslint-disable-next-line sonarjs/no-hardcoded-ip
-                  // placeholder="10.0.0.0/24"
                   sx={{ minWidth: 290 }}
                   value={field.value}
                 />
@@ -79,7 +76,7 @@ export const VPCIPv6Ranges = ({ disabled, interfaceIndex }: Props) => {
         ))}
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
-        <LinkButton isDisabled={disabled} onClick={() => append({ range: '' })}>
+        <LinkButton disabled={disabled} onClick={() => append({ range: '' })}>
           Add IPv6 Range
         </LinkButton>
         <TooltipIcon
