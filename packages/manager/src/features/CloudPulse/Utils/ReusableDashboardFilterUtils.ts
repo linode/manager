@@ -56,6 +56,7 @@ export const getDashboardProperties = (
     dashboardId: dashboardObj.id,
     duration: timeDuration ?? defaultTimeDuration(),
     resources: [String(resource)],
+    serviceType: dashboardObj.service_type,
     savePref: false,
     groupBy,
     region,
@@ -80,7 +81,7 @@ export const checkMandatoryFiltersSelected = (
     return false;
   }
 
-  if (dashboardObj.id === 6 && !region) {
+  if (dashboardObj.service_type === 'objectstorage' && !region) {
     return false;
   }
 
