@@ -47,7 +47,7 @@ interface Props<DisableClearable extends boolean>
 export const FirewallSelect = <DisableClearable extends boolean>(
   props: Props<DisableClearable>
 ) => {
-  const { errorText, hideDefaultChips, loading, value, ...rest } = props;
+  const { errorText, hideDefaultChips, label, loading, value, ...rest } = props;
 
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
 
@@ -61,8 +61,9 @@ export const FirewallSelect = <DisableClearable extends boolean>(
 
   return (
     <Autocomplete<Firewall, false, DisableClearable>
+      aria-label={label === '' ? 'Firewall' : undefined}
       errorText={errorText ?? error?.[0].reason}
-      label="Firewall"
+      label={label ?? 'Firewall'}
       loading={isLoading || loading}
       noMarginTop
       options={firewalls ?? []}

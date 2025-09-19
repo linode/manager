@@ -19,16 +19,16 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { DeleteVolumeDialog } from 'src/features/Volumes/Dialogs/DeleteVolumeDialog';
 import { DetachVolumeDialog } from 'src/features/Volumes/Dialogs/DetachVolumeDialog';
-import { CloneVolumeDrawer } from 'src/features/Volumes/Drawers/CloneVolumeDrawer';
-import { EditVolumeDrawer } from 'src/features/Volumes/Drawers/EditVolumeDrawer';
-import { ManageTagsDrawer } from 'src/features/Volumes/Drawers/ManageTagsDrawer';
-import { ResizeVolumeDrawer } from 'src/features/Volumes/Drawers/ResizeVolumeDrawer';
-import { VolumeDetailsDrawer } from 'src/features/Volumes/Drawers/VolumeDetailsDrawer';
-import { LinodeVolumeAddDrawer } from 'src/features/Volumes/Drawers/VolumeDrawer/LinodeVolumeAddDrawer';
-import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { VolumeTableRow } from 'src/features/Volumes/Partials/VolumeTableRow';
+import { CloneVolumeDrawer } from 'src/features/Volumes/VolumeDrawers/CloneVolumeDrawer/CloneVolumeDrawer';
+import { EditVolumeDrawer } from 'src/features/Volumes/VolumeDrawers/EditVolumeDrawer/EditVolumeDrawer';
+import { ManageTagsDrawer } from 'src/features/Volumes/VolumeDrawers/ManageTagsDrawer/ManageTagsDrawer';
+import { ResizeVolumeDrawer } from 'src/features/Volumes/VolumeDrawers/ResizeVolumeDrawer';
+import { VolumeDetailsDrawer } from 'src/features/Volumes/VolumeDrawers/VolumeDetailsDrawer';
+import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawers/VolumeDrawer/LinodeVolumeAddDrawer';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -41,12 +41,11 @@ export const LinodeVolumes = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id,
-  });
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linode?.id
+  );
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -207,8 +206,13 @@ export const LinodeVolumes = () => {
         <Typography variant="h3">Volumes</Typography>
         <Button
           buttonType="primary"
-          disabled={isLinodesGrantReadOnly}
+          disabled={!linodePermissions?.update_linode}
           onClick={handleCreateVolume}
+          tooltipText={
+            !linodePermissions?.update_linode
+              ? 'You do not have permission to create or attach a volume to this Linode.'
+              : undefined
+          }
         >
           Add Volume
         </Button>

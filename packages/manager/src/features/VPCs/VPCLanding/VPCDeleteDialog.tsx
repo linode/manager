@@ -1,9 +1,11 @@
 import { useDeleteVPCMutation } from '@linode/queries';
+import { Notice } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { APIError, VPC } from '@linode/api-v4';
 
@@ -27,6 +29,8 @@ export const VPCDeleteDialog = (props: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { data: permissions } = usePermissions('vpc', ['delete_vpc'], vpc?.id);
+
   React.useEffect(() => {
     if (open) {
       reset();
@@ -47,6 +51,7 @@ export const VPCDeleteDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={!permissions.delete_vpc}
       entity={{
         action: 'deletion',
         name: vpc?.label,
@@ -62,7 +67,14 @@ export const VPCDeleteDialog = (props: Props) => {
       onClick={onDeleteVPC}
       onClose={onClose}
       open={open}
-      title={`Delete VPC ${vpc?.label ?? 'Unknown'}`}
-    />
+      title={`Delete VPC${vpc ? ` ${vpc.label}` : ''}`}
+    >
+      {!permissions.delete_vpc && (
+        <Notice
+          text={`You don't have permissions to delete ${vpc?.label}. Please contact an account administrator for details.`}
+          variant="error"
+        />
+      )}
+    </TypeToConfirmDialog>
   );
 };

@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { Link } from 'react-router-dom';
-import type { LinkProps } from 'react-router-dom';
+
+import { Link } from 'src/components/Link';
 
 import type {
   EntityType,
@@ -13,7 +12,7 @@ export interface SupportLinkProps {
   description?: string;
   entity?: EntityForTicketDetails;
   formPayloadValues?: FormPayloadValues;
-  onClick?: LinkProps['onClick'];
+  onClick?: () => void;
   text: string;
   ticketType?: TicketType;
   title?: string;
@@ -38,16 +37,20 @@ const SupportLink = (props: SupportLinkProps) => {
   return (
     <Link
       onClick={onClick}
-      to={{
-        pathname: '/support/tickets/open?dialogOpen=true',
-        state: {
+      search={{
+        dialogOpen: true,
+      }}
+      state={(prev) => {
+        return {
+          ...prev,
           description,
           entity,
           formPayloadValues,
           ticketType,
           title,
-        },
+        };
       }}
+      to="/support/tickets/open"
     >
       {text}
     </Link>

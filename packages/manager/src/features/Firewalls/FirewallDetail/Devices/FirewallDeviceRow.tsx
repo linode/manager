@@ -27,9 +27,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   return (
     <TableRow data-testid={`firewall-device-row-${id}`}>
       <TableCell>
-        <Link tabIndex={0} to={entityLink}>
-          {entityLabel}
-        </Link>
+        <Link to={entityLink}>{entityLabel}</Link>
       </TableCell>
       {isLinodeInterfacesEnabled && isLinodeRelatedDevice && (
         <TableCell>

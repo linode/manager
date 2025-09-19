@@ -145,6 +145,7 @@ export const Accordion = (props: AccordionProps) => {
         <Box
           display="flex"
           flexDirection="column"
+          flexGrow={1}
           rowGap={(theme) => theme.spacingFunction(8)}
         >
           <Typography {...headingProps} data-qa-panel-subheading variant="h3">

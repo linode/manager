@@ -3,7 +3,13 @@ import {
   useAccountRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Drawer,
+  LinkButton,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,7 +19,6 @@ import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 
@@ -23,6 +28,8 @@ import {
 } from '../../Shared/constants';
 import {
   getAllRoles,
+  isAccountRole,
+  isEntityRole,
   mergeAssignedRolesIntoExistingRoles,
 } from '../../Shared/utilities';
 
@@ -30,11 +37,16 @@ import type { AssignNewRoleFormValues } from '../../Shared/utilities';
 import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
+  assignedRoles?: IamUserRoles;
   onClose: () => void;
   open: boolean;
 }
 
-export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
+export const AssignNewRoleDrawer = ({
+  assignedRoles,
+  onClose,
+  open,
+}: Props) => {
   const theme = useTheme();
   const { username } = useParams({
     from: '/iam/users/$username',
@@ -69,8 +81,21 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     if (!accountRoles) {
       return [];
     }
-    return getAllRoles(accountRoles);
-  }, [accountRoles]);
+    return getAllRoles(accountRoles).filter((role) => {
+      // exclude account and entities roles that are already assigned to the user
+      if (isAccountRole(role)) {
+        return !assignedRoles?.account_access.includes(role.value);
+      }
+
+      if (isEntityRole(role)) {
+        return !assignedRoles?.entity_access.some((entity) =>
+          entity.roles.includes(role.value)
+        );
+      }
+
+      return true;
+    });
+  }, [accountRoles, assignedRoles, roles]);
 
   const { mutateAsync: updateUserRoles, isPending } =
     useUserRolesMutation(username);

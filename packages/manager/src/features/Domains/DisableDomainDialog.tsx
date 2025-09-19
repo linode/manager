@@ -62,7 +62,7 @@ export const DisableDomainDialog = React.memo(
         isFetching={isFetching}
         onClose={onClose}
         open={open}
-        title={`Disable Domain ${domain?.domain ?? 'Unknown'}?`}
+        title={`Disable Domain${domain ? ` ${domain.domain}` : ''}?`}
       >
         Are you sure you want to disable this DNS zone?
       </ConfirmationDialog>

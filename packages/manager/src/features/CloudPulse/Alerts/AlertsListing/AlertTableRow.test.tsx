@@ -2,7 +2,6 @@ import { capitalize } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -10,9 +9,9 @@ import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { AlertTableRow } from './AlertTableRow';
 
 import type { Item } from '../constants';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
-const mockServices: Item<string, AlertServiceType>[] = [
+const mockServices: Item<string, CloudPulseServiceType>[] = [
   {
     label: 'Linode',
     value: 'linode',
@@ -72,18 +71,16 @@ describe('Alert Row', () => {
     history.push('/alerts/definitions');
     const link = `/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
     const renderedAlert = (
-      <Router history={history}>
-        <AlertTableRow
-          alert={alert}
-          handlers={{
-            handleDelete: vi.fn(),
-            handleDetails: vi.fn(),
-            handleEdit: vi.fn(),
-            handleStatusChange: vi.fn(),
-          }}
-          services={mockServices}
-        />
-      </Router>
+      <AlertTableRow
+        alert={alert}
+        handlers={{
+          handleDelete: vi.fn(),
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleStatusChange: vi.fn(),
+        }}
+        services={mockServices}
+      />
     );
     const { getByText } = renderWithTheme(wrapWithTableBody(renderedAlert));
 

@@ -19,6 +19,7 @@ it('test getDashboardProperties method', () => {
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 1,
+    groupBy: [],
   });
 
   expect(result).toBeDefined();
@@ -31,10 +32,11 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 0,
+    groupBy: [],
   });
   expect(result).toBe(false);
   result = checkMandatoryFiltersSelected({
-    dashboardObj: mockDashboard,
+    dashboardObj: { ...mockDashboard, id: 2 },
     filterValue: { region: 'us-east' },
     resource: 1,
     timeDuration: {
@@ -42,6 +44,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
       preset,
       start: start.toISO(),
     },
+    groupBy: [],
   });
 
   expect(result).toBe(true);
@@ -51,6 +54,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     filterValue: { region: 'us-east' },
     resource: 1,
     timeDuration: undefined, // here time duration is undefined, so it should return false
+    groupBy: [],
   });
 
   expect(result).toBe(false);
@@ -60,6 +64,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     filterValue: { region: 'us-east' },
     resource: 0, // here resource is 0, so it should return false
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
   });
 
   expect(result).toBe(false);
@@ -72,6 +77,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     filterValue: { region: 'us-east' }, // here role is missing
     resource: 1,
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
   });
 
   expect(result).toBe(false);
@@ -81,6 +87,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     filterValue: { node_type: 'primary', region: 'us-east' },
     resource: 1,
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
   });
 
   expect(result).toBe(true);
@@ -92,6 +99,7 @@ it('test constructDimensionFilters method', () => {
     dashboardObj: mockDashboard,
     filterValue: { node_type: 'primary' },
     resource: 1,
+    groupBy: [],
   });
 
   expect(result.length).toEqual(1);
@@ -100,26 +108,26 @@ it('test constructDimensionFilters method', () => {
 });
 
 it('test checkIfFilterNeededInMetricsCall method', () => {
-  let result = checkIfFilterNeededInMetricsCall('region', 'linode');
+  let result = checkIfFilterNeededInMetricsCall('region', 2);
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('resource_id', 'linode');
+  result = checkIfFilterNeededInMetricsCall('resource_id', 2);
   expect(result).toEqual(false); // not needed as dimension filter
 
-  result = checkIfFilterNeededInMetricsCall('node_type', 'dbaas');
+  result = checkIfFilterNeededInMetricsCall('node_type', 1);
   expect(result).toEqual(true);
 
-  result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
+  result = checkIfFilterNeededInMetricsCall('engine', 1);
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('node_type', 'xyz'); // xyz service type
+  result = checkIfFilterNeededInMetricsCall('node_type', 2);
   expect(result).toEqual(false);
 });
 
 it('test checkIfFilterBuilderNeeded method', () => {
   let result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
-    service_type: 'linode',
+    id: 2,
   });
   expect(result).toBe(false); // should be false for linode
 
@@ -131,7 +139,8 @@ it('test checkIfFilterBuilderNeeded method', () => {
 
   result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
-    service_type: '',
+    id: -1,
+    service_type: 'linode',
   });
   expect(result).toBe(false); // should be false for empty / undefined case
 

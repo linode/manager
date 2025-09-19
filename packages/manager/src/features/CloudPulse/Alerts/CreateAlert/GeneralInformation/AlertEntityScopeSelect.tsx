@@ -15,22 +15,26 @@ import {
 
 import type { AlertFormMode } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertDefinitionScope, AlertServiceType } from '@linode/api-v4';
+import type {
+  AlertDefinitionScope,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 interface ScopeOption {
   disabled: boolean;
   label: string;
   value: AlertDefinitionScope;
 }
 interface AlertEntityScopeSelectProps {
+  disabled?: boolean;
   formMode?: AlertFormMode;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
     AlertDefinitionScope | null | undefined
   >;
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
-  const { name, serviceType, formMode = 'create' } = props;
+  const { name, serviceType, formMode = 'create', disabled } = props;
   const { isLoading, data } = useCloudPulseServiceByServiceType(
     serviceType ?? '',
     serviceType !== null
@@ -87,7 +91,7 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
           <Autocomplete
             data-testid="entity-grouping"
             disableClearable={options.length !== 0}
-            disabled={!serviceType || isLoading}
+            disabled={!serviceType || isLoading || disabled}
             errorText={fieldState.error?.message}
             getOptionLabel={(option) => option.label}
             label="Scope"
@@ -96,13 +100,8 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
             onChange={(_, selectedValue) => {
               const value = selectedValue?.value;
               field.onChange(value);
-
-              /*
-                TODO: This will be uncommented in future PRs when regions support is added.
-
-               setValue('regions', value === 'region' ? [] : undefined);
-               setValue('entity_ids', value === 'entity' ? [] : undefined);
-              */
+              setValue('regions', value === 'region' ? [] : undefined);
+              setValue('entity_ids', value === 'entity' ? [] : undefined);
             }}
             options={options}
             placeholder="Select a scope"

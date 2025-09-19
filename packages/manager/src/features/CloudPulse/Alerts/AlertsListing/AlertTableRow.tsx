@@ -14,7 +14,7 @@ import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Item } from '../constants';
 import type { ActionHandlers } from './AlertActionMenu';
-import type { Alert, AlertServiceType } from '@linode/api-v4';
+import type { Alert, CloudPulseServiceType } from '@linode/api-v4';
 
 interface Props {
   /**
@@ -28,7 +28,7 @@ interface Props {
   /**
    * services list for the reverse mapping to display the labels from the alert service values
    */
-  services: Item<string, AlertServiceType>[];
+  services: Item<string, CloudPulseServiceType>[];
 }
 
 export const AlertTableRow = (props: Props) => {
@@ -45,7 +45,7 @@ export const AlertTableRow = (props: Props) => {
     updated_by,
   } = alert;
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
@@ -68,7 +68,7 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>
         {services.find((service) => service.value === service_type)?.label}{' '}
-        {aclpBetaServices?.[service_type]?.alerts && <BetaChip />}
+        {aclpServices?.[service_type]?.alerts?.beta && <BetaChip />}
       </TableCell>
       <TableCell data-testid={`created-by-${id}`}>{created_by}</TableCell>
       <TableCell data-testid={`updated-${id}`}>

@@ -11,6 +11,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
   BillingActionButton,
@@ -59,6 +60,7 @@ export const ContactInformation = React.memo((props: Props) => {
     zip,
   } = props;
 
+  const { iamRbacPrimaryNavChanges } = useFlags();
   const navigate = useNavigate();
   const { contactDrawerOpen, focusEmail } = useSearch({
     strict: false,
@@ -82,7 +84,7 @@ export const ContactInformation = React.memo((props: Props) => {
 
   const handleEditDrawerOpen = () => {
     navigate({
-      to: '/account/billing',
+      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       search: (prev) => ({
         ...prev,
         action: 'edit',
@@ -257,7 +259,7 @@ export const ContactInformation = React.memo((props: Props) => {
         focusEmail={Boolean(focusEmail)}
         onClose={() => {
           navigate({
-            to: '/account/billing',
+            to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
             search: undefined,
           });
         }}

@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutateProfile, useProfile } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
+import { UpdateUserEmailSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -9,10 +11,11 @@ import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  canUpdateUser: boolean;
   user: User;
 }
 
-export const UserEmailPanel = ({ user }: Props) => {
+export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
@@ -26,6 +29,7 @@ export const UserEmailPanel = ({ user }: Props) => {
     handleSubmit,
     setError,
   } = useForm({
+    resolver: yupResolver(UpdateUserEmailSchema),
     defaultValues: { email: user.email },
     values: { email: user.email },
   });
@@ -52,7 +56,7 @@ export const UserEmailPanel = ({ user }: Props) => {
 
   return (
     <Paper>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Controller
           control={control}
           name="email"
@@ -73,9 +77,14 @@ export const UserEmailPanel = ({ user }: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={!isDirty}
+          disabled={!isDirty || !canUpdateUser}
           loading={isSubmitting}
           sx={{ mt: 2 }}
+          tooltipText={
+            !canUpdateUser
+              ? 'You do not have permission to update this user.'
+              : undefined
+          }
           type="submit"
         >
           Save

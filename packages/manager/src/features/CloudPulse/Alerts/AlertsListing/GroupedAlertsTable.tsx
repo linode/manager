@@ -13,7 +13,7 @@ import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertTableRow } from './AlertTableRow';
 
 import type { Item } from '../constants';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
 import type { GroupedBy } from '@linode/utilities';
 
@@ -41,7 +41,7 @@ interface GroupedAlertsProps {
   /**
    * The list of services to display in the table
    */
-  services: Item<string, AlertServiceType>[];
+  services: Item<string, CloudPulseServiceType>[];
 }
 
 export const GroupedAlertsTable = ({

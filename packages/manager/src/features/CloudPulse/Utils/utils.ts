@@ -26,6 +26,7 @@ import type {
   APIError,
   Capabilities,
   CloudPulseAlertsPayload,
+  CloudPulseServiceType,
   Dashboard,
   MonitoringCapabilities,
   ResourcePage,
@@ -34,6 +35,7 @@ import type {
   TimeDuration,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
+import type { AclpServices } from 'src/featureFlags';
 import type {
   StatWithDummyPoint,
   WithStartAndEnd,
@@ -61,10 +63,10 @@ interface AclpSupportedRegionProps {
 export const useIsACLPEnabled = (): {
   isACLPEnabled: boolean;
 } => {
-  const { data: account, error } = useAccount();
+  const { data: account } = useAccount();
   const flags = useFlags();
 
-  if (error || !flags) {
+  if (!flags) {
     return { isACLPEnabled: false };
   }
 
@@ -82,7 +84,7 @@ export const useIsACLPEnabled = (): {
 /**
  * @param alerts List of alerts to be displayed
  * @param entityId Id of the selected entity
- * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState
+ * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState, resetToInitialState
  */
 export const useContextualAlertsState = (
   alerts: Alert[],
@@ -121,6 +123,11 @@ export const useContextualAlertsState = (
 
   const [enabledAlerts, setEnabledAlerts] = React.useState(initialState);
 
+  // Reset function to sync with latest initial state
+  const resetToInitialState = React.useCallback(() => {
+    setEnabledAlerts(initialState);
+  }, [initialState]);
+
   // Check if the enabled alerts have changed from the initial state
   const hasUnsavedChanges = React.useMemo(() => {
     return (
@@ -134,6 +141,7 @@ export const useContextualAlertsState = (
     setEnabledAlerts,
     hasUnsavedChanges,
     initialState,
+    resetToInitialState,
   };
 };
 
@@ -214,15 +222,23 @@ export const seriesDataFormatter = (
 /**
  *
  * @param rawServiceTypes list of service types returned from api response
- * @returns converted service types list into string array
+ * @param aclpServices list of services with their statuses
+ * @returns enabled service types
  */
-export const formattedServiceTypes = (
-  rawServiceTypes: ServiceTypesList | undefined
-): string[] => {
+export const getEnabledServiceTypes = (
+  rawServiceTypes: ServiceTypesList | undefined,
+  aclpServices: Partial<AclpServices> | undefined
+): CloudPulseServiceType[] => {
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
-  return rawServiceTypes.data.map((obj: Service) => obj.service_type);
+  // Return the service types that are enabled in the aclpServices flag
+  return rawServiceTypes.data
+    .filter(
+      (obj: Service) =>
+        aclpServices?.[obj.service_type]?.metrics?.enabled ?? false
+    )
+    .map((obj: Service) => obj.service_type);
 };
 
 /**
@@ -233,7 +249,7 @@ export const formattedServiceTypes = (
  */
 export const getAllDashboards = (
   queryResults: UseQueryResult<ResourcePage<Dashboard>, APIError[]>[],
-  serviceTypes: string[]
+  serviceTypes: CloudPulseServiceType[]
 ) => {
   let error = '';
   let isLoading = false;
@@ -289,6 +305,10 @@ export const arePortsValid = (ports: string): string | undefined => {
     return undefined;
   }
 
+  if (ports.length > 100) {
+    return PORTS_LIMIT_ERROR_MESSAGE;
+  }
+
   if (ports.startsWith(',')) {
     return PORTS_LEADING_COMMA_ERROR_MESSAGE;
   }
@@ -302,18 +322,12 @@ export const arePortsValid = (ports: string): string | undefined => {
   }
 
   const portList = ports.split(',');
-  let portLimitCount = 0;
 
   for (const port of portList) {
     const result = isValidPort(port);
     if (result !== undefined) {
       return result;
     }
-    portLimitCount++;
-  }
-
-  if (portLimitCount > 15) {
-    return PORTS_LIMIT_ERROR_MESSAGE;
   }
 
   return undefined;
@@ -331,6 +345,10 @@ export const areValidInterfaceIds = (
     return undefined;
   }
 
+  if (interfaceIds.length > 100) {
+    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
+  }
+
   if (interfaceIds.startsWith(',')) {
     return INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE;
   }
@@ -340,13 +358,6 @@ export const areValidInterfaceIds = (
   }
   if (!/^[\d,]+$/.test(interfaceIds)) {
     return INTERFACE_IDS_ERROR_MESSAGE;
-  }
-
-  const interfaceIdList = interfaceIds.split(',');
-  const interfaceIdLimitCount = interfaceIdList.length;
-
-  if (interfaceIdLimitCount > 15) {
-    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
   }
 
   return undefined;

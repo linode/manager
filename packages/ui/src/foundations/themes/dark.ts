@@ -155,7 +155,12 @@ const iconCircleAnimation = {
 
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
-  '&:hover': {
+  '&:disabled': {
+    color: Alias.Content.Text.Link.Disabled,
+    cursor: 'not-allowed',
+  },
+  '&:hover:not(:disabled)': {
+    backgroundColor: 'transparent',
     color: Alias.Content.Text.Link.Hover,
     textDecoration: 'underline',
   },
@@ -193,14 +198,6 @@ const genericTableHeaderStyle = {
       color: customDarkModeOptions.textColors.linkActiveLight,
     },
     cursor: 'pointer',
-  },
-};
-
-const MuiTableHeadSvgStyles = {
-  svg: {
-    path: {
-      fill: Color.Brand[60],
-    },
   },
 };
 
@@ -716,7 +713,7 @@ export const darkTheme: ThemeOptions = {
           '&$disabled': {
             color: Component.Label.Text,
           },
-          '&$error': {
+          '&.Mui-error': {
             color: Component.Label.Text,
           },
           '&.Mui-focused': {
@@ -1082,10 +1079,20 @@ export const darkTheme: ThemeOptions = {
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
-            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
-            ':hover': {
-              color: Color.Brand[60],
-              ...MuiTableHeadSvgStyles,
+            '&.MuiIconButton-isActive': {
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Active,
+                },
+              },
+            },
+            ':hover, :focus': {
+              color: Table.HeaderNested.Icon.Hover,
+              svg: {
+                path: {
+                  fill: Table.HeaderNested.Icon.Hover,
+                },
+              },
             },
             svg: {
               path: {
@@ -1147,9 +1154,13 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-active': {
             color: Table.HeaderNested.Text,
           },
-          ':hover': {
-            ...MuiTableHeadSvgStyles,
-            color: Color.Brand[60],
+          ':hover, :focus': {
+            color: Table.HeaderNested.Icon.Hover,
+            svg: {
+              path: {
+                fill: Table.HeaderNested.Icon.Hover,
+              },
+            },
           },
           svg: {
             path: {

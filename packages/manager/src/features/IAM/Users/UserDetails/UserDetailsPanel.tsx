@@ -46,13 +46,14 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
               status={
                 user.last_login?.status === 'successful' ? 'active' : 'error'
               }
+              sx={{ alignSelf: 'center' }}
             />
           )}
         </Stack>
       ),
     },
     {
-      label: 'Last Login',
+      label: 'Last login',
       value: user.last_login ? (
         <DateTimeDisplay value={user.last_login.login_datetime} />
       ) : (
@@ -74,7 +75,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       ),
     },
     {
-      label: 'Verified Phone Number',
+      label: 'Verified number',
       value: (
         <MaskableText
           isToggleable
@@ -116,6 +117,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
                 '& > p:nth-of-type(2)': {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
+                  alignItems: 'center',
                 },
               }}
             >
@@ -124,7 +126,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
                   font: theme.font.bold,
                 })}
               >
-                {item.label}
+                {item.label}:
               </Typography>
               {item.value}
             </Stack>

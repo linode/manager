@@ -6,8 +6,6 @@ import * as React from 'react';
 import { statusTooltipIcons } from 'src/features/Linodes/LinodeEntityDetailHeaderMaintenancePolicy.utils';
 import { LinodeMaintenanceText } from 'src/features/Linodes/LinodeMaintenanceText';
 
-import { parseMaintenanceStartTime } from './LinodesLanding/utils';
-
 import type { MaintenancePolicySlug } from '@linode/api-v4';
 import type { LinodeMaintenance } from 'src/utilities/linodes';
 
@@ -20,15 +18,13 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
   props: LinodeEntityDetailHeaderMaintenancePolicyProps
 ) => {
   const { linodeMaintenancePolicySet, maintenance } = props;
-  const parsedMaintenanceStartTime = parseMaintenanceStartTime(
-    maintenance?.start_time || maintenance?.when
-  );
+  const maintenanceStartTime = maintenance?.start_time || maintenance?.when;
 
   const isPendingOrScheduled =
     maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
 
   const isInProgress =
-    maintenance?.status === 'started' || maintenance?.status === 'in-progress';
+    maintenance?.status === 'started' || maintenance?.status === 'in_progress';
 
   return (
     <Box
@@ -63,7 +59,7 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
               ? 'Migrating'
               : 'Migrate'}
         </Typography>
-        {isInProgress && (
+        {isInProgress && maintenanceStartTime && (
           <TooltipIcon
             className="ui-TooltipIcon ui-TooltipIcon-isActive"
             icon={statusTooltipIcons.active}
@@ -76,7 +72,7 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
             text={
               <LinodeMaintenanceText
                 isOpened
-                maintenanceStartTime={parsedMaintenanceStartTime}
+                maintenanceStartTime={maintenanceStartTime}
               />
             }
             tooltipPosition="top"
@@ -101,11 +97,13 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
             text={
               maintenance?.status === 'pending' ? (
                 "This Linode's maintenance window is pending."
-              ) : (
+              ) : maintenanceStartTime ? (
                 <LinodeMaintenanceText
                   isOpened={false}
-                  maintenanceStartTime={parsedMaintenanceStartTime}
+                  maintenanceStartTime={maintenanceStartTime}
                 />
+              ) : (
+                "This Linode's maintenance window is scheduled."
               )
             }
             tooltipPosition="top"

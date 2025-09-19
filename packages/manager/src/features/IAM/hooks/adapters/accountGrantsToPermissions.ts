@@ -21,16 +21,16 @@ export const accountGrantsToPermissions = (
     // AccountAdmin
     accept_service_transfer: unrestricted,
     acknowledge_account_agreement: hasWriteAccess,
-    cancel_account: unrestricted || globalGrants?.cancel_account,
+    cancel_account: hasWriteAccess || globalGrants?.cancel_account,
     cancel_service_transfer: unrestricted,
     create_service_transfer: unrestricted,
     create_user: unrestricted,
     delete_user: unrestricted, // TODO: verify mapping as this is not in the API
-    enable_managed: unrestricted,
+    enable_managed: hasWriteAccess,
     enroll_beta_program: unrestricted,
     is_account_admin: unrestricted,
     update_account: hasWriteAccess,
-    update_account_settings: unrestricted,
+    update_account_settings: hasWriteAccess,
     update_user: unrestricted, // TODO: verify mapping as this is not in the API
     update_user_grants: unrestricted, // TODO: verify mapping as this is not in the API
     // AccountViewer
@@ -42,7 +42,7 @@ export const accountGrantsToPermissions = (
     list_user_grants: unrestricted, // TODO: verify mapping as this is not in the API
     view_account: unrestricted,
     view_account_login: unrestricted,
-    view_account_settings: unrestricted,
+    view_account_settings: hasReadAccess,
     view_enrolled_beta_program: unrestricted,
     view_network_usage: unrestricted,
     view_region_available_service: unrestricted,
@@ -67,5 +67,19 @@ export const accountGrantsToPermissions = (
     create_firewall: unrestricted || globalGrants?.add_firewalls,
     // AccountLinodeAdmin
     create_linode: unrestricted || globalGrants?.add_linodes,
+    // AccountVolumeAdmin
+    create_volume: unrestricted || globalGrants?.add_volumes,
+    // AccountNodeBalancerAdmin
+    create_nodebalancer: unrestricted || globalGrants?.add_nodebalancers,
+    // AccountImageAdmin
+    create_image: unrestricted || globalGrants?.add_images,
+    upload_image: unrestricted || globalGrants?.add_images,
+    // AccountVPCAdmin
+    create_vpc: unrestricted || globalGrants?.add_vpcs,
+    // AccountOAuthClientAdmin
+    create_oauth_client: true,
+    update_oauth_client: true,
+    delete_oauth_client: true,
+    reset_oauth_client_secret: true,
   } as Record<AccountAdmin, boolean>;
 };

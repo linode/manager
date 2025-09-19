@@ -1,7 +1,7 @@
-import { Box, ErrorState, StyledLinkButton, Typography } from '@linode/ui';
+import { Box, ErrorState, LinkButton, Typography } from '@linode/ui';
 import Warning from '@mui/icons-material/CheckCircle';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
@@ -9,7 +9,7 @@ import { SupportTicketDialog } from 'src/features/Support/SupportTickets/Support
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 export const AccountActivationLanding = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [supportDrawerIsOpen, toggleSupportDrawer] =
     React.useState<boolean>(false);
@@ -18,9 +18,13 @@ export const AccountActivationLanding = () => {
     ticketID: number,
     attachmentErrors?: AttachmentError[]
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketID}`,
-      state: { attachmentErrors },
+    navigate({
+      to: '/support/tickets/$ticketId',
+      params: { ticketId: ticketID },
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
 
     toggleSupportDrawer(false);
@@ -55,9 +59,9 @@ export const AccountActivationLanding = () => {
               Thanks for signing up! You&rsquo;ll receive an email from us once
               our review is complete, so hang tight. If you have questions
               during this process{' '}
-              <StyledLinkButton onClick={() => toggleSupportDrawer(true)}>
+              <LinkButton onClick={() => toggleSupportDrawer(true)}>
                 please open a Support ticket
-              </StyledLinkButton>
+              </LinkButton>
               .
             </Typography>
             <SupportTicketDialog

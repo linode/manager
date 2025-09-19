@@ -65,8 +65,9 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   );
 
   const deleteDisabled =
-    !firewallPermissions.delete_firewall_device ||
-    !linodePermissions.update_linode;
+    deviceType === 'nodebalancer'
+      ? !firewallPermissions.delete_firewall_device
+      : !linodePermissions.update_linode;
 
   const onDelete = async () => {
     if (!device) {

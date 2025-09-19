@@ -98,9 +98,11 @@ export const getLinodeCreatePayload = (
       );
       values.firewall_id = undefined;
     } else {
-      values.interfaces = formValues.linodeInterfaces.map(
-        getLegacyInterfaceFromLinodeInterface
-      );
+      values.interfaces = formValues.backup_id
+        ? undefined
+        : formValues.linodeInterfaces.map(
+            getLegacyInterfaceFromLinodeInterface
+          );
     }
   } else {
     values.interfaces = getInterfacesPayload(
@@ -190,8 +192,7 @@ const defaultInterfaces: InterfacePayload[] = [
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
  * removes them from the payload before it is sent to the API.
  */
-export interface LinodeCreateFormValues
-  extends Omit<CreateLinodeRequest, 'maintenance_policy'> {
+export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * Manually override firewall policy for sensitive users
    */
@@ -202,10 +203,8 @@ export interface LinodeCreateFormValues
   hasSignedEUAgreement?: boolean;
   /**
    * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces.
-   * `ipv4` and `ipv6` fields are only accepted for VPC interfaces and the omit type avoids
-   * `CreateLinodeSchema` type errors (see https://github.com/linode/manager/pull/11942#discussion_r2043029481)
    */
-  interfaces: InterfacePayload[] | Omit<InterfacePayload, 'ipv4' | 'ipv6'>[];
+  interfaces: InterfacePayload[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */

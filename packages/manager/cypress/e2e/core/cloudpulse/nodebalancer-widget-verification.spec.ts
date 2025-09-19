@@ -30,6 +30,7 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
+  flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
@@ -37,7 +38,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -51,33 +51,13 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpBetaServices: { nodebalancer: { alerts: true, metrics: true } },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'nodebalancer',
-    },
-  ],
-};
-const { dashboardName, id, metrics, region, resource, serviceType } =
+const { dashboardName, id, metrics, region, resource } =
   widgetDetails.nodebalancer;
-
+const serviceType = 'nodebalancer';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
+  id,
   widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
@@ -142,6 +122,8 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
+    serviceType,
+    groupBy: ['entity_id'],
   });
 
   // Destructure metrics data from the first legend row
@@ -166,9 +148,8 @@ const mockNodeBalancer = nodeBalancerFactory.build({
 // Tests will be modified
 describe('Integration Tests for Nodebalancer Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
-
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');

@@ -15,7 +15,12 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory, alertRulesFactory } from 'src/factories';
+import {
+  accountFactory,
+  alertFactory,
+  alertRulesFactory,
+  flagsFactory,
+} from 'src/factories';
 import {
   alertLimitMessage,
   alertToolTipText,
@@ -28,20 +33,16 @@ import {
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
+import type {
+  Alert,
+  AlertStatusType,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 const alertDefinitionsUrl = '/alerts/definitions';
 
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpBetaServices: {
-    dbaas: { metrics: true, alerts: true },
-    linode: { metrics: true, alerts: true },
-  },
-};
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
@@ -111,7 +112,7 @@ const statusList: AlertStatusType[] = [
   'in progress',
   'failed',
 ];
-const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 
 /**
  * @description
@@ -211,7 +212,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
    * - Ensures API calls return correct responses and status codes.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetCloudPulseServices(['linode', 'dbaas']);
@@ -259,24 +260,27 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   });
 
   it('should validate UI elements and alert details', () => {
-    // Validate navigation links and buttons
-    cy.findByText('Alerts').should('be.visible');
+    // filter to main content area to avoid confusion w/ 'Alerts' nav link in left sidebar
+    cy.get('main').within(() => {
+      // Validate breadcrumb and buttons
+      cy.findByText('Alerts', { exact: false }).should('be.visible');
 
-    cy.findByText('Definitions')
-      .should('be.visible')
-      .and('have.attr', 'href', alertDefinitionsUrl);
-    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
+      cy.findByText('Definitions')
+        .should('be.visible')
+        .and('have.attr', 'href', alertDefinitionsUrl);
+      ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
-    // Validate table headers
-    cy.get('[data-qa="alert-table"]').within(() => {
-      expectedHeaders.forEach((header) => {
-        cy.findByText(header).should('have.text', header);
+      // Validate table headers
+      cy.get('[data-qa="alert-table"]').within(() => {
+        expectedHeaders.forEach((header) => {
+          cy.findByText(header).should('have.text', header);
+        });
       });
-    });
 
-    // Validate alert details
-    mockAlerts.forEach((alert) => {
-      validateAlertDetails(alert);
+      // Validate alert details
+      mockAlerts.forEach((alert) => {
+        validateAlertDetails(alert);
+      });
     });
   });
 
@@ -381,8 +385,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
             .findByTitle(`Action menu for Alert ${alertName}`)
             .should('be.visible')
             .click();
+          ui.actionMenuItem.findByTitle(action).should('be.visible').click();
         });
-      ui.actionMenuItem.findByTitle(action).should('be.visible').click();
 
       // verify dialog title
       ui.dialog

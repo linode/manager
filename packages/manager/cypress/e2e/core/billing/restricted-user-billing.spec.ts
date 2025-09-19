@@ -6,6 +6,7 @@ import { grantsFactory, profileFactory } from '@linode/utilities';
 import { paymentMethodFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetProfile,
   mockGetProfileGrants,
@@ -25,7 +26,7 @@ const mockPaymentMethods = [
   paymentMethodFactory.build({
     data: {
       card_type: 'Visa',
-      expiry: '12/2026',
+      expiry: '12/2029',
       last_four: '1234',
     },
     is_default: false,
@@ -33,7 +34,7 @@ const mockPaymentMethods = [
   paymentMethodFactory.build({
     data: {
       card_type: 'Visa',
-      expiry: '12/2026',
+      expiry: '12/2029',
       last_four: '5678',
     },
     is_default: true,
@@ -223,6 +224,10 @@ const assertMakeAPaymentEnabled = () => {
 describe('restricted user billing flows', () => {
   beforeEach(() => {
     mockGetPaymentMethods(mockPaymentMethods);
+    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: true,
+    });
   });
 
   /*
@@ -254,7 +259,7 @@ describe('restricted user billing flows', () => {
     mockGetProfile(mockProfile);
     mockGetProfileGrants(mockGrants);
     mockGetUser(mockUser);
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/billing');
 
     assertEditBillingInfoDisabled(restrictedUserTooltip);
     assertAddPaymentMethodDisabled(restrictedUserTooltip);
@@ -284,7 +289,7 @@ describe('restricted user billing flows', () => {
 
     mockGetProfile(mockProfile);
     mockGetUser(mockUser);
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/billing');
 
     assertEditBillingInfoDisabled(restrictedUserTooltip);
     assertAddPaymentMethodDisabled(restrictedUserTooltip);
@@ -324,7 +329,7 @@ describe('restricted user billing flows', () => {
     // Confirm button behavior for regular users.
     mockGetProfile(mockProfileRegular);
     mockGetUser(mockUserRegular);
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/billing');
     cy.findByText(mockProfileRegular.username);
     assertEditBillingInfoEnabled();
     assertAddPaymentMethodEnabled();
@@ -333,7 +338,7 @@ describe('restricted user billing flows', () => {
     // Confirm button behavior for parent users.
     mockGetProfile(mockProfileParent);
     mockGetUser(mockUserParent);
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/billing');
     cy.findByText(mockProfileParent.username);
     assertEditBillingInfoEnabled();
     assertAddPaymentMethodEnabled();

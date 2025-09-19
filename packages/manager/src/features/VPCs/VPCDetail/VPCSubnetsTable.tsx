@@ -329,7 +329,6 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
-              isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
               numNodebalancers={subnet.nodebalancers.length}
               subnet={subnet}
@@ -398,9 +397,7 @@ export const VPCSubnetsTable = (props: Props) => {
         InnerTable,
         OuterTableCells,
         id: subnet.id,
-        label: `${subnet.label}${
-          isVPCLKEEnterpriseCluster ? ' (Managed)' : ''
-        }`,
+        label: subnet.label,
       };
     });
   };
@@ -426,7 +423,6 @@ export const VPCSubnetsTable = (props: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={isVPCLKEEnterpriseCluster}
           onClick={handleSubnetCreate}
           sx={{
             marginBottom: theme.spacingFunction(16),

@@ -1,9 +1,3 @@
-import {
-  type Alert,
-  type AlertServiceType,
-  type APIError,
-  type DeleteAlertPayload,
-} from '@linode/api-v4';
 import { Notice, Typography } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import { GridLegacy, TableBody, TableHead, TableRow } from '@mui/material';
@@ -36,6 +30,12 @@ import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
+import type {
+  Alert,
+  APIError,
+  CloudPulseServiceType,
+  DeleteAlertPayload,
+} from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface AlertsListTableProps {
@@ -62,7 +62,7 @@ export interface AlertsListTableProps {
   /**
    * The list of services to display in the table
    */
-  services: Item<string, AlertServiceType>[];
+  services: Item<string, CloudPulseServiceType>[];
   /**
    * The callback to toggle the alerts grouped by tag
    */
@@ -132,7 +132,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         alertId: alert.id,
         serviceType: alert.service_type,
         status: toggleStatus,
-        scope: alert.scope,
       })
         .then(() => {
           // Handle success

@@ -259,9 +259,9 @@ describe('Object Storage Multicluster access keys', () => {
           )
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Permissions').click();
       });
 
-    ui.actionMenuItem.findByTitle('Permissions').click();
     ui.drawer
       .findByTitle(`Permissions for ${mockAccessKey.label}`)
       .should('be.visible')

@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -8,9 +8,12 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
-import { IAM_DOCS_LINK } from './Shared/constants';
+import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/iam/users`,
@@ -26,10 +29,14 @@ export const IdentityAccessLanding = React.memo(() => {
     breadcrumbProps: {
       pathname: '/iam',
     },
-    docsLink: IAM_DOCS_LINK,
+    docsLink: tabIndex === 0 ? IAM_DOCS_LINK : ROLES_LEARN_MORE_LINK,
     entity: 'Identity and Access',
     title: 'Identity and Access',
   };
+
+  if (location.pathname === '/iam') {
+    navigate({ to: '/iam/users' });
+  }
 
   return (
     <>

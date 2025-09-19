@@ -26,7 +26,9 @@ describe('DeleteUserPanel', () => {
       username: 'current_user',
     });
 
-    const { getByTestId } = renderWithTheme(<DeleteUserPanel user={user} />);
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel canDeleteUser={true} user={user} />
+    );
 
     const deleteButton = getByTestId('button');
     expect(deleteButton).toBeDisabled();
@@ -42,7 +44,9 @@ describe('DeleteUserPanel', () => {
       username: 'current_user',
     });
 
-    const { getByTestId } = renderWithTheme(<DeleteUserPanel user={user} />);
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel canDeleteUser={true} user={user} />
+    );
 
     const deleteButton = getByTestId('button');
     expect(deleteButton).toBeDisabled();
@@ -58,7 +62,9 @@ describe('DeleteUserPanel', () => {
       username: 'user',
     });
 
-    const { getByTestId } = renderWithTheme(<DeleteUserPanel user={user} />);
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel canDeleteUser={true} user={user} />
+    );
 
     const deleteButton = getByTestId('button');
     expect(deleteButton).toBeEnabled();
@@ -75,7 +81,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DeleteUserPanel user={user} />
+      <DeleteUserPanel canDeleteUser={true} user={user} />
     );
 
     const deleteButton = getByTestId('button');
@@ -84,5 +90,18 @@ describe('DeleteUserPanel', () => {
     expect(
       getByText('The user will be deleted permanently.')
     ).toBeInTheDocument();
+  });
+
+  it('disables the delete button when the user does not have delete_user permission', async () => {
+    const user = accountUserFactory.build({
+      username: 'my-linode-username',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel canDeleteUser={false} user={user} />
+    );
+
+    const deleteButton = getByTestId('button');
+    expect(deleteButton).toBeDisabled();
   });
 });

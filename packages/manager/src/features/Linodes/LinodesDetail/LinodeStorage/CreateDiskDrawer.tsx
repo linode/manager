@@ -21,7 +21,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -48,13 +47,14 @@ const modeList: Mode<CreateMode>[] = [
 ];
 
 export interface Props {
+  disabled: boolean;
   linodeId: number;
   onClose: () => void;
   open: boolean;
 }
 
 export const CreateDiskDrawer = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, onClose, open, disabled } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { checkForNewEvents } = useEventsPollingActions();
@@ -64,12 +64,6 @@ export const CreateDiskDrawer = (props: Props) => {
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
-
-  const disabled = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linodeId,
-  });
 
   const { mutateAsync: createDisk, reset } =
     useLinodeDiskCreateMutation(linodeId);

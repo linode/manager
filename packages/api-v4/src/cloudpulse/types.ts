@@ -3,12 +3,12 @@ import type { AccountCapability } from 'src/account';
 export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
-export type AlertServiceType = 'dbaas' | 'firewall' | 'linode' | 'nodebalancer';
-export type MetricsServiceType =
+export type CloudPulseServiceType =
   | 'dbaas'
   | 'firewall'
   | 'linode'
   | 'nodebalancer';
+
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -39,9 +39,10 @@ type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   created: string;
+  group_by?: string[];
   id: number;
   label: string;
-  service_type: string;
+  service_type: CloudPulseServiceType;
   time_duration: TimeDuration;
   updated: string;
   widgets: Widgets[];
@@ -71,13 +72,13 @@ export interface Widgets {
   color: string;
   entity_ids: string[];
   filters: Filters[];
-  group_by: string[];
+  group_by?: string[];
   label: string;
   metric: string;
   namespace_id: number;
   region_id: number;
-  service_type: string;
-  serviceType: string;
+  service_type: CloudPulseServiceType;
+  serviceType: CloudPulseServiceType;
   size: number;
   time_duration: TimeDuration;
   time_granularity: TimeGranularity;
@@ -146,9 +147,10 @@ export interface Metric {
 
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
+  associated_entity_region?: string;
   entity_ids: number[];
   filters?: Filters[];
-  group_by: string[];
+  group_by?: string[];
   metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
@@ -183,7 +185,7 @@ export interface Service {
   alert: ServiceAlert;
   label: string;
   regions: string;
-  service_type: string;
+  service_type: CloudPulseServiceType;
 }
 
 export interface ServiceTypesList {
@@ -195,6 +197,7 @@ export interface CreateAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: MetricCriteria[];
   };
@@ -252,7 +255,7 @@ export interface Alert {
     rules: AlertDefinitionMetricCriteria[];
   };
   scope: AlertDefinitionScope;
-  service_type: AlertServiceType;
+  service_type: CloudPulseServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
   tags: string[];
@@ -336,10 +339,10 @@ export interface EditAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label?: string;
+  regions?: string[];
   rule_criteria?: {
     rules: MetricCriteria[];
   };
-  scope?: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
@@ -349,7 +352,7 @@ export interface EditAlertDefinitionPayload {
 export interface EditAlertPayloadWithService
   extends EditAlertDefinitionPayload {
   alertId: number;
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 export type AlertStatusUpdateType = 'Disable' | 'Enable';
@@ -361,11 +364,11 @@ export interface EntityAlertUpdatePayload {
 
 export interface DeleteAlertPayload {
   alertId: number;
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 export const capabilityServiceTypeMapping: Record<
-  AlertServiceType | MetricsServiceType | string,
+  CloudPulseServiceType,
   AccountCapability
 > = {
   linode: 'Linodes',

@@ -6,6 +6,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAlertDefinition } from './CreateAlertDefinition';
 
+import type { AclpServices } from 'src/featureFlags';
+
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
@@ -21,6 +23,11 @@ const queryMocks = vi.hoisted(() => ({
   useGetCloudPulseMetricDefinitionsByServiceType: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
+  useFlags: vi.fn(),
+}));
+
+vi.mock('src/hooks/useFlags', () => ({
+  useFlags: queryMocks.useFlags,
 }));
 
 vi.mock('src/queries/cloudpulse/services', async () => {
@@ -32,6 +39,20 @@ vi.mock('src/queries/cloudpulse/services', async () => {
     useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
+
+const aclpServicesFlag: Partial<AclpServices> = {
+  linode: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+  dbaas: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+};
+
+const linodeLabel = 'Linode beta';
+const databasesLabel = 'Databases beta';
 
 beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
@@ -51,38 +72,41 @@ beforeEach(() => {
     isFetching: false,
   });
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-    data: { data: [{ label: 'Linode', service_type: 'linode' }] },
+    data: {
+      data: [
+        { label: 'Linode', service_type: 'linode' },
+        { label: 'Databases', service_type: 'dbaas' },
+      ],
+    },
     isError: false,
     isLoading: false,
     status: 'success',
+  });
+  queryMocks.useFlags.mockReturnValue({
+    aclpServices: aclpServicesFlag,
   });
 });
 
 describe('AlertDefinition Create', () => {
   it('should render input components', async () => {
-    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
-      <CreateAlertDefinition />
-    );
+    await renderWithTheme(<CreateAlertDefinition />);
 
-    expect(getByText('1. General Information')).toBeVisible();
-    expect(getByLabelText('Name')).toBeVisible();
-    expect(getByLabelText('Description (optional)')).toBeVisible();
-    expect(getByLabelText('Severity')).toBeVisible();
-    expect(getByLabelText('Service')).toBeVisible();
-    expect(getByText('2. Entities')).toBeVisible();
-    await expect(
-      getByPlaceholderText('Search for a Region or Entity')
-    ).toBeInTheDocument();
-    await expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
-    expect(getByText('3. Criteria')).toBeVisible();
-    expect(getByText('Metric Threshold')).toBeVisible();
-    expect(getByLabelText('Data Field')).toBeVisible();
-    expect(getByLabelText('Aggregation Type')).toBeVisible();
-    expect(getByLabelText('Operator')).toBeVisible();
-    expect(getByLabelText('Threshold')).toBeVisible();
-    expect(getByText('4. Notification Channels')).toBeVisible();
-    expect(getByLabelText('Evaluation Period')).toBeVisible();
-    expect(getByLabelText('Polling Interval')).toBeVisible();
+    expect(screen.getByText('1. General Information')).toBeVisible();
+    expect(screen.getByLabelText('Name')).toBeVisible();
+    expect(screen.getByLabelText('Description (optional)')).toBeVisible();
+    expect(screen.getByLabelText('Severity')).toBeVisible();
+    expect(screen.getByLabelText('Service')).toBeVisible();
+    expect(screen.getByText('2. Account/Region/Entity')).toBeVisible();
+    expect(screen.getByText('No scope selected')).toBeVisible();
+    expect(screen.getByText('3. Criteria')).toBeVisible();
+    expect(screen.getByText('Metric Threshold')).toBeVisible();
+    expect(screen.getByLabelText('Data Field')).toBeVisible();
+    expect(screen.getByLabelText('Aggregation Type')).toBeVisible();
+    expect(screen.getByLabelText('Operator')).toBeVisible();
+    expect(screen.getByLabelText('Threshold')).toBeVisible();
+    expect(screen.getByText('4. Notification Channels')).toBeVisible();
+    expect(screen.getByLabelText('Evaluation Period')).toBeVisible();
+    expect(screen.getByLabelText('Polling Interval')).toBeVisible();
   });
 
   it('should be able to enter a value in the textbox', async () => {
@@ -136,7 +160,7 @@ describe('AlertDefinition Create', () => {
 
       await user.click(submitButton);
 
-      expect(container.getAllByText('Enter a positive value.').length).toBe(2);
+      expect(container.getAllByText('Enter a positive value.').length).toBe(1);
 
       const thresholdInput = container.getByLabelText('Threshold');
       const triggerOccurrences = container.getByTestId('trigger-occurences');
@@ -165,7 +189,7 @@ describe('AlertDefinition Create', () => {
     );
 
     await user.click(submitButton!);
-    expect(container.getAllByText(errorMessage).length).toBe(11);
+    expect(container.getAllByText(errorMessage).length).toBe(12);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
@@ -196,5 +220,47 @@ describe('AlertDefinition Create', () => {
     expect(
       await container.findByText('Description must be 100 characters or less.')
     ).toBeVisible();
+  });
+
+  it('should render the service types based on the aclp services flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+        dbaas: {
+          alerts: { enabled: false, beta: true },
+          metrics: { enabled: false, beta: true },
+        },
+      },
+    });
+
+    renderWithTheme(<CreateAlertDefinition />);
+    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: databasesLabel })).toBeNull(); // Verify that Databases is NOT present (filtered out by the flag)
+  });
+
+  it('should not return service types that are missing in the flag', async () => {
+    queryMocks.useFlags.mockReturnValue({
+      aclpServices: {
+        linode: {
+          alerts: { enabled: true, beta: true },
+          metrics: { enabled: true, beta: true },
+        },
+      },
+    });
+
+    renderWithTheme(<CreateAlertDefinition />);
+    const serviceFilterDropdown = screen.getByTestId('servicetype-select');
+    await userEvent.click(
+      within(serviceFilterDropdown).getByRole('button', { name: 'Open' })
+    );
+    expect(screen.getByRole('option', { name: linodeLabel })).toBeVisible();
+    expect(screen.queryByRole('option', { name: 'Databases' })).toBeNull();
   });
 });

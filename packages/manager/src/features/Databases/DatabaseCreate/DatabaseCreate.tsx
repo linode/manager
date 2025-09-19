@@ -383,6 +383,7 @@ export const DatabaseCreate = () => {
               data-qa-select-plan
               disabled={isRestricted}
               error={errors.type}
+              flow="database"
               handleTabChange={handleTabChange}
               header="Choose a Plan"
               isCreate

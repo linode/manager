@@ -1,4 +1,4 @@
-import { useAccount, useRegionsQuery } from '@linode/queries';
+import { useAccount } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Notice, Stack } from '@linode/ui';
 import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -24,21 +24,11 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
-const restrictedLkeNotice = (
-  <Notice
-    text={getRestrictedResourceText({
-      action: 'edit',
-      resourceType: 'LKE Clusters',
-      isSingular: true,
-    })}
-    variant="warning"
-  />
-);
-
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
-  const { clusterId } = useParams({ from: '/kubernetes/clusters/$clusterId' });
-  const id = Number(clusterId);
+  const { clusterId: id } = useParams({
+    from: '/kubernetes/clusters/$clusterId',
+  });
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
@@ -51,7 +41,6 @@ export const KubernetesClusterDetail = () => {
     id,
     isUsingBetaEndpoint,
   });
-  const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } =
     useKubernetesClusterMutation(id);
@@ -114,7 +103,16 @@ export const KubernetesClusterDetail = () => {
           currentVersion={cluster?.k8s_version}
         />
       )}
-      {isClusterReadOnly && restrictedLkeNotice}
+      {isClusterReadOnly && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'edit',
+            resourceType: 'LKE Clusters',
+            isSingular: true,
+          })}
+          variant="warning"
+        />
+      )}
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
@@ -158,8 +156,8 @@ export const KubernetesClusterDetail = () => {
             clusterLabel={cluster.label}
             clusterRegionId={cluster.region}
             clusterTier={cluster.tier ?? 'standard'}
+            clusterVersion={cluster.k8s_version}
             isLkeClusterRestricted={isClusterReadOnly}
-            regionsData={regionsData || []}
           />
         </Stack>
         <UpgradeKubernetesClusterToHADialog

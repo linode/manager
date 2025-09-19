@@ -363,11 +363,11 @@ describe('hooks', () => {
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: true,
         },
       });
@@ -378,7 +378,8 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: false,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: false,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
@@ -390,11 +391,11 @@ describe('hooks', () => {
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: false,
           la: true,
-          phase2Mtc: false,
+          phase2Mtc: { byoVPC: false, dualStack: false },
           postLa: false,
         },
       });
@@ -405,7 +406,8 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: false,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
@@ -413,15 +415,19 @@ describe('hooks', () => {
     it('returns true for Phase 2/MTC feature enablement if the account has the capability + enabled Phase 2 feature flag values', () => {
       queryMocks.useAccount.mockReturnValue({
         data: {
-          capabilities: ['Kubernetes Enterprise'],
+          capabilities: [
+            'Kubernetes Enterprise',
+            'Kubernetes Enterprise BYO VPC',
+            'Kubernetes Enterprise Dual Stack',
+          ],
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: false,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: false,
         },
       });
@@ -432,7 +438,8 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: true,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
@@ -444,11 +451,11 @@ describe('hooks', () => {
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: false,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: false,
         },
       });
@@ -459,23 +466,28 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
 
-    it('returns true for GA feature enablement if the account has the capability + enabled GA feature flag values', () => {
+    it('returns true for GA feature enablement if the account has the capabilities + enabled GA feature flag values', () => {
       queryMocks.useAccount.mockReturnValue({
         data: {
-          capabilities: ['Kubernetes Enterprise'],
+          capabilities: [
+            'Kubernetes Enterprise',
+            'Kubernetes Enterprise BYO VPC',
+            'Kubernetes Enterprise Dual Stack',
+          ],
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: true,
         },
       });
@@ -486,7 +498,8 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: true,
         isLkeEnterprisePostLAFeatureEnabled: true,
       });
     });
@@ -500,11 +513,11 @@ describe('hooks', () => {
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
         },
       });
       queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
@@ -541,11 +554,11 @@ describe('hooks', () => {
 
     it('returns standard versions when the LKE-E feature is disabled', () => {
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: false,
           ga: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
         },
       });
 

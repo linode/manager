@@ -1,11 +1,12 @@
 import { useProfile, useVPCQuery } from '@linode/queries';
-import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
+import { Box, CircleProgress, LinkButton } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import {
@@ -34,7 +35,7 @@ interface FooterProps {
   isLoadingKubernetesACL: boolean;
   setControlPlaneACLDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sx?: SxProps;
-  vpcId: number | undefined;
+  vpcId: null | number | undefined;
 }
 
 export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -55,7 +56,8 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     vpcId,
   } = props;
 
-  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterprisePhase2BYOVPCFeatureEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const enabledACL = aclData?.acl.enabled ?? false;
   const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
@@ -68,7 +70,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   const { data: vpc } = useVPCQuery(
     vpcId ?? -1,
-    isLkeEnterprisePhase2FeatureEnabled && Boolean(vpcId)
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled && Boolean(vpcId)
   );
 
   const { mutateAsync: updateKubernetesCluster } =
@@ -140,9 +142,9 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           >
             <StyledListItem sx={{ ...sxListItemFirstChild }}>
               <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
-              {clusterId}
+              <CopyTooltip copyableText text={String(clusterId)} />
             </StyledListItem>
-            {isLkeEnterprisePhase2FeatureEnabled && vpc && (
+            {isLkeEnterprisePhase2BYOVPCFeatureEnabled && vpc && (
               <StyledListItem
                 sx={{
                   alignItems: 'center',
@@ -156,7 +158,11 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                   {vpc?.label ?? `${vpcId}`}
                 </Link>
                 &nbsp;
-                {vpcId && vpc?.label ? `(ID: ${vpcId})` : undefined}
+                {vpcId && vpc?.label && (
+                  <span>
+                    (ID: <CopyTooltip copyableText text={String(vpcId)} />)
+                  </span>
+                )}
               </StyledListItem>
             )}
             <StyledListItem>
@@ -168,7 +174,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                   <CircleProgress noPadding size="sm" />
                 </Box>
               ) : (
-                <StyledLinkButton
+                <LinkButton
                   disabled={isClusterReadOnly}
                   onClick={() => setControlPlaneACLDrawerOpen(true)}
                   sx={(theme) => ({
@@ -182,7 +188,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
                   })}
                 >
                   {buttonCopyACL}
-                </StyledLinkButton>
+                </LinkButton>
               )}
             </StyledListItem>
             <StyledListItem>
@@ -212,6 +218,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           disabled={areClusterLinodesReadOnly}
+          entity="Kubernetes Cluster"
           entityLabel={clusterLabel}
           sx={{
             width: '100%',

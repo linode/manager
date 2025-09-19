@@ -1,6 +1,6 @@
 import { Box, Button, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 interface Props {
   hasSecurityQuestions: boolean;
@@ -11,7 +11,7 @@ export const VerificationDetailsBanner = ({
   hasSecurityQuestions,
   hasVerifiedPhoneNumber,
 }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const focusOptions = {
     focusSecurityQuestions: false,
     focusTel: false,
@@ -43,9 +43,13 @@ export const VerificationDetailsBanner = ({
           data-testid="confirmButton"
           onClick={() => {
             const { focusSecurityQuestions, focusTel } = focusOptions;
-            history.push(
-              `/profile/auth?focusSecurityQuestions=${focusSecurityQuestions}&focusTel=${focusTel}`
-            );
+            navigate({
+              to: '/profile/auth',
+              search: {
+                focusSecurityQuestions,
+                focusTel,
+              },
+            });
           }}
           sx={{
             width: 250,

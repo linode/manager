@@ -1,17 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import {
-  useCreateVPCMutation,
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useCreateVPCMutation, useRegionsQuery } from '@linode/queries';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { createVPCSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
@@ -30,12 +26,12 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { handleSelectVPC, onDrawerClose, pushToVPCPage, selectedRegion } =
     inputs;
 
+  const navigate = useNavigate();
+
   const previousSubmitCount = React.useRef<number>(0);
 
-  const navigate = useNavigate();
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
+  const userCannotAddVPC = !permissions?.create_vpc;
 
   const createType = useGetLinodeCreateType();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');

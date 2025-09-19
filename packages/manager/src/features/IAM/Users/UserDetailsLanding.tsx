@@ -7,7 +7,12 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
-import { IAM_DOCS_LINK, IAM_LABEL } from '../Shared/constants';
+import {
+  IAM_LABEL,
+  USER_DETAILS_LINK,
+  USER_ENTITIES_LINK,
+  USER_ROLES_LINK,
+} from '../Shared/constants';
 
 export const UserDetailsLanding = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
@@ -26,6 +31,9 @@ export const UserDetailsLanding = () => {
     },
   ]);
 
+  const docsLinks = [USER_DETAILS_LINK, USER_ROLES_LINK, USER_ENTITIES_LINK];
+  const docsLink = docsLinks[tabIndex] ?? USER_DETAILS_LINK;
+
   return (
     <>
       <LandingHeader
@@ -41,7 +49,7 @@ export const UserDetailsLanding = () => {
           },
           pathname: location.pathname,
         }}
-        docsLink={IAM_DOCS_LINK}
+        docsLink={docsLink}
         removeCrumbX={4}
         spacingBottom={4}
         title={username}

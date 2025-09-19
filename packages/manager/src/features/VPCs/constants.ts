@@ -42,6 +42,17 @@ export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
 
 export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
 
+export const ASSIGN_IP_RANGES_TITLE = 'Assign additional IP ranges';
+
+export const PUBLIC_IPV4_ACCESS_CHECKBOX_TOOLTIP =
+  'Allow IPv4 access to the internet using 1:1 NAT on the VPC interface.';
+
+export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP =
+  "To enable IPv6 internet access, assign a globally routed IPv6 prefix to the subnet and enable the interface's Public setting.";
+
+export const RFC1918HelperText =
+  'The VPC can use the entire RFC 1918 specified range for subnetting except for 192.168.128.0/17.';
+
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
@@ -72,3 +83,10 @@ export const VPC_DETAILS_ROUTE = '/vpcs/$vpcId';
 export const VPC_CREATE_ROUTE = '/vpcs/create';
 export const SUBNET_ACTION_PATH =
   '/vpcs/$vpcId/subnets/$subnetId/$subnetAction';
+
+// Table headers
+export const REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS = [
+  'Linode',
+  'VPC IPv4',
+  'VPC IPv4 Ranges',
+];
