@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 
 import { objectStorageQueries } from 'src/queries/object-storage/queries';
 
-import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import { deepEqual, filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
 
 import type {
   CloudPulseMetricsFilter,
@@ -120,7 +120,7 @@ export const CloudPulseEndpointsSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getEndpointsList = React.useMemo<CloudPulseEndpoints[]>(() => {
-      return filterUsingDependentFilters(validSortedEndpoints, xFilter) ?? [];
+      return filterEndpointsUsingRegion(validSortedEndpoints, xFilter) ?? [];
     }, [validSortedEndpoints, xFilter]);
 
     // Once the data is loaded, set the state variable with value stored in preferences

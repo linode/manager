@@ -14,7 +14,10 @@ import type {
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
-import type { CloudPulseEndpointsSelectProps } from '../shared/CloudPulseEndpointsSelect';
+import type {
+  CloudPulseEndpoints,
+  CloudPulseEndpointsSelectProps,
+} from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
@@ -694,17 +697,17 @@ export const getFilters = (
  * @param dependentFilters The selected dependent filters that will be used to filter the resources
  * @returns The filtered resources
  */
-export function filterUsingDependentFilters<T extends { [key: string]: any }>(
-  data?: T[],
+export function filterUsingDependentFilters<CloudPulseResources>(
+  data?: CloudPulseResources[],
   dependentFilters?: CloudPulseMetricsFilter
-): T[] | undefined {
+): CloudPulseResources[] | undefined {
   if (!dependentFilters || !data) {
     return data;
   }
 
   return data.filter((resource) => {
     return Object.entries(dependentFilters).every(([key, filterValue]) => {
-      const resourceValue = resource[key as keyof T];
+      const resourceValue = resource[key as keyof CloudPulseResources];
 
       if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
         return filterValue.some((val) => resourceValue.includes(String(val)));
@@ -719,3 +722,26 @@ export function filterUsingDependentFilters<T extends { [key: string]: any }>(
     });
   });
 }
+
+/**
+ * @param data The endpoints for which the filter needs to be applied
+ * @param regionFilter The selected region filter that will be used to filter the endpoints
+ * @returns The filtered endpoints
+ */
+export const filterEndpointsUsingRegion = (
+  data?: CloudPulseEndpoints[],
+  regionFilter?: CloudPulseMetricsFilter
+): CloudPulseEndpoints[] | undefined => {
+  if (!data) {
+    return data;
+  }
+
+  const regionFromFilter = regionFilter?.region;
+
+  // If no region filter is provided, return data as-is
+  if (!regionFromFilter) {
+    return data;
+  }
+
+  return data.filter(({ region }) => region === regionFromFilter);
+};

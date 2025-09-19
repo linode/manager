@@ -1,12 +1,17 @@
 import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
-import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
+import {
+  dashboardFactory,
+  databaseInstanceFactory,
+  objectStorageEndpointsFactory,
+} from 'src/factories';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
   deepEqual,
   filterBasedOnConfig,
+  filterEndpointsUsingRegion,
   filterUsingDependentFilters,
   getEndpointsProperties,
   getFilters,
@@ -26,6 +31,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
+import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
 
@@ -427,18 +433,26 @@ it('test getEndpointsProperties method', () => {
       },
       vi.fn()
     );
+    const {
+      label,
+      serviceType,
+      disabled,
+      savePreferences,
+      handleEndpointsSelection,
+      defaultValue,
+      region,
+      xFilter,
+    } = endpointsProperties;
 
     expect(endpointsProperties).toBeDefined();
-    expect(endpointsProperties.label).toEqual(
-      endpointsConfig.configuration.name
-    );
-    expect(endpointsProperties.serviceType).toEqual('objectstorage');
-    expect(endpointsProperties.savePreferences).toEqual(true);
-    expect(endpointsProperties.disabled).toEqual(false);
-    expect(endpointsProperties.handleEndpointsSelection).toBeDefined();
-    expect(endpointsProperties.defaultValue).toEqual(undefined);
-    expect(endpointsProperties.region).toEqual('us-east');
-    expect(endpointsProperties.xFilter).toEqual({ region: 'us-east' });
+    expect(label).toEqual(endpointsConfig.configuration.name);
+    expect(serviceType).toEqual('objectstorage');
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(handleEndpointsSelection).toBeDefined();
+    expect(defaultValue).toEqual(undefined);
+    expect(region).toEqual('us-east');
+    expect(xFilter).toEqual({ region: 'us-east' });
   }
 });
 
@@ -599,6 +613,32 @@ describe('filterUsingDependentFilters', () => {
 
     result = filterUsingDependentFilters(mockData, filters);
     expect(result).toEqual([mockData[1]]);
+  });
+});
+
+describe('filterEndpointsUsingRegion', () => {
+  const mockData: CloudPulseEndpoints[] = [
+    {
+      ...objectStorageEndpointsFactory.build({ region: 'us-east' }),
+      label: 'us-east-1.linodeobjects.com',
+    },
+    {
+      ...objectStorageEndpointsFactory.build({ region: 'us-west' }),
+      label: 'us-west-1.linodeobjects.com',
+    },
+  ];
+  it('should return data as is if data is undefined', () => {
+    expect(
+      filterEndpointsUsingRegion(undefined, { region: 'us-east' })
+    ).toEqual(undefined);
+  });
+  it('should return data as is if region filter is undefined', () => {
+    expect(filterEndpointsUsingRegion(mockData, undefined)).toEqual(mockData);
+  });
+  it('should return endpoints based on region if region filter is provided', () => {
+    expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(
+      [mockData[0]]
+    );
   });
 });
 
