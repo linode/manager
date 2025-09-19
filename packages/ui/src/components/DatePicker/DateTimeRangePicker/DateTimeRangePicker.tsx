@@ -330,7 +330,7 @@ export const DateTimeRangePicker = ({
           transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         >
           <Box
-            bgcolor="background.paper"
+            bgcolor={theme.tokens.component.Calendar.Background}
             boxShadow={4}
             display="flex"
             gap={2}
@@ -434,7 +434,13 @@ export const DateTimeRangePicker = ({
             </Box>
           </Box>
           <Divider spacingBottom={0} spacingTop={0} />
-          <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
+          <Box
+            bgcolor={theme.tokens.component.Calendar.Background}
+            display="flex"
+            gap={2}
+            justifyContent="flex-end"
+            padding={2}
+          >
             <Button buttonType="outlined" data-qa-buttons onClick={handleClose}>
               Cancel
             </Button>
