@@ -1,9 +1,4 @@
-import {
-  useAllFirewallsQuery,
-  useAllLinodesQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
+import { useAllFirewallsQuery, useAllLinodesQuery } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
@@ -13,7 +8,6 @@ import {
   RadioGroup,
   Typography,
 } from '@linode/ui';
-import { getEntityIdsByPermission } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -61,26 +55,16 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
 
   const { control } = useFormContext<CreateFirewallFormValues>();
 
-  const { data: grants } = useGrants();
   const { data: firewalls } = useAllFirewallsQuery(open);
-  const { data: profile } = useProfile();
 
   const { data: permissableLinodes, hasFiltered: hasFilteredLinodes } =
     useQueryWithPermissions<Linode>(useAllLinodesQuery(), 'linode', [
       'apply_linode_firewalls',
     ]);
 
-  const isRestrictedUser = profile?.restricted;
-
-  // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
-  const readOnlyNodebalancerIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
-    : [];
-
-  const deviceSelectGuidance =
-    hasFilteredLinodes || readOnlyNodebalancerIds.length > 0
-      ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
-      : undefined;
+  const deviceSelectGuidance = hasFilteredLinodes
+    ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
+    : undefined;
 
   const assignedServices = firewalls
     ?.map((firewall) => firewall.entities)
@@ -101,9 +85,8 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   };
 
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-    return (
-      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
+    return !assignedNodeBalancers?.some(
+      (service) => service.id === nodebalancer.id
     );
   };
 
