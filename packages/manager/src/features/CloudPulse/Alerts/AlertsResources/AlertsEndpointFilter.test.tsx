@@ -11,14 +11,14 @@ describe('AlertsEndpointFilter', () => {
   it('calls handleFilterChange with correct arguments when an endpoint is selected', async () => {
     const handleFilterChange = vi.fn();
 
-    const { getByRole } = renderWithTheme(
+    renderWithTheme(
       <AlertsEndpointFilter
         endpointOptions={endpointOptions}
         handleFilterChange={handleFilterChange}
       />
     );
 
-    await userEvent.click(getByRole('button', { name: 'Open' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
 
     // Check first option exists
     expect(
@@ -26,23 +26,52 @@ describe('AlertsEndpointFilter', () => {
     ).toBeVisible();
 
     // Select first option
-    await userEvent.click(getByRole('option', { name: endpointOptions[0] }));
+    await userEvent.click(
+      screen.getByRole('option', { name: endpointOptions[0] })
+    );
     expect(handleFilterChange).toHaveBeenCalledWith(
-      endpointOptions[0],
+      [endpointOptions[0]],
       'endpoint'
     );
+  });
+  it('renders with empty endpointOptions', async () => {
+    const handleFilterChange = vi.fn();
 
-    await userEvent.click(getByRole('button', { name: 'Open' }));
+    renderWithTheme(
+      <AlertsEndpointFilter
+        endpointOptions={[]}
+        handleFilterChange={handleFilterChange}
+      />
+    );
 
-    // Check second option exists
+    await userEvent.click(screen.getByRole('button', { name: 'Open' })); // indicates there is a drop down
     expect(
-      screen.getByRole('option', { name: endpointOptions[1] })
+      screen.getByText('You have no options to choose from')
     ).toBeVisible();
+  });
 
+  it('renders with multiple selection endpoints', async () => {
+    const handleFilterChange = vi.fn();
+
+    renderWithTheme(
+      <AlertsEndpointFilter
+        endpointOptions={endpointOptions}
+        handleFilterChange={handleFilterChange}
+      />
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+
+    // Select first option
+    await userEvent.click(
+      screen.getByRole('option', { name: endpointOptions[0] })
+    );
     // Select second option
-    await userEvent.click(getByRole('option', { name: endpointOptions[1] }));
+    await userEvent.click(
+      screen.getByRole('option', { name: endpointOptions[1] })
+    );
     expect(handleFilterChange).toHaveBeenCalledWith(
-      endpointOptions[1],
+      [...endpointOptions],
       'endpoint'
     );
   });
