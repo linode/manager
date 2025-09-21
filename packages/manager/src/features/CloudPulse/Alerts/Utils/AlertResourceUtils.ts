@@ -269,6 +269,11 @@ const applyAdditionalFilter = (
       return value.some((obj) => resourceValue.includes(obj));
     }
 
+    // to cover the endpoint scenario where resourceValue is string and value can be string[]
+    if (Array.isArray(value) && typeof resourceValue === 'string') {
+      return resourceValue && value.includes(resourceValue);
+    }
+
     return resourceValue === value;
   });
 };
@@ -376,7 +381,6 @@ export const getOfflineRegionFilteredResources = (
   supportedRegionIds: string[]
 ): CloudPulseResources[] => {
   return resources.filter(
-    (resource) =>
-      resource.region && supportedRegionIds.includes(resource.region)
+    ({ region }) => region && supportedRegionIds.includes(region)
   );
 };

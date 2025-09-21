@@ -1345,6 +1345,11 @@ export const handlers = [
         region: 'ap-west',
         s3_endpoint: 'ap-west-1.linodeobjects.com',
       }),
+      objectStorageBucketFactoryGen2.build({
+        endpoint_type: 'E3',
+        region: 'us-iad',
+        s3_endpoint: 'us-iad-1.linodeobjects.com',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
@@ -1491,7 +1496,7 @@ export const handlers = [
       data: buckets.slice(
         (page - 1) * pageSize,
         (page - 1) * pageSize + pageSize
-      ),  
+      ),
       page,
       pages: Math.ceil(buckets.length / pageSize),
       results: buckets.length,
