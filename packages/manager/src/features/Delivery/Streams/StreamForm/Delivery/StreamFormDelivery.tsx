@@ -67,10 +67,18 @@ export const StreamFormDelivery = () => {
     name: 'stream.destinations',
   });
 
-  const destinationNameFilterOptions = createFilterOptions<DestinationName>();
+  const destinationNameFilterOptions = createFilterOptions<DestinationName>({
+    stringify: (destination) => destination.label,
+  });
 
   const findDestination = (id: number) =>
     destinations?.data?.find((destination) => destination.id === id);
+
+  const restDestinationForm = () => {
+    Object.values(controlPaths).forEach((controlPath) =>
+      setValue(controlPath, '')
+    );
+  };
 
   const getDestinationForm = () => (
     <>
@@ -120,6 +128,10 @@ export const StreamFormDelivery = () => {
             onBlur={field.onBlur}
             onChange={(_, newValue) => {
               const id = newValue?.id;
+
+              if (id === undefined && selectedDestinations.length > 0) {
+                restDestinationForm();
+              }
 
               setValue('stream.destinations', id ? [id] : []);
               const selectedDestination = id ? findDestination(id) : undefined;

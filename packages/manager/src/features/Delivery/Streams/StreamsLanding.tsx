@@ -63,7 +63,7 @@ export const StreamsLanding = () => {
       label: { '+contains': search?.label },
     }),
     ...(search?.status !== undefined && {
-      status: { '+contains': search?.status },
+      status: search?.status,
     }),
   };
 
@@ -151,7 +151,6 @@ export const StreamsLanding = () => {
     destinations,
     details,
     label,
-    type,
     status,
   }: Stream) => {
     updateStream({
@@ -159,7 +158,6 @@ export const StreamsLanding = () => {
       destinations: destinations.map(({ id: destinationId }) => destinationId),
       details,
       label,
-      type,
       status:
         status === streamStatus.Active
           ? streamStatus.Inactive

@@ -133,7 +133,6 @@ export const StreamForm = (props: StreamFormProps) => {
         await updateStream({
           id: streamId,
           label,
-          type,
           status: status as StreamStatus,
           destinations: [destinationId],
           details: payloadDetails,
@@ -186,7 +185,7 @@ export const StreamForm = (props: StreamFormProps) => {
           <FormSubmitBar
             blockSubmit={!selectedDestinations?.length}
             connectionTested={destinationVerified}
-            destinationType={destination.type}
+            destinationType={destination?.type}
             formType={'stream'}
             isSubmitting={isSubmitting}
             isTesting={isVerifyingDestination}

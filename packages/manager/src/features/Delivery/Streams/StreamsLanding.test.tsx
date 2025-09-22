@@ -159,8 +159,7 @@ describe('Streams Landing Table', () => {
           status: 'inactive',
           label: 'Stream 1',
           destinations: [123],
-          details: {},
-          type: 'audit_logs',
+          details: null,
         });
       });
     });
@@ -182,8 +181,7 @@ describe('Streams Landing Table', () => {
           status: 'active',
           label: 'Stream 1',
           destinations: [123],
-          details: {},
-          type: 'audit_logs',
+          details: null,
         });
       });
     });
