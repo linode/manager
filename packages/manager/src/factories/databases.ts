@@ -49,6 +49,9 @@ export const possibleTypes: string[] = [
   'g6-dedicated-50',
   'g6-dedicated-56',
   'g6-dedicated-64',
+  'g7-premium-2',
+  'g7-premium-4',
+  'g7-premium-8',
 ];
 
 export const possibleRegions: string[] = [

@@ -39,6 +39,7 @@ type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   created: string;
+  group_by?: string[];
   id: number;
   label: string;
   service_type: CloudPulseServiceType;
@@ -71,7 +72,7 @@ export interface Widgets {
   color: string;
   entity_ids: string[];
   filters: Filters[];
-  group_by: string[];
+  group_by?: string[];
   label: string;
   metric: string;
   namespace_id: number;
@@ -149,7 +150,7 @@ export interface CloudPulseMetricsRequest {
   associated_entity_region?: string;
   entity_ids: number[];
   filters?: Filters[];
-  group_by: string[];
+  group_by?: string[];
   metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
@@ -388,10 +389,10 @@ export interface CloudPulseAlertsPayload {
    * Array of enabled system alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  system?: number[];
+  system_alerts?: number[];
   /**
    * Array of enabled user alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  user?: number[];
+  user_alerts?: number[];
 }

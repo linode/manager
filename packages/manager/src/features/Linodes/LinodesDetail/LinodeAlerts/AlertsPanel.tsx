@@ -5,14 +5,12 @@ import {
 } from '@linode/queries';
 import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
-import { alertsSchema } from '@linode/validation';
+import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
-import { useBlocker } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -29,6 +27,11 @@ interface Props {
    * - If not provided, the Alerts Panel will be in the create flow mode (read-only).
    */
   linodeId?: number;
+  /**
+   * Callback triggered when the Legacy Alerts form has unsaved changes.
+   * Receives `true` when there are unsaved changes, and `false` when the form is clean.
+   */
+  onUnsavedChangesUpdate?: (hasUnsavedChanges: boolean) => void;
 }
 
 export const AlertsPanel = (props: Props) => {
@@ -78,7 +81,7 @@ export const AlertsPanel = (props: Props) => {
     enableReinitialize: true,
     initialValues,
     validateOnChange: true,
-    validationSchema: alertsSchema,
+    validationSchema: UpdateLinodeAlertsSchema,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
@@ -293,39 +296,6 @@ export const AlertsPanel = (props: Props) => {
     },
   ].filter((thisAlert) => !thisAlert.hidden);
 
-  const hasUnsavedChanges = formik.dirty;
-
-  const { proceed, reset, status } = useBlocker({
-    enableBeforeUnload: hasUnsavedChanges,
-    shouldBlockFn: ({ next }) => {
-      // Only block if there are unsaved changes
-      if (!hasUnsavedChanges) {
-        return false;
-      }
-
-      // Don't block navigation to the specific route
-      const isNavigatingToAllowedRoute =
-        next.routeId === '/linodes/$linodeId/alerts';
-
-      return !isNavigatingToAllowedRoute;
-    },
-    withResolver: true,
-  });
-
-  // Create a combined handler for proceeding with navigation
-  const handleProceedNavigation = React.useCallback(() => {
-    if (status === 'blocked' && proceed) {
-      proceed();
-    }
-  }, [status, proceed]);
-
-  // Create a combined handler for canceling navigation
-  const handleCancelNavigation = React.useCallback(() => {
-    if (status === 'blocked' && reset) {
-      reset();
-    }
-  }, [status, reset]);
-
   const handleSaveClick = () => {
     if (!isLinodeAclpSubscribed) {
       formik.handleSubmit();
@@ -334,37 +304,22 @@ export const AlertsPanel = (props: Props) => {
     }
   };
 
+  React.useEffect(() => {
+    if (props.onUnsavedChangesUpdate) {
+      const hasUnsavedChanges = formik.dirty;
+      props.onUnsavedChangesUpdate(hasUnsavedChanges);
+    }
+
+    return () => {
+      // Cleanup on unmount
+      if (props.onUnsavedChangesUpdate) {
+        props.onUnsavedChangesUpdate(false);
+      }
+    };
+  }, [formik.dirty]);
+
   return (
     <>
-      <ConfirmationDialog
-        actions={() => (
-          <ActionsPanel
-            primaryButtonProps={{
-              label: 'Confirm',
-              onClick: () => {
-                handleProceedNavigation();
-              },
-            }}
-            secondaryButtonProps={{
-              buttonType: 'outlined',
-              label: 'Cancel',
-              onClick: () => {
-                handleCancelNavigation();
-              },
-            }}
-          />
-        )}
-        onClose={() => {
-          handleCancelNavigation();
-        }}
-        open={status === 'blocked'}
-        title="Unsaved Changes"
-      >
-        <Typography variant="body1">
-          Are you sure you want to leave the page? You have unsaved changes.
-        </Typography>
-      </ConfirmationDialog>
-
       {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
       when user already subscribed to Beta/ACLP Mode and makes changes in the
       Legacy mode Interface. */}

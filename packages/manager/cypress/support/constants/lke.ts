@@ -2,6 +2,8 @@ import { dedicatedTypeFactory, linodeTypeFactory } from '@linode/utilities';
 import { getLatestKubernetesVersion } from 'support/util/lke';
 
 import {
+  kubernetesEnterpriseTierVersionFactory,
+  kubernetesStandardTierVersionFactory,
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
 } from 'src/factories';
@@ -11,6 +13,28 @@ import { dcPricingMockLinodeTypes } from './dc-specific-pricing';
 import type { KubernetesTieredVersion } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { LkePlanDescription } from 'support/api/lke';
+
+// TODO M3-10442: Consolidate LKE version mocks and their types if possible.
+
+/**
+ * Array of mock standard-tier LKE version objects.
+ */
+export const mockTieredStandardVersions =
+  kubernetesStandardTierVersionFactory.buildList(2);
+
+/**
+ * Array of mock enterprise-tier LKE version objects.
+ */
+export const mockTieredEnterpriseVersions =
+  kubernetesEnterpriseTierVersionFactory.buildList(2);
+
+/**
+ * Array of mock standard and enterprise-tier LKE version objects.
+ */
+export const mockTieredVersions = [
+  ...mockTieredStandardVersions,
+  ...mockTieredEnterpriseVersions,
+];
 
 /**
  * Kubernetes versions available for cluster creation via Cloud Manager.
