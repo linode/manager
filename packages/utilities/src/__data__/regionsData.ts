@@ -13,7 +13,7 @@ export const regions: Region[] = [
       'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
-      'Object Storage'
+      'Object Storage',
     ],
     country: 'in',
     id: 'ap-west',
