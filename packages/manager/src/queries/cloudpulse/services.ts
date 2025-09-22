@@ -1,3 +1,4 @@
+import { queryPresets } from '@linode/queries';
 import {
   type APIError,
   type Filter,
@@ -23,6 +24,8 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
   return useQuery<ResourcePage<MetricDefinition>, APIError[]>({
     ...queryFactory.metricsDefinitons(serviceType, params, filter),
     enabled,
+    ...queryPresets.oneTimeFetch, // It is a configuration and not need to be refetched
+    retry: 2,
   });
 };
 
