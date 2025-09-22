@@ -2,7 +2,10 @@ import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
 
 import type { ResourcePage as Page, Params } from '../types';
-import type { ChildAccount, ChildAccountWithUsers } from './delegation.types';
+import type {
+  ChildAccount,
+  ChildAccountWithDelegates,
+} from './delegation.types';
 import type { IamUserRoles } from './types';
 import type { Account } from 'src/account';
 import type { Token } from 'src/profile';
@@ -13,7 +16,7 @@ interface ListChildAccountsParams {
 }
 export const listChildAccounts = ({ params }: ListChildAccountsParams) =>
   params?.includeDelegates
-    ? Request<Page<ChildAccountWithUsers>>(
+    ? Request<Page<ChildAccountWithDelegates>>(
         setURL(`${BETA_API_ROOT}/iam/delegation/child-accounts?users=true`),
         setMethod('GET'),
         setParams({ ...params }),

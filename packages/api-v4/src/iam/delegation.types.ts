@@ -3,6 +3,6 @@ export interface ChildAccount {
   euuid: string;
 }
 
-export interface ChildAccountWithUsers extends ChildAccount {
+export interface ChildAccountWithDelegates extends ChildAccount {
   users: string[];
 }
