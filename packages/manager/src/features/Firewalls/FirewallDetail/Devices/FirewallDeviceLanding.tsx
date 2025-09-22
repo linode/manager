@@ -154,6 +154,7 @@ export const FirewallDeviceLanding = React.memo(
         />
         {type === 'linode' ? (
           <AddLinodeDrawer
+            disabled={isCreateDeviceDisabled}
             helperText={helperText}
             onClose={handleClose}
             open={location.pathname.endsWith('add')}
