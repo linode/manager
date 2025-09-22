@@ -397,7 +397,6 @@ export const useIsAclpSupportedRegion = (
 };
 
 /**
- * 
  * @param filter The filter associated with the metric
  * @param options The dimension options associated with the metric
  * @returns boolean
@@ -412,12 +411,14 @@ export const isValidFilter = (
   // allow pattern operators without value check
   if (operator === 'endswith' || operator === 'startswith') return true;
 
-  const dim = options.find(
+  const dimension = options.find(
     ({ dimension_label: dimensionLabel }) =>
       dimensionLabel === filter.dimension_label
   );
-  if (!dim) return false;
+  if (!dimension) return false;
 
-  const validValues = new Set(dim.values);
-  return (filter.value ?? '').split(',').every((v) => validValues.has(v));
+  const validValues = new Set(dimension.values);
+  return (filter.value ?? '')
+    .split(',')
+    .every((value) => validValues.has(value));
 };
