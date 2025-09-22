@@ -92,6 +92,7 @@ export async function loadDevTools() {
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
       ],
+      entities: [...initialContext.entities, ...(seedContext?.entities || [])],
       kubernetesClusters: [
         ...initialContext.kubernetesClusters,
         ...(seedContext?.kubernetesClusters || []),

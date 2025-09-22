@@ -27,6 +27,7 @@ export const emptyStore: MockState = {
   destinations: [],
   domainRecords: [],
   domains: [],
+  entities: [],
   eventQueue: [],
   firewallDevices: [],
   firewalls: [],

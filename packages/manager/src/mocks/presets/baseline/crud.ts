@@ -7,6 +7,7 @@ import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
 import { cloudNATCrudPreset } from '../crud/cloudnats';
 import { domainCrudPreset } from '../crud/domains';
+import { entityCrudPreset } from '../crud/entities';
 import { firewallCrudPreset } from '../crud/firewalls';
 import { kubernetesCrudPreset } from '../crud/kubernetes';
 import { nodeBalancerCrudPreset } from '../crud/nodebalancers';
@@ -24,6 +25,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
     ...cloudNATCrudPreset.handlers,
     ...domainCrudPreset.handlers,
     ...deliveryCrudPreset.handlers,
+    ...entityCrudPreset.handlers,
     ...firewallCrudPreset.handlers,
     ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,
