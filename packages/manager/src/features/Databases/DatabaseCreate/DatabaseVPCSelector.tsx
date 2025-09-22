@@ -1,6 +1,7 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
+  BetaChip,
   Box,
   Checkbox,
   Notice,
@@ -10,6 +11,7 @@ import {
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../constants';
@@ -40,6 +42,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     privateNetworkValues,
   } = props;
 
+  const flags = useFlags();
   const isCreate = mode === 'create';
   const { data: selectedRegion } = useRegionQuery(selectedRegionId);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');
@@ -131,6 +134,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
         variant="h3"
       >
         Assign a VPC
+        {flags.databaseVpcBeta && <BetaChip />}
       </Typography>
 
       <Typography>
