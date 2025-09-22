@@ -205,4 +205,65 @@ export const widgetDetails = {
     serviceType: 'firewall',
     region: 'Newark',
   },
+
+  objectstorage: {
+    dashboardName: 'Object Storage Dashboard',
+    id: 6,
+    metrics: [
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['avg', 'max', 'min'],
+        expectedGranularity: '1 hr',
+        name: 'obj_bucket_size',
+        title: 'Total Bucket Size',
+        unit: 'B',
+        yLabel: 'obj_bucket_size',
+        filters: [
+          { dimension_label: 'endpoint', operator: 'eq', value: null },
+          { dimension_label: 'request_type', operator: 'eq', value: null },
+        ],
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['avg', 'max', 'min'],
+        expectedGranularity: '1 hr',
+        name: 'obj_requests_num',
+        title: 'All Requests',
+        unit: 'Count',
+        yLabel: 'obj_requests_num',
+        filters: [
+          { dimension_label: 'endpoint', operator: 'eq', value: null },
+          { dimension_label: 'request_type', operator: 'eq', value: null },
+        ],
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['avg', 'max', 'min'],
+        expectedGranularity: '1 hr',
+        name: 'obj_responses_num',
+        title: 'All Responses',
+        unit: 'Count',
+        yLabel: 'obj_responses_num',
+        filters: [
+          { dimension_label: 'endpoint', operator: 'eq', value: null },
+          { dimension_label: 'response_type', operator: 'eq', value: null },
+        ],
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['avg', 'max', 'min'],
+        expectedGranularity: '1 hr',
+        name: 'obj_bytes_downloaded',
+        title: 'Bytes Downloaded',
+        unit: 'B',
+        yLabel: 'obj_bytes_downloaded',
+        filters: [
+          { dimension_label: 'endpoint', operator: 'eq', value: null },
+          { dimension_label: 'response_type', operator: 'eq', value: null },
+        ],
+      },
+    ],
+    region: 'Chicago',
+    serviceType: 'objectstorage',
+  },
 };
