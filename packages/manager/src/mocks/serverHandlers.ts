@@ -2959,7 +2959,6 @@ export const handlers = [
             label: 'Firewall - testing',
             service_type: 'firewall',
             type: 'user',
-            scope: 'account',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
@@ -2998,7 +2997,6 @@ export const handlers = [
             label: 'Firewall - testing',
             service_type: 'firewall',
             type: 'user',
-            scope: 'account',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },

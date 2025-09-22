@@ -1,4 +1,3 @@
-import { queryPresets } from '@linode/queries';
 import {
   type APIError,
   type Filter,
@@ -9,6 +8,7 @@ import {
   type ResourcePage,
   type ServiceTypesList,
 } from '@linode/api-v4';
+import { queryPresets } from '@linode/queries';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
