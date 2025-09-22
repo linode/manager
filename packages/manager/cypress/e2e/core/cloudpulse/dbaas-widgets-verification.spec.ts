@@ -542,7 +542,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       });
   });
 
-  it.only('should apply group by at widget level only  and verify the metrics API calls', () => {
+  it('should apply group by at widget level only  and verify the metrics API calls', () => {
     // validate the widget level granularity selection and its metrics
     ui.button
       .findByAttribute('aria-label', 'Group By Dashboard Metrics')
