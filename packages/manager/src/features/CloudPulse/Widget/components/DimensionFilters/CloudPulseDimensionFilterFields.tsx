@@ -12,7 +12,11 @@ import type {
   MetricsDimensionFilter,
   MetricsDimensionFilterForm,
 } from './types';
-import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dimension,
+  DimensionFilterOperatorType,
+} from '@linode/api-v4';
 
 interface CloudPulseDimensionFilterFieldsProps {
   /**
@@ -27,6 +31,7 @@ interface CloudPulseDimensionFilterFieldsProps {
    * The name (with the index) used for the component to set in form
    */
   name: FieldPathByValue<MetricsDimensionFilterForm, MetricsDimensionFilter>;
+
   /**
    * function to delete the DimensionFilter component
    * @returns void
@@ -37,6 +42,11 @@ interface CloudPulseDimensionFilterFieldsProps {
    * The selected entities for the dimension filter
    */
   selectedEntities?: string[];
+
+  /**
+   * The service type of the associated metric
+   */
+  serviceType: CloudPulseServiceType;
 }
 
 export const CloudPulseDimensionFilterFields = (
@@ -48,6 +58,7 @@ export const CloudPulseDimensionFilterFields = (
     name,
     onFilterDelete,
     selectedEntities,
+    serviceType,
   } = props;
 
   const { control, setValue } = useFormContext<MetricsDimensionFilterForm>();
@@ -181,7 +192,8 @@ export const CloudPulseDimensionFilterFields = (
               operator={dimensionOperatorWatcher}
               scope={'entity'}
               selectedRegions={[]}
-              serviceType={'linode'}
+              serviceType={serviceType}
+              type="metrics"
               value={field.value}
               values={selectedDimension?.values ?? []}
             />

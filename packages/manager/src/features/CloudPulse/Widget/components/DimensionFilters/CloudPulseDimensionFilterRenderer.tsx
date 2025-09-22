@@ -15,7 +15,7 @@ import type {
   MetricsDimensionFilter,
   MetricsDimensionFilterForm,
 } from './types';
-import type { Dimension } from '@linode/api-v4';
+import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
 
 interface CloudPulseDimensionFilterRendererProps {
   /**
@@ -45,10 +45,15 @@ interface CloudPulseDimensionFilterRendererProps {
    * The selected dimension filters for the metric
    */
   selectedDimensions?: MetricsDimensionFilter[];
+
   /**
    * The selected entities for the dimension filter
    */
   selectedEntities?: string[];
+  /**
+   * The service type of the associated metric
+   */
+  serviceType: CloudPulseServiceType;
 }
 export const CloudPulseDimensionFilterRenderer = (
   props: CloudPulseDimensionFilterRendererProps
@@ -61,12 +66,13 @@ export const CloudPulseDimensionFilterRenderer = (
     onSubmit,
     clearAllTrigger,
     onClose,
+    serviceType,
   } = props;
 
   const formMethods = useForm<MetricsDimensionFilterForm>({
     defaultValues: {
       dimension_filters:
-        selectedDimensions && selectedDimensions?.length
+        selectedDimensions && selectedDimensions.length > 0
           ? selectedDimensions
           : [
               {
@@ -127,6 +133,7 @@ export const CloudPulseDimensionFilterRenderer = (
                   name={`dimension_filters.${index}`}
                   onFilterDelete={() => remove(index)}
                   selectedEntities={selectedEntities}
+                  serviceType={serviceType}
                 />
               ))}
           </Stack>

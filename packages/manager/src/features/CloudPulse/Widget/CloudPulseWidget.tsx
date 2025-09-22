@@ -154,9 +154,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
   const [groupBy, setGroupBy] = React.useState<string[]>([]);
-  const [dimensionFilters, setDimensionFilters] = React.useState<
-    MetricsDimensionFilter[] | undefined
-  >(widget.filters);
 
   const theme = useTheme();
 
@@ -177,6 +174,15 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     widget: widgetProp,
     linodeRegion,
   } = props;
+  const [dimensionFilters, setDimensionFilters] = React.useState<
+    MetricsDimensionFilter[] | undefined
+  >([
+    {
+      dimension_label: 'linode_id',
+      operator: 'eq',
+      value: '25391867',
+    },
+  ]);
 
   const timezone =
     duration.timeZone ?? profile?.timezone ?? DateTime.local().zoneName;
@@ -322,10 +328,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
   const filteredDimensions = React.useMemo(() => {
     return availableMetrics?.dimensions.filter(
-      (dimension) =>
-        !GLOBAL_DIMENSION_FILTER_LIST[serviceType].includes(
-          dimension.dimension_label
-        )
+      ({ dimension_label: dimensionLabel }) =>
+        !GLOBAL_DIMENSION_FILTER_LIST[serviceType].includes(dimensionLabel)
     );
   }, [availableMetrics, serviceType]);
   return (
@@ -402,6 +406,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   handleSelectionChange={setDimensionFilters}
                   selectedDimensions={dimensionFilters}
                   selectedEntities={entityIds}
+                  serviceType={serviceType}
                 />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}

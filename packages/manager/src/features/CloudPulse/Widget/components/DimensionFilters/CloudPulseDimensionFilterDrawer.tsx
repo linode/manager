@@ -7,7 +7,7 @@ import type {
   MetricsDimensionFilter,
   MetricsDimensionFilterForm,
 } from './types';
-import type { Dimension } from '@linode/api-v4';
+import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
 
 interface CloudPulseDimensionFilterDrawerProps {
   /**
@@ -40,10 +40,16 @@ interface CloudPulseDimensionFilterDrawerProps {
    * The selected dimension filters for the metric
    */
   selectedDimensions?: MetricsDimensionFilter[];
+
   /**
    * The selected entities for the dimension filter
    */
   selectedEntities?: string[];
+
+  /**
+   * The service type of the associated metric
+   */
+  serviceType: CloudPulseServiceType;
 }
 
 export const CloudPulseDimensionFilterDrawer = (
@@ -57,6 +63,7 @@ export const CloudPulseDimensionFilterDrawer = (
     handleSelectionChange,
     drawerLabel,
     selectedEntities,
+    serviceType,
   } = props;
 
   const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
@@ -112,6 +119,7 @@ export const CloudPulseDimensionFilterDrawer = (
           onSubmit={handleFormSubmit}
           selectedDimensions={selectedDimensions}
           selectedEntities={selectedEntities}
+          serviceType={serviceType}
         />
       </Stack>
     </Drawer>
