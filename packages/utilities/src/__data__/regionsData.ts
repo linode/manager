@@ -27,7 +27,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Cloud Firewall'], metrics: [] },
+    monitors: { alerts: ['Cloud Firewall'], metrics: ['Block Storage'] },
   },
   {
     capabilities: [

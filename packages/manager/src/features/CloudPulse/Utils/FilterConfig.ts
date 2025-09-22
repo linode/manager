@@ -315,6 +315,40 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   serviceType: 'firewall',
 };
 
+export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['blockstorage'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Volumes',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Volumes',
+        priority: 2,
+      },
+      name: 'Volumes',
+    },
+  ],
+  serviceType: 'blockstorage',
+};
+
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -322,4 +356,5 @@ export const FILTER_CONFIG: Readonly<
   [2, LINODE_CONFIG],
   [3, NODEBALANCER_CONFIG],
   [4, FIREWALL_CONFIG],
+  [7, BLOCKSTORAGE_CONFIG],
 ]);
