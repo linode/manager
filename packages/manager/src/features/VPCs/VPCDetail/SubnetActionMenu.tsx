@@ -37,6 +37,7 @@ export const SubnetActionMenu = (props: Props) => {
 
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
   const canUpdateVPC = permissions?.update_vpc;
+
   const actions: Action[] = [
     {
       onClick: () => {

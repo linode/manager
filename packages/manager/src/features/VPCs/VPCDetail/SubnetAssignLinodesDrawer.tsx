@@ -151,6 +151,7 @@ export const SubnetAssignLinodesDrawer = (
   const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
   // TODO: change update_linode to create_linode_config_profile_interface once it's available
   // TODO: change delete_linode to delete_linode_config_profile_interface once it's available
+  // TODO: refactor useQueryWithPermissions once API filter is available
   const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
     useAllLinodesQuery(),
     'linode',
