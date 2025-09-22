@@ -24,6 +24,7 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
+import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
@@ -227,6 +228,9 @@ export const VPC = ({ index }: Props) => {
                         errors.linodeInterfaces?.[index]?.vpc?.ipv6?.slaac?.[0]
                           ?.range?.message
                       }
+                      helperText={generateVPCIPv6InputHelperText(
+                        selectedSubnet?.ipv6?.[0].range ?? ''
+                      )}
                       label="VPC IPv6"
                       noMarginTop
                       onBlur={field.onBlur}
