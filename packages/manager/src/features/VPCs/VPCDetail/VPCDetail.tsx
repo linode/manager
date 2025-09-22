@@ -179,7 +179,7 @@ const VPCDetail = () => {
             tooltipText={
               !permissions.update_vpc
                 ? 'You do not have permission to edit this VPC.'
-                : ''
+                : undefined
             }
           >
             Edit
@@ -190,7 +190,7 @@ const VPCDetail = () => {
             tooltipText={
               !permissions.delete_vpc
                 ? 'You do not have permission to delete this VPC.'
-                : ''
+                : undefined
             }
           >
             Delete

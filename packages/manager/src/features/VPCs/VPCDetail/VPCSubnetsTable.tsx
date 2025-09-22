@@ -439,7 +439,7 @@ export const VPCSubnetsTable = (props: Props) => {
           tooltipText={
             !permissions.create_vpc_subnet
               ? 'You do not have permission to create a VPC subnet.'
-              : ''
+              : undefined
           }
         >
           Create Subnet
