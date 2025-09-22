@@ -96,7 +96,9 @@ export const CloudPulseEndpointsSelect = React.memo(
 
       const validEndpoints: CloudPulseEndpoints[] = endpoints
         .flatMap((endpoint) =>
-          endpoint.s3_endpoint !== null
+          endpoint.s3_endpoint !== null &&
+          endpoint.endpoint_type !== 'E0' &&
+          endpoint.endpoint_type !== 'E1'
             ? [
                 {
                   label: endpoint.s3_endpoint,
