@@ -94,13 +94,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
+    mockAppendFeatureFlags(flagsFactory.build());
   });
 
   it('should only display the Chicago region in the dropdown when supportedRegionIds is set to Chicago (us-ord)', () => {
     mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
-    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
-    cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -155,10 +154,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   });
   it('supportedRegionIds is empty, no regions will be displayed', () => {
     mockGetRegions([extendedMockRegion]).as('fetchRegion');
-    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
-    cy.wait('@getFeatureFlags');
-
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
       .findByLabel('Dashboard')
@@ -197,9 +193,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   it('should only display mocking region as Chicago and then supportedRegionIds is set to Junk', () => {
     mockGetRegions([{ ...mockRegion, monitors: undefined }]).as('fetchRegion');
-    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
     cy.visitWithLogin('metrics');
-    cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -246,11 +240,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     // Since we are mocking the region as Chicago but setting supportedRegionIds to Newark,
     // no region should be displayed in the dropdown, as the region displayed must match the supported region
 
-    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
     mockGetRegions([{ ...mockRegion, monitors: undefined }]).as('fetchRegion');
 
     cy.visitWithLogin('metrics');
-    cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -290,11 +282,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   it('should only display the Chicago region in the dropdown when supportedRegionIds is set to Chicago (us-ord) with extra spaces', () => {
     // Adding extra space to supportedRegionIds with the value ' us-ord', and the value should be trimmed to remove the extra spaces.',
-    mockAppendFeatureFlags(flagsFactory.build()).as('getFeatureFlags');
     mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
 
     cy.visitWithLogin('metrics');
-    cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -450,7 +440,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         });
       }),
     });
-    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
