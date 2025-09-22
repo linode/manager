@@ -9,8 +9,8 @@ import type { DateTimeWithPreset } from '@linode/api-v4';
 /**
  * Returns the default time duration, which is the last 30 minutes from the current time.
  *
- * @param {string} [timezone] - Optional timezone to use. If not provided, the local timezone is used.
- * @returns {DateTimeWithPreset} An object containing start time, end time, preset, and timezone.
+ * @param timezone Optional timezone to use. If not provided, the local timezone is used.
+ * @returns An object containing start time, end time, preset, and timezone.
  */
 export const defaultTimeDuration = (timezone?: string): DateTimeWithPreset => {
   const date = DateTime.now()
@@ -28,9 +28,9 @@ export const defaultTimeDuration = (timezone?: string): DateTimeWithPreset => {
 /**
  * Converts a date string to GMT timezone.
  *
- * @param {string} date - ISO date string to convert
- * @param {string} [timeZone] - Optional timezone of the input date. If not provided, the local timezone is used.
- * @returns {string} ISO date string in GMT timezone (with 'Z' suffix)
+ * @param date ISO date string to convert
+ * @param timeZone Optional timezone of the input date. If not provided, the local timezone is used.
+ * @returns ISO date string in GMT timezone (with 'Z' suffix)
  */
 export const convertToGmt = (date: string, timeZone?: string): string => {
   const dateObject = DateTime.fromISO(date).setZone(
@@ -44,9 +44,9 @@ export const convertToGmt = (date: string, timeZone?: string): string => {
 /**
  * Calculates the start and end times based on a preset time range.
  *
- * @param {DateTimeWithPreset} currentValue - The current date time range with preset
- * @param {string} timeZone - The timezone to use for calculations
- * @returns {DateTimeWithPreset} An object with updated start and end dates based on the preset
+ * @param currentValue The current date time range with preset
+ * @param timeZone The timezone to use for calculations
+ * @returns An object with updated start and end dates based on the preset
  */
 export function getTimeFromPreset(
   currentValue: DateTimeWithPreset,
