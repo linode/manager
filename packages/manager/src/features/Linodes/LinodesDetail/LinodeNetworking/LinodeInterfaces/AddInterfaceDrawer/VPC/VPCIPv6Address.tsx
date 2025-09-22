@@ -1,3 +1,4 @@
+import { useSubnetQuery } from '@linode/queries';
 import {
   Checkbox,
   FormControlLabel,
@@ -10,24 +11,27 @@ import {
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { Code } from 'src/components/Code/Code';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 
 import type { CreateInterfaceFormValues } from '../utilities';
 
-interface Props {
-  index: number;
-  isDualStackVPC: boolean;
-}
-
-export const VPCIPv4Address = (props: Props) => {
-  const { index, isDualStackVPC } = props;
+export const VPCIPv6Address = () => {
   const {
     control,
+    getValues,
     formState: { errors },
   } = useFormContext<CreateInterfaceFormValues>();
 
-  const error = errors.vpc?.ipv4?.addresses?.[index]?.message;
+  const { vpc } = getValues();
+  const { data: subnet } = useSubnetQuery(
+    vpc?.vpc_id ?? -1,
+    vpc?.subnet_id ?? -1,
+    Boolean(vpc?.vpc_id && vpc?.subnet_id)
+  );
+
+  const error = errors.vpc?.ipv6?.message;
 
   return (
     <Stack spacing={1}>
@@ -38,41 +42,37 @@ export const VPCIPv4Address = (props: Props) => {
       )}
       <Controller
         control={control}
-        name={`vpc.ipv4.addresses.${index}.address`}
+        name="vpc.ipv6.slaac.0.range"
         render={({ field, fieldState }) => (
           <Stack rowGap={1}>
             <Stack direction="row">
               <FormControlLabel
                 checked={field.value === 'auto'}
                 control={<Checkbox />}
-                label="Auto-assign VPC IPv4 address"
+                label="Auto-assign VPC IPv6 address"
                 onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
                 sx={{ pl: 0.4, mr: 0 }}
               />
               <TooltipIcon
                 status="info"
                 text={
-                  isDualStackVPC ? (
-                    <Typography component="span">
-                      Automatically assign an IPv4 address as{' '}
-                      {isDualStackVPC ? 'a' : 'the'} private IP address for this
-                      Linode in the VPC.
-                    </Typography>
-                  ) : (
-                    VPC_AUTO_ASSIGN_IPV4_TOOLTIP
-                  )
+                  <Typography component="span">
+                    Automatically assign an IPv6 address as a private IP address
+                    for this Linode in the VPC. A <Code>/52</Code> IPv6 network
+                    prefix is allocated for the VPC.
+                  </Typography>
                 }
               />
             </Stack>
             {field.value !== 'auto' && (
               <TextField
-                containerProps={{ sx: { mb: 1.5, mt: 1 } }}
                 errorText={fieldState.error?.message}
-                label="VPC IPv4"
+                helperText={generateVPCIPv6InputHelperText(
+                  subnet?.ipv6?.[0].range ?? ''
+                )}
+                label="VPC IPv6"
                 noMarginTop
-                onBlur={field.onBlur}
                 onChange={field.onChange}
-                required
                 value={field.value}
               />
             )}
