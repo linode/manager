@@ -1,4 +1,5 @@
 import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
+import { MetricsDimensionFilterOperatorType } from '../Widget/components/DimensionFilters/types';
 
 export const DASHBOARD_ID = 'dashboardId';
 
@@ -130,3 +131,11 @@ export const GLOBAL_DIMENSION_FILTER_LIST: Record<
   nodebalancer: ['port'],
   firewall: ['interface_type', 'interface_id', 'region_id'],
 };
+
+export const VALID_OPERATORS: MetricsDimensionFilterOperatorType[] = [
+  'endswith',
+  'eq',
+  'in',
+  'neq',
+  'startswith',
+];

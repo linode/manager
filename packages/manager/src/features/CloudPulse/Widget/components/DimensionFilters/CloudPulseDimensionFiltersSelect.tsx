@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useFetchOptions } from 'src/features/CloudPulse/Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
 import { CloudPulseTooltip } from 'src/features/CloudPulse/shared/CloudPulseTooltip';
+import { isValidFilter } from 'src/features/CloudPulse/Utils/utils';
 
 import { CloudPulseDimensionFilterDrawer } from './CloudPulseDimensionFilterDrawer';
 import { CloudPulseDimensionFilterIconWithBadge } from './FilterIconWithBadge';
@@ -62,18 +63,21 @@ export const CloudPulseDimensionFilterSelect = (
     serviceType,
   });
 
-  const checkIfValidLinodeId = (linodeId: string) => {
-    return linodesFetch.values.find((value) => value.value === linodeId);
-  };
+  const mergedDimensionOptions = React.useMemo(
+    () =>
+      dimensionOptions.map((dim) =>
+        dim.dimension_label === 'linode_id'
+          ? { ...dim, values: linodesFetch.values.map((lin) => lin.value) }
+          : dim
+      ),
+    [dimensionOptions, linodesFetch.values]
+  );
 
-  const filteredSelections =
-    selectedDimensions && selectedDimensions?.length
-      ? selectedDimensions.filter((value) =>
-          value.dimension_label === 'linode_id'
-            ? checkIfValidLinodeId(value.value ?? '')
-            : true
-        )
-      : [];
+  const filteredSelections = selectedDimensions?.length
+    ? selectedDimensions.filter((filter) =>
+        isValidFilter(filter, mergedDimensionOptions)
+      )
+    : [];
 
   const handleChangeInSelection = (
     selectedValue: MetricsDimensionFilter[],
