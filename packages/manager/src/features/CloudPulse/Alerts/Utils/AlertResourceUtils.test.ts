@@ -234,10 +234,10 @@ describe('getSupportedRegionIds', () => {
 
 describe('getEndpointOptions', () => {
   const mockResources: CloudPulseResources[] = [
-    { id: '1', endpoint: 'endpoint-a', region: 'us-east', label: 'r1' } as any,
-    { id: '2', endpoint: 'endpoint-b', region: 'us-east', label: 'r2' } as any,
-    { id: '3', endpoint: 'endpoint-a', region: 'us-west', label: 'r3' } as any, // duplicate endpoint
-    { id: '4', endpoint: undefined, region: 'us-west', label: 'r4' } as any, // no endpoint
+    { id: '1', endpoint: 'endpoint-a', region: 'us-east', label: 'r1' },
+    { id: '2', endpoint: 'endpoint-b', region: 'us-east', label: 'r2' },
+    { id: '3', endpoint: 'endpoint-a', region: 'us-west', label: 'r3' },
+    { id: '4', endpoint: undefined, region: 'us-west', label: 'r4' },
   ];
 
   it('returns all unique endpoints when isAdditionOrDeletionNeeded = true', () => {
