@@ -1,67 +1,63 @@
 import { IconButton } from '@linode/ui';
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 
 import { CloudPulseTooltip } from 'src/features/CloudPulse/shared/CloudPulseTooltip';
 
 import { CloudPulseDimensionFilterDrawer } from './CloudPulseDimensionFilterDrawer';
-import { FilterIconWithBadge } from './FilterIconWithBadge';
+import { CloudPulseDimensionFilterIconWithBadge } from './FilterIconWithBadge';
 
+import type { MetricsDimensionFilter } from './types';
 import type { Dimension } from '@linode/api-v4';
-import type {
-  DimensionFilterForm,
-  OnlyDimensionFilterForm,
-} from 'src/features/CloudPulse/Alerts/CreateAlert/types';
 
-interface CloudPulseDimensionFilterIconProps {
+interface CloudPulseDimensionFilterSelectProps {
+  /**
+   * The list of available dimensions for the selected metric
+   */
   dimensionOptions: Dimension[];
-  handleSelectionChange: (selectedDimensions: DimensionFilterForm[]) => void;
-  selectedDimensions?: DimensionFilterForm[];
+  /**
+   * The label for the drawer, typically the name of the metric
+   */
+  drawerLabel: string;
+  /**
+   *
+   * @param selectedDimensions The list of selected dimension filters
+   * @returns
+   */
+  handleSelectionChange: (selectedDimensions: MetricsDimensionFilter[]) => void;
+  /**
+   * The selected dimension filters for the metric
+   */
+  selectedDimensions?: MetricsDimensionFilter[];
+  /**
+   * The selected entities for the dimension filter
+   */
   selectedEntities?: string[];
-  widgetMetricName: string;
 }
 
-export const CloudPulseDimensionFilterIcon = (
-  props: CloudPulseDimensionFilterIconProps
+export const CloudPulseDimensionFilterSelect = (
+  props: CloudPulseDimensionFilterSelectProps
 ) => {
   const {
     dimensionOptions,
     selectedDimensions,
     handleSelectionChange,
-    widgetMetricName,
+    drawerLabel,
     selectedEntities,
   } = props;
   const [open, setOpen] = React.useState(false);
 
   const handleChangeInSelection = (
-    selectedValue: DimensionFilterForm[],
+    selectedValue: MetricsDimensionFilter[],
     close: boolean
   ) => {
-    handleSelectionChange(selectedValue);
     if (close) {
+      handleSelectionChange(selectedValue);
       setOpen(false);
     }
   };
 
-  const formMethods = useForm<OnlyDimensionFilterForm>({
-    defaultValues: {
-      dimension_filters:
-        selectedDimensions && selectedDimensions?.length
-          ? selectedDimensions
-          : [
-              {
-                dimension_label: null,
-                operator: null,
-                value: null,
-              },
-            ],
-    },
-    mode: 'onBlur',
-  });
-  const { control, handleSubmit } = formMethods;
-
   return (
-    <FormProvider {...formMethods}>
+    <>
       <CloudPulseTooltip placement="bottom-end" title="Dimension Filter">
         <IconButton
           aria-label="Widget Dimension Filter"
@@ -79,20 +75,20 @@ export const CloudPulseDimensionFilterIcon = (
             padding: 0,
           })}
         >
-          <FilterIconWithBadge count={selectedDimensions?.length} />
+          <CloudPulseDimensionFilterIconWithBadge
+            count={selectedDimensions?.length ?? 0}
+          />
         </IconButton>
       </CloudPulseTooltip>
       <CloudPulseDimensionFilterDrawer
-        control={control}
         dimensionOptions={dimensionOptions}
+        drawerLabel={drawerLabel}
         handleSelectionChange={handleChangeInSelection}
-        handleSubmit={handleSubmit}
         onClose={() => setOpen(false)}
         open={open}
         selectedDimensions={selectedDimensions}
         selectedEntities={selectedEntities}
-        widgetMetricName={widgetMetricName}
       />
-    </FormProvider>
+    </>
   );
 };

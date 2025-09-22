@@ -2,20 +2,20 @@ import Badge from '@mui/material/Badge';
 import React from 'react';
 
 import FilterIcon from 'src/assets/icons/filter.svg';
-interface FilterIconWithBadgeProps {
-  count?: number;
-  max?: number;
+interface CloudPulseDimensionFilterIconWithBadgeProps {
+  /**
+   * The count to be displayed in the badge
+   */
+  count: number;
 }
 
-export const FilterIconWithBadge: React.FC<FilterIconWithBadgeProps> = ({
-  count = 0,
-  max = 9,
-}) => {
-  const display = count > max ? `${max}+` : count;
+export const CloudPulseDimensionFilterIconWithBadge = ({
+  count,
+}: CloudPulseDimensionFilterIconWithBadgeProps) => {
   return (
     <Badge
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      badgeContent={display}
+      badgeContent={count}
       invisible={count === 0}
       overlap="rectangular"
       sx={(theme) => ({

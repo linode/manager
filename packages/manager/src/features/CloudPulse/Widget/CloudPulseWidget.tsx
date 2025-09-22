@@ -28,12 +28,12 @@ import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
-import { CloudPulseDimensionFilterIcon } from './components/DimensionFilters/CloudPulseDimensionFilterIcon';
+import { CloudPulseDimensionFilterSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
 
-import type { DimensionFilterForm } from '../Alerts/CreateAlert/types';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { MetricsDimensionFilter } from './components/DimensionFilters/types';
 import type {
   CloudPulseServiceType,
   DateTimeWithPreset,
@@ -155,8 +155,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
   const [groupBy, setGroupBy] = React.useState<string[]>([]);
   const [dimensionFilters, setDimensionFilters] = React.useState<
-    DimensionFilterForm[] | undefined
-  >(undefined);
+    MetricsDimensionFilter[] | undefined
+  >(widget.filters);
 
   const theme = useTheme();
 
@@ -396,12 +396,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   metric={widget.metric}
                   serviceType={serviceType}
                 />
-                <CloudPulseDimensionFilterIcon
+                <CloudPulseDimensionFilterSelect
                   dimensionOptions={filteredDimensions ?? []}
+                  drawerLabel={availableMetrics?.label ?? ''}
                   handleSelectionChange={setDimensionFilters}
                   selectedDimensions={dimensionFilters}
                   selectedEntities={entityIds}
-                  widgetMetricName={availableMetrics?.label ?? ''}
                 />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}

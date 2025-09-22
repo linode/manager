@@ -9,6 +9,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
+import type { DimensionFilterForm } from '../Alerts/CreateAlert/types';
 import type {
   CloudPulseMetricsFilter,
   FilterValueType,
@@ -35,7 +36,6 @@ import type {
   Filters,
   TimeDuration,
 } from '@linode/api-v4';
-import { DimensionFilterForm } from '../Alerts/CreateAlert/types';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;

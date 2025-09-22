@@ -1,32 +1,49 @@
 import { Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import {
-  type Control,
-  useFormContext,
-  type UseFormHandleSubmit,
-} from 'react-hook-form';
 
 import { CloudPulseDimensionFilterRenderer } from './CloudPulseDimensionFilterRenderer';
 
-import type { Dimension } from '@linode/api-v4';
 import type {
-  DimensionFilterForm,
-  OnlyDimensionFilterForm,
-} from 'src/features/CloudPulse/Alerts/CreateAlert/types';
+  MetricsDimensionFilter,
+  MetricsDimensionFilterForm,
+} from './types';
+import type { Dimension } from '@linode/api-v4';
 
 interface CloudPulseDimensionFilterDrawerProps {
-  control: Control<OnlyDimensionFilterForm>;
+  /**
+   * The list of dimensions associated with the selected metric
+   */
   dimensionOptions: Dimension[];
+  /**
+   * The label for the drawer, typically the name of the metric
+   */
+  drawerLabel: string;
+  /**
+   * @param selectedDimensions The list of selected dimension filters
+   * @param close Property to determine whether to close the drawer after selection
+   * @returns
+   */
   handleSelectionChange: (
-    selectedDimensions: DimensionFilterForm[],
+    selectedDimensions: MetricsDimensionFilter[],
     close: boolean
   ) => void;
-  handleSubmit: UseFormHandleSubmit<OnlyDimensionFilterForm>;
+  /**
+   * The callback to close the drawer
+   * @returns
+   */
   onClose: () => void;
+  /**
+   * The boolean value to control the drawer open state
+   */
   open: boolean;
-  selectedDimensions?: DimensionFilterForm[];
+  /**
+   * The selected dimension filters for the metric
+   */
+  selectedDimensions?: MetricsDimensionFilter[];
+  /**
+   * The selected entities for the dimension filter
+   */
   selectedEntities?: string[];
-  widgetMetricName: string;
 }
 
 export const CloudPulseDimensionFilterDrawer = (
@@ -38,21 +55,21 @@ export const CloudPulseDimensionFilterDrawer = (
     dimensionOptions,
     selectedDimensions,
     handleSelectionChange,
-    widgetMetricName,
-    control,
-    handleSubmit,
+    drawerLabel,
     selectedEntities,
   } = props;
 
+  const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
+
   const handleClose = () => {
     onClose();
+    setClearAllTrigger(0); // After closing the drawer, reset the clear all trigger
   };
 
-  const handleSubmitHere = (data: OnlyDimensionFilterForm) => {
+  const handleFormSubmit = (data: MetricsDimensionFilterForm) => {
     handleSelectionChange(data.dimension_filters, true);
+    setClearAllTrigger(0); // After submission, reset the clear all trigger
   };
-
-  const { reset } = useFormContext<OnlyDimensionFilterForm>();
 
   return (
     <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
@@ -63,21 +80,13 @@ export const CloudPulseDimensionFilterDrawer = (
             sx={(theme) => ({ marginTop: -2, font: theme.font.normal })}
             variant="h3"
           >
-            {widgetMetricName}
+            {drawerLabel}
           </Typography>
           <Typography
             component="a"
             data-qa-id="filter-drawer-clear-all"
             onClick={() => {
-              reset({
-                dimension_filters: [
-                  {
-                    dimension_label: null,
-                    operator: null,
-                    value: null,
-                  },
-                ],
-              });
+              setClearAllTrigger((prev) => prev + 1);
             }}
             sx={(theme) => ({
               marginTop: -2,
@@ -96,11 +105,11 @@ export const CloudPulseDimensionFilterDrawer = (
           Select upto 5 Dimension Filters
         </Typography>
         <CloudPulseDimensionFilterRenderer
-          control={control}
+          clearAllTrigger={clearAllTrigger}
           dataFieldDisabled={false}
           dimensionOptions={dimensionOptions}
-          handleSubmit={handleSubmit}
-          onSubmit={handleSubmitHere}
+          onClose={handleClose}
+          onSubmit={handleFormSubmit}
           selectedDimensions={selectedDimensions}
           selectedEntities={selectedEntities}
         />

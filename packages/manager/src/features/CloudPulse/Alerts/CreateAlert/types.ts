@@ -28,10 +28,6 @@ export interface CreateAlertDefinitionForm
   trigger_conditions: TriggerConditionForm;
 }
 
-export interface OnlyDimensionFilterForm {
-  dimension_filters: DimensionFilterForm[];
-}
-
 export interface MetricCriteriaForm
   extends Omit<
     MetricCriteria,

@@ -8,25 +8,25 @@ import { dimensionOperatorOptions } from 'src/features/CloudPulse/Alerts/constan
 import { ClearIconButton } from 'src/features/CloudPulse/Alerts/CreateAlert/Criteria/ClearIconButton';
 import { ValueFieldRenderer } from 'src/features/CloudPulse/Alerts/CreateAlert/Criteria/DimensionFilterValue/ValueFieldRenderer';
 
-import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
 import type {
-  DimensionFilterForm,
-  OnlyDimensionFilterForm,
-} from 'src/features/CloudPulse/Alerts/CreateAlert/types';
+  MetricsDimensionFilter,
+  MetricsDimensionFilterForm,
+} from './types';
+import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
 
-interface CloudPulseDimensionFilterProps {
+interface CloudPulseDimensionFilterFieldsProps {
   /**
-   * boolean value to disable the Data Field in dimension filter
+   * The boolean value to disable the Data Field in dimension filter
    */
   dataFieldDisabled: boolean;
   /**
-   * dimension filter data options to list in the Autocomplete component
+   * The dimension filter data options to list in the Autocomplete component
    */
   dimensionOptions: Dimension[];
   /**
-   * name (with the index) used for the component to set in form
+   * The name (with the index) used for the component to set in form
    */
-  name: FieldPathByValue<OnlyDimensionFilterForm, DimensionFilterForm>;
+  name: FieldPathByValue<MetricsDimensionFilterForm, MetricsDimensionFilter>;
   /**
    * function to delete the DimensionFilter component
    * @returns void
@@ -39,8 +39,8 @@ interface CloudPulseDimensionFilterProps {
   selectedEntities?: string[];
 }
 
-export const CloudPulseDimensionFilter = (
-  props: CloudPulseDimensionFilterProps
+export const CloudPulseDimensionFilterFields = (
+  props: CloudPulseDimensionFilterFieldsProps
 ) => {
   const {
     dataFieldDisabled,
@@ -50,7 +50,7 @@ export const CloudPulseDimensionFilter = (
     selectedEntities,
   } = props;
 
-  const { control, setValue } = useFormContext<OnlyDimensionFilterForm>();
+  const { control, setValue } = useFormContext<MetricsDimensionFilterForm>();
 
   const dataFieldOptions =
     dimensionOptions.map((dimension) => ({
