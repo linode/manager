@@ -1,9 +1,19 @@
 import { useAllVPCsQuery } from '@linode/queries';
-import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Button,
+  CircleProgress,
+  ErrorState,
+  Typography,
+} from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
+
+import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
 import { getReadOnlyHost } from '../../utilities';
 import {
   StyledGridContainer,
@@ -59,6 +69,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
     },
   }));
 
+  const flags = useFlags();
   const { classes } = useStyles();
   const [isManageNetworkingDrawerOpen, setIsManageNetworkingDrawerOpen] =
     React.useState(false);
@@ -117,10 +128,14 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Manage Networking</Typography>
+            <Typography variant="h3">
+              Manage Networking
+              {flags.databaseVpcBeta && <BetaChip />}
+            </Typography>
           </div>
           <Typography sx={{ maxWidth: '500px' }}>
-            Update access settings or the VPC assignment.
+            Update access settings or the VPC assignment.{' '}
+            <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
             <br />
             Note that a change of VPC assignment settings can disrupt service
             availability. Avoid writing data to the database while a change is
