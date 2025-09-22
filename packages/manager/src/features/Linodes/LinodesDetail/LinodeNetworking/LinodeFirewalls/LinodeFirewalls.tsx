@@ -110,7 +110,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
           Add Firewall
         </Button>
       </Paper>
-      <Table aria-label="Linode Firewalls">
+      <Table data-qa-linode-firewalls-table>
         <TableHead>
           <TableRow>
             <TableCell>Firewall</TableCell>

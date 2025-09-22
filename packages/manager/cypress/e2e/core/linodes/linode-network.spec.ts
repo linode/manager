@@ -309,7 +309,7 @@ describe('Linode Interfaces enabled', () => {
         .should('be.visible')
         .should('be.enabled');
 
-      cy.findByLabelText('Linode Firewalls')
+      cy.get('[data-qa-linode-firewalls-table]')
         .should('be.visible')
         .within(() => {
           cy.findByText('No Firewalls are assigned.').should('be.visible');
@@ -344,7 +344,7 @@ describe('Linode Interfaces enabled', () => {
     it('does not show the Linode Interface networking table', () => {
       cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
 
-      cy.findByLabelText('Linode Interfaces').should('not.exist');
+      cy.get('[data-qa-linode-interfaces-table]').should('not.exist');
       cy.findByText('Add Network Interface').should('not.exist');
       cy.findByText('Interface Settings').should('not.exist');
     });
@@ -391,7 +391,7 @@ describe('Linode Interfaces enabled', () => {
       cy.visitWithLogin(`/linodes/${mockLinode.id}/networking`);
 
       // Confirm Firewalls section is absent
-      cy.findByLabelText('Linode Firewalls').should('not.exist');
+      cy.get('[data-qa-linode-firewalls-table]').should('not.exist');
       cy.findByText('Add Firewall').should('not.exist');
 
       // Confirm add IP and delete IP buttons are missing from IP address section
@@ -424,7 +424,7 @@ describe('Linode Interfaces enabled', () => {
         .should('be.enabled');
 
       // Confirm table heading row
-      cy.findByLabelText('Linode Interfaces')
+      cy.get('[data-qa-linode-interfaces-table]')
         .should('be.visible')
         .within(() => {
           cy.findByText('Type').should('be.visible');
