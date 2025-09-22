@@ -60,7 +60,7 @@ export const AddLinodeDrawer = (props: Props) => {
       useAllLinodesQuery({}, {}),
       'linode',
       ['update_linode'],
-      !disabled
+      open
     );
 
   const linodesUsingLinodeInterfaces =
