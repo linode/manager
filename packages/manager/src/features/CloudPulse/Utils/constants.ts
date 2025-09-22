@@ -124,4 +124,7 @@ export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
   netloadbalancer: {
     ...ORDER_BY_LABLE_ASC,
   },
+  blockstorage: {
+    ...ORDER_BY_LABLE_ASC,
+  },
 };

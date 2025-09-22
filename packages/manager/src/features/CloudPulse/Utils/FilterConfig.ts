@@ -365,6 +365,41 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
     ],
     serviceType: 'objectstorage',
   };
+};
+
+export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['blockstorage'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Volumes',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Volumes',
+        priority: 2,
+      },
+      name: 'Volumes',
+    },
+  ],
+  serviceType: 'blockstorage',
+};
 
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
@@ -374,4 +409,5 @@ export const FILTER_CONFIG: Readonly<
   [3, NODEBALANCER_CONFIG],
   [4, FIREWALL_CONFIG],
   [6, OBJECTSTORAGE_CONFIG_BUCKET],
+  [7, BLOCKSTORAGE_CONFIG],
 ]);
