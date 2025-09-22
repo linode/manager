@@ -5,7 +5,7 @@ import type { AlertFilterKey } from './types';
 
 export interface AlertsEndpointFilterProps {
   /**
-   *
+   * List of object storage endpoints.
    */
   endpointOptions: string[];
   /**
