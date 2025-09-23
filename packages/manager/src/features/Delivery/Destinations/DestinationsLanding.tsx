@@ -1,5 +1,4 @@
 import {
-  useAllDestinationsQuery,
   useDeleteDestinationMutation,
   useDestinationsQuery,
 } from '@linode/queries';
@@ -31,8 +30,6 @@ import type { DestinationHandlers } from 'src/features/Delivery/Destinations/Des
 
 export const DestinationsLanding = () => {
   const navigate = useNavigate();
-  const { isLoading: isLoadingAllDestinations, data: allDestinationsData } =
-    useAllDestinationsQuery();
   const { mutateAsync: deleteDestination } = useDeleteDestinationMutation();
   const destinationsUrl = '/logs/delivery/destinations';
   const search = useSearch({
@@ -91,17 +88,13 @@ export const DestinationsLanding = () => {
     navigate({ to: '/logs/delivery/destinations/create' });
   };
 
-  if (isLoadingAllDestinations) {
-    return <CircleProgress />;
-  }
-
   if (error) {
     return (
       <ErrorState errorText="There was an error retrieving your destinations. Please reload and try again." />
     );
   }
 
-  if (!allDestinationsData?.results) {
+  if (destinations?.results === 0 && !search?.label) {
     return (
       <DestinationsLandingEmptyState navigateToCreate={navigateToCreate} />
     );

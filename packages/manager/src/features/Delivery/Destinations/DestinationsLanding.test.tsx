@@ -11,7 +11,7 @@ const loadingTestId = 'circle-progress';
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
-  useAllDestinationsQuery: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn(),
   useDestinationsQuery: vi.fn().mockReturnValue({}),
   useDeleteDestinationMutation: vi.fn().mockReturnValue({
     mutateAsync: vi.fn(),
@@ -23,6 +23,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -31,7 +32,6 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useDestinationsQuery: queryMocks.useDestinationsQuery,
-    useAllDestinationsQuery: queryMocks.useAllDestinationsQuery,
     useDeleteDestinationMutation: queryMocks.useDeleteDestinationMutation,
   };
 });
@@ -40,7 +40,7 @@ const destination = destinationFactory.build({ id: 1 });
 const destinations = [destination, ...destinationFactory.buildList(30)];
 
 describe('Destinations Landing Table', () => {
-  const renderComponentAndWaitForLoadingComplete = () => {
+  const renderComponent = () => {
     renderWithTheme(<DestinationsLanding />, {
       initialRoute: '/logs/delivery/destinations',
     });
@@ -48,16 +48,10 @@ describe('Destinations Landing Table', () => {
 
   beforeEach(() => {
     mockMatchMedia();
+    queryMocks.useSearch.mockReturnValue({});
   });
 
   it('should render destinations landing tab header and table with items PaginationFooter', () => {
-    queryMocks.useAllDestinationsQuery.mockReturnValue({
-      data: {
-        data: destinations,
-        results: 31,
-      },
-    });
-
     queryMocks.useDestinationsQuery.mockReturnValue({
       data: {
         data: destinations,
@@ -65,7 +59,7 @@ describe('Destinations Landing Table', () => {
       },
     });
 
-    renderComponentAndWaitForLoadingComplete();
+    renderComponent();
 
     // search text input
     screen.getByPlaceholderText('Search for a Destination');
@@ -88,13 +82,6 @@ describe('Destinations Landing Table', () => {
   });
 
   it('should render destinations landing table with empty row when there are no search results', () => {
-    queryMocks.useAllDestinationsQuery.mockReturnValue({
-      data: {
-        data: destinations,
-        results: 31,
-      },
-    });
-
     queryMocks.useDestinationsQuery.mockReturnValue({
       data: {
         data: [],
@@ -102,37 +89,37 @@ describe('Destinations Landing Table', () => {
       },
     });
 
-    renderComponentAndWaitForLoadingComplete();
+    queryMocks.useSearch.mockReturnValue({
+      label: 'Same unknown label',
+    });
+
+    renderComponent();
 
     const emptyRow = screen.getByText('No items to display.');
     expect(emptyRow).toBeInTheDocument();
   });
 
   it('should render destinations landing empty state', () => {
-    queryMocks.useAllDestinationsQuery.mockReturnValue({
+    queryMocks.useDestinationsQuery.mockReturnValue({
       data: {
         data: [],
         results: 0,
       },
     });
 
-    renderComponentAndWaitForLoadingComplete();
+    renderComponent();
 
     screen.getByText((text) =>
       text.includes('Create a destination for cloud logs')
     );
   });
 
-  it('should render loading state when fetching all destinations', () => {
-    queryMocks.useAllDestinationsQuery.mockReturnValue({
-      data: {
-        data: null,
-        results: 0,
-      },
+  it('should render loading state when fetching destinations', () => {
+    queryMocks.useDestinationsQuery.mockReturnValue({
       isLoading: true,
     });
 
-    renderComponentAndWaitForLoadingComplete();
+    renderComponent();
 
     const loadingElement = screen.queryByTestId(loadingTestId);
     expect(loadingElement).toBeInTheDocument();
@@ -151,13 +138,6 @@ describe('Destinations Landing Table', () => {
 
   describe('given action menu', () => {
     beforeEach(() => {
-      queryMocks.useAllDestinationsQuery.mockReturnValue({
-        data: {
-          data: destinations,
-          results: 31,
-        },
-      });
-
       queryMocks.useDestinationsQuery.mockReturnValue({
         data: {
           data: destinations,
@@ -171,7 +151,7 @@ describe('Destinations Landing Table', () => {
         const mockNavigate = vi.fn();
         queryMocks.useNavigate.mockReturnValue(mockNavigate);
 
-        renderComponentAndWaitForLoadingComplete();
+        renderComponent();
 
         await clickOnActionMenu();
         await clickOnActionMenuItem('Edit');
@@ -189,7 +169,7 @@ describe('Destinations Landing Table', () => {
           mutateAsync: mockDeleteDestinationMutation,
         });
 
-        renderComponentAndWaitForLoadingComplete();
+        renderComponent();
         await clickOnActionMenu();
         await clickOnActionMenuItem('Delete');
 

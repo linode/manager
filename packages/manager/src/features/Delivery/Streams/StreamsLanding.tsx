@@ -1,6 +1,5 @@
 import { streamStatus } from '@linode/api-v4';
 import {
-  useAllStreamsQuery,
   useDeleteStreamMutation,
   useStreamsQuery,
   useUpdateStreamMutation,
@@ -33,9 +32,6 @@ import type { Stream } from '@linode/api-v4';
 
 export const StreamsLanding = () => {
   const navigate = useNavigate();
-  const { isLoading: isLoadingAllStreams, data: allStreamsData } =
-    useAllStreamsQuery();
-
   const streamsUrl = '/logs/delivery/streams';
   const search = useSearch({
     from: '/logs/delivery/streams',
@@ -110,17 +106,13 @@ export const StreamsLanding = () => {
     navigate({ to: '/logs/delivery/streams/create' });
   };
 
-  if (isLoadingAllStreams) {
-    return <CircleProgress />;
-  }
-
   if (error) {
     return (
       <ErrorState errorText="There was an error retrieving your streams. Please reload and try again." />
     );
   }
 
-  if (!allStreamsData?.results) {
+  if (streams?.results === 0 && !search?.status && !search?.label) {
     return <StreamsLandingEmptyState navigateToCreate={navigateToCreate} />;
   }
 
