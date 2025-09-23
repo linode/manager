@@ -18,7 +18,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useAccountEntities } from 'src/queries/entities/entities';
+import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
@@ -90,7 +90,7 @@ export const AssignedEntitiesTable = () => {
     data: entities,
     error: entitiesError,
     isLoading: entitiesLoading,
-  } = useAccountEntities();
+  } = useAllAccountEntities({});
 
   const {
     data: assignedRoles,
@@ -102,7 +102,7 @@ export const AssignedEntitiesTable = () => {
     if (!assignedRoles || !entities) {
       return { filterableOptions: [], roles: [] };
     }
-    const transformedEntities = groupAccountEntitiesByType(entities.data);
+    const transformedEntities = groupAccountEntitiesByType(entities);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
