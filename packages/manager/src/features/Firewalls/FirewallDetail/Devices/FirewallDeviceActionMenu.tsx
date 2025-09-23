@@ -19,21 +19,36 @@ export const FirewallDeviceActionMenu = React.memo(
   (props: FirewallDeviceActionMenuProps) => {
     const { device, disabled, handleRemoveDevice } = props;
 
+    const { type } = device.entity;
+
     const { data: linodePermissions } = usePermissions(
       'linode',
       ['update_linode'],
-      device?.entity.id
+      device?.entity.id,
+      type !== 'nodebalancer'
     );
+
+    const { data: nodebalancerPermissions } = usePermissions(
+      'nodebalancer',
+      ['update_nodebalancer'],
+      device?.entity.id,
+      type === 'nodebalancer'
+    );
+
+    const disabledDueToPermissions =
+      type === 'nodebalancer'
+        ? !nodebalancerPermissions?.update_nodebalancer
+        : !linodePermissions?.update_linode;
 
     return (
       <InlineMenuAction
         actionText="Remove"
-        disabled={disabled || !linodePermissions?.update_linode}
+        disabled={disabled || disabledDueToPermissions}
         key="Remove"
         onClick={() => handleRemoveDevice(device)}
         tooltip={
-          !linodePermissions?.update_linode
-            ? 'You do not have permission to modify this Linode.'
+          disabledDueToPermissions
+            ? `You do not have permission to modify this ${type === 'nodebalancer' ? 'NodeBalancer' : 'Linode'}.`
             : undefined
         }
       />
