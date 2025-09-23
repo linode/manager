@@ -1,5 +1,5 @@
+import type { MetricsDimensionFilterOperatorType } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
-import { MetricsDimensionFilterOperatorType } from '../Widget/components/DimensionFilters/types';
 
 export const DASHBOARD_ID = 'dashboardId';
 
