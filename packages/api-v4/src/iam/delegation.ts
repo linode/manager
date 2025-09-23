@@ -1,19 +1,20 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
 
-import type { ResourcePage as Page, Params } from '../types';
+import type { ResourcePage as Page } from '../types';
 import type {
   ChildAccount,
   ChildAccountWithDelegates,
+  ListChildAccountDelegatesParams,
+  ListChildAccountsParams,
+  ListDelegatedChildAccountsForUserParams,
+  ListMyDelegatedChildAccountsParams,
+  UpdateChildAccountDelegatesParams,
 } from './delegation.types';
 import type { IamUserRoles } from './types';
 import type { Account } from 'src/account';
 import type { Token } from 'src/profile';
 
-type ParamsWithDelegates = Params & { includeDelegates?: boolean };
-interface ListChildAccountsParams {
-  params?: ParamsWithDelegates;
-}
 export const listChildAccounts = ({ params }: ListChildAccountsParams) =>
   params?.includeDelegates
     ? Request<Page<ChildAccountWithDelegates>>(
@@ -27,10 +28,6 @@ export const listChildAccounts = ({ params }: ListChildAccountsParams) =>
         setParams({ ...params }),
       );
 
-interface ListDelegatedChildAccountsForUserParams {
-  params?: Params;
-  username: string;
-}
 export const listDelegatedChildAccountsForUser = ({
   username,
   params,
@@ -43,10 +40,6 @@ export const listDelegatedChildAccountsForUser = ({
     setParams(params),
   );
 
-interface ListChildAccountDelegatesParams {
-  euuid: string;
-  params?: Params;
-}
 export const listChildAccountDelegates = ({
   euuid,
   params,
@@ -59,10 +52,6 @@ export const listChildAccountDelegates = ({
     setParams(params),
   );
 
-interface UpdateChildAccountDelegatesParams {
-  data: string[];
-  euuid: string;
-}
 export const updateChildAccountDelegates = ({
   euuid,
   data,
@@ -75,9 +64,6 @@ export const updateChildAccountDelegates = ({
     setData(data),
   );
 
-interface ListMyDelegatedChildAccountsParams {
-  params?: Params;
-}
 export const listMyDelegatedChildAccounts = ({
   params,
 }: ListMyDelegatedChildAccountsParams) =>
