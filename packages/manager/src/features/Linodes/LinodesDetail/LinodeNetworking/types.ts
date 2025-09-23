@@ -8,5 +8,7 @@ export type IPTypes =
   | 'Reserved IPv4 (public)'
   | 'Shared – IPv4'
   | 'VPC – IPv4'
+  | 'VPC – IPv6'
   | 'VPC – Range – IPv4'
+  | 'VPC – Range – IPv6'
   | 'VPC NAT – IPv4';
