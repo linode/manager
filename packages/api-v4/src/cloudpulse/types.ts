@@ -110,6 +110,7 @@ export interface AclpConfig {
 
 export interface AclpWidget {
   aggregateFunction: string;
+  groupBy?: string[];
   label: string;
   size: number;
   timeGranularity: TimeGranularity;
