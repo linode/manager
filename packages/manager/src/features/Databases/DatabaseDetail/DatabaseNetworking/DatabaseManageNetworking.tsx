@@ -51,6 +51,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
     },
     sectionTitle: {
       marginBottom: '0.25rem',
+      display: 'flex',
     },
     sectionTitleAndText: {
       width: '100%',
@@ -128,10 +129,8 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">
-              Manage Networking
-              {flags.databaseVpcBeta && <BetaChip />}
-            </Typography>
+            <Typography variant="h3">Manage Networking</Typography>
+            {flags.databaseVpcBeta && <BetaChip />}
           </div>
           <Typography sx={{ maxWidth: '500px' }}>
             Update access settings or the VPC assignment.{' '}
