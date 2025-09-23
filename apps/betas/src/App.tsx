@@ -2,6 +2,7 @@ import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 import { QueryClient, QueryClientProvider } from '@linode/queries'
 import { light, ThemeProvider } from '@linode/ui';
+import React from 'react';
 
 const queryClient = new QueryClient();
 

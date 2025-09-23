@@ -41,8 +41,8 @@ export const BetasLanding = () => {
 
   return (
     <>
-      <Typography variant="h2">Betas</Typography>
       <Stack spacing={2}>
+        <Typography variant="h2">Betas</Typography>
         <BetaDetailsList
           betas={active}
           dataQA="enrolled-beta"

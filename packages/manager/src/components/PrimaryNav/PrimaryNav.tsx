@@ -254,7 +254,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               {
                 display: 'Betas',
                 hide: !flags.selfServeBetas,
-                to: '/betas',
+                to: '/betas/*',
               },
               {
                 display: 'Identity & Access',

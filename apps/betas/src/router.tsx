@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter } from '@tanstack/react-rout
 
 import { BetaSignup } from './BetaSignup';
 import { BetasLanding } from './BetasLanding';
+import React from 'react';
 
 const rootRoute = createRootRoute();
 

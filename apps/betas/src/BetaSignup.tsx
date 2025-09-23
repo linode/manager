@@ -38,13 +38,7 @@ export const BetaSignup = () => {
 
   return (
     <>
-      <Typography>{beta.label}</Typography>
-      {/*<LandingHeader
-        breadcrumbProps={{
-          pathname: `/betas/${betaId}`,
-        }}
-        title={beta?.label}
-      />*/}
+      <Typography variant="h2" sx={{ mb: 2 }}>Betas / {beta.label}</Typography>
       <Paper>
         <Stack>
           <Typography paddingBottom={2} variant="h2">
