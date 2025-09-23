@@ -1,15 +1,12 @@
-import { screen, within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { d } from 'node_modules/@tanstack/react-query-devtools/build/modern/devtools-PtxSnd7z';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CloudPulseDimensionFilterRenderer } from './CloudPulseDimensionFilterRenderer';
 import { CloudPulseDimensionFilterSelect } from './CloudPulseDimensionFiltersSelect';
 
 import type { Dimension } from '@linode/api-v4';
-import exp from 'constants';
 
 const dimensionOptions: Dimension[] = [
   {
