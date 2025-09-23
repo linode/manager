@@ -66,15 +66,15 @@ describe('Volume table row', () => {
     );
 
     // Check row for basic values
-    expect(getByText(attachedVolume.label));
-    expect(getByText(attachedVolume.size, { exact: false }));
-    expect(getByTestId('region'));
-    expect(getByText(attachedVolume.linode_label!));
+    expect(getByText(attachedVolume.label)).toBeVisible();
+    expect(getByText(attachedVolume.size, { exact: false })).toBeVisible();
+    expect(getByTestId('region')).toBeVisible();
+    expect(getByText(attachedVolume.linode_label!)).toBeVisible();
 
     await userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is a detach button
-    expect(getByText('Detach'));
+    expect(getByText('Detach')).toBeVisible();
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', async () => {
@@ -83,12 +83,12 @@ describe('Volume table row', () => {
         <VolumeTableRow handlers={handlers} volume={unattachedVolume} />
       )
     );
-    expect(getByText('Unattached'));
+    expect(getByText('Unattached')).toBeVisible();
 
     await userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is an attach button
-    expect(getByText('Attach'));
+    expect(getByText('Attach')).toBeVisible();
   });
 
   it('should render an upgrade chip if the volume is eligible for an upgrade', async () => {
@@ -173,8 +173,8 @@ describe('Volume table row - for linodes detail page', () => {
       );
 
     // Check row for basic values
-    expect(getByText(attachedVolume.label));
-    expect(getByText(attachedVolume.size, { exact: false }));
+    expect(getByText(attachedVolume.label)).toBeVisible();
+    expect(getByText(attachedVolume.size, { exact: false })).toBeVisible();
 
     // Because we are on a Linode details page that has the region, we don't need to show
     // the volume's region. A Volume attached to a Linode must be in the same region.
@@ -186,7 +186,7 @@ describe('Volume table row - for linodes detail page', () => {
     await userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is a detach button
-    expect(getByText('Detach'));
+    expect(getByText('Detach')).toBeVisible();
   });
 
   it('should show a high performance icon tooltip if Linode has the capability', async () => {
