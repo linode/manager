@@ -15,7 +15,7 @@ import {
 } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
-import { invalidateAlerts } from './useAlertsMutation';
+import { invalidateAclpAlerts } from './useAlertsMutation';
 
 import type {
   Alert,
@@ -254,7 +254,7 @@ export const useServiceAlertsMutation = (
       return updateServiceAlerts(serviceType, entityId, payload);
     },
     onSuccess(_, payload) {
-      invalidateAlerts(queryClient, serviceType, entityId, payload);
+      invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
     },
   });
 };
