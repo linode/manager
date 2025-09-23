@@ -11,7 +11,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import { useFlags } from 'src/hooks/useFlags';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { useInterfaceDataForLinode } from '../../../hooks/useInterfaceDataForLinode';
@@ -72,7 +72,7 @@ export const SubnetLinodeRow = (props: Props) => {
     vpcId,
   } = props;
 
-  const flags = useFlags();
+  const { isDualStackEnabled } = useVPCDualStack();
 
   const subnetInterfaceData =
     subnetInterfaces.find((interfaceData) => interfaceData.active) ??
@@ -233,7 +233,7 @@ export const SubnetLinodeRow = (props: Props) => {
           })}
         </TableCell>
       </Hidden>
-      {flags.vpcIpv6 && (
+      {isDualStackEnabled && (
         <>
           <Hidden smDown>
             <TableCell data-testid="vpc-ipv6-cell" noWrap>
@@ -406,7 +406,7 @@ const getIPRangesCellContents = (
 };
 
 export const SubnetLinodeTableRowHead = (
-  vpcIPv6FeatureFlag: boolean = false
+  isDualStackEnabled: boolean = false
 ) => (
   <TableRow>
     <TableCell sx={{ width: '24%' }}>Linode</TableCell>
@@ -417,7 +417,7 @@ export const SubnetLinodeTableRowHead = (
     <Hidden smDown>
       <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
-    {vpcIPv6FeatureFlag && (
+    {isDualStackEnabled && (
       <>
         <Hidden smDown>
           <TableCell>VPC IPv6</TableCell>
