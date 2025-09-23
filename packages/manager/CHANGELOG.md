@@ -83,6 +83,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Account scope support for ACLP-Alerting firewall dimension filters ([#12879](https://github.com/linode/manager/pull/12879))
 - Ability to edit tags on volume details page ([#12800](https://github.com/linode/manager/pull/12800))
 - Add VPC IPv6 support in Linode Create flow ([#12885](https://github.com/linode/manager/pull/12885))
+- Add VPC IPv6 support in the Linode Details page -> Network tab ([#12856](https://github.com/linode/manager/pull/12856))
 
 ## [2025-09-11] - v1.150.1
 
