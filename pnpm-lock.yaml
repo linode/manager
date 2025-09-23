@@ -21,6 +21,9 @@ importers:
       '@linode/eslint-plugin-cloud-manager':
         specifier: ^0.0.11
         version: 0.0.11(eslint@9.31.0(jiti@2.4.2))
+      '@types/bun':
+        specifier: 1.2.22
+        version: 1.2.22(@types/react@19.1.6)
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.38.0
         version: 8.38.0(@typescript-eslint/parser@8.38.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.31.0(jiti@2.4.2))(typescript@5.7.3)
@@ -118,9 +121,6 @@ importers:
       '@testing-library/jest-dom':
         specifier: ~6.4.8
         version: 6.4.8
-      '@types/bun':
-        specifier: 1.2.22
-        version: 1.2.22(@types/react@19.1.6)
       '@types/react':
         specifier: 19.1.6
         version: 19.1.6
