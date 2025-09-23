@@ -1,4 +1,8 @@
-import { type StreamStatus, streamType } from '@linode/api-v4';
+import {
+  type CreateDestinationPayload,
+  type StreamStatus,
+  streamType,
+} from '@linode/api-v4';
 import {
   useCreateDestinationMutation,
   useCreateStreamMutation,
@@ -12,7 +16,10 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { type SubmitHandler, useFormContext, useWatch } from 'react-hook-form';
 
-import { getStreamPayloadDetails } from 'src/features/Delivery/deliveryUtils';
+import {
+  getDestinationPayloadDetails,
+  getStreamPayloadDetails,
+} from 'src/features/Delivery/deliveryUtils';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
 import { StreamFormDelivery } from 'src/features/Delivery/Streams/StreamForm/Delivery/StreamFormDelivery';
@@ -20,6 +27,7 @@ import { StreamFormDelivery } from 'src/features/Delivery/Streams/StreamForm/Del
 import { StreamFormClusters } from './Clusters/StreamFormClusters';
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
 
+import type { UpdateDestinationPayload } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
@@ -79,7 +87,13 @@ export const StreamForm = (props: StreamFormProps) => {
     let destinationId = destinations?.[0];
     if (!destinationId) {
       try {
-        const { id } = await createDestination(destination);
+        const destinationPayload:
+          | CreateDestinationPayload
+          | UpdateDestinationPayload = {
+          ...destination,
+          details: getDestinationPayloadDetails(destination.details),
+        };
+        const { id } = await createDestination(destinationPayload);
         destinationId = id;
         enqueueSnackbar(
           `Destination ${destination.label} created successfully`,
