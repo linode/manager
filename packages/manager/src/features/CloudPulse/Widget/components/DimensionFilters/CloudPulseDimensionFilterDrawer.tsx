@@ -73,8 +73,10 @@ export const CloudPulseDimensionFilterDrawer = (
     setClearAllTrigger(0); // After closing the drawer, reset the clear all trigger
   };
 
-  const handleFormSubmit = (data: MetricsDimensionFilterForm) => {
-    handleSelectionChange(data.dimension_filters, true);
+  const handleFormSubmit = ({
+    dimension_filters: dimensionFilters,
+  }: MetricsDimensionFilterForm) => {
+    handleSelectionChange(dimensionFilters, true);
     setClearAllTrigger(0); // After submission, reset the clear all trigger
   };
 

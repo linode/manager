@@ -64,9 +64,9 @@ export const CloudPulseDimensionFilterFields = (
   const { control, setValue } = useFormContext<MetricsDimensionFilterForm>();
 
   const dataFieldOptions =
-    dimensionOptions.map((dimension) => ({
-      label: dimension.label,
-      value: dimension.dimension_label,
+    dimensionOptions.map(({ label, dimension_label: dimensionLabel }) => ({
+      label,
+      value: dimensionLabel,
     })) ?? [];
 
   const handleDataFieldChange = (
@@ -102,7 +102,8 @@ export const CloudPulseDimensionFilterFields = (
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
-          (dim) => dim.dimension_label === dimensionFieldWatcher
+          ({ dimension_label: dimensionLabel }) =>
+            dimensionLabel === dimensionFieldWatcher
         ) ?? null)
       : null;
 
