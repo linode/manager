@@ -1831,7 +1831,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '85A355',
     },
     description: `Distributed, masterless, replicating NoSQL database cluster.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'apachecassandra.svg',
     related_guides: [
       {
@@ -1891,7 +1891,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'AAAAAA',
     },
     description: `High performance, BSD license key/value database.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'valkey.svg',
     related_guides: [
       {
@@ -1911,7 +1911,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'FFBA01',
     },
     description: `OSI approved open source secrets platform.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'openbao.svg',
     related_guides: [
       {
@@ -1931,7 +1931,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '9D29FB',
     },
     description: `Time series database supporting native query and visualization.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'influxdb.svg',
     related_guides: [
       {
@@ -2121,6 +2121,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'ffffff',
     },
     description: `Cribl Stream is an observability pipeline that helps organizations collect, reduce, enrich, and route telemetry data in real-time. It connects with 80+ sources and destinations, enabling you to handle data from any source to any analytics tool. Cribl Stream helps reduce data volume and optimize log processing to cut costs, enhance data security with encryption and access controls, and transform data using AI-powered tools. The platform scales from small to enterprise-level deployments and acts as a universal data management layer, giving organizations more control and efficiency in handling their telemetry data across various systems.`,
+    isNew: true,
     logo_url: 'cribl.svg',
     related_guides: [
       {
@@ -2140,6 +2141,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '648c19',
     },
     description: `Jaeger all-in-one is a complete distributed tracing solution deployed as a single Docker container that includes the Jaeger UI, Collector, Query service, Agent, and in-memory storage. This integrated setup is designed for development, testing, and quick deployment scenarios where you need full tracing capabilities without complex distributed architecture. Jaeger helps developers track request flows across microservices, identify performance bottlenecks, analyze service dependencies, and troubleshoot errors in distributed applications. The all-in-one image supports various tracing protocols including Zipkin and Jaeger's own formats, making it ideal for getting started with distributed tracing.`,
+    isNew: true,
     logo_url: 'jaeger.svg',
     related_guides: [
       {
