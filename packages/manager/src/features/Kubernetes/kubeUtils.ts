@@ -1,4 +1,4 @@
-import { useAccount, useAccountBetaQuery } from '@linode/queries';
+import { useAccount, useAccountBetaQuery, useGrants } from '@linode/queries';
 import { getBetaStatus, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -266,6 +266,11 @@ export const getLatestVersion = (
 export const useIsLkeEnterpriseEnabled = () => {
   const flags = useFlags();
   const { data: account } = useAccount();
+  const { data: grants } = useGrants();
+
+  const hasAccountEndpointAccess =
+    grants?.global.account_access === 'read_only' ||
+    grants?.global.account_access === 'read_write';
 
   const isLkeEnterpriseLAFlagEnabled = Boolean(
     flags?.lkeEnterprise2?.enabled && flags.lkeEnterprise2.la
@@ -299,11 +304,14 @@ export const useIsLkeEnterpriseEnabled = () => {
     account?.capabilities ?? []
   );
   // For feature-flagged update strategy and firewall work
-  const isLkeEnterprisePostLAFeatureEnabled = isFeatureEnabledV2(
-    'Kubernetes Enterprise',
-    isLkeEnterprisePostLAFlagEnabled,
-    account?.capabilities ?? []
-  );
+  // For users will restricted billing/account access, skip the inaccessible capability and just check the feature flag.
+  const isLkeEnterprisePostLAFeatureEnabled = hasAccountEndpointAccess
+    ? isFeatureEnabledV2(
+        'Kubernetes Enterprise',
+        isLkeEnterprisePostLAFlagEnabled,
+        account?.capabilities ?? []
+      )
+    : isLkeEnterprisePostLAFlagEnabled;
   const isLkeEnterpriseGAFeatureEnabled = isFeatureEnabledV2(
     'Kubernetes Enterprise',
     isLkeEnterpriseGAFlagEnabled,
