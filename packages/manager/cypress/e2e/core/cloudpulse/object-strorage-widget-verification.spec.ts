@@ -193,35 +193,35 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
       cluster: 'us-ord-1',
       hostname: 'bucket-1.us-ord-1.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-1.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E2-us-sea-1.linodeobjects.com',
       label: 'bucket-1',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-2',
       hostname: 'bucket-2.us-ord-2.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-2.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E2-us-sea-2.linodeobjects.com',
       label: 'bucket-2',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-3',
       hostname: 'bucket-3.us-ord-3.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-3.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E3-us-sea-3.linodeobjects.com',
       label: 'bucket-3',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-4',
       hostname: 'bucket-4.us-ord-4.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-4.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E2-us-sea-4.linodeobjects.com',
       label: 'bucket-4',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-5',
       hostname: 'bucket-5.us-ord-5.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-5.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E1-us-sea-5.linodeobjects.com',
       label: 'bucket-5',
     }),
   ];
@@ -230,27 +230,27 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     objectStorageEndpointsFactory.build({
       endpoint_type: 'E2',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-1.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E2-us-sea-1.linodeobjects.com',
     }),
     objectStorageEndpointsFactory.build({
       endpoint_type: 'E2',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-2.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E2-us-sea-2.linodeobjects.com',
     }),
     objectStorageEndpointsFactory.build({
       endpoint_type: 'E1',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-5.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E1-us-sea-5.linodeobjects.com',
     }),
     objectStorageEndpointsFactory.build({
       endpoint_type: 'E2',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-3.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E2-us-sea-3.linodeobjects.com',
     }),
     objectStorageEndpointsFactory.build({
       endpoint_type: 'E3',
       region: mockRegion.id,
-      s3_endpoint: 'us-sea-4.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E3-us-sea-4.linodeobjects.com',
     }),
   ];
 
@@ -316,14 +316,14 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Endpoints')
       .should('be.visible')
-      .type('us-sea-3.linodeobjects.com{enter}');
+      .type('endpoint_type-E2-us-sea-3.linodeobjects.com{enter}');
 
     ui.autocomplete.findByLabel('Endpoints').click();
 
     ui.autocomplete
       .findByLabel('Buckets')
       .should('be.visible')
-      .type('bucket-3.us-ord-3.linodeobjects.com{enter}');
+      .type('endpoint_type-E3-us-sea-3.linodeobjects.com{enter}');
 
     ui.autocomplete.findByLabel('Buckets').click();
 
