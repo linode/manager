@@ -56,6 +56,7 @@ interface Props {
   subnet: Subnet;
   subnetId: number;
   subnetInterfaces: SubnetLinodeInterfaceData[];
+  vpcId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
@@ -68,6 +69,7 @@ export const SubnetLinodeRow = (props: Props) => {
     subnet,
     subnetId,
     subnetInterfaces,
+    vpcId,
   } = props;
 
   const flags = useFlags();
@@ -274,6 +276,7 @@ export const SubnetLinodeRow = (props: Props) => {
           linode={linode}
           showPowerButton={showPowerButton}
           subnet={subnet}
+          vpcId={vpcId}
         />
       </TableCell>
     </TableRow>
