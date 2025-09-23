@@ -75,19 +75,19 @@ export const updateChildAccountDelegates = ({
     setData(data),
   );
 
-interface ListMyDelegatedChildAccountProfilesParams {
+interface ListMyDelegatedChildAccountsParams {
   params?: Params;
 }
-export const listMyDelegatedChildAccountProfiles = ({
+export const listMyDelegatedChildAccounts = ({
   params,
-}: ListMyDelegatedChildAccountProfilesParams) =>
+}: ListMyDelegatedChildAccountsParams) =>
   Request<Page<Account>>(
     setURL(`${BETA_API_ROOT}/iam/delegation/profile/child-accounts`),
     setMethod('GET'),
     setParams(params),
   );
 
-export const getChildAccountProfile = ({ euuid }: { euuid: string }) =>
+export const getDelegatedChildAccount = ({ euuid }: { euuid: string }) =>
   Request<Account>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}`,

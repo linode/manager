@@ -1,11 +1,11 @@
 import {
   generateChildAccountToken,
-  getChildAccountProfile,
   getDefaultDelegationAccess,
+  getDelegatedChildAccount,
   listChildAccountDelegates,
   listChildAccounts,
   listDelegatedChildAccountsForUser,
-  listMyDelegatedChildAccountProfiles,
+  listMyDelegatedChildAccounts,
   updateChildAccountDelegates,
   updateDefaultDelegationAccess,
 } from '@linode/api-v4';
@@ -45,12 +45,12 @@ export const delegationQueries = createQueryKeys('delegation', {
     queryFn: listChildAccountDelegates,
     queryKey: [euuid, params],
   }),
-  myDelegatedChildAccountProfiles: ({ params }: { params?: Params }) => ({
-    queryFn: listMyDelegatedChildAccountProfiles,
+  myDelegatedChildAccounts: ({ params }: { params?: Params }) => ({
+    queryFn: listMyDelegatedChildAccounts,
     queryKey: [params],
   }),
-  childAccountProfile: ({ euuid }: { euuid: string }) => ({
-    queryFn: getChildAccountProfile,
+  delegatedChildAccount: ({ euuid }: { euuid: string }) => ({
+    queryFn: getDelegatedChildAccount,
     queryKey: [euuid],
   }),
   defaultAccess: {
@@ -60,7 +60,7 @@ export const delegationQueries = createQueryKeys('delegation', {
 });
 
 /**
- * List all child accounts
+ * List all child accounts (gets all child accounts from customerParentChild table for the parent account)
  * - Purpose: Inventory child accounts under the caller’s parent account.
  * - Scope: All child accounts for the parent; not filtered by any user’s delegation.
  * - Audience: Parent account administrators managing delegation.
@@ -138,36 +138,32 @@ export const useUpdateChildAccountDelegatesQuery = () => {
 };
 
 /**
- * List my delegated child accounts (profiles)
+ * List my delegated child accounts (gets child accounts where user has view_child_account permission)
  * - Purpose: Which child accounts the current caller can manage via delegation.
  * - Scope: Only child accounts where the caller has an active delegate and required view permission.
- * - Audience: Any caller viewing “my delegated access.”
+ * - Audience: Needing to return accounts the caller can actually access
  * - Data: Page<Account> (limited profile fields) for `GET /iam/delegation/profile/child-accounts`.
  */
-export const useListMyDelegatedChildAccountProfilesQuery = ({
+export const useListMyDelegatedChildAccountsQuery = ({
   params,
 }: {
   params?: Params;
 }) => {
   return useQuery({
-    ...delegationQueries.myDelegatedChildAccountProfiles({ params }),
+    ...delegationQueries.myDelegatedChildAccounts({ params }),
   });
 };
 
 /**
- * Get child account profile
+ * Get child account
  * - Purpose: Retrieve profile information for a specific child account by EUUID.
  * - Scope: Single child account identified by `euuid`; subject to required grants.
  * - Audience: Callers needing basic child account info in the delegation context.
- * - Data: Account (limited profile fields) for `GET /iam/delegation/profile/child-accounts/:euuid`.
+ * - Data: Account (limited account fields) for `GET /iam/delegation/profile/child-accounts/:euuid`.
  */
-export const useGetChildAccountProfileQuery = ({
-  euuid,
-}: {
-  euuid: string;
-}) => {
+export const useGetChildAccountQuery = ({ euuid }: { euuid: string }) => {
   return useQuery({
-    ...delegationQueries.childAccountProfile({ euuid }),
+    ...delegationQueries.delegatedChildAccount({ euuid }),
   });
 };
 
