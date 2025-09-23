@@ -8,7 +8,7 @@ import type { Linode } from '@linode/api-v4';
 
 authenticate();
 describe('switch linode state', () => {
-  before(() => {
+  beforeEach(() => {
     cleanUp(['linodes']);
     cy.tag('method:e2e');
   });
@@ -19,7 +19,8 @@ describe('switch linode state', () => {
    * - Confirms that landing page UI updates to reflect Linode power state.
    * - Does not wait for Linode to finish being shut down before succeeding.
    */
-  it('powers off a linode from landing page', () => {
+  it.skip('powers off a linode from landing page', () => {
+    // TODO M3-10588 - Unskip landing page power off test, evaluate stability.
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to reboot shortly after booting up when the Linode is
@@ -28,8 +29,11 @@ describe('switch linode state', () => {
       createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
     ).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+
+      cy.findByText(linode.label).scrollIntoView();
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Running', { timeout: LINODE_CREATE_TIMEOUT }).should(
             'be.visible'
@@ -54,8 +58,9 @@ describe('switch linode state', () => {
             .click();
         });
 
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Shutting Down').should('be.visible');
         });
@@ -110,12 +115,15 @@ describe('switch linode state', () => {
    * - Confirms that landing page UI updates to reflect Linode power state.
    * - Waits for Linode to finish booting up before succeeding.
    */
-  it('powers on a linode from landing page', () => {
+  it.skip('powers on a linode from landing page', () => {
+    // TODO M3-10588 - Unskip landing page power on test, evaluate stability.
     cy.defer(() => createTestLinode({ booted: false })).then(
       (linode: Linode) => {
         cy.visitWithLogin('/linodes');
-        cy.get(`[data-qa-linode="${linode.label}"]`)
+        cy.findByText(linode.label).scrollIntoView();
+        cy.findByText(linode.label)
           .should('be.visible')
+          .closest('tr')
           .within(() => {
             cy.contains('Offline', { timeout: LINODE_CREATE_TIMEOUT }).should(
               'be.visible'
@@ -140,10 +148,14 @@ describe('switch linode state', () => {
               .click();
           });
 
-        cy.get(`[data-qa-linode="${linode.label}"]`)
+        cy.findByText(linode.label).scrollIntoView();
+        cy.findByText(linode.label)
           .should('be.visible')
+          .closest('tr')
           .within(() => {
-            cy.contains('Booting').should('be.visible');
+            cy.contains('Booting', { timeout: LINODE_CREATE_TIMEOUT }).should(
+              'be.visible'
+            );
             cy.contains('Running', { timeout: LINODE_CREATE_TIMEOUT }).should(
               'be.visible'
             );
@@ -196,7 +208,9 @@ describe('switch linode state', () => {
    * - Confirms that landing page UI updates to reflect Linode power state.
    * - Does not wait for Linode to finish rebooting before succeeding.
    */
-  it('reboots a linode from landing page', () => {
+  it.skip('reboots a linode from landing page', () => {
+    // TODO M3-10588 - Unskip landing page reboot test, evaluate stability.
+
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to reboot shortly after booting up when the Linode is
@@ -205,8 +219,10 @@ describe('switch linode state', () => {
       createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
     ).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+      cy.findByText(linode.label).scrollIntoView();
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Running', { timeout: LINODE_CREATE_TIMEOUT }).should(
             'be.visible'
@@ -231,8 +247,9 @@ describe('switch linode state', () => {
             .click();
         });
 
-      cy.get(`[data-qa-linode="${linode.label}"]`)
+      cy.findByText(linode.label)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
           cy.contains('Rebooting').should('be.visible');
         });

@@ -3,7 +3,7 @@ import { isEmpty } from '@linode/api-v4';
 import { DEFAULT_DEVICE_LIMIT } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { Interface } from '@linode/api-v4';
+import type { DiskDevice, Interface, VolumeDevice } from '@linode/api-v4';
 
 /**
  * Gets the index of the primary Linode interface
@@ -66,4 +66,16 @@ export const useGetDeviceLimit = (ram: number) => {
   }
 
   return DEFAULT_DEVICE_LIMIT;
+};
+
+export const isDiskDevice = (
+  device: DiskDevice | VolumeDevice
+): device is DiskDevice => {
+  return 'disk_id' in device && device.disk_id !== null;
+};
+
+export const isVolumeDevice = (
+  device: DiskDevice | VolumeDevice
+): device is VolumeDevice => {
+  return 'volume_id' in device && device.volume_id !== null;
 };

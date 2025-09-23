@@ -3,7 +3,7 @@ import {
   Box,
   CircleProgress,
   ErrorState,
-  StyledLinkButton,
+  LinkButton,
   Typography,
 } from '@linode/ui';
 import { truncate } from '@linode/utilities';
@@ -201,13 +201,13 @@ const VPCDetail = () => {
             <Typography sx={{ overflowWrap: 'anywhere', wordBreak: 'normal' }}>
               {description}{' '}
               {description.length > 150 && (
-                <StyledLinkButton
+                <LinkButton
                   data-testid="show-description-button"
                   onClick={() => setShowFullDescription((show) => !show)}
                   sx={{ fontSize: '0.875rem' }}
                 >
                   Read {showFullDescription ? 'Less' : 'More'}
-                </StyledLinkButton>
+                </LinkButton>
               )}
             </Typography>
           </StyledDescriptionBox>
