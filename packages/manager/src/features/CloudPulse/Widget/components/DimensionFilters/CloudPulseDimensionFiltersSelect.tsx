@@ -6,7 +6,7 @@ import { CloudPulseTooltip } from 'src/features/CloudPulse/shared/CloudPulseTool
 import { isValidFilter } from 'src/features/CloudPulse/Utils/utils';
 
 import { CloudPulseDimensionFilterDrawer } from './CloudPulseDimensionFilterDrawer';
-import { CloudPulseDimensionFilterIconWithBadge } from './FilterIconWithBadge';
+import { CloudPulseDimensionFilterIconWithBadge } from './CloudPulseFilterIconWithBadge';
 
 import type { MetricsDimensionFilter } from './types';
 import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';

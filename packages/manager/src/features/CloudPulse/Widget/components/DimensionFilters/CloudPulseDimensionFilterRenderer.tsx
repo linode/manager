@@ -140,6 +140,7 @@ export const CloudPulseDimensionFilterRenderer = (
           <Button
             compactX
             data-qa-buttons="true"
+            data-testid="Add Filter"
             disabled={
               dimensionFilterWatcher && dimensionFilterWatcher.length === 5
             }

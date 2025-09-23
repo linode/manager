@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CloudPulseDimensionFilterIconWithBadge } from './FilterIconWithBadge';
+import { CloudPulseDimensionFilterIconWithBadge } from './CloudPulseFilterIconWithBadge';
 
 describe('CloudPulseDimensionFilterIconWithBadge', () => {
   it('renders the badge with correct count when count > 0', () => {
