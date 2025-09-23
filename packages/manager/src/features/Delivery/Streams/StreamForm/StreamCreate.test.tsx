@@ -28,6 +28,7 @@ describe('StreamCreate', () => {
             type: destinationType.LinodeObjectStorage,
             details: {
               region: '',
+              path: '',
             },
           },
         },
