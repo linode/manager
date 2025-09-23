@@ -147,30 +147,32 @@ describe('LKE cluster updates', () => {
     it('can upgrade standard kubernetes version from the details page', () => {
       const mockTieredStandardVersions =
         kubernetesStandardTierVersionFactory.buildList(2);
+      const oldVersion = mockTieredStandardVersions[0].id;
+      const newVersion = mockTieredStandardVersions[1].id;
 
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: mockTieredStandardVersions[0].id,
+        k8s_version: oldVersion,
         tier: 'standard',
       });
 
       const mockClusterUpdated = {
         ...mockCluster,
-        k8s_version: mockTieredStandardVersions[1].id,
+        k8s_version: newVersion,
       };
 
-      const upgradePrompt = `A new version of Kubernetes is available (${mockTieredStandardVersions[1].id}).`;
+      const upgradePrompt = `A new version of Kubernetes is available (${newVersion}).`;
 
       const upgradeNotes = [
         'This upgrades the control plane on your cluster',
         'and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
-        mockTieredStandardVersions[0].id,
-        mockTieredStandardVersions[1].id,
+        oldVersion,
+        newVersion,
       ];
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetTieredKubernetesVersions(
-        mockCluster?.tier ?? 'standard',
+        'standard',
         mockTieredStandardVersions
       ).as('getTieredVersions');
       mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
@@ -191,7 +193,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Upgrade Kubernetes version to ${mockTieredStandardVersions[1].id} on ${mockCluster.label}?`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -249,7 +251,7 @@ describe('LKE cluster updates', () => {
       cy.findByText(upgradePrompt).should('not.exist');
 
       // Verify the version is correct after the update
-      cy.findByText(`Version ${mockTieredStandardVersions[1].id}`);
+      cy.findByText(`Version ${newVersion}`);
 
       ui.toast.findByMessage('Recycle started successfully.');
     });

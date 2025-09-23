@@ -200,7 +200,6 @@ describe('LKE landing page', () => {
     mockGetTieredKubernetesVersions('standard', mockStandardTierVersions).as(
       'getTieredVersions'
     );
-    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
 
     cy.visitWithLogin(`/kubernetes/clusters`);
 
