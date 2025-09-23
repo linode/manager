@@ -283,17 +283,41 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     ...restQueryResult
   } = useQueryResult;
   const { data: profile } = useProfile();
-  const { isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+
+  const accessType = entityType;
+
+  /**
+   * Apply the same Beta/LA permission logic as usePermissions.
+   * - Use Beta Permissions if:
+   *   - The feature is beta
+   *   - The access type is in the BETA_ACCESS_TYPE_SCOPE
+   *   - The account permission is not in the LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE
+   * - Use LA Permissions if:
+   *   - The feature is not beta
+   */
+  const useBetaPermissions =
+    isIAMEnabled &&
+    isIAMBeta &&
+    BETA_ACCESS_TYPE_SCOPE.includes(accessType) &&
+    LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE.some((blacklistedPermission) =>
+      permissionsToCheck.includes(blacklistedPermission as AccountAdmin)
+    ) === false;
+  const useLAPermissions = isIAMEnabled && !isIAMBeta;
+  const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
+
   const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
     useEntitiesPermissions<T>(
       allEntities,
       entityType,
       profile,
-      isIAMEnabled && enabled
+      shouldUsePermissionMap && enabled
     );
-  const { data: grants } = useGrants(!isIAMEnabled);
+  const { data: grants } = useGrants(
+    (!isIAMEnabled || !shouldUsePermissionMap) && enabled
+  );
 
-  const entityPermissionsMap = isIAMEnabled
+  const entityPermissionsMap = shouldUsePermissionMap
     ? toEntityPermissionMap(
         allEntities,
         entityPermissions,
