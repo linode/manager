@@ -22,7 +22,7 @@ import type {
 
 export const delegationQueries = createQueryKeys('delegation', {
   childAccounts: ({ params }: { params?: Params }) => ({
-    queryFn: () => listChildAccounts({ params }),
+    queryFn: listChildAccounts,
     queryKey: [params],
   }),
   delegatedChildAccountsForUser: ({
@@ -32,7 +32,7 @@ export const delegationQueries = createQueryKeys('delegation', {
     params?: Params;
     username: string;
   }) => ({
-    queryFn: () => listDelegatedChildAccountsForUser({ username, params }),
+    queryFn: listDelegatedChildAccountsForUser,
     queryKey: [username, params],
   }),
   childAccountDelegates: ({
@@ -42,15 +42,15 @@ export const delegationQueries = createQueryKeys('delegation', {
     euuid: string;
     params?: Params;
   }) => ({
-    queryFn: () => listChildAccountDelegates({ euuid, params }),
+    queryFn: listChildAccountDelegates,
     queryKey: [euuid, params],
   }),
   myDelegatedChildAccountProfiles: ({ params }: { params?: Params }) => ({
-    queryFn: () => listMyDelegatedChildAccountProfiles({ params }),
+    queryFn: listMyDelegatedChildAccountProfiles,
     queryKey: [params],
   }),
   childAccountProfile: ({ euuid }: { euuid: string }) => ({
-    queryFn: () => getChildAccountProfile({ euuid }),
+    queryFn: getChildAccountProfile,
     queryKey: [euuid],
   }),
   defaultAccess: {
