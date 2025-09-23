@@ -63,7 +63,6 @@ export const DateField = ({
             'aria-invalid': Boolean(errorText),
             'aria-labelledby': validInputId,
             id: validInputId,
-            onClick,
           }}
           inputRef={inputRef}
           onChange={handleChange}
@@ -72,6 +71,7 @@ export const DateField = ({
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),
               helperText: '',
+              onClick, // Move onClick to textField slotProps
             },
           }}
           sx={{ marginTop: 1 }}
