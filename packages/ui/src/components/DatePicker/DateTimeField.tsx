@@ -1,4 +1,5 @@
-import { CalendarIcon, CloseIcon, IconButton, styled } from '@linode/ui';
+import { CalendarIcon, CloseIcon, IconButton } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTimeField as MUIDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
