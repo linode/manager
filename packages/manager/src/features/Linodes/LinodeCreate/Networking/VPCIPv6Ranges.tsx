@@ -1,16 +1,16 @@
 import {
   CloseIcon,
   IconButton,
+  LinkButton,
   Notice,
   Stack,
   TextField,
   TooltipIcon,
 } from '@linode/ui';
-import { LinkButton } from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
+import { VPCIPv6RangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -19,7 +19,7 @@ interface Props {
   interfaceIndex: number;
 }
 
-export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
+export const VPCIPv6Ranges = ({ disabled, interfaceIndex }: Props) => {
   const {
     control,
     formState: { errors },
@@ -27,17 +27,17 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
 
   const { append, fields, remove } = useFieldArray({
     control,
-    name: `linodeInterfaces.${interfaceIndex}.vpc.ipv4.ranges`,
+    name: `linodeInterfaces.${interfaceIndex}.vpc.ipv6.ranges`,
   });
 
   return (
     <Stack>
       <Stack spacing={1}>
-        {errors?.linodeInterfaces?.[interfaceIndex]?.vpc?.ipv4?.ranges
+        {errors?.linodeInterfaces?.[interfaceIndex]?.vpc?.ipv6?.ranges
           ?.message && (
           <Notice variant="error">
             {
-              errors?.linodeInterfaces?.[interfaceIndex]?.vpc?.ipv4?.ranges
+              errors?.linodeInterfaces?.[interfaceIndex]?.vpc?.ipv6?.ranges
                 ?.message
             }
           </Notice>
@@ -51,7 +51,7 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
           >
             <Controller
               control={control}
-              name={`linodeInterfaces.${interfaceIndex}.vpc.ipv4.ranges.${index}.range`}
+              name={`linodeInterfaces.${interfaceIndex}.vpc.ipv6.ranges.${index}.range`}
               render={({ field, fieldState }) => (
                 <TextField
                   errorText={fieldState.error?.message}
@@ -77,12 +77,12 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
         <LinkButton disabled={disabled} onClick={() => append({ range: '' })}>
-          Add IPv4 Range
+          Add IPv6 Range
         </LinkButton>
         <TooltipIcon
           status="info"
           sxTooltipIcon={{ p: 0.5 }}
-          text={<VPCRangesDescription />}
+          text={<VPCIPv6RangesDescription />}
         />
       </Stack>
     </Stack>

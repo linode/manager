@@ -63,6 +63,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Cypress tests for Premium Plans and Horizontal Resizing ([#12854](https://github.com/linode/manager/pull/12854))
 - Cypress test flake in "events-fetching.spec.ts" ([#12875](https://github.com/linode/manager/pull/12875))
 - Update Cypress tests following LKE-E postLa feature flag enablement ([#12883](https://github.com/linode/manager/pull/12883))
+- Reflect 'Allow public IPv4 access (1:1 NAT)' copy change in E2E and unit tests related to Linode Create and networking flows ([#12885](https://github.com/linode/manager/pull/12885))
 
 ### Upcoming Features:
 
@@ -81,6 +82,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ACLP: Add `GlobalFilterGroupByRendererComponent` and `WidgetFilterGroupByRendererComponent` ([#12865](https://github.com/linode/manager/pull/12865))
 - Account scope support for ACLP-Alerting firewall dimension filters ([#12879](https://github.com/linode/manager/pull/12879))
 - Ability to edit tags on volume details page ([#12800](https://github.com/linode/manager/pull/12800))
+- Add VPC IPv6 support in Linode Create flow ([#12885](https://github.com/linode/manager/pull/12885))
 
 ## [2025-09-11] - v1.150.1
 
