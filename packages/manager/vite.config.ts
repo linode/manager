@@ -9,9 +9,10 @@ import { urlCanParsePolyfill } from './src/polyfills/urlCanParse';
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
 
-export default defineConfig({
+export default defineConfig((env) => ({
   build: {
     outDir: 'build',
+    target: 'ES2022',
   },
   envPrefix: 'REACT_APP_',
   plugins: [
@@ -21,7 +22,8 @@ export default defineConfig({
         betas: {
           type: 'module',
           name: 'betas',
-          entry: 'http://localhost:4000/remoteEntry.js',
+          entry: 'https://betas.nussman.us/remoteEntry.js',
+          // entry: 'http://localhost:4000/remoteEntry.js',
         },
       },
       filename: 'remoteEntry.js',
@@ -67,4 +69,4 @@ export default defineConfig({
     pool: 'forks',
     setupFiles: './src/testSetup.ts',
   },
-});
+}));

@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     port: 4000,
   },
+  build: {
+    target: 'es2022',
+  },
   plugins: [
     federation({
       filename: 'remoteEntry.js',
