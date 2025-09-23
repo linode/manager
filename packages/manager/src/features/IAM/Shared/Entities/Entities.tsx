@@ -4,7 +4,7 @@ import React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { useAccountEntities } from 'src/queries/entities/entities';
+import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { getFormattedEntityType } from '../utilities';
 import {
@@ -34,14 +34,15 @@ export const Entities = ({
   type,
   value,
 }: Props) => {
-  const { data: entities } = useAccountEntities();
+  const { data: entities } = useAllAccountEntities({});
   const theme = useTheme();
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
       return [];
     }
-    const typeEntities = getEntitiesByType(type, entities.data);
+    const typeEntities = getEntitiesByType(type, entities);
+
     return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
   }, [entities, access, type]);
 
