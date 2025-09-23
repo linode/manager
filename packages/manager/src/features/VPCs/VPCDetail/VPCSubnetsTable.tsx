@@ -29,9 +29,9 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import { SUBNET_ACTION_PATH } from '../constants';
 import { VPC_DETAILS_ROUTE } from '../constants';
@@ -64,8 +64,6 @@ export const VPCSubnetsTable = (props: Props) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
-  const flags = useFlags();
-
   const navigate = useNavigate();
   const params = useParams({ strict: false });
   const location = useLocation();
@@ -91,6 +89,7 @@ export const VPCSubnetsTable = (props: Props) => {
   const { query } = search;
 
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+  const { isDualStackEnabled } = useVPCDualStack();
 
   const { data: permissions } = usePermissions(
     'vpc',
@@ -302,9 +301,9 @@ export const VPCSubnetsTable = (props: Props) => {
         </TableSortCell>
       </Hidden>
       <TableCell sx={{ width: '18%' }}>
-        Subnet {flags.vpcIpv6 ? 'IPv4' : 'IP'} Range
+        Subnet {isDualStackEnabled ? 'IPv4' : 'IP'} Range
       </TableCell>
-      {flags.vpcIpv6 && <TableCell>Subnet IPv6 Range</TableCell>}
+      {isDualStackEnabled && <TableCell>Subnet IPv6 Range</TableCell>}
       <Hidden smDown>
         <TableCell
           sx={{ width: '10%' }}
@@ -322,7 +321,7 @@ export const VPCSubnetsTable = (props: Props) => {
             <TableCell>{subnet.id}</TableCell>
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
-          {flags.vpcIpv6 && (
+          {isDualStackEnabled && (
             <TableCell>{subnet.ipv6?.[0]?.range ?? '—'}</TableCell>
           )}
           <Hidden smDown>
@@ -353,7 +352,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 color: theme.tokens.color.Neutrals.White,
               }}
             >
-              {SubnetLinodeTableRowHead(flags.vpcIpv6)}
+              {SubnetLinodeTableRowHead(isDualStackEnabled)}
             </TableHead>
             <TableBody>
               {subnet.linodes.length > 0 ? (
@@ -372,7 +371,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 ))
               ) : (
                 <TableRowEmpty
-                  colSpan={flags.vpcIpv6 ? 8 : 6}
+                  colSpan={isDualStackEnabled ? 8 : 6}
                   message="No Linodes"
                 />
               )}
