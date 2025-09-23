@@ -6,7 +6,6 @@ import {
   mockGetClusterPools,
   mockGetClusters,
   mockGetKubeconfig,
-  mockGetKubernetesVersions,
   mockGetTieredKubernetesVersions,
   mockRecycleAllNodes,
   mockUpdateCluster,
@@ -19,6 +18,8 @@ import { getRegionById } from 'support/util/regions';
 import {
   accountFactory,
   kubernetesClusterFactory,
+  kubernetesEnterpriseTierVersionFactory,
+  kubernetesStandardTierVersionFactory,
   nodePoolFactory,
 } from 'src/factories';
 
@@ -187,19 +188,23 @@ describe('LKE landing page', () => {
   });
 
   it('does not show an Upgrade chip when there is no new kubernetes standard version', () => {
-    const oldVersion = '1.25';
-    const newVersion = '1.26';
+    const mockStandardTierVersions =
+      kubernetesStandardTierVersionFactory.buildList(2);
+    const newVersion = mockStandardTierVersions[1].id;
 
     const cluster = kubernetesClusterFactory.build({
       k8s_version: newVersion,
     });
 
     mockGetClusters([cluster]).as('getClusters');
-    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+    mockGetTieredKubernetesVersions('standard', mockStandardTierVersions).as(
+      'getTieredVersions'
+    );
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
 
     cy.visitWithLogin(`/kubernetes/clusters`);
 
-    cy.wait(['@getClusters', '@getVersions']);
+    cy.wait(['@getClusters', '@getTieredVersions']);
 
     cy.findByText(newVersion).should('be.visible');
 
@@ -207,8 +212,9 @@ describe('LKE landing page', () => {
   });
 
   it('does not show an Upgrade chip when there is no new kubernetes enterprise version', () => {
-    const oldVersion = '1.31.1+lke1';
-    const newVersion = '1.32.1+lke2';
+    const mockEnterpriseTierVersions =
+      kubernetesEnterpriseTierVersionFactory.buildList(2);
+    const newVersion = mockEnterpriseTierVersions[1].id;
 
     mockGetAccount(
       accountFactory.build({
@@ -227,10 +233,10 @@ describe('LKE landing page', () => {
     });
 
     mockGetClusters([cluster]).as('getClusters');
-    mockGetTieredKubernetesVersions('enterprise', [
-      { id: newVersion, tier: 'enterprise' },
-      { id: oldVersion, tier: 'enterprise' },
-    ]).as('getTieredVersions');
+    mockGetTieredKubernetesVersions(
+      'enterprise',
+      mockEnterpriseTierVersions
+    ).as('getTieredVersions');
 
     cy.visitWithLogin(`/kubernetes/clusters`);
 
@@ -242,8 +248,10 @@ describe('LKE landing page', () => {
   });
 
   it('can upgrade the standard kubernetes version from the landing page', () => {
-    const oldVersion = '1.25';
-    const newVersion = '1.26';
+    const mockStandardTierVersions =
+      kubernetesStandardTierVersionFactory.buildList(2);
+    const oldVersion = mockStandardTierVersions[0].id;
+    const newVersion = mockStandardTierVersions[1].id;
 
     const cluster = kubernetesClusterFactory.build({
       k8s_version: oldVersion,
@@ -254,13 +262,15 @@ describe('LKE landing page', () => {
 
     mockGetCluster(cluster).as('getCluster');
     mockGetClusters([cluster]).as('getClusters');
-    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+    mockGetTieredKubernetesVersions('standard', mockStandardTierVersions).as(
+      'getTieredVersions'
+    );
     mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
     mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
 
     cy.visitWithLogin(`/kubernetes/clusters`);
 
-    cy.wait(['@getClusters', '@getVersions']);
+    cy.wait(['@getClusters', '@getTieredVersions']);
 
     cy.findByText(oldVersion).should('be.visible');
 
@@ -300,8 +310,11 @@ describe('LKE landing page', () => {
   });
 
   it('can upgrade the enterprise kubernetes version from the landing page', () => {
-    const oldVersion = '1.31.1+lke1';
-    const newVersion = '1.32.1+lke2';
+    const mockEnterpriseTierVersions =
+      kubernetesEnterpriseTierVersionFactory.buildList(2);
+    const oldVersion = mockEnterpriseTierVersions[0].id;
+
+    const newVersion = mockEnterpriseTierVersions[1].id;
 
     mockGetAccount(
       accountFactory.build({
@@ -323,10 +336,10 @@ describe('LKE landing page', () => {
 
     mockGetCluster(cluster).as('getCluster');
     mockGetClusters([cluster]).as('getClusters');
-    mockGetTieredKubernetesVersions('enterprise', [
-      { id: newVersion, tier: 'enterprise' },
-      { id: oldVersion, tier: 'enterprise' },
-    ]).as('getTieredVersions');
+    mockGetTieredKubernetesVersions(
+      'enterprise',
+      mockEnterpriseTierVersions
+    ).as('getTieredVersions');
     mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
     mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
 
