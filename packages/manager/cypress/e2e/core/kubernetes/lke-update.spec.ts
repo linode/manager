@@ -23,7 +23,6 @@ import {
   mockGetControlPlaneACL,
   mockGetControlPlaneACLError,
   mockGetDashboardUrl,
-  mockGetKubernetesVersions,
   mockGetTieredKubernetesVersions,
   mockRecycleAllNodes,
   mockRecycleNode,
@@ -48,6 +47,7 @@ import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
+  kubernetesStandardTierVersionFactory,
   nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
@@ -97,13 +97,13 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockUpdateCluster(mockCluster.id, mockClusterWithHA).as('updateCluster');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait(['@getCluster', '@getNodePools', '@getTieredVersions']);
 
       // Initiate high availability upgrade and agree to changes.
       ui.button
@@ -145,38 +145,41 @@ describe('LKE cluster updates', () => {
      * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
      */
     it('can upgrade standard kubernetes version from the details page', () => {
-      const oldVersion = '1.25';
-      const newVersion = '1.26';
+      const mockTieredStandardVersions =
+        kubernetesStandardTierVersionFactory.buildList(2);
 
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: oldVersion,
+        k8s_version: mockTieredStandardVersions[0].id,
         tier: 'standard',
       });
 
       const mockClusterUpdated = {
         ...mockCluster,
-        k8s_version: newVersion,
+        k8s_version: mockTieredStandardVersions[1].id,
       };
 
-      const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
+      const upgradePrompt = `A new version of Kubernetes is available (${mockTieredStandardVersions[1].id}).`;
 
       const upgradeNotes = [
         'This upgrades the control plane on your cluster',
         'and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
-        oldVersion,
-        newVersion,
+        mockTieredStandardVersions[0].id,
+        mockTieredStandardVersions[1].id,
       ];
 
       mockGetCluster(mockCluster).as('getCluster');
-      mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+      mockGetTieredKubernetesVersions(
+        mockCluster?.tier ?? 'standard',
+        mockTieredStandardVersions
+      ).as('getTieredVersions');
       mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
       mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait(['@getCluster', '@getNodePools', '@getTieredVersions']);
 
       // Confirm that upgrade prompt is shown.
       cy.findByText(upgradePrompt).should('be.visible');
@@ -188,7 +191,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
+          `Upgrade Kubernetes version to ${mockTieredStandardVersions[1].id} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -246,7 +249,7 @@ describe('LKE cluster updates', () => {
       cy.findByText(upgradePrompt).should('not.exist');
 
       // Verify the version is correct after the update
-      cy.findByText(`Version ${newVersion}`);
+      cy.findByText(`Version ${mockTieredStandardVersions[1].id}`);
 
       ui.toast.findByMessage('Recycle started successfully.');
     });
@@ -387,12 +390,17 @@ describe('LKE cluster updates', () => {
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
       mockGetLinodes([mockLinode]).as('getLinodes');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getLinodes',
+        '@getTieredVersions',
+      ]);
 
       // Recycle individual node.
       ui.button
@@ -525,7 +533,7 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
       mockGetAccount(
@@ -539,7 +547,12 @@ describe('LKE cluster updates', () => {
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait([
+        '@getAccount',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
 
       // Click "Autoscale Pool", enable autoscaling, and set min and max values.
       mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
@@ -677,7 +690,7 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('enterprise').as('getTieredVersions');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
       mockGetAccount(
@@ -691,7 +704,12 @@ describe('LKE cluster updates', () => {
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait([
+        '@getAccount',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
 
       // Click "Autoscale Pool", enable autoscaling, and set min and max values.
       mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
@@ -801,12 +819,17 @@ describe('LKE cluster updates', () => {
         'getNodePools'
       );
       mockGetLinodes(mockLinodes).as('getLinodes');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getLinodes',
+        '@getTieredVersions',
+      ]);
 
       // Confirm that nodes are listed with correct details.
       mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
@@ -945,7 +968,7 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockResetKubeconfig(mockCluster.id).as('resetKubeconfig');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
@@ -957,7 +980,7 @@ describe('LKE cluster updates', () => {
       ];
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait(['@getCluster', '@getNodePools', '@getTieredVersions']);
 
       // Click "Reset" button, proceed through confirmation dialog.
       cy.findByText('Reset').should('be.visible').click({ force: true });
@@ -1088,7 +1111,7 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
       mockDeleteNodePool(mockCluster.id, mockNewNodePool.id).as(
         'deleteNodePool'
@@ -1097,7 +1120,12 @@ describe('LKE cluster updates', () => {
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getRegions', '@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait([
+        '@getRegions',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
 
       // Assert that initial node pool is shown on the page.
       cy.findByText('Dedicated 8 GB', { selector: 'h3' }).should('be.visible');
@@ -1210,12 +1238,12 @@ describe('LKE cluster updates', () => {
       });
 
       mockGetCluster(mockCluster).as('getCluster');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
       mockUpdateCluster(mockCluster.id, mockNewCluster).as('updateCluster');
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait(['@getCluster', '@getNodePools', '@getTieredVersions']);
 
       // LKE clusters can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
       cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
@@ -1246,14 +1274,14 @@ describe('LKE cluster updates', () => {
       const mockErrorMessage = 'API request fails';
 
       mockGetCluster(mockCluster).as('getCluster');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
       mockUpdateClusterError(mockCluster.id, mockErrorMessage).as(
         'updateClusterError'
       );
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait(['@getCluster', '@getNodePools', '@getTieredVersions']);
 
       // LKE cluster can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
       cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
@@ -1308,7 +1336,7 @@ describe('LKE cluster updates', () => {
     mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
       'getNodePoolsNoTags'
     );
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
       'getControlPlaneAcl'
     );
@@ -1320,7 +1348,7 @@ describe('LKE cluster updates', () => {
     cy.wait([
       '@getCluster',
       '@getNodePoolsNoTags',
-      '@getVersions',
+      '@getTieredVersions',
       '@getType',
       '@getControlPlaneAcl',
     ]);
@@ -1425,7 +1453,7 @@ describe('LKE cluster updates', () => {
       mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
         'getNodePools'
       );
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
         'getControlPlaneAcl'
       );
@@ -1446,7 +1474,7 @@ describe('LKE cluster updates', () => {
       cy.wait([
         '@getCluster',
         '@getNodePools',
-        '@getVersions',
+        '@getTieredVersions',
         '@getType',
         '@getControlPlaneAcl',
       ]);
@@ -1589,7 +1617,7 @@ describe('LKE cluster updates', () => {
       cy.wait([
         '@getCluster',
         '@getNodePools',
-        '@getVersions',
+        '@getTieredVersions',
         '@getType',
         '@getControlPlaneAcl',
       ]);
@@ -1771,7 +1799,7 @@ describe('LKE cluster updates', () => {
       cy.wait([
         '@getCluster',
         '@getNodePools',
-        '@getVersions',
+        '@getTieredVersions',
         '@getType',
         '@getControlPlaneAcl',
       ]);
@@ -2238,7 +2266,7 @@ describe('LKE cluster updates', () => {
       );
       mockGetLinodes(mockLinodes).as('getLinodes');
       mockGetLinodeType(mockPlanType).as('getLinodeType');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
 
@@ -2248,7 +2276,7 @@ describe('LKE cluster updates', () => {
         '@getCluster',
         '@getNodePools',
         '@getLinodes',
-        '@getVersions',
+        '@getTieredVersions',
         '@getLinodeType',
       ]);
 
@@ -2378,7 +2406,7 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
       mockGetLinodeType(mockPlanType).as('getLinodeType');
       mockGetLinodeTypes(dcPricingMockLinodeTypes);
@@ -2390,7 +2418,7 @@ describe('LKE cluster updates', () => {
         '@getRegions',
         '@getCluster',
         '@getNodePools',
-        '@getVersions',
+        '@getTieredVersions',
         '@getLinodeType',
       ]);
 
@@ -2506,7 +2534,7 @@ describe('LKE cluster updates', () => {
       );
       mockGetLinodes(mockLinodes).as('getLinodes');
       mockGetLinodeType(mockPlanType).as('getLinodeType');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockGetDashboardUrl(mockCluster.id);
       mockGetApiEndpoints(mockCluster.id);
 
@@ -2516,7 +2544,7 @@ describe('LKE cluster updates', () => {
         '@getCluster',
         '@getNodePools',
         '@getLinodes',
-        '@getVersions',
+        '@getTieredVersions',
         '@getLinodeType',
       ]);
 
@@ -2637,7 +2665,7 @@ describe('LKE cluster updates', () => {
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
+      mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
       mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
       mockGetLinodeType(mockPlanType).as('getLinodeType');
       mockGetLinodeTypes(dcPricingMockLinodeTypes);
@@ -2649,7 +2677,7 @@ describe('LKE cluster updates', () => {
         '@getRegions',
         '@getCluster',
         '@getNodePools',
-        '@getVersions',
+        '@getTieredVersions',
         '@getLinodeType',
       ]);
 
