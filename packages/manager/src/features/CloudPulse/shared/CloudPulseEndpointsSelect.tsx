@@ -1,22 +1,17 @@
-import { queryPresets, useQuery } from '@linode/queries';
 import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
 import { Box } from '@mui/material';
 import React, { useMemo } from 'react';
 
-import { objectStorageQueries } from 'src/queries/object-storage/queries';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
 
 import type {
   CloudPulseMetricsFilter,
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
-import type {
-  APIError,
-  CloudPulseServiceType,
-  FilterValue,
-  ObjectStorageEndpoint,
-} from '@linode/api-v4';
+import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseEndpoints {
   /**
@@ -83,31 +78,33 @@ export const CloudPulseEndpointsSelect = React.memo(
     } = props;
 
     const {
-      data: endpoints,
-      isLoading,
+      data: buckets,
       isError,
-    } = useQuery<ObjectStorageEndpoint[], APIError[]>({
-      ...objectStorageQueries.endpoints,
-      ...queryPresets.oneTimeFetch,
-    });
+      isLoading,
+    } = useResourcesQuery(
+      disabled !== undefined ? !disabled : Boolean(region && serviceType),
+      serviceType,
+      {},
+
+      RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}
+    );
 
     const validSortedEndpoints = useMemo(() => {
-      if (!endpoints) return [];
+      if (!buckets) return [];
 
-      const validEndpoints: CloudPulseEndpoints[] = endpoints
-        .flatMap((endpoint) =>
-          endpoint.s3_endpoint !== null
-            ? [
-                {
-                  label: endpoint.s3_endpoint,
-                  region: endpoint.region,
-                },
-              ]
-            : []
-        )
-        .sort((a, b) => a.label.localeCompare(b.label));
-      return validEndpoints;
-    }, [endpoints]);
+      const visitedEndpoints = new Set<string>();
+      const uniqueEndpoints: CloudPulseEndpoints[] = [];
+
+      buckets.forEach(({ endpoint, region }) => {
+        if (endpoint && region && !visitedEndpoints.has(endpoint)) {
+          visitedEndpoints.add(endpoint);
+          uniqueEndpoints.push({ label: endpoint, region });
+        }
+      });
+
+      uniqueEndpoints.sort((a, b) => a.label.localeCompare(b.label));
+      return uniqueEndpoints;
+    }, [buckets]);
 
     const [selectedEndpoints, setSelectedEndpoints] =
       React.useState<CloudPulseEndpoints[]>();
@@ -129,7 +126,7 @@ export const CloudPulseEndpointsSelect = React.memo(
         return;
       }
       // To save default values, go through side effects if disabled is false
-      if (!endpoints || !savePreferences || selectedEndpoints) {
+      if (!buckets || !savePreferences || selectedEndpoints) {
         if (selectedEndpoints) {
           setSelectedEndpoints([]);
           handleEndpointsSelection([]);
@@ -147,7 +144,7 @@ export const CloudPulseEndpointsSelect = React.memo(
         setSelectedEndpoints(endpoints);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [endpoints, region, xFilter, serviceType]);
+    }, [buckets, region, xFilter, serviceType]);
 
     return (
       <Autocomplete
