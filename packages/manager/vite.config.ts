@@ -22,8 +22,10 @@ export default defineConfig((env) => ({
         betas: {
           type: 'module',
           name: 'betas',
-          entry: 'https://betas.nussman.us/remoteEntry.js',
-          // entry: 'http://localhost:4000/remoteEntry.js',
+          entry:
+            env.command === 'build'
+              ? 'https://betas.nussman.us/remoteEntry.js'
+              : 'http://localhost:4000/remoteEntry.js',
         },
       },
       filename: 'remoteEntry.js',
