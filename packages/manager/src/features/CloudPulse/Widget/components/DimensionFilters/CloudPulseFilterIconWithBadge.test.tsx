@@ -13,6 +13,9 @@ describe('CloudPulseDimensionFilterIconWithBadge', () => {
     // Badge content should be visible
     const badge = screen.getByText('5');
     expect(badge).toBeInTheDocument();
+
+    const filter = screen.getByTestId('filled-filter');
+    expect(filter).toBeInTheDocument();
   });
 
   it('does not render the badge when count = 0', () => {
@@ -21,5 +24,8 @@ describe('CloudPulseDimensionFilterIconWithBadge', () => {
     // Badge should not be visible
     const badge = screen.queryByText('0');
     expect(badge).not.toBeInTheDocument();
+
+    const filter = screen.getByTestId('filter');
+    expect(filter).toBeInTheDocument();
   });
 });
