@@ -268,16 +268,19 @@ export const useIsLkeEnterpriseEnabled = () => {
   const { data: account } = useAccount();
 
   const isLkeEnterpriseLAFlagEnabled = Boolean(
-    flags?.lkeEnterprise?.enabled && flags.lkeEnterprise.la
+    flags?.lkeEnterprise2?.enabled && flags.lkeEnterprise2.la
   );
-  const isLkeEnterprisePhase2FlagEnabled = Boolean(
-    flags.lkeEnterprise?.enabled && flags.lkeEnterprise.phase2Mtc
+  const isLkeEnterprisePhase2BYOVPCFlagEnabled = Boolean(
+    flags.lkeEnterprise2?.enabled && flags.lkeEnterprise2.phase2Mtc.byoVPC
+  );
+  const isLkeEnterprisePhase2DualStackFlagEnabled = Boolean(
+    flags.lkeEnterprise2?.enabled && flags.lkeEnterprise2.phase2Mtc.dualStack
   );
   const isLkeEnterprisePostLAFlagEnabled = Boolean(
-    flags?.lkeEnterprise?.enabled && flags.lkeEnterprise.postLa
+    flags?.lkeEnterprise2?.enabled && flags.lkeEnterprise2.postLa
   );
   const isLkeEnterpriseGAFlagEnabled = Boolean(
-    flags.lkeEnterprise?.enabled && flags.lkeEnterprise.ga
+    flags.lkeEnterprise2?.enabled && flags.lkeEnterprise2.ga
   );
 
   const isLkeEnterpriseLAFeatureEnabled = isFeatureEnabledV2(
@@ -285,9 +288,14 @@ export const useIsLkeEnterpriseEnabled = () => {
     isLkeEnterpriseLAFlagEnabled,
     account?.capabilities ?? []
   );
-  const isLkeEnterprisePhase2FeatureEnabled = isFeatureEnabledV2(
-    'Kubernetes Enterprise',
-    isLkeEnterprisePhase2FlagEnabled,
+  const isLkeEnterprisePhase2BYOVPCFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise BYO VPC',
+    isLkeEnterprisePhase2BYOVPCFlagEnabled,
+    account?.capabilities ?? []
+  );
+  const isLkeEnterprisePhase2DualStackFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise Dual Stack',
+    isLkeEnterprisePhase2DualStackFlagEnabled,
     account?.capabilities ?? []
   );
   // For feature-flagged update strategy and firewall work
@@ -307,7 +315,8 @@ export const useIsLkeEnterpriseEnabled = () => {
     isLkeEnterpriseGAFlagEnabled,
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
-    isLkeEnterprisePhase2FeatureEnabled,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled,
+    isLkeEnterprisePhase2DualStackFeatureEnabled,
     isLkeEnterprisePostLAFeatureEnabled,
   };
 };

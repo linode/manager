@@ -109,7 +109,7 @@ describe('QEMU reboot upgrade notification', () => {
     // Confirm that the notice is visible and contains the expected message
     cy.findByText(NOTIFICATION_BANNER_TEXT, { exact: false })
       .should('be.visible')
-      .closest('[data-testid="notice-warning"]')
+      .closest('[data-testid="platform-maintenance-banner"]')
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
@@ -321,7 +321,7 @@ describe('QEMU reboot upgrade notification', () => {
     // Confirm that the notice is visible and contains the expected message
     cy.findByText(NOTIFICATION_BANNER_TEXT, { exact: false })
       .should('be.visible')
-      .closest('[data-testid="notice-warning"]')
+      .closest('[data-testid="platform-maintenance-banner"]')
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
@@ -329,7 +329,7 @@ describe('QEMU reboot upgrade notification', () => {
         });
       });
     cy.findByText(' upcoming', { exact: false })
-      .closest('[data-testid="notice-warning"]')
+      .closest('[data-testid="maintenance-banner"]')
       .should('be.visible')
       .within(() => {
         cy.get('p').then(($el) => {

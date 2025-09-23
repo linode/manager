@@ -1,6 +1,6 @@
 import { getTFAToken } from '@linode/api-v4/lib/profile';
 import { profileQueries, useSecurityQuestions } from '@linode/queries';
-import { Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { LinkButton, Notice, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -208,13 +208,13 @@ export const TwoFactor = (props: TwoFactorProps) => {
         )}
         {twoFactorEnabled && (
           <StyledCTAWrapper>
-            <StyledLinkButton data-qa-hide-show-code onClick={toggleHidden}>
+            <LinkButton data-qa-hide-show-code onClick={toggleHidden}>
               {showQRCode
                 ? 'Hide QR Code'
                 : twoFactorConfirmed
                   ? 'Reset two-factor authentication'
                   : 'Show QR Code'}
-            </StyledLinkButton>
+            </LinkButton>
           </StyledCTAWrapper>
         )}
         {twoFactorEnabled &&

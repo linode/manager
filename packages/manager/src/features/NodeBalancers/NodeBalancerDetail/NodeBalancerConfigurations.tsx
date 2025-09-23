@@ -39,10 +39,10 @@ import {
 import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
+  NodeBalancerConfigurationsPermissions,
 } from '../types';
 import type {
   APIError,
-  Grants,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
 } from '@linode/api-v4';
@@ -75,12 +75,12 @@ const StyledConfigsButton = styled(Button, {
 interface Props {
   configId: number | undefined;
   configs: NodeBalancerConfigFieldsWithStatus[];
-  grants: Grants | undefined;
   nodeBalancerId: number;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
   nodeBalancerSubnetId?: number;
   nodeBalancerVpcId?: number;
+  permissions: Partial<Record<NodeBalancerConfigurationsPermissions, boolean>>;
   queryClient: QueryClient;
 }
 
@@ -444,17 +444,6 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
     return true;
   };
 
-  isNodeBalancerReadOnly = () => {
-    const { grants } = this.props;
-    const nodeBalancerId = this.props.nodeBalancerId;
-    return Boolean(
-      grants?.nodebalancer?.some(
-        (grant) =>
-          grant.id === nodeBalancerId && grant.permissions === 'read_only'
-      )
-    );
-  };
-
   onCloseConfirmation = () =>
     this.setState({
       deleteConfigConfirmDialog: {
@@ -532,8 +521,6 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
       panelMessages,
     } = this.state;
 
-    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
-
     return (
       <div>
         <DocumentTitleSegment
@@ -549,7 +536,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
             <StyledConfigsButton
               buttonType="outlined"
               data-qa-add-config
-              disabled={isNodeBalancerReadOnly}
+              disabled={!this.props.permissions.update_nodebalancer}
               onClick={() => this.addNodeBalancerConfig()}
             >
               {configs.length === 0
@@ -606,8 +593,6 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
       // Check whether config is expended based on the URL
       const isExpanded = this.props.configId === config.id;
 
-      const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
-
       const L = {
         algorithmLens: lensTo(['algorithm']),
         checkBodyLens: lensTo(['check_body']),
@@ -649,7 +634,6 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
             checkPassive={view(L.checkPassiveLens, this.state)}
             checkPath={view(L.checkPathLens, this.state)}
             configIdx={idx}
-            disabled={isNodeBalancerReadOnly}
             errors={configErrors[idx]}
             forEdit
             healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}
@@ -699,6 +683,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
             )}
             onSslCertificateChange={this.updateState(L.sslCertificateLens)}
             onUdpCheckPortChange={this.updateState(L.udpCheckPortLens, L)}
+            permissions={this.props.permissions}
             port={view(L.portLens, this.state)}
             privateKey={view(L.privateKeyLens, this.state)}
             protocol={view(L.protocolLens, this.state)}

@@ -8,8 +8,19 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+}));
+
 describe('ImagesLandingEmptyState', () => {
   it('disables the create button if the user does not have permission to create images', async () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: false },
+    });
     server.use(
       http.get('*/v4/profile', () => {
         const profile = profileFactory.build({ restricted: true });

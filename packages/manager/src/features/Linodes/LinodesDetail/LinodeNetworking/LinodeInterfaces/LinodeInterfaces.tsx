@@ -1,12 +1,15 @@
 import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import React, { useState } from 'react';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
 import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
+import { HistoryDialog } from './LinodeInterfacesHistory/HistoryDialog';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -16,9 +19,13 @@ interface Props {
 
 export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const navigate = useNavigate();
-  const { interfaceId } = useParams({
-    strict: false,
-  });
+  const location = useLocation();
+  const flags = useFlags();
+
+  const isHistoryTableEnabled =
+    flags.linodeInterfaces?.interface_history ?? false;
+
+  const { interfaceId } = useParams({ strict: false });
 
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -42,15 +49,13 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
     navigate({
       to: '/linodes/$linodeId/networking/interfaces/$interfaceId',
       params: { linodeId, interfaceId },
-      search: {
-        delete: undefined,
-        migrate: undefined,
-        rebuild: undefined,
-        rescue: undefined,
-        resize: undefined,
-        selectedImageId: undefined,
-        upgrade: undefined,
-      },
+    });
+  };
+
+  const onShowHistory = () => {
+    navigate({
+      to: '/linodes/$linodeId/networking/history',
+      params: { linodeId },
     });
   };
 
@@ -68,7 +73,15 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       >
         <Typography variant="h3">Network Interfaces</Typography>
         <Stack direction="row" spacing={1}>
-          <Button onClick={() => setIsSettingsDrawerOpen(true)}>
+          {isHistoryTableEnabled && (
+            <Button buttonType="secondary" onClick={onShowHistory}>
+              Interface History
+            </Button>
+          )}
+          <Button
+            buttonType={isHistoryTableEnabled ? 'outlined' : 'secondary'}
+            onClick={() => setIsSettingsDrawerOpen(true)}
+          >
             Interface Settings
           </Button>
           <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
@@ -104,6 +117,18 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         }
         open={Boolean(interfaceId)}
       />
+      {isHistoryTableEnabled && (
+        <HistoryDialog
+          linodeId={linodeId}
+          onClose={() =>
+            navigate({
+              to: '/linodes/$linodeId/networking',
+              params: { linodeId },
+            })
+          }
+          open={location.pathname.includes('networking/history')}
+        />
+      )}
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}

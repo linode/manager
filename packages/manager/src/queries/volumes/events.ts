@@ -1,4 +1,4 @@
-import { accountQueries, volumeQueries } from '@linode/queries';
+import { accountQueries, linodeQueries, volumeQueries } from '@linode/queries';
 
 import type { EventHandlerData } from '@linode/queries';
 
@@ -16,9 +16,24 @@ export const volumeEventsHandler = ({
       queryKey: volumeQueries.lists.queryKey,
     });
 
+    // `event.entity` is the Volume
     if (event.entity) {
       invalidateQueries({
         queryKey: volumeQueries.volume(event.entity.id).queryKey,
+      });
+    }
+
+    // `event.secondary_entity` will be a Linode when the event is a Volume attach / detach event
+    if (event.secondary_entity) {
+      // Invalidate the Linode's paginated list of volumes to ensure the list is up to date
+      invalidateQueries({
+        queryKey: volumeQueries.linode(event.secondary_entity.id)._ctx.volumes
+          ._def,
+      });
+      // Invalidate the Linode's configs because config storage devices may be updated when an attach/detach happens
+      invalidateQueries({
+        queryKey: linodeQueries.linode(event.secondary_entity.id)._ctx.configs
+          .queryKey,
       });
     }
   }

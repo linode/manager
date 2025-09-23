@@ -22,6 +22,7 @@ import {
 
 import { accountQueries } from '../account';
 import { queryPresets } from '../base';
+import { linodeQueries } from '../linodes';
 import { profileQueries } from '../profile';
 import { getAllVolumes, getAllVolumeTypes } from './requests';
 
@@ -200,6 +201,11 @@ export const useCreateVolumeMutation = () => {
         queryClient.invalidateQueries({
           queryKey: volumeQueries.linode(volume.linode_id)._ctx.volumes._def,
         });
+        // Invalidate the Linode's configs because the volume will now be returned as a Config device
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(volume.linode_id)._ctx.configs
+            .queryKey,
+        });
       }
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
@@ -228,14 +234,10 @@ export const useVolumesMigrateMutation = () => {
   });
 };
 
-interface UpdateVolumePayloadWithId extends UpdateVolumeRequest {
-  volumeId: number;
-}
-
-export const useUpdateVolumeMutation = () => {
+export const useVolumeUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>({
-    mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
+  return useMutation<Volume, APIError[], UpdateVolumeRequest>({
+    mutationFn: (data) => updateVolume(id, data),
     onSuccess(volume) {
       // Update the specific volume
       queryClient.setQueryData<Volume>(

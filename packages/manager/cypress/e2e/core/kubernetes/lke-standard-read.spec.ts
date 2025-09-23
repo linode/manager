@@ -52,7 +52,11 @@ describe('LKE Cluster Summary', () => {
   it('does not show linked VPC in summary for a standard cluster', () => {
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: false },
+      },
     });
     mockGetAccount(
       accountFactory.build({
@@ -86,7 +90,11 @@ describe('LKE Node Pools', () => {
   it('does not show VPC IP columns for standard LKE cluster', () => {
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: false },
+      },
     });
     mockGetAccount(
       accountFactory.build({

@@ -1,16 +1,6 @@
 import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers';
-import { makeStyles } from 'tss-react/mui';
-
-export const useStyles = makeStyles()(() => ({
-  timeAutocomplete: {
-    '.MuiBox-root': {
-      marginTop: '0',
-    },
-    width: '140px',
-  },
-}));
 
 export const StyledDateCalendar = styled(DateCalendar, {
   label: 'StyledDateCalendar',

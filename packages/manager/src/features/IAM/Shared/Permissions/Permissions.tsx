@@ -1,4 +1,4 @@
-import { StyledLinkButton, Typography } from '@linode/ui';
+import { LinkButton, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
 import { Grid } from '@mui/material';
 import * as React from 'react';
@@ -63,7 +63,7 @@ export const Permissions = React.memo(({ permissions }: Props) => {
 
           {(numHiddenItems > 0 || showAll) && (
             <StyledBox>
-              <StyledLinkButton
+              <LinkButton
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowAll(!showAll);
@@ -71,7 +71,7 @@ export const Permissions = React.memo(({ permissions }: Props) => {
                 type="button"
               >
                 {showAll ? 'Hide' : `Expand (+${numHiddenItems})`}
-              </StyledLinkButton>
+              </LinkButton>
             </StyledBox>
           )}
         </StyledContainer>

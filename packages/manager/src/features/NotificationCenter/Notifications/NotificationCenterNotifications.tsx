@@ -1,4 +1,4 @@
-import { CircleProgress, StyledLinkButton } from '@linode/ui';
+import { CircleProgress, LinkButton } from '@linode/ui';
 import React from 'react';
 
 import { useStyles } from '../NotificationCenter.styles';
@@ -63,7 +63,7 @@ export const NotificationCenterNotifications = React.memo(
         ))}
         {content.length > count ? (
           <StyledLToggleContainer display="flex" justifyContent="flex-end">
-            <StyledLinkButton
+            <LinkButton
               aria-label={`Display all ${content.length} items`}
               data-testid="showMoreButton"
               onClick={() => setShowAll(!showAll)}
@@ -79,7 +79,7 @@ export const NotificationCenterNotifications = React.memo(
                   [classes.inverted]: showAll,
                 })}
               />
-            </StyledLinkButton>
+            </LinkButton>
           </StyledLToggleContainer>
         ) : null}
       </>

@@ -34,7 +34,7 @@ import type {
  *
  */
 export const getAccountInfo = () => {
-  return Request<Account>(setURL(`${API_ROOT}/account`), setMethod('GET'));
+  return Request<Account>(setURL(`${BETA_API_ROOT}/account`), setMethod('GET'));
 };
 
 /**
@@ -57,7 +57,7 @@ export const getNetworkUtilization = () =>
  */
 export const updateAccountInfo = (data: Partial<Account>) =>
   Request<Account>(
-    setURL(`${API_ROOT}/account`),
+    setURL(`${BETA_API_ROOT}/account`),
     setMethod('PUT'),
     setData(data, updateAccountSchema),
   );

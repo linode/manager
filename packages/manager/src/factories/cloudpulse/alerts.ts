@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import { Factory, regionFactory } from '@linode/utilities';
 
 import type {
   Alert,
@@ -51,6 +51,50 @@ export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   threshold: 1000,
 });
 
+export const ingressTrafficRateRulesFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      {
+        dimension_label: 'port',
+        operator: 'eq',
+        value: '',
+      },
+      {
+        dimension_label: 'protocol',
+        operator: 'in',
+        value: 'TCP,UDP',
+      },
+      {
+        dimension_label: 'config_id',
+        operator: 'eq',
+        value: '',
+      },
+    ],
+    metric: 'nb_ingress_traffic_rate',
+    operator: 'eq',
+    threshold: 1000, // adjust as per your alert threshold
+  });
+
+export const egressTrafficRateRulesFactory =
+  ingressTrafficRateRulesFactory.extend({
+    metric: 'nb_egress_traffic_rate',
+  });
+
+export const newSessionsRulesFactory = ingressTrafficRateRulesFactory.extend({
+  metric: 'nb_new_sessions_per_second',
+});
+
+export const totalActiveSessionsRulesFactory =
+  ingressTrafficRateRulesFactory.extend({
+    metric: 'nb_total_active_sessions',
+  });
+
+export const totalActiveBackendsRulesFactory =
+  ingressTrafficRateRulesFactory.extend({
+    metric: 'nb_total_active_backends',
+  });
+
 export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   aggregate_function: 'avg',
   dimension_filters: [],
@@ -58,6 +102,91 @@ export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   operator: 'eq',
   threshold: 1000,
 });
+export const currentConnectionsRulesFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      { dimension_label: 'region_id', operator: 'eq', value: '' },
+      { dimension_label: 'customer_id', operator: 'eq', value: '' },
+      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'interface_id', operator: 'eq', value: '' },
+      {
+        dimension_label: 'interface_type',
+        operator: 'in',
+        value: 'vpc,public',
+      },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
+    ],
+    metric: 'current_connections',
+    operator: 'eq',
+    threshold: 1000,
+  });
+
+export const availableConnectionsRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'available_connections',
+};
+export const ingressPacketsAcceptedRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'ingress_packets_accepted',
+};
+
+export const egressPacketsAcceptedRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'egress_packets_accepted',
+};
+
+export const ingressBytesAcceptedRulesFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      { dimension_label: 'region_id', operator: 'eq', value: '' },
+      { dimension_label: 'customer_id', operator: 'eq', value: '' },
+      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'interface_id', operator: 'eq', value: '' },
+      {
+        dimension_label: 'interface_type',
+        operator: 'in',
+        value: 'vpc,public',
+      },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
+    ],
+    metric: 'ingress_bytes_accepted',
+    operator: 'eq',
+    threshold: 1000,
+  });
+
+export const egressBytesAcceptedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'egress_bytes_accepted',
+};
+
+export const ingressPacketsDroppedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'ingress_packets_dropped',
+};
+
+export const egressPacketsDroppedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'egress_packets_dropped',
+};
+
+export const packetsDroppedConnectionTableFullRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'packets_dropped_connection_table_full',
+};
+
+export const newIngressConnectionsRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'new_ingress_connections',
+};
+
+export const newEgressConnectionsRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'new_egress_connections',
+};
 
 export const alertDefinitionFactory =
   Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
@@ -93,6 +222,8 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   created_by: 'system',
   description: 'Test description',
   entity_ids: ['1', '2', '3', '48', '50', '51'],
+  scope: 'entity',
+  regions: regionFactory.buildList(3).map(({ id }) => id),
   has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
@@ -112,7 +243,6 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   type: 'system',
   updated: new Date().toISOString(),
   updated_by: 'system',
-  scope: 'entity',
 });
 
 const firewallDimensions: Dimension[] = [

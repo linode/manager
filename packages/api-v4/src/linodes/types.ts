@@ -191,7 +191,7 @@ export interface ConfigInterfaceIPv4 {
 }
 
 export interface IPv6SLAAC {
-  address: string;
+  address?: string;
   range: string;
 }
 
@@ -342,16 +342,35 @@ export interface PublicInterfaceData {
 }
 
 // Other Linode Interface types
-export type LinodeInterfaceStatus = 'active' | 'deleted' | 'inactive';
 
 export interface LinodeInterfaceHistory {
+  /**
+   * When this version was created.
+   *
+   * @example 2025-09-16T15:01:32
+   */
   created: string;
-  event_id: number;
-  interface_data: string; // will come in as JSON string object that we'll need to parse
+  /**
+   * The JSON body returned in response to a successful PUT, POST, or DELETE operation on the interface.
+   */
+  interface_data: LinodeInterface;
+  /**
+   * The unique ID for this history version.
+   */
   interface_history_id: number;
+  /**
+   * The network interface defined in the version.
+   */
   interface_id: number;
+  /**
+   * The Linode the interface_id belongs to.
+   */
   linode_id: number;
-  status: LinodeInterfaceStatus;
+  /**
+   * The network interface's version.
+   *
+   * The first version from a POST is 1. The version number is incremented when the network interface configuration is changed.
+   */
   version: number;
 }
 
@@ -382,10 +401,12 @@ export interface UpgradeInterfaceData {
 // ----------------------------------------------------------
 
 export interface DiskDevice {
-  disk_id: null | number;
+  disk_id: number;
+  volume_id: null;
 }
 export interface VolumeDevice {
-  volume_id: null | number;
+  disk_id: null;
+  volume_id: number;
 }
 
 export type ConfigDevice = DiskDevice | null | VolumeDevice;

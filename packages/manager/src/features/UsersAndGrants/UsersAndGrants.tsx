@@ -33,8 +33,8 @@ export const UsersAndGrants = () => {
 
   return (
     <>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <UsersLanding />
     </>

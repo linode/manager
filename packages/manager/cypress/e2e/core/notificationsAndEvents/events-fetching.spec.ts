@@ -18,7 +18,6 @@ describe('Event fetching and polling', () => {
    */
   it('Makes initial fetch to events endpoint', () => {
     const mockNow = DateTime.now();
-
     mockGetEvents([]).as('getEvents');
 
     cy.visitWithLogin('/');
@@ -28,10 +27,21 @@ describe('Event fetching and polling', () => {
       const lastWeekTimestamp = mockNow
         .minus({ weeks: 1 })
         .toUTC()
-        .startOf('second') // Helps with matching the timestamp at the start of the second
+        .startOf('second'); // Helps with matching the timestamp at the start of the second
+
+      const ts1 = lastWeekTimestamp.toFormat("yyyy-MM-dd'T'HH:mm:ss");
+      const ts2 = lastWeekTimestamp
+        .plus({ seconds: 1 })
         .toFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-      const timestampFilter = `"created":{"+gt":"${lastWeekTimestamp}"`;
+      const timestampfilter1 = `"created":{"+gt":"${ts1}"`;
+      const timestampfilter2 = `"created":{"+gt":"${ts2}"`;
+
+      // M3-10512: There is a small delay between between setting
+      // the clock and the app's filter generation.
+      // In the event that the delay causes the timestamp to roll
+      // over to the next second, we should accept either timestamp
+      // in the test.
 
       /*
        * Confirm that initial fetch request contains filters to achieve
@@ -42,7 +52,10 @@ describe('Event fetching and polling', () => {
        * - Sort events by their created date.
        * - Only retrieve events created within the past week.
        */
-      expect(filters).to.contain(timestampFilter);
+      expect(filters).to.satisfy(
+        (f: string) =>
+          f.includes(timestampfilter1) || f.includes(timestampfilter2)
+      );
       expect(filters).to.contain('"+neq":"profile_update"');
       expect(filters).to.contain('"+order_by":"id"');
     });

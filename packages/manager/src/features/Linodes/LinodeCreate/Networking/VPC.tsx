@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Box,
   Checkbox,
+  Divider,
   FormControlLabel,
   Notice,
   Stack,
@@ -10,21 +11,29 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
-import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
+import {
+  VPCIPv6PublicIPLabel,
+  VPCPublicIPLabel,
+} from 'src/features/VPCs/components/VPCPublicIPLabel';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
+import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import { VPCAvailabilityNotice } from './VPCAvailabilityNotice';
+import { VPCIPv6Ranges } from './VPCIPv6Ranges';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
+import type { Theme } from '@linode/ui';
 
 interface Props {
   index: number;
@@ -33,6 +42,7 @@ interface Props {
 export const VPC = ({ index }: Props) => {
   const {
     control,
+    getValues,
     resetField,
     setValue,
     formState: { errors },
@@ -58,7 +68,19 @@ export const VPC = ({ index }: Props) => {
     filter: { region: regionId },
   });
 
+  const { isDualStackEnabled } = useVPCDualStack();
+
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+
+  // Check that selected subnet supports IPv6
+  const selectedSubnet = selectedVPC?.subnets.find(
+    (subnet) =>
+      subnet.id === getValues(`linodeInterfaces.${index}.vpc.subnet_id`)
+  );
+
+  const showIPv6Fields =
+    isDualStackEnabled &&
+    Boolean(selectedSubnet?.ipv6?.length && selectedSubnet?.ipv6?.length > 0);
 
   return (
     <Box>
@@ -83,7 +105,7 @@ export const VPC = ({ index }: Props) => {
                 field.onChange(vpc?.id ?? null);
 
                 if (vpc && vpc.subnets.length === 1) {
-                  // If the user selectes a VPC and the VPC only has one subnet,
+                  // If the user selects a VPC and the VPC only has one subnet,
                   // preselect that subnet for the user.
                   setValue(
                     `linodeInterfaces.${index}.vpc.subnet_id`,
@@ -145,10 +167,7 @@ export const VPC = ({ index }: Props) => {
                   disabled={!regionSupportsVPCs}
                   label={
                     <Stack alignItems="center" direction="row">
-                      <Typography>
-                        Auto-assign a VPC IPv4 address for this Linode in the
-                        VPC
-                      </Typography>
+                      <Typography>Auto-assign VPC IPv4 address</Typography>
                       <TooltipIcon
                         status="info"
                         text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
@@ -178,28 +197,111 @@ export const VPC = ({ index }: Props) => {
               </Box>
             )}
           />
-          <Controller
-            control={control}
-            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
-            render={({ field, fieldState }) => (
-              <Box>
-                {fieldState.error?.message && (
-                  <Notice text={fieldState.error.message} variant="error" />
+          {showIPv6Fields && (
+            <Controller
+              control={control}
+              name={`linodeInterfaces.${index}.vpc.ipv6.slaac.0.range`}
+              render={({ field, fieldState }) => (
+                <Box>
+                  <FormControlLabel
+                    checked={field.value === 'auto'}
+                    control={<Checkbox sx={{ ml: 0.4 }} />}
+                    disabled={!regionSupportsVPCs}
+                    label={
+                      <Stack alignItems="center" direction="row">
+                        <Typography>Auto-assign VPC IPv6 address</Typography>
+                        <TooltipIcon
+                          status="info"
+                          text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
+                        />
+                      </Stack>
+                    }
+                    onChange={(e, checked) =>
+                      field.onChange(checked ? 'auto' : '')
+                    }
+                  />
+                  {field.value !== 'auto' && (
+                    <TextField
+                      containerProps={{ sx: { mb: 1.5, mt: 1 } }}
+                      errorText={
+                        fieldState.error?.message ??
+                        errors.linodeInterfaces?.[index]?.vpc?.ipv6?.slaac?.[0]
+                          ?.range?.message
+                      }
+                      helperText={generateVPCIPv6InputHelperText(
+                        selectedSubnet?.ipv6?.[0].range ?? ''
+                      )}
+                      label="VPC IPv6"
+                      noMarginTop
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                      required
+                      value={field.value}
+                    />
+                  )}
+                </Box>
+              )}
+            />
+          )}
+          <Box>
+            <Divider
+              sx={(theme) => ({ marginBottom: theme.spacingFunction(16) })}
+            />
+            <Typography sx={(theme: Theme) => ({ font: theme.font.bold })}>
+              Public access
+            </Typography>
+            <Controller
+              control={control}
+              name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
+              render={({ field, fieldState }) => (
+                <Box>
+                  {fieldState.error?.message && (
+                    <Notice text={fieldState.error.message} variant="error" />
+                  )}
+                  <FormControlLabel
+                    checked={field.value === 'auto'}
+                    control={<Checkbox sx={{ ml: 0.4 }} />}
+                    disabled={!regionSupportsVPCs}
+                    label={<VPCPublicIPLabel />}
+                    onChange={(e, checked) =>
+                      field.onChange(checked ? 'auto' : null)
+                    }
+                  />
+                </Box>
+              )}
+            />
+            {showIPv6Fields && (
+              <Controller
+                control={control}
+                name={`linodeInterfaces.${index}.vpc.ipv6.is_public`}
+                render={({ field, fieldState }) => (
+                  <Box>
+                    {fieldState.error?.message && (
+                      <Notice text={fieldState.error.message} variant="error" />
+                    )}
+                    <FormControlLabel
+                      checked={field.value === true}
+                      control={<Checkbox sx={{ ml: 0.4 }} />}
+                      disabled={!regionSupportsVPCs}
+                      label={<VPCIPv6PublicIPLabel />}
+                      onChange={() => field.onChange(!field.value)}
+                    />
+                  </Box>
                 )}
-                <FormControlLabel
-                  checked={field.value === 'auto'}
-                  control={<Checkbox sx={{ ml: 0.4 }} />}
-                  disabled={!regionSupportsVPCs}
-                  label={<VPCPublicIPLabel />}
-                  onChange={(e, checked) =>
-                    field.onChange(checked ? 'auto' : null)
-                  }
-                />
-              </Box>
+              />
             )}
-          />
+            <Divider
+              sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
+            />
+          </Box>
         </Stack>
         <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
+        {showIPv6Fields && (
+          <VPCIPv6Ranges
+            disabled={!regionSupportsVPCs}
+            interfaceIndex={index}
+          />
+        )}
       </Stack>
       <VPCCreateDrawer
         onClose={() => setIsCreateDrawerOpen(false)}

@@ -3,7 +3,6 @@ import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
@@ -50,7 +49,6 @@ export const KubernetesPlanContainer = (
     updatePlanCount,
     wholePanelIsDisabled,
   } = props;
-  const flags = useFlags();
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
 
   /**
@@ -59,9 +57,13 @@ export const KubernetesPlanContainer = (
    */
   const planSelectionDividers: PlanSelectionDividers[] = [
     {
-      flag: Boolean(flags.gpuv2?.planDivider),
       planType: 'gpu',
       tables: [
+        {
+          header: 'NVIDIA RTX PRO 6000 Blackwell Server Edition',
+          planFilter: (plan: PlanWithAvailability) =>
+            plan.label.includes('Blackwell'),
+        },
         {
           header: 'NVIDIA RTX 4000 Ada',
           planFilter: (plan: PlanWithAvailability) =>
@@ -70,7 +72,7 @@ export const KubernetesPlanContainer = (
         {
           header: 'NVIDIA Quadro RTX 6000',
           planFilter: (plan: PlanWithAvailability) =>
-            !plan.label.includes('Ada'),
+            !plan.label.includes('Ada') && !plan.label.includes('Blackwell'),
         },
       ],
     },
@@ -130,8 +132,7 @@ export const KubernetesPlanContainer = (
           />
         ) : (
           planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag
+            planType === planSelectionDivider.planType
               ? planSelectionDivider.tables.map((table) => {
                   const filteredPlans = table.planFilter
                     ? plans.filter(table.planFilter)
@@ -159,8 +160,7 @@ export const KubernetesPlanContainer = (
           }}
         >
           {planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag ? (
+            planType === planSelectionDivider.planType ? (
               planSelectionDivider.tables.map((table, idx) => {
                 const filteredPlans = table.planFilter
                   ? plans.filter(table.planFilter)

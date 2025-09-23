@@ -1,10 +1,11 @@
 import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
 import { Box, Button, Paper, Select, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../IAM/hooks/usePermissions';
+import { LinodeInterfaceFeatureStatusChip } from '../Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type {
   AccountSettings,
@@ -79,8 +80,9 @@ export const NetworkInterfaceType = () => {
         <Stack mt={1}>
           <Typography variant="body1">
             Choose whether to use Configuration Profile Interfaces or Linode
-            Interfaces (BETA) when creating new Linodes or upgrading existing
-            ones.
+            Interfaces
+            <LinodeInterfaceFeatureStatusChip fallback=" " sx={{ mx: 0.5 }} />
+            when creating new Linodes or upgrading existing ones.
           </Typography>
           <Controller
             control={control}
