@@ -1,5 +1,5 @@
 import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
-import { Box, Chip, Typography } from '@linode/ui';
+import { Box, Chip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
@@ -19,6 +19,7 @@ import {
   getEventProgress,
   volumeStatusIconMap,
 } from '../utils';
+import { AttachedToValue } from './AttachedToValue';
 import { VolumesActionMenu } from './VolumesActionMenu';
 
 import type { ActionHandlers } from './VolumesActionMenu';
@@ -193,16 +194,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       )}
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={volume.linode_label}>
-          {volume.linode_id !== null ? (
-            <Link
-              className="link secondaryLink"
-              to={`/linodes/${volume.linode_id}/storage`}
-            >
-              {volume.linode_label}
-            </Link>
-          ) : (
-            <Typography data-qa-unattached>Unattached</Typography>
-          )}
+          <AttachedToValue volume={volume} />
         </TableCell>
       )}
       {isBlockStorageEncryptionFeatureEnabled && (

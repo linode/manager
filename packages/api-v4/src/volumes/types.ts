@@ -6,6 +6,7 @@ export interface Volume {
   filesystem_path: string;
   hardware_type: VolumeHardwareType;
   id: number;
+  io_ready?: boolean; // @TODO Remove optionality once io_ready implemented on the BE side
   label: string;
   linode_id: null | number;
   linode_label: null | string;
