@@ -203,7 +203,7 @@ describe('DateRangePicker - Date Display', () => {
 
   it('should render with correct structure and placeholders', async () => {
     renderWithTheme(
-      <DateRangePicker {...defaultProps} as const format="yyyy-MM-dd" />,
+      <DateRangePicker {...defaultProps} format={'yyyy-MM-dd' as const} />,
     );
 
     // Check that the component renders correctly
