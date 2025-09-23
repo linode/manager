@@ -47,13 +47,8 @@ export const PublicAccess = (props: Props) => {
         Public access
       </Typography>
       <FormControlLabel
-        control={
-          <Checkbox
-            checked={allowPublicIPv4Access}
-            onChange={handleAllowPublicIPv4AccessChange}
-            sx={{ ml: 0.4 }}
-          />
-        }
+        checked={allowPublicIPv4Access}
+        control={<Checkbox sx={{ ml: 0.4 }} />}
         disabled={userCannotAssignLinodes}
         label={
           <Stack alignItems="center" direction="row">
@@ -64,16 +59,12 @@ export const PublicAccess = (props: Props) => {
             />
           </Stack>
         }
+        onChange={handleAllowPublicIPv4AccessChange}
       />
       {showIPv6Content && (
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={allowPublicIPv6Access}
-              onChange={handleAllowPublicIPv6AccessChange}
-              sx={{ ml: 0.4 }}
-            />
-          }
+          checked={allowPublicIPv6Access}
+          control={<Checkbox sx={{ ml: 0.4 }} />}
           disabled={userCannotAssignLinodes}
           label={
             <Stack alignItems="center" direction="row">
@@ -84,6 +75,7 @@ export const PublicAccess = (props: Props) => {
               />
             </Stack>
           }
+          onChange={handleAllowPublicIPv6AccessChange}
         />
       )}
     </>

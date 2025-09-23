@@ -2,11 +2,12 @@ import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { firewallSettingsFactory } from 'src/factories';
+import { accountFactory, firewallSettingsFactory } from 'src/factories';
 import {
   subnetAssignedLinodeDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
@@ -212,6 +213,10 @@ describe('VPC Subnets table', () => {
 
   // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
   it('renders VPC IPv6 and VPC IPv6 Ranges columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['VPC Dual Stack'],
+    });
+
     const subnet = subnetFactory.build({
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
@@ -221,6 +226,12 @@ describe('VPC Subnets table', () => {
         data: [subnet],
       },
     });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     renderWithTheme(
       <VPCSubnetsTable

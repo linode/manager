@@ -1,3 +1,21 @@
+## [2025-09-23] - v0.21.0
+
+### Changed:
+
+- Rename `StyledLinkButton` to `LinkButton` ([#12832](https://github.com/linode/manager/pull/12832))
+
+- TimePicker format supports hours, minutes, and seconds ([#12868](https://github.com/linode/manager/pull/12868))
+
+### Fixed:
+
+- Various style issues with `LinkButton` ([#12832](https://github.com/linode/manager/pull/12832))
+- TimePicker re-renders on any change to value property when used individually or within DateTimeRangePicker ([#12868](https://github.com/linode/manager/pull/12868))
+
+### Removed:
+
+- `V2` suffix from new date picker storybook page names ([#12784](https://github.com/linode/manager/pull/12784))
+- `marginRight: 0` on `MuiChip` when it is the last child ([#12846](https://github.com/linode/manager/pull/12846))
+
 ## [2025-09-09] - v0.20.0
 
 ### Fixed:

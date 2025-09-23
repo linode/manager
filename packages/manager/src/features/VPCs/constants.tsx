@@ -1,3 +1,8 @@
+import { Typography } from '@linode/ui';
+import React from 'react';
+
+import { Code } from 'src/components/Code/Code';
+
 // Various constants for the VPCs package
 
 // Labels
@@ -25,6 +30,13 @@ export const MULTIPLE_CONFIGURATIONS_MESSAGE =
 
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
+
+export const VPC_AUTO_ASSIGN_IPV6_TOOLTIP = (
+  <Typography>
+    Automatically assign an IPv6 address from the subnet&rsquo;s allocated{' '}
+    <Code>/64</Code> prefix block.
+  </Typography>
+);
 
 export const CANNOT_CREATE_VPC_MESSAGE =
   "You don't have permissions to create a new VPC. Please contact an account administrator for details.";

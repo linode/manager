@@ -151,12 +151,12 @@ const slaacSchema = object().shape({
 
 const VPCInterfaceIPv6RangeSchema = object({
   range: string()
+    .required('Range is required.')
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
       test: (value) => validateIPv6PrefixLengthIs64(value),
-    })
-    .required(),
+    }),
 });
 
 const ipv6Interface = object({
@@ -736,7 +736,7 @@ const ModifyVlanInterfaceSchema = object({
   .notRequired()
   .nullable();
 
-const ModifyVPCInterfaceIPv6RangeSchema = object({
+const ModifyVPCInterfaceIPv6SlaacSchema = object({
   range: string().notRequired().nullable(),
 });
 
@@ -760,13 +760,10 @@ export const ModifyLinodeInterfaceSchema = object({
       .nullable(),
     ipv6: object({
       slaac: array()
-        .of(ModifyVPCInterfaceIPv6RangeSchema)
+        .of(ModifyVPCInterfaceIPv6SlaacSchema)
         .notRequired()
         .nullable(),
-      ranges: array()
-        .of(ModifyVPCInterfaceIPv6RangeSchema)
-        .notRequired()
-        .nullable(),
+      ranges: array().of(VPCInterfaceIPv6RangeSchema).notRequired().nullable(),
       is_public: boolean().notRequired().nullable(),
     })
       .notRequired()
