@@ -444,6 +444,12 @@ describe('transformDimensionValue', () => {
 });
 
 describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
   it('should return true when arrays are undefined', () => {
     expect(arraysEqual(undefined, undefined)).toBe(true);
   });

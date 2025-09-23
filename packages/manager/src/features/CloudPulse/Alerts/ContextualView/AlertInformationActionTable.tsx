@@ -15,7 +15,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
 import {
-  invalidateAlerts,
+  invalidateAclpAlerts,
   servicePayloadTransformerMap,
   useAlertsMutation,
 } from 'src/queries/cloudpulse/useAlertsMutation';
@@ -198,7 +198,7 @@ export const AlertInformationActionTable = (
           });
           // Reset the state to sync with the updated alerts from API
           resetToInitialState();
-          invalidateAlerts(queryClient, serviceType, entityId, payload);
+          invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {

@@ -115,7 +115,7 @@ const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
  * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Avg").
+ * @param aggregationType - The aggregation type (e.g., "Average").
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
@@ -195,7 +195,7 @@ const verifyAlertRow = (
     });
 };
 
-describe('Create Alert', () => {
+describe('Create Firewall Alert Successfully', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
    * - Confirms that users can enter alert details, select entities, and configure conditions.

@@ -195,6 +195,11 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
         cy.get('[data-testid="betaChip"]').should('not.exist');
       });
   });
+  // SKIPPED: The feature flag normalizer auto-enables Linode when `{ aclpServices: { linode: {} } }` is provided,
+  // expanding to `aclpServices.linode.metrics = { beta: true, enabled: true }`. Expected: Linode hidden when the
+  // flag is missing/empty. Unskip when either (a) the flag lib distinguishes missing/empty and treats them as
+  // disabled, or (b) product adopts "omit key = disabled" and the test is updated accordingly.
+  // Tracked in DI-27224 — unskip once flag handling is fixed.
 
   it.skip('should not display "Linode" when its feature flag is missing', () => {
     // Mock the feature flags without linode under aclpServices
@@ -253,7 +258,10 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
         cy.get('[data-testid="betaChip"]').should('not.exist');
       });
   });
-
+  // SKIPPED: If `aclpServices` is not passed, LaunchDarkly should treat it as null/false.
+  // Currently, missing/partial flags are defaulted to `{ beta: true, enabled: true }`,
+  // which causes Linode to appear enabled instead of hidden.
+  // Tracked in DI-27224 — unskip once flag handling is fixed.
   it.skip('should show no service options when aclpServices flag is missing', () => {
     // Mock the feature flags without linode under aclpServices
     const flags = {

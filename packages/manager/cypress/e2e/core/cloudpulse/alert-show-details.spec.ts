@@ -52,12 +52,14 @@ const regions = [
     country: 'us',
     id: 'us-ord',
     label: 'Chicago, IL',
+    monitors: { alerts: ['Managed Databases'] },
   }),
   regionFactory.build({
     capabilities: ['Managed Databases'],
     country: 'us',
     id: 'us-east',
     label: 'Newark',
+    monitors: { alerts: ['Managed Databases'] },
   }),
 ];
 

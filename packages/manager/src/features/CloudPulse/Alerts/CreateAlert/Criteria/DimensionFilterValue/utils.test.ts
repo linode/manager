@@ -122,7 +122,9 @@ describe('Utils', () => {
     ];
 
     it('should return matched resources by entity IDs', () => {
-      expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual(['a']);
+      expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual([
+        'a',
+      ]);
     });
 
     it('should return empty array if no match', () => {
@@ -131,7 +133,9 @@ describe('Utils', () => {
 
     it('should handle undefined inputs', () => {
       expect(getFilteredFirewallParentEntities(undefined, ['1'])).toEqual([]);
-      expect(getFilteredFirewallParentEntities(resources, undefined)).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, undefined)).toEqual(
+        []
+      );
     });
   });
 
