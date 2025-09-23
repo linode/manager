@@ -118,6 +118,9 @@ importers:
       '@testing-library/jest-dom':
         specifier: ~6.4.8
         version: 6.4.8
+      '@types/bun':
+        specifier: 1.2.22
+        version: 1.2.22(@types/react@19.1.6)
       '@types/react':
         specifier: 19.1.6
         version: 19.1.6
@@ -2627,6 +2630,9 @@ packages:
   '@types/braintree-web@3.96.15':
     resolution: {integrity: sha512-Eg5TdfopjEWU2p81LCMUoA9SXDNDYi5DQ3+J9bmWVUqlYdvZHjZ+fxGCsus2Gdhfyuz1Z+UAG16B23zAY0yziA==}
 
+  '@types/bun@1.2.22':
+    resolution: {integrity: sha512-5A/KrKos2ZcN0c6ljRSOa1fYIyCKhZfIVYeuyb4snnvomnpFqC0tTsEkdqNxbAgExV384OETQ//WAjl3XbYqQA==}
+
   '@types/chai-string@1.4.5':
     resolution: {integrity: sha512-IecXRMSnpUvRnTztdpSdjcmcW7EdNme65bfDCQMi7XrSEPGmyDYYTEfc5fcactWDA6ioSm8o7NUqg9QxjBCCEw==}
 
@@ -3242,6 +3248,11 @@ packages:
   builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
+
+  bun-types@1.2.22:
+    resolution: {integrity: sha512-hwaAu8tct/Zn6Zft4U9BsZcXkYomzpHJX28ofvx7k0Zz2HNz54n1n+tDgxoWFGB4PcFvJXJQloPhaV2eP3Q6EA==}
+    peerDependencies:
+      '@types/react': ^19
 
   bundle-require@5.1.0:
     resolution: {integrity: sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA==}
@@ -8244,6 +8255,12 @@ snapshots:
       '@types/googlepay': 0.7.6
       '@types/paypal-checkout-components': 4.0.8
 
+  '@types/bun@1.2.22(@types/react@19.1.6)':
+    dependencies:
+      bun-types: 1.2.22(@types/react@19.1.6)
+    transitivePeerDependencies:
+      - '@types/react'
+
   '@types/chai-string@1.4.5':
     dependencies:
       '@types/chai': 5.0.1
@@ -8695,7 +8712,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.13
       tinyrainbow: 2.0.0
-      vitest: 3.1.2(@types/debug@4.1.12)(@types/node@22.18.1)(@vitest/ui@3.1.2)(jiti@2.4.2)(jsdom@24.1.3)(msw@2.6.5(@types/node@22.18.1)(typescript@5.8.3))(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1)
+      vitest: 3.1.2(@types/debug@4.1.12)(@types/node@22.18.1)(@vitest/ui@3.1.2)(jiti@2.4.2)(jsdom@24.1.3)(msw@2.6.5(@types/node@22.18.1)(typescript@5.7.3))(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1)
 
   '@vitest/utils@3.0.9':
     dependencies:
@@ -8996,6 +9013,11 @@ snapshots:
       ieee754: 1.2.1
 
   builtin-modules@3.3.0: {}
+
+  bun-types@1.2.22(@types/react@19.1.6):
+    dependencies:
+      '@types/node': 22.18.1
+      '@types/react': 19.1.6
 
   bundle-require@5.1.0(esbuild@0.25.3):
     dependencies:
