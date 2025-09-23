@@ -30,6 +30,7 @@ const mockKubernetesEnterpriseVersions =
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
+  useGrants: vi.fn().mockReturnValue({}),
   useAccountBetaQuery: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
   useKubernetesTieredVersionsQuery: vi.fn().mockReturnValue({}),
@@ -41,6 +42,7 @@ vi.mock('@linode/queries', () => {
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
+    useGrants: queryMocks.useGrants,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,
   };
 });
@@ -356,7 +358,7 @@ describe('helper functions', () => {
 
 describe('hooks', () => {
   describe('useIsLkeEnterpriseEnabled', () => {
-    it('returns false for feature enablement if the account does not have the capability', () => {
+    it('returns false for feature enablement (except post-LA) if the account does not have the capability', () => {
       queryMocks.useAccount.mockReturnValue({
         data: {
           capabilities: [],
@@ -380,7 +382,7 @@ describe('hooks', () => {
         isLkeEnterpriseLAFlagEnabled: true,
         isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
         isLkeEnterprisePhase2DualStackFeatureEnabled: false,
-        isLkeEnterprisePostLAFeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: true, // This is okay, because the *LA* feature is gated by the account capability.
       });
     });
 

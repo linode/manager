@@ -304,7 +304,8 @@ export const useIsLkeEnterpriseEnabled = () => {
     account?.capabilities ?? []
   );
   // For feature-flagged update strategy and firewall work
-  // For users will restricted billing/account access, skip the inaccessible capability and just check the feature flag.
+  // For users with restricted billing/account access, skip the inaccessible capability and just check the feature flag.
+  // This is okay, because the LA feature is gated by the account capability.
   const isLkeEnterprisePostLAFeatureEnabled = hasAccountEndpointAccess
     ? isFeatureEnabledV2(
         'Kubernetes Enterprise',
