@@ -2,21 +2,20 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { objectStorageEndpointsFactory } from 'src/factories';
+import { objectStorageBucketFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseEndpointsSelect } from './CloudPulseEndpointsSelect';
 
 const queryMocks = vi.hoisted(() => ({
-  useQuery: vi.fn().mockReturnValue({}),
+  useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-
+vi.mock('src/queries/cloudpulse/resources', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/resources');
   return {
     ...actual,
-    useQuery: queryMocks.useQuery,
+    useResourcesQuery: queryMocks.useResourcesQuery,
   };
 });
 
@@ -24,10 +23,34 @@ const mockEndpointHandler = vi.fn();
 const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
 
+const mockBuckets = [
+  {
+    ...objectStorageBucketFactory.build({
+      s3_endpoint: 'us-east-1.linodeobjects.com',
+      endpoint_type: 'E3',
+    }),
+    endpoint: 'us-east-1.linodeobjects.com',
+  },
+  {
+    ...objectStorageBucketFactory.build({
+      s3_endpoint: 'us-east-2.linodeobjects.com',
+      endpoint_type: 'E3',
+    }),
+    endpoint: 'us-east-2.linodeobjects.com',
+  },
+  {
+    ...objectStorageBucketFactory.build({
+      s3_endpoint: 'br-gru-1.linodeobjects.com',
+      endpoint_type: 'E3',
+    }),
+    endpoint: 'br-gru-1.linodeobjects.com',
+  },
+];
+
 describe('CloudPulseEndpointsSelect component tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    objectStorageEndpointsFactory.resetSequenceNumber();
+    objectStorageBucketFactory.resetSequenceNumber();
   });
 
   it('renders with the correct label and placeholder', () => {
@@ -59,15 +82,8 @@ describe('CloudPulseEndpointsSelect component tests', () => {
   });
 
   it('should render endpoints', async () => {
-    const mockEndpoints = [
-      objectStorageEndpointsFactory.build(),
-      objectStorageEndpointsFactory.build({
-        s3_endpoint: 'us-west-1.linodeobjects.com',
-      }),
-    ];
-
-    queryMocks.useQuery.mockReturnValue({
-      data: mockEndpoints,
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: mockBuckets,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -87,26 +103,20 @@ describe('CloudPulseEndpointsSelect component tests', () => {
 
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[0].s3_endpoint ?? '',
+        name: mockBuckets[0].s3_endpoint ?? '',
       })
     ).toBeVisible();
 
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[1].s3_endpoint ?? '',
+        name: mockBuckets[1].s3_endpoint ?? '',
       })
     ).toBeVisible();
   });
 
   it('should be able to deselect the selected endpoints', async () => {
-    const mockEndpoints = [
-      objectStorageEndpointsFactory.build(),
-      objectStorageEndpointsFactory.build({
-        s3_endpoint: 'us-west-1.linodeobjects.com',
-      }),
-    ];
-    queryMocks.useQuery.mockReturnValue({
-      data: mockEndpoints,
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: mockBuckets,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -133,30 +143,19 @@ describe('CloudPulseEndpointsSelect component tests', () => {
     // Check that both endpoints are deselected
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[0].s3_endpoint ?? '',
+        name: mockBuckets[0].s3_endpoint ?? '',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[1].s3_endpoint ?? '',
+        name: mockBuckets[1].s3_endpoint ?? '',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
 
   it('should select multiple endpoints', async () => {
-    const mockEndpoints = [
-      objectStorageEndpointsFactory.build({
-        s3_endpoint: 'us-east-1.linodeobjects.com',
-      }),
-      objectStorageEndpointsFactory.build({
-        s3_endpoint: 'ap-west-1.linodeobjects.com',
-      }),
-      objectStorageEndpointsFactory.build({
-        s3_endpoint: 'br-gru-1.linodeobjects.com',
-      }),
-    ];
-    queryMocks.useQuery.mockReturnValue({
-      data: mockEndpoints,
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: mockBuckets,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -175,29 +174,29 @@ describe('CloudPulseEndpointsSelect component tests', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', {
-        name: mockEndpoints[0].s3_endpoint ?? '',
+        name: mockBuckets[0].s3_endpoint ?? '',
       })
     );
     await userEvent.click(
       await screen.findByRole('option', {
-        name: mockEndpoints[1].s3_endpoint ?? '',
+        name: mockBuckets[1].s3_endpoint ?? '',
       })
     );
 
     // Check that the correct endpoints are selected/not selected
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[0].s3_endpoint ?? '',
+        name: mockBuckets[0].s3_endpoint ?? '',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[1].s3_endpoint ?? '',
+        name: mockBuckets[1].s3_endpoint ?? '',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       await screen.findByRole('option', {
-        name: mockEndpoints[2].s3_endpoint ?? '',
+        name: mockBuckets[2].s3_endpoint ?? '',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
@@ -206,7 +205,7 @@ describe('CloudPulseEndpointsSelect component tests', () => {
   });
 
   it('should show appropriate error message on endpoints call failure', async () => {
-    queryMocks.useQuery.mockReturnValue({
+    queryMocks.useResourcesQuery.mockReturnValue({
       data: undefined,
       isError: true,
       isLoading: false,
