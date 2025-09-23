@@ -57,7 +57,7 @@ const customHTTPsDetailsSchema = object({
   endpoint_url: string().max(maxLength, maxLengthMessage).required(),
 });
 
-const linodeObjectStorageDetailsSchema = object({
+const linodeObjectStorageDetailsBaseSchema = object({
   host: string().max(maxLength, maxLengthMessage).required('Host is required.'),
   bucket_name: string()
     .max(maxLength, maxLengthMessage)
@@ -65,7 +65,7 @@ const linodeObjectStorageDetailsSchema = object({
   region: string()
     .max(maxLength, maxLengthMessage)
     .required('Region is required.'),
-  path: string().max(maxLength, maxLengthMessage).required('Path is required.'),
+  path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)
     .required('Access Key ID is required.'),
@@ -74,20 +74,41 @@ const linodeObjectStorageDetailsSchema = object({
     .required('Access Key Secret is required.'),
 });
 
-export const destinationSchema = object().shape({
+const linodeObjectStorageDetailsPayloadSchema =
+  linodeObjectStorageDetailsBaseSchema.shape({
+    path: string().max(maxLength, maxLengthMessage).optional(),
+  });
+
+const destinationSchemaBase = object().shape({
   label: string()
     .max(maxLength, maxLengthMessage)
     .required('Destination name is required.'),
   type: string().oneOf(['linode_object_storage', 'custom_https']).required(),
   details: mixed<
     | InferType<typeof customHTTPsDetailsSchema>
-    | InferType<typeof linodeObjectStorageDetailsSchema>
+    | InferType<typeof linodeObjectStorageDetailsBaseSchema>
   >()
     .defined()
     .required()
     .when('type', {
       is: 'linode_object_storage',
-      then: () => linodeObjectStorageDetailsSchema,
+      then: () => linodeObjectStorageDetailsBaseSchema,
+      otherwise: () => customHTTPsDetailsSchema,
+    }),
+});
+
+export const destinationFormSchema = destinationSchemaBase;
+
+export const destinationSchema = destinationSchemaBase.shape({
+  details: mixed<
+    | InferType<typeof customHTTPsDetailsSchema>
+    | InferType<typeof linodeObjectStorageDetailsPayloadSchema>
+  >()
+    .defined()
+    .required()
+    .when('type', {
+      is: 'linode_object_storage',
+      then: () => linodeObjectStorageDetailsPayloadSchema,
       otherwise: () => customHTTPsDetailsSchema,
     }),
 });
@@ -158,7 +179,7 @@ export const streamAndDestinationFormSchema = object({
       })
       .required(),
   }),
-  destination: destinationSchema.defined().when('stream.destinations', {
+  destination: destinationFormSchema.defined().when('stream.destinations', {
     is: (value: never[]) => !value?.length,
     then: (schema) => schema,
     otherwise: (schema) =>

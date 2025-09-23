@@ -11,7 +11,12 @@ import {
   streamTypeOptions,
 } from 'src/features/Delivery/Shared/types';
 
-import type { StreamDetails, StreamType } from '@linode/api-v4';
+import type {
+  DestinationDetails,
+  DestinationDetailsPayload,
+  StreamDetails,
+  StreamType,
+} from '@linode/api-v4';
 import type {
   FormMode,
   LabelValueOption,
@@ -44,6 +49,16 @@ export const getStreamPayloadDetails = (
   }
 
   return payloadDetails;
+};
+
+export const getDestinationPayloadDetails = (
+  details: DestinationDetails
+): DestinationDetailsPayload => {
+  if ('path' in details && details.path === '') {
+    return omitProps(details, ['path']);
+  }
+
+  return details;
 };
 
 export const getStreamDescription = (stream: Stream) => {

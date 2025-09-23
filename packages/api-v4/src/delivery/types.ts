@@ -121,8 +121,17 @@ export interface UpdateStreamPayloadWithId extends UpdateStreamPayload {
   id: number;
 }
 
+export interface LinodeObjectStorageDetailsPayload
+  extends Omit<LinodeObjectStorageDetails, 'path'> {
+  path?: string;
+}
+
+export type DestinationDetailsPayload =
+  | CustomHTTPsDetails
+  | LinodeObjectStorageDetailsPayload;
+
 export interface CreateDestinationPayload {
-  details: CustomHTTPsDetails | LinodeObjectStorageDetails;
+  details: DestinationDetailsPayload;
   label: string;
   type: DestinationType;
 }

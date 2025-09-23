@@ -29,7 +29,7 @@ const controlPaths = {
 } as const;
 
 export const StreamFormClusters = () => {
-  const { control, setValue, formState } =
+  const { control, setValue, formState, trigger } =
     useFormContext<StreamAndDestinationFormType>();
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -109,14 +109,14 @@ export const StreamFormClusters = () => {
             render={({ field }) => (
               <Checkbox
                 checked={field.value}
-                onBlur={field.onBlur}
-                onChange={(_, checked) => {
+                onChange={async (_, checked) => {
                   field.onChange(checked);
                   if (checked) {
                     setValue(controlPaths.clusterIds, idsWithLogsEnabled);
                   } else {
                     setValue(controlPaths.clusterIds, []);
                   }
+                  await trigger('stream.details');
                 }}
                 sxFormLabel={{ ml: -1 }}
                 text="Automatically include all existing and recently configured clusters."

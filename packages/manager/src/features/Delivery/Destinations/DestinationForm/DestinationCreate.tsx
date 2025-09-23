@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { destinationType } from '@linode/api-v4';
 import { useCreateDestinationMutation } from '@linode/queries';
-import { destinationSchema } from '@linode/validation';
+import { destinationFormSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -9,8 +9,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { getDestinationPayloadDetails } from 'src/features/Delivery/deliveryUtils';
 import { DestinationForm } from 'src/features/Delivery/Destinations/DestinationForm/DestinationForm';
 
+import type { CreateDestinationPayload } from '@linode/api-v4';
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { DestinationFormType } from 'src/features/Delivery/Shared/types';
 
@@ -39,14 +41,19 @@ export const DestinationCreate = () => {
       type: destinationType.LinodeObjectStorage,
       details: {
         region: '',
+        path: '',
       },
     },
     mode: 'onBlur',
-    resolver: yupResolver(destinationSchema),
+    resolver: yupResolver(destinationFormSchema),
   });
 
   const onSubmit = () => {
-    const destination = form.getValues();
+    const formValues = form.getValues();
+    const destination: CreateDestinationPayload = {
+      ...formValues,
+      details: getDestinationPayloadDetails(formValues.details),
+    };
 
     createDestination(destination)
       .then(() => {
