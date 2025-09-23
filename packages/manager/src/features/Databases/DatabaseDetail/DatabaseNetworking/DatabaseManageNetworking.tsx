@@ -135,7 +135,11 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
           </div>
           <Typography sx={{ maxWidth: '500px' }}>
             Update access settings or the VPC assignment.{' '}
-            <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
+            <Link
+              to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
+            >
+              Learn more.
+            </Link>
             <br />
             Note that a change of VPC assignment settings can disrupt service
             availability. Avoid writing data to the database while a change is

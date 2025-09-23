@@ -139,7 +139,11 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
 
       <Typography>
         Assign this cluster to an existing VPC.{' '}
-        <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
+        <Link
+          to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
+        >
+          Learn more.
+        </Link>
       </Typography>
       <Box style={{ display: 'flex' }}>
         <Autocomplete
