@@ -21,45 +21,40 @@ import type {
 } from '@linode/api-v4';
 
 export const delegationQueries = createQueryKeys('delegation', {
-  lists: {
-    contextQueries: {
-      childAccounts: ({ params }: { params: Params }) => ({
-        queryFn: () => listChildAccounts({ params }),
-        queryKey: [params],
-      }),
-      delegatedChildAccountsForUser: ({
-        username,
-        params,
-      }: {
-        params: Params;
-        username: string;
-      }) => ({
-        queryFn: () => listDelegatedChildAccountsForUser({ username, params }),
-        queryKey: [username, params],
-      }),
-      childAccountDelegates: ({
-        euuid,
-        params,
-      }: {
-        euuid: string;
-        params: Params;
-      }) => ({
-        queryFn: () => listChildAccountDelegates({ euuid, params }),
-        queryKey: [euuid, params],
-      }),
-      myDelegatedChildAccountProfiles: ({ params }: { params: Params }) => ({
-        queryFn: () => listMyDelegatedChildAccountProfiles({ params }),
-        queryKey: [params],
-      }),
-      childAccountProfile: ({ euuid }: { euuid: string }) => ({
-        queryFn: () => getChildAccountProfile({ euuid }),
-        queryKey: [euuid],
-      }),
-      defaultAccess: () => ({
-        queryFn: () => getDefaultDelegationAccess(),
-        queryKey: ['defaultAccess'],
-      }),
-    },
+  childAccounts: ({ params }: { params?: Params }) => ({
+    queryFn: () => listChildAccounts({ params }),
+    queryKey: [params],
+  }),
+  delegatedChildAccountsForUser: ({
+    username,
+    params,
+  }: {
+    params?: Params;
+    username: string;
+  }) => ({
+    queryFn: () => listDelegatedChildAccountsForUser({ username, params }),
+    queryKey: [username, params],
+  }),
+  childAccountDelegates: ({
+    euuid,
+    params,
+  }: {
+    euuid: string;
+    params?: Params;
+  }) => ({
+    queryFn: () => listChildAccountDelegates({ euuid, params }),
+    queryKey: [euuid, params],
+  }),
+  myDelegatedChildAccountProfiles: ({ params }: { params?: Params }) => ({
+    queryFn: () => listMyDelegatedChildAccountProfiles({ params }),
+    queryKey: [params],
+  }),
+  childAccountProfile: ({ euuid }: { euuid: string }) => ({
+    queryFn: () => getChildAccountProfile({ euuid }),
+    queryKey: [euuid],
+  }),
+  defaultAccess: {
+    queryFn: getDefaultDelegationAccess,
     queryKey: null,
   },
 });
@@ -71,16 +66,9 @@ export const delegationQueries = createQueryKeys('delegation', {
  * - Audience: Parent account administrators managing delegation.
  * - Data: Page<ChildAccount>; optionally Page<ChildAccountWithUsers> when `users=true` (use `params.includeDelegates` to set).
  */
-export const useListChildAccountsQuery = ({
-  params,
-}: {
-  params: Params;
-  withUsers: boolean;
-}) => {
+export const useListChildAccountsQuery = ({ params }: { params: Params }) => {
   return useQuery({
-    ...delegationQueries.lists._ctx.childAccounts({
-      params,
-    }),
+    ...delegationQueries.childAccounts({ params }),
   });
 };
 
@@ -95,14 +83,11 @@ export const useListDelegatedChildAccountsForUserQuery = ({
   username,
   params,
 }: {
-  params: Params;
+  params?: Params;
   username: string;
 }) => {
   return useQuery({
-    ...delegationQueries.lists._ctx.delegatedChildAccountsForUser({
-      username,
-      params,
-    }),
+    ...delegationQueries.delegatedChildAccountsForUser({ username, params }),
   });
 };
 
@@ -118,10 +103,10 @@ export const useListChildAccountDelegatesQuery = ({
   params,
 }: {
   euuid: string;
-  params: Params;
+  params?: Params;
 }) => {
   return useQuery({
-    ...delegationQueries.lists._ctx.childAccountDelegates({
+    ...delegationQueries.childAccountDelegates({
       euuid,
       params,
     }),
@@ -142,12 +127,11 @@ export const useUpdateChildAccountDelegatesQuery = () => {
     APIError[],
     { data: string[]; euuid: string }
   >({
-    mutationFn: ({ data, euuid }) =>
-      updateChildAccountDelegates({ data, euuid }),
-    onSuccess() {
+    mutationFn: updateChildAccountDelegates,
+    onSuccess(_data, { euuid }) {
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
-        queryKey: delegationQueries.lists._ctx.childAccountDelegates._def,
+        queryKey: delegationQueries.childAccountDelegates({ euuid }).queryKey,
       });
     },
   });
@@ -163,12 +147,10 @@ export const useUpdateChildAccountDelegatesQuery = () => {
 export const useListMyDelegatedChildAccountProfilesQuery = ({
   params,
 }: {
-  params: Params;
+  params?: Params;
 }) => {
   return useQuery({
-    ...delegationQueries.lists._ctx.myDelegatedChildAccountProfiles({
-      params,
-    }),
+    ...delegationQueries.myDelegatedChildAccountProfiles({ params }),
   });
 };
 
@@ -185,7 +167,7 @@ export const useGetChildAccountProfileQuery = ({
   euuid: string;
 }) => {
   return useQuery({
-    ...delegationQueries.lists._ctx.childAccountProfile({ euuid }),
+    ...delegationQueries.childAccountProfile({ euuid }),
   });
 };
 
@@ -198,7 +180,7 @@ export const useGetChildAccountProfileQuery = ({
  */
 export const useGenerateChildAccountTokenQuery = () => {
   return useMutation<Token, APIError[], { euuid: string }>({
-    mutationFn: ({ euuid }) => generateChildAccountToken({ euuid }),
+    mutationFn: generateChildAccountToken,
   });
 };
 
@@ -211,7 +193,7 @@ export const useGenerateChildAccountTokenQuery = () => {
  */
 export const useGetDefaultDelegationAccessQuery = () => {
   return useQuery<IamUserRoles, APIError[]>({
-    ...delegationQueries.lists._ctx.defaultAccess(),
+    ...delegationQueries.defaultAccess,
   });
 };
 
@@ -227,10 +209,7 @@ export const useUpdateDefaultDelegationAccessQuery = () => {
   return useMutation<IamUserRoles, APIError[], IamUserRoles>({
     mutationFn: updateDefaultDelegationAccess,
     onSuccess(data) {
-      queryClient.setQueryData(
-        delegationQueries.lists._ctx.defaultAccess().queryKey,
-        data,
-      );
+      queryClient.setQueryData(delegationQueries.defaultAccess.queryKey, data);
     },
   });
 };
