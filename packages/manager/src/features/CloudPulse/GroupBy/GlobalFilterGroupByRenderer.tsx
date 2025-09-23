@@ -9,13 +9,21 @@ import { GLOBAL_GROUP_BY_MESSAGE } from './constants';
 import { useGlobalDimensions } from './utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
-import type { Dashboard } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 interface GlobalFilterGroupByRendererProps {
   /**
    * Callback to handle the selected values
    */
-  handleChange: (selectedValue: string[]) => void;
+  handleChange: (selectedValue: string[], savePref?: boolean) => void;
+  /**
+   * User's saved group by preference
+   */
+  preference?: FilterValue;
+  /**
+   * Indicates whether to save the selected group by options to user preferences
+   */
+  savePreferences?: boolean;
   /**
    * Currently selected dashboard
    */
@@ -25,12 +33,14 @@ interface GlobalFilterGroupByRendererProps {
 export const GlobalFilterGroupByRenderer = (
   props: GlobalFilterGroupByRendererProps
 ) => {
-  const { selectedDashboard, handleChange } = props;
+  const { selectedDashboard, handleChange, preference, savePreferences } =
+    props;
   const [isSelected, setIsSelected] = React.useState(false);
 
   const { options, defaultValue, isLoading } = useGlobalDimensions(
     selectedDashboard?.id,
-    selectedDashboard?.service_type
+    selectedDashboard?.service_type,
+    preference as string[]
   );
 
   const [open, setOpen] = React.useState(false);
@@ -42,10 +52,13 @@ export const GlobalFilterGroupByRenderer = (
       } else {
         setIsSelected(true);
       }
-      handleChange(selectedValue.map(({ value }) => value));
+      handleChange(
+        selectedValue.map(({ value }) => value),
+        savePreferences
+      );
       setOpen(false);
     },
-    [handleChange]
+    [handleChange, savePreferences]
   );
 
   const onCancel = React.useCallback(() => {
