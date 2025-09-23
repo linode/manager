@@ -14,6 +14,7 @@ import type {
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
+import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
@@ -672,4 +673,27 @@ export const filterUsingDependentFilters = (
       }
     });
   });
+}
+
+/**
+ * @param data The endpoints for which the filter needs to be applied
+ * @param regionFilter The selected region filter that will be used to filter the endpoints
+ * @returns The filtered endpoints
+ */
+export const filterEndpointsUsingRegion = (
+  data?: CloudPulseEndpoints[],
+  regionFilter?: CloudPulseMetricsFilter
+): CloudPulseEndpoints[] | undefined => {
+  if (!data) {
+    return data;
+  }
+
+  const regionFromFilter = regionFilter?.region;
+
+  // If no region filter is provided, return data as-is
+  if (!regionFromFilter) {
+    return data;
+  }
+
+  return data.filter(({ region }) => region === regionFromFilter);
 };

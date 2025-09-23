@@ -1,12 +1,17 @@
 import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
-import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
+import {
+  dashboardFactory,
+  databaseInstanceFactory,
+  objectStorageEndpointsFactory,
+} from 'src/factories';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
   deepEqual,
   filterBasedOnConfig,
+  filterEndpointsUsingRegion,
   filterUsingDependentFilters,
   getFilters,
   getTextFilterProperties,
@@ -25,6 +30,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
+import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
 
@@ -553,6 +559,32 @@ describe('filterUsingDependentFilters', () => {
 
     result = filterUsingDependentFilters(mockData, filters);
     expect(result).toEqual([mockData[1]]);
+  });
+});
+
+describe('filterEndpointsUsingRegion', () => {
+  const mockData: CloudPulseEndpoints[] = [
+    {
+      ...objectStorageEndpointsFactory.build({ region: 'us-east' }),
+      label: 'us-east-1.linodeobjects.com',
+    },
+    {
+      ...objectStorageEndpointsFactory.build({ region: 'us-west' }),
+      label: 'us-west-1.linodeobjects.com',
+    },
+  ];
+  it('should return data as is if data is undefined', () => {
+    expect(
+      filterEndpointsUsingRegion(undefined, { region: 'us-east' })
+    ).toEqual(undefined);
+  });
+  it('should return data as is if region filter is undefined', () => {
+    expect(filterEndpointsUsingRegion(mockData, undefined)).toEqual(mockData);
+  });
+  it('should return endpoints based on region if region filter is provided', () => {
+    expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(
+      [mockData[0]]
+    );
   });
 });
 
