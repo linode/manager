@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2025-09-29] - v1.151.1
+## [2025-09-25] - v1.151.1
 
 ### Added:
 
-- Beta chip and updated Learn link for VPC feature
+- DBaaS - Display Beta chip for VPC fields and update related documentation link
 
 ## [2025-09-23] - v1.151.0
 
