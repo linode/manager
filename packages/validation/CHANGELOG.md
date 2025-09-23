@@ -7,6 +7,7 @@
 ### Fixed:
 
 - Username & email ASCII & chars limit validation + improved messages ([#12788](https://github.com/linode/manager/pull/12788))
+- Fix VPC IPv6 range validation in `ModifyLinodeInterfaceSchema` ([#12856](https://github.com/linode/manager/pull/12856))
 
 ### Upcoming Features:
 

@@ -1,3 +1,9 @@
+## [2025-09-23] - v0.9.0
+
+### Changed:
+
+- Separate VPC IPv6 from `linodeInterfaceFactoryVPC` into `linodeInterfaceFactoryDualStackVPC`
+
 ## [2025-09-09] - v0.8.0
 
 ### Changed:
