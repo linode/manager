@@ -126,16 +126,16 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
 
   return (
     <>
-      <Typography
+      <Box
         sx={(theme: Theme) => ({
+          display: 'flex',
           marginTop: theme.spacingFunction(20),
           marginBottom: theme.spacingFunction(4),
         })}
-        variant="h3"
       >
-        Assign a VPC
+        <Typography variant="h3">Assign a VPC</Typography>
         {flags.databaseVpcBeta && <BetaChip />}
-      </Typography>
+      </Box>
 
       <Typography>
         Assign this cluster to an existing VPC.{' '}
