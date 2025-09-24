@@ -188,9 +188,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     MetricsDimensionFilter[] | undefined
   >([
     {
-      dimension_label: 'protocol',
+      dimension_label: 'linode_id',
       operator: 'eq',
-      value: 'tcp',
+      value: '12344',
     },
   ]);
 
@@ -209,15 +209,25 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     scope: 'entity',
     serviceType,
   });
+  const vpcFetch = useFetchOptions({
+    dimensionLabel: 'vpc_subnet_id',
+    type: 'metrics',
+    entities: entityIds,
+    regions: [],
+    scope: 'entity',
+    serviceType,
+  });
 
   const mergedDimensionOptions = React.useMemo(
     () =>
       availableMetrics?.dimensions?.map((dim) =>
         dim.dimension_label === 'linode_id'
           ? { ...dim, values: linodesFetch.values.map((lin) => lin.value) }
-          : dim
+          : dim.dimension_label === 'vpc_subnet_id'
+            ? { ...dim, values: vpcFetch.values.map((vpc) => vpc.value) }
+            : dim
       ),
-    [availableMetrics?.dimensions, linodesFetch.values]
+    [availableMetrics?.dimensions, linodesFetch.values, vpcFetch.values]
   );
 
   const filteredSelections = React.useMemo(
