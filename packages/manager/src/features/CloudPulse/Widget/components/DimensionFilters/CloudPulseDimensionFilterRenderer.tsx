@@ -152,7 +152,6 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
               }
               size="small"
               sx={{ justifyContent: 'start', width: '160px' }}
-              tooltipText="You can add up to 5 dimension filters."
             >
               Add Filter
             </Button>

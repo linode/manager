@@ -408,14 +408,14 @@ export const isValidFilter = (
   const operator = filter.operator;
   if (!operator || !VALID_OPERATORS.includes(operator)) return false;
 
-  // allow pattern operators without value check
-  if (operator === 'endswith' || operator === 'startswith') return true;
-
   const dimension = options.find(
     ({ dimension_label: dimensionLabel }) =>
       dimensionLabel === filter.dimension_label
   );
   if (!dimension) return false;
+
+  // allow pattern operators without value check
+  if (operator === 'endswith' || operator === 'startswith') return true;
 
   const validValues = new Set(dimension.values);
   return (filter.value ?? '')
