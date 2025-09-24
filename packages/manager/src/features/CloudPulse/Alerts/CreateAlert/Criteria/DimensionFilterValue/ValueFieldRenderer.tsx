@@ -62,7 +62,7 @@ interface ValueFieldRendererProps {
    */
   scope?: AlertDefinitionScope | null;
   /**
-   * List of selected regions in the region scope
+   * List of selected regions under the region scope
    */
   selectedRegions?: string[];
   /**

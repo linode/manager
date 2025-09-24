@@ -106,6 +106,11 @@ export interface CloudPulseWidgetProperties {
   linodeRegion?: string;
 
   /**
+   * Selected region for the widget
+   */
+  region?: string;
+
+  /**
    * List of resources available of selected service type
    */
   resources: CloudPulseResources[];
@@ -163,7 +168,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const {
     additionalFilters,
-    dashboardId,
     ariaLabel,
     authToken,
     availableMetrics,
@@ -177,6 +181,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     unit,
     widget: widgetProp,
     linodeRegion,
+    dashboardId,
+    region,
   } = props;
   const [dimensionFilters, setDimensionFilters] = React.useState<
     MetricsDimensionFilter[] | undefined
@@ -321,6 +327,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         widget,
         groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
         linodeRegion,
+        region,
+        serviceType,
       }),
       filters, // any additional dimension filters will be constructed and passed here
     },
