@@ -2986,6 +2986,13 @@ export const handlers = [
           rules: [firewallMetricRulesFactory.build()],
         },
       }),
+      alertFactory.build({
+        id: 550,
+        label: 'Object Storage - testing',
+        type: 'user',
+        service_type: 'objectstorage',
+        entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3003,6 +3010,17 @@ export const handlers = [
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            type: 'user',
+            label: 'object-storage -testing',
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
           })
         );
       }
@@ -3119,7 +3137,7 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
-        scope: ['entity']
+        scope: ['entity'],
       }),
     });
 
