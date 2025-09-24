@@ -45,7 +45,7 @@ describe('Tests for CloudPulse Dimension Filters Select', () => {
     // check for drawer fields
     const drawerOpen = screen.getByText('Test Metric');
     expect(drawerOpen).toBeInTheDocument();
-    const selectText = screen.getByText('Select upto 5 Dimension Filters');
+    const selectText = screen.getByText('Select up to 5 Dimension Filters');
     expect(selectText).toBeInTheDocument();
     // validate for form fields to be present
     const dataFieldContainer = screen.queryByTestId('dimension-field');
