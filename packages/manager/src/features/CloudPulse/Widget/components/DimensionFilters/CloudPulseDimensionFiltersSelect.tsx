@@ -52,15 +52,17 @@ export const CloudPulseDimensionFilterSelect = React.memo(
     } = props;
     const [open, setOpen] = React.useState(false);
 
-    const handleChangeInSelection = (
-      selectedValue: MetricsDimensionFilter[],
-      close: boolean
-    ) => {
-      if (close) {
-        handleSelectionChange(selectedValue);
-        setOpen(false);
-      }
-    };
+    const handleChangeInSelection = React.useCallback(
+      (selectedValue: MetricsDimensionFilter[], close: boolean) => {
+        if (close) {
+          handleSelectionChange(selectedValue);
+          setOpen(false);
+        }
+      },
+      [handleSelectionChange]
+    );
+
+    const selectionCount = selectedDimensions?.length ?? 0;
 
     return (
       <>
@@ -68,22 +70,20 @@ export const CloudPulseDimensionFilterSelect = React.memo(
           <IconButton
             aria-label="Widget Dimension Filter"
             color="inherit"
-            data-qa-selected={selectedDimensions?.length}
+            data-qa-selected={selectionCount}
             data-testid="dimension-filter"
             disabled={dimensionOptions.length === 0}
             onClick={() => setOpen(true)}
             size="small"
             sx={(theme) => ({
               marginBlockEnd: 'auto',
-              color: selectedDimensions?.length
+              color: selectionCount
                 ? theme.color.buttonPrimaryHover
                 : 'inherit',
               padding: 0,
             })}
           >
-            <CloudPulseDimensionFilterIconWithBadge
-              count={selectedDimensions?.length ?? 0}
-            />
+            <CloudPulseDimensionFilterIconWithBadge count={selectionCount} />
           </IconButton>
         </CloudPulseTooltip>
         <CloudPulseDimensionFilterDrawer

@@ -24,10 +24,11 @@ export const CloudPulseDimensionFilterIconWithBadge = React.memo(
           '& .MuiBadge-badge': {
             top: 3, // nudge up
             right: 3, // nudge right
-            minWidth: 16,
+            minWidth: 8,
+            width: 15,
             height: 16,
             borderRadius: '100%',
-            fontSize: theme.spacingFunction(10),
+            fontSize: 10,
             lineHeight: 1,
             color: theme.tokens.color.Neutrals.White,
             backgroundColor: theme.palette.error.dark,

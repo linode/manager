@@ -108,7 +108,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
     });
 
     React.useEffect(() => {
-      // set a single empty filter (same shape as your default)
+      // set a single empty filter
       if (clearAllTrigger > 0) {
         reset({
           dimension_filters: [

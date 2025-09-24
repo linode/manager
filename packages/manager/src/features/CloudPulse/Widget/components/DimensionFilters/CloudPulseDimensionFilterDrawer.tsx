@@ -67,17 +67,18 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
 
     const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
 
-    const handleClose = () => {
+    const handleClose = React.useCallback(() => {
       onClose();
       setClearAllTrigger(0); // After closing the drawer, reset the clear all trigger
-    };
+    }, [onClose]);
 
-    const handleFormSubmit = ({
-      dimension_filters: dimensionFilters,
-    }: MetricsDimensionFilterForm) => {
-      handleSelectionChange(dimensionFilters, true);
-      setClearAllTrigger(0); // After submission, reset the clear all trigger
-    };
+    const handleFormSubmit = React.useCallback(
+      ({ dimension_filters: dimensionFilters }: MetricsDimensionFilterForm) => {
+        handleSelectionChange(dimensionFilters, true);
+        setClearAllTrigger(0); // After submission, reset the clear all trigger
+      },
+      [handleSelectionChange]
+    );
 
     return (
       <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
@@ -110,7 +111,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
             data-qa-id="filter-drawer-selection-title"
             sx={(theme) => ({ font: theme.font.semibold })}
           >
-            Select upto 5 Dimension Filters
+            Select up to 5 Dimension Filters
           </Typography>
           <CloudPulseDimensionFilterRenderer
             clearAllTrigger={clearAllTrigger}

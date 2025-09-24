@@ -135,7 +135,7 @@ export const GLOBAL_DIMENSION_FILTER_LIST: Record<
   dbaas: ['node_type'],
   nodebalancer: ['port'],
   firewall: ['interface_type', 'interface_id', 'region_id'],
-  objectstorage: ['endpoints'],
+  objectstorage: ['endpoint'],
 };
 
 export const VALID_OPERATORS: MetricsDimensionFilterOperatorType[] = [

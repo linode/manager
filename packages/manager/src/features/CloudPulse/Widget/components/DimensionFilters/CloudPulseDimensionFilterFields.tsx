@@ -62,31 +62,34 @@ export const CloudPulseDimensionFilterFields = React.memo(
 
     const { control, setValue } = useFormContext<MetricsDimensionFilterForm>();
 
-    const dataFieldOptions =
-      dimensionOptions.map(({ label, dimension_label: dimensionLabel }) => ({
-        label,
-        value: dimensionLabel,
-      })) ?? [];
+    const dataFieldOptions = React.useMemo(
+      () =>
+        dimensionOptions.map(({ label, dimension_label: dimensionLabel }) => ({
+          label,
+          value: dimensionLabel,
+        })) ?? [],
+      [dimensionOptions]
+    );
 
-    const handleDataFieldChange = (
-      selected: { label: string; value: string },
-      operation: string
-    ) => {
-      const fieldValue = {
-        dimension_label: null,
-        operator: null,
-        value: null,
-      };
-      if (operation === 'selectOption') {
-        setValue(`${name}.dimension_label`, selected.value, {
-          shouldValidate: true,
-        });
-        setValue(`${name}.operator`, fieldValue.operator);
-        setValue(`${name}.value`, fieldValue.value);
-      } else {
-        setValue(name, fieldValue);
-      }
-    };
+    const handleDataFieldChange = React.useCallback(
+      (selected: { label: string; value: string }, operation: string) => {
+        const fieldValue = {
+          dimension_label: null,
+          operator: null,
+          value: null,
+        };
+        if (operation === 'selectOption') {
+          setValue(`${name}.dimension_label`, selected.value, {
+            shouldValidate: true,
+          });
+          setValue(`${name}.operator`, fieldValue.operator);
+          setValue(`${name}.value`, fieldValue.value);
+        } else {
+          setValue(name, fieldValue);
+        }
+      },
+      [name, setValue]
+    );
 
     const dimensionFieldWatcher = useWatch({
       control,
@@ -98,13 +101,16 @@ export const CloudPulseDimensionFilterFields = React.memo(
       name: `${name}.operator`,
     });
 
-    const selectedDimension =
-      dimensionOptions && dimensionFieldWatcher
-        ? (dimensionOptions.find(
-            ({ dimension_label: dimensionLabel }) =>
-              dimensionLabel === dimensionFieldWatcher
-          ) ?? null)
-        : null;
+    const selectedDimension = React.useMemo(
+      () =>
+        dimensionOptions && dimensionFieldWatcher
+          ? (dimensionOptions.find(
+              ({ dimension_label: dimensionLabel }) =>
+                dimensionLabel === dimensionFieldWatcher
+            ) ?? null)
+          : null,
+      [dimensionFieldWatcher, dimensionOptions]
+    );
 
     return (
       <GridLegacy
@@ -194,7 +200,6 @@ export const CloudPulseDimensionFilterFields = React.memo(
                 onChange={field.onChange}
                 operator={dimensionOperatorWatcher}
                 scope={'entity'}
-                selectedRegions={[]}
                 serviceType={serviceType}
                 type="metrics"
                 value={field.value}
