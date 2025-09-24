@@ -22,6 +22,7 @@ export const getStateSeederGroups = (
 };
 
 export const emptyStore: MockState = {
+  childAccounts: [],
   cloudnats: [],
   configInterfaces: [],
   destinations: [],

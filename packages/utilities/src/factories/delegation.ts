@@ -7,7 +7,7 @@ import type {
   IamUserRoles,
 } from '@linode/api-v4';
 
-export const delegateUsersList = [
+export const mockDelegateUsersList = [
   'John Doe',
   'Jill Smith',
   'Jack Black',
