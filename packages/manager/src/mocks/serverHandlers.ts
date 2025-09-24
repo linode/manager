@@ -3060,6 +3060,7 @@ export const handlers = [
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
+      objectstorage: 'Object Storage',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,

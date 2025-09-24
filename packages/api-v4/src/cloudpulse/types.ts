@@ -7,7 +7,8 @@ export type CloudPulseServiceType =
   | 'dbaas'
   | 'firewall'
   | 'linode'
-  | 'nodebalancer';
+  | 'nodebalancer'
+  | 'objectstorage';
 
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
@@ -375,6 +376,7 @@ export const capabilityServiceTypeMapping: Record<
   dbaas: 'Managed Databases',
   nodebalancer: 'NodeBalancers',
   firewall: 'Cloud Firewall',
+  objectstorage: 'Object Storage',
 };
 
 /**
