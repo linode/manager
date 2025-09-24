@@ -5,14 +5,6 @@ import { pluginSvgr } from '@rsbuild/plugin-svgr';
 
 
 export default defineConfig({
-  // html: {
-  //   template: './index.html',
-  // },
-  // source: {
-  //   entry: {
-  //     index: './src/main.tsx',
-  //   },
-  // },
   plugins: [
     pluginReact(),
     pluginSvgr({ svgrOptions: { exportType: 'default' } }),

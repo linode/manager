@@ -145,5 +145,6 @@ docs/.vitepress/cache
 # pnpm store will be generated if you run pnpm install in docker environments
 .pnpm-store
 
-# module federation tmp files
+# module federation temporary files
 .__mf__temp
+@mf-types
