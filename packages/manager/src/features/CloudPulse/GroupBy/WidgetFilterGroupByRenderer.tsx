@@ -31,7 +31,7 @@ interface WidgetFilterGroupByRendererProps {
   /**
    * User's saved group by preference
    */
-  preference?: string[];
+  preferenceGroupBy?: string[];
   /**
    * Indicates whether to save the selected group by options to user preferences
    */
@@ -52,7 +52,7 @@ export const WidgetFilterGroupByRenderer = (
     label,
     handleChange,
     savePreferences,
-    preference,
+    preferenceGroupBy,
   } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
@@ -67,7 +67,7 @@ export const WidgetFilterGroupByRenderer = (
     serviceType,
     globalDimensions,
     metric,
-    preference
+    preferenceGroupBy
   );
   const [open, setOpen] = React.useState(false);
   const onCancel = React.useCallback(() => {
