@@ -19,7 +19,7 @@ interface GlobalFilterGroupByRendererProps {
   /**
    * User's saved group by preference
    */
-  preference?: FilterValue;
+  preferenceGroupBy?: FilterValue;
   /**
    * Indicates whether to save the selected group by options to user preferences
    */
@@ -33,14 +33,18 @@ interface GlobalFilterGroupByRendererProps {
 export const GlobalFilterGroupByRenderer = (
   props: GlobalFilterGroupByRendererProps
 ) => {
-  const { selectedDashboard, handleChange, preference, savePreferences } =
-    props;
+  const {
+    selectedDashboard,
+    handleChange,
+    preferenceGroupBy,
+    savePreferences,
+  } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
   const { options, defaultValue, isLoading } = useGlobalDimensions(
     selectedDashboard?.id,
     selectedDashboard?.service_type,
-    preference as string[]
+    preferenceGroupBy as string[]
   );
 
   const [open, setOpen] = React.useState(false);

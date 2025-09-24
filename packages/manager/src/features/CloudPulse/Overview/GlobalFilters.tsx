@@ -163,7 +163,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             </CloudPulseTooltip>
             <GlobalFilterGroupByRenderer
               handleChange={onGroupByChange}
-              preference={preferences?.[GROUP_BY]}
+              preferenceGroupBy={preferences?.[GROUP_BY]}
               savePreferences
               selectedDashboard={selectedDashboard}
             />

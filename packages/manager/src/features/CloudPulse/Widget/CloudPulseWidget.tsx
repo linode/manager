@@ -394,7 +394,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   handleChange={handleGroupByChange}
                   label={widget.label}
                   metric={widget.metric}
-                  preference={groupBy}
+                  preferenceGroupBy={groupBy}
                   serviceType={serviceType}
                 />
                 <ZoomIcon
