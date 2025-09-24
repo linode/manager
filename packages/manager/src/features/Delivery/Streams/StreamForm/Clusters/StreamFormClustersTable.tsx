@@ -43,8 +43,10 @@ export const StreamFormClusterTableContent = ({
     selectedIds.length === (idsWithLogsEnabled?.length ?? 0);
   const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
 
-  const toggleAllClusters = () =>
+  const toggleAllClusters = () => {
     field.onChange(isAllSelected ? [] : idsWithLogsEnabled);
+    field.onBlur();
+  };
 
   const toggleCluster = (toggledId: number) => {
     const updatedClusterIds = selectedIds.includes(toggledId)
@@ -52,6 +54,7 @@ export const StreamFormClusterTableContent = ({
       : [...selectedIds, toggledId];
 
     field.onChange(updatedClusterIds);
+    field.onBlur();
   };
 
   return (
@@ -114,7 +117,6 @@ export const StreamFormClusterTableContent = ({
                     aria-label={`Toggle ${label} cluster`}
                     checked={selectedIds.includes(id)}
                     disabled={isAutoAddAllClustersEnabled || !logsEnabled}
-                    onBlur={field.onBlur}
                     onChange={() => toggleCluster(id)}
                   />
                 </TableCell>
