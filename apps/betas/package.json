@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
     "typecheck": "tsc",
-    "preview": "vite preview"
+    "preview": "rsbuild preview"
   },
   "dependencies": {
     "@linode/api-v4": "workspace:*",
@@ -21,6 +20,10 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@module-federation/rsbuild-plugin": "^0.19.1",
+    "@rsbuild/core": "^1.5.11",
+    "@rsbuild/plugin-react": "^1.4.0",
+    "@rsbuild/plugin-svgr": "^1.2.2",
     "@testing-library/jest-dom": "~6.4.8",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.6",

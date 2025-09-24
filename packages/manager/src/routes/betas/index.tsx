@@ -12,6 +12,5 @@ export const betaRouteTree = createRoute({
   errorComponent: () => (
     <ErrorState errorText="Betas app is currently offline." />
   ),
-  // @ts-expect-error No types for MF modules currently
   component: lazyRouteComponent(() => import('betas/app')),
 });

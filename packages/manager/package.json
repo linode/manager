@@ -93,11 +93,11 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
+    "start": "concurrently --raw \"rsbuild dev\" \"tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "vite preview --port 3000 --host",
     "lint": "eslint . --ext .js,.ts,.tsx --quiet",
-    "build": "vite build",
+    "build": "rsbuild build",
     "build:analyze": "bunx vite-bundle-visualizer",
     "test": "vitest run",
     "test:ui": "vitest --ui",
@@ -125,6 +125,10 @@
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
+    "@module-federation/rsbuild-plugin": "^0.19.1",
+    "@rsbuild/core": "^1.5.11",
+    "@rsbuild/plugin-react": "^1.4.0",
+    "@rsbuild/plugin-svgr": "^1.2.2",
     "@storybook/addon-a11y": "^9.0.12",
     "@storybook/addon-docs": "^9.0.12",
     "@storybook/react-vite": "^9.0.12",
