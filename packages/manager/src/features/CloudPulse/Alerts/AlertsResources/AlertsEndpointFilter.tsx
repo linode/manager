@@ -42,12 +42,12 @@ export const AlertsEndpointFilter = React.memo(
         autoHighlight
         clearOnBlur
         isOptionEqualToValue={(option, value) => option.label === value.label}
-        label="Endpoint"
+        label="Endpoints"
         limitTags={1}
         multiple
         onChange={handleFilterSelection}
         options={endpointBuiltOptions}
-        placeholder="Select an Endpoint"
+        placeholder="Select Endpoints"
         textFieldProps={{
           hideLabel: true,
         }}
