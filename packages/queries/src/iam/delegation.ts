@@ -1,11 +1,11 @@
 import {
   generateChildAccountToken,
+  getChildAccountDelegates,
+  getChildAccountsIam,
   getDefaultDelegationAccess,
   getDelegatedChildAccount,
-  listChildAccountDelegates,
-  listChildAccounts,
-  listDelegatedChildAccountsForUser,
-  listMyDelegatedChildAccounts,
+  getDelegatedChildAccountsForUser,
+  getMyDelegatedChildAccounts,
   updateChildAccountDelegates,
   updateDefaultDelegationAccess,
 } from '@linode/api-v4';
@@ -14,6 +14,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
   APIError,
+  GetChildAccountDelegatesParams,
+  GetChildAccountsIamParams,
+  GetDelegatedChildAccountsForUserParams,
   IamUserRoles,
   Params,
   ResourcePage,
@@ -21,35 +24,29 @@ import type {
 } from '@linode/api-v4';
 
 export const delegationQueries = createQueryKeys('delegation', {
-  childAccounts: ({ params }: { params?: Params }) => ({
-    queryFn: listChildAccounts,
+  childAccounts: ({ params, users }) => ({
+    queryFn: () => getChildAccountsIam({ params, users }),
     queryKey: [params],
   }),
   delegatedChildAccountsForUser: ({
     username,
     params,
-  }: {
-    params?: Params;
-    username: string;
-  }) => ({
-    queryFn: listDelegatedChildAccountsForUser,
+  }: GetDelegatedChildAccountsForUserParams) => ({
+    queryFn: getDelegatedChildAccountsForUser,
     queryKey: [username, params],
   }),
   childAccountDelegates: ({
     euuid,
     params,
-  }: {
-    euuid: string;
-    params?: Params;
-  }) => ({
-    queryFn: listChildAccountDelegates,
+  }: GetChildAccountDelegatesParams) => ({
+    queryFn: getChildAccountDelegates,
     queryKey: [euuid, params],
   }),
-  myDelegatedChildAccounts: ({ params }: { params?: Params }) => ({
-    queryFn: listMyDelegatedChildAccounts,
+  myDelegatedChildAccounts: (params: Params) => ({
+    queryFn: getMyDelegatedChildAccounts,
     queryKey: [params],
   }),
-  delegatedChildAccount: ({ euuid }: { euuid: string }) => ({
+  delegatedChildAccount: (euuid: string) => ({
     queryFn: getDelegatedChildAccount,
     queryKey: [euuid],
   }),
@@ -66,9 +63,11 @@ export const delegationQueries = createQueryKeys('delegation', {
  * - Audience: Parent account administrators managing delegation.
  * - Data: Page<ChildAccount>; optionally Page<ChildAccountWithUsers> when `users=true` (use `params.includeDelegates` to set).
  */
-export const useListChildAccountsQuery = ({ params }: { params: Params }) => {
+export const useListChildAccountsQuery = (
+  params: GetChildAccountsIamParams,
+) => {
   return useQuery({
-    ...delegationQueries.childAccounts({ params }),
+    ...delegationQueries.childAccounts(params),
   });
 };
 
@@ -82,10 +81,7 @@ export const useListChildAccountsQuery = ({ params }: { params: Params }) => {
 export const useListDelegatedChildAccountsForUserQuery = ({
   username,
   params,
-}: {
-  params?: Params;
-  username: string;
-}) => {
+}: GetDelegatedChildAccountsForUserParams) => {
   return useQuery({
     ...delegationQueries.delegatedChildAccountsForUser({ username, params }),
   });
@@ -101,10 +97,7 @@ export const useListDelegatedChildAccountsForUserQuery = ({
 export const useListChildAccountDelegatesQuery = ({
   euuid,
   params,
-}: {
-  euuid: string;
-  params?: Params;
-}) => {
+}: GetChildAccountDelegatesParams) => {
   return useQuery({
     ...delegationQueries.childAccountDelegates({
       euuid,
@@ -144,13 +137,9 @@ export const useUpdateChildAccountDelegatesQuery = () => {
  * - Audience: Needing to return accounts the caller can actually access
  * - Data: Page<Account> (limited profile fields) for `GET /iam/delegation/profile/child-accounts`.
  */
-export const useListMyDelegatedChildAccountsQuery = ({
-  params,
-}: {
-  params?: Params;
-}) => {
+export const useListMyDelegatedChildAccountsQuery = (params: Params) => {
   return useQuery({
-    ...delegationQueries.myDelegatedChildAccounts({ params }),
+    ...delegationQueries.myDelegatedChildAccounts(params),
   });
 };
 
@@ -161,9 +150,9 @@ export const useListMyDelegatedChildAccountsQuery = ({
  * - Audience: Callers needing basic child account info in the delegation context.
  * - Data: Account (limited account fields) for `GET /iam/delegation/profile/child-accounts/:euuid`.
  */
-export const useGetChildAccountQuery = ({ euuid }: { euuid: string }) => {
+export const useGetChildAccountQuery = (euuid: string) => {
   return useQuery({
-    ...delegationQueries.delegatedChildAccount({ euuid }),
+    ...delegationQueries.delegatedChildAccount(euuid),
   });
 };
 

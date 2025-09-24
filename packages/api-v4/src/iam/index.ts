@@ -1,4 +1,5 @@
 export * from './delegation';
-export * from './iam';
+export * from './delegation.types';
 
+export * from './iam';
 export * from './types';

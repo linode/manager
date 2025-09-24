@@ -5,25 +5,25 @@ export interface ChildAccount {
   euuid: string;
 }
 
-type ParamsWithDelegates = Params & { includeDelegates?: boolean };
-export interface ListChildAccountsParams {
-  params?: ParamsWithDelegates;
+export interface GetChildAccountsIamParams {
+  params?: Params;
+  users?: boolean;
 }
 
 export interface ChildAccountWithDelegates extends ChildAccount {
   users: string[];
 }
 
-export interface ListMyDelegatedChildAccountsParams {
+export interface GetMyDelegatedChildAccountsParams {
   params?: Params;
 }
 
-export interface ListDelegatedChildAccountsForUserParams {
+export interface GetDelegatedChildAccountsForUserParams {
   params?: Params;
   username: string;
 }
 
-export interface ListChildAccountDelegatesParams {
+export interface GetChildAccountDelegatesParams {
   euuid: string;
   params?: Params;
 }

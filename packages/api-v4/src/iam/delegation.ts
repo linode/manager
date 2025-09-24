@@ -1,22 +1,25 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
 
+import type { Account } from '../account';
+import type { Token } from '../profile';
 import type { ResourcePage as Page } from '../types';
 import type {
   ChildAccount,
   ChildAccountWithDelegates,
-  ListChildAccountDelegatesParams,
-  ListChildAccountsParams,
-  ListDelegatedChildAccountsForUserParams,
-  ListMyDelegatedChildAccountsParams,
+  GetChildAccountDelegatesParams,
+  GetChildAccountsIamParams,
+  GetDelegatedChildAccountsForUserParams,
+  GetMyDelegatedChildAccountsParams,
   UpdateChildAccountDelegatesParams,
 } from './delegation.types';
 import type { IamUserRoles } from './types';
-import type { Account } from 'src/account';
-import type { Token } from 'src/profile';
 
-export const listChildAccounts = ({ params }: ListChildAccountsParams) =>
-  params?.includeDelegates
+export const getChildAccountsIam = ({
+  params,
+  users,
+}: GetChildAccountsIamParams) =>
+  users
     ? Request<Page<ChildAccountWithDelegates>>(
         setURL(`${BETA_API_ROOT}/iam/delegation/child-accounts?users=true`),
         setMethod('GET'),
@@ -28,10 +31,10 @@ export const listChildAccounts = ({ params }: ListChildAccountsParams) =>
         setParams({ ...params }),
       );
 
-export const listDelegatedChildAccountsForUser = ({
+export const getDelegatedChildAccountsForUser = ({
   username,
   params,
-}: ListDelegatedChildAccountsForUserParams) =>
+}: GetDelegatedChildAccountsForUserParams) =>
   Request<Page<ChildAccount>>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/users/${encodeURIComponent(username)}/child-accounts`,
@@ -40,10 +43,10 @@ export const listDelegatedChildAccountsForUser = ({
     setParams(params),
   );
 
-export const listChildAccountDelegates = ({
+export const getChildAccountDelegates = ({
   euuid,
   params,
-}: ListChildAccountDelegatesParams) =>
+}: GetChildAccountDelegatesParams) =>
   Request<Page<string[]>>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
@@ -64,9 +67,9 @@ export const updateChildAccountDelegates = ({
     setData(data),
   );
 
-export const listMyDelegatedChildAccounts = ({
+export const getMyDelegatedChildAccounts = ({
   params,
-}: ListMyDelegatedChildAccountsParams) =>
+}: GetMyDelegatedChildAccountsParams) =>
   Request<Page<Account>>(
     setURL(`${BETA_API_ROOT}/iam/delegation/profile/child-accounts`),
     setMethod('GET'),
