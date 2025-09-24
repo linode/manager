@@ -8,7 +8,7 @@ export * from './cloudpulse';
 
 export * from './databases';
 
-export * from './datastream';
+export * from './delivery';
 
 export * from './domains';
 

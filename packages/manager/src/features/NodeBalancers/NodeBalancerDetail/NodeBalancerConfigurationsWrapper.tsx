@@ -1,5 +1,4 @@
 import {
-  useGrants,
   useNodeBalancerQuery,
   useNodeBalancerVPCConfigsBetaQuery,
 } from '@linode/queries';
@@ -7,6 +6,8 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMatchRoute, useParams } from '@tanstack/react-router';
 import React from 'react';
+
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerConfigurations } from './NodeBalancerConfigurations';
@@ -30,7 +31,16 @@ export const NodeBalancerConfigurationsWrapper = () => {
 
   const configId = configParams !== false ? configParams.configId : undefined;
 
-  const { data: grants } = useGrants();
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    [
+      'update_nodebalancer',
+      'delete_nodebalancer',
+      'create_nodebalancer_config',
+    ],
+    Number(nodeBalancerId)
+  );
+
   const { data: nodeBalancer } = useNodeBalancerQuery(+nodeBalancerId);
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
@@ -67,12 +77,12 @@ export const NodeBalancerConfigurationsWrapper = () => {
     <NodeBalancerConfigurations
       configId={configId ? +configId : undefined}
       configs={data}
-      grants={grants}
       nodeBalancerId={+nodeBalancerId}
       nodeBalancerLabel={nodeBalancer?.label ?? ''}
       nodeBalancerRegion={nodeBalancer?.region ?? ''}
       nodeBalancerSubnetId={nodeBalancerSubnetId}
       nodeBalancerVpcId={nodeBalancerVpcId}
+      permissions={permissions}
       queryClient={queryClient}
     />
   );

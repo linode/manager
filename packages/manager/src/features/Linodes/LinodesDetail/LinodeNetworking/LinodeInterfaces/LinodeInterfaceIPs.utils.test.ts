@@ -1,4 +1,5 @@
 import {
+  linodeInterfaceFactoryDualStackVPC,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVlan,
   linodeInterfaceFactoryVPC,
@@ -33,6 +34,21 @@ describe('getLinodeInterfaceIPs', () => {
       '10.0.0.1',
       '10.0.0.3',
       '10.0.0.5/32',
+    ]);
+  });
+
+  it('should return VPC IPv6s', () => {
+    const linodeInterface = linodeInterfaceFactoryDualStackVPC.build();
+
+    const ips = getLinodeInterfaceIPs(linodeInterface);
+
+    expect(ips).toStrictEqual([
+      '10.0.0.0',
+      '10.0.1.0',
+      '10.0.0.1',
+      '2600:3c19:e418:1:2000:4fff:fed1:38c4',
+      '2600:3c19:e418:1::/64',
+      '2600:3c19:e418:2::/64',
     ]);
   });
 

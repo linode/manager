@@ -17,7 +17,7 @@ import type {
   Dashboard,
   MetricDefinition,
   NotificationChannel,
-  ServiceType,
+  Service,
 } from '@linode/api-v4';
 
 /**
@@ -71,7 +71,7 @@ export const mockGetCloudPulseServices = (
  */
 export const mockGetCloudPulseServiceByServiceType = (
   serviceType: string,
-  service: ServiceType
+  service: Service
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
@@ -374,7 +374,6 @@ export const mockGetAlertChannels = (
     paginateResponse(channel)
   );
 };
-
 /**
  * Mocks the API response for creating a new alert definition in the monitoring service.
  * This function intercepts a POST request to create alert definitions and returns a mock
@@ -390,7 +389,6 @@ export const mockGetAlertChannels = (
  *
  * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
  */
-
 export const mockCreateAlertDefinition = (
   serviceType: string,
   alert: Alert
@@ -576,5 +574,25 @@ export const mockDeleteAlert = (
       body: {},
       statusCode,
     }
+  );
+};
+
+/**
+ * Mocks the API response for a specific CloudPulse service endpoint.
+ * Intercepts the GET request to `/monitor/services/:serviceType` and returns
+ * a paginated mock response containing the provided service object.
+ *
+ * @param {string} serviceType - The type of the service (e.g., 'dbaas', 'linode').
+ * @param {Service} service - The mocked service object to be returned in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockGetCloudPulseServiceByType = (
+  serviceType: string,
+  service: Service
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`monitor/services/${serviceType}`),
+    makeResponse(service)
   );
 };

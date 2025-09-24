@@ -18,20 +18,29 @@ import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
 import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
 
-import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
+import type {
+  Firewall,
+  FirewallDeviceEntityType,
+  PermissionType,
+} from '@linode/api-v4';
+
+type PermissionsSubset<T extends PermissionType> = T;
+type SelectFirewallPanelPermissions = PermissionsSubset<
+  'create_firewall' | 'create_nodebalancer'
+>;
 
 interface Props {
-  disabled?: boolean;
   entityType: FirewallDeviceEntityType | undefined;
   handleFirewallChange: (firewallID: number | undefined) => void;
   helperText: JSX.Element;
+  permissions: Record<SelectFirewallPanelPermissions, boolean>;
   selectedFirewallId: number | undefined;
 }
 
 export const SelectFirewallPanel = (props: Props) => {
   const {
-    disabled,
     entityType,
+    permissions,
     handleFirewallChange,
     helperText,
     selectedFirewallId,
@@ -94,7 +103,7 @@ export const SelectFirewallPanel = (props: Props) => {
             />
           )}
         <Autocomplete
-          disabled={disabled}
+          disabled={!permissions.create_nodebalancer}
           errorText={error?.[0].reason}
           label="Assign Firewall"
           loading={isLoading}
@@ -105,7 +114,10 @@ export const SelectFirewallPanel = (props: Props) => {
           value={selectedFirewall}
         />
         <StyledLinkButtonBox>
-          <LinkButton disabled={disabled} onClick={handleCreateFirewallClick}>
+          <LinkButton
+            disabled={!permissions.create_firewall}
+            onClick={handleCreateFirewallClick}
+          >
             Create Firewall
           </LinkButton>
         </StyledLinkButtonBox>

@@ -14,7 +14,7 @@ import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
@@ -26,11 +26,11 @@ export const NodeBalancerSettings = () => {
   const { id } = useParams({ strict: false });
   const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const isNodeBalancerReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'nodebalancer',
-    id: nodebalancer?.id,
-  });
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    ['update_nodebalancer', 'delete_nodebalancer'],
+    nodebalancer?.id
+  );
 
   const {
     error: labelError,
@@ -80,7 +80,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="NodeBalancer Label">
         <TextField
           data-qa-label-panel
-          disabled={isNodeBalancerReadOnly}
+          disabled={!permissions.update_nodebalancer}
           errorText={labelError?.[0].reason}
           label="Label"
           onChange={(e) => setLabel(e.target.value)}
@@ -90,7 +90,9 @@ export const NodeBalancerSettings = () => {
         <Button
           buttonType="primary"
           data-qa-label-save
-          disabled={isNodeBalancerReadOnly || label === nodebalancer.label}
+          disabled={
+            !permissions.update_nodebalancer || label === nodebalancer.label
+          }
           loading={isUpdatingLabel}
           onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
@@ -104,7 +106,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
           data-qa-connection-throttle
-          disabled={isNodeBalancerReadOnly}
+          disabled={!permissions.update_nodebalancer}
           errorText={throttleError?.[0].reason}
           InputProps={{
             endAdornment: (
@@ -140,7 +142,7 @@ export const NodeBalancerSettings = () => {
         <Button
           buttonType="primary"
           data-testid="delete-nodebalancer"
-          disabled={isNodeBalancerReadOnly}
+          disabled={!permissions.delete_nodebalancer}
           onClick={() =>
             navigate({
               params: { id: String(id) },

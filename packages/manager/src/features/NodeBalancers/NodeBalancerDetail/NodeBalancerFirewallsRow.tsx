@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const NodeBalancerFirewallsRow = (props: Props) => {
-  const { firewall, onClickUnassign } = props;
+  const { firewall, onClickUnassign, nodeBalancerId } = props;
 
   const { id: firewallID, label, rules, status } = firewall;
 
@@ -41,6 +41,7 @@ export const NodeBalancerFirewallsRow = (props: Props) => {
       <TableCell actionCell>
         <NodeBalancerFirewallsActionMenu
           firewallID={firewallID}
+          nodeBalancerId={nodeBalancerId}
           onUnassign={onClickUnassign}
         />
       </TableCell>

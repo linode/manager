@@ -5,7 +5,7 @@ import { getDatabasesDescription } from 'src/features/Databases/utilities';
 import {
   getDestinationDescription,
   getStreamDescription,
-} from 'src/features/DataStream/dataStreamUtils';
+} from 'src/features/Delivery/deliveryUtils';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 
@@ -205,7 +205,7 @@ export const stackscriptToSearchableItem = (
 export const streamToSearchableItem = (stream: Stream): SearchableItem => ({
   data: {
     description: getStreamDescription(stream),
-    path: `/datastream/streams/${stream.id}/edit`,
+    path: `/logs/delivery/streams/${stream.id}/edit`,
     status: stream.status,
   },
   entityType: 'stream',
@@ -218,7 +218,7 @@ export const destinationToSearchableItem = (
 ): SearchableItem => ({
   data: {
     description: getDestinationDescription(destination),
-    path: `/datastream/destinations/${destination.id}/edit`,
+    path: `/logs/delivery/destinations/${destination.id}/edit`,
   },
   entityType: 'destination',
   label: destination.label,

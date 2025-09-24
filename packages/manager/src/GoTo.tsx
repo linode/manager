@@ -1,9 +1,10 @@
-import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
+import { useAccountSettings } from '@linode/queries';
 import { Dialog, Select } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { usePermissions } from './features/IAM/hooks/usePermissions';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
@@ -14,15 +15,12 @@ export const GoTo = React.memo(() => {
   const navigate = useNavigate();
 
   const { data: accountSettings } = useAccountSettings();
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
 
   const { iamRbacPrimaryNavChanges } = useFlags();
 
   const isManagedAccount = accountSettings?.managed ?? false;
 
-  const hasAccountAccess =
-    !profile?.restricted || Boolean(grants?.global.account_access);
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
@@ -118,7 +116,7 @@ export const GoTo = React.memo(() => {
         : [
             {
               display: 'Account',
-              hide: !hasAccountAccess,
+              hide: !permissions.is_account_admin,
               href: '/account/billing',
             },
           ]),
@@ -132,7 +130,8 @@ export const GoTo = React.memo(() => {
       },
     ],
     [
-      hasAccountAccess,
+      permissions.is_account_admin,
+      isDatabasesEnabled,
       isManagedAccount,
       isPlacementGroupsEnabled,
       iamRbacPrimaryNavChanges,
@@ -168,7 +167,10 @@ export const GoTo = React.memo(() => {
             {
               display: 'none',
             },
-          height: '80%',
+          '& .MuiPaper-root': {
+            boxShadow: 'none',
+          },
+          height: '60%',
           minHeight: '50%',
           minWidth: 'auto !important',
           padding: '0 !important',

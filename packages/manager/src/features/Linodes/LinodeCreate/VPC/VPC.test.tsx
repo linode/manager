@@ -78,14 +78,10 @@ describe('VPC', () => {
         },
       });
 
-    expect(
-      getByLabelText(
-        'Auto-assign a VPC IPv4 address for this Linode in the VPC'
-      )
-    ).toBeInTheDocument();
+    expect(getByLabelText('Auto-assign VPC IPv4 address')).toBeInTheDocument();
 
     expect(
-      getByLabelText('Assign a public IPv4 address for this Linode')
+      getByLabelText('Allow public IPv4 access (1:1 NAT)')
     ).toBeInTheDocument();
 
     expect(getByText('Assign additional IPv4 ranges')).toBeInTheDocument();
@@ -107,11 +103,7 @@ describe('VPC', () => {
         },
       });
 
-    expect(
-      getByLabelText(
-        'Auto-assign a VPC IPv4 address for this Linode in the VPC'
-      )
-    ).toBeChecked();
+    expect(getByLabelText('Auto-assign VPC IPv4 address')).toBeChecked();
   });
 
   it('should uncheck the VPC IPv4 if a "ipv4.vpc" is a string value and show the VPC IP TextField', async () => {
@@ -130,11 +122,7 @@ describe('VPC', () => {
         },
       });
 
-    expect(
-      getByLabelText(
-        'Auto-assign a VPC IPv4 address for this Linode in the VPC'
-      )
-    ).not.toBeChecked();
+    expect(getByLabelText('Auto-assign VPC IPv4 address')).not.toBeChecked();
 
     expect(getByLabelText('VPC IPv4 (required)')).toBeVisible();
   });

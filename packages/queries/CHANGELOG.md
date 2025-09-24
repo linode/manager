@@ -1,3 +1,11 @@
+## [2025-09-23] - v0.14.0
+
+### Upcoming Features:
+
+- Add infiniteQueries for Streams and Destinations ([#12811](https://github.com/linode/manager/pull/12811))
+- Add query for Destinations' POST v4beta/monitor/streams/destinations/verify endpoint ([#12823](https://github.com/linode/manager/pull/12823))
+- Rename DataStream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
 ## [2025-09-11] - v0.13.1
 
 ### Fixed:

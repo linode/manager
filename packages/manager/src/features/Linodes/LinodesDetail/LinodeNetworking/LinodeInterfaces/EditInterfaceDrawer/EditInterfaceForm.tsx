@@ -5,6 +5,8 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { PublicAccess } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/EditInterfaceDrawer/VPCInterface/PublicAccess';
+
 import { getLinodeInterfaceType } from '../utilities';
 import { EditInterfaceFirewall } from './EditInterfaceFirewall';
 import {
@@ -13,8 +15,8 @@ import {
 } from './EditInterfaceForm.utils';
 import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
-import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
-import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
+import { VPCIPAddresses } from './VPCInterface/VPCIPAddresses';
+import { VPCIPRanges } from './VPCInterface/VPCIPRanges';
 
 import type { EditLinodeInterfaceFormValues } from './EditInterfaceForm.utils';
 import type { Firewall, LinodeInterface } from '@linode/api-v4';
@@ -134,8 +136,9 @@ export const EditInterfaceForm = (props: Props) => {
             )}
             {interfaceType === 'VPC' && (
               <Stack divider={<Divider />} spacing={3}>
-                <VPCIPv4Addresses linodeInterface={linodeInterface} />
-                <VPCIPv4Ranges />
+                <VPCIPAddresses linodeInterface={linodeInterface} />
+                <PublicAccess />
+                <VPCIPRanges />
               </Stack>
             )}
             <EditInterfaceFirewall

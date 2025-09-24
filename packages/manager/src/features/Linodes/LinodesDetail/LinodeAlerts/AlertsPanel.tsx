@@ -5,7 +5,7 @@ import {
 } from '@linode/queries';
 import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
-import { alertsSchema } from '@linode/validation';
+import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -81,7 +81,7 @@ export const AlertsPanel = (props: Props) => {
     enableReinitialize: true,
     initialValues,
     validateOnChange: true,
-    validationSchema: alertsSchema,
+    validationSchema: UpdateLinodeAlertsSchema,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {

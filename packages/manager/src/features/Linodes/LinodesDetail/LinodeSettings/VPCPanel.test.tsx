@@ -181,7 +181,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByLabelText('Assign a public IPv4 address for this Linode')
+        wrapper.getByLabelText('Allow public IPv4 access (1:1 NAT)')
       ).toBeChecked();
     });
   });

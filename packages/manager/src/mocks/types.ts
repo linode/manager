@@ -4,6 +4,7 @@ import type {
   Destination,
   Domain,
   DomainRecord,
+  Entity,
   Event,
   Firewall,
   FirewallDevice,
@@ -121,8 +122,9 @@ export interface MockPresetExtra extends MockPresetBase {
 export type MockPresetCrudGroup = {
   id:
     | 'CloudNATs'
-    | 'DataStream'
+    | 'Delivery'
     | 'Domains'
+    | 'Entities'
     | 'Firewalls'
     | 'IP Addresses'
     | 'Kubernetes'
@@ -136,8 +138,9 @@ export type MockPresetCrudGroup = {
 };
 export type MockPresetCrudId =
   | 'cloudnats:crud'
-  | 'datastream:crud'
+  | 'delivery:crud'
   | 'domains:crud'
+  | 'entities:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
   | 'kubernetes:crud'
@@ -165,6 +168,7 @@ export interface MockState {
   destinations: Destination[];
   domainRecords: DomainRecord[];
   domains: Domain[];
+  entities: Entity[];
   eventQueue: Event[];
   firewallDevices: [number, FirewallDevice][]; // number is Firewall ID
   firewalls: Firewall[];

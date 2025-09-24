@@ -4,6 +4,7 @@ import { Factory } from './factoryProxy';
 
 import type {
   LinodeInterface,
+  LinodeInterfaceHistory,
   LinodeInterfaceSettings,
   UpgradeInterfaceData,
 } from '@linode/api-v4';
@@ -68,17 +69,48 @@ export const linodeInterfaceFactoryVPC =
         ],
         ranges: [{ range: '10.0.0.1' }],
       },
+      subnet_id: 1,
+      vpc_id: 1,
+    },
+  });
+
+export const linodeInterfaceFactoryDualStackVPC =
+  Factory.Sync.makeFactory<LinodeInterface>({
+    created: '2025-03-19T03:58:04',
+    default_route: {
+      ipv4: true, // Currently, VPC interfaces can only be the default route for IPv4, not IPv6
+    },
+    id: Factory.each((i) => i),
+    mac_address: 'a4:ac:39:b7:6e:42',
+    public: null,
+    updated: '2025-03-19T03:58:04',
+    version: 1,
+    vlan: null,
+    vpc: {
+      ipv4: {
+        addresses: [
+          {
+            address: '10.0.0.0',
+            primary: true,
+          },
+          {
+            address: '10.0.1.0',
+            primary: false,
+          },
+        ],
+        ranges: [{ range: '10.0.0.1' }],
+      },
       ipv6: {
         is_public: false,
         ranges: [
           {
-            range: '2600:3c03::f03c:91ff:fe0a:109a',
+            range: '2600:3c19:e418:2::/64',
           },
         ],
         slaac: [
           {
-            address: '2600:3c03::f03c:91ff:fe0a:109a',
-            range: '2600:3c03::/64',
+            address: '2600:3c19:e418:1:2000:4fff:fed1:38c4',
+            range: '2600:3c19:e418:1::/64',
           },
         ],
       },
@@ -116,4 +148,14 @@ export const linodeInterfaceFactoryPublic =
     version: 1,
     vlan: null,
     vpc: null,
+  });
+
+export const linodeInterfaceHistoryFactory =
+  Factory.Sync.makeFactory<LinodeInterfaceHistory>({
+    created: '2025-03-19T03:58:04',
+    interface_data: linodeInterfaceFactoryPublic.build(),
+    interface_history_id: Factory.each((i) => i),
+    interface_id: Factory.each((i) => i),
+    linode_id: Factory.each((i) => i),
+    version: Factory.each((i) => i),
   });

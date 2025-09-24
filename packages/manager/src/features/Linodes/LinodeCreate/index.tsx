@@ -36,6 +36,7 @@ import {
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
@@ -95,6 +96,8 @@ export const LinodeCreate = () => {
 
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { isDualStackEnabled } = useVPCDualStack();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
     context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
@@ -161,6 +164,7 @@ export const LinodeCreate = () => {
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
+      isDualStackEnabled,
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
       isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,

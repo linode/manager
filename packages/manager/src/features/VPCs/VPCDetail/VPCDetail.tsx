@@ -15,6 +15,7 @@ import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleB
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
@@ -53,6 +54,12 @@ const VPCDetail = () => {
   const flags = useIsNodebalancerVPCEnabled();
 
   const { data: regions } = useRegionsQuery();
+
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpcId
+  );
 
   const handleEditVPC = (vpc: VPC) => {
     navigate({
@@ -166,10 +173,26 @@ const VPCDetail = () => {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="end">
-          <StyledActionButton onClick={() => handleEditVPC(vpc)}>
+          <StyledActionButton
+            disabled={!permissions.update_vpc}
+            onClick={() => handleEditVPC(vpc)}
+            tooltipText={
+              !permissions.update_vpc
+                ? 'You do not have permission to edit this VPC.'
+                : undefined
+            }
+          >
             Edit
           </StyledActionButton>
-          <StyledActionButton onClick={() => handleDeleteVPC(vpc)}>
+          <StyledActionButton
+            disabled={!permissions.delete_vpc}
+            onClick={() => handleDeleteVPC(vpc)}
+            tooltipText={
+              !permissions.delete_vpc
+                ? 'You do not have permission to delete this VPC.'
+                : undefined
+            }
+          >
             Delete
           </StyledActionButton>
         </Box>

@@ -2,6 +2,7 @@ import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVlan,
   linodeInterfaceFactoryVPC,
+  linodeInterfaceHistoryFactory,
   linodeInterfaceSettingsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
@@ -23,6 +24,7 @@ import type {
   Firewall,
   InterfaceGenerationType,
   LinodeInterface,
+  LinodeInterfaceHistory,
   LinodeInterfaces,
   LinodeInterfaceSettings,
   UpgradeInterfaceData,
@@ -97,6 +99,30 @@ export const getInterfaces = () => [
       }
 
       return makeResponse(linodeInterface[1]);
+    }
+  ),
+
+  http.get(
+    '*/v4*/linode/instances/:id/interfaces/history',
+    async ({
+      request,
+      params,
+    }): Promise<
+      StrictResponse<
+        APIErrorResponse | APIPaginatedResponse<LinodeInterfaceHistory>
+      >
+    > => {
+      const id = Number(params.id);
+      const linode = await mswDB.get('linodes', id);
+
+      if (!linode || linode.interface_generation !== 'linode') {
+        return makeNotFoundResponse();
+      }
+
+      return makePaginatedResponse({
+        data: linodeInterfaceHistoryFactory.buildList(75),
+        request,
+      });
     }
   ),
 ];

@@ -16,13 +16,16 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 
-import type { NodeBalancerConfigNodeFields } from './types';
+import type {
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigurationsPermissions,
+} from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
   configIdx: number;
-  disabled: boolean;
   disallowRemoval: boolean;
+  forEdit?: boolean;
   hideModeSelect: boolean;
   idx: number;
   node: NodeBalancerConfigNodeFields;
@@ -38,6 +41,7 @@ export interface NodeBalancerConfigNodeProps {
   onNodeModeChange: (nodeId: number, mode: NodeBalancerConfigNodeMode) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  permissions?: Partial<Record<NodeBalancerConfigurationsPermissions, boolean>>;
   removeNode: (nodeIndex: number) => void;
 }
 
@@ -61,7 +65,7 @@ export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
       configIdx,
-      disabled,
+      permissions,
       disallowRemoval,
       hideModeSelect,
       idx,
@@ -75,6 +79,7 @@ export const NodeBalancerConfigNode = React.memo(
       onNodePortChange,
       onNodeWeightChange,
       removeNode,
+      forEdit,
     } = props;
 
     if (node.modifyStatus === 'delete') {
@@ -86,6 +91,10 @@ export const NodeBalancerConfigNode = React.memo(
       ['label', 'address', 'weight', 'port', 'mode'],
       node.errors
     );
+
+    const disabled = forEdit
+      ? !permissions?.update_nodebalancer
+      : !permissions?.create_nodebalancer;
 
     return (
       <React.Fragment>
@@ -231,7 +240,14 @@ export const NodeBalancerConfigNode = React.memo(
             )}
             {!disallowRemoval && (
               <Box alignSelf="flex-end">
-                <Button disabled={disabled} onClick={() => removeNode(idx)}>
+                <Button
+                  disabled={
+                    forEdit
+                      ? !permissions?.delete_nodebalancer
+                      : !permissions?.create_nodebalancer
+                  }
+                  onClick={() => removeNode(idx)}
+                >
                   Remove
                 </Button>
               </Box>

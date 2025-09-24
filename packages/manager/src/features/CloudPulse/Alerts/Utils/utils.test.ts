@@ -7,6 +7,7 @@ import { useContextualAlertsState } from '../../Utils/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   alertsFromEnabledServices,
+  arraysEqual,
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
@@ -251,7 +252,10 @@ describe('useContextualAlertsState', () => {
   it('should return empty initial state when no entityId provided', () => {
     const alerts = alertFactory.buildList(3);
     const { result } = renderHook(() => useContextualAlertsState(alerts));
-    expect(result.current.initialState).toEqual({ system: [], user: [] });
+    expect(result.current.initialState).toEqual({
+      system_alerts: [],
+      user_alerts: [],
+    });
   });
 
   it('should include alerts that match entityId or account/region level alerts in initial states', () => {
@@ -284,9 +288,9 @@ describe('useContextualAlertsState', () => {
       useContextualAlertsState(alerts, entityId)
     );
 
-    expect(result.current.initialState.system).toContain(1);
-    expect(result.current.initialState.system).toContain(3);
-    expect(result.current.initialState.user).toContain(2);
+    expect(result.current.initialState.system_alerts).toContain(1);
+    expect(result.current.initialState.system_alerts).toContain(3);
+    expect(result.current.initialState.user_alerts).toContain(2);
   });
 
   it('should detect unsaved changes when alerts are modified', () => {
@@ -309,7 +313,7 @@ describe('useContextualAlertsState', () => {
     act(() => {
       result.current.setEnabledAlerts((prev) => ({
         ...prev,
-        system: [...(prev.system ?? []), 999],
+        system_alerts: [...(prev.system_alerts ?? []), 999],
       }));
     });
 
@@ -492,5 +496,29 @@ describe('transformDimensionValue', () => {
     expect(
       transformDimensionValue('linode', 'unknown_dimension', 'test_value')
     ).toBe('Test_value');
+  });
+});
+
+describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are undefined', () => {
+    expect(arraysEqual(undefined, undefined)).toBe(true);
+  });
+  it('should return false when one of the arrays is undefined', () => {
+    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+  });
+  it('should return false when arrays are not equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
+  });
+  it('should return true when arrays have same elements but in different order', () => {
+    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
   });
 });

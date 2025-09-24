@@ -2,7 +2,6 @@ import { nodeBalancerFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { firewallFactory } from 'src/factories';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerSettings } from './NodeBalancerSettings';
@@ -16,6 +15,16 @@ const queryMocks = vi.hoisted(() => ({
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
   useParams: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_nodebalancer: true,
+      delete_nodebalancer: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -90,7 +99,12 @@ describe('NodeBalancerSettings', () => {
   });
 
   it('disables inputs and buttons if the Node Balancer is read only', () => {
-    vi.mocked(useIsResourceRestricted).mockReturnValue(true);
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_nodebalancer: false,
+        delete_nodebalancer: false,
+      },
+    });
     const { getByLabelText, getByTestId } = renderWithTheme(
       <NodeBalancerSettings />
     );

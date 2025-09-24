@@ -41,6 +41,7 @@ export const AddInterfaceForm = (props: Props) => {
         ipv4: {
           addresses: [{ primary: true, address: 'auto' }],
         },
+        ipv6: undefined,
       },
     },
     async resolver(rawValues, context, options) {

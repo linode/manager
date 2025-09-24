@@ -37,21 +37,21 @@ const mockEnabledLegacyAlerts = {
 };
 
 const mockDisabledBetaAlerts = {
-  system: [],
-  user: [],
+  system_alerts: [],
+  user_alerts: [],
 };
 
 const mockEnabledBetaAlerts = {
-  system: [1, 2],
-  user: [3],
+  system_alerts: [1, 2],
+  user_alerts: [3],
 };
 
 /*
  * UI of Linode alerts tab based on beta and legacy alert values in linode.alerts. Dependent on region support for alerts
  * Legacy alerts = 0, Beta alerts = [] (empty arrays or no values at all) => legacy disabled for `beta` stage OR beta disabled for `ga` stage
  * Legacy alerts > 0, Beta alerts = [] (empty arrays or no values at all) => legacy enabled
- * Legacy alerts = 0, Beta alerts has values (either system, user, or both) => beta enabled
- * Legacy alerts > 0, Beta alerts has values (either system, user, or both) => beta enabled
+ * Legacy alerts = 0, Beta alerts has values (either system_alerts, user_alerts, or both) => beta enabled
+ * Legacy alerts > 0, Beta alerts has values (either system_alerts, user_alerts, or both) => beta enabled
  *
  * Note: Here, "disabled" means that all toggles are in the OFF state, but it's still editable (not read-only)
  */

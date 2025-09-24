@@ -24,6 +24,7 @@ export interface CloudPulseMetricsFilter {
 export interface DashboardProp {
   dashboard?: Dashboard;
   filterValue: CloudPulseMetricsFilter;
+  groupBy: string[];
   timeDuration?: DateTimeWithPreset;
 }
 
@@ -32,6 +33,8 @@ export const CloudPulseDashboardLanding = () => {
     id: {},
     label: {},
   });
+
+  const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
   const [timeDuration, setTimeDuration] = React.useState<
     DateTimeWithPreset | undefined
@@ -45,6 +48,10 @@ export const CloudPulseDashboardLanding = () => {
   const toggleAppliedFilter = (isVisible: boolean) => {
     setShowAppliedFilters(isVisible);
   };
+
+  const onGroupByChange = React.useCallback((selectedValues: string[]) => {
+    setGroupBy(selectedValues);
+  }, []);
 
   const onFilterChange = React.useCallback(
     (filterKey: string, filterValue: FilterValueType, labels: string[]) => {
@@ -92,6 +99,7 @@ export const CloudPulseDashboardLanding = () => {
               <GlobalFilters
                 handleAnyFilterChange={onFilterChange}
                 handleDashboardChange={onDashboardChange}
+                handleGroupByChange={onGroupByChange}
                 handleTimeDurationChange={onTimeDurationChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
               />
@@ -107,6 +115,7 @@ export const CloudPulseDashboardLanding = () => {
         <CloudPulseDashboardRenderer
           dashboard={dashboard}
           filterValue={filterData.id}
+          groupBy={groupBy}
           timeDuration={timeDuration}
         />
       </GridLegacy>

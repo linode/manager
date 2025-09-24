@@ -40,7 +40,7 @@ export type NavEntity =
   | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
-  | 'DataStream'
+  | 'Delivery'
   | 'Domains'
   | 'Firewalls'
   | 'Help & Support'
@@ -240,9 +240,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/longview',
               },
               {
-                display: 'DataStream',
+                display: 'Delivery',
                 hide: !flags.aclpLogs?.enabled,
-                to: '/datastream',
+                to: '/logs/delivery',
                 isBeta: flags.aclpLogs?.beta,
               },
             ],
