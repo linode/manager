@@ -98,9 +98,9 @@ export const NodeBalancerSelect = (
   const { data, error, isLoading } = useAllNodeBalancersQuery();
 
   const {
-    data: nodebalancersReadWrite,
-    error: nodebalancersReadWriteError,
-    isLoading: nodebalancersReadWriteLoading,
+    data: availableNodebalancers,
+    error: availableNodebalancersError,
+    isLoading: availableNodebalancersLoading,
   } = useQueryWithPermissions<NodeBalancer>(
     useAllNodeBalancersQuery(),
     'nodebalancer',
@@ -109,7 +109,7 @@ export const NodeBalancerSelect = (
   );
 
   const nodebalancers = optionsFilter
-    ? nodebalancersReadWrite.filter(optionsFilter)
+    ? availableNodebalancers.filter(optionsFilter)
     : data;
 
   React.useEffect(() => {
@@ -132,7 +132,7 @@ export const NodeBalancerSelect = (
       disabled={disabled}
       disablePortal={true}
       errorText={
-        (error?.[0].reason || nodebalancersReadWriteError?.[0].reason) ??
+        (error?.[0].reason || availableNodebalancersError?.[0].reason) ??
         errorText
       }
       getOptionLabel={(nodebalancer: NodeBalancer) =>
@@ -142,14 +142,14 @@ export const NodeBalancerSelect = (
       id={id}
       inputValue={inputValue}
       label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
-      loading={isLoading || nodebalancersReadWriteLoading || loading}
+      loading={isLoading || availableNodebalancersLoading || loading}
       multiple={multiple}
       noMarginTop={noMarginTop}
       noOptionsText={
         noOptionsMessage ??
         getDefaultNoOptionsMessage(
-          error || nodebalancersReadWriteError,
-          isLoading || nodebalancersReadWriteLoading
+          error || availableNodebalancersError,
+          isLoading || availableNodebalancersLoading
         )
       }
       onBlur={onBlur}

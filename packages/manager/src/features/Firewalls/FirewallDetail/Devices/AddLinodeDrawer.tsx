@@ -55,7 +55,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
-  const { data: linodesReadWrite, isLoading: linodesLoading } =
+  const { data: availableLinodes, isLoading: availableLinodesLoading } =
     useQueryWithPermissions<Linode>(
       useAllLinodesQuery({}, {}),
       'linode',
@@ -64,7 +64,7 @@ export const AddLinodeDrawer = (props: Props) => {
     );
 
   const linodesUsingLinodeInterfaces =
-    linodesReadWrite?.filter((l) => l.interface_generation === 'linode') ?? [];
+    availableLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
 
   const allFirewallEntities = React.useMemo(
     () => data?.map((firewall) => firewall.entities).flat() ?? [],
@@ -117,7 +117,7 @@ export const AddLinodeDrawer = (props: Props) => {
     },
   });
 
-  const linodeOptions = linodesReadWrite?.filter((linode) => {
+  const linodeOptions = availableLinodes?.filter((linode) => {
     // Exclude a Linode if it uses Linode Interfaces but has no eligible interfaces
     if (linode.interface_generation === 'linode') {
       return Boolean(linodesAndEligibleInterfaces[linode.id]);
@@ -358,9 +358,9 @@ export const AddLinodeDrawer = (props: Props) => {
         )}
         {localError ? errorNotice() : null}
         <LinodeSelect
-          disabled={isLoading || disabled}
+          disabled={isLoading || availableLinodesLoading || disabled}
           helperText={helperText}
-          loading={linodesLoading}
+          loading={availableLinodesLoading}
           multiple
           onSelectionChange={(linodes) => onSelectionChange(linodes)}
           options={linodeOptions}
