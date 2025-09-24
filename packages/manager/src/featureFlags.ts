@@ -174,6 +174,7 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
+  iamDelegation: BaseFeatureFlag;
   iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
