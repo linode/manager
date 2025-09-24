@@ -46,6 +46,7 @@ const DEFAULT_OS = 'linode/ubuntu24.04';
 interface LinodeCreatePayloadOptions {
   isAclpAlertsPreferenceBeta?: boolean;
   isAclpIntegration?: boolean;
+  isDualStackEnabled?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
 
@@ -64,6 +65,7 @@ export const getLinodeCreatePayload = (
     isShowingNewNetworkingUI,
     isAclpIntegration,
     isAclpAlertsPreferenceBeta,
+    isDualStackEnabled,
   } = options;
 
   const values: CreateLinodeRequest = omitProps(formValues, [
@@ -100,8 +102,11 @@ export const getLinodeCreatePayload = (
     } else {
       values.interfaces = formValues.backup_id
         ? undefined
-        : formValues.linodeInterfaces.map(
-            getLegacyInterfaceFromLinodeInterface
+        : formValues.linodeInterfaces.map((linodeInterface) =>
+            getLegacyInterfaceFromLinodeInterface(
+              linodeInterface,
+              isDualStackEnabled
+            )
           );
     }
   } else {
