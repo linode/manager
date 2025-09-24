@@ -18,6 +18,8 @@ export const productInformationBannerFactory =
 
 export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
   aclp: { beta: true, enabled: true },
+  objMultiCluster: false,
+  objectStorageGen2: { enabled: false },
   aclpAlerting: {
     accountAlertLimit: 10,
     accountMetricLimit: 10,
@@ -42,6 +44,10 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       alerts: { beta: true, enabled: true },
       metrics: { beta: true, enabled: true },
     },
+    objectstorage: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
   },
   aclpResourceTypeMap: [
     {
@@ -63,6 +69,11 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       dimensionKey: 'firewall',
       maxResourceSelections: 10,
       serviceType: 'firewall',
+    },
+    {
+      dimensionKey: 'objectstorage',
+      maxResourceSelections: 10,
+      serviceType: 'objectstorage',
     },
   ],
 });
