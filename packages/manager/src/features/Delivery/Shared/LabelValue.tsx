@@ -3,6 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 interface LabelValueProps {
+  children?: React.ReactNode;
   compact?: boolean;
   'data-testid'?: string;
   label: string;
@@ -10,7 +11,13 @@ interface LabelValueProps {
 }
 
 export const LabelValue = (props: LabelValueProps) => {
-  const { compact = false, label, value, 'data-testid': dataTestId } = props;
+  const {
+    compact = false,
+    label,
+    value,
+    'data-testid': dataTestId,
+    children,
+  } = props;
   const theme = useTheme();
 
   return (
@@ -29,6 +36,7 @@ export const LabelValue = (props: LabelValueProps) => {
         {label}:
       </Typography>
       <StyledValue data-testid={dataTestId}>{value}</StyledValue>
+      {children}
     </Box>
   );
 };
