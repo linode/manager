@@ -114,7 +114,10 @@ export const SelectFirewallPanel = (props: Props) => {
           value={selectedFirewall}
         />
         <StyledLinkButtonBox>
-          <LinkButton disabled={!permissions.create_firewall} onClick={handleCreateFirewallClick}>
+          <LinkButton
+            disabled={!permissions.create_firewall}
+            onClick={handleCreateFirewallClick}
+          >
             Create Firewall
           </LinkButton>
         </StyledLinkButtonBox>

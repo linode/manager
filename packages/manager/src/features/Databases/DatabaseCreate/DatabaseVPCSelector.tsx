@@ -147,8 +147,8 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
           loading={isLoading}
           noOptionsText="There are no VPCs in the selected region."
           onChange={(e, value) => {
+            onChange('private_network.subnet_id', null); // Always reset subnet selection when VPC changes
             if (!value) {
-              onChange('private_network.subnet_id', null);
               onChange('private_network.public_access', false);
             }
             onConfigurationChange?.(value ?? null);

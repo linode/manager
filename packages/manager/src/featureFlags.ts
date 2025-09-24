@@ -59,6 +59,10 @@ interface LinodeInterfacesFlag extends BaseFeatureFlag {
    */
   beta?: boolean;
   /**
+   * Enables the Interface History Table
+   */
+  interface_history?: boolean;
+  /**
    * Shows a New chip for UI elements related to Linode Interfaces
    */
   new?: boolean;
@@ -171,6 +175,7 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
+  iamDelegation: BaseFeatureFlag;
   iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
@@ -293,7 +298,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
-  | 'DataStream'
+  | 'Delivery'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'
