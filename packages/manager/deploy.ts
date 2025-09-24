@@ -8,4 +8,4 @@ await $`pnpm build`.env({
   REACT_APP_APP_ROOT: 'https://cloud.nussman.us',
 });
 
-await $`scp -r ./build/* root@192.168.0.114:/usr/share/caddy/manager`;
+await $`scp -r ./dist/* root@192.168.0.114:/usr/share/caddy/manager`;

@@ -4,7 +4,7 @@ import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 import { pluginSvgr } from '@rsbuild/plugin-svgr';
 
 
-export default defineConfig({
+export default defineConfig(({ env }) => ({
   plugins: [
     pluginReact(),
     pluginSvgr({ svgrOptions: { exportType: 'default' } }),
@@ -13,6 +13,7 @@ export default defineConfig({
       exposes: {
         './app': './src/App.tsx',
       },
+      getPublicPath: env === 'production' ? `function() {return "https://betas.nussman.us/"}` : undefined,
       shared: {
         'react': { singleton: true, eager: true, strictVersion: false },
         'react-dom': { singleton: true, eager: true, strictVersion: false },
@@ -23,4 +24,4 @@ export default defineConfig({
   server: {
     port: 4000,
   },
-});
+}));
