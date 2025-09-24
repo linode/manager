@@ -186,13 +186,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = props;
   const [dimensionFilters, setDimensionFilters] = React.useState<
     MetricsDimensionFilter[] | undefined
-  >([
-    {
-      dimension_label: 'linode_id',
-      operator: 'eq',
-      value: '12344',
-    },
-  ]);
+  >(widget.filters);
 
   const timezone =
     duration.timeZone ?? profile?.timezone ?? DateTime.local().zoneName;
@@ -245,7 +239,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       dimensionFilters?.length
       ? [
           ...constructAdditionalRequestFilters(additionalFilters ?? []),
-          ...(constructWidgetDimensionFilters(filteredSelections) ?? []),
+          ...(constructWidgetDimensionFilters(filteredSelections) ?? []), // dashboard level filters followed by widget filters
         ]
       : undefined;
   }, [
