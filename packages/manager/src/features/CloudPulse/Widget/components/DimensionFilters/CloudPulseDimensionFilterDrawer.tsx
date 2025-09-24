@@ -21,7 +21,6 @@ interface CloudPulseDimensionFilterDrawerProps {
   /**
    * @param selectedDimensions The list of selected dimension filters
    * @param close Property to determine whether to close the drawer after selection
-   * @returns
    */
   handleSelectionChange: (
     selectedDimensions: MetricsDimensionFilter[],
@@ -29,7 +28,6 @@ interface CloudPulseDimensionFilterDrawerProps {
   ) => void;
   /**
    * The callback to close the drawer
-   * @returns
    */
   onClose: () => void;
   /**
