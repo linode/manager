@@ -17,6 +17,7 @@ export default defineConfig((ctx) => ({
       remotes: {
         betas: 'betas@http://localhost:4000/mf-manifest.json',
       },
+      shareStrategy: 'loaded-first',
       shared: {
         react: { singleton: true, eager: true, strictVersion: false },
         'react-dom': { singleton: true, eager: true, strictVersion: false },
