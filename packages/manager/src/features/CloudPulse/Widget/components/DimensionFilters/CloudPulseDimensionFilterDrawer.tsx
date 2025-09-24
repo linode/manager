@@ -52,78 +52,78 @@ interface CloudPulseDimensionFilterDrawerProps {
   serviceType: CloudPulseServiceType;
 }
 
-export const CloudPulseDimensionFilterDrawer = (
-  props: CloudPulseDimensionFilterDrawerProps
-) => {
-  const {
-    onClose,
-    open,
-    dimensionOptions,
-    selectedDimensions,
-    handleSelectionChange,
-    drawerLabel,
-    selectedEntities,
-    serviceType,
-  } = props;
+export const CloudPulseDimensionFilterDrawer = React.memo(
+  (props: CloudPulseDimensionFilterDrawerProps) => {
+    const {
+      onClose,
+      open,
+      dimensionOptions,
+      selectedDimensions,
+      handleSelectionChange,
+      drawerLabel,
+      selectedEntities,
+      serviceType,
+    } = props;
 
-  const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
+    const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
 
-  const handleClose = () => {
-    onClose();
-    setClearAllTrigger(0); // After closing the drawer, reset the clear all trigger
-  };
+    const handleClose = () => {
+      onClose();
+      setClearAllTrigger(0); // After closing the drawer, reset the clear all trigger
+    };
 
-  const handleFormSubmit = ({
-    dimension_filters: dimensionFilters,
-  }: MetricsDimensionFilterForm) => {
-    handleSelectionChange(dimensionFilters, true);
-    setClearAllTrigger(0); // After submission, reset the clear all trigger
-  };
+    const handleFormSubmit = ({
+      dimension_filters: dimensionFilters,
+    }: MetricsDimensionFilterForm) => {
+      handleSelectionChange(dimensionFilters, true);
+      setClearAllTrigger(0); // After submission, reset the clear all trigger
+    };
 
-  return (
-    <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
-      <Stack gap={4}>
-        <Stack direction="row" justifyContent="space-between">
+    return (
+      <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
+        <Stack gap={4}>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography
+              data-qa-id="filter-drawer-subtitle"
+              sx={(theme) => ({ marginTop: -2, font: theme.font.normal })}
+              variant="h3"
+            >
+              {drawerLabel}
+            </Typography>
+            <Typography
+              component="a"
+              data-qa-id="filter-drawer-clear-all"
+              onClick={() => {
+                setClearAllTrigger((prev) => prev + 1);
+              }}
+              sx={(theme) => ({
+                marginTop: -2,
+                font: theme.font.normal,
+                color: theme.textColors.linkActiveLight,
+              })}
+              variant="h3"
+            >
+              Clear All
+            </Typography>
+          </Stack>
           <Typography
-            data-qa-id="filter-drawer-subtitle"
-            sx={(theme) => ({ marginTop: -2, font: theme.font.normal })}
-            variant="h3"
+            data-qa-id="filter-drawer-selection-title"
+            sx={(theme) => ({ font: theme.font.semibold })}
           >
-            {drawerLabel}
+            Select upto 5 Dimension Filters
           </Typography>
-          <Typography
-            component="a"
-            data-qa-id="filter-drawer-clear-all"
-            onClick={() => {
-              setClearAllTrigger((prev) => prev + 1);
-            }}
-            sx={(theme) => ({
-              marginTop: -2,
-              font: theme.font.normal,
-              color: theme.textColors.linkActiveLight,
-            })}
-            variant="h3"
-          >
-            Clear All
-          </Typography>
+          <CloudPulseDimensionFilterRenderer
+            clearAllTrigger={clearAllTrigger}
+            dataFieldDisabled={false}
+            dimensionOptions={dimensionOptions}
+            onClose={handleClose}
+            onSubmit={handleFormSubmit}
+            selectedDimensions={selectedDimensions}
+            selectedEntities={selectedEntities}
+            serviceType={serviceType}
+          />
         </Stack>
-        <Typography
-          data-qa-id="filter-drawer-selection-title"
-          sx={(theme) => ({ font: theme.font.semibold })}
-        >
-          Select upto 5 Dimension Filters
-        </Typography>
-        <CloudPulseDimensionFilterRenderer
-          clearAllTrigger={clearAllTrigger}
-          dataFieldDisabled={false}
-          dimensionOptions={dimensionOptions}
-          onClose={handleClose}
-          onSubmit={handleFormSubmit}
-          selectedDimensions={selectedDimensions}
-          selectedEntities={selectedEntities}
-          serviceType={serviceType}
-        />
-      </Stack>
-    </Drawer>
-  );
-};
+      </Drawer>
+    );
+  }
+);

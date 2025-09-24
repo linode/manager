@@ -40,63 +40,63 @@ interface CloudPulseDimensionFilterSelectProps {
   serviceType: CloudPulseServiceType;
 }
 
-export const CloudPulseDimensionFilterSelect = (
-  props: CloudPulseDimensionFilterSelectProps
-) => {
-  const {
-    dimensionOptions,
-    selectedDimensions,
-    handleSelectionChange,
-    drawerLabel,
-    selectedEntities,
-    serviceType,
-  } = props;
-  const [open, setOpen] = React.useState(false);
+export const CloudPulseDimensionFilterSelect = React.memo(
+  (props: CloudPulseDimensionFilterSelectProps) => {
+    const {
+      dimensionOptions,
+      selectedDimensions,
+      handleSelectionChange,
+      drawerLabel,
+      selectedEntities,
+      serviceType,
+    } = props;
+    const [open, setOpen] = React.useState(false);
 
-  const handleChangeInSelection = (
-    selectedValue: MetricsDimensionFilter[],
-    close: boolean
-  ) => {
-    if (close) {
-      handleSelectionChange(selectedValue);
-      setOpen(false);
-    }
-  };
+    const handleChangeInSelection = (
+      selectedValue: MetricsDimensionFilter[],
+      close: boolean
+    ) => {
+      if (close) {
+        handleSelectionChange(selectedValue);
+        setOpen(false);
+      }
+    };
 
-  return (
-    <>
-      <CloudPulseTooltip placement="bottom-end" title="Dimension Filter">
-        <IconButton
-          aria-label="Widget Dimension Filter"
-          color="inherit"
-          data-qa-selected={selectedDimensions?.length}
-          data-testid="dimension-filter"
-          disabled={dimensionOptions.length === 0}
-          onClick={() => setOpen(true)}
-          size="small"
-          sx={(theme) => ({
-            marginBlockEnd: 'auto',
-            color: selectedDimensions?.length
-              ? theme.color.buttonPrimaryHover
-              : 'inherit',
-            padding: 0,
-          })}
-        >
-          <CloudPulseDimensionFilterIconWithBadge
-            count={selectedDimensions?.length ?? 0}
-          />
-        </IconButton>
-      </CloudPulseTooltip>
-      <CloudPulseDimensionFilterDrawer
-        dimensionOptions={dimensionOptions}
-        drawerLabel={drawerLabel}
-        handleSelectionChange={handleChangeInSelection}
-        onClose={() => setOpen(false)}
-        open={open}
-        selectedDimensions={selectedDimensions}
-        selectedEntities={selectedEntities}
-        serviceType={serviceType}
-      />
-    </>
-  );
-};
+    return (
+      <>
+        <CloudPulseTooltip placement="bottom-end" title="Dimension Filter">
+          <IconButton
+            aria-label="Widget Dimension Filter"
+            color="inherit"
+            data-qa-selected={selectedDimensions?.length}
+            data-testid="dimension-filter"
+            disabled={dimensionOptions.length === 0}
+            onClick={() => setOpen(true)}
+            size="small"
+            sx={(theme) => ({
+              marginBlockEnd: 'auto',
+              color: selectedDimensions?.length
+                ? theme.color.buttonPrimaryHover
+                : 'inherit',
+              padding: 0,
+            })}
+          >
+            <CloudPulseDimensionFilterIconWithBadge
+              count={selectedDimensions?.length ?? 0}
+            />
+          </IconButton>
+        </CloudPulseTooltip>
+        <CloudPulseDimensionFilterDrawer
+          dimensionOptions={dimensionOptions}
+          drawerLabel={drawerLabel}
+          handleSelectionChange={handleChangeInSelection}
+          onClose={() => setOpen(false)}
+          open={open}
+          selectedDimensions={selectedDimensions}
+          selectedEntities={selectedEntities}
+          serviceType={serviceType}
+        />
+      </>
+    );
+  }
+);
