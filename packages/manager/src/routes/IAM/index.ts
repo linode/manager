@@ -85,6 +85,41 @@ const iamRolesCatchAllRoute = createRoute({
   },
 });
 
+const iamDelegationsRoute = createRoute({
+  getParentRoute: () => iamTabsRoute,
+  path: 'delegations',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/account/users',
+      });
+    }
+    if (isIAMEnabled && !isDelegationEnabled) {
+      throw redirect({
+        to: '/iam/users',
+      });
+    }
+  },
+}).lazy(() =>
+  import('src/features/IAM/Delegations/delegationsLandingLazyRoute').then(
+    (m) => m.delegationsLandingLazyRoute
+  )
+);
+
+const iamDelegationsCatchAllRoute = createRoute({
+  getParentRoute: () => iamDelegationsRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/iam/delegations' });
+  },
+});
+
 const iamUserNameRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/users/$username',
@@ -238,8 +273,10 @@ export const iamRouteTree = iamRoute.addChildren([
   iamTabsRoute.addChildren([
     iamRolesRoute,
     iamUsersRoute,
+    iamDelegationsRoute,
     iamUsersCatchAllRoute,
     iamRolesCatchAllRoute,
+    iamDelegationsCatchAllRoute,
   ]),
   iamCatchAllRoute,
   iamUserNameRoute.addChildren([
