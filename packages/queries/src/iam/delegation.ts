@@ -13,7 +13,10 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
+  Account,
   APIError,
+  ChildAccount,
+  ChildAccountWithDelegates,
   GetChildAccountDelegatesParams,
   GetChildAccountsIamParams,
   GetDelegatedChildAccountsForUserParams,
@@ -22,9 +25,10 @@ import type {
   ResourcePage,
   Token,
 } from '@linode/api-v4';
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 export const delegationQueries = createQueryKeys('delegation', {
-  childAccounts: ({ params, users }) => ({
+  childAccounts: ({ params, users }: GetChildAccountsIamParams) => ({
     queryFn: () => getChildAccountsIam({ params, users }),
     queryKey: [params],
   }),
@@ -63,11 +67,15 @@ export const delegationQueries = createQueryKeys('delegation', {
  * - Audience: Parent account administrators managing delegation.
  * - Data: Page<ChildAccount>; optionally Page<ChildAccountWithUsers> when `users=true` (use `params.includeDelegates` to set).
  */
-export const useListChildAccountsQuery = (
-  params: GetChildAccountsIamParams,
-) => {
+export const useGetChildAccountsQuery = ({
+  params,
+  users,
+}: GetChildAccountsIamParams): UseQueryResult<
+  ResourcePage<ChildAccount | ChildAccountWithDelegates>,
+  APIError[]
+> => {
   return useQuery({
-    ...delegationQueries.childAccounts(params),
+    ...delegationQueries.childAccounts({ params, users }),
   });
 };
 
@@ -78,10 +86,13 @@ export const useListChildAccountsQuery = (
  * - Audience: Parent account administrators auditing a user’s delegated access.
  * - Data: Page<ChildAccount> for `GET /iam/delegation/users/:username/child-accounts`.
  */
-export const useListDelegatedChildAccountsForUserQuery = ({
+export const useGetDelegatedChildAccountsForUserQuery = ({
   username,
   params,
-}: GetDelegatedChildAccountsForUserParams) => {
+}: GetDelegatedChildAccountsForUserParams): UseQueryResult<
+  ResourcePage<ChildAccount>,
+  APIError[]
+> => {
   return useQuery({
     ...delegationQueries.delegatedChildAccountsForUser({ username, params }),
   });
@@ -94,10 +105,13 @@ export const useListDelegatedChildAccountsForUserQuery = ({
  * - Audience: Parent account administrators managing delegates for a specific child account.
  * - Data: Page<string[]> (usernames) for `GET /iam/delegation/child-accounts/:euuid/users`.
  */
-export const useListChildAccountDelegatesQuery = ({
+export const useGetChildAccountDelegatesQuery = ({
   euuid,
   params,
-}: GetChildAccountDelegatesParams) => {
+}: GetChildAccountDelegatesParams): UseQueryResult<
+  ResourcePage<string[]>,
+  APIError[]
+> => {
   return useQuery({
     ...delegationQueries.childAccountDelegates({
       euuid,
@@ -113,7 +127,11 @@ export const useListChildAccountDelegatesQuery = ({
  * - Audience: Parent account administrators assigning/removing delegates for a child account.
  * - Data: Request usernames (**full replacement**); Response Page<string[]> of resulting delegate usernames for `PUT /.../:euuid/users`.
  */
-export const useUpdateChildAccountDelegatesQuery = () => {
+export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
+  ResourcePage<string[]>,
+  APIError[],
+  { data: string[]; euuid: string }
+> => {
   const queryClient = useQueryClient();
   return useMutation<
     ResourcePage<string[]>,
@@ -137,7 +155,9 @@ export const useUpdateChildAccountDelegatesQuery = () => {
  * - Audience: Needing to return accounts the caller can actually access
  * - Data: Page<Account> (limited profile fields) for `GET /iam/delegation/profile/child-accounts`.
  */
-export const useListMyDelegatedChildAccountsQuery = (params: Params) => {
+export const useGetMyDelegatedChildAccountsQuery = (
+  params: Params,
+): UseQueryResult<ResourcePage<Account>, APIError[]> => {
   return useQuery({
     ...delegationQueries.myDelegatedChildAccounts(params),
   });
@@ -150,7 +170,9 @@ export const useListMyDelegatedChildAccountsQuery = (params: Params) => {
  * - Audience: Callers needing basic child account info in the delegation context.
  * - Data: Account (limited account fields) for `GET /iam/delegation/profile/child-accounts/:euuid`.
  */
-export const useGetChildAccountQuery = (euuid: string) => {
+export const useGetChildAccountQuery = (
+  euuid: string,
+): UseQueryResult<Account, APIError[]> => {
   return useQuery({
     ...delegationQueries.delegatedChildAccount(euuid),
   });
@@ -163,7 +185,11 @@ export const useGetChildAccountQuery = (euuid: string) => {
  * - Audience: Clients that need temporary auth to perform actions in the child account.
  * - Data: Token for `POST /iam/delegation/child-accounts/:euuid/token`.
  */
-export const useGenerateChildAccountTokenQuery = () => {
+export const useGenerateChildAccountTokenQuery = (): UseMutationResult<
+  Token,
+  APIError[],
+  { euuid: string }
+> => {
   return useMutation<Token, APIError[], { euuid: string }>({
     mutationFn: generateChildAccountToken,
   });
@@ -176,7 +202,10 @@ export const useGenerateChildAccountTokenQuery = () => {
  * - Audience: Child account administrators reviewing default delegate access.
  * - Data: IamUserRoles with `account_access` and `entity_access` for `GET /iam/delegation/default-role-permissions`.
  */
-export const useGetDefaultDelegationAccessQuery = () => {
+export const useGetDefaultDelegationAccessQuery = (): UseQueryResult<
+  IamUserRoles,
+  APIError[]
+> => {
   return useQuery<IamUserRoles, APIError[]>({
     ...delegationQueries.defaultAccess,
   });
@@ -189,7 +218,11 @@ export const useGetDefaultDelegationAccessQuery = () => {
  * - Audience: Child account administrators configuring default delegate access.
  * - Data: Request/Response IamUserRoles for `PUT /iam/delegation/default-role-permissions`.
  */
-export const useUpdateDefaultDelegationAccessQuery = () => {
+export const useUpdateDefaultDelegationAccessQuery = (): UseMutationResult<
+  IamUserRoles,
+  APIError[],
+  IamUserRoles
+> => {
   const queryClient = useQueryClient();
   return useMutation<IamUserRoles, APIError[], IamUserRoles>({
     mutationFn: updateDefaultDelegationAccess,
