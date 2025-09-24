@@ -1,9 +1,7 @@
 import { IconButton } from '@linode/ui';
 import React from 'react';
 
-import { useFetchOptions } from 'src/features/CloudPulse/Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
 import { CloudPulseTooltip } from 'src/features/CloudPulse/shared/CloudPulseTooltip';
-import { isValidFilter } from 'src/features/CloudPulse/Utils/utils';
 
 import { CloudPulseDimensionFilterDrawer } from './CloudPulseDimensionFilterDrawer';
 import { CloudPulseDimensionFilterIconWithBadge } from './CloudPulseFilterIconWithBadge';
@@ -54,30 +52,6 @@ export const CloudPulseDimensionFilterSelect = (
     serviceType,
   } = props;
   const [open, setOpen] = React.useState(false);
-  const linodesFetch = useFetchOptions({
-    dimensionLabel: 'linode_id',
-    type: 'metrics',
-    entities: selectedEntities,
-    regions: [],
-    scope: 'entity',
-    serviceType,
-  });
-
-  const mergedDimensionOptions = React.useMemo(
-    () =>
-      dimensionOptions.map((dim) =>
-        dim.dimension_label === 'linode_id'
-          ? { ...dim, values: linodesFetch.values.map((lin) => lin.value) }
-          : dim
-      ),
-    [dimensionOptions, linodesFetch.values]
-  );
-
-  const filteredSelections = selectedDimensions?.length
-    ? selectedDimensions.filter((filter) =>
-        isValidFilter(filter, mergedDimensionOptions)
-      )
-    : [];
 
   const handleChangeInSelection = (
     selectedValue: MetricsDimensionFilter[],
@@ -95,21 +69,21 @@ export const CloudPulseDimensionFilterSelect = (
         <IconButton
           aria-label="Widget Dimension Filter"
           color="inherit"
-          data-qa-selected={filteredSelections?.length}
+          data-qa-selected={selectedDimensions?.length}
           data-testid="dimension-filter"
           disabled={dimensionOptions.length === 0}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            color: filteredSelections?.length
+            color: selectedDimensions?.length
               ? theme.color.buttonPrimaryHover
               : 'inherit',
             padding: 0,
           })}
         >
           <CloudPulseDimensionFilterIconWithBadge
-            count={filteredSelections?.length ?? 0}
+            count={selectedDimensions?.length ?? 0}
           />
         </IconButton>
       </CloudPulseTooltip>
@@ -119,7 +93,7 @@ export const CloudPulseDimensionFilterSelect = (
         handleSelectionChange={handleChangeInSelection}
         onClose={() => setOpen(false)}
         open={open}
-        selectedDimensions={filteredSelections}
+        selectedDimensions={selectedDimensions}
         selectedEntities={selectedEntities}
         serviceType={serviceType}
       />

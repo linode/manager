@@ -7,6 +7,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
+import { useFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
 import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
@@ -24,7 +25,10 @@ import {
 } from '../Utils/FilterBuilder';
 import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
-import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
+import {
+  convertStringToCamelCasesWithSpaces,
+  isValidFilter,
+} from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
@@ -178,9 +182,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     MetricsDimensionFilter[] | undefined
   >([
     {
-      dimension_label: 'linode_id',
+      dimension_label: 'protocol',
       operator: 'eq',
-      value: '25391867',
+      value: 'tcp',
     },
   ]);
 
@@ -191,17 +195,49 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
+  const linodesFetch = useFetchOptions({
+    dimensionLabel: 'linode_id',
+    type: 'metrics',
+    entities: entityIds,
+    regions: [],
+    scope: 'entity',
+    serviceType,
+  });
+
+  const mergedDimensionOptions = React.useMemo(
+    () =>
+      availableMetrics?.dimensions?.map((dim) =>
+        dim.dimension_label === 'linode_id'
+          ? { ...dim, values: linodesFetch.values.map((lin) => lin.value) }
+          : dim
+      ),
+    [availableMetrics?.dimensions, linodesFetch.values]
+  );
+
+  const filteredSelections = React.useMemo(
+    () =>
+      dimensionFilters?.length
+        ? dimensionFilters.filter((filter) =>
+            isValidFilter(filter, mergedDimensionOptions ?? [])
+          )
+        : [],
+    [dimensionFilters, mergedDimensionOptions]
+  );
   const filters: Filters[] | undefined = React.useMemo(() => {
     return additionalFilters?.length ||
       widget?.filters?.length ||
       dimensionFilters?.length
       ? [
           ...constructAdditionalRequestFilters(additionalFilters ?? []),
-          ...(widget.filters ?? []),
-          ...(constructWidgetDimensionFilters(dimensionFilters ?? []) ?? []),
+          ...(constructWidgetDimensionFilters(filteredSelections) ?? []),
         ]
       : undefined;
-  }, [additionalFilters, widget, dimensionFilters]);
+  }, [
+    additionalFilters,
+    widget?.filters?.length,
+    dimensionFilters?.length,
+    filteredSelections,
+  ]);
 
   /**
    *
@@ -404,7 +440,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   dimensionOptions={filteredDimensions ?? []}
                   drawerLabel={availableMetrics?.label ?? ''}
                   handleSelectionChange={setDimensionFilters}
-                  selectedDimensions={dimensionFilters}
+                  selectedDimensions={filteredSelections}
                   selectedEntities={entityIds}
                   serviceType={serviceType}
                 />
