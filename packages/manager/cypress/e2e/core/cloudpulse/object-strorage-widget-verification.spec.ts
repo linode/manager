@@ -195,6 +195,7 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
       region: mockRegion.id,
       s3_endpoint: 'endpoint_type-E2-us-sea-1.linodeobjects.com',
       label: 'bucket-1',
+      endpoint_type: 'E1',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-2',
@@ -202,6 +203,7 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
       region: mockRegion.id,
       s3_endpoint: 'endpoint_type-E2-us-sea-2.linodeobjects.com',
       label: 'bucket-2',
+      endpoint_type: 'E2',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-3',
@@ -209,6 +211,7 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
       region: mockRegion.id,
       s3_endpoint: 'endpoint_type-E3-us-sea-3.linodeobjects.com',
       label: 'bucket-3',
+      endpoint_type: 'E3',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-4',
@@ -216,13 +219,15 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
       region: mockRegion.id,
       s3_endpoint: 'endpoint_type-E2-us-sea-4.linodeobjects.com',
       label: 'bucket-4',
+      endpoint_type: 'E2',
     }),
     objectStorageBucketFactory.build({
       cluster: 'us-ord-5',
       hostname: 'bucket-5.us-ord-5.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'endpoint_type-E1-us-sea-5.linodeobjects.com',
+      s3_endpoint: 'endpoint_type-E0-us-sea-5.linodeobjects.com',
       label: 'bucket-5',
+      endpoint_type: 'E0',
     }),
   ];
 
@@ -316,14 +321,14 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Endpoints')
       .should('be.visible')
-      .type('endpoint_type-E2-us-sea-3.linodeobjects.com{enter}');
+      .type('endpoint_type-E2-us-sea-2.linodeobjects.com{enter}');
 
     ui.autocomplete.findByLabel('Endpoints').click();
 
     ui.autocomplete
       .findByLabel('Buckets')
       .should('be.visible')
-      .type('endpoint_type-E3-us-sea-3.linodeobjects.com{enter}');
+      .type('bucket-2.us-ord-2.linodeobjects.com{enter}');
 
     ui.autocomplete.findByLabel('Buckets').click();
 
