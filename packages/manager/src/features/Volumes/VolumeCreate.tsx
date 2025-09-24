@@ -170,22 +170,6 @@ export const VolumeCreate = () => {
       )
       .map((thisRegion) => thisRegion.id) ?? [];
 
-  const renderSelectTooltip = (tooltipText: string) => {
-    return (
-      <TooltipIcon
-        classes={{ popper: classes.tooltip }}
-        status="info"
-        sxTooltipIcon={{
-          marginBottom: '6px',
-          marginLeft: theme.spacing(),
-          padding: 0,
-        }}
-        text={tooltipText}
-        tooltipPosition="right"
-      />
-    );
-  };
-
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -426,12 +410,10 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(e, region) => handleRegionChange(region)}
                 regions={regions ?? []}
+                tooltipText="Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region."
                 value={values.region}
                 width={400}
               />
-              {renderSelectTooltip(
-                'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
-              )}
             </Box>
             <Box
               alignItems="baseline"
@@ -472,9 +454,12 @@ export const VolumeCreate = () => {
                     }}
                     value={values.linode_id}
                   />
-                  {renderSelectTooltip(
-                    'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
-                  )}
+                  <TooltipIcon
+                    placement="right"
+                    status="info"
+                    sxTooltipIcon={{ position: 'relative', top: 4 }}
+                    text="If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation."
+                  />
                 </Box>
                 {shouldDisplayClientLibraryCopy &&
                   values.encryption === 'enabled' && (

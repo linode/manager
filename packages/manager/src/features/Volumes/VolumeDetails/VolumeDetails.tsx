@@ -36,6 +36,13 @@ export const VolumeDetails = () => {
     return <CircleProgress />;
   }
 
+  const navigateToVolumes = () => {
+    navigate({
+      search: (prev) => prev,
+      to: '/volumes',
+    });
+  };
+
   const navigateToVolumeSummary = () => {
     navigate({
       search: (prev) => prev,
@@ -62,7 +69,10 @@ export const VolumeDetails = () => {
         </React.Suspense>
       </Tabs>
 
-      <VolumeDrawers onCloseHandler={navigateToVolumeSummary} />
+      <VolumeDrawers
+        onCloseHandler={navigateToVolumeSummary}
+        onDeleteSuccessHandler={navigateToVolumes}
+      />
     </>
   );
 };
