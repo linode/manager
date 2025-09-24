@@ -76,9 +76,10 @@ interface FilterRendererProps {
   handleFilterChange: (
     engineType: string | undefined,
     type: AlertAdditionalFilterKey
-  ) => void /**
+  ) => void;
+  /**
    * Callback for publishing the IDs of the selected regions.
-   */;
+   */
   handleFilteredRegionsChange: (regions: string[]) => void;
   /**
    * The regions to be displayed according to the resources associated with alerts
