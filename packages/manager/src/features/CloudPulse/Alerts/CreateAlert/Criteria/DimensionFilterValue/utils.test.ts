@@ -9,6 +9,7 @@ import {
   getStaticOptions,
   handleValueChange,
   resolveSelectedValues,
+  scopeBasedFilteredBuckets,
 } from './utils';
 
 import type { Linode } from '@linode/api-v4';
@@ -187,6 +188,96 @@ describe('Utils', () => {
           value: 'us-west',
         },
       ]);
+    });
+  });
+
+  describe('scopeBasedFilteredBuckets', () => {
+    const buckets: CloudPulseResources[] = [
+      { label: 'bucket-1', id: 'bucket-1', region: 'us-east' },
+      { label: 'bucket-2', id: 'bucket-2', region: 'us-west' },
+      { label: 'bucket-3', id: 'bucket-3', region: 'eu-central' },
+    ];
+
+    it('returns all buckets for account scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'account',
+        buckets,
+      });
+      expect(result).toEqual(buckets);
+    });
+
+    it('filters buckets by entity IDs for entity scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'entity',
+        buckets,
+        entities: ['bucket-1', 'bucket-3'],
+      });
+      expect(result).toEqual([
+        { id: 'bucket-1', label: 'bucket-1', region: 'us-east' },
+        { id: 'bucket-3', label: 'bucket-3', region: 'eu-central' },
+      ]);
+    });
+
+    it('returns empty array if no entities match for entity scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'entity',
+        buckets,
+        entities: ['bucket-99'],
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('returns empty array if entities is undefined for entity scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'entity',
+        buckets,
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('filters buckets by region IDs for region scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'region',
+        buckets,
+        selectedRegions: ['us-east', 'eu-central'],
+      });
+      expect(result).toEqual([
+        { id: 'bucket-1', label: 'bucket-1', region: 'us-east' },
+        { id: 'bucket-3', label: 'bucket-3', region: 'eu-central' },
+      ]);
+    });
+
+    it('returns empty array if no regions match for region scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'region',
+        buckets,
+        selectedRegions: ['ap-south'],
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('returns empty array if selectedRegions is undefined for region scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: 'region',
+        buckets,
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('returns all buckets for null scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: null,
+        buckets,
+      });
+      expect(result).toEqual(buckets);
+    });
+
+    it('returns all buckets for unrecognized scope', () => {
+      const result = scopeBasedFilteredBuckets({
+        scope: null,
+        buckets,
+      });
+      expect(result).toEqual(buckets);
     });
   });
 });

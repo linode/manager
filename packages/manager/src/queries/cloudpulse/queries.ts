@@ -132,8 +132,8 @@ export const queryFactory = createQueryKeys(key, {
         return {
           queryFn: () => getAllBuckets(),
           queryKey: [
-            objectStorageQueries.buckets.queryKey,
-            objectStorageQueries.endpoints.queryKey,
+            ...objectStorageQueries.endpoints.queryKey,
+            objectStorageQueries.buckets.queryKey[1],
           ],
         };
       case 'volumes':
