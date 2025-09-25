@@ -5,7 +5,6 @@ import {
 } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
-// import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import {
   mockGetRegionAvailability,
   mockGetRegions,
@@ -195,12 +194,6 @@ xdescribe('smoketest for Nvidia blackwell GPUs in kubernetes/create page', () =>
       mockAppendFeatureFlags({
         kubernetesBlackwellPlans: false,
       }).as('getFeatureFlags');
-      // const linodePayload = createLinodeRequestFactory.build({
-      //   booted: false,
-      //   label: randomLabel(),
-      //   region: mockRegion.id,
-      //   type: 'g6-nanode-1',
-      // });
 
       cy.visitWithLogin('/kubernetes/create');
       cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
@@ -236,12 +229,6 @@ xdescribe('smoketest for Nvidia blackwell GPUs in kubernetes/create page', () =>
       mockAppendFeatureFlags({
         kubernetesBlackwellPlans: true,
       }).as('getFeatureFlags');
-      // const linodePayload = createLinodeRequestFactory.build({
-      //   booted: false,
-      //   label: randomLabel(),
-      //   region: mockRegion.id,
-      //   type: 'g6-nanode-1',
-      // });
 
       cy.visitWithLogin('/kubernetes/create');
       cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
