@@ -15,6 +15,7 @@ describe('AlertsResourcesFilterRenderer', () => {
       handleFilterChange: handleFilterChangeMock,
       handleFilteredRegionsChange: handleFilterChangeMock,
       regionOptions: [],
+      endpointOptions: [],
       tagOptions: [],
     });
     const enginePropKeys = Object.keys(engineProps);
@@ -36,6 +37,7 @@ describe('AlertsResourcesFilterRenderer', () => {
       filterKey: 'region',
       handleFilterChange: handleFilterChangeMock,
       handleFilteredRegionsChange: handleFilterChangeMock,
+      endpointOptions: [],
       regionOptions: [],
       tagOptions: [],
     });
