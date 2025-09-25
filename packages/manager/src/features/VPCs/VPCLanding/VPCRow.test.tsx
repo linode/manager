@@ -25,11 +25,11 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 }));
 
 describe('VPC Table Row', () => {
-  it('should render a VPC row', () => {
+  it('should render a VPC row', async () => {
     const vpc = vpcFactory.build({ id: 24, subnets: [subnetFactory.build()] });
     resizeScreenSize(1600);
 
-    const { getByText } = renderWithTheme(
+    const { getByText, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={vi.fn()}
@@ -40,6 +40,8 @@ describe('VPC Table Row', () => {
       )
     );
 
+    const actionMenu = getByLabelText(`Action menu for VPC ${vpc.label}`);
+    await userEvent.click(actionMenu);
     // Check to see if the row rendered some data
     expect(getByText(vpc.label)).toBeVisible();
     expect(getByText(vpc.id)).toBeVisible();
@@ -52,7 +54,7 @@ describe('VPC Table Row', () => {
   it('should have a delete button that calls the provided callback when clicked', async () => {
     const vpc = vpcFactory.build();
     const handleDelete = vi.fn();
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={handleDelete}
@@ -62,6 +64,9 @@ describe('VPC Table Row', () => {
         />
       )
     );
+    const actionMenu = getByLabelText(`Action menu for VPC ${vpc.label}`);
+    await userEvent.click(actionMenu);
+
     const deleteBtn = getByTestId('Delete');
     await userEvent.click(deleteBtn);
     expect(handleDelete).toHaveBeenCalled();
@@ -70,7 +75,7 @@ describe('VPC Table Row', () => {
   it('should have an edit button that calls the provided callback when clicked', async () => {
     const vpc = vpcFactory.build();
     const handleEdit = vi.fn();
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={vi.fn()}
@@ -80,6 +85,9 @@ describe('VPC Table Row', () => {
         />
       )
     );
+    const actionMenu = getByLabelText(`Action menu for VPC ${vpc.label}`);
+    await userEvent.click(actionMenu);
+
     const editButton = getByTestId('Edit');
     await userEvent.click(editButton);
     expect(handleEdit).toHaveBeenCalled();
@@ -94,7 +102,7 @@ describe('VPC Table Row', () => {
     });
     const vpc = vpcFactory.build();
     const handleEdit = vi.fn();
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={vi.fn()}
@@ -104,10 +112,13 @@ describe('VPC Table Row', () => {
         />
       )
     );
+    const actionMenu = getByLabelText(`Action menu for VPC ${vpc.label}`);
+    await userEvent.click(actionMenu);
+
     const editButton = getByTestId('Edit');
-    expect(editButton).toBeDisabled();
+    expect(editButton).toHaveAttribute('aria-disabled', 'true');
     const deleteButton = getByTestId('Delete');
-    expect(deleteButton).toBeDisabled();
+    expect(deleteButton).toHaveAttribute('aria-disabled', 'true');
   });
   it('should enable "Edit" and "Delete" button if user has "update_vpc" and "delete_vpc" permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
@@ -118,7 +129,7 @@ describe('VPC Table Row', () => {
     });
     const vpc = vpcFactory.build();
     const handleEdit = vi.fn();
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={vi.fn()}
@@ -128,6 +139,9 @@ describe('VPC Table Row', () => {
         />
       )
     );
+    const actionMenu = getByLabelText(`Action menu for VPC ${vpc.label}`);
+    await userEvent.click(actionMenu);
+
     const editButton = getByTestId('Edit');
     expect(editButton).toBeEnabled();
     const deleteButton = getByTestId('Delete');

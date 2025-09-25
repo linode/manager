@@ -1,8 +1,10 @@
 import { useDeleteSubnetMutation } from '@linode/queries';
+import { Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { APIError, Subnet } from '@linode/api-v4';
 
@@ -25,6 +27,9 @@ export const SubnetDeleteDialog = (props: Props) => {
     reset,
   } = useDeleteSubnetMutation(vpcId, subnet?.id ?? -1);
 
+  // TODO: change 'update_vpc' to 'delete_vpc_subnet' once it's available
+  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+
   React.useEffect(() => {
     if (open) {
       reset();
@@ -41,6 +46,7 @@ export const SubnetDeleteDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={!permissions.update_vpc}
       entity={{
         action: 'deletion',
         name: subnet?.label,
@@ -57,6 +63,13 @@ export const SubnetDeleteDialog = (props: Props) => {
       onClose={onClose}
       open={open}
       title={`Delete Subnet ${subnet?.label}`}
-    />
+    >
+      {!permissions.update_vpc && (
+        <Notice
+          text={`You don't have permissions to delete ${subnet?.label}. Please contact an account administrator for details.`}
+          variant="error"
+        />
+      )}
+    </TypeToConfirmDialog>
   );
 };
