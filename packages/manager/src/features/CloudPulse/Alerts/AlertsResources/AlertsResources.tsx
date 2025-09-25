@@ -131,17 +131,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
-    if (serviceType === 'firewall') {
+    if (serviceType === 'firewall' || !supportedRegionIds?.length) {
       return undefined;
     }
 
-    const regionFilter: Filter = supportedRegionIds
-      ? {
-          '+or': supportedRegionIds.map((regionId) => ({
-            region: regionId,
-          })),
-        }
-      : {};
+    const regionFilter: Filter = {
+      '+or': supportedRegionIds?.map((regionId) => ({
+        region: regionId,
+      })),
+    };
 
     // if service type is other than dbaas, return only region filter
     if (serviceType !== 'dbaas') {
@@ -153,7 +151,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
     // If alertType is not 'system' or alertClass is not defined, return only platform filter
     if (alertType !== 'system' || !alertClass) {
-      return platformFilter;
+      return { ...platformFilter, '+and': [regionFilter] };
     }
 
     // Dynamically exclude 'dedicated' if alertClass is 'shared'
@@ -182,7 +180,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isError: isResourcesError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
-    Boolean(serviceType),
+    Boolean(
+      serviceType && (serviceType === 'firewall' || supportedRegionIds?.length)
+    ), // Enable query only if serviceType and supportedRegionIds are available, in case of firewall only serviceType is needed
     serviceType,
     {},
     xFilterToBeApplied

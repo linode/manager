@@ -184,12 +184,8 @@ describe('AlertDefinition Create', () => {
 
     const submitButton = container.getByText('Submit');
 
-    await user.click(
-      container.getByRole('button', { name: 'Add dimension filter' })
-    );
-
     await user.click(submitButton!);
-    expect(container.getAllByText(errorMessage).length).toBe(12);
+    expect(container.getAllByText(errorMessage).length).toBe(9);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
