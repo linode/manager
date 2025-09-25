@@ -25,6 +25,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclpLogs', label: 'ACLP Logs' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
+  { flag: 'aplLkeE', label: 'Akamai App Platform LKE-E' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'blockStorageVolumeLimit', label: 'Block Storage Volume Limit' },
   { flag: 'cloudNat', label: 'Cloud NAT' },
