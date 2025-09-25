@@ -13,6 +13,7 @@ import {
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
   filterUsingDependentFilters,
+  getEndpointsProperties,
   getFilters,
   getTextFilterProperties,
 } from './FilterBuilder';
@@ -45,6 +46,13 @@ const nodeBalancerConfig = FILTER_CONFIG.get(3);
 const firewallConfig = FILTER_CONFIG.get(4);
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas', id: 1 });
+
+const objectStorageBucketDashboard = dashboardFactory.build({
+  service_type: 'objectstorage',
+  id: 6,
+});
+
+const objectStorageBucketConfig = FILTER_CONFIG.get(6);
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
@@ -405,6 +413,38 @@ it('test getTextFilterProperties method for interface_id', () => {
     expect(handleTextFilterChange).toBeDefined();
     expect(label).toEqual(interfaceIdFilterConfig.configuration.name);
     expect(savePreferences).toEqual(true);
+  }
+});
+
+it('test getEndpointsProperties method', () => {
+  const endpointsConfig = objectStorageBucketConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Endpoints'
+  );
+
+  expect(endpointsConfig).toBeDefined();
+
+  if (endpointsConfig) {
+    const endpointsProperties = getEndpointsProperties(
+      {
+        config: endpointsConfig,
+        dashboard: objectStorageBucketDashboard,
+        dependentFilters: { region: 'us-east' },
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+
+    expect(endpointsProperties).toBeDefined();
+    expect(endpointsProperties.label).toEqual(
+      endpointsConfig.configuration.name
+    );
+    expect(endpointsProperties.serviceType).toEqual('objectstorage');
+    expect(endpointsProperties.savePreferences).toEqual(true);
+    expect(endpointsProperties.disabled).toEqual(false);
+    expect(endpointsProperties.handleEndpointsSelection).toBeDefined();
+    expect(endpointsProperties.defaultValue).toEqual(undefined);
+    expect(endpointsProperties.region).toEqual('us-east');
+    expect(endpointsProperties.xFilter).toEqual({ region: 'us-east' });
   }
 });
 
