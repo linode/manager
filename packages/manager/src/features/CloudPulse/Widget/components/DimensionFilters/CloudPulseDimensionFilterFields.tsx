@@ -81,6 +81,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
         if (operation === 'selectOption') {
           setValue(`${name}.dimension_label`, selected.value, {
             shouldValidate: true,
+            shouldDirty: true,
           });
           setValue(`${name}.operator`, fieldValue.operator);
           setValue(`${name}.value`, fieldValue.value);

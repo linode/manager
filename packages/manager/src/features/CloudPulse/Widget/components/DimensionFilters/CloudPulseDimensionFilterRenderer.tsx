@@ -73,18 +73,14 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
         dimension_filters:
           selectedDimensions && selectedDimensions.length > 0
             ? selectedDimensions
-            : [
-                {
-                  dimension_label: null,
-                  operator: null,
-                  value: null,
-                },
-              ],
+            : [],
       },
       mode: 'onBlur',
       resolver: yupResolver(metricDimensionFiltersSchema),
     });
-    const { control, handleSubmit, reset } = formMethods;
+    const { control, handleSubmit, formState, setValue } = formMethods;
+
+    const { isDirty } = formState;
 
     const formRef = React.useRef<HTMLFormElement>(null);
     const handleFormSubmit = handleSubmit(async (values) => {
@@ -110,13 +106,11 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
     React.useEffect(() => {
       // set a single empty filter
       if (clearAllTrigger > 0) {
-        reset({
-          dimension_filters: [
-            { dimension_label: null, operator: null, value: null },
-          ],
+        setValue('dimension_filters', [], {
+          shouldDirty: true,
         });
       }
-    }, [clearAllTrigger, reset]);
+    }, [clearAllTrigger, setValue]);
 
     return (
       <FormProvider {...formMethods}>
@@ -171,6 +165,8 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
             primaryButtonProps={{
               label: 'Apply',
               type: 'submit',
+              disabled:
+                selectedDimensions && selectedDimensions.length > 0 && !isDirty,
             }}
             secondaryButtonProps={{
               label: 'Cancel',
