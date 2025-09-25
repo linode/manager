@@ -36,22 +36,22 @@ export const delegationQueries = createQueryKeys('delegation', {
     username,
     params,
   }: GetDelegatedChildAccountsForUserParams) => ({
-    queryFn: getDelegatedChildAccountsForUser,
+    queryFn: () => getDelegatedChildAccountsForUser({ username, params }),
     queryKey: [username, params],
   }),
   childAccountDelegates: ({
     euuid,
     params,
   }: GetChildAccountDelegatesParams) => ({
-    queryFn: getChildAccountDelegates,
+    queryFn: () => getChildAccountDelegates({ euuid, params }),
     queryKey: [euuid, params],
   }),
   myDelegatedChildAccounts: (params: Params) => ({
-    queryFn: getMyDelegatedChildAccounts,
+    queryFn: () => getMyDelegatedChildAccounts({ params }),
     queryKey: [params],
   }),
   delegatedChildAccount: (euuid: string) => ({
-    queryFn: getDelegatedChildAccount,
+    queryFn: () => getDelegatedChildAccount({ euuid }),
     queryKey: [euuid],
   }),
   defaultAccess: {

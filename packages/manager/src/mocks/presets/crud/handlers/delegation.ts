@@ -31,6 +31,7 @@ export const getChildAccounts = () => [
     > => {
       const childAccounts = await mswDB.getAll('childAccounts');
       const delegations = await mswDB.getAll('delegations');
+      const withUsers = request.url.includes('users=true');
 
       if (!childAccounts || !delegations) {
         return makeNotFoundResponse();
@@ -39,9 +40,11 @@ export const getChildAccounts = () => [
       return makePaginatedResponse({
         data: childAccounts.map((account) => ({
           ...account,
-          users: delegations
-            .filter((d) => d.childAccountEuuid === account.euuid)
-            .map((d) => d.username),
+          users: withUsers
+            ? delegations
+                .filter((d) => d.childAccountEuuid === account.euuid)
+                .map((d) => d.username)
+            : undefined,
         })),
         request,
       });
