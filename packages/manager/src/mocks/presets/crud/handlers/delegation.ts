@@ -185,18 +185,19 @@ export const delegatedChildAccounts = () => [
       const delegations = await mswDB.getAll('delegations');
       const childAccounts = await mswDB.getAll('childAccounts');
 
-      if (!childAccounts || !delegations) {
+      if (!childAccounts) {
         return makeNotFoundResponse();
       }
 
-      const mockCurrentUser = 'mockuser'; // TODO: adjust this logic
-      const userDelegations = delegations.filter(
+      const allDelegations = await mswDB.getAll('delegations');
+      const mockCurrentUser = allDelegations?.[0]?.username || 'mockuser';
+      const userDelegations = delegations?.filter(
         (d) => d.username === mockCurrentUser
       );
 
       const delegatedAccounts = childAccounts
         .filter((account) =>
-          userDelegations.some((d) => d.childAccountEuuid === account.euuid)
+          userDelegations?.some((d) => d.childAccountEuuid === account.euuid)
         )
         .map((childAccount) => ({
           ...accountFactory.build({
