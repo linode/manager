@@ -14,6 +14,7 @@ import type {
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
+import type { CloudPulseEndpointsSelectProps } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
@@ -360,6 +361,39 @@ export const getTextFilterProperties = (
   };
 };
 
+export const getEndpointsProperties = (
+  props: CloudPulseFilterProperties,
+  handleEndpointsChange: (endpoints: string[], savePref?: boolean) => void
+): CloudPulseEndpointsSelectProps => {
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    config,
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+    shouldDisable,
+  } = props;
+  return {
+    defaultValue: preferences?.[config.configuration.filterKey],
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard,
+        preferences
+      ),
+    handleEndpointsSelection: handleEndpointsChange,
+    label,
+    placeholder,
+    serviceType: dashboard.service_type,
+    region: dependentFilters?.[REGION],
+    savePreferences: !isServiceAnalyticsIntegration,
+    xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+  };
+};
+
 /**
  * This function helps in builder the xFilter needed to passed in a apiV4 call
  *
@@ -652,25 +686,28 @@ export const getFilters = (
  * @param dependentFilters The selected dependent filters that will be used to filter the resources
  * @returns The filtered resources
  */
-export const filterUsingDependentFilters = (
-  data?: CloudPulseResources[],
+export function filterUsingDependentFilters<T extends { [key: string]: any }>(
+  data?: T[],
   dependentFilters?: CloudPulseMetricsFilter
-): CloudPulseResources[] | undefined => {
+): T[] | undefined {
   if (!dependentFilters || !data) {
     return data;
   }
 
   return data.filter((resource) => {
     return Object.entries(dependentFilters).every(([key, filterValue]) => {
-      const resourceValue = resource[key as keyof CloudPulseResources];
+      const resourceValue = resource[key as keyof T];
 
       if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
         return filterValue.some((val) => resourceValue.includes(String(val)));
-      } else if (Array.isArray(resourceValue)) {
-        return resourceValue.includes(String(filterValue));
-      } else {
-        return resourceValue === filterValue;
       }
+      if (Array.isArray(resourceValue)) {
+        return resourceValue.includes(String(filterValue));
+      }
+      if (Array.isArray(filterValue)) {
+        return (filterValue as string[]).includes(String(resourceValue));
+      }
+      return resourceValue === filterValue;
     });
   });
 }

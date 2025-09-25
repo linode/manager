@@ -278,7 +278,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
-      url: flags.aclpReadEndpoint!,
+      url: 'https://mr-devcloud.cloud-observability-dev.akadns.net/v2beta/monitor/services/',
     }
   );
   let data: DataSet[] = [];

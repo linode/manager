@@ -527,6 +527,12 @@ describe('filterUsingDependentFilters', () => {
     expect(result).toEqual([mockData[0], mockData[1]]);
   });
 
+  it('should filter when resource value is a string and filter value is an array', () => {
+    const filters = { region: ['us-east', 'us-west'] };
+    const result = filterUsingDependentFilters(mockData, filters);
+    expect(result).toEqual([mockData[0], mockData[1]]);
+  });
+
   it('should return empty array if no resource matches', () => {
     const filters = { region: 'us-central' };
     const result = filterUsingDependentFilters(mockData, filters);
