@@ -185,7 +185,13 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
-                resource_ids={[resource]}
+                resource_ids={
+                  dashboard.service_type !== 'objectstorage'
+                    ? typeof resource === 'number'
+                      ? [resource]
+                      : undefined
+                    : undefined
+                }
               />
             )}
             <GridLegacy

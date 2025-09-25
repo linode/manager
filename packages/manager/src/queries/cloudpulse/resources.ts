@@ -38,12 +38,10 @@ export const useResourcesQuery = (
           resourceType === 'objectstorage'
             ? resource.hostname
             : String(resource.id);
-        const label =
-          resourceType === 'objectstorage' ? resource.hostname : resource.label;
         return {
           engineType: resource.engine,
           id,
-          label,
+          label: resourceType === 'objectstorage' ? id : resource.label,
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
           tags: resource.tags,

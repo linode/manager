@@ -695,17 +695,17 @@ export const getFilters = (
  * @param dependentFilters The selected dependent filters that will be used to filter the resources
  * @returns The filtered resources
  */
-export function filterUsingDependentFilters<T extends { [key: string]: any }>(
-  data?: T[],
+export function filterUsingDependentFilters<CloudPulseResources>(
+  data?: CloudPulseResources[],
   dependentFilters?: CloudPulseMetricsFilter
-): T[] | undefined {
+): CloudPulseResources[] | undefined {
   if (!dependentFilters || !data) {
     return data;
   }
 
   return data.filter((resource) => {
     return Object.entries(dependentFilters).every(([key, filterValue]) => {
-      const resourceValue = resource[key as keyof T];
+      const resourceValue = resource[key as keyof CloudPulseResources];
 
       if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
         return filterValue.some((val) => resourceValue.includes(String(val)));

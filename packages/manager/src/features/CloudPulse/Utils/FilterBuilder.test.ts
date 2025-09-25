@@ -433,18 +433,26 @@ it('test getEndpointsProperties method', () => {
       },
       vi.fn()
     );
+    const {
+      label,
+      serviceType,
+      disabled,
+      savePreferences,
+      handleEndpointsSelection,
+      defaultValue,
+      region,
+      xFilter,
+    } = endpointsProperties;
 
     expect(endpointsProperties).toBeDefined();
-    expect(endpointsProperties.label).toEqual(
-      endpointsConfig.configuration.name
-    );
-    expect(endpointsProperties.serviceType).toEqual('objectstorage');
-    expect(endpointsProperties.savePreferences).toEqual(true);
-    expect(endpointsProperties.disabled).toEqual(false);
-    expect(endpointsProperties.handleEndpointsSelection).toBeDefined();
-    expect(endpointsProperties.defaultValue).toEqual(undefined);
-    expect(endpointsProperties.region).toEqual('us-east');
-    expect(endpointsProperties.xFilter).toEqual({ region: 'us-east' });
+    expect(label).toEqual(endpointsConfig.configuration.name);
+    expect(serviceType).toEqual('objectstorage');
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(handleEndpointsSelection).toBeDefined();
+    expect(defaultValue).toEqual(undefined);
+    expect(region).toEqual('us-east');
+    expect(xFilter).toEqual({ region: 'us-east' });
   }
 });
 
