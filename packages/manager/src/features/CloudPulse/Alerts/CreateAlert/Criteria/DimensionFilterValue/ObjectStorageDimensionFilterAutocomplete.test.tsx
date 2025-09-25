@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React, { use } from 'react';
+import React from 'react';
 import { vi } from 'vitest';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
