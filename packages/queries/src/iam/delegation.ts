@@ -9,6 +9,7 @@ import {
   updateChildAccountDelegates,
   updateDefaultDelegationAccess,
 } from '@linode/api-v4';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -46,10 +47,19 @@ export const delegationQueries = createQueryKeys('delegation', {
     queryFn: () => getChildAccountDelegates({ euuid, params }),
     queryKey: [euuid, params],
   }),
-  myDelegatedChildAccounts: (params: Params) => ({
-    queryFn: () => getMyDelegatedChildAccounts({ params }),
-    queryKey: [params],
-  }),
+  myDelegatedChildAccounts: {
+    contextQueries: {
+      all: (params: Params) => ({
+        queryFn: () => getAllMyDelegatedChildAccounts(params),
+        queryKey: [params],
+      }),
+      paginated: (params: Params) => ({
+        queryFn: () => getMyDelegatedChildAccounts({ params }),
+        queryKey: [params],
+      }),
+    },
+    queryKey: null,
+  },
   delegatedChildAccount: (euuid: string) => ({
     queryFn: () => getDelegatedChildAccount({ euuid }),
     queryKey: [euuid],
@@ -159,7 +169,17 @@ export const useGetMyDelegatedChildAccountsQuery = (
   params: Params,
 ): UseQueryResult<ResourcePage<Account>, APIError[]> => {
   return useQuery({
-    ...delegationQueries.myDelegatedChildAccounts(params),
+    ...delegationQueries.myDelegatedChildAccounts._ctx.paginated(params),
+  });
+};
+
+export const useAllListMyDelegatedChildAccountsQuery = ({
+  params = {},
+  enabled = true,
+}) => {
+  return useQuery({
+    enabled,
+    ...delegationQueries.myDelegatedChildAccounts._ctx.all(params),
   });
 };
 
@@ -231,3 +251,8 @@ export const useUpdateDefaultDelegationAccessQuery = (): UseMutationResult<
     },
   });
 };
+
+const getAllMyDelegatedChildAccounts = (_params: Params = {}) =>
+  getAll<Account>((params) =>
+    getMyDelegatedChildAccounts({ params: { ...params, ..._params } }),
+  )().then((data) => data.data);

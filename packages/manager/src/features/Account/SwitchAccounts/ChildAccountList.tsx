@@ -1,4 +1,7 @@
-import { useChildAccountsInfiniteQuery } from '@linode/queries';
+import {
+  useAllListMyDelegatedChildAccountsQuery,
+  useChildAccountsInfiniteQuery,
+} from '@linode/queries';
 import {
   Box,
   Button,
@@ -12,6 +15,7 @@ import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import type { Filter, UserType } from '@linode/api-v4';
 
@@ -39,6 +43,8 @@ export const ChildAccountList = React.memo(
     searchQuery,
     userType,
   }: ChildAccountListProps) => {
+    const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
     const filter: Filter = {
       ['+order']: 'asc',
       ['+order_by']: 'company',
@@ -65,13 +71,32 @@ export const ChildAccountList = React.memo(
             }
           : undefined,
     });
-    const childAccounts = data?.pages.flatMap((page) => page.data);
+    const {
+      data: allChildAccounts,
+      error: allChildAccountsError,
+      isLoading: allChildAccountsLoading,
+      isRefetching: allChildAccountsIsRefetching,
+      refetch: refetchAllChildAccounts,
+    } = useAllListMyDelegatedChildAccountsQuery({
+      params: {},
+      enabled: isIAMDelegationEnabled,
+    });
+
+    const refetchFn = isIAMDelegationEnabled
+      ? refetchAllChildAccounts
+      : refetchChildAccounts;
+
+    const childAccounts = isIAMDelegationEnabled
+      ? allChildAccounts
+      : data?.pages.flatMap((page) => page.data);
 
     if (
       isInitialLoading ||
       isLoading ||
       isSwitchingChildAccounts ||
-      isRefetching
+      isRefetching ||
+      allChildAccountsLoading ||
+      allChildAccountsIsRefetching
     ) {
       return (
         <Box display="flex" justifyContent="center">
@@ -92,7 +117,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (isError) {
+    if (isError || allChildAccountsError) {
       return (
         <Stack alignItems="center" gap={1} justifyContent="center">
           <ErrorStateCloud />
@@ -102,7 +127,7 @@ export const ChildAccountList = React.memo(
           </Typography>
           <Button
             buttonType="primary"
-            onClick={() => refetchChildAccounts()}
+            onClick={() => refetchFn()}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
