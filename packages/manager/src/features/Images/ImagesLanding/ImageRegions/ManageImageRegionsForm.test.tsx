@@ -25,7 +25,7 @@ describe('ManageImageRegionsDrawer', () => {
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageReplicasForm image={image} onClose={vi.fn()} open={true} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const cancelButton = getByText('Cancel').closest('button');
@@ -62,7 +62,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <ManageImageReplicasForm image={image} onClose={vi.fn()} open={true} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     await findByText('US, Newark, NJ');
@@ -99,7 +99,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <ManageImageReplicasForm image={image} onClose={vi.fn()} open={true} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const saveButton = getByText('Save').closest('button');
@@ -148,7 +148,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText, getByLabelText } = renderWithTheme(
-      <ManageImageReplicasForm image={image} onClose={vi.fn()} open={true} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     // Verify both region labels have been loaded by the API
@@ -176,7 +176,7 @@ describe('ManageImageRegionsDrawer', () => {
   it('should enable the region select if the user has permissions', async () => {
     const image = imageFactory.build();
     const { getByRole } = renderWithTheme(
-      <ManageImageReplicasForm image={image} onClose={vi.fn()} open={true} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
     const select = getByRole('combobox');
     expect(select).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe('ManageImageRegionsDrawer', () => {
     });
     const image = imageFactory.build();
     const { getByRole } = renderWithTheme(
-      <ManageImageReplicasForm image={image} onClose={vi.fn()} open={true} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
     const select = getByRole('combobox');
     expect(select).toBeInTheDocument();

@@ -26,7 +26,6 @@ import type { DisableItemOption } from '@linode/ui';
 interface Props {
   image: Image | undefined;
   onClose: () => void;
-  open: boolean;
 }
 interface Context {
   imageRegions: ImageRegion[] | undefined;
@@ -34,7 +33,7 @@ interface Context {
 }
 
 export const ManageImageReplicasForm = (props: Props) => {
-  const { image, onClose, open } = props;
+  const { image, onClose } = props;
 
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
@@ -51,8 +50,7 @@ export const ManageImageReplicasForm = (props: Props) => {
   const { data: permissions } = usePermissions(
     'image',
     ['replicate_image'],
-    image?.id,
-    open
+    image?.id
   );
 
   const {

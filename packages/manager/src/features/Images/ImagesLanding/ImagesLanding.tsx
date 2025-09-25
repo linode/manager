@@ -557,7 +557,6 @@ export const ImagesLanding = () => {
           <ManageImageReplicasForm
             image={selectedImage}
             onClose={handleCloseDialog}
-            open={params?.action === 'manage-replicas'}
           />
         </Drawer>
         <DeleteImageDialog
