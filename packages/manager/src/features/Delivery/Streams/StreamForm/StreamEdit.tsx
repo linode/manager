@@ -77,7 +77,7 @@ export const StreamEdit = () => {
           : {};
 
       const streamsDestinationIds = stream.destinations.map(({ id }) => id);
-      const destination = destinations?.data?.find(
+      const destination = destinations?.find(
         ({ id }) => id === streamsDestinationIds[0]
       );
 

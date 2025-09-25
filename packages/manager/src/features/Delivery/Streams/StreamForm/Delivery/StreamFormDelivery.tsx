@@ -49,13 +49,13 @@ export const StreamFormDelivery = () => {
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
 
-  const destinationNameOptions: DestinationName[] = (
-    destinations?.data || []
-  ).map(({ id, label, type }) => ({
-    id,
-    label,
-    type,
-  }));
+  const destinationNameOptions: DestinationName[] = (destinations || []).map(
+    ({ id, label, type }) => ({
+      id,
+      label,
+      type,
+    })
+  );
 
   const selectedDestinationType = useWatch({
     control,
@@ -70,7 +70,7 @@ export const StreamFormDelivery = () => {
   const destinationNameFilterOptions = createFilterOptions<DestinationName>();
 
   const findDestination = (id: number) =>
-    destinations?.data?.find((destination) => destination.id === id);
+    destinations?.find((destination) => destination.id === id);
 
   const getDestinationForm = () => (
     <>
