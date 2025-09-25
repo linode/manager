@@ -11,7 +11,6 @@ import {
   getKubernetesClusters,
   getKubernetesTieredVersions,
   getKubernetesTypes,
-  getKubernetesVersions,
   getNodePool,
   getNodePools,
   recycleAllNodes,
@@ -42,7 +41,6 @@ import type {
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesTieredVersion,
-  KubernetesVersion,
   UpdateNodePoolData,
 } from '@linode/api-v4';
 import type {
@@ -162,10 +160,6 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   }),
   types: {
     queryFn: () => getAllKubernetesTypes(),
-    queryKey: null,
-  },
-  versions: {
-    queryFn: () => getAllKubernetesVersions(),
     queryKey: null,
   },
 });
@@ -417,12 +411,6 @@ export const useKubernetesDashboardQuery = (
   });
 };
 
-export const useKubernetesVersionQuery = () =>
-  useQuery<KubernetesVersion[], APIError[]>({
-    ...kubernetesQueries.versions,
-    ...queryPresets.oneTimeFetch,
-  });
-
 export const useKubernetesTieredVersionsQuery = (
   tier: string,
   enabled = true
@@ -481,11 +469,6 @@ const getAllNodePoolsForCluster = (clusterId: number) =>
 const getAllKubernetesClusters = () =>
   getAll<KubernetesCluster>((params, filters) =>
     getKubernetesClusters(params, filters)
-  )().then((data) => data.data);
-
-const getAllKubernetesVersions = () =>
-  getAll<KubernetesVersion>((params, filters) =>
-    getKubernetesVersions(params, filters)
   )().then((data) => data.data);
 
 const getAllKubernetesTieredVersions = (tier: string) =>

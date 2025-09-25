@@ -21,12 +21,10 @@ import {
   dedicatedNodeCount,
   dedicatedType,
   latestEnterpriseTierKubernetesVersion,
-  latestKubernetesVersion,
   mockedLKEClusterTypes,
   mockedLKEEnterprisePrices,
   mockTieredEnterpriseVersions,
   mockTieredStandardVersions,
-  mockTieredVersions,
   nanodeNodeCount,
   nanodeType,
 } from 'support/constants/lke';
@@ -43,7 +41,6 @@ import {
   mockGetClusters,
   mockGetControlPlaneACL,
   mockGetDashboardUrl,
-  mockGetKubernetesVersions,
   mockGetLKEClusterTypes,
   mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
@@ -184,7 +181,6 @@ describe('LKE Cluster Creation', () => {
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
     mockGetLKEClusterTypes(mockedLKEClusterPrices).as('getLKEClusterTypes');
     mockGetClusters([mockedLKECluster]).as('getClusters');
-    mockGetKubernetesVersions([clusterVersion]).as('getKubernetesVersions');
 
     cy.visitWithLogin('/kubernetes/clusters');
 
@@ -662,7 +658,10 @@ describe('LKE Cluster Creation with ACL', () => {
 
   describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
-      mockGetKubernetesVersions([clusterVersion]).as('getLKEVersions');
+      mockGetTieredKubernetesVersions(
+        'standard',
+        mockTieredStandardVersions
+      ).as('getLKEVersions');
       mockGetRegions([mockRegion]).as('getRegions');
       mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
       mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
@@ -935,10 +934,12 @@ describe('LKE Cluster Creation with ACL', () => {
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetKubernetesVersions([latestKubernetesVersion]).as(
-        'getKubernetesVersions'
-      );
+      ]).as('getTieredEnterpriseVersions');
+      mockGetTieredKubernetesVersions(
+        'standard',
+        mockTieredStandardVersions
+      ).as('getTieredStandardVersions');
+
       mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
       mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
         'getLKEEnterpriseClusterTypes'
@@ -969,7 +970,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getKubernetesVersions', '@getTieredKubernetesVersions']);
+      cy.wait(['@getTieredStandardVersions', '@getTieredEnterpriseVersions']);
 
       // Select enterprise tier.
       cy.get(`[data-qa-select-card-heading="LKE Enterprise"]`)
@@ -1320,10 +1321,12 @@ describe('LKE Cluster Creation with LKE-E', () => {
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetKubernetesVersions([latestKubernetesVersion]).as(
-        'getKubernetesVersions'
-      );
+      ]).as('getEnterpriseTieredVersions');
+      mockGetTieredKubernetesVersions(
+        'standard',
+        mockTieredStandardVersions
+      ).as('getStandardTieredVersions');
+
       mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
       mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
         'getLKEEnterpriseClusterTypes'
@@ -1360,8 +1363,8 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       cy.url().should('endWith', '/kubernetes/create');
       cy.wait([
-        '@getKubernetesVersions',
-        '@getTieredKubernetesVersions',
+        '@getEnterpriseTieredVersions',
+        '@getStandardTieredVersions',
         '@getLinodeTypes',
       ]);
 
@@ -1631,7 +1634,6 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     );
-    mockGetKubernetesVersions(mockTieredVersions.map((version) => version.id));
     mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
     mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
   });
