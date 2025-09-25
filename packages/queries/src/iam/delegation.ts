@@ -173,6 +173,14 @@ export const useGetMyDelegatedChildAccountsQuery = (
   });
 };
 
+/**
+ * List all my delegated child accounts (fetches all pages of child accounts where user has view_child_account permission)
+ * - Purpose: Retrieve the full list of child accounts the current caller can manage via delegation, across all pages.
+ * - Scope: Only child accounts where the caller has an active delegate and required view permission; returns all results, not paginated.
+ * - Audience: Callers needing the complete set of accessible accounts for the current user.
+ * - Data: Account[] (limited profile fields) for `GET /iam/delegation/profile/child-accounts` (all pages).
+ * - Usage: Pass `enabled` to control query activation (e.g., only if IAM Delegation is enabled).
+ */
 export const useAllListMyDelegatedChildAccountsQuery = ({
   params = {},
   enabled = true,
@@ -252,6 +260,9 @@ export const useUpdateDefaultDelegationAccessQuery = (): UseMutationResult<
   });
 };
 
+/**
+ * Fetches all my delegated child accounts for the current user (all pages).
+ */
 const getAllMyDelegatedChildAccounts = (_params: Params = {}) =>
   getAll<Account>((params) =>
     getMyDelegatedChildAccounts({ params: { ...params, ..._params } }),
