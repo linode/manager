@@ -1839,10 +1839,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
       expect(nodePools[0]).to.be.an('object');
       expect(nodePools[0]['type']).to.equal(mockPlan.id);
       expect(nodePools[0]['count']).to.equal(3);
-
-      // TODO M3-10590 - Uncomment and adjust according to chosen resolution.
-      // expect(nodePools[0]['update_strategy']).to.be.undefined;
-      // expect(nodePools[0]['firewall_id']).to.be.undefined;
+      expect(nodePools[0]['update_strategy']).to.be.undefined;
+      expect(nodePools[0]['firewall_id']).to.be.undefined;
     });
 
     cy.url().should('endWith', `kubernetes/clusters/${mockCluster.id}/summary`);
