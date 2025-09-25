@@ -190,7 +190,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = useResourcesQuery(
     Boolean(
       serviceType && (serviceType === 'firewall' || supportedRegionIds?.length)
-    ), // Enable query only if serviceType and supportedRegionIds are available
+    ), // Enable query only if serviceType and supportedRegionIds are available, in case of firewall only serviceType is needed
     serviceType,
     {},
     xFilterToBeApplied
