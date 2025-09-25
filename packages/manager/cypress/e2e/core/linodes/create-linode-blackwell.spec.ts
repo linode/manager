@@ -76,6 +76,22 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
     ]).as('getLinodeTypes');
   });
 
+  it('GPU tab not visible if no linode types included in response', function () {
+    mockAppendFeatureFlags({
+      kubernetesBlackwellPlans: true,
+    }).as('getFeatureFlags');
+    // empty array to simulate absent gpu_blackwell_beta tag
+    mockGetLinodeTypes([]).as('getLinodeTypes');
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getRegions', '@getLinodeTypes']);
+
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    ui.regionSelect.find().type(`${this.mockRegion.label}{enter}`);
+    // "GPU" tab not visible
+    ui.tabList.findTabByTitle('GPU').should('not.exist');
+  });
+
   /*
    * Displays all GPUs w/out any filtered
    */
@@ -113,7 +129,7 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
 	- enterprise tier and id includes 'gpu'
  * If visible in table, rows are always enabled
 */
-xdescribe('smoketest for Nvidia blackwell GPUs in kubernetes/create page', () => {
+describe('smoketest for Nvidia blackwell GPUs in kubernetes/create page', () => {
   beforeEach(() => {
     cy.wrap(mockRegion).as('mockRegion');
     mockGetRegions([mockRegion]).as('getRegions');
