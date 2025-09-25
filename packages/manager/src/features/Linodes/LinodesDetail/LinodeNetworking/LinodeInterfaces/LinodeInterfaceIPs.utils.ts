@@ -59,5 +59,20 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
     }
   }
 
+  if (linodeInterface.vpc && linodeInterface.vpc.ipv6) {
+    // VPC IPv6s
+    for (const slaacs of linodeInterface.vpc.ipv6.slaac) {
+      if (slaacs.address) {
+        ips.push(slaacs.address);
+        ips.push(slaacs.range);
+      }
+    }
+
+    // VPC IPv6 Ranges
+    for (const range of linodeInterface.vpc.ipv6.ranges) {
+      ips.push(range.range);
+    }
+  }
+
   return ips;
 }
