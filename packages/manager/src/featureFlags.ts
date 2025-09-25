@@ -182,7 +182,6 @@ export interface Flags {
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
   linodeInterfaces: LinodeInterfacesFlag;
-  lkeEnterprise: LkeEnterpriseFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
