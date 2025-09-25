@@ -150,7 +150,7 @@ describe('LKE Cluster Creation', () => {
     exclude: ['au-mel', 'eu-west', 'id-cgk', 'br-gru'],
   });
   const clusterLabel = randomLabel();
-  const clusterVersion = '1.31';
+  const clusterVersion = mockTieredStandardVersions[0].id;
   const mockedLKECluster = kubernetesClusterFactory.build({
     label: clusterLabel,
     region: clusterRegion.id,
@@ -181,6 +181,9 @@ describe('LKE Cluster Creation', () => {
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
     mockGetLKEClusterTypes(mockedLKEClusterPrices).as('getLKEClusterTypes');
     mockGetClusters([mockedLKECluster]).as('getClusters');
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions).as(
+      'getKubernetesVersions'
+    );
 
     cy.visitWithLogin('/kubernetes/clusters');
 
