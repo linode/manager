@@ -83,6 +83,10 @@ export async function loadDevTools() {
         ...initialContext.childAccounts,
         ...(seedContext?.childAccounts || []),
       ],
+      delegations: [
+        ...initialContext.delegations,
+        ...(seedContext?.delegations || []),
+      ],
       domains: [...initialContext.domains, ...(seedContext?.domains || [])],
       eventQueue: [
         ...initialContext.eventQueue,
