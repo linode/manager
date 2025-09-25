@@ -1,7 +1,9 @@
 import { regionFactory } from '@linode/utilities';
 
 import {
+  getEndpointOptions,
   getFilteredResources,
+  getOfflineRegionFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
   getSupportedRegionIds,
@@ -187,6 +189,7 @@ describe('getFilteredResources', () => {
     const result = getFilteredResources({
       additionalFilters: {
         engineType: 'postgresql',
+        endpoint: undefined,
         tags: undefined,
       },
       data,
@@ -200,6 +203,7 @@ describe('getFilteredResources', () => {
     const result = getFilteredResources({
       additionalFilters: {
         engineType: undefined,
+        endpoint: undefined,
         tags: undefined,
       },
       data,
@@ -225,5 +229,67 @@ describe('getSupportedRegionIds', () => {
   it('should return empty list if regions list empty', () => {
     const result = getSupportedRegionIds([], 'linode');
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('getEndpointOptions', () => {
+  const mockResources: CloudPulseResources[] = [
+    { id: '1', endpoint: 'endpoint-a', region: 'us-east', label: 'r1' },
+    { id: '2', endpoint: 'endpoint-b', region: 'us-east', label: 'r2' },
+    { id: '3', endpoint: 'endpoint-a', region: 'us-west', label: 'r3' },
+    { id: '4', endpoint: undefined, region: 'us-west', label: 'r4' },
+  ];
+
+  it('returns all unique endpoints when isAdditionOrDeletionNeeded = true', () => {
+    const result = getEndpointOptions(mockResources, true);
+    expect(result).toEqual(['endpoint-a', 'endpoint-b']);
+  });
+
+  it('returns endpoints only for matching resourceIds when flag = false', () => {
+    const result = getEndpointOptions(mockResources, false, ['2', '4']);
+    expect(result).toEqual(['endpoint-b']);
+  });
+
+  it('returns empty array when no data provided', () => {
+    const result = getEndpointOptions(undefined, true);
+    expect(result).toEqual([]);
+  });
+
+  it('returns empty array when no resourceIds and flag = false', () => {
+    const result = getEndpointOptions(mockResources, false, []);
+    expect(result).toEqual([]);
+  });
+});
+
+describe('getOfflineRegionFilteredResources', () => {
+  const mockResources: CloudPulseResources[] = [
+    { id: '1', region: 'us-east', label: 'r1' },
+    { id: '2', region: 'us-west', label: 'r2' },
+    { id: '3', region: '', label: 'r3' },
+  ];
+
+  it('filters resources based on supportedRegionIds', () => {
+    const result = getOfflineRegionFilteredResources(mockResources, [
+      'us-east',
+    ]);
+    expect(result).toEqual([{ id: '1', region: 'us-east', label: 'r1' }]);
+  });
+
+  it('returns empty array if no supported regions match', () => {
+    const result = getOfflineRegionFilteredResources(mockResources, [
+      'eu-central',
+    ]);
+    expect(result).toEqual([]);
+  });
+
+  it('excludes resources with undefined region', () => {
+    const result = getOfflineRegionFilteredResources(mockResources, [
+      'us-east',
+      'us-west',
+    ]);
+    expect(result).toEqual([
+      { id: '1', region: 'us-east', label: 'r1' },
+      { id: '2', region: 'us-west', label: 'r2' },
+    ]);
   });
 });
