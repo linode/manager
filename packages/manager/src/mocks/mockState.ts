@@ -25,6 +25,7 @@ export const emptyStore: MockState = {
   childAccounts: [],
   cloudnats: [],
   configInterfaces: [],
+  delegations: [],
   destinations: [],
   domainRecords: [],
   domains: [],

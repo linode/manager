@@ -139,6 +139,7 @@ export type MockPresetCrudGroup = {
     | 'VPCs';
 };
 export type MockPresetCrudId =
+  | 'child-accounts-for-user:crud'
   | 'child-accounts:crud'
   | 'cloudnats:crud'
   | 'delivery:crud'
@@ -162,6 +163,12 @@ export interface MockPresetCrud extends MockPresetBase {
 
 export type MockHandler = (mockState: MockState) => HttpHandler[];
 
+interface Delegation {
+  childAccountEuuid: string;
+  id: number;
+  username: string;
+}
+
 /**
  * Stateful data shared among mocks.
  */
@@ -169,6 +176,7 @@ export interface MockState {
   childAccounts: ChildAccount[];
   cloudnats: CloudNAT[];
   configInterfaces: [number, Interface][]; // number is Config ID
+  delegations: Delegation[];
   destinations: Destination[];
   domainRecords: DomainRecord[];
   domains: Domain[];
