@@ -168,6 +168,7 @@ export interface Flags {
   databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseVpc: boolean;
+  databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
