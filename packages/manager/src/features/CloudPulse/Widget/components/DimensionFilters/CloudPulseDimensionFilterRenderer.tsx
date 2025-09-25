@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ActionsPanel, Box, Button, Stack } from '@linode/ui';
+import { ActionsPanel, Box, Button, Divider, Stack } from '@linode/ui';
 import React from 'react';
 import {
   FormProvider,
@@ -122,18 +122,29 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       <FormProvider {...formMethods}>
         <form onSubmit={handleFormSubmit} ref={formRef}>
           <Box display="flex" flexDirection="column" gap={1}>
-            <Stack gap={1}>
+            <Stack gap={1.25}>
               {fields?.length > 0 &&
                 fields.map((field, index) => (
-                  <CloudPulseDimensionFilterFields
-                    dataFieldDisabled={dataFieldDisabled}
-                    dimensionOptions={dimensionOptions}
-                    key={field.id}
-                    name={`dimension_filters.${index}`}
-                    onFilterDelete={() => remove(index)}
-                    selectedEntities={selectedEntities}
-                    serviceType={serviceType}
-                  />
+                  <>
+                    <CloudPulseDimensionFilterFields
+                      dataFieldDisabled={dataFieldDisabled}
+                      dimensionOptions={dimensionOptions}
+                      key={field.id}
+                      name={`dimension_filters.${index}`}
+                      onFilterDelete={() => remove(index)}
+                      selectedEntities={selectedEntities}
+                      serviceType={serviceType}
+                    />
+                    <Divider
+                      sx={(theme) => ({
+                        display: 'none',
+                        [theme.breakpoints.down('md')]: {
+                          display:
+                            index === fields.length - 1 ? 'none' : 'flex',
+                        },
+                      })}
+                    />
+                  </>
                 ))}
             </Stack>
             <Button

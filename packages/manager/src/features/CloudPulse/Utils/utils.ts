@@ -414,6 +414,8 @@ export const isValidFilter = (
   );
   if (!dimension) return false;
 
+  if (!dimension.values) return true; // static value dimensions
+
   // allow pattern operators without value check
   if (operator === 'endswith' || operator === 'startswith') return true;
 

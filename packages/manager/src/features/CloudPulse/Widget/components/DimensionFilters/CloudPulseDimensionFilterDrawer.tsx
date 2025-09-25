@@ -1,4 +1,4 @@
-import { Drawer, Stack, Typography } from '@linode/ui';
+import { Button, Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { CloudPulseDimensionFilterRenderer } from './CloudPulseDimensionFilterRenderer';
@@ -80,7 +80,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
 
     return (
       <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
-        <Stack gap={4}>
+        <Stack gap={1.5}>
           <Stack direction="row" justifyContent="space-between">
             <Typography
               data-qa-id="filter-drawer-subtitle"
@@ -89,7 +89,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
             >
               {drawerLabel}
             </Typography>
-            <Typography
+            <Button
               component="a"
               data-qa-id="filter-drawer-clear-all"
               onClick={() => {
@@ -100,10 +100,10 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
                 font: theme.font.normal,
                 color: theme.textColors.linkActiveLight,
               })}
-              variant="h3"
+              variant="text"
             >
               Clear All
-            </Typography>
+            </Button>
           </Stack>
           <Typography
             data-qa-id="filter-drawer-selection-title"

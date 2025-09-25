@@ -209,7 +209,15 @@ export const CloudPulseDimensionFilterFields = React.memo(
           />
         </GridLegacy>
         <GridLegacy item>
-          <Box alignContent="flex-start" mt={6}>
+          <Box
+            alignContent="flex-start"
+            sx={(theme) => ({
+              marginTop: 6,
+              [theme.breakpoints.down('md')]: {
+                marginTop: 3,
+              },
+            })}
+          >
             <ClearIconButton handleClick={onFilterDelete} />
           </Box>
         </GridLegacy>
