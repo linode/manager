@@ -189,21 +189,27 @@ export function usePermissions<
   const useLAPermissions = isIAMEnabled && !isIAMBeta;
   const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
 
-  const { data: grants } = useGrants(
+  const { data: grants, isLoading: isGrantsLoading } = useGrants(
     (!isIAMEnabled || !shouldUsePermissionMap) && enabled
   );
 
-  const { data: userAccountPermissions, ...restAccountPermissions } =
-    useUserAccountPermissions(
-      shouldUsePermissionMap && accessType === 'account' && enabled
-    );
+  const {
+    data: userAccountPermissions,
+    isLoading: isUserAccountPermissionsLoading,
+    ...restAccountPermissions
+  } = useUserAccountPermissions(
+    shouldUsePermissionMap && accessType === 'account' && enabled
+  );
 
-  const { data: userEntityPermissions, ...restEntityPermissions } =
-    useUserEntityPermissions(
-      accessType,
-      _entityId!,
-      shouldUsePermissionMap && enabled
-    );
+  const {
+    data: userEntityPermissions,
+    isLoading: isUserEntityPermissionsLoading,
+    ...restEntityPermissions
+  } = useUserEntityPermissions(
+    accessType,
+    _entityId!,
+    shouldUsePermissionMap && enabled
+  );
 
   const usersPermissions =
     accessType === 'account' ? userAccountPermissions : userEntityPermissions;
@@ -224,6 +230,10 @@ export function usePermissions<
 
   return {
     data: permissionMap,
+    isLoading:
+      isGrantsLoading ||
+      isUserAccountPermissionsLoading ||
+      isUserEntityPermissionsLoading,
     ...restAccountPermissions,
     ...restEntityPermissions,
   } as const;

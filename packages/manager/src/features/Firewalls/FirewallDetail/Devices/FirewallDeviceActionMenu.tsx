@@ -21,14 +21,18 @@ export const FirewallDeviceActionMenu = React.memo(
 
     const { type } = device.entity;
 
-    const { data: linodePermissions } = usePermissions(
-      'linode',
-      ['update_linode'],
-      device?.entity.id,
-      type !== 'nodebalancer'
-    );
+    const { data: linodePermissions, isLoading: isLinodePermissionsLoading } =
+      usePermissions(
+        'linode',
+        ['update_linode'],
+        device?.entity.id,
+        type !== 'nodebalancer'
+      );
 
-    const { data: nodebalancerPermissions } = usePermissions(
+    const {
+      data: nodebalancerPermissions,
+      isLoading: isNodebalancerPermissionsLoading,
+    } = usePermissions(
       'nodebalancer',
       ['update_nodebalancer'],
       device?.entity.id,
@@ -40,11 +44,17 @@ export const FirewallDeviceActionMenu = React.memo(
         ? !nodebalancerPermissions?.update_nodebalancer
         : !linodePermissions?.update_linode;
 
+    const isPermissionsLoading =
+      type === 'nodebalancer'
+        ? isNodebalancerPermissionsLoading
+        : isLinodePermissionsLoading;
+
     return (
       <InlineMenuAction
         actionText="Remove"
         disabled={disabled || disabledDueToPermissions}
         key="Remove"
+        loading={isPermissionsLoading}
         onClick={() => handleRemoveDevice(device)}
         tooltip={
           disabledDueToPermissions

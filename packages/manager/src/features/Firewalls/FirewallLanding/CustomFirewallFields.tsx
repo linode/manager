@@ -2,6 +2,7 @@ import { useAllFirewallsQuery, useAllLinodesQuery } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
+  CircleProgress,
   FormControlLabel,
   Notice,
   Radio,
@@ -57,10 +58,13 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
 
   const { data: firewalls } = useAllFirewallsQuery(open);
 
-  const { data: permissableLinodes, hasFiltered: hasFilteredLinodes } =
-    useQueryWithPermissions<Linode>(useAllLinodesQuery(), 'linode', [
-      'apply_linode_firewalls',
-    ]);
+  const {
+    data: permissableLinodes,
+    hasFiltered: hasFilteredLinodes,
+    isLoading: isLoadingLinodes,
+  } = useQueryWithPermissions<Linode>(useAllLinodesQuery(), 'linode', [
+    'apply_linode_firewalls',
+  ]);
 
   const deviceSelectGuidance = hasFilteredLinodes
     ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
@@ -105,6 +109,10 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
       Learn more
     </Link>
   );
+
+  if (isLoadingLinodes) {
+    return <CircleProgress />;
+  }
 
   return (
     <>
