@@ -1,4 +1,8 @@
-import { getRegion, getRegionAvailability } from '@linode/api-v4/lib/regions';
+import {
+  getRegion,
+  getRegionAvailability,
+  getRegionVPCAvailability,
+} from '@linode/api-v4/lib/regions';
 import { getNewRegionLabel } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -7,9 +11,14 @@ import { queryPresets } from '../base';
 import {
   getAllRegionAvailabilitiesRequest,
   getAllRegionsRequest,
+  getAllRegionVPCAvailabilitiesRequest,
 } from './requests';
 
-import type { Region, RegionAvailability } from '@linode/api-v4/lib/regions';
+import type {
+  Region,
+  RegionAvailability,
+  RegionVPCAvailability,
+} from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const regionQueries = createQueryKeys('regions', {
@@ -23,6 +32,19 @@ export const regionQueries = createQueryKeys('regions', {
         queryFn: () => getRegionAvailability(regionId),
         queryKey: [regionId],
       }),
+      vpc: {
+        contextQueries: {
+          all: {
+            queryFn: getAllRegionVPCAvailabilitiesRequest,
+            queryKey: null,
+          },
+          region: (regionId: string) => ({
+            queryFn: () => getRegionVPCAvailability(regionId),
+            queryKey: [regionId],
+          }),
+        },
+        queryKey: null,
+      },
     },
     queryKey: null,
   },
@@ -77,6 +99,22 @@ export const useRegionAvailabilityQuery = (
 ) => {
   return useQuery<RegionAvailability[], APIError[]>({
     ...regionQueries.availability._ctx.region(regionId),
+    enabled,
+  });
+};
+
+export const useRegionsVPCAvailabilitiesQuery = (enabled: boolean = false) =>
+  useQuery<RegionVPCAvailability[], APIError[]>({
+    ...regionQueries.availability._ctx.vpc._ctx.all,
+    enabled,
+  });
+
+export const useRegionVPCAvailabilityQuery = (
+  regionId: string,
+  enabled: boolean = false,
+) => {
+  return useQuery<RegionVPCAvailability, APIError[]>({
+    ...regionQueries.availability._ctx.vpc._ctx.region(regionId),
     enabled,
   });
 };
