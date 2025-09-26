@@ -329,18 +329,18 @@ export const getCloudPulseMetricRequest = (
   const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
     props;
   const preset = duration.preset;
-
+  const presetDuration = getTimeDurationFromPreset(preset);
   return {
     absolute_time_duration:
-      preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
-        ? undefined
-        : { end: duration.end, start: duration.start },
+      presetDuration === undefined
+        ? { end: duration.end, start: duration.start }
+        : undefined,
     entity_ids: resources
       ? entityIds.map((id) => parseInt(id, 10))
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
-    relative_time_duration: getTimeDurationFromPreset(preset),
+    relative_time_duration: presetDuration,
     metrics: [
       {
         aggregate_function: widget.aggregate_function,
