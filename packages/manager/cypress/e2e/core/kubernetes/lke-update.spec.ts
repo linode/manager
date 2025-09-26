@@ -192,9 +192,7 @@ describe('LKE cluster updates', () => {
         .click();
 
       ui.dialog
-        .findByTitle(
-          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-        )
+        .findByTitle(`Upgrade Cluster ${mockCluster.label} to ${newVersion}`)
         .should('be.visible')
         .within(() => {
           upgradeNotes.forEach((note: string) => {
@@ -298,7 +296,7 @@ describe('LKE cluster updates', () => {
 
       const upgradeNotes = [
         'This upgrades the control plane on your cluster',
-        'Worker nodes within each node pool can then be upgraded separately.',
+        'Existing worker nodes are updated automatically or manually, depending on the update strategy defined for each node pool.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -332,9 +330,7 @@ describe('LKE cluster updates', () => {
         .click();
 
       ui.dialog
-        .findByTitle(
-          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-        )
+        .findByTitle(`Upgrade Cluster ${mockCluster.label} to ${newVersion}`)
         .should('be.visible')
         .within(() => {
           upgradeNotes.forEach((note: string) => {

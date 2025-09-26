@@ -278,9 +278,7 @@ describe('LKE landing page', () => {
     cy.wait(['@getCluster']);
 
     ui.dialog
-      .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${cluster.label}?`
-      )
+      .findByTitle(`Upgrade Cluster ${cluster.label} to ${newVersion}`)
       .should('be.visible');
 
     mockGetClusters([updatedCluster]).as('getClusters');
@@ -353,9 +351,7 @@ describe('LKE landing page', () => {
     cy.wait(['@getCluster']);
 
     ui.dialog
-      .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${cluster.label}?`
-      )
+      .findByTitle(`Upgrade Cluster ${cluster.label} to ${newVersion}`)
       .should('be.visible');
 
     mockGetClusters([updatedCluster]).as('getClusters');
