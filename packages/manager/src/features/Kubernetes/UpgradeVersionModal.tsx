@@ -5,14 +5,11 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import {
-  getNextVersion,
-  useKubernetesBetaEndpoint,
-  useLkeStandardOrEnterpriseVersions,
-} from 'src/features/Kubernetes/kubeUtils';
+import { getNextVersion } from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
+  useKubernetesTieredVersionsQuery,
 } from 'src/queries/kubernetes';
 
 import { LocalStorageWarningNotice } from './KubernetesClusterDetail/LocalStorageWarningNotice';
@@ -52,19 +49,16 @@ export const UpgradeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-
   const { data: cluster } = useKubernetesClusterQuery({
     id: clusterID,
-    isUsingBetaEndpoint,
   });
 
   const { mutateAsync: updateKubernetesCluster } =
     useKubernetesClusterMutation(clusterID);
 
-  const { versions } = useLkeStandardOrEnterpriseVersions(
+  const { data: versions } = useKubernetesTieredVersionsQuery(
     cluster?.tier ?? 'standard'
-  ); // TODO LKE: remove fallback once LKE-E is in GA and tier is required
+  );
 
   const nextVersion = getNextVersion(
     cluster?.k8s_version ?? '',
