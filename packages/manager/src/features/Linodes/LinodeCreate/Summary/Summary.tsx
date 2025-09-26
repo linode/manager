@@ -1,4 +1,9 @@
-import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
+import {
+  useAllTypes,
+  useImageQuery,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -13,9 +18,8 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import { getLinodePrice } from './utilities';
-
-import type { LinodeCreateFormValues } from '../utilities';
+import { type LinodeCreateFormValues } from '../utilities';
+import { getLinodePrice, parseClusterData } from './utilities';
 
 interface SummaryProps {
   isAlertsBetaMode?: boolean;
@@ -27,6 +31,8 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { control } = useFormContext<LinodeCreateFormValues>();
+
+  const { data: allTypes } = useAllTypes();
 
   const [
     label,
@@ -40,7 +46,9 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     vlanLabel,
     vpcId,
     diskEncryption,
+    stackscriptData,
     clusterSize,
+    clusterName,
     linodeInterfaces,
     interfaceGeneration,
     alerts,
@@ -58,12 +66,21 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'interfaces.1.label',
       'interfaces.0.vpc_id',
       'disk_encryption',
+      'stackscript_data',
       'stackscript_data.cluster_size',
+      'stackscript_data.cluster_name',
       'linodeInterfaces',
       'interface_generation',
       'alerts',
     ],
   });
+
+  const rawClusterData = parseClusterData(stackscriptData);
+
+  const clusterData = rawClusterData.map((cluster) => ({
+    ...cluster,
+    typeData: allTypes?.find((t) => t.label === cluster.typeLabel),
+  }));
 
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
@@ -83,7 +100,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
-  const price = getLinodePrice({ clusterSize, regionId, type });
+  const price = getLinodePrice({ clusterSize, regionId, type, clusterData });
 
   const hasVPC = isLinodeInterfacesEnabled
     ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
@@ -135,13 +152,30 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       },
       show: Boolean(region),
     },
-    {
-      item: {
-        details: price,
-        title: type ? formatStorageUnits(type.label) : typeId,
-      },
-      show: price,
-    },
+    ...(() => {
+      if (clusterSize) {
+        return [
+          {
+            item: {
+              title:
+                clusterName || (type ? formatStorageUnits(type.label) : typeId),
+              details: price,
+            },
+            show: price,
+          },
+        ];
+      } else {
+        return [
+          {
+            item: {
+              details: price,
+              title: type ? formatStorageUnits(type.label) : typeId,
+            },
+            show: price,
+          },
+        ];
+      }
+    })(),
     {
       item: {
         details: `$${backupsPrice}/month`,
