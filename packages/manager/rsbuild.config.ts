@@ -22,6 +22,7 @@ export default defineConfig((ctx) => {
               : 'betas@http://localhost:4000/mf-manifest.json',
         },
         shareStrategy: 'loaded-first',
+        // @todo don't share anything so there is true isolation between host and remote apps
         shared: {
           react: { singleton: true, eager: true, strictVersion: false },
           'react-dom': { singleton: true, eager: true, strictVersion: false },

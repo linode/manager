@@ -14,6 +14,7 @@ export default defineConfig(({ env }) => ({
         './app': './src/App.tsx',
       },
       getPublicPath: env === 'production' ? `function() {return "https://betas.nussman.us/"}` : undefined,
+      // @todo don't share anything so there is true isolation between host and remote apps
       shared: {
         'react': { singleton: true, eager: true, strictVersion: false },
         'react-dom': { singleton: true, eager: true, strictVersion: false },
