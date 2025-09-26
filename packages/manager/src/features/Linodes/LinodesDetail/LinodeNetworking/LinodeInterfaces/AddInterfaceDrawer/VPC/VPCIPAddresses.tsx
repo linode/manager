@@ -35,11 +35,7 @@ export const VPCIPAddresses = () => {
   return (
     <Stack spacing={1}>
       {fields.map((field, index) => (
-        <VPCIPv4Address
-          index={index}
-          isDualStackVPC={isDualStackEnabled}
-          key={field.id}
-        />
+        <VPCIPv4Address index={index} key={field.id} />
       ))}
       {isDualStackVPC && <VPCIPv6Address />}
     </Stack>

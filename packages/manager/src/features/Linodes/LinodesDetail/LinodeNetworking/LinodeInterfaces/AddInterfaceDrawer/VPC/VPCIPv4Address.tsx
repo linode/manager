@@ -5,7 +5,6 @@ import {
   Stack,
   TextField,
   TooltipIcon,
-  Typography,
 } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -17,11 +16,10 @@ import type { CreateInterfaceFormValues } from '../utilities';
 
 interface Props {
   index: number;
-  isDualStackVPC: boolean;
 }
 
 export const VPCIPv4Address = (props: Props) => {
-  const { index, isDualStackVPC } = props;
+  const { index } = props;
   const {
     control,
     formState: { errors },
@@ -49,20 +47,7 @@ export const VPCIPv4Address = (props: Props) => {
                 onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
                 sx={{ pl: 0.4, mr: 0 }}
               />
-              <TooltipIcon
-                status="info"
-                text={
-                  isDualStackVPC ? (
-                    <Typography component="span">
-                      Automatically assign an IPv4 address as{' '}
-                      {isDualStackVPC ? 'a' : 'the'} private IP address for this
-                      Linode in the VPC.
-                    </Typography>
-                  ) : (
-                    VPC_AUTO_ASSIGN_IPV4_TOOLTIP
-                  )
-                }
-              />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Stack>
             {field.value !== 'auto' && (
               <TextField

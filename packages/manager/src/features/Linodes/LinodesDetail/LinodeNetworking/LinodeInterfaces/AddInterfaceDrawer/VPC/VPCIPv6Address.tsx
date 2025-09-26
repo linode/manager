@@ -6,13 +6,12 @@ import {
   Stack,
   TextField,
   TooltipIcon,
-  Typography,
 } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Code } from 'src/components/Code/Code';
 import { ErrorMessage } from 'src/components/ErrorMessage';
+import { VPC_AUTO_ASSIGN_IPV6_TOOLTIP } from 'src/features/VPCs/constants';
 import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 
 import type { CreateInterfaceFormValues } from '../utilities';
@@ -53,16 +52,7 @@ export const VPCIPv6Address = () => {
                 onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
                 sx={{ pl: 0.4, mr: 0 }}
               />
-              <TooltipIcon
-                status="info"
-                text={
-                  <Typography component="span">
-                    Automatically assign an IPv6 address as a private IP address
-                    for this Linode in the VPC. A <Code>/52</Code> IPv6 network
-                    prefix is allocated for the VPC.
-                  </Typography>
-                }
-              />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP} />
             </Stack>
             {field.value !== 'auto' && (
               <TextField

@@ -24,7 +24,6 @@ import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { Code } from 'src/components/Code/Code';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
@@ -37,6 +36,7 @@ import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/Lino
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -642,20 +642,7 @@ export const SubnetAssignLinodesDrawer = (
                 label={<Typography>Auto-assign VPC IPv4 address</Typography>}
                 sx={{ marginRight: 0 }}
               />
-              <TooltipIcon
-                status="info"
-                text={
-                  showIPv6Content ? (
-                    <Typography component="span">
-                      Automatically assign an IPv4 address as{' '}
-                      {showIPv6Content ? 'a' : 'the'} private IP address for
-                      this Linode in the VPC.
-                    </Typography>
-                  ) : (
-                    VPC_AUTO_ASSIGN_IPV4_TOOLTIP
-                  )
-                }
-              />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
             {!autoAssignVPCIPv4Address && (
               <TextField
@@ -705,13 +692,7 @@ export const SubnetAssignLinodesDrawer = (
                   />
                   <TooltipIcon
                     status="info"
-                    text={
-                      <Typography component="span">
-                        Automatically assign an IPv6 address as a private IP
-                        address for this Linode in the VPC. A <Code>/52</Code>{' '}
-                        IPv6 network prefix is allocated for the VPC.
-                      </Typography>
-                    }
+                    text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
                   />
                 </Box>
                 {!autoAssignVPCIPv6Address && (
