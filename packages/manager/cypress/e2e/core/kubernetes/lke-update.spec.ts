@@ -298,7 +298,7 @@ describe('LKE cluster updates', () => {
 
       const upgradeNotes = [
         'This upgrades the control plane on your cluster',
-        'Worker nodes within each node pool can then be upgraded separately.',
+        'Existing worker nodes are updated automatically or manually, depending on the update strategy defined for each node pool.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
