@@ -273,6 +273,7 @@ export const VPCTopSectionContent = (props: Props) => {
             render={({ field, fieldState }) => (
               <RadioGroup
                 onChange={(_, value) => field.onChange([{ range: value }])}
+                style={{ margin: 0 }}
                 value={field.value}
               >
                 <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
