@@ -50,7 +50,7 @@ export const GlobalFilterGroupByRenderer = (
   const [open, setOpen] = React.useState(false);
 
   const onApply = React.useCallback(
-    (selectedValue: GroupByOption[]) => {
+    (selectedValue: GroupByOption[], savePref?: boolean) => {
       if (selectedValue.length === 0) {
         setIsSelected(false);
       } else {
@@ -58,7 +58,7 @@ export const GlobalFilterGroupByRenderer = (
       }
       handleChange(
         selectedValue.map(({ value }) => value),
-        savePreferences
+        savePref ?? savePreferences
       );
       setOpen(false);
     },

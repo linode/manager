@@ -74,7 +74,7 @@ export const WidgetFilterGroupByRenderer = (
     setOpen(false);
   }, []);
   const onApply = React.useCallback(
-    (selectedValue: GroupByOption[]) => {
+    (selectedValue: GroupByOption[], savePref?: boolean) => {
       if (selectedValue.length === 0) {
         setIsSelected(false);
       } else {
@@ -82,7 +82,7 @@ export const WidgetFilterGroupByRenderer = (
       }
       handleChange(
         selectedValue.map(({ value }) => value),
-        savePreferences
+        savePref ?? savePreferences
       );
       setOpen(false);
     },
