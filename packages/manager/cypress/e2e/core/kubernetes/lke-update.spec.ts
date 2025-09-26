@@ -192,9 +192,7 @@ describe('LKE cluster updates', () => {
         .click();
 
       ui.dialog
-        .findByTitle(
-          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-        )
+        .findByTitle(`Upgrade Cluster ${mockCluster.label} to ${newVersion}`)
         .should('be.visible')
         .within(() => {
           upgradeNotes.forEach((note: string) => {
@@ -332,9 +330,7 @@ describe('LKE cluster updates', () => {
         .click();
 
       ui.dialog
-        .findByTitle(
-          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-        )
+        .findByTitle(`Upgrade Cluster ${mockCluster.label} to ${newVersion}`)
         .should('be.visible')
         .within(() => {
           upgradeNotes.forEach((note: string) => {
