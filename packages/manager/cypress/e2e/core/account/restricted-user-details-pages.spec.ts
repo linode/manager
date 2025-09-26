@@ -8,6 +8,7 @@ import {
   databaseConfigurations,
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
+import { mockTieredStandardVersions } from 'support/constants/lke';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
@@ -30,7 +31,7 @@ import {
   mockGetCluster,
   mockGetClusterPools,
   mockGetDashboardUrl,
-  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
   mockRecycleAllNodes,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
@@ -419,8 +420,8 @@ describe('restricted user details pages', () => {
 
   it.skip("should disable action elements and buttons in the 'Kubernetes' details page", () => {
     // TODO: M3-9585 Not working for kubernets. Skip this test for now.
-    const oldVersion = '1.25';
-    const newVersion = '1.26';
+    const oldVersion = mockTieredStandardVersions[0].id;
+    const newVersion = mockTieredStandardVersions[1].id;
 
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: oldVersion,
@@ -443,7 +444,7 @@ describe('restricted user details pages', () => {
     const mockNodePools = nodePoolFactory.buildList(2);
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
     mockGetDashboardUrl(mockCluster.id);

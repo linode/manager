@@ -9,7 +9,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { ipTableId } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/utils';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -138,13 +138,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
+  const { isLoading } = useAPLAvailability();
 
   const { data: cluster } = useKubernetesClusterQuery({
-    enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
+    enabled: Boolean(linodeLkeClusterId) && !isLoading,
     id: linodeLkeClusterId ?? -1,
-    isUsingBetaEndpoint,
   });
 
   return (

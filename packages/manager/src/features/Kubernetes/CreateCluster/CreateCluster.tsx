@@ -38,14 +38,12 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
-  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -126,7 +124,6 @@ export const CreateCluster = () => {
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const { showAPL } = useAPLAvailability();
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
@@ -174,7 +171,7 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
   // LKE-E does not support APL at this time.
   const isAPLSupported = showAPL && selectedTier === 'standard';
@@ -240,14 +237,11 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesCluster } =
     useCreateKubernetesClusterMutation();
 
-  const { mutateAsync: createKubernetesClusterBeta } =
-    useCreateKubernetesClusterBetaMutation();
-
   const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+    data: versionData,
+    isLoading: isLoadingVersions,
+    error: versionsError,
+  } = useKubernetesTieredVersionsQuery(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -349,10 +343,6 @@ export const CreateCluster = () => {
       };
     }
 
-    const createClusterFn = isUsingBetaEndpoint
-      ? createKubernetesClusterBeta
-      : createKubernetesCluster;
-
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (
       (isLkeEnterprisePostLAFeatureEnabled ||
@@ -384,7 +374,7 @@ export const CreateCluster = () => {
       }
     }
 
-    createClusterFn(payload)
+    createKubernetesCluster(payload)
       .then((cluster) => {
         navigate({
           to: '/kubernetes/clusters/$clusterId/summary',

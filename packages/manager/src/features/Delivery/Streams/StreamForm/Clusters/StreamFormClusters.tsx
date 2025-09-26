@@ -55,7 +55,6 @@ export const StreamFormClusters = () => {
     error,
   } = useKubernetesClustersQuery({
     filter,
-    isUsingBetaEndpoint: true,
     params: {
       page,
       page_size: pageSize,
