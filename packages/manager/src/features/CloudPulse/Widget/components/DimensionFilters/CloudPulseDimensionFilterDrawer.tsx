@@ -64,11 +64,18 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
     } = props;
 
     const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
+    const [hideClearAll, setHideClearAll] = React.useState(
+      !selectedDimensions?.length
+    );
 
     const handleClose = React.useCallback(() => {
       onClose();
       setClearAllTrigger(0); // After closing the drawer, reset the clear all trigger
     }, [onClose]);
+
+    const onDimensionChange = React.useCallback((isDirty: boolean) => {
+      setHideClearAll(!isDirty);
+    }, []);
 
     const handleFormSubmit = React.useCallback(
       ({ dimension_filters: dimensionFilters }: MetricsDimensionFilterForm) => {
@@ -99,6 +106,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
                 marginTop: -2,
                 font: theme.font.normal,
                 color: theme.textColors.linkActiveLight,
+                display: hideClearAll ? 'none' : 'flex',
               })}
               variant="text"
             >
@@ -116,6 +124,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
             dataFieldDisabled={false}
             dimensionOptions={dimensionOptions}
             onClose={handleClose}
+            onDimensionChange={onDimensionChange}
             onSubmit={handleFormSubmit}
             selectedDimensions={selectedDimensions}
             selectedEntities={selectedEntities}

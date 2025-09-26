@@ -36,20 +36,27 @@ interface CloudPulseDimensionFilterRendererProps {
    * Callback fired to close the drawer
    */
   onClose: () => void;
+
+  /**
+   * Callback to publish any change in form
+   * @param isDirty indicated the changes
+   */
+  onDimensionChange: (isDirty: boolean) => void;
   /**
    * Callback fired on form submission
    * @param data The form data on submission
    */
   onSubmit: (data: MetricsDimensionFilterForm) => void;
+
   /**
    * The selected dimension filters for the metric
    */
   selectedDimensions?: MetricsDimensionFilter[];
-
   /**
    * The selected entities for the dimension filter
    */
   selectedEntities?: string[];
+
   /**
    * The service type of the associated metric
    */
@@ -66,6 +73,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       clearAllTrigger,
       onClose,
       serviceType,
+      onDimensionChange,
     } = props;
 
     const formMethods = useForm<MetricsDimensionFilterForm>({
@@ -111,6 +119,14 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
         });
       }
     }, [clearAllTrigger, setValue]);
+
+    React.useEffect(() => {
+      if (fields.length) {
+        onDimensionChange(true);
+      } else {
+        onDimensionChange(false);
+      }
+    }, [fields, onDimensionChange]);
 
     return (
       <FormProvider {...formMethods}>
