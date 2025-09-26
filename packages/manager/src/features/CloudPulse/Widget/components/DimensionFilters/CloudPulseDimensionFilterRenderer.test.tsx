@@ -26,16 +26,19 @@ describe('CloudPulse dimension filter field tests', () => {
   it('renders the filter fields based on the dimension options', async () => {
     const handleClose = vi.fn();
     const handleSubmit = vi.fn();
+    const handleDimensionChange = vi.fn();
     renderWithTheme(
       <CloudPulseDimensionFilterRenderer
         clearAllTrigger={0}
         dataFieldDisabled={false}
         dimensionOptions={dimensionOptions}
         onClose={handleClose}
+        onDimensionChange={handleDimensionChange}
         onSubmit={handleSubmit}
         serviceType="linode"
       />
     );
+    await userEvent.click(screen.getByTestId('Add Filter'));
     await selectADimensionAndValue(
       screen.getByTestId(dimensionFilterForZerothIndex),
       0,
@@ -52,6 +55,7 @@ describe('CloudPulse dimension filter field tests', () => {
     await userEvent.click(screen.getByText('Apply'));
     expect(handleClose).not.toHaveBeenCalled();
     expect(handleSubmit).toHaveBeenCalledTimes(1);
+    expect(handleDimensionChange).toHaveBeenCalledTimes(3);
     expect(handleSubmit).toHaveBeenLastCalledWith({
       dimension_filters: [
         {
@@ -76,11 +80,13 @@ describe('CloudPulse dimension filter field tests', () => {
         dataFieldDisabled={false}
         dimensionOptions={dimensionOptions}
         onClose={handleClose}
+        onDimensionChange={vi.fn()}
         onSubmit={handleSubmit}
         selectedDimensions={[]}
         serviceType="linode"
       />
     );
+    await userEvent.click(screen.getByTestId('Add Filter'));
     await selectADimensionAndValue(
       screen.getByTestId(dimensionFilterForZerothIndex),
       0,
@@ -94,12 +100,14 @@ describe('CloudPulse dimension filter field tests', () => {
   it('handles the case when a proper already selected dimension is passed', async () => {
     const handleClose = vi.fn();
     const handleSubmit = vi.fn();
+    const handleDimensionChange = vi.fn();
     renderWithTheme(
       <CloudPulseDimensionFilterRenderer
         clearAllTrigger={0}
         dataFieldDisabled={false}
         dimensionOptions={dimensionOptions}
         onClose={handleClose}
+        onDimensionChange={handleDimensionChange}
         onSubmit={handleSubmit}
         selectedDimensions={[
           {
@@ -123,19 +131,7 @@ describe('CloudPulse dimension filter field tests', () => {
     const value =
       within(dimensionContainer).getByPlaceholderText('Enter a Value');
     expect(value).toHaveValue('ZYX');
-
-    await userEvent.click(screen.getByText('Apply'));
-    expect(handleClose).not.toHaveBeenCalled();
-    expect(handleSubmit).toHaveBeenCalledTimes(1);
-    expect(handleSubmit).toHaveBeenLastCalledWith({
-      dimension_filters: [
-        {
-          dimension_label: 'test',
-          operator: 'startswith',
-          value: 'ZYX',
-        },
-      ],
-    });
+    expect(screen.getByText('Apply')).toHaveAttribute('aria-disabled', 'true'); // form is not changed, so the apply button is disabled in this case
   });
 });
 

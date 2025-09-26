@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -24,6 +25,7 @@ describe('CloudPulse dimension filter drawer tests', () => {
     expect(drawerOpen).toBeInTheDocument();
     const selectText = screen.getByText('Select up to 5 Dimension Filters');
     expect(selectText).toBeInTheDocument();
+    await userEvent.click(screen.getByText('Add Filter'));
     // validate for form fields to be present
     const dataFieldContainer = screen.queryByTestId('dimension-field');
     expect(dataFieldContainer).toBeInTheDocument();
