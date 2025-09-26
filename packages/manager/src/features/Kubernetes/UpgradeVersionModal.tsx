@@ -35,7 +35,8 @@ const getWorkerNodeCopy = (clusterTier: KubernetesTier = 'standard') => {
     </span>
   ) : (
     <span>
-      . Worker nodes within each node pool can then be upgraded separately.{' '}
+      . Existing worker nodes are updated automatically or manually, depending
+      on the update strategy defined for each node pool.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-an-lke-enterprise-cluster-to-a-newer-kubernetes-version">
         Learn more
       </Link>
