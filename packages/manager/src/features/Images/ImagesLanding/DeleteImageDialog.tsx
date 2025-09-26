@@ -1,8 +1,11 @@
 import { useDeleteImageMutation, useImageQuery } from '@linode/queries';
+import { Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 interface Props {
   imageId: string | undefined;
@@ -20,6 +23,13 @@ export const DeleteImageDialog = (props: Props) => {
     error,
   } = useImageQuery(imageId ?? '', Boolean(imageId));
 
+  const { data: permissions } = usePermissions(
+    'image',
+    ['delete_image'],
+    imageId,
+    open
+  );
+
   const { mutate: deleteImage, isPending } = useDeleteImageMutation({
     onSuccess() {
       enqueueSnackbar('Image has been scheduled for deletion.', {
@@ -33,6 +43,7 @@ export const DeleteImageDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={!permissions.delete_image}
       entity={{
         type: 'Image',
         primaryBtnText: isPendingUpload ? 'Cancel Upload' : 'Delete',
@@ -54,6 +65,16 @@ export const DeleteImageDialog = (props: Props) => {
           ? 'Cancel Upload'
           : `Delete Image ${image?.label ?? imageId}`
       }
-    />
+    >
+      {!permissions.delete_image && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'Images',
+            action: 'delete',
+          })}
+          variant="error"
+        />
+      )}
+    </TypeToConfirmDialog>
   );
 };

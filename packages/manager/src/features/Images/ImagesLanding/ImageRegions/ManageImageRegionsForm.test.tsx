@@ -9,6 +9,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ManageImageReplicasForm } from './ManageImageRegionsForm';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      replicate_image: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('ManageImageRegionsDrawer', () => {
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
@@ -159,5 +171,30 @@ describe('ManageImageRegionsDrawer', () => {
         'You cannot remove this region because at least one available region must be present.'
       )
     ).toBeInTheDocument();
+  });
+
+  it('should enable the region select if the user has permissions', async () => {
+    const image = imageFactory.build();
+    const { getByRole } = renderWithTheme(
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
+    );
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+    expect(select).toBeEnabled();
+  });
+
+  it('should disable the region select if the user has no permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        replicate_image: false,
+      },
+    });
+    const image = imageFactory.build();
+    const { getByRole } = renderWithTheme(
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
+    );
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+    expect(select).toBeDisabled();
   });
 });
