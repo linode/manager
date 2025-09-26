@@ -32,9 +32,8 @@ export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 
 export const VPC_AUTO_ASSIGN_IPV6_TOOLTIP = (
-  <Typography>
-    Automatically assign an IPv6 address from the subnet&rsquo;s allocated{' '}
-    <Code>/64</Code> prefix block.
+  <Typography component="span">
+    Automatically assign a <Code>/64</Code> IPv6 prefix from the subnet.
   </Typography>
 );
 
@@ -60,7 +59,7 @@ export const PUBLIC_IPV4_ACCESS_CHECKBOX_TOOLTIP =
   'Allow IPv4 access to the internet using 1:1 NAT on the VPC interface.';
 
 export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP =
-  "To enable IPv6 internet access, assign a globally routed IPv6 prefix to the subnet and enable the interface's Public setting.";
+  'Enable to allow two-way IPv6 traffic between your VPC and the internet. Disable to restrict IPv6 traffic to within the VPC. When enabled, Linodes will be publicly reachable over IPv6 unless restricted by a Cloud Firewall.';
 
 export const RFC1918HelperText =
   'The VPC can use the entire RFC 1918 specified range for subnetting except for 192.168.128.0/17.';
