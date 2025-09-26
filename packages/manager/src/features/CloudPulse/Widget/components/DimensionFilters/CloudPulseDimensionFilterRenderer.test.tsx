@@ -21,6 +21,7 @@ const dimensionOptions: Dimension[] = [
   },
 ];
 const dimensionFilterForZerothIndex = 'dimension_filters.0-id';
+const addFilter = 'Add Filter';
 
 describe('CloudPulse dimension filter field tests', () => {
   it('renders the filter fields based on the dimension options', async () => {
@@ -38,14 +39,14 @@ describe('CloudPulse dimension filter field tests', () => {
         serviceType="linode"
       />
     );
-    await userEvent.click(screen.getByTestId('Add Filter'));
+    await userEvent.click(screen.getByTestId(addFilter));
     await selectADimensionAndValue(
       screen.getByTestId(dimensionFilterForZerothIndex),
       0,
       'Equal',
       2
     );
-    await userEvent.click(screen.getByTestId('Add Filter'));
+    await userEvent.click(screen.getByTestId(addFilter));
     await selectADimensionAndValue(
       screen.getByTestId('dimension_filters.1-id'),
       1,
@@ -86,7 +87,7 @@ describe('CloudPulse dimension filter field tests', () => {
         serviceType="linode"
       />
     );
-    await userEvent.click(screen.getByTestId('Add Filter'));
+    await userEvent.click(screen.getByTestId(addFilter));
     await selectADimensionAndValue(
       screen.getByTestId(dimensionFilterForZerothIndex),
       0,
