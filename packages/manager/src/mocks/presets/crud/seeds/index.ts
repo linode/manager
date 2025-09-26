@@ -1,4 +1,5 @@
 import { cloudNATSeeder } from './cloudnats';
+import { delegationSeeder } from './delegation';
 import { domainSeeder } from './domains';
 import { entitiesSeeder } from './entities';
 import { firewallSeeder } from './firewalls';
@@ -13,6 +14,7 @@ import { vpcSeeder } from './vpcs';
 
 export const dbSeeders = [
   cloudNATSeeder,
+  delegationSeeder,
   domainSeeder,
   entitiesSeeder,
   firewallSeeder,
