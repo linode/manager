@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
@@ -62,15 +62,18 @@ export const ChildAccountList = React.memo(
       isInitialLoading,
       isRefetching,
       refetch: refetchChildAccounts,
-    } = useChildAccountsInfiniteQuery({
-      filter,
-      headers:
-        userType === 'proxy'
-          ? {
-              Authorization: currentTokenWithBearer,
-            }
-          : undefined,
-    });
+    } = useChildAccountsInfiniteQuery(
+      {
+        filter,
+        headers:
+          userType === 'proxy'
+            ? {
+                Authorization: currentTokenWithBearer,
+              }
+            : undefined,
+      },
+      isIAMDelegationEnabled === false
+    );
     const {
       data: allChildAccounts,
       error: allChildAccountsError,
@@ -86,9 +89,19 @@ export const ChildAccountList = React.memo(
       ? refetchAllChildAccounts
       : refetchChildAccounts;
 
-    const childAccounts = isIAMDelegationEnabled
-      ? allChildAccounts
-      : data?.pages.flatMap((page) => page.data);
+    const childAccounts = useMemo(() => {
+      if (isIAMDelegationEnabled) {
+        if (searchQuery && allChildAccounts) {
+          // Client-side filter: match company field with searchQuery (case-insensitive, contains)
+          const normalizedQuery = searchQuery.toLowerCase();
+          return allChildAccounts.filter((account) =>
+            account.company?.toLowerCase().includes(normalizedQuery)
+          );
+        }
+        return allChildAccounts;
+      }
+      return data?.pages.flatMap((page) => page.data);
+    }, [isIAMDelegationEnabled, searchQuery, allChildAccounts, data]);
 
     if (
       isInitialLoading ||
@@ -105,7 +118,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (childAccounts?.length === 0) {
+    if (childAccounts && childAccounts.length === 0) {
       return (
         <Notice variant="info">
           There are no child accounts

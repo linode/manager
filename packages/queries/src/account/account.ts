@@ -31,14 +31,19 @@ export const useMutateAccount = () =>
     mutationFn: updateAccountInfo,
   });
 
-export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
+export const useChildAccountsInfiniteQuery = (
+  options: RequestOptions,
+  featureFlag = true,
+) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(options.headers?.Authorization);
-  const enabled =
-    (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
-    Boolean(grants?.global?.child_account_access) ||
-    hasExplicitAuthToken;
+
+  const enabled = featureFlag
+    ? (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
+      Boolean(grants?.global?.child_account_access) ||
+      hasExplicitAuthToken
+    : false;
 
   return useInfiniteQuery<ResourcePage<Account>, APIError[]>({
     enabled,
