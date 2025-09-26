@@ -11,6 +11,7 @@ import React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import type { ImageRegionStatus, ImageStatus } from '@linode/api-v4';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
@@ -32,6 +33,15 @@ export const ImageRegionRow = (props: Props) => {
 
   const actualRegion = regions?.find((r) => r.id === region);
 
+  const tooltipTextPerPermission = getRestrictedResourceText({
+    action: 'edit',
+    isSingular: true,
+    resourceType: 'Images',
+  });
+
+  const tooltipTextPerRegion =
+    'You cannot remove this region because at least one available region must be present.';
+
   return (
     <Box alignItems="center" display="flex" justifyContent="space-between">
       <Stack alignItems="center" direction="row" gap={1}>
@@ -44,10 +54,10 @@ export const ImageRegionRow = (props: Props) => {
         <Tooltip
           title={
             disabled
-              ? ''
+              ? tooltipTextPerPermission
               : disableRemoveButton
-                ? 'You cannot remove this region because at least one available region must be present.'
-                : ''
+                ? tooltipTextPerRegion
+                : undefined
           }
         >
           <span>
