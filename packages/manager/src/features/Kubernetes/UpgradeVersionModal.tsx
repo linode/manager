@@ -126,7 +126,7 @@ export const UpgradeDialog = (props: Props) => {
 
   const dialogTitle = shouldShowRecycleNodesStep
     ? 'Upgrade complete'
-    : `Upgrade ${cluster?.label} to ${nextVersion}`;
+    : `Upgrade Cluster ${cluster?.label} to ${nextVersion}`;
 
   const actions = (
     <ActionsPanel
