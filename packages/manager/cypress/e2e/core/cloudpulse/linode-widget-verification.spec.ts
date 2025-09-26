@@ -73,6 +73,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
 const mockLinode = linodeFactory.build({
   id: kubeLinodeFactory.build().instance_id ?? undefined,
   label: resource,
+  tags: ['tag-2', 'tag-3'],
   region: 'us-ord',
 });
 
@@ -89,7 +90,7 @@ const mockRegion = regionFactory.build({
 });
 
 const extendedMockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
+  capabilities: ['Linodes'],
   id: 'us-east',
   label: 'Newark,NL',
 });
@@ -144,6 +145,7 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
+// Tests will be modified
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -188,11 +190,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    ui.regionSelect.find().click();
-
     //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
     ui.regionSelect.find().type(extendedMockRegion.label);
 
     // Since Linode does not support this region, we expect it to not be in the dropdown.
@@ -216,6 +214,9 @@ describe('Integration Tests for Linode Dashboard ', () => {
     ui.autocomplete.findByLabel('Linode Label(s)').click();
 
     cy.findByText(resource).should('be.visible');
+
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
@@ -271,10 +272,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.unit
             );
 
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.log('expectedWidgetValues ', expectedWidgetValues.max);
 
@@ -327,13 +328,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${testData.title} (${testData.unit.trim()})`
-              );
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
@@ -401,10 +399,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
@@ -435,13 +433,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.unit
             );
 
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${testData.title} (${testData.unit.trim()})`
-              );
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
