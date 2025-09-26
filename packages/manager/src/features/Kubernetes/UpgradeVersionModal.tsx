@@ -35,7 +35,8 @@ const getWorkerNodeCopy = (clusterTier: KubernetesTier = 'standard') => {
     </span>
   ) : (
     <span>
-      . Worker nodes within each node pool can then be upgraded separately.{' '}
+      . Existing worker nodes are updated automatically or manually, depending
+      on the update strategy defined for each node pool.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-an-lke-enterprise-cluster-to-a-newer-kubernetes-version">
         Learn more
       </Link>
@@ -125,9 +126,7 @@ export const UpgradeDialog = (props: Props) => {
 
   const dialogTitle = shouldShowRecycleNodesStep
     ? 'Upgrade complete'
-    : `Upgrade Kubernetes version ${
-        nextVersion ? `to ${nextVersion}` : ''
-      } on ${cluster?.label}?`;
+    : `Upgrade Cluster ${cluster?.label} to ${nextVersion}`;
 
   const actions = (
     <ActionsPanel
