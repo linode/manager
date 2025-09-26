@@ -126,9 +126,7 @@ export const UpgradeDialog = (props: Props) => {
 
   const dialogTitle = shouldShowRecycleNodesStep
     ? 'Upgrade complete'
-    : `Upgrade Kubernetes version ${
-        nextVersion ? `to ${nextVersion}` : ''
-      } on ${cluster?.label}?`;
+    : `Upgrade ${cluster?.label} to ${nextVersion}`;
 
   const actions = (
     <ActionsPanel
