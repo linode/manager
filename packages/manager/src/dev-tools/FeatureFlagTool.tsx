@@ -46,6 +46,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },
+  { flag: 'databaseVpcBeta', label: 'Database VPC Beta' },
   { flag: 'databasePremium', label: 'Database Premium' },
   {
     flag: 'databaseRestrictPlanResize',
@@ -53,6 +54,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',

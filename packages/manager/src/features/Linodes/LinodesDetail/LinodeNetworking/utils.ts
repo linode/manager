@@ -54,6 +54,10 @@ export const ipResponseToDisplayRows = (inputs: {
 
   ipDisplay.push(...createVPCIPv4Display(ipv4.vpc));
 
+  if (ipv6?.vpc) {
+    ipDisplay.push(...createVPCIPv6Display(ipv6.vpc));
+  }
+
   // IPv6 ranges and pools to display in the networking table
   ipDisplay.push(
     ...[...(ipv6 ? ipv6.global : [])].map((thisIP) => {
@@ -161,6 +165,33 @@ export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
       vpcIPDisplay.push({
         address: ip.nat_1_1,
         type: 'VPC NAT – IPv4',
+        ...emptyProps,
+      });
+    }
+  }
+  return vpcIPDisplay;
+};
+
+export const createVPCIPv6Display = (ips: VPCIP[]): IPDisplay[] => {
+  const emptyProps = {
+    gateway: '',
+    rdns: '',
+    subnetMask: '',
+  };
+
+  const vpcIPDisplay: IPDisplay[] = [];
+  for (const ip of ips) {
+    if (ip.ipv6_range) {
+      vpcIPDisplay.push({
+        address: ip.ipv6_range,
+        type: 'VPC – Range – IPv6',
+        ...emptyProps,
+      });
+    }
+    if (ip.ipv6_addresses.length > 0) {
+      vpcIPDisplay.push({
+        address: ip.ipv6_addresses[0].slaac_address,
+        type: 'VPC – IPv6',
         ...emptyProps,
       });
     }
