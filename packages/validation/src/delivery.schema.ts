@@ -132,13 +132,13 @@ const streamDetailsSchema = streamDetailsBase.test(
   },
 );
 
-const detailsShouldBeEmpty = (schema: MixedSchema) =>
+const detailsShouldNotExistOrBeNull = (schema: MixedSchema) =>
   schema
-    .defined()
+    .nullable()
     .test(
-      'details-should-be-empty',
-      'Empty details for type `audit_logs`',
-      (value) => Object.keys(value).length === 0,
+      'details-should-not-exist',
+      'Details should be null or no details passed for type `audit_logs`',
+      (value, ctx) => !('details' in ctx) || value === null,
     );
 
 const streamSchemaBase = object({
@@ -151,33 +151,35 @@ const streamSchemaBase = object({
     .oneOf(['audit_logs', 'lke_audit_logs'])
     .required('Stream type is required.'),
   destinations: array().of(number().defined()).ensure().min(1).required(),
-  details: mixed<InferType<typeof streamDetailsSchema> | object>()
-    .when('type', {
-      is: 'lke_audit_logs',
-      then: () => streamDetailsSchema.required(),
-      otherwise: detailsShouldBeEmpty,
-    })
-    .required(),
+  details: mixed().when('type', {
+    is: 'lke_audit_logs',
+    then: () => streamDetailsSchema.required(),
+    otherwise: detailsShouldNotExistOrBeNull,
+  }),
 });
 
 export const createStreamSchema = streamSchemaBase;
 
-export const updateStreamSchema = streamSchemaBase.shape({
-  status: mixed<'active' | 'inactive'>()
-    .oneOf(['active', 'inactive'])
-    .required(),
-});
+export const updateStreamSchema = streamSchemaBase
+  .omit(['type'])
+  .shape({
+    status: mixed<'active' | 'inactive'>()
+      .oneOf(['active', 'inactive'])
+      .required(),
+  })
+  .noUnknown('Object contains unknown fields');
 
 export const streamAndDestinationFormSchema = object({
   stream: streamSchemaBase.shape({
     destinations: array().of(number().required()).required(),
-    details: mixed<InferType<typeof streamDetailsSchema> | object>()
-      .when('type', {
-        is: 'lke_audit_logs',
-        then: () => streamDetailsBase.required(),
-        otherwise: detailsShouldBeEmpty,
-      })
-      .required(),
+    details: mixed().when('type', {
+      is: 'lke_audit_logs',
+      then: () => streamDetailsBase.required(),
+      otherwise: (schema) =>
+        schema
+          .nullable()
+          .equals([null], 'Details must be null for audit_logs type'),
+    }) as Schema<InferType<typeof streamDetailsSchema> | null>,
   }),
   destination: destinationFormSchema.defined().when('stream.destinations', {
     is: (value: never[]) => !value?.length,

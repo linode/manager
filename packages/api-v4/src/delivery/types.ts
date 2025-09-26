@@ -21,7 +21,7 @@ export interface AuditData {
 
 export interface Stream extends AuditData {
   destinations: Destination[];
-  details: StreamDetails;
+  details: StreamDetailsType;
   id: number;
   label: string;
   primary_destination_id: number;
@@ -35,6 +35,8 @@ export interface StreamDetails {
   cluster_ids?: number[];
   is_auto_add_all_clusters_enabled?: boolean;
 }
+
+export type StreamDetailsType = null | StreamDetails;
 
 export const destinationType = {
   CustomHttps: 'custom_https',
@@ -103,7 +105,7 @@ interface CustomHeader {
 
 export interface CreateStreamPayload {
   destinations: number[];
-  details: StreamDetails;
+  details?: StreamDetailsType;
   label: string;
   status?: StreamStatus;
   type: StreamType;
@@ -111,10 +113,9 @@ export interface CreateStreamPayload {
 
 export interface UpdateStreamPayload {
   destinations: number[];
-  details: StreamDetails;
+  details?: StreamDetailsType;
   label: string;
   status: StreamStatus;
-  type: StreamType;
 }
 
 export interface UpdateStreamPayloadWithId extends UpdateStreamPayload {
