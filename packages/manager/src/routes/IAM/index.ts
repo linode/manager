@@ -178,6 +178,15 @@ const iamUserNameEntitiesRoute = createRoute({
   )
 );
 
+const iamUserNameDelegationsRoute = createRoute({
+  getParentRoute: () => iamUserNameRoute,
+  path: 'delegations',
+}).lazy(() =>
+  import(
+    'src/features/IAM/Users/UserDelegations/userDelegationsLazyRoute'
+  ).then((m) => m.userDelegationsLazyRoute)
+);
+
 // Catch all route for user details page
 const iamUserNameCatchAllRoute = createRoute({
   getParentRoute: () => iamRoute,
@@ -238,6 +247,7 @@ export const iamRouteTree = iamRoute.addChildren([
     iamUserNameDetailsRoute,
     iamUserNameRolesRoute,
     iamUserNameEntitiesRoute,
+    iamUserNameDelegationsRoute,
     iamUserNameCatchAllRoute,
     iamUserNameDetailsCatchAllRoute,
     iamUserNameRolesCatchAllRoute,
