@@ -54,7 +54,7 @@ export const InterfaceSettingsForm = (props: Props) => {
 
   const interfaces = interfacesData?.interfaces.map((networkInterface) => ({
     ...networkInterface,
-    label: `${getLinodeInterfaceType(networkInterface)} Interface (ID : ${networkInterface.id})`,
+    label: `${getLinodeInterfaceType(networkInterface)} Interface (ID: ${networkInterface.id})`,
   }));
 
   const { mutateAsync: updateSettings } =
