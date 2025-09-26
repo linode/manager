@@ -230,10 +230,9 @@ export function usePermissions<
 
   return {
     data: permissionMap,
-    isLoading:
-      isGrantsLoading ||
-      isUserAccountPermissionsLoading ||
-      isUserEntityPermissionsLoading,
+    isLoading: shouldUsePermissionMap
+      ? isUserAccountPermissionsLoading || isUserEntityPermissionsLoading
+      : isGrantsLoading,
     ...restAccountPermissions,
     ...restEntityPermissions,
   } as const;
