@@ -38,4 +38,34 @@ describe('CloudPulse dimension filter drawer tests', () => {
     const cancelButton = screen.getByText('Cancel');
     expect(cancelButton).toBeInTheDocument();
   });
+
+  it('the clear all button in the drawer works correctly', async () => {
+    const handleClose = vi.fn();
+    const handleSelectionChange = vi.fn();
+    const ariaDisabled = 'aria-hidden';
+    renderWithTheme(
+      <CloudPulseDimensionFilterDrawer
+        dimensionOptions={[]}
+        drawerLabel="Test Metric"
+        handleSelectionChange={handleSelectionChange}
+        onClose={handleClose}
+        open
+        serviceType="linode"
+      />
+    );
+
+    const drawerOpen = screen.getByText('Test Metric');
+    expect(drawerOpen).toBeInTheDocument();
+    const selectText = screen.getByText('Select up to 5 Dimension Filters');
+    expect(selectText).toBeInTheDocument();
+    expect(screen.getByText('Clear All')).toHaveAttribute(ariaDisabled, 'true'); // nothing is done in form
+    await userEvent.click(screen.getByText('Add Filter'));
+    expect(screen.getByText('Clear All')).toHaveAttribute(
+      ariaDisabled,
+      'false'
+    ); // now we have added one filter field
+    // validate for form fields to be present
+    await userEvent.click(screen.getByText('Clear All'));
+    expect(screen.getByText('Clear All')).toHaveAttribute(ariaDisabled, 'true'); // means the fields are cleared again
+  });
 });

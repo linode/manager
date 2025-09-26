@@ -97,6 +97,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
               {drawerLabel}
             </Typography>
             <Button
+              aria-hidden={hideClearAll}
               component="a"
               data-qa-id="filter-drawer-clear-all"
               onClick={() => {
