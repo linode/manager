@@ -18,7 +18,7 @@ export const StyledOuterContainerGrid = styled(Grid, {
   background: theme.bg.bgPaper,
   flexDirection: 'column',
   margin: '-8px',
-  padding: theme.spacing(2),
+  padding: theme.spacingFunction(12),
   [theme.breakpoints.up('sm')]: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
