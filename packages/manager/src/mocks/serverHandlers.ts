@@ -1340,6 +1340,16 @@ export const handlers = [
         region: 'us-mia',
         s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'ap-west',
+        s3_endpoint: 'ap-west-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-iad',
+        s3_endpoint: 'us-iad-1.linodeobjects.com',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
@@ -1441,14 +1451,49 @@ export const handlers = [
       Math.random() * 4
     )}` as ObjectStorageEndpointTypes;
 
-    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
-      cluster: `${region}-1`,
-      endpoint_type: randomEndpointType,
-      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
-      label: `obj-bucket-${randomBucketNumber}`,
-      region,
-    });
-
+    const buckets =
+      region !== 'ap-west' && region !== 'us-iad'
+        ? objectStorageBucketFactoryGen2.buildList(1, {
+            cluster: `${region}-1`,
+            endpoint_type: randomEndpointType,
+            hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+            label: `obj-bucket-${randomBucketNumber}`,
+            region,
+          })
+        : [];
+    if (region === 'ap-west') {
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-804.ap-west.linodeobjects.com`,
+          label: `obj-bucket-804`,
+          region,
+        })
+      );
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-902.ap-west.linodeobjects.com`,
+          label: `obj-bucket-902`,
+          region,
+        })
+      );
+    }
+    if (region === 'us-iad')
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `us-iad-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'us-iad-1.linodeobjects.com',
+          hostname: `obj-bucket-230.us-iad.linodeobjects.com`,
+          label: `obj-bucket-230`,
+          region,
+        })
+      );
     return HttpResponse.json({
       data: buckets.slice(
         (page - 1) * pageSize,
@@ -2941,6 +2986,13 @@ export const handlers = [
           rules: [firewallMetricRulesFactory.build()],
         },
       }),
+      alertFactory.build({
+        id: 550,
+        label: 'Object Storage - testing',
+        type: 'user',
+        service_type: 'objectstorage',
+        entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -2958,6 +3010,17 @@ export const handlers = [
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            type: 'user',
+            label: 'object-storage -testing',
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
           })
         );
       }
@@ -3048,6 +3111,12 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Object Storage',
+          service_type: 'objectstorage',
+          regions: '',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3068,6 +3137,7 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
+        scope: ['entity'],
       }),
     });
 
