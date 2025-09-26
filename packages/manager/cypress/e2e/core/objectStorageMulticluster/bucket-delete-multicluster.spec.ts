@@ -38,7 +38,7 @@ describe('Object Storage Multicluster Bucket delete', () => {
     });
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketMock.region!).as('deleteBucket');
-    cy.visitWithLogin('/object-storage');
+    cy.visitWithLogin('/object-storage/buckets');
     cy.wait('@getBuckets');
 
     cy.findByText(bucketLabel)
