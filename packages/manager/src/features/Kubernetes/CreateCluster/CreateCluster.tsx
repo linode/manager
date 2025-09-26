@@ -197,7 +197,10 @@ export const CreateCluster = () => {
       setErrors(undefined);
     }
 
-    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    // If a user configures node pools in the LKE-E flow, but then switches to LKE, reset configurations that are incompatible with LKE-E:
+    // - If a user added > 100 nodes, set the max node count to 100 for correct price display.
+    // - Clear the firewall selection.
+    // - Clear the update strategy selection.
     if (isLkeEnterpriseLAFeatureEnabled) {
       nodePools.forEach((nodePool, idx) =>
         update(idx, {
@@ -208,6 +211,8 @@ export const CreateCluster = () => {
               ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
               : MAX_NODES_PER_POOL_STANDARD_TIER
           ),
+          firewall_id: undefined,
+          update_strategy: undefined,
         })
       );
     }
