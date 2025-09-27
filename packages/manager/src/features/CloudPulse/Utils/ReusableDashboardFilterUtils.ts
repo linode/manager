@@ -24,9 +24,13 @@ interface ReusableDashboardFilterUtilProps {
    */
   groupBy: string[];
   /**
+   * The selected region
+   */
+  region?: string;
+  /**
    * The selected resource id
    */
-  resource: number;
+  resource: number | string;
   /**
    * The selected time duration
    */
@@ -40,7 +44,8 @@ interface ReusableDashboardFilterUtilProps {
 export const getDashboardProperties = (
   props: ReusableDashboardFilterUtilProps
 ): DashboardProperties => {
-  const { dashboardObj, filterValue, resource, timeDuration, groupBy } = props;
+  const { dashboardObj, filterValue, resource, timeDuration, groupBy, region } =
+    props;
   return {
     additionalFilters: constructDimensionFilters({
       dashboardObj,
@@ -51,8 +56,10 @@ export const getDashboardProperties = (
     dashboardId: dashboardObj.id,
     duration: timeDuration ?? defaultTimeDuration(),
     resources: [String(resource)],
+    serviceType: dashboardObj.service_type,
     savePref: false,
     groupBy,
+    region,
   };
 };
 
@@ -63,7 +70,7 @@ export const getDashboardProperties = (
 export const checkMandatoryFiltersSelected = (
   props: ReusableDashboardFilterUtilProps
 ): boolean => {
-  const { dashboardObj, filterValue, resource, timeDuration } = props;
+  const { dashboardObj, filterValue, resource, timeDuration, region } = props;
   const serviceTypeConfig = FILTER_CONFIG.get(dashboardObj.id);
 
   if (!serviceTypeConfig) {
@@ -71,6 +78,10 @@ export const checkMandatoryFiltersSelected = (
   }
 
   if (!timeDuration || !resource) {
+    return false;
+  }
+
+  if (dashboardObj.service_type === 'objectstorage' && !region) {
     return false;
   }
 
