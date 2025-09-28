@@ -20,10 +20,6 @@ import type {
 
 interface CloudPulseDimensionFilterFieldsProps {
   /**
-   * The boolean value to disable the Data Field in dimension filter
-   */
-  dataFieldDisabled: boolean;
-  /**
    * The dimension filter data options to list in the Autocomplete component
    */
   dimensionOptions: Dimension[];
@@ -33,8 +29,7 @@ interface CloudPulseDimensionFilterFieldsProps {
   name: FieldPathByValue<MetricsDimensionFilterForm, MetricsDimensionFilter>;
 
   /**
-   * function to delete the DimensionFilter component
-   * @returns void
+   * Callback function to delete the DimensionFilter component
    */
   onFilterDelete: () => void;
 
@@ -52,7 +47,6 @@ interface CloudPulseDimensionFilterFieldsProps {
 export const CloudPulseDimensionFilterFields = React.memo(
   (props: CloudPulseDimensionFilterFieldsProps) => {
     const {
-      dataFieldDisabled,
       dimensionOptions,
       name,
       onFilterDelete,
@@ -128,7 +122,6 @@ export const CloudPulseDimensionFilterFields = React.memo(
               <Autocomplete
                 data-qa-dimension-filter={`${name}-dimension-field`}
                 data-testid="dimension-field"
-                disabled={dataFieldDisabled}
                 errorText={fieldState.error?.message}
                 label="Dimension"
                 onBlur={field.onBlur}

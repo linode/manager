@@ -24,16 +24,11 @@ interface CloudPulseDimensionFilterRendererProps {
   clearAllTrigger: number;
 
   /**
-   * The boolean value to disable the Data Field in dimension filter
-   */
-  dataFieldDisabled: boolean;
-
-  /**
    * The list of dimensions associated with the selected metric
    */
   dimensionOptions: Dimension[];
   /**
-   * Callback fired to close the drawer
+   * Callback triggered to close the drawer
    */
   onClose: () => void;
 
@@ -43,7 +38,7 @@ interface CloudPulseDimensionFilterRendererProps {
    */
   onDimensionChange: (isDirty: boolean) => void;
   /**
-   * Callback fired on form submission
+   * Callback triggered on form submission
    * @param data The form data on submission
    */
   onSubmit: (data: MetricsDimensionFilterForm) => void;
@@ -65,7 +60,6 @@ interface CloudPulseDimensionFilterRendererProps {
 export const CloudPulseDimensionFilterRenderer = React.memo(
   (props: CloudPulseDimensionFilterRendererProps) => {
     const {
-      dataFieldDisabled,
       dimensionOptions,
       selectedEntities = [],
       selectedDimensions,
@@ -137,7 +131,6 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                 fields.map((field, index) => (
                   <>
                     <CloudPulseDimensionFilterFields
-                      dataFieldDisabled={dataFieldDisabled}
                       dimensionOptions={dimensionOptions}
                       key={field.id}
                       name={`dimension_filters.${index}`}
@@ -149,6 +142,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                       sx={(theme) => ({
                         display: 'none',
                         [theme.breakpoints.down('md')]: {
+                          // only show the divider for smaller screens
                           display:
                             index === fields.length - 1 ? 'none' : 'flex',
                         },

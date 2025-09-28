@@ -31,7 +31,6 @@ describe('CloudPulse dimension filter field tests', () => {
     renderWithTheme(
       <CloudPulseDimensionFilterRenderer
         clearAllTrigger={0}
-        dataFieldDisabled={false}
         dimensionOptions={dimensionOptions}
         onClose={handleClose}
         onDimensionChange={handleDimensionChange}
@@ -78,7 +77,6 @@ describe('CloudPulse dimension filter field tests', () => {
     renderWithTheme(
       <CloudPulseDimensionFilterRenderer
         clearAllTrigger={0}
-        dataFieldDisabled={false}
         dimensionOptions={dimensionOptions}
         onClose={handleClose}
         onDimensionChange={vi.fn()}
@@ -105,7 +103,6 @@ describe('CloudPulse dimension filter field tests', () => {
     renderWithTheme(
       <CloudPulseDimensionFilterRenderer
         clearAllTrigger={0}
-        dataFieldDisabled={false}
         dimensionOptions={dimensionOptions}
         onClose={handleClose}
         onDimensionChange={handleDimensionChange}

@@ -19,9 +19,7 @@ interface CloudPulseDimensionFilterSelectProps {
    */
   drawerLabel: string;
   /**
-   *
    * @param selectedDimensions The list of selected dimension filters
-   * @returns
    */
   handleSelectionChange: (selectedDimensions: MetricsDimensionFilter[]) => void;
   /**
@@ -72,7 +70,7 @@ export const CloudPulseDimensionFilterSelect = React.memo(
             color="inherit"
             data-qa-selected={selectionCount}
             data-testid="dimension-filter"
-            disabled={dimensionOptions.length === 0}
+            disabled={!dimensionOptions.length}
             onClick={() => setOpen(true)}
             size="small"
             sx={(theme) => ({

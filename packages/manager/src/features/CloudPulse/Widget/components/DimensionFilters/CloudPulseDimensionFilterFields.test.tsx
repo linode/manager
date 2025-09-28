@@ -28,7 +28,6 @@ describe('CloudPulse dimension filter field tests', () => {
     renderWithThemeAndHookFormContext<MetricsDimensionFilterForm>({
       component: (
         <CloudPulseDimensionFilterFields
-          dataFieldDisabled={false}
           dimensionOptions={dimensionOptions}
           name={`dimension_filters.${1}`}
           onFilterDelete={handleDelete}

@@ -122,7 +122,6 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
           </Typography>
           <CloudPulseDimensionFilterRenderer
             clearAllTrigger={clearAllTrigger}
-            dataFieldDisabled={false}
             dimensionOptions={dimensionOptions}
             onClose={handleClose}
             onDimensionChange={onDimensionChange}
