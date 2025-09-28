@@ -27,7 +27,7 @@ import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   convertStringToCamelCasesWithSpaces,
-  isValidFilter,
+  getFilteredDimensions,
 } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
@@ -212,26 +212,15 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     serviceType,
   });
 
-  const mergedDimensionOptions = React.useMemo(
-    () =>
-      availableMetrics?.dimensions?.map((dim) =>
-        dim.dimension_label === 'linode_id'
-          ? { ...dim, values: linodesFetch.values.map((lin) => lin.value) }
-          : dim.dimension_label === 'vpc_subnet_id'
-            ? { ...dim, values: vpcFetch.values.map((vpc) => vpc.value) }
-            : dim
-      ),
-    [availableMetrics?.dimensions, linodesFetch.values, vpcFetch.values]
-  );
-
   const filteredSelections = React.useMemo(
     () =>
-      dimensionFilters?.length
-        ? dimensionFilters.filter((filter) =>
-            isValidFilter(filter, mergedDimensionOptions ?? [])
-          )
-        : [],
-    [dimensionFilters, mergedDimensionOptions]
+      getFilteredDimensions(
+        availableMetrics,
+        linodesFetch,
+        vpcFetch,
+        dimensionFilters
+      ),
+    [availableMetrics, dimensionFilters, linodesFetch, vpcFetch]
   );
   const filters: Filters[] | undefined = React.useMemo(() => {
     return additionalFilters?.length ||

@@ -22,6 +22,7 @@ import {
   VALID_OPERATORS,
 } from './constants';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
@@ -31,6 +32,7 @@ import type {
   CloudPulseServiceType,
   Dashboard,
   Dimension,
+  MetricDefinition,
   MonitoringCapabilities,
   ResourcePage,
   Service,
@@ -423,4 +425,30 @@ export const isValidFilter = (
   return (filter.value ?? '')
     .split(',')
     .every((value) => validValues.has(value));
+};
+
+/**
+ * @param linodes The list of linode according to the supported regions
+ * @param vpcs The list of vpcs according to the supported regions
+ * @param dimensionFilters The array of dimension filters selected
+ * @returns The filtered dimension filter based on the selections
+ */
+export const getFilteredDimensions = (
+  availableMetrics: MetricDefinition | undefined,
+  linodes: FetchOptions,
+  vpcs: FetchOptions,
+  dimensionFilters: MetricsDimensionFilter[] | undefined
+): MetricsDimensionFilter[] => {
+  const mergedDimensions = availableMetrics?.dimensions?.map((dim) =>
+    dim.dimension_label === 'linode_id'
+      ? { ...dim, values: linodes.values.map((lin) => lin.value) }
+      : dim.dimension_label === 'vpc_subnet_id'
+        ? { ...dim, values: vpcs.values.map((vpc) => vpc.value) }
+        : dim
+  );
+  return dimensionFilters?.length
+    ? dimensionFilters.filter((filter) =>
+        isValidFilter(filter, mergedDimensions ?? [])
+      )
+    : [];
 };
