@@ -32,7 +32,6 @@ import type {
   CloudPulseServiceType,
   Dashboard,
   Dimension,
-  MetricDefinition,
   MonitoringCapabilities,
   ResourcePage,
   Service,
@@ -416,7 +415,7 @@ export const isValidFilter = (
   );
   if (!dimension) return false;
 
-  if (!dimension.values) return true; // static value dimensions
+  if (!dimension.values.length) return true; // static value dimensions
 
   // allow pattern operators without value check
   if (operator === 'endswith' || operator === 'startswith') return true;
@@ -434,12 +433,12 @@ export const isValidFilter = (
  * @returns The filtered dimension filter based on the selections
  */
 export const getFilteredDimensions = (
-  availableMetrics: MetricDefinition | undefined,
+  dimensions: Dimension[],
   linodes: FetchOptions,
   vpcs: FetchOptions,
   dimensionFilters: MetricsDimensionFilter[] | undefined
 ): MetricsDimensionFilter[] => {
-  const mergedDimensions = availableMetrics?.dimensions?.map((dim) =>
+  const mergedDimensions = dimensions.map((dim) =>
     dim.dimension_label === 'linode_id'
       ? { ...dim, values: linodes.values.map((lin) => lin.value) }
       : dim.dimension_label === 'vpc_subnet_id'
