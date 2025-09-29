@@ -9,6 +9,18 @@ import { FirewallDeviceRow } from './FirewallDeviceRow';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_linode: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 const props = {
   device: firewallDeviceFactory.build(),
   disabled: false,

@@ -1,11 +1,8 @@
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-  useGrants,
-  useProfile,
 } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
-import { getEntityIdsByPermission } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -32,9 +29,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const { helperText, onClose, open, disabled } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams({ strict: false });
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
-  const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data, error, isLoading } = useAllFirewallsQuery(open);
 
@@ -149,20 +143,14 @@ export const AddNodebalancerDrawer = (props: Props) => {
     }
   };
 
-  // If a user is restricted, they can not add a read-only Nodebalancer to a firewall.
-  const readOnlyNodebalancerIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
-    : [];
-
   const assignedNodeBalancers = data
     ?.map((firewall) => firewall.entities)
     .flat()
     ?.filter((service) => service.type === 'nodebalancer');
 
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-    return (
-      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
+    return !assignedNodeBalancers?.some(
+      (service) => service.id === nodebalancer.id
     );
   };
 
