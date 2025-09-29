@@ -9,10 +9,10 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { ipTableId } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/utils';
-import { useFlags } from 'src/hooks/useFlags';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
@@ -102,8 +102,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     vpcLinodeIsAssignedTo,
   } = props;
 
-  const flags = useFlags();
-
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -115,6 +113,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
+
+  const { isDualStackEnabled } = useVPCDualStack();
 
   const isLinodeInterface = interfaceGeneration === 'linode';
   const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
@@ -138,13 +138,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
+  const { isLoading } = useAPLAvailability();
 
   const { data: cluster } = useKubernetesClusterQuery({
-    enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
+    enabled: Boolean(linodeLkeClusterId) && !isLoading,
     id: linodeLkeClusterId ?? -1,
-    isUsingBetaEndpoint,
   });
 
   return (
@@ -379,8 +377,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </StyledIPItem>
                 </StyledIPBox>
               )}
-              {flags.vpcIpv6 &&
-                vpcIPv6 && ( // @TODO VPC IPv6: remove flag check once VPC IPv6 is fully rolled out
+              {isDualStackEnabled &&
+                vpcIPv6 && ( // @TODO VPC IPv6: remove Dual Stack check once VPC IPv6 is fully rolled out
                   <StyledIPBox>
                     <StyledIPLabel data-testid="vpc-ipv6-label">
                       VPC IPv6
