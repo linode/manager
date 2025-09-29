@@ -1,5 +1,5 @@
 # UI Package
-/packages/UI @linode/ui-platform-design-systems
+/packages/ui @linode/ui-platform-design-systems
 
 # Metrics & Alerts
 /packages/manager/cypress/e2e/core/cloudpulse @linode/metrics-alerts
