@@ -1661,10 +1661,6 @@ export const handlers = [
     );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
-  http.get('*/volumes/:id', () => {
-    const volume = volumeFactory.build({ region: 'ap-west' });
-    return HttpResponse.json(volume);
-  }),
   http.get('*/volumes/types', () => {
     const volumeTypes = volumeTypeFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(volumeTypes));
