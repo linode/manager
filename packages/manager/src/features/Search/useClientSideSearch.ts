@@ -11,7 +11,6 @@ import {
   useAllVolumesQuery,
 } from '@linode/queries';
 
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
@@ -48,12 +47,11 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: domainsError,
     isLoading: domainsLoading,
   } = useAllDomainsQuery(enabled);
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: lkeClustersError,
     isLoading: lkeClustersLoading,
-  } = useAllKubernetesClustersQuery({ enabled, isUsingBetaEndpoint });
+  } = useAllKubernetesClustersQuery({ enabled });
   const {
     data: volumes,
     error: volumesError,
