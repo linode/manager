@@ -112,7 +112,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
         container
         data-testid={`${name}-id`}
         flexWrap="wrap"
-        spacing={1.25}
+        spacing={2}
       >
         <GridLegacy item md={3.5} xs={12}>
           <Controller

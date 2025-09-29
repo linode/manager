@@ -95,7 +95,16 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
           >
             {drawerLabel}
           </Typography>
-          <Stack direction="row" justifyContent="space-between">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={(theme) => ({
+              marginRight: 6,
+              [theme.breakpoints.down('md')]: {
+                marginRight: 0,
+              },
+            })}
+          >
             <Typography
               data-qa-id="filter-drawer-selection-title"
               sx={(theme) => ({ font: theme.font.semibold })}
