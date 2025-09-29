@@ -47,7 +47,7 @@ export const getChildAccountDelegates = ({
   euuid,
   params,
 }: GetChildAccountDelegatesParams) =>
-  Request<Page<string[]>>(
+  Request<Page<string>>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
     ),
@@ -59,7 +59,7 @@ export const updateChildAccountDelegates = ({
   euuid,
   data,
 }: UpdateChildAccountDelegatesParams) =>
-  Request<Page<string[]>>(
+  Request<Page<string>>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
     ),
@@ -87,7 +87,7 @@ export const getDelegatedChildAccount = ({ euuid }: { euuid: string }) =>
 export const generateChildAccountToken = ({ euuid }: { euuid: string }) =>
   Request<Token>(
     setURL(
-      `${BETA_API_ROOT}/iam/delegation/child-accounts/child-accounts/${encodeURIComponent(euuid)}/token`,
+      `${BETA_API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}/token`,
     ),
     setMethod('POST'),
     setData(euuid),

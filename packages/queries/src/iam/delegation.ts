@@ -13,7 +13,10 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
+  Account,
   APIError,
+  ChildAccount,
+  ChildAccountWithDelegates,
   GetChildAccountDelegatesParams,
   GetChildAccountsIamParams,
   GetDelegatedChildAccountsForUserParams,
@@ -22,9 +25,10 @@ import type {
   ResourcePage,
   Token,
 } from '@linode/api-v4';
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 export const delegationQueries = createQueryKeys('delegation', {
-  childAccounts: ({ params, users }) => ({
+  childAccounts: ({ params, users }: GetChildAccountsIamParams) => ({
     queryFn: () => getChildAccountsIam({ params, users }),
     queryKey: [params],
   }),
@@ -32,22 +36,22 @@ export const delegationQueries = createQueryKeys('delegation', {
     username,
     params,
   }: GetDelegatedChildAccountsForUserParams) => ({
-    queryFn: getDelegatedChildAccountsForUser,
+    queryFn: () => getDelegatedChildAccountsForUser({ username, params }),
     queryKey: [username, params],
   }),
   childAccountDelegates: ({
     euuid,
     params,
   }: GetChildAccountDelegatesParams) => ({
-    queryFn: getChildAccountDelegates,
+    queryFn: () => getChildAccountDelegates({ euuid, params }),
     queryKey: [euuid, params],
   }),
   myDelegatedChildAccounts: (params: Params) => ({
-    queryFn: getMyDelegatedChildAccounts,
+    queryFn: () => getMyDelegatedChildAccounts({ params }),
     queryKey: [params],
   }),
   delegatedChildAccount: (euuid: string) => ({
-    queryFn: getDelegatedChildAccount,
+    queryFn: () => getDelegatedChildAccount({ euuid }),
     queryKey: [euuid],
   }),
   defaultAccess: {
@@ -58,30 +62,37 @@ export const delegationQueries = createQueryKeys('delegation', {
 
 /**
  * List all child accounts (gets all child accounts from customerParentChild table for the parent account)
- * - Purpose: Inventory child accounts under the caller’s parent account.
- * - Scope: All child accounts for the parent; not filtered by any user’s delegation.
+ * - Purpose: Get ALL child accounts under a parent account, optionally with their delegate users
+ * - Scope: All child accounts for the parent (inventory view)
  * - Audience: Parent account administrators managing delegation.
- * - Data: Page<ChildAccount>; optionally Page<ChildAccountWithUsers> when `users=true` (use `params.includeDelegates` to set).
+ * - CRUD: GET /iam/delegation/child-accounts?users=true (optional)
  */
-export const useListChildAccountsQuery = (
-  params: GetChildAccountsIamParams,
-) => {
+export const useGetChildAccountsQuery = ({
+  params,
+  users,
+}: GetChildAccountsIamParams): UseQueryResult<
+  ResourcePage<ChildAccount | ChildAccountWithDelegates>,
+  APIError[]
+> => {
   return useQuery({
-    ...delegationQueries.childAccounts(params),
+    ...delegationQueries.childAccounts({ params, users }),
   });
 };
 
 /**
  * List delegated child accounts for a user
- * - Purpose: Which child accounts the specified parent user is delegated to manage.
- * - Scope: Subset filtered by `username`; only where that user has an active delegate and required view permission.
+ * - Purpose: Get child accounts that a SPECIFIC user is delegated to manage (which child accounts a specific user can access)
+ * - Scope: Filtered by username - only child accounts where that user has active delegation
  * - Audience: Parent account administrators auditing a user’s delegated access.
- * - Data: Page<ChildAccount> for `GET /iam/delegation/users/:username/child-accounts`.
+ * - CRUD: GET /iam/delegation/users/:username/child-accounts
  */
-export const useListDelegatedChildAccountsForUserQuery = ({
+export const useGetDelegatedChildAccountsForUserQuery = ({
   username,
   params,
-}: GetDelegatedChildAccountsForUserParams) => {
+}: GetDelegatedChildAccountsForUserParams): UseQueryResult<
+  ResourcePage<ChildAccount>,
+  APIError[]
+> => {
   return useQuery({
     ...delegationQueries.delegatedChildAccountsForUser({ username, params }),
   });
@@ -89,15 +100,18 @@ export const useListDelegatedChildAccountsForUserQuery = ({
 
 /**
  * List delegates for a child account
- * - Purpose: Which parent users are currently delegated to manage this child account.
- * - Scope: Delegates tied to `euuid`; only active delegate users and active parent user records included.
- * - Audience: Parent account administrators managing delegates for a specific child account.
- * - Data: Page<string[]> (usernames) for `GET /iam/delegation/child-accounts/:euuid/users`.
+ * - Purpose: Get all delegate users for a SPECIFIC child account
+ * - Scope: Filtered by child account euuid - only users delegated to that account
+ * - Audience: Parent account administrators managing delegates for a SPECIFIC child account.
+ * - CRUD: GET /iam/delegation/child-accounts/:euuid/users
  */
-export const useListChildAccountDelegatesQuery = ({
+export const useGetChildAccountDelegatesQuery = ({
   euuid,
   params,
-}: GetChildAccountDelegatesParams) => {
+}: GetChildAccountDelegatesParams): UseQueryResult<
+  ResourcePage<string[]>,
+  APIError[]
+> => {
   return useQuery({
     ...delegationQueries.childAccountDelegates({
       euuid,
@@ -110,13 +124,17 @@ export const useListChildAccountDelegatesQuery = ({
  * Update delegates for a child account
  * - Purpose: Replace the full set of parent users delegated to a child account.
  * - Scope: Requires parent-account context, valid parent→child relationship, and authorization; payload must be non-empty.
- * - Audience: Parent account administrators assigning/removing delegates for a child account.
- * - Data: Request usernames (**full replacement**); Response Page<string[]> of resulting delegate usernames for `PUT /.../:euuid/users`.
+ * - Audience: Parent account administrators assigning/removing delegates for a SPECIFIC child account.
+ * - CRUD: PUT /iam/delegation/child-accounts/:euuid/users
  */
-export const useUpdateChildAccountDelegatesQuery = () => {
+export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
+  ResourcePage<string>,
+  APIError[],
+  { data: string[]; euuid: string }
+> => {
   const queryClient = useQueryClient();
   return useMutation<
-    ResourcePage<string[]>,
+    ResourcePage<string>,
     APIError[],
     { data: string[]; euuid: string }
   >({
@@ -131,13 +149,15 @@ export const useUpdateChildAccountDelegatesQuery = () => {
 };
 
 /**
- * List my delegated child accounts (gets child accounts where user has view_child_account permission)
- * - Purpose: Which child accounts the current caller can manage via delegation.
+ * List my delegated child accounts (gets child accounts where user has view_child_account permission).
+ * - Purpose: Get child accounts that the current authenticated user can manage via delegation.
  * - Scope: Only child accounts where the caller has an active delegate and required view permission.
- * - Audience: Needing to return accounts the caller can actually access
- * - Data: Page<Account> (limited profile fields) for `GET /iam/delegation/profile/child-accounts`.
+ * - Audience: Needing to return accounts the caller can actually access.
+ * - CRUD: GET /iam/delegation/profile/child-accounts
  */
-export const useListMyDelegatedChildAccountsQuery = (params: Params) => {
+export const useGetMyDelegatedChildAccountsQuery = (
+  params: Params,
+): UseQueryResult<ResourcePage<Account>, APIError[]> => {
   return useQuery({
     ...delegationQueries.myDelegatedChildAccounts(params),
   });
@@ -145,12 +165,14 @@ export const useListMyDelegatedChildAccountsQuery = (params: Params) => {
 
 /**
  * Get child account
- * - Purpose: Retrieve profile information for a specific child account by EUUID.
- * - Scope: Single child account identified by `euuid`; subject to required grants.
- * - Audience: Callers needing basic child account info in the delegation context.
- * - Data: Account (limited account fields) for `GET /iam/delegation/profile/child-accounts/:euuid`.
+ * - Purpose: Get SPECIFIC child account that the current authenticated user can manage via delegation.
+ * - Scope: Only child accounts where the caller has active delegation and required view permission.
+ * - Audience: The current user needing to see which accounts they can actually access.
+ * - CRUD: GET /iam/delegation/profile/child-accounts/:euuid
  */
-export const useGetChildAccountQuery = (euuid: string) => {
+export const useGetChildAccountQuery = (
+  euuid: string,
+): UseQueryResult<Account, APIError[]> => {
   return useQuery({
     ...delegationQueries.delegatedChildAccount(euuid),
   });
@@ -163,7 +185,11 @@ export const useGetChildAccountQuery = (euuid: string) => {
  * - Audience: Clients that need temporary auth to perform actions in the child account.
  * - Data: Token for `POST /iam/delegation/child-accounts/:euuid/token`.
  */
-export const useGenerateChildAccountTokenQuery = () => {
+export const useGenerateChildAccountTokenQuery = (): UseMutationResult<
+  Token,
+  APIError[],
+  { euuid: string }
+> => {
   return useMutation<Token, APIError[], { euuid: string }>({
     mutationFn: generateChildAccountToken,
   });
@@ -176,7 +202,10 @@ export const useGenerateChildAccountTokenQuery = () => {
  * - Audience: Child account administrators reviewing default delegate access.
  * - Data: IamUserRoles with `account_access` and `entity_access` for `GET /iam/delegation/default-role-permissions`.
  */
-export const useGetDefaultDelegationAccessQuery = () => {
+export const useGetDefaultDelegationAccessQuery = (): UseQueryResult<
+  IamUserRoles,
+  APIError[]
+> => {
   return useQuery<IamUserRoles, APIError[]>({
     ...delegationQueries.defaultAccess,
   });
@@ -189,7 +218,11 @@ export const useGetDefaultDelegationAccessQuery = () => {
  * - Audience: Child account administrators configuring default delegate access.
  * - Data: Request/Response IamUserRoles for `PUT /iam/delegation/default-role-permissions`.
  */
-export const useUpdateDefaultDelegationAccessQuery = () => {
+export const useUpdateDefaultDelegationAccessQuery = (): UseMutationResult<
+  IamUserRoles,
+  APIError[],
+  IamUserRoles
+> => {
   const queryClient = useQueryClient();
   return useMutation<IamUserRoles, APIError[], IamUserRoles>({
     mutationFn: updateDefaultDelegationAccess,
