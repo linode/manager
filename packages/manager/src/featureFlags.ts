@@ -168,6 +168,7 @@ export interface Flags {
   databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseVpc: boolean;
+  databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
@@ -182,7 +183,6 @@ export interface Flags {
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
   linodeInterfaces: LinodeInterfacesFlag;
-  lkeEnterprise: LkeEnterpriseFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
