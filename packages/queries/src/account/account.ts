@@ -33,20 +33,20 @@ export const useMutateAccount = () =>
 
 export const useChildAccountsInfiniteQuery = (
   options: RequestOptions,
-  featureFlag = true,
+  enabled = true,
 ) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(options.headers?.Authorization);
 
-  const enabled = featureFlag
+  const isEnabled = enabled
     ? (Boolean(profile?.user_type === 'parent') && !profile?.restricted) ||
       Boolean(grants?.global?.child_account_access) ||
       hasExplicitAuthToken
     : false;
 
   return useInfiniteQuery<ResourcePage<Account>, APIError[]>({
-    enabled,
+    enabled: isEnabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
         return undefined;
