@@ -167,7 +167,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
 
         // Auto-assign IPv4 checkbox checked by default
-        cy.findByLabelText('Auto-assign VPC IPv4 address').should('be.checked');
+        cy.findByLabelText('Auto-assign VPC IPv4').should('be.checked');
 
         cy.wait('@getLinodeConfigs');
 
@@ -304,9 +304,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
 
         // Uncheck auto-assign checkbox and type in VPC IPv4
-        cy.findByLabelText('Auto-assign VPC IPv4 address')
-          .should('be.checked')
-          .click();
+        cy.findByLabelText('Auto-assign VPC IPv4').should('be.checked').click();
         cy.findByLabelText('VPC IPv4').should('be.visible').click();
         cy.focused().type(mockVPCInterface.ipv4?.vpc ?? '10.0.0.7');
 

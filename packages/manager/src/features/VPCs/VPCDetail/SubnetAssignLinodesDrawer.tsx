@@ -37,6 +37,8 @@ import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
+  VPC_IPV4_INPUT_HELPER_TEXT,
+  VPC_IPV6_INPUT_HELPER_TEXT,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -50,7 +52,6 @@ import {
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
 import {
-  generateVPCIPv6InputHelperText,
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
   getVPCInterfacePayload,
@@ -639,7 +640,7 @@ export const SubnetAssignLinodesDrawer = (
                 }
                 data-testid="vpc-ipv4-checkbox"
                 disabled={!userCanAssignLinodes}
-                label={<Typography>Auto-assign VPC IPv4 address</Typography>}
+                label={<Typography>Auto-assign VPC IPv4</Typography>}
                 sx={{ marginRight: 0 }}
               />
               <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
@@ -648,14 +649,12 @@ export const SubnetAssignLinodesDrawer = (
               <TextField
                 disabled={!userCanAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
+                helperText={VPC_IPV4_INPUT_HELPER_TEXT}
                 label="VPC IPv4"
                 noMarginTop={showIPv6Content}
                 onChange={(e) => {
                   setFieldValue('chosenIPv4', e.target.value);
                   setAssignLinodesErrors({});
-                }}
-                style={{
-                  marginBottom: showIPv6Content ? theme.spacingFunction(24) : 0,
                 }}
                 value={values.chosenIPv4}
               />
@@ -685,9 +684,7 @@ export const SubnetAssignLinodesDrawer = (
                     }
                     data-testid="vpc-ipv6-checkbox"
                     disabled={!userCanAssignLinodes}
-                    label={
-                      <Typography>Auto-assign VPC IPv6 address</Typography>
-                    }
+                    label={<Typography>Auto-assign VPC IPv6</Typography>}
                     sx={{ marginRight: 0 }}
                   />
                   <TooltipIcon
@@ -699,9 +696,7 @@ export const SubnetAssignLinodesDrawer = (
                   <TextField
                     disabled={!userCanAssignLinodes}
                     errorText={assignLinodesErrors['vpc.ipv6.slaac[0].range']}
-                    helperText={generateVPCIPv6InputHelperText(
-                      subnet?.ipv6?.[0].range ?? ''
-                    )}
+                    helperText={VPC_IPV6_INPUT_HELPER_TEXT}
                     label="VPC IPv6"
                     noMarginTop
                     onChange={(e) => {

@@ -31,17 +31,23 @@ export const MULTIPLE_CONFIGURATIONS_MESSAGE =
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 
+export const VPC_IPV4_INPUT_HELPER_TEXT =
+  'Define a /32 address derived from the subnet IPv4 range.';
+
 export const VPC_AUTO_ASSIGN_IPV6_TOOLTIP = (
   <Typography component="span">
     Automatically assign a <Code>/64</Code> IPv6 prefix from the subnet.
   </Typography>
 );
 
+export const VPC_IPV6_INPUT_HELPER_TEXT =
+  'Define a /64 IPv6 prefix for this Linode interface, and then append /64.';
+
 export const CANNOT_CREATE_VPC_MESSAGE =
   "You don't have permissions to create a new VPC. Please contact an account administrator for details.";
 
 export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT =
-  'Each VPC can further segment itself into distinct networks through the use of multiple subnets. These subnets can isolate various functionality of an application.';
+  'A VPC can be divided into multiple subnets to create isolated network segments. Subnets help separate different parts of your application, such as databases, frontend services, and backend services.';
 
 export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
   'A VPC is an isolated network that enables private communication between Compute Instances within the same data center.';
@@ -62,7 +68,7 @@ export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP =
   'Enable to allow two-way IPv6 traffic between your VPC and the internet. Disable to restrict IPv6 traffic to within the VPC. When enabled, Linodes will be publicly reachable over IPv6 unless restricted by a Cloud Firewall.';
 
 export const RFC1918HelperText =
-  'The VPC can use the entire RFC 1918 specified range for subnetting except for 192.168.128.0/17.';
+  'VPCs can use the full RFC 1918 private IP address range for subnetting, except for 192.168.128.0/17, which is reserved.';
 
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =

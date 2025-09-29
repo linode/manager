@@ -43,7 +43,7 @@ export const VPCIPv4Address = (props: Props) => {
               <FormControlLabel
                 checked={field.value === 'auto'}
                 control={<Checkbox />}
-                label="Auto-assign VPC IPv4 address"
+                label="Auto-assign VPC IPv4"
                 onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
                 sx={{ pl: 0.4, mr: 0 }}
               />
