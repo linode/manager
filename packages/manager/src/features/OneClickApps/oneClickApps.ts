@@ -86,23 +86,22 @@ export const oneClickApps: Record<number, OCA> = {
     summary: `Build production-ready apps with the MERN stack: MongoDB, Express, React, and Node.js.`,
   },
   401706: {
-    alt_description: 'Virtual private network.',
-    alt_name: 'Free VPN',
+    alt_description: 'Virtual private network server.',
+    alt_name: 'Free VPN Server',
     categories: ['Security'],
     colors: {
       end: '51171a',
       start: '88171a',
     },
-    description: `Configuring WireGuard&reg; is as simple as configuring SSH. A connection is established by an exchange of public keys between server and client, and only a client whose public key is present in the server's configuration file is considered authorized. WireGuard sets up
-      standard network interfaces which behave similarly to other common network interfaces, like eth0. This makes it possible to configure and manage WireGuard interfaces using standard networking tools such as ifconfig and ip. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
+    description: `Deploy a WireGuard&reg; server to create a central VPN hub for secure network connections. This server automatically configures WireGuard with sensible defaults, sets up NAT for full-tunnel capability, and implements security best practices. The server acts as a central point where multiple WireGuard clients can connect by adding their public keys to the server's configuration. WireGuard uses state-of-the-art cryptography and is designed to be faster and more secure than traditional VPN protocols. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
     logo_url: 'wireguard.svg',
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
-        title: 'Deploy WireGuard through the Linode Marketplace',
+        title: 'Deploy WireGuard Server through the Linode Marketplace',
       },
     ],
-    summary: `Modern VPN which utilizes state-of-the-art cryptography. It aims to be faster and leaner than other VPN protocols and has a smaller source code footprint.`,
+    summary: `Modern VPN server which acts as a central hub for secure client connections using state-of-the-art cryptography.`,
     website: 'https://www.wireguard.com/',
   },
   401707: {
@@ -1832,7 +1831,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '85A355',
     },
     description: `Distributed, masterless, replicating NoSQL database cluster.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'apachecassandra.svg',
     related_guides: [
       {
@@ -1892,7 +1891,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'AAAAAA',
     },
     description: `High performance, BSD license key/value database.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'valkey.svg',
     related_guides: [
       {
@@ -1912,7 +1911,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'FFBA01',
     },
     description: `OSI approved open source secrets platform.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'openbao.svg',
     related_guides: [
       {
@@ -1932,7 +1931,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '9D29FB',
     },
     description: `Time series database supporting native query and visualization.`,
-    isNew: true,
+    isNew: false,
     logo_url: 'influxdb.svg',
     related_guides: [
       {
@@ -2093,5 +2092,64 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Leading graph database for connected data applications.',
     website: 'https://neo4j.com/',
+  },
+  1914317: {
+    alt_description: 'Virtual private network client.',
+    alt_name: 'Free VPN Client',
+    categories: ['Security'],
+    colors: {
+      end: '51171a',
+      start: '88171a',
+    },
+    description: `Deploy a WireGuard&reg; client to securely connect your Linode to a remote WireGuard server for private networking, tunneling, or secure remote access. This client automatically configures the WireGuard connection using the server's public key and endpoint information you provide. The client is ideal for creating secure point-to-point connections, accessing private networks through a VPN tunnel, or routing traffic through a central WireGuard server. WireGuard uses state-of-the-art cryptography and is designed to be faster and more secure than traditional VPN protocols. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
+    logo_url: 'wireguard.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
+        title: 'Deploy WireGuard Client through the Linode Marketplace',
+      },
+    ],
+    summary: `Modern VPN client that connects to a remote WireGuard server for secure network access using state-of-the-art cryptography.`,
+    website: 'https://www.wireguard.com/',
+  },
+  1902903: {
+    alt_description: 'Observability pipeline for data management.',
+    alt_name: 'Telemetry data routing and optimization',
+    categories: ['Development'],
+    colors: {
+      end: '04cccc',
+      start: 'ffffff',
+    },
+    description: `Cribl Stream is an observability pipeline that helps organizations collect, reduce, enrich, and route telemetry data in real-time. It connects with 80+ sources and destinations, enabling you to handle data from any source to any analytics tool. Cribl Stream helps reduce data volume and optimize log processing to cut costs, enhance data security with encryption and access controls, and transform data using AI-powered tools. The platform scales from small to enterprise-level deployments and acts as a universal data management layer, giving organizations more control and efficiency in handling their telemetry data across various systems.`,
+    isNew: true,
+    logo_url: 'cribl.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cribl/',
+        title: 'Deploy Cribl through the Linode Marketplace',
+      },
+    ],
+    summary: `Observability pipeline for collecting, reducing, enriching, and routing telemetry data in real-time across 80+ sources and destinations.`,
+    website: 'https://cribl.io/products/stream/',
+  },
+  1902904: {
+    alt_description: 'All-in-one distributed tracing platform.',
+    alt_name: 'Microservices tracing and observability',
+    categories: ['Development'],
+    colors: {
+      end: '68cfe3',
+      start: '648c19',
+    },
+    description: `Jaeger all-in-one is a complete distributed tracing solution deployed as a single Docker container that includes the Jaeger UI, Collector, Query service, Agent, and in-memory storage. This integrated setup is designed for development, testing, and quick deployment scenarios where you need full tracing capabilities without complex distributed architecture. Jaeger helps developers track request flows across microservices, identify performance bottlenecks, analyze service dependencies, and troubleshoot errors in distributed applications. The all-in-one image supports various tracing protocols including Zipkin and Jaeger's own formats, making it ideal for getting started with distributed tracing.`,
+    isNew: true,
+    logo_url: 'jaeger.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jaeger/',
+        title: 'Deploy Jaeger through the Linode Marketplace',
+      },
+    ],
+    summary: `All-in-one distributed tracing platform with integrated UI, collector, and storage for monitoring microservices.`,
+    website: 'https://www.jaegertracing.io/',
   },
 };

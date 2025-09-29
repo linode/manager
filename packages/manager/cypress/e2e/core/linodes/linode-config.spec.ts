@@ -727,7 +727,7 @@ describe('Linode Config management', () => {
     /*
      * - Tests Linode config edit and VPC interface assignment UI flows using mock API data.
      * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", and sets eth1 to "VPC", confirm that correct notice appears.
-     * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", sets eth1 to "VPC", and checks "Assign a public IPv4 address for this Linode", confirm that correct notice appears.
+     * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", sets eth1 to "VPC", and checks "Allow public IPv4 access (1:1 NAT)", confirm that correct notice appears.
      * - Confirms that "REBOOT NEEDED" status indicator appears upon creating VPC config.
      */
     it('Creates a new config using non-recommended settings and confirm the informational notices', () => {
@@ -823,7 +823,7 @@ describe('Linode Config management', () => {
           cy.findByText(LINODE_UNREACHABLE_HELPER_TEXT).should('be.visible');
 
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC",
-          // and checks "Assign a public IPv4 address for this Linode"
+          // and checks "Allow public IPv4 access (1:1 NAT)"
           cy.get('[data-qa-textfield-label="VPC"]').scrollIntoView();
           cy.get('[data-qa-textfield-label="VPC"]').click();
           cy.focused().type(`${mockVPC.label}`);
@@ -840,7 +840,7 @@ describe('Linode Config management', () => {
             .findByTitle(`${mockSubnet.label} (${mockSubnet.ipv4})`)
             .should('be.visible')
             .click();
-          cy.findByText('Assign a public IPv4 address for this Linode')
+          cy.findByText('Allow public IPv4 access (1:1 NAT)')
             .should('be.visible')
             .click();
           // Confirm that internet access warning is displayed.

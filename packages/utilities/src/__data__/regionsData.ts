@@ -13,6 +13,7 @@ export const regions: Region[] = [
       'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
+      'Object Storage',
     ],
     country: 'in',
     id: 'ap-west',
@@ -27,7 +28,10 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Cloud Firewall'], metrics: ['Block Storage'] },
+    monitors: {
+      alerts: ['Cloud Firewall', 'Object Storage'],
+      metrics: ['Block Storage', 'Object Storage'],
+    },
   },
   {
     capabilities: [
@@ -113,7 +117,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Linodes'], metrics: ['Linodes'] },
+    monitors: { alerts: ['Linodes', 'Object Storage'], metrics: ['Linodes'] },
   },
   {
     capabilities: [

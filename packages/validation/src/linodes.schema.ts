@@ -151,12 +151,12 @@ const slaacSchema = object().shape({
 
 const VPCInterfaceIPv6RangeSchema = object({
   range: string()
+    .required('Range is required.')
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
       test: (value) => validateIPv6PrefixLengthIs64(value),
-    })
-    .required(),
+    }),
 });
 
 const ipv6Interface = object({
@@ -363,20 +363,39 @@ const DiskEncryptionSchema = string()
   .oneOf(['enabled', 'disabled'])
   .notRequired();
 
-export const alertsSchema = object({
-  // Legacy numeric-threshold alerts. All fields are now optional so that the
-  // same schema can validate partial updates.
-  cpu: number()
-    .min(0, 'Must be between 0 and 4800')
-    .max(4800, 'Must be between 0 and 4800')
-    .notRequired(),
-  network_in: number().notRequired(),
-  network_out: number().notRequired(),
-  transfer_quota: number().notRequired(),
-  io: number().notRequired(),
+/**
+ * A number field schema with conditional validation for legacy alert fields.
+ * @param label - The label used in the required error message.
+ * @returns A number schema with conditional validation.
+ */
+const legacyAlertsFieldSchema = (
+  label:
+    | 'CPU Usage'
+    | 'Disk I/O Rate'
+    | 'Incoming Traffic'
+    | 'Outbound Traffic'
+    | 'Transfer Quota',
+) =>
+  // If system_alerts and user_alerts are undefined, then it is legacy alerts context.
+  // If it is legacy alerts context, then the field is required.
+  number().when(['system_alerts', 'user_alerts'], {
+    is: (systemAlerts?: number[], userAlerts?: number[]) => {
+      return systemAlerts === undefined && userAlerts === undefined;
+    },
+    then: (schema) => schema.required(`${label} is required.`),
+    otherwise: (schema) => schema.notRequired(),
+  });
 
-  // ACLP alerts ‑ arrays of alert-definition IDs. Optional so the same payload
-  // can mix legacy and ACLP shapes when only one set is present.
+export const UpdateLinodeAlertsSchema = object({
+  // Legacy numeric-threshold alerts. All fields are required to update legacy alerts, but not for ACLP alerts.
+  cpu: legacyAlertsFieldSchema('CPU Usage')
+    .min(0, 'Must be between 0 and 4800')
+    .max(4800, 'Must be between 0 and 4800'),
+  network_in: legacyAlertsFieldSchema('Incoming Traffic'),
+  network_out: legacyAlertsFieldSchema('Outbound Traffic'),
+  transfer_quota: legacyAlertsFieldSchema('Transfer Quota'),
+  io: legacyAlertsFieldSchema('Disk I/O Rate'),
+  // ACLP alerts. All fields are required to update ACLP alerts, but not for legacy alerts.
   system_alerts: array().of(number().defined()).notRequired(),
   user_alerts: array().of(number().defined()).notRequired(),
 });
@@ -427,7 +446,7 @@ export const UpdateLinodeSchema = object({
     .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
-  alerts: alertsSchema.notRequired().default(undefined),
+  alerts: UpdateLinodeAlertsSchema.notRequired().default(undefined),
   backups,
 });
 
@@ -663,7 +682,7 @@ const CreateVlanInterfaceSchema = object({
   ipam_address: string().nullable(),
 });
 
-const AclpAlertsPayloadSchema = object({
+const CreateLinodeAclpAlertsSchema = object({
   system_alerts: array().of(number().defined()).required(),
   user_alerts: array().of(number().defined()).required(),
 });
@@ -717,7 +736,7 @@ const ModifyVlanInterfaceSchema = object({
   .notRequired()
   .nullable();
 
-const ModifyVPCInterfaceIPv6RangeSchema = object({
+const ModifyVPCInterfaceIPv6SlaacSchema = object({
   range: string().notRequired().nullable(),
 });
 
@@ -741,13 +760,10 @@ export const ModifyLinodeInterfaceSchema = object({
       .nullable(),
     ipv6: object({
       slaac: array()
-        .of(ModifyVPCInterfaceIPv6RangeSchema)
+        .of(ModifyVPCInterfaceIPv6SlaacSchema)
         .notRequired()
         .nullable(),
-      ranges: array()
-        .of(ModifyVPCInterfaceIPv6RangeSchema)
-        .notRequired()
-        .nullable(),
+      ranges: array().of(VPCInterfaceIPv6RangeSchema).notRequired().nullable(),
       is_public: boolean().notRequired().nullable(),
     })
       .notRequired()
@@ -840,5 +856,5 @@ export const CreateLinodeSchema = object({
     .oneOf(['linode/migrate', 'linode/power_off_on', undefined])
     .notRequired()
     .nullable(),
-  alerts: AclpAlertsPayloadSchema.notRequired().default(undefined),
+  alerts: CreateLinodeAclpAlertsSchema.notRequired().default(undefined),
 });

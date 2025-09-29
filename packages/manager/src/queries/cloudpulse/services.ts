@@ -8,6 +8,7 @@ import {
   type ResourcePage,
   type ServiceTypesList,
 } from '@linode/api-v4';
+import { queryPresets } from '@linode/queries';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
@@ -23,6 +24,8 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
   return useQuery<ResourcePage<MetricDefinition>, APIError[]>({
     ...queryFactory.metricsDefinitons(serviceType, params, filter),
     enabled,
+    ...queryPresets.oneTimeFetch, // It is a configuration and not need to be refetched
+    retry: 2,
   });
 };
 

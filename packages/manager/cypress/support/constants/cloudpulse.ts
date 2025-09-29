@@ -8,6 +8,7 @@ export const cloudPulseServiceMap: Record<string, string> = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
   firewall: 'Firewall',
+  objectstorage: 'Object Storage',
 };
 /**
  * Descriptions used in the Create/Edit Alert form to guide users
