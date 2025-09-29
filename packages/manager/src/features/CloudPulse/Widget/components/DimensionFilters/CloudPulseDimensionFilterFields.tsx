@@ -114,7 +114,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
         flexWrap="wrap"
         spacing={2}
       >
-        <GridLegacy item md={3.5} xs={12}>
+        <GridLegacy item md={3.8} xs={12}>
           <Controller
             control={control}
             name={`${name}.dimension_label`}
@@ -143,7 +143,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
             )}
           />
         </GridLegacy>
-        <GridLegacy item md={3.5} xs={12}>
+        <GridLegacy item md={3.8} xs={12}>
           <Controller
             control={control}
             name={`${name}.operator`}
@@ -179,7 +179,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
             )}
           />
         </GridLegacy>
-        <GridLegacy item md={3.5} xs={12}>
+        <GridLegacy item md={3.8} xs={12}>
           <Controller
             control={control}
             name={`${name}.value`}
@@ -202,7 +202,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
             )}
           />
         </GridLegacy>
-        <GridLegacy item>
+        <GridLegacy item marginLeft={-0.5} md={0.5} xs={12}>
           <Box
             alignContent="flex-start"
             sx={(theme) => ({
