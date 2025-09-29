@@ -122,6 +122,17 @@ export const handleGeneralErrors = (
   }
 };
 
+/**
+ * This function checks if the field from the APIError object is included
+ * in the list of parent fields that need to provide the full key that includes the child field.
+ * It returns true if that parent field is in the list.
+ */
+const shouldProvideFullKey = (error: APIError): boolean => {
+  const key = error.field?.split('.')[0];
+  const parentFields = ['private_network'];
+  return parentFields.includes(key ?? '') ? true : false;
+};
+
 export const handleAPIErrors = (
   errors: APIError[],
   setFieldError: (field: string, message: string) => void,
@@ -133,8 +144,12 @@ export const handleAPIErrors = (
        * The line below gets the field name because the API returns something like this...
        * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
        * It takes 'data.card_number' and translates it to 'card_number'
+       * This will return the full field key for certain parent fields. See the shouldProvideFullKey function above.
        */
-      const key = error.field.split('.')[error.field.split('.').length - 1];
+      const key = shouldProvideFullKey(error)
+        ? error.field
+        : error.field.split('.')[error.field.split('.').length - 1];
+
       if (key) {
         setFieldError(key, error.reason);
       }

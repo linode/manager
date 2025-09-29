@@ -17,11 +17,33 @@ const setFieldError = vi.fn();
 const setError = vi.fn();
 
 describe('handleAPIErrors', () => {
-  it('should handle api error with a field', () => {
+  it('should handle api error with a regular field', () => {
+    const errorWithFlatField = [{ field: 'label', reason: 'Invalid label' }];
+    handleAPIErrors(errorWithFlatField, setFieldError, setError);
+    expect(setFieldError).toHaveBeenCalledWith(
+      'label',
+      errorWithFlatField[0].reason
+    );
+    expect(setError).not.toHaveBeenCalled();
+  });
+
+  it('should handle api error with a parent field', () => {
     handleAPIErrors(errorWithField, setFieldError, setError);
     expect(setFieldError).toHaveBeenCalledWith(
       'card_number',
       errorWithField[0].reason
+    );
+    expect(setError).not.toHaveBeenCalled();
+  });
+
+  it('should handle api error with a parent field that needs to provide the full parent-child key', () => {
+    const errorWithParentField = [
+      { field: 'private_network.subnet_id', reason: 'Invalid subnet ID' },
+    ];
+    handleAPIErrors(errorWithParentField, setFieldError, setError);
+    expect(setFieldError).toHaveBeenCalledWith(
+      'private_network.subnet_id',
+      errorWithParentField[0].reason
     );
     expect(setError).not.toHaveBeenCalled();
   });
