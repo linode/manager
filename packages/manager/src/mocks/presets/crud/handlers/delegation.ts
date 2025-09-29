@@ -85,9 +85,15 @@ export const getDelegatedChildAccountsForUser = () => [
         return makeNotFoundResponse();
       }
 
-      const userDelegations = delegations.filter(
-        (d) => d.username === username
-      );
+      const userDelegations =
+        delegations.filter((d) => d.username === username) || [];
+
+      if (userDelegations.length === 0 && childAccounts?.length > 0) {
+        return makePaginatedResponse({
+          data: [childAccounts[0]],
+          request,
+        });
+      }
 
       return makePaginatedResponse({
         data: childAccounts.filter((account) =>

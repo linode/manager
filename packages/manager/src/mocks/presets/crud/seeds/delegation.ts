@@ -1,13 +1,16 @@
-import {
-  childAccountFactory,
-  mockDelegateUsersList,
-  pickRandomMultiple,
-} from '@linode/utilities';
+import { childAccountFactory, pickRandomMultiple } from '@linode/utilities';
 
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { mswDB } from 'src/mocks/indexedDB';
 
 import type { MockSeeder, MockState } from 'src/mocks/types';
+
+const DELEGATION_USERNAMES = [
+  'abailly@akamai.com',
+  'test-admin@example.com',
+  'delegate-user1@example.com',
+  'delegate-user2@example.com',
+];
 
 export const delegationSeeder: MockSeeder = {
   canUpdateCount: true,
@@ -28,12 +31,7 @@ export const delegationSeeder: MockSeeder = {
     let delegationId = 1;
 
     for (const childAccount of childAccounts) {
-      // Randomly assign 1-3 users to each child account
-      const numDelegates = Math.floor(Math.random() * 3) + 1;
-      const selectedUsers = pickRandomMultiple(
-        mockDelegateUsersList,
-        numDelegates
-      );
+      const selectedUsers = pickRandomMultiple(DELEGATION_USERNAMES, 2);
 
       for (const username of selectedUsers) {
         delegations.push({
