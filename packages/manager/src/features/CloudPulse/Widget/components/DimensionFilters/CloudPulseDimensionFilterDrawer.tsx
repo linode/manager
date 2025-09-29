@@ -88,13 +88,19 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
     return (
       <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
         <Stack gap={1.5}>
+          <Typography
+            data-qa-id="filter-drawer-subtitle"
+            sx={(theme) => ({ marginTop: -2, font: theme.font.normal })}
+            variant="h3"
+          >
+            {drawerLabel}
+          </Typography>
           <Stack direction="row" justifyContent="space-between">
             <Typography
-              data-qa-id="filter-drawer-subtitle"
-              sx={(theme) => ({ marginTop: -2, font: theme.font.normal })}
-              variant="h3"
+              data-qa-id="filter-drawer-selection-title"
+              sx={(theme) => ({ font: theme.font.semibold })}
             >
-              {drawerLabel}
+              Select up to 5 Filters
             </Typography>
             <Button
               aria-hidden={hideClearAll}
@@ -104,7 +110,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
                 setClearAllTrigger((prev) => prev + 1);
               }}
               sx={(theme) => ({
-                marginTop: -2,
+                padding: 0,
                 font: theme.font.normal,
                 color: theme.textColors.linkActiveLight,
                 display: hideClearAll ? 'none' : 'flex',
@@ -114,12 +120,6 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
               Clear All
             </Button>
           </Stack>
-          <Typography
-            data-qa-id="filter-drawer-selection-title"
-            sx={(theme) => ({ font: theme.font.semibold })}
-          >
-            Select up to 5 Dimension Filters
-          </Typography>
           <CloudPulseDimensionFilterRenderer
             clearAllTrigger={clearAllTrigger}
             dimensionOptions={dimensionOptions}

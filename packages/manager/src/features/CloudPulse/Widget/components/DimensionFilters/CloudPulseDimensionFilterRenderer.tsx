@@ -177,11 +177,18 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
               type: 'submit',
               disabled:
                 selectedDimensions && selectedDimensions.length > 0 && !isDirty,
+              sx: {
+                width: '65px',
+              },
             }}
             secondaryButtonProps={{
               label: 'Cancel',
               onClick: () => {
                 onClose();
+              },
+              buttonType: 'outlined',
+              sx: {
+                width: '70px',
               },
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
