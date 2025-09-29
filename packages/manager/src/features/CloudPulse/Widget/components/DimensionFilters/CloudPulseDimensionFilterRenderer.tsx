@@ -86,12 +86,8 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
 
     const formRef = React.useRef<HTMLFormElement>(null);
     const handleFormSubmit = handleSubmit(async (values) => {
-      values.dimension_filters = values.dimension_filters.filter(
-        ({ dimension_label: dimensionLabel, operator, value }) =>
-          dimensionLabel && operator && value
-      );
       onSubmit({
-        dimension_filters: dimensionFilterWatcher,
+        dimension_filters: values.dimension_filters,
       });
     });
 
