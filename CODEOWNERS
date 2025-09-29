@@ -1,5 +1,14 @@
-# Default code owners
-* @linode/frontend
+# UI Package
+/packages/UI @linode/ui-platform-design-systems
 
-# Frontend SDET code owners for Cypress tests
+# Metrics & Alerts
+packages/manager/cypress/e2e/core/cloudpulse @linode/metrics-alerts
+packages/manager/src/features/CloudPulse @linode/metrics-alerts
+packages/api-v4/src/cloudpulse @linode/metrics-alerts
+packages/validation/src/cloudpulse.schema.ts @linode/metrics-alerts
+
+# Cypress E2E Tests
 /packages/manager/cypress/ @linode/frontend-sdet
+
+# Default Team
+* @linode/cloud-manager-code-reviewers
