@@ -7,6 +7,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseEndpointsSelect } from './CloudPulseEndpointsSelect';
 
+import type { CloudPulseResources } from './CloudPulseResourcesSelect';
+
 const queryMocks = vi.hoisted(() => ({
   useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
@@ -23,26 +25,23 @@ const mockEndpointHandler = vi.fn();
 const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
 
-const mockBuckets = [
+const mockBuckets: CloudPulseResources[] = [
   {
-    ...objectStorageBucketFactory.build({
-      s3_endpoint: 'us-east-1.linodeobjects.com',
-      endpoint_type: 'E3',
-    }),
+    id: 'obj-bucket-1.us-east-1.linodeobjects.com',
+    label: 'obj-bucket-1.us-east-1.linodeobjects.com',
+    region: 'us-east',
     endpoint: 'us-east-1.linodeobjects.com',
   },
   {
-    ...objectStorageBucketFactory.build({
-      s3_endpoint: 'us-east-2.linodeobjects.com',
-      endpoint_type: 'E3',
-    }),
+    id: 'obj-bucket-2.us-east-2.linodeobjects.com',
+    label: 'obj-bucket-2.us-east-2.linodeobjects.com',
+    region: 'us-east',
     endpoint: 'us-east-2.linodeobjects.com',
   },
   {
-    ...objectStorageBucketFactory.build({
-      s3_endpoint: 'br-gru-1.linodeobjects.com',
-      endpoint_type: 'E3',
-    }),
+    id: 'obj-bucket-1.br-gru-1.linodeobjects.com',
+    label: 'obj-bucket-1.br-gru-1.linodeobjects.com',
+    region: 'us-east',
     endpoint: 'br-gru-1.linodeobjects.com',
   },
 ];
@@ -103,13 +102,13 @@ describe('CloudPulseEndpointsSelect component tests', () => {
 
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[0].s3_endpoint ?? '',
+        name: mockBuckets[0].endpoint,
       })
     ).toBeVisible();
 
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[1].s3_endpoint ?? '',
+        name: mockBuckets[1].endpoint,
       })
     ).toBeVisible();
   });
@@ -143,12 +142,12 @@ describe('CloudPulseEndpointsSelect component tests', () => {
     // Check that both endpoints are deselected
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[0].s3_endpoint ?? '',
+        name: mockBuckets[0].endpoint,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[1].s3_endpoint ?? '',
+        name: mockBuckets[1].endpoint,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
@@ -174,29 +173,29 @@ describe('CloudPulseEndpointsSelect component tests', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', {
-        name: mockBuckets[0].s3_endpoint ?? '',
+        name: mockBuckets[0].endpoint,
       })
     );
     await userEvent.click(
       await screen.findByRole('option', {
-        name: mockBuckets[1].s3_endpoint ?? '',
+        name: mockBuckets[1].endpoint,
       })
     );
 
     // Check that the correct endpoints are selected/not selected
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[0].s3_endpoint ?? '',
+        name: mockBuckets[0].endpoint,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[1].s3_endpoint ?? '',
+        name: mockBuckets[1].endpoint,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       await screen.findByRole('option', {
-        name: mockBuckets[2].s3_endpoint ?? '',
+        name: mockBuckets[2].endpoint,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(

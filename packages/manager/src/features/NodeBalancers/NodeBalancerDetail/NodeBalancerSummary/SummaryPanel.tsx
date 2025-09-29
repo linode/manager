@@ -16,15 +16,12 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 import { useIsNodebalancerVPCEnabled } from '../../utils';
 
 export const SummaryPanel = () => {
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-
   const { id } = useParams({
     from: '/nodebalancers/$id/summary',
   });
@@ -77,7 +74,6 @@ export const SummaryPanel = () => {
   const { status: clusterStatus } = useKubernetesClusterQuery({
     enabled: Boolean(nodebalancer?.lke_cluster),
     id: nodebalancer?.lke_cluster?.id ?? -1,
-    isUsingBetaEndpoint,
     options: {
       refetchOnMount: false,
       refetchOnReconnect: false,
