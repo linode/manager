@@ -22,12 +22,10 @@ import {
   dedicatedNodeCount,
   dedicatedType,
   latestEnterpriseTierKubernetesVersion,
-  latestKubernetesVersion,
   mockedLKEClusterTypes,
   mockedLKEEnterprisePrices,
   mockTieredEnterpriseVersions,
   mockTieredStandardVersions,
-  mockTieredVersions,
   nanodeNodeCount,
   nanodeType,
 } from 'support/constants/lke';
@@ -44,7 +42,6 @@ import {
   mockGetClusters,
   mockGetControlPlaneACL,
   mockGetDashboardUrl,
-  mockGetKubernetesVersions,
   mockGetLKEClusterTypes,
   mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
@@ -154,7 +151,7 @@ describe('LKE Cluster Creation', () => {
     exclude: ['au-mel', 'eu-west', 'id-cgk', 'br-gru'],
   });
   const clusterLabel = randomLabel();
-  const clusterVersion = '1.31';
+  const clusterVersion = mockTieredStandardVersions[0].id;
   const mockedLKECluster = kubernetesClusterFactory.build({
     label: clusterLabel,
     region: clusterRegion.id,
@@ -185,7 +182,9 @@ describe('LKE Cluster Creation', () => {
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
     mockGetLKEClusterTypes(mockedLKEClusterPrices).as('getLKEClusterTypes');
     mockGetClusters([mockedLKECluster]).as('getClusters');
-    mockGetKubernetesVersions([clusterVersion]).as('getKubernetesVersions');
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions).as(
+      'getKubernetesVersions'
+    );
 
     cy.visitWithLogin('/kubernetes/clusters');
 
@@ -663,7 +662,10 @@ describe('LKE Cluster Creation with ACL', () => {
 
   describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
-      mockGetKubernetesVersions([clusterVersion]).as('getLKEVersions');
+      mockGetTieredKubernetesVersions(
+        'standard',
+        mockTieredStandardVersions
+      ).as('getLKEVersions');
       mockGetRegions([mockRegion]).as('getRegions');
       mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
       mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
@@ -936,10 +938,12 @@ describe('LKE Cluster Creation with ACL', () => {
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetKubernetesVersions([latestKubernetesVersion]).as(
-        'getKubernetesVersions'
-      );
+      ]).as('getTieredEnterpriseVersions');
+      mockGetTieredKubernetesVersions(
+        'standard',
+        mockTieredStandardVersions
+      ).as('getTieredStandardVersions');
+
       mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
       mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
         'getLKEEnterpriseClusterTypes'
@@ -970,7 +974,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getKubernetesVersions', '@getTieredKubernetesVersions']);
+      cy.wait(['@getTieredStandardVersions', '@getTieredEnterpriseVersions']);
 
       // Select enterprise tier.
       cy.get(`[data-qa-select-card-heading="LKE Enterprise"]`)
@@ -1095,7 +1099,6 @@ describe('LKE Cluster Creation with ACL', () => {
         '@getCluster',
         '@getClusterPools',
         '@createCluster',
-        '@getLKEEnterpriseClusterTypes',
         '@getLinodeTypes',
         '@getApiEndpoints',
         '@getControlPlaneACL',
@@ -1322,10 +1325,12 @@ describe('LKE Cluster Creation with LKE-E', () => {
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
-      ]).as('getTieredKubernetesVersions');
-      mockGetKubernetesVersions([latestKubernetesVersion]).as(
-        'getKubernetesVersions'
-      );
+      ]).as('getEnterpriseTieredVersions');
+      mockGetTieredKubernetesVersions(
+        'standard',
+        mockTieredStandardVersions
+      ).as('getStandardTieredVersions');
+
       mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
       mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
         'getLKEEnterpriseClusterTypes'
@@ -1362,8 +1367,8 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       cy.url().should('endWith', '/kubernetes/create');
       cy.wait([
-        '@getKubernetesVersions',
-        '@getTieredKubernetesVersions',
+        '@getEnterpriseTieredVersions',
+        '@getStandardTieredVersions',
         '@getLinodeTypes',
       ]);
 
@@ -1536,7 +1541,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         '@getCluster',
         '@getClusterPools',
         '@createCluster',
-        '@getLKEEnterpriseClusterTypes',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);
@@ -1634,7 +1638,6 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     );
-    mockGetKubernetesVersions(mockTieredVersions.map((version) => version.id));
     mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
     mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
   });
@@ -1840,10 +1843,8 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
       expect(nodePools[0]).to.be.an('object');
       expect(nodePools[0]['type']).to.equal(mockPlan.id);
       expect(nodePools[0]['count']).to.equal(3);
-
-      // TODO M3-10590 - Uncomment and adjust according to chosen resolution.
-      // expect(nodePools[0]['update_strategy']).to.be.undefined;
-      // expect(nodePools[0]['firewall_id']).to.be.undefined;
+      expect(nodePools[0]['update_strategy']).to.be.undefined;
+      expect(nodePools[0]['firewall_id']).to.be.undefined;
     });
 
     cy.url().should('endWith', `kubernetes/clusters/${mockCluster.id}/summary`);
