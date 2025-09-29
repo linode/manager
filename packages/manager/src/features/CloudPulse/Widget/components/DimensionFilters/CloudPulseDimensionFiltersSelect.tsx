@@ -9,7 +9,7 @@ import { CloudPulseDimensionFilterIconWithBadge } from './CloudPulseFilterIconWi
 import type { MetricsDimensionFilter } from './types';
 import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
 
-interface CloudPulseDimensionFilterSelectProps {
+interface CloudPulseDimensionFiltersSelectProps {
   /**
    * The list of available dimensions for the selected metric
    */
@@ -38,8 +38,8 @@ interface CloudPulseDimensionFilterSelectProps {
   serviceType: CloudPulseServiceType;
 }
 
-export const CloudPulseDimensionFilterSelect = React.memo(
-  (props: CloudPulseDimensionFilterSelectProps) => {
+export const CloudPulseDimensionFiltersSelect = React.memo(
+  (props: CloudPulseDimensionFiltersSelectProps) => {
     const {
       dimensionOptions,
       selectedDimensions,

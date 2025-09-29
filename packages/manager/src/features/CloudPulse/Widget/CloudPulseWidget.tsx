@@ -32,7 +32,7 @@ import {
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
-import { CloudPulseDimensionFilterSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
+import { CloudPulseDimensionFiltersSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -437,7 +437,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   metric={widget.metric}
                   serviceType={serviceType}
                 />
-                <CloudPulseDimensionFilterSelect
+                <CloudPulseDimensionFiltersSelect
                   dimensionOptions={filteredDimensions ?? []}
                   drawerLabel={availableMetrics?.label ?? ''}
                   handleSelectionChange={setDimensionFilters}

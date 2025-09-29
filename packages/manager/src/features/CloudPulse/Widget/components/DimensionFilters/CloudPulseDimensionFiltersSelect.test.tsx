@@ -4,7 +4,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CloudPulseDimensionFilterSelect } from './CloudPulseDimensionFiltersSelect';
+import { CloudPulseDimensionFiltersSelect } from './CloudPulseDimensionFiltersSelect';
 
 import type { Dimension } from '@linode/api-v4';
 
@@ -25,7 +25,7 @@ describe('Tests for CloudPulse Dimension Filters Select', () => {
   it('renders the CloudPulse Dimension Filters with icon and drawer', async () => {
     const handleSubmit = vi.fn();
     renderWithTheme(
-      <CloudPulseDimensionFilterSelect
+      <CloudPulseDimensionFiltersSelect
         dimensionOptions={dimensionOptions}
         drawerLabel="Test Metric"
         handleSelectionChange={handleSubmit}
