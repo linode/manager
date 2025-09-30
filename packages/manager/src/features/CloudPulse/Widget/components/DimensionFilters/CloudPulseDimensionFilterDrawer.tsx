@@ -86,7 +86,12 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
     );
 
     return (
-      <Drawer onClose={(_) => handleClose()} open={open} title="Filters" wide>
+      <Drawer
+        onClose={(_) => handleClose()}
+        open={open}
+        title="Dimension Filters"
+        wide
+      >
         <Stack gap={1.5}>
           <Typography
             data-qa-id="filter-drawer-subtitle"

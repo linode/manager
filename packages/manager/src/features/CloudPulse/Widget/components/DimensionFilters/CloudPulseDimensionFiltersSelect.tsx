@@ -64,7 +64,7 @@ export const CloudPulseDimensionFiltersSelect = React.memo(
 
     return (
       <>
-        <CloudPulseTooltip placement="bottom-end" title="Dimension Filter">
+        <CloudPulseTooltip placement="bottom-end" title="Dimension Filters">
           <IconButton
             aria-label="Widget Dimension Filter"
             color="inherit"
