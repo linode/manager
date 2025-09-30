@@ -1,14 +1,12 @@
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { useFlags } from 'src/hooks/useFlags';
-import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
+import { store } from 'src/new-store';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { Flags, FlagSet } from 'src/featureFlags';
-import type { Dispatch } from 'src/hooks/types';
 
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
@@ -164,7 +162,6 @@ interface SetNestedValueOptions {
 }
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
-  const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
   const ldFlags = ldUseFlags();
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -172,9 +169,12 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   React.useEffect(() => {
     const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY);
     if (storedFlags) {
-      dispatch(setMockFeatureFlags(storedFlags));
+      store.setState((state) => ({
+        ...state,
+        featureFlagOverrides: storedFlags,
+      }));
     }
-  }, [dispatch]);
+  }, []);
 
   const setNestedValue = ({
     ldFlagsObj,
@@ -238,7 +238,10 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   };
 
   const updateFlagStorage = (updatedFlags: object) => {
-    dispatch(setMockFeatureFlags(updatedFlags));
+    store.setState((state) => ({
+      ...state,
+      featureFlagOverrides: updatedFlags,
+    }));
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, JSON.stringify(updatedFlags));
   };
 
@@ -246,7 +249,10 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
    * This will reset the flags values to the Launch Darkly defaults (as returned from the LD dev environment)
    */
   const resetFlags = () => {
-    dispatch(setMockFeatureFlags(ldFlags));
+    store.setState((state) => ({
+      ...state,
+      featureFlagOverrides: ldFlags,
+    }));
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, '');
   };
 

@@ -1,8 +1,9 @@
+import { useStore } from '@tanstack/react-store';
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
-import { useSelector } from 'react-redux';
+
+import { store } from 'src/new-store';
 
 import type { FlagSet } from 'src/featureFlags';
-import type { ApplicationState } from 'src/store';
 export { useLDClient } from 'launchdarkly-react-client-sdk';
 
 /**
@@ -20,9 +21,7 @@ export const useFlags = () => {
   const flags = ldUseFlags() as FlagSet;
 
   // Mock flags are set by custom dev tools and saved in local storage, and override real flags.
-  const mockFlags = useSelector(
-    (state: ApplicationState) => state.mockFeatureFlags
-  );
+  const mockFlags = useStore(store, (state) => state.featureFlagOverrides);
 
   return {
     ...flags,

@@ -1,5 +1,7 @@
 import { Store } from '@tanstack/react-store';
 
+import type { FlagSet } from './featureFlags';
+
 export const store = new Store({
   isMaintenanceModeEnabled: false,
   isImageUploadInProgress: false,
@@ -7,6 +9,7 @@ export const store = new Store({
   isNotificationMenuOpen: false,
   isComplianceModalOpen: false,
   isParentSessionExpiredModalOpen: false,
+  featureFlagOverrides: {} as FlagSet
 });
 
 export const openNotificationMenu = () => {

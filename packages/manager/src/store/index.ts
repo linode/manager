@@ -8,11 +8,6 @@ import longviewStats, {
   defaultState as defaultLongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
 
-import mockFeatureFlags, {
-  defaultMockFeatureFlagState,
-} from './mockFeatureFlags';
-
-import type { MockFeatureFlagState } from './mockFeatureFlags';
 import type { Store } from 'redux';
 import type { State as LongviewState } from 'src/store/longview/longview.reducer';
 import type { State as LongviewStatsState } from 'src/store/longviewStats/longviewStats.reducer';
@@ -20,19 +15,16 @@ import type { State as LongviewStatsState } from 'src/store/longviewStats/longvi
 export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
-  mockFeatureFlags: MockFeatureFlagState;
 }
 
 export const defaultState: ApplicationState = {
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState,
 };
 
 const reducers = combineReducers<ApplicationState>({
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags,
 });
 
 export const storeFactory = () =>
