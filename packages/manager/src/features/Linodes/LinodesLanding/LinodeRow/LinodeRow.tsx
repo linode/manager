@@ -17,7 +17,7 @@ import {
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
-import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
+import { openNotificationMenu } from 'src/new-store';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeMaintenanceText } from '../../LinodeMaintenanceText';
@@ -50,8 +50,6 @@ export const LinodeRow = (props: Props) => {
     status,
     type,
   } = props;
-
-  const notificationContext = React.useContext(_notificationContext);
 
   const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
@@ -105,7 +103,7 @@ export const LinodeRow = (props: Props) => {
         <StatusIcon status={iconStatus} />
         {!isTransitioning && getFormattedStatus(status)}
         {isTransitioning && (
-          <StyledButton onClick={notificationContext.openMenu}>
+          <StyledButton onClick={openNotificationMenu}>
             <ProgressDisplay
               progress={getProgressOrDefault(recentEvent)}
               sx={{ display: 'inline-block' }}

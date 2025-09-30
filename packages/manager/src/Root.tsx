@@ -14,6 +14,7 @@ import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Outlet, useNavigate } from '@tanstack/react-router';
+import { useStore } from '@tanstack/react-store';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -26,28 +27,20 @@ import {
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useDialogContext } from 'src/context/useDialogContext';
 import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
-import {
-  notificationCenterContext,
-  useNotificationContext,
-} from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 
 import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
-import { complianceUpdateContext } from './context/complianceUpdateContext';
-import { sessionExpirationContext } from './context/sessionExpirationContext';
-import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
-import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
+import { store } from './new-store';
 import { useEventsPoller } from './queries/events/events';
 
 import type { Theme } from '@mui/material/styles';
@@ -124,24 +117,6 @@ export const Root = () => {
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const globalErrors = useGlobalErrors();
-
-  const NotificationProvider = notificationCenterContext.Provider;
-  const contextValue = useNotificationContext();
-
-  const ComplianceUpdateProvider = complianceUpdateContext.Provider;
-  const complianceUpdateContextValue = useDialogContext();
-
-  const SwitchAccountSessionProvider = switchAccountSessionContext.Provider;
-  const switchAccountSessionContextValue = useDialogContext({
-    isOpen: false,
-  });
-
-  const SessionExpirationProvider = sessionExpirationContext.Provider;
-  const sessionExpirationContextValue = useDialogContext({
-    isOpen: false,
-  });
-
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
@@ -153,6 +128,16 @@ export const Root = () => {
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
 
+  const isMaintenanceModeEnabled = useStore(
+    store,
+    (state) => state.isMaintenanceModeEnabled
+  );
+
+  const isAccountUnactivated = useStore(
+    store,
+    (state) => state.isAccountUnactivated
+  );
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -160,12 +145,12 @@ export const Root = () => {
    *
    * So in this case, we'll show something more user-friendly
    */
-  if (globalErrors.account_unactivated) {
+  if (isAccountUnactivated) {
     navigate({ to: '/account-activation' });
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
+  if (isMaintenanceModeEnabled || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
 
@@ -185,103 +170,93 @@ export const Root = () => {
         hideIconVariant={false}
         maxSnack={3}
       >
-        <SessionExpirationProvider value={sessionExpirationContextValue}>
-          <SwitchAccountSessionProvider
-            value={switchAccountSessionContextValue}
+        <GoTo />
+        <MainContentBanner />
+        <TopMenu
+          desktopMenuToggle={desktopMenuToggle}
+          openSideMenu={() => toggleMenu(true)}
+          username={username}
+        />
+        <Box display="flex" flex={1} position="relative" zIndex={1}>
+          <Box
+            height={
+              isNarrowViewport
+                ? '100%'
+                : isPageScrollable
+                  ? '100vh'
+                  : `calc(100vh - ${TOPMENU_HEIGHT}px)`
+            }
+            position="sticky"
+            top={0}
+            zIndex={1400}
           >
-            <ComplianceUpdateProvider value={complianceUpdateContextValue}>
-              <NotificationProvider value={contextValue}>
-                <GoTo />
-                <MainContentBanner />
-                <TopMenu
-                  desktopMenuToggle={desktopMenuToggle}
-                  openSideMenu={() => toggleMenu(true)}
-                  username={username}
-                />
-                <Box display="flex" flex={1} position="relative" zIndex={1}>
-                  <Box
-                    height={
-                      isNarrowViewport
-                        ? '100%'
-                        : isPageScrollable
-                          ? '100vh'
-                          : `calc(100vh - ${TOPMENU_HEIGHT}px)`
-                    }
-                    position="sticky"
-                    top={0}
-                    zIndex={1400}
-                  >
-                    <SideMenu
-                      closeMenu={() => toggleMenu(false)}
-                      collapse={desktopMenuIsOpen || false}
-                      desktopMenuToggle={desktopMenuToggle}
-                      open={menuIsOpen}
-                    />
-                  </Box>
-                  <div
-                    className={cx(classes.content, {
-                      [classes.fullWidthContent]: desktopMenuIsOpen === true,
-                    })}
-                    style={{
-                      marginLeft: isNarrowViewport
-                        ? 0
-                        : desktopMenuIsOpen ||
-                            (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                          ? SIDEBAR_COLLAPSED_WIDTH
-                          : SIDEBAR_WIDTH,
-                    }}
-                  >
-                    <MainContentBanner />
-                    <Box
-                      component="main"
-                      id="main-content"
-                      role="main"
-                      sx={(theme) => ({
-                        flex: 1,
-                        margin: '0 auto',
-                        maxWidth: `${theme.breakpoints.values.lg}px !important`,
-                        pb: theme.spacingFunction(32),
-                        pt: theme.spacingFunction(24),
-                        px: {
-                          md: theme.spacingFunction(16),
-                          xs: 0,
-                        },
-                        transition: theme.transitions.create('opacity'),
-                        width: isNarrowViewport
-                          ? '100%'
-                          : `calc(100vw - ${
-                              desktopMenuIsOpen
-                                ? SIDEBAR_COLLAPSED_WIDTH
-                                : SIDEBAR_WIDTH
-                            }px)`,
-                      })}
-                    >
-                      <Grid
-                        className={classes.grid}
-                        container
-                        ref={contentRef}
-                        spacing={0}
-                      >
-                        <Grid className={cx(classes.switchWrapper, 'p0')}>
-                          <div className="content-wrapper">
-                            <GlobalNotifications />
-                            <React.Suspense fallback={<SuspenseLoader />}>
-                              <ErrorBoundaryFallback>
-                                <Outlet />
-                              </ErrorBoundaryFallback>
-                            </React.Suspense>
-                          </div>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                    <Footer />
+            <SideMenu
+              closeMenu={() => toggleMenu(false)}
+              collapse={desktopMenuIsOpen || false}
+              desktopMenuToggle={desktopMenuToggle}
+              open={menuIsOpen}
+            />
+          </Box>
+          <div
+            className={cx(classes.content, {
+              [classes.fullWidthContent]: desktopMenuIsOpen === true,
+            })}
+            style={{
+              marginLeft: isNarrowViewport
+                ? 0
+                : desktopMenuIsOpen ||
+                    (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                  ? SIDEBAR_COLLAPSED_WIDTH
+                  : SIDEBAR_WIDTH,
+            }}
+          >
+            <MainContentBanner />
+            <Box
+              component="main"
+              id="main-content"
+              role="main"
+              sx={(theme) => ({
+                flex: 1,
+                margin: '0 auto',
+                maxWidth: `${theme.breakpoints.values.lg}px !important`,
+                pb: theme.spacingFunction(32),
+                pt: theme.spacingFunction(24),
+                px: {
+                  md: theme.spacingFunction(16),
+                  xs: 0,
+                },
+                transition: theme.transitions.create('opacity'),
+                width: isNarrowViewport
+                  ? '100%'
+                  : `calc(100vw - ${
+                      desktopMenuIsOpen
+                        ? SIDEBAR_COLLAPSED_WIDTH
+                        : SIDEBAR_WIDTH
+                    }px)`,
+              })}
+            >
+              <Grid
+                className={classes.grid}
+                container
+                ref={contentRef}
+                spacing={0}
+              >
+                <Grid className={cx(classes.switchWrapper, 'p0')}>
+                  <div className="content-wrapper">
+                    <GlobalNotifications />
+                    <React.Suspense fallback={<SuspenseLoader />}>
+                      <ErrorBoundaryFallback>
+                        <Outlet />
+                      </ErrorBoundaryFallback>
+                    </React.Suspense>
                   </div>
-                </Box>
-                <GlobalListeners />
-              </NotificationProvider>
-            </ComplianceUpdateProvider>
-          </SwitchAccountSessionProvider>
-        </SessionExpirationProvider>
+                </Grid>
+              </Grid>
+            </Box>
+            <Footer />
+          </div>
+        </Box>
+        <GlobalListeners />
       </Snackbar>
     </div>
   );

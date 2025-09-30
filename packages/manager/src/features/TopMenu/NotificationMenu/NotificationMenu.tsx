@@ -5,18 +5,16 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
+import { useStore } from '@tanstack/react-store';
 import * as React from 'react';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { Link } from 'src/components/Link';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
-import {
-  notificationCenterContext as _notificationContext,
-  menuButtonId,
-} from 'src/features/NotificationCenter/NotificationCenterContext';
 import { NotificationCenterNotificationsContainer } from 'src/features/NotificationCenter/Notifications/NotificationCenterNotificationsContainer';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/useFormattedNotifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
+import { store } from 'src/new-store';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
   useEventsInfiniteQuery,
@@ -25,11 +23,17 @@ import {
 
 import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
 
+const menuButtonId = 'menu-button--notification-events-menu';
+
 export const NotificationMenu = () => {
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
-  const notificationContext = React.useContext(_notificationContext);
+
+  const isNotificationMenuOpen = useStore(
+    store,
+    (state) => state.isNotificationMenuOpen
+  );
 
   const { data } = useEventsInfiniteQuery();
 
@@ -47,22 +51,24 @@ export const NotificationMenu = () => {
   const showInProgressEventIcon = events?.some(isInProgressEvent);
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const prevOpen = usePrevious(notificationContext.menuOpen);
+  const prevOpen = usePrevious(isNotificationMenuOpen);
 
   const handleNotificationMenuToggle = () => {
-    if (!notificationContext.menuOpen) {
-      notificationContext.openMenu();
-    } else {
-      notificationContext.closeMenu();
-    }
+    store.setState((state) => ({
+      ...state,
+      isNotificationMenuOpen: !state.isNotificationMenuOpen,
+    }));
   };
 
   const handleClose = () => {
-    notificationContext.closeMenu();
+    store.setState((state) => ({
+      ...state,
+      isNotificationMenuOpen: false,
+    }));
   };
 
   React.useEffect(() => {
-    if (prevOpen && !notificationContext.menuOpen) {
+    if (prevOpen && !isNotificationMenuOpen) {
       // Dismiss seen notifications after the menu has closed.
       if (events && events.length >= 1 && !events[0].seen) {
         markEventsAsSeen(events[0].id);
@@ -70,7 +76,7 @@ export const NotificationMenu = () => {
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [
-    notificationContext.menuOpen,
+    isNotificationMenuOpen,
     events,
     notifications,
     markEventsAsSeen,
@@ -78,7 +84,7 @@ export const NotificationMenu = () => {
     prevOpen,
   ]);
 
-  const id = notificationContext.menuOpen ? 'notifications-popover' : undefined;
+  const id = isNotificationMenuOpen ? 'notifications-popover' : undefined;
 
   return (
     <>
@@ -93,7 +99,7 @@ export const NotificationMenu = () => {
           ref={anchorRef}
           sx={(theme) => ({
             ...topMenuIconButtonSx(theme),
-            color: notificationContext.menuOpen
+            color: isNotificationMenuOpen
               ? theme.tokens.component.GlobalHeader.Icon.Active
               : theme.tokens.component.GlobalHeader.Icon.Default,
           })}
@@ -126,7 +132,7 @@ export const NotificationMenu = () => {
         data-qa-notification-menu
         id={id}
         onClose={handleClose}
-        open={notificationContext.menuOpen}
+        open={isNotificationMenuOpen}
         slotProps={{
           paper: {
             sx: (theme) => ({

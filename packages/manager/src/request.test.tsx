@@ -3,14 +3,11 @@ import { AxiosHeaders } from 'axios';
 
 import { setAuthDataInLocalStorage } from './OAuth/oauth';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
-import { storeFactory } from './store';
 import { storage } from './utilities/storage';
 
 import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
 import type { AxiosError, AxiosResponse } from 'axios';
-
-const store = storeFactory();
 
 const mockAxiosError = {
   isAxiosError: true,
@@ -46,7 +43,7 @@ describe('Expiring Tokens', () => {
       token: 'helloworld',
     });
 
-    const result = handleError(error400, store);
+    const result = handleError(error400);
 
     expect(storage.authentication.token.get()).toEqual('helloworld');
     expect(storage.authentication.expire.get()).toEqual('never');

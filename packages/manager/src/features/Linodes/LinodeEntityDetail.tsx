@@ -11,7 +11,6 @@ import * as React from 'react';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useInProgressEvents } from 'src/queries/events/events';
 
@@ -42,8 +41,6 @@ export interface Props extends LinodeEntityDetailProps {
 
 export const LinodeEntityDetail = (props: Props) => {
   const { handlers, isSummaryView, linode, variant } = props;
-
-  const notificationContext = React.useContext(_notificationContext);
 
   const { data: events } = useInProgressEvents();
 
@@ -163,7 +160,6 @@ export const LinodeEntityDetail = (props: Props) => {
             linodeRegionDisplay={linodeRegionDisplay}
             linodeStatus={linode.status}
             maintenance={linode.maintenance ?? null}
-            openNotificationMenu={notificationContext.openMenu}
             progress={progress}
             transitionText={transitionText}
             type={type ?? null}

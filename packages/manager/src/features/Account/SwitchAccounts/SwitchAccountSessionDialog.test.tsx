@@ -20,10 +20,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('SwitchAccountSessionDialog', () => {
   it('renders correctly when isOpen is true', () => {
-    const onCloseMock = vi.fn();
-    const { getByText } = renderWithTheme(
-      <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
-    );
+    const { getByText } = renderWithTheme(<SwitchAccountSessionDialog />);
 
     expect(getByText('Session expired')).toBeInTheDocument();
     expect(
@@ -37,18 +34,14 @@ describe('SwitchAccountSessionDialog', () => {
 
   it('calls onClose when close button is clicked', () => {
     const onCloseMock = vi.fn();
-    const { getByText } = renderWithTheme(
-      <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
-    );
+    const { getByText } = renderWithTheme(<SwitchAccountSessionDialog />);
 
     fireEvent.click(getByText('Close'));
     expect(onCloseMock).toHaveBeenCalled();
   });
 
   it('calls history.push("/logout") when Log in button is clicked', () => {
-    const { getByText } = renderWithTheme(
-      <SwitchAccountSessionDialog isOpen={true} onClose={vi.fn()} />
-    );
+    const { getByText } = renderWithTheme(<SwitchAccountSessionDialog />);
 
     fireEvent.click(getByText('Log in'));
     expect(mockNavigate).toHaveBeenCalledWith({

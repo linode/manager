@@ -1,7 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import * as React from 'react';
 
-import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 
 const queryMocks = vi.hoisted(() => ({
@@ -20,18 +18,6 @@ vi.mock('src/features/Account/SwitchAccounts/utils', async () => {
 
 const mockUpdateState = vi.fn();
 
-const wrapper = ({ children }: any) => (
-  <switchAccountSessionContext.Provider
-    value={{
-      close: vi.fn(),
-      isOpen: false,
-      open: vi.fn(),
-      updateState: mockUpdateState,
-    }}
-  >
-    {children}
-  </switchAccountSessionContext.Provider>
-);
 
 // Utility function to render the hook with the wrapper and initialProps
 const renderUseIsParentTokenExpiredHook = ({
@@ -41,7 +27,6 @@ const renderUseIsParentTokenExpiredHook = ({
 }) =>
   renderHook(() => useIsParentTokenExpired({ isProxyUser }), {
     initialProps: isProxyUser,
-    wrapper,
   });
 
 describe('useIsParentTokenExpired', () => {
@@ -80,7 +65,6 @@ describe('useIsParentTokenExpired', () => {
       ({ isProxyUser }) => useIsParentTokenExpired({ isProxyUser }),
       {
         initialProps: { isProxyUser: false },
-        wrapper,
       }
     );
 

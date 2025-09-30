@@ -92,7 +92,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
+  setupInterceptors();
 
   const uiToRender = ui.children ?? ui;
 

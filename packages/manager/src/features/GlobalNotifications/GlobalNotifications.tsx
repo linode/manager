@@ -2,8 +2,6 @@ import { useProfile, useSecurityQuestions } from '@linode/queries';
 import * as React from 'react';
 
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
-import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
-import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
@@ -22,8 +20,6 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const sessionContext = React.useContext(switchAccountSessionContext);
-  const sessionExpirationContext = React.useContext(_sessionExpirationContext);
   const isChildUser = profile?.user_type === 'child';
   const isProxyUser = profile?.user_type === 'proxy';
   const { data: securityQuestions } = useSecurityQuestions({
@@ -60,16 +56,8 @@ export const GlobalNotifications = () => {
       <ComplianceBanner />
       {isProxyUser && (
         <>
-          <SwitchAccountSessionDialog
-            isOpen={Boolean(sessionContext.isOpen)}
-            onClose={() => sessionContext.updateState({ isOpen: false })}
-          />
-          <SessionExpirationDialog
-            isOpen={Boolean(sessionExpirationContext.isOpen)}
-            onClose={() =>
-              sessionExpirationContext.updateState({ isOpen: false })
-            }
-          />
+          <SwitchAccountSessionDialog />
+          <SessionExpirationDialog />
         </>
       )}
       <ComplianceUpdateModal />

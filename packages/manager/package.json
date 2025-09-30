@@ -44,6 +44,7 @@
     "@tanstack/react-query": "5.51.24",
     "@tanstack/react-query-devtools": "5.51.24",
     "@tanstack/react-router": "^1.111.11",
+    "@tanstack/react-store": "^0.7.7",
     "@xterm/xterm": "^5.5.0",
     "akamai-cds-react-components": "0.0.1-alpha.14",
     "algoliasearch": "^4.14.3",

@@ -19,7 +19,7 @@ import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
 
-setupInterceptors(store);
+setupInterceptors();
 
 const Main = () => {
   if (!navigator.cookieEnabled) {

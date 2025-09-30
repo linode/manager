@@ -4,12 +4,11 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
+import { store } from 'src/new-store';
 
 import { isEUModelContractNotification } from '../NotificationCenter/utils';
 
 export const ComplianceBanner = () => {
-  const context = React.useContext(complianceUpdateContext);
   const { data: notifications } = useNotificationsQuery();
 
   const hasComplianceNotification = notifications?.some((notification) =>
@@ -23,7 +22,15 @@ export const ComplianceBanner = () => {
   return (
     <DismissibleBanner
       actionButton={
-        <StyledActionButton buttonType="primary" onClick={() => context.open()}>
+        <StyledActionButton
+          buttonType="primary"
+          onClick={() =>
+            store.setState((state) => ({
+              ...state,
+              isComplianceModalOpen: true,
+            }))
+          }
+        >
           Review Update
         </StyledActionButton>
       }

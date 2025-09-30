@@ -92,7 +92,7 @@ const supportSearchLandingRoute = createRoute({
 
 export const accountActivationLandingRoute = createRoute({
   beforeLoad: async ({ context }) => {
-    if (!context.globalErrors?.account_unactivated) {
+    if (!context.isAccountUnactivated) {
       throw redirect({ to: '/' });
     }
     return true;

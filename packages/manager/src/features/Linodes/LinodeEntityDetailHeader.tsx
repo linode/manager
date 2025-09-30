@@ -8,6 +8,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
+import { openNotificationMenu } from 'src/new-store';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
@@ -51,7 +52,6 @@ export interface HeaderProps {
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
   maintenance: LinodeMaintenance | null;
-  openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
   type: LinodeType | null;
@@ -78,7 +78,6 @@ export const LinodeEntityDetailHeader = (
     linodeStatus,
     linodeMaintenancePolicySet,
     maintenance,
-    openNotificationMenu,
     progress,
     transitionText,
     type,

@@ -7,12 +7,12 @@ import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { store } from 'src/new-store';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
@@ -34,7 +34,6 @@ interface MenuLink {
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
-  const sessionContext = React.useContext(switchAccountSessionContext);
   const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
   const theme = useTheme();
 
@@ -171,9 +170,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
-      return sessionContext.updateState({
-        isOpen: true,
-      });
+      return store.setState((state) => ({
+        ...state,
+        isParentSessionExpiredModalOpen: true,
+      }));
     }
 
     onDrawerOpen(true);

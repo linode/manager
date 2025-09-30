@@ -9,12 +9,11 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
+import { store } from 'src/new-store';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
 import { NotificationCenterNotificationMessage } from './Notifications/NotificationCenterNotificationMessage';
 import {
   adjustSeverity,
@@ -52,7 +51,6 @@ const formatNotificationForDisplay = (
 
 export const useFormattedNotifications =
   (): NotificationCenterNotificationsItem[] => {
-    const notificationContext = React.useContext(_notificationContext);
     const { dismissNotifications, hasDismissedNotifications } =
       useDismissibleNotifications();
 
@@ -69,7 +67,7 @@ export const useFormattedNotifications =
 
     const handleClose = () => {
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
-      notificationContext.closeMenu();
+      store.setState((state) => ({ ...state, isNotificationMenuOpen: false }));
     };
 
     const filteredNotifications = notifications?.filter((thisNotification) => {
@@ -375,15 +373,15 @@ const StyledLink = styled(Link)<Pick<Notification, 'severity'>>(
 );
 
 const ComplianceNotification = () => {
-  const complianceModelContext = React.useContext(complianceUpdateContext);
-
   return (
     <Typography>
       Please review the compliance update for guidance regarding the EU Standard
       Contractual Clauses and its application to users located in Europe as well
       as deployments in Linode’s London and Frankfurt data centers
       <LinkButton
-        onClick={() => complianceModelContext.open()}
+        onClick={() =>
+          store.setState((state) => ({ ...state, isComplianceModalOpen: true }))
+        }
         sx={{ minHeight: 0 }}
       >
         Review compliance update.

@@ -98,7 +98,7 @@ export const router = createRouter({
   context: {
     accountSettings: undefined,
     flags: {},
-    globalErrors: {},
+    isAccountUnactivated: false,
     isACLPEnabled: false,
     isDatabasesEnabled: false,
     isPlacementGroupsEnabled: false,

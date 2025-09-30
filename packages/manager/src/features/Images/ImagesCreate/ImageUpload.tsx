@@ -19,11 +19,11 @@ import {
 } from '@linode/ui';
 import { readableBytes } from '@linode/utilities';
 import { useBlocker, useNavigate, useSearch } from '@tanstack/react-router';
+import { useStore } from '@tanstack/react-store';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
@@ -33,8 +33,7 @@ import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploa
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { setPendingUpload } from 'src/store/pendingUpload';
+import { store } from 'src/new-store';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -47,7 +46,6 @@ import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
 import type { ImageUploadFormData } from './ImageUpload.utils';
 import type { AxiosError, AxiosProgressEvent } from 'axios';
-import type { Dispatch } from 'src/hooks/types';
 
 export const ImageUpload = () => {
   const { imageDescription, imageLabel } = useSearch({
@@ -55,8 +53,10 @@ export const ImageUpload = () => {
   });
   const navigate = useNavigate();
 
-  const dispatch = useDispatch<Dispatch>();
-  const hasPendingUpload = usePendingUpload();
+  const hasPendingUpload = useStore(
+    store,
+    (state) => state.isImageUploadInProgress
+  );
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
@@ -93,7 +93,10 @@ export const ImageUpload = () => {
       // Let the entire app know that there's a pending upload via Redux.
       // High-level components like AuthenticationWrapper need to know
       // this, so the user isn't redirected to Login if the token expires.
-      dispatch(setPendingUpload(true));
+      store.setState((state) => ({
+        ...state,
+        isImageUploadInProgress: true,
+      }));
 
       recordImageAnalytics('start', file);
 
@@ -125,15 +128,21 @@ export const ImageUpload = () => {
         // Force a re-render so that `hasPendingUpload` is false when navigating away
         // from the upload page. We need this to make the navigation prompt work as expected.
         flushSync(() => {
-          dispatch(setPendingUpload(false));
+          store.setState((state) => ({
+            ...state,
+            isImageUploadInProgress: false,
+          }));
         });
 
         navigate({ search: () => ({}), to: '/images' });
       } catch (error) {
         // Handle an Axios error for the actual image upload
         form.setError('root', { message: (error as AxiosError).message });
-        // Update Redux to show we have no upload in progress
-        dispatch(setPendingUpload(false));
+        // Update store to show we have no upload in progress
+        store.setState((state) => ({
+          ...state,
+          isImageUploadInProgress: false,
+        }));
         recordImageAnalytics('fail', file);
       }
     } catch (errors) {
@@ -147,7 +156,10 @@ export const ImageUpload = () => {
         }
       }
       // Update Redux to show we have no upload in progress
-      dispatch(setPendingUpload(false));
+      store.setState((state) => ({
+        ...state,
+        isImageUploadInProgress: false,
+      }));
     }
   });
 

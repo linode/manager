@@ -16,12 +16,12 @@ import {
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
-import { notificationCenterContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import {
   PLACEMENT_GROUP_MIGRATION_INBOUND_MESSAGE,
   PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE,
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { openNotificationMenu } from 'src/new-store';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import type { Linode } from '@linode/api-v4';
@@ -39,7 +39,6 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { id: placementGroupId } = useParams({
     from: '/placement-groups/$id', // todo connie - check about $id/linode
   });
-  const notificationContext = React.useContext(notificationCenterContext);
   const isLinodeMigrating = Boolean(linode.placement_group?.migrating_to);
   const { data: placementGroup } = usePlacementGroupQuery(
     Number(placementGroupId),
@@ -86,7 +85,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         {isMigrationInProgress ? (
           <>
             <StatusIcon status={iconStatus} />
-            <StyledButton onClick={notificationContext.openMenu}>
+            <StyledButton onClick={openNotificationMenu}>
               <ProgressDisplay
                 progress={getProgressOrDefault(recentEvent)}
                 sx={{ display: 'inline-block' }}

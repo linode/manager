@@ -15,7 +15,6 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -29,6 +28,7 @@ import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
+import { store } from 'src/new-store';
 
 export const AccountLanding = () => {
   const navigate = useNavigate();
@@ -45,7 +45,6 @@ export const AccountLanding = () => {
   ]);
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
-  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
@@ -115,9 +114,10 @@ export const AccountLanding = () => {
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
-      return sessionContext.updateState({
-        isOpen: true,
-      });
+      return store.setState((state) => ({
+        ...state,
+        isParentSessionExpiredModalOpen: true,
+      }));
     }
 
     setIsDrawerOpen(true);

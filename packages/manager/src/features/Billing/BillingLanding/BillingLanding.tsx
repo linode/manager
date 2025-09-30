@@ -5,11 +5,11 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
-import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { store } from 'src/new-store';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PlatformMaintenanceBanner } from '../../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
@@ -33,7 +33,6 @@ export const BillingLanding = () => {
   ]);
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
-  const sessionContext = React.useContext(switchAccountSessionContext);
 
   const isIAMRbacPrimaryNavChangesEnabled = flags?.iamRbacPrimaryNavChanges;
   const isAkamaiAccount = account?.billing_source === 'akamai';
@@ -61,9 +60,10 @@ export const BillingLanding = () => {
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
-      return sessionContext.updateState({
-        isOpen: true,
-      });
+      return store.setState((state) => ({
+        ...state,
+        isParentSessionExpiredModalOpen: true,
+      }));
     }
 
     setIsDrawerOpen(true);

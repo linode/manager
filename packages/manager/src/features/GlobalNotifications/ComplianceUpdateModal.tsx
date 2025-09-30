@@ -1,11 +1,12 @@
 import { accountQueries, useMutateAccountAgreements } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
+import { useStore } from '@tanstack/react-store';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
+import { store } from 'src/new-store';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
@@ -15,7 +16,11 @@ export const ComplianceUpdateModal = () => {
   const [checked, setChecked] = React.useState(false);
   const queryClient = useQueryClient();
 
-  const complianceModelContext = React.useContext(complianceUpdateContext);
+  const isOpen = useStore(store, (state) => state.isComplianceModalOpen);
+
+  const onClose = () => {
+    store.setState((state) => ({ ...state, isComplianceModalOpen: false }));
+  };
 
   const { isPending, mutateAsync: updateAccountAgreements } =
     useMutateAccountAgreements();
@@ -24,7 +29,7 @@ export const ComplianceUpdateModal = () => {
     setError('');
     updateAccountAgreements({ eu_model: true, privacy_policy: true })
       .then(() => {
-        complianceModelContext.close();
+        onClose();
         // Re-request notifications so the GDPR notification goes away.
         queryClient.invalidateQueries({
           queryKey: accountQueries.notifications.queryKey,
@@ -54,14 +59,14 @@ export const ComplianceUpdateModal = () => {
             label: 'Close',
             onClick: () => {
               setChecked(false);
-              complianceModelContext.close();
+              onClose();
             },
           }}
         />
       )}
       error={error}
-      onClose={complianceModelContext.close}
-      open={complianceModelContext.isOpen}
+      onClose={onClose}
+      open={isOpen}
       title="Compliance Update"
     >
       <Typography>
@@ -75,7 +80,7 @@ export const ComplianceUpdateModal = () => {
         <SupportLink
           onClick={() => {
             setChecked(false);
-            complianceModelContext.close();
+            onClose();
           }}
           text="open a Support Ticket"
           title="Updates to the new EU Model Contact"

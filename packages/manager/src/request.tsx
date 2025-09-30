@@ -2,12 +2,11 @@ import { baseRequest } from '@linode/api-v4/lib/request';
 import { AxiosHeaders } from 'axios';
 
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
+import { store } from './new-store';
 import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
-import type { ApplicationStore } from './store';
 import type { APIError, Profile } from '@linode/api-v4';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -33,14 +32,11 @@ export type LinodeError = { errors: APIError[] };
  */
 let isRedirectingToLogin = false;
 
-export const handleError = (
-  error: AxiosError<LinodeError>,
-  store: ApplicationStore
-) => {
+export const handleError = (error: AxiosError<LinodeError>) => {
   if (
     error.response &&
     error.response.status === 401 &&
-    !store.getState().pendingUpload &&
+    !store.state.isImageUploadInProgress &&
     !isRedirectingToLogin &&
     window.location.pathname !== '/oauth/callback'
   ) {
@@ -57,22 +53,14 @@ export const handleError = (
   const apiInMaintenanceMode = !!error.response?.headers['x-maintenance-mode'];
 
   if (apiInMaintenanceMode) {
-    store.dispatch(
-      setErrors({
-        api_maintenance_mode: true,
-      })
-    );
+    store.setState((state) => ({ ...state, isMaintenanceModeEnabled: true }))
   }
 
   if (
     !!errors[0].reason.match(/account must be activated/i) &&
     status === 403
   ) {
-    store.dispatch(
-      setErrors({
-        account_unactivated: true,
-      })
-    );
+    store.setState((state) => ({ ...state, isAccountUnactivated: true }))
   }
 
   // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
@@ -133,7 +121,7 @@ export const isSuccessfulGETProfileResponse = (
   );
 };
 
-export const setupInterceptors = (store: ApplicationStore) => {
+export const setupInterceptors = () => {
   baseRequest.interceptors.request.use(async (config) => {
     if (
       window.location.pathname === '/oauth/callback' ||
@@ -164,16 +152,7 @@ export const setupInterceptors = (store: ApplicationStore) => {
     };
   });
 
-  /*
-  Interceptor that:
-    * initiates re-authentication if the response is HTTP 401 "Unauthorized"
-    * displays a Maintenance view if the API is in Maintenance mode
-  Also rejects non-error responses if the API is in Maintenance mode
-  */
-  baseRequest.interceptors.response.use(
-    handleSuccess,
-    (error: AxiosError<LinodeError>) => handleError(error, store)
-  );
+  baseRequest.interceptors.response.use(handleSuccess, handleError);
 
   baseRequest.interceptors.response.use(injectAkamaiAccountHeader);
 };
