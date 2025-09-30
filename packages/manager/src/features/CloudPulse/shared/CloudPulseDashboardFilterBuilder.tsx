@@ -10,6 +10,7 @@ import NullComponent from 'src/components/NullComponent';
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
+  ENDPOINT,
   INTERFACE_ID,
   LINODE_REGION,
   NODE_TYPE,
@@ -21,6 +22,7 @@ import {
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
+  getEndpointsProperties,
   getFilters,
   getNodeTypeProperties,
   getRegionProperties,
@@ -235,6 +237,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           filterKey === REGION
             ? {
                 [filterKey]: region,
+                [ENDPOINT]: undefined,
                 [RESOURCES]: undefined,
                 [TAGS]: undefined,
               }
@@ -248,6 +251,16 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           savePref,
           updatedPreferenceData
         );
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
+    const handleEndpointsChange = React.useCallback(
+      (endpoints: string[], savePref: boolean = false) => {
+        emitFilterChangeByFilterKey(ENDPOINT, endpoints, endpoints, savePref, {
+          [ENDPOINT]: endpoints,
+          [RESOURCE_ID]: undefined,
+        });
       },
       [emitFilterChangeByFilterKey]
     );
@@ -357,6 +370,18 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleTextFilterChange
           );
+        } else if (config.configuration.filterKey === ENDPOINT) {
+          return getEndpointsProperties(
+            {
+              config,
+              dashboard,
+              dependentFilters: dependentFilterReference.current,
+              isServiceAnalyticsIntegration,
+              preferences,
+              shouldDisable: isError || isLoading,
+            },
+            handleEndpointsChange
+          );
         } else {
           return getCustomSelectProperties(
             {
@@ -380,6 +405,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleRegionChange,
         handleTextFilterChange,
         handleResourceChange,
+        handleEndpointsChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
         preferences,
