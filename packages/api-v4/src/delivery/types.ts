@@ -137,7 +137,7 @@ export interface CreateDestinationPayload {
   type: DestinationType;
 }
 
-export type UpdateDestinationPayload = CreateDestinationPayload;
+export type UpdateDestinationPayload = Omit<CreateDestinationPayload, 'type'>;
 
 export interface UpdateDestinationPayloadWithId
   extends UpdateDestinationPayload {

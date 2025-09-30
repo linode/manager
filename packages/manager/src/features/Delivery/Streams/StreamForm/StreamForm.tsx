@@ -27,7 +27,6 @@ import { StreamFormDelivery } from 'src/features/Delivery/Streams/StreamForm/Del
 import { StreamFormClusters } from './Clusters/StreamFormClusters';
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
 
-import type { UpdateDestinationPayload } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
@@ -87,9 +86,7 @@ export const StreamForm = (props: StreamFormProps) => {
     let destinationId = destinations?.[0];
     if (!destinationId) {
       try {
-        const destinationPayload:
-          | CreateDestinationPayload
-          | UpdateDestinationPayload = {
+        const destinationPayload: CreateDestinationPayload = {
           ...destination,
           details: getDestinationPayloadDetails(destination.details),
         };

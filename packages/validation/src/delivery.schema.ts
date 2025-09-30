@@ -1,4 +1,4 @@
-import { array, boolean, mixed, number, object, string } from 'yup';
+import { array, boolean, lazy, mixed, number, object, string } from 'yup';
 
 import type { InferType, MixedSchema, Schema } from 'yup';
 
@@ -99,7 +99,7 @@ const destinationSchemaBase = object().shape({
 
 export const destinationFormSchema = destinationSchemaBase;
 
-export const destinationSchema = destinationSchemaBase.shape({
+export const createDestinationSchema = destinationSchemaBase.shape({
   details: mixed<
     | InferType<typeof customHTTPsDetailsSchema>
     | InferType<typeof linodeObjectStorageDetailsPayloadSchema>
@@ -112,6 +112,30 @@ export const destinationSchema = destinationSchemaBase.shape({
       otherwise: () => customHTTPsDetailsSchema,
     }),
 });
+
+export const updateDestinationSchema = createDestinationSchema
+  .omit(['type'])
+  .shape({
+    details: lazy((value) => {
+      if ('bucket_name' in value) {
+        return linodeObjectStorageDetailsPayloadSchema.noUnknown(
+          'Object contains unknown fields for Linode Object Storage Details.',
+        );
+      }
+      if ('client_certificate_details' in value) {
+        return customHTTPsDetailsSchema.noUnknown(
+          'Object contains unknown fields for Custom HTTPS Details.',
+        );
+      }
+
+      // fallback schema: force error
+      return mixed().test({
+        name: 'details-schema',
+        message: 'Details object does not match any known schema.',
+        test: () => false,
+      });
+    }),
+  });
 
 // Logs Delivery Stream
 
@@ -166,6 +190,18 @@ export const updateStreamSchema = streamSchemaBase
     status: mixed<'active' | 'inactive'>()
       .oneOf(['active', 'inactive'])
       .required(),
+    details: lazy((value) => {
+      if (
+        value &&
+        typeof value === 'object' &&
+        ('cluster_ids' in value || 'is_auto_add_all_clusters_enabled' in value)
+      ) {
+        return streamDetailsSchema.required();
+      }
+
+      // fallback schema: detailsShouldNotExistOrBeNull
+      return detailsShouldNotExistOrBeNull(mixed());
+    }),
   })
   .noUnknown('Object contains unknown fields');
 
