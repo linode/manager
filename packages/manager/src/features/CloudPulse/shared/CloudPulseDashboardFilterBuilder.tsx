@@ -214,6 +214,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           savePref,
           {
             [NODE_TYPE]: undefined,
+            [LINODE_REGION]: undefined,
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),
