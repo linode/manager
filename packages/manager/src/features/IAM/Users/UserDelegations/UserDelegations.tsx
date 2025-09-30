@@ -31,6 +31,7 @@ export const UserDelegations = () => {
   const isIAMDelegationEnabled = flags?.iamDelegation?.enabled;
   const [search, setSearch] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<ChildAccount[]>([]);
+  const [isSearching, setIsSearching] = React.useState(false);
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/users/$username/delegations',
@@ -57,23 +58,44 @@ export const UserDelegations = () => {
     enabled: search.length > 0,
   });
 
-  const searchIsActive = (value: string) =>
-    value.length > 0 &&
-    allDelegatedChildAccounts &&
-    !allDelegatedChildAccountsLoading;
+  const searchIsActive = React.useCallback(
+    (value: string) =>
+      value.length > 0 &&
+      allDelegatedChildAccounts &&
+      !allDelegatedChildAccountsLoading,
+    [allDelegatedChildAccounts, allDelegatedChildAccountsLoading]
+  );
 
   const handleSearch = (value: string) => {
     setSearch(value);
-    if (searchIsActive(value)) {
-      setSearchResults(
-        allDelegatedChildAccounts?.filter((childAccount) =>
-          childAccount.company.toLowerCase().includes(value.toLowerCase())
-        ) || []
-      );
+    if (value.length > 0) {
+      setIsSearching(true);
     } else {
-      setSearchResults([]);
+      setIsSearching(false);
     }
   };
+
+  React.useEffect(() => {
+    if (
+      search.length > 0 &&
+      allDelegatedChildAccounts &&
+      !allDelegatedChildAccountsLoading
+    ) {
+      setSearchResults(
+        allDelegatedChildAccounts
+          .filter((childAccount) =>
+            childAccount.company.toLowerCase().includes(search.toLowerCase())
+          )
+          .sort((a, b) => a.company.localeCompare(b.company))
+      );
+      setIsSearching(false); // Search processing complete
+    } else {
+      setSearchResults([]);
+      if (search.length === 0) {
+        setIsSearching(false);
+      }
+    }
+  }, [search, allDelegatedChildAccounts, allDelegatedChildAccountsLoading]);
 
   if (!isIAMDelegationEnabled) {
     return null;
@@ -92,10 +114,10 @@ export const UserDelegations = () => {
       <Stack>
         <Typography variant="h2">Account Delegations</Typography>
         <DebouncedSearchTextField
-          debounceTime={0}
+          debounceTime={250}
           hideLabel
+          isSearching={allDelegatedChildAccountsLoading}
           label="Search"
-          loading={allDelegatedChildAccountsLoading}
           onSearch={handleSearch}
           placeholder="Search"
           sx={{ mt: 3 }}
@@ -108,8 +130,10 @@ export const UserDelegations = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(delegatedChildAccounts?.results === 0 ||
-              (search.length > 0 && searchResults.length === 0)) && (
+            {((delegatedChildAccounts?.results === 0 && search.length === 0) ||
+              (search.length > 0 &&
+                searchResults.length === 0 &&
+                !isSearching)) && (
               <TableRowEmpty colSpan={1} message="No accounts found" />
             )}
             {searchIsActive(search) &&
@@ -127,7 +151,7 @@ export const UserDelegations = () => {
               ))}
           </TableBody>
         </Table>
-        {!searchIsActive && (
+        {!searchIsActive(search) && (
           <PaginationFooter
             count={delegatedChildAccounts?.results ?? 0}
             eventCategory="Delegated Child Accounts"
