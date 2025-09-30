@@ -130,7 +130,7 @@ export const handleGeneralErrors = (
 const shouldProvideFullKey = (error: APIError): boolean => {
   const key = error.field?.split('.')[0];
   const parentFields = ['private_network'];
-  return parentFields.includes(key ?? '') ? true : false;
+  return parentFields.includes(key ?? '');
 };
 
 export const handleAPIErrors = (
