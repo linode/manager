@@ -162,7 +162,7 @@ export const DatabaseCreate = () => {
       if (ipErrors) {
         setIPErrorsFromAPI(ipErrors);
       }
-      handleAPIErrors(errors, setFieldError, setCreateError);
+      handleAPIErrors(errors, setFieldError, setCreateError, true);
     }
 
     setSubmitting(false);

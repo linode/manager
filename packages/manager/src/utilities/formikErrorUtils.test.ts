@@ -40,7 +40,7 @@ describe('handleAPIErrors', () => {
     const errorWithParentField = [
       { field: 'private_network.subnet_id', reason: 'Invalid subnet ID' },
     ];
-    handleAPIErrors(errorWithParentField, setFieldError, setError);
+    handleAPIErrors(errorWithParentField, setFieldError, setError, true);
     expect(setFieldError).toHaveBeenCalledWith(
       'private_network.subnet_id',
       errorWithParentField[0].reason
