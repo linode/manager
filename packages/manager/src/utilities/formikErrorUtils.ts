@@ -134,7 +134,7 @@ export const handleAPIErrors = (
        * The line below gets the field name because the API returns something like this...
        * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
        * It takes 'data.card_number' and translates it to 'card_number'
-       * If keepParentField is true, then it will return the field without translation.
+       * If keepParentChildFieldKey returns true, then it will return the field without translation.
        */
       const key = keepParentChildFieldKey?.(error)
         ? error.field
