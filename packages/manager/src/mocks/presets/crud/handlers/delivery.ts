@@ -2,7 +2,7 @@ import { destinationType } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { destinationFactory, streamFactory } from 'src/factories/delivery';
+import { destinationFactory, streamFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
