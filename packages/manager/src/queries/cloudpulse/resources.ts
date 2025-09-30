@@ -14,6 +14,7 @@ export const useResourcesQuery = (
   useQuery<any[], unknown, CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),
     enabled,
+    retry: resourceType === 'objectstorage' ? false : 3,
     select: (resources) => {
       if (!enabled) {
         return []; // Return empty array if the query is not enabled
@@ -36,13 +37,18 @@ export const useResourcesQuery = (
             }
           });
         }
+        const id =
+          resourceType === 'objectstorage'
+            ? resource.hostname
+            : String(resource.id);
         return {
           engineType: resource.engine,
-          id: String(resource.id),
-          label: resource.label,
+          id,
+          label: resourceType === 'objectstorage' ? id : resource.label,
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
           tags: resource.tags,
+          endpoint: resource.s3_endpoint,
           entities,
           clusterSize: resource.cluster_size,
         };

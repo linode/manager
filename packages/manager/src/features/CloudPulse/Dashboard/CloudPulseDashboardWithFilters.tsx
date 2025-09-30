@@ -29,14 +29,18 @@ export interface CloudPulseDashboardWithFiltersProp {
    */
   dashboardId: number;
   /**
+   * The region for which the metrics will be listed
+   */
+  region?: string;
+  /**
    * The resource id for which the metrics will be listed
    */
-  resource: number;
+  resource: number | string;
 }
 
 export const CloudPulseDashboardWithFilters = React.memo(
   (props: CloudPulseDashboardWithFiltersProp) => {
-    const { dashboardId, resource } = props;
+    const { dashboardId, resource, region } = props;
     const { data: dashboard, isError } =
       useCloudPulseDashboardByIdQuery(dashboardId);
     const [filterData, setFilterData] = React.useState<FilterData>({
@@ -122,6 +126,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
       dashboardObj: dashboard,
       filterValue: filterData.id,
       resource,
+      region,
       timeDuration,
       groupBy,
     });
@@ -180,7 +185,13 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
-                resource_ids={[resource]}
+                resource_ids={
+                  dashboard.service_type !== 'objectstorage'
+                    ? typeof resource === 'number'
+                      ? [resource]
+                      : undefined
+                    : undefined
+                }
               />
             )}
             <GridLegacy
@@ -206,6 +217,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
               dashboardObj: dashboard,
               filterValue: filterData.id,
               resource,
+              region,
               timeDuration,
               groupBy,
             })}

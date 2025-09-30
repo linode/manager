@@ -85,6 +85,7 @@ export const CloudPulseDashboardRenderer = React.memo(
             : []
         }
         savePref={true}
+        serviceType={dashboard.service_type}
         tags={
           filterValue[TAGS] && Array.isArray(filterValue[TAGS])
             ? (filterValue[TAGS] as string[])
