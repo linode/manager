@@ -28,7 +28,10 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Cloud Firewall'], metrics: ['Object Storage'] },
+    monitors: {
+      alerts: ['Cloud Firewall', 'Object Storage'],
+      metrics: ['Object Storage'],
+    },
   },
   {
     capabilities: [
@@ -114,7 +117,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Linodes'], metrics: ['Linodes'] },
+    monitors: { alerts: ['Linodes', 'Object Storage'], metrics: ['Linodes'] },
   },
   {
     capabilities: [

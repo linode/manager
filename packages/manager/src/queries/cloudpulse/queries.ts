@@ -126,7 +126,6 @@ export const queryFactory = createQueryKeys(key, {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys
           queryKey: ['linodes', params, filters],
         };
-
       case 'nodebalancer':
         return nodebalancerQueries.nodebalancers._ctx.all(params, filters);
       case 'objectstorage':
@@ -139,7 +138,6 @@ export const queryFactory = createQueryKeys(key, {
         };
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
-
       default:
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes
     }
