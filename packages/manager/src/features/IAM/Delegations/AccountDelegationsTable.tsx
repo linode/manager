@@ -20,22 +20,25 @@ import type {
   ChildAccount,
   ChildAccountWithDelegates,
 } from '@linode/api-v4';
-import type { Order } from 'src/features/Users/UsersLandingTableHead';
 
 interface Props {
   delegations: ChildAccount[] | ChildAccountWithDelegates[] | undefined;
   error: APIError[] | null;
+  handleOrderChange: (orderBy: string) => void;
   isLoading: boolean;
   numCols: number;
-  order: Order;
+  order: 'asc' | 'desc';
+  orderBy: string;
 }
 
 export const AccountDelegationsTable = ({
   delegations,
   error,
+  handleOrderChange,
   isLoading,
   numCols,
   order,
+  orderBy,
 }: Props) => {
   const handleUpdateDelegations = () => {
     // Placeholder for future update delegations functionality
@@ -53,9 +56,9 @@ export const AccountDelegationsTable = ({
       >
         <TableRow>
           <TableSortCell
-            active={order.orderBy === 'company'}
-            direction={order.order}
-            handleClick={order.handleOrderChange}
+            active={orderBy === 'company'}
+            direction={order}
+            handleClick={() => handleOrderChange('company')}
             label="company"
             style={{ width: '27%' }}
           >
@@ -82,20 +85,38 @@ export const AccountDelegationsTable = ({
           !error &&
           delegations &&
           delegations.length > 0 &&
-          delegations.map((delegation) => (
+          delegations.map((delegation, key) => (
             <TableRow
               data-qa-table-row={delegation.euuid}
-              key={delegation.euuid}
+              key={`delegation-${delegation.euuid}-${key}`}
             >
               <TableCell>
                 <Typography variant="body1">{delegation.company}</Typography>
               </TableCell>
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <TableCell
+                sx={(theme) => ({
+                  display: { sm: 'table-cell', xs: 'none' },
+                  padding: theme.tokens.spacing.S8,
+                })}
+              >
                 {'users' in delegation && delegation.users.length > 0 ? (
-                  <TruncatedList>
-                    <Typography variant="body1">
-                      {delegation.users.join(', ')}
-                    </Typography>
+                  <TruncatedList
+                    listContainerSx={{
+                      gap: 0.5,
+                      maxHeight: 24,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {delegation.users.map((user: string, index: number) => (
+                      <Typography
+                        color="textSecondary"
+                        key={user}
+                        variant="body1"
+                      >
+                        {user}
+                        {index < delegation.users.length - 1 && ','}
+                      </Typography>
+                    ))}
                   </TruncatedList>
                 ) : (
                   <Typography

@@ -27,11 +27,30 @@ import type {
   Token,
 } from '@linode/api-v4';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+// TODO: UIE-9292 - Remove this and replace with API filtering
+const getAllDelegationsRequest = (
+  _params: Params = {},
+  _users: boolean = true,
+) => {
+  return getAll<ChildAccount | ChildAccountWithDelegates>((params) => {
+    return getChildAccountsIam({
+      params: { ...params, ..._params },
+      users: _users,
+    });
+  })().then((data) => {
+    return data.data;
+  });
+};
 
 export const delegationQueries = createQueryKeys('delegation', {
   childAccounts: ({ params, users }: GetChildAccountsIamParams) => ({
     queryFn: () => getChildAccountsIam({ params, users }),
-    queryKey: [params],
+    queryKey: [params, users],
+  }),
+  // TODO: UIE-9292 - Remove this and replace with API filtering using childAccounts query
+  allChildAccounts: (params: Params = {}, users: boolean = true) => ({
+    queryFn: () => getAllDelegationsRequest(params, users),
+    queryKey: ['all', params, users],
   }),
   delegatedChildAccountsForUser: ({
     username,
@@ -71,10 +90,10 @@ export const delegationQueries = createQueryKeys('delegation', {
 });
 
 /**
- * List all child accounts (gets all child accounts from customerParentChild table for the parent account)
- * - Purpose: Get ALL child accounts under a parent account, optionally with their delegate users
- * - Scope: All child accounts for the parent (inventory view)
- * - Audience: Parent account administrators managing delegation.
+ * List child accounts (paginated) - gets child accounts with server-side pagination
+ * - Purpose: Get child accounts under a parent account with pagination
+ * - Scope: Paginated child accounts for the parent
+ * - Audience: Parent account administrators managing delegation with pagination.
  * - CRUD: GET /iam/delegation/child-accounts?users=true (optional)
  */
 export const useGetChildAccountsQuery = ({
@@ -86,6 +105,25 @@ export const useGetChildAccountsQuery = ({
 > => {
   return useQuery({
     ...delegationQueries.childAccounts({ params, users }),
+  });
+};
+
+/**
+ * List ALL child accounts (fetches all data) - gets all child accounts without pagination
+ * - Purpose: Get ALL child accounts under a parent account for client-side operations
+ * - Scope: All child accounts for the parent (for sorting, filtering, etc.)
+ * - Audience: Parent account administrators needing full dataset.
+ * - CRUD: GET /iam/delegation/child-accounts?users=true (uses getAll utility)
+ */
+export const useGetAllChildAccountsQuery = ({
+  params = {},
+  users = true,
+}: Partial<GetChildAccountsIamParams> = {}): UseQueryResult<
+  (ChildAccount | ChildAccountWithDelegates)[],
+  APIError[]
+> => {
+  return useQuery({
+    ...delegationQueries.allChildAccounts(params, users),
   });
 };
 
