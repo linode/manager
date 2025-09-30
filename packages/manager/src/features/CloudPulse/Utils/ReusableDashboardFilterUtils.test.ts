@@ -20,11 +20,14 @@ it('test getDashboardProperties method', () => {
     filterValue: { region: 'us-east' },
     resource: 1,
     groupBy: [],
+    region: 'us-east',
   });
 
   expect(result).toBeDefined();
   expect(result.dashboardId).toEqual(mockDashboard.id);
+  expect(result.serviceType).toEqual(mockDashboard.service_type);
   expect(result.resources).toEqual(['1']);
+  expect(result.region).toEqual('us-east');
 });
 
 it('test checkMandatoryFiltersSelected method for time duration and resource', () => {
@@ -90,6 +93,29 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     groupBy: [],
   });
 
+  expect(result).toBe(true);
+});
+
+it('checkMandatoryFiltersSelected method should return false if no region is selected for objectstorage service type', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+  });
+  expect(result).toBe(false);
+});
+
+it('checkMandatoryFiltersSelected method should return true if region is selected for objectstorage service type', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+    region: 'ap-west',
+  });
   expect(result).toBe(true);
 });
 

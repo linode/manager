@@ -3114,7 +3114,7 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Object Storage',
           service_type: 'objectstorage',
-          regions: '',
+          regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
       ],
@@ -3202,6 +3202,16 @@ export const handlers = [
           id: 4,
           label: 'Firewall Dashboard',
           service_type: 'firewall',
+        })
+      );
+    }
+
+    if (params.serviceType === 'objectstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 6,
+          label: 'Object Storage Dashboard',
+          service_type: 'objectstorage',
         })
       );
     }
@@ -3492,6 +3502,9 @@ export const handlers = [
     } else if (id === '4') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
+    } else if (id === '6') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Object Storage Service I/O Statistics';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
@@ -3632,9 +3645,8 @@ export const handlers = [
           },
           {
             metric: {
-              entity_id: '789',
+              entity_id: 'obj-bucket-383.ap-west.linodeobjects.com',
               metric_name: 'average_cpu_usage',
-              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],
