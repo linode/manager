@@ -1898,7 +1898,7 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
   });
 
   describe('standard tier', () => {
-    it('enabled feature flag includes blackwells', function () {
+    it('enabled feature flag includes blackwells', () => {
       mockAppendFeatureFlags({
         kubernetesBlackwellPlans: true,
       }).as('getFeatureFlags');
@@ -1936,7 +1936,7 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
       });
     });
 
-    it('disabled feature flag excludes blackwells', function () {
+    it('disabled feature flag excludes blackwells', () => {
       mockAppendFeatureFlags({
         kubernetesBlackwellPlans: false,
       }).as('getFeatureFlags');
