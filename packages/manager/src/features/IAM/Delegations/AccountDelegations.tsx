@@ -109,7 +109,7 @@ export const AccountDelegations = () => {
           hideLabel
           label="Search"
           onSearch={handleSearch}
-          placeholder="Search"
+          placeholder="Search accounts and users"
           value={query ?? ''}
         />
       </Stack>
