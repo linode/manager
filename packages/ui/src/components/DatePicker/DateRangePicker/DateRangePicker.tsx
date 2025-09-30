@@ -10,6 +10,7 @@ import { Divider } from '../../Divider/Divider';
 import { Stack } from '../../Stack/Stack';
 import { Calendar } from '../Calendar/Calendar';
 import { DateField } from '../DateField';
+import { PRESET_LABELS } from '../utils';
 import { Presets } from './Presets';
 
 import type { SxProps } from '@mui/material/styles';
@@ -247,6 +248,7 @@ export const DateRangePicker = ({
             {presetsProps?.enablePresets && (
               <Presets
                 onPresetSelect={handlePresetSelect}
+                presetLabels={PRESET_LABELS}
                 selectedPreset={selectedPreset}
               />
             )}
@@ -283,3 +285,6 @@ export const DateRangePicker = ({
     </LocalizationProvider>
   );
 };
+
+// Expose the constant via a static property on the component
+DateRangePicker.PRESET_LABELS = PRESET_LABELS;
