@@ -1858,17 +1858,15 @@ xdescribe('LKE cluster creation with LKE-E Post-LA', () => {
  * If visible in table, rows are always enabled
 */
 describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => {
-  const regions = [
-    regionFactory.build({
-      capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-    }),
-    regionFactory.build({
-      capabilities: [],
-    }),
-  ];
-  const mockRegion = chooseRegion({
-    capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
-    regions: regions,
+  const mockRegion = regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+    capabilities: [
+      'GPU Linodes',
+      'Linodes',
+      'Kubernetes',
+      'Kubernetes Enterprise',
+    ],
   });
 
   const mockBlackwellLinodeTypes = new Array(4).fill(null).map((_, index) =>
@@ -1884,7 +1882,7 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
         capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
       })
     );
-    mockGetRegions(regions).as('getRegions');
+    mockGetRegions([mockRegion]).as('getRegions');
 
     mockGetLinodeTypes(mockBlackwellLinodeTypes).as('getLinodeTypes');
     const mockRegionAvailability = mockBlackwellLinodeTypes.map((type) =>
