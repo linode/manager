@@ -24,8 +24,7 @@ export const dimensionFiltersSchema = object({
       operator,
     })
       .defined()
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null);
+      .nullable();
   }),
 });
 
