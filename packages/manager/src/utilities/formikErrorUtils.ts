@@ -122,11 +122,25 @@ export const handleGeneralErrors = (
   }
 };
 
+/**
+ * This function checks if the parent field from the APIError object is included
+ * in parentFields list and returns true if if it's found.
+ * This check will determine whether to provide the full key (parent.child) or just the translated key
+ * in the handleAPIErrors function.
+ */
+const keepParentChildFieldKey = (
+  error: APIError,
+  parentFields: string[]
+): boolean => {
+  const key = error.field?.split('.')[0];
+  return parentFields.includes(key ?? '');
+};
+
 export const handleAPIErrors = (
   errors: APIError[],
   setFieldError: (field: string, message: string) => void,
   setError?: (message: string) => void,
-  keepParentChildFieldKey?: (error: APIError) => boolean
+  parentFields?: string[]
 ) => {
   errors.forEach((error: APIError) => {
     if (error.field) {
@@ -134,9 +148,11 @@ export const handleAPIErrors = (
        * The line below gets the field name because the API returns something like this...
        * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
        * It takes 'data.card_number' and translates it to 'card_number'
-       * If keepParentChildFieldKey returns true, then it will return the field without translation.
+       * If parentFields is provided, then it will provide the full field key for those fields without translation
+       * ie. In the example above, if parentFields was ['data'] then the field key would continue to be 'data.card_number'.
+       * This will be useful for when we want to set error messages for the nested fields of a parent.
        */
-      const key = keepParentChildFieldKey?.(error)
+      const key = keepParentChildFieldKey(error, parentFields ?? [])
         ? error.field
         : error.field.split('.')[error.field.split('.').length - 1];
 

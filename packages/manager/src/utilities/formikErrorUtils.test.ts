@@ -4,8 +4,6 @@ import {
   set,
 } from './formikErrorUtils';
 
-import type { APIError } from '@linode/api-v4';
-
 const errorWithoutField = [{ reason: 'Internal server error' }];
 const errorWithField = [
   { field: 'data.card_number', reason: 'Invalid credit card number' },
@@ -19,7 +17,7 @@ const setFieldError = vi.fn();
 const setError = vi.fn();
 
 describe('handleAPIErrors', () => {
-  it('should handle api error with a regular field', () => {
+  it('should handle API error for a regular field', () => {
     const errorWithFlatField = [{ field: 'label', reason: 'Invalid label' }];
     handleAPIErrors(errorWithFlatField, setFieldError, setError);
     expect(setFieldError).toHaveBeenCalledWith(
@@ -29,7 +27,7 @@ describe('handleAPIErrors', () => {
     expect(setError).not.toHaveBeenCalled();
   });
 
-  it('should handle api error with a parent field', () => {
+  it('should handle API error for a parent field when parentFields is not provided', () => {
     handleAPIErrors(errorWithField, setFieldError, setError);
     expect(setFieldError).toHaveBeenCalledWith(
       'card_number',
@@ -38,23 +36,18 @@ describe('handleAPIErrors', () => {
     expect(setError).not.toHaveBeenCalled();
   });
 
-  it('should handle api error with a parent field that needs to provide the full parent-child key', () => {
+  it('should handle API error for a parent field when parentFields is provided', () => {
     const errorWithParentField = [
       { field: 'private_network.subnet_id', reason: 'Invalid subnet ID' },
     ];
 
-    // Pass function to provide full key for specific parent fields
-    const keepParentChildFieldKey = (error: APIError): boolean => {
-      const key = error.field?.split('.')[0];
-      const parentFields = ['private_network'];
-      return parentFields.includes(key ?? '');
-    };
+    const parentFields = ['private_network']; // Provide parentFields so full field key is used
 
     handleAPIErrors(
       errorWithParentField,
       setFieldError,
       setError,
-      keepParentChildFieldKey
+      parentFields
     );
     expect(setFieldError).toHaveBeenCalledWith(
       'private_network.subnet_id',
@@ -63,7 +56,7 @@ describe('handleAPIErrors', () => {
     expect(setError).not.toHaveBeenCalled();
   });
 
-  it('should handle a general api error', () => {
+  it('should handle a general API error', () => {
     handleAPIErrors(errorWithoutField, setFieldError, setError);
     expect(setFieldError).not.toHaveBeenCalledWith();
     expect(setError).toHaveBeenCalledWith(errorWithoutField[0].reason);
