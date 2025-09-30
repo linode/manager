@@ -1,11 +1,28 @@
 # UI Package
-/packages/UI @linode/ui-platform-design-systems
+/packages/ui @linode/ui-platform-design-systems
 
 # Metrics & Alerts
-/packages/manager/cypress/e2e/core/cloudpulse @linode/metrics-alerts
-/packages/manager/src/features/CloudPulse @linode/metrics-alerts
 /packages/api-v4/src/cloudpulse @linode/metrics-alerts
 /packages/validation/src/cloudpulse.schema.ts @linode/metrics-alerts
+/packages/manager/cypress/e2e/core/cloudpulse @linode/metrics-alerts
+/packages/manager/cypress/support/util/cloudpulse.ts @linode/metrics-alerts
+/packages/manager/cypress/support/constants/cloudpulse.ts @linode/metrics-alerts
+/packages/manager/cypress/support/intercepts/cloudpulse.ts @linode/metrics-alerts
+/packages/manager/src/routes/alerts @linode/metrics-alerts
+/packages/manager/src/routes/metrics @linode/metrics-alerts
+/packages/manager/src/factories/cloudpulse @linode/metrics-alerts
+/packages/manager/src/features/CloudPulse @linode/metrics-alerts
+/packages/manager/src/queries/cloudpulse @linode/metrics-alerts
+
+# IAM
+/packages/api-v4/src/iam @linode/iam
+/packages/manager/src/routes/IAM @linode/iam
+/packages/queries/src/iam @linode/iam
+/packages/manager/src/features/IAM @linode/iam
+/packages/manager/src/mocks/presets/crud/seeds/delegation.ts @linode/iam
+/packages/manager/src/mocks/presets/crud/handlers/delegation.ts @linode/iam
+/packages/manager/src/mocks/presets/crud/delegation.ts @linode/iam
+/packages/utilities/src/factories/delegation.ts @linode/iam
 
 # Cypress E2E Tests
 /packages/manager/cypress/ @linode/frontend-sdet
