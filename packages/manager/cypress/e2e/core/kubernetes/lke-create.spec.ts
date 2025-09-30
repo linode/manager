@@ -122,7 +122,7 @@ const validEnterprisePlanTabs = [
 ];
 const validStandardPlanTabs = [...validEnterprisePlanTabs, 'GPU'];
 
-xdescribe('LKE Cluster Creation', () => {
+describe('LKE Cluster Creation', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
@@ -358,7 +358,7 @@ xdescribe('LKE Cluster Creation', () => {
   });
 });
 
-xdescribe('LKE Cluster Creation with APL enabled', () => {
+describe('LKE Cluster Creation with APL enabled', () => {
   it('can create an LKE cluster with APL flag enabled', () => {
     const clusterLabel = randomLabel();
     const mockedLKECluster = kubernetesClusterFactory.build({
@@ -502,7 +502,7 @@ xdescribe('LKE Cluster Creation with APL enabled', () => {
   });
 });
 
-xdescribe('LKE Cluster Creation with DC-specific pricing', () => {
+describe('LKE Cluster Creation with DC-specific pricing', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
@@ -627,7 +627,7 @@ xdescribe('LKE Cluster Creation with DC-specific pricing', () => {
   });
 });
 
-xdescribe('LKE Cluster Creation with ACL', () => {
+describe('LKE Cluster Creation with ACL', () => {
   beforeEach(() => {
     // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
     mockAppendFeatureFlags({
@@ -660,7 +660,7 @@ xdescribe('LKE Cluster Creation with ACL', () => {
   const planName = 'dedicated-1';
   const checkoutName = 'dedicated-1 Plan';
 
-  xdescribe('with LKE IPACL account capability', () => {
+  describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
       mockGetTieredKubernetesVersions(
         'standard',
@@ -1245,7 +1245,7 @@ xdescribe('LKE Cluster Creation with ACL', () => {
   });
 });
 
-xdescribe('LKE Cluster Creation with LKE-E', () => {
+describe('LKE Cluster Creation with LKE-E', () => {
   /**
    * - Confirms LKE-E flow does not exist if account doesn't have the corresponding capability
    * @todo LKE-E: Remove this test once LKE-E is fully rolled out
@@ -1267,7 +1267,7 @@ xdescribe('LKE Cluster Creation with LKE-E', () => {
     cy.contains('Cluster Tier').should('not.exist');
   });
 
-  xdescribe('shows the LKE-E flow with the feature flag on', () => {
+  describe('shows the LKE-E flow with the feature flag on', () => {
     beforeEach(() => {
       // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
       mockAppendFeatureFlags({
@@ -1605,7 +1605,7 @@ xdescribe('LKE Cluster Creation with LKE-E', () => {
  * Node pool size is specified inside of a configuration drawer instead of directly in the plan table,
  * and additional node pool options have been added exclusively for LKE Enterprise clusters.
  */
-xdescribe('LKE cluster creation with LKE-E Post-LA', () => {
+describe('LKE cluster creation with LKE-E Post-LA', () => {
   const mockRegions = [
     ...regionFactory.buildList(3, {
       capabilities: ['Linodes', 'Kubernetes'],
@@ -1954,6 +1954,12 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
     });
   });
   describe('enterprise tier hides GPU tab', () => {
+    beforeEach(() => {
+      // necessary to prevent crash after selecting Enterprise button
+      mockGetTieredKubernetesVersions('enterprise', [
+        latestEnterpriseTierKubernetesVersion,
+      ]).as('getEnterpriseTieredVersions');
+    });
     it('enabled feature flag', () => {
       mockAppendFeatureFlags({
         kubernetesBlackwellPlans: true,
@@ -1963,6 +1969,7 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
       cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
 
       cy.findByText('LKE Enterprise').click();
+      cy.wait(['@getEnterpriseTieredVersions']);
       ui.regionSelect.find().click();
       ui.regionSelect.find().clear();
       ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
@@ -1979,38 +1986,14 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
       cy.visitWithLogin('/kubernetes/create');
       cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
 
-      cy.findByText('LKE Enterprise').click();
       ui.regionSelect.find().click();
       ui.regionSelect.find().clear();
       ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
+      cy.findByText('LKE Enterprise').click();
+      cy.wait(['@getEnterpriseTieredVersions']);
+      2;
       // "GPU" tab hidden
-      //   ui.tabList.findTabByTitle('GPU').should('not.exist');
-      cy.wait('@getRegionAvailability');
-      // Navigate to "GPU" tab
-      ui.tabList.findTabByTitle('GPU').scrollIntoView();
-      ui.tabList.findTabByTitle('GPU').should('be.visible').click();
-
-      cy.findByRole('table', {
-        name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
-      }).within(() => {
-        cy.get('tbody tr')
-          .should('have.length', 4)
-          .each((row, index) => {
-            cy.wrap(row).within(() => {
-              cy.get('td')
-                .eq(0)
-                .within(() => {
-                  cy.findByText(mockBlackwellLinodeTypes[index].label).should(
-                    'be.visible'
-                  );
-                });
-              ui.button
-                .findByTitle('Configure Pool')
-                .should('be.visible')
-                .should('be.enabled');
-            });
-          });
-      });
+      ui.tabList.findTabByTitle('GPU').should('not.exist');
     });
   });
 });
