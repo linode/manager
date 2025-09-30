@@ -24,6 +24,18 @@
 /packages/manager/src/mocks/presets/crud/delegation.ts @linode/iam
 /packages/utilities/src/factories/delegation.ts @linode/iam
 
+# DBaaS
+/packages/manager/src/features/Databases @linode/dbaas-ui
+/packages/manager/src/routes/databases @linode/dbaas-ui
+/packages/manager/src/queries/databases @linode/dbaas-ui
+/packages/manager/src/factories/databases.ts @linode/dbaas-ui
+/packages/queries/src/databases @linode/dbaas-ui
+/packages/api-v4/src/databases @linode/dbaas-ui
+/packages/validation/src/databases.schema.ts @linode/dbaas-ui
+/packages/manager/cypress/e2e/core/databases @linode/dbaas-ui
+/packages/manager/cypress/support/constants/databases.ts @linode/dbaas-ui
+/packages/manager/cypress/support/intercepts/databases.ts @linode/dbaas-ui
+
 # Cypress E2E Tests
 /packages/manager/cypress/ @linode/frontend-sdet
 
