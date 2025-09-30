@@ -3337,6 +3337,27 @@ export const handlers = [
             scrape_interval: '30s',
             unit: 'ops_per_second',
           },
+          {
+            label: 'Network Traffic',
+            metric: 'vm_network_bytes_total',
+            unit: 'Kbps',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['avg'],
+            dimensions: [
+              {
+                label: 'Traffic Pattern',
+                dimension_label: 'pattern',
+                values: ['publicin', 'publicout', 'privatein', 'privateout'],
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['ipv4', 'ipv6'],
+              },
+            ],
+          },
         ],
       };
 
@@ -3621,7 +3642,7 @@ export const handlers = [
             {
               dimension_label: 'pattern',
               operator: 'in',
-              value: 'publicin,privatein',
+              value: 'publicin',
             },
           ],
         },
