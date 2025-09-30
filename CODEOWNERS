@@ -17,6 +17,7 @@
 # IAM
 /packages/api-v4/src/iam @linode/iam
 /packages/manager/src/routes/IAM @linode/iam
+/packages/manager/cypress/component/features/IAM @linode/iam
 /packages/queries/src/iam @linode/iam
 /packages/manager/src/features/IAM @linode/iam
 /packages/manager/src/mocks/presets/crud/seeds/delegation.ts @linode/iam
