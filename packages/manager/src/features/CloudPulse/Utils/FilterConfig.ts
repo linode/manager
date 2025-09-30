@@ -365,7 +365,6 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
     ],
     serviceType: 'objectstorage',
   };
-};
 
 export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   capability: capabilityServiceTypeMapping['blockstorage'],
