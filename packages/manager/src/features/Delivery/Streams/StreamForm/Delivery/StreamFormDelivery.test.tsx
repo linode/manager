@@ -86,6 +86,9 @@ describe('StreamFormDelivery', () => {
             label: '',
             type: destinationType.LinodeObjectStorage,
           },
+          stream: {
+            destinations: [],
+          },
         },
       },
     });
