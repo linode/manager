@@ -21,10 +21,10 @@ import {
   PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE,
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { openNotificationMenu } from 'src/new-store';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import type { Linode } from '@linode/api-v4';
+import { store } from 'src/new-store';
 
 interface Props {
   handleUnassignLinodeModal: (linode: Linode) => void;
@@ -85,7 +85,14 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         {isMigrationInProgress ? (
           <>
             <StatusIcon status={iconStatus} />
-            <StyledButton onClick={openNotificationMenu}>
+            <StyledButton
+              onClick={() =>
+                store.setState((state) => ({
+                  ...state,
+                  isNotificationMenuOpen: true,
+                }))
+              }
+            >
               <ProgressDisplay
                 progress={getProgressOrDefault(recentEvent)}
                 sx={{ display: 'inline-block' }}

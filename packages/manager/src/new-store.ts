@@ -11,7 +11,3 @@ export const store = new Store({
   isParentSessionExpiredModalOpen: false,
   featureFlagOverrides: {} as FlagSet
 });
-
-export const openNotificationMenu = () => {
-  store.setState((state) => ({ ...state, isNotificationMenuOpen: true }))
-};
