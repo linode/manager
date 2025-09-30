@@ -4,7 +4,7 @@ import {
   regionAvailabilityFactory,
   regionFactory,
 } from '@linode/utilities';
-// import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
   mockCreateLinode,
   mockGetLinodeTypes,
@@ -15,13 +15,6 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-
-const linodeLabels = [
-  `${randomLabel()}-1`,
-  `${randomLabel()}-2`,
-  `${randomLabel()}-3`,
-  `${randomLabel()}-4`,
-];
 
 const mockEnabledRegion = regionFactory.build({
   id: 'us-east',
@@ -34,39 +27,27 @@ const mockDisabledRegion = regionFactory.build({
   label: 'Chicago, IL',
   capabilities: ['Linodes'],
 });
-// table on GPU tab populated by types w/ class = 'gpu'
-const mockNotBlackwellLinodeTypes = linodeLabels.map((planName) =>
+const mockBlackwellLinodeTypes = new Array(4).fill(null).map((_, index) =>
   linodeTypeFactory.build({
-    id: `id-${randomLabel()}`,
+    id: `g3-gpu-rtxpro6000-blackwell-${index + 1}`,
+    label: `RTX PRO 6000 Blackwell x${index + 1}`,
     class: 'gpu',
-    label: planName,
   })
 );
-const mockBlackwellLinodeTypes = linodeLabels.map((planName) =>
-  linodeTypeFactory.build({
-    id: `id-blackwell-${randomLabel()}`,
-    class: 'gpu',
-    label: 'blackwell-' + planName,
-  })
-);
-const mockLinodeTypes = [
-  ...mockNotBlackwellLinodeTypes,
-  ...mockBlackwellLinodeTypes,
-];
 const selectedBlackwellId = mockBlackwellLinodeTypes[0].id;
 
 describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
   beforeEach(() => {
     mockGetRegions([mockEnabledRegion, mockDisabledRegion]).as('getRegions');
 
-    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetLinodeTypes(mockBlackwellLinodeTypes).as('getLinodeTypes');
   });
 
   /*
    * Blackwells not enabled if region not enables it
    */
   it('disables Blackwells if disabled region selected', function () {
-    const mockRegionAvailability = mockLinodeTypes.map((type) =>
+    const mockRegionAvailability = mockBlackwellLinodeTypes.map((type) =>
       regionAvailabilityFactory.build({
         plan: type.label,
         available: false,
@@ -92,14 +73,18 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
     cy.get('[data-qa-error="true"]').should('be.visible');
 
     cy.findByRole('table', {
-      name: 'List of NVIDIA Quadro RTX 6000 Plans',
+      name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
     }).within(() => {
-      cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
+      cy.findByText('NVIDIA RTX PRO 6000 Blackwell Server Edition').should(
+        'be.visible'
+      );
       cy.get('tbody tr')
-        .should('have.length', 8)
+        .should('have.length', 4)
         .each((_, index) => {
           // linode table has radio button in first column
-          cy.get(`#${mockLinodeTypes[index].id}`).should('be.disabled');
+          cy.get(`#${mockBlackwellLinodeTypes[index].id}`).should(
+            'be.disabled'
+          );
         });
     });
   });
@@ -122,20 +107,23 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
       });
 
     cy.findByRole('table', {
-      name: 'List of NVIDIA Quadro RTX 6000 Plans',
+      name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
     }).within(() => {
-      cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
+      cy.findByText('NVIDIA RTX PRO 6000 Blackwell Server Edition').should(
+        'be.visible'
+      );
       cy.get('tbody tr')
-        .should('have.length', 8)
+        .should('have.length', 4)
         .each((_, index) => {
           // linode table has radio button in first column
-          cy.get(`#${mockLinodeTypes[index].id}`).should('be.enabled');
+          cy.get(`#${mockBlackwellLinodeTypes[index].id}`).should('be.enabled');
         });
 
       // select blackwell plan
       cy.get(`input#${selectedBlackwellId}`).click();
     });
-
+    const newLinodeLabel = randomLabel();
+    cy.findByLabelText('Linode Label').type(newLinodeLabel);
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
     cy.get('[id="root-password"]').type(randomString(12));
     cy.scrollTo('bottom');
@@ -151,38 +139,25 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    // validate payload content
 
+    // validate payload content
     cy.wait('@createLinode').then((xhr) => {
+      // validate request
       const payload = xhr.request.body;
       expect(payload.region).to.eq(mockEnabledRegion.id);
       expect(payload.type).to.eq(selectedBlackwellId);
-      // 		image
-      // :
-      // "linode/ubuntu24.04"
-      // interfaces
-      // :
-      // [{…}]
-      // label
-      // :
-      // "ubuntu-us-east"
-      // private_ip
-      // :
-      // false
-      // region
-      // :
-      // "us-east"
-      // root_pass
-      // :
-      // "6EtWa2vIVSzH"
-      // type
-      // :
-      // "id-blackwell-cy-test-yqsapwdxvy"
-      //   debugger;
-      //   const alerts = intercept.request.body['alerts'];
-      //   expect(alerts).to.eq(undefined);
-    });
 
-    // page redirects to /linodes/<id>/metrics of newly created linode
+      // validate response
+      expect(xhr.response?.body?.id).to.eq(mockLinode.id);
+      assert.equal(xhr.response?.statusCode, 200);
+      cy.url().should('endWith', `linodes/${mockLinode.id}/metrics`);
+    });
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
+    cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+      'be.visible'
+    );
+    cy.get('h1[data-qa-header]', { timeout: LINODE_CREATE_TIMEOUT })
+      .should('be.visible')
+      .should('have.text', mockLinode.label);
   });
 });
