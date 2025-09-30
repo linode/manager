@@ -21,10 +21,10 @@ import {
   PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE,
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { store } from 'src/new-store';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import type { Linode } from '@linode/api-v4';
-import { store } from 'src/new-store';
 
 interface Props {
   handleUnassignLinodeModal: (linode: Linode) => void;

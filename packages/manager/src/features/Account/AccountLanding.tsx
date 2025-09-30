@@ -20,6 +20,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useTabs } from 'src/hooks/useTabs';
+import { store } from 'src/new-store';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
@@ -28,7 +29,6 @@ import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
-import { store } from 'src/new-store';
 
 export const AccountLanding = () => {
   const navigate = useNavigate();

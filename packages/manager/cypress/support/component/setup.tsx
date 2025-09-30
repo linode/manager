@@ -28,10 +28,8 @@ import { mount } from 'cypress/react';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
-import { Provider } from 'react-redux';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { storeFactory } from 'src/store';
 
 import type { ThemeName } from '@linode/ui';
 import type { AnyRoute, AnyRouter } from '@tanstack/react-router';
@@ -50,7 +48,6 @@ export const mountWithTheme = (
   routeTree?: (parentRoute: AnyRoute) => AnyRoute[]
 ) => {
   const queryClient = queryClientFactory();
-  const store = storeFactory();
   const rootRoute = createRootRoute({});
   const indexRoute = createRoute({
     component: () => jsx,
@@ -68,22 +65,20 @@ export const mountWithTheme = (
   });
 
   return mount(
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <LinodeThemeWrapper theme={theme}>
-          <LDProvider
-            clientSideID={''}
-            deferInitialization
-            flags={flags}
-            options={{ bootstrap: flags }}
-          >
-            <SnackbarProvider>
-              <RouterProvider router={router} />
-            </SnackbarProvider>
-          </LDProvider>
-        </LinodeThemeWrapper>
-      </QueryClientProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <LinodeThemeWrapper theme={theme}>
+        <LDProvider
+          clientSideID={''}
+          deferInitialization
+          flags={flags}
+          options={{ bootstrap: flags }}
+        >
+          <SnackbarProvider>
+            <RouterProvider router={router} />
+          </SnackbarProvider>
+        </LDProvider>
+      </LinodeThemeWrapper>
+    </QueryClientProvider>
   );
 };
 

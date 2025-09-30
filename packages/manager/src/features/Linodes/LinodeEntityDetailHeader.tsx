@@ -8,6 +8,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
+import { store } from 'src/new-store';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
@@ -23,7 +24,6 @@ import type {
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from '@linode/ui';
 import type { LinodeMaintenance } from 'src/utilities/linodes';
-import { store } from 'src/new-store';
 
 interface LinodeEntityDetailProps {
   id: number;
