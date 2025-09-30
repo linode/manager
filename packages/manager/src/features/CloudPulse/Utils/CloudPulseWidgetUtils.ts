@@ -347,15 +347,16 @@ export const getCloudPulseMetricRequest = (
     serviceType,
   } = props;
   const preset = duration.preset;
+  const presetDuration = getTimeDurationFromPreset(preset);
   return {
     absolute_time_duration:
-      preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
-        ? undefined
-        : { end: duration.end, start: duration.start },
+      presetDuration === undefined
+        ? { end: duration.end, start: duration.start }
+        : undefined,
     entity_ids: getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
-    relative_time_duration: getTimeDurationFromPreset(preset),
+    relative_time_duration: presetDuration,
     metrics: [
       {
         aggregate_function: widget.aggregate_function,
