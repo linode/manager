@@ -118,6 +118,17 @@ export const DatabaseCreate = () => {
     }
   };
 
+  /**
+   * This function checks if the field from the APIError object is included
+   * in the list of parent fields that need to provide the full key that includes the child field.
+   * It returns true if that parent field is in the list.
+   */
+  const keepParentChildFieldKey = (error: APIError): boolean => {
+    const key = error.field?.split('.')[0];
+    const parentFields = ['private_network'];
+    return parentFields.includes(key ?? '');
+  };
+
   const submitForm = async () => {
     if (values.allow_list.some((ip) => ip.error)) {
       return;
@@ -162,7 +173,12 @@ export const DatabaseCreate = () => {
       if (ipErrors) {
         setIPErrorsFromAPI(ipErrors);
       }
-      handleAPIErrors(errors, setFieldError, setCreateError, true);
+      handleAPIErrors(
+        errors,
+        setFieldError,
+        setCreateError,
+        keepParentChildFieldKey
+      );
     }
 
     setSubmitting(false);

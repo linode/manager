@@ -126,7 +126,7 @@ export const handleAPIErrors = (
   errors: APIError[],
   setFieldError: (field: string, message: string) => void,
   setError?: (message: string) => void,
-  keepParentField?: boolean
+  keepParentChildFieldKey?: (error: APIError) => boolean
 ) => {
   errors.forEach((error: APIError) => {
     if (error.field) {
@@ -136,7 +136,7 @@ export const handleAPIErrors = (
        * It takes 'data.card_number' and translates it to 'card_number'
        * If keepParentField is true, then it will return the field without translation.
        */
-      const key = keepParentField
+      const key = keepParentChildFieldKey?.(error)
         ? error.field
         : error.field.split('.')[error.field.split('.').length - 1];
 

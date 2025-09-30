@@ -4,6 +4,8 @@ import {
   set,
 } from './formikErrorUtils';
 
+import type { APIError } from '@linode/api-v4';
+
 const errorWithoutField = [{ reason: 'Internal server error' }];
 const errorWithField = [
   { field: 'data.card_number', reason: 'Invalid credit card number' },
@@ -40,7 +42,20 @@ describe('handleAPIErrors', () => {
     const errorWithParentField = [
       { field: 'private_network.subnet_id', reason: 'Invalid subnet ID' },
     ];
-    handleAPIErrors(errorWithParentField, setFieldError, setError, true);
+
+    // Pass function to provide full key for specific parent fields
+    const keepParentChildFieldKey = (error: APIError): boolean => {
+      const key = error.field?.split('.')[0];
+      const parentFields = ['private_network'];
+      return parentFields.includes(key ?? '');
+    };
+
+    handleAPIErrors(
+      errorWithParentField,
+      setFieldError,
+      setError,
+      keepParentChildFieldKey
+    );
     expect(setFieldError).toHaveBeenCalledWith(
       'private_network.subnet_id',
       errorWithParentField[0].reason
