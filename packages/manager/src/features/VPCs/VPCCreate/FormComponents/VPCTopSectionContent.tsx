@@ -213,7 +213,7 @@ export const VPCTopSectionContent = (props: Props) => {
                       sm: 12,
                       xs: 12,
                     }}
-                    heading="IPv4 + IPv6 (dual-stack)"
+                    heading="IPv4 + IPv6 (Dual Stack)"
                     onClick={() => {
                       field.onChange([
                         {

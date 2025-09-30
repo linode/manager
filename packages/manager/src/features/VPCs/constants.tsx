@@ -67,8 +67,12 @@ export const PUBLIC_IPV4_ACCESS_CHECKBOX_TOOLTIP =
 export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP =
   'Enable to allow two-way IPv6 traffic between your VPC and the internet. Disable to restrict IPv6 traffic to within the VPC. When enabled, Linodes will be publicly reachable over IPv6 unless restricted by a Cloud Firewall.';
 
-export const RFC1918HelperText =
-  'VPCs can use the full RFC 1918 private IP address range for subnetting, except for 192.168.128.0/17, which is reserved.';
+export const RFC1918HelperText = (
+  <Typography component="span">
+    VPCs can use the full RFC 1918 private IP address range for subnetting,
+    except for <Code>192.168.128.0/17</Code>, which is reserved.
+  </Typography>
+);
 
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
