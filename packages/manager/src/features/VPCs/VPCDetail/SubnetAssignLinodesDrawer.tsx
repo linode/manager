@@ -588,9 +588,7 @@ export const SubnetAssignLinodesDrawer = (
       isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
-      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'} (${
-        subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
-      })`}
+      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'}`}
     >
       {!userCanAssignLinodes && (
         <Notice

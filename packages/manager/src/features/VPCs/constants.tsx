@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Code } from 'src/components/Code/Code';
@@ -64,8 +64,20 @@ export const ASSIGN_IP_RANGES_TITLE = 'Assign additional IP ranges';
 export const PUBLIC_IPV4_ACCESS_CHECKBOX_TOOLTIP =
   'Allow IPv4 access to the internet using 1:1 NAT on the VPC interface.';
 
-export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP =
-  'Enable to allow two-way IPv6 traffic between your VPC and the internet. Disable to restrict IPv6 traffic to within the VPC. When enabled, Linodes will be publicly reachable over IPv6 unless restricted by a Cloud Firewall.';
+export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP = (
+  <Stack spacing={2}>
+    <Typography component="span">
+      Enable to allow two-way IPv6 traffic between your VPC and the internet.
+    </Typography>
+    <Typography component="span">
+      Disable to restrict IPv6 traffic to within the VPC.
+    </Typography>
+    <Typography component="span">
+      When enabled, Linodes will be publicly reachable over IPv6 unless
+      restricted by a Cloud Firewall.
+    </Typography>
+  </Stack>
+);
 
 export const RFC1918HelperText = (
   <Typography component="span">

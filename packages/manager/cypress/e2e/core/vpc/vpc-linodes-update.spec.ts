@@ -140,7 +140,7 @@ describe('VPC assign/unassign flows', () => {
       .click();
 
     ui.drawer
-      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
+      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label}`)
       .should('be.visible')
       .within(() => {
         // confirm that the user is warned that a reboot / shutdown is required
@@ -277,7 +277,7 @@ describe('VPC assign/unassign flows', () => {
       .click();
 
     ui.drawer
-      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
+      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label}`)
       .should('be.visible')
       .within(() => {
         // confirm that the user is warned that a reboot / shutdown is required
