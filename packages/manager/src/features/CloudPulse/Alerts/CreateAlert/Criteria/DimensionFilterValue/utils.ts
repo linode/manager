@@ -78,9 +78,9 @@ export const getOperatorGroup = (
  * @returns - List of label/value option objects.
  */
 export const getStaticOptions = (
-  serviceType: CloudPulseServiceType | undefined,
+  serviceType: CloudPulseServiceType | null,
   dimensionLabel: string,
-  values: null | string[]
+  values: string[]
 ): Item<string, string>[] => {
   return (
     values?.map((val: string) => ({

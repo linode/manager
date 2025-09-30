@@ -31,12 +31,7 @@ export const DimensionFilterAutocomplete = (
   } = props;
 
   const options = useMemo(
-    () =>
-      getStaticOptions(
-        serviceType ?? undefined,
-        dimensionLabel ?? '',
-        values ?? []
-      ),
+    () => getStaticOptions(serviceType, dimensionLabel ?? '', values ?? []),
     [dimensionLabel, serviceType, values]
   );
   return (
@@ -48,7 +43,6 @@ export const DimensionFilterAutocomplete = (
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
       limitTags={1}
-      loading={!disabled}
       multiple={multiple}
       onBlur={fieldOnBlur}
       onChange={(_, selected, operation) => {

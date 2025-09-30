@@ -140,56 +140,59 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
 
-    if (config.useCustomFetch === 'firewall')
-      return (
-        <FirewallDimensionFilterAutocomplete
-          dimensionLabel={dimensionLabel}
-          disabled={disabled}
-          entities={entities}
-          fieldOnBlur={onBlur}
-          fieldOnChange={onChange}
-          fieldValue={value}
-          multiple={config.multiple}
-          name={name}
-          placeholderText={config.placeholder ?? autocompletePlaceholder}
-          scope={scope}
-          serviceType={serviceType ?? null}
-        />
-      );
-    else if (config.useCustomFetch === 'objectstorage')
-      return (
-        <ObjectStorageDimensionFilterAutocomplete
-          dimensionLabel={dimensionLabel}
-          disabled={disabled}
-          entities={entities ?? []}
-          fieldOnBlur={onBlur}
-          fieldOnChange={onChange}
-          fieldValue={value}
-          multiple={config.multiple}
-          name={name}
-          placeholderText={config.placeholder ?? autocompletePlaceholder}
-          scope={scope}
-          selectedRegions={selectedRegions}
-          serviceType={serviceType ?? null}
-        />
-      );
-    else
-      return (
-        <DimensionFilterAutocomplete
-          dimensionLabel={dimensionLabel}
-          disabled={disabled}
-          errorText={errorText}
-          fieldOnBlur={onBlur}
-          fieldOnChange={onChange}
-          fieldValue={value}
-          multiple={config.multiple}
-          name={name}
-          placeholderText={config.placeholder ?? autocompletePlaceholder}
-          serviceType={serviceType ?? null}
-          values={values}
-        />
-      );
+    switch (config.useCustomFetch) {
+      case 'firewall':
+        return (
+          <FirewallDimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            entities={entities}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            scope={scope}
+            serviceType={serviceType ?? null}
+          />
+        );
+      case 'objectstorage':
+        return (
+          <ObjectStorageDimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            entities={entities ?? []}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            scope={scope}
+            selectedRegions={selectedRegions}
+            serviceType={serviceType ?? null}
+          />
+        );
+      default:
+        return (
+          <DimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            serviceType={serviceType ?? null}
+            values={values}
+          />
+        );
+    }
   }
-
   return null;
 };

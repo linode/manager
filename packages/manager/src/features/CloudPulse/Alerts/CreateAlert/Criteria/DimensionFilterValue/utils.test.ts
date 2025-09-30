@@ -104,7 +104,7 @@ describe('Utils', () => {
     });
 
     it('should return empty array if input is null', () => {
-      expect(getStaticOptions('linode', 'dim', null)).toEqual([]);
+      expect(getStaticOptions('linode', 'dim', [])).toEqual([]);
     });
   });
 
