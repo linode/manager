@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 
-import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
+import { getClientStats } from 'src/features/Longview/store/longviewStats/longviewStats.requests';
 
 import type {
   LongviewNotification,
   LongviewResponse,
 } from 'src/features/Longview/request.types';
-import type { ApplicationState } from 'src/store';
-import type { ThunkDispatch } from 'src/store/types';
+import type { ApplicationState } from 'src/features/Longview/store';
+import type { ThunkDispatch } from 'src/features/Longview/store/types';
 
 export interface LVClientData {
   longviewClientData: LongviewResponse['DATA'];

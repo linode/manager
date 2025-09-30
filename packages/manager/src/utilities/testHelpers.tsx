@@ -19,9 +19,9 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
+import { defaultState, storeFactory } from 'src/features/Longview/store';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { setupInterceptors } from 'src/request';
-import { defaultState, storeFactory } from 'src/store';
 
 import { mergeDeepRight } from './mergeDeepRight';
 
@@ -30,7 +30,7 @@ import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction } from '@testing-library/react';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
-import type { ApplicationState } from 'src/store';
+import type { ApplicationState } from 'src/features/Longview/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {

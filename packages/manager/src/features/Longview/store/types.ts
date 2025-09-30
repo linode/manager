@@ -5,7 +5,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { QueryClient } from '@tanstack/react-query';
 import type { Action, Dispatch } from 'redux';
 import type { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
-import type { ApplicationState } from 'src/store';
+import type { ApplicationState } from 'src/features/Longview/store';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
   entity: EventEntity;

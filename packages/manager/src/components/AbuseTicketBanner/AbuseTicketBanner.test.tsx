@@ -7,10 +7,10 @@ import {
 } from 'src/factories/notification';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { AbuseTicketBanner } from './AbuseTicketBanner';
+import { getAbuseTickets } from './AbuseTicketBanner.utils';
 
 const TICKET_TESTID = 'abuse-ticket-link';
 

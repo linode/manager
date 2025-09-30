@@ -7,7 +7,8 @@ import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
+
+import { getAbuseTickets } from './AbuseTicketBanner.utils';
 
 const preferenceKey = 'abuse-tickets';
 

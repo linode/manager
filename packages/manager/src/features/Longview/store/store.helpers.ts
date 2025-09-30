@@ -1,4 +1,4 @@
-import type { ThunkActionCreator } from 'src/store/types';
+import type { ThunkActionCreator } from 'src/features/Longview/store/types';
 import type { AsyncActionCreators } from 'typescript-fsa';
 
 export const createRequestThunk = <Req, Res, Err>(

@@ -11,8 +11,6 @@ import {
   useAllVolumesQuery,
 } from '@linode/queries';
 
-import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
   bucketToSearchableItem,
   databaseToSearchableItem,
@@ -26,7 +24,9 @@ import {
   stackscriptToSearchableItem,
   streamToSearchableItem,
   volumeToSearchableItem,
-} from 'src/store/selectors/getSearchEntities';
+} from 'src/features/Search/getSearchEntities';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { search } from './utils';
 

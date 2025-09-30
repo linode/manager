@@ -13,7 +13,6 @@ import {
 import { getAPIFilterFromQuery } from '@linode/search';
 import { useDebouncedValue } from '@linode/utilities';
 
-import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 import {
   databaseToSearchableItem,
   destinationToSearchableItem,
@@ -26,7 +25,8 @@ import {
   stackscriptToSearchableItem,
   streamToSearchableItem,
   volumeToSearchableItem,
-} from 'src/store/selectors/getSearchEntities';
+} from 'src/features/Search/getSearchEntities';
+import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 
 import { emptyErrors, separateResultsByEntity } from './utils';
 

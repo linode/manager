@@ -6,14 +6,14 @@ import {
   createLongviewClient as create,
   getAllLongviewClients,
   updateLongviewClient as update,
-} from 'src/store/longview/longview.requests';
+} from 'src/features/Longview/store/longview/longview.requests';
 
 import type { Filter, Params } from '@linode/api-v4';
 import type { LongviewClient } from '@linode/api-v4/lib/longview';
 import type { GetAllData } from '@linode/utilities';
-import type { ApplicationState } from 'src/store';
-import type { State } from 'src/store/longview/longview.reducer';
-import type { ThunkDispatch } from 'src/store/types';
+import type { ApplicationState } from 'src/features/Longview/store';
+import type { State } from 'src/features/Longview/store/longview/longview.reducer';
+import type { ThunkDispatch } from 'src/features/Longview/store/types';
 
 export interface DispatchProps {
   createLongviewClient: (label?: string) => Promise<LongviewClient>;

@@ -30,8 +30,8 @@ import type {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
-import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
-import type { MapState } from 'src/store/types';
+import type { State as StatsState } from 'src/features/Longview/store/longviewStats/longviewStats.reducer';
+import type { MapState } from 'src/features/Longview/store/types';
 
 interface Props {
   activeSubscription: ActiveLongviewPlan;

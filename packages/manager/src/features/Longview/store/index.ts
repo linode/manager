@@ -3,14 +3,14 @@ import thunk from 'redux-thunk';
 
 import longview, {
   defaultState as defaultLongviewState,
-} from 'src/store/longview/longview.reducer';
+} from 'src/features/Longview/store/longview/longview.reducer';
 import longviewStats, {
   defaultState as defaultLongviewStatsState,
-} from 'src/store/longviewStats/longviewStats.reducer';
+} from 'src/features/Longview/store/longviewStats/longviewStats.reducer';
 
 import type { Store } from 'redux';
-import type { State as LongviewState } from 'src/store/longview/longview.reducer';
-import type { State as LongviewStatsState } from 'src/store/longviewStats/longviewStats.reducer';
+import type { State as LongviewState } from 'src/features/Longview/store/longview/longview.reducer';
+import type { State as LongviewStatsState } from 'src/features/Longview/store/longviewStats/longviewStats.reducer';
 
 export interface ApplicationState {
   longviewClients: LongviewState;
