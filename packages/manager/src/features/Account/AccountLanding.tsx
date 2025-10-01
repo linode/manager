@@ -1,4 +1,4 @@
-import { useAccount, useProfile } from '@linode/queries';
+import { useAccount } from '@linode/queries';
 import { NotFound } from '@linode/ui';
 import {
   Outlet,
@@ -24,6 +24,7 @@ import { useTabs } from 'src/hooks/useTabs';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
+import { useDelegationUserType } from '../IAM/hooks/useDelegationUserType';
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
@@ -37,7 +38,8 @@ export const AccountLanding = () => {
     strict: false,
   });
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
+  const { userType, isProxyUser, isChildUser, isParentUser } =
+    useDelegationUserType();
   const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
 
   const { data: permissions } = usePermissions('account', [
@@ -48,9 +50,6 @@ export const AccountLanding = () => {
   const sessionContext = React.useContext(switchAccountSessionContext);
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
-  const isProxyUser = profile?.user_type === 'proxy';
-  const isChildUser = profile?.user_type === 'child';
-  const isParentUser = profile?.user_type === 'parent';
 
   const showQuotasTab = limitsEvolution?.enabled ?? false;
 
@@ -181,7 +180,7 @@ export const AccountLanding = () => {
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        userType={profile?.user_type}
+        userType={userType}
       />
     </React.Fragment>
   );

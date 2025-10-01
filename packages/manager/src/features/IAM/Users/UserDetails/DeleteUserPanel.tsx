@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 import { PARENT_USER } from 'src/features/Account/constants';
 
+import { useDelegationUserType } from '../../hooks/useDelegationUserType';
 import { UserDeleteConfirmation } from './UserDeleteConfirmation';
 
 import type { User } from '@linode/api-v4';
@@ -16,16 +17,15 @@ interface Props {
 
 export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const navigate = useNavigate();
   const { data: profile } = useProfile();
 
-  const isProxyUserProfile = user.user_type === 'proxy';
+  const navigate = useNavigate();
+  const { isProxyUser } = useDelegationUserType();
 
   const tooltipText =
     profile?.username === user.username
       ? 'You can\u{2019}t delete the currently active user.'
-      : isProxyUserProfile
+      : isProxyUser
         ? `You can\u{2019}t delete a ${PARENT_USER}.`
         : undefined;
 
@@ -38,7 +38,7 @@ export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
             buttonType="outlined"
             disabled={
               profile?.username === user.username ||
-              isProxyUserProfile ||
+              isProxyUser ||
               !canDeleteUser
             }
             onClick={() => setIsDeleteDialogOpen(true)}

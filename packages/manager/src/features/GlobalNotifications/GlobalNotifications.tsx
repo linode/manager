@@ -9,6 +9,7 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import { useFlags } from 'src/hooks/useFlags';
 
 import { SessionExpirationDialog } from '../Account/SwitchAccounts/SessionExpirationDialog';
+import { useDelegationUserType } from '../IAM/hooks/useDelegationUserType';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
@@ -21,11 +22,12 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
 export const GlobalNotifications = () => {
   const flags = useFlags();
-  const { data: profile } = useProfile();
+
   const sessionContext = React.useContext(switchAccountSessionContext);
   const sessionExpirationContext = React.useContext(_sessionExpirationContext);
-  const isChildUser = profile?.user_type === 'child';
-  const isProxyUser = profile?.user_type === 'proxy';
+  const { data: profile } = useProfile();
+  const { isChildUser, isProxyUser } = useDelegationUserType();
+
   const { data: securityQuestions } = useSecurityQuestions({
     enabled: isChildUser,
   });

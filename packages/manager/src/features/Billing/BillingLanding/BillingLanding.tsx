@@ -1,4 +1,4 @@
-import { useAccount, useProfile } from '@linode/queries';
+import { useAccount } from '@linode/queries';
 import { Navigate, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -15,6 +15,7 @@ import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnaly
 import { PlatformMaintenanceBanner } from '../../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
 import { SwitchAccountButton } from '../../Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from '../../Account/SwitchAccountDrawer';
+import { useDelegationUserType } from '../../IAM/hooks/useDelegationUserType';
 import { usePermissions } from '../../IAM/hooks/usePermissions';
 import { BillingDetail } from '../BillingDetail';
 
@@ -26,7 +27,8 @@ export const BillingLanding = () => {
   const location = useLocation();
 
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
+  const { userType, isProxyUser, isChildUser, isParentUser } =
+    useDelegationUserType();
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
@@ -37,9 +39,6 @@ export const BillingLanding = () => {
 
   const isIAMRbacPrimaryNavChangesEnabled = flags?.iamRbacPrimaryNavChanges;
   const isAkamaiAccount = account?.billing_source === 'akamai';
-  const isProxyUser = profile?.user_type === 'proxy';
-  const isChildUser = profile?.user_type === 'child';
-  const isParentUser = profile?.user_type === 'parent';
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -113,7 +112,7 @@ export const BillingLanding = () => {
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        userType={profile?.user_type}
+        userType={userType}
       />
     </>
   );

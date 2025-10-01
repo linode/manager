@@ -1,7 +1,6 @@
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
-  useProfile,
 } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
@@ -19,6 +18,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -48,7 +48,7 @@ const PREFERENCE_KEY = 'api-tokens';
 export const APITokenTable = (props: Props) => {
   const { title, type } = props;
 
-  const { data: profile } = useProfile();
+  const { isProxyUser } = useDelegationUserType();
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -80,8 +80,6 @@ export const APITokenTable = (props: Props) => {
     },
     { '+order': order, '+order_by': orderBy }
   );
-
-  const isProxyUser = Boolean(profile?.user_type === 'proxy');
 
   const [isCreateOpen, setIsCreateOpen] = React.useState<boolean>(false);
   const [isRevokeOpen, setIsRevokeOpen] = React.useState<boolean>(false);
