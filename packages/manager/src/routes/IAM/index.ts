@@ -89,18 +89,8 @@ const iamDelegationsRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'delegations',
   beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags
-    );
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
-
-    if (!isIAMEnabled) {
-      throw redirect({
-        to: '/account/users',
-      });
-    }
-    if (isIAMEnabled && !isDelegationEnabled) {
+    if (!isDelegationEnabled) {
       throw redirect({
         to: '/iam/users',
       });

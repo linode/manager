@@ -27,7 +27,7 @@ import type {
   Token,
 } from '@linode/api-v4';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-// TODO: UIE-9292 - Remove this and replace with API filtering
+
 const getAllDelegationsRequest = (
   _params: Params = {},
   _users: boolean = true,
@@ -60,7 +60,6 @@ export const delegationQueries = createQueryKeys('delegation', {
     queryFn: () => getChildAccountsIam({ params, users }),
     queryKey: [params, users],
   }),
-  // TODO: UIE-9292 - Remove this and replace with API filtering using childAccounts query
   allChildAccounts: (params: Params = {}, users: boolean = true) => ({
     queryFn: () => getAllDelegationsRequest(params, users),
     queryKey: ['all', params, users],

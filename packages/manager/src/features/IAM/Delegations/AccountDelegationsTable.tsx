@@ -1,7 +1,5 @@
-import { Typography } from '@linode/ui';
 import React from 'react';
 
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -13,7 +11,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { NO_DELEGATIONS_TEXT } from '../Shared/constants';
-import { TruncatedList } from '../Shared/TruncatedList';
+import { AccountDelegationsTableRow } from './AccountDelegationsTableRow';
 
 import type {
   APIError,
@@ -40,10 +38,6 @@ export const AccountDelegationsTable = ({
   order,
   orderBy,
 }: Props) => {
-  const handleUpdateDelegations = () => {
-    // Placeholder for future update delegations functionality
-  };
-
   return (
     <Table
       aria-label="List of Account Delegations"
@@ -85,56 +79,12 @@ export const AccountDelegationsTable = ({
           !error &&
           delegations &&
           delegations.length > 0 &&
-          delegations.map((delegation, key) => (
-            <TableRow
-              data-qa-table-row={delegation.euuid}
-              key={`delegation-${delegation.euuid}-${key}`}
-            >
-              <TableCell>
-                <Typography variant="body1">{delegation.company}</Typography>
-              </TableCell>
-              <TableCell
-                sx={(theme) => ({
-                  display: { sm: 'table-cell', xs: 'none' },
-                  padding: theme.tokens.spacing.S8,
-                })}
-              >
-                {'users' in delegation && delegation.users.length > 0 ? (
-                  <TruncatedList
-                    listContainerSx={{
-                      gap: 0.5,
-                      maxHeight: 24,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {delegation.users.map((user: string, index: number) => (
-                      <Typography
-                        color="textSecondary"
-                        key={user}
-                        variant="body1"
-                      >
-                        {user}
-                        {index < delegation.users.length - 1 && ','}
-                      </Typography>
-                    ))}
-                  </TruncatedList>
-                ) : (
-                  <Typography
-                    sx={{ fontStyle: 'italic', textTransform: 'capitalize' }}
-                    variant="body1"
-                  >
-                    no delegate users added
-                  </Typography>
-                )}
-              </TableCell>
-              <TableCell sx={{ textAlign: 'right' }}>
-                <InlineMenuAction
-                  actionText="Update Delegations"
-                  buttonHeight={40}
-                  onClick={handleUpdateDelegations}
-                />
-              </TableCell>
-            </TableRow>
+          delegations.map((delegation, index) => (
+            <AccountDelegationsTableRow
+              delegation={delegation}
+              index={index}
+              key={`delegation-${delegation.euuid}-${index}`}
+            />
           ))}
       </TableBody>
     </Table>
