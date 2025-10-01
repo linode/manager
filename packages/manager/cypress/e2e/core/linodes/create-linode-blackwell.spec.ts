@@ -34,7 +34,7 @@ const mockBlackwellLinodeTypes = new Array(4).fill(null).map((_, index) =>
     class: 'gpu',
   })
 );
-const selectedBlackwellId = mockBlackwellLinodeTypes[0].id;
+const selectedBlackwell = mockBlackwellLinodeTypes[0];
 
 describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
   beforeEach(() => {
@@ -120,7 +120,7 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
         });
 
       // select blackwell plan
-      cy.get(`input#${selectedBlackwellId}`).click();
+      cy.get(`input#${selectedBlackwell.id}`).click();
     });
     const newLinodeLabel = randomLabel();
     cy.findByLabelText('Linode Label').type(newLinodeLabel);
@@ -130,7 +130,7 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
       region: mockEnabledRegion.id,
-      type: selectedBlackwellId,
+      type: selectedBlackwell.id,
     });
     mockCreateLinode(mockLinode).as('createLinode');
 
@@ -145,7 +145,7 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
       // validate request
       const payload = xhr.request.body;
       expect(payload.region).to.eq(mockEnabledRegion.id);
-      expect(payload.type).to.eq(selectedBlackwellId);
+      expect(payload.type).to.eq(selectedBlackwell.id);
 
       // validate response
       expect(xhr.response?.body?.id).to.eq(mockLinode.id);
@@ -153,11 +153,18 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
       cy.url().should('endWith', `linodes/${mockLinode.id}/metrics`);
     });
     ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
+    // verify blackwell attributes displayed on new linode details page
     cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
       'be.visible'
     );
     cy.get('h1[data-qa-header]', { timeout: LINODE_CREATE_TIMEOUT })
       .should('be.visible')
       .should('have.text', mockLinode.label);
+    cy.findByText('Plan:')
+      .should('be.visible')
+      .parent('p')
+      .within(() => {
+        cy.findByText(selectedBlackwell.label, { exact: false });
+      });
   });
 });
