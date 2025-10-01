@@ -5,8 +5,8 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
+import { EditVPCIPv6Address } from './EditVPCIPv6Address';
 import { VPCIPv4Address } from './VPCIPv4Address';
-import { VPCIPv6Address } from './VPCIPv6Address';
 
 import type {
   LinodeInterface,
@@ -55,7 +55,9 @@ export const VPCIPAddresses = (props: Props) => {
           linodeInterface={linodeInterface}
         />
       ))}
-      {isDualStackVPC && <VPCIPv6Address linodeInterface={linodeInterface} />}
+      {isDualStackVPC && (
+        <EditVPCIPv6Address linodeInterface={linodeInterface} />
+      )}
     </Stack>
   );
 };

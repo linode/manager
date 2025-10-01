@@ -5,8 +5,8 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
+import { AddVPCIPv6Address } from './AddVPCIPv6Address';
 import { VPCIPv4Address } from './VPCIPv4Address';
-import { VPCIPv6Address } from './VPCIPv6Address';
 
 import type { CreateInterfaceFormValues } from '../utilities';
 
@@ -41,7 +41,7 @@ export const VPCIPAddresses = () => {
           key={field.id}
         />
       ))}
-      {isDualStackVPC && <VPCIPv6Address />}
+      {isDualStackVPC && <AddVPCIPv6Address />}
     </Stack>
   );
 };

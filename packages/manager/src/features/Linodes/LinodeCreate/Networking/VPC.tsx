@@ -15,6 +15,7 @@ import { LinkButton } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { VPCIPv6Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv6Address';
 import {
   VPCIPv6PublicIPLabel,
   VPCPublicIPLabel,
@@ -22,7 +23,6 @@ import {
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
-  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
@@ -202,44 +202,20 @@ export const VPC = ({ index }: Props) => {
               control={control}
               name={`linodeInterfaces.${index}.vpc.ipv6.slaac.0.range`}
               render={({ field, fieldState }) => (
-                <Box>
-                  <FormControlLabel
-                    checked={field.value === 'auto'}
-                    control={<Checkbox sx={{ ml: 0.4 }} />}
-                    disabled={!regionSupportsVPCs}
-                    label={
-                      <Stack alignItems="center" direction="row">
-                        <Typography>Auto-assign VPC IPv6 address</Typography>
-                        <TooltipIcon
-                          status="info"
-                          text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
-                        />
-                      </Stack>
-                    }
-                    onChange={(e, checked) =>
-                      field.onChange(checked ? 'auto' : '')
-                    }
-                  />
-                  {field.value !== 'auto' && (
-                    <TextField
-                      containerProps={{ sx: { mb: 1.5, mt: 1 } }}
-                      errorText={
-                        fieldState.error?.message ??
-                        errors.linodeInterfaces?.[index]?.vpc?.ipv6?.slaac?.[0]
-                          ?.range?.message
-                      }
-                      helperText={generateVPCIPv6InputHelperText(
-                        selectedSubnet?.ipv6?.[0].range ?? ''
-                      )}
-                      label="VPC IPv6"
-                      noMarginTop
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      required
-                      value={field.value}
-                    />
+                <VPCIPv6Address
+                  disabled={!regionSupportsVPCs}
+                  errorMessage={
+                    fieldState.error?.message ??
+                    errors.linodeInterfaces?.[index]?.vpc?.ipv6?.slaac?.[0]
+                      ?.range?.message
+                  }
+                  fieldValue={field.value}
+                  helperText={generateVPCIPv6InputHelperText(
+                    selectedSubnet?.ipv6?.[0].range ?? ''
                   )}
-                </Box>
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                />
               )}
             />
           )}
