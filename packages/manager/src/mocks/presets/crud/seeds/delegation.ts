@@ -38,7 +38,8 @@ export const delegationSeeder: MockSeeder = {
       for (const username of selectedUsers) {
         delegations.push({
           id: delegationId++,
-          childAccountEuuid: childAccount.euuid,
+          // childAccountEuuid: childAccount.euuid,
+          childAccountEuuid: '23be8d61-f3f5-46bf-91f8-d4213b2b011d',
           username,
         });
       }

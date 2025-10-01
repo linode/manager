@@ -1,4 +1,9 @@
-import { useAccountUsers } from '@linode/queries';
+import {
+  useAccount,
+  useAccountUsers,
+  useGetChildAccountDelegatesQuery,
+  useProfile,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Button, Paper, Stack } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
@@ -13,6 +18,7 @@ import { TableBody } from 'src/components/TableBody';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -23,6 +29,11 @@ import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
   const navigate = useNavigate();
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { data: profile } = useProfile();
+  const { data: account } = useAccount();
+  const euuid = account?.euuid ?? '';
+
   const { query } = useSearch({
     from: '/iam',
   });
@@ -73,6 +84,13 @@ export const UsersLanding = () => {
       page_size: pagination.pageSize,
     },
   });
+
+  const { data: childAccountDelegates } = useGetChildAccountDelegatesQuery({
+    // euuid,
+    euuid: '23be8d61-f3f5-46bf-91f8-d4213b2b011d',
+  });
+
+  // console.log('childAccountDelegates table', childAccountDelegates);
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
