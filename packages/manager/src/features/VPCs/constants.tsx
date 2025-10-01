@@ -32,16 +32,13 @@ export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 
 export const VPC_IPV4_INPUT_HELPER_TEXT =
-  'Define a /32 address derived from the subnet IPv4 range.';
+  'Define an IP address derived from the subnet IPv4 range.';
 
-export const VPC_AUTO_ASSIGN_IPV6_TOOLTIP = (
-  <Typography component="span">
-    Automatically assign a <Code>/64</Code> IPv6 prefix from the subnet.
-  </Typography>
-);
+export const VPC_AUTO_ASSIGN_IPV6_TOOLTIP =
+  'Automatically assign an IPv6 address for this Linode in the VPC.';
 
 export const VPC_IPV6_INPUT_HELPER_TEXT =
-  'Define a /64 IPv6 prefix for this Linode interface, and then append /64.';
+  'Define a /64 prefix derived from the subnet IPv6 range.';
 
 export const CANNOT_CREATE_VPC_MESSAGE =
   "You don't have permissions to create a new VPC. Please contact an account administrator for details.";
