@@ -79,6 +79,12 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
               overflow: 'hidden',
               maxHeight: 24,
               gap: 1,
+              '& .last-visible-before-overflow': {
+                '&::after': {
+                  top: 1,
+                  right: -13,
+                },
+              },
             }}
           >
             {delegation.users.map((user: string, index: number) => (
