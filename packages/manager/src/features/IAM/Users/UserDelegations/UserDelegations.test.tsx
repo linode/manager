@@ -87,6 +87,11 @@ describe('UserDelegations', () => {
   });
 
   it('filters child accounts by search', async () => {
+    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: childAccountFactory.buildList(30),
+      isLoading: false,
+    });
+
     renderWithTheme(<UserDelegations />, {
       flags: {
         iamDelegation: {
@@ -95,12 +100,25 @@ describe('UserDelegations', () => {
       },
     });
 
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'Test Account 1');
+    const paginationRow = screen.getByRole('navigation', {
+      name: 'pagination navigation',
+    });
 
-    screen.getByText('Test Account 1');
+    screen.getByText('child-account-31');
+    screen.getByText('child-account-32');
+
+    expect(paginationRow).toBeInTheDocument();
+
+    const searchInput = screen.getByPlaceholderText('Search');
+    await userEvent.type(searchInput, 'child-account-31');
+
+    screen.getByText('child-account-31');
+
     await waitFor(() => {
-      expect(screen.queryByText('Test Account 2')).not.toBeInTheDocument();
+      expect(screen.queryByText('Child Account 32')).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(paginationRow).not.toBeInTheDocument();
     });
   });
 });
