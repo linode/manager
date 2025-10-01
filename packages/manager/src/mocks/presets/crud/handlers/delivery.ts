@@ -73,7 +73,7 @@ export const createStreams = (mockState: MockState) => [
         destinations: payload['destinations'].map((destinationId: number) =>
           destinations?.find(({ id }) => id === destinationId)
         ),
-        details: payload['details'],
+        details: payload['details'] ?? null,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });
