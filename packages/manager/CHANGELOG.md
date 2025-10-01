@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-10-01] - v1.151.2
+
+### Fixed:
+
+- DBaaS - Database Create Subnet field should display backend error messages
+
 ## [2025-09-25] - v1.151.1
 
 ### Added:
