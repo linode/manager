@@ -14,8 +14,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { isDefaultDatabase } from '../../utilities';
-import ConnectionDetailsHostRows from '../ConnectionDetailsHostRows';
-import ConnectionDetailsRow from '../ConnectionDetailsRow';
+import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
+import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
 import { StyledGridContainer } from './DatabaseSummaryClusterConfiguration.style';
 import { useStyles } from './DatabaseSummaryConnectionDetails.style';
 

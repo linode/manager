@@ -11,7 +11,7 @@ interface ConnectionDetailsRowProps {
   label: string;
 }
 
-const ConnectionDetailsRow = (props: ConnectionDetailsRowProps) => {
+export const ConnectionDetailsRow = (props: ConnectionDetailsRowProps) => {
   const { children, label } = props;
   return (
     <>
@@ -27,5 +27,3 @@ const ConnectionDetailsRow = (props: ConnectionDetailsRowProps) => {
     </>
   );
 };
-
-export default ConnectionDetailsRow;

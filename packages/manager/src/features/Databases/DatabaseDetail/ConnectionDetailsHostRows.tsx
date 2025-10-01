@@ -9,7 +9,7 @@ import {
   SUMMARY_PRIVATE_HOST_LEGACY_COPY,
 } from '../constants';
 import { getReadOnlyHost, isLegacyDatabase } from '../utilities';
-import ConnectionDetailsRow from './ConnectionDetailsRow';
+import { ConnectionDetailsRow } from './ConnectionDetailsRow';
 import { useStyles } from './DatabaseSummary/DatabaseSummaryConnectionDetails.style';
 
 import type { Database } from '@linode/api-v4/lib/databases/types';
@@ -21,7 +21,9 @@ interface ConnectionDetailsHostRowsProps {
 /**
  * This component is responsible for conditionally rendering the Private Host, Public Host, and Read-only Host rows that get displayed in
  * the Connection Details tables that appear in the Database Summary and Networking tabs */
-const ConnectionDetailsHostRows = (props: ConnectionDetailsHostRowsProps) => {
+export const ConnectionDetailsHostRows = (
+  props: ConnectionDetailsHostRowsProps
+) => {
   const { database } = props;
   const { classes } = useStyles();
 
@@ -131,5 +133,3 @@ const ConnectionDetailsHostRows = (props: ConnectionDetailsHostRowsProps) => {
     </>
   );
 };
-
-export default ConnectionDetailsHostRows;

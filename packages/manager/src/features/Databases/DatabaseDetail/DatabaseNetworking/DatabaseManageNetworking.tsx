@@ -13,8 +13,8 @@ import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
-import ConnectionDetailsHostRows from '../ConnectionDetailsHostRows';
-import ConnectionDetailsRow from '../ConnectionDetailsRow';
+import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
+import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
 import { StyledGridContainer } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
 import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';

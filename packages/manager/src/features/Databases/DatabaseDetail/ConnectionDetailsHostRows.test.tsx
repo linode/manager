@@ -3,7 +3,7 @@ import React from 'react';
 import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ConnectionDetailsHostRows from './ConnectionDetailsHostRows';
+import { ConnectionDetailsHostRows } from './ConnectionDetailsHostRows';
 
 import type { Database } from '@linode/api-v4/lib/databases';
 
@@ -14,7 +14,7 @@ const LEGACY_PRIMARY = 'db-mysql-legacy-primary.net';
 const LEGACY_SECONDARY = 'db-mysql-legacy-secondary.net';
 
 describe('ConnectionDetailsHostRows', () => {
-  it('should display correctly for default database', async () => {
+  it('should display correctly for default database', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: DEFAULT_PRIMARY,
@@ -35,7 +35,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText('Read-only Host')).toHaveLength(1);
   });
 
-  it('should display N/A for default DB with blank read-only Host field', async () => {
+  it('should display N/A for default DB with blank read-only Host field', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: DEFAULT_PRIMARY,
@@ -52,7 +52,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText('N/A')).toHaveLength(1);
   });
 
-  it('should display Host rows correctly for legacy db', async () => {
+  it('should display Host rows correctly for legacy db', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: LEGACY_PRIMARY,
@@ -76,7 +76,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText(LEGACY_SECONDARY)).toHaveLength(1);
   });
 
-  it('should display provisioning text when hosts are not available', async () => {
+  it('should display provisioning text when hosts are not available', () => {
     const database = databaseFactory.build({
       hosts: undefined,
       platform: 'rdbms-default',
@@ -93,7 +93,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(hostNameProvisioningText).toBeInTheDocument();
   });
 
-  it('should display Host when VPC is not configured', async () => {
+  it('should display Host when VPC is not configured', () => {
     const privateStrIndex = DEFAULT_PRIMARY.indexOf('-');
     const baseHostName = DEFAULT_PRIMARY.slice(privateStrIndex + 1);
 
@@ -113,7 +113,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText(baseHostName)).toHaveLength(1);
   });
 
-  it('should display Private Host field when VPC is configured with public access as false', async () => {
+  it('should display Private Host field when VPC is configured with public access as false', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: DEFAULT_PRIMARY,
@@ -135,7 +135,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText(DEFAULT_PRIMARY)).toHaveLength(1);
   });
 
-  it('should display both Private Host and Public Host fields when VPC is configured with public access as true', async () => {
+  it('should display both Private Host and Public Host fields when VPC is configured with public access as true', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: DEFAULT_PRIMARY,
@@ -166,7 +166,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText(expectedPublicHostname)).toHaveLength(1);
   });
 
-  it('should display Read-only Host when read-only host is available', async () => {
+  it('should display Read-only Host when read-only host is available', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: DEFAULT_PRIMARY,

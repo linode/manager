@@ -2,7 +2,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ConnectionDetailsRow from './ConnectionDetailsRow';
+import { ConnectionDetailsRow } from './ConnectionDetailsRow';
 
 describe('ConnectionDetailsRow', () => {
   it('should render provided label and children', async () => {
