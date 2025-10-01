@@ -5,16 +5,17 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useFlags } from 'src/hooks/useFlags';
 
-import { ACCOUNT_DELEGATIONS_TABLE_PREFERENCE_KEY } from '../Shared/constants';
 import { AccountDelegationsTable } from './AccountDelegationsTable';
 
 const DELEGATIONS_ROUTE = '/iam/delegations';
 
 export const AccountDelegations = () => {
   const navigate = useNavigate();
+  const flags = useFlags();
   const { query } = useSearch({
     from: '/iam',
   });
@@ -76,21 +77,7 @@ export const AccountDelegations = () => {
     });
   }, [filteredDelegations, order]);
 
-  const pagination = usePaginationV2({
-    currentRoute: DELEGATIONS_ROUTE,
-    initialPage: 1,
-    preferenceKey: ACCOUNT_DELEGATIONS_TABLE_PREFERENCE_KEY,
-  });
-  // Apply pagination to sorted data
-  const paginatedDelegations = React.useMemo(() => {
-    const startIndex = (pagination.page - 1) * pagination.pageSize;
-    const endIndex = startIndex + pagination.pageSize;
-    return sortedDelegations.slice(startIndex, endIndex);
-  }, [sortedDelegations, pagination.page, pagination.pageSize]);
-
   const handleSearch = (value: string) => {
-    // Reset to first page when searching
-    pagination.handlePageChange(1);
     navigate({
       to: DELEGATIONS_ROUTE,
       search: { query: value },
@@ -100,7 +87,9 @@ export const AccountDelegations = () => {
   if (isLoading) {
     return <CircleProgress />;
   }
-
+  if (!flags.iamDelegation?.enabled) {
+    return null;
+  }
   return (
     <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
       <Stack
@@ -120,27 +109,40 @@ export const AccountDelegations = () => {
           hideLabel
           label="Search"
           onSearch={handleSearch}
-          placeholder="Search accounts and users"
+          placeholder="Search"
           value={query ?? ''}
         />
       </Stack>
 
-      <AccountDelegationsTable
-        delegations={paginatedDelegations}
-        error={error}
-        handleOrderChange={handleOrderChange}
-        isLoading={isLoading}
-        numCols={numCols}
-        order={order}
-        orderBy={orderBy}
-      />
-      <PaginationFooter
-        count={sortedDelegations.length}
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+      <Paginate data={sortedDelegations} pageSize={25}>
+        {({
+          count,
+          data: paginatedData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => (
+          <>
+            <AccountDelegationsTable
+              delegations={paginatedData}
+              error={error}
+              handleOrderChange={handleOrderChange}
+              isLoading={isLoading}
+              numCols={numCols}
+              order={order}
+              orderBy={orderBy}
+            />
+            <PaginationFooter
+              count={count}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+            />
+          </>
+        )}
+      </Paginate>
     </Paper>
   );
 };
