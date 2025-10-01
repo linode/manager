@@ -6,8 +6,8 @@ import { mswDB } from 'src/mocks/indexedDB';
 import type { MockSeeder, MockState } from 'src/mocks/types';
 
 const DELEGATION_USERNAMES = [
-  'abailly@akamai.com',
-  'test-admin@example.com',
+  'test-admin1@example.com',
+  'test-admin2@example.com',
   'delegate-user1@example.com',
   'delegate-user2@example.com',
 ];
