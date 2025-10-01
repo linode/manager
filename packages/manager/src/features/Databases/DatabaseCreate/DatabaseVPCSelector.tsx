@@ -4,6 +4,7 @@ import {
   BetaChip,
   Box,
   Checkbox,
+  FormHelperText,
   Notice,
   TooltipIcon,
   Typography,
@@ -209,6 +210,16 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
                 'Adds a public endpoint to the database in addition to the private VPC endpoint.'
               }
             />
+            {errors?.private_network?.public_access && (
+              <FormHelperText
+                className="error-for-scroll"
+                error
+                role="alert"
+                sx={{ marginTop: 0 }}
+              >
+                {errors?.private_network?.public_access}
+              </FormHelperText>
+            )}
           </Box>
         </>
       ) : (

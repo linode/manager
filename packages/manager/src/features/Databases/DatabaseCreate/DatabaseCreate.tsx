@@ -162,7 +162,8 @@ export const DatabaseCreate = () => {
       if (ipErrors) {
         setIPErrorsFromAPI(ipErrors);
       }
-      handleAPIErrors(errors, setFieldError, setCreateError);
+      const parentFields = ['private_network']; // List of parent fields that need the full key from the errors response
+      handleAPIErrors(errors, setFieldError, setCreateError, parentFields);
     }
 
     setSubmitting(false);
