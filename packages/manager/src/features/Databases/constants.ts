@@ -53,6 +53,15 @@ export const BACKUPS_INVALID_TIME_VALIDATON_TEXT =
 export const BACKUPS_UNABLE_TO_RESTORE_TEXT =
   'You can restore a backup after the first backup is completed.';
 
+export const SUMMARY_HOST_TOOLTIP_COPY =
+  'Use the IPv6 address (AAAA record) for this hostname to avoid network transfer charges when connecting to this database from Linodes within the same region.';
+
+export const SUMMARY_PRIVATE_HOST_COPY =
+  "The private hostname resolves to an internal IP address and can only be used to access the database cluster from other Linode instances within the same VPC. This connection is secured and doesn't incur transfer costs.";
+
+export const SUMMARY_PRIVATE_HOST_LEGACY_COPY =
+  'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
+
 // Links
 export const LEARN_MORE_LINK_LEGACY =
   'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';
