@@ -1375,7 +1375,7 @@ describe('Linode Interfaces enabled', () => {
        * - Confirms IPv4 ranges can be added
        * - Confirms updating a firewall
        */
-      it.only('confirms editing a VPC interface', () => {
+      it('confirms editing a VPC interface', () => {
         const linodeInterface = linodeInterfaceFactoryVPC.build({
           vpc: {
             ipv4: {
