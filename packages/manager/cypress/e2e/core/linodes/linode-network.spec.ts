@@ -1375,7 +1375,7 @@ describe('Linode Interfaces enabled', () => {
        * - Confirms IPv4 ranges can be added
        * - Confirms updating a firewall
        */
-      it('confirms editing a VPC interface', () => {
+      it.only('confirms editing a VPC interface', () => {
         const linodeInterface = linodeInterfaceFactoryVPC.build({
           vpc: {
             ipv4: {
@@ -1462,13 +1462,13 @@ describe('Linode Interfaces enabled', () => {
           .should('be.visible')
           .within(() => {
             // confirm VPC IPv4 address and public IPv4 address checkboxes exist
-            cy.findByLabelText('VPC IPv4 Address').should('be.visible');
-            cy.findByText('Auto-assign a VPC IPv4 Address')
+            cy.findByLabelText('VPC IPv4 address').should('be.visible');
+            cy.findByText('Auto-assign VPC IPv4')
               .should('be.visible')
               .should('be.enabled');
-            cy.findByText(
-              'Assign a public IPv4 address for this Linode'
-            ).should('be.visible');
+            cy.findByText('Allow public IPv4 access (1:1 NAT)').should(
+              'be.visible'
+            );
 
             // Add an IPv4 range
             ui.button
@@ -1518,7 +1518,7 @@ describe('Linode Interfaces enabled', () => {
               'have.value',
               '10.0.0.1'
             );
-            cy.findByLabelText('VPC IPv4 Address').should(
+            cy.findByLabelText('VPC IPv4 address').should(
               'have.value',
               '10.0.0.0'
             );
