@@ -1,24 +1,13 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
-import {
-  Autocomplete,
-  Box,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  Notice,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete, Box, Divider, Stack, Typography } from '@linode/ui';
 import { LinkButton } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
+import { PublicIPv6Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv6Access';
 import { VPCIPv4Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv4Address';
 import { VPCIPv6Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv6Address';
-import {
-  VPCIPv6PublicIPLabel,
-  VPCPublicIPLabel,
-} from 'src/features/VPCs/components/VPCPublicIPLabel';
 import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -198,20 +187,12 @@ export const VPC = ({ index }: Props) => {
               control={control}
               name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
               render={({ field, fieldState }) => (
-                <Box>
-                  {fieldState.error?.message && (
-                    <Notice text={fieldState.error.message} variant="error" />
-                  )}
-                  <FormControlLabel
-                    checked={field.value === 'auto'}
-                    control={<Checkbox sx={{ ml: 0.4 }} />}
-                    disabled={!regionSupportsVPCs}
-                    label={<VPCPublicIPLabel />}
-                    onChange={(e, checked) =>
-                      field.onChange(checked ? 'auto' : null)
-                    }
-                  />
-                </Box>
+                <PublicIPv4Access
+                  checked={Boolean(field.value)}
+                  disabled={!regionSupportsVPCs}
+                  errorMessage={fieldState.error?.message}
+                  onChange={field.onChange}
+                />
               )}
             />
             {showIPv6Fields && (
@@ -219,18 +200,12 @@ export const VPC = ({ index }: Props) => {
                 control={control}
                 name={`linodeInterfaces.${index}.vpc.ipv6.is_public`}
                 render={({ field, fieldState }) => (
-                  <Box>
-                    {fieldState.error?.message && (
-                      <Notice text={fieldState.error.message} variant="error" />
-                    )}
-                    <FormControlLabel
-                      checked={field.value === true}
-                      control={<Checkbox sx={{ ml: 0.4 }} />}
-                      disabled={!regionSupportsVPCs}
-                      label={<VPCIPv6PublicIPLabel />}
-                      onChange={() => field.onChange(!field.value)}
-                    />
-                  </Box>
+                  <PublicIPv6Access
+                    checked={field.value === true}
+                    disabled={!regionSupportsVPCs}
+                    errorMessage={fieldState.error?.message}
+                    onChange={field.onChange}
+                  />
                 )}
               />
             )}

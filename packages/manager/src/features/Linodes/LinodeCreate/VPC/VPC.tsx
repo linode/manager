@@ -2,9 +2,7 @@ import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Notice,
   Paper,
   Stack,
@@ -16,12 +14,10 @@ import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
+import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
+import { PublicIPv6Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv6Access';
 import { VPCIPv4Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv4Address';
 import { VPCIPv6Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv6Address';
-import {
-  VPCIPv6PublicIPLabel,
-  VPCPublicIPLabel,
-} from 'src/features/VPCs/components/VPCPublicIPLabel';
 import {
   DualStackVPCRangesDescription,
   VPCRangesDescription,
@@ -269,15 +265,12 @@ export const VPC = () => {
                     <Controller
                       control={control}
                       name="interfaces.0.ipv4.nat_1_1"
-                      render={({ field }) => (
-                        <FormControlLabel
-                          checked={field.value === 'any'}
-                          control={<Checkbox sx={{ ml: 0.5 }} />}
-                          label={<VPCPublicIPLabel />}
-                          onChange={(e, checked) =>
-                            field.onChange(checked ? 'any' : null)
-                          }
-                          sx={{ mt: 0 }}
+                      render={({ field, fieldState }) => (
+                        <PublicIPv4Access
+                          checked={Boolean(field.value)}
+                          errorMessage={fieldState.error?.message}
+                          isConfigInterface
+                          onChange={field.onChange}
                         />
                       )}
                     />
@@ -286,21 +279,12 @@ export const VPC = () => {
                         control={control}
                         name={`interfaces.0.ipv6.is_public`}
                         render={({ field, fieldState }) => (
-                          <Box>
-                            {fieldState.error?.message && (
-                              <Notice
-                                text={fieldState.error.message}
-                                variant="error"
-                              />
-                            )}
-                            <FormControlLabel
-                              checked={field.value === true}
-                              control={<Checkbox sx={{ ml: 0.4 }} />}
-                              disabled={!regionSupportsVPCs}
-                              label={<VPCIPv6PublicIPLabel />}
-                              onChange={() => field.onChange(!field.value)}
-                            />
-                          </Box>
+                          <PublicIPv6Access
+                            checked={field.value === true}
+                            disabled={!regionSupportsVPCs}
+                            errorMessage={fieldState.error?.message}
+                            onChange={field.onChange}
+                          />
                         )}
                       />
                     )}
