@@ -72,6 +72,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ACLP-Alerting: Object Storage service onboarding for Alerts UI ([#12910](https://github.com/linode/manager/pull/12910))
 - CloudPulse-Metrics: Handle special conditions for `objectstorage` service addition, add related filters at `FilterConfig.ts`, integrate related component `CloudPulseEndpointsSelect.tsx` ([#12912](https://github.com/linode/manager/pull/12912))
 
+## [2025-10-02] - v1.151.2
+
+### Fixed:
+
+- DBaaS - Database Create Subnet field should display backend error messages
+
 ## [2025-09-25] - v1.151.1
 
 ### Added:
