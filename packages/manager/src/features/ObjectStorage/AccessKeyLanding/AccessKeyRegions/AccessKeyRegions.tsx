@@ -6,9 +6,6 @@ import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';
-import { WHITELISTED_REGIONS } from '../../utilities';
-
 import type { Region } from '@linode/api-v4';
 
 interface Props {
@@ -35,8 +32,6 @@ export const AccessKeyRegions = (props: Props) => {
   const { allRegionsError, availableStorageRegions } =
     useObjectStorageRegions();
 
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
-
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
 
@@ -45,9 +40,6 @@ export const AccessKeyRegions = (props: Props) => {
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
-      forcefullyShownRegionIds={
-        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
-      }
       isClearable={false}
       isGeckoLAEnabled={isGeckoLAEnabled}
       label="Regions"
