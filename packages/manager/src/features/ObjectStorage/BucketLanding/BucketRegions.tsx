@@ -5,9 +5,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { useIsObjectStorageGen2Enabled } from '../hooks/useIsObjectStorageGen2Enabled';
-import { WHITELISTED_REGIONS } from '../utilities';
-
 interface Props {
   disabled?: boolean;
   error?: string;
@@ -22,8 +19,6 @@ export const BucketRegions = (props: Props) => {
 
   const { allRegionsError, availableStorageRegions } =
     useObjectStorageRegions();
-
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
@@ -40,9 +35,6 @@ export const BucketRegions = (props: Props) => {
       disableClearable
       disabled={disabled}
       errorText={errorText}
-      forcefullyShownRegionIds={
-        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
-      }
       isGeckoLAEnabled={isGeckoLAEnabled}
       label="Region"
       onBlur={onBlur}
