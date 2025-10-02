@@ -78,7 +78,7 @@ export const SubnetNode = (props: Props) => {
                 errorText={fieldState.error?.message}
                 helperText={!shouldDisplayIPv6 && availableIPv4HelperText}
                 inputId={`subnet-ipv4-${idx}`}
-                label="Subnet IP Address Range"
+                label="Subnet IPv4 Range (CIDR)"
                 onBlur={field.onBlur}
                 onChange={field.onChange}
                 value={field.value}
@@ -96,11 +96,14 @@ export const SubnetNode = (props: Props) => {
                     numberOfAvailableIPv4Linodes,
                     calculateAvailableIPv6Linodes(field.value)
                   )}`}
-                  label="IPv6 Prefix Length"
+                  label="Subnet IPv6 Prefix Length"
                   onChange={(_, option) => field.onChange(option.value)}
                   options={SUBNET_IPV6_PREFIX_LENGTHS}
                   sx={{
                     width: 140,
+                    '& .MuiInputLabel-root': {
+                      overflow: 'visible',
+                    },
                   }}
                   value={SUBNET_IPV6_PREFIX_LENGTHS.find(
                     (option) => option.value === field.value

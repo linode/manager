@@ -11,7 +11,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import { useFlags } from 'src/hooks/useFlags';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { useInterfaceDataForLinode } from '../../../hooks/useInterfaceDataForLinode';
@@ -56,6 +56,7 @@ interface Props {
   subnet: Subnet;
   subnetId: number;
   subnetInterfaces: SubnetLinodeInterfaceData[];
+  vpcId: number;
 }
 
 export const SubnetLinodeRow = (props: Props) => {
@@ -68,9 +69,10 @@ export const SubnetLinodeRow = (props: Props) => {
     subnet,
     subnetId,
     subnetInterfaces,
+    vpcId,
   } = props;
 
-  const flags = useFlags();
+  const { isDualStackEnabled } = useVPCDualStack();
 
   const subnetInterfaceData =
     subnetInterfaces.find((interfaceData) => interfaceData.active) ??
@@ -231,7 +233,7 @@ export const SubnetLinodeRow = (props: Props) => {
           })}
         </TableCell>
       </Hidden>
-      {flags.vpcIpv6 && (
+      {isDualStackEnabled && (
         <>
           <Hidden smDown>
             <TableCell data-testid="vpc-ipv6-cell" noWrap>
@@ -274,6 +276,7 @@ export const SubnetLinodeRow = (props: Props) => {
           linode={linode}
           showPowerButton={showPowerButton}
           subnet={subnet}
+          vpcId={vpcId}
         />
       </TableCell>
     </TableRow>
@@ -382,9 +385,7 @@ const getIPRangesCellContents = (
       determineNoneSingleOrMultipleWithChip(ipv6Ranges);
 
     // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
-    return noneSingleOrMultipleWithChipIPV6 === 'None'
-      ? '—'
-      : noneSingleOrMultipleWithChipIPV6;
+    return !interfaceData.ipv6 ? '—' : noneSingleOrMultipleWithChipIPV6;
   } else {
     const linodeInterfaceVPCRanges =
       ipType === 'ipv4'
@@ -396,14 +397,14 @@ const getIPRangesCellContents = (
     );
 
     // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
-    return ipType === 'ipv6' && noneSingleOrMultipleWithChip === 'None'
+    return ipType === 'ipv6' && !interfaceData.vpc?.ipv6
       ? '—'
       : noneSingleOrMultipleWithChip;
   }
 };
 
 export const SubnetLinodeTableRowHead = (
-  vpcIPv6FeatureFlag: boolean = false
+  isDualStackEnabled: boolean = false
 ) => (
   <TableRow>
     <TableCell sx={{ width: '24%' }}>Linode</TableCell>
@@ -414,7 +415,7 @@ export const SubnetLinodeTableRowHead = (
     <Hidden smDown>
       <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
-    {vpcIPv6FeatureFlag && (
+    {isDualStackEnabled && (
       <>
         <Hidden smDown>
           <TableCell>VPC IPv6</TableCell>

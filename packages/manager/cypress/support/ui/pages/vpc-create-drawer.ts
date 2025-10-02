@@ -57,7 +57,7 @@ export const vpcCreateDrawer = {
    * @param subnetIndex - Optional index of subnet for which to update IP range.
    */
   setSubnetIpRange: (subnetIpRange: string, subnetIndex: number = 0) => {
-    cy.findByText('Subnet IP Address Range', {
+    cy.findByText('Subnet IPv4 Range (CIDR)', {
       selector: `label[for="subnet-ipv4-${subnetIndex}"]`,
     })
       .should('be.visible')

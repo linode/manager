@@ -129,9 +129,19 @@ interface MetricRequestProps {
   linodeRegion?: string;
 
   /**
+   * selected region for the widget
+   */
+  region?: string;
+
+  /**
    * list of CloudPulse resources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the widget
+   */
+  serviceType: CloudPulseServiceType;
 
   /**
    * widget filters for metrics data
@@ -326,21 +336,27 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
-    props;
+  const {
+    duration,
+    entityIds,
+    resources,
+    widget,
+    groupBy,
+    linodeRegion,
+    region,
+    serviceType,
+  } = props;
   const preset = duration.preset;
-
+  const presetDuration = getTimeDurationFromPreset(preset);
   return {
     absolute_time_duration:
-      preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
-        ? undefined
-        : { end: duration.end, start: duration.start },
-    entity_ids: resources
-      ? entityIds.map((id) => parseInt(id, 10))
-      : widget.entity_ids.map((id) => parseInt(id, 10)),
+      presetDuration === undefined
+        ? { end: duration.end, start: duration.start }
+        : undefined,
+    entity_ids: getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
-    relative_time_duration: getTimeDurationFromPreset(preset),
+    relative_time_duration: presetDuration,
     metrics: [
       {
         aggregate_function: widget.aggregate_function,
@@ -355,7 +371,29 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
     associated_entity_region: linodeRegion,
+    entity_region: serviceType === 'objectstorage' ? region : undefined,
   };
+};
+
+/**
+ *
+ * @param resources list of CloudPulse resources
+ * @param entityIds list of entity ids
+ * @param widget widget
+ * @returns transformed entity ids
+ */
+export const getEntityIds = (
+  resources: CloudPulseResources[],
+  entityIds: string[],
+  widget: Widgets,
+  serviceType: CloudPulseServiceType
+) => {
+  if (serviceType === 'objectstorage') {
+    return entityIds;
+  }
+  return resources
+    ? entityIds.map((id) => parseInt(id, 10))
+    : widget.entity_ids.map((id) => parseInt(id, 10));
 };
 
 /**

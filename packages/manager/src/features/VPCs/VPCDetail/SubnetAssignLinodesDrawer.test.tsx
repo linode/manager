@@ -59,9 +59,7 @@ describe('Subnet Assign Linodes Drawer', () => {
       <SubnetAssignLinodesDrawer {...props} />
     );
 
-    const header = getByText(
-      'Assign Linodes to subnet: subnet-1 (10.0.0.0/24)'
-    );
+    const header = getByText('Assign Linodes to subnet: subnet-1');
     expect(header).toBeVisible();
     const notice = getByTestId('subnet-linode-action-notice');
     expect(notice).toBeVisible();

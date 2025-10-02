@@ -107,7 +107,9 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
           </Stack>
           <Button
             buttonType="outlined"
-            disabled={metricCriteriaWatcher.length === 5}
+            disabled={
+              serviceType === null || metricCriteriaWatcher.length === 5
+            }
             onClick={() =>
               append({
                 aggregate_function: null,
