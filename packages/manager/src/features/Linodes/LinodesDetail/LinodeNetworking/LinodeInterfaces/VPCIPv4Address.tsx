@@ -29,7 +29,7 @@ export const VPCIPv4Address = (props: Props) => {
     <Stack rowGap={1}>
       <Stack direction="row">
         <FormControlLabel
-          checked={fieldValue === 'auto'}
+          checked={['auto', null, undefined].includes(fieldValue)}
           control={<Checkbox />}
           disabled={disabled}
           label="Auto-assign VPC IPv4"
