@@ -244,7 +244,7 @@ export const printInvoice = async (
      */
     const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
     // Country-level tax IDs are always displayed when available
-    const countryTax = hasTax ? taxes?.country_tax : undefined;
+    const countryTax = taxes?.country_tax;
     const provincialTax = hasTax
       ? taxes?.provincial_tax_ids?.[account.state]
       : undefined;
