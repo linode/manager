@@ -6,12 +6,10 @@ import { linodeTypeFactory, regionFactory } from '@linode/utilities';
 import {
   clusterPlans,
   latestEnterpriseTierKubernetesVersion,
-  latestKubernetesVersion,
   mockedLKEClusterTypes,
   mockedLKEEnterprisePrices,
   mockTieredEnterpriseVersions,
   mockTieredStandardVersions,
-  mockTieredVersions,
 } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -21,7 +19,6 @@ import {
   mockCreateCluster,
   mockCreateClusterError,
   mockGetCluster,
-  mockGetKubernetesVersions,
   mockGetLKEClusterTypes,
   mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
@@ -106,9 +103,9 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     mockGetTieredKubernetesVersions('enterprise', [
       latestEnterpriseTierKubernetesVersion,
-    ]).as('getTieredKubernetesVersions');
-    mockGetKubernetesVersions([latestKubernetesVersion]).as(
-      'getKubernetesVersions'
+    ]).as('getEnterpriseTieredVersions');
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions).as(
+      'getStandardTieredVersions'
     );
 
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
@@ -127,11 +124,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     ui.button.findByTitle('Create Cluster').click();
     cy.url().should('endWith', '/kubernetes/create');
-    cy.wait([
-      '@getKubernetesVersions',
-      '@getTieredKubernetesVersions',
-      '@getLinodeTypes',
-    ]);
+    cy.wait(['@getLinodeTypes']);
   });
 
   describe('LKE-E Phase 2 Networking Configurations', () => {
@@ -499,7 +492,6 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     );
-    mockGetKubernetesVersions(mockTieredVersions.map((version) => version.id));
     mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
     mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
   });

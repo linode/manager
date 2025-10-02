@@ -79,6 +79,14 @@ export async function loadDevTools() {
     // Merge the contexts
     const mergedContext: MockState = {
       ...initialContext,
+      childAccounts: [
+        ...initialContext.childAccounts,
+        ...(seedContext?.childAccounts || []),
+      ],
+      delegations: [
+        ...initialContext.delegations,
+        ...(seedContext?.delegations || []),
+      ],
       domains: [...initialContext.domains, ...(seedContext?.domains || [])],
       eventQueue: [
         ...initialContext.eventQueue,
@@ -92,6 +100,7 @@ export async function loadDevTools() {
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
       ],
+      entities: [...initialContext.entities, ...(seedContext?.entities || [])],
       kubernetesClusters: [
         ...initialContext.kubernetesClusters,
         ...(seedContext?.kubernetesClusters || []),

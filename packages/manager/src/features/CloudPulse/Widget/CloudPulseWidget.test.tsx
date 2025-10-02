@@ -27,6 +27,7 @@ const props: CloudPulseWidgetProperties = {
     scrape_interval: '2m',
     unit: 'percent',
   },
+  dashboardId: 1,
   duration: {
     end: DateTime.now().toISO(),
     preset: '30minutes',

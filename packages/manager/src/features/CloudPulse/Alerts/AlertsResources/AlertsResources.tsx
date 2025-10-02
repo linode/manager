@@ -12,7 +12,9 @@ import { MULTILINE_ERROR_SEPARATOR } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
   getAlertResourceFilterProps,
+  getEndpointOptions,
   getFilteredResources,
+  getOfflineRegionFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
   getSupportedRegionIds,
@@ -119,7 +121,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
-  >({ engineType: undefined, tags: undefined });
+  >({ engineType: undefined, tags: undefined, endpoint: undefined });
 
   const {
     data: regions,
@@ -129,19 +131,23 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const theme = useTheme();
 
-  const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
+  const supportedRegionIds = React.useMemo(() => {
+    return getSupportedRegionIds(regions, serviceType);
+  }, [regions, serviceType]);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
-    if (serviceType === 'firewall') {
+    if (
+      serviceType === 'firewall' ||
+      serviceType === 'objectstorage' ||
+      !supportedRegionIds?.length
+    ) {
       return undefined;
     }
 
-    const regionFilter: Filter = supportedRegionIds
-      ? {
-          '+or': supportedRegionIds.map((regionId) => ({
-            region: regionId,
-          })),
-        }
-      : {};
+    const regionFilter: Filter = {
+      '+or': supportedRegionIds?.map((regionId) => ({
+        region: regionId,
+      })),
+    };
 
     // if service type is other than dbaas, return only region filter
     if (serviceType !== 'dbaas') {
@@ -153,7 +159,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
     // If alertType is not 'system' or alertClass is not defined, return only platform filter
     if (alertType !== 'system' || !alertClass) {
-      return platformFilter;
+      return { ...platformFilter, '+and': [regionFilter] };
     }
 
     // Dynamically exclude 'dedicated' if alertClass is 'shared'
@@ -182,20 +188,29 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isError: isResourcesError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
-    Boolean(serviceType),
+    Boolean(
+      serviceType && (serviceType === 'firewall' || supportedRegionIds?.length)
+    ), // Enable query only if serviceType and supportedRegionIds are available, in case of firewall only serviceType is needed
     serviceType,
     {},
     xFilterToBeApplied
   );
 
+  const regionFilteredResources = React.useMemo(() => {
+    if (serviceType === 'objectstorage' && resources && supportedRegionIds) {
+      return getOfflineRegionFilteredResources(resources, supportedRegionIds);
+    }
+    return resources;
+  }, [serviceType, resources, supportedRegionIds]);
+
   const computedSelectedResources = React.useMemo(() => {
-    if (!isSelectionsNeeded || !resources) {
+    if (!isSelectionsNeeded || !regionFilteredResources) {
       return alertResourceIds;
     }
-    return resources
+    return regionFilteredResources
       .filter(({ id }) => alertResourceIds.includes(id))
       .map(({ id }) => id);
-  }, [resources, isSelectionsNeeded, alertResourceIds]);
+  }, [regionFilteredResources, isSelectionsNeeded, alertResourceIds]);
 
   React.useEffect(() => {
     setSelectedResources(computedSelectedResources);
@@ -209,13 +224,25 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   // Derived list of regions associated with the provided resource IDs, filtered based on available data.
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
-      data: resources,
+      data: regionFilteredResources,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
     });
-  }, [resources, alertResourceIds, regionsIdToRegionMap, isSelectionsNeeded]);
+  }, [
+    regionFilteredResources,
+    alertResourceIds,
+    regionsIdToRegionMap,
+    isSelectionsNeeded,
+  ]);
 
+  const endpointOptions: string[] = React.useMemo(() => {
+    return getEndpointOptions(
+      regionFilteredResources,
+      isSelectionsNeeded,
+      alertResourceIds
+    );
+  }, [alertResourceIds, isSelectionsNeeded, regionFilteredResources]);
   const isDataLoadingError = isRegionsError || isResourcesError;
 
   const handleSearchTextChange = (searchText: string) => {
@@ -246,7 +273,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const filteredResources: AlertInstance[] = React.useMemo(() => {
     return getFilteredResources({
       additionalFilters,
-      data: resources,
+      data: regionFilteredResources,
       filteredRegions,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToRegionMap,
@@ -256,7 +283,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       selectedResources,
     });
   }, [
-    resources,
+    regionFilteredResources,
     filteredRegions,
     isSelectionsNeeded,
     regionsIdToRegionMap,
@@ -283,7 +310,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const handleAllSelection = React.useCallback(
     (action: SelectDeselectAll) => {
-      if (!resources) {
+      if (!regionFilteredResources) {
         return;
       }
 
@@ -294,7 +321,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         setSelectedResources([]);
       } else {
         // Select all
-        currentSelections = resources.map(({ id }) => id);
+        currentSelections = regionFilteredResources.map(({ id }) => id);
         setSelectedResources(currentSelections);
       }
 
@@ -302,7 +329,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         handleResourcesSelection(currentSelections); // publish the resources selected
       }
     },
-    [handleResourcesSelection, resources]
+    [handleResourcesSelection, regionFilteredResources]
   );
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
@@ -352,7 +379,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     maxSelectionCount && selectedResources
       ? Math.max(0, maxSelectionCount - selectedResources.length)
       : undefined;
-
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -401,11 +427,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   filterKey,
                   handleFilterChange,
                   handleFilteredRegionsChange,
+                  endpointOptions,
                   regionOptions,
                   tagOptions: Array.from(
                     new Set(
-                      resources
-                        ? resources.flatMap(({ tags }) => tags ?? [])
+                      regionFilteredResources
+                        ? regionFilteredResources.flatMap(
+                            ({ tags }) => tags ?? []
+                          )
                         : []
                     )
                   ),
@@ -454,15 +483,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
-          resources &&
-          resources.length > 0 && (
+          regionFilteredResources &&
+          regionFilteredResources.length > 0 && (
             <GridLegacy item xs={12}>
               <AlertSelectedInfoNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
                 property="entities"
                 selectedCount={selectedResources.length}
-                totalCount={resources?.length ?? 0}
+                totalCount={regionFilteredResources?.length ?? 0}
               />
             </GridLegacy>
           )}

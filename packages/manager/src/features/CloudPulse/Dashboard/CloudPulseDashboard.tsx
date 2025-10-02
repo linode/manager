@@ -17,7 +17,11 @@ import {
 } from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DateTimeWithPreset,
+  JWETokenPayLoad,
+} from '@linode/api-v4';
 
 export interface DashboardProperties {
   /**
@@ -34,6 +38,11 @@ export interface DashboardProperties {
    * time duration to fetch the metrics data in this widget
    */
   duration: DateTimeWithPreset;
+
+  /**
+   * list of fields to group the metrics data by
+   */
+  groupBy: string[];
 
   /**
    * Selected linode region for the dashboard
@@ -61,6 +70,11 @@ export interface DashboardProperties {
   savePref?: boolean;
 
   /**
+   * Selected service type for the dashboard
+   */
+  serviceType: CloudPulseServiceType;
+
+  /**
    * Selected tags for the dashboard
    */
   tags?: string[];
@@ -74,12 +88,18 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    serviceType,
+    groupBy,
     linodeRegion,
+    region,
   } = props;
 
   const { preferences } = useAclpPreference();
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
+    if (serviceType === 'objectstorage') {
+      return {};
+    }
     return {
       entity_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
@@ -152,18 +172,19 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       'No visualizations are available at this moment. Create Dashboards to list here.'
     );
   }
-
   return (
     <RenderWidgets
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}
+      groupBy={groupBy}
       isJweTokenFetching={isJweTokenFetching}
       jweToken={jweToken}
       linodeRegion={linodeRegion}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
+      region={region}
       resourceList={resourceList}
       resources={resources}
       savePref={savePref}

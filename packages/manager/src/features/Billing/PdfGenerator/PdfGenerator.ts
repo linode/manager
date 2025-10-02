@@ -229,27 +229,22 @@ export const printInvoice = async (
       taxes && taxes?.date ? dateConversion(taxes.date) : Infinity;
 
     /**
-     * Users who have identified their country as one of the ones targeted by
-     * one of our tax policies will have a `taxes` with at least a .date.
-     * Customers with no country, or from a country we don't have a tax policy
-     * for, will have a `taxes` of {}, and the following logic will skip them.
+     * Tax data is served from LaunchDarkly feature flags and displayed on invoices.
+     * Country-level tax IDs (like EU VAT, Japanese JCT, etc.) are always displayed
+     * when available, regardless of invoice date.
      *
-     * If taxes.date is defined, and the invoice we're about to print is after
-     * that date, we want to add the customer's tax ID to the invoice.
+     * Provincial/state-level tax IDs still use date filtering to determine when
+     * they should be applied based on local tax policy implementation dates.
      *
-     * If in addition to the above, taxes is defined, it means
-     * we have a corporate tax ID for the country and should display that in the left
-     * side of the header.
+     * The source of truth for all tax data is LaunchDarkly, with examples:
      *
-     * The source of truth for all tax banners is LaunchDarkly, but as an example,
-     * as of 2/20/2020 we have the following cases:
-     *
-     * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
-     *  - [M3-8277] For EU customers, invoices will include VAT for B2C transactions and exclude VAT for B2B transactions. Both VAT numbers will be shown on the invoice template for EU countries.
-     * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
+     * EU VAT: Shows both EU VAT number and Switzerland VAT for B2B customers
+     * Japanese JCT: Shows Japan JCT tax ID and QI Registration number
+     * US/CA: Shows federal tax IDs and state-specific tax IDs when applicable
      */
     const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
-    const countryTax = hasTax ? taxes?.country_tax : undefined;
+    // Country-level tax IDs are always displayed when available
+    const countryTax = taxes?.country_tax;
     const provincialTax = hasTax
       ? taxes?.provincial_tax_ids?.[account.state]
       : undefined;

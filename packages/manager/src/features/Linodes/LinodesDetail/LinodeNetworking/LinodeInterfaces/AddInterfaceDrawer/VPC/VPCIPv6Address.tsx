@@ -1,4 +1,3 @@
-import { useSubnetQuery } from '@linode/queries';
 import {
   Checkbox,
   FormControlLabel,
@@ -6,30 +5,23 @@ import {
   Stack,
   TextField,
   TooltipIcon,
-  Typography,
 } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Code } from 'src/components/Code/Code';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
+import {
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
+  VPC_IPV6_INPUT_HELPER_TEXT,
+} from 'src/features/VPCs/constants';
 
 import type { CreateInterfaceFormValues } from '../utilities';
 
 export const VPCIPv6Address = () => {
   const {
     control,
-    getValues,
     formState: { errors },
   } = useFormContext<CreateInterfaceFormValues>();
-
-  const { vpc } = getValues();
-  const { data: subnet } = useSubnetQuery(
-    vpc?.vpc_id ?? -1,
-    vpc?.subnet_id ?? -1,
-    Boolean(vpc?.vpc_id && vpc?.subnet_id)
-  );
 
   const error = errors.vpc?.ipv6?.message;
 
@@ -49,27 +41,16 @@ export const VPCIPv6Address = () => {
               <FormControlLabel
                 checked={field.value === 'auto'}
                 control={<Checkbox />}
-                label="Auto-assign VPC IPv6 address"
+                label="Auto-assign VPC IPv6"
                 onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
                 sx={{ pl: 0.4, mr: 0 }}
               />
-              <TooltipIcon
-                status="info"
-                text={
-                  <Typography component="span">
-                    Automatically assign an IPv6 address as a private IP address
-                    for this Linode in the VPC. A <Code>/52</Code> IPv6 network
-                    prefix is allocated for the VPC.
-                  </Typography>
-                }
-              />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP} />
             </Stack>
             {field.value !== 'auto' && (
               <TextField
                 errorText={fieldState.error?.message}
-                helperText={generateVPCIPv6InputHelperText(
-                  subnet?.ipv6?.[0].range ?? ''
-                )}
+                helperText={VPC_IPV6_INPUT_HELPER_TEXT}
                 label="VPC IPv6"
                 noMarginTop
                 onChange={field.onChange}

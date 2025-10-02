@@ -5,7 +5,7 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 export const VlanInterfaceDetailsContent = (props: {
   ipam_address: string;
-  vlan_label: string;
+  vlan_label: null | string;
 }) => {
   const { ipam_address, vlan_label } = props;
   return (
@@ -20,9 +20,7 @@ export const VlanInterfaceDetailsContent = (props: {
         <Typography>
           <strong>IPAM Address</strong>
         </Typography>
-        <Typography>
-          <MaskableText isToggleable text={ipam_address} />
-        </Typography>
+        <MaskableText isToggleable text={ipam_address} />
       </Stack>
     </>
   );

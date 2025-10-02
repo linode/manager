@@ -54,6 +54,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',

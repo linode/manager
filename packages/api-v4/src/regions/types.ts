@@ -69,6 +69,12 @@ export interface RegionAvailability {
   region: string;
 }
 
+export interface RegionVPCAvailability {
+  available: boolean; // True if Region has VPC capabilities
+  available_ipv6_prefix_lengths: number[];
+  region: string;
+}
+
 type CountryCode = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
 
 export type Country = Lowercase<CountryCode>;

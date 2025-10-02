@@ -13,6 +13,7 @@ import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
   clusterSize?: number;
+  endpoint?: string;
   engineType?: string;
   entities?: Record<string, string>;
   id: string;

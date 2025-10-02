@@ -1,6 +1,6 @@
-import { useAccountUsers, useProfile } from '@linode/queries';
+import { useAccountUsers } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Button, Paper, Stack, Typography } from '@linode/ui';
+import { Button, Paper, Stack } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -16,7 +16,6 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { usePermissions } from '../../hooks/usePermissions';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
-import { ProxyUserTable } from './ProxyUserTable';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
@@ -31,7 +30,6 @@ export const UsersLanding = () => {
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
-  const { data: profile } = useProfile();
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', ['create_user']);
   const pagination = usePaginationV2({
@@ -49,9 +47,6 @@ export const UsersLanding = () => {
     },
     preferenceKey: 'iam-account-users-order',
   });
-
-  const isProxyUser =
-    profile?.user_type === 'child' || profile?.user_type === 'proxy';
 
   const queryParams = new URLSearchParams(location.search);
 
@@ -108,14 +103,6 @@ export const UsersLanding = () => {
 
   return (
     <React.Fragment>
-      {isProxyUser && (
-        <ProxyUserTable
-          canListUsers={true}
-          handleDelete={handleDelete}
-          isProxyUser={isProxyUser}
-          order={order}
-        />
-      )}
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
         <Stack
           direction={isSmDown ? 'column' : 'row'}
@@ -123,35 +110,22 @@ export const UsersLanding = () => {
           marginBottom={2}
           spacing={2}
         >
-          {isProxyUser ? (
-            <Typography
-              sx={(theme) => ({
-                [theme.breakpoints.down('md')]: {
-                  marginLeft: theme.tokens.spacing.S8,
-                },
-              })}
-              variant="h3"
-            >
-              User Settings
-            </Typography>
-          ) : (
-            <DebouncedSearchTextField
-              clearable
-              containerProps={{
-                sx: {
-                  width: '320px',
-                },
-              }}
-              debounceTime={250}
-              errorText={searchError?.message}
-              hideLabel
-              isSearching={isFetching}
-              label="Filter"
-              onSearch={handleSearch}
-              placeholder="Filter"
-              value={query ?? ''}
-            />
-          )}
+          <DebouncedSearchTextField
+            clearable
+            containerProps={{
+              sx: {
+                width: '320px',
+              },
+            }}
+            debounceTime={250}
+            errorText={searchError?.message}
+            hideLabel
+            isSearching={isFetching}
+            label="Filter"
+            onSearch={handleSearch}
+            placeholder="Filter"
+            value={query ?? ''}
+          />
           <Button
             buttonType="primary"
             disabled={!canCreateUser}

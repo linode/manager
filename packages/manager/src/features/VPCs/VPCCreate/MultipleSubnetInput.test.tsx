@@ -41,7 +41,7 @@ describe('MultipleSubnetInput', () => {
       });
 
     expect(getAllByText('Subnet Label')).toHaveLength(3);
-    expect(getAllByText('Subnet IP Address Range')).toHaveLength(3);
+    expect(getAllByText('Subnet IPv4 Range (CIDR)')).toHaveLength(3);
     getByDisplayValue('subnet 0');
     getByDisplayValue('subnet 1');
     getByDisplayValue('subnet 2');

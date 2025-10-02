@@ -7,7 +7,6 @@ import {
   kubernetesDashboardUrlFactory,
 } from '@src/factories';
 import {
-  kubernetesVersions,
   latestEnterpriseTierKubernetesVersion,
   latestStandardTierKubernetesVersion,
 } from 'support/constants/lke';
@@ -24,31 +23,8 @@ import type {
   KubernetesControlPlaneACLPayload,
   KubernetesTier,
   KubernetesTieredVersion,
-  KubernetesVersion,
   PriceType,
 } from '@linode/api-v4';
-
-// TODO M3-10442: Examine `mockGetKubernetesVersions` and consider modifying/adding alternative util that mocks response containing tiered version objects.
-/**
- * Intercepts GET request to retrieve Kubernetes versions and mocks response.
- *
- * @param versions - Optional array of strings containing mocked versions.
- *
- * @returns Cypress chainable.
- */
-export const mockGetKubernetesVersions = (versions?: string[] | undefined) => {
-  const versionObjects = (versions ? versions : kubernetesVersions).map(
-    (kubernetesVersionString: string): KubernetesVersion => {
-      return { id: kubernetesVersionString };
-    }
-  );
-
-  return cy.intercept(
-    'GET',
-    apiMatcher('lke/versions*'),
-    paginateResponse(versionObjects)
-  );
-};
 
 /**
  * Intercepts GET request to retrieve tiered Kubernetes versions and mocks response.
