@@ -12,7 +12,6 @@ import {
 } from 'src/factories/subnets';
 
 import {
-  generateVPCIPv6InputHelperText,
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
   getUniqueLinodesFromSubnets,
@@ -383,20 +382,5 @@ describe('transformLinodeInterfaceErrorsToFormikErrors', () => {
         reason: 'address 2 is invalid.',
       },
     ]);
-  });
-});
-
-describe('generateVPCIPv6InputHelperText', () => {
-  it('returns null when subnetIPv6Range is falsy', () => {
-    expect(generateVPCIPv6InputHelperText(undefined)).toBeNull();
-    expect(generateVPCIPv6InputHelperText('')).toBeNull();
-  });
-
-  it('returns helper text that correctly represents the number of fixed hextets', () => {
-    const result = generateVPCIPv6InputHelperText('2600:3c03::/64');
-    expect(result).toBe('The first 4 hextets of 2600:3c03::/64 are fixed.');
-
-    const result2 = generateVPCIPv6InputHelperText('2600:3c03::/56');
-    expect(result2).toBe('The first 3.5 hextets of 2600:3c03::/56 are fixed.');
   });
 });

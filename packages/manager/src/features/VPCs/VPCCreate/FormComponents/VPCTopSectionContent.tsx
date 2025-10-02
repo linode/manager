@@ -213,7 +213,7 @@ export const VPCTopSectionContent = (props: Props) => {
                       sm: 12,
                       xs: 12,
                     }}
-                    heading="IPv4 + IPv6 (dual-stack)"
+                    heading="IPv4 + IPv6 (Dual Stack)"
                     onClick={() => {
                       field.onChange([
                         {
@@ -244,7 +244,9 @@ export const VPCTopSectionContent = (props: Props) => {
                             <Typography>
                               The VPC supports both IPv4 and IPv6 addresses.
                             </Typography>
-                            <Typography>{RFC1918HelperText}</Typography>
+                            <Typography>
+                              For IPv4, {RFC1918HelperText}
+                            </Typography>
                             <Typography>
                               For IPv6, the VPC is assigned an IPv6 prefix
                               length of <Code>/52</Code> by default.
