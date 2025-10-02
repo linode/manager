@@ -32,7 +32,7 @@ export const VPCIPAddresses = (props: Props) => {
    * We currently enforce a hard limit of one IPv4 address per VPC interface.
    * See VPC-2044.
    *
-   * @todo Eventually, when the API supports it, we should all the user to append/remove more VPC IPs
+   * @todo Eventually, when the API supports it, we should allow the user to append/remove more VPC IPs
    */
   const { fields } = useFieldArray({
     control,
@@ -50,7 +50,6 @@ export const VPCIPAddresses = (props: Props) => {
       {fields.map((field, index) => (
         <EditVPCIPv4Address
           index={index}
-          isDualStackVPC={isDualStackVPC}
           key={field.id}
           linodeInterface={linodeInterface}
         />

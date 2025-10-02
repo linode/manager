@@ -20,7 +20,6 @@ import {
   VPCPublicIPLabel,
 } from 'src/features/VPCs/components/VPCPublicIPLabel';
 import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
-import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
@@ -164,9 +163,6 @@ export const VPC = ({ index }: Props) => {
                     ?.message
                 }
                 fieldValue={field.value}
-                helperText={generateVPCIPv6InputHelperText(
-                  selectedSubnet?.ipv6?.[0].range ?? ''
-                )}
                 onBlur={field.onBlur}
                 onChange={field.onChange}
               />
@@ -185,9 +181,6 @@ export const VPC = ({ index }: Props) => {
                       ?.range?.message
                   }
                   fieldValue={field.value}
-                  helperText={generateVPCIPv6InputHelperText(
-                    selectedSubnet?.ipv6?.[0].range ?? ''
-                  )}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                 />

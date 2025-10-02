@@ -1,10 +1,9 @@
-import { Notice, Stack, Typography } from '@linode/ui';
+import { Notice, Stack } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { VPCIPv4Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv4Address';
-import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 
 import type {
   LinodeInterface,
@@ -13,12 +12,11 @@ import type {
 
 interface Props {
   index: number;
-  isDualStackVPC: boolean;
   linodeInterface: LinodeInterface;
 }
 
 export const EditVPCIPv4Address = (props: Props) => {
-  const { index, linodeInterface, isDualStackVPC } = props;
+  const { index, linodeInterface } = props;
   const {
     control,
     formState: { errors },
@@ -41,17 +39,6 @@ export const EditVPCIPv4Address = (props: Props) => {
             <VPCIPv4Address
               errorMessage={fieldState.error?.message}
               fieldValue={field.value}
-              helperText={
-                isDualStackVPC ? (
-                  <Typography component="span">
-                    Automatically assign an IPv4 address as{' '}
-                    {isDualStackVPC ? 'a' : 'the'} private IP address for this
-                    Linode in the VPC.
-                  </Typography>
-                ) : (
-                  VPC_AUTO_ASSIGN_IPV4_TOOLTIP
-                )
-              }
               ipv4Address={linodeInterface.vpc?.ipv4?.addresses[index].address}
               onChange={field.onChange}
             />

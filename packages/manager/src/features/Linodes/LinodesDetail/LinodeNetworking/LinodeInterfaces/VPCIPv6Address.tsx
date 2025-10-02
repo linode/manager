@@ -7,28 +7,23 @@ import {
 } from '@linode/ui';
 import React from 'react';
 
-import { VPC_AUTO_ASSIGN_IPV6_TOOLTIP } from 'src/features/VPCs/constants';
+import {
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
+  VPC_IPV6_INPUT_HELPER_TEXT,
+} from 'src/features/VPCs/constants';
 
 interface Props {
   disabled?: boolean;
   errorMessage?: string;
   fieldValue?: null | string;
-  helperText?: null | string;
   ipv6Address?: string;
   onBlur?: () => void;
   onChange: (ipv6Address: string) => void;
 }
 
 export const VPCIPv6Address = (props: Props) => {
-  const {
-    errorMessage,
-    fieldValue,
-    onBlur,
-    onChange,
-    helperText,
-    disabled,
-    ipv6Address,
-  } = props;
+  const { errorMessage, fieldValue, onBlur, onChange, disabled, ipv6Address } =
+    props;
 
   return (
     <Stack rowGap={1}>
@@ -37,7 +32,7 @@ export const VPCIPv6Address = (props: Props) => {
           checked={fieldValue === 'auto'}
           control={<Checkbox />}
           disabled={disabled}
-          label="Auto-assign VPC IPv6 address"
+          label="Auto-assign VPC IPv6"
           onChange={(e, checked) => {
             onChange(checked ? 'auto' : (ipv6Address ?? ''));
           }}
@@ -48,7 +43,7 @@ export const VPCIPv6Address = (props: Props) => {
       {fieldValue !== 'auto' && (
         <TextField
           errorText={errorMessage}
-          helperText={helperText}
+          helperText={VPC_IPV6_INPUT_HELPER_TEXT}
           label="VPC IPv6"
           noMarginTop
           onBlur={onBlur}
