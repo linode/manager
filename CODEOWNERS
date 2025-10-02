@@ -1,3 +1,15 @@
+# Default Team
+# This is a catch all: any change that is not captured by a codeowner rule
+# below will result in`@linode/cloud-manager-code-reviewers` being assigned
+# for PR review.
+* @linode/cloud-manager-code-reviewers
+
+# Cypress E2E Tests
+# This is also a catch all: any change to E2E tests outside of the team-owned
+# files and directories will result in `@linode/frontend-sdet` being assigned
+# for PR review.
+/packages/manager/cypress/ @linode/frontend-sdet
+
 # UI Package
 /packages/ui @linode/ui-platform-design-systems
 
@@ -36,9 +48,3 @@
 /packages/manager/cypress/e2e/core/databases @linode/dbaas-ui
 /packages/manager/cypress/support/constants/databases.ts @linode/dbaas-ui
 /packages/manager/cypress/support/intercepts/databases.ts @linode/dbaas-ui
-
-# Cypress E2E Tests
-/packages/manager/cypress/ @linode/frontend-sdet
-
-# Default Team
-* @linode/cloud-manager-code-reviewers
