@@ -45,7 +45,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
-    forcefullyShownRegionIds,
     helperText,
     isClearable,
     isGeckoLAEnabled,
@@ -65,7 +64,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    forcefullyShownRegionIds,
     regions,
   });
 

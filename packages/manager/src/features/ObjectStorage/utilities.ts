@@ -168,15 +168,6 @@ export const objectACLHelperText: Record<string, string> = {
   'public-read-write': 'Public Read/Write ACL',
 };
 
-// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
-export const WHITELISTED_REGIONS = new Set([
-  'gb-lon',
-  'au-mel',
-  'in-bom-2',
-  'de-fra-2',
-  'sg-sin-2',
-]);
-
 /**
  * For OBJ Gen2 users, filter regions based on available Object Storage endpoints.
  * Otherwise, we return the regions as is.
