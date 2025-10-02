@@ -5,7 +5,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useTabs } from 'src/hooks/useTabs';
 
 import {
@@ -17,8 +17,7 @@ import {
 
 export const UserDetailsLanding = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const flags = useFlags();
-  const isIAMDelegationEnabled = flags?.iamDelegation?.enabled;
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {

@@ -18,15 +18,15 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import type { ChildAccount } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 export const UserDelegations = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const flags = useFlags();
-  const isIAMDelegationEnabled = flags?.iamDelegation?.enabled;
+
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const [search, setSearch] = React.useState('');
   const [childAccounts, setChildAccounts] = React.useState<ChildAccount[]>([]);
 

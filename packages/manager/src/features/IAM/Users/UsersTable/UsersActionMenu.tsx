@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -20,8 +20,7 @@ interface Props {
 
 export const UsersActionMenu = (props: Props) => {
   const { onDelete, permissions, username } = props;
-  const flags = useFlags();
-  const isIAMDelegationEnabled = flags?.iamDelegation?.enabled;
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
 
