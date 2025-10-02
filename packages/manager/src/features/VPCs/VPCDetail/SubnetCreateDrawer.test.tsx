@@ -88,7 +88,7 @@ describe('Create Subnet Drawer', () => {
       },
     });
 
-    const ipv4Input = screen.getByText('Subnet IPv4 Address Range');
+    const ipv4Input = screen.getByText('Subnet IPv4 Range (CIDR)');
     expect(ipv4Input).toBeVisible();
     expect(ipv4Input).toBeEnabled();
 
