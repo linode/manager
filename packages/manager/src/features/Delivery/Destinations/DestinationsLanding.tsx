@@ -18,6 +18,7 @@ import {
   DESTINATIONS_TABLE_DEFAULT_ORDER_BY,
   DESTINATIONS_TABLE_PREFERENCE_KEY,
 } from 'src/features/Delivery/Destinations/constants';
+import { DeleteDestinationDialog } from 'src/features/Delivery/Destinations/DeleteDestinationDialog';
 import { DestinationsLandingEmptyState } from 'src/features/Delivery/Destinations/DestinationsLandingEmptyState';
 import { DestinationTableRow } from 'src/features/Delivery/Destinations/DestinationTableRow';
 import { DeliveryTabHeader } from 'src/features/Delivery/Shared/DeliveryTabHeader/DeliveryTabHeader';
@@ -32,6 +33,14 @@ export const DestinationsLanding = () => {
   const navigate = useNavigate();
   const { mutateAsync: deleteDestination } = useDeleteDestinationMutation();
   const destinationsUrl = '/logs/delivery/destinations';
+
+  const [deleteDialogOpen, setDeleteDialogOpen] =
+    React.useState<boolean>(false);
+  const [deleteError, setDeleteError] = React.useState<string | undefined>();
+  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
+  const [deleteDestinationSelection, setDeleteDestinationSelection] =
+    React.useState<Destination | undefined>();
+
   const search = useSearch({
     from: destinationsUrl,
     shouldThrow: false,
@@ -104,31 +113,48 @@ export const DestinationsLanding = () => {
     navigate({ to: `/logs/delivery/destinations/${id}/edit` });
   };
 
-  const handleDelete = ({ id, label }: Destination) => {
+  const openDeleteDialog = (destination: Destination) => {
+    setDeleteError(undefined);
+    setDeleteDestinationSelection(destination);
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDelete = () => {
+    const { id, label } = deleteDestinationSelection as Destination;
+    setDeleteLoading(true);
     deleteDestination({
       id,
     })
       .then(() => {
+        closeDeleteDialog();
         return enqueueSnackbar(`Destination  ${label} deleted successfully`, {
           variant: 'success',
         });
       })
       .catch((error) => {
-        return enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            `There was an issue deleting your destination`
-          )[0].reason,
-          {
-            variant: 'error',
-          }
-        );
+        const apiErrorReason = getAPIErrorOrDefault(
+          error,
+          'There was an issue deleting your destination'
+        )[0].reason;
+
+        setDeleteError(apiErrorReason);
+
+        return enqueueSnackbar(apiErrorReason, {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setDeleteLoading(false);
       });
   };
 
   const handlers: DestinationHandlers = {
     onEdit: handleEdit,
-    onDelete: handleDelete,
+    onDelete: openDeleteDialog,
   };
 
   return (
@@ -212,6 +238,14 @@ export const DestinationsLanding = () => {
             handleSizeChange={pagination.handlePageSizeChange}
             page={pagination.page}
             pageSize={pagination.pageSize}
+          />
+          <DeleteDestinationDialog
+            destination={deleteDestinationSelection}
+            error={deleteError}
+            loading={deleteLoading}
+            onClose={closeDeleteDialog}
+            onDelete={handleDelete}
+            open={deleteDialogOpen}
           />
         </>
       )}
