@@ -6,6 +6,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
 
@@ -40,8 +41,11 @@ export const EmailForm = () => {
     values,
   });
 
-  const tooltipForDisabledEmailField =
-    profile?.user_type === 'proxy' ? RESTRICTED_FIELD_TOOLTIP : undefined;
+  const { isProxyUser } = useDelegationUserType();
+
+  const tooltipForDisabledEmailField = isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
 
   const onSubmit = async (values: Values) => {
     try {

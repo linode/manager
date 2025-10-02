@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
@@ -6,6 +5,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
@@ -27,7 +27,7 @@ interface Props {
 export const ViewAPITokenDrawer = (props: Props) => {
   const { onClose, open, token } = props;
 
-  const { data: profile } = useProfile();
+  const { userType } = useDelegationUserType();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -37,7 +37,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
 
   // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
   const hideChildAccountAccessScope =
-    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
+    userType !== 'parent' || isChildAccountAccessRestricted;
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>

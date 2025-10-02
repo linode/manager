@@ -5,6 +5,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
@@ -34,9 +35,11 @@ export const UsernameForm = () => {
     values,
   });
 
+  const { isProxyUser } = useDelegationUserType();
+
   const tooltipForDisabledUsernameField = !permissions.update_user
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
-    : profile?.user_type === 'proxy'
+    : isProxyUser
       ? RESTRICTED_FIELD_TOOLTIP
       : undefined;
 

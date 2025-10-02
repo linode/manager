@@ -155,6 +155,7 @@ describe('Payment Info Panel', () => {
     it('should be disabled for all child users', async () => {
       queryMocks.useProfile.mockReturnValue({
         data: profileFactory.build({
+          ...queryMocks.useProfile().data,
           restricted: false,
           user_type: 'child',
         }),
@@ -162,10 +163,7 @@ describe('Payment Info Panel', () => {
 
       const { getByTestId } = renderWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-          <PaymentInformation
-            {...props}
-            profile={queryMocks.useProfile().data}
-          />
+          <PaymentInformation {...props} />
         </PayPalScriptProvider>,
         {
           initialRoute: '/account/billing',

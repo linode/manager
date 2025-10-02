@@ -1,7 +1,7 @@
-import { useProfile } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
+import { useDelegationUserType } from '../IAM/hooks/useDelegationUserType';
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import CloseAccountDialog from './CloseAccountDialog';
 import {
@@ -13,15 +13,14 @@ import {
 export const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
-  const { data: profile } = useProfile();
+  const { userType } = useDelegationUserType();
 
   const { data: permissions } = usePermissions('account', ['cancel_account']);
 
   // Disable the Close Account button for users with a Parent/Proxy/Child user type.
-  const isCloseAccountDisabled = Boolean(profile?.user_type !== 'default');
+  const isCloseAccountDisabled = Boolean(userType !== 'default');
 
   let closeAccountButtonTooltipText;
-  const userType = profile?.user_type;
   const caseKey = isCloseAccountDisabled ? userType : 'default';
 
   switch (caseKey) {

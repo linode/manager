@@ -10,6 +10,7 @@ import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/Delet
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -21,7 +22,6 @@ import {
 } from '../../BillingDetail';
 import { AddPaymentMethodDrawer } from './AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
-import type { Profile } from '@linode/api-v4';
 import type { PaymentMethod } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -30,11 +30,10 @@ interface Props {
   isAkamaiCustomer: boolean;
   loading: boolean;
   paymentMethods: PaymentMethod[] | undefined;
-  profile: Profile | undefined;
 }
 
 const PaymentInformation = (props: Props) => {
-  const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
+  const { error, isAkamaiCustomer, loading, paymentMethods } = props;
   const { iamRbacPrimaryNavChanges } = useFlags();
   const search = useSearch({
     from: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
@@ -49,8 +48,7 @@ const PaymentInformation = (props: Props) => {
     React.useState<PaymentMethod | undefined>();
   const queryClient = useQueryClient();
   const addPaymentMethodRouteMatch = search.action === 'add-payment-method';
-
-  const isChildUser = profile?.user_type === 'child';
+  const { isChildUser } = useDelegationUserType();
 
   const { data: permissions } = usePermissions('account', [
     'create_payment_method',

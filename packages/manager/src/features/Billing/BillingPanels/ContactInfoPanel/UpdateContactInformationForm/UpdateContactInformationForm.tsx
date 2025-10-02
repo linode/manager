@@ -4,7 +4,6 @@ import {
   useMutateAccount,
   useMutateAccountAgreements,
   useNotificationsQuery,
-  useProfile,
 } from '@linode/queries';
 import {
   ActionsPanel,
@@ -32,6 +31,7 @@ import {
   TAX_ID_AGREEMENT_TEXT,
   TAX_ID_HELPER_TEXT,
 } from 'src/features/Billing/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -53,12 +53,10 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>(undefined);
-  const { data: profile } = useProfile();
   const [billingAgreementChecked, setBillingAgreementChecked] =
     React.useState(false);
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
-  const isChildUser = profile?.user_type === 'child';
-  const isParentUser = profile?.user_type === 'parent';
+  const { isChildUser, isParentUser } = useDelegationUserType();
   const { data: permissions } = usePermissions('account', [
     'acknowledge_account_agreement',
     'update_account',

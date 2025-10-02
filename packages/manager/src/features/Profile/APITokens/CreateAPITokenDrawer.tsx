@@ -1,7 +1,4 @@
-import {
-  useCreatePersonalAccessTokenMutation,
-  useProfile,
-} from '@linode/queries';
+import { useCreatePersonalAccessTokenMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -21,6 +18,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -105,7 +103,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
     scopes: scopeStringToPermTuples('', true),
   };
 
-  const { data: profile } = useProfile();
+  const { userType } = useDelegationUserType();
 
   const {
     error,
@@ -119,7 +117,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
 
   // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
   const hideChildAccountAccessScope =
-    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
+    userType !== 'parent' || isChildAccountAccessRestricted;
 
   const form = useFormik<{
     expiry: string;

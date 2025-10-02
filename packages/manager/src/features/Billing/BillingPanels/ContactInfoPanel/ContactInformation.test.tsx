@@ -24,7 +24,6 @@ const props = {
   firstName: 'Linny',
   lastName: 'The Platypus',
   phone: '19005553221',
-  profile: queryMocks.useProfile().data,
   state: 'PA',
   taxId: '1337',
   zip: '19106',
@@ -46,13 +45,12 @@ describe('Edit Contact Information', () => {
   it('should be disabled for all child users', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({
+        ...queryMocks.useProfile().data,
         user_type: 'child',
       }),
     });
 
-    const { getByTestId } = renderWithTheme(
-      <ContactInformation {...props} profile={queryMocks.useProfile().data} />
-    );
+    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',
@@ -99,6 +97,7 @@ describe('Edit Contact Information', () => {
   it('should be disabled for all child users and if user has update_account permission', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({
+        ...queryMocks.useProfile().data,
         user_type: 'child',
       }),
     });
@@ -107,9 +106,7 @@ describe('Edit Contact Information', () => {
       data: { update_account: true },
     });
 
-    const { getByTestId } = renderWithTheme(
-      <ContactInformation {...props} profile={queryMocks.useProfile().data} />
-    );
+    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',

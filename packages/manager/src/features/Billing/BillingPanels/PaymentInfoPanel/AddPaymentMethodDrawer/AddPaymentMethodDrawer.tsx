@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import {
   Divider,
   Drawer,
@@ -13,6 +12,7 @@ import * as React from 'react';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { GooglePayChip } from '../GooglePayChip';
@@ -47,12 +47,11 @@ const sxTooltipIcon = {
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
-  const { data: profile } = useProfile();
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
     PaymentMessage | undefined
   >(undefined);
-  const isChildUser = profile?.user_type === 'child';
+  const { isChildUser } = useDelegationUserType();
 
   const { data: permissions } = usePermissions('account', [
     'create_payment_method',

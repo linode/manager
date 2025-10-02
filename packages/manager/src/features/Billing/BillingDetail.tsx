@@ -1,8 +1,4 @@
-import {
-  useAccount,
-  useAllPaymentMethodsQuery,
-  useProfile,
-} from '@linode/queries';
+import { useAccount, useAllPaymentMethodsQuery } from '@linode/queries';
 import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -34,8 +30,6 @@ export const BillingDetail = () => {
     error: accountError,
     isLoading: accountLoading,
   } = useAccount();
-
-  const { data: profile } = useProfile();
 
   if (accountLoading) {
     return <CircleProgress />;
@@ -80,7 +74,6 @@ export const BillingDetail = () => {
           firstName={account.first_name}
           lastName={account.last_name}
           phone={account.phone}
-          profile={profile}
           state={account.state}
           taxId={account.tax_id}
           zip={account.zip}
@@ -90,7 +83,6 @@ export const BillingDetail = () => {
           isAkamaiCustomer={account?.billing_source === 'akamai'}
           loading={paymentMethodsLoading}
           paymentMethods={paymentMethods}
-          profile={profile}
         />
         <BillingActivityPanel accountActiveSince={account?.active_since} />
       </Grid>

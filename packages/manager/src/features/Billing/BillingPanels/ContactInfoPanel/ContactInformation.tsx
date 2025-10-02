@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
+import { useDelegationUserType } from 'src/features/IAM/hooks/useDelegationUserType';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useFlags } from 'src/hooks/useFlags';
@@ -24,9 +25,6 @@ import {
   StyledVisibilityShowIcon,
 } from './ContactInformation.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
-
-import type { Profile } from '@linode/api-v4';
-
 interface Props {
   address1: string;
   address2: string;
@@ -37,7 +35,6 @@ interface Props {
   firstName: string;
   lastName: string;
   phone: string;
-  profile: Profile | undefined;
   state: string;
   taxId: string;
   zip: string;
@@ -54,7 +51,6 @@ export const ContactInformation = React.memo((props: Props) => {
     firstName,
     lastName,
     phone,
-    profile,
     state,
     taxId,
     zip,
@@ -65,14 +61,13 @@ export const ContactInformation = React.memo((props: Props) => {
   const { contactDrawerOpen, focusEmail } = useSearch({
     strict: false,
   });
+  const { isChildUser } = useDelegationUserType();
 
   const { data: notifications } = useNotificationsQuery();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );
-
-  const isChildUser = Boolean(profile?.user_type === 'child');
 
   const taxIdIsVerifyingNotification = notifications?.find((notification) => {
     return notification.type === 'tax_id_verifying';

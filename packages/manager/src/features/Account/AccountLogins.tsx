@@ -1,4 +1,4 @@
-import { useAccountLoginsQuery, useProfile } from '@linode/queries';
+import { useAccountLoginsQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import * as React from 'react';
@@ -19,6 +19,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useDelegationUserType } from '../IAM/hooks/useDelegationUserType';
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import AccountLoginsTableRow from './AccountLoginsTableRow';
 import { getRestrictedResourceText } from './utils';
@@ -80,8 +81,7 @@ const AccountLogins = () => {
     },
     filter
   );
-  const { data: profile } = useProfile();
-  const isChildUser = profile?.user_type === 'child';
+  const { isChildUser } = useDelegationUserType();
   const canViewAccountLogins = permissions.list_account_logins;
 
   const renderTableContent = () => {
