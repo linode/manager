@@ -1,3 +1,4 @@
+import { useRegionsVPCAvailabilitiesQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Box,
@@ -24,6 +25,7 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -64,11 +66,21 @@ export const VPCTopSectionContent = (props: Props) => {
     name: 'subnets',
   });
 
-  const subnets = useWatch({ control, name: 'subnets' });
-  const vpcIPv6 = useWatch({ control, name: 'ipv6' });
+  const [subnets, vpcIPv6, regionId] = useWatch({
+    control,
+    name: ['subnets', 'ipv6', 'region'],
+  });
 
-  const { isDualStackEnabled, isDualStackSelected, isEnterpriseCustomer } =
-    useVPCDualStack(vpcIPv6);
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
+
+  const { isDualStackEnabled, isDualStackSelected } = useVPCDualStack(vpcIPv6);
+
+  const { data: regionsVPCAvailabilities } =
+    useRegionsVPCAvailabilitiesQuery(isDualStackEnabled);
+
+  const availableRegionIPv6PrefixLengths = regionsVPCAvailabilities?.find(
+    (region) => region.region === regionId
+  )?.available_ipv6_prefix_lengths;
 
   return (
     <>
@@ -150,6 +162,7 @@ export const VPCTopSectionContent = (props: Props) => {
                 <Grid container spacing={2}>
                   <SelectionCard
                     checked={!isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
                     gridSize={{
                       md: isDrawer ? 12 : 3,
                       sm: 12,
@@ -165,7 +178,12 @@ export const VPCTopSectionContent = (props: Props) => {
                         })
                       );
                     }}
-                    renderIcon={() => <Radio checked={!isDualStackSelected} />}
+                    renderIcon={() => (
+                      <Radio
+                        checked={!isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
                     renderVariant={() => (
                       <TooltipIcon
                         status="info"
@@ -189,6 +207,7 @@ export const VPCTopSectionContent = (props: Props) => {
                   />
                   <SelectionCard
                     checked={isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
                     gridSize={{
                       md: isDrawer ? 12 : 3,
                       sm: 12,
@@ -208,7 +227,12 @@ export const VPCTopSectionContent = (props: Props) => {
                         })
                       );
                     }}
-                    renderIcon={() => <Radio checked={isDualStackSelected} />}
+                    renderIcon={() => (
+                      <Radio
+                        checked={isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
                     renderVariant={() => (
                       <TooltipIcon
                         status="info"
@@ -240,43 +264,42 @@ export const VPCTopSectionContent = (props: Props) => {
           />
         </Box>
       )}
-      {isDualStackSelected && isEnterpriseCustomer && (
-        <Controller
-          control={control}
-          name="ipv6"
-          render={({ field, fieldState }) => (
-            <RadioGroup
-              onChange={(_, value) => field.onChange([{ range: value }])}
-              value={field.value}
-            >
-              <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
-                VPC IPv6 Prefix Length
-              </StyledFormLabel>
-              {errors.ipv6 && (
-                <Notice
-                  sx={{ marginTop: 1 }}
-                  text={fieldState.error?.message}
-                  variant="error"
-                />
-              )}
-              <>
-                <FormControlLabel
-                  checked={vpcIPv6 && vpcIPv6[0].range === '/52'}
-                  control={<Radio />}
-                  label="/52"
-                  value="/52"
-                />
-                <FormControlLabel
-                  checked={vpcIPv6 && vpcIPv6[0].range === '/48'}
-                  control={<Radio />}
-                  label="/48"
-                  value="/48"
-                />
-              </>
-            </RadioGroup>
-          )}
-        />
-      )}
+      {isDualStackSelected &&
+        availableRegionIPv6PrefixLengths &&
+        availableRegionIPv6PrefixLengths.length > 1 && ( // Hide /52 if it's the only prefix length
+          <Controller
+            control={control}
+            name="ipv6"
+            render={({ field, fieldState }) => (
+              <RadioGroup
+                onChange={(_, value) => field.onChange([{ range: value }])}
+                style={{ margin: 0 }}
+                value={field.value}
+              >
+                <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
+                  VPC IPv6 Prefix Length
+                </StyledFormLabel>
+                {errors.ipv6 && (
+                  <Notice
+                    sx={{ marginTop: 1 }}
+                    text={fieldState.error?.message}
+                    variant="error"
+                  />
+                )}
+                {availableRegionIPv6PrefixLengths.map((prefixLength) => (
+                  <FormControlLabel
+                    checked={vpcIPv6 && vpcIPv6[0].range === `/${prefixLength}`}
+                    control={<Radio />}
+                    disabled={!permissions?.create_vpc}
+                    key={prefixLength}
+                    label={`/${prefixLength}`}
+                    value={`/${prefixLength}`}
+                  />
+                ))}
+              </RadioGroup>
+            )}
+          />
+        )}
     </>
   );
 };

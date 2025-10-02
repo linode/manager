@@ -9,7 +9,7 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'id', label: 'Linode ID' },
   { key: 'ipv4', label: 'IPv4' },
   { key: 'vpcIPv4', label: 'IPv4 VPC' },
-  { key: 'vpcRanges', label: 'IPv4 VPC Ranges' },
+  { key: 'vpcIPv4Ranges', label: 'IPv4 VPC Ranges' },
 ];
 
 interface SubnetIPv6PrefixOption {

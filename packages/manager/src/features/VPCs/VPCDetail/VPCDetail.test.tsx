@@ -16,6 +16,17 @@ const queryMocks = vi.hoisted(() => ({
   useVPCQuery: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_vpc: true,
+      delete_vpc: true,
+    },
+  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -39,6 +50,10 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
 beforeAll(() => mockMatchMedia());
 
 describe('VPC Detail Summary section', () => {
@@ -191,5 +206,32 @@ describe('VPC Detail Summary section', () => {
         'This VPC has been automatically generated for your LKE Enterprise cluster.'
       )
     ).toBeVisible();
+  });
+  it('should disable actions if user does not have "update_vpc" or "delete_vpc" permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: false,
+        delete_vpc: false,
+      },
+    });
+
+    const { getByText } = renderWithTheme(<VPCDetail />);
+
+    expect(getByText('Edit')).toBeDisabled();
+    expect(getByText('Delete')).toBeDisabled();
+  });
+
+  it('should enable actions if user has "update_vpc" or "delete_vpc" permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: true,
+        delete_vpc: true,
+      },
+    });
+
+    const { getByText } = renderWithTheme(<VPCDetail />);
+
+    expect(getByText('Edit')).toBeEnabled();
+    expect(getByText('Delete')).toBeEnabled();
   });
 });

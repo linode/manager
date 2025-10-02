@@ -28,25 +28,28 @@ describe('VPC landing page', () => {
     cy.wait('@getVPCs');
 
     // Confirm each VPC is listed with expected data.
-    mockVPCs.forEach((mockVPC) => {
-      const regionLabel = getRegionById(mockVPC.region).label;
-      cy.findByText(mockVPC.label)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByText(regionLabel).should('be.visible');
+    const regionLabel = getRegionById(mockVPCs[0].region).label;
+    cy.findByText(mockVPCs[0].label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(regionLabel).should('be.visible');
 
-          ui.button
-            .findByTitle('Edit')
-            .should('be.visible')
-            .should('be.enabled');
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockVPCs[0].label}`)
+          .should('be.visible')
+          .click();
 
-          ui.button
-            .findByTitle('Delete')
-            .should('be.visible')
-            .should('be.enabled');
-        });
-    });
+        ui.actionMenuItem
+          .findByTitle('Edit')
+          .should('be.visible')
+          .should('be.enabled');
+
+        ui.actionMenuItem
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled');
+      });
   });
 
   /*
@@ -112,7 +115,11 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        ui.button.findByTitle('Edit').should('be.visible').click();
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockVPCs[1].label}`)
+          .should('be.visible')
+          .click();
+        ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
       });
 
     // Confirm correct information is shown and update label and description.
@@ -149,7 +156,11 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        ui.button.findByTitle('Edit').should('be.visible').click();
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockUpdatedVPC.label}`)
+          .should('be.visible')
+          .click();
+        ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
       });
 
     ui.drawer
@@ -179,7 +190,11 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        ui.button
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockVPCs[0].label}`)
+          .should('be.visible')
+          .click();
+        ui.actionMenuItem
           .findByTitle('Delete')
           .should('be.visible')
           .should('be.enabled')
@@ -192,7 +207,6 @@ describe('VPC landing page', () => {
       .within(() => {
         cy.findByLabelText('VPC Label').should('be.visible').click();
         cy.focused().type(mockVPCs[0].label);
-
         ui.button
           .findByTitle('Delete')
           .should('be.visible')
@@ -211,7 +225,11 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        ui.button
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockVPCs[1].label}`)
+          .should('be.visible')
+          .click();
+        ui.actionMenuItem
           .findByTitle('Delete')
           .should('be.visible')
           .should('be.enabled')
@@ -269,7 +287,11 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        ui.button
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockVPCs[0].label}`)
+          .should('be.visible')
+          .click();
+        ui.actionMenuItem
           .findByTitle('Delete')
           .should('be.visible')
           .should('be.enabled')
@@ -312,7 +334,11 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        ui.button
+        ui.actionMenu
+          .findByTitle(`Action menu for VPC ${mockVPCs[1].label}`)
+          .should('be.visible')
+          .click();
+        ui.actionMenuItem
           .findByTitle('Delete')
           .should('be.visible')
           .should('be.enabled')

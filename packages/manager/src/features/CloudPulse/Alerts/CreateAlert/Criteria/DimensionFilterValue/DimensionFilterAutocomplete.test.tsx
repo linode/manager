@@ -25,6 +25,8 @@ describe('<DimensionFilterAutocomplete />', () => {
     multiple: false,
     placeholderText: 'Select a value',
     values: mockOptions,
+    isLoading: false,
+    isError: false,
   };
 
   it('renders with label and placeholder', () => {
@@ -122,5 +124,34 @@ describe('<DimensionFilterAutocomplete />', () => {
     expect(fieldOnChange).toHaveBeenCalledWith(
       `${mockOptions[1].value},${mockOptions[0].value}`
     );
+  });
+
+  it('should show loading state when API is loading', async () => {
+    renderWithTheme(
+      <DimensionFilterAutocomplete
+        {...defaultProps}
+        fieldValue={null}
+        isError={false}
+        isLoading={true}
+        multiple
+      />
+    );
+
+    expect(await screen.findByTestId('circle-progress')).toBeVisible();
+  });
+
+  it('should render error message when API call fails', () => {
+    renderWithTheme(
+      <DimensionFilterAutocomplete
+        {...defaultProps}
+        errorText={undefined}
+        fieldValue={null}
+        isError={true}
+        isLoading={false}
+        multiple
+      />
+    );
+
+    expect(screen.getByText('Failed to fetch the values.')).toBeVisible();
   });
 });

@@ -40,7 +40,6 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -56,6 +55,7 @@ import {
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -158,9 +158,10 @@ const NodeBalancerCreate = () => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_nodebalancers',
-  });
+  const { data: permissions } = usePermissions('account', [
+    'create_firewall',
+    'create_nodebalancer',
+  ]);
 
   const [vpcSelected, setVPCSelected] = React.useState<null | VPC>(null);
   const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
@@ -171,7 +172,7 @@ const NodeBalancerCreate = () => {
   }, [vpcSelected]);
 
   const addNodeBalancer = () => {
-    if (isRestricted) {
+    if (!permissions.create_nodebalancer) {
       return;
     }
     setNodeBalancerFields((prev) => ({
@@ -625,7 +626,7 @@ const NodeBalancerCreate = () => {
         }}
         title="Create"
       />
-      {generalError && !isRestricted && (
+      {generalError && permissions.create_nodebalancer && (
         <Notice spacingTop={8} variant="error">
           <ErrorMessage
             entity={{ type: 'nodebalancer_id' }}
@@ -633,7 +634,7 @@ const NodeBalancerCreate = () => {
           />
         </Notice>
       )}
-      {isRestricted && (
+      {!permissions.create_nodebalancer && (
         <Notice
           spacingTop={16}
           text={getRestrictedResourceText({
@@ -646,7 +647,7 @@ const NodeBalancerCreate = () => {
       <Stack spacing={2}>
         <Paper>
           <TextField
-            disabled={isRestricted}
+            disabled={!permissions.create_nodebalancer}
             errorText={hasErrorFor('label')}
             label={'NodeBalancer Label'}
             noMarginTop
@@ -654,7 +655,7 @@ const NodeBalancerCreate = () => {
             value={nodeBalancerFields.label || ''}
           />
           <TagsInput
-            disabled={isRestricted}
+            disabled={!permissions.create_nodebalancer}
             onChange={tagsChange}
             tagError={hasErrorFor('tags')}
             value={
@@ -678,7 +679,7 @@ const NodeBalancerCreate = () => {
             <RegionSelect
               currentCapability="NodeBalancers"
               disableClearable
-              disabled={isRestricted}
+              disabled={!permissions.create_nodebalancer}
               errorText={hasErrorFor('region')}
               isGeckoLAEnabled={isGeckoLAEnabled}
               noMarginTop
@@ -697,7 +698,6 @@ const NodeBalancerCreate = () => {
           </Stack>
         </Paper>
         <SelectFirewallPanel
-          disabled={isRestricted}
           entityType="nodebalancer"
           handleFirewallChange={(firewallId: number) => {
             setNodeBalancerFields((prev) => ({
@@ -712,11 +712,12 @@ const NodeBalancerCreate = () => {
               <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
             </Typography>
           }
+          permissions={permissions}
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
         {isNodebalancerVPCEnabled && (
           <VPCPanel
-            disabled={isRestricted}
+            disabled={!permissions.create_nodebalancer}
             errors={vpcErrors}
             ipv4Change={ipv4Change}
             regionSelected={nodeBalancerFields.region ?? ''}
@@ -751,7 +752,6 @@ const NodeBalancerCreate = () => {
                 checkPassive={nodeBalancerFields.configs[idx].check_passive!}
                 checkPath={nodeBalancerFields.configs[idx].check_path!}
                 configIdx={idx}
-                disabled={isRestricted}
                 errors={nodeBalancerConfig.errors}
                 healthCheckAttempts={
                   nodeBalancerFields.configs[idx].check_attempts!
@@ -806,6 +806,7 @@ const NodeBalancerCreate = () => {
                 onUdpCheckPortChange={(value) =>
                   onChange('udp_check_port')(value)
                 }
+                permissions={permissions}
                 port={nodeBalancerFields.configs[idx].port!}
                 privateKey={nodeBalancerFields.configs[idx].ssl_key!}
                 protocol={nodeBalancerFields.configs[idx].protocol!}
@@ -821,7 +822,7 @@ const NodeBalancerCreate = () => {
       </Box>
       <Button
         buttonType="outlined"
-        disabled={isRestricted}
+        disabled={!permissions.create_nodebalancer}
         onClick={addNodeBalancer}
         sx={matchesSmDown ? { marginLeft: theme.spacing(2) } : null}
       >
@@ -851,7 +852,7 @@ const NodeBalancerCreate = () => {
           data-qa-deploy-nodebalancer
           disabled={
             (showGDPRCheckbox && !hasSignedAgreement) ||
-            isRestricted ||
+            !permissions.create_nodebalancer ||
             isInvalidPrice
           }
           loading={

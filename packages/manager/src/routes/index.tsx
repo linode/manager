@@ -6,7 +6,7 @@ import React from 'react';
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
-import { accountSettingsRouteTree } from './accountSettings';
+import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
 import { cloudPulseAlertsRouteTree } from './alerts';
 import {
   cancelLandingRoute,
@@ -17,7 +17,7 @@ import {
 import { betaRouteTree } from './betas';
 import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
-import { dataStreamRouteTree } from './datastream';
+import { deliveryRouteTree } from './delivery';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
@@ -67,7 +67,7 @@ export const routeTree = rootRoute.addChildren([
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
   databasesRouteTree,
-  dataStreamRouteTree,
+  deliveryRouteTree,
   domainsRouteTree,
   eventsRouteTree,
   iamRouteTree,
@@ -86,6 +86,7 @@ export const routeTree = rootRoute.addChildren([
   quotasRouteTree,
   searchRouteTree,
   serviceTransfersRouteTree,
+  settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
   usersAndGrantsRouteTree,

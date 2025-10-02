@@ -40,7 +40,6 @@ export type NavEntity =
   | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
-  | 'DataStream'
   | 'Domains'
   | 'Firewalls'
   | 'Help & Support'
@@ -49,6 +48,7 @@ export type NavEntity =
   | 'Kubernetes'
   | 'Linodes'
   | 'Login History'
+  | 'Logs'
   | 'Longview'
   | 'Maintenance'
   | 'Managed'
@@ -240,9 +240,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/longview',
               },
               {
-                display: 'DataStream',
+                display: 'Logs',
                 hide: !flags.aclpLogs?.enabled,
-                to: '/datastream',
+                to: '/logs/delivery',
                 isBeta: flags.aclpLogs?.beta,
               },
             ],

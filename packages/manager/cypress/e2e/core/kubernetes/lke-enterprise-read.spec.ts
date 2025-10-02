@@ -16,7 +16,7 @@ import {
 import {
   mockGetCluster,
   mockGetClusterPools,
-  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetVPC } from 'support/intercepts/vpc';
@@ -118,11 +118,18 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
   beforeEach(() => {
     // TODO LKE-E: Remove once feature is in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     });
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+        ],
       })
     ).as('getAccount');
   });
@@ -131,7 +138,7 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
    */
   it('shows linked VPC in summary for cluster with a VPC', () => {
     mockGetCluster(mockClusterWithVPC).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('enterprise').as('getTieredVersions');
     mockGetClusterPools(mockClusterWithVPC.id, []).as('getNodePools');
     mockGetVPC(mockVPC).as('getVPC');
     mockGetProfile(mockProfile).as('getProfile');
@@ -140,7 +147,7 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
     cy.wait([
       '@getCluster',
       '@getNodePools',
-      '@getVersions',
+      '@getTieredVersions',
       '@getVPC',
       '@getProfile',
     ]);
@@ -167,14 +174,19 @@ describe('LKE-E Cluster Summary - VPC Section', () => {
    */
   it('does not show linked VPC in summary when cluster does not specify a VPC', () => {
     mockGetCluster(mockClusterWithoutVPC).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('enterprise').as('getTieredVersions');
     mockGetClusterPools(mockClusterWithoutVPC.id, []).as('getNodePools');
     mockGetProfile(mockProfile).as('getProfile');
 
     cy.visitWithLogin(
       `/kubernetes/clusters/${mockClusterWithoutVPC.id}/summary`
     );
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getProfile']);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getTieredVersions',
+      '@getProfile',
+    ]);
 
     // Confirm that no VPC label or link is shown in the summary section
     cy.get('[data-qa-kube-entity-footer]').within(() => {
@@ -195,20 +207,26 @@ describe('LKE-E Node Pools', () => {
   it('shows VPC IPv4 and IPv6 columns for an LKE-E cluster', () => {
     mockAppendFeatureFlags({
       // TODO LKE-E: Remove once feature is in GA
-      lkeEnterprise: { enabled: true, la: true, phase2Mtc: true },
+      lkeEnterprise2: {
+        enabled: true,
+        la: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
+      },
     });
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
 
     mockGetCluster(mockClusterWithVPC).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('enterprise').as('getTieredVersions');
     mockGetClusterPools(mockClusterWithVPC.id, mockNodePools).as(
       'getNodePools'
     );
-    mockGetVPC(mockVPC).as('getVPC');
     mockGetProfile(mockProfile).as('getProfile');
     mockGetLinodes(mockLinodes).as('getLinodes');
     mockGetLinodeIPAddresses(mockLinodes[0].id, mockLinodeIPs).as(
@@ -219,9 +237,8 @@ describe('LKE-E Node Pools', () => {
     cy.wait([
       '@getCluster',
       '@getNodePools',
-      '@getVersions',
+      '@getTieredVersions',
       '@getProfile',
-      '@getVPC',
     ]);
 
     // Confirm VPC IP columns are present in the table header
