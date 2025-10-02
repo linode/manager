@@ -141,59 +141,40 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     </>
   );
 
-  const getConnectionTypeContent = () => {
-    return (
-      <>
-        <Box
-          sx={(theme: Theme) => ({
-            marginRight: theme.spacingFunction(20),
-          })}
-        >
-          {hasVPC ? 'VPC' : 'Public'}
-        </Box>
-        <Link to={`/databases/${database?.engine}/${database?.id}/networking`}>
-          View Details
-        </Link>
-      </>
-    );
-  };
-
-  const getCredentialsContent = () => {
-    return (
-      <>
-        {password}
-        {showCredentials && credentialsLoading ? (
-          <div className={classes.progressCtn}>
-            <CircleProgress noPadding size="xs" />
-          </div>
-        ) : credentialsError ? (
-          <>
-            <span className={classes.error}>Error retrieving credentials.</span>
-            {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
-          </>
-        ) : (
-          credentialsBtn(
-            handleShowPasswordClick,
-            showCredentials && credentials ? 'Hide' : 'Show'
-          )
-        )}
-        {disableShowBtn && (
-          <TooltipIcon
-            status="info"
-            sxTooltipIcon={sxTooltipIcon}
-            text={
-              database.status === 'provisioning'
-                ? 'Your Database Cluster is currently provisioning.'
-                : 'Your root password is unavailable when your Database Cluster has failed.'
-            }
-          />
-        )}
-        {showCredentials && credentials && (
-          <CopyTooltip className={classes.inlineCopyToolTip} text={password} />
-        )}
-      </>
-    );
-  };
+  const CredentialsContent = (
+    <>
+      {password}
+      {showCredentials && credentialsLoading ? (
+        <div className={classes.progressCtn}>
+          <CircleProgress noPadding size="xs" />
+        </div>
+      ) : credentialsError ? (
+        <>
+          <span className={classes.error}>Error retrieving credentials.</span>
+          {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
+        </>
+      ) : (
+        credentialsBtn(
+          handleShowPasswordClick,
+          showCredentials && credentials ? 'Hide' : 'Show'
+        )
+      )}
+      {disableShowBtn && (
+        <TooltipIcon
+          status="info"
+          sxTooltipIcon={sxTooltipIcon}
+          text={
+            database.status === 'provisioning'
+              ? 'Your Database Cluster is currently provisioning.'
+              : 'Your root password is unavailable when your Database Cluster has failed.'
+          }
+        />
+      )}
+      {showCredentials && credentials && (
+        <CopyTooltip className={classes.inlineCopyToolTip} text={password} />
+      )}
+    </>
+  );
 
   return (
     <>
@@ -203,7 +184,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <StyledGridContainer container size={{ lg: 7, md: 10 }} spacing={0}>
         <ConnectionDetailsRow label="Username">{username}</ConnectionDetailsRow>
         <ConnectionDetailsRow label="Password">
-          {getCredentialsContent()}
+          {CredentialsContent}
         </ConnectionDetailsRow>
         <ConnectionDetailsRow label="Database name">
           {isLegacy ? database.engine : 'defaultdb'}
@@ -217,7 +198,18 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         </ConnectionDetailsRow>
         {displayConnectionType && (
           <ConnectionDetailsRow label="Connection Type">
-            {getConnectionTypeContent()}
+            <Box
+              sx={(theme: Theme) => ({
+                marginRight: theme.spacingFunction(20),
+              })}
+            >
+              {hasVPC ? 'VPC' : 'Public'}
+            </Box>
+            <Link
+              to={`/databases/${database?.engine}/${database?.id}/networking`}
+            >
+              View Details
+            </Link>
           </ConnectionDetailsRow>
         )}
       </StyledGridContainer>

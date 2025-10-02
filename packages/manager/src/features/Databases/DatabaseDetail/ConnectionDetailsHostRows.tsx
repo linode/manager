@@ -47,37 +47,40 @@ export const ConnectionDetailsHostRows = (
   const getHostContent = (
     mode: 'default' | 'private' | 'public' = 'default'
   ) => {
-    const hasPrimaryHostname = !!database.hosts?.primary;
     let primaryHostName = database.hosts?.primary;
 
-    if (mode === 'public' && hasPrimaryHostname) {
+    if (mode === 'public' && primaryHostName) {
       // Remove 'private-' substring at the beginning of the hostname and replace it with 'public-'
       const privateStrIndex = database.hosts.primary.indexOf('-');
       const baseHostName = database.hosts.primary.slice(privateStrIndex + 1);
       primaryHostName = `public-${baseHostName}`;
     }
 
-    return hasPrimaryHostname ? (
-      <>
-        {primaryHostName}
-        <CopyTooltip
-          className={classes.inlineCopyToolTip}
-          text={primaryHostName}
-        />
-        {!isLegacy && (
-          <TooltipIcon
-            componentsProps={hostTooltipComponentProps}
-            status="info"
-            sxTooltipIcon={sxTooltipIcon}
-            text={
-              mode === 'private'
-                ? SUMMARY_PRIVATE_HOST_COPY
-                : SUMMARY_HOST_TOOLTIP_COPY
-            }
+    if (primaryHostName) {
+      return (
+        <>
+          {primaryHostName}
+          <CopyTooltip
+            className={classes.inlineCopyToolTip}
+            text={primaryHostName}
           />
-        )}
-      </>
-    ) : (
+          {!isLegacy && (
+            <TooltipIcon
+              componentsProps={hostTooltipComponentProps}
+              status="info"
+              sxTooltipIcon={sxTooltipIcon}
+              text={
+                mode === 'private'
+                  ? SUMMARY_PRIVATE_HOST_COPY
+                  : SUMMARY_HOST_TOOLTIP_COPY
+              }
+            />
+          )}
+        </>
+      );
+    }
+
+    return (
       <Typography>
         <span className={classes.provisioningText}>
           Your hostname will appear here once it is available.
