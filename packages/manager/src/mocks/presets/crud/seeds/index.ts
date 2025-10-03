@@ -7,8 +7,10 @@ import { kubernetesSeeder } from './kubernetes';
 import { linodesSeeder } from './linodes';
 import { ipAddressSeeder } from './networking';
 import { nodeBalancerSeeder } from './nodebalancers';
+import { permissionsSeeder } from './permissions';
 import { placementGroupSeeder } from './placementGroups';
 import { supportTicketsSeeder } from './supportTickets';
+import { usersSeeder } from './users';
 import { volumesSeeder } from './volumes';
 import { vpcSeeder } from './vpcs';
 
@@ -22,8 +24,10 @@ export const dbSeeders = [
   kubernetesSeeder,
   linodesSeeder,
   nodeBalancerSeeder,
+  permissionsSeeder,
   placementGroupSeeder,
   supportTicketsSeeder,
+  usersSeeder,
   volumesSeeder,
   vpcSeeder,
 ];
