@@ -140,7 +140,6 @@ export const queryFactory = createQueryKeys(key, {
         };
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
-
       default:
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes
     }
