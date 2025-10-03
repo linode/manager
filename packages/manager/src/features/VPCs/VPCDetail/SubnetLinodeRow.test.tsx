@@ -103,7 +103,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnetFactory.build()}
           subnetId={0}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-          vpcId={1}
         />
       )
     );
@@ -136,7 +135,6 @@ describe('SubnetLinodeRow', () => {
             subnet={subnetFactory1}
             subnetId={1}
             subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-            vpcId={1}
           />,
           { flags: { vpcIpv6: false } }
         )
@@ -194,7 +192,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnetFactory.build()}
           subnetId={1}
           subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
-          vpcId={1}
         />
       )
     );
@@ -241,7 +238,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnetFactory1}
           subnetId={1}
           subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-          vpcId={1}
         />,
         {
           flags: { vpcIpv6: true },
@@ -285,7 +281,6 @@ describe('SubnetLinodeRow', () => {
           subnetInterfaces={[
             { active: true, config_id: null, id: vpcLinodeInterface.id },
           ]}
-          vpcId={1}
         />,
         {
           flags: { vpcIpv6: true },
@@ -329,7 +324,6 @@ describe('SubnetLinodeRow', () => {
           subnetInterfaces={[
             { active: true, config_id: config.id, id: vpcInterface.id },
           ]}
-          vpcId={1}
         />
       )
     );
@@ -387,7 +381,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnet}
           subnetId={subnet.id}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-          vpcId={1}
         />
       )
     );
@@ -416,7 +409,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnet}
           subnetId={subnet.id}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-          vpcId={1}
         />
       )
     );
