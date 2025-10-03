@@ -77,7 +77,6 @@ export const getPermissions = (mockState: MockState) => [
         userRolesEntries.push(userRolesEntry);
       }
 
-      const mockState = await mswDB.getStore('seedState');
       if (mockState) {
         const updatedMockState = {
           ...mockState,
@@ -112,7 +111,6 @@ export const getPermissions = (mockState: MockState) => [
     }): Promise<StrictResponse<APIErrorResponse | IamAccountRoles>> => {
       const body = (await request.json()) as IamAccountRoles;
 
-      const mockState = await mswDB.getStore('seedState');
       if (mockState) {
         const updatedMockState = {
           ...mockState,
@@ -188,7 +186,6 @@ export const getPermissions = (mockState: MockState) => [
         userAccountPermissionsEntries.push(permissionsEntry);
       }
 
-      const mockState = await mswDB.getStore('seedState');
       if (mockState) {
         const updatedMockState = {
           ...mockState,
@@ -276,7 +273,6 @@ export const getPermissions = (mockState: MockState) => [
         userEntityPermissionsEntries.push(permissionsEntry);
       }
 
-      const mockState = await mswDB.getStore('seedState');
       if (mockState) {
         const updatedMockState = {
           ...mockState,
