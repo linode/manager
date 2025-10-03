@@ -155,4 +155,87 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     );
     expect(noFilterText).toBeDefined();
   });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for nodebalancer', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: { ...mockDashboard, service_type: 'nodebalancer', id: 3 },
+      error: false,
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters dashboardId={3} resource={1} />
+    );
+    const startDate = screen.getByText('Start Date');
+    const portsSelect = screen.getByPlaceholderText('e.g., 80,443,3000');
+    expect(startDate).toBeInTheDocument();
+    expect(portsSelect).toBeInTheDocument();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for firewall', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: { ...mockDashboard, service_type: 'firewall', id: 4 },
+      error: false,
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters dashboardId={4} resource={1} />
+    );
+    const startDate = screen.getByText('Start Date');
+    expect(startDate).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Select a Linode Region')).toBeVisible();
+    expect(screen.getByPlaceholderText('Select Interface Types')).toBeVisible();
+    expect(screen.getByPlaceholderText('e.g., 1234,5678')).toBeVisible();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for objectstorage', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+      error: false,
+      isError: false,
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters
+        dashboardId={6}
+        region={'test'}
+        resource={'test'}
+      />
+    );
+
+    const startDate = screen.getByText('Start Date');
+    expect(startDate).toBeInTheDocument();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for objectstorage if region is not provided', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+      error: false,
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters dashboardId={6} resource={'test'} />
+    );
+    const error = screen.getByText(mandatoryFiltersError);
+    expect(error).toBeDefined();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for blockstorage', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: { ...mockDashboard, service_type: 'blockstorage', id: 7 },
+      error: false,
+      isError: false,
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters dashboardId={7} resource={1} />
+    );
+
+    const startDate = screen.getByText('Start Date');
+    expect(startDate).toBeInTheDocument();
+  });
 });

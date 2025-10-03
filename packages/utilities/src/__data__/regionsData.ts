@@ -30,7 +30,7 @@ export const regions: Region[] = [
     status: 'ok',
     monitors: {
       alerts: ['Cloud Firewall', 'Object Storage'],
-      metrics: ['Object Storage'],
+      metrics: ['Block Storage', 'Object Storage'],
     },
   },
   {
