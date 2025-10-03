@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory, streamFactory } from 'src/factories/delivery';
+import { destinationFactory, streamFactory } from 'src/factories';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
