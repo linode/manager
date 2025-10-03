@@ -1,5 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { Box, Chip, Stack, Typography } from '@linode/ui';
+import { Box, Chip, Stack, TooltipIcon, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -18,11 +18,16 @@ import { UsersActionMenu } from './UsersActionMenu';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  isChildWithDelegationEnabled?: boolean;
   onDelete: (username: string) => void;
   user: User;
 }
 
-export const UserRow = ({ onDelete, user }: Props) => {
+export const UserRow = ({
+  onDelete,
+  user,
+  isChildWithDelegationEnabled,
+}: Props) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
@@ -32,8 +37,6 @@ export const UserRow = ({ onDelete, user }: Props) => {
   ]);
 
   const canViewUser = permissions.is_account_admin;
-
-  const isProxyUser = Boolean(user.user_type === 'proxy');
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
@@ -62,19 +65,44 @@ export const UserRow = ({ onDelete, user }: Props) => {
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
+      {isChildWithDelegationEnabled && (
+        <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
+          <Typography>
+            {user.user_type === 'child' ? 'User' : 'Delegate User'}
+          </Typography>
+        </TableCell>
+      )}
       <TableCell
         sx={{
           '& > p': { overflow: 'hidden', textOverflow: 'ellipsis' },
           display: { sm: 'table-cell', xs: 'none' },
         }}
       >
-        <MaskableText isToggleable text={user.email} />
+        {isChildWithDelegationEnabled ? (
+          user.user_type === 'child' ? (
+            <MaskableText isToggleable text={user.email} />
+          ) : (
+            <Typography>
+              Not applicable{' '}
+              <TooltipIcon
+                status="info"
+                sxTooltipIcon={{
+                  marginLeft: '-9px',
+                  marginTop: '-5px',
+                }}
+                text="E-mail addresses of delegate users are not displayed."
+                tooltipPosition="right"
+              />
+            </Typography>
+          )
+        ) : (
+          <MaskableText isToggleable text={user.email} />
+        )}
       </TableCell>
-      {!isProxyUser && (
-        <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
-          <LastLogin last_login={user.last_login} />
-        </TableCell>
-      )}
+      <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
+        <LastLogin last_login={user.last_login} />
+      </TableCell>
+
       <TableCell actionCell>
         <UsersActionMenu
           onDelete={onDelete}
