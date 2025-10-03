@@ -29,7 +29,8 @@ export const delegationSeeder: MockSeeder = {
 
     for (const childAccount of childAccounts) {
       // Randomly assign 1-3 users to each child account
-      const numDelegates = Math.floor(Math.random() * 3) + 1;
+      // TODO:changed this to 20 to test expand/hide functionality
+      const numDelegates = Math.floor(Math.random() * 20) + 1;
       const selectedUsers = pickRandomMultiple(
         mockDelegateUsersList,
         numDelegates
