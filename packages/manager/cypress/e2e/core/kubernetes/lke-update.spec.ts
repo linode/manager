@@ -1036,19 +1036,12 @@ describe('LKE cluster updates', () => {
       mockGetRegions([clusterRegion]).as('getRegions');
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      mockGetKubernetesVersions().as('getVersions');
       mockGetClusterPools(mockCluster.id, []).as('getNodePools');
       mockGetLinodeTypes([type]).as('getTypes');
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
 
-      cy.wait([
-        '@getAccount',
-        '@getCluster',
-        '@getNodePools',
-        '@getRegions',
-        '@getVersions',
-      ]);
+      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getRegions']);
 
       ui.button
         .findByTitle('Add a Node Pool')
