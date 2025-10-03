@@ -1,12 +1,7 @@
-import {
-  useAccount,
-  useAccountUsers,
-  useGetChildAccountDelegatesQuery,
-  useProfile,
-} from '@linode/queries';
+import { useAccountUsers, useProfile } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Button, Paper, Stack } from '@linode/ui';
-import { useMediaQuery } from '@mui/material';
+import { Button, Paper, Select } from '@linode/ui';
+import { Grid, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
@@ -26,13 +21,17 @@ import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
+
+const ALL_USERS_OPTION: SelectOption = {
+  label: 'All User Types',
+  value: 'all',
+};
 
 export const UsersLanding = () => {
   const navigate = useNavigate();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { data: profile } = useProfile();
-  const { data: account } = useAccount();
-  const euuid = account?.euuid ?? '';
 
   const { query } = useSearch({
     from: '/iam',
@@ -65,6 +64,15 @@ export const UsersLanding = () => {
     searchableFieldsWithoutOperator: ['username', 'email'],
   });
 
+  // Determine if the current user is a child account with isIAMDelegationEnabled enabled
+  // If so, we need to show both 'child' and 'delegate_user' users in the table
+  const isChildWithDelegationEnabled =
+    isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
+
+  const [userType, setUserType] = React.useState<null | SelectOption>(
+    ALL_USERS_OPTION
+  );
+
   const usersFilter: Filter = {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
@@ -85,12 +93,51 @@ export const UsersLanding = () => {
     },
   });
 
-  const { data: childAccountDelegates } = useGetChildAccountDelegatesQuery({
-    // euuid,
-    euuid: '23be8d61-f3f5-46bf-91f8-d4213b2b011d',
+  // since we can't filter by multiple user types in a single query,
+  // we need to make a second query for 'delegate_user' users if delegation is enabled
+  // and the current user is a child account
+  const { data: delegateUsers } = useAccountUsers({
+    enabled: isChildWithDelegationEnabled,
+    filters: { user_type: 'proxy' }, // TODO - change 'proxy' to 'delegate_user'
+    params: {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
   });
 
-  // console.log('childAccountDelegates table', childAccountDelegates);
+  const allUsers = React.useMemo(() => {
+    if (isChildWithDelegationEnabled) {
+      return [
+        ...(users?.data ?? []),
+        ...(delegateUsers?.data ? delegateUsers.data : []),
+      ];
+    }
+    return users?.data ?? [];
+  }, [isChildWithDelegationEnabled, users, delegateUsers]);
+
+  const filteredUsers = React.useMemo(() => {
+    if (!userType || userType.value === 'all') return allUsers;
+    // Map UI select value to API user_type value
+    let apiUserType: string | undefined;
+    if (userType.value === 'users') {
+      apiUserType = 'child';
+    } else {
+      apiUserType = 'proxy'; // TODO: Change from 'proxy' to 'delegate_user'
+    }
+    return allUsers.filter((user) => user.user_type === apiUserType);
+  }, [allUsers, userType]);
+
+  const filterableOptions = [
+    ALL_USERS_OPTION,
+    {
+      label: 'Users',
+      value: 'users',
+    },
+    {
+      label: 'Delegate Users',
+      value: 'delegate',
+    },
+  ];
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
@@ -108,7 +155,10 @@ export const UsersLanding = () => {
     }
     navigate({
       to: '/iam/users',
-      search: { query: value },
+      search: {
+        users: queryParams.get('users') ?? 'all',
+        query: value,
+      },
     });
   };
 
@@ -122,50 +172,84 @@ export const UsersLanding = () => {
   return (
     <React.Fragment>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
-        <Stack
-          direction={isSmDown ? 'column' : 'row'}
-          justifyContent="space-between"
-          marginBottom={2}
-          spacing={2}
+        <Grid
+          container
+          direction="row"
+          rowSpacing={1}
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: theme.tokens.spacing.S12,
+          }}
         >
-          <DebouncedSearchTextField
-            clearable
-            containerProps={{
-              sx: {
-                width: '320px',
-              },
-            }}
-            debounceTime={250}
-            errorText={searchError?.message}
-            hideLabel
-            isSearching={isFetching}
-            label="Filter"
-            onSearch={handleSearch}
-            placeholder="Filter"
-            value={query ?? ''}
-          />
-          <Button
-            buttonType="primary"
-            disabled={!canCreateUser}
-            onClick={() => setIsCreateDrawerOpen(true)}
-            tooltipText={
-              canCreateUser
-                ? 'You cannot create other users as a restricted user.'
-                : undefined
-            }
-          >
-            Add a User
-          </Button>
-        </Stack>
+          <Grid container direction="row" rowSpacing={1}>
+            <DebouncedSearchTextField
+              clearable
+              containerProps={{
+                sx: {
+                  width: '320px',
+                  marginRight: { md: 2, xs: 2 },
+                },
+              }}
+              debounceTime={250}
+              errorText={searchError?.message}
+              hideLabel
+              isSearching={isFetching}
+              label="Filter"
+              onSearch={handleSearch}
+              placeholder="Filter"
+              value={query ?? ''}
+            />
+            {isChildWithDelegationEnabled && (
+              <Select
+                hideLabel
+                label="Select type"
+                onChange={(_, selected) => {
+                  pagination.handlePageChange(1);
+                  setUserType(selected ?? null);
+                  navigate({
+                    to: '/iam/users',
+                    search: {
+                      users: String(selected?.value ?? 'all'),
+                      query: queryParams.get('query') ?? '',
+                    },
+                  });
+                }}
+                options={filterableOptions}
+                placeholder="All User Types"
+                sx={{ minWidth: 250 }}
+                value={userType}
+              />
+            )}
+          </Grid>
+          <Grid sx={{ alignSelf: 'flex-start' }}>
+            <Button
+              buttonType="primary"
+              disabled={!canCreateUser}
+              onClick={() => setIsCreateDrawerOpen(true)}
+              tooltipText={
+                canCreateUser
+                  ? 'You cannot create other users as a restricted user.'
+                  : undefined
+              }
+            >
+              Add a User
+            </Button>
+          </Grid>
+        </Grid>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
-          <UsersLandingTableHead order={order} />
+          <UsersLandingTableHead
+            isChildWithDelegationEnabled={isChildWithDelegationEnabled}
+            order={order}
+          />
           <TableBody>
             <UsersLandingTableBody
               error={error}
+              isChildWithDelegationEnabled={isChildWithDelegationEnabled}
               isLoading={isLoading}
               numCols={numCols}
               onDelete={handleDelete}
-              users={users?.data ?? []}
+              users={filteredUsers ?? []}
             />
           </TableBody>
         </Table>

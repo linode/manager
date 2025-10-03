@@ -14,10 +14,14 @@ export interface Order {
 }
 
 interface Props {
+  isChildWithDelegationEnabled?: boolean;
   order: Order;
 }
 
-export const UsersLandingTableHead = ({ order }: Props) => {
+export const UsersLandingTableHead = ({
+  order,
+  isChildWithDelegationEnabled,
+}: Props) => {
   return (
     <TableHead
       sx={{
@@ -34,18 +38,26 @@ export const UsersLandingTableHead = ({ order }: Props) => {
         >
           Username
         </TableSortCell>
+        {isChildWithDelegationEnabled && (
+          <TableCell
+            style={{ width: '20%' }}
+            sx={{ display: { lg: 'table-cell', xs: 'none' } }}
+          >
+            User Type
+          </TableCell>
+        )}
         <TableSortCell
           active={order.orderBy === 'email'}
           direction={order.order}
           handleClick={order.handleOrderChange}
           label="email"
-          style={{ width: '40%' }}
+          style={{ width: '20%' }}
           sx={{ display: { sm: 'table-cell', xs: 'none' } }}
         >
           Email Address
         </TableSortCell>
         <TableCell
-          style={{ width: '20%' }}
+          style={{ width: '15%' }}
           sx={{ display: { lg: 'table-cell', xs: 'none' } }}
         >
           Last Login

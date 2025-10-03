@@ -13,6 +13,7 @@ interface IamEntitiesSearchParams {
 
 interface IamUsersSearchParams extends TableSearchParams {
   query?: string;
+  users?: string;
 }
 
 const iamRoute = createRoute({
