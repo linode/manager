@@ -195,9 +195,17 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
   const database = databaseFactory.build(db);
+
   if (database.platform !== 'rdbms-default') {
     delete database.private_network;
   }
+
+  if (database.platform === 'rdbms-default' && !!database.private_network) {
+    // When a database is configured with a VPC, the primary host is prepended with 'private-'
+    const privateHost = `private-${database.hosts.primary}`;
+    database.hosts.primary = privateHost;
+  }
+
   return database;
 };
 

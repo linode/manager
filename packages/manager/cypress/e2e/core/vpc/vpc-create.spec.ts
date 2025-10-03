@@ -110,7 +110,7 @@ describe('VPC create flow', () => {
         cy.findByText('Subnet Label').should('be.visible').click();
         cy.focused().type(mockSubnets[0].label);
 
-        cy.findByText('Subnet IP Address Range').should('be.visible').click();
+        cy.findByText('Subnet IPv4 Range (CIDR)').should('be.visible').click();
         cy.focused().type(`{selectAll}{backspace}`);
       });
 
@@ -123,7 +123,7 @@ describe('VPC create flow', () => {
     cy.findByText(ipValidationErrorMessage1).should('be.visible');
 
     // Enter a random non-IP address string to further test client side validation.
-    cy.findByText('Subnet IP Address Range').should('be.visible').click();
+    cy.findByText('Subnet IPv4 Range (CIDR)').should('be.visible').click();
     cy.focused().type(`{selectAll}{backspace}`);
     cy.focused().type(randomString(18));
 
@@ -136,7 +136,7 @@ describe('VPC create flow', () => {
     cy.findByText(ipValidationErrorMessage2).should('be.visible');
 
     // Enter a valid IP address with an invalid network prefix to further test client side validation.
-    cy.findByText('Subnet IP Address Range').should('be.visible').click();
+    cy.findByText('Subnet IPv4 Range (CIDR)').should('be.visible').click();
     cy.focused().type(`{selectAll}{backspace}`);
     cy.focused().type(mockInvalidIpRange);
 
@@ -149,7 +149,7 @@ describe('VPC create flow', () => {
     cy.findByText(ipValidationErrorMessage2).should('be.visible');
 
     // Replace invalid IP address range with valid range.
-    cy.findByText('Subnet IP Address Range').should('be.visible').click();
+    cy.findByText('Subnet IPv4 Range (CIDR)').should('be.visible').click();
     cy.focused().type(`{selectAll}{backspace}`);
     cy.focused().type(mockSubnets[0].ipv4!);
 
@@ -165,7 +165,7 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(1)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet IP Address Range').should('be.visible').click();
+        cy.findByText('Subnet IPv4 Range (CIDR)').should('be.visible').click();
         cy.focused().type(`{selectAll}{backspace}`);
         cy.focused().type(mockSubnetToDelete.ipv4!);
       });
@@ -209,7 +209,9 @@ describe('VPC create flow', () => {
           cy.findByText('Subnet Label').should('be.visible').click();
           cy.focused().type(mockSubnet.label);
 
-          cy.findByText('Subnet IP Address Range').should('be.visible').click();
+          cy.findByText('Subnet IPv4 Range (CIDR)')
+            .should('be.visible')
+            .click();
           cy.focused().type(`{selectAll}{backspace}`);
           cy.focused().type(`${randomIp()}/${randomNumber(0, 32)}`);
         });
