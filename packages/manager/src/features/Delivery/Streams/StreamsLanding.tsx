@@ -21,18 +21,28 @@ import {
   STREAMS_TABLE_DEFAULT_ORDER_BY,
   STREAMS_TABLE_PREFERENCE_KEY,
 } from 'src/features/Delivery/Streams/constants';
+import { DeleteStreamDialog } from 'src/features/Delivery/Streams/DeleteStreamDialog';
 import { StreamsLandingEmptyState } from 'src/features/Delivery/Streams/StreamsLandingEmptyState';
 import { StreamTableRow } from 'src/features/Delivery/Streams/StreamTableRow';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { Handlers as StreamHandlers } from './StreamActionMenu';
+import type { StreamHandlers } from './StreamActionMenu';
 import type { Stream } from '@linode/api-v4';
 
 export const StreamsLanding = () => {
   const navigate = useNavigate();
   const streamsUrl = '/logs/delivery/streams';
+
+  const [deleteDialogOpen, setDeleteDialogOpen] =
+    React.useState<boolean>(false);
+  const [deleteError, setDeleteError] = React.useState<string | undefined>();
+  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
+  const [deleteStreamSelection, setDeleteStreamSelection] = React.useState<
+    Stream | undefined
+  >();
+
   const search = useSearch({
     from: '/logs/delivery/streams',
     shouldThrow: false,
@@ -120,26 +130,41 @@ export const StreamsLanding = () => {
     navigate({ to: `/logs/delivery/streams/${id}/edit` });
   };
 
-  const handleDelete = ({ id, label }: Stream) => {
+  const openDeleteDialog = (stream: Stream) => {
+    setDeleteError(undefined);
+    setDeleteStreamSelection(stream);
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDelete = () => {
+    const { id, label } = deleteStreamSelection as Stream;
+    setDeleteLoading(true);
     deleteStream({
       id,
     })
       .then(() => {
+        closeDeleteDialog();
         return enqueueSnackbar(`Stream  ${label} deleted successfully`, {
           variant: 'success',
         });
       })
       .catch((error) => {
-        return enqueueSnackbar(
-          getAPIErrorOrDefault(
-            error,
-            `There was an issue deleting your stream`
-          )[0].reason,
-          {
-            variant: 'error',
-          }
-        );
-      });
+        const apiErrorReason = getAPIErrorOrDefault(
+          error,
+          'There was an issue deleting your stream'
+        )[0].reason;
+
+        setDeleteError(apiErrorReason);
+
+        return enqueueSnackbar(apiErrorReason, {
+          variant: 'error',
+        });
+      })
+      .finally(() => setDeleteLoading(false));
   };
 
   const handleDisableOrEnable = ({
@@ -183,7 +208,7 @@ export const StreamsLanding = () => {
   const handlers: StreamHandlers = {
     onDisableOrEnable: handleDisableOrEnable,
     onEdit: handleEdit,
-    onDelete: handleDelete,
+    onDelete: openDeleteDialog,
   };
 
   return (
@@ -263,6 +288,14 @@ export const StreamsLanding = () => {
             handleSizeChange={pagination.handlePageSizeChange}
             page={pagination.page}
             pageSize={pagination.pageSize}
+          />
+          <DeleteStreamDialog
+            error={deleteError}
+            loading={deleteLoading}
+            onClose={closeDeleteDialog}
+            onDelete={handleDelete}
+            open={deleteDialogOpen}
+            stream={deleteStreamSelection}
           />
         </>
       )}
