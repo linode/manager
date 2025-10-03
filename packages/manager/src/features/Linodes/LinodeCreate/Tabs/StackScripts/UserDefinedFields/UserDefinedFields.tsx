@@ -59,6 +59,10 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
 
   const isCluster = clusterSize !== null && clusterSize !== undefined;
 
+  const totalClusterSize = Object.entries(stackscriptData || {})
+    .filter(([key]) => key.endsWith('_cluster_size'))
+    .reduce((sum, [_, value]) => sum + Number(value), Number(clusterSize));
+
   const marketplaceAppInfo =
     stackscriptId !== null && stackscriptId !== undefined
       ? oneClickApps[stackscriptId]
@@ -102,7 +106,7 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
         )}
         {isCluster && (
           <Notice
-            text={`You are creating a cluster with ${clusterSize} nodes.`}
+            text={`You are creating a cluster with ${totalClusterSize} nodes.`}
             variant="success"
           />
         )}

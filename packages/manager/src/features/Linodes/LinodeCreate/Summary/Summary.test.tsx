@@ -264,6 +264,53 @@ describe('Linode Create Summary', () => {
     await findByText(`5 Nodes - $10/month $2.50/hr`);
   });
 
+  it('should render correct pricing for Marketplace app cluster deployments with multiple plans involved', async () => {
+    const types = [
+      typeFactory.build({
+        label: 'Dedicated 2GB',
+        price: { hourly: 0.1, monthly: 1 },
+      }),
+      typeFactory.build({
+        label: 'Dedicated 4GB',
+        price: { hourly: 0.2, monthly: 2 },
+      }),
+      typeFactory.build({
+        label: 'Dedicated 8GB',
+        price: { hourly: 0.3, monthly: 3 },
+      }),
+    ];
+
+    server.use(
+      http.get('*/v4*/linode/types/:id', ({ params }) => {
+        const type = types.find((type) => type.id === params.id);
+        return HttpResponse.json(type);
+      }),
+      http.get('*/v4*/linode/types', () => {
+        return HttpResponse.json(makeResourcePage(types));
+      })
+    );
+
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Summary />,
+        useFormOptions: {
+          defaultValues: {
+            region: 'fake-region',
+            stackscript_data: {
+              cluster_size: 1,
+              elastic_cluster_size: 2,
+              elastic_cluster_type: types[1].label,
+              logstash_cluster_size: 2,
+              logstash_cluster_type: types[2].label,
+            },
+            type: types[0].id,
+          },
+        },
+      });
+
+    await findByText(`5 Nodes - $11/month $1.10/hr`);
+  });
+
   it('should render "Encrypted" if a distributed region is selected', async () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
