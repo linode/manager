@@ -101,7 +101,7 @@ export const CreateAlertDefinition = () => {
     getValues,
     handleSubmit,
     setError,
-    setValue,
+    resetField,
   } = formMethods;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -154,10 +154,14 @@ export const CreateAlertDefinition = () => {
 
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
-    setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
-    setValue('entity_ids', []);
-    setValue('trigger_conditions', triggerConditionInitialValues);
-  }, [setValue]);
+    resetField('rule_criteria.rules', {
+      defaultValue: [{ ...criteriaInitialValues }],
+    });
+    resetField('entity_ids', { defaultValue: [] });
+    resetField('trigger_conditions', {
+      defaultValue: triggerConditionInitialValues,
+    });
+  }, [resetField]);
 
   React.useEffect(() => {
     setValidationSchema(
