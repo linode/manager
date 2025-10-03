@@ -1,6 +1,6 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { placementGroupFactory } from 'src/factories';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { MockSeeder, MockState } from 'src/mocks/types';
@@ -22,6 +22,8 @@ export const placementGroupSeeder: MockSeeder = {
         members: [],
       }),
     });
+
+    addToEntities(mockState, 'placementGroups', placementGroupSeeds);
 
     const updatedMockState = {
       ...mockState,

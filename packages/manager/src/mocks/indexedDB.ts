@@ -1,6 +1,7 @@
 import { hasId } from './presets/crud/seeds/utils';
 
 import type { MockState } from './types';
+import type { Entity } from '@linode/api-v4';
 
 type ObjectStore = 'mockState' | 'seedState';
 
@@ -20,6 +21,77 @@ const findItem = (item: unknown, id: number) => {
 
   return itemTupleToFind || itemToFind;
 };
+
+const addEntityToEntities = (
+  mockState: MockState,
+  entity: string,
+  item: any
+) => {
+  const entityType = mapMockTypesToEntityTypes(entity);
+  if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+    mockState.entities.push({
+      id: item.id,
+      label: item.label,
+      type: entityType,
+      url: `/${entity}/${item.id}`,
+    });
+  }
+};
+
+const mapMockTypesToEntityTypes = (entity: string) => {
+  switch (entity) {
+    case 'databases':
+      return 'database';
+    case 'domains':
+      return 'domain';
+    case 'firewalls':
+      return 'firewall';
+    case 'images':
+      return 'image';
+    case 'kubernetesClusters':
+      return 'lkecluster';
+    case 'linodes':
+      return 'linode';
+    case 'nodeBalancers':
+      return 'nodebalancer';
+    case 'placementGroups':
+      return 'placement_group';
+    case 'stackscripts':
+      return 'stackscript';
+    case 'volumes':
+      return 'volume';
+    case 'vpcs':
+      return 'vpc';
+    default:
+      return entity;
+  }
+};
+
+// export for seeding
+export const addToEntities = (
+  mockState: MockState,
+  entity: keyof MockState,
+  items: any[]
+) => {
+  items.forEach((item) =>
+    addEntityToEntities(mockState, mapMockTypesToEntityTypes(entity), item)
+  );
+};
+
+const TYPES_TO_ADD_TO_ENTITIES = [
+  'database',
+  'domain',
+  'firewall',
+  'image',
+  'linode',
+  'lkecluster',
+  'longview',
+  'nodebalancer',
+  'placement_group',
+  'stackscript',
+  'volume',
+  'vpc',
+];
 
 export const mswDB = {
   add: async <T extends keyof MockState>(
@@ -77,6 +149,8 @@ export const mswDB = {
         mockState[entity].push(payload);
         state[entity].push(payload as any);
 
+        addEntityToEntities(mockState, entity, payload);
+
         const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
@@ -132,6 +206,8 @@ export const mswDB = {
         });
 
         mockState[entity].push(...payload);
+        payload.forEach((item) => addToEntities(mockState, entity, [item]));
+
         if (state) {
           state[entity].push(...(payload as any));
         }
@@ -203,6 +279,24 @@ export const mswDB = {
           deleteEntity(mockState);
           deleteEntity(seedState);
 
+          const entityType = mapMockTypesToEntityTypes(entity);
+          if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+            const entityIndex = mockState.entities.findIndex(
+              (e: Entity) => e.type === entityType && e.id === id
+            );
+            if (entityIndex !== -1) {
+              mockState.entities.splice(entityIndex, 1);
+            }
+            if (seedState?.entities) {
+              const seedEntityIndex = seedState.entities.findIndex(
+                (e: Entity) => e.type === entityType && e.id === id
+              );
+              if (seedEntityIndex !== -1) {
+                seedState.entities.splice(seedEntityIndex, 1);
+              }
+            }
+          }
+
           if (state[entity]) {
             const stateIndex = state[entity].findIndex((item) => {
               if (!hasId(item)) {
@@ -269,6 +363,18 @@ export const mswDB = {
           state[entity] = [];
         }
 
+        const entityType = mapMockTypesToEntityTypes(entity);
+        if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+          mockState.entities = mockState.entities.filter(
+            (e: Entity) => e.type !== entityType
+          );
+          if (state?.entities) {
+            state.entities = state.entities.filter(
+              (e: Entity) => e.type !== entityType
+            );
+          }
+        }
+
         const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
@@ -312,6 +418,24 @@ export const mswDB = {
           mockState[entity].splice(index, 1);
           if (state) {
             state[entity].splice(index, 1);
+          }
+
+          const entityType = mapMockTypesToEntityTypes(entity);
+          if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+            const entityIndex = mockState.entities.findIndex(
+              (e: Entity) => e.type === entityType && e.id === id
+            );
+            if (entityIndex !== -1) {
+              mockState.entities.splice(entityIndex, 1);
+            }
+            if (state?.entities) {
+              const stateEntityIndex = state.entities.findIndex(
+                (e: Entity) => e.type === entityType && e.id === id
+              );
+              if (stateEntityIndex !== -1) {
+                state.entities.splice(stateEntityIndex, 1);
+              }
+            }
           }
         });
 
@@ -510,6 +634,19 @@ export const mswDB = {
           if (index !== -1) {
             Object.assign(mockState[entity][index], payload);
             Object.assign(state[entity][index], payload);
+            const entityType = mapMockTypesToEntityTypes(entity);
+
+            if (
+              TYPES_TO_ADD_TO_ENTITIES.includes(entityType) &&
+              'label' in payload
+            ) {
+              const entityIndex = mockState.entities.findIndex(
+                (e: Entity) => e.type === entityType && e.id === id
+              );
+              if (entityIndex !== -1 && payload.label) {
+                mockState.entities[entityIndex].label = payload.label;
+              }
+            }
 
             const updatedRequest = store.put({ id: 1, ...mockState });
             updatedRequest.onsuccess = () => resolve();
@@ -537,6 +674,19 @@ export const mswDB = {
 
           Object.assign(seedState[entity][index], payload);
           Object.assign(state[entity][index], payload);
+
+          if (
+            TYPES_TO_ADD_TO_ENTITIES.includes(entity) &&
+            'label' in payload &&
+            seedState.entities
+          ) {
+            const entityIndex = seedState.entities.findIndex(
+              (e: Entity) => e.type === entity && e.id === id
+            );
+            if (entityIndex !== -1 && payload.label) {
+              seedState.entities[entityIndex].label = payload.label;
+            }
+          }
 
           const updatedSeedRequest = seedStore.put({ id: 1, ...seedState });
           updatedSeedRequest.onsuccess = () => resolve();
