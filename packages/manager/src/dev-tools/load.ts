@@ -79,6 +79,10 @@ export async function loadDevTools() {
     // Merge the contexts
     const mergedContext: MockState = {
       ...initialContext,
+      accountRoles: [
+        ...initialContext.accountRoles,
+        ...(seedContext?.accountRoles || []),
+      ],
       childAccounts: [
         ...initialContext.childAccounts,
         ...(seedContext?.childAccounts || []),
@@ -147,6 +151,19 @@ export async function loadDevTools() {
       supportTickets: [
         ...initialContext.supportTickets,
         ...(seedContext?.supportTickets || []),
+      ],
+      users: [...initialContext.users, ...(seedContext?.users || [])],
+      userRoles: [
+        ...initialContext.userRoles,
+        ...(seedContext?.userRoles || []),
+      ],
+      userAccountPermissions: [
+        ...initialContext.userAccountPermissions,
+        ...(seedContext?.userAccountPermissions || []),
+      ],
+      userEntityPermissions: [
+        ...initialContext.userEntityPermissions,
+        ...(seedContext?.userEntityPermissions || []),
       ],
       volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
       vpcs: [...initialContext.vpcs, ...(seedContext?.vpcs || [])],
