@@ -27,6 +27,7 @@ export const getUsers = () => [
       if (!users) {
         return makeNotFoundResponse();
       }
+
       return makePaginatedResponse({
         data: users,
         request,
