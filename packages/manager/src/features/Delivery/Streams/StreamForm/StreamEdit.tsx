@@ -51,7 +51,8 @@ export const StreamEdit = () => {
     defaultValues: {
       stream: {
         type: streamType.AuditLogs,
-        details: {},
+        details: null,
+        destinations: [],
       },
       destination: {
         type: destinationType.LinodeObjectStorage,
@@ -66,15 +67,14 @@ export const StreamEdit = () => {
   });
 
   useEffect(() => {
-    if (stream) {
-      const details =
-        Object.keys(stream.details).length > 0
-          ? {
-              is_auto_add_all_clusters_enabled: false,
-              cluster_ids: [],
-              ...stream.details,
-            }
-          : {};
+    if (stream && destinations) {
+      const details = stream.details
+        ? {
+            is_auto_add_all_clusters_enabled: false,
+            cluster_ids: [],
+            ...stream.details,
+          }
+        : null;
 
       const streamsDestinationIds = stream.destinations.map(({ id }) => id);
       const destination = destinations?.find(

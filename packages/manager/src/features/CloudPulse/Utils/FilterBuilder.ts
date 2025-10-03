@@ -14,10 +14,8 @@ import type {
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
-import type {
-  CloudPulseEndpoints,
-  CloudPulseEndpointsSelectProps,
-} from '../shared/CloudPulseEndpointsSelect';
+import type { CloudPulseEndpointsSelectProps } from '../shared/CloudPulseEndpointsSelect';
+import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {

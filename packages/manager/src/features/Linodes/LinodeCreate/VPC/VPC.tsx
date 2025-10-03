@@ -30,8 +30,9 @@ import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
+  VPC_IPV4_INPUT_HELPER_TEXT,
+  VPC_IPV6_INPUT_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -251,9 +252,7 @@ export const VPC = () => {
                             control={<Checkbox sx={{ ml: 0.5 }} />}
                             label={
                               <Stack alignItems="center" direction="row">
-                                <Typography>
-                                  Auto-assign VPC IPv4 address
-                                </Typography>
+                                <Typography>Auto-assign VPC IPv4</Typography>
                                 <TooltipIcon
                                   status="info"
                                   text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
@@ -280,6 +279,7 @@ export const VPC = () => {
                             <TextField
                               containerProps={{ sx: { mb: 1, mt: 1 } }}
                               errorText={fieldState.error?.message}
+                              helperText={VPC_IPV4_INPUT_HELPER_TEXT}
                               label="VPC IPv4"
                               noMarginTop
                               onBlur={field.onBlur}
@@ -303,7 +303,7 @@ export const VPC = () => {
                                 label={
                                   <Stack alignItems="center" direction="row">
                                     <Typography>
-                                      Auto-assign VPC IPv6 address
+                                      Auto-assign VPC IPv6
                                     </Typography>
                                     <TooltipIcon
                                       status="info"
@@ -330,9 +330,7 @@ export const VPC = () => {
                               <TextField
                                 containerProps={{ sx: { mb: 1, mt: 1 } }}
                                 errorText={fieldState.error?.message}
-                                helperText={generateVPCIPv6InputHelperText(
-                                  selectedSubnet?.ipv6?.[0].range ?? ''
-                                )}
+                                helperText={VPC_IPV6_INPUT_HELPER_TEXT}
                                 label="VPC IPv6"
                                 noMarginTop
                                 onBlur={field.onBlur}
