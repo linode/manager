@@ -1,8 +1,4 @@
-import {
-  useAllLinodeDisksQuery,
-  useGrants,
-  useLinodeQuery,
-} from '@linode/queries';
+import { useAllLinodeDisksQuery, useLinodeQuery } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -41,7 +37,6 @@ export const LinodeDisks = () => {
 
   const { data: disks, error, isLoading } = useAllLinodeDisksQuery(id);
   const { data: linode } = useLinodeQuery(id);
-  const { data: grants } = useGrants();
 
   const { data: permissions } = usePermissions(
     'linode',
@@ -58,10 +53,6 @@ export const LinodeDisks = () => {
   const selectedDisk = disks?.find((d) => d.id === selectedDiskId);
 
   const linodeTotalDisk = linode?.specs.disk ?? 0;
-
-  const readOnly =
-    grants !== undefined &&
-    grants.linode.some((g) => g.id === id && g.permissions === 'read_only');
 
   const usedDiskSpace = addUsedDiskSpace(disks ?? []);
 
@@ -107,7 +98,6 @@ export const LinodeDisks = () => {
         onDelete={() => onDelete(disk)}
         onRename={() => onRename(disk)}
         onResize={() => onResize(disk)}
-        readOnly={readOnly}
       />
     ));
   };

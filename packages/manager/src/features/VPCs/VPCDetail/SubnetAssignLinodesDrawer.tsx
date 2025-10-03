@@ -24,7 +24,6 @@ import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { Code } from 'src/components/Code/Code';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
@@ -37,6 +36,9 @@ import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/Lino
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
+  VPC_IPV4_INPUT_HELPER_TEXT,
+  VPC_IPV6_INPUT_HELPER_TEXT,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -50,7 +52,6 @@ import {
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
 import {
-  generateVPCIPv6InputHelperText,
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
   getVPCInterfacePayload,
@@ -587,9 +588,7 @@ export const SubnetAssignLinodesDrawer = (
       isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
-      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'} (${
-        subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
-      })`}
+      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'}`}
     >
       {!userCanAssignLinodes && (
         <Notice
@@ -639,36 +638,21 @@ export const SubnetAssignLinodesDrawer = (
                 }
                 data-testid="vpc-ipv4-checkbox"
                 disabled={!userCanAssignLinodes}
-                label={<Typography>Auto-assign VPC IPv4 address</Typography>}
+                label={<Typography>Auto-assign VPC IPv4</Typography>}
                 sx={{ marginRight: 0 }}
               />
-              <TooltipIcon
-                status="info"
-                text={
-                  showIPv6Content ? (
-                    <Typography component="span">
-                      Automatically assign an IPv4 address as{' '}
-                      {showIPv6Content ? 'a' : 'the'} private IP address for
-                      this Linode in the VPC.
-                    </Typography>
-                  ) : (
-                    VPC_AUTO_ASSIGN_IPV4_TOOLTIP
-                  )
-                }
-              />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
             {!autoAssignVPCIPv4Address && (
               <TextField
                 disabled={!userCanAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
+                helperText={VPC_IPV4_INPUT_HELPER_TEXT}
                 label="VPC IPv4"
                 noMarginTop={showIPv6Content}
                 onChange={(e) => {
                   setFieldValue('chosenIPv4', e.target.value);
                   setAssignLinodesErrors({});
-                }}
-                style={{
-                  marginBottom: showIPv6Content ? theme.spacingFunction(24) : 0,
                 }}
                 value={values.chosenIPv4}
               />
@@ -698,29 +682,19 @@ export const SubnetAssignLinodesDrawer = (
                     }
                     data-testid="vpc-ipv6-checkbox"
                     disabled={!userCanAssignLinodes}
-                    label={
-                      <Typography>Auto-assign VPC IPv6 address</Typography>
-                    }
+                    label={<Typography>Auto-assign VPC IPv6</Typography>}
                     sx={{ marginRight: 0 }}
                   />
                   <TooltipIcon
                     status="info"
-                    text={
-                      <Typography component="span">
-                        Automatically assign an IPv6 address as a private IP
-                        address for this Linode in the VPC. A <Code>/52</Code>{' '}
-                        IPv6 network prefix is allocated for the VPC.
-                      </Typography>
-                    }
+                    text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
                   />
                 </Box>
                 {!autoAssignVPCIPv6Address && (
                   <TextField
                     disabled={!userCanAssignLinodes}
                     errorText={assignLinodesErrors['vpc.ipv6.slaac[0].range']}
-                    helperText={generateVPCIPv6InputHelperText(
-                      subnet?.ipv6?.[0].range ?? ''
-                    )}
+                    helperText={VPC_IPV6_INPUT_HELPER_TEXT}
                     label="VPC IPv6"
                     noMarginTop
                     onChange={(e) => {

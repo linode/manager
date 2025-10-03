@@ -35,8 +35,13 @@ export const SubnetActionMenu = (props: Props) => {
 
   const flags = useIsNodebalancerVPCEnabled();
 
-  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpcId
+  );
   const canUpdateVPC = permissions?.update_vpc;
+  const canDeleteVPC = permissions?.delete_vpc;
 
   const actions: Action[] = [
     {
@@ -72,7 +77,7 @@ export const SubnetActionMenu = (props: Props) => {
     },
     {
       // TODO: change to 'delete_vpc_subnet' once it's available
-      disabled: numLinodes !== 0 || numNodebalancers !== 0 || !canUpdateVPC,
+      disabled: numLinodes !== 0 || numNodebalancers !== 0 || !canDeleteVPC,
       onClick: () => {
         handleDelete(subnet);
       },
@@ -80,7 +85,7 @@ export const SubnetActionMenu = (props: Props) => {
       tooltip:
         numLinodes > 0 || numNodebalancers > 0
           ? `${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'} assigned to a subnet must be unassigned before the subnet can be deleted.`
-          : !canUpdateVPC
+          : !canDeleteVPC
             ? 'You do not have permission to delete this subnet.'
             : undefined,
     },

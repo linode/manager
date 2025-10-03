@@ -13,6 +13,7 @@ const queryMocks = vi.hoisted(() => ({
       update_linode: true,
       delete_linode: true,
       update_vpc: true,
+      delete_vpc: true,
     },
   })),
   useQueryWithPermissions: vi.fn().mockReturnValue({
@@ -133,6 +134,7 @@ describe('SubnetActionMenu', () => {
         update_linode: false,
         delete_linode: false,
         update_vpc: false,
+        delete_vpc: false,
       },
     });
     const view = renderWithTheme(<SubnetActionMenu {...props} />);
@@ -149,6 +151,7 @@ describe('SubnetActionMenu', () => {
         update_linode: true,
         delete_linode: false,
         update_vpc: true,
+        delete_vpc: false,
       },
     });
     const view = renderWithTheme(<SubnetActionMenu {...props} />);
@@ -165,6 +168,7 @@ describe('SubnetActionMenu', () => {
         update_linode: false,
         delete_linode: false,
         update_vpc: false,
+        delete_vpc: false,
       },
     });
     const view = renderWithTheme(<SubnetActionMenu {...props} />);
@@ -181,6 +185,7 @@ describe('SubnetActionMenu', () => {
         update_linode: false,
         delete_linode: false,
         update_vpc: true,
+        delete_vpc: false,
       },
     });
     const view = renderWithTheme(<SubnetActionMenu {...props} />);

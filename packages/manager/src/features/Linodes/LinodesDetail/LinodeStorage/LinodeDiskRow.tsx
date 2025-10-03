@@ -18,20 +18,11 @@ interface Props {
   onDelete: () => void;
   onRename: () => void;
   onResize: () => void;
-  readOnly: boolean;
 }
 
 export const LinodeDiskRow = React.memo((props: Props) => {
   const { data: events } = useInProgressEvents();
-  const {
-    disk,
-    linodeId,
-    linodeStatus,
-    onDelete,
-    onRename,
-    onResize,
-    readOnly,
-  } = props;
+  const { disk, linodeId, linodeStatus, onDelete, onRename, onResize } = props;
 
   const diskEventLabelMap: Partial<Record<EventAction, string>> = {
     disk_create: 'Creating',
@@ -80,7 +71,6 @@ export const LinodeDiskRow = React.memo((props: Props) => {
           onDelete={onDelete}
           onRename={onRename}
           onResize={onResize}
-          readOnly={readOnly}
         />
       </TableCell>
     </TableRow>

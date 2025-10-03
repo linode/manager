@@ -143,6 +143,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         // cURL tab
         ui.tabList.findTabByTitle('cURL').should('be.visible').click();
         cy.contains('alert').should('not.exist');
+        ui.button.findByTitle('Close').scrollIntoView();
         ui.button
           .findByTitle('Close')
           .should('be.visible')
@@ -318,6 +319,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           cy.contains('system_alerts');
           cy.contains('user_alerts');
         });
+        ui.button.findByTitle('Close').scrollIntoView();
         ui.button
           .findByTitle('Close')
           .should('be.visible')

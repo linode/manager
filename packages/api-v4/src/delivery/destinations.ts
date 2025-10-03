@@ -1,4 +1,7 @@
-import { destinationSchema } from '@linode/validation';
+import {
+  createDestinationSchema,
+  updateDestinationSchema,
+} from '@linode/validation';
 
 import { BETA_API_ROOT } from '../constants';
 import Request, {
@@ -49,7 +52,7 @@ export const getDestinations = (params?: Params, filter?: Filter) =>
  */
 export const createDestination = (data: CreateDestinationPayload) =>
   Request<Destination>(
-    setData(data, destinationSchema),
+    setData(data, createDestinationSchema),
     setURL(`${BETA_API_ROOT}/monitor/streams/destinations`),
     setMethod('POST'),
   );
@@ -65,7 +68,7 @@ export const updateDestination = (
   data: UpdateDestinationPayload,
 ) =>
   Request<Destination>(
-    setData(data, destinationSchema),
+    setData(data, updateDestinationSchema),
     setURL(
       `${BETA_API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
     ),
@@ -92,7 +95,7 @@ export const deleteDestination = (destinationId: number) =>
  */
 export const verifyDestination = (data: CreateDestinationPayload) =>
   Request<Destination>(
-    setData(data, destinationSchema),
+    setData(data, createDestinationSchema),
     setURL(`${BETA_API_ROOT}/monitor/streams/destinations/verify`),
     setMethod('POST'),
   );

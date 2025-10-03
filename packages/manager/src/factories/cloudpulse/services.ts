@@ -8,6 +8,7 @@ const serviceTypes: CloudPulseServiceType[] = [
   'nodebalancer',
   'dbaas',
   'firewall',
+  'objectstorage',
 ];
 
 export const serviceAlertFactory = Factory.Sync.makeFactory<ServiceAlert>({
