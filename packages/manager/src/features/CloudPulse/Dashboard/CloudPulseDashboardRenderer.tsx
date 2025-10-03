@@ -19,8 +19,7 @@ import type { DashboardProp } from './CloudPulseDashboardLanding';
 
 export const CloudPulseDashboardRenderer = React.memo(
   (props: DashboardProp) => {
-    const { dashboard, filterValue, timeDuration } = props;
-
+    const { dashboard, filterValue, timeDuration, groupBy } = props;
     const selectDashboardAndFilterMessage =
       'Select a dashboard and apply filters to visualize metrics.';
 
@@ -63,6 +62,7 @@ export const CloudPulseDashboardRenderer = React.memo(
         additionalFilters={getMetricsCall}
         dashboardId={dashboard.id}
         duration={timeDuration}
+        groupBy={groupBy}
         linodeRegion={
           filterValue[LINODE_REGION] &&
           typeof filterValue[LINODE_REGION] === 'string'
@@ -85,6 +85,7 @@ export const CloudPulseDashboardRenderer = React.memo(
             : []
         }
         savePref={true}
+        serviceType={dashboard.service_type}
         tags={
           filterValue[TAGS] && Array.isArray(filterValue[TAGS])
             ? (filterValue[TAGS] as string[])

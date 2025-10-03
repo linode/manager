@@ -11,6 +11,17 @@ export const pickRandom = <T>(items: T[]): T => {
 };
 
 /**
+ * Similar to pickRandom, but picks multiple items from an array
+ * @param items { T[] } an array of any kind
+ * @param count { number } the number of items to pick
+ * @returns {T[]} an array of the given type
+ */
+export const pickRandomMultiple = <T>(items: T[], count: number): T[] => {
+  // eslint-disable-next-line sonarjs/pseudo-random
+  return items.sort(() => Math.random() - 0.5).slice(0, count);
+};
+
+/**
  * Generates a random date between two dates
  * @param start {Date} the start date
  * @param end {Date} the end date

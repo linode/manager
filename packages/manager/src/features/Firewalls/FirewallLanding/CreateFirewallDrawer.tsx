@@ -1,6 +1,7 @@
 import { useCreateFirewall } from '@linode/queries';
 import {
   ActionsPanel,
+  CircleProgress,
   Drawer,
   FormControlLabel,
   Notice,
@@ -62,7 +63,10 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
 
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  const { data: permissions } = usePermissions('account', ['create_firewall']);
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
+    'account',
+    ['create_firewall']
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -133,6 +137,10 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
       }
     }
   };
+
+  if (isPermissionsLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <FormProvider {...form}>

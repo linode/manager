@@ -4,13 +4,12 @@ import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedEntitiesTable } from '../../Users/UserEntities/AssignedEntitiesTable';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
+  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
@@ -28,7 +27,7 @@ vi.mock('src/queries/entities/entities', async () => {
   const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -74,8 +73,8 @@ describe('AssignedEntitiesTable', () => {
       data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<AssignedEntitiesTable />);
@@ -99,8 +98,8 @@ describe('AssignedEntitiesTable', () => {
       data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<AssignedEntitiesTable />);
@@ -118,8 +117,8 @@ describe('AssignedEntitiesTable', () => {
       data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<AssignedEntitiesTable />);
@@ -137,8 +136,8 @@ describe('AssignedEntitiesTable', () => {
       data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<AssignedEntitiesTable />);

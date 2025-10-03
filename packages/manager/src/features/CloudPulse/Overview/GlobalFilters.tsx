@@ -6,6 +6,7 @@ import * as React from 'react';
 import Reload from 'src/assets/icons/refresh.svg';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
@@ -29,6 +30,7 @@ export interface GlobalFilterProperties {
     labels: string[]
   ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
+  handleGroupByChange: (selectedValues: string[]) => void;
   handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
 }
@@ -39,6 +41,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleDashboardChange,
     handleTimeDurationChange,
     handleToggleAppliedFilter,
+    handleGroupByChange,
   } = props;
 
   const { preferences, updateGlobalFilterPreference: updatePreferences } =
@@ -129,6 +132,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               handleStatsChange={handleTimeRangeChange}
               savePreferences
             />
+
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
                 aria-label="Refresh Dashboard Metrics"
@@ -145,6 +149,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 <Reload height="24px" width="24px" />
               </IconButton>
             </CloudPulseTooltip>
+            <GlobalFilterGroupByRenderer
+              handleChange={handleGroupByChange}
+              selectedDashboard={selectedDashboard}
+            />
           </Box>
         </Box>
       </GridLegacy>

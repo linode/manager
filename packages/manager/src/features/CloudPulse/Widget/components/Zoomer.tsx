@@ -29,6 +29,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
           onClick={() => handleZoomToggle(false)}
           sx={{
             padding: 0,
+            visibility: { lg: 'visible', xs: 'hidden' },
           }}
         >
           <ZoomOutMap />
@@ -50,6 +51,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
         onClick={() => handleZoomToggle(true)}
         sx={{
           padding: 0,
+          visibility: { lg: 'visible', xs: 'hidden' },
         }}
       >
         <ZoomInMap />

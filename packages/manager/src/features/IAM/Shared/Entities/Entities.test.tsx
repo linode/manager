@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Entities } from './Entities';
@@ -11,14 +10,14 @@ import { Entities } from './Entities';
 import type { EntitiesOption } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
+  useAllAccountEntities: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/entities/entities', async () => {
   const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -82,8 +81,8 @@ describe('Entities', () => {
   });
 
   it('renders correct data when it is an entity access', () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(
@@ -108,8 +107,8 @@ describe('Entities', () => {
   });
 
   it('renders correct data when it is an entity access', () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(
@@ -134,8 +133,8 @@ describe('Entities', () => {
   });
 
   it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(
@@ -156,8 +155,8 @@ describe('Entities', () => {
   });
 
   it('updates selected options when Autocomplete value changes when it is an entity access', async () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(

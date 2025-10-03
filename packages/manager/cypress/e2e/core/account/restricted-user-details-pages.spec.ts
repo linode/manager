@@ -8,6 +8,7 @@ import {
   databaseConfigurations,
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
+import { mockTieredStandardVersions } from 'support/constants/lke';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
@@ -30,7 +31,7 @@ import {
   mockGetCluster,
   mockGetClusterPools,
   mockGetDashboardUrl,
-  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
   mockRecycleAllNodes,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
@@ -301,19 +302,29 @@ describe('restricted user details pages', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    ['Edit', 'Manage Tags', 'Resize', 'Clone', 'Attach', 'Delete'].forEach(
-      (menuItem: string) => {
+    [
+      'Show Config',
+      'Edit',
+      'Manage Tags',
+      'Resize',
+      'Clone',
+      'Attach',
+      'Delete',
+    ].forEach((menuItem: string) => {
+      if (menuItem === 'Show Config') {
+        ui.actionMenuItem.findByTitle(menuItem).should('not.be.disabled');
+      } else {
         ui.actionMenuItem.findByTitle(menuItem).should('be.disabled');
+        // Optionally check tooltip for disabled items
 
-        if (menuItem !== 'Manage Tags') {
-          const tooltipMessage = `You don't have permissions to ${menuItem.toLocaleLowerCase()} this Volume. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`;
-          ui.button
-            .findByAttribute('aria-label', tooltipMessage)
-            .trigger('mouseover');
-          ui.tooltip.findByText(tooltipMessage);
-        }
+        const tooltipMessage = `You don't have permissions to ${menuItem === 'Manage Tags' ? 'edit' : menuItem.toLocaleLowerCase()} this Volume. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`;
+        ui.button
+          .findByAttribute('aria-label', tooltipMessage)
+          .first()
+          .trigger('mouseover');
+        ui.tooltip.findByText(tooltipMessage);
       }
-    );
+    });
   });
 
   databaseConfigurations.forEach(
@@ -409,8 +420,8 @@ describe('restricted user details pages', () => {
 
   it.skip("should disable action elements and buttons in the 'Kubernetes' details page", () => {
     // TODO: M3-9585 Not working for kubernets. Skip this test for now.
-    const oldVersion = '1.25';
-    const newVersion = '1.26';
+    const oldVersion = mockTieredStandardVersions[0].id;
+    const newVersion = mockTieredStandardVersions[1].id;
 
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: oldVersion,
@@ -433,7 +444,7 @@ describe('restricted user details pages', () => {
     const mockNodePools = nodePoolFactory.buildList(2);
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
     mockGetDashboardUrl(mockCluster.id);
@@ -451,9 +462,7 @@ describe('restricted user details pages', () => {
       .click();
 
     ui.dialog
-      .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
-      )
+      .findByTitle(`Upgrade Cluster ${mockCluster.label} to ${newVersion}`)
       .should('be.visible')
       .within(() => {
         upgradeNotes.forEach((note: string) => {

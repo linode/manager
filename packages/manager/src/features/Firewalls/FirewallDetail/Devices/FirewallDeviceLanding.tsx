@@ -1,4 +1,4 @@
-import { Button, Notice, Typography } from '@linode/ui';
+import { Button, CircleProgress, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import { useLocation, useNavigate } from '@tanstack/react-router';
@@ -27,11 +27,12 @@ export const FirewallDeviceLanding = React.memo(
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const { data: permissions } = usePermissions(
-      'firewall',
-      ['create_firewall_device', 'delete_firewall_device'],
-      firewallId
-    );
+    const { data: permissions, isLoading: isPermissionsLoading } =
+      usePermissions(
+        'firewall',
+        ['create_firewall_device', 'delete_firewall_device'],
+        firewallId
+      );
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
@@ -81,6 +82,10 @@ export const FirewallDeviceLanding = React.memo(
         });
       }
     }, [device, location.pathname, firewallId, type, navigate]);
+
+    if (isPermissionsLoading) {
+      return <CircleProgress />;
+    }
 
     return (
       // TODO: Matching old behavior. Do we want separate messages for when the user can't create or remove devices?
@@ -154,12 +159,14 @@ export const FirewallDeviceLanding = React.memo(
         />
         {type === 'linode' ? (
           <AddLinodeDrawer
+            disabled={isCreateDeviceDisabled}
             helperText={helperText}
             onClose={handleClose}
             open={location.pathname.endsWith('add')}
           />
         ) : (
           <AddNodebalancerDrawer
+            disabled={isCreateDeviceDisabled}
             helperText={helperText}
             onClose={handleClose}
             open={location.pathname.endsWith('add')}

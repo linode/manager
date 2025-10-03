@@ -18,7 +18,7 @@ interface Props {
 
 export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
   return (
-    <Table>
+    <Table data-qa-linode-interfaces-table>
       <TableHead>
         <TableRow>
           <TableCell>Type</TableCell>

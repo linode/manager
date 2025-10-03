@@ -1,5 +1,50 @@
-# Default code owners
-* @linode/frontend
+# Default Team
+# This is a catch all: any change that is not captured by a codeowner rule
+# below will result in`@linode/cloud-manager-code-reviewers` being assigned
+# for PR review.
+* @linode/cloud-manager-code-reviewers
 
-# Frontend SDET code owners for Cypress tests
+# Cypress E2E Tests
+# This is also a catch all: any change to E2E tests outside of the team-owned
+# files and directories will result in `@linode/frontend-sdet` being assigned
+# for PR review.
 /packages/manager/cypress/ @linode/frontend-sdet
+
+# UI Package
+/packages/ui @linode/ui-platform-design-systems
+
+# Metrics & Alerts
+/packages/api-v4/src/cloudpulse @linode/metrics-alerts
+/packages/validation/src/cloudpulse.schema.ts @linode/metrics-alerts
+/packages/manager/cypress/e2e/core/cloudpulse @linode/metrics-alerts
+/packages/manager/cypress/support/util/cloudpulse.ts @linode/metrics-alerts
+/packages/manager/cypress/support/constants/cloudpulse.ts @linode/metrics-alerts
+/packages/manager/cypress/support/intercepts/cloudpulse.ts @linode/metrics-alerts
+/packages/manager/src/routes/alerts @linode/metrics-alerts
+/packages/manager/src/routes/metrics @linode/metrics-alerts
+/packages/manager/src/factories/cloudpulse @linode/metrics-alerts
+/packages/manager/src/features/CloudPulse @linode/metrics-alerts
+/packages/manager/src/queries/cloudpulse @linode/metrics-alerts
+
+# IAM
+/packages/api-v4/src/iam @linode/iam
+/packages/manager/src/routes/IAM @linode/iam
+/packages/manager/cypress/component/features/IAM @linode/iam
+/packages/queries/src/iam @linode/iam
+/packages/manager/src/features/IAM @linode/iam
+/packages/manager/src/mocks/presets/crud/seeds/delegation.ts @linode/iam
+/packages/manager/src/mocks/presets/crud/handlers/delegation.ts @linode/iam
+/packages/manager/src/mocks/presets/crud/delegation.ts @linode/iam
+/packages/utilities/src/factories/delegation.ts @linode/iam
+
+# DBaaS
+/packages/manager/src/features/Databases @linode/dbaas-ui
+/packages/manager/src/routes/databases @linode/dbaas-ui
+/packages/manager/src/queries/databases @linode/dbaas-ui
+/packages/manager/src/factories/databases.ts @linode/dbaas-ui
+/packages/queries/src/databases @linode/dbaas-ui
+/packages/api-v4/src/databases @linode/dbaas-ui
+/packages/validation/src/databases.schema.ts @linode/dbaas-ui
+/packages/manager/cypress/e2e/core/databases @linode/dbaas-ui
+/packages/manager/cypress/support/constants/databases.ts @linode/dbaas-ui
+/packages/manager/cypress/support/intercepts/databases.ts @linode/dbaas-ui

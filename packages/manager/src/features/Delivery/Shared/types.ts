@@ -2,7 +2,7 @@ import { destinationType, streamStatus, streamType } from '@linode/api-v4';
 
 import type {
   CreateDestinationPayload,
-  UpdateDestinationPayload,
+  DestinationDetails,
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
@@ -46,6 +46,9 @@ export const streamStatusOptions: LabelValueOption[] = [
   },
 ];
 
-export type DestinationFormType =
-  | CreateDestinationPayload
-  | UpdateDestinationPayload;
+export interface DestinationForm
+  extends Omit<CreateDestinationPayload, 'details'> {
+  details: DestinationDetails;
+}
+
+export type DestinationFormType = DestinationForm;

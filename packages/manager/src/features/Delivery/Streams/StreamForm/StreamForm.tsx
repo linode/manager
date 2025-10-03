@@ -1,4 +1,8 @@
-import { type StreamStatus, streamType } from '@linode/api-v4';
+import {
+  type CreateDestinationPayload,
+  type StreamStatus,
+  streamType,
+} from '@linode/api-v4';
 import {
   useCreateDestinationMutation,
   useCreateStreamMutation,
@@ -12,7 +16,10 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { type SubmitHandler, useFormContext, useWatch } from 'react-hook-form';
 
-import { getStreamPayloadDetails } from 'src/features/Delivery/deliveryUtils';
+import {
+  getDestinationPayloadDetails,
+  getStreamPayloadDetails,
+} from 'src/features/Delivery/deliveryUtils';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
 import { StreamFormDelivery } from 'src/features/Delivery/Streams/StreamForm/Delivery/StreamFormDelivery';
@@ -79,7 +86,11 @@ export const StreamForm = (props: StreamFormProps) => {
     let destinationId = destinations?.[0];
     if (!destinationId) {
       try {
-        const { id } = await createDestination(destination);
+        const destinationPayload: CreateDestinationPayload = {
+          ...destination,
+          details: getDestinationPayloadDetails(destination.details),
+        };
+        const { id } = await createDestination(destinationPayload);
         destinationId = id;
         enqueueSnackbar(
           `Destination ${destination.label} created successfully`,
@@ -119,7 +130,6 @@ export const StreamForm = (props: StreamFormProps) => {
         await updateStream({
           id: streamId,
           label,
-          type,
           status: status as StreamStatus,
           destinations: [destinationId],
           details: payloadDetails,
@@ -172,7 +182,7 @@ export const StreamForm = (props: StreamFormProps) => {
           <FormSubmitBar
             blockSubmit={!selectedDestinations?.length}
             connectionTested={destinationVerified}
-            destinationType={destination.type}
+            destinationType={destination?.type}
             formType={'stream'}
             isSubmitting={isSubmitting}
             isTesting={isVerifyingDestination}

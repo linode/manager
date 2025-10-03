@@ -26,7 +26,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
     if (value === streamType.LKEAuditLogs) {
       setValue('stream.details.is_auto_add_all_clusters_enabled', false);
     } else {
-      setValue('stream.details', {});
+      setValue('stream.details', null);
     }
   };
 

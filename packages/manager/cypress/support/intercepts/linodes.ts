@@ -685,6 +685,27 @@ export const mockGetLinodeInterfaces = (
 };
 
 /**
+ * Mocks GET request to get a single Linode Interface.
+ *
+ * @param linodeId - ID of Linode to get interface associated with it
+ * @param interfaceId - ID of interface to get
+ * @param interfaces - the mocked Linode interface
+ *
+ * @returns Cypress Chainable.
+ */
+export const mockGetLinodeInterface = (
+  linodeId: number,
+  interfaceId: number,
+  linodeInterface: LinodeInterface
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/interfaces/${interfaceId}`),
+    linodeInterface
+  );
+};
+
+/**
  * Intercepts POST request to create a Linode Interface.
  *
  * @param linodeId - the Linodes ID to add the interface to.

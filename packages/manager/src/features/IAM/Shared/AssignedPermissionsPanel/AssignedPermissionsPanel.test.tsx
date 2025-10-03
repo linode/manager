@@ -2,7 +2,6 @@ import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
@@ -10,14 +9,14 @@ import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
 import type { ExtendedRole } from '../utilities';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
+  useAllAccountEntities: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/entities/entities', async () => {
   const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -84,8 +83,8 @@ describe('AssignedPermissionsPanel', () => {
   });
 
   it('renders with the correct context when the access is an entity', () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
     renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
@@ -107,8 +106,8 @@ describe('AssignedPermissionsPanel', () => {
   });
 
   it('renders the Autocomplete when the access is an entity', () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
     renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />

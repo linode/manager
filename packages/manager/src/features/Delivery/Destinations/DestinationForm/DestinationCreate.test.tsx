@@ -1,5 +1,10 @@
 import { destinationType } from '@linode/api-v4';
-import { screen, waitFor } from '@testing-library/react';
+import { profileFactory } from '@linode/utilities';
+import {
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
@@ -70,6 +75,47 @@ describe('DestinationCreate', () => {
     }
   );
 
+  it('should render Sample Destination Object Name and change its value according to Log Path Prefix input', async () => {
+    const profileUid = 123;
+    const [month, day, year] = new Date().toLocaleDateString().split('/');
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ uid: profileUid }));
+      })
+    );
+
+    renderDestinationCreate();
+
+    const loadingElement = screen.queryByTestId('circle-progress');
+    await waitForElementToBeRemoved(loadingElement);
+
+    const samplePath = screen.getByText(
+      `/audit_logs/com.akamai.audit.login/${profileUid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597.gz`
+    );
+    expect(samplePath).toBeInTheDocument();
+
+    // Type the test value inside the input
+    const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+
+    await userEvent.type(logPathPrefixInput, 'test');
+    // sample path should be created based on *log path* value
+    expect(samplePath.textContent).toEqual(
+      '/test/akamai_log-000166-1756015362-319597.gz'
+    );
+
+    await userEvent.clear(logPathPrefixInput);
+    await userEvent.type(logPathPrefixInput, '/test');
+    expect(samplePath.textContent).toEqual(
+      '/test/akamai_log-000166-1756015362-319597.gz'
+    );
+
+    await userEvent.clear(logPathPrefixInput);
+    await userEvent.type(logPathPrefixInput, '/');
+    expect(samplePath.textContent).toEqual(
+      '/akamai_log-000166-1756015362-319597.gz'
+    );
+  });
+
   describe('given Test Connection and Create Destination buttons', () => {
     const testConnectionButtonText = 'Test Connection';
     const createDestinationButtonText = 'Create Destination';
@@ -107,6 +153,9 @@ describe('DestinationCreate', () => {
           http.post('*/monitor/streams/destinations', () => {
             createDestinationSpy();
             return HttpResponse.json({});
+          }),
+          http.get('*/profile', () => {
+            return HttpResponse.json(profileFactory.build());
           })
         );
 
@@ -141,6 +190,9 @@ describe('DestinationCreate', () => {
           http.post('*/monitor/streams/destinations/verify', () => {
             verifyDestinationSpy();
             return HttpResponse.error();
+          }),
+          http.get('*/profile', () => {
+            return HttpResponse.json(profileFactory.build());
           })
         );
 

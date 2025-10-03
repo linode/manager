@@ -4,8 +4,8 @@ import {
   useDestinationQuery,
   useUpdateDestinationMutation,
 } from '@linode/queries';
-import { Box, CircleProgress, ErrorState } from '@linode/ui';
-import { destinationSchema } from '@linode/validation';
+import { Box, CircleProgress, ErrorState, omitProps } from '@linode/ui';
+import { destinationFormSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -17,6 +17,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { DestinationForm } from 'src/features/Delivery/Destinations/DestinationForm/DestinationForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import type { UpdateDestinationPayloadWithId } from '@linode/api-v4';
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 import type { DestinationFormType } from 'src/features/Delivery/Shared/types';
 
@@ -53,24 +54,33 @@ export const DestinationEdit = () => {
       type: destinationType.LinodeObjectStorage,
       details: {
         region: '',
+        path: '',
       },
     },
     mode: 'onBlur',
-    resolver: yupResolver(destinationSchema),
+    resolver: yupResolver(destinationFormSchema),
   });
 
   useEffect(() => {
     if (destination) {
       form.reset({
         ...destination,
+        ...('path' in destination.details
+          ? {
+              details: {
+                ...destination.details,
+                path: destination.details.path || '',
+              },
+            }
+          : {}),
       });
     }
   }, [destination, form]);
 
   const onSubmit = () => {
-    const destination = {
+    const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
-      ...form.getValues(),
+      ...omitProps(form.getValues(), ['type']),
     };
 
     updateDestination(destination)

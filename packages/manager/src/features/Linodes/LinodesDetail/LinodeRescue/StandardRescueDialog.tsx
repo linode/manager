@@ -1,10 +1,8 @@
 import {
   useAllLinodeDisksQuery,
   useAllVolumesQuery,
-  useGrants,
   useLinodeQuery,
   useLinodeRescueMutation,
-  useProfile,
 } from '@linode/queries';
 import {
   ActionsPanel,
@@ -20,6 +18,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
 import { deviceSlots } from '../LinodeConfigs/constants';
@@ -95,13 +94,12 @@ export const StandardRescueDialog = (props: Props) => {
   } = useAllVolumesQuery({}, { region: linode?.region }, open);
   const isLoading = isLoadingLinodes || isLoadingDisks || isLoadingVolumes;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const isReadOnly =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find((grant) => grant.id === linodeId)?.permissions ===
-      'read_only';
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['rescue_linode'],
+    linodeId,
+    open
+  );
 
   // We need the API to allow us to filter on `linode_id`
   // const { data: volumes } = useAllVolumesQuery(
@@ -173,7 +171,7 @@ export const StandardRescueDialog = (props: Props) => {
       })) ?? [],
   };
 
-  const disabled = isReadOnly;
+  const disabled = !permissions.rescue_linode;
 
   const onSubmit = () => {
     rescueLinode(createDevicesFromStrings(rescueDevices))
@@ -224,7 +222,7 @@ export const StandardRescueDialog = (props: Props) => {
       ) : (
         <div>
           <StyledPaper>
-            {isReadOnly && <LinodePermissionsError />}
+            {!permissions.rescue_linode && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
               counter={counter}

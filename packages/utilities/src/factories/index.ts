@@ -1,6 +1,7 @@
 export * from './accountAvailability';
 export * from './betas';
 export * from './config';
+export * from './delegation';
 export * from './factoryProxy';
 export * from './grants';
 export * from './linodeConfigInterface';

@@ -76,7 +76,7 @@ export const CloudPulseGroupByDrawer = React.memo(
     const [selectedValue, setSelectedValue] = React.useState<GroupByOption[]>(
       defaultValue.slice(
         0,
-        Math.min(defaultValue.length ?? 0, GROUP_BY_SELECTION_LIMIT)
+        Math.min(defaultValue.length, GROUP_BY_SELECTION_LIMIT)
       )
     );
     const previousValueRef = React.useRef<GroupByOption[]>(
@@ -94,7 +94,7 @@ export const CloudPulseGroupByDrawer = React.memo(
     React.useEffect(() => {
       const value = defaultValue.slice(
         0,
-        Math.min(defaultValue.length ?? 0, GROUP_BY_SELECTION_LIMIT)
+        Math.min(defaultValue.length, GROUP_BY_SELECTION_LIMIT)
       );
       onApply(value);
       setSelectedValue(value);

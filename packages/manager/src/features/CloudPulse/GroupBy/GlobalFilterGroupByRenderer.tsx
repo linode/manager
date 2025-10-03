@@ -65,7 +65,9 @@ export const GlobalFilterGroupByRenderer = (
           sx={(theme) => ({
             marginBlockEnd: 'auto',
             marginTop: { md: theme.spacingFunction(28) },
-            color: isSelected ? theme.color.buttonPrimaryHover : 'inherit',
+            color: isSelected
+              ? theme.tokens.component.Button.Primary.Hover.Background
+              : 'inherit',
           })}
         >
           <GroupByIcon height="24px" width="24px" />

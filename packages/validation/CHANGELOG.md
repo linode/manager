@@ -1,3 +1,11 @@
+## [2025-10-07] - v0.76.0
+
+
+### Upcoming Features:
+
+- Update validation schema for Destination - Details - Path ([#12851](https://github.com/linode/manager/pull/12851))
+- Logs Delivery Stream and Destination details validation change for Update schemas ([#12898](https://github.com/linode/manager/pull/12898))
+
 ## [2025-09-23] - v0.75.0
 
 ### Changed:

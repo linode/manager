@@ -1,4 +1,4 @@
-import { array, boolean, mixed, number, object, string } from 'yup';
+import { array, boolean, lazy, mixed, number, object, string } from 'yup';
 
 import type { InferType, MixedSchema, Schema } from 'yup';
 
@@ -57,7 +57,7 @@ const customHTTPsDetailsSchema = object({
   endpoint_url: string().max(maxLength, maxLengthMessage).required(),
 });
 
-const linodeObjectStorageDetailsSchema = object({
+const linodeObjectStorageDetailsBaseSchema = object({
   host: string().max(maxLength, maxLengthMessage).required('Host is required.'),
   bucket_name: string()
     .max(maxLength, maxLengthMessage)
@@ -65,7 +65,7 @@ const linodeObjectStorageDetailsSchema = object({
   region: string()
     .max(maxLength, maxLengthMessage)
     .required('Region is required.'),
-  path: string().max(maxLength, maxLengthMessage).required('Path is required.'),
+  path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)
     .required('Access Key ID is required.'),
@@ -74,23 +74,68 @@ const linodeObjectStorageDetailsSchema = object({
     .required('Access Key Secret is required.'),
 });
 
-export const destinationSchema = object().shape({
+const linodeObjectStorageDetailsPayloadSchema =
+  linodeObjectStorageDetailsBaseSchema.shape({
+    path: string().max(maxLength, maxLengthMessage).optional(),
+  });
+
+const destinationSchemaBase = object().shape({
   label: string()
     .max(maxLength, maxLengthMessage)
     .required('Destination name is required.'),
   type: string().oneOf(['linode_object_storage', 'custom_https']).required(),
   details: mixed<
     | InferType<typeof customHTTPsDetailsSchema>
-    | InferType<typeof linodeObjectStorageDetailsSchema>
+    | InferType<typeof linodeObjectStorageDetailsBaseSchema>
   >()
     .defined()
     .required()
     .when('type', {
       is: 'linode_object_storage',
-      then: () => linodeObjectStorageDetailsSchema,
+      then: () => linodeObjectStorageDetailsBaseSchema,
       otherwise: () => customHTTPsDetailsSchema,
     }),
 });
+
+export const destinationFormSchema = destinationSchemaBase;
+
+export const createDestinationSchema = destinationSchemaBase.shape({
+  details: mixed<
+    | InferType<typeof customHTTPsDetailsSchema>
+    | InferType<typeof linodeObjectStorageDetailsPayloadSchema>
+  >()
+    .defined()
+    .required()
+    .when('type', {
+      is: 'linode_object_storage',
+      then: () => linodeObjectStorageDetailsPayloadSchema,
+      otherwise: () => customHTTPsDetailsSchema,
+    }),
+});
+
+export const updateDestinationSchema = createDestinationSchema
+  .omit(['type'])
+  .shape({
+    details: lazy((value) => {
+      if ('bucket_name' in value) {
+        return linodeObjectStorageDetailsPayloadSchema.noUnknown(
+          'Object contains unknown fields for Linode Object Storage Details.',
+        );
+      }
+      if ('client_certificate_details' in value) {
+        return customHTTPsDetailsSchema.noUnknown(
+          'Object contains unknown fields for Custom HTTPS Details.',
+        );
+      }
+
+      // fallback schema: force error
+      return mixed().test({
+        name: 'details-schema',
+        message: 'Details object does not match any known schema.',
+        test: () => false,
+      });
+    }),
+  });
 
 // Logs Delivery Stream
 
@@ -111,13 +156,13 @@ const streamDetailsSchema = streamDetailsBase.test(
   },
 );
 
-const detailsShouldBeEmpty = (schema: MixedSchema) =>
+const detailsShouldNotExistOrBeNull = (schema: MixedSchema) =>
   schema
-    .defined()
+    .nullable()
     .test(
-      'details-should-be-empty',
-      'Empty details for type `audit_logs`',
-      (value) => Object.keys(value).length === 0,
+      'details-should-not-exist',
+      'Details should be null or no details passed for type `audit_logs`',
+      (value, ctx) => !('details' in ctx) || value === null,
     );
 
 const streamSchemaBase = object({
@@ -130,35 +175,49 @@ const streamSchemaBase = object({
     .oneOf(['audit_logs', 'lke_audit_logs'])
     .required('Stream type is required.'),
   destinations: array().of(number().defined()).ensure().min(1).required(),
-  details: mixed<InferType<typeof streamDetailsSchema> | object>()
-    .when('type', {
-      is: 'lke_audit_logs',
-      then: () => streamDetailsSchema.required(),
-      otherwise: detailsShouldBeEmpty,
-    })
-    .required(),
+  details: mixed().when('type', {
+    is: 'lke_audit_logs',
+    then: () => streamDetailsSchema.required(),
+    otherwise: detailsShouldNotExistOrBeNull,
+  }),
 });
 
 export const createStreamSchema = streamSchemaBase;
 
-export const updateStreamSchema = streamSchemaBase.shape({
-  status: mixed<'active' | 'inactive'>()
-    .oneOf(['active', 'inactive'])
-    .required(),
-});
+export const updateStreamSchema = streamSchemaBase
+  .omit(['type'])
+  .shape({
+    status: mixed<'active' | 'inactive'>()
+      .oneOf(['active', 'inactive'])
+      .required(),
+    details: lazy((value) => {
+      if (
+        value &&
+        typeof value === 'object' &&
+        ('cluster_ids' in value || 'is_auto_add_all_clusters_enabled' in value)
+      ) {
+        return streamDetailsSchema.required();
+      }
+
+      // fallback schema: detailsShouldNotExistOrBeNull
+      return detailsShouldNotExistOrBeNull(mixed());
+    }),
+  })
+  .noUnknown('Object contains unknown fields');
 
 export const streamAndDestinationFormSchema = object({
   stream: streamSchemaBase.shape({
     destinations: array().of(number().required()).required(),
-    details: mixed<InferType<typeof streamDetailsSchema> | object>()
-      .when('type', {
-        is: 'lke_audit_logs',
-        then: () => streamDetailsBase.required(),
-        otherwise: detailsShouldBeEmpty,
-      })
-      .required(),
+    details: mixed().when('type', {
+      is: 'lke_audit_logs',
+      then: () => streamDetailsBase.required(),
+      otherwise: (schema) =>
+        schema
+          .nullable()
+          .equals([null], 'Details must be null for audit_logs type'),
+    }) as Schema<InferType<typeof streamDetailsSchema> | null>,
   }),
-  destination: destinationSchema.defined().when('stream.destinations', {
+  destination: destinationFormSchema.defined().when('stream.destinations', {
     is: (value: never[]) => !value?.length,
     then: (schema) => schema,
     otherwise: (schema) =>

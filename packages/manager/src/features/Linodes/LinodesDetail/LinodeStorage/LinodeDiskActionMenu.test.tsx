@@ -26,6 +26,7 @@ const queryMocks = vi.hoisted(() => ({
       resize_linode: false,
       delete_linode: false,
       clone_linode: false,
+      create_image: true,
     },
   })),
 }));
@@ -209,6 +210,7 @@ describe('LinodeDiskActionMenu', () => {
         resize_linode: false,
         delete_linode: false,
         clone_linode: false,
+        create_image: false,
       },
     });
 
@@ -242,6 +244,7 @@ describe('LinodeDiskActionMenu', () => {
         resize_linode: true,
         delete_linode: true,
         clone_linode: true,
+        create_image: true,
       },
     });
 

@@ -42,11 +42,13 @@ const regions = [
     capabilities: ['Managed Databases'],
     id: 'us-ord',
     label: 'Chicago, IL',
+    monitors: { alerts: ['Managed Databases'] },
   }),
   regionFactory.build({
     capabilities: ['Managed Databases'],
     id: 'us-east',
     label: 'Newark',
+    monitors: { alerts: ['Managed Databases'] },
   }),
 ];
 const databases: Database[] = databaseFactory

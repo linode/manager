@@ -2,7 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Divider, TextField, Typography } from '@linode/ui';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -36,6 +36,10 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
   const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
   const { data: regions } = useRegionsQuery();
   const { control } = useFormContext();
+  const path = useWatch({
+    control,
+    name: controlPaths?.path,
+  });
 
   return (
     <>
@@ -126,7 +130,13 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
       />
       <Divider sx={{ my: 3 }} />
       <Typography variant="h2">Path</Typography>
-      <Box alignItems="end" display="flex" flexWrap="wrap" gap="16px">
+      <Box
+        alignItems="baseline"
+        display="flex"
+        flexWrap="wrap"
+        gap="16px"
+        sx={{ '> *': { width: '100%' } }}
+      >
         <Controller
           control={control}
           name={controlPaths.path}
@@ -138,14 +148,12 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
               placeholder="Log Path Prefix"
-              sx={{ width: 416 }}
+              sx={{ maxWidth: 416 }}
               value={field.value}
             />
           )}
         />
-        <PathSample
-          value="text-cloud/logs/audit/02/26/2026" // TODO: Generate sample path value in DPS-34666
-        />
+        <PathSample value={path} />
       </Box>
     </>
   );

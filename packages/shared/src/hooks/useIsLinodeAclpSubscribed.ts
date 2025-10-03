@@ -39,8 +39,8 @@ export const useIsLinodeAclpSubscribed = (
     (linode.alerts.transfer_quota ?? 0) > 0;
 
   const hasAclpAlerts =
-    (linode.alerts.system?.length ?? 0) > 0 ||
-    (linode.alerts.user?.length ?? 0) > 0;
+    (linode.alerts.system_alerts?.length ?? 0) > 0 ||
+    (linode.alerts.user_alerts?.length ?? 0) > 0;
 
   // Always subscribed if ACLP alerts exist. For GA stage, default to subscribed if no alerts exist.
   return (

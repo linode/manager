@@ -104,11 +104,11 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     isAlertsBetaMode;
 
   const totalBetaAclpAlertsAssignedCount =
-    (alerts?.system?.length ?? 0) + (alerts?.user?.length ?? 0);
+    (alerts?.system_alerts?.length ?? 0) + (alerts?.user_alerts?.length ?? 0);
 
   const betaAclpAlertsAssignedList = [
-    ...(alerts?.system ?? []),
-    ...(alerts?.user ?? []),
+    ...(alerts?.system_alerts ?? []),
+    ...(alerts?.user_alerts ?? []),
   ].join(', ');
 
   const betaAclpAlertsAssignedDetails =

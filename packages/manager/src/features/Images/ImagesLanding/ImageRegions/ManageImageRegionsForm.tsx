@@ -8,6 +8,8 @@ import type { Resolver } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { useRegionsThatSupportImageStorage } from '../../utils';
@@ -44,6 +46,12 @@ export const ManageImageReplicasForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { regions } = useRegionsThatSupportImageStorage();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
+
+  const { data: permissions } = usePermissions(
+    'image',
+    ['replicate_image'],
+    image?.id
+  );
 
   const {
     formState: { errors, isDirty, isSubmitting },
@@ -103,6 +111,14 @@ export const ManageImageReplicasForm = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {!permissions.replicate_image && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'Images',
+          })}
+          variant="error"
+        />
+      )}
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
@@ -127,6 +143,7 @@ export const ManageImageReplicasForm = (props: Props) => {
       </Notice>
       <RegionMultiSelect
         currentCapability={undefined} // Images don't have a region capability yet
+        disabled={!permissions.replicate_image}
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         isGeckoLAEnabled={isGeckoLAEnabled}
@@ -147,7 +164,9 @@ export const ManageImageReplicasForm = (props: Props) => {
       </Typography>
       <Paper
         sx={(theme) => ({
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: !permissions.replicate_image
+            ? theme.tokens.alias.Interaction.Background.Disabled
+            : theme.palette.background.paper,
           p: 2,
           py: 1,
         })}
@@ -173,6 +192,7 @@ export const ManageImageReplicasForm = (props: Props) => {
 
             return (
               <ImageRegionRow
+                disabled={!permissions.replicate_image}
                 disableRemoveButton={isLastAvailableRegion}
                 key={regionId}
                 onRemove={() =>
@@ -191,7 +211,7 @@ export const ManageImageReplicasForm = (props: Props) => {
       </Paper>
       <ActionsPanel
         primaryButtonProps={{
-          disabled: !isDirty,
+          disabled: !isDirty || !permissions.replicate_image,
           label: 'Save',
           loading: isSubmitting,
           type: 'submit',

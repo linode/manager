@@ -14,6 +14,8 @@ import type {
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
+import type { CloudPulseEndpointsSelectProps } from '../shared/CloudPulseEndpointsSelect';
+import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
@@ -360,6 +362,48 @@ export const getTextFilterProperties = (
 };
 
 /**
+ * This function helps in building the properties needed for endpoints selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters of endpoints key
+ * @param handleEndpointsChange - the callback when we select new endpoints
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ * @returns CloudPulseEndpointsSelectProps
+ */
+export const getEndpointsProperties = (
+  props: CloudPulseFilterProperties,
+  handleEndpointsChange: (endpoints: string[], savePref?: boolean) => void
+): CloudPulseEndpointsSelectProps => {
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    config,
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+    shouldDisable,
+  } = props;
+  return {
+    defaultValue: preferences?.[config.configuration.filterKey],
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard,
+        preferences
+      ),
+    handleEndpointsSelection: handleEndpointsChange,
+    label,
+    placeholder,
+    serviceType: dashboard.service_type,
+    region: dependentFilters?.[REGION],
+    savePreferences: !isServiceAnalyticsIntegration,
+    xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+  };
+};
+
+/**
  * This function helps in builder the xFilter needed to passed in a apiV4 call
  *
  * @param config - any cloudpulse service type filter config
@@ -665,11 +709,37 @@ export const filterUsingDependentFilters = (
 
       if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
         return filterValue.some((val) => resourceValue.includes(String(val)));
-      } else if (Array.isArray(resourceValue)) {
-        return resourceValue.includes(String(filterValue));
-      } else {
-        return resourceValue === filterValue;
       }
+      if (Array.isArray(resourceValue)) {
+        return resourceValue.includes(String(filterValue));
+      }
+      if (Array.isArray(filterValue)) {
+        return (filterValue as string[]).includes(String(resourceValue));
+      }
+      return resourceValue === filterValue;
     });
   });
+}
+
+/**
+ * @param data The endpoints for which the filter needs to be applied
+ * @param regionFilter The selected region filter that will be used to filter the endpoints
+ * @returns The filtered endpoints
+ */
+export const filterEndpointsUsingRegion = (
+  data?: CloudPulseEndpoints[],
+  regionFilter?: CloudPulseMetricsFilter
+): CloudPulseEndpoints[] | undefined => {
+  if (!data) {
+    return data;
+  }
+
+  const regionFromFilter = regionFilter?.region;
+
+  // If no region filter is provided, return undefined as region is mandatory filter
+  if (!regionFromFilter) {
+    return undefined;
+  }
+
+  return data.filter(({ region }) => region === regionFromFilter);
 };

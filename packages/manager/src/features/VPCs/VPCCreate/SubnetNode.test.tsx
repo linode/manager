@@ -65,7 +65,7 @@ describe('SubnetNode', () => {
     });
 
     screen.getByText('Subnet Label');
-    screen.getByText('Subnet IP Address Range');
+    screen.getByText('Subnet IPv4 Range (CIDR)');
   });
 
   it('should show a removable button if not a drawer', () => {
@@ -133,7 +133,7 @@ describe('SubnetNode', () => {
       },
     });
 
-    expect(screen.getByText('IPv6 Prefix Length')).toBeVisible();
+    expect(screen.getByText('Subnet IPv6 Prefix Length')).toBeVisible();
     const select = screen.getByRole('combobox');
     expect(select).toHaveValue('/56');
   });

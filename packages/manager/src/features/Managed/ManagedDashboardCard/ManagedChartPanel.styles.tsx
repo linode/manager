@@ -29,6 +29,9 @@ export const StyledGraphControlsDiv = styled('div', {
     top: 52,
     width: 1,
   },
+  '& .MuiPaper-root': {
+    padding: `0 0 0 ${theme.spacingFunction(24)}`,
+  },
   alignItems: 'center',
   display: 'flex',
   minHeight: 460,

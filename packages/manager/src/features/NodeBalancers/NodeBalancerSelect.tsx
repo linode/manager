@@ -5,6 +5,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 import type { JSX } from 'react';
 
+import { useQueryWithPermissions } from '../IAM/hooks/usePermissions';
+
 import type { APIError, NodeBalancer } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material/styles';
 
@@ -95,7 +97,20 @@ export const NodeBalancerSelect = (
 
   const { data, error, isLoading } = useAllNodeBalancersQuery();
 
-  const nodebalancers = optionsFilter ? data?.filter(optionsFilter) : data;
+  const {
+    data: availableNodebalancers,
+    error: availableNodebalancersError,
+    isLoading: availableNodebalancersLoading,
+  } = useQueryWithPermissions<NodeBalancer>(
+    useAllNodeBalancersQuery(),
+    'nodebalancer',
+    ['update_nodebalancer'],
+    Boolean(optionsFilter)
+  );
+
+  const nodebalancers = optionsFilter
+    ? availableNodebalancers.filter(optionsFilter)
+    : data;
 
   React.useEffect(() => {
     /** We want to clear the input value when the value prop changes to null.
@@ -116,7 +131,10 @@ export const NodeBalancerSelect = (
       disableCloseOnSelect={multiple}
       disabled={disabled}
       disablePortal={true}
-      errorText={error?.[0].reason ?? errorText}
+      errorText={
+        (error?.[0].reason || availableNodebalancersError?.[0].reason) ??
+        errorText
+      }
       getOptionLabel={(nodebalancer: NodeBalancer) =>
         renderOptionLabel ? renderOptionLabel(nodebalancer) : nodebalancer.label
       }
@@ -124,11 +142,15 @@ export const NodeBalancerSelect = (
       id={id}
       inputValue={inputValue}
       label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
-      loading={isLoading || loading}
+      loading={isLoading || availableNodebalancersLoading || loading}
       multiple={multiple}
       noMarginTop={noMarginTop}
       noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+        noOptionsMessage ??
+        getDefaultNoOptionsMessage(
+          error || availableNodebalancersError,
+          isLoading || availableNodebalancersLoading
+        )
       }
       onBlur={onBlur}
       onChange={(_, value) =>

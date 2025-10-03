@@ -27,7 +27,7 @@ export const streamFactory = Factory.Sync.makeFactory<Stream>({
   destinations: Factory.each(() => [
     { ...destinationFactory.build(), id: 123 },
   ]),
-  details: {},
+  details: null,
   updated: '2025-07-30',
   updated_by: 'username',
   id: Factory.each((id) => id),

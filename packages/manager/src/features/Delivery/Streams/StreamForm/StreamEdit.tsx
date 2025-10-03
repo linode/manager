@@ -51,12 +51,14 @@ export const StreamEdit = () => {
     defaultValues: {
       stream: {
         type: streamType.AuditLogs,
-        details: {},
+        details: null,
+        destinations: [],
       },
       destination: {
         type: destinationType.LinodeObjectStorage,
         details: {
           region: '',
+          path: '',
         },
       },
     },
@@ -65,26 +67,39 @@ export const StreamEdit = () => {
   });
 
   useEffect(() => {
-    if (stream) {
-      const details =
-        Object.keys(stream.details).length > 0
-          ? {
-              is_auto_add_all_clusters_enabled: false,
-              cluster_ids: [],
-              ...stream.details,
-            }
-          : {};
+    if (stream && destinations) {
+      const details = stream.details
+        ? {
+            is_auto_add_all_clusters_enabled: false,
+            cluster_ids: [],
+            ...stream.details,
+          }
+        : null;
 
       const streamsDestinationIds = stream.destinations.map(({ id }) => id);
+      const destination = destinations?.find(
+        ({ id }) => id === streamsDestinationIds[0]
+      );
+
       form.reset({
         stream: {
           ...stream,
           details,
           destinations: streamsDestinationIds,
         },
-        destination: destinations?.data?.find(
-          ({ id }) => id === streamsDestinationIds[0]
-        ),
+        destination: destination
+          ? {
+              ...destination,
+              ...('path' in destination.details
+                ? {
+                    details: {
+                      ...destination.details,
+                      path: destination.details.path || '',
+                    },
+                  }
+                : {}),
+            }
+          : undefined,
       });
     }
   }, [stream, destinations, form]);

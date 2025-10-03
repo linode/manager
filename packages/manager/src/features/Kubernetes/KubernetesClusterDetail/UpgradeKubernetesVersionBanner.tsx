@@ -2,11 +2,9 @@ import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { useKubernetesTieredVersionsQuery } from 'src/queries/kubernetes';
 
-import {
-  getNextVersion,
-  useLkeStandardOrEnterpriseVersions,
-} from '../kubeUtils';
+import { getNextVersion } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 
 import type { KubernetesTier } from '@linode/api-v4';
@@ -20,7 +18,7 @@ interface Props {
 export const UpgradeKubernetesVersionBanner = (props: Props) => {
   const { clusterID, clusterTier, currentVersion } = props;
 
-  const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
+  const { data: versions } = useKubernetesTieredVersionsQuery(clusterTier);
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
