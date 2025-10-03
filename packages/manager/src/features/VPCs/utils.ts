@@ -240,15 +240,3 @@ export const transformLinodeInterfaceErrorsToFormikErrors = (
 
   return errors;
 };
-
-export const generateVPCIPv6InputHelperText = (subnetIPv6Range?: string) => {
-  if (!subnetIPv6Range) {
-    return null;
-  }
-
-  const [, ipv6Mask] = subnetIPv6Range.split('/');
-
-  const fixedHextets = Number(ipv6Mask) / 16;
-
-  return `The first ${fixedHextets} hextets of ${subnetIPv6Range} are fixed.`;
-};

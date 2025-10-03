@@ -131,15 +131,16 @@ export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'endpoint',
   'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.
   'tags',
+  'endpoint',
 ];
 
 export const alertAdditionalFilterKeyMap: Record<
   AlertAdditionalFilterKey,
   keyof AlertInstance
 > = {
+  endpoint: 'endpoint',
   engineType: 'engineType', // engineType filter selected here, will map to engineType property on AlertInstance
   tags: 'tags',
-  endpoint: 'endpoint',
 };
 
 export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
