@@ -149,9 +149,9 @@ export const StreamFormDelivery = () => {
             )}
             placeholder="Create or Select Destination Name"
             renderOption={(props, option) => {
-              const { key, ...optionProps } = props;
+              const { id, ...optionProps } = props;
               return (
-                <li key={key} {...optionProps}>
+                <li {...optionProps} key={id}>
                   {option.create ? (
                     <>
                       <strong>Create&nbsp;</strong> &quot;{option.label}&quot;

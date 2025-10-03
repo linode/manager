@@ -253,7 +253,7 @@ export const StreamsLanding = () => {
               {streams?.data.map((stream) => (
                 <StreamTableRow key={stream.id} stream={stream} {...handlers} />
               ))}
-              {streams?.results === 0 && <TableRowEmpty colSpan={6} />}
+              {streams?.results === 0 && <TableRowEmpty colSpan={7} />}
             </TableBody>
           </Table>
           <PaginationFooter
