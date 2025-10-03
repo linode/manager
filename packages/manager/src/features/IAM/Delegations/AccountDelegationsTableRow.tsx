@@ -54,6 +54,7 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
                   maxWidth: 'max-content',
                   padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S8}`,
                   position: 'relative',
+                  marginLeft: theme.tokens.spacing.S12,
                 }}
               >
                 <Tooltip
