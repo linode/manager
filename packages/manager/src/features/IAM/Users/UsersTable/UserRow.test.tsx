@@ -26,16 +26,9 @@ describe('UserRow', () => {
     expect(getByText(user.username)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
   });
-  it('renders only a username, email, and account access status for a Proxy user', async () => {
-    const mockLogin = {
-      login_datetime: '2022-02-09T16:19:26',
-    };
-    const proxyUser = accountUserFactory.build({
-      email: 'proxy@proxy.com',
-      last_login: mockLogin,
-      restricted: true,
-      user_type: 'proxy',
-      username: 'proxyUsername',
+  it('renders username, email, and user type for a Child user when isIAMDelegationEnabled flag is enabled', async () => {
+    const user = accountUserFactory.build({
+      user_type: 'child',
     });
 
     server.use(
@@ -45,16 +38,47 @@ describe('UserRow', () => {
       })
     );
 
-    const { findByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />)
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <UserRow
+          isChildWithDelegationEnabled={true}
+          onDelete={vi.fn()}
+          user={user}
+        />
+      )
     );
 
-    // Renders Username, Email, and Account Access fields for a proxy user.
-    expect(await findByText('proxyUsername')).toBeInTheDocument();
-    expect(await findByText('proxy@proxy.com')).toBeInTheDocument();
+    expect(getByText(user.username)).toBeVisible();
+    expect(getByText(user.email)).toBeVisible();
+    expect(getByText('User')).toBeVisible();
+  });
 
-    // Does not render the Last Login for a proxy user.
-    expect(queryByText('2022-02-09T16:19:26')).not.toBeInTheDocument();
+  it('renders username and user type, and does not render email for a Delegate user when isIAMDelegationEnabled flag is enabled', async () => {
+    const user = accountUserFactory.build({
+      user_type: 'proxy', // TODO - change 'proxy' to 'delegate_user'
+    });
+
+    server.use(
+      // Mock the active profile for the child account.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
+      })
+    );
+
+    const { getByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(
+        <UserRow
+          isChildWithDelegationEnabled={true}
+          onDelete={vi.fn()}
+          user={user}
+        />
+      )
+    );
+
+    expect(getByText(user.username)).toBeVisible();
+    expect(queryByText(user.email)).not.toBeInTheDocument();
+    expect(getByText('Not applicable')).toBeVisible();
+    expect(getByText('Delegate User')).toBeVisible();
   });
 
   it('renders "Never" if last_login is null', async () => {

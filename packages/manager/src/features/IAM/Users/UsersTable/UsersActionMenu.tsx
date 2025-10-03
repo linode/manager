@@ -12,7 +12,7 @@ type UserActionMenuPermissions = PickPermissions<
 >;
 
 interface Props {
-  isProxyUser: boolean;
+  isProxyUser?: boolean;
   onDelete: (username: string) => void;
   permissions: Record<UserActionMenuPermissions, boolean>;
 
