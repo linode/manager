@@ -170,6 +170,7 @@ export const createLinode = (mockState: MockState) => [
     }
 
     await mswDB.add('linodes', linode, mockState);
+
     if (linode.interface_generation === 'linode') {
       if (
         payload.interfaces &&
