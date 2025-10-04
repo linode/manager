@@ -1,5 +1,6 @@
 /* eslint-disable perfectionist/sort-interfaces */
 import type {
+  AccountRoleType,
   ChildAccount,
   CloudNAT,
   Config,
@@ -7,6 +8,7 @@ import type {
   Domain,
   DomainRecord,
   Entity,
+  EntityRoleType,
   Event,
   Firewall,
   FirewallDevice,
@@ -23,7 +25,6 @@ import type {
   NodeBalancerConfig,
   NodeBalancerConfigNode,
   Notification,
-  PermissionType,
   PlacementGroup,
   Region,
   RegionAvailability,
@@ -185,14 +186,14 @@ export interface UserRolesEntry {
 
 export interface UserAccountPermissionsEntry {
   username: string;
-  permissions: PermissionType[];
+  permissions: AccountRoleType[];
 }
 
 export interface UserEntityPermissionsEntry {
   username: string;
   entityType: string;
   entityId: number | string;
-  permissions: PermissionType[];
+  permissions: EntityRoleType[];
 }
 
 /**

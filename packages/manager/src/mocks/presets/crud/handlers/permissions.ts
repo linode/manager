@@ -1,5 +1,6 @@
 import { http } from 'msw';
 
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { mswDB } from 'src/mocks/indexedDB';
 import {
   makeNotFoundResponse,
@@ -7,9 +8,10 @@ import {
 } from 'src/mocks/utilities/response';
 
 import type {
+  AccountRoleType,
+  EntityRoleType,
   IamAccountRoles,
   IamUserRoles,
-  PermissionType,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type {
@@ -48,6 +50,7 @@ export const getPermissions = (mockState: MockState) => [
   ),
 
   // Update user roles for a specific username
+  // Update user roles for a specific username
   http.put(
     '*/v4*/iam/users/:username/role-permissions',
     async ({
@@ -57,33 +60,46 @@ export const getPermissions = (mockState: MockState) => [
       const username = params.username as string;
       const body = (await request.json()) as IamUserRoles;
 
-      const userRolesEntries = await mswDB.getAll('userRoles');
-      const existingIndex = userRolesEntries?.findIndex(
-        (entry: UserRolesEntry) => entry.username === username
-      );
+      // GET THE CURRENT STATE FROM THE DATABASE FIRST
+      const currentState = await mswDB.getStore('mockState');
 
-      const userRolesEntry: UserRolesEntry = {
-        username,
-        roles: body,
-      };
-
-      if (!userRolesEntries || !existingIndex) {
+      if (!currentState) {
         return makeNotFoundResponse();
       }
 
-      if (existingIndex !== -1) {
-        userRolesEntries[existingIndex] = userRolesEntry;
-      } else {
-        userRolesEntries.push(userRolesEntry);
-      }
+      // Update the specific arrays using the current state from database
+      const updatedState = {
+        ...currentState, // Use currentState from DB, not mockState parameter
+        userRoles: [
+          ...currentState.userRoles.filter(
+            (entry) => entry.username !== username
+          ),
+          { username, roles: body },
+        ],
+        userAccountPermissions: body.account_access
+          ? [
+              ...currentState.userAccountPermissions.filter(
+                (entry) => entry.username !== username
+              ),
+              { username, permissions: body.account_access },
+            ]
+          : currentState.userAccountPermissions,
+        userEntityPermissions: body.entity_access
+          ? [
+              ...currentState.userEntityPermissions.filter(
+                (entry) => entry.username !== username
+              ),
+              ...body.entity_access.map((entityAccess) => ({
+                username,
+                entityType: entityAccess.type,
+                entityId: entityAccess.id,
+                permissions: entityAccess.roles,
+              })),
+            ]
+          : currentState.userEntityPermissions,
+      };
 
-      if (mockState) {
-        const updatedMockState = {
-          ...mockState,
-          userRoles: userRolesEntries,
-        };
-        await mswDB.saveStore(updatedMockState, 'seedState');
-      }
+      await mswDB.saveStore(updatedState, 'mockState');
 
       return makeResponse(body);
     }
@@ -93,13 +109,7 @@ export const getPermissions = (mockState: MockState) => [
   http.get(
     '*/v4*/iam/role-permissions',
     async (): Promise<StrictResponse<APIErrorResponse | IamAccountRoles>> => {
-      const accountRoles = await mswDB.getAll('accountRoles');
-
-      if (!accountRoles || accountRoles.length === 0) {
-        return makeNotFoundResponse();
-      }
-
-      return makeResponse(accountRoles[0]);
+      return makeResponse(accountRolesFactory.build());
     }
   ),
 
@@ -116,7 +126,7 @@ export const getPermissions = (mockState: MockState) => [
           ...mockState,
           accountRoles: [body],
         };
-        await mswDB.saveStore(updatedMockState, 'seedState');
+        await mswDB.saveStore(updatedMockState, 'mockState');
       }
 
       return makeResponse(body);
@@ -128,7 +138,7 @@ export const getPermissions = (mockState: MockState) => [
     '*/v4*/iam/users/:username/permissions/account',
     async ({
       params,
-    }): Promise<StrictResponse<APIErrorResponse | PermissionType[]>> => {
+    }): Promise<StrictResponse<AccountRoleType[] | APIErrorResponse>> => {
       const username = params.username;
 
       const userAccountPermissionsEntries = await mswDB.getAll(
@@ -160,9 +170,9 @@ export const getPermissions = (mockState: MockState) => [
     async ({
       params,
       request,
-    }): Promise<StrictResponse<APIErrorResponse | PermissionType[]>> => {
+    }): Promise<StrictResponse<AccountRoleType[] | APIErrorResponse>> => {
       const username = params.username as string;
-      const body = (await request.json()) as PermissionType[];
+      const body = (await request.json()) as AccountRoleType[];
 
       const userAccountPermissionsEntries = await mswDB.getAll(
         'userAccountPermissions'
@@ -191,7 +201,7 @@ export const getPermissions = (mockState: MockState) => [
           ...mockState,
           userAccountPermissions: userAccountPermissionsEntries,
         };
-        await mswDB.saveStore(updatedMockState, 'seedState');
+        await mswDB.saveStore(updatedMockState, 'mockState');
       }
 
       return makeResponse(body);
@@ -203,7 +213,7 @@ export const getPermissions = (mockState: MockState) => [
     '*/v4*/iam/users/:username/permissions/:entityType/:entityId',
     async ({
       params,
-    }): Promise<StrictResponse<APIErrorResponse | PermissionType[]>> => {
+    }): Promise<StrictResponse<APIErrorResponse | EntityRoleType[]>> => {
       const username = params.username as string;
       const entityType = params.entityType;
       const entityId = params.entityId;
@@ -240,11 +250,11 @@ export const getPermissions = (mockState: MockState) => [
     async ({
       params,
       request,
-    }): Promise<StrictResponse<APIErrorResponse | PermissionType[]>> => {
+    }): Promise<StrictResponse<APIErrorResponse | EntityRoleType[]>> => {
       const username = params.username as string;
       const entityType = params.entityType as string;
       const entityId = params.entityId as number | string;
-      const body = (await request.json()) as PermissionType[];
+      const body = (await request.json()) as EntityRoleType[];
 
       const userEntityPermissionsEntries = await mswDB.getAll(
         'userEntityPermissions'
@@ -278,7 +288,7 @@ export const getPermissions = (mockState: MockState) => [
           ...mockState,
           userEntityPermissions: userEntityPermissionsEntries,
         };
-        await mswDB.saveStore(updatedMockState, 'seedState');
+        await mswDB.saveStore(updatedMockState, 'mockState');
       }
 
       return makeResponse(body);

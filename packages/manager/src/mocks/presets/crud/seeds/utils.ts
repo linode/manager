@@ -58,6 +58,7 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
 
 type WithId = {
   id: number;
+  username: string;
 };
 
 /**
@@ -68,7 +69,7 @@ type WithId = {
  * @returns True if the object has an 'id' property, false otherwise.
  */
 export const hasId = (obj: any): obj is WithId => {
-  return 'id' in obj;
+  return 'id' in obj || 'username' in obj;
 };
 
 interface SeedWithUniqueIdsArgs<T extends keyof MockState> {

@@ -10,7 +10,7 @@ const SEED_STATE: ObjectStore = 'seedState';
 
 // Helper method to find an item in the DB. Returns true
 // if the given item has the same ID as the given number
-const findItem = (item: unknown, id: number) => {
+const findItem = (item: unknown, id: number | string) => {
   // Some items may be stored as [number, Entity], so we
   // need to check for both Entity and [number, Entity] types
   const isItemTuple = Array.isArray(item) && item.length >= 2;
@@ -18,8 +18,9 @@ const findItem = (item: unknown, id: number) => {
   const itemTupleToFind = isItemTuple && hasId(item[1]) && item[1].id === id;
 
   const itemToFind = hasId(item) && item.id === id;
+  const stringIdToFind = hasId(item) && String(item.username) === String(id);
 
-  return itemTupleToFind || itemToFind;
+  return itemTupleToFind || itemToFind || stringIdToFind;
 };
 
 const addEntityToEntities = (
@@ -246,7 +247,7 @@ export const mswDB = {
 
   delete: async <T extends keyof MockState>(
     entity: T,
-    id: number,
+    id: number | string,
     state: MockState
   ): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
@@ -609,7 +610,7 @@ export const mswDB = {
 
   update: async <T extends keyof MockState>(
     entity: T,
-    id: number,
+    id: number | string,
     payload: Partial<MockState[T] extends Array<infer U> ? U : MockState[T]>,
     state: MockState
   ): Promise<void> => {
