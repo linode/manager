@@ -62,13 +62,42 @@ export const createUser = (mockState: MockState) => [
       const body = (await request.json()) as User;
 
       const user = accountUserFactory.build({ ...body });
+      const defaultRoles = userDefaultRolesFactory.build();
 
+      // Add user to users array
       await mswDB.add('users', user, mockState);
+
+      // Add userRoles entry
       await mswDB.add(
         'userRoles',
-        { username: user.username, roles: userDefaultRolesFactory.build() },
+        { username: user.username, roles: defaultRoles },
         mockState
       );
+
+      // Add userAccountPermissions entry
+      if (defaultRoles.account_access) {
+        await mswDB.add(
+          'userAccountPermissions',
+          { username: user.username, permissions: defaultRoles.account_access },
+          mockState
+        );
+      }
+
+      // Add userEntityPermissions entries
+      if (defaultRoles.entity_access) {
+        for (const entityAccess of defaultRoles.entity_access) {
+          await mswDB.add(
+            'userEntityPermissions',
+            {
+              username: user.username,
+              entityType: entityAccess.type,
+              entityId: entityAccess.id,
+              permissions: entityAccess.roles,
+            },
+            mockState
+          );
+        }
+      }
 
       return makeResponse(user);
     }
