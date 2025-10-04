@@ -1,7 +1,7 @@
 import { configFactory, linodeFactory } from '@linode/utilities';
 
 import { getSeedsCountMap } from 'src/dev-tools/utils';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { Config } from '@linode/api-v4';
@@ -27,6 +27,8 @@ export const linodesSeeder: MockSeeder = {
     const configs: [number, Config][] = linodeSeeds.map((linodeSeed) => {
       return [linodeSeed.id, configFactory.build()];
     });
+
+    addToEntities(mockState, 'linodes', linodeSeeds);
 
     const updatedMockState = {
       ...mockState,
