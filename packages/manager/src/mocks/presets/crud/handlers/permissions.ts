@@ -8,6 +8,7 @@ import {
 } from 'src/mocks/utilities/response';
 
 import type {
+  AccessType,
   AccountRoleType,
   EntityRoleType,
   IamAccountRoles,
@@ -18,7 +19,6 @@ import type {
   MockState,
   UserAccountPermissionsEntry,
   UserEntityPermissionsEntry,
-  UserRolesEntry,
 } from 'src/mocks/types';
 import type { APIErrorResponse } from 'src/mocks/utilities/response';
 
@@ -31,21 +31,34 @@ export const getPermissions = (mockState: MockState) => [
     }): Promise<StrictResponse<APIErrorResponse | IamUserRoles>> => {
       const username = params.username;
 
-      const userRolesEntries = await mswDB.getAll('userRoles');
-
-      if (!userRolesEntries || userRolesEntries.length === 0) {
-        return makeNotFoundResponse();
-      }
-
-      const userRolesEntry = userRolesEntries.find(
-        (entry: UserRolesEntry) => entry.username === username
+      // Get account permissions
+      const userAccountPermissionsEntries = await mswDB.getAll(
+        'userAccountPermissions'
+      );
+      const accountPermissionsEntry = userAccountPermissionsEntries?.find(
+        (entry: UserAccountPermissionsEntry) => entry.username === username
       );
 
-      if (!userRolesEntry) {
-        return makeNotFoundResponse();
-      }
+      // Get entity permissions
+      const userEntityPermissionsEntries = await mswDB.getAll(
+        'userEntityPermissions'
+      );
+      const entityPermissionsEntries = userEntityPermissionsEntries?.filter(
+        (entry: UserEntityPermissionsEntry) => entry.username === username
+      );
 
-      return makeResponse(userRolesEntry.roles);
+      // Construct the response from current data
+      const response: IamUserRoles = {
+        account_access: accountPermissionsEntry?.permissions || [],
+        entity_access:
+          entityPermissionsEntries?.map((entry) => ({
+            id: Number(entry.entityId),
+            roles: entry.permissions,
+            type: entry.entityType as AccessType,
+          })) || [],
+      };
+
+      return makeResponse(response);
     }
   ),
 
@@ -60,16 +73,14 @@ export const getPermissions = (mockState: MockState) => [
       const username = params.username as string;
       const body = (await request.json()) as IamUserRoles;
 
-      // GET THE CURRENT STATE FROM THE DATABASE FIRST
       const currentState = await mswDB.getStore('mockState');
 
       if (!currentState) {
         return makeNotFoundResponse();
       }
 
-      // Update the specific arrays using the current state from database
       const updatedState = {
-        ...currentState, // Use currentState from DB, not mockState parameter
+        ...currentState,
         userRoles: [
           ...currentState.userRoles.filter(
             (entry) => entry.username !== username

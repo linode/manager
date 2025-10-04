@@ -18,9 +18,11 @@ const findItem = (item: unknown, id: number | string) => {
   const itemTupleToFind = isItemTuple && hasId(item[1]) && item[1].id === id;
 
   const itemToFind = hasId(item) && item.id === id;
-  const stringIdToFind = hasId(item) && String(item.username) === String(id);
+  const entityIdToFind = hasId(item) && item.entityId === id;
+  const stringIdToFind =
+    hasId(item) && typeof id === 'string' && item.username === id;
 
-  return itemTupleToFind || itemToFind || stringIdToFind;
+  return itemTupleToFind || itemToFind || entityIdToFind || stringIdToFind;
 };
 
 const addEntityToEntities = (
