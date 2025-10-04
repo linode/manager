@@ -445,6 +445,12 @@ export const deleteLinode = (mockState: MockState) => [
         sequence: [{ status: 'finished' }],
       }).then(async () => {
         await mswDB.delete('linodes', id, mockState);
+        await mswDB.delete('linodeInterfaces', linode.id, mockState);
+        await mswDB.delete('linodeConfigs', linode.id, mockState);
+        await mswDB.delete('linodeIps', linode.id, mockState);
+        await mswDB.delete('userEntityPermissions', linode.id, mockState);
+        await mswDB.delete('userAccountPermissions', linode.id, mockState);
+        await mswDB.delete('userRoles', linode.id, mockState);
       });
     });
 
