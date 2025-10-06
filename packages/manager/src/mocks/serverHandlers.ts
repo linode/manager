@@ -1666,7 +1666,9 @@ export const handlers = [
       'offline',
       'resizing',
     ];
-    const volumes = statuses.map((status) => volumeFactory.build({ status }));
+    const volumes = statuses.map((status) =>
+      volumeFactory.build({ status, region: 'ap-west' })
+    );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
@@ -3125,6 +3127,12 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Block Storage',
+          service_type: 'blockstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3138,6 +3146,7 @@ export const handlers = [
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
+      blockstorage: 'Block Storage',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -3220,6 +3229,16 @@ export const handlers = [
           id: 6,
           label: 'Object Storage Dashboard',
           service_type: 'objectstorage',
+        })
+      );
+    }
+
+    if (params.serviceType === 'blockstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 7,
+          label: 'Block Storage Dashboard',
+          service_type: 'blockstorage',
         })
       );
     }
@@ -3513,6 +3532,9 @@ export const handlers = [
     } else if (id === '6') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Object Storage Service I/O Statistics';
+    } else if (id === '7') {
+      serviceType = 'blockstorage';
+      dashboardLabel = 'Block Storage Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
