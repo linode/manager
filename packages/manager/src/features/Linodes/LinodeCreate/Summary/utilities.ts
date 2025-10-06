@@ -4,13 +4,13 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import type { LinodeType } from '@linode/api-v4';
 
 interface LinodePriceOptions {
-  clusterData?: ClusterData[] | undefined;
+  clusterData?: MarketplaceClusterData[] | undefined;
   clusterSize: string | undefined;
   regionId: string | undefined;
   type: LinodeType | undefined;
 }
 
-interface ClusterData {
+interface MarketplaceClusterData {
   prefix: string;
   size?: string;
   typeData?: LinodeType;
@@ -54,10 +54,10 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
   return `$${renderMonthlyPriceToCorrectDecimalPlace(price.monthly)}/month`;
 };
 
-export function parseClusterData(
+export function getParsedMarketplaceClusterData(
   stackscriptData: Record<string, string> = {}
-): ClusterData[] {
-  const result: ClusterData[] = [];
+): MarketplaceClusterData[] {
+  const result: MarketplaceClusterData[] = [];
 
   for (const [key, value] of Object.entries(stackscriptData)) {
     const match = key.match(/^(.+)_cluster_(size|type)$/);

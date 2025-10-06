@@ -18,7 +18,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import { getLinodePrice, parseClusterData } from './utilities';
+import { getLinodePrice, getParsedMarketplaceClusterData } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -76,7 +76,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     ],
   });
 
-  const rawClusterData = parseClusterData(stackscriptData);
+  const rawClusterData = getParsedMarketplaceClusterData(stackscriptData);
 
   const clusterData = rawClusterData.map((cluster) => ({
     ...cluster,
