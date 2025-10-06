@@ -9,9 +9,10 @@ describe('getLinodePrice', () => {
     });
 
     const result = getLinodePrice({
-      clusterSize: undefined,
+      stackscriptData: undefined,
       regionId: 'fake-region-id',
       type,
+      types: [],
     });
 
     expect(result).toBe('$5/month');
@@ -23,8 +24,11 @@ describe('getLinodePrice', () => {
     });
 
     const result = getLinodePrice({
-      clusterSize: '3',
+      stackscriptData: {
+        cluster_size: '3',
+      },
       regionId: 'fake-region-id',
+      types: [],
       type,
     });
 
@@ -53,7 +57,7 @@ describe('getParsedMarketplaceClusterData', () => {
       {
         prefix: 'mysql',
         size: '5',
-        type: types[0]
+        type: types[0],
       },
       {
         prefix: 'redis',

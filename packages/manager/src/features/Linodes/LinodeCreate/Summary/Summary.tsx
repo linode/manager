@@ -18,7 +18,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import { getLinodePrice, getParsedMarketplaceClusterData } from './utilities';
+import { getLinodePrice } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -48,7 +48,6 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     vpcId,
     diskEncryption,
     stackscriptData,
-    clusterSize,
     clusterName,
     linodeInterfaces,
     interfaceGeneration,
@@ -68,14 +67,12 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'interfaces.0.vpc_id',
       'disk_encryption',
       'stackscript_data',
-      'stackscript_data.cluster_size',
       'stackscript_data.cluster_name',
       'linodeInterfaces',
       'interface_generation',
       'alerts',
     ],
   });
-
 
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
@@ -95,8 +92,12 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
-  const clusterData = getParsedMarketplaceClusterData(stackscriptData, types);
-  const price = getLinodePrice({ clusterSize, regionId, type, clusterData });
+  const price = getLinodePrice({
+    regionId,
+    types,
+    stackscriptData,
+    type,
+  });
 
   const hasVPC = isLinodeInterfacesEnabled
     ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
