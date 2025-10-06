@@ -32,10 +32,10 @@ import type { Stats } from '@linode/api-v4';
 describe('ACLP Components UI varies according to ACLP support by region and user preference', function () {
   beforeEach(function () {
     mockAppendFeatureFlags({
-      aclpBetaServices: {
+      aclpServices: {
         linode: {
-          alerts: false,
-          metrics: true,
+          alerts: { beta: false, enabled: false },
+          metrics: { beta: true, enabled: true },
         },
       },
     }).as('getFeatureFlags');

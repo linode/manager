@@ -78,7 +78,7 @@ export type MockPresetExtraGroupId =
   | 'Maintenance'
   | 'Managed'
   | 'Notifications'
-  | 'Profile'
+  | 'Profile & Grants'
   | 'Regions'
   | 'User Permissions';
 
@@ -88,7 +88,7 @@ export type MockPresetExtraGroupType =
   | 'events'
   | 'maintenance'
   | 'notifications'
-  | 'profile'
+  | 'profile & grants'
   | 'select'
   | 'userPermissions';
 
@@ -102,7 +102,7 @@ export type MockPresetExtraId =
   | 'limits:lke-limits'
   | 'maintenance:custom'
   | 'notifications:custom'
-  | 'profile:custom'
+  | 'profile-grants:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy'
@@ -121,7 +121,7 @@ export interface MockPresetExtra extends MockPresetBase {
 export type MockPresetCrudGroup = {
   id:
     | 'CloudNATs'
-    | 'DataStream'
+    | 'Delivery'
     | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
@@ -136,7 +136,7 @@ export type MockPresetCrudGroup = {
 };
 export type MockPresetCrudId =
   | 'cloudnats:crud'
-  | 'datastream:crud'
+  | 'delivery:crud'
   | 'domains:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'

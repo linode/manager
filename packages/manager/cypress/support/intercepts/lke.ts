@@ -28,6 +28,7 @@ import type {
   PriceType,
 } from '@linode/api-v4';
 
+// TODO M3-10442: Examine `mockGetKubernetesVersions` and consider modifying/adding alternative util that mocks response containing tiered version objects.
 /**
  * Intercepts GET request to retrieve Kubernetes versions and mocks response.
  *
@@ -252,6 +253,17 @@ export const mockAddNodePool = (
     apiMatcher(`lke/clusters/${clusterId}/pools`),
     makeResponse(nodePool)
   );
+};
+
+/**
+ * Intercepts POST request to create Node Pool.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateNodePool = (
+  clusterId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`lke/clusters/${clusterId}/pools`));
 };
 
 /**

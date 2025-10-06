@@ -16,10 +16,10 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Username')).toBeVisible();
+    expect(getByText(/Username/)).toBeVisible();
     expect(getByText(user.username)).toBeVisible();
 
-    expect(getByText('Email')).toBeVisible();
+    expect(getByText(/Email/)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
   });
 
@@ -31,7 +31,7 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText(/Assigned Roles/)).toBeVisible();
     expect(getAllByText('0')[0]).toBeVisible();
   });
 
@@ -61,7 +61,7 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText(/Assigned Roles/)).toBeVisible();
     expect(getByText('7')).toBeVisible();
   });
 
@@ -82,7 +82,7 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText(/Assigned Roles/)).toBeVisible();
     expect(getByText('4')).toBeVisible();
   });
 
@@ -96,7 +96,7 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Verified Phone Number')).toBeVisible();
+    expect(getByText(/Verified number/)).toBeVisible();
     expect(getByText(user.verified_phone_number!)).toBeVisible();
   });
 
@@ -108,7 +108,7 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('2FA')).toBeVisible();
+    expect(getByText(/2FA/)).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
   });
 });

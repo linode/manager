@@ -1,8 +1,8 @@
 import type {
   Capabilities,
+  CloudPulseServiceType,
   DatabaseEngine,
   DatabaseType,
-  MetricsServiceType,
 } from '@linode/api-v4';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
@@ -23,7 +23,7 @@ export interface CloudPulseServiceTypeFilterMap {
   /**
    * The service types like dbaas, linode etc.,
    */
-  readonly serviceType: MetricsServiceType;
+  readonly serviceType: CloudPulseServiceType;
 }
 
 /**

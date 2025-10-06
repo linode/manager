@@ -33,11 +33,11 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
+  flagsFactory,
   widgetFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
 /**
  * Verifies the presence and values of specific properties within the aclpPreference object
@@ -47,32 +47,9 @@ import type { Flags } from 'src/featureFlags';
  * @param requestPayload - The payload received from the request, containing the aclpPreference object.
  * @param expectedValues - An object containing the expected values for properties to validate against the requestPayload.
  */
-
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
-const {
-  clusterName,
-  dashboardName,
-  engine,
-  id,
-  metrics,
-  nodeType,
-  serviceType,
-} = widgetDetails.dbaas;
-
+const { clusterName, dashboardName, engine, id, metrics, nodeType } =
+  widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
@@ -139,7 +116,7 @@ const mockAccount = accountFactory.build();
 
 describe('Tests for API error handling', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
@@ -412,6 +389,11 @@ describe('Tests for API error handling', () => {
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
+    // simulate an error on instances call before changing the region again
+    mockGetDatabasesError('Internal Server Error').as(
+      'getDatabaseInstancesError'
+    );
+
     //  Select a dashboard from the autocomplete input
     ui.autocomplete
       .findByLabel('Dashboard')
@@ -420,33 +402,6 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
-      .should('be.visible')
-      .click();
-
-    // Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
-
-    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
-
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionId(mockRegions[0].id, mockRegions)
-      .should('be.visible')
-      .click();
-
-    // simulate an error on instances call before changing the region again
-    mockGetDatabasesError('Internal Server Error').as(
-      'getDatabaseInstancesError'
-    );
-
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionId(mockRegions[1].id, mockRegions)
       .should('be.visible')
       .click();
 

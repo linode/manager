@@ -12,6 +12,7 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { QuotasTable } from './QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
@@ -22,6 +23,8 @@ import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
   const navigate = useNavigate();
+  const flags = useFlags();
+
   const [selectedLocation, setSelectedLocation] =
     React.useState<null | SelectOption<Quota['region_applied']>>(null);
   const locationData = useGetLocationsForQuotaService('object-storage');
@@ -68,7 +71,11 @@ export const Quotas = () => {
                   label: value?.label,
                   value: value?.value,
                 });
-                navigate({ to: '/account/quotas' });
+                navigate({
+                  to: flags?.iamRbacPrimaryNavChanges
+                    ? '/quotas'
+                    : '/account/quotas',
+                });
               }}
               options={
                 sortedS3Endpoints?.map((location) => ({

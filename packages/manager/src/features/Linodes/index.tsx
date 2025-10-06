@@ -103,7 +103,7 @@ export const LinodesLandingWrapper = React.memo(() => {
       },
       from: '/linodes',
     },
-    preferenceKey: 'linodes_view_style',
+    preferenceKey: 'linodes-landing',
   });
 
   const handleRegionFilter = (regionFilter: RegionFilter) => {

@@ -228,7 +228,7 @@ export const MonitorTable = () => {
         onClick={handleDelete}
         onClose={() => navigate({ to: '/managed/monitors' })}
         open={isDeleteDialogOpen}
-        title={`Delete Monitor ${selectedMonitor?.label || 'Unknown'}?`}
+        title={`Delete Monitor${selectedMonitor ? ` ${selectedMonitor.label}` : ''}?`}
       >
         <Notice variant="warning">
           <Typography>

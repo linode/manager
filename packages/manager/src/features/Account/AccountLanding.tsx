@@ -1,4 +1,5 @@
 import { useAccount, useProfile } from '@linode/queries';
+import { NotFound } from '@linode/ui';
 import {
   Outlet,
   useLocation,
@@ -37,7 +38,7 @@ export const AccountLanding = () => {
   });
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { limitsEvolution } = useFlags();
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
@@ -45,13 +46,6 @@ export const AccountLanding = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
-
-  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
-  if (location.pathname === '/account') {
-    navigate({
-      to: '/account/billing',
-    });
-  }
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
@@ -104,10 +98,20 @@ export const AccountLanding = () => {
   React.useEffect(() => {
     if (match.routeId === '/account/quotas' && !showQuotasTab) {
       navigate({
-        to: '/account/billing',
+        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/billing',
       });
     }
-  }, [match.routeId, showQuotasTab, navigate]);
+  }, [match.routeId, showQuotasTab, navigate, iamRbacPrimaryNavChanges]);
+
+  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
+  if (location.pathname === '/account') {
+    if (iamRbacPrimaryNavChanges) {
+      return <NotFound />;
+    }
+    navigate({
+      to: '/account/billing',
+    });
+  }
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
@@ -145,7 +149,7 @@ export const AccountLanding = () => {
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
         navigate({
-          to: '/account/billing',
+          to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
           search: { action: 'make-payment' },
         });
     }
@@ -162,8 +166,8 @@ export const AccountLanding = () => {
 
   return (
     <React.Fragment>
-      <PlatformMaintenanceBanner pathname={location.pathname} />
-      <MaintenanceBannerV2 pathname={location.pathname} />
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
       <Tabs index={tabIndex} onChange={handleTabChange}>

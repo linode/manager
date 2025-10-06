@@ -9,16 +9,11 @@ import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 export const IAMRoute = () => {
   const { isIAMEnabled } = useIsIAMEnabled();
-
-  if (!isIAMEnabled) {
-    return <NotFound />;
-  }
-
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Identity and Access" />
       <ProductInformationBanner bannerLocation="Identity and Access" />
-      <Outlet />
+      {isIAMEnabled ? <Outlet /> : <NotFound />}
     </React.Suspense>
   );
 };

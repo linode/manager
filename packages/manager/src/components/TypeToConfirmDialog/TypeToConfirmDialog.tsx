@@ -28,6 +28,7 @@ interface EntityInfo {
     | 'Bucket'
     | 'Database'
     | 'Domain'
+    | 'Image'
     | 'Kubernetes'
     | 'Linode'
     | 'Load Balancer'
@@ -87,7 +88,7 @@ interface TypeToConfirmDialogProps {
    */
   reversePrimaryButtonPosition?: boolean;
   /** Props for the secondary button */
-  secondaryButtonProps?: Omit<ActionButtonsProps, 'label'>;
+  secondaryButtonProps?: ActionButtonsProps;
 }
 
 type CombinedProps = TypeToConfirmDialogProps &
@@ -176,10 +177,10 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     };
 
     const cancelProps: ActionButtonsProps = {
-      ...secondaryButtonProps,
       'data-testid': 'cancel',
       label: 'Cancel',
       onClick: () => onClose?.({}, 'escapeKeyDown'),
+      ...secondaryButtonProps,
     };
 
     return {
@@ -207,7 +208,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     }
 
     const typeInstructions =
-      entity.action === 'cancellation'
+      entity.action === 'cancellation' && entity.type === 'AccountSetting'
         ? 'type your Username '
         : `type the name of the ${entity.type} ${entity.subType || ''} `;
 

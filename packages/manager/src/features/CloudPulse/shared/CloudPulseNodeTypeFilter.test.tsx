@@ -20,14 +20,14 @@ const props: CloudPulseNodeTypeFilterProps = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useAllDatabasesQuery: vi.fn().mockReturnValue({}),
+  useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/cloudpulse/resources', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/resources');
   return {
     ...actual,
-    useAllDatabasesQuery: queryMocks.useAllDatabasesQuery,
+    useResourcesQuery: queryMocks.useResourcesQuery,
   };
 });
 
@@ -50,8 +50,8 @@ describe('CloudPulseNodeTypeFilter', () => {
   });
 
   it('initializes with Primary as default value when no preferences are saved', async () => {
-    queryMocks.useAllDatabasesQuery.mockReturnValue({
-      data: databaseInstanceFactory.buildList(2),
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: [{ ...databaseInstanceFactory.build(), clusterSize: 1 }],
       isError: false,
       isLoading: false,
     });
@@ -67,10 +67,16 @@ describe('CloudPulseNodeTypeFilter', () => {
   });
 
   it('displays correct options in dropdown in case of maximum cluster size one', async () => {
-    queryMocks.useAllDatabasesQuery.mockReturnValue({
+    queryMocks.useResourcesQuery.mockReturnValue({
       data: [
-        databaseInstanceFactory.build({ cluster_size: 1, id: 1 }),
-        databaseInstanceFactory.build({ cluster_size: 1, id: 2 }),
+        {
+          ...databaseInstanceFactory.build({ id: 1 }),
+          clusterSize: 1,
+        },
+        {
+          ...databaseInstanceFactory.build({ id: 2 }),
+          clusterSize: 1,
+        },
       ],
       isError: false,
       isLoading: false,
@@ -87,10 +93,16 @@ describe('CloudPulseNodeTypeFilter', () => {
   });
 
   it('displays correct options in dropdown if maximum cluster size is greater than one', async () => {
-    queryMocks.useAllDatabasesQuery.mockReturnValue({
+    queryMocks.useResourcesQuery.mockReturnValue({
       data: [
-        databaseInstanceFactory.build({ cluster_size: 2, id: 1 }),
-        databaseInstanceFactory.build({ cluster_size: 3, id: 2 }),
+        {
+          ...databaseInstanceFactory.build({ id: 1 }),
+          clusterSize: 2,
+        },
+        {
+          ...databaseInstanceFactory.build({ id: 2 }),
+          clusterSize: 3,
+        },
       ],
       isError: false,
       isLoading: false,
@@ -116,10 +128,16 @@ describe('CloudPulseNodeTypeFilter', () => {
   });
 
   it('maintains selected value in preferences after re-render', async () => {
-    queryMocks.useAllDatabasesQuery.mockReturnValue({
+    queryMocks.useResourcesQuery.mockReturnValue({
       data: [
-        databaseInstanceFactory.build({ cluster_size: 1, id: 1 }),
-        databaseInstanceFactory.build({ cluster_size: 3, id: 2 }),
+        {
+          ...databaseInstanceFactory.build({ id: 1 }),
+          clusterSize: 1,
+        },
+        {
+          ...databaseInstanceFactory.build({ id: 2 }),
+          clusterSize: 3,
+        },
       ],
       isError: false,
       isLoading: false,

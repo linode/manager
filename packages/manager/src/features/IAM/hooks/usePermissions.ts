@@ -1,8 +1,4 @@
-import {
-  type AccessType,
-  getUserEntityPermissions,
-  type PermissionType,
-} from '@linode/api-v4';
+import { getUserEntityPermissions } from '@linode/api-v4';
 import {
   useGrants,
   useProfile,
@@ -20,41 +16,85 @@ import {
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 
 import type {
+  AccessType,
+  AccountAdmin,
   AccountEntity,
   APIError,
   EntityType,
   GrantType,
+  PermissionType,
   Profile,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
 
-export type PermissionsResult = {
-  data: Record<PermissionType, boolean>;
+const BETA_ACCESS_TYPE_SCOPE: AccessType[] = ['account', 'linode', 'firewall'];
+const LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE = [
+  'create_image',
+  'upload_image',
+  'create_vpc',
+  'create_volume',
+  'create_nodebalancer',
+];
+
+export type PermissionsResult<T extends readonly PermissionType[]> = {
+  data: Record<T[number], boolean>;
 } & Omit<UseQueryResult<PermissionType[], APIError[]>, 'data'>;
 
-export const usePermissions = (
+export const usePermissions = <T extends readonly PermissionType[]>(
   accessType: AccessType,
-  permissionsToCheck: PermissionType[],
-  entityId?: number,
+  permissionsToCheck: T,
+  entityId?: number | string,
   enabled: boolean = true
-): PermissionsResult => {
-  const { isIAMEnabled } = useIsIAMEnabled();
+): PermissionsResult<T> => {
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { data: profile } = useProfile();
+
+  const _entityId =
+    typeof entityId === 'string' && entityId.includes('/')
+      ? entityId.split('/')[1]
+      : entityId;
+
+  /**
+   * BETA and LA features should use the new permission model.
+   * However, beta features are limited to a subset of AccessTypes and account permissions.
+   * - Use Beta Permissions if:
+   *   - The feature is beta
+   *   - The access type is in the BETA_ACCESS_TYPE_SCOPE
+   *   - The account permission is not in the LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE
+   * - Use LA Permissions if:
+   *   - The feature is not beta
+   */
+  const useBetaPermissions =
+    isIAMEnabled &&
+    isIAMBeta &&
+    BETA_ACCESS_TYPE_SCOPE.includes(accessType) &&
+    LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE.some(
+      (blacklistedPermission) =>
+        permissionsToCheck.includes(blacklistedPermission as AccountAdmin) // some of the account admin in the blacklist have not been added yet
+    ) === false;
+  const useLAPermissions = isIAMEnabled && !isIAMBeta;
+  const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
+
+  const { data: grants } = useGrants(
+    (!isIAMEnabled || !shouldUsePermissionMap) && enabled
+  );
 
   const { data: userAccountPermissions, ...restAccountPermissions } =
     useUserAccountPermissions(
-      isIAMEnabled && accessType === 'account' && enabled
+      shouldUsePermissionMap && accessType === 'account' && enabled
     );
 
-  const { data: userEntityPermisssions, ...restEntityPermissions } =
-    useUserEntityPermissions(accessType, entityId!, isIAMEnabled && enabled);
+  const { data: userEntityPermissions, ...restEntityPermissions } =
+    useUserEntityPermissions(
+      accessType,
+      _entityId!,
+      shouldUsePermissionMap && enabled
+    );
 
   const usersPermissions =
-    accessType === 'account' ? userAccountPermissions : userEntityPermisssions;
+    accessType === 'account' ? userAccountPermissions : userEntityPermissions;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants(!isIAMEnabled && enabled);
-
-  const permissionMap = isIAMEnabled
+  const permissionMap = shouldUsePermissionMap
     ? toPermissionMap(
         permissionsToCheck,
         usersPermissions!,
@@ -65,7 +105,7 @@ export const usePermissions = (
         permissionsToCheck,
         grants!,
         profile?.restricted,
-        entityId
+        _entityId
       );
 
   return {
@@ -118,7 +158,8 @@ export type QueryWithPermissionsResult<T> = {
 export const useQueryWithPermissions = <T extends EntityBase>(
   useQueryResult: UseQueryResult<T[], APIError[]>,
   entityType: EntityType,
-  permissionsToCheck: PermissionType[]
+  permissionsToCheck: PermissionType[],
+  enabled?: boolean
 ): QueryWithPermissionsResult<T> => {
   const {
     data: allEntities,
@@ -130,7 +171,12 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
   const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(allEntities, entityType, profile, isIAMEnabled);
+    useEntitiesPermissions<T>(
+      allEntities,
+      entityType,
+      profile,
+      isIAMEnabled && enabled
+    );
   const { data: grants } = useGrants(!isIAMEnabled);
 
   const entityPermissionsMap = isIAMEnabled
@@ -143,10 +189,11 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     : entityPermissionMapFrom(grants, entityType as GrantType, profile);
 
   const entities: T[] | undefined = allEntities?.filter((entity: T) => {
-    const permissions = entityPermissionsMap[entity.id];
+    const permissions = entityPermissionsMap[entity.id] ?? {};
     return (
       !profile?.restricted ||
-      permissionsToCheck.every((permission) => permissions[permission])
+      (permissions &&
+        permissionsToCheck.every((permission) => permissions[permission]))
     );
   });
 

@@ -1,9 +1,8 @@
 import { useImageQuery, useRegionsQuery } from '@linode/queries';
-import { Accordion, Notice, TextField, Typography } from '@linode/ui';
+import { Accordion, Notice, TextField } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { UserDataHeading } from './UserDataHeading';
@@ -55,17 +54,6 @@ export const UserData = () => {
 
   return (
     <Accordion heading={<UserDataHeading />} sx={{ m: '0 !important', p: 1 }}>
-      <Typography>
-        User data is a feature of the Metadata service that enables you to
-        perform system configuration tasks (such as adding users and installing
-        software) by providing custom instructions or scripts to cloud-init. Any
-        user data should be added at this step and cannot be modified after the
-        the Linode has been created.{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service">
-          Learn more
-        </Link>
-        .
-      </Typography>
       {formatWarning && (
         <Notice spacingBottom={16} spacingTop={16} variant="warning">
           The user data may be formatted incorrectly.

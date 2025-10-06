@@ -11,7 +11,9 @@ import {
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 
 export interface PlansAvailabilityNoticeProps {
+  flow?: 'database' | 'kubernetes' | 'linode';
   hasSelectedRegion: boolean;
+  isResize?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
   planType: LinodeTypeClass;
   regionsData: Region[];
@@ -24,6 +26,8 @@ export const PlansAvailabilityNotice = React.memo(
       isSelectedRegionEligibleForPlan,
       planType,
       regionsData,
+      flow,
+      isResize,
     } = props;
     const capability = getCapabilityFromPlanType(planType);
 
@@ -37,7 +41,9 @@ export const PlansAvailabilityNotice = React.memo(
 
     return (
       <PlansAvailabilityNoticeMessage
+        flow={flow}
         hasSelectedRegion={hasSelectedRegion}
+        isResize={isResize}
         isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
         planType={planType}
         regionList={getEligibleRegionList()}
@@ -47,7 +53,9 @@ export const PlansAvailabilityNotice = React.memo(
 );
 
 interface PlansAvailabilityNoticeMessageProps {
+  flow?: 'database' | 'kubernetes' | 'linode';
   hasSelectedRegion: boolean;
+  isResize?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
   planType: LinodeTypeClass;
   regionList: Region[];
@@ -61,6 +69,8 @@ const PlansAvailabilityNoticeMessage = (
     isSelectedRegionEligibleForPlan,
     planType,
     regionList,
+    flow,
+    isResize,
   } = props;
 
   const FormattedRegionList = () => (
@@ -77,6 +87,7 @@ const PlansAvailabilityNoticeMessage = (
   );
 
   const formattedPlanType = formatPlanTypes(planType);
+  const isDatabaseResize = flow === 'database' && isResize;
 
   if (!hasSelectedRegion) {
     return (
@@ -103,17 +114,21 @@ const PlansAvailabilityNoticeMessage = (
         <PlanNoticeTypography>
           {formattedPlanType} Plans are not currently available in this
           region.&nbsp;
-          <PlanTextTooltip
-            displayText="See global availability"
-            tooltipText={
-              regionList.length > 0 ? (
-                <FormattedRegionList />
-              ) : (
-                'There are no regions available for this plan.'
-              )
-            }
-          />
-          .
+          {!isDatabaseResize && (
+            <>
+              <PlanTextTooltip
+                displayText="See global availability"
+                tooltipText={
+                  regionList.length > 0 ? (
+                    <FormattedRegionList />
+                  ) : (
+                    'There are no regions available for this plan.'
+                  )
+                }
+              />
+              .
+            </>
+          )}
         </PlanNoticeTypography>
       </Notice>
     );

@@ -8,6 +8,7 @@ import {
   Chip,
   CircleProgress,
   ErrorState,
+  LinkButton,
   Paper,
   Typography,
 } from '@linode/ui';
@@ -19,7 +20,6 @@ import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LinkButton } from 'src/components/LinkButton';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -75,7 +75,7 @@ export const FirewallDetail = () => {
 
   const { data: permissions } = usePermissions(
     'firewall',
-    ['update_firewall_rules'],
+    ['update_firewall_rules', 'update_firewall'],
     firewallId
   );
 
@@ -173,6 +173,7 @@ export const FirewallDetail = () => {
           },
           pathname: `/firewalls/${firewall.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_firewall}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         spacingBottom={4}

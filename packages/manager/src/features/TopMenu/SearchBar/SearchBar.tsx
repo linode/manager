@@ -6,14 +6,12 @@ import {
   InputAdornment,
   TextField,
 } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import Search from 'src/assets/icons/search.svg';
-import { useSearch } from 'src/features/Search/useSearch';
+import { useSearch as useCloudManagerSearch } from 'src/features/Search/useSearch';
 
 import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
@@ -43,7 +41,7 @@ const isSpecialOption = (
 export const SearchBar = () => {
   // Search state
   const [searchText, setSearchText] = React.useState<string>('');
-  const { combinedResults, isLargeAccount, isLoading } = useSearch({
+  const { combinedResults, isLargeAccount, isLoading } = useCloudManagerSearch({
     query: searchText,
   });
 
@@ -53,26 +51,29 @@ export const SearchBar = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
   // Hooks
-  const history = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
   const theme = useTheme();
+  const search = useSearch({
+    strict: false,
+  });
 
   // Sync state with query params
   React.useEffect(() => {
-    const { pathname, search } = history.location;
-    const query = getQueryParamsFromQueryString(search);
+    const { pathname } = location;
 
     if (pathname !== '/search') {
       setValue(null);
       setSearchText('');
-    } else if (pathname === '/search' && Object.keys(query).length > 0) {
-      const q = query.query;
+    } else if (pathname === '/search' && Object.keys(search).length > 0) {
+      const q = search.query;
       if (!q) {
         return;
       }
 
       setSearchText(q);
     }
-  }, [history.location]);
+  }, [location, search]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
@@ -86,7 +87,7 @@ export const SearchBar = () => {
   const handleClose = () => {
     document.body.classList.remove('searchOverlay');
     setSearchActive(false);
-    if (history.location.pathname !== '/search') {
+    if (location.pathname !== '/search') {
       setSearchText('');
     }
     setMenuOpen(false);
@@ -100,7 +101,7 @@ export const SearchBar = () => {
 
   const handleFocus = () => {
     setSearchActive(true);
-    if (history.location.pathname !== '/search') {
+    if (location.pathname !== '/search') {
       setSearchText('');
     }
   };
@@ -113,9 +114,11 @@ export const SearchBar = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' && searchText !== '' && combinedResults) {
-      history.push({
-        pathname: `/search`,
-        search: `?query=${encodeURIComponent(searchText)}`,
+      navigate({
+        to: `/search`,
+        search: {
+          query: searchText,
+        },
       });
       handleClose();
     }
@@ -132,15 +135,19 @@ export const SearchBar = () => {
 
     if (isSpecialOption(item)) {
       if (item.value === 'redirect') {
-        history.push({
-          pathname: `/search`,
-          search: `?query=${encodeURIComponent(searchText)}`,
+        navigate({
+          to: `/search`,
+          search: {
+            query: searchText,
+          },
         });
       }
       return;
     }
 
-    history.push(item.data.path);
+    navigate({
+      to: item.data.path,
+    });
     handleClose();
   };
 

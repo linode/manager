@@ -13,12 +13,13 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory } from 'src/factories';
+import { accountFactory, alertFactory, flagsFactory } from 'src/factories';
 
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
-
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
+import type {
+  Alert,
+  AlertStatusType,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
 const statusList: AlertStatusType[] = [
@@ -27,7 +28,7 @@ const statusList: AlertStatusType[] = [
   'in progress',
   'failed',
 ];
-const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 const tagSequence = ['LinodeTags', 'DBaaSTags', 'bothTags', 'No Tags'];
 
 // Generate mock alerts with a mix of tags, statuses, and service types
@@ -85,7 +86,7 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
    */
   it('Displays alerts accurately grouped under their corresponding tags', () => {
     // Setup necessary mocks and feature flags
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(serviceTypes);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');

@@ -22,6 +22,8 @@ import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/
 import { useFlags } from 'src/hooks/useFlags';
 import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNotice';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { MaintenancePolicyValues } from 'src/hooks/useUpcomingMaintenanceNotice.ts';
 
 export const MaintenancePolicy = () => {
@@ -31,7 +33,9 @@ export const MaintenancePolicy = () => {
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
 
   const flags = useFlags();
-
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   const {
     control,
     formState: { isDirty, isSubmitting },
@@ -90,6 +94,7 @@ export const MaintenancePolicy = () => {
             name="maintenance_policy"
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
+                disabled={!permissions.update_account_settings}
                 errorText={fieldState.error?.message}
                 hideDefaultChip
                 onChange={(policy) => field.onChange(policy.slug)}
@@ -100,7 +105,7 @@ export const MaintenancePolicy = () => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
-              disabled={!isDirty}
+              disabled={!isDirty || !permissions.update_account_settings}
               loading={isSubmitting}
               type="submit"
             >

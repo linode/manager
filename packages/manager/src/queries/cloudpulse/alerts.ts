@@ -18,7 +18,6 @@ import { queryFactory } from './queries';
 
 import type {
   Alert,
-  AlertServiceType,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   DeleteAlertPayload,
@@ -28,7 +27,7 @@ import type {
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
-export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
+export const useCreateAlertDefinition = (serviceType: string) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
     mutationFn: (data) => createAlertDefinition(data, serviceType),
@@ -107,14 +106,21 @@ export const useEditAlertDefinition = () => {
       editAlertDefinition(data, serviceType, alertId),
 
     onSuccess(data) {
-      const allAlertsQueryKey = queryFactory.alerts._ctx.all().queryKey;
-      queryClient.cancelQueries({ queryKey: allAlertsQueryKey });
-      queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
-        return (
-          oldData?.map((alert) => {
-            return alert.id === data.id ? data : alert;
-          }) ?? [data]
-        );
+      const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
+
+      queryClient.setQueryData<Alert[] | undefined>(allAlertsKey, (prev) => {
+        // nothing cached yet
+        if (!prev) return prev;
+
+        const idx = prev.findIndex((a) => a.id === data.id);
+        if (idx === -1) return prev;
+
+        // if no change keep referential equality
+        if (prev[idx] === data) return prev;
+
+        const next = prev.slice();
+        next[idx] = data;
+        return next;
       });
 
       queryClient.setQueryData<Alert>(
@@ -246,9 +252,43 @@ export const useServiceAlertsMutation = (
     mutationFn: (payload: CloudPulseAlertsPayload) => {
       return updateServiceAlerts(serviceType, entityId, payload);
     },
-    onSuccess() {
+    onSuccess(_, payload) {
+      const allAlerts = queryClient.getQueryData<Alert[]>(
+        queryFactory.alerts._ctx.all().queryKey
+      );
+
+      // Get alerts previously enabled for this entity
+      const oldEnabledAlertIds =
+        allAlerts
+          ?.filter((alert) => alert.entity_ids.includes(entityId))
+          .map((alert) => alert.id) || [];
+
+      // Combine enabled user and system alert IDs from payload
+      const newEnabledAlertIds = [
+        ...(payload.user ?? []),
+        ...(payload.system ?? []),
+      ];
+
+      // Get unique list of all enabled alert IDs for cache invalidation
+      const alertIdsToInvalidate = Array.from(
+        new Set([...oldEnabledAlertIds, ...newEnabledAlertIds])
+      );
+
       queryClient.invalidateQueries({
         queryKey: queryFactory.resources(serviceType).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      alertIdsToInvalidate.forEach((alertId) => {
+        queryClient.invalidateQueries({
+          queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+            serviceType,
+            String(alertId)
+          ).queryKey,
+        });
       });
     },
   });

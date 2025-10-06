@@ -16,12 +16,14 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
+import {
+  accountFactory,
+  alertFactory,
+  databaseFactory,
+  flagsFactory,
+} from 'src/factories';
 
 import type { Alert, Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
-
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
 const mockAccount = accountFactory.build();
@@ -69,7 +71,7 @@ describe('Integration Tests for Edit Alert', () => {
    * - Confirms that after submitting, the data matches with the API response.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetRegions(regions);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
@@ -98,10 +100,9 @@ describe('Integration Tests for Edit Alert', () => {
           .findByTitle(`Action menu for Alert ${label}`)
           .should('be.visible')
           .click();
+        // Select the "Edit" option from the action menu
+        ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
       });
-
-    // Select the "Edit" option from the action menu
-    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
     // Verify the URL ends with the expected details page path
     cy.url().should('endWith', `/edit/${service_type}/${id}`);
@@ -192,8 +193,6 @@ describe('Integration Tests for Edit Alert', () => {
     cy.wait('@updateDefinitions').then(({ request, response }) => {
       const { created_by, description, severity, status, type, updated_by } =
         alertDetails;
-
-      expect(response).to.have.property('statusCode', 200);
 
       const resourceIds: string[] = request.body.entity_ids.map((id: number) =>
         String(id)

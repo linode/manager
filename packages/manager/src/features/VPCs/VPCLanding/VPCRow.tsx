@@ -7,11 +7,9 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import {
-  getIsVPCLKEEnterpriseCluster,
   getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
 } from '../utils';
@@ -40,42 +38,36 @@ export const VPCRow = ({
     ? getUniqueResourcesFromSubnets(vpc.subnets)
     : getUniqueLinodesFromSubnets(vpc.subnets);
 
-  const isVPCReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'vpc',
-    id: vpc.id,
-  });
-
-  const isVPCLKEEnterpriseCluster = getIsVPCLKEEnterpriseCluster(vpc);
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpc.id
+  );
 
   const actions: Action[] = [
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: !permissions.update_vpc,
       onClick: handleEditVPC,
       title: 'Edit',
-      tooltip: isVPCReadOnly
+      tooltip: !permissions.update_vpc
         ? getRestrictedResourceText({
             action: 'edit',
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: !permissions.delete_vpc,
       onClick: handleDeleteVPC,
       title: 'Delete',
-      tooltip: isVPCReadOnly
+      tooltip: !permissions.delete_vpc
         ? getRestrictedResourceText({
             action: 'delete',
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
   ];
 

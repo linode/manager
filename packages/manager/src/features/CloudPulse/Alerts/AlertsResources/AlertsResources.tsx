@@ -27,6 +27,7 @@ import {
 } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
+import type { SelectDeselectAll } from '../constants';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
@@ -36,7 +37,7 @@ import type {
 import type {
   AlertClass,
   AlertDefinitionType,
-  AlertServiceType,
+  CloudPulseServiceType,
   Filter,
   Region,
 } from '@linode/api-v4';
@@ -54,7 +55,7 @@ export interface AlertResourcesProp {
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
-  alertResourceIds: string[];
+  alertResourceIds?: string[];
 
   /**
    * The type of the alert system | user
@@ -94,16 +95,14 @@ export interface AlertResourcesProp {
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
-  serviceType?: AlertServiceType;
+  serviceType?: CloudPulseServiceType;
 }
-
-export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertClass,
     alertLabel,
-    alertResourceIds,
+    alertResourceIds = [],
     alertType,
     errorText,
     handleResourcesSelection,
@@ -132,6 +131,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const supportedRegionIds = getSupportedRegionIds(regions, serviceType);
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    if (serviceType === 'firewall') {
+      return undefined;
+    }
+
     const regionFilter: Filter = supportedRegionIds
       ? {
           '+or': supportedRegionIds.map((regionId) => ({

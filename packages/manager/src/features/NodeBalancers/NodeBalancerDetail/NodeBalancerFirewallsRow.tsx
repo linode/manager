@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const NodeBalancerFirewallsRow = (props: Props) => {
-  const { firewall, onClickUnassign } = props;
+  const { firewall, onClickUnassign, nodeBalancerId } = props;
 
   const { id: firewallID, label, rules, status } = firewall;
 
@@ -31,9 +31,7 @@ export const NodeBalancerFirewallsRow = (props: Props) => {
   return (
     <TableRow data-qa-linode-firewall-row key={`firewall-${firewallID}`}>
       <TableCell data-qa-firewall-label>
-        <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
-          {label}
-        </Link>
+        <Link to={`/firewalls/${firewallID}`}>{label}</Link>
       </TableCell>
       <TableCell data-qa-firewall-status statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -43,6 +41,7 @@ export const NodeBalancerFirewallsRow = (props: Props) => {
       <TableCell actionCell>
         <NodeBalancerFirewallsActionMenu
           firewallID={firewallID}
+          nodeBalancerId={nodeBalancerId}
           onUnassign={onClickUnassign}
         />
       </TableCell>

@@ -7,6 +7,10 @@ import { RolesTable } from './RolesTable';
 
 import type { RoleView } from '../../Shared/types';
 
+const queryMocks = {
+  usePermissions: vi.fn(),
+};
+
 vi.mock('src/features/IAM/Shared/utilities', async () => {
   const actual = await vi.importActual<any>(
     'src/features/IAM/Shared/utilities'
@@ -14,6 +18,16 @@ vi.mock('src/features/IAM/Shared/utilities', async () => {
   return {
     ...actual,
     mapAccountPermissionsToRoles: vi.fn(),
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual<any>(
+    'src/features/IAM/hooks/usePermissions'
+  );
+  return {
+    ...actual,
+    usePermissions: vi.fn().mockReturnValue({}),
   };
 });
 
@@ -40,6 +54,11 @@ const mockRoles: RoleView[] = [
 
 beforeEach(() => {
   vi.clearAllMocks();
+  queryMocks.usePermissions.mockReturnValue({
+    data: {
+      is_account_admin: true,
+    },
+  });
 });
 
 describe('RolesTable', () => {

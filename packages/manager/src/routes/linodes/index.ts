@@ -174,6 +174,17 @@ const linodesDetailRoute = createRoute({
   )
 );
 
+const lishRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/linodes/$linodeId/lish/$type',
+  parseParams: (params) => ({
+    linodeId: Number(params.linodeId),
+    type: params.type,
+  }),
+}).lazy(() =>
+  import('src/features/Lish/lishLazyRoute').then((m) => m.lishLazyRoute)
+);
+
 const linodeCatchAllRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: '$invalidPath',
@@ -230,6 +241,11 @@ const linodesDetailNetworkingRoute = createRoute({
 const linodesDetailNetworkingInterfacesRoute = createRoute({
   getParentRoute: () => linodesDetailNetworkingRoute,
   path: 'interfaces',
+});
+
+const linodesDetailNetworkingInterfacesHistoryRoute = createRoute({
+  getParentRoute: () => linodesDetailNetworkingRoute,
+  path: 'history',
 });
 
 const linodesDetailNetworkingInterfacesDetailRoute = createRoute({
@@ -319,6 +335,7 @@ export const linodesRouteTree = linodesRoute.addChildren([
   linodesCreateBackupsRoute,
   linodesCreateRouteRedirect,
   linodesDetailRoute.addChildren([
+    lishRoute,
     linodesDetailCloneRoute.addChildren([
       linodesDetailCloneConfigsRoute,
       linodesDetailCloneDisksRoute,
@@ -326,6 +343,7 @@ export const linodesRouteTree = linodesRoute.addChildren([
     linodesDetailAnalyticsRoute,
     linodesDetailNetworkingRoute.addChildren([
       linodesDetailNetworkingInterfacesRoute,
+      linodesDetailNetworkingInterfacesHistoryRoute,
       linodesDetailNetworkingInterfacesDetailRoute,
     ]),
     linodesDetailStorageRoute,

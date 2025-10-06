@@ -18,11 +18,14 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { SupportLink } from 'src/components/SupportLink';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
-import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
+import { ScopeContentRenderer } from './ScopeContentRenderer';
+
+import type { CloudPulseServiceType } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export interface AlertRouteParams {
   /**
@@ -44,19 +47,14 @@ export const AlertDetail = () => {
     data: alertDetails,
     isError,
     isLoading,
-  } = useAlertDefinitionQuery(alertId, serviceType);
+  } = useAlertDefinitionQuery(alertId, serviceType as CloudPulseServiceType);
 
   const { crumbOverrides, pathname } = React.useMemo(() => {
-    const overrides = [
+    const overrides: CrumbOverridesProps[] = [
       {
         label: 'Definitions',
         linkTo: '/alerts/definitions',
         position: 1,
-      },
-      {
-        label: 'Details',
-        linkTo: `/alerts/definitions/details/${serviceType}/${alertId}`,
-        position: 2,
       },
     ];
     return { crumbOverrides: overrides, pathname: '/Definitions/Details' };
@@ -102,14 +100,7 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const {
-    class: alertClass,
-    entity_ids: entityIds,
-    service_type: alertServiceType,
-    type,
-    status,
-    label,
-  } = alertDetails;
+  const { service_type: alertServiceType, status, label } = alertDetails;
 
   return (
     <>
@@ -154,24 +145,16 @@ export const AlertDetail = () => {
                 overflow: 'auto',
               }}
             >
-              <AlertDetailCriteria alertDetails={alertDetails} />
+              <AlertDetailCriteria
+                alertDetails={alertDetails}
+                serviceType={alertServiceType}
+              />
             </Box>
           </Box>
-          <Box
-            data-qa-section="Resources"
+          <ScopeContentRenderer
+            alert={alertDetails}
             maxHeight={sectionMaxHeight}
-            sx={{
-              ...getAlertBoxStyles(theme),
-              overflow: 'auto',
-            }}
-          >
-            <AlertResources
-              alertClass={alertClass}
-              alertResourceIds={entityIds}
-              alertType={type}
-              serviceType={alertServiceType}
-            />
-          </Box>
+          />
           <Box
             data-qa-section="Notification Channels"
             sx={{

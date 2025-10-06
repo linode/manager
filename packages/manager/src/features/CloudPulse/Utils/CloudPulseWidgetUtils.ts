@@ -1,6 +1,7 @@
 import { Alias } from '@linode/design-language-system';
 import { getMetrics } from '@linode/utilities';
 
+import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
 import {
   convertValueToUnit,
   formatToolTip,
@@ -17,6 +18,7 @@ import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
+  CloudPulseServiceType,
   DateTimeWithPreset,
   TimeDuration,
   Widgets,
@@ -26,7 +28,11 @@ import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
-interface LabelNameOptionsProps {
+export interface LabelNameOptionsProps {
+  /**
+   * array of group by fields
+   */
+  groupBy?: string[];
   /**
    * Boolean to check if metric name should be hidden
    */
@@ -43,9 +49,19 @@ interface LabelNameOptionsProps {
   metric: { [label: string]: string };
 
   /**
+   * label for the current metric
+   */
+  metricLabel?: string;
+
+  /**
    * list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the data
+   */
+  serviceType: CloudPulseServiceType;
 
   /**
    * unit of the data
@@ -55,9 +71,18 @@ interface LabelNameOptionsProps {
 
 interface GraphDataOptionsProps {
   /**
+   * array of group by fields
+   */
+  groupBy?: string[];
+  /**
    * label for the graph title
    */
   label: string;
+
+  /**
+   * label for the current metric
+   */
+  metricLabel?: string;
 
   /**
    * data that will be displayed on graph
@@ -68,6 +93,11 @@ interface GraphDataOptionsProps {
    * list of CloudPulse resources
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the data
+   */
+  serviceType: CloudPulseServiceType;
 
   /**
    * status returned from react query ( pending | error | success)
@@ -91,6 +121,13 @@ interface MetricRequestProps {
    */
   entityIds: string[];
 
+  groupBy?: string[];
+
+  /**
+   * selected linode region for the widget
+   */
+  linodeRegion?: string;
+
   /**
    * list of CloudPulse resources available
    */
@@ -102,21 +139,33 @@ interface MetricRequestProps {
   widget: Widgets;
 }
 
-interface DimensionNameProperties {
+export interface DimensionNameProperties {
+  /**
+   * array of group by fields
+   */
+  groupBy?: string[];
   /**
    * Boolean to check if metric name should be hidden
    */
   hideMetricName?: boolean;
-
   /**
    * metric key-value to generate dimension name
    */
   metric: { [label: string]: string };
+  /**
+   * label for the current metric
+   */
+  metricLabel?: string;
 
   /**
    * resources list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the data
+   */
+  serviceType: CloudPulseServiceType;
 }
 
 interface GraphData {
@@ -146,7 +195,16 @@ interface GraphData {
  * @returns parameters which will be necessary to populate graph & legends
  */
 export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
-  const { label, metricsList, resources, status, unit } = props;
+  const {
+    label,
+    metricsList,
+    resources,
+    serviceType,
+    status,
+    unit,
+    groupBy,
+    metricLabel,
+  } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
@@ -182,6 +240,9 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           resources,
           unit,
           hideMetricName,
+          serviceType,
+          groupBy,
+          metricLabel,
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
@@ -265,7 +326,8 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget } = props;
+  const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
+    props;
   const preset = duration.preset;
 
   return {
@@ -277,7 +339,7 @@ export const getCloudPulseMetricRequest = (
       ? entityIds.map((id) => parseInt(id, 10))
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
-    group_by: widget.group_by,
+    group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: getTimeDurationFromPreset(preset),
     metrics: [
       {
@@ -292,6 +354,7 @@ export const getCloudPulseMetricRequest = (
             unit: widget.time_granularity.unit,
             value: widget.time_granularity.value,
           },
+    associated_entity_region: linodeRegion,
   };
 };
 
@@ -300,14 +363,30 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 export const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { label, metric, resources, unit, hideMetricName = false } = props;
+  const {
+    label,
+    metric,
+    resources,
+    unit,
+    hideMetricName = false,
+    serviceType,
+    groupBy,
+    metricLabel,
+  } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
     return `${label} (${unit})`;
   }
 
-  return getDimensionName({ metric, resources, hideMetricName });
+  return getDimensionName({
+    metric,
+    resources,
+    hideMetricName,
+    serviceType,
+    groupBy,
+    metricLabel,
+  });
 };
 
 /**
@@ -316,28 +395,55 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
  */
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { metric, resources, hideMetricName = false } = props;
-  return Object.entries(metric)
-    .map(([key, value]) => {
-      if (key === 'entity_id') {
-        return mapResourceIdToName(value, resources);
+  const {
+    metric,
+    resources,
+    hideMetricName = false,
+    serviceType,
+    groupBy = [],
+    metricLabel = '',
+  } = props;
+  const labels: string[] = new Array(groupBy.length).fill('');
+  Object.entries(metric).forEach(([key, value]) => {
+    if (key === 'entity_id') {
+      const resourceName = mapResourceIdToName(value, resources);
+      const index = groupBy.indexOf(key);
+      if (index !== -1) {
+        labels[index] = resourceName;
+      } else {
+        labels.push(resourceName);
       }
+      return;
+    }
 
-      if (key === 'linode_id') {
-        return (
-          resources.find((resource) => resource.entities?.[value] !== undefined)
-            ?.entities?.[value] ?? value
-        );
+    if (key === 'linode_id') {
+      const linodeLabel =
+        resources.find((resource) => resource.entities?.[value] !== undefined)
+          ?.entities?.[value] ?? value;
+      const index = groupBy.indexOf('linode_id');
+      if (index !== -1) {
+        labels[index] = linodeLabel;
+      } else {
+        labels.push(linodeLabel);
       }
+      return;
+    }
 
-      if (key === 'metric_name' && hideMetricName) {
-        return '';
-      }
+    if (key === 'metric_name' && hideMetricName) {
+      return;
+    }
 
-      return value ?? '';
-    })
-    .filter(Boolean)
-    .join(' | ');
+    const dimensionValue =
+      DIMENSION_TRANSFORM_CONFIG[serviceType]?.[key]?.(value) ?? value ?? '';
+    const index = groupBy.indexOf(key);
+    if (index !== -1) {
+      labels[index] = dimensionValue;
+    } else {
+      labels.push(dimensionValue);
+    }
+  });
+  const label = labels.filter(Boolean).join(' | ');
+  return label || metricLabel;
 };
 
 /**

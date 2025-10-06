@@ -32,6 +32,7 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
+import { QuotasInfoNotice } from '../QuotasInfoNotice';
 import { BucketRegions } from './BucketRegions';
 import { StyledEUAgreementCheckbox } from './OMC_CreateBucketDrawer.styles';
 import { OveragePricing } from './OveragePricing';
@@ -284,6 +285,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   return (
     <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
+        <QuotasInfoNotice action="creating a bucket" />
         {isRestrictedUser && (
           <Notice
             data-qa-permissions-notice

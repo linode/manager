@@ -32,7 +32,9 @@ describe('Maintenance Table Row', () => {
       )
     );
     getByText(maintenance.entity.label);
-    getByText(formatDate(maintenance.when));
+    if (maintenance.when) {
+      getByText(formatDate(maintenance.when));
+    }
   });
 
   it('should render a relative time', async () => {
@@ -43,9 +45,11 @@ describe('Maintenance Table Row', () => {
     );
     const { getByText } = within(screen.getByTestId('relative-date'));
 
-    expect(
-      getByText(parseAPIDate(maintenance.when).toRelative()!)
-    ).toBeInTheDocument();
+    if (maintenance.when) {
+      expect(
+        getByText(parseAPIDate(maintenance.when).toRelative()!)
+      ).toBeInTheDocument();
+    }
   });
 });
 

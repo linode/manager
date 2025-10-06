@@ -1,13 +1,15 @@
 import { useAccount } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { useFlags } from 'src/hooks/useFlags';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 export const CreditCardExpiredBanner = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const flags = useFlags();
 
   const { data: account } = useAccount();
 
@@ -29,7 +31,13 @@ export const CreditCardExpiredBanner = () => {
       actionButton={
         <Button
           buttonType="primary"
-          onClick={() => history.push('/account/billing')}
+          onClick={() =>
+            navigate({
+              to: flags?.iamRbacPrimaryNavChanges
+                ? '/billing'
+                : '/account/billing',
+            })
+          }
         >
           Update Card
         </Button>

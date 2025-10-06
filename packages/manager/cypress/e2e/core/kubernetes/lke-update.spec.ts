@@ -14,6 +14,7 @@ import {
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
 import {
+  interceptCreateNodePool,
   mockAddNodePool,
   mockDeleteNodePool,
   mockGetApiEndpoints,
@@ -273,7 +274,7 @@ describe('LKE cluster updates', () => {
 
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true },
+        lkeEnterprise2: { enabled: true, la: true },
       });
 
       const mockCluster = kubernetesClusterFactory.build({
@@ -422,7 +423,12 @@ describe('LKE cluster updates', () => {
       cy.wait('@recycleNode');
       ui.toast.assertMessage('Node queued for recycling.');
 
-      ui.button
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem
         .findByTitle('Recycle Pool Nodes')
         .should('be.visible')
         .should('be.enabled')
@@ -529,7 +535,7 @@ describe('LKE cluster updates', () => {
       ).as('getAccount');
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true },
+        lkeEnterprise2: { enabled: true, la: true },
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -542,7 +548,13 @@ describe('LKE cluster updates', () => {
       mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
         'getNodePools'
       );
-      ui.button
+
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -586,14 +598,20 @@ describe('LKE cluster updates', () => {
       ui.toast.assertMessage(
         `Autoscaling updated for Node Pool ${mockNodePool.id}.`
       );
-      cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
-        'be.visible'
-      );
+      cy.findByText(
+        `Autoscaling (Min ${autoscaleMin} / Max ${autoscaleMax})`
+      ).should('be.visible');
 
       // Click "Autoscale Pool" again and disable autoscaling.
       mockUpdateNodePool(mockCluster.id, mockNodePool).as('toggleAutoscale');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
-      ui.button
+
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -617,9 +635,9 @@ describe('LKE cluster updates', () => {
       ui.toast.assertMessage(
         `Autoscaling updated for Node Pool ${mockNodePool.id}.`
       );
-      cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
-        'not.exist'
-      );
+      cy.findByText(
+        `Autoscaling (Min ${autoscaleMin} / Max ${autoscaleMax})`
+      ).should('not.exist');
     });
 
     /*
@@ -669,7 +687,7 @@ describe('LKE cluster updates', () => {
       ).as('getAccount');
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
-        lkeEnterprise: { enabled: true, la: true },
+        lkeEnterprise2: { enabled: true, la: true },
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -682,7 +700,13 @@ describe('LKE cluster updates', () => {
       mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
         'getNodePools'
       );
-      ui.button
+
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -728,9 +752,9 @@ describe('LKE cluster updates', () => {
       ui.toast.assertMessage(
         `Autoscaling updated for Node Pool ${mockNodePool.id}.`
       );
-      cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
-        'be.visible'
-      );
+      cy.findByText(
+        `Autoscaling (Min ${autoscaleMin} / Max ${autoscaleMax})`
+      ).should('be.visible');
     });
 
     /*
@@ -803,8 +827,13 @@ describe('LKE cluster updates', () => {
           });
       });
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Resize Pool" and increase size to 3 nodes.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Resize Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -862,8 +891,13 @@ describe('LKE cluster updates', () => {
           });
       });
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Resize Pool" and decrease size back to 1 node.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Resize Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -947,6 +981,85 @@ describe('LKE cluster updates', () => {
       ui.toast.assertMessage('Successfully reset Kubeconfig');
     });
 
+    it('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
+      const cluster = kubernetesClusterFactory.build({
+        tier: 'enterprise',
+      });
+      const account = accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      });
+      const type = linodeTypeFactory.build({
+        class: 'dedicated',
+        label: 'Fake Plan',
+      });
+
+      mockAppendFeatureFlags({
+        lkeEnterprise2: {
+          enabled: true,
+          postLa: true,
+        },
+      });
+
+      mockGetAccount(account).as('getAccount');
+      mockGetCluster(cluster).as('getCluster');
+      mockGetClusterPools(cluster.id, []).as('getNodePools');
+      mockGetLinodeTypes([type]).as('getTypes');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${cluster.id}`);
+
+      cy.wait(['@getCluster', '@getNodePools', '@getAccount']);
+
+      ui.button
+        .findByTitle('Add a Node Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@getTypes');
+
+      // Selet a plan
+      cy.get(`[data-qa-plan-row="${type.label}"]`).within(() => {
+        // Increment nodes 3 times
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+        cy.findByLabelText('Add 1').should('be.enabled').click();
+      });
+
+      interceptCreateNodePool(cluster.id).as('createNodePool');
+
+      ui.drawer.findByTitle(`Add a Node Pool: ${cluster.label}`).within(() => {
+        cy.findByLabelText('Update Strategy')
+          .should('be.visible')
+          .should('be.enabled')
+          .should('have.value', 'On Recycle Updates') // Should default to "On Recycle"
+          .click(); // Open the Autocomplete
+
+        ui.autocompletePopper
+          .findByTitle('Rolling Updates') // Select "Rolling Updates"
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Verify the field's value actually changed
+        cy.findByLabelText('Update Strategy').should(
+          'have.value',
+          'Rolling Updates'
+        );
+
+        ui.button
+          .findByTitle('Add pool')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
+
+      cy.wait('@createNodePool').then((intercept) => {
+        const payload = intercept.request.body;
+        expect(payload.update_strategy).to.equal('rolling_update');
+        expect(payload.type).to.equal(type.id);
+      });
+    });
+
     /*
      * - Confirms UI flow when adding and deleting node pools.
      * - Confirms that user cannot delete a node pool when there is only 1 pool.
@@ -987,13 +1100,21 @@ describe('LKE cluster updates', () => {
       cy.wait(['@getRegions', '@getCluster', '@getNodePools', '@getVersions']);
 
       // Assert that initial node pool is shown on the page.
-      cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+      cy.findByText('Dedicated 8 GB', { selector: 'h3' }).should('be.visible');
+
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+        .should('be.visible')
+        .click();
 
       // "Delete Pool" button should be disabled when only 1 node pool exists.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Delete Pool')
         .should('be.visible')
         .should('be.disabled');
+
+      // Close the action menu
+      cy.focused().type('{esc}');
 
       // Add a new node pool, select plan, submit form in drawer.
       ui.button
@@ -1028,19 +1149,25 @@ describe('LKE cluster updates', () => {
 
       // Wait for API responses and confirm that both node pools are shown.
       cy.wait(['@addNodePool', '@getNodePools']);
-      cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
-      cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('be.visible');
+      cy.findByText('Dedicated 8 GB', { selector: 'h3' }).should('be.visible');
+      cy.findByText('Dedicated 4 GB', { selector: 'h3' }).should('be.visible');
 
       // Delete the newly added node pool.
       cy.get(`[data-qa-node-pool-id="${mockNewNodePool.id}"]`)
         .should('be.visible')
         .within(() => {
-          ui.button
-            .findByTitle('Delete Pool')
+          ui.actionMenu
+            .findByTitle(`Action menu for Node Pool ${mockNewNodePool.id}`)
             .should('be.visible')
-            .should('be.enabled')
             .click();
         });
+
+      // "Delete Pool" button should be disabled when only 1 node pool exists.
+      ui.actionMenuItem
+        .findByTitle('Delete Pool')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
       ui.dialog
@@ -1057,10 +1184,15 @@ describe('LKE cluster updates', () => {
       // Confirm node pool is deleted, original node pool still exists, and
       // delete pool button is once again disabled.
       cy.wait(['@deleteNodePool', '@getNodePools']);
-      cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
-      cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('not.exist');
+      cy.findByText('Dedicated 8 GB', { selector: 'h3' }).should('be.visible');
+      cy.findByText('Dedicated 4 GB', { selector: 'h3' }).should('not.exist');
 
-      ui.button
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem
         .findByTitle('Delete Pool')
         .should('be.visible')
         .should('be.disabled');
@@ -1326,8 +1458,13 @@ describe('LKE cluster updates', () => {
         'getNodePoolsUpdated'
       );
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Labels and Taints" button and confirm drawer contents.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Labels and Taints')
         .should('be.visible')
         .should('be.enabled')
@@ -1464,8 +1601,13 @@ describe('LKE cluster updates', () => {
         'getNodePoolsUpdated'
       );
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Labels and Taints" button and confirm drawer contents.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Labels and Taints')
         .should('be.visible')
         .should('be.enabled')
@@ -1641,8 +1783,13 @@ describe('LKE cluster updates', () => {
         mockErrorMessage
       ).as('updateNodePoolError');
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Labels and Taints" button and confirm drawer contents.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Labels and Taints')
         .should('be.visible')
         .should('be.enabled')
@@ -1749,7 +1896,7 @@ describe('LKE cluster updates', () => {
     });
   });
 
-  it('does not collapse the accordion when an action button is clicked in the accordion header', () => {
+  it('does not collapse the accordion when the user interacts with the node pool action menu', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
@@ -1770,35 +1917,32 @@ describe('LKE cluster updates', () => {
         'true'
       );
 
-      // Click on a disabled button
-      cy.get('[data-testid="node-pool-actions"]')
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockSingleNodePool.id}`)
         .should('be.visible')
-        .within(() => {
-          ui.button
-            .findByTitle('Delete Pool')
-            .should('be.visible')
-            .should('be.disabled')
-            .click();
-        });
+        .click();
+    });
 
+    ui.actionMenuItem
+      .findByTitle('Delete Pool')
+      .should('be.visible')
+      .should('be.disabled')
+      .click({ force: true }); // Force because pointer events are disabled on the delete option
+
+    cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
       // Check that the accordion is still expanded
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',
         'true'
       );
-
-      // Click on an action button
-      cy.get('[data-testid="node-pool-actions"]')
-        .should('be.visible')
-        .within(() => {
-          ui.button
-            .findByTitle('Recycle Pool Nodes')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
     });
+
+    ui.actionMenuItem
+      .findByTitle('Recycle Pool Nodes')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     // Exit dialog
     ui.dialog
@@ -2125,8 +2269,13 @@ describe('LKE cluster updates', () => {
       // Confirm total price is listed in Kube Specs.
       cy.findByText('$14.40/month').should('be.visible');
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Resize Pool" and increase size to 3 nodes.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Resize Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -2246,7 +2395,7 @@ describe('LKE cluster updates', () => {
       ]);
 
       // Assert that initial node pool is shown on the page.
-      cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+      cy.findByText(mockPlanType.formattedLabel, { selector: 'h3' }).should(
         'be.visible'
       );
 
@@ -2388,8 +2537,13 @@ describe('LKE cluster updates', () => {
       // Confirm total price is listed in Kube Specs.
       cy.findByText('$0.00/month').should('be.visible');
 
+      ui.actionMenu
+        .findByTitle(`Action menu for Node Pool ${mockNodePoolInitial.id}`)
+        .should('be.visible')
+        .click();
+
       // Click "Resize Pool" and increase size to 4 nodes.
-      ui.button
+      ui.actionMenuItem
         .findByTitle('Resize Pool')
         .should('be.visible')
         .should('be.enabled')
@@ -2500,7 +2654,7 @@ describe('LKE cluster updates', () => {
       ]);
 
       // Assert that initial node pool is shown on the page.
-      cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+      cy.findByText(mockPlanType.formattedLabel, { selector: 'h3' }).should(
         'be.visible'
       );
 

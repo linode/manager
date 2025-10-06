@@ -1,10 +1,29 @@
-import { ipAddressFactory } from 'src/factories/networking';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 
+import { ipAddressFactory } from 'src/factories/networking';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
+import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { listIPv6InRange } from './LinodeIPAddressRow';
 import { createType, ipResponseToDisplayRows } from './utils';
 
 import type { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+const loadingTestId = 'circle-progress';
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_linode: true,
+    },
+  })),
+}));
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
+beforeAll(() => mockMatchMedia());
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);
   const ipv6Range = ipAddressFactory.build({
@@ -111,5 +130,55 @@ describe('createType utility function', () => {
 
     expect(createType(ipv6, 'SLAAC')).toBe('Public – IPv6 – SLAAC');
     expect(createType(ipv6, 'Link Local')).toBe('Link Local – IPv6');
+  });
+});
+
+describe('LinodeIPAddresses', () => {
+  it('should disable "Add an IP Address" button if the user does not have update_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: false,
+      },
+    });
+
+    const { queryByTestId } = await renderWithTheme(
+      <LinodeIPAddresses linodeID={2} />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    const menuButton = screen.getByLabelText(/Linode IP Address Actions/i);
+    await userEvent.click(menuButton);
+
+    const ipTransferBtn = screen.getByTestId('Add an IP Address');
+    expect(ipTransferBtn).toBeInTheDocument();
+    expect(ipTransferBtn).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable "Add an IP Address" button if the user has update_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: true,
+      },
+    });
+
+    const { queryByTestId } = await renderWithTheme(
+      <LinodeIPAddresses linodeID={2} />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    const menuButton = screen.getByLabelText(/Linode IP Address Actions/i);
+    await userEvent.click(menuButton);
+
+    const ipTransferBtn = screen.getByTestId('Add an IP Address');
+    expect(ipTransferBtn).toBeInTheDocument();
+    expect(ipTransferBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

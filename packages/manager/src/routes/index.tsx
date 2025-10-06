@@ -6,10 +6,18 @@ import React from 'react';
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
+import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
 import { cloudPulseAlertsRouteTree } from './alerts';
+import {
+  cancelLandingRoute,
+  loginAsCustomerCallbackRoute,
+  logoutRoute,
+  oauthCallbackRoute,
+} from './auth';
 import { betaRouteTree } from './betas';
+import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
-import { dataStreamRouteTree } from './datastream';
+import { deliveryRouteTree } from './delivery';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
@@ -17,17 +25,22 @@ import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
+import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
+import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
-import { migrationRootRoute, rootRoute } from './root';
+import { quotasRouteTree } from './quotas';
+import { rootRoute } from './root';
 import { searchRouteTree } from './search';
+import { serviceTransfersRouteTree } from './serviceTransfers';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
+import { usersAndGrantsRouteTree } from './usersAndGrants';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
@@ -43,12 +56,18 @@ const indexRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
+  accountSettingsRouteTree,
+  cancelLandingRoute,
+  loginAsCustomerCallbackRoute,
+  logoutRoute,
+  oauthCallbackRoute,
   accountRouteTree,
+  billingRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
   databasesRouteTree,
-  dataStreamRouteTree,
+  deliveryRouteTree,
   domainsRouteTree,
   eventsRouteTree,
   iamRouteTree,
@@ -56,24 +75,39 @@ export const routeTree = rootRoute.addChildren([
   imagesRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
+  loginHistoryRouteTree,
   longviewRouteTree,
+  maintenanceRouteTree,
   managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
   profileRouteTree,
+  quotasRouteTree,
   searchRouteTree,
+  serviceTransfersRouteTree,
+  settingsRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
+  usersAndGrantsRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
 ]);
 
 export const router = createRouter({
   context: {
+    accountSettings: undefined,
+    flags: {},
+    globalErrors: {},
+    isACLPEnabled: false,
+    isDatabasesEnabled: false,
+    isPlacementGroupsEnabled: false,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
+  defaultErrorComponent: ({ error, reset }) => (
+    <ErrorComponent error={error} eventId={error.name} resetError={reset} />
+  ),
   defaultPreload: 'intent',
   routeTree,
 });
@@ -84,48 +118,3 @@ declare module '@tanstack/react-router' {
     router: typeof router;
   }
 }
-
-/**
- * This is the router that is used to handle the migration to TanStack Router.
- * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
- * This is a temporary solution until we are ready to fully migrate to TanStack Router.
- * Eventually we will only use the router exported above.
- */
-export const migrationRouteTree = migrationRootRoute.addChildren([
-  accountRouteTree,
-  betaRouteTree,
-  cloudPulseAlertsRouteTree,
-  cloudPulseMetricsRouteTree,
-  databasesRouteTree,
-  domainsRouteTree,
-  dataStreamRouteTree,
-  eventsRouteTree,
-  firewallsRouteTree,
-  iamRouteTree,
-  imagesRouteTree,
-  kubernetesRouteTree,
-  linodesRouteTree,
-  longviewRouteTree,
-  managedRouteTree,
-  nodeBalancersRouteTree,
-  objectStorageRouteTree,
-  placementGroupsRouteTree,
-  profileRouteTree,
-  searchRouteTree,
-  stackScriptsRouteTree,
-  supportRouteTree,
-  volumesRouteTree,
-  vpcsRouteTree,
-]);
-export type MigrationRouteTree = typeof migrationRouteTree;
-export const migrationRouter = createRouter({
-  context: {
-    queryClient: new QueryClient(),
-  },
-  defaultNotFoundComponent: () => <NotFound />,
-  defaultPreload: 'intent',
-  defaultErrorComponent: ({ error, reset }) => (
-    <ErrorComponent error={error} eventId={error.name} resetError={reset} />
-  ),
-  routeTree: migrationRouteTree,
-});

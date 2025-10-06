@@ -7,6 +7,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
+import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
@@ -24,6 +25,7 @@ import { ZoomIcon } from './components/Zoomer';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
+  CloudPulseServiceType,
   DateTimeWithPreset,
   Filters,
   MetricDefinition,
@@ -60,6 +62,11 @@ export interface CloudPulseWidgetProperties {
   availableMetrics: MetricDefinition | undefined;
 
   /**
+   * ID of the selected dashboard
+   */
+  dashboardId: number;
+
+  /**
    * time duration to fetch the metrics data in this widget
    */
   duration: DateTimeWithPreset;
@@ -80,6 +87,11 @@ export interface CloudPulseWidgetProperties {
   isJweTokenFetching: boolean;
 
   /**
+   * Selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
    * List of resources available of selected service type
    */
   resources: CloudPulseResources[];
@@ -92,7 +104,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * Service type selected by user
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -108,7 +120,6 @@ export interface CloudPulseWidgetProperties {
    * color index to be selected from available them if not theme is provided by user
    */
   useColorIndex?: number;
-
   /**
    * this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
    */
@@ -132,11 +143,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { data: profile } = useProfile();
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
+  const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
   const theme = useTheme();
 
   const {
     additionalFilters,
+    dashboardId,
     ariaLabel,
     authToken,
     availableMetrics,
@@ -149,6 +162,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     timeStamp,
     unit,
     widget: widgetProp,
+    linodeRegion,
   } = props;
 
   const timezone =
@@ -230,7 +244,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
-
+  const handleGroupByChange = React.useCallback((selectedGroupBy: string[]) => {
+    setGroupBy(selectedGroupBy);
+  }, []);
   const {
     data: metricsList,
     error,
@@ -244,6 +260,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
+        groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
+        linodeRegion,
       }),
       filters, // any additional dimension filters will be constructed and passed here
     },
@@ -268,6 +286,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       status,
       unit,
+      serviceType,
+      groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
+      metricLabel: availableMetrics?.label,
     });
 
     data = generatedData.dimensions;
@@ -307,7 +328,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)} (
               {scaledWidgetUnit.current}
-              {unit.endsWith('ps') ? '/s' : ''})
+              {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
+                ? '/s'
+                : ''}
+              )
             </Typography>
             <Stack
               direction={{ sm: 'row' }}
@@ -339,7 +363,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   onAggregateFuncChange={handleAggregateFunctionChange}
                 />
               )}
-              <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <WidgetFilterGroupByRenderer
+                  dashboardId={dashboardId}
+                  handleChange={handleGroupByChange}
+                  label={widget.label}
+                  metric={widget.metric}
+                  serviceType={serviceType}
+                />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}
@@ -367,7 +398,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             showDot
             showLegend={data.length !== 0}
             timezone={timezone}
-            unit={currentUnit}
+            unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
             variant={variant}
             xAxis={{ tickFormat, tickGap: 60 }}
           />

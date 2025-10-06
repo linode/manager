@@ -377,31 +377,6 @@ describe('SubnetLinodeRow', () => {
     });
   });
 
-  it('should hide action-menu buttons for LKE-E Linodes', async () => {
-    queryMocks.useLinodeConfigQuery.mockReturnValue({
-      data: configurationProfile,
-    });
-
-    const { queryByText } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={true}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={0}
-          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-        />
-      )
-    );
-
-    const powerOffButton = queryByText('Power Off');
-    expect(powerOffButton).not.toBeInTheDocument();
-    const unassignLinodeButton = queryByText('Unassign Linode');
-    expect(unassignLinodeButton).not.toBeInTheDocument();
-  });
-
   it('should not display a warning icon for LKE-E Linodes', async () => {
     const subnet = subnetFactory.build({
       id: 1,

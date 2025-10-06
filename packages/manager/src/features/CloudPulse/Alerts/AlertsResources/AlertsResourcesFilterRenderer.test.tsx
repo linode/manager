@@ -7,7 +7,7 @@ import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { serviceToFiltersMap } from './constants';
 
 describe('AlertsResourcesFilterRenderer', () => {
-  const filters = serviceToFiltersMap['dbaas']; // Get filters for dbaas service type
+  const filters = serviceToFiltersMap['dbaas'] ?? []; // Get filters for dbaas service type
   it('renders the correct filter components based on properties passed', () => {
     const handleFilterChangeMock = vi.fn();
     const engineProps = getAlertResourceFilterProps({

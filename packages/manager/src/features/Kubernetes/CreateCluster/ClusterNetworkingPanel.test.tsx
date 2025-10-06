@@ -9,7 +9,8 @@ const queryMocks = vi.hoisted(() => ({
   useRegionQuery: vi.fn().mockReturnValue({ data: { capabilities: ['VPCs'] } }),
   useAllVPCsQuery: vi.fn().mockReturnValue({ data: [], isLoading: false }),
   useIsLkeEnterpriseEnabled: vi.fn(() => ({
-    isLkeEnterprisePhase2FeatureEnabled: true,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+    isLkeEnterprisePhase2DualStackFeatureEnabled: true,
   })),
 }));
 
@@ -49,9 +50,9 @@ describe('ClusterNetworkingPanel', () => {
     });
 
     // Confirm stack type section
-    expect(getByText('IP Version')).toBeVisible();
+    expect(getByText('IP Stack')).toBeVisible();
     expect(getByText('IPv4')).toBeVisible();
-    expect(getByText('IPv4 + IPv6')).toBeVisible();
+    expect(getByText('IPv4 + IPv6 (dual-stack)')).toBeVisible();
 
     // Confirm VPC section
     expect(getByText('VPC')).toBeVisible();
@@ -71,7 +72,9 @@ describe('ClusterNetworkingPanel', () => {
 
     // Confirm stack type default
     expect(getByRole('radio', { name: 'IPv4' })).toBeChecked();
-    expect(getByRole('radio', { name: 'IPv4 + IPv6' })).not.toBeChecked();
+    expect(
+      getByRole('radio', { name: 'IPv4 + IPv6 (dual-stack)' })
+    ).not.toBeChecked();
 
     // Confirm VPC default
     expect(

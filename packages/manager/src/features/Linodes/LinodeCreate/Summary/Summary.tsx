@@ -87,7 +87,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
@@ -117,7 +117,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       : firewallId;
 
   const hasBetaAclpAlertsAssigned =
-    aclpBetaServices?.linode?.alerts &&
+    aclpServices?.linode?.alerts?.enabled &&
     isAclpAlertsSupportedRegionLinode &&
     isAlertsBetaMode;
 

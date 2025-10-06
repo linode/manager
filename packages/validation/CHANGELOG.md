@@ -1,5 +1,44 @@
-## [2025-07-29] - v0.71.0
+## [2025-09-09] - v0.74.0
 
+### Added:
+
+- Additional device slots to `devices` schema ([#12791](https://github.com/linode/manager/pull/12791))
+- Node Pool schemas `CreateNodePoolSchema` and `EditNodePoolSchema` ([#12793](https://github.com/linode/manager/pull/12793))
+
+### Removed:
+
+- General Node Pool schema `nodePoolSchema` ([#12793](https://github.com/linode/manager/pull/12793))
+
+## [2025-08-26] - v0.73.0
+
+### Changed:
+
+- Update `alertsSchema` to require numeric fields when empty and change the validation messages ([#12703](https://github.com/linode/manager/pull/12703))
+
+### Tech Stories:
+
+- Clean up linode ipv6 interfaces ([#12612](https://github.com/linode/manager/pull/12612))
+
+## [2025-08-12] - v0.72.0
+
+### Changed:
+
+- Update `createVPCSchema` to support IPv6 subnets ([#12563](https://github.com/linode/manager/pull/12563))
+
+### Fixed:
+
+- ACLP - Alerting: Fix missing 'in' operator check in dimension filter for create alert schema ([#12628](https://github.com/linode/manager/pull/12628))
+- Non-human-readable validation messages for Linode Alert numeric input ([#12635](https://github.com/linode/manager/pull/12635))
+
+### Removed:
+
+- `nodePoolBetaSchema` in favor of `nodePoolSchema` ([#12596](https://github.com/linode/manager/pull/12596))
+
+### Upcoming Features:
+
+- Validation for datastream forms: create stream and destination. Validation for datastream create POST request ([#12557](https://github.com/linode/manager/pull/12557))
+
+## [2025-07-29] - v0.71.0
 
 ### Changed:
 
@@ -12,14 +51,12 @@
 
 ## [2025-07-15] - v0.70.0
 
-
 ### Upcoming Features:
 
 - Update validation schemas for the changes in endpoints /v4/nodebalancers & /v4/nodebalancers/configs/{configId}/nodes for NB Dual Stack Support ([#12421](https://github.com/linode/manager/pull/12421))
 - Add `regions` in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` ([#12435](https://github.com/linode/manager/pull/12435))
 
 ## [2025-07-01] - v0.69.0
-
 
 ### Added:
 
@@ -37,7 +74,6 @@
 
 ## [2025-06-17] - v0.68.0
 
-
 ### Added:
 
 - Validation schema for database PrivateNetwork property via updatePrivateNetworkSchema ([#12354](https://github.com/linode/manager/pull/12354))
@@ -50,7 +86,7 @@
 
 ### Added:
 
-- Method to retrieve dynamic validation for Create database schema  ([#12281](https://github.com/linode/manager/pull/12281))
+- Method to retrieve dynamic validation for Create database schema ([#12281](https://github.com/linode/manager/pull/12281))
 
 ### Fixed:
 

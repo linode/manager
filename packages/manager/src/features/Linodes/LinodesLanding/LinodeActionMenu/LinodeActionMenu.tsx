@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
@@ -20,8 +21,6 @@ import type { LinodeHandlers } from '../LinodesLanding';
 import type { LinodeBackups, LinodeType } from '@linode/api-v4';
 import type { ActionType } from 'src/features/Account/utils';
 
-const NO_PERMISSION_TOOLTIP_TEXT =
-  'You do not have permission to perform this action.';
 const MAINTENANCE_TOOLTIP_TEXT =
   'This action is unavailable while your Linode is undergoing host maintenance.';
 const DISTRIBUTED_REGION_TOOLTIP_TEXT =
@@ -56,8 +55,13 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const { data: permissions } = usePermissions(
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+
+  const { data: permissions, isLoading } = usePermissions(
     'linode',
     [
       'shutdown_linode',
@@ -71,7 +75,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       'delete_linode',
       'generate_linode_lish_token',
     ],
-    linodeId
+    linodeId,
+    isOpen
   );
 
   const handlePowerAction = () => {
@@ -144,6 +149,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       condition: !isBareMetalInstance,
       disabled:
         !permissions.clone_linode ||
+        !accountPermissions.create_linode ||
         hasHostMaintenance ||
         linodeIsInDistributedRegion,
       isReadOnly: !permissions.clone_linode,
@@ -252,7 +258,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-      onOpen={sendLinodeActionEvent}
+      loading={isLoading}
+      onOpen={() => {
+        sendLinodeActionEvent();
+        setIsOpen(true);
+      }}
     />
   );
 };

@@ -3,7 +3,7 @@ import type { MemoExoticComponent } from 'react';
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertsTagFilterProps } from './AlertsTagsFilter';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 export interface ColumnConfig<T> {
   /**
@@ -32,14 +32,15 @@ export interface EngineType {
 
 /**
  * Represents the column configurations for different service types.
- * Each key in the record corresponds to an AlertServiceType or an empty string (default).
+ * Each key in the record corresponds to an CloudPulseServiceType or an empty string (default).
  * The value is an array of ColumnConfig objects defining the table structure for that service type.
  * @template T - The type of data displayed in the table columns.
  */
-export type ServiceColumns<T> = Record<
-  '' | AlertServiceType,
-  ColumnConfig<T>[]
->;
+
+export type ServiceColumns<T> = Partial<
+  Record<CloudPulseServiceType, ColumnConfig<T>[]>
+> &
+  Record<'', ColumnConfig<T>[]>;
 
 /**
  * Defines the available filter keys that can be used to filter alerts.

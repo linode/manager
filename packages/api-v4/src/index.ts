@@ -8,13 +8,11 @@ export * from './cloudpulse';
 
 export * from './databases';
 
-export * from './datastream';
+export * from './delivery';
 
 export * from './domains';
 
 export * from './entities';
-
-export * from './entity-transfers';
 
 export * from './firewalls';
 

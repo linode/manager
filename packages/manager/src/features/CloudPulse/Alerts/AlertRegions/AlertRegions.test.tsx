@@ -9,12 +9,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { REGION_GROUP_INFO_MESSAGE } from '../constants';
 import { AlertRegions } from './AlertRegions';
 
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 const regions = regionFactory.buildList(6, {
   monitors: { alerts: ['Managed Databases'] },
 });
-const serviceType: AlertServiceType = 'dbaas';
+const serviceType: CloudPulseServiceType = 'dbaas';
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn(),

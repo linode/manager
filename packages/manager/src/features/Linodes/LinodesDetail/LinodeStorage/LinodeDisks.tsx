@@ -238,6 +238,7 @@ export const LinodeDisks = () => {
         open={isDeleteDialogOpen}
       />
       <CreateDiskDrawer
+        disabled={!permissions.create_linode_disk}
         linodeId={id}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}

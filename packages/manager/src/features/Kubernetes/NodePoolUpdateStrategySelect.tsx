@@ -5,7 +5,7 @@ import { UPDATE_STRATEGY_OPTIONS } from './constants';
 
 interface Props {
   onChange: (value: string | undefined) => void;
-  value: string;
+  value: string | undefined;
 }
 
 export const NodePoolUpdateStrategySelect = (props: Props) => {
@@ -13,7 +13,8 @@ export const NodePoolUpdateStrategySelect = (props: Props) => {
   return (
     <Autocomplete
       disableClearable
-      label="Node Pool Update Strategy"
+      label="Update Strategy"
+      noMarginTop
       onChange={(e, updateStrategy) => onChange(updateStrategy?.value)}
       options={UPDATE_STRATEGY_OPTIONS}
       placeholder="Select an Update Strategy"

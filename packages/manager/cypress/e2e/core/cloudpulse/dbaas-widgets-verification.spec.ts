@@ -27,6 +27,7 @@ import {
   dashboardMetricFactory,
   databaseFactory,
   dimensionFilterFactory,
+  flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
@@ -40,7 +41,6 @@ import type {
   DimensionFilter,
   Widgets,
 } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -55,33 +55,9 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
-
-const {
-  clusterName,
-  dashboardName,
-  engine,
-  id,
-  metrics,
-  nodeType,
-  serviceType,
-} = widgetDetails.dbaas;
-
+const { clusterName, dashboardName, engine, id, metrics, nodeType } =
+  widgetDetails.dbaas;
+const serviceType = 'dbaas';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
@@ -168,6 +144,8 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
+    serviceType,
+    groupBy: ['entity_id'],
   });
 
   // Destructure metrics data from the first legend row
@@ -206,7 +184,7 @@ const validateWidgetFilters = (widget: Widgets) => {
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);

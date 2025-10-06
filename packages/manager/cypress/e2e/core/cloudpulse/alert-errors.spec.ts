@@ -7,11 +7,7 @@ import {
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory } from 'src/factories';
-
-import type { Flags } from 'src/featureFlags';
-
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
+import { accountFactory, alertFactory, flagsFactory } from 'src/factories';
 const mockAccount = accountFactory.build();
 const mockAlerts = [
   alertFactory.build({
@@ -39,7 +35,7 @@ describe('Alerts Listing Page - Error Handling', () => {
    * - Confirms that the UI does not reflect a successful state change if the request fails.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
@@ -82,9 +78,9 @@ describe('Alerts Listing Page - Error Handling', () => {
             .findByTitle(`Action menu for Alert ${alertName}`)
             .should('be.visible')
             .click();
+          ui.actionMenuItem.findByTitle(action).should('be.visible').click();
         });
 
-      ui.actionMenuItem.findByTitle(action).should('be.visible').click();
       ui.button.findByTitle(action).should('be.visible').click();
       cy.wait(alias).then(({ response }) => {
         ui.toast.assertMessage(response?.body.errors[0].reason);

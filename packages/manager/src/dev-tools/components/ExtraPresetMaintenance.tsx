@@ -145,7 +145,7 @@ const renderMaintenanceFields = (
     >
       <option value="canceled">Canceled</option>
       <option value="completed">Completed</option>
-      <option value="in-progress">In Progress</option>
+      <option value="in_progress">In Progress</option>
       <option value="pending">Pending</option>
       <option value="scheduled">Scheduled</option>
       <option value="started">Started</option>
@@ -207,7 +207,7 @@ const maintenanceTemplates = {
   Canceled: () => accountMaintenanceFactory.build({ status: 'canceled' }),
   Completed: () => accountMaintenanceFactory.build({ status: 'completed' }),
   'In Progress': () =>
-    accountMaintenanceFactory.build({ status: 'in-progress' }),
+    accountMaintenanceFactory.build({ status: 'in_progress' }),
   Pending: () => accountMaintenanceFactory.build({ status: 'pending' }),
   Scheduled: () => accountMaintenanceFactory.build({ status: 'scheduled' }),
   Started: () => accountMaintenanceFactory.build({ status: 'started' }),
