@@ -117,6 +117,8 @@ export const queryFactory = createQueryKeys(key, {
     filters?: Filter
   ) => {
     switch (resourceType) {
+      case 'blockstorage':
+        return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
       case 'dbaas':
         return databaseQueries.databases._ctx.all(params, filters);
       case 'firewall':
@@ -132,8 +134,8 @@ export const queryFactory = createQueryKeys(key, {
         return {
           queryFn: () => getAllBuckets(),
           queryKey: [
-            objectStorageQueries.buckets.queryKey,
-            objectStorageQueries.endpoints.queryKey,
+            ...objectStorageQueries.endpoints.queryKey,
+            objectStorageQueries.buckets.queryKey[1],
           ],
         };
       case 'volumes':

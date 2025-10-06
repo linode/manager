@@ -42,7 +42,7 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   const {
     createToken,
-    createTokenError,
+    error: createTokenError,
     revokeToken,
     updateCurrentToken,
     validateParentToken,

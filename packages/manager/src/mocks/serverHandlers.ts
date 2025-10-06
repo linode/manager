@@ -195,9 +195,17 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
   const database = databaseFactory.build(db);
+
   if (database.platform !== 'rdbms-default') {
     delete database.private_network;
   }
+
+  if (database.platform === 'rdbms-default' && !!database.private_network) {
+    // When a database is configured with a VPC, the primary host is prepended with 'private-'
+    const privateHost = `private-${database.hosts.primary}`;
+    database.hosts.primary = privateHost;
+  }
+
   return database;
 };
 
@@ -1340,12 +1348,12 @@ export const handlers = [
         region: 'us-mia',
         s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
-      objectStorageBucketFactoryGen2.build({
+      objectStorageEndpointsFactory.build({
         endpoint_type: 'E3',
         region: 'ap-west',
         s3_endpoint: 'ap-west-1.linodeobjects.com',
       }),
-      objectStorageBucketFactoryGen2.build({
+      objectStorageEndpointsFactory.build({
         endpoint_type: 'E3',
         region: 'us-iad',
         s3_endpoint: 'us-iad-1.linodeobjects.com',
@@ -1451,13 +1459,16 @@ export const handlers = [
       Math.random() * 4
     )}` as ObjectStorageEndpointTypes;
 
-    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
-      cluster: `${region}-1`,
-      endpoint_type: randomEndpointType,
-      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
-      label: `obj-bucket-${randomBucketNumber}`,
-      region,
-    });
+    const buckets =
+      region !== 'ap-west' && region !== 'us-iad'
+        ? objectStorageBucketFactoryGen2.buildList(1, {
+            cluster: `${region}-1`,
+            endpoint_type: randomEndpointType,
+            hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+            label: `obj-bucket-${randomBucketNumber}`,
+            region,
+          })
+        : [];
     if (region === 'ap-west') {
       buckets.push(
         objectStorageBucketFactoryGen2.build({
@@ -1491,7 +1502,6 @@ export const handlers = [
           region,
         })
       );
-
     return HttpResponse.json({
       data: buckets.slice(
         (page - 1) * pageSize,
@@ -1656,7 +1666,9 @@ export const handlers = [
       'offline',
       'resizing',
     ];
-    const volumes = statuses.map((status) => volumeFactory.build({ status }));
+    const volumes = statuses.map((status) =>
+      volumeFactory.build({ status, region: 'ap-west' })
+    );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
@@ -2991,6 +3003,7 @@ export const handlers = [
       alertFactory.build({
         id: 550,
         label: 'Object Storage - testing',
+        type: 'user',
         service_type: 'objectstorage',
         entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
       }),
@@ -3018,6 +3031,7 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             id: 550,
+            type: 'user',
             label: 'object-storage -testing',
             service_type: 'objectstorage',
             entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
@@ -3120,6 +3134,12 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Block Storage',
+          service_type: 'blockstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3134,6 +3154,7 @@ export const handlers = [
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
+      blockstorage: 'Block Storage',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -3141,6 +3162,7 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
+        scope: ['entity'],
       }),
     });
 
@@ -3215,6 +3237,16 @@ export const handlers = [
           id: 6,
           label: 'Object Storage Dashboard',
           service_type: 'objectstorage',
+        })
+      );
+    }
+
+    if (params.serviceType === 'blockstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 7,
+          label: 'Block Storage Dashboard',
+          service_type: 'blockstorage',
         })
       );
     }
@@ -3508,6 +3540,9 @@ export const handlers = [
     } else if (id === '6') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Object Storage Service I/O Statistics';
+    } else if (id === '7') {
+      serviceType = 'blockstorage';
+      dashboardLabel = 'Block Storage Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

@@ -92,6 +92,7 @@ export const NO_REGION_MESSAGE: Record<string, string> = {
   nodebalancer: 'No NodeBalancers configured in any regions.',
   firewall: 'No firewalls configured in any Linode regions.',
   objectstorage: 'No Object Storage buckets configured in any region.',
+  blockstorage: 'No volumes configured in any regions.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {
@@ -124,6 +125,9 @@ export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
     ...ORDER_BY_LABLE_ASC,
   },
   netloadbalancer: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+  blockstorage: {
     ...ORDER_BY_LABLE_ASC,
   },
 };
