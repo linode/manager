@@ -3035,7 +3035,6 @@ export const handlers = [
             id: 550,
             type: 'user',
             label: 'object-storage -testing',
-            type: 'user',
             rule_criteria: {
               rules: [objectStorageMetricCriteria.build()],
             },
