@@ -18,8 +18,9 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
-import { type LinodeCreateFormValues } from '../utilities';
 import { getLinodePrice, parseClusterData } from './utilities';
+
+import type { LinodeCreateFormValues } from '../utilities';
 
 interface SummaryProps {
   isAlertsBetaMode?: boolean;

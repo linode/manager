@@ -54,16 +54,10 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
   return `$${renderMonthlyPriceToCorrectDecimalPlace(price.monthly)}/month`;
 };
 
-export type ClusterDataTypes = {
-  prefix: string;
-  size?: string;
-  typeLabel?: string;
-};
-
 export function parseClusterData(
   stackscriptData: Record<string, string> = {}
-): ClusterDataTypes[] {
-  const result: ClusterDataTypes[] = [];
+): ClusterData[] {
+  const result: ClusterData[] = [];
 
   for (const [key, value] of Object.entries(stackscriptData)) {
     const match = key.match(/^(.+)_cluster_(size|type)$/);
