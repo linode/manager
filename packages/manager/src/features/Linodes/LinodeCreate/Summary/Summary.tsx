@@ -33,7 +33,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
 
   const { control } = useFormContext<LinodeCreateFormValues>();
 
-  const { data: allTypes } = useAllTypes();
+  const { data: types } = useAllTypes();
 
   const [
     label,
@@ -76,12 +76,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     ],
   });
 
-  const rawClusterData = getParsedMarketplaceClusterData(stackscriptData);
-
-  const clusterData = rawClusterData.map((cluster) => ({
-    ...cluster,
-    typeData: allTypes?.find((t) => t.label === cluster.typeLabel),
-  }));
+  const clusterData = getParsedMarketplaceClusterData(stackscriptData, types);
 
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));

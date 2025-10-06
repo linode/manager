@@ -11,10 +11,22 @@ interface LinodePriceOptions {
 }
 
 interface MarketplaceClusterData {
+  /**
+   * The name of the service within the complex Marketplace app cluster.
+   *
+   * @example mysql
+   */
   prefix: string;
+  /**
+   * The number of nodes just for this paticular service within the Marketplace cluster deployment.
+   */
   size?: string;
-  typeData?: LinodeType;
-  typeLabel?: string;
+  /**
+   * The Linode type that should be used for nodes in this service
+   *
+   * @example Linode 2GB
+   */
+  type?: LinodeType;
 }
 
 export const getLinodePrice = (options: LinodePriceOptions) => {
@@ -40,7 +52,7 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
 
     if (hasClusterData) {
       for (const clusterPool of clusterData) {
-        const price = getLinodeRegionPrice(clusterPool.typeData, regionId);
+        const price = getLinodeRegionPrice(clusterPool.type, regionId);
         const numberOfNodesInPool = parseInt(clusterPool.size ?? '0', 10);
         clusterTotalMonthlyPrice += (price?.monthly ?? 0) * numberOfNodesInPool;
         clusterTotalHourlyPrice += (price?.hourly ?? 0) * numberOfNodesInPool;
@@ -55,7 +67,8 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
 };
 
 export function getParsedMarketplaceClusterData(
-  stackscriptData: Record<string, string> = {}
+  stackscriptData: Record<string, string> = {},
+  types: LinodeType[] = []
 ): MarketplaceClusterData[] {
   const result: MarketplaceClusterData[] = [];
 
@@ -75,7 +88,7 @@ export function getParsedMarketplaceClusterData(
     if (kind === 'size') {
       cluster.size = value as string;
     } else if (kind === 'type') {
-      cluster.typeLabel = value as string;
+      cluster.type = types.find((t) => t.label === value);
     }
   }
   return result;
