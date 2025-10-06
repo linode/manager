@@ -49,8 +49,6 @@ export const VPCIPv4Address = (props: Props) => {
           noMarginTop
           onBlur={onBlur}
           onChange={(e) => onChange(e.target.value)}
-          // eslint-disable-next-line sonarjs/no-hardcoded-ip
-          placeholder="10.0.0.5"
           required
           value={fieldValue}
         />
