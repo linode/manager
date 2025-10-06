@@ -34,24 +34,31 @@ describe('getLinodePrice', () => {
 
 describe('getParsedMarketplaceClusterData', () => {
   it('parses stackscript user defined fields', () => {
+    const types = [
+      linodeTypeFactory.build({ label: 'Linode 2GB' }),
+      linodeTypeFactory.build({ label: 'Linode 4GB' }),
+    ];
+
     const stackscriptData = {
       cluster_size: '1',
       mysql_cluster_size: '5',
       mysql_cluster_type: 'Linode 2GB',
       redis_cluster_size: '5',
-      redis_cluster_type: 'Linode 2GB',
+      redis_cluster_type: 'Linode 4GB',
     };
 
-    expect(getParsedMarketplaceClusterData(stackscriptData)).toStrictEqual([
+    expect(
+      getParsedMarketplaceClusterData(stackscriptData, types)
+    ).toStrictEqual([
       {
         prefix: 'mysql',
         size: '5',
-        typeLabel: 'Linode 2GB',
+        type: types[0]
       },
       {
         prefix: 'redis',
         size: '5',
-        typeLabel: 'Linode 2GB',
+        type: types[1],
       },
     ]);
   });

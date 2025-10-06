@@ -68,7 +68,7 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
 
 export function getParsedMarketplaceClusterData(
   stackscriptData: Record<string, string> = {},
-  types: LinodeType[] = []
+  types: LinodeType[] | undefined,
 ): MarketplaceClusterData[] {
   const result: MarketplaceClusterData[] = [];
 
@@ -88,7 +88,7 @@ export function getParsedMarketplaceClusterData(
     if (kind === 'size') {
       cluster.size = value as string;
     } else if (kind === 'type') {
-      cluster.type = types.find((t) => t.label === value);
+      cluster.type = types?.find((t) => t.label === value);
     }
   }
   return result;
