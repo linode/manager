@@ -35,6 +35,7 @@ export const regions: Region[] = [
         'Cloud Firewall',
         'Linodes',
         'Managed Databases',
+        'Block Storage',
       ],
     },
   },
