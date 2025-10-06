@@ -140,6 +140,7 @@ export const GLOBAL_DIMENSION_FILTER_LIST: Record<
   nodebalancer: ['port'],
   firewall: ['interface_type', 'interface_id', 'region_id'],
   objectstorage: ['endpoint'],
+  blockstorage: [],
 };
 
 export const VALID_OPERATORS: MetricsDimensionFilterOperatorType[] = [

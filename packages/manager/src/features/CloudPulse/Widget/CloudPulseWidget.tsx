@@ -437,14 +437,16 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   metric={widget.metric}
                   serviceType={serviceType}
                 />
-                <CloudPulseDimensionFiltersSelect
-                  dimensionOptions={filteredDimensions ?? []}
-                  drawerLabel={availableMetrics?.label ?? ''}
-                  handleSelectionChange={setDimensionFilters}
-                  selectedDimensions={filteredSelections}
-                  selectedEntities={entityIds}
-                  serviceType={serviceType}
-                />
+                {flags.aclp?.showWidgetDimensionFilters && (
+                  <CloudPulseDimensionFiltersSelect
+                    dimensionOptions={filteredDimensions ?? []}
+                    drawerLabel={availableMetrics?.label ?? ''}
+                    handleSelectionChange={setDimensionFilters}
+                    selectedDimensions={filteredSelections}
+                    selectedEntities={entityIds}
+                    serviceType={serviceType}
+                  />
+                )}
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}
