@@ -3,6 +3,7 @@ import { transformDimensionValue } from '../../../Utils/utils';
 import type { Item } from '../../../constants';
 import type { OperatorGroup } from './constants';
 import type {
+  AlertDefinitionScope,
   CloudPulseServiceType,
   DimensionFilterOperatorType,
   Linode,
@@ -77,9 +78,9 @@ export const getOperatorGroup = (
  * @returns - List of label/value option objects.
  */
 export const getStaticOptions = (
-  serviceType: CloudPulseServiceType | undefined,
+  serviceType: CloudPulseServiceType | null,
   dimensionLabel: string,
-  values: null | string[]
+  values: string[]
 ): Item<string, string>[] => {
   return (
     values?.map((val: string) => ({
@@ -152,4 +153,52 @@ export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
       value: String(subnetId),
     }))
   );
+};
+
+interface ScopeBasedFilteredBucketsProps {
+  /**
+   * The full list of available CloudPulse resources (buckets).
+   */
+  buckets: CloudPulseResources[];
+  /**
+   * A list of entity IDs (bucket IDs) to filter by when scope is `entity`.
+   */
+  entities?: string[];
+  /**
+   * The scope of the alert definition (`account`, `entity`, `region`, or `null`).
+   */
+  scope: AlertDefinitionScope | null;
+  /**
+   * A list of region IDs to filter by when scope is `region`.
+   */
+  selectedRegions?: null | string[];
+}
+
+/**
+ * Filters a list of Object Storage buckets based on the given alert definition scope.
+ *
+ * @param props - Object containing filter parameters.
+ * @returns A filtered list of buckets based on the provided scope.
+ */
+export const scopeBasedFilteredBuckets = (
+  props: ScopeBasedFilteredBucketsProps
+): CloudPulseResources[] => {
+  const { scope, buckets, selectedRegions, entities } = props;
+
+  switch (scope) {
+    case 'account':
+      return buckets;
+    case 'entity':
+      return entities
+        ? buckets.filter((bucket) => entities.includes(bucket.id))
+        : [];
+    case 'region':
+      return selectedRegions
+        ? buckets.filter((bucket) =>
+            selectedRegions.includes(bucket.region ?? '')
+          )
+        : [];
+    default:
+      return buckets;
+  }
 };
