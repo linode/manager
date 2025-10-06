@@ -76,7 +76,6 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     ],
   });
 
-  const clusterData = getParsedMarketplaceClusterData(stackscriptData, types);
 
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
@@ -96,6 +95,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
+  const clusterData = getParsedMarketplaceClusterData(stackscriptData, types);
   const price = getLinodePrice({ clusterSize, regionId, type, clusterData });
 
   const hasVPC = isLinodeInterfacesEnabled
@@ -148,30 +148,13 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       },
       show: Boolean(region),
     },
-    ...(() => {
-      if (clusterSize) {
-        return [
-          {
-            item: {
-              title:
-                clusterName || (type ? formatStorageUnits(type.label) : typeId),
-              details: price,
-            },
-            show: price,
-          },
-        ];
-      } else {
-        return [
-          {
-            item: {
-              details: price,
-              title: type ? formatStorageUnits(type.label) : typeId,
-            },
-            show: price,
-          },
-        ];
-      }
-    })(),
+    {
+      item: {
+        title: clusterName || (type ? formatStorageUnits(type.label) : typeId),
+        details: price,
+      },
+      show: price,
+    },
     {
       item: {
         details: `$${backupsPrice}/month`,
