@@ -22,7 +22,6 @@ interface Props extends SubnetLinodeActionHandlers {
   linode: Linode;
   showPowerButton: boolean;
   subnet: Subnet;
-  vpcId?: number;
 }
 
 export const SubnetLinodeActionMenu = (props: Props) => {
@@ -34,10 +33,8 @@ export const SubnetLinodeActionMenu = (props: Props) => {
     subnet,
     linode,
     showPowerButton,
-    vpcId,
   } = props;
 
-  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
   // TODO: change 'delete_linode' to 'delete_linode_config_profile_interface' once it's available
   const { data: linodePermissions } = usePermissions(
     'linode',
@@ -52,8 +49,8 @@ export const SubnetLinodeActionMenu = (props: Props) => {
         handlePowerActionsLinode(linode, 'Reboot', subnet);
       },
       title: 'Reboot',
-      disabled: !(linodePermissions?.reboot_linode && permissions?.update_vpc),
-      tooltip: !(linodePermissions?.reboot_linode && permissions?.update_vpc)
+      disabled: !linodePermissions?.reboot_linode,
+      tooltip: !linodePermissions?.reboot_linode
         ? 'You do not have permission to reboot this Linode.'
         : undefined,
     });
@@ -69,11 +66,11 @@ export const SubnetLinodeActionMenu = (props: Props) => {
         );
       },
       disabled: isOffline
-        ? !(linodePermissions?.boot_linode && permissions?.update_vpc)
-        : !(linodePermissions?.shutdown_linode && permissions?.update_vpc),
-      tooltip: !(linodePermissions?.boot_linode && permissions?.update_vpc)
+        ? !linodePermissions?.boot_linode
+        : !linodePermissions?.shutdown_linode,
+      tooltip: !linodePermissions?.boot_linode
         ? 'You do not have permission to power on this Linode.'
-        : !(linodePermissions?.shutdown_linode && permissions?.update_vpc)
+        : !linodePermissions?.shutdown_linode
           ? 'You do not have permission to power off this Linode.'
           : undefined,
       title: isOffline ? 'Power On' : 'Power Off',
@@ -85,8 +82,8 @@ export const SubnetLinodeActionMenu = (props: Props) => {
       handleUnassignLinode(linode, subnet);
     },
     title: 'Unassign Linode',
-    disabled: !(linodePermissions?.delete_linode && permissions?.update_vpc),
-    tooltip: !(linodePermissions?.delete_linode && permissions?.update_vpc)
+    disabled: !linodePermissions?.delete_linode,
+    tooltip: !linodePermissions?.delete_linode
       ? 'You do not have permission to unassign this Linode.'
       : undefined,
   });
