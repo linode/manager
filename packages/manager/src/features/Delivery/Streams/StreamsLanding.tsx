@@ -161,7 +161,7 @@ export const StreamsLanding = () => {
     })
       .then(() => {
         return enqueueSnackbar(
-          `Stream  ${label} ${status === streamStatus.Active ? 'disabled' : 'enabled'}`,
+          `Stream  ${label} ${status === streamStatus.Active ? 'deactivated' : 'activated'}`,
           {
             variant: 'success',
           }
@@ -171,7 +171,7 @@ export const StreamsLanding = () => {
         return enqueueSnackbar(
           getAPIErrorOrDefault(
             error,
-            `There was an issue ${status === streamStatus.Active ? 'disabling' : 'enabling'} your stream`
+            `There was an issue ${status === streamStatus.Active ? 'deactivating' : 'activating'} your stream`
           )[0].reason,
           {
             variant: 'error',
