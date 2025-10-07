@@ -161,6 +161,7 @@ export const CreateAlertDefinition = () => {
     resetField('trigger_conditions', {
       defaultValue: triggerConditionInitialValues,
     });
+    resetField('scope', { defaultValue: null });
   }, [resetField]);
 
   React.useEffect(() => {
