@@ -1,12 +1,8 @@
-import {
-  useDeleteDestinationMutation,
-  useDestinationsQuery,
-} from '@linode/queries';
+import { useDestinationsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -24,20 +20,15 @@ import { DestinationTableRow } from 'src/features/Delivery/Destinations/Destinat
 import { DeliveryTabHeader } from 'src/features/Delivery/Shared/DeliveryTabHeader/DeliveryTabHeader';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Destination } from '@linode/api-v4';
 import type { DestinationHandlers } from 'src/features/Delivery/Destinations/DestinationActionMenu';
 
 export const DestinationsLanding = () => {
   const navigate = useNavigate();
-  const { mutateAsync: deleteDestination } = useDeleteDestinationMutation();
   const destinationsUrl = '/logs/delivery/destinations';
-
   const [deleteDialogOpen, setDeleteDialogOpen] =
     React.useState<boolean>(false);
-  const [deleteError, setDeleteError] = React.useState<string | undefined>();
-  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
   const [deleteDestinationSelection, setDeleteDestinationSelection] =
     React.useState<Destination | undefined>();
 
@@ -114,42 +105,12 @@ export const DestinationsLanding = () => {
   };
 
   const openDeleteDialog = (destination: Destination) => {
-    setDeleteError(undefined);
     setDeleteDestinationSelection(destination);
     setDeleteDialogOpen(true);
   };
 
   const closeDeleteDialog = () => {
     setDeleteDialogOpen(false);
-  };
-
-  const handleDelete = () => {
-    const { id, label } = deleteDestinationSelection as Destination;
-    setDeleteLoading(true);
-    deleteDestination({
-      id,
-    })
-      .then(() => {
-        closeDeleteDialog();
-        return enqueueSnackbar(`Destination  ${label} deleted successfully`, {
-          variant: 'success',
-        });
-      })
-      .catch((error) => {
-        const apiErrorReason = getAPIErrorOrDefault(
-          error,
-          'There was an issue deleting your destination'
-        )[0].reason;
-
-        setDeleteError(apiErrorReason);
-
-        return enqueueSnackbar(apiErrorReason, {
-          variant: 'error',
-        });
-      })
-      .finally(() => {
-        setDeleteLoading(false);
-      });
   };
 
   const handlers: DestinationHandlers = {
@@ -241,10 +202,7 @@ export const DestinationsLanding = () => {
           />
           <DeleteDestinationDialog
             destination={deleteDestinationSelection}
-            error={deleteError}
-            loading={deleteLoading}
             onClose={closeDeleteDialog}
-            onDelete={handleDelete}
             open={deleteDialogOpen}
           />
         </>

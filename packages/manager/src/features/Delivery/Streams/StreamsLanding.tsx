@@ -1,9 +1,5 @@
 import { streamStatus } from '@linode/api-v4';
-import {
-  useDeleteStreamMutation,
-  useStreamsQuery,
-  useUpdateStreamMutation,
-} from '@linode/queries';
+import { useStreamsQuery, useUpdateStreamMutation } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
@@ -37,8 +33,6 @@ export const StreamsLanding = () => {
 
   const [deleteDialogOpen, setDeleteDialogOpen] =
     React.useState<boolean>(false);
-  const [deleteError, setDeleteError] = React.useState<string | undefined>();
-  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
   const [deleteStreamSelection, setDeleteStreamSelection] = React.useState<
     Stream | undefined
   >();
@@ -64,7 +58,6 @@ export const StreamsLanding = () => {
   });
 
   const { mutateAsync: updateStream } = useUpdateStreamMutation();
-  const { mutateAsync: deleteStream } = useDeleteStreamMutation();
 
   const filter = {
     ['+order']: order,
@@ -131,40 +124,12 @@ export const StreamsLanding = () => {
   };
 
   const openDeleteDialog = (stream: Stream) => {
-    setDeleteError(undefined);
     setDeleteStreamSelection(stream);
     setDeleteDialogOpen(true);
   };
 
   const closeDeleteDialog = () => {
     setDeleteDialogOpen(false);
-  };
-
-  const handleDelete = () => {
-    const { id, label } = deleteStreamSelection as Stream;
-    setDeleteLoading(true);
-    deleteStream({
-      id,
-    })
-      .then(() => {
-        closeDeleteDialog();
-        return enqueueSnackbar(`Stream  ${label} deleted successfully`, {
-          variant: 'success',
-        });
-      })
-      .catch((error) => {
-        const apiErrorReason = getAPIErrorOrDefault(
-          error,
-          'There was an issue deleting your stream'
-        )[0].reason;
-
-        setDeleteError(apiErrorReason);
-
-        return enqueueSnackbar(apiErrorReason, {
-          variant: 'error',
-        });
-      })
-      .finally(() => setDeleteLoading(false));
   };
 
   const handleDisableOrEnable = ({
@@ -290,10 +255,7 @@ export const StreamsLanding = () => {
             pageSize={pagination.pageSize}
           />
           <DeleteStreamDialog
-            error={deleteError}
-            loading={deleteLoading}
             onClose={closeDeleteDialog}
-            onDelete={handleDelete}
             open={deleteDialogOpen}
             stream={deleteStreamSelection}
           />
