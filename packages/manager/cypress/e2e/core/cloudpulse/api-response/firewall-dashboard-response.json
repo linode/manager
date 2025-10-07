@@ -1,0 +1,152 @@
+{
+    "data": [
+        {
+            "id": 4,
+            "type": "standard",
+            "service_type": "firewall",
+            "label": "Cloud Firewall for Linodes",
+            "created": "2025-08-18T03:02:58",
+            "updated": "2025-08-18T03:02:58",
+            "widgets": [
+                {
+                    "metric": "fw_active_connections",
+                    "unit": "Count",
+                    "label": "Current Connections",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_active_connections",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "fw_available_connections",
+                    "unit": "Count",
+                    "label": "Available Connections",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_available_connections",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "fw_ingress_packets_accepted",
+                    "unit": "packets/s",
+                    "label": "Ingress Packets Accepted",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_ingress_packets_accepted",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "fw_egress_packets_accepted",
+                    "unit": "packets/s",
+                    "label": "Egress Packets Accepted",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_egress_packets_accepted",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "fw_ingress_bytes_accepted",
+                    "unit": "Bps",
+                    "label": "Ingress Bytes Accepted",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_ingress_bytes_accepted",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "fw_egress_bytes_accepted",
+                    "unit": "Bps",
+                    "label": "Egress Bytes Accepted",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_egress_bytes_accepted",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "fw_ingress_packets_dropped",
+                    "unit": "packets/s",
+                    "label": "Ingress Packets Dropped",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_ingress_packets_dropped",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "fw_egress_packets_dropped",
+                    "unit": "packets/s",
+                    "label": "Egress Packets Dropped",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_egress_packets_dropped",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "fw_packets_dropped_connection_table_full",
+                    "unit": "packets/s",
+                    "label": "Packets Dropped Connection Table Full",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "fw_packets_dropped_connection_table_full",
+                    "group_by": [
+                        "entity_id",
+                        "linode_id",
+                        "interface_id"
+                    ],
+                    "aggregate_function": "sum"
+                }
+            ]
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 1
+}
