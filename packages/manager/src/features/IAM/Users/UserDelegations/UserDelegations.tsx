@@ -20,7 +20,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
-import type { ChildAccount } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 export const UserDelegations = () => {
@@ -28,7 +27,6 @@ export const UserDelegations = () => {
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const [search, setSearch] = React.useState('');
-  const [childAccounts, setChildAccounts] = React.useState<ChildAccount[]>([]);
 
   // TODO: UIE-9298 - Replace with API filtering
   const {
@@ -41,30 +39,21 @@ export const UserDelegations = () => {
 
   const handleSearch = (value: string) => {
     setSearch(value);
-    if (
-      value.length > 0 &&
-      allDelegatedChildAccounts &&
-      !allDelegatedChildAccountsLoading
-    ) {
-      setChildAccounts(
-        allDelegatedChildAccounts.filter((childAccount) =>
-          childAccount.company.toLowerCase().includes(value.toLowerCase())
-        )
-      );
-    } else {
-      setChildAccounts(allDelegatedChildAccounts ?? []);
-    }
   };
 
-  React.useEffect(() => {
-    if (
-      search.length === 0 &&
-      allDelegatedChildAccounts &&
-      !allDelegatedChildAccountsLoading
-    ) {
-      setChildAccounts(allDelegatedChildAccounts);
+  const childAccounts = React.useMemo(() => {
+    if (!allDelegatedChildAccounts) {
+      return [];
     }
-  }, [allDelegatedChildAccounts, allDelegatedChildAccountsLoading, search]);
+
+    if (search.length === 0) {
+      return allDelegatedChildAccounts;
+    }
+
+    return allDelegatedChildAccounts.filter((childAccount) =>
+      childAccount.company.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [allDelegatedChildAccounts, search]);
 
   if (!isIAMDelegationEnabled) {
     return null;
