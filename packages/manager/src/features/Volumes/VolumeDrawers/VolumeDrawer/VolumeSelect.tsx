@@ -1,7 +1,10 @@
-import { useInfiniteVolumesQuery, useVolumeQuery } from '@linode/queries';
+import { useAllVolumesQuery, useVolumeQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
-import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
+
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import type { Volume } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
@@ -18,44 +21,37 @@ export const VolumeSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
-  const debouncedInputValue = useDebouncedValue(inputValue);
+  const { data: availableVolumes, isLoading: isAvailableVolumesLoading } =
+    useQueryWithPermissions<Volume>(useAllVolumesQuery({}, {}), 'volume', [
+      'attach_volume',
+    ]);
 
-  const searchFilter = debouncedInputValue
-    ? {
-        '+or': [
-          { label: { '+contains': debouncedInputValue } },
-          { tags: { '+contains': debouncedInputValue } },
-        ],
-      }
-    : {};
-
-  const { data, fetchNextPage, hasNextPage, isLoading } =
-    useInfiniteVolumesQuery({
-      ...searchFilter,
-      ...(region ? { region } : {}),
-      '+order': 'asc',
-      // linode_id: null,  <- if the API let us, we would do this
-      '+order_by': 'label',
-    });
-
-  const options = data?.pages.flatMap((page) => page.data);
+  // Filter out volumes that are already attached to a Linode
+  const filteredVolumes = availableVolumes?.filter(
+    (volume) => !volume.linode_id
+  );
 
   const { data: volume, isLoading: isLoadingSelected } = useVolumeQuery(
     value,
     value > 0
   );
 
-  if (value && volume && !options?.some((item) => item.id === volume.id)) {
-    options?.push(volume);
+  if (
+    value &&
+    volume &&
+    !filteredVolumes?.some((item) => item.id === volume.id)
+  ) {
+    filteredVolumes?.push(volume);
   }
 
-  const selectedVolume = options?.find((option) => option.id === value) ?? null;
+  const selectedVolume =
+    filteredVolumes?.find((option) => option.id === value) ?? null;
 
   return (
     <Autocomplete
-      disabled={disabled}
+      disabled={disabled || isAvailableVolumesLoading}
       errorText={error}
-      filterOptions={(options) => options}
+      filterOptions={(filteredVolumes) => filteredVolumes}
       helperText={
         region && "Only volumes in this Linode's region are attachable."
       }
@@ -63,19 +59,7 @@ export const VolumeSelect = (props: Props) => {
       inputValue={selectedVolume ? selectedVolume.label : inputValue}
       isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
       label="Volume"
-      ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
-      }}
-      loading={isLoading || isLoadingSelected}
+      loading={isLoadingSelected || isAvailableVolumesLoading}
       onBlur={onBlur}
       onChange={(_, value) => {
         setInputValue('');
@@ -88,7 +72,7 @@ export const VolumeSelect = (props: Props) => {
           setInputValue('');
         }
       }}
-      options={options ?? []}
+      options={filteredVolumes ?? []}
       placeholder="Select a Volume"
       value={selectedVolume}
     />
