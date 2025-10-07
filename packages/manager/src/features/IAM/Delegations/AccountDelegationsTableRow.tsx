@@ -6,6 +6,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
 
 import { TruncatedList } from '../Shared/TruncatedList';
+import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
 import type { ChildAccount, ChildAccountWithDelegates } from '@linode/api-v4';
 
@@ -16,10 +17,14 @@ interface Props {
 
 export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
   const theme = useTheme();
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const handleUpdateDelegations = () => {
-    // Placeholder for future update delegations functionality
-    // This will open the Update Delegates drawer
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
   };
 
   return (
@@ -40,7 +45,6 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
           <TruncatedList
             addEllipsis
             customOverflowButton={(numHiddenItems) => (
-              // TODO: move to the separate component
               <Box
                 sx={{
                   alignItems: 'center',
@@ -111,6 +115,11 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
           onClick={handleUpdateDelegations}
         />
       </TableCell>
+      <UpdateDelegationsDrawer
+        delegation={delegation}
+        onClose={handleCloseDrawer}
+        open={isDrawerOpen}
+      />
     </TableRow>
   );
 };

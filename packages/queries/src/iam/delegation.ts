@@ -212,7 +212,7 @@ export const useGetChildAccountDelegatesQuery = ({
   euuid,
   params,
 }: GetChildAccountDelegatesParams): UseQueryResult<
-  ResourcePage<string[]>,
+  ResourcePage<string>,
   APIError[]
 > => {
   return useQuery({
