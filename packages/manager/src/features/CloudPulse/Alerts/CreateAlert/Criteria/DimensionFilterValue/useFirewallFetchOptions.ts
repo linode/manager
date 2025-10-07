@@ -11,45 +11,16 @@ import {
   getVPCSubnets,
 } from './utils';
 
-import type { FetchOptions } from './constants';
-import type {
-  AlertDefinitionScope,
-  CloudPulseServiceType,
-  Filter,
-  Region,
-} from '@linode/api-v4';
-interface FetchOptionsProps {
-  /**
-   * The dimension label determines the filtering logic and return type.
-   */
-  dimensionLabel: null | string;
-  /**
-   * List of firewall entity IDs to filter on.
-   */
-  entities?: string[];
-  /**
-   * List of regions to filter on.
-   */
-  regions?: Region[];
-  /**
-   * Scope of fetching: account (all resources) or entity (filtered subset).
-   */
-  scope?: AlertDefinitionScope | null;
-  /**
-   * Service to apply specific transformations to dimension values.
-   */
-  serviceType?: CloudPulseServiceType | null;
-  /**
-   * The type of monitoring to filter on.
-   */
-  type: 'alerts' | 'metrics';
-}
+import type { FetchOptions, FetchOptionsProps } from './constants';
+import type { Filter } from '@linode/api-v4';
 
 /**
  * Custom hook to return selectable options based on the dimension type.
  * Handles fetching and transforming data for edge-cases.
  */
-export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
+export function useFirewallFetchOptions(
+  props: FetchOptionsProps
+): FetchOptions {
   const { dimensionLabel, regions, entities, serviceType, type, scope } = props;
 
   const supportedRegionIds =

@@ -34,4 +34,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,
   },
+  objectstorage: {
+    endpoint: TRANSFORMS.original,
+  }
 };

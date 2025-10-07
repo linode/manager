@@ -92,6 +92,8 @@ import {
   objectStorageClusterFactory,
   objectStorageEndpointsFactory,
   objectStorageKeyFactory,
+  objectStorageMetricCriteria,
+  objectStorageMetricRules,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
   paymentFactory,
@@ -3033,8 +3035,14 @@ export const handlers = [
             id: 550,
             type: 'user',
             label: 'object-storage -testing',
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
             service_type: 'objectstorage',
-            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+            entity_ids: [
+              'obj-bucket-804.ap-west.linodeobjects.com',
+              'obj-bucket-230.us-iad.linodeobjects.com',
+            ],
           })
         );
       }
@@ -3073,6 +3081,20 @@ export const handlers = [
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            label: 'object-storage -testing',
+            type: 'user',
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
           })
         );
       }
@@ -3132,7 +3154,9 @@ export const handlers = [
           label: 'Object Storage',
           service_type: 'objectstorage',
           regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
         }),
         serviceTypesFactory.build({
           label: 'Block Storage',
@@ -3532,6 +3556,9 @@ export const handlers = [
       }
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
+      }
+      if (params.serviceType === 'objectstorage') {
+        return HttpResponse.json({ data: objectStorageMetricRules });
       }
       return HttpResponse.json(response);
     }
