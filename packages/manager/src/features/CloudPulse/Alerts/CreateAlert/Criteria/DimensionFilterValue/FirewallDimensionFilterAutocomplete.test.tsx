@@ -38,6 +38,7 @@ describe('<FirewallDimensionFilterAutocomplete />', () => {
     entities: [],
     scope: 'account',
     serviceType: 'firewall',
+    type: 'alerts',
   };
 
   beforeEach(() => {

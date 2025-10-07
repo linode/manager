@@ -86,7 +86,8 @@ export function useFirewallFetchOptions(
   } = useAllLinodesQuery(
     {},
     combinedFilter,
-    filterLabels.includes(dimensionLabel ?? '') &&
+    serviceType === 'firewall' &&
+      filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds.length > 0 &&
       supportedRegionIds?.length > 0
   );
@@ -108,7 +109,7 @@ export function useFirewallFetchOptions(
     isLoading: isVPCsLoading,
     isError: isVPCsError,
   } = useAllVPCsQuery({
-    enabled: dimensionLabel === 'vpc_subnet_id',
+    enabled: serviceType === 'firewall' && dimensionLabel === 'vpc_subnet_id',
   });
 
   const vpcSubnets = useMemo(() => getVPCSubnets(vpcs ?? []), [vpcs]);
