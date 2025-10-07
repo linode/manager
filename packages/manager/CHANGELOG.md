@@ -42,7 +42,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - CloudPulse-Metrics: Update `CloudPulseDashboardFilterBuilder.tsx` and `CloudPulseRegionSelect.tsx` to handle saved preference clearance for linode region filter ([#12926](https://github.com/linode/manager/pull/12926))
 - IAM: Hide IAM Beta badge in User Menu for LA ([#12933](https://github.com/linode/manager/pull/12933))
 - Always show tax id's when available irrespective of date filtering ([#12942](https://github.com/linode/manager/pull/12942))
-- IAM Beta badge is visible for non-beta users in the User Menu ([#12962](https://github.com/linode/manager/pull/12962))
 
 ### Tech Stories:
 
