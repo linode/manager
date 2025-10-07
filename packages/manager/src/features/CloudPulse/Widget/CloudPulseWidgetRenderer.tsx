@@ -30,12 +30,17 @@ interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard: Dashboard;
   duration: DateTimeWithPreset;
+  groupBy: string[];
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   linodeRegion?: string;
   manualRefreshTimeStamp?: number;
   metricDefinitions: ResourcePage<MetricDefinition> | undefined;
   preferences?: AclpConfig;
+  /**
+   * Selected region for the widget
+   */
+  region?: string;
   resourceList: CloudPulseResources[] | undefined;
   resources: string[];
   savePref?: boolean;
@@ -65,7 +70,9 @@ export const RenderWidgets = React.memo(
       resourceList,
       resources,
       savePref,
+      groupBy,
       linodeRegion,
+      region,
     } = props;
 
     const getCloudPulseGraphProperties = (
@@ -84,7 +91,12 @@ export const RenderWidgets = React.memo(
         serviceType: dashboard.service_type,
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
-        widget: { ...widget, time_granularity: autoIntervalOption },
+        dashboardId: dashboard.id,
+        widget: {
+          ...widget,
+          time_granularity: autoIntervalOption,
+          group_by: groupBy.length === 0 ? undefined : groupBy,
+        },
       };
       if (savePref) {
         graphProp.widget = setPreferredWidgetPlan(graphProp.widget);
@@ -169,6 +181,7 @@ export const RenderWidgets = React.memo(
                 availableMetrics={availMetrics}
                 isJweTokenFetching={isJweTokenFetching}
                 linodeRegion={linodeRegion}
+                region={region}
                 resources={resourceList!}
                 savePref={savePref}
               />
@@ -188,6 +201,7 @@ export const RenderWidgets = React.memo(
       'duration',
       'resources',
       'additionalFilters',
+      'groupBy',
     ];
 
     for (const key of keysToCompare) {

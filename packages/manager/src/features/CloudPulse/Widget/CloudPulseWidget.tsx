@@ -7,6 +7,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
+import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
@@ -61,6 +62,11 @@ export interface CloudPulseWidgetProperties {
   availableMetrics: MetricDefinition | undefined;
 
   /**
+   * ID of the selected dashboard
+   */
+  dashboardId: number;
+
+  /**
    * time duration to fetch the metrics data in this widget
    */
   duration: DateTimeWithPreset;
@@ -84,6 +90,11 @@ export interface CloudPulseWidgetProperties {
    * Selected linode region for the widget
    */
   linodeRegion?: string;
+
+  /**
+   * Selected region for the widget
+   */
+  region?: string;
 
   /**
    * List of resources available of selected service type
@@ -114,7 +125,6 @@ export interface CloudPulseWidgetProperties {
    * color index to be selected from available them if not theme is provided by user
    */
   useColorIndex?: number;
-
   /**
    * this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
    */
@@ -138,6 +148,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { data: profile } = useProfile();
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
+  const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
   const theme = useTheme();
 
@@ -156,6 +167,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     unit,
     widget: widgetProp,
     linodeRegion,
+    dashboardId,
+    region,
   } = props;
 
   const timezone =
@@ -237,7 +250,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
-
+  const handleGroupByChange = React.useCallback((selectedGroupBy: string[]) => {
+    setGroupBy(selectedGroupBy);
+  }, []);
   const {
     data: metricsList,
     error,
@@ -251,7 +266,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
+        groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
         linodeRegion,
+        region,
+        serviceType,
       }),
       filters, // any additional dimension filters will be constructed and passed here
     },
@@ -277,7 +295,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       status,
       unit,
       serviceType,
-      groupBy: widgetProp.group_by,
+      groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
+      metricLabel: availableMetrics?.label,
     });
 
     data = generatedData.dimensions;
@@ -352,7 +371,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   onAggregateFuncChange={handleAggregateFunctionChange}
                 />
               )}
-              <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <WidgetFilterGroupByRenderer
+                  dashboardId={dashboardId}
+                  handleChange={handleGroupByChange}
+                  label={widget.label}
+                  metric={widget.metric}
+                  serviceType={serviceType}
+                />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}

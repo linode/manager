@@ -8,6 +8,10 @@ export const SECONDARY_NODE = 'secondary';
 
 export const REGION = 'region';
 
+export const ENTITY_REGION = 'entity_region';
+
+export const ENDPOINT = 'endpoint';
+
 export const LINODE_REGION = 'associated_entity_region';
 
 export const RESOURCES = 'resources';
@@ -85,6 +89,7 @@ export const NO_REGION_MESSAGE: Record<string, string> = {
   linode: 'No Linodes configured in any regions.',
   nodebalancer: 'No NodeBalancers configured in any regions.',
   firewall: 'No firewalls configured in any Linode regions.',
+  objectstorage: 'No Object Storage buckets configured in any region.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {

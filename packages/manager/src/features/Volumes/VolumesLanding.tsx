@@ -235,7 +235,10 @@ export const VolumesLanding = () => {
         pageSize={pagination.pageSize}
       />
 
-      <VolumeDrawers onCloseHandler={navigateToVolumes} />
+      <VolumeDrawers
+        onCloseHandler={navigateToVolumes}
+        onDeleteSuccessHandler={navigateToVolumes}
+      />
     </Stack>
   );
 };

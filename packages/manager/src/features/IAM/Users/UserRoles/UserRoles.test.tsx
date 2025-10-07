@@ -5,7 +5,6 @@ import React from 'react';
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -22,7 +21,7 @@ const mockEntities = [
 ];
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
+  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
@@ -43,7 +42,7 @@ vi.mock('src/queries/entities/entities', async () => {
   const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -108,8 +107,8 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<UserRoles />);
@@ -140,8 +139,8 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<UserRoles />);
@@ -167,8 +166,8 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<UserRoles />);
@@ -185,8 +184,8 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<UserRoles />);

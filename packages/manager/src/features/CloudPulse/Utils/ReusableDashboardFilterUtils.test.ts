@@ -19,11 +19,15 @@ it('test getDashboardProperties method', () => {
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 1,
+    groupBy: [],
+    region: 'us-east',
   });
 
   expect(result).toBeDefined();
   expect(result.dashboardId).toEqual(mockDashboard.id);
+  expect(result.serviceType).toEqual(mockDashboard.service_type);
   expect(result.resources).toEqual(['1']);
+  expect(result.region).toEqual('us-east');
 });
 
 it('test checkMandatoryFiltersSelected method for time duration and resource', () => {
@@ -31,6 +35,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 0,
+    groupBy: [],
   });
   expect(result).toBe(false);
   result = checkMandatoryFiltersSelected({
@@ -42,6 +47,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
       preset,
       start: start.toISO(),
     },
+    groupBy: [],
   });
 
   expect(result).toBe(true);
@@ -51,6 +57,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     filterValue: { region: 'us-east' },
     resource: 1,
     timeDuration: undefined, // here time duration is undefined, so it should return false
+    groupBy: [],
   });
 
   expect(result).toBe(false);
@@ -60,6 +67,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     filterValue: { region: 'us-east' },
     resource: 0, // here resource is 0, so it should return false
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
   });
 
   expect(result).toBe(false);
@@ -72,6 +80,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     filterValue: { region: 'us-east' }, // here role is missing
     resource: 1,
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
   });
 
   expect(result).toBe(false);
@@ -81,8 +90,32 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     filterValue: { node_type: 'primary', region: 'us-east' },
     resource: 1,
     timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
   });
 
+  expect(result).toBe(true);
+});
+
+it('checkMandatoryFiltersSelected method should return false if no region is selected for objectstorage service type', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+  });
+  expect(result).toBe(false);
+});
+
+it('checkMandatoryFiltersSelected method should return true if region is selected for objectstorage service type', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+    region: 'ap-west',
+  });
   expect(result).toBe(true);
 });
 
@@ -92,6 +125,7 @@ it('test constructDimensionFilters method', () => {
     dashboardObj: mockDashboard,
     filterValue: { node_type: 'primary' },
     resource: 1,
+    groupBy: [],
   });
 
   expect(result.length).toEqual(1);

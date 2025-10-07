@@ -97,6 +97,26 @@ describe('StreamEdit', () => {
           { exact: false }
         );
         await userEvent.click(createNewTestDestination);
+        const hostInput = screen.getByLabelText('Host');
+        await waitFor(() => {
+          expect(hostInput).toBeDefined();
+        });
+        await userEvent.type(hostInput, 'Test');
+        const bucketInput = screen.getByLabelText('Bucket');
+        await userEvent.type(bucketInput, 'Test');
+        const regionAutocomplete = screen.getByLabelText('Region');
+        await userEvent.click(regionAutocomplete);
+        await userEvent.type(regionAutocomplete, 'US, Chi');
+        const chicagoRegion = await screen.findByText(
+          'US, Chicago, IL (us-ord)'
+        );
+        await userEvent.click(chicagoRegion);
+        const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+        await userEvent.type(accessKeyIDInput, 'Test');
+        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        await userEvent.type(secretAccessKeyInput, 'Test');
+        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+        await userEvent.type(logPathPrefixInput, 'Test');
       };
 
       describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {

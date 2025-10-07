@@ -1,9 +1,11 @@
 import type {
+  ChildAccount,
   CloudNAT,
   Config,
   Destination,
   Domain,
   DomainRecord,
+  Entity,
   Event,
   Firewall,
   FirewallDevice,
@@ -120,9 +122,11 @@ export interface MockPresetExtra extends MockPresetBase {
  */
 export type MockPresetCrudGroup = {
   id:
+    | 'Child Accounts'
     | 'CloudNATs'
     | 'Delivery'
     | 'Domains'
+    | 'Entities'
     | 'Firewalls'
     | 'IP Addresses'
     | 'Kubernetes'
@@ -135,9 +139,12 @@ export type MockPresetCrudGroup = {
     | 'VPCs';
 };
 export type MockPresetCrudId =
+  | 'child-accounts-for-user:crud'
+  | 'child-accounts:crud'
   | 'cloudnats:crud'
   | 'delivery:crud'
   | 'domains:crud'
+  | 'entities:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
   | 'kubernetes:crud'
@@ -156,15 +163,24 @@ export interface MockPresetCrud extends MockPresetBase {
 
 export type MockHandler = (mockState: MockState) => HttpHandler[];
 
+interface Delegation {
+  childAccountEuuid: string;
+  id: number;
+  username: string;
+}
+
 /**
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  childAccounts: ChildAccount[];
   cloudnats: CloudNAT[];
   configInterfaces: [number, Interface][]; // number is Config ID
+  delegations: Delegation[];
   destinations: Destination[];
   domainRecords: DomainRecord[];
   domains: Domain[];
+  entities: Entity[];
   eventQueue: Event[];
   firewallDevices: [number, FirewallDevice][]; // number is Firewall ID
   firewalls: Firewall[];

@@ -28,7 +28,7 @@ export const VolumeDetailsHeader = ({ volume }: Props) => {
         pathname: `/volumes/${volume.label}`,
       }}
       docsLabel="Getting Started"
-      docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
+      docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
       entity="Volume"
       spacingBottom={16}
     />

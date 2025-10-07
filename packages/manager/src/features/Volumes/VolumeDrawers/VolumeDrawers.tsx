@@ -14,9 +14,13 @@ import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
 
 interface Props {
   onCloseHandler: () => void;
+  onDeleteSuccessHandler: () => void;
 }
 
-export const VolumeDrawers = ({ onCloseHandler }: Props) => {
+export const VolumeDrawers = ({
+  onCloseHandler,
+  onDeleteSuccessHandler,
+}: Props) => {
   const params = useParams({ strict: false });
 
   const {
@@ -85,6 +89,7 @@ export const VolumeDrawers = ({ onCloseHandler }: Props) => {
       <DeleteVolumeDialog
         isFetching={isFetchingVolume}
         onClose={onCloseHandler}
+        onDeleteSuccess={onDeleteSuccessHandler}
         open={params.action === 'delete'}
         volume={selectedVolume}
         volumeError={selectedVolumeError}

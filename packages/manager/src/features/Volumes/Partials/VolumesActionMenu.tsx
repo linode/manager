@@ -72,6 +72,13 @@ export const VolumesActionMenu = (props: Props) => {
       disabled: !volumePermissions?.update_volume,
       onClick: handlers.handleManageTags,
       title: 'Manage Tags',
+      tooltip: !volumePermissions?.update_volume
+        ? getRestrictedResourceText({
+            action: 'edit',
+            isSingular: true,
+            resourceType: 'Volumes',
+          })
+        : undefined,
     },
     RESIZE: {
       disabled: !volumePermissions?.resize_volume,

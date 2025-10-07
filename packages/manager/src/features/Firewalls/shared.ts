@@ -2,7 +2,6 @@ import { truncateAndJoinList } from '@linode/utilities';
 import { capitalize } from '@linode/utilities';
 
 import type { PORT_PRESETS } from './FirewallDetail/Rules/shared';
-import type { Grants, Profile } from '@linode/api-v4';
 import type {
   Firewall,
   FirewallRuleProtocol,
@@ -247,18 +246,6 @@ export const generateAddressesLabel = (
 
   // If no IPs are allowed.
   return 'None';
-};
-
-export const checkIfUserCanModifyFirewall = (
-  firewallId: number,
-  profile?: Profile,
-  grants?: Grants
-) => {
-  return (
-    !profile?.restricted ||
-    grants?.firewall?.find((firewall) => firewall.id === firewallId)
-      ?.permissions === 'read_write'
-  );
 };
 
 export const getFirewallDescription = (firewall: Firewall) => {

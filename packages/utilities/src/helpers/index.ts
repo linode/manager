@@ -24,7 +24,6 @@ export * from './getDisplayName';
 export * from './getIsLegacyInterfaceArray';
 export * from './getNewRegionLabel';
 export * from './getUserTimezone';
-export * from './grants';
 export * from './groupByTags';
 export * from './initWindows';
 export * from './isNilOrEmpty';

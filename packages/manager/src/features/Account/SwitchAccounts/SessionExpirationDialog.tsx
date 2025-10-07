@@ -36,8 +36,8 @@ export const SessionExpirationDialog = React.memo(
 
     const {
       createToken,
-      createTokenError,
-      createTokenLoading,
+      error: createTokenError,
+      loading: createTokenLoading,
       revokeToken,
       updateCurrentToken,
       validateParentToken,

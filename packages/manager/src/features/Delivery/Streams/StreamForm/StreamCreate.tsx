@@ -33,12 +33,14 @@ export const StreamCreate = () => {
     defaultValues: {
       stream: {
         type: streamType.AuditLogs,
-        details: {},
+        details: null,
+        destinations: [],
       },
       destination: {
         type: destinationType.LinodeObjectStorage,
         details: {
           region: '',
+          path: '',
         },
       },
     },

@@ -34,7 +34,7 @@ describe('VPC create page', () => {
     expect(getByText('Description')).toBeVisible();
     expect(getByText('Subnets')).toBeVisible();
     expect(getByText('Subnet Label')).toBeVisible();
-    expect(getByText('Subnet IP Address Range')).toBeVisible();
+    expect(getByText('Subnet IPv4 Range (CIDR)')).toBeVisible();
     expect(getByText('Add another Subnet')).toBeVisible();
     expect(getByText('Create VPC')).toBeVisible();
   });
@@ -46,7 +46,7 @@ describe('VPC create page', () => {
     await userEvent.click(addSubnet);
 
     const subnetLabels = screen.getAllByText('Subnet Label');
-    const subnetIps = screen.getAllByText('Subnet IP Address Range');
+    const subnetIps = screen.getAllByText('Subnet IPv4 Range (CIDR)');
     expect(subnetLabels).toHaveLength(2);
     expect(subnetIps).toHaveLength(2);
 
@@ -55,14 +55,14 @@ describe('VPC create page', () => {
     await userEvent.click(deleteSubnet);
 
     const subnetLabelAfter = screen.getAllByText('Subnet Label');
-    const subnetIpsAfter = screen.getAllByText('Subnet IP Address Range');
+    const subnetIpsAfter = screen.getAllByText('Subnet IPv4 Range (CIDR)');
     expect(subnetLabelAfter).toHaveLength(1);
     expect(subnetIpsAfter).toHaveLength(1);
   });
 
   it('should display that a subnet ip is invalid and require a subnet label if a user adds an invalid subnet ip', async () => {
     renderWithTheme(<VPCCreate />);
-    const subnetIp = screen.getByText('Subnet IP Address Range');
+    const subnetIp = screen.getByText('Subnet IPv4 Range (CIDR)');
     expect(subnetIp).toBeInTheDocument();
     const createVPCButton = screen.getByText('Create VPC');
     expect(createVPCButton).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('VPC create page', () => {
     const description = screen.getByRole('textbox', { name: /description/i });
     expect(description).toBeDisabled();
     expect(getByLabelText('Subnet Label')).toBeDisabled();
-    expect(getByLabelText('Subnet IP Address Range')).toBeDisabled();
+    expect(getByLabelText('Subnet IPv4 Range (CIDR)')).toBeDisabled();
     expect(getByText('Add another Subnet')).toBeDisabled();
     expect(getByText('Create VPC')).toBeDisabled();
   });
@@ -117,7 +117,7 @@ describe('VPC create page', () => {
     const description = screen.getByRole('textbox', { name: /description/i });
     expect(description).toBeEnabled();
     expect(getByLabelText('Subnet Label')).toBeEnabled();
-    expect(getByLabelText('Subnet IP Address Range')).toBeEnabled();
+    expect(getByLabelText('Subnet IPv4 Range (CIDR)')).toBeEnabled();
     expect(getByText('Add another Subnet')).toBeEnabled();
     expect(getByText('Create VPC')).toBeEnabled();
   });
