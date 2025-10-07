@@ -7,7 +7,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
-import { useFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
+import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
 import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
@@ -195,7 +195,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
-  const linodesFetch = useFetchOptions({
+  const linodesFetch = useFirewallFetchOptions({
     dimensionLabel: 'linode_id',
     type: 'metrics',
     entities: entityIds,
@@ -203,7 +203,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     scope: 'entity',
     serviceType,
   });
-  const vpcFetch = useFetchOptions({
+  const vpcFetch = useFirewallFetchOptions({
     dimensionLabel: 'vpc_subnet_id',
     type: 'metrics',
     entities: entityIds,

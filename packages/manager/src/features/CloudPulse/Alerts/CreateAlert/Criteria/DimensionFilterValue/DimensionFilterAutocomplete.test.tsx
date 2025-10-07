@@ -31,6 +31,7 @@ describe('<DimensionFilterAutocomplete />', () => {
     selectedRegions: [],
     serviceType: 'firewall',
     values: mockOptions.map((o) => o.value),
+    type: 'alerts',
   };
 
   it('renders with label and placeholder', () => {

@@ -159,6 +159,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
             serviceType={serviceType ?? null}
+            type={type}
           />
         );
       case 'objectstorage':
@@ -177,6 +178,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             scope={scope}
             selectedRegions={selectedRegions}
             serviceType={serviceType ?? null}
+            type={type}
           />
         );
       default:
@@ -192,6 +194,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             name={name}
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             serviceType={serviceType ?? null}
+            type={type}
             values={values}
           />
         );

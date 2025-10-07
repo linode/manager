@@ -27,6 +27,7 @@ export const ObjectStorageDimensionFilterAutocomplete = (
     scope,
     selectedRegions,
     serviceType,
+    type = 'alerts',
   } = props;
 
   const { data: regions } = useRegionsQuery();
@@ -34,7 +35,7 @@ export const ObjectStorageDimensionFilterAutocomplete = (
     entities,
     dimensionLabel,
     regions,
-    type: 'alerts',
+    type,
     scope,
     selectedRegions,
     serviceType,

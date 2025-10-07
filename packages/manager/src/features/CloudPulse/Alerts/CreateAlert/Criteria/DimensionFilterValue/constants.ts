@@ -424,6 +424,11 @@ export interface DimensionFilterAutocompleteProps {
    */
   serviceType: CloudPulseServiceType | null;
   /**
+   * The type of monitoring to filter on.
+   */
+  type: 'alerts' | 'metrics';
+
+  /**
    * The list of pre-defined values for static options.
    */
   values?: null | string[];
