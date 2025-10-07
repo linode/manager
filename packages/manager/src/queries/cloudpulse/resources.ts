@@ -35,6 +35,9 @@ export const useResourcesQuery = (
               entities[String(entity.parent_entity.id)] =
                 entity.parent_entity.label;
             }
+            if (entity.type === 'nodebalancer' && entity.label) {
+              entities[String(entity.id)] = entity.label;
+            }
           });
         }
         const id =

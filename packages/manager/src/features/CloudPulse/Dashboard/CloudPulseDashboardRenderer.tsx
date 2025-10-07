@@ -2,7 +2,7 @@ import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import {
-  LINODE_REGION,
+  PARENT_ENTITY_REGION,
   REFRESH,
   REGION,
   RESOURCE_ID,
@@ -64,9 +64,9 @@ export const CloudPulseDashboardRenderer = React.memo(
         duration={timeDuration}
         groupBy={groupBy}
         linodeRegion={
-          filterValue[LINODE_REGION] &&
-          typeof filterValue[LINODE_REGION] === 'string'
-            ? (filterValue[LINODE_REGION] as string)
+          filterValue[PARENT_ENTITY_REGION] &&
+          typeof filterValue[PARENT_ENTITY_REGION] === 'string'
+            ? (filterValue[PARENT_ENTITY_REGION] as string)
             : undefined
         }
         manualRefreshTimeStamp={

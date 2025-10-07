@@ -341,6 +341,10 @@ export interface FetchOptions {
 
 export interface FetchOptionsProps {
   /**
+   * Dashboard ID associated with the service type.
+   */
+  dashboardId?: number;
+  /**
    * The dimension label determines the filtering logic and return type.
    */
   dimensionLabel: null | string;

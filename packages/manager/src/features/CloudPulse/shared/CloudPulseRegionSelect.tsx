@@ -9,8 +9,8 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
 import { filterRegionByServiceType } from '../Alerts/Utils/utils';
 import {
-  LINODE_REGION,
   NO_REGION_MESSAGE,
+  PARENT_ENTITY_REGION,
   RESOURCE_FILTER_MAP,
 } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
@@ -90,6 +90,7 @@ export const CloudPulseRegionSelect = React.memo(
       entities: selectedEntities,
       regions,
       serviceType,
+      dashboardId,
       type: 'metrics',
     });
     const linodeRegionIds = linodeRegions.map(
@@ -107,7 +108,7 @@ export const CloudPulseRegionSelect = React.memo(
     }, [regions, serviceType]);
 
     const supportedRegionsFromResources = React.useMemo(() => {
-      if (filterKey === LINODE_REGION) {
+      if (filterKey === PARENT_ENTITY_REGION) {
         return supportedLinodeRegions;
       }
       return supportedRegions.filter(({ id }) =>
@@ -150,7 +151,7 @@ export const CloudPulseRegionSelect = React.memo(
         handleRegionChange(filterKey, region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
       } else if (
-        filterKey === LINODE_REGION &&
+        filterKey === PARENT_ENTITY_REGION &&
         !savePreferences &&
         supportedRegionsFromResources?.length &&
         selectedRegion === undefined
@@ -192,7 +193,7 @@ export const CloudPulseRegionSelect = React.memo(
         }
         noMarginTop
         noOptionsText={
-          NO_REGION_MESSAGE[selectedDashboard?.service_type ?? ''] ??
+          NO_REGION_MESSAGE[selectedDashboard?.id ?? 0] ??
           'No Regions Available.'
         }
         onChange={(_, region) => {

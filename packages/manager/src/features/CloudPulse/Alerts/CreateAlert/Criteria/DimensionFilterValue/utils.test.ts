@@ -1,10 +1,11 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 
 import { transformDimensionValue } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
+  getNodebalancerRegions,
   getOperatorGroup,
   getStaticOptions,
   handleValueChange,
@@ -120,16 +121,30 @@ describe('Utils', () => {
         entities: { b: 'linode-2' },
         label: 'firewall-2',
       },
+      {
+        id: '3',
+        entities: { c: 'nodebalancer-1' },
+        label: 'firewall-3',
+      },
     ];
 
     it('should return matched resources by entity IDs', () => {
       expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual([
-        'a',
+        {
+          label: 'linode-1',
+          id: 'a',
+        },
+      ]);
+      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([
+        {
+          label: 'nodebalancer-1',
+          id: 'c',
+        },
       ]);
     });
 
-    it('should return empty array if no match', () => {
-      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([]);
+    it('should return empty object if no match', () => {
+      expect(getFilteredFirewallParentEntities(resources, ['4'])).toEqual([]);
     });
 
     it('should handle undefined inputs', () => {
@@ -184,6 +199,35 @@ describe('Utils', () => {
             'firewall',
             'region_id',
             linodes[1].region
+          ),
+          value: 'us-west',
+        },
+      ]);
+    });
+  });
+
+  describe('getNodebalancerRegions', () => {
+    it('should extract and deduplicate regions', () => {
+      const nodebalancers = nodeBalancerFactory.buildList(3, {
+        region: 'us-east',
+      });
+      nodebalancers[1].region = 'us-west'; // introduce a second unique region
+
+      const result = getNodebalancerRegions(nodebalancers);
+      expect(result).toEqual([
+        {
+          label: transformDimensionValue(
+            'firewall',
+            'region_id',
+            nodebalancers[0].region
+          ),
+          value: 'us-east',
+        },
+        {
+          label: transformDimensionValue(
+            'firewall',
+            'region_id',
+            nodebalancers[1].region
           ),
           value: 'us-west',
         },

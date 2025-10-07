@@ -467,6 +467,19 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
       return;
     }
 
+    if (key === 'nodebalancer_id') {
+      const nodebalancerLabel =
+        resources.find((resource) => resource.entities?.[value] !== undefined)
+          ?.entities?.[value] ?? value;
+      const index = groupBy.indexOf('nodebalancer_id');
+      if (index !== -1) {
+        labels[index] = nodebalancerLabel;
+      } else {
+        labels.push(nodebalancerLabel);
+      }
+      return;
+    }
+
     if (key === 'metric_name' && hideMetricName) {
       return;
     }
