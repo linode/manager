@@ -97,42 +97,6 @@ const databaseMock: Database = databaseFactory.build({
 const mockProfile = profileFactory.build({
   timezone: 'UTC',
 });
-/**
- * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
- * hour, and minute. The function also provides individual date components such as day, hour,
- * minute, month, and AM/PM.
- *
- * @param {number} daysOffset - The number of days to adjust from the current date. Positive
- *                               values give a future date, negative values give a past date.
- * @param {number} hour - The hour to set for the resulting date (0-23).
- * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
- *
- * @returns {Object} - Returns an object containing:
- *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
- *   - `day`: The day of the month as a number.
- *   - `hour`: The hour in the 24-hour format as a number.
- *   - `minute`: The minute of the hour as a number.
- *   - `month`: The month of the year as a number.
- */
-const getDateRangeInGMT = (
-  hour: number,
-  minute: number = 0,
-  isStart: boolean = false
-) => {
-  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = isStart
-    ? now.startOf('month').set({ hour, minute }).setZone('GMT')
-    : now.set({ hour, minute }).setZone('GMT');
-  const actualDate = targetDate.setZone('GMT').toFormat('yyyy-LL-dd HH:mm');
-
-  return {
-    actualDate,
-    day: targetDate.day,
-    hour: targetDate.hour,
-    minute: targetDate.minute,
-    month: targetDate.month,
-  };
-};
 
 /**
  * This function calculates the start of the current month and the current date and time,
@@ -233,28 +197,22 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
-    // --- Generate start and end date/time in GMT ---
-    const {
-      actualDate: startActualDate,
-      day: startDay,
-      hour: startHour,
-      minute: startMinute,
-    } = getDateRangeInGMT(12, 15, true);
-
-    const {
-      actualDate: endActualDate,
-      day: endDay,
-      hour: endHour,
-      minute: endMinute,
-    } = getDateRangeInGMT(12, 30);
+    const year = 2025;
+    const month = 10;
+    const day = 11;
+    const hour = 12;
+    const minuteStart = 15;
+    const minuteEnd = 30;
+    const startActualDate = `${year}-${month}-${day} ${hour}:${minuteStart}`;
+    const endActualDate = `${year}-${month}-${day} ${hour}:${minuteEnd}`;
 
     cy.wait(1000);
     // --- Select start date ---
     cy.get('[aria-labelledby="start-date"]').as('startDateInput');
     cy.get('@startDateInput').click();
     cy.get('[role="dialog"]').within(() => {
-      cy.findAllByText(startDay).first().click();
-      cy.findAllByText(endDay).first().click();
+      cy.findAllByText(day).first().click();
+      cy.findAllByText(day).first().click();
     });
 
     ui.button
@@ -276,7 +234,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .scrollIntoView({ easing: 'linear' });
 
     cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${startHour} hours"]`).click();
+      cy.get(`[aria-label="${hour} hours"]`).click();
     });
 
     cy.findByLabelText('Select minutes')
@@ -284,7 +242,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .scrollIntoView({ duration: 500, easing: 'linear' });
 
     cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${startMinute} minutes"]`).click();
+      cy.get(`[aria-label="${minuteStart} minutes"]`).click();
     });
 
     cy.findByLabelText('Select meridiem')
@@ -307,11 +265,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       easing: 'linear',
     });
     cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${endHour} hours"]`).click();
+      cy.get(`[aria-label="${hour} hours"]`).click();
     });
 
     cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${endMinute} minutes"]`).click();
+      cy.get(`[aria-label="${minuteEnd} minutes"]`).click();
     });
 
     cy.findByLabelText('Select meridiem')
