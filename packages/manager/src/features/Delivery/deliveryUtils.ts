@@ -1,7 +1,11 @@
 import {
   type Destination,
+  type DestinationDetails,
+  type DestinationDetailsPayload,
   isEmpty,
   type Stream,
+  type StreamDetailsType,
+  type StreamType,
   streamType,
 } from '@linode/api-v4';
 import { omitProps } from '@linode/ui';
@@ -11,7 +15,6 @@ import {
   streamTypeOptions,
 } from 'src/features/Delivery/Shared/types';
 
-import type { StreamDetails, StreamType } from '@linode/api-v4';
 import type {
   FormMode,
   LabelValueOption,
@@ -31,19 +34,31 @@ export const isFormInEditMode = (mode: FormMode) => mode === 'edit';
 
 export const getStreamPayloadDetails = (
   type: StreamType,
-  details: StreamDetails
-): StreamDetails => {
-  let payloadDetails: StreamDetails = {};
+  details: StreamDetailsType
+): StreamDetailsType => {
+  if (!details) {
+    return null;
+  }
 
   if (!isEmpty(details) && type === streamType.LKEAuditLogs) {
     if (details.is_auto_add_all_clusters_enabled) {
-      payloadDetails = omitProps(details, ['cluster_ids']);
+      return omitProps(details, ['cluster_ids']);
     } else {
-      payloadDetails = omitProps(details, ['is_auto_add_all_clusters_enabled']);
+      return omitProps(details, ['is_auto_add_all_clusters_enabled']);
     }
   }
 
-  return payloadDetails;
+  return null;
+};
+
+export const getDestinationPayloadDetails = (
+  details: DestinationDetails
+): DestinationDetailsPayload => {
+  if ('path' in details && details.path === '') {
+    return omitProps(details, ['path']);
+  }
+
+  return details;
 };
 
 export const getStreamDescription = (stream: Stream) => {

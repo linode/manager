@@ -43,7 +43,7 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
+          node-version-file: "package.json"
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
