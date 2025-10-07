@@ -1,9 +1,12 @@
 import { formatPercentage } from '@linode/utilities';
 
+import { widgetFactory } from 'src/factories';
+
 import {
   generateGraphData,
   generateMaxUnit,
   getDimensionName,
+  getEntityIds,
   getLabelName,
   getTimeDurationFromPreset,
   mapResourceIdToName,
@@ -260,5 +263,27 @@ describe('getTimeDurationFromPreset method', () => {
   it('should return undefined for invalid preset', () => {
     const result = getTimeDurationFromPreset('15min');
     expect(result).toBe(undefined);
+  });
+
+  describe('getEntityIds method', () => {
+    it('should return entity ids for linode service type', () => {
+      const result = getEntityIds(
+        [{ id: '123', label: 'linode-1' }],
+        ['123'],
+        widgetFactory.build(),
+        'linode'
+      );
+      expect(result).toEqual([123]);
+    });
+
+    it('should return entity ids for objectstorage service type', () => {
+      const result = getEntityIds(
+        [{ id: 'bucket-1', label: 'bucket-name-1' }],
+        ['bucket-1'],
+        widgetFactory.build(),
+        'objectstorage'
+      );
+      expect(result).toEqual(['bucket-1']);
+    });
   });
 });

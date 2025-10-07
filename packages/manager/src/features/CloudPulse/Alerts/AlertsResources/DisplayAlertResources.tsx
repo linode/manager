@@ -25,6 +25,10 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
+   * The endpoint associated with the object storage instance
+   */
+  endpoint?: string;
+  /**
    * The region associated with the instance
    */
   engineType?: string;

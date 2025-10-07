@@ -702,7 +702,7 @@ export const darkTheme: ThemeOptions = {
             color: Select.Error.Border,
           },
           fontWeight: Font.FontWeight.Semibold,
-          color: Color.Neutrals[40],
+          color: TextField.Placeholder.HintText,
           lineHeight: 1.25,
           marginTop: '4px',
         },

@@ -969,6 +969,7 @@ export const lightTheme: ThemeOptions = {
           letterSpacing: 'inherit',
           maxWidth: 416,
           textTransform: 'none',
+          color: TextField.Placeholder.HintText,
           marginTop: '4px',
         },
       },

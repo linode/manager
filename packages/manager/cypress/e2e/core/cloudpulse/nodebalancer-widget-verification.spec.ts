@@ -39,6 +39,7 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
+
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
  * This test suite is dedicated to verifying the functionality and display of widgets on the Cloudpulse dashboard.
@@ -291,10 +292,10 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
               testData.unit
             );
 
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.log('expectedWidgetValues ', expectedWidgetValues.max);
 
@@ -314,8 +315,6 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     });
   });
   it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
-    // validate the widget level granularity selection and its metrics
-
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -349,13 +348,10 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${testData.title} (${testData.unit.trim()})`
-              );
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
@@ -373,7 +369,6 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     });
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    // mock the API call for refreshing metrics
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
@@ -424,10 +419,10 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
@@ -458,13 +453,10 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
               testData.unit
             );
 
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${testData.title} (${testData.unit.trim()})`
-              );
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')

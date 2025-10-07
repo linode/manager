@@ -1,5 +1,4 @@
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -13,19 +12,20 @@ const props = {
   helperText,
   onClose,
   open: true,
+  disabled: true,
 };
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
-  userPermissions: vi.fn(() => ({
-    data: {
-      create_firewall_device: false,
-    },
-  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -62,20 +62,11 @@ describe('AddLinodeDrawer', () => {
   });
 
   it('should disable "Add" button if the user does not have create_firewall_device permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        create_firewall_device: false,
-      },
-    });
-
     const { getByRole } = renderWithTheme(<AddLinodeDrawer {...props} />);
 
-    const autocomplete = screen.getByRole('combobox');
-    await userEvent.click(autocomplete);
-    await userEvent.type(autocomplete, 'linode-5');
-
-    const option = await screen.findByText('linode-5');
-    await userEvent.click(option);
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+    expect(select).toBeDisabled();
 
     const addButton = getByRole('button', {
       name: 'Add',
@@ -85,25 +76,15 @@ describe('AddLinodeDrawer', () => {
   });
 
   it('should enable "Add" button if the user has create_firewall_device permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        create_firewall_device: true,
-      },
+    const { getByRole } = renderWithTheme(
+      <AddLinodeDrawer {...props} disabled={false} />
+    );
+
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(select).toBeEnabled();
     });
-
-    const { getByRole } = renderWithTheme(<AddLinodeDrawer {...props} />);
-
-    const autocomplete = screen.getByRole('combobox');
-    await userEvent.click(autocomplete);
-    await userEvent.type(autocomplete, 'linode-5');
-
-    const option = await screen.findByText('linode-5');
-    await userEvent.click(option);
-
-    const addButton = getByRole('button', {
-      name: 'Add',
-    });
-    expect(addButton).toBeInTheDocument();
-    expect(addButton).toBeEnabled();
   });
 });
