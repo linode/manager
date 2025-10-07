@@ -173,7 +173,7 @@ export interface MockPresetCrud extends MockPresetBase {
 
 export type MockHandler = (mockState: MockState) => HttpHandler[];
 
-interface Delegation {
+export interface Delegation {
   childAccountEuuid: string;
   id: number;
   username: string;

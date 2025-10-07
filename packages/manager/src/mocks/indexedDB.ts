@@ -395,7 +395,7 @@ export const mswDB = {
 
   deleteMany: async <T extends keyof MockState>(
     entity: T,
-    ids: number[],
+    ids: number[] | string[],
     state?: MockState,
     objectStore: ObjectStore = MOCK_STATE
   ): Promise<void> => {

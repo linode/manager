@@ -1,4 +1,5 @@
 import { getProfile } from '@linode/api-v4';
+import { childAccountFactory } from '@linode/utilities';
 import { http } from 'msw';
 
 import { accountUserFactory } from 'src/factories';
@@ -18,17 +19,22 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-const addUserToMockState = async (mockState: MockState, user: User) => {
+/**
+ * Reusable methods to create and remove users because of the complex logic and relationship model
+ */
+export const addUserToMockState = async (mockState: MockState, user: User) => {
   await mswDB.add('users', user, mockState);
 
   const defaultRoles = userDefaultRolesFactory.build();
 
+  // Add user roles
   await mswDB.add(
     'userRoles',
     { username: user.username, roles: defaultRoles },
     mockState
   );
 
+  // Add user account permissions
   if (defaultRoles.account_access) {
     await mswDB.add(
       'userAccountPermissions',
@@ -37,6 +43,7 @@ const addUserToMockState = async (mockState: MockState, user: User) => {
     );
   }
 
+  // Add user entity permissions
   if (defaultRoles.entity_access) {
     for (const entityAccess of defaultRoles.entity_access) {
       await mswDB.add(
@@ -52,7 +59,49 @@ const addUserToMockState = async (mockState: MockState, user: User) => {
     }
   }
 
+  if (user.user_type === 'parent') {
+    const childAccounts = childAccountFactory.buildList(4);
+
+    // Create delegations pointing to our active user (parent)
+    for (const childAccount of childAccounts) {
+      await mswDB.add('childAccounts', childAccount, mockState);
+      await mswDB.add(
+        'delegations',
+        {
+          username: user.username,
+          childAccountEuuid: childAccount.euuid,
+          id: Math.floor(Math.random() * 1000000),
+        },
+        mockState
+      );
+    }
+  }
+
   await mswDB.saveStore(mockState, 'mockState');
+};
+
+export const removeUserFromMockState = async (
+  mockState: MockState,
+  user: User
+) => {
+  await mswDB.delete('users', user.username, mockState);
+  await mswDB.delete('userRoles', user.username, mockState);
+  await mswDB.delete('userAccountPermissions', user.username, mockState);
+  await mswDB.delete('userEntityPermissions', user.username, mockState);
+
+  // If parent user, delete all their delegations
+  if (user.user_type === 'parent') {
+    const delegations = await mswDB.getAll('delegations');
+    const userDelegations = delegations?.filter(
+      (d) => d.username === user.username
+    );
+
+    if (userDelegations) {
+      for (const delegation of userDelegations) {
+        await mswDB.delete('delegations', delegation.id, mockState);
+      }
+    }
+  }
 };
 
 export const getUsers = (mockState: MockState) => [
@@ -68,15 +117,22 @@ export const getUsers = (mockState: MockState) => [
       const actingUser = accountUserFactory.build({
         username: profile?.username,
         user_type: profile?.user_type,
+        restricted: profile?.restricted,
       });
-      const users = await mswDB.getAll('users');
+      let users = await mswDB.getAll('users');
 
       if (!users) {
         return makeNotFoundResponse();
       }
 
       if (!users.find((user) => user.username === actingUser.username)) {
-        addUserToMockState(mockState, actingUser);
+        await addUserToMockState(mockState, actingUser);
+        // Re-fetch users to include the newly added user
+        users = await mswDB.getAll('users');
+
+        if (!users) {
+          return makeNotFoundResponse();
+        }
       }
 
       // Not in parent/child context, just return defaults users (including the real acting user)
@@ -187,16 +243,11 @@ export const deleteUser = (mockState: MockState) => [
 
       const user = users?.find((user) => user.username === username);
 
-      // Also delete roles and permissions
-      await mswDB.delete('userRoles', username, mockState);
-      await mswDB.delete('userAccountPermissions', username, mockState);
-      await mswDB.delete('userEntityPermissions', username, mockState);
-
       if (!user) {
         return makeNotFoundResponse();
       }
 
-      await mswDB.delete('users', username, mockState);
+      removeUserFromMockState(mockState, user);
 
       return makeResponse({});
     }

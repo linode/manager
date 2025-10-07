@@ -1,15 +1,21 @@
+import { getProfile } from '@linode/api-v4';
+import { childAccountFactory } from '@linode/utilities';
+
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { accountUserFactory } from 'src/factories';
-import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userDefaultRolesFactory } from 'src/factories/userRoles';
 import { mswDB } from 'src/mocks/indexedDB';
+import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
+import type { ChildAccount } from '@linode/api-v4';
 import type {
+  Delegation,
+  MockSeeder,
+  MockState,
   UserAccountPermissionsEntry,
   UserEntityPermissionsEntry,
   UserRolesEntry,
 } from 'src/mocks/types';
-import type { MockSeeder, MockState } from 'src/mocks/types';
 
 export const usersSeeder: MockSeeder = {
   canUpdateCount: true,
@@ -21,42 +27,74 @@ export const usersSeeder: MockSeeder = {
   seeder: async (mockState: MockState) => {
     const seedsCountMap = getSeedsCountMap();
     const count = seedsCountMap[usersSeeder.id] ?? 0;
+    const profile = await getProfile();
 
-    // Create users
-    const users = accountUserFactory.buildList(count);
+    const userSeeds = seedWithUniqueIds<'users'>({
+      dbEntities: await mswDB.getAll('users'),
+      seedEntities: accountUserFactory.buildList(count, {
+        user_type: profile?.user_type,
+        restricted: profile?.restricted,
+      }),
+    });
 
-    // Create permissions for each user
     const userRolesEntries: UserRolesEntry[] = [];
     const userAccountPermissionsEntries: UserAccountPermissionsEntry[] = [];
     const userEntityPermissionsEntries: UserEntityPermissionsEntry[] = [];
+    const childAccountsToAdd: ChildAccount[] = [];
+    const delegationsToAdd: Delegation[] = [];
 
-    users.forEach((user) => {
-      // Create user roles
+    userSeeds.forEach((user) => {
       const userRoles = userDefaultRolesFactory.build();
       userRolesEntries.push({
         username: user.username,
         roles: userRoles,
       });
 
-      // Create user account permissions
-      userAccountPermissionsEntries.push({
-        username: user.username,
-        permissions: [],
-      });
-    });
+      if (userRoles.account_access) {
+        userAccountPermissionsEntries.push({
+          username: user.username,
+          permissions: userRoles.account_access,
+        });
+      }
 
-    // Create account roles (only once, not per user)
-    const accountRoles = [accountRolesFactory.build()];
+      if (userRoles.entity_access) {
+        for (const entityAccess of userRoles.entity_access) {
+          userEntityPermissionsEntries.push({
+            username: user.username,
+            entityType: entityAccess.type,
+            entityId: entityAccess.id,
+            permissions: entityAccess.roles,
+          });
+        }
+      }
+
+      // Create child accounts and delegations for parent users
+      if (user.user_type === 'parent') {
+        const childAccounts = childAccountFactory.buildList(3);
+
+        for (const childAccount of childAccounts) {
+          childAccountsToAdd.push(childAccount);
+          delegationsToAdd.push({
+            username: user.username,
+            childAccountEuuid: childAccount.euuid,
+            id: Math.floor(Math.random() * 1000000),
+          });
+        }
+      }
+    });
 
     const updatedMockState = {
       ...mockState,
-      users: mockState.users.concat(users),
+      users: (mockState.users ?? []).concat(userSeeds),
       userRoles: (mockState.userRoles ?? []).concat(userRolesEntries),
       userAccountPermissions: (mockState.userAccountPermissions ?? []).concat(
         userAccountPermissionsEntries
       ),
-      userEntityPermissions: userEntityPermissionsEntries,
-      accountRoles,
+      userEntityPermissions: (mockState.userEntityPermissions ?? []).concat(
+        userEntityPermissionsEntries
+      ),
+      childAccounts: (mockState.childAccounts ?? []).concat(childAccountsToAdd),
+      delegations: (mockState.delegations ?? []).concat(delegationsToAdd),
     };
 
     await mswDB.saveStore(updatedMockState, 'seedState');
