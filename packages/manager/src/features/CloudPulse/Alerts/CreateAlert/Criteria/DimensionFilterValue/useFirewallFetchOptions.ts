@@ -1,4 +1,8 @@
-import { useAllLinodesQuery, useAllVPCsQuery } from '@linode/queries';
+import {
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVPCsQuery,
+} from '@linode/queries';
 import { useMemo } from 'react';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -8,6 +12,7 @@ import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
+  getNodebalancerRegions,
   getVPCSubnets,
 } from './utils';
 
@@ -21,7 +26,15 @@ import type { Filter } from '@linode/api-v4';
 export function useFirewallFetchOptions(
   props: FetchOptionsProps
 ): FetchOptions {
-  const { dimensionLabel, regions, entities, serviceType, type, scope } = props;
+  const {
+    dimensionLabel,
+    regions,
+    entities,
+    serviceType,
+    dashboardId,
+    type,
+    scope,
+  } = props;
 
   const supportedRegionIds =
     (serviceType &&
@@ -70,12 +83,26 @@ export function useFirewallFetchOptions(
 
   const idFilter = {
     '+or': filteredFirewallParentEntityIds.length
-      ? filteredFirewallParentEntityIds.map((id) => ({ id }))
+      ? filteredFirewallParentEntityIds.map((entity) => ({
+          id: String(entity.id),
+        }))
       : [{ id: '' }],
   };
 
-  const combinedFilter: Filter = {
+  const labelFilter = {
+    '+or': filteredFirewallParentEntityIds.length
+      ? filteredFirewallParentEntityIds.map((entity) => ({
+          label: entity.label,
+        }))
+      : [{ label: '' }],
+  };
+
+  const combinedFilterLinode: Filter = {
     '+and': [idFilter, regionFilter].filter(Boolean) as Filter[],
+  };
+
+  const combinedFilterNodebalancer: Filter = {
+    '+and': [labelFilter, regionFilter].filter(Boolean) as Filter[],
   };
 
   // Fetch all linodes with the combined filter
@@ -85,11 +112,26 @@ export function useFirewallFetchOptions(
     isLoading: isLinodesLoading,
   } = useAllLinodesQuery(
     {},
-    combinedFilter,
+    combinedFilterLinode,
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds.length > 0 &&
+      filteredFirewallParentEntityIds?.length > 0 &&
+      (!dashboardId || dashboardId === 4) &&
       supportedRegionIds?.length > 0
+  );
+
+  // Fetch all nodebalancers with the combined filter
+  const {
+    data: nodebalancers,
+    isError: isNodebalancersError,
+    isLoading: isNodebalancersLoading,
+  } = useAllNodeBalancersQuery(
+    filterLabels.includes(dimensionLabel ?? '') &&
+      filteredFirewallParentEntityIds?.length > 0 &&
+      (!dashboardId || dashboardId === 8) &&
+      supportedRegionIds?.length > 0,
+    {},
+    combinedFilterNodebalancer
   );
 
   // Extract linodes from filtered firewall resources
@@ -102,6 +144,12 @@ export function useFirewallFetchOptions(
   const linodeRegions = useMemo(
     () => getLinodeRegions(linodes ?? []),
     [linodes]
+  );
+
+  // Extract unique regions from nodebalancers
+  const nodebalancerRegions = useMemo(
+    () => getNodebalancerRegions(nodebalancers ?? []),
+    [nodebalancers]
   );
 
   const {
@@ -117,15 +165,24 @@ export function useFirewallFetchOptions(
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
     case 'associated_entity_region':
-    case 'region_id':
       return {
-        values: linodeRegions,
-        isError: isLinodesError || isResourcesError,
-        isLoading: isLinodesLoading || isResourcesLoading,
+        values:
+          dashboardId === 4 || !dashboardId
+            ? linodeRegions
+            : nodebalancerRegions,
+        isError: isLinodesError || isResourcesError || isNodebalancersError,
+        isLoading:
+          isLinodesLoading || isResourcesLoading || isNodebalancersLoading,
       };
     case 'linode_id':
       return {
         values: firewallLinodes,
+        isError: isLinodesError || isResourcesError,
+        isLoading: isLinodesLoading || isResourcesLoading,
+      };
+    case 'region_id':
+      return {
+        values: linodeRegions,
         isError: isLinodesError || isResourcesError,
         isLoading: isLinodesLoading || isResourcesLoading,
       };

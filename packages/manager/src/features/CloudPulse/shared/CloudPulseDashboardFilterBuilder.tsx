@@ -12,8 +12,8 @@ import {
   DASHBOARD_ID,
   ENDPOINT,
   INTERFACE_ID,
-  LINODE_REGION,
   NODE_TYPE,
+  PARENT_ENTITY_REGION,
   PORT,
   REGION,
   RESOURCE_ID,
@@ -216,7 +216,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           savePref,
           {
             [NODE_TYPE]: undefined,
-            [LINODE_REGION]: undefined,
+            [PARENT_ENTITY_REGION]: undefined,
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),
@@ -310,7 +310,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleRegionChange
           );
-        } else if (config.configuration.filterKey === LINODE_REGION) {
+        } else if (config.configuration.filterKey === PARENT_ENTITY_REGION) {
           return getRegionProperties(
             {
               config,
