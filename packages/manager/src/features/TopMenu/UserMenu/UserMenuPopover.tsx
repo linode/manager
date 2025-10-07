@@ -114,7 +114,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             : iamRbacPrimaryNavChanges && !isIAMEnabled
               ? '/users'
               : '/account/users',
-        isBeta: iamRbacPrimaryNavChanges && isIAMBeta,
+        isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
       },
       {
         display: 'Quotas',
