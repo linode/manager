@@ -2,10 +2,21 @@ export type VolumeEncryption = 'disabled' | 'enabled';
 
 export interface Volume {
   created: string;
-  encryption?: VolumeEncryption; // @TODO BSE: Remove optionality once BSE is fully rolled out
+  /**
+   * Indicates whether a volume is encrypted or not
+   *
+   * @TODO BSE: Remove optionality once BSE is fully rolled out
+   */
+  encryption?: VolumeEncryption; //
   filesystem_path: string;
   hardware_type: VolumeHardwareType;
   id: number;
+  /**
+   * Indicates whether a volume is ready for I/O operations
+   *
+   * @TODO Remove optionality once io_ready is fully rolled out
+   */
+  io_ready?: boolean;
   label: string;
   linode_id: null | number;
   linode_label: null | string;
