@@ -101,10 +101,12 @@ export type AccountAdmin =
   | 'view_user_preferences'
   | AccountBillingAdmin
   | AccountFirewallAdmin
+  | AccountImageAdmin
   | AccountLinodeAdmin
   | AccountNodeBalancerAdmin
   | AccountOauthClientAdmin
-  | AccountVolumeAdmin;
+  | AccountVolumeAdmin
+  | AccountVPCAdmin;
 
 /** Permissions associated with the "account_billing_admin" role. */
 export type AccountBillingAdmin =
@@ -137,6 +139,12 @@ export type AccountFirewallAdmin = AccountFirewallCreator | FirewallAdmin;
 /** Permissions associated with the "account_firewall_creator" role. */
 export type AccountFirewallCreator = 'create_firewall';
 
+/** Permissions associated with the "account_vpc_admin" role. */
+export type AccountVPCAdmin = AccountVPCCreator | VPCAdmin;
+
+/** Permissions associated with the "account_vpc_creator" role. */
+export type AccountVPCCreator = 'create_vpc';
+
 /** Permissions associated with the "account_linode_admin" role. */
 export type AccountLinodeAdmin = AccountLinodeCreator | LinodeAdmin;
 
@@ -156,6 +164,15 @@ export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
 
 /** Permissions associated with the "account_volume_creator" role. */
 export type AccountVolumeCreator = 'create_volume';
+
+/** Permissions associated with the "account_image_admin" role. */
+export type AccountImageAdmin = AccountImageCreator | ImageAdmin;
+
+/** Permissions associated with the "account_image_creator" role. */
+export type AccountImageCreator =
+  | 'create_image'
+  | 'list_images'
+  | 'upload_image';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';
@@ -247,6 +264,22 @@ export type FirewallViewer =
   | 'view_firewall'
   | 'view_firewall_device'
   | 'view_firewall_rule_version';
+
+/** Permissions associated with the "vpc_admin" role. */
+export type VPCAdmin = 'delete_vpc' | 'delete_vpc_subnet' | VPCContributor;
+
+/** Permissions associated with the "vpc_contributor role. */
+export type VPCContributor =
+  | 'create_vpc_subnet'
+  | 'update_vpc'
+  | 'update_vpc_subnet'
+  | VPCViewer;
+
+/** Permissions associated with the "vpc_viewer" role. */
+export type VPCViewer =
+  | 'list_vpc_ip_addresses'
+  | 'view_vpc'
+  | 'view_vpc_subnet';
 
 /** Permissions associated with the "linode_admin" role. */
 export type LinodeAdmin =
@@ -348,6 +381,18 @@ export type VolumeContributor =
 
 /** Permissions associated with the "volume_viewer" role. */
 export type VolumeViewer = 'view_volume';
+
+export type ImageAdmin =
+  | 'delete_image'
+  | 'replicate_image'
+  | ImageContributor
+  | ImageViewer;
+
+/** Permissions associated with the "image_contributor" role. */
+export type ImageContributor = 'update_image' | ImageViewer;
+
+/** Permissions associated with the "image_viewer" role. */
+export type ImageViewer = 'view_image';
 
 /** Union of all permissions */
 export type PermissionType = AccountAdmin;

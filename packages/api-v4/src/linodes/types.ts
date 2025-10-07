@@ -191,7 +191,7 @@ export interface ConfigInterfaceIPv4 {
 }
 
 export interface IPv6SLAAC {
-  address: string;
+  address?: string;
   range: string;
 }
 
@@ -342,16 +342,35 @@ export interface PublicInterfaceData {
 }
 
 // Other Linode Interface types
-export type LinodeInterfaceStatus = 'active' | 'deleted' | 'inactive';
 
 export interface LinodeInterfaceHistory {
+  /**
+   * When this version was created.
+   *
+   * @example 2025-09-16T15:01:32
+   */
   created: string;
-  event_id: number;
-  interface_data: string; // will come in as JSON string object that we'll need to parse
+  /**
+   * The JSON body returned in response to a successful PUT, POST, or DELETE operation on the interface.
+   */
+  interface_data: LinodeInterface;
+  /**
+   * The unique ID for this history version.
+   */
   interface_history_id: number;
+  /**
+   * The network interface defined in the version.
+   */
   interface_id: number;
+  /**
+   * The Linode the interface_id belongs to.
+   */
   linode_id: number;
-  status: LinodeInterfaceStatus;
+  /**
+   * The network interface's version.
+   *
+   * The first version from a POST is 1. The version number is incremented when the network interface configuration is changed.
+   */
   version: number;
 }
 
@@ -382,21 +401,81 @@ export interface UpgradeInterfaceData {
 // ----------------------------------------------------------
 
 export interface DiskDevice {
-  disk_id: null | number;
+  disk_id: number;
+  volume_id: null;
 }
 export interface VolumeDevice {
-  volume_id: null | number;
+  disk_id: null;
+  volume_id: number;
 }
 
+export type ConfigDevice = DiskDevice | null | VolumeDevice;
+
 export interface Devices {
-  sda: DiskDevice | null | VolumeDevice;
-  sdb: DiskDevice | null | VolumeDevice;
-  sdc: DiskDevice | null | VolumeDevice;
-  sdd: DiskDevice | null | VolumeDevice;
-  sde: DiskDevice | null | VolumeDevice;
-  sdf: DiskDevice | null | VolumeDevice;
-  sdg: DiskDevice | null | VolumeDevice;
-  sdh: DiskDevice | null | VolumeDevice;
+  sda?: ConfigDevice;
+  sdaa?: ConfigDevice;
+  sdab?: ConfigDevice;
+  sdac?: ConfigDevice;
+  sdad?: ConfigDevice;
+  sdae?: ConfigDevice;
+  sdaf?: ConfigDevice;
+  sdag?: ConfigDevice;
+  sdah?: ConfigDevice;
+  sdai?: ConfigDevice;
+  sdaj?: ConfigDevice;
+  sdak?: ConfigDevice;
+  sdal?: ConfigDevice;
+  sdam?: ConfigDevice;
+  sdan?: ConfigDevice;
+  sdao?: ConfigDevice;
+  sdap?: ConfigDevice;
+  sdaq?: ConfigDevice;
+  sdar?: ConfigDevice;
+  sdas?: ConfigDevice;
+  sdat?: ConfigDevice;
+  sdau?: ConfigDevice;
+  sdav?: ConfigDevice;
+  sdaw?: ConfigDevice;
+  sdax?: ConfigDevice;
+  sday?: ConfigDevice;
+  sdaz?: ConfigDevice;
+  sdb?: ConfigDevice;
+  sdba?: ConfigDevice;
+  sdbb?: ConfigDevice;
+  sdbc?: ConfigDevice;
+  sdbd?: ConfigDevice;
+  sdbe?: ConfigDevice;
+  sdbf?: ConfigDevice;
+  sdbg?: ConfigDevice;
+  sdbh?: ConfigDevice;
+  sdbi?: ConfigDevice;
+  sdbj?: ConfigDevice;
+  sdbk?: ConfigDevice;
+  sdbl?: ConfigDevice;
+  sdc?: ConfigDevice;
+  sdd?: ConfigDevice;
+  sde?: ConfigDevice;
+  sdf?: ConfigDevice;
+  sdg?: ConfigDevice;
+  sdh?: ConfigDevice;
+  sdi?: ConfigDevice;
+  sdj?: ConfigDevice;
+  sdk?: ConfigDevice;
+  sdl?: ConfigDevice;
+  sdm?: ConfigDevice;
+  sdn?: ConfigDevice;
+  sdo?: ConfigDevice;
+  sdp?: ConfigDevice;
+  sdq?: ConfigDevice;
+  sdr?: ConfigDevice;
+  sds?: ConfigDevice;
+  sdt?: ConfigDevice;
+  sdu?: ConfigDevice;
+  sdv?: ConfigDevice;
+  sdw?: ConfigDevice;
+  sdx?: ConfigDevice;
+  sdy?: ConfigDevice;
+  sdz?: ConfigDevice;
 }
 
 export type KernelArchitecture = 'i386' | 'x86_64';
@@ -678,10 +757,7 @@ export interface MigrateLinodeRequest {
   region: string;
 }
 
-export type RescueRequestObject = Pick<
-  Devices,
-  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'
->;
+export type RescueRequestObject = Omit<Devices, 'sdbl'>;
 
 export interface LinodeCloneData {
   backups_enabled?: boolean | null;

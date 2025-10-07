@@ -58,6 +58,8 @@ import {
   firewallDeviceFactory,
   firewallEntityfactory,
   firewallFactory,
+  firewallMetricDefinitionsResponse,
+  firewallMetricRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -193,9 +195,17 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
   const database = databaseFactory.build(db);
+
   if (database.platform !== 'rdbms-default') {
     delete database.private_network;
   }
+
+  if (database.platform === 'rdbms-default' && !!database.private_network) {
+    // When a database is configured with a VPC, the primary host is prepended with 'private-'
+    const privateHost = `private-${database.hosts.primary}`;
+    database.hosts.primary = privateHost;
+  }
+
   return database;
 };
 
@@ -739,6 +749,9 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
+    const linodesWithFirewalls = linodeFactory.buildList(10, {
+      region: 'ap-west',
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -819,7 +832,13 @@ export const handlers = [
         id: 1006,
       }),
     ];
+    const linodeFirewall = linodeFactory.build({
+      region: 'ap-west',
+      label: 'Linode-firewall-test',
+      id: 90909,
+    });
     const linodes = [
+      ...linodesWithFirewalls,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -872,6 +891,7 @@ export const handlers = [
       }),
       eventLinode,
       multipleIPLinode,
+      linodeFirewall,
     ];
 
     if (request.headers.get('x-filter')) {
@@ -882,19 +902,62 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
-      // filter the linodes based on id or region
       if (andFilters?.length) {
-        filteredLinodes = filteredLinodes.filter((linode) => {
-          const filteredById = andFilters.every(
-            (filter: { id: number }) => filter.id === linode.id
-          );
-          const filteredByRegion = andFilters.every(
-            (filter: { region: string }) => filter.region === linode.region
-          );
+        // Check if this is a combined filter structure (multiple filter groups with +or arrays)
+        const hasCombinedFilter = andFilters.some(
+          (filterGroup: any) =>
+            filterGroup['+or'] && Array.isArray(filterGroup['+or'])
+        );
 
-          return filteredById || filteredByRegion;
-        });
+        if (hasCombinedFilter) {
+          // Handle combined filter structure for CloudPulse alerts
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            return andFilters.every((filterGroup: any) => {
+              // Handle id filter group
+              if (filterGroup['+or'] && Array.isArray(filterGroup['+or'])) {
+                const idFilters = filterGroup['+or'].filter(
+                  (f) => f.id !== undefined
+                );
+                const regionFilters = filterGroup['+or'].filter(
+                  (f) => f.region !== undefined
+                );
+
+                // Check if linode matches any id in the id filter group
+                const matchesId =
+                  idFilters.length === 0 ||
+                  idFilters.some((f) => Number(f.id) === linode.id);
+
+                // Check if linode matches any region in the region filter group
+                const matchesRegion =
+                  regionFilters.length === 0 ||
+                  regionFilters.some((f) => f.region === linode.region);
+
+                return matchesId && matchesRegion;
+              }
+
+              return false;
+            });
+          });
+        } else {
+          // Handle legacy andFilters for other use cases
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            const filteredById = andFilters.every(
+              (filter: { id: number }) => filter.id === linode.id
+            );
+            const filteredByRegion = andFilters.every(
+              (filter: { region: string }) => filter.region === linode.region
+            );
+
+            return filteredById || filteredByRegion;
+          });
+        }
       }
+
+      // The legacy id/region filtering logic has been removed here because it
+      // duplicated the work done above and incorrectly trimmed results when a
+      // newer "combined" filter structure (an array of "+or" groups inside
+      // "+and") was supplied. For legacy consumers the filtering is handled
+      // in the `else` branch above (lines ~922–934).
 
       // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
       if (orFilters?.length) {
@@ -953,8 +1016,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
           alerts: {
-            user: [21, 22, 23, 24, 25],
-            system: [19, 20],
+            user_alerts: [21, 22, 23, 24, 25],
+            system_alerts: [19, 20],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -969,8 +1032,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 10,
             io: 10000,
             network_in: 0,
@@ -988,8 +1051,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-3',
           region: 'us-iad',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -1161,6 +1224,9 @@ export const handlers = [
           }),
           firewallEntityfactory.build({
             type: 'linode',
+            label: 'Linode-firewall-test',
+            parent_entity: null,
+            id: 90909,
           }),
         ],
       }),
@@ -1282,6 +1348,16 @@ export const handlers = [
         region: 'us-mia',
         s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'ap-west',
+        s3_endpoint: 'ap-west-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-iad',
+        s3_endpoint: 'us-iad-1.linodeobjects.com',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
@@ -1383,14 +1459,49 @@ export const handlers = [
       Math.random() * 4
     )}` as ObjectStorageEndpointTypes;
 
-    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
-      cluster: `${region}-1`,
-      endpoint_type: randomEndpointType,
-      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
-      label: `obj-bucket-${randomBucketNumber}`,
-      region,
-    });
-
+    const buckets =
+      region !== 'ap-west' && region !== 'us-iad'
+        ? objectStorageBucketFactoryGen2.buildList(1, {
+            cluster: `${region}-1`,
+            endpoint_type: randomEndpointType,
+            hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+            label: `obj-bucket-${randomBucketNumber}`,
+            region,
+          })
+        : [];
+    if (region === 'ap-west') {
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-804.ap-west.linodeobjects.com`,
+          label: `obj-bucket-804`,
+          region,
+        })
+      );
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-902.ap-west.linodeobjects.com`,
+          label: `obj-bucket-902`,
+          region,
+        })
+      );
+    }
+    if (region === 'us-iad')
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `us-iad-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'us-iad-1.linodeobjects.com',
+          hostname: `obj-bucket-230.us-iad.linodeobjects.com`,
+          label: `obj-bucket-230`,
+          region,
+        })
+      );
     return HttpResponse.json({
       data: buckets.slice(
         (page - 1) * pageSize,
@@ -1555,7 +1666,9 @@ export const handlers = [
       'offline',
       'resizing',
     ];
-    const volumes = statuses.map((status) => volumeFactory.build({ status }));
+    const volumes = statuses.map((status) =>
+      volumeFactory.build({ status, region: 'ap-west' })
+    );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
@@ -2807,6 +2920,13 @@ export const handlers = [
             scope: 'region',
             regions: ['us-east'],
           }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'entity',
+            regions: ['us-east'],
+            entity_ids: ['5', '6'],
+          }),
         ],
       });
     }
@@ -2865,12 +2985,55 @@ export const handlers = [
         type: 'user',
         updated_by: 'user1',
       }),
+      alertFactory.build({
+        id: 999,
+        label: 'Firewall - testing',
+        service_type: 'firewall',
+        type: 'user',
+        scope: 'account',
+        created_by: 'user1',
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
+      alertFactory.build({
+        id: 550,
+        label: 'Object Storage - testing',
+        type: 'user',
+        service_type: 'objectstorage',
+        entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            scope: 'account',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            type: 'user',
+            label: 'object-storage -testing',
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+          })
+        );
+      }
       if (params.id !== undefined) {
         return HttpResponse.json(
           alertFactory.build({
@@ -2885,6 +3048,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
+            scope: pickRandom(['account', 'region', 'entity']),
           })
         );
       }
@@ -2894,6 +3058,20 @@ export const handlers = [
   http.put(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params, request }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            scope: 'account',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
       const body: any = request.json();
       return HttpResponse.json(
         alertFactory.build({
@@ -2943,6 +3121,18 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Object Storage',
+          service_type: 'objectstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
+        serviceTypesFactory.build({
+          label: 'Block Storage',
+          service_type: 'blockstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -2955,6 +3145,8 @@ export const handlers = [
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
+      objectstorage: 'Object Storage',
+      blockstorage: 'Block Storage',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -2962,6 +3154,7 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
+        scope: ['entity'],
       }),
     });
 
@@ -3026,6 +3219,26 @@ export const handlers = [
           id: 4,
           label: 'Firewall Dashboard',
           service_type: 'firewall',
+        })
+      );
+    }
+
+    if (params.serviceType === 'objectstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 6,
+          label: 'Object Storage Dashboard',
+          service_type: 'objectstorage',
+        })
+      );
+    }
+
+    if (params.serviceType === 'blockstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 7,
+          label: 'Block Storage Dashboard',
+          service_type: 'blockstorage',
         })
       );
     }
@@ -3096,7 +3309,7 @@ export const handlers = [
             metric: 'system_memory_usage_by_resource',
             metric_type: 'gauge',
             scrape_interval: '30s',
-            unit: 'byte',
+            unit: 'Bps ',
           },
           {
             available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
@@ -3285,6 +3498,9 @@ export const handlers = [
           },
         ],
       };
+      if (params.serviceType === 'firewall') {
+        return HttpResponse.json({ data: firewallMetricDefinitionsResponse });
+      }
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
       }
@@ -3313,6 +3529,12 @@ export const handlers = [
     } else if (id === '4') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
+    } else if (id === '6') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Object Storage Service I/O Statistics';
+    } else if (id === '7') {
+      serviceType = 'blockstorage';
+      dashboardLabel = 'Block Storage Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
@@ -3347,7 +3569,7 @@ export const handlers = [
           label: 'Memory Usage',
           metric: 'system_memory_usage_by_resource',
           size: 12,
-          unit: 'Bytes',
+          unit: 'Bps',
           group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
@@ -3453,9 +3675,8 @@ export const handlers = [
           },
           {
             metric: {
-              entity_id: '789',
+              entity_id: 'obj-bucket-383.ap-west.linodeobjects.com',
               metric_name: 'average_cpu_usage',
-              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

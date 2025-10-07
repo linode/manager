@@ -143,6 +143,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         // cURL tab
         ui.tabList.findTabByTitle('cURL').should('be.visible').click();
         cy.contains('alert').should('not.exist');
+        ui.button.findByTitle('Close').scrollIntoView();
         ui.button
           .findByTitle('Close')
           .should('be.visible')
@@ -299,25 +300,26 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         cy.get('pre code').should('be.visible');
         /** alert in code snippet
          * "alerts": {
-         *    "system": [
+         *    "system_alerts": [
          *             1,
          *             2,
          *      ],
-         *      "user": [
+         *      "user_alerts": [
          *             2
          *      ]
          * }
          */
-        const strAlertSnippet = `alerts '{"system": [${alertDefinitions[0].id},${alertDefinitions[1].id}],"user":[${alertDefinitions[2].id}]}`;
+        const strAlertSnippet = `alerts '{"system_alerts": [${alertDefinitions[0].id},${alertDefinitions[1].id}],"user_alerts":[${alertDefinitions[2].id}]}`;
         cy.contains(strAlertSnippet).should('be.visible');
         // cURL tab
         ui.tabList.findTabByTitle('cURL').should('be.visible').click();
         // hard to consolidate text within multiple spans in <pre><code>
         cy.get('pre code').within(() => {
           cy.contains('alerts');
-          cy.contains('system');
-          cy.contains('user');
+          cy.contains('system_alerts');
+          cy.contains('user_alerts');
         });
+        ui.button.findByTitle('Close').scrollIntoView();
         ui.button
           .findByTitle('Close')
           .should('be.visible')
@@ -341,11 +343,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       .click();
     cy.wait('@createLinode').then((intercept) => {
       const alerts = intercept.request.body['alerts'];
-      expect(alerts.system.length).to.equal(2);
-      expect(alerts.system[0]).to.eq(alertDefinitions[0].id);
-      expect(alerts.system[1]).to.eq(alertDefinitions[1].id);
-      expect(alerts.user.length).to.equal(1);
-      expect(alerts.user[0]).to.eq(alertDefinitions[2].id);
+      expect(alerts.system_alerts.length).to.equal(2);
+      expect(alerts.system_alerts[0]).to.eq(alertDefinitions[0].id);
+      expect(alerts.system_alerts[1]).to.eq(alertDefinitions[1].id);
+      expect(alerts.user_alerts.length).to.equal(1);
+      expect(alerts.user_alerts[0]).to.eq(alertDefinitions[2].id);
     });
   });
 

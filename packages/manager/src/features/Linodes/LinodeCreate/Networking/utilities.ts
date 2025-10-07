@@ -77,7 +77,8 @@ export const getLinodeInterfacePayload = (
  * we will convert these new interfaces to legacy interface onSubmit.
  */
 export const getLegacyInterfaceFromLinodeInterface = (
-  linodeInterface: LinodeCreateInterface
+  linodeInterface: LinodeCreateInterface,
+  isDualStackEnabled: boolean = false
 ): InterfacePayload => {
   const purpose = linodeInterface.purpose;
 
@@ -96,18 +97,32 @@ export const getLegacyInterfaceFromLinodeInterface = (
         ? 'any'
         : linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address;
 
-    // New interfaces use "auto" to auto-assign a VPC IP, but legacy will auto-assign with `null`.
-    const vpcIp =
+    // New interfaces use "auto" to auto-assign a VPC IPv4, but legacy will auto-assign with `null`.
+    const vpcIPv4 =
       linodeInterface.vpc?.ipv4?.addresses?.[0].address === 'auto'
         ? null
         : linodeInterface.vpc?.ipv4?.addresses?.[0].address;
+
+    const vpcIPv6 =
+      linodeInterface.vpc?.ipv6?.slaac?.[0]?.range === 'auto'
+        ? null
+        : linodeInterface.vpc?.ipv6?.slaac?.[0]?.range;
+
+    const allowPublicIPv6Access = linodeInterface.vpc?.ipv6?.is_public;
 
     return {
       ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
       ipv4: {
         nat_1_1: nat,
-        vpc: vpcIp,
+        vpc: vpcIPv4,
       },
+      ipv6: isDualStackEnabled
+        ? {
+            is_public: allowPublicIPv6Access,
+            slaac: vpcIPv6 ? [{ range: vpcIPv6 }] : [],
+            ranges: linodeInterface.vpc?.ipv6?.ranges ?? [],
+          }
+        : undefined,
       purpose,
       subnet_id: linodeInterface.vpc?.subnet_id,
       vpc_id: linodeInterface.vpc?.vpc_id,
@@ -192,11 +207,11 @@ export const getDefaultFirewallForInterfacePurpose = (
   }
 
   if (purpose === 'public') {
-    return firewallSettings.default_firewall_ids.public_interface;
+    return firewallSettings.default_firewall_ids?.public_interface;
   }
 
   if (purpose === 'vpc') {
-    return firewallSettings.default_firewall_ids.vpc_interface;
+    return firewallSettings.default_firewall_ids?.vpc_interface;
   }
 
   return null;

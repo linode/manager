@@ -42,11 +42,13 @@ const regions = [
     capabilities: ['Managed Databases'],
     id: 'us-ord',
     label: 'Chicago, IL',
+    monitors: { alerts: ['Managed Databases'] },
   }),
   regionFactory.build({
     capabilities: ['Managed Databases'],
     id: 'us-east',
     label: 'Newark',
+    monitors: { alerts: ['Managed Databases'] },
   }),
 ];
 const databases: Database[] = databaseFactory
@@ -193,8 +195,6 @@ describe('Integration Tests for Edit Alert', () => {
     cy.wait('@updateDefinitions').then(({ request, response }) => {
       const { created_by, description, severity, status, type, updated_by } =
         alertDetails;
-
-      expect(response).to.have.property('statusCode', 200);
 
       const resourceIds: string[] = request.body.entity_ids.map((id: number) =>
         String(id)

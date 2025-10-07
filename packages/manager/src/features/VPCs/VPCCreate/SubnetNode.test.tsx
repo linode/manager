@@ -65,7 +65,7 @@ describe('SubnetNode', () => {
     });
 
     screen.getByText('Subnet Label');
-    screen.getByText('Subnet IP Address Range');
+    screen.getByText('Subnet IPv4 Range (CIDR)');
   });
 
   it('should show a removable button if not a drawer', () => {
@@ -133,7 +133,7 @@ describe('SubnetNode', () => {
       },
     });
 
-    expect(screen.getByText('IPv6 Prefix Length')).toBeVisible();
+    expect(screen.getByText('Subnet IPv6 Prefix Length')).toBeVisible();
     const select = screen.getByRole('combobox');
     expect(select).toHaveValue('/56');
   });
@@ -160,5 +160,26 @@ describe('SubnetNode', () => {
     expect(
       screen.queryByText('Number of Available IP Addresses: 252')
     ).not.toBeInTheDocument();
+  });
+
+  it('should display zero instead of negative numbers for linodes helper text', () => {
+    renderWithThemeAndHookFormContext({
+      component: <SubnetNode {...props} shouldDisplayIPv6={true} />,
+      useFormOptions: {
+        defaultValues: {
+          ...formOptions.defaultValues,
+          ipv6: [{ range: '/52' }],
+          subnets: [
+            {
+              ipv4: '10.0.0.0/32',
+              ipv6: [{ range: '/56' }],
+              label: 'subnet 0',
+            },
+          ],
+        },
+      },
+    });
+
+    expect(screen.getByText('Number of Linodes: 0')).toBeVisible();
   });
 });

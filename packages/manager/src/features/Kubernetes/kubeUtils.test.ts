@@ -1,12 +1,7 @@
 import { accountBetaFactory, linodeTypeFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
-import {
-  kubeLinodeFactory,
-  kubernetesEnterpriseTierVersionFactory,
-  kubernetesVersionFactory,
-  nodePoolFactory,
-} from 'src/factories';
+import { kubeLinodeFactory, nodePoolFactory } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 
 import {
@@ -16,7 +11,6 @@ import {
   getTotalClusterMemoryCPUAndStorage,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
-  useLkeStandardOrEnterpriseVersions,
 } from './kubeUtils';
 
 import type {
@@ -24,16 +18,12 @@ import type {
   KubernetesVersion,
 } from '@linode/api-v4';
 
-const mockKubernetesVersions = kubernetesVersionFactory.buildList(1);
-const mockKubernetesEnterpriseVersions =
-  kubernetesEnterpriseTierVersionFactory.buildList(1);
-
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
+  useGrants: vi.fn().mockReturnValue({}),
   useAccountBetaQuery: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
   useKubernetesTieredVersionsQuery: vi.fn().mockReturnValue({}),
-  useKubernetesVersionQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', () => {
@@ -41,6 +31,7 @@ vi.mock('@linode/queries', () => {
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
+    useGrants: queryMocks.useGrants,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,
   };
 });
@@ -59,7 +50,6 @@ vi.mock('src/queries/kubernetes', () => {
     ...actual,
     useKubernetesTieredVersionsQuery:
       queryMocks.useKubernetesTieredVersionsQuery,
-    useKubernetesVersionQuery: queryMocks.useKubernetesVersionQuery,
   };
 });
 
@@ -356,18 +346,18 @@ describe('helper functions', () => {
 
 describe('hooks', () => {
   describe('useIsLkeEnterpriseEnabled', () => {
-    it('returns false for feature enablement if the account does not have the capability', () => {
+    it('returns false for feature enablement (except post-LA) if the account does not have the capability', () => {
       queryMocks.useAccount.mockReturnValue({
         data: {
           capabilities: [],
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: true,
         },
       });
@@ -378,8 +368,9 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: false,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: false,
-        isLkeEnterprisePostLAFeatureEnabled: false,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: true, // This is okay, because the *LA* feature is gated by the account capability.
       });
     });
 
@@ -390,11 +381,11 @@ describe('hooks', () => {
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: false,
           la: true,
-          phase2Mtc: false,
+          phase2Mtc: { byoVPC: false, dualStack: false },
           postLa: false,
         },
       });
@@ -405,7 +396,8 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: false,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
@@ -413,15 +405,19 @@ describe('hooks', () => {
     it('returns true for Phase 2/MTC feature enablement if the account has the capability + enabled Phase 2 feature flag values', () => {
       queryMocks.useAccount.mockReturnValue({
         data: {
-          capabilities: ['Kubernetes Enterprise'],
+          capabilities: [
+            'Kubernetes Enterprise',
+            'Kubernetes Enterprise BYO VPC',
+            'Kubernetes Enterprise Dual Stack',
+          ],
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: false,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: false,
         },
       });
@@ -432,7 +428,8 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: true,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
@@ -444,11 +441,11 @@ describe('hooks', () => {
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: false,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: false,
         },
       });
@@ -459,23 +456,28 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
         isLkeEnterprisePostLAFeatureEnabled: false,
       });
     });
 
-    it('returns true for GA feature enablement if the account has the capability + enabled GA feature flag values', () => {
+    it('returns true for GA feature enablement if the account has the capabilities + enabled GA feature flag values', () => {
       queryMocks.useAccount.mockReturnValue({
         data: {
-          capabilities: ['Kubernetes Enterprise'],
+          capabilities: [
+            'Kubernetes Enterprise',
+            'Kubernetes Enterprise BYO VPC',
+            'Kubernetes Enterprise Dual Stack',
+          ],
         },
       });
       queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
+        lkeEnterprise2: {
           enabled: true,
           ga: true,
           la: true,
-          phase2Mtc: true,
+          phase2Mtc: { byoVPC: true, dualStack: true },
           postLa: true,
         },
       });
@@ -486,76 +488,10 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
-        isLkeEnterprisePhase2FeatureEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: true,
         isLkeEnterprisePostLAFeatureEnabled: true,
       });
-    });
-  });
-
-  describe('useLkeStandardOrEnterpriseVersions', () => {
-    beforeAll(() => {
-      queryMocks.useAccount.mockReturnValue({
-        data: {
-          capabilities: ['Kubernetes Enterprise'],
-        },
-      });
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
-          enabled: true,
-          ga: true,
-          la: true,
-          phase2Mtc: true,
-        },
-      });
-      queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
-        data: mockKubernetesEnterpriseVersions,
-        error: null,
-        isFetching: false,
-      });
-      queryMocks.useKubernetesVersionQuery.mockReturnValue({
-        data: mockKubernetesVersions,
-        error: null,
-        isLoading: false,
-      });
-    });
-
-    it('returns enterprise versions for enterprise clusters when the LKE-E feature is enabled', () => {
-      const { result } = renderHook(() =>
-        useLkeStandardOrEnterpriseVersions('enterprise')
-      );
-
-      expect(result.current.versions).toEqual(mockKubernetesEnterpriseVersions);
-      expect(result.current.isLoadingVersions).toBe(false);
-      expect(result.current.versionsError).toBe(null);
-    });
-
-    it('returns standard versions for standard clusters when the LKE-E feature is enabled', () => {
-      const { result } = renderHook(() =>
-        useLkeStandardOrEnterpriseVersions('standard')
-      );
-
-      expect(result.current.versions).toEqual(mockKubernetesVersions);
-      expect(result.current.isLoadingVersions).toBe(false);
-      expect(result.current.versionsError).toBe(null);
-    });
-
-    it('returns standard versions when the LKE-E feature is disabled', () => {
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise: {
-          enabled: false,
-          ga: true,
-          la: true,
-          phase2Mtc: true,
-        },
-      });
-
-      const { result } = renderHook(() =>
-        useLkeStandardOrEnterpriseVersions('standard')
-      );
-
-      expect(result.current.versions).toEqual(mockKubernetesVersions);
-      expect(result.current.isLoadingVersions).toBe(false);
-      expect(result.current.versionsError).toBe(null);
     });
   });
 });

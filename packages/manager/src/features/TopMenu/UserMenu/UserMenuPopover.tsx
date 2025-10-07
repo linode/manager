@@ -32,33 +32,15 @@ interface MenuLink {
   to: string;
 }
 
-const profileLinks: MenuLink[] = [
-  {
-    display: 'Display',
-    to: '/profile/display',
-  },
-  { display: 'Login & Authentication', to: '/profile/auth' },
-  { display: 'SSH Keys', to: '/profile/keys' },
-  { display: 'LISH Console Settings', to: '/profile/lish' },
-  {
-    display: 'API Tokens',
-    to: '/profile/tokens',
-  },
-  { display: 'OAuth Apps', to: '/profile/clients' },
-  { display: 'Referrals', to: '/profile/referrals' },
-  { display: 'My Settings', to: '/profile/settings' },
-  { display: 'Log Out', to: '/logout' },
-];
-
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const flags = useFlags();
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
   const theme = useTheme();
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -72,6 +54,32 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
+
+  const profileLinks: MenuLink[] = [
+    {
+      display: 'Display',
+      to: '/profile/display',
+    },
+    { display: 'Login & Authentication', to: '/profile/auth' },
+    { display: 'SSH Keys', to: '/profile/keys' },
+    { display: 'LISH Console Settings', to: '/profile/lish' },
+    {
+      display: 'API Tokens',
+      to: '/profile/tokens',
+    },
+    { display: 'OAuth Apps', to: '/profile/clients' },
+    {
+      display: iamRbacPrimaryNavChanges ? 'Preferences' : 'Referrals',
+      to: iamRbacPrimaryNavChanges
+        ? '/profile/preferences'
+        : '/profile/referrals',
+    },
+    {
+      display: iamRbacPrimaryNavChanges ? 'Referrals' : 'My Settings',
+      to: iamRbacPrimaryNavChanges ? '/profile/referrals' : '/profile/settings',
+    },
+    { display: 'Log Out', to: '/logout' },
+  ];
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders = isProxyUser
@@ -93,50 +101,50 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     () => [
       {
         display: 'Billing',
-        to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+        to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
       {
         display:
-          flags?.iamRbacPrimaryNavChanges && isIAMEnabled
+          iamRbacPrimaryNavChanges && isIAMEnabled
             ? 'Identity & Access'
             : 'Users & Grants',
         to:
-          flags?.iamRbacPrimaryNavChanges && isIAMEnabled
+          iamRbacPrimaryNavChanges && isIAMEnabled
             ? '/iam'
-            : flags?.iamRbacPrimaryNavChanges && !isIAMEnabled
+            : iamRbacPrimaryNavChanges && !isIAMEnabled
               ? '/users'
               : '/account/users',
-        isBeta: flags?.iamRbacPrimaryNavChanges && isIAMEnabled,
+        isBeta: iamRbacPrimaryNavChanges && isIAMBeta,
       },
       {
         display: 'Quotas',
-        hide: !flags.limitsEvolution?.enabled,
-        to: flags?.iamRbacPrimaryNavChanges ? '/quotas' : '/account/quotas',
+        hide: !limitsEvolution?.enabled,
+        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/quotas',
       },
       {
         display: 'Login History',
-        to: flags?.iamRbacPrimaryNavChanges
+        to: iamRbacPrimaryNavChanges
           ? '/login-history'
           : '/account/login-history',
       },
       {
         display: 'Service Transfers',
-        to: flags?.iamRbacPrimaryNavChanges
+        to: iamRbacPrimaryNavChanges
           ? '/service-transfers'
           : '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        to: flags?.iamRbacPrimaryNavChanges
-          ? '/maintenance'
-          : '/account/maintenance',
+        to: iamRbacPrimaryNavChanges ? '/maintenance' : '/account/maintenance',
       },
       {
-        display: 'Settings',
-        to: flags?.iamRbacPrimaryNavChanges ? '/settings' : '/account/settings',
+        display: iamRbacPrimaryNavChanges ? 'Account Settings' : 'Settings',
+        to: iamRbacPrimaryNavChanges
+          ? '/account-settings'
+          : '/account/settings',
       },
     ],
-    [isIAMEnabled, flags]
+    [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -246,7 +254,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         </Box>
         <Box>
           <Heading>
-            {flags?.iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
+            {iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
           </Heading>
           <Divider />
           <Stack

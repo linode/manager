@@ -14,29 +14,24 @@ interface Props {
   onDelete: () => void;
   onRename: () => void;
   onResize: () => void;
-  readOnly?: boolean;
 }
 
 export const LinodeDiskActionMenu = (props: Props) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const {
-    disk,
-    linodeId,
-    linodeStatus,
-    onDelete,
-    onRename,
-    onResize,
-    readOnly,
-  } = props;
+  const { disk, linodeId, linodeStatus, onDelete, onRename, onResize } = props;
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'linode',
     ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
     linodeId,
     isOpen
   );
+
+  const { data: imagePermissions } = usePermissions('account', [
+    'create_image',
+  ]);
 
   const poweredOnTooltip =
     linodeStatus !== 'offline'
@@ -67,7 +62,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
         : poweredOnTooltip,
     },
     {
-      disabled: readOnly || !!swapTooltip,
+      disabled: !imagePermissions.create_image || !!swapTooltip,
       onClick: () =>
         navigate({
           to: `/images/create/disk`,
@@ -77,7 +72,9 @@ export const LinodeDiskActionMenu = (props: Props) => {
           },
         }),
       title: 'Create Disk Image',
-      tooltip: readOnly ? noPermissionTooltip : swapTooltip,
+      tooltip: !imagePermissions.create_image
+        ? noPermissionTooltip
+        : swapTooltip,
     },
     {
       disabled: !permissions.clone_linode,
@@ -106,6 +103,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Disk ${disk.label}`}
+      loading={isLoading}
       onOpen={() => setIsOpen(true)}
     />
   );
