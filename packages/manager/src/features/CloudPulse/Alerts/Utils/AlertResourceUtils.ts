@@ -138,7 +138,6 @@ export const getRegionOptions = (
   });
   return Array.from(uniqueRegions);
 };
-
 /**
  * Builds a list of unique endpoint strings from CloudPulse resources.
  *
@@ -274,7 +273,6 @@ const applyAdditionalFilter = (
     if (Array.isArray(value) && typeof resourceValue === 'string') {
       return resourceValue && value.includes(resourceValue);
     }
-
     return resourceValue === value;
   });
 };

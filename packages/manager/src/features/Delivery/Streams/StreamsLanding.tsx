@@ -63,7 +63,7 @@ export const StreamsLanding = () => {
       label: { '+contains': search?.label },
     }),
     ...(search?.status !== undefined && {
-      status: { '+contains': search?.status },
+      status: search?.status,
     }),
   };
 
@@ -147,7 +147,6 @@ export const StreamsLanding = () => {
     destinations,
     details,
     label,
-    type,
     status,
   }: Stream) => {
     updateStream({
@@ -155,7 +154,6 @@ export const StreamsLanding = () => {
       destinations: destinations.map(({ id: destinationId }) => destinationId),
       details,
       label,
-      type,
       status:
         status === streamStatus.Active
           ? streamStatus.Inactive
@@ -255,7 +253,7 @@ export const StreamsLanding = () => {
               {streams?.data.map((stream) => (
                 <StreamTableRow key={stream.id} stream={stream} {...handlers} />
               ))}
-              {streams?.results === 0 && <TableRowEmpty colSpan={6} />}
+              {streams?.results === 0 && <TableRowEmpty colSpan={7} />}
             </TableBody>
           </Table>
           <PaginationFooter
