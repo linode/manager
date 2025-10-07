@@ -184,7 +184,6 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
           });
         }
 
-        // Add more complex filter types here as needed
         return true;
       }
     );
@@ -228,8 +227,6 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
     results,
   });
 };
-
-// ... rest of the code ...
 
 /**
  * Builds a Mock Service Worker not found response.

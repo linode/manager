@@ -63,7 +63,6 @@ export const getPermissions = (mockState: MockState) => [
   ),
 
   // Update user roles for a specific username
-  // Update user roles for a specific username
   http.put(
     '*/v4*/iam/users/:username/role-permissions',
     async ({
