@@ -19,8 +19,11 @@ import {
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
+  VALID_OPERATORS,
 } from './constants';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
   APIError,
@@ -28,6 +31,7 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
   Dashboard,
+  Dimension,
   MonitoringCapabilities,
   ResourcePage,
   Service,
@@ -392,4 +396,59 @@ export const useIsAclpSupportedRegion = (
   const region = regions?.find(({ id }) => id === regionId);
 
   return region?.monitors?.[type]?.includes(capability) ?? false;
+};
+
+/**
+ * @param filter The filter associated with the metric
+ * @param options The dimension options associated with the metric
+ * @returns boolean
+ */
+export const isValidFilter = (
+  filter: MetricsDimensionFilter,
+  options: Dimension[]
+): boolean => {
+  const operator = filter.operator;
+  if (!operator || !VALID_OPERATORS.includes(operator)) return false;
+
+  const dimension = options.find(
+    ({ dimension_label: dimensionLabel }) =>
+      dimensionLabel === filter.dimension_label
+  );
+  if (!dimension) return false;
+
+  if (!dimension.values.length) return true; // static value dimensions
+
+  // allow pattern operators without value check
+  if (operator === 'endswith' || operator === 'startswith') return true;
+
+  const validValues = new Set(dimension.values);
+  return (filter.value ?? '')
+    .split(',')
+    .every((value) => validValues.has(value));
+};
+
+/**
+ * @param linodes The list of linode according to the supported regions
+ * @param vpcs The list of vpcs according to the supported regions
+ * @param dimensionFilters The array of dimension filters selected
+ * @returns The filtered dimension filter based on the selections
+ */
+export const getFilteredDimensions = (
+  dimensions: Dimension[],
+  linodes: FetchOptions,
+  vpcs: FetchOptions,
+  dimensionFilters: MetricsDimensionFilter[] | undefined
+): MetricsDimensionFilter[] => {
+  const mergedDimensions = dimensions.map((dim) =>
+    dim.dimension_label === 'linode_id'
+      ? { ...dim, values: linodes.values.map((lin) => lin.value) }
+      : dim.dimension_label === 'vpc_subnet_id'
+        ? { ...dim, values: vpcs.values.map((vpc) => vpc.value) }
+        : dim
+  );
+  return dimensionFilters?.length
+    ? dimensionFilters.filter((filter) =>
+        isValidFilter(filter, mergedDimensions ?? [])
+      )
+    : [];
 };

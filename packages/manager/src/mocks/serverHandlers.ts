@@ -3361,6 +3361,27 @@ export const handlers = [
             scrape_interval: '30s',
             unit: 'ops_per_second',
           },
+          {
+            label: 'Network Traffic',
+            metric: 'vm_network_bytes_total',
+            unit: 'Kbps',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['avg'],
+            dimensions: [
+              {
+                label: 'Traffic Pattern',
+                dimension_label: 'pattern',
+                values: ['publicin', 'publicout', 'privatein', 'privateout'],
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['ipv4', 'ipv6'],
+              },
+            ],
+          },
         ],
       };
 
@@ -3517,18 +3538,91 @@ export const handlers = [
   http.get('*/monitor/dashboards/:id', ({ params }) => {
     let serviceType: string;
     let dashboardLabel: string;
+    let widgets;
 
     const id = params.id;
 
     if (id === '1') {
       serviceType = 'dbaas';
       dashboardLabel = 'DBaaS Service I/O Statistics';
+      widgets = [
+        {
+          metric: 'cpu_usage',
+          unit: '%',
+          label: 'CPU Usage',
+          color: 'default',
+          size: 12,
+          chart_type: 'area',
+          y_label: 'cpu_usage',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'memory_usage',
+          unit: '%',
+          label: 'Memory Usage',
+          color: 'default',
+          size: 6,
+          chart_type: 'area',
+          y_label: 'memory_usage',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+      ];
     } else if (id === '3') {
       serviceType = 'nodebalancer';
       dashboardLabel = 'NodeBalancer Service I/O Statistics';
+      widgets = [
+        {
+          metric: 'nb_ingress_traffic_rate',
+          unit: 'Bps',
+          label: 'Ingress Traffic Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nb_ingress_traffic_rate',
+          group_by: ['entity_id'],
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nb_egress_traffic_rate',
+          unit: 'Bps',
+          label: 'Egress Traffic Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nb_egress_traffic_rate',
+          group_by: ['entity_id'],
+          aggregate_function: 'sum',
+        },
+      ];
     } else if (id === '4') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
+      widgets = [
+        {
+          metric: 'fw_active_connections',
+          unit: 'Count',
+          label: 'Current Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'fw_active_connections',
+          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'fw_available_connections',
+          unit: 'Count',
+          label: 'Available Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'fw_available_connections',
+          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          aggregate_function: 'avg',
+        },
+      ];
     } else if (id === '6') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Object Storage Service I/O Statistics';
@@ -3538,6 +3632,48 @@ export const handlers = [
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
+      widgets = [
+        {
+          metric: 'vm_cpu_time_total',
+          unit: '%',
+          label: 'CPU Usage by Instance',
+          color: 'default',
+          size: 12,
+          chart_type: 'area',
+          y_label: 'vm_cpu_time_total',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'vm_local_disk_iops_total',
+          unit: 'IOPS',
+          label: 'Local Disk I/O by Instance',
+          color: 'default',
+          size: 12,
+          chart_type: 'area',
+          y_label: 'vm_local_disk_iops_total',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'vm_network_bytes_total',
+          unit: 'Kbps',
+          label: 'Network Traffic In by Instance',
+          color: 'default',
+          size: 12,
+          chart_type: 'area',
+          y_label: 'vm_network_bytes_total',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+          filters: [
+            {
+              dimension_label: 'pattern',
+              operator: 'in',
+              value: 'publicin',
+            },
+          ],
+        },
+      ];
     }
 
     const response = {
@@ -3547,7 +3683,7 @@ export const handlers = [
       service_type: serviceType,
       type: 'standard',
       updated: null,
-      widgets: [
+      widgets: widgets || [
         {
           aggregate_function: 'avg',
           chart_type: 'area',

@@ -89,7 +89,7 @@ export interface Widgets {
 
 export interface Filters {
   dimension_label: string;
-  operator: string;
+  operator: DimensionFilterOperatorType;
   value: string;
 }
 

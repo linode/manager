@@ -72,6 +72,11 @@ interface ValueFieldRendererProps {
   serviceType?: CloudPulseServiceType | null;
 
   /**
+   * The type of monitoring to filter on.
+   */
+  type?: 'alerts' | 'metrics';
+
+  /**
    * The currently selected value for the input field.
    */
   value: null | string;
@@ -96,6 +101,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     operator,
     value,
     values,
+    type = 'alerts',
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
@@ -118,7 +124,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     regions,
     entities,
     serviceType,
-    type: 'alerts',
+    type,
     scope,
   });
   const staticOptions = useMemo(
