@@ -4,7 +4,7 @@ import React from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 
-import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
+import { oauthClient } from './oauth';
 
 /**
  * Login will redirect back to Cloud Manager with a URL like:
@@ -16,7 +16,7 @@ export const OAuthCallback = () => {
   const navigate = useNavigate();
   const authenticate = async () => {
     try {
-      const { returnTo } = await handleOAuthCallback({
+      const { returnTo } = await oauthClient.handleOAuthCallback({
         params: location.search,
       });
 
@@ -25,7 +25,7 @@ export const OAuthCallback = () => {
       // eslint-disable-next-line no-console
       console.error(error);
       Sentry.captureException(error);
-      clearStorageAndRedirectToLogout();
+      oauthClient.clearStorageAndRedirectToLogout();
     }
   };
 

@@ -7,7 +7,7 @@ import { AppBar } from 'src/components/AppBar';
 import { Link } from 'src/components/Link';
 import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
-import { getIsLoggedInAsCustomer } from 'src/OAuth/oauth';
+import { oauthClient } from 'src/OAuth/oauth';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
@@ -36,7 +36,7 @@ export interface TopMenuProps {
 export const TopMenu = React.memo((props: TopMenuProps) => {
   const { openSideMenu, username } = props;
 
-  const isLoggedInAsCustomer = getIsLoggedInAsCustomer();
+  const isLoggedInAsCustomer = oauthClient.getIsLoggedInAsCustomer();
 
   const isNarrowViewport = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(960)

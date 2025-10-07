@@ -3,10 +3,8 @@ import { useNavigate } from '@tanstack/react-router';
 import React, { useEffect } from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
-import {
-  clearStorageAndRedirectToLogout,
-  handleLoginAsCustomerCallback,
-} from 'src/OAuth/oauth';
+
+import { oauthClient } from './oauth';
 
 /**
  * This component is similar to the OAuth component, in that it's main
@@ -23,7 +21,7 @@ export const LoginAsCustomerCallback = () => {
 
   const authenticate = async () => {
     try {
-      const { returnTo } = await handleLoginAsCustomerCallback({
+      const { returnTo } = await oauthClient.handleLoginAsCustomerCallback({
         params: location.hash.substring(1), // substring is called to remove the leading "#" from the hash params
       });
 
@@ -32,7 +30,7 @@ export const LoginAsCustomerCallback = () => {
       // eslint-disable-next-line no-console
       console.error(error);
       Sentry.captureException(error);
-      clearStorageAndRedirectToLogout();
+      oauthClient.clearStorageAndRedirectToLogout();
     }
   };
 

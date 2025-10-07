@@ -4,12 +4,12 @@ import { AxiosHeaders } from 'axios';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
 import type { APIError, Profile } from '@linode/api-v4';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { oauthClient } from './OAuth/oauth';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
@@ -45,8 +45,8 @@ export const handleError = (
     window.location.pathname !== '/oauth/callback'
   ) {
     isRedirectingToLogin = true;
-    clearAuthDataFromLocalStorage();
-    redirectToLogin();
+    oauthClient.clearAuthDataFromLocalStorage();
+    oauthClient.redirectToLogin();
   }
 
   const status: number = error.response?.status ?? 0;

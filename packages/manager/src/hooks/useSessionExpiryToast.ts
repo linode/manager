@@ -2,7 +2,7 @@ import { isNumeric } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 
-import { getIsAdminToken } from 'src/OAuth/oauth';
+import { oauthClient } from 'src/OAuth/oauth';
 import { storage } from 'src/utilities/storage';
 
 export const useSessionExpiryToast = () => {
@@ -22,7 +22,7 @@ export const useSessionExpiryToast = () => {
      * Do **not** show a session expiry for regular customers.
      * (We can change this in the future if we want, we just need to run it by product)
      */
-    if (!getIsAdminToken(token)) {
+    if (!oauthClient.getIsAdminToken(token)) {
       // Early return if we're not logged in as a customer
       return;
     }

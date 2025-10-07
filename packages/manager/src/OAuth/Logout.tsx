@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
-import { logout } from 'src/OAuth/oauth';
+
+import { oauthClient } from './oauth';
 
 export const Logout = () => {
   useEffect(() => {
-    logout();
+    oauthClient.logout();
   }, []);
 
   return <SplashScreen />;

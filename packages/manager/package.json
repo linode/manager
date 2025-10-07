@@ -26,6 +26,7 @@
     "@linode/api-v4": "workspace:*",
     "@linode/design-language-system": "^5.0.0",
     "@linode/queries": "workspace:*",
+    "@linode/oauth": "workspace:*",
     "@linode/search": "workspace:*",
     "@linode/shared": "workspace:*",
     "@linode/ui": "workspace:*",
