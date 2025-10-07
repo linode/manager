@@ -31,11 +31,7 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type {
-  CloudPulseMetricsResponse,
-  CloudPulseServiceType,
-  Dashboard,
-} from '@linode/api-v4';
+import type { CloudPulseMetricsResponse, Dashboard } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -50,7 +46,8 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, serviceType } = widgetDetails.blockstorage;
+const { dashboardName, id, metrics } = widgetDetails.blockstorage;
+const serviceType = 'blockstorage';
 
 // Build a shared dimension blockstorage
 const dimensions = [
@@ -66,10 +63,10 @@ const getFiltersForMetric = (metricName: string) => {
   const metric = metrics.find((m) => m.name === metricName);
   if (!metric) return [];
 
-  return metric.filters.map((f) => ({
-    dimension_label: f.dimension_label,
-    label: f.dimension_label, // or friendly name
-    values: f.value ? [f.value] : undefined,
+  return metric.filters.map((filter) => ({
+    dimension_label: filter.dimension_label,
+    label: filter.dimension_label,
+    values: filter.value ? [filter.value] : undefined,
   }));
 };
 
@@ -77,7 +74,7 @@ const getFiltersForMetric = (metricName: string) => {
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   group_by: ['entity_id'],
-  service_type: serviceType as CloudPulseServiceType,
+  service_type: serviceType,
   id,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
@@ -87,7 +84,7 @@ const dashboard = dashboardFactory.build({
       unit,
       y_label: yLabel,
       namespace_id: id,
-      service_type: serviceType as CloudPulseServiceType,
+      service_type: serviceType,
     })
   ),
 });
@@ -177,7 +174,7 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
-    serviceType: serviceType as CloudPulseServiceType,
+    serviceType,
     groupBy: ['entity_id'],
   });
 
@@ -230,11 +227,6 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
    * and Verifications ensure correct API payloads, widget states, applied filters,
    * and accurate graph/legend values.
    */
-  afterEach(() => {
-    cy.clearLocalStorage();
-    cy.clearCookies();
-  });
-
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build());
@@ -391,8 +383,7 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
     // Validate all intercepted metrics API calls contain correct filters and group_by values
     cy.get('@refreshMetrics.all')
       .should('have.length', 6)
-      .each((xhr: unknown) => {
-        const interception = xhr as Interception;
+      .each((interception: Interception) => {
         const { body: requestPayload } = interception.request;
 
         // Ensure group_by contains entity_id and node_type in correct order
@@ -450,8 +441,7 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
     // Validate all intercepted metrics API calls contain no group_by values
     cy.get('@refreshMetrics.all')
       .should('have.length', 6)
-      .each((xhr: unknown) => {
-        const interception = xhr as Interception;
+      .each((interception: Interception) => {
         const { body: requestPayload } = interception.request;
 
         // Ensure group_by is cleared (null, undefined, or empty array)
@@ -679,8 +669,7 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
     // validate the API calls are going with intended payload
     cy.get('@refreshMetrics.all')
       .should('have.length', 6)
-      .each((xhr: unknown) => {
-        const interception = xhr as Interception;
+      .each((interception: Interception) => {
         const { body: requestPayload } = interception.request;
         const { metrics: metric, relative_time_duration: timeRange } =
           requestPayload;
