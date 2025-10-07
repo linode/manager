@@ -11,10 +11,10 @@ import type { MockSeeder, MockState } from 'src/mocks/types';
 
 export const delegationSeeder: MockSeeder = {
   canUpdateCount: true,
-  desc: 'Child Accounts and Delegations Seeds',
+  desc: 'Child Accounts',
   group: { id: 'Child Accounts' },
   id: 'child-accounts:crud',
-  label: 'Child Accounts & Delegations',
+  label: 'Child Accounts',
 
   seeder: async (mockState: MockState) => {
     const seedsCountMap = getSeedsCountMap();
