@@ -91,7 +91,7 @@ const getFiltersForMetric = (metricName: string) => {
 
   return metric.filters.map((f) => ({
     dimension_label: f.dimension_label,
-    label: f.dimension_label, // or friendly name
+    label: f.dimension_label,
     values: f.value ? [f.value] : undefined,
   }));
 };

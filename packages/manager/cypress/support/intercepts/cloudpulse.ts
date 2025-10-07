@@ -125,7 +125,6 @@ export const mockGetCloudPulseDashboards = (
  *
  * This function allows you to specify a mock response for POST requests
  *
- * @param {any} mockResponse - The mock response to return for the intercepted request.
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 export const mockCreateCloudPulseMetrics = (
@@ -154,7 +153,7 @@ export const mockCreateCloudPulseMetrics = (
         },
       };
 
-      req.reply({ statusCode: 200, body: response });
+      req.reply({ body: response });
     }
   );
 };

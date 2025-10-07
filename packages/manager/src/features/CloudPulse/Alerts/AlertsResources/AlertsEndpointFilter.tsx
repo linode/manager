@@ -3,6 +3,9 @@ import React from 'react';
 
 import type { AlertFilterKey } from './types';
 
+interface EndpointOption {
+  label: string;
+}
 export interface AlertsEndpointFilterProps {
   /**
    * List of object storage endpoints.
@@ -21,14 +24,16 @@ export const AlertsEndpointFilter = React.memo(
   (props: AlertsEndpointFilterProps) => {
     const { handleFilterChange: handleSelection, endpointOptions } = props;
     const [selectedEndpoints, setSelectedEndpoints] = React.useState<
-      { label: string }[]
+      EndpointOption[]
     >([]);
-    const endpointBuiltOptions = endpointOptions.map((option) => ({
-      label: option,
-    }));
+    const endpointBuiltOptions: EndpointOption[] = endpointOptions.map(
+      (option) => ({
+        label: option,
+      })
+    );
 
     const handleFilterSelection = React.useCallback(
-      (_: React.SyntheticEvent, endpoints: { label: string }[]) => {
+      (_: React.SyntheticEvent, endpoints: EndpointOption[]) => {
         setSelectedEndpoints(endpoints);
         handleSelection(
           endpoints.length ? endpoints.map(({ label }) => label) : undefined,

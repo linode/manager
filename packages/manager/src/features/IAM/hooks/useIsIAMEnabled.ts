@@ -19,17 +19,17 @@ import type { FlagSet } from 'src/featureFlags';
 export const useIsIAMEnabled = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: roles } = useAccountRoles(
+  const { data: roles, isLoading: isLoadingRoles } = useAccountRoles(
     flags?.iam?.enabled === true && !profile?.restricted
   );
 
-  const { data: permissions } = useUserAccountPermissions(
-    flags?.iam?.enabled === true
-  );
+  const { data: permissions, isLoading: isLoadingPermissions } =
+    useUserAccountPermissions(flags?.iam?.enabled === true);
 
   return {
     isIAMBeta: flags.iam?.beta,
-    isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions?.length),
+    isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
+    isLoading: isLoadingRoles || isLoadingPermissions,
   };
 };
 
@@ -60,7 +60,7 @@ export const checkIAMEnabled = async (
       const permissions = await queryClient.ensureQueryData(
         queryOptions(iamQueries.user(profile.username)._ctx.accountPermissions)
       );
-      return Boolean(permissions.length);
+      return Boolean(permissions);
     }
 
     // For non-restricted users ONLY, get roles
@@ -72,4 +72,14 @@ export const checkIAMEnabled = async (
   } catch {
     return false;
   }
+};
+
+/**
+ * Returns whether or not features related to the IAM Delegation project
+ * should be enabled.
+ */
+export const useIsIAMDelegationEnabled = () => {
+  const flags = useFlags();
+
+  return { isIAMDelegationEnabled: flags.iamDelegation?.enabled ?? false };
 };
