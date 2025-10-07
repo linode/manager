@@ -1097,6 +1097,15 @@ describe('LKE cluster updates', () => {
         );
 
         cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+        cy.get(`[data-qa-node-pool-id="${mockNodePool.id}"]`).within(() => {
+          cy.contains(`Version: ${mockTieredEnterpriseVersions[1].id}`).should(
+            'be.visible'
+          );
+          cy.contains(`Firewall: ${mockFirewallOriginal.id}`).should(
+            'be.visible'
+          );
+        });
+
         ui.actionMenu
           .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
           .should('be.visible')
@@ -1143,6 +1152,7 @@ describe('LKE cluster updates', () => {
               .should('be.visible')
               .click();
 
+            mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]);
             ui.button.findByTitle('Save').should('be.visible').click();
           });
 
@@ -1155,6 +1165,16 @@ describe('LKE cluster updates', () => {
             mockTieredEnterpriseVersions[0].id
           );
           expect(payload['update_strategy']).to.equal('rolling_update');
+        });
+
+        // Confirm that UI updates to reflect new node pool configuration.
+        cy.get(`[data-qa-node-pool-id="${mockNodePool.id}"]`).within(() => {
+          cy.contains(`Version: ${mockTieredEnterpriseVersions[0].id}`).should(
+            'be.visible'
+          );
+          cy.contains(`Firewall: ${mockFirewallUpdated.id}`).should(
+            'be.visible'
+          );
         });
 
         ui.toast.assertMessage('Node Pool configuration successfully updated.');
