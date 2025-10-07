@@ -1143,7 +1143,6 @@ describe('LKE cluster updates', () => {
               .should('be.visible')
               .click();
 
-            // cy.findByLabelText('Firewall').type(mockFirewallUpdated.label);
             cy.get('[data-qa-autocomplete][aria-label="Firewall"]').type(
               mockFirewallUpdated.label
             );
