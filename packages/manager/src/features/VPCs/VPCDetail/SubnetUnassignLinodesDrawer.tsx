@@ -126,7 +126,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { data: filteredLinodes } = useQueryWithPermissions(
       useAllLinodesQuery(),
       'linode',
-      ['delete_linode']
+      ['delete_linode'],
+      open
     );
     const userCanUnassignLinodes =
       permissions.update_vpc && filteredLinodes?.length > 0;
