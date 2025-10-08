@@ -120,8 +120,8 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
 
       expectedKeys.forEach((key) => {
         assertDeepEqual(
-          actual[key],
-          expected[key],
+          (actual as any)[key],
+          (expected as any)[key],
           path ? `${path}.${key}` : key,
           ignoreKeys,
           unorderedPaths
