@@ -5,8 +5,11 @@
             "type": "standard",
             "service_type": "nodebalancer",
             "label": "NodeBalancer",
-            "created": "2025-08-12T02:41:58",
-            "updated": "2025-08-12T02:41:58",
+            "group_by": [
+                "entity_id"
+            ],
+            "created": "2025-06-05T05:02:14",
+            "updated": "2025-10-07T01:16:40",
             "widgets": [
                 {
                     "metric": "nb_ingress_traffic_rate",
@@ -16,9 +19,6 @@
                     "size": 12,
                     "chart_type": "line",
                     "y_label": "nb_ingress_traffic_rate",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -29,9 +29,6 @@
                     "size": 12,
                     "chart_type": "line",
                     "y_label": "nb_egress_traffic_rate",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -42,9 +39,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_ingress_tcp_traffic_rate",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -55,9 +49,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_egress_tcp_traffic_rate",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -68,9 +59,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_ingress_udp_traffic_rate",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -81,9 +69,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_egress_udp_traffic_rate",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -94,9 +79,6 @@
                     "size": 12,
                     "chart_type": "line",
                     "y_label": "nb_total_active_sessions",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -107,9 +89,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_active_tcp_sessions",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -120,9 +99,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_active_udp_sessions",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -133,9 +109,6 @@
                     "size": 12,
                     "chart_type": "line",
                     "y_label": "nb_new_sessions_per_second",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -146,9 +119,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_new_tcp_sessions_per_second",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -159,9 +129,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_new_udp_sessions_per_second",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "sum"
                 },
                 {
@@ -172,9 +139,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_active_tcp_backends",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -185,9 +149,6 @@
                     "size": 6,
                     "chart_type": "line",
                     "y_label": "nb_active_udp_backends",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 }
             ]

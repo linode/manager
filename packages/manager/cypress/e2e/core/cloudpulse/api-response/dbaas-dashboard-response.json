@@ -5,8 +5,11 @@
             "type": "standard",
             "service_type": "dbaas",
             "label": "Resource Usage",
+            "group_by": [
+                "entity_id"
+            ],
             "created": "2025-02-27T07:59:40",
-            "updated": "2025-02-27T07:59:40",
+            "updated": "2025-10-07T01:16:40",
             "widgets": [
                 {
                     "metric": "cpu_usage",
@@ -16,9 +19,6 @@
                     "size": 12,
                     "chart_type": "area",
                     "y_label": "cpu_usage",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -29,9 +29,6 @@
                     "size": 6,
                     "chart_type": "area",
                     "y_label": "memory_usage",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -42,9 +39,6 @@
                     "size": 6,
                     "chart_type": "area",
                     "y_label": "available_memory",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -55,9 +49,6 @@
                     "size": 6,
                     "chart_type": "area",
                     "y_label": "disk_usage",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -68,9 +59,6 @@
                     "size": 6,
                     "chart_type": "area",
                     "y_label": "available_disk",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -81,9 +69,6 @@
                     "size": 6,
                     "chart_type": "area",
                     "y_label": "read_iops",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 },
                 {
@@ -94,9 +79,6 @@
                     "size": 6,
                     "chart_type": "area",
                     "y_label": "write_iops",
-                    "group_by": [
-                        "entity_id"
-                    ],
                     "aggregate_function": "avg"
                 }
             ]
