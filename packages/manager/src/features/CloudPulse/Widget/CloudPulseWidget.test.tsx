@@ -51,6 +51,7 @@ const props: CloudPulseWidgetProperties = {
   widget: widgetFactory.build({
     label: 'CPU Utilization',
   }),
+  globalFilterGroupBy: [],
 };
 
 const queryMocks = vi.hoisted(() => ({
