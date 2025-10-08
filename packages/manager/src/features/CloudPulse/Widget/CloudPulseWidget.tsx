@@ -262,14 +262,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
-  const handleGroupByChange = React.useCallback((selectedGroupBy: string[]) => {
-    if (savePref) {
-      updatePreferences(widget.label, {
-        [GROUP_BY]: selectedGroupBy,
-      });
-    }
-    setGroupBy(selectedGroupBy);
-  }, []);
+  const handleGroupByChange = React.useCallback(
+    (selectedGroupBy: string[], savePreferences?: boolean) => {
+      if (savePreferences) {
+        updatePreferences(widget.label, {
+          [GROUP_BY]: selectedGroupBy,
+        });
+      }
+      setGroupBy(selectedGroupBy);
+    },
+    []
+  );
   const {
     data: metricsList,
     error,
@@ -395,6 +398,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   label={widget.label}
                   metric={widget.metric}
                   preferenceGroupBy={groupBy}
+                  savePreferences={savePref}
                   serviceType={serviceType}
                 />
                 <ZoomIcon
