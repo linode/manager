@@ -104,7 +104,7 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell sx={{ textAlign: 'right' }}>
+      <TableCell sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
         <InlineMenuAction
           actionText="Update Delegations"
           buttonHeight={40}

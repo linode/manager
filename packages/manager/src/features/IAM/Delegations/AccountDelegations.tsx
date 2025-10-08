@@ -29,7 +29,7 @@ export const AccountDelegations = () => {
 
   // TODO: UIE-9292 - replace this with API filtering
   const {
-    data: allDelegations,
+    data: childAccountsWithDelegates,
     error,
     isLoading,
   } = useGetAllChildAccountsQuery({
@@ -51,14 +51,14 @@ export const AccountDelegations = () => {
 
   // Apply search filter
   const filteredDelegations = React.useMemo(() => {
-    if (!allDelegations) return [];
-    if (!query?.trim()) return allDelegations;
+    if (!childAccountsWithDelegates) return [];
+    if (!query?.trim()) return childAccountsWithDelegates;
 
     const searchTerm = query.toLowerCase().trim();
-    return allDelegations.filter((delegation) =>
+    return childAccountsWithDelegates.filter((delegation) =>
       delegation.company?.toLowerCase().includes(searchTerm)
     );
-  }, [allDelegations, query]);
+  }, [childAccountsWithDelegates, query]);
 
   // Sort filtered data globally
   const sortedDelegations = React.useMemo(() => {
@@ -80,7 +80,7 @@ export const AccountDelegations = () => {
   const handleSearch = (value: string) => {
     navigate({
       to: DELEGATIONS_ROUTE,
-      search: { query: value },
+      search: { query: value || undefined },
     });
   };
 

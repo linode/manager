@@ -39,10 +39,7 @@ export const AccountDelegationsTable = ({
   orderBy,
 }: Props) => {
   return (
-    <Table
-      aria-label="List of Account Delegations"
-      sx={{ tableLayout: 'fixed' }}
-    >
+    <Table aria-label="List of Account Delegations">
       <TableHead
         sx={{
           whiteSpace: 'nowrap',
