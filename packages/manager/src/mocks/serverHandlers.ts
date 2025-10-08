@@ -201,9 +201,13 @@ const makeMockDatabase = (params: PathParams): Database => {
   }
 
   if (database.platform === 'rdbms-default' && !!database.private_network) {
-    // When a database is configured with a VPC, the primary host is prepended with 'private-'
-    const privateHost = `private-${database.hosts.primary}`;
-    database.hosts.primary = privateHost;
+    // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
+    const hasPrimary = Boolean(database.hosts?.primary);
+    const hasStandby = Boolean(database.hosts?.standby);
+    const primaryHost = hasPrimary ? `private-${database.hosts.primary}` : '';
+    const standbyHost = hasStandby ? `private-${database.hosts.standby}` : '';
+    database.hosts.primary = primaryHost;
+    database.hosts.standby = standbyHost;
   }
 
   return database;
