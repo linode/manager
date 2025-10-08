@@ -290,11 +290,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').click();
-    cy.get('@startDateInput').clear();
+    // Updated selector for MUI x-date-pickers v8 - click on the wrapper div
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
 
-    ui.button.findByTitle('last day').click();
+    cy.get('@startDateInput').click();
+
+    cy.get('[data-qa-preset="Last day"]').click();
 
     // Click the "Apply" button to confirm the end date and time
     cy.get('[data-qa-buttons="apply"]')
@@ -558,6 +559,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
       });
+
+    // Scroll to the top of the page to ensure consistent test behavior
+    cy.scrollTo('top');
   });
 
   it('should apply group by at widget level only  and verify the metrics API calls', () => {
@@ -836,9 +840,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     );
 
     // click the global refresh button
-    ui.button
-      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
+    cy.get('[data-testid="global-refresh"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // validate the API calls are going with intended payload
