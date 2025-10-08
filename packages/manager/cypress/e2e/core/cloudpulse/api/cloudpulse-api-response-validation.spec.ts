@@ -59,7 +59,7 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
     if (Array.isArray(actual) && Array.isArray(expected)) {
       const unordered = unorderedPaths.some((p) => path.endsWith(p));
       if (unordered) {
-        const sortByStringify = (a: any, b: any) =>
+        const sortByStringify = (a: unknown, b: unknown) =>
           JSON.stringify(a).localeCompare(JSON.stringify(b));
         const actualSorted = [...actual].sort(sortByStringify);
         const expectedSorted = [...expected].sort(sortByStringify);
@@ -120,8 +120,8 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
 
       expectedKeys.forEach((key) => {
         assertDeepEqual(
-          (actual as any)[key],
-          (expected as any)[key],
+          (actual as Record<string, unknown>)[key],
+          (expected as Record<string, unknown>)[key],
           path ? `${path}.${key}` : key,
           ignoreKeys,
           unorderedPaths
@@ -136,7 +136,10 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
   // -----------------------------
   // Recursive timestamp/page stripping
   // -----------------------------
-  const stripKeysRecursively = (obj: any, fieldsToRemove: string[]): any => {
+  const stripKeysRecursively = (
+    obj: unknown,
+    fieldsToRemove: string[]
+  ): unknown => {
     if (Array.isArray(obj))
       return obj.map((item) => stripKeysRecursively(item, fieldsToRemove));
     if (typeof obj !== 'object' || obj === null) return obj;
