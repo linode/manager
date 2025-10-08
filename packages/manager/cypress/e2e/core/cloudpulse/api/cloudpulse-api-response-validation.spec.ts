@@ -1,15 +1,15 @@
 /**
- * @file regions.spec.ts
- * @description Fetch and validate /regions API
+ * @file cloudpulse-api.spec.ts
+ * @description Self-contained Cypress tests for /monitor dashboards and metric-definitions.
  */
 
 import type { Dashboard } from '@linode/api-v4';
 
-describe('DBaaS Regions API - Capabilities and Countries', () => {
+describe('CloudPulse API - Dashboards and Metric Definitions', () => {
   const apiRoot = Cypress.env('REACT_APP_API_ROOT');
   const token = Cypress.env('MANAGER_OAUTH');
 
-  // Map of environments to their API → Cloud URL mapping
+  // Map of environments to their corresponding Cloud URLs
   const apiRootToCloudMap: Record<string, string> = {
     'https://api.linode.com/v4': 'https://cloud.linode.com/api',
     'https://api.dev.linode.com/v4': 'https://cloud.dev.linode.com',
@@ -17,118 +17,155 @@ describe('DBaaS Regions API - Capabilities and Countries', () => {
     'https://api.devcloud.linode.com/v4': 'https://api.devcloud.linode.com',
   };
 
-  // Function to get the cloud base URL from apiRoot
-  const getCloudBaseUrl = (apiRoot: string): string =>
-    apiRootToCloudMap[apiRoot];
+  const cloudBaseUrl =
+    apiRootToCloudMap[apiRoot] ?? apiRoot.replace('api.', 'cloud.');
 
-  // Resolve cloud base URL once
-  const cloudBaseUrl = getCloudBaseUrl(apiRoot);
+  const IGNORED_KEYS = [
+    'id',
+    'uuid',
+    'created',
+    'updated',
+    'timestamp',
+    'page',
+    'pages',
+    'results',
+  ];
+  const UNORDERED_ARRAY_PATHS = [
+    'available_aggregate_functions',
+    'dimensions.values',
+  ];
 
-  // List of fields to ignore in comparisons (optional)
-  const IGNORED_KEYS = ['id', 'created', 'updated', 'uuid', 'timestamp'];
-
-  const assertEqualRecursive = (actual: any, expected: any, path = '') => {
-    // Handle undefined/null early
+  // -----------------------------
+  // Recursive deep comparison
+  // -----------------------------
+  const assertDeepEqual = (
+    actual: unknown,
+    expected: unknown,
+    path = '',
+    ignoreKeys: string[] = IGNORED_KEYS,
+    unorderedPaths: string[] = UNORDERED_ARRAY_PATHS
+  ) => {
     if (actual === undefined || expected === undefined) {
       expect(actual, `assertpath "${path}" - undefined mismatch`).to.equal(
         expected
       );
       return;
     }
-
     if (actual === null || expected === null) {
       expect(actual, `assertpath "${path}" - null mismatch`).to.equal(expected);
       return;
     }
 
-    // Handle arrays
     if (Array.isArray(actual) && Array.isArray(expected)) {
-      expect(actual.length, `assertpath "${path}" - array length`).to.equal(
-        expected.length
-      );
-      actual.forEach((item, idx) => {
-        assertEqualRecursive(item, expected[idx], `${path}[${idx}]`);
-      });
+      const unordered = unorderedPaths.some((p) => path.endsWith(p));
+      if (unordered) {
+        const sortByStringify = (a: any, b: any) =>
+          JSON.stringify(a).localeCompare(JSON.stringify(b));
+        const actualSorted = [...actual].sort(sortByStringify);
+        const expectedSorted = [...expected].sort(sortByStringify);
+        expect(
+          actualSorted,
+          `assertpath "${path}" - unordered array mismatch`
+        ).to.deep.equal(expectedSorted);
+      } else {
+        expect(actual.length, `assertpath "${path}" - array length`).to.equal(
+          expected.length
+        );
+        actual.forEach((item, idx) => {
+          assertDeepEqual(
+            item,
+            expected[idx],
+            `${path}[${idx}]`,
+            ignoreKeys,
+            unorderedPaths
+          );
+        });
+      }
       return;
     }
 
-    // One is array, the other is not
     if (Array.isArray(actual) !== Array.isArray(expected)) {
       throw new Error(
         `assertpath "${path}" - type mismatch: one is array, the other isn't`
       );
     }
 
-    // Handle objects
     if (typeof actual === 'object' && typeof expected === 'object') {
       const actualKeys = Object.keys(actual)
-        .filter((k) => !IGNORED_KEYS.includes(k))
+        .filter((k) => !ignoreKeys.includes(k))
         .sort();
       const expectedKeys = Object.keys(expected)
-        .filter((k) => !IGNORED_KEYS.includes(k))
+        .filter((k) => !ignoreKeys.includes(k))
         .sort();
 
-      // Compute differences
       const extraInApi = actualKeys.filter((k) => !expectedKeys.includes(k));
       const missingInApi = expectedKeys.filter((k) => !actualKeys.includes(k));
 
       if (extraInApi.length || missingInApi.length) {
-        // Log clearer diff info
         cy.log(`❌ Key mismatch at path "${path}"`);
         if (extraInApi.length)
-          cy.log(`Extra keys in API: ${JSON.stringify(extraInApi)}`);
+          cy.log(`Extra keys: ${JSON.stringify(extraInApi)}`);
         if (missingInApi.length)
-          cy.log(`Missing keys in API: ${JSON.stringify(missingInApi)}`);
-
+          cy.log(`Missing keys: ${JSON.stringify(missingInApi)}`);
         throw new Error(
           `assertpath "${path}" - object keys mismatch.\n` +
             (extraInApi.length
-              ? `Extra keys in API: ${extraInApi.join(', ')}\n`
+              ? `Extra keys: ${extraInApi.join(', ')}\n`
               : '') +
             (missingInApi.length
-              ? `Missing keys in API: ${missingInApi.join(', ')}`
+              ? `Missing keys: ${missingInApi.join(', ')}`
               : '')
         );
       }
 
-      // Recurse through all keys
       expectedKeys.forEach((key) => {
-        assertEqualRecursive(
+        assertDeepEqual(
           actual[key],
           expected[key],
-          path ? `${path}.${key}` : key
+          path ? `${path}.${key}` : key,
+          ignoreKeys,
+          unorderedPaths
         );
       });
       return;
     }
 
-    // Primitive comparison
     expect(actual, `assertpath "${path}" - value`).to.equal(expected);
   };
 
-  ['dbaas', 'firewall', 'nodebalancer', 'objectstorage', 'linode'].forEach(
-    (type) => {
-      it.only(`should fetch ${type.toUpperCase()} dashboards successfully`, () => {
-        const requestUrl = `${cloudBaseUrl}/v4beta/monitor/services/${type}/dashboards`;
-        const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-dashboard-response.json`;
+  // -----------------------------
+  // Recursive timestamp/page stripping
+  // -----------------------------
+  const stripKeysRecursively = (obj: any, fieldsToRemove: string[]): any => {
+    if (Array.isArray(obj))
+      return obj.map((item) => stripKeysRecursively(item, fieldsToRemove));
+    if (typeof obj !== 'object' || obj === null) return obj;
 
-        cy.readFile(templatePath).then((templateData) => {
-          cy.request({
-            method: 'GET',
-            url: requestUrl,
-            headers: {
-              Accept: 'application/json, text/plain, */*',
-              Authorization: `Bearer ${token}`,
-            },
-          }).then((response) => {
-            expect(response.status).to.eq(200);
-            expect(response.body).to.have.property('data');
-            assertEqualRecursive(response.body.data, templateData.data);
-          });
-        });
-      });
-    }
-  );
+    const filtered = Object.fromEntries(
+      Object.entries(obj).filter(([key]) => !fieldsToRemove.includes(key))
+    );
+
+    return Object.fromEntries(
+      Object.entries(filtered).map(([key, value]) => [
+        key,
+        stripKeysRecursively(value, fieldsToRemove),
+      ])
+    );
+  };
+
+  const normalizeDashboard = (
+    data: Dashboard | Dashboard[] | { data: Dashboard[] }
+  ): Dashboard => {
+    if (Array.isArray(data)) return data[0];
+    if ('data' in data && Array.isArray(data.data)) return data.data[0];
+    return data as Dashboard;
+  };
+
+  // Log failures in CI
+  Cypress.on('fail', (err) => {
+    cy.log(`🔥 Assertion failed: ${err.message}`);
+    throw err;
+  });
 
   const services = [
     { type: 'dbaas', id: 1 },
@@ -138,61 +175,88 @@ describe('DBaaS Regions API - Capabilities and Countries', () => {
     { type: 'linode', id: 2 },
   ];
 
-  services.forEach(({ type, id }) => {
-    it.only(`should fetch ${type.toUpperCase()} dashboard by ID successfully`, () => {
-      const requestUrl = `${cloudBaseUrl}/v4beta/monitor/dashboards/${id}`;
-      const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-dashboard-response.json`;
+  // -----------------------------
+  // Dashboards tests
+  // -----------------------------
+  context('Dashboards', () => {
+    ['dbaas', 'firewall', 'nodebalancer', 'objectstorage', 'linode'].forEach(
+      (type) => {
+        it(`should fetch ${type.toUpperCase()} dashboards`, () => {
+          const url = `${cloudBaseUrl}/v4beta/monitor/services/${type}/dashboards`;
+          const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-dashboard-response.json`;
 
-      cy.readFile(templatePath).then((templateData) => {
-        cy.request({
-          method: 'GET',
-          url: requestUrl,
-          headers: {
-            Accept: 'application/json, text/plain, */*',
-            Authorization: `Bearer ${token}`,
-          },
-        }).then((response) => {
-          expect(response.status).to.eq(200);
+          cy.readFile(templatePath).then((templateData) => {
+            cy.request({
+              method: 'GET',
+              url,
+              headers: { Authorization: `Bearer ${token}` },
+            }).then((res) => {
+              expect(res.status).to.eq(200);
+              expect(res.body).to.have.property('data');
+              assertDeepEqual(res.body.data, templateData.data);
+            });
+          });
+        });
+      }
+    );
 
-          // Normalize both responses into single objects
-          const normalizeToObject = (
-            data: Dashboard | Dashboard[] | { data: Dashboard[] }
-          ): Dashboard => {
-            if (Array.isArray(data)) {
-              // Already an array, take first item
-              return data[0];
-            }
+    services.forEach(({ type, id }) => {
+      it(`should fetch ${type.toUpperCase()} dashboard by ID`, () => {
+        const url = `${cloudBaseUrl}/v4beta/monitor/dashboards/${id}`;
+        const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-dashboard-response.json`;
 
-            if ('data' in data && Array.isArray(data.data)) {
-              // Wrapped in { data: Dashboard[] }
-              return data.data[0];
-            }
+        cy.readFile(templatePath).then((templateData) => {
+          cy.request({
+            method: 'GET',
+            url,
+            headers: { Authorization: `Bearer ${token}` },
+          }).then((res) => {
+            expect(res.status).to.eq(200);
+            const apiNormalized = stripKeysRecursively(
+              normalizeDashboard(res.body),
+              IGNORED_KEYS
+            );
+            const templateNormalized = stripKeysRecursively(
+              normalizeDashboard(templateData),
+              IGNORED_KEYS
+            );
 
-            // Must be a single Dashboard object
-            return data as Dashboard;
-          };
-
-          const apiStripped = normalizeAndStripTimestamps(
-            normalizeToObject(response.body)
-          );
-          const templateStripped = normalizeAndStripTimestamps(
-            normalizeToObject(templateData)
-          );
-
-          assertEqualRecursive(apiStripped, templateStripped);
+            assertDeepEqual(apiNormalized, templateNormalized);
+          });
         });
       });
     });
   });
 
-  const normalizeAndStripTimestamps = (input: Dashboard): Dashboard => {
-    if (!input || typeof input !== 'object') return input;
+  // -----------------------------
+  // Metric Definitions tests
+  // -----------------------------
+  context('Metric Definitions', () => {
+    ['dbaas', 'objectstorage', 'linode', 'firewall', 'nodebalancer'].forEach(
+      (type) => {
+        it(`should fetch ${type.toUpperCase()} metric definitions`, () => {
+          const url = `${cloudBaseUrl}/v4beta/monitor/services/${type}/metric-definitions`;
+          const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-metric-definition.json`;
 
-    // List of fields to remove
-    const fieldsToRemove = ['created', 'updated', 'page', 'pages', 'results'];
-
-    return Object.fromEntries(
-      Object.entries(input).filter(([key]) => !fieldsToRemove.includes(key))
-    ) as Dashboard;
-  };
+          cy.readFile(templatePath).then((templateData) => {
+            cy.request({
+              method: 'GET',
+              url,
+              headers: { Authorization: `Bearer ${token}` },
+            }).then((res) => {
+              expect(res.status).to.eq(200);
+              expect(res.body).to.have.property('data');
+              assertDeepEqual(
+                res.body.data,
+                templateData.data,
+                '',
+                IGNORED_KEYS,
+                UNORDERED_ARRAY_PATHS
+              );
+            });
+          });
+        });
+      }
+    );
+  });
 });

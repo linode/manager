@@ -1,0 +1,96 @@
+{
+    "data": [
+        {
+            "label": "CPU Usage",
+            "metric": "vm_cpu_time_total",
+            "unit": "%",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Local Disk I/O",
+            "metric": "vm_local_disk_iops_total",
+            "unit": "IOPS",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Disk Device",
+                    "dimension_label": "disk_device",
+                    "values": null
+                },
+                {
+                    "label": "Disk Operation",
+                    "dimension_label": "operation",
+                    "values": [
+                        "read",
+                        "write"
+                    ]
+                },
+                {
+                    "label": "Disk Type",
+                    "dimension_label": "type",
+                    "values": [
+                        "disk",
+                        "swap"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Network Traffic",
+            "metric": "vm_network_bytes_total",
+            "unit": "Kbps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Traffic Pattern",
+                    "dimension_label": "pattern",
+                    "values": [
+                        "publicin",
+                        "publicout",
+                        "privatein",
+                        "privateout"
+                    ]
+                },
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "ipv4",
+                        "ipv6"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Network Transfer",
+            "metric": "vm_network_transfer_percent",
+            "unit": "%",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg"
+            ],
+            "dimensions": []
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 4
+}

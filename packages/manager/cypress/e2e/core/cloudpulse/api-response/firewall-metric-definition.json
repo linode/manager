@@ -1,0 +1,494 @@
+{
+    "data": [
+        {
+            "label": "Current Connections (Linode)",
+            "metric": "fw_active_connections",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg",
+                "min",
+                "max"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Available Connections (Linode)",
+            "metric": "fw_available_connections",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg",
+                "min",
+                "max"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Packets Accepted (Linode)",
+            "metric": "fw_ingress_packets_accepted",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Egress Packets Accepted (Linode)",
+            "metric": "fw_egress_packets_accepted",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Bytes Accepted (Linode)",
+            "metric": "fw_ingress_bytes_accepted",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Egress Bytes Accepted  (Linode)",
+            "metric": "fw_egress_bytes_accepted",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Packets Dropped (Linode)",
+            "metric": "fw_ingress_packets_dropped",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Egress Packets Dropped (Linode)",
+            "metric": "fw_egress_packets_dropped",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Packets Dropped Connection Table Full (Linode)",
+            "metric": "fw_packets_dropped_connection_table_full",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "VPC-Subnet",
+                    "dimension_label": "vpc_subnet_id",
+                    "values": null
+                },
+                {
+                    "label": "Interface Type",
+                    "dimension_label": "interface_type",
+                    "values": [
+                        "vpc",
+                        "public"
+                    ]
+                },
+                {
+                    "label": "Interface",
+                    "dimension_label": "interface_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode",
+                    "dimension_label": "linode_id",
+                    "values": null
+                },
+                {
+                    "label": "Linode Region",
+                    "dimension_label": "region_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Bytes Accepted (Node Balancer)",
+            "metric": "nb_ingress_bytes_accepted",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "IP Version",
+                    "dimension_label": "ip_version",
+                    "values": [
+                        "v4",
+                        "v6"
+                    ]
+                },
+                {
+                    "label": "NodeBalancer",
+                    "dimension_label": "nodebalancer_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Bytes Dropped  (Node Balancer)",
+            "metric": "nb_ingress_bytes_dropped",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "IP Version",
+                    "dimension_label": "ip_version",
+                    "values": [
+                        "v4",
+                        "v6"
+                    ]
+                },
+                {
+                    "label": "NodeBalancer",
+                    "dimension_label": "nodebalancer_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Packets Accepted  (Node Balancer)",
+            "metric": "nb_ingress_packets_accepted",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "IP Version",
+                    "dimension_label": "ip_version",
+                    "values": [
+                        "v4",
+                        "v6"
+                    ]
+                },
+                {
+                    "label": "NodeBalancer",
+                    "dimension_label": "nodebalancer_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Packets Dropped  (Node Balancer)",
+            "metric": "nb_ingress_packets_dropped",
+            "unit": "packets/s",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 13
+}
