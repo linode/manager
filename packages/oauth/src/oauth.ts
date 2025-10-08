@@ -18,25 +18,30 @@ import type {
 } from './types';
 
 interface Options {
+  /**
+   * @default https://login.linode.com
+   */
   loginUrl?: string;
   clientId: string;
-  appRoot?: string;
+  /**
+   * @default http://localhost:3000/oauth/callback
+   */
+  callbackUrl?: string;
   onError?: (error: AuthenticationError) => void;
 }
 
 export class OAuthClient {
   public LOGIN_URL = 'https://login.linode.com';
   public CLIENT_ID: string;
-  public APP_ROOT = 'http://localhost:3000';
-
+  public CALLBACK_URL = 'http://localhost:3000/oauth/callback';
   public onError?: (error: AuthenticationError) => void;
 
   constructor(options: Options) {
     if (options.loginUrl) {
       this.LOGIN_URL = options.loginUrl;
     }
-    if (options.appRoot) {
-      this.APP_ROOT = options.appRoot;
+    if (options.callbackUrl) {
+      this.CALLBACK_URL = options.callbackUrl;
     }
     this.CLIENT_ID = options.clientId;
     this.onError = options.onError;
@@ -172,7 +177,7 @@ export class OAuthClient {
       client_id: this.CLIENT_ID,
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
-      redirect_uri: `${this.APP_ROOT}/oauth/callback?returnTo=${returnTo}`,
+      redirect_uri: `${this.CALLBACK_URL}?returnTo=${returnTo}`,
       response_type: 'code',
       scope: '*',
       state: nonce,
@@ -184,7 +189,7 @@ export class OAuthClient {
   /**
   * Generates prerequisite data needed for authentication then redirects the user to the login server to authenticate.
   */
-  public async redirectToLogin() {
+  public async login() {
     // Retain the user's current path and search params so that login redirects
     // the user back to where they left off.
     const returnTo = `${window.location.pathname}${window.location.search}`;

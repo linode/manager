@@ -5,7 +5,7 @@ import { getAppRoot, getClientId, getLoginURL } from './constants';
 
 export const oauthClient = new OAuthClient({
   clientId: getClientId(),
-  appRoot: getAppRoot(),
+  callbackUrl: `${getAppRoot()}/oauth/callback`,
   loginUrl: getLoginURL(),
   onError(error) {
     Sentry.captureException(error);
