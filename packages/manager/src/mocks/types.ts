@@ -1,4 +1,6 @@
+/* eslint-disable perfectionist/sort-interfaces */
 import type {
+  AccountRoleType,
   ChildAccount,
   CloudNAT,
   Config,
@@ -6,9 +8,12 @@ import type {
   Domain,
   DomainRecord,
   Entity,
+  EntityRoleType,
   Event,
   Firewall,
   FirewallDevice,
+  IamAccountRoles,
+  IamUserRoles,
   Interface,
   IPAddress,
   KubeNodePoolResponse,
@@ -27,6 +32,7 @@ import type {
   Subnet,
   SupportReply,
   SupportTicket,
+  User,
   Volume,
   VPC,
   VPCIP,
@@ -132,9 +138,11 @@ export type MockPresetCrudGroup = {
     | 'Kubernetes'
     | 'Linodes'
     | 'NodeBalancers'
+    | 'Permissions'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
+    | 'Users'
     | 'Volumes'
     | 'VPCs';
 };
@@ -150,9 +158,11 @@ export type MockPresetCrudId =
   | 'kubernetes:crud'
   | 'linodes:crud'
   | 'nodebalancers:crud'
+  | 'permissions:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'
+  | 'users:crud'
   | 'volumes:crud'
   | 'vpcs:crud';
 export interface MockPresetCrud extends MockPresetBase {
@@ -163,10 +173,27 @@ export interface MockPresetCrud extends MockPresetBase {
 
 export type MockHandler = (mockState: MockState) => HttpHandler[];
 
-interface Delegation {
+export interface Delegation {
   childAccountEuuid: string;
   id: number;
   username: string;
+}
+
+export interface UserRolesEntry {
+  username: string;
+  roles: IamUserRoles;
+}
+
+export interface UserAccountPermissionsEntry {
+  username: string;
+  permissions: AccountRoleType[];
+}
+
+export interface UserEntityPermissionsEntry {
+  username: string;
+  entityType: string;
+  entityId: number | string;
+  permissions: EntityRoleType[];
 }
 
 /**
@@ -202,9 +229,16 @@ export interface MockState {
   subnets: [number, Subnet][]; // number is VPC ID
   supportReplies: SupportReply[];
   supportTickets: SupportTicket[];
+  users: User[];
   volumes: Volume[];
   vpcs: VPC[];
   vpcsIps: VPCIP[];
+
+  // IAM Permission-related fields
+  accountRoles: IamAccountRoles[];
+  userRoles: UserRolesEntry[];
+  userAccountPermissions: UserAccountPermissionsEntry[];
+  userEntityPermissions: UserEntityPermissionsEntry[];
 }
 
 export interface MockSeeder extends Omit<MockPresetCrud, 'handlers'> {
