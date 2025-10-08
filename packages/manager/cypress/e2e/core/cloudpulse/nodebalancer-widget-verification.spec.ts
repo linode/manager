@@ -182,11 +182,12 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    // Updated selector for MUI x-date-pickers v8 - click on the wrapper div
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
 
     cy.get('@startDateInput').click();
 
-    ui.button.findByTitle('last day').click();
+    cy.get('[data-qa-preset="Last day"]').click();
 
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
@@ -212,6 +213,9 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+
+    // Scroll to the top of the page to ensure consistent test behavior
+    cy.scrollTo('top');
   });
   it('should apply optional filter (port) and verify API request payloads', () => {
     const randomPort = randomNumber(1, 65535).toString();
@@ -370,9 +374,9 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     );
 
     // click the global refresh button
-    ui.button
-      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
+    cy.get('[data-testid="global-refresh"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // validate the API calls are going with intended payload
