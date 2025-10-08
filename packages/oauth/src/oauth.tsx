@@ -16,6 +16,7 @@ import type {
   TokenInfoToStore,
   TokenResponse,
 } from './types';
+import { useEffect, useState } from 'react';
 
 interface Options {
   /**
@@ -343,3 +344,40 @@ export class OAuthClient {
     };
   }
 }
+
+interface Props {
+  client: OAuthClient;
+  children: React.ReactNode;
+}
+
+export const AuthProvider = ({ client, children }: Props) => {
+  const [isLoading, setIsLoading] = useState(window.location.pathname === '/oauth/callback');
+
+  const authenticate = async () => {
+    if (window.location.pathname === '/oauth/callback') {
+      try {
+        const { returnTo } = await client.handleOAuthCallback({
+          params: location.search,
+        });
+
+        window.history.pushState({}, "", returnTo);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        client.clearStorageAndRedirectToLogout();
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    authenticate();
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
+  return children;
+};

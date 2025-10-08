@@ -14,11 +14,13 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@linode/utilities": "workspace:*",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "react": "*"
   },
   "devDependencies": {
     "msw": "^2.6.5",
     "vite": "^6.3.6",
-    "vitest": "^3.1.2"
+    "vitest": "^3.1.2",
+    "@types/react": "*"
   }
 }

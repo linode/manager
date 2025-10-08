@@ -51,6 +51,7 @@ import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
 import { useEventsPoller } from './queries/events/events';
 
 import type { Theme } from '@mui/material/styles';
+import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -293,5 +294,6 @@ const GlobalListeners = () => {
   usePendo();
   useNewRelic();
   useSessionExpiryToast();
+  useSetupFeatureFlags();
   return null;
 };

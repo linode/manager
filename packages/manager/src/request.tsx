@@ -41,8 +41,7 @@ export const handleError = (
     error.response &&
     error.response.status === 401 &&
     !store.getState().pendingUpload &&
-    !isRedirectingToLogin &&
-    window.location.pathname !== '/oauth/callback'
+    !isRedirectingToLogin
   ) {
     isRedirectingToLogin = true;
     oauthClient.clearAuthDataFromLocalStorage();
