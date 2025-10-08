@@ -1,4 +1,5 @@
 import { profileFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -15,6 +16,18 @@ import type { Order } from '@linode/utilities';
 // Because the table row hides certain columns on small viewport sizes,
 // we must use this.
 beforeAll(() => mockMatchMedia());
+
+const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 
 const defaultProps = {
   order: {
@@ -33,16 +46,17 @@ describe('UsersLandingTableHead', () => {
       })
     );
 
+    queryMocks.useFlags.mockReturnValue({
+      iamDelegation: { enabled: true },
+    });
+
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <UsersLandingTableHead
-          isChildWithDelegationEnabled={true}
-          {...defaultProps}
-        />
-      )
+      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />)
     );
 
-    expect(getByText('User Type')).toBeVisible();
+    await waitFor(() => {
+      expect(getByText('User Type')).toBeVisible();
+    });
     expect(getByText('Username')).toBeVisible();
     expect(getByText('Email Address')).toBeVisible();
     expect(getByText('Last Login')).toBeVisible();
@@ -58,13 +72,12 @@ describe('UsersLandingTableHead', () => {
       })
     );
 
+    queryMocks.useFlags.mockReturnValue({
+      iamDelegation: { enabled: false },
+    });
+
     const { getByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(
-        <UsersLandingTableHead
-          isChildWithDelegationEnabled={false}
-          {...defaultProps}
-        />
-      )
+      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />)
     );
 
     expect(queryByText('User Type')).not.toBeInTheDocument();

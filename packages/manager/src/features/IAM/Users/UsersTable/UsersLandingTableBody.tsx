@@ -12,7 +12,6 @@ import type { APIError, User } from '@linode/api-v4';
 
 interface Props {
   error: APIError[] | null;
-  isChildWithDelegationEnabled?: boolean;
   isLoading: boolean;
   numCols: number;
   onDelete: (username: string) => void;
@@ -20,14 +19,7 @@ interface Props {
 }
 
 export const UsersLandingTableBody = (props: Props) => {
-  const {
-    error,
-    isLoading,
-    numCols,
-    onDelete,
-    users,
-    isChildWithDelegationEnabled,
-  } = props;
+  const { error, isLoading, numCols, onDelete, users } = props;
   const { data: profile } = useProfile();
 
   if (isLoading) {
@@ -62,12 +54,7 @@ export const UsersLandingTableBody = (props: Props) => {
   return (
     <>
       {users.map((user) => (
-        <UserRow
-          isChildWithDelegationEnabled={isChildWithDelegationEnabled}
-          key={user.username}
-          onDelete={onDelete}
-          user={user}
-        />
+        <UserRow key={user.username} onDelete={onDelete} user={user} />
       ))}
     </>
   );

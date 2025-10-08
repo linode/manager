@@ -1,4 +1,5 @@
 import { profileFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories/accountUsers';
@@ -14,6 +15,18 @@ import { UserRow } from './UserRow';
 // Because the table row hides certain columns on small viewport sizes,
 // we must use this.
 beforeAll(() => mockMatchMedia());
+
+const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 
 describe('UserRow', () => {
   it('renders a username and email', async () => {
@@ -38,23 +51,24 @@ describe('UserRow', () => {
       })
     );
 
+    queryMocks.useFlags.mockReturnValue({
+      iamDelegation: { enabled: true },
+    });
+
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <UserRow
-          isChildWithDelegationEnabled={true}
-          onDelete={vi.fn()}
-          user={user}
-        />
-      )
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
 
     expect(getByText(user.username)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
-    expect(getByText('User')).toBeVisible();
+
+    await waitFor(() => {
+      expect(getByText('User')).toBeVisible();
+    });
   });
 
   it('renders username and user type, and does not render email for a Delegate user when isIAMDelegationEnabled flag is enabled', async () => {
-    const user = accountUserFactory.build({
+    const delegateUser = accountUserFactory.build({
       user_type: 'proxy', // TODO - change 'proxy' to 'delegate_user'
     });
 
@@ -65,20 +79,21 @@ describe('UserRow', () => {
       })
     );
 
+    queryMocks.useFlags.mockReturnValue({
+      iamDelegation: { enabled: true },
+    });
+
     const { getByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(
-        <UserRow
-          isChildWithDelegationEnabled={true}
-          onDelete={vi.fn()}
-          user={user}
-        />
-      )
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={delegateUser} />)
     );
 
-    expect(getByText(user.username)).toBeVisible();
-    expect(queryByText(user.email)).not.toBeInTheDocument();
-    expect(getByText('Not applicable')).toBeVisible();
-    expect(getByText('Delegate User')).toBeVisible();
+    expect(getByText(delegateUser.username)).toBeVisible();
+
+    await waitFor(() => {
+      expect(queryByText(delegateUser.email)).not.toBeInTheDocument();
+      expect(getByText('Not applicable')).toBeVisible();
+      expect(getByText('Delegate User')).toBeVisible();
+    });
   });
 
   it('renders "Never" if last_login is null', async () => {

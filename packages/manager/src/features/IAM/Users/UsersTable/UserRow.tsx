@@ -12,22 +12,18 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { UsersActionMenu } from './UsersActionMenu';
 
 import type { User } from '@linode/api-v4';
 
 interface Props {
-  isChildWithDelegationEnabled?: boolean;
   onDelete: (username: string) => void;
   user: User;
 }
 
-export const UserRow = ({
-  onDelete,
-  user,
-  isChildWithDelegationEnabled,
-}: Props) => {
+export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
@@ -36,7 +32,13 @@ export const UserRow = ({
     'is_account_admin',
   ]);
 
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const canViewUser = permissions.is_account_admin;
+
+  // Determine if the current user is a child account with isIAMDelegationEnabled enabled
+  // If so, we need to show the 'User type' column in the table
+  const isChildWithDelegationEnabled =
+    isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
