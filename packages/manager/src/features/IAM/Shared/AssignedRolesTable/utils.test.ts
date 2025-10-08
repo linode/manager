@@ -48,21 +48,22 @@ describe('mapRolesToPermissions', () => {
     const expectedRoles = [
       {
         access: accountAccess,
-        description: 'Access to create a firewall instance',
+        description: 'Allows the user to create firewalls in the account.',
         entity_ids: null,
         entity_type: 'firewall',
         id: 'account_firewall_creator',
         name: 'account_firewall_creator',
-        permissions: ['create_firewall', 'list_firewalls'],
+        permissions: ['create_firewall'],
       },
       {
         access: entityAccess,
-        description: 'Access to view a image instance',
+        description:
+          'Allows the user to view Volume instances attached to this role.',
         entity_ids: [12345678],
         entity_type: 'image',
         id: 'image_viewer',
         name: 'image_viewer',
-        permissions: ['view_image'],
+        permissions: [],
       },
     ];
 
