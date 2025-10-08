@@ -69,6 +69,10 @@ export class OAuthClient {
     localStorage.removeItem('authentication/code-verifier');
   }
 
+  public getToken() {
+    return localStorage.getItem('authentication/token');
+  }
+
   private clearAllAuthDataFromLocalStorage() {
     this.clearNonceAndCodeVerifierFromLocalStorage();
     this.clearAuthDataFromLocalStorage();

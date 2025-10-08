@@ -1,1 +1,1 @@
-export { OAuthClient } from './oauth'
+export * from './oauth'
