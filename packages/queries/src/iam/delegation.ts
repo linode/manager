@@ -28,18 +28,47 @@ import type {
 } from '@linode/api-v4';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
+const getAllDelegatedChildAccountsForUser = ({
+  username,
+  params: passedParams,
+  enabled = true,
+}: GetDelegatedChildAccountsForUserParams) =>
+  getAll<ChildAccount>((params) =>
+    getDelegatedChildAccountsForUser({
+      username,
+      ...{ ...params, ...passedParams },
+      enabled,
+    }),
+  )().then((data) => data.data);
+
 export const delegationQueries = createQueryKeys('delegation', {
   childAccounts: ({ params, users }: GetChildAccountsIamParams) => ({
     queryFn: () => getChildAccountsIam({ params, users }),
     queryKey: [params],
   }),
-  delegatedChildAccountsForUser: ({
-    username,
-    params,
-  }: GetDelegatedChildAccountsForUserParams) => ({
-    queryFn: () => getDelegatedChildAccountsForUser({ username, params }),
-    queryKey: [username, params],
-  }),
+  delegatedChildAccountsForUser: {
+    contextQueries: {
+      paginated: ({
+        username,
+        params,
+        enabled = true,
+      }: GetDelegatedChildAccountsForUserParams) => ({
+        queryFn: () =>
+          getDelegatedChildAccountsForUser({ username, params, enabled }),
+        queryKey: [username, params],
+      }),
+      all: ({
+        username,
+        params,
+        enabled = true,
+      }: GetDelegatedChildAccountsForUserParams) => ({
+        queryFn: () =>
+          getAllDelegatedChildAccountsForUser({ username, params, enabled }),
+        queryKey: [username, params],
+      }),
+    },
+    queryKey: null,
+  },
   childAccountDelegates: ({
     euuid,
     params,
@@ -99,12 +128,39 @@ export const useGetChildAccountsQuery = ({
 export const useGetDelegatedChildAccountsForUserQuery = ({
   username,
   params,
-}: GetDelegatedChildAccountsForUserParams): UseQueryResult<
-  ResourcePage<ChildAccount>,
-  APIError[]
-> => {
+  enabled = true,
+}: GetDelegatedChildAccountsForUserParams & {
+  enabled?: boolean;
+}): UseQueryResult<ResourcePage<ChildAccount>, APIError[]> => {
   return useQuery({
-    ...delegationQueries.delegatedChildAccountsForUser({ username, params }),
+    ...delegationQueries.delegatedChildAccountsForUser._ctx.paginated({
+      username,
+      params,
+    }),
+    enabled,
+  });
+};
+
+/**
+ * List ALL delegated child accounts for a user
+ * - Purpose: Get all child accounts that a user is delegated to manage
+ * - Scope: All child accounts for the user
+ * - Audience: Parent account administrators auditing a user’s delegated access.
+ * - CRUD: GET /iam/delegation/users/:username/child-accounts
+ */
+export const useAllGetDelegatedChildAccountsForUserQuery = ({
+  username,
+  params,
+  enabled = true,
+}: GetDelegatedChildAccountsForUserParams & {
+  enabled?: boolean;
+}): UseQueryResult<ChildAccount[], APIError[]> => {
+  return useQuery({
+    ...delegationQueries.delegatedChildAccountsForUser._ctx.all({
+      username,
+      params,
+    }),
+    enabled,
   });
 };
 
