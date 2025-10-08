@@ -93,39 +93,17 @@ export const UsersLanding = () => {
     },
   });
 
-  // since we can't filter by multiple user types in a single query,
-  // we need to make a second query for 'delegate_user' users if delegation is enabled
-  // and the current user is a child account
-  const { data: delegateUsers } = useAccountUsers({
-    enabled: isChildWithDelegationEnabled,
-    filters: { user_type: 'proxy' }, // TODO - change 'proxy' to 'delegate_user'
-    params: {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
-  });
-
-  const allUsers = React.useMemo(() => {
-    if (isChildWithDelegationEnabled) {
-      return [
-        ...(users?.data ?? []),
-        ...(delegateUsers?.data ? delegateUsers.data : []),
-      ];
-    }
-    return users?.data ?? [];
-  }, [isChildWithDelegationEnabled, users, delegateUsers]);
-
   const filteredUsers = React.useMemo(() => {
-    if (!userType || userType.value === 'all') return allUsers;
+    if (!userType || userType.value === 'all') return users?.data;
     // Map UI select value to API user_type value
     let apiUserType: string | undefined;
     if (userType.value === 'users') {
       apiUserType = 'child';
     } else {
-      apiUserType = 'proxy'; // TODO: Change from 'proxy' to 'delegate_user'
+      apiUserType = 'delegate';
     }
-    return allUsers.filter((user) => user.user_type === apiUserType);
-  }, [allUsers, userType]);
+    return users?.data.filter((user) => user.user_type === apiUserType);
+  }, [users, userType]);
 
   const filterableOptions = [
     ALL_USERS_OPTION,

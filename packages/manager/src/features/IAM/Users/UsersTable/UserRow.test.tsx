@@ -69,7 +69,7 @@ describe('UserRow', () => {
 
   it('renders username and user type, and does not render email for a Delegate user when isIAMDelegationEnabled flag is enabled', async () => {
     const delegateUser = accountUserFactory.build({
-      user_type: 'proxy', // TODO - change 'proxy' to 'delegate_user'
+      user_type: 'delegate',
     });
 
     server.use(
