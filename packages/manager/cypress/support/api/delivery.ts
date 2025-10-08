@@ -4,16 +4,11 @@ import {
   getDestinations,
   getStreams,
 } from '@linode/api-v4';
-import { apiCheckErrors, isTestLabel } from 'support/api/common';
-import { oauthToken, pageSize } from 'support/constants/api';
-import { mockDestinationPayload } from 'support/constants/delivery';
+import { isTestLabel } from 'support/api/common';
+import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
-import type {
-  CreateDestinationPayload,
-  Destination,
-  Stream,
-} from '@linode/api-v4';
+import type { Destination, Stream } from '@linode/api-v4';
 
 /**
  * Deletes all destinations which are prefixed with the test entity prefix.
@@ -47,37 +42,4 @@ export const deleteAllTestStreams = async (): Promise<void> => {
     .map((destination: Stream) => deleteStream(destination.id));
 
   await Promise.all(deletionPromises);
-};
-
-const makeDestinationCreateReq = (
-  destinationPayload?: CreateDestinationPayload
-) => {
-  const destinationData: CreateDestinationPayload = destinationPayload
-    ? destinationPayload
-    : mockDestinationPayload;
-
-  return cy.request({
-    auth: {
-      bearer: oauthToken,
-    },
-    body: destinationData,
-    method: 'POST',
-    url:
-      Cypress.env('REACT_APP_API_ROOT') +
-      'beta/' +
-      'monitor/streams/destinations',
-  });
-};
-
-/**
- * Use this method if you do not need to get the request detail
- * @param destination if undefined will use default
- * @returns destination object
- */
-export const createDestination = (destination?: CreateDestinationPayload) => {
-  return makeDestinationCreateReq(destination).then((resp) => {
-    apiCheckErrors(resp);
-    console.log(`Created Destination ${resp.body.label} successfully`, resp);
-    return resp.body;
-  });
 };

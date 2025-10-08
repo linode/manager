@@ -1,42 +1,33 @@
-import { authenticate } from 'support/api/authentication';
 import {
-  incorrectDestinationData,
+  mockDestination,
   mockDestinationPayload,
 } from 'support/constants/delivery';
 import {
+  mockCreateDestination,
+  mockGetDestinations,
   mockTestConnection,
-  setLocalStorageLogsFlag,
 } from 'support/intercepts/delivery';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
-import { fillDestinationDetailsForm } from 'support/util/delivery';
-import { randomLabel } from 'support/util/random';
+import { logsDestinationForm } from 'support/ui/pages/logs-destination-form';
 
 import type { LinodeObjectStorageDetails } from '@linode/api-v4';
 
-authenticate();
-describe('Create Destination (e2e)', () => {
+describe('Create Destination', () => {
   before(() => {
-    cleanUp('destinations');
-    setLocalStorageLogsFlag();
+    mockAppendFeatureFlags({
+      aclpLogs: { enabled: true, beta: true },
+    });
   });
 
   it('create destination with form', () => {
-    cy.tag('method:e2e');
-    const label = randomLabel();
-
     cy.visitWithLogin('/logs/delivery/destinations/create');
 
     // Give Destination a label
-    cy.findByLabelText('Destination Name')
-      .should('be.visible')
-      .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Destination Name')
-      .click();
-    cy.focused().type(label);
+    logsDestinationForm.setLabel(mockDestinationPayload.label);
 
-    fillDestinationDetailsForm(
-      incorrectDestinationData.details as LinodeObjectStorageDetails
+    logsDestinationForm.fillDestinationDetailsForm(
+      mockDestinationPayload.details as LinodeObjectStorageDetails
     );
 
     // Create Destination should be disabled before test connection
@@ -44,8 +35,8 @@ describe('Create Destination (e2e)', () => {
       'be.disabled'
     );
 
-    // Test connection of the destination form
-    mockTestConnection(400); // @TODO remove when API endpoint released
+    // Test connection of the destination form - failure
+    mockTestConnection(400);
     ui.button
       .findByTitle('Test Connection')
       .should('be.enabled')
@@ -61,12 +52,8 @@ describe('Create Destination (e2e)', () => {
       'be.disabled'
     );
 
-    fillDestinationDetailsForm(
-      mockDestinationPayload.details as LinodeObjectStorageDetails
-    );
-
-    // Test connection of the destination form
-    mockTestConnection(200); // @TODO remove when API endpoint released
+    // Test connection of the destination form - success
+    mockTestConnection(200);
     ui.button
       .findByTitle('Test Connection')
       .should('be.enabled')
@@ -77,23 +64,36 @@ describe('Create Destination (e2e)', () => {
       `Delivery connection test completed successfully. Data can now be sent using this configuration.`
     );
 
-    // Submit the destination create form
+    // Submit the destination create form - failure
+    mockCreateDestination({}, 400);
     cy.findByRole('button', { name: 'Create Destination' })
       .should('be.enabled')
       .should('have.attr', 'type', 'button')
       .click();
 
-    ui.toast.assertMessage(`Destination ${label} created successfully`);
+    ui.toast.assertMessage(`There was an issue creating your destination`);
+
+    // Submit the destination create form - success
+    mockCreateDestination(mockDestination);
+    mockGetDestinations([mockDestination]);
+    cy.findByRole('button', { name: 'Create Destination' })
+      .should('be.enabled')
+      .should('have.attr', 'type', 'button')
+      .click();
+
+    ui.toast.assertMessage(
+      `Destination ${mockDestination.label} created successfully`
+    );
 
     // Verify we redirect to the destinations landing page upon successful creation
     cy.url().should('endWith', 'destinations');
 
     // Verify the newly created destination shows on the Destinations landing page
-    cy.findByText(label)
+    cy.findByText(mockDestination.label)
       .closest('tr')
       .within(() => {
         // Verify Destination label shows
-        cy.findByText(label).should('be.visible');
+        cy.findByText(mockDestination.label).should('be.visible');
       });
   });
 });

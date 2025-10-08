@@ -1,12 +1,15 @@
-import {
-  mockGetDestinations,
-  setLocalStorageLogsFlag,
-} from 'support/intercepts/delivery';
+import { mockGetDestinations } from 'support/intercepts/delivery';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
 describe('Destinations empty landing page', () => {
   beforeEach(() => {
-    setLocalStorageLogsFlag();
+    mockAppendFeatureFlags({
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+      },
+    });
   });
 
   /**
