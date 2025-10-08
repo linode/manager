@@ -77,6 +77,11 @@ export const UsersLanding = () => {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
     ...filter,
+    ...(isChildWithDelegationEnabled && userType && userType.value !== 'all'
+      ? {
+          user_type: userType.value === 'users' ? 'child' : 'delegate',
+        }
+      : {}),
   };
 
   // Since this query is disabled for restricted users, use isLoading.
@@ -92,18 +97,6 @@ export const UsersLanding = () => {
       page_size: pagination.pageSize,
     },
   });
-
-  const filteredUsers = React.useMemo(() => {
-    if (!userType || userType.value === 'all') return users?.data;
-    // Map UI select value to API user_type value
-    let apiUserType: string | undefined;
-    if (userType.value === 'users') {
-      apiUserType = 'child';
-    } else {
-      apiUserType = 'delegate';
-    }
-    return users?.data.filter((user) => user.user_type === apiUserType);
-  }, [users, userType]);
 
   const filterableOptions = [
     ALL_USERS_OPTION,
@@ -223,7 +216,7 @@ export const UsersLanding = () => {
               isLoading={isLoading}
               numCols={numCols}
               onDelete={handleDelete}
-              users={filteredUsers ?? []}
+              users={users?.data ?? []}
             />
           </TableBody>
         </Table>
