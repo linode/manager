@@ -16,11 +16,11 @@ export const mockDestinationPayload = {
   label: randomLabel(),
   type: destinationType.LinodeObjectStorage,
   details: {
-    host: 'e2e-tests.pl-labkrk2-1.devcloud.linodeobjects.com',
-    bucket_name: 'e2e-tests',
+    host: randomString(),
+    bucket_name: randomString(),
     region: 'pl-labkrk-2',
-    access_key_id: 'CL1YOXP2A264NO4QHNPV',
-    access_key_secret: 'C11um45dx8cajdN5EXHgnVeeMILPGa6KXCNBwSdh',
+    access_key_id: randomString(),
+    access_key_secret: randomString(),
     path: '/',
   },
 };
@@ -30,27 +30,3 @@ export const mockDestination: Destination = destinationFactory.build({
   ...mockDestinationPayload,
   version: '1.0',
 });
-
-// Destination configuration with erroneous data to test destination create/edit.
-export const incorrectDestinationData: Destination = {
-  ...mockDestination,
-  type: 'linode_object_storage',
-  details: {
-    ...mockDestination.details,
-    host: randomString(),
-    bucket_name: randomString(),
-    access_key_id: randomString(),
-    access_key_secret: randomString(),
-    path: '',
-  },
-};
-
-// Destination configuration with correct data to test edit.
-export const updatedDestinationData: Destination = {
-  ...mockDestination,
-  label: randomLabel(),
-  details: {
-    ...mockDestination.details,
-    path: '',
-  },
-};

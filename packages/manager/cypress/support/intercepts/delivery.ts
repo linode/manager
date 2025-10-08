@@ -6,15 +6,10 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Destination } from '@linode/api-v4';
-
-export const setLocalStorageLogsFlag = () =>
-  cy.window().then((win) => {
-    return win.localStorage.setItem(
-      'devTools/mock-feature-flags',
-      '{"aclpLogs": { "beta": true, "enabled": true }}'
-    );
-  });
+import type {
+  Destination,
+  UpdateDestinationPayloadWithId,
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch destination instance and mocks response.
@@ -36,7 +31,7 @@ export const mockGetDestination = (
 /**
  * Intercepts GET request to mock destination data.
  *
- * @param destinations - an array of mock destination objects
+ * @param destinations - an array of mock destination objects.
  *
  * @returns Cypress chainable.
  */
@@ -64,37 +59,53 @@ export const interceptCreateDestination = (): Cypress.Chainable<null> => {
  *
  * @returns Cypress chainable.
  */
-export const interceptDeleteDestination = (
-  destination: Destination
-): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'DELETE',
-    apiMatcher(`monitor/streams/destinations/${destination.id}`)
-  );
+export const interceptDeleteDestination = (): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`monitor/streams/destinations/*`));
 };
 
 /**
  * Intercepts PUT request to update a destination and mocks response.
  *
  * @param destination - Destination data to update.
+ * @param responseBody - Full updated destination object.
  *
  * @returns Cypress chainable.
  */
 export const mockUpdateDestination = (
-  destination: Destination
+  destination: UpdateDestinationPayloadWithId,
+  responseBody: Destination
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
     apiMatcher(`monitor/streams/destinations/${destination.id}`),
-    makeResponse(destination)
+    makeResponse(responseBody)
+  );
+};
+
+/**
+ * Intercepts POST request to create a destination and mocks response.
+ *
+ * @param responseCode
+ * @param responseBody - Full destination object returned when created.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateDestination = (
+  responseBody = {},
+  responseCode = 200
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`monitor/streams/destinations`),
+    makeResponse(responseBody ?? {}, responseCode)
   );
 };
 
 /**
  * Intercepts POST request to verify destination connection.
  *
- * @param responseCode - status code of the response
- * @param responseBody - response body content
+ * @param responseCode - status code of the response.
+ * @param responseBody - response body content.
  *
  * @returns Cypress chainable.
  */

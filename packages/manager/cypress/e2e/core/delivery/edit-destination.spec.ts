@@ -1,37 +1,29 @@
-import { authenticate } from 'support/api/authentication';
-import { createDestination } from 'support/api/delivery';
 import {
-  incorrectDestinationData,
+  mockDestination,
   mockDestinationPayload,
-  updatedDestinationData,
 } from 'support/constants/delivery';
 import {
+  mockGetDestination,
+  mockGetDestinations,
   mockTestConnection,
-  setLocalStorageLogsFlag,
+  mockUpdateDestination,
 } from 'support/intercepts/delivery';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
-import { fillDestinationDetailsForm } from 'support/util/delivery';
+import { logsDestinationForm } from 'support/ui/pages/logs-destination-form';
+import { randomLabel } from 'support/util/random';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
 
 import type { LinodeObjectStorageDetails } from '@linode/api-v4';
 
-let destinationId: number;
-
-authenticate();
-before(() => {
-  cleanUp('destinations');
-  // create destination to test edit form on
-  createDestination(mockDestinationPayload).then((destination) => {
-    destinationId = destination.id;
-  });
-});
-
-describe('Edit Destination (e2e)', () => {
+describe('Edit Destination', () => {
   beforeEach(() => {
-    setLocalStorageLogsFlag();
-    cy.visitWithLogin(`/logs/delivery/destinations/${destinationId}/edit`);
+    mockAppendFeatureFlags({
+      aclpLogs: { enabled: true, beta: true },
+    });
+    cy.visitWithLogin(`/logs/delivery/destinations/${mockDestination.id}/edit`);
+    mockGetDestination(mockDestination);
   });
 
   it('destination type edit should be disabled', () => {
@@ -41,21 +33,19 @@ describe('Edit Destination (e2e)', () => {
       .should(
         'have.attr',
         'value',
-        getDestinationTypeOption(mockDestinationPayload.type)?.label
+        getDestinationTypeOption(mockDestination.type)?.label
       );
   });
 
   it('edit destination with incorrect data', () => {
-    cy.tag('method:e2e');
-
-    fillDestinationDetailsForm(
-      incorrectDestinationData.details as LinodeObjectStorageDetails
+    logsDestinationForm.fillDestinationDetailsForm(
+      mockDestinationPayload.details as LinodeObjectStorageDetails
     );
 
     // Create Destination should be disabled before test connection
     cy.findByRole('button', { name: 'Edit Destination' }).should('be.disabled');
     // Test connection of the destination form
-    mockTestConnection(400); // @TODO remove when API endpoint released
+    mockTestConnection(400);
     ui.button
       .findByTitle('Test Connection')
       .should('be.enabled')
@@ -71,22 +61,18 @@ describe('Edit Destination (e2e)', () => {
   });
 
   it('edit destination with correct data', () => {
+    const newLabel = randomLabel();
     // Give Destination a new label
-    cy.findByLabelText('Destination Name')
-      .should('be.visible')
-      .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Destination Name')
-      .clear();
-    cy.focused().type(updatedDestinationData.label);
+    logsDestinationForm.setLabel(newLabel);
 
-    fillDestinationDetailsForm(
-      updatedDestinationData.details as LinodeObjectStorageDetails
+    logsDestinationForm.fillDestinationDetailsForm(
+      mockDestinationPayload.details as LinodeObjectStorageDetails
     );
 
     // Create Destination should be disabled before test connection
     cy.findByRole('button', { name: 'Edit Destination' }).should('be.disabled');
     // Test connection of the destination form
-    mockTestConnection(); // @TODO remove when API endpoint released
+    mockTestConnection();
     ui.button
       .findByTitle('Test Connection')
       .should('be.enabled')
@@ -97,6 +83,9 @@ describe('Edit Destination (e2e)', () => {
       `Delivery connection test completed successfully. Data can now be sent using this configuration.`
     );
 
+    const updatedDestination = { ...mockDestination, label: newLabel };
+    mockUpdateDestination(mockDestination, updatedDestination);
+    mockGetDestinations([updatedDestination]);
     // Submit the destination edit form
     cy.findByRole('button', { name: 'Edit Destination' })
       .should('be.enabled')
@@ -104,18 +93,18 @@ describe('Edit Destination (e2e)', () => {
       .click();
 
     ui.toast.assertMessage(
-      `Destination ${updatedDestinationData.label} edited successfully`
+      `Destination ${updatedDestination.label} edited successfully`
     );
 
     // Verify we redirect to the destinations landing page upon successful edit
     cy.url().should('endWith', 'destinations');
 
     // Verify the edited destination shows on the Destinations landing page
-    cy.findByText(updatedDestinationData.label)
+    cy.findByText(newLabel)
       .closest('tr')
       .within(() => {
         // Verify Destination label shows
-        cy.findByText(updatedDestinationData.label).should('be.visible');
+        cy.findByText(newLabel).should('be.visible');
       });
   });
 });
