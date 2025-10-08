@@ -48,6 +48,10 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       alerts: { beta: true, enabled: true },
       metrics: { beta: true, enabled: true },
     },
+    blockstorage: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
   },
   aclpResourceTypeMap: [
     {
@@ -74,6 +78,11 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       dimensionKey: 'objectstorage',
       maxResourceSelections: 10,
       serviceType: 'objectstorage',
+    },
+    {
+      dimensionKey: 'blockstorage',
+      maxResourceSelections: 10,
+      serviceType: 'blockstorage',
     },
   ],
 });
