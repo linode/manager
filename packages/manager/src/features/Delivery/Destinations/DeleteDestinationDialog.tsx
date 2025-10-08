@@ -4,7 +4,6 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Destination } from '@linode/api-v4';
 
@@ -16,33 +15,22 @@ interface Props {
 
 export const DeleteDestinationDialog = React.memo((props: Props) => {
   const { onClose, open, destination } = props;
-  const { mutateAsync: deleteDestination, isPending } =
-    useDeleteDestinationMutation();
-  const [deleteError, setDeleteError] = React.useState<string | undefined>();
+  const {
+    mutateAsync: deleteDestination,
+    isPending,
+    error,
+  } = useDeleteDestinationMutation();
 
   const handleDelete = () => {
     const { id, label } = destination as Destination;
     deleteDestination({
       id,
-    })
-      .then(() => {
-        onClose();
-        return enqueueSnackbar(`Destination  ${label} deleted successfully`, {
-          variant: 'success',
-        });
-      })
-      .catch((error) => {
-        const apiErrorReason = getAPIErrorOrDefault(
-          error,
-          'There was an issue deleting your destination'
-        )[0].reason;
-
-        setDeleteError(apiErrorReason);
-
-        return enqueueSnackbar(apiErrorReason, {
-          variant: 'error',
-        });
+    }).then(() => {
+      onClose();
+      return enqueueSnackbar(`Destination ${label} deleted successfully`, {
+        variant: 'success',
       });
+    });
   };
 
   const actions = (
@@ -61,7 +49,7 @@ export const DeleteDestinationDialog = React.memo((props: Props) => {
   return (
     <ConfirmationDialog
       actions={actions}
-      error={deleteError}
+      error={error}
       onClose={onClose}
       open={open}
       title="Delete Destination"
