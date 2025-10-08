@@ -70,6 +70,14 @@ export const usersSeeder: MockSeeder = {
 
       // Create child accounts and delegations for parent users
       if (user.user_type === 'parent') {
+        const delegateUser = accountUserFactory.build({
+          username: `${user.username}_delegate`,
+          user_type: 'delegate',
+          email: `${user.username}_delegate@example.com`,
+          restricted: false,
+        });
+        userSeeds.push(delegateUser);
+
         const childAccounts = childAccountFactory.buildList(3);
 
         for (const childAccount of childAccounts) {
