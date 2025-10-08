@@ -85,7 +85,7 @@ describe('Widget Group By Renderer', () => {
     const title = screen.getByText('Group By');
     expect(title).toBeInTheDocument();
 
-    expect(handleChange).toHaveBeenCalledWith([], undefined);
+    expect(handleChange).toHaveBeenCalledWith([], false);
   });
 
   it('Should not open drawer but group by icon should be enabled', async () => {
@@ -120,10 +120,7 @@ describe('Widget Group By Renderer', () => {
     const drawer = screen.getByTestId('drawer');
     expect(drawer).toBeInTheDocument();
 
-    expect(handleChange).toHaveBeenCalledWith(
-      [defaultValue[0].value],
-      undefined
-    );
+    expect(handleChange).toHaveBeenCalledWith([defaultValue[0].value], false);
 
     defaultValue.forEach((value) => {
       const option = screen.getByRole('button', { name: value.label });
