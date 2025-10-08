@@ -238,14 +238,10 @@ export const UsersLanding = () => {
           </Grid>
         </Grid>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
-          <UsersLandingTableHead
-            isChildWithDelegationEnabled={isChildWithDelegationEnabled}
-            order={order}
-          />
+          <UsersLandingTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody
               error={error}
-              isChildWithDelegationEnabled={isChildWithDelegationEnabled}
               isLoading={isLoading}
               numCols={numCols}
               onDelete={handleDelete}
