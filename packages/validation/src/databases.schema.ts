@@ -4,6 +4,7 @@ import { array, object, string } from 'yup';
 const LABEL_MESSAGE = 'Label must be between 3 and 32 characters';
 
 export const createDatabaseSchema = object({
+  allow_list: array().of(string()).notRequired(),
   label: string()
     .required('Label is required')
     .min(3, LABEL_MESSAGE)
@@ -14,8 +15,6 @@ export const createDatabaseSchema = object({
   cluster_size: number()
     .oneOf([1, 2, 3], 'Nodes are required')
     .required('Nodes are required'),
-  replication_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
-  replication_commit_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
 });
 
 export const getDynamicDatabaseSchema = (isVPCSelected: boolean) => {

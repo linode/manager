@@ -9,12 +9,17 @@ import Grid from '@mui/material/Grid';
 import { useState } from 'react';
 import * as React from 'react';
 import type { ChangeEvent } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { ipV6FieldPlaceholder } from 'src/utilities/ipUtils';
+import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
+import { ipV6FieldPlaceholder, validateIPs } from 'src/utilities/ipUtils';
 
+import { ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT } from '../constants';
+
+import type { DatabaseCreateValues } from './DatabaseCreate';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -41,30 +46,37 @@ export type AccessVariant = 'networking' | 'standard';
 export interface AccessProps {
   disabled?: boolean;
   errors?: APIError[];
-  ips: ExtendedIP[];
-  onBlur: (ips: ExtendedIP[]) => void;
-  onChange: (ips: ExtendedIP[]) => void;
   variant?: AccessVariant;
 }
 
 export const DatabaseCreateAccessControls = (props: AccessProps) => {
-  const {
-    disabled = false,
-    errors,
-    ips,
-    onBlur,
-    onChange,
-    variant = 'standard',
-  } = props;
+  const { disabled = false, errors, variant = 'standard' } = props;
   const { classes } = useStyles();
   const [accessOption, setAccessOption] = useState<AccessOption>('specific');
 
-  const handleAccessOptionChange = (_: ChangeEvent, value: AccessOption) => {
-    setAccessOption(value);
-    if (value === 'none') {
-      onChange([{ address: '', error: '' }]);
+  const handleIPValidation = (ips: ExtendedIP[]) => {
+    const validatedIps = validateIPs(ips, {
+      allowEmptyAddress: true,
+      errorMessage: ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
+    });
+    const validatedIpsWithMasks = enforceIPMasks(validatedIps);
+    if (validatedIpsWithMasks.some((ip) => ip.error)) {
+      setValue('allow_list', validatedIpsWithMasks);
+    } else {
+      setValue(
+        'allow_list',
+        validatedIpsWithMasks.map((ip) => {
+          delete ip.error;
+          return {
+            ...ip,
+          };
+        })
+      );
     }
   };
+
+  const { control, setValue, watch } = useFormContext<DatabaseCreateValues>();
+  const ips = watch('allow_list');
 
   return (
     <Grid>
@@ -86,7 +98,6 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
         (Note: You can modify access controls after your database cluster is
         active.)
       </Typography>
-
       <Grid className={classes.container}>
         {errors &&
           errors.map((apiError: APIError) => (
@@ -96,37 +107,48 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
               variant="error"
             />
           ))}
-        <RadioGroup
-          aria-label="type"
-          name="type"
-          onChange={handleAccessOptionChange}
-          value={accessOption}
-        >
-          <FormControlLabel
-            control={<Radio />}
-            data-qa-dbaas-radio="Specific"
-            disabled={disabled}
-            label="Specific Access (recommended)"
-            value="specific"
-          />
-          <MultipleIPInput
-            buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
-            className={classes.multipleIPInput}
-            disabled={accessOption === 'none' || disabled}
-            ips={ips}
-            onBlur={onBlur}
-            onChange={onChange}
-            placeholder={ipV6FieldPlaceholder}
-            title="Allowed IP Addresses or Ranges"
-          />
-          <FormControlLabel
-            control={<Radio />}
-            data-qa-dbaas-radio="None"
-            disabled={disabled}
-            label="No Access (Deny connections from all IP addresses)"
-            value="none"
-          />
-        </RadioGroup>
+        <Controller
+          control={control}
+          name="allow_list"
+          render={({ field }) => (
+            <RadioGroup
+              aria-label="type"
+              name="type"
+              onChange={(_: ChangeEvent, value: AccessOption) => {
+                setAccessOption(value);
+                if (value === 'none') {
+                  field.onChange([{ address: '', error: '' }]);
+                }
+              }}
+              value={accessOption}
+            >
+              <FormControlLabel
+                control={<Radio />}
+                data-qa-dbaas-radio="Specific"
+                disabled={disabled}
+                label="Specific Access (recommended)"
+                value="specific"
+              />
+              <MultipleIPInput
+                buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
+                className={classes.multipleIPInput}
+                disabled={accessOption === 'none' || disabled}
+                ips={ips}
+                onBlur={() => handleIPValidation(ips)}
+                onChange={field.onChange}
+                placeholder={ipV6FieldPlaceholder}
+                title="Allowed IP Addresses or Ranges"
+              />
+              <FormControlLabel
+                control={<Radio />}
+                data-qa-dbaas-radio="None"
+                disabled={disabled}
+                label="No Access (Deny connections from all IP addresses)"
+                value="none"
+              />
+            </RadioGroup>
+          )}
+        />
       </Grid>
     </Grid>
   );
