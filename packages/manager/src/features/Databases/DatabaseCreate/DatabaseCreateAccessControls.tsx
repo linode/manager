@@ -3,14 +3,14 @@ import {
   Notice,
   Radio,
   RadioGroup,
+  styled,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import { useState } from 'react';
 import * as React from 'react';
 import type { ChangeEvent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -21,24 +21,7 @@ import { ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT } from '../constants';
 
 import type { DatabaseCreateValues } from './DatabaseCreate';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Theme } from '@mui/material/styles';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  container: {
-    marginTop: theme.spacing(3),
-    maxWidth: 450,
-  },
-  header: {
-    marginBottom: theme.spacing(0.5),
-  },
-  multipleIPInput: {
-    marginLeft: theme.spacing(4),
-  },
-  subHeader: {
-    marginTop: theme.spacing(2),
-  },
-}));
 
 export type AccessOption = 'none' | 'specific';
 export type AccessVariant = 'networking' | 'standard';
@@ -51,7 +34,6 @@ export interface AccessProps {
 
 export const DatabaseCreateAccessControls = (props: AccessProps) => {
   const { disabled = false, errors, variant = 'standard' } = props;
-  const { classes } = useStyles();
   const [accessOption, setAccessOption] = useState<AccessOption>('specific');
 
   const handleIPValidation = (ips: ExtendedIP[]) => {
@@ -79,11 +61,8 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
   const ips = watch('allow_list');
 
   return (
-    <Grid>
-      <Typography
-        className={classes.header}
-        variant={variant === 'networking' ? 'h3' : 'h2'}
-      >
+    <Box>
+      <Typography variant={variant === 'networking' ? 'h3' : 'h2'}>
         Manage Access
       </Typography>
       <Typography>
@@ -94,11 +73,11 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
         </Link>
         .
       </Typography>
-      <Typography className={classes.subHeader}>
+      <Typography mt={1}>
         (Note: You can modify access controls after your database cluster is
         active.)
       </Typography>
-      <Grid className={classes.container}>
+      <Box>
         {errors &&
           errors.map((apiError: APIError) => (
             <Notice
@@ -129,9 +108,8 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
                 label="Specific Access (recommended)"
                 value="specific"
               />
-              <MultipleIPInput
+              <StyledMultipleIPInput
                 buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
-                className={classes.multipleIPInput}
                 disabled={accessOption === 'none' || disabled}
                 ips={ips}
                 onBlur={() => handleIPValidation(ips)}
@@ -149,7 +127,13 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
             </RadioGroup>
           )}
         />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
+
+const StyledMultipleIPInput = styled(MultipleIPInput, {
+  label: 'StyledMultipleIPInput',
+})(({ theme }) => ({
+  marginLeft: theme.spacingFunction(32),
+}));

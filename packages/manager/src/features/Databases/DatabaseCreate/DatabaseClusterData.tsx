@@ -2,7 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Divider, Typography } from '@linode/ui';
 import { getCapabilityFromPlanType } from '@linode/utilities';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -85,7 +85,7 @@ export const DatabaseClusterData = (props: Props) => {
 
   return (
     <>
-      <Grid>
+      <Box>
         <Typography variant="h2">Name Your Cluster</Typography>
         <Controller
           control={control}
@@ -102,13 +102,13 @@ export const DatabaseClusterData = (props: Props) => {
             />
           )}
         />
-      </Grid>
+      </Box>
       <Divider spacingBottom={12} spacingTop={38} />
-      <Grid>
+      <Box>
         <Typography variant="h2">Select Engine and Region</Typography>
         <DatabaseEngineSelect />
-      </Grid>
-      <Grid>
+      </Box>
+      <Box>
         <Controller
           control={control}
           name="region"
@@ -126,7 +126,7 @@ export const DatabaseClusterData = (props: Props) => {
           )}
         />
         <RegionHelperText mt={1} />
-      </Grid>
+      </Box>
     </>
   );
 };
