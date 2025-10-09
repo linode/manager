@@ -5,9 +5,13 @@ import {
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import { latestKubernetesVersion } from 'support/constants/lke';
+import {
+  latestKubernetesVersion,
+  mockTieredEnterpriseVersions,
+} from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockGetLinodes,
   mockGetLinodeType,
@@ -43,6 +47,7 @@ import { extendRegion } from 'support/util/regions';
 
 import {
   accountFactory,
+  firewallFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
@@ -52,7 +57,14 @@ import {
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 
-import type { Label, Linode, PoolNodeResponse, Taint } from '@linode/api-v4';
+import type {
+  KubernetesTier,
+  Label,
+  Linode,
+  NodePoolUpdateStrategy,
+  PoolNodeResponse,
+  Taint,
+} from '@linode/api-v4';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -1000,6 +1012,230 @@ describe('LKE cluster updates', () => {
       // Wait for API response and assert toast message appears.
       cy.wait('@resetKubeconfig');
       ui.toast.assertMessage('Successfully reset Kubeconfig');
+    });
+
+    describe('Node pool configuration', () => {
+      const mockFirewallOriginal = firewallFactory.build();
+      const mockFirewallUpdated = firewallFactory.build();
+      const mockFirewalls = [mockFirewallOriginal, mockFirewallUpdated];
+
+      const mockRegion = regionFactory.build({
+        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+      });
+
+      const mockLinodePlan = extendType(linodeTypeFactory.build());
+
+      const mockLinodes = linodeFactory.buildList(3, {
+        type: mockLinodePlan.id,
+        region: mockRegion.id,
+      });
+
+      const mockCluster = kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        region: mockRegion.id,
+        k8s_version: mockTieredEnterpriseVersions[0].id,
+      });
+
+      const mockClusterStandard = {
+        ...mockCluster,
+        tier: 'standard' as KubernetesTier,
+      };
+
+      const mockAccount = accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      });
+
+      const mockNodePool = nodePoolFactory.build({
+        label: randomLabel(),
+        firewall_id: mockFirewallOriginal.id,
+        update_strategy: 'on_recycle',
+        nodes: mockLinodes.map((mockLinode) =>
+          kubeLinodeFactory.build({
+            instance_id: mockLinode.id,
+          })
+        ),
+        type: mockLinodePlan.id,
+        k8s_version: mockTieredEnterpriseVersions[1].id,
+      });
+
+      const mockNodePoolUpdated = {
+        ...mockNodePool,
+        firewall_id: mockFirewallUpdated.id,
+        update_strategy: 'rolling_update' as NodePoolUpdateStrategy,
+        k8s_version: mockTieredEnterpriseVersions[0].id,
+      };
+
+      /*
+       * - Confirms node pool "Configure Pool" option exists for LKE-E clusters.
+       * - Confirms node pool version, firewall, and update strategy can be updated.
+       * - Confirms outgoing API request contains expected payload data.
+       * - Confirms that UI updates upon updating node pool configuration.
+       */
+      it('can update node pool configurations on LKE enterprise clusters', () => {
+        // TODO M3-8838 - Remove this mock when "lkeEnterprise2" feature flag goes away.
+        mockAppendFeatureFlags({
+          lkeEnterprise2: {
+            enabled: true,
+            postLa: true,
+          },
+        });
+
+        mockGetAccount(mockAccount);
+        mockGetLinodeType(mockLinodePlan);
+        mockGetLinodeTypes([mockLinodePlan]);
+        mockGetLinodes(mockLinodes);
+        mockGetFirewalls(mockFirewalls);
+        mockGetRegions([mockRegion]);
+        mockGetTieredKubernetesVersions(
+          'enterprise',
+          mockTieredEnterpriseVersions
+        );
+        mockGetCluster(mockCluster);
+        mockGetClusterPools(mockCluster.id, [mockNodePool]);
+        mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+          'updateNodePool'
+        );
+
+        cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+        cy.get(`[data-qa-node-pool-id="${mockNodePool.id}"]`).within(() => {
+          cy.contains(`Version: ${mockTieredEnterpriseVersions[1].id}`).should(
+            'be.visible'
+          );
+          cy.contains(`Firewall: ${mockFirewallOriginal.id}`).should(
+            'be.visible'
+          );
+        });
+
+        ui.actionMenu
+          .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        ui.actionMenuItem
+          .findByTitle('Configure Pool')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        ui.drawer
+          .findByTitle(
+            `Configure Node Pool: ${mockLinodePlan.formattedLabel} Plan`
+          )
+          .should('be.visible')
+          .within(() => {
+            ui.autocomplete
+              .findByLabel('Update Strategy')
+              .type('Rolling Updates');
+
+            ui.autocompletePopper
+              .findByTitle('Rolling Updates')
+              .should('be.visible')
+              .click();
+
+            ui.autocomplete
+              .findByLabel('Kubernetes Version')
+              .should('be.visible')
+              .type(mockTieredEnterpriseVersions[0].id);
+
+            ui.autocompletePopper
+              .findByTitle(mockTieredEnterpriseVersions[0].id)
+              .should('be.visible')
+              .click();
+
+            cy.get('[data-qa-autocomplete][aria-label="Firewall"]').type(
+              mockFirewallUpdated.label
+            );
+            ui.autocompletePopper
+              .findByTitle(mockFirewallUpdated.label)
+              .should('be.visible')
+              .click();
+
+            mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]);
+            ui.button.findByTitle('Save').should('be.visible').click();
+          });
+
+        // Confirm that outgoing API node pool update request contains expected
+        // payload data.
+        cy.wait('@updateNodePool').then((xhr) => {
+          const payload = xhr.request.body;
+          expect(payload['firewall_id']).to.equal(mockFirewallUpdated.id);
+          expect(payload['k8s_version']).to.equal(
+            mockTieredEnterpriseVersions[0].id
+          );
+          expect(payload['update_strategy']).to.equal('rolling_update');
+        });
+
+        // Confirm that UI updates to reflect new node pool configuration.
+        cy.get(`[data-qa-node-pool-id="${mockNodePool.id}"]`).within(() => {
+          cy.contains(`Version: ${mockTieredEnterpriseVersions[0].id}`).should(
+            'be.visible'
+          );
+          cy.contains(`Firewall: ${mockFirewallUpdated.id}`).should(
+            'be.visible'
+          );
+        });
+
+        ui.toast.assertMessage('Node Pool configuration successfully updated.');
+      });
+
+      // TODO M3-8838 - Delete this test once "lkeEnterprise2" feature flag goes away.
+      /*
+       * - Confirms that node pool "Configure Pool" option is absent when LKE-E post-LA flag is disabled.
+       */
+      it('cannot update node pool configurations when feature flag is disabled', () => {
+        mockAppendFeatureFlags({
+          lkeEnterprise2: {
+            enabled: true,
+            postLa: false,
+          },
+        });
+
+        mockGetAccount(mockAccount);
+        mockGetRegions([mockRegion]);
+        mockGetCluster(mockCluster);
+        mockGetClusterPools(mockCluster.id, [mockNodePool]);
+
+        cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+        ui.actionMenu
+          .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.get('[data-qa-action-menu-item="Configure Pool"]').should(
+          'not.exist'
+        );
+      });
+
+      /*
+       * - Confirms that node pool "Configure Pool" option is absent when viewing a standard LKE cluster.
+       */
+      it('cannot update node pool configurations on standard LKE clusters', () => {
+        // TODO M3-8838 - Remove this mock when "lkeEnterprise2" feature flag goes away.
+        mockAppendFeatureFlags({
+          lkeEnterprise2: {
+            enabled: true,
+            postLa: true,
+          },
+        });
+
+        mockGetAccount(mockAccount);
+        mockGetRegions([mockRegion]);
+        mockGetCluster(mockClusterStandard);
+        mockGetClusterPools(mockCluster.id, [mockNodePool]);
+
+        cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+        ui.actionMenu
+          .findByTitle(`Action menu for Node Pool ${mockNodePool.id}`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.get('[data-qa-action-menu-item="Configure Pool"]').should(
+          'not.exist'
+        );
+      });
     });
 
     it('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
