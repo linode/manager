@@ -2,6 +2,7 @@
  * Utility functions for handling date and time operations for CloudPulse.
  */
 
+import { DateTimeRangePicker } from '@linode/ui';
 import { DateTime } from 'luxon';
 
 import type { DateTimeWithPreset } from '@linode/api-v4';
@@ -19,7 +20,7 @@ export const defaultTimeDuration = (timezone?: string): DateTimeWithPreset => {
 
   return {
     end: date.toISO() ?? '',
-    preset: 'last hour',
+    preset: DateTimeRangePicker.PRESET_LABELS.LAST_HOUR,
     start: date.minus({ hours: 1 }).toISO() ?? '',
     timeZone: timezone,
   };
@@ -58,36 +59,36 @@ export function getTimeFromPreset(
   let startDate: string;
   let endDate: string;
   switch (preset) {
-    case 'last 7 days':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_7_DAYS:
       startDate = today.minus({ days: 7 }).toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
 
-    case 'last 12 hours':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_12_HOURS:
       startDate = today.minus({ hours: 12 }).toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
-    case 'last 30 days':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_30_DAYS:
       startDate = today.minus({ days: 30 }).toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
-    case 'last 30 minutes':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_30_MINUTES:
       startDate = today.minus({ minutes: 30 }).toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
-    case 'last day':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_DAY:
       startDate = today.minus({ days: 1 }).toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
-    case 'last hour':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_HOUR:
       startDate = today.minus({ hours: 1 }).toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
-    case 'last month':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_MONTH:
       startDate = today.minus({ months: 1 }).startOf('month').toISO() ?? start;
       endDate = today.minus({ months: 1 }).endOf('month').toISO() ?? end;
       break;
-    case 'this month':
+    case DateTimeRangePicker.PRESET_LABELS.THIS_MONTH:
       startDate = today.startOf('month').toISO() ?? start;
       endDate = today.toISO() ?? end;
       break;
@@ -95,7 +96,7 @@ export function getTimeFromPreset(
       // Reset to provided values or empty strings if none provided
       startDate = start;
       endDate = end;
-      selectedPreset = 'reset';
+      selectedPreset = DateTimeRangePicker.PRESET_LABELS.RESET;
   }
 
   return {

@@ -308,6 +308,8 @@ export const AreaChart = (props: AreaChartProps) => {
               color: theme.tokens.color.Neutrals[70],
               font: theme.font.bold,
             }}
+            offset={20}
+            wrapperStyle={{ zIndex: 2 }}
           />
           {showLegend && !legendRows && (
             <Legend
