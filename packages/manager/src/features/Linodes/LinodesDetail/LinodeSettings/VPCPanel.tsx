@@ -18,7 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
+import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -41,7 +41,7 @@ export interface VPCPanelProps {
   selectedSubnetId: null | number | undefined;
   selectedVPCId: null | number | undefined;
   subnetError?: string;
-  toggleAssignPublicIPv4Address: () => void;
+  toggleAssignPublicIPv4Address: (ipv4Access: null | string) => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
   vpcIdError?: string;
   vpcIPRangesError?: string;
@@ -233,14 +233,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
                   })}
                 >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={assignPublicIPv4Address}
-                        onChange={toggleAssignPublicIPv4Address}
-                      />
-                    }
-                    label={<VPCPublicIPLabel />}
+                  <PublicIPv4Access
+                    checked={assignPublicIPv4Address}
+                    isConfigInterface
+                    onChange={toggleAssignPublicIPv4Address}
                   />
                 </Box>
                 {assignPublicIPv4Address && publicIPv4Error && (

@@ -22,6 +22,8 @@ export const TIME_DURATION = 'dateTimeDuration';
 
 export const AGGREGATE_FUNCTION = 'aggregateFunction';
 
+export const GROUP_BY = 'groupBy';
+
 export const SIZE = 'size';
 
 export const LABEL = 'label';

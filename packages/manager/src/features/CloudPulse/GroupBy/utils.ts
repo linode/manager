@@ -40,7 +40,8 @@ interface MetricDimension {
  */
 export const useGlobalDimensions = (
   dashboardId: number | undefined,
-  serviceType: CloudPulseServiceType | undefined
+  serviceType: CloudPulseServiceType | undefined,
+  preference?: string[]
 ): GroupByDimension => {
   const { data: dashboard, isLoading: dashboardLoading } =
     useCloudPulseDashboardByIdQuery(dashboardId);
@@ -60,7 +61,7 @@ export const useGlobalDimensions = (
   ];
 
   const commonGroups = getCommonGroups(
-    dashboard?.group_by ?? [],
+    preference ? preference : (dashboard?.group_by ?? []),
     commonDimensions
   );
   return {
@@ -81,10 +82,18 @@ export const getCommonGroups = (
   commonDimensions: GroupByOption[]
 ): GroupByOption[] => {
   if (groupBy.length === 0 || commonDimensions.length === 0) return [];
-
-  return commonDimensions.filter((group) => {
-    return groupBy.includes(group.value);
-  });
+  const commonGroups: GroupByOption[] = [];
+  // To maintain the order of groupBy from dashboard config or preferences
+  for (let index = 0; index < groupBy.length; index++) {
+    const group = groupBy[index];
+    const commonGroup = commonDimensions.find(
+      (dimension) => dimension.value === group
+    );
+    if (commonGroup) {
+      commonGroups.push(commonGroup);
+    }
+  }
+  return commonGroups;
 };
 
 /**
@@ -99,7 +108,8 @@ export const useWidgetDimension = (
   dashboardId: number | undefined,
   serviceType: CloudPulseServiceType | undefined,
   globalDimensions: GroupByOption[],
-  metric: string | undefined
+  metric: string | undefined,
+  preference?: string[]
 ): GroupByDimension => {
   const { data: dashboard, isLoading: dashboardLoading } =
     useCloudPulseDashboardByIdQuery(dashboardId);
@@ -120,9 +130,11 @@ export const useWidgetDimension = (
         label,
         value: dimension_label,
       })) ?? [];
-  const defaultGroupBy =
-    dashboard?.widgets.find((widget) => widget.metric === metric)?.group_by ??
-    [];
+  const defaultGroupBy = preference
+    ? preference
+    : (dashboard?.widgets.find((widget) => widget.metric === metric)
+        ?.group_by ?? []);
+
   const options = metricDimensions.filter(
     (metricDimension) =>
       !globalDimensions.some(
@@ -130,9 +142,17 @@ export const useWidgetDimension = (
       )
   );
 
-  const defaultValue = options.filter((options) =>
-    defaultGroupBy.includes(options.value)
-  );
+  // To maintain the order of groupBy from dashboard config or preferences
+  const defaultValue: GroupByOption[] = [];
+
+  for (let index = 0; index < defaultGroupBy.length; index++) {
+    const groupBy = defaultGroupBy[index];
+
+    const defaultOption = options.find((option) => option.value === groupBy);
+    if (defaultOption) {
+      defaultValue.push(defaultOption);
+    }
+  }
 
   return {
     options,
