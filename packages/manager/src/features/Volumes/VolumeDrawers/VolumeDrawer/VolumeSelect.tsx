@@ -21,10 +21,15 @@ export const VolumeSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
+  const query = useAllVolumesQuery(
+    {},
+    {
+      ...(region ? { region } : {}),
+    }
+  );
+
   const { data: availableVolumes, isLoading: isAvailableVolumesLoading } =
-    useQueryWithPermissions<Volume>(useAllVolumesQuery({}, {}), 'volume', [
-      'attach_volume',
-    ]);
+    useQueryWithPermissions<Volume>(query, 'volume', ['attach_volume']);
 
   // Filter out volumes that are already attached to a Linode
   const filteredVolumes = availableVolumes?.filter(
