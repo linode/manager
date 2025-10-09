@@ -27,7 +27,6 @@ import type { Theme } from '@mui/material';
 
 export const UserDelegations = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const [search, setSearch] = React.useState('');
 
@@ -73,6 +72,7 @@ export const UserDelegations = () => {
   const pagination = usePaginationV2({
     currentRoute: '/iam/users/$username/delegations',
     preferenceKey: 'user-delegations',
+    initialPage: 1,
   });
 
   if (!isIAMDelegationEnabled) {
@@ -119,6 +119,7 @@ export const UserDelegations = () => {
               data={sortedData ?? []}
               page={pagination.page}
               pageSize={pagination.pageSize}
+              pageSizeSetter={pagination.handlePageSizeChange}
               updatePageUrl={pagination.handlePageChange}
             >
               {({
@@ -126,8 +127,6 @@ export const UserDelegations = () => {
                 data: paginatedData,
                 handlePageChange,
                 handlePageSizeChange,
-                page,
-                pageSize,
               }) => (
                 <>
                   {paginatedData?.length === 0 && (
@@ -155,8 +154,8 @@ export const UserDelegations = () => {
                           eventCategory="DelegatedChildAccounts"
                           handlePageChange={handlePageChange}
                           handleSizeChange={handlePageSizeChange}
-                          page={page}
-                          pageSize={pageSize}
+                          page={pagination.page}
+                          pageSize={pagination.pageSize}
                         />
                       </TableCell>
                     </TableRow>
