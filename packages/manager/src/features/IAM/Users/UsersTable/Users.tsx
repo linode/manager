@@ -174,7 +174,7 @@ export const UsersLanding = () => {
             {isChildWithDelegationEnabled && (
               <Select
                 hideLabel
-                label="Select type"
+                label="Select user type"
                 onChange={(_, selected) => {
                   pagination.handlePageChange(1);
                   setUserType(selected ?? null);
