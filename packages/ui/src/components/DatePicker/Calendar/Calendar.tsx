@@ -36,6 +36,12 @@ export const Calendar = ({
   const startDay = startOfMonth.weekday % 7;
   const totalDaysInMonth = endOfMonth.day;
   const today = DateTime.now();
+  const isDateRange =
+    startDate &&
+    endDate &&
+    startDate.isValid &&
+    endDate.isValid &&
+    !startDate.hasSame(endDate, 'day');
   // Calculate dynamic grid size based on actual content
   const days = [];
 
@@ -109,6 +115,7 @@ export const Calendar = ({
       <DayBox
         aria-selected={Boolean(isSelected || isStart || isEnd)}
         isEnd={isVisualEnd}
+        isRange={isDateRange}
         isSelected={isSelected}
         isStart={isVisualStart}
         key={`${month.month} ${day}`}
