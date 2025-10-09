@@ -9,7 +9,10 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
-import { RESOURCE_FILTER_MAP } from '../Utils/constants';
+import {
+  FIREWALL_ENTITY_TYPE_MAP,
+  RESOURCE_FILTER_MAP,
+} from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
@@ -119,7 +122,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
+    FIREWALL_ENTITY_TYPE_MAP[dashboardId]
   );
 
   const {

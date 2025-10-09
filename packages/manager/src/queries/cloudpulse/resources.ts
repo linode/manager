@@ -4,12 +4,18 @@ import { queryFactory } from './queries';
 
 import type { Filter, FirewallDeviceEntity, Params } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+import type { FirewallEntityType } from 'src/features/CloudPulse/shared/types';
 
 export const useResourcesQuery = (
   enabled = false,
   resourceType: string | undefined,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
+  firewallEntityTypesToCompare: FirewallEntityType[] = [
+    'linode',
+    'linode_interface',
+    'nodebalancer',
+  ]
 ) =>
   useQuery<any[], unknown, CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),
@@ -25,18 +31,19 @@ export const useResourcesQuery = (
         // handle separately for firewall resource type
         if (resourceType === 'firewall') {
           resource.entities?.forEach((entity: FirewallDeviceEntity) => {
-            if (entity.type === 'linode' && entity.label) {
+            if (
+              firewallEntityTypesToCompare?.includes(entity.type) &&
+              entity.label
+            ) {
               entities[String(entity.id)] = entity.label;
             }
             if (
+              firewallEntityTypesToCompare?.includes(entity.type) &&
               entity.type === 'linode_interface' &&
               entity.parent_entity?.label
             ) {
               entities[String(entity.parent_entity.id)] =
                 entity.parent_entity.label;
-            }
-            if (entity.type === 'nodebalancer' && entity.label) {
-              entities[String(entity.id)] = entity.label;
             }
           });
         }
