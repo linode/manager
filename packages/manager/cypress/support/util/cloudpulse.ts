@@ -52,7 +52,7 @@ export const generateRandomMetricsData = (
 };
 
 /*
-Common assertions for multiple tests w/ different setups which 
+Common assertions for multiple tests w/ different setups which
 assume legacy metrics will be displayed
 with no option to view beta metrics
 */
