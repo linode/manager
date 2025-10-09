@@ -33,7 +33,6 @@ import type {
   UpdateDestinationPayloadWithId,
   UpdateStreamPayloadWithId,
 } from '@linode/api-v4';
-import type { GetAllData } from '@linode/utilities';
 
 export const getAllStreams = (
   passedParams: Params = {},
@@ -41,7 +40,7 @@ export const getAllStreams = (
 ) =>
   getAll<Stream>((params, filter) =>
     getStreams({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
-  )();
+  )().then((data) => data.data);
 
 export const getAllDestinations = (
   passedParams: Params = {},
@@ -52,7 +51,7 @@ export const getAllDestinations = (
       { ...params, ...passedParams },
       { ...filter, ...passedFilter },
     ),
-  )();
+  )().then((data) => data.data);
 
 export const deliveryQueries = createQueryKeys('delivery', {
   stream: (id: number) => ({
@@ -111,7 +110,7 @@ export const useAllStreamsQuery = (
   filter: Filter = {},
   enabled = true,
 ) =>
-  useQuery<GetAllData<Stream>, APIError[]>({
+  useQuery<Stream[], APIError[]>({
     ...deliveryQueries.streams._ctx.all(params, filter),
     enabled,
   });
@@ -209,7 +208,7 @@ export const useAllDestinationsQuery = (
   filter: Filter = {},
   enabled = true,
 ) =>
-  useQuery<GetAllData<Destination>, APIError[]>({
+  useQuery<Destination[], APIError[]>({
     ...deliveryQueries.destinations._ctx.all(params, filter),
     enabled,
   });

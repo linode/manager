@@ -38,14 +38,12 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
-  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -126,7 +124,6 @@ export const CreateCluster = () => {
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const { showAPL } = useAPLAvailability();
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
@@ -174,7 +171,7 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
   // APL is supported for standard clusters, and for enterprise clusters when the APL_LKE_E flag is enabled
   const isAPLSupported =
@@ -208,7 +205,10 @@ export const CreateCluster = () => {
       }
     }
 
-    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    // If a user configures node pools in the LKE-E flow, but then switches to LKE, reset configurations that are incompatible with LKE-E:
+    // - If a user added > 100 nodes, set the max node count to 100 for correct price display.
+    // - Clear the firewall selection.
+    // - Clear the update strategy selection.
     if (isLkeEnterpriseLAFeatureEnabled) {
       nodePools.forEach((nodePool, idx) =>
         update(idx, {
@@ -219,6 +219,8 @@ export const CreateCluster = () => {
               ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
               : MAX_NODES_PER_POOL_STANDARD_TIER
           ),
+          firewall_id: undefined,
+          update_strategy: undefined,
         })
       );
     }
@@ -248,14 +250,11 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesCluster } =
     useCreateKubernetesClusterMutation();
 
-  const { mutateAsync: createKubernetesClusterBeta } =
-    useCreateKubernetesClusterBetaMutation();
-
   const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+    data: versionData,
+    isLoading: isLoadingVersions,
+    error: versionsError,
+  } = useKubernetesTieredVersionsQuery(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -357,10 +356,6 @@ export const CreateCluster = () => {
       };
     }
 
-    const createClusterFn = isUsingBetaEndpoint
-      ? createKubernetesClusterBeta
-      : createKubernetesCluster;
-
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (
       (isLkeEnterprisePostLAFeatureEnabled ||
@@ -392,7 +387,7 @@ export const CreateCluster = () => {
       }
     }
 
-    createClusterFn(payload)
+    createKubernetesCluster(payload)
       .then((cluster) => {
         navigate({
           to: '/kubernetes/clusters/$clusterId/summary',

@@ -79,69 +79,21 @@ export async function loadDevTools() {
     // Merge the contexts
     const mergedContext: MockState = {
       ...initialContext,
-      domains: [...initialContext.domains, ...(seedContext?.domains || [])],
-      eventQueue: [
-        ...initialContext.eventQueue,
-        ...(seedContext?.eventQueue || []),
-      ],
-      firewallDevices: [
-        ...initialContext.firewallDevices,
-        ...(seedContext?.firewallDevices || []),
-      ],
-      firewalls: [
-        ...initialContext.firewalls,
-        ...(seedContext?.firewalls || []),
-      ],
-      entities: [...initialContext.entities, ...(seedContext?.entities || [])],
-      kubernetesClusters: [
-        ...initialContext.kubernetesClusters,
-        ...(seedContext?.kubernetesClusters || []),
-      ],
-      kubernetesNodePools: [
-        ...initialContext.kubernetesNodePools,
-        ...(seedContext?.kubernetesNodePools || []),
-      ],
-      linodeConfigs: [
-        ...initialContext.linodeConfigs,
-        ...(seedContext?.linodeConfigs || []),
-      ],
-      linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
-      nodeBalancerConfigNodes: [
-        ...initialContext.nodeBalancerConfigNodes,
-        ...(seedContext.nodeBalancerConfigNodes || []),
-      ],
-      nodeBalancerConfigs: [
-        ...initialContext.nodeBalancerConfigs,
-        ...(seedContext.nodeBalancerConfigs || []),
-      ],
-      nodeBalancers: [
-        ...initialContext.nodeBalancers,
-        ...(seedContext.nodeBalancers || []),
-      ],
-      notificationQueue: [
-        ...initialContext.notificationQueue,
-        ...(seedContext?.notificationQueue || []),
-      ],
-      placementGroups: [
-        ...initialContext.placementGroups,
-        ...(seedContext?.placementGroups || []),
-      ],
-      regionAvailability: [
-        ...initialContext.regionAvailability,
-        ...(seedContext?.regionAvailability || []),
-      ],
-      regions: [...initialContext.regions, ...(seedContext?.regions || [])],
-      subnets: [...initialContext.subnets, ...(seedContext?.subnets || [])],
-      supportReplies: [
-        ...initialContext.supportReplies,
-        ...(seedContext?.supportReplies || []),
-      ],
-      supportTickets: [
-        ...initialContext.supportTickets,
-        ...(seedContext?.supportTickets || []),
-      ],
-      volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
-      vpcs: [...initialContext.vpcs, ...(seedContext?.vpcs || [])],
+      ...Object.fromEntries(
+        Object.keys(initialContext).map((key) => {
+          const k = key as keyof MockState;
+          const initialValue = initialContext[k];
+          const seedValue = seedContext?.[k];
+
+          if (Array.isArray(initialValue) && Array.isArray(seedValue)) {
+            return [k, [...initialValue, ...seedValue]];
+          } else if (seedValue !== undefined) {
+            return [k, seedValue];
+          } else {
+            return [k, initialValue];
+          }
+        })
+      ),
     };
 
     const extraHandlers = extraMswPresets.reduce(

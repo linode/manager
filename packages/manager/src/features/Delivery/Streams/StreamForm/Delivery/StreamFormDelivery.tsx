@@ -49,13 +49,13 @@ export const StreamFormDelivery = () => {
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
 
-  const destinationNameOptions: DestinationName[] = (
-    destinations?.data || []
-  ).map(({ id, label, type }) => ({
-    id,
-    label,
-    type,
-  }));
+  const destinationNameOptions: DestinationName[] = (destinations || []).map(
+    ({ id, label, type }) => ({
+      id,
+      label,
+      type,
+    })
+  );
 
   const selectedDestinationType = useWatch({
     control,
@@ -67,10 +67,18 @@ export const StreamFormDelivery = () => {
     name: 'stream.destinations',
   });
 
-  const destinationNameFilterOptions = createFilterOptions<DestinationName>();
+  const destinationNameFilterOptions = createFilterOptions<DestinationName>({
+    stringify: (destination) => destination.label,
+  });
 
   const findDestination = (id: number) =>
-    destinations?.data?.find((destination) => destination.id === id);
+    destinations?.find((destination) => destination.id === id);
+
+  const restDestinationForm = () => {
+    Object.values(controlPaths).forEach((controlPath) =>
+      setValue(controlPath, '')
+    );
+  };
 
   const getDestinationForm = () => (
     <>
@@ -121,6 +129,10 @@ export const StreamFormDelivery = () => {
             onChange={(_, newValue) => {
               const id = newValue?.id;
 
+              if (id === undefined && selectedDestinations.length > 0) {
+                restDestinationForm();
+              }
+
               setValue('stream.destinations', id ? [id] : []);
               const selectedDestination = id ? findDestination(id) : undefined;
               if (selectedDestination) {
@@ -137,9 +149,9 @@ export const StreamFormDelivery = () => {
             )}
             placeholder="Create or Select Destination Name"
             renderOption={(props, option) => {
-              const { key, ...optionProps } = props;
+              const { id, ...optionProps } = props;
               return (
-                <li key={key} {...optionProps}>
+                <li {...optionProps} key={id}>
                   {option.create ? (
                     <>
                       <strong>Create&nbsp;</strong> &quot;{option.label}&quot;

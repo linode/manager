@@ -47,6 +47,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },
+  { flag: 'databaseVpcBeta', label: 'Database VPC Beta' },
   { flag: 'databasePremium', label: 'Database Premium' },
   {
     flag: 'databaseRestrictPlanResize',

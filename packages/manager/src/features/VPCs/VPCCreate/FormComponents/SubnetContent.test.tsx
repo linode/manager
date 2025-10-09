@@ -20,7 +20,7 @@ describe('Subnet form content', () => {
 
     expect(getByText('Subnets')).toBeVisible();
     expect(getByText('Subnet Label')).toBeVisible();
-    expect(getByText('Subnet IP Address Range')).toBeVisible();
+    expect(getByText('Subnet IPv4 Range (CIDR)')).toBeVisible();
     expect(getByText('Add another Subnet')).toBeVisible();
   });
 });

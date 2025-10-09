@@ -4,7 +4,7 @@ import {
   useDestinationQuery,
   useUpdateDestinationMutation,
 } from '@linode/queries';
-import { Box, CircleProgress, ErrorState } from '@linode/ui';
+import { Box, CircleProgress, ErrorState, omitProps } from '@linode/ui';
 import { destinationFormSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
@@ -80,7 +80,7 @@ export const DestinationEdit = () => {
   const onSubmit = () => {
     const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
-      ...form.getValues(),
+      ...omitProps(form.getValues(), ['type']),
     };
 
     updateDestination(destination)
