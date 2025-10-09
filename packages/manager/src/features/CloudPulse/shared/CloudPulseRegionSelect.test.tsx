@@ -36,6 +36,7 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
   useResourcesQuery: vi.fn().mockReturnValue({}),
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
+  useAllNodeBalancersQuery: vi.fn().mockReturnValue({}),
 }));
 
 const allRegions: Region[] = [
@@ -86,6 +87,7 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
   useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+  useAllNodeBalancersQuery: queryMocks.useAllNodeBalancersQuery,
 }));
 
 vi.mock('src/queries/cloudpulse/resources', async () => {
@@ -394,6 +396,52 @@ describe('CloudPulseRegionSelect', () => {
         selectedDashboard={dashboardFactory.build({
           service_type: 'firewall',
           id: 4,
+        })}
+        selectedEntities={['1']}
+      />
+    );
+    expect(screen.getByDisplayValue('IN, Mumbai (ap-west)')).toBeVisible();
+  });
+  it('Should select the first region automatically from the nodebalancer regions if savePreferences is false', async () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'ap-west',
+          label: 'IN, Mumbai',
+          capabilities: [capabilityServiceTypeMapping['firewall']],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: [
+        firewallFactory.build({
+          id: 1,
+          entities: [{ id: 1, type: 'nodebalancer' }],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useAllNodeBalancersQuery.mockReturnValue({
+      data: [
+        nodeBalancerFactory.build({
+          id: 1,
+          region: 'ap-west',
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        filterKey="associated_entity_region"
+        savePreferences={false}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'firewall',
+          id: 8,
         })}
         selectedEntities={['1']}
       />

@@ -143,7 +143,7 @@ describe('Utils', () => {
       ]);
     });
 
-    it('should return empty object if no match', () => {
+    it('should return empty array if no match', () => {
       expect(getFilteredFirewallParentEntities(resources, ['4'])).toEqual([]);
     });
 
