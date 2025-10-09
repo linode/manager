@@ -270,14 +270,14 @@ it('test mapResourceIdToName method', () => {
 
 describe('getTimeDurationFromPreset method', () => {
   it('should return correct time duration for Last Day preset', () => {
-    const result = getTimeDurationFromPreset('last day');
+    const result = getTimeDurationFromPreset('Last day');
     expect(result).toStrictEqual({
       unit: 'days',
       value: 1,
     });
   });
 
-  it('shoult return undefined of invalid preset', () => {
+  it('should return undefined for invalid preset', () => {
     const result = getTimeDurationFromPreset('15min');
     expect(result).toBe(undefined);
   });
