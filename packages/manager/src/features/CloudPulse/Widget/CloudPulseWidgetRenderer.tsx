@@ -92,10 +92,11 @@ export const RenderWidgets = React.memo(
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
         dashboardId: dashboard.id,
+        globalFilterGroupBy: groupBy,
         widget: {
           ...widget,
           time_granularity: autoIntervalOption,
-          group_by: groupBy.length === 0 ? undefined : groupBy,
+          group_by: undefined,
         },
       };
       if (savePref) {
@@ -122,11 +123,13 @@ export const RenderWidgets = React.memo(
           time_granularity: {
             ...(pref.timeGranularity ?? autoIntervalOption),
           },
+          group_by: pref.groupBy,
         };
       } else {
         return {
           ...widgetObj,
           time_granularity: autoIntervalOption,
+          group_by: undefined,
         };
       }
     };
