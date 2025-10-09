@@ -14,6 +14,7 @@ import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 import {
   DASHBOARD_ID,
+  GROUP_BY,
   REFRESH,
   RESOURCE_FILTER_MAP,
   TIME_DURATION,
@@ -105,6 +106,17 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     RESOURCE_FILTER_MAP[selectedDashboard?.service_type ?? ''] ?? {}
   );
 
+  const onGroupByChange = React.useCallback(
+    (selectedValues: string[], savePref: boolean = false) => {
+      if (savePref) {
+        updatePreferences({ [GROUP_BY]: selectedValues });
+      }
+
+      handleGroupByChange(selectedValues);
+    },
+    []
+  );
+
   return (
     <GridLegacy container>
       <GridLegacy item xs={12}>
@@ -150,7 +162,9 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               </IconButton>
             </CloudPulseTooltip>
             <GlobalFilterGroupByRenderer
-              handleChange={handleGroupByChange}
+              handleChange={onGroupByChange}
+              preferenceGroupBy={preferences?.[GROUP_BY]}
+              savePreferences
               selectedDashboard={selectedDashboard}
             />
           </Box>
