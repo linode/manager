@@ -19,8 +19,8 @@ export const destinationTypeOptions: LabelValueOption[] = [
     label: 'Custom HTTPS',
   },
   {
-    value: destinationType.LinodeObjectStorage,
-    label: 'Linode Object Storage',
+    value: destinationType.AkamaiObjectStorage,
+    label: 'Akamai Object Storage',
   },
 ];
 
