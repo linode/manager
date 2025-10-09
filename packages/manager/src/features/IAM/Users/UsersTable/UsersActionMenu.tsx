@@ -28,6 +28,7 @@ export const UsersActionMenu = (props: Props) => {
   const profileUsername = profile?.username;
   const isAccountAdmin = permissions.is_account_admin;
   const canDeleteUser = permissions.delete_user;
+  const isParentUser = profile?.user_type === 'parent';
 
   const actions: Action[] = [
     {
@@ -71,7 +72,7 @@ export const UsersActionMenu = (props: Props) => {
     },
     {
       disabled: false,
-      hidden: !isIAMDelegationEnabled,
+      hidden: !isIAMDelegationEnabled || !isParentUser,
       onClick: () => {
         navigate({
           to: '/iam/users/$username/delegations',
