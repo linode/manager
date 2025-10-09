@@ -84,7 +84,7 @@ export function useFirewallFetchOptions(
   const idFilter = {
     '+or': filteredFirewallParentEntityIds.length
       ? filteredFirewallParentEntityIds.map((entity) => ({
-          id: String(entity.id),
+          id: entity.id,
         }))
       : [{ id: '' }],
   };
