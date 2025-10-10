@@ -204,8 +204,12 @@ const makeMockDatabase = (params: PathParams): Database => {
     // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
     const hasPrimary = Boolean(database.hosts?.primary);
     const hasStandby = Boolean(database.hosts?.standby);
-    const primaryHost = hasPrimary ? `private-${database.hosts.primary}` : '';
-    const standbyHost = hasStandby ? `private-${database.hosts.standby}` : '';
+    const primaryHost = hasPrimary
+      ? `private-${database.hosts.primary}`
+      : undefined;
+    const standbyHost = hasStandby
+      ? `private-${database.hosts.standby}`
+      : undefined;
     database.hosts.primary = primaryHost;
     database.hosts.standby = standbyHost;
   }

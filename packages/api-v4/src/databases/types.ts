@@ -85,7 +85,7 @@ export interface DatabaseCredentials {
 }
 
 interface DatabaseHosts {
-  primary: string;
+  primary?: string;
   secondary?: string;
   standby?: string;
 }

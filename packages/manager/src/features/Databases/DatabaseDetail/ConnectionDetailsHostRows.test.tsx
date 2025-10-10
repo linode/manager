@@ -150,7 +150,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText(PRIVATE_PRIMARY)).toHaveLength(1);
     // Verify that the Public hostname is rendered correctly
     const expectedPublicHostname = convertPrivateToPublicHostname(
-      database.hosts.primary
+      database.hosts.primary!
     );
     expect(queryAllByText(expectedPublicHostname)).toHaveLength(1);
 
