@@ -1,11 +1,7 @@
 /**
  * @file Integration Tests for CloudPulse Firewall Nodebalancer Dashboard.
  */
-import {
-  linodeFactory,
-  nodeBalancerFactory,
-  regionFactory,
-} from '@linode/utilities';
+import { nodeBalancerFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -148,19 +144,6 @@ const getWidgetLegendRowValuesFromResponse = (
   // Return the rounded values in an object
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
-
-const mockLinodes = [
-  linodeFactory.build({
-    id: 1,
-    label: firewalls,
-    region: 'us-east',
-  }),
-  linodeFactory.build({
-    id: 2,
-    label: 'firewalls-us-ord',
-    region: 'us-ord',
-  }),
-];
 
 const mockRegions = [
   regionFactory.build({
