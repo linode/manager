@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Outlet, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -16,8 +17,10 @@ import {
 } from '../Shared/constants';
 
 export const UserDetailsLanding = () => {
+  const { data: profile } = useProfile();
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const isParentUser = profile?.user_type === 'parent';
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
@@ -35,7 +38,7 @@ export const UserDetailsLanding = () => {
     {
       to: `/iam/users/$username/delegations`,
       title: 'Account Delegations',
-      hide: !isIAMDelegationEnabled,
+      hide: !isIAMDelegationEnabled || !isParentUser,
     },
   ]);
 
