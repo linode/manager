@@ -18,8 +18,9 @@ export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const navigate = useNavigate();
+  const { profileUserName } = useDelegationRole();
 
-  const { isProxyUser, profileUserName } = useDelegationRole();
+  const isProxyUser = user.user_type === 'proxy';
 
   const tooltipText =
     profileUserName === user.username
