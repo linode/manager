@@ -16,6 +16,7 @@ import {
 import {
   AGGREGATE_FUNCTION,
   GLOBAL_DIMENSION_FILTER_LIST,
+  GROUP_BY,
   SIZE,
   TIME_GRANULARITY,
 } from '../Utils/constants';
@@ -96,6 +97,11 @@ export interface CloudPulseWidgetProperties {
   errorLabel?: string;
 
   /**
+   * Group by selected on global filter
+   */
+  globalFilterGroupBy: string[];
+
+  /**
    * Jwe token fetching status check
    */
   isJweTokenFetching: boolean;
@@ -134,11 +140,11 @@ export interface CloudPulseWidgetProperties {
    * this should come from dashboard, which maintains map for service types in a separate API call
    */
   unit: string;
-
   /**
    * color index to be selected from available them if not theme is provided by user
    */
   useColorIndex?: number;
+
   /**
    * this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
    */
@@ -162,11 +168,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { data: profile } = useProfile();
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
-  const [groupBy, setGroupBy] = React.useState<string[]>([]);
-
+  const [groupBy, setGroupBy] = React.useState<string[] | undefined>(
+    props.widget.group_by
+  );
   const theme = useTheme();
 
   const {
+    globalFilterGroupBy,
     additionalFilters,
     ariaLabel,
     authToken,
@@ -302,9 +310,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
-  const handleGroupByChange = React.useCallback((selectedGroupBy: string[]) => {
-    setGroupBy(selectedGroupBy);
-  }, []);
+  const handleGroupByChange = React.useCallback(
+    (selectedGroupBy: string[], savePreferences?: boolean) => {
+      if (savePreferences) {
+        updatePreferences(widget.label, {
+          [GROUP_BY]: selectedGroupBy,
+        });
+      }
+      setGroupBy(selectedGroupBy);
+    },
+    []
+  );
   const {
     data: metricsList,
     error,
@@ -318,7 +334,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
-        groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
+        groupBy: [...globalFilterGroupBy, ...(groupBy ?? [])],
         linodeRegion,
         region,
         serviceType,
@@ -347,7 +363,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       status,
       unit,
       serviceType,
-      groupBy: [...(widgetProp.group_by ?? []), ...groupBy],
+      groupBy: [...globalFilterGroupBy, ...(groupBy ?? [])],
       metricLabel: availableMetrics?.label,
     });
 
@@ -435,6 +451,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   handleChange={handleGroupByChange}
                   label={widget.label}
                   metric={widget.metric}
+                  preferenceGroupBy={groupBy}
+                  savePreferences={savePref}
                   serviceType={serviceType}
                 />
                 {flags.aclp?.showWidgetDimensionFilters && (
