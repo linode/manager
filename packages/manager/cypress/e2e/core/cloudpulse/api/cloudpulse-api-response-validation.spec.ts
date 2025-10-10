@@ -11,14 +11,13 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
 
   // Map of environments to their corresponding Cloud URLs
   const apiRootToCloudMap: Record<string, string> = {
-    'https://api.linode.com/v4': 'https://cloud.linode.com/api',
-    'https://api.dev.linode.com/v4': 'https://cloud.dev.linode.com',
-    'https://api.staging.linode.com/v4': 'https://cloud.staging.linode.com/api',
+    'https://api.linode.com/v4': 'https://api.linode.com/api',
+    'https://api.dev.linode.com/v4': 'https://api.dev.linode.com',
+    'https://api.staging.linode.com/v4': 'https://api.staging.linode.com/api',
     'https://api.devcloud.linode.com/v4': 'https://api.devcloud.linode.com',
   };
 
-  const cloudBaseUrl =
-    apiRootToCloudMap[apiRoot] ?? apiRoot.replace('api.', 'cloud.');
+  const apiBaseUrl = apiRootToCloudMap[apiRoot];
 
   const IGNORED_KEYS = [
     'id',
@@ -185,8 +184,10 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
     ['dbaas', 'firewall', 'nodebalancer', 'objectstorage', 'linode'].forEach(
       (type) => {
         it(`should fetch ${type.toUpperCase()} dashboards`, () => {
-          const url = `${cloudBaseUrl}/v4beta/monitor/services/${type}/dashboards`;
+          const url = `${apiBaseUrl}/v4beta/monitor/services/${type}/dashboards`;
           const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-dashboard-response.json`;
+
+          cy.log(`Using Cloud URL*********: ${apiBaseUrl}`);
 
           cy.readFile(templatePath).then((templateData) => {
             cy.request({
@@ -205,7 +206,7 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
 
     services.forEach(({ type, id }) => {
       it(`should fetch ${type.toUpperCase()} dashboard by ID`, () => {
-        const url = `${cloudBaseUrl}/v4beta/monitor/dashboards/${id}`;
+        const url = `${apiBaseUrl}/v4beta/monitor/dashboards/${id}`;
         const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-dashboard-response.json`;
 
         cy.readFile(templatePath).then((templateData) => {
@@ -238,7 +239,7 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
     ['dbaas', 'objectstorage', 'linode', 'firewall', 'nodebalancer'].forEach(
       (type) => {
         it(`should fetch ${type.toUpperCase()} metric definitions`, () => {
-          const url = `${cloudBaseUrl}/v4beta/monitor/services/${type}/metric-definitions`;
+          const url = `${apiBaseUrl}/v4beta/monitor/services/${type}/metric-definitions`;
           const templatePath = `${Cypress.config('fileServerFolder')}/cypress/e2e/core/cloudpulse/api-response/${type}-metric-definition.json`;
 
           cy.readFile(templatePath).then((templateData) => {
