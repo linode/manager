@@ -1,6 +1,6 @@
 import { useProfile } from '@linode/queries';
 
-import type { Profile, UserType } from '@linode/api-v4';
+import type { UserType } from '@linode/api-v4';
 
 type DelegationRole = {
   isChildAccount: boolean;
@@ -8,8 +8,8 @@ type DelegationRole = {
   isDelegateUser: boolean;
   isParentAccount: boolean;
   isProxyUser: boolean;
-  profile: Profile | undefined;
-  userType: undefined | UserType;
+  profileUserName: string | undefined;
+  profileUserType: undefined | UserType;
 };
 
 export const useDelegationRole = (): DelegationRole => {
@@ -21,7 +21,7 @@ export const useDelegationRole = (): DelegationRole => {
     isParentAccount: profile?.user_type === 'parent',
     isChildAccount: profile?.user_type === 'child',
     isDelegateUser: profile?.user_type === 'delegate',
-    userType: profile?.user_type,
-    profile,
+    profileUserType: profile?.user_type,
+    profileUserName: profile?.username,
   };
 };

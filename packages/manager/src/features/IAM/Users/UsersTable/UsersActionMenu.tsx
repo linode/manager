@@ -24,9 +24,8 @@ export const UsersActionMenu = (props: Props) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
-  const { isParentAccount, profile } = useDelegationRole();
+  const { isParentAccount, profileUserName } = useDelegationRole();
 
-  const profileUsername = profile?.username;
   const isAccountAdmin = permissions.is_account_admin;
   const canDeleteUser = permissions.delete_user;
 
@@ -83,13 +82,13 @@ export const UsersActionMenu = (props: Props) => {
       tooltip: undefined,
     },
     {
-      disabled: username === profileUsername || !canDeleteUser,
+      disabled: username === profileUserName || !canDeleteUser,
       onClick: () => {
         onDelete(username);
       },
       title: 'Delete User',
       tooltip:
-        username === profileUsername
+        username === profileUserName
           ? "You can't delete the currently active user."
           : !canDeleteUser
             ? 'You do not have permission to delete this user.'
@@ -100,7 +99,7 @@ export const UsersActionMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for user ${profileUsername}`}
+      ariaLabel={`Action menu for user ${profileUserName}`}
     />
   );
 };
