@@ -8,6 +8,7 @@ interface DayBoxBaseProps {
 }
 
 interface DayBoxProps extends DayBoxBaseProps {
+  isRange?: boolean | null;
   isSelected: boolean | null;
 }
 
@@ -18,8 +19,11 @@ interface DayBoxInnerProps extends DayBoxBaseProps {
 export const DayBox = styled(Box, {
   label: 'DayBox',
   shouldForwardProp: (prop) =>
-    prop !== 'isSelected' && prop !== 'isStart' && prop !== 'isEnd',
-})<DayBoxProps>(({ isSelected, isStart, isEnd, theme }) => {
+    prop !== 'isSelected' &&
+    prop !== 'isStart' &&
+    prop !== 'isEnd' &&
+    prop !== 'isRange',
+})<DayBoxProps>(({ isSelected, isStart, isEnd, theme, isRange }) => {
   // Apply rounded edges to create smooth visual flow for date ranges
   const getBorderRadius = () => {
     if (isStart && isEnd) return '50%'; // Single date - fully rounded
@@ -30,7 +34,7 @@ export const DayBox = styled(Box, {
 
   return {
     backgroundColor:
-      isSelected || isStart || isEnd
+      (isSelected || isStart || isEnd) && isRange
         ? theme.tokens.component.Calendar.DateRange.Background.Default
         : 'transparent',
     borderRadius: isSelected || isStart || isEnd ? getBorderRadius() : '0',
