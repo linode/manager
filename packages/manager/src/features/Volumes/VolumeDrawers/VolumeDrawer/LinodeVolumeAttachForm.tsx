@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -90,13 +89,6 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     values.volume_id !== -1
   );
 
-  const { data: permissions } = usePermissions(
-    'volume',
-    ['attach_volume'],
-    volume?.id
-  );
-  const canAttachVolume = permissions?.attach_volume;
-
   const linodeRequiresClientLibraryUpdate =
     volume?.encryption === 'enabled' &&
     Boolean(!linode.capabilities?.includes('Block Storage Encryption'));
@@ -108,17 +100,8 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {!canAttachVolume && (
-        <Notice
-          text={
-            "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
-          }
-          variant="error"
-        />
-      )}
       {error && <Notice text={error} variant="error" />}
       <VolumeSelect
-        disabled={!canAttachVolume}
         error={touched.volume_id ? errors.volume_id : undefined}
         name="volume_id"
         onBlur={handleBlur}
@@ -127,7 +110,6 @@ export const LinodeVolumeAttachForm = (props: Props) => {
         value={values.volume_id}
       />
       <ConfigSelect
-        disabled={!canAttachVolume}
         error={touched.config_id ? errors.config_id : undefined}
         linodeId={linode.id}
         name="config_id"
@@ -137,7 +119,8 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled: !canAttachVolume || linodeRequiresClientLibraryUpdate,
+          disabled:
+            linodeRequiresClientLibraryUpdate || values.volume_id === -1,
           label: 'Attach Volume',
           loading: isSubmitting,
           type: 'submit',

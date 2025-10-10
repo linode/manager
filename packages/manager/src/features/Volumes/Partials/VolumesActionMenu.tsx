@@ -51,6 +51,13 @@ export const VolumesActionMenu = (props: Props) => {
     isOpen
   );
 
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['delete_linode'],
+    volume.linode_id!,
+    isOpen && isAttached
+  );
+
   const ACTIONS = {
     SHOW_CONFIG: {
       onClick: handlers.handleDetails,
@@ -97,13 +104,14 @@ export const VolumesActionMenu = (props: Props) => {
         !volumePermissions?.clone_volume || !accountPermissions?.create_volume,
       onClick: handlers.handleClone,
       title: 'Clone',
-      tooltip: !volumePermissions?.clone_volume
-        ? getRestrictedResourceText({
-            action: 'clone',
-            isSingular: true,
-            resourceType: 'Volumes',
-          })
-        : undefined,
+      tooltip:
+        !volumePermissions?.clone_volume || !accountPermissions?.create_volume
+          ? getRestrictedResourceText({
+              action: 'clone',
+              isSingular: true,
+              resourceType: 'Volumes',
+            })
+          : undefined,
     },
     ATTACH: {
       disabled: !volumePermissions?.attach_volume,
@@ -118,10 +126,14 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     DETACH: {
-      disabled: !volumePermissions?.detach_volume,
+      disabled: !(
+        volumePermissions?.detach_volume && linodePermissions?.delete_linode
+      ),
       onClick: handlers.handleDetach,
       title: 'Detach',
-      tooltip: !volumePermissions?.detach_volume
+      tooltip: !(
+        volumePermissions?.detach_volume && linodePermissions?.delete_linode
+      )
         ? getRestrictedResourceText({
             action: 'detach',
             isSingular: true,
