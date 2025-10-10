@@ -31,9 +31,9 @@ export function useFirewallFetchOptions(
     regions,
     entities,
     serviceType,
-    dashboardId,
     type,
     scope,
+    firewallEntityType = 'both',
   } = props;
 
   const supportedRegionIds =
@@ -112,7 +112,7 @@ export function useFirewallFetchOptions(
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds?.length > 0 &&
-      (!dashboardId || dashboardId === 4) &&
+      (firewallEntityType === 'linode' || firewallEntityType === 'both') &&
       supportedRegionIds?.length > 0
   );
 
@@ -124,7 +124,8 @@ export function useFirewallFetchOptions(
   } = useAllNodeBalancersQuery(
     filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds?.length > 0 &&
-      (!dashboardId || dashboardId === 8) &&
+      (firewallEntityType === 'nodebalancer' ||
+        firewallEntityType === 'both') &&
       supportedRegionIds?.length > 0,
     {},
     combinedFilterNodebalancer
@@ -148,6 +149,11 @@ export function useFirewallFetchOptions(
     [nodebalancers]
   );
 
+  const allRegions = useMemo(
+    () => Array.from(new Set([...linodeRegions, ...nodebalancerRegions])),
+    [linodeRegions, nodebalancerRegions]
+  );
+
   const {
     data: vpcs,
     isLoading: isVPCsLoading,
@@ -163,9 +169,11 @@ export function useFirewallFetchOptions(
     case 'associated_entity_region':
       return {
         values:
-          dashboardId === 4 || !dashboardId
+          firewallEntityType === 'linode'
             ? linodeRegions
-            : nodebalancerRegions,
+            : firewallEntityType === 'nodebalancer'
+              ? nodebalancerRegions
+              : allRegions,
         isError: isLinodesError || isResourcesError || isNodebalancersError,
         isLoading:
           isLinodesLoading || isResourcesLoading || isNodebalancersLoading,

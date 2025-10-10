@@ -341,10 +341,6 @@ export interface FetchOptions {
 
 export interface FetchOptionsProps {
   /**
-   * Dashboard ID associated with the service type.
-   */
-  dashboardId?: number;
-  /**
    * The dimension label determines the filtering logic and return type.
    */
   dimensionLabel: null | string;
@@ -352,6 +348,10 @@ export interface FetchOptionsProps {
    * List of firewall entity IDs to filter on.
    */
   entities?: string[];
+  /**
+   * The type of firewall entity to filter on.
+   */
+  firewallEntityType?: 'both' | 'linode' | 'nodebalancer';
   /**
    * List of regions to filter on.
    */
