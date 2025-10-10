@@ -19,7 +19,9 @@ interface Props {
 
 export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { isProxyUser, profileUserName } = useDelegationRole();
+  const { profileUserName } = useDelegationRole();
+
+  const isProxyUser = user?.user_type === 'proxy';
 
   const { mutateAsync: updateProfile } = useMutateProfile();
 
