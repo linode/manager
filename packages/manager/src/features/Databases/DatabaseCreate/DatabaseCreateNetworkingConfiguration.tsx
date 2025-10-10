@@ -4,34 +4,19 @@ import * as React from 'react';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 import { DatabaseVPCSelector } from './DatabaseVPCSelector';
 
-import type { DatabaseCreateValues } from './DatabaseClusterData';
 import type { AccessProps } from './DatabaseCreateAccessControls';
-import type { PrivateNetwork, VPC } from '@linode/api-v4';
+import type { VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { FormikErrors } from 'formik';
 
 interface NetworkingConfigurationProps {
   accessControlsConfiguration: AccessProps;
-  errors: FormikErrors<DatabaseCreateValues>;
-  onChange: (field: string, value: boolean | null | number) => void;
-  onNetworkingConfigurationChange: (vpcSelected: null | VPC) => void;
-  privateNetworkValues: PrivateNetwork;
-  resetFormFields: (partialValues?: Partial<DatabaseCreateValues>) => void;
-  selectedRegionId: string;
+  onChange: (selectedVPC: null | VPC) => void;
 }
 
 export const DatabaseCreateNetworkingConfiguration = (
   props: NetworkingConfigurationProps
 ) => {
-  const {
-    accessControlsConfiguration,
-    errors,
-    onNetworkingConfigurationChange,
-    onChange,
-    selectedRegionId,
-    resetFormFields,
-    privateNetworkValues,
-  } = props;
+  const { accessControlsConfiguration, onChange } = props;
 
   return (
     <>
@@ -45,15 +30,7 @@ export const DatabaseCreateNetworkingConfiguration = (
       </Typography>
 
       <DatabaseCreateAccessControls {...accessControlsConfiguration} />
-      <DatabaseVPCSelector
-        errors={errors}
-        mode="create"
-        onChange={onChange}
-        onConfigurationChange={onNetworkingConfigurationChange}
-        privateNetworkValues={privateNetworkValues}
-        resetFormFields={resetFormFields}
-        selectedRegionId={selectedRegionId}
-      />
+      <DatabaseVPCSelector onChange={onChange} />
     </>
   );
 };

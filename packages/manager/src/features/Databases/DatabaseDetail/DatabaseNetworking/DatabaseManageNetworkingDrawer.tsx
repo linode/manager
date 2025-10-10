@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { DatabaseVPCSelector } from '../../DatabaseCreate/DatabaseVPCSelector';
+import { DatabaseVPCSelector } from './DatabaseVPCSelector';
 
 import type {
   Database,
