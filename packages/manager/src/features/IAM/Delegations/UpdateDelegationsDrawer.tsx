@@ -1,5 +1,5 @@
 import {
-  useGetChildAccountDelegatesQuery,
+  useAccountUsers,
   useUpdateChildAccountDelegatesQuery,
 } from '@linode/queries';
 import {
@@ -13,6 +13,10 @@ import {
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import {
+  DELEGATION_UPDATE_ERROR,
+  DELEGATION_VALIDATION_ERROR,
+} from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
 
 import type { ChildAccount, ChildAccountWithDelegates } from '@linode/api-v4';
@@ -39,8 +43,9 @@ export const UpdateDelegationsDrawer = ({
 }: Props) => {
   const theme = useTheme();
 
-  const { data: allUsers } = useGetChildAccountDelegatesQuery({
-    euuid: delegation?.euuid ?? '',
+  // Get all account users as options for delegation
+  const { data: allAccountUsers, isLoading } = useAccountUsers({
+    enabled: open,
   });
 
   const { mutateAsync: updateDelegates } =
@@ -54,12 +59,12 @@ export const UpdateDelegationsDrawer = ({
   }, [delegation]);
 
   const userOptions = React.useMemo(() => {
-    if (!allUsers?.data) return [];
-    return allUsers.data.map((user) => ({
-      label: user,
-      value: user,
+    if (!allAccountUsers?.data) return [];
+    return allAccountUsers.data.map((user) => ({
+      label: user.username,
+      value: user.username,
     }));
-  }, [allUsers]);
+  }, [allAccountUsers]);
 
   const form = useForm<UpdateDelegationsFormValues>({
     defaultValues: {
@@ -93,13 +98,13 @@ export const UpdateDelegationsDrawer = ({
     try {
       await updateDelegates({
         euuid: delegation.euuid,
-        data: usersList,
+        data: { users: usersList },
       });
 
       handleClose();
     } catch {
       setError('root', {
-        message: 'Failed to update delegates. Please try again.',
+        message: DELEGATION_UPDATE_ERROR,
       });
     }
   };
@@ -138,11 +143,13 @@ export const UpdateDelegationsDrawer = ({
             name="users"
             render={({ field, fieldState }) => (
               <Autocomplete
+                data-testid="delegates-autocomplete"
                 errorText={fieldState.error?.message}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
                 label={''}
+                loading={isLoading}
                 multiple
                 noMarginTop
                 onChange={(_, newValue) => {
@@ -157,7 +164,9 @@ export const UpdateDelegationsDrawer = ({
                 value={field.value}
               />
             )}
-            rules={{ required: true }}
+            rules={{
+              required: DELEGATION_VALIDATION_ERROR,
+            }}
           />
 
           <ActionsPanel

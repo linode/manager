@@ -25,6 +25,7 @@ import type {
   Params,
   ResourcePage,
   Token,
+  UpdateChildAccountDelegatesParams,
 } from '@linode/api-v4';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -233,13 +234,13 @@ export const useGetChildAccountDelegatesQuery = ({
 export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
   ResourcePage<string>,
   APIError[],
-  { data: string[]; euuid: string }
+  UpdateChildAccountDelegatesParams
 > => {
   const queryClient = useQueryClient();
   return useMutation<
     ResourcePage<string>,
     APIError[],
-    { data: string[]; euuid: string }
+    UpdateChildAccountDelegatesParams
   >({
     mutationFn: updateChildAccountDelegates,
     onSuccess(_data, { euuid }) {
