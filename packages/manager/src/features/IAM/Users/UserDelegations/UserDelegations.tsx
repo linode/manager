@@ -18,13 +18,15 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import type { Theme } from '@mui/material';
 
 export const UserDelegations = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const [search, setSearch] = React.useState('');
 
@@ -55,6 +57,24 @@ export const UserDelegations = () => {
     );
   }, [allDelegatedChildAccounts, search]);
 
+  const { handleOrderChange, order, orderBy, sortedData } = useOrderV2({
+    data: childAccounts,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'company',
+      },
+      from: '/iam/users/$username/delegations',
+    },
+    preferenceKey: 'user-delegations',
+  });
+
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/users/$username/delegations',
+    preferenceKey: 'user-delegations',
+    initialPage: 1,
+  });
+
   if (!isIAMDelegationEnabled) {
     return null;
   }
@@ -84,23 +104,34 @@ export const UserDelegations = () => {
         <Table sx={{ mt: 2 }}>
           <TableHead>
             <TableRow>
-              <TableCell>Account</TableCell>
+              <TableSortCell
+                active={orderBy === 'company'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label={'company'}
+              >
+                Account
+              </TableSortCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {childAccounts?.length === 0 && (
-              <TableRowEmpty colSpan={1} message="No accounts found" />
-            )}
-            <Paginate data={childAccounts} pageSize={25}>
+            <Paginate
+              data={sortedData ?? []}
+              page={pagination.page}
+              pageSize={pagination.pageSize}
+              pageSizeSetter={pagination.handlePageSizeChange}
+              updatePageUrl={pagination.handlePageChange}
+            >
               {({
                 count,
                 data: paginatedData,
                 handlePageChange,
                 handlePageSizeChange,
-                page,
-                pageSize,
               }) => (
                 <>
+                  {paginatedData?.length === 0 && (
+                    <TableRowEmpty colSpan={1} message="No accounts found" />
+                  )}
                   {paginatedData?.map((childAccount) => (
                     <TableRow key={childAccount.euuid}>
                       <TableCell>{childAccount.company}</TableCell>
@@ -120,11 +151,11 @@ export const UserDelegations = () => {
                       >
                         <PaginationFooter
                           count={count}
-                          eventCategory="Delegated Child Accounts"
+                          eventCategory="DelegatedChildAccounts"
                           handlePageChange={handlePageChange}
                           handleSizeChange={handlePageSizeChange}
-                          page={page}
-                          pageSize={pageSize}
+                          page={pagination.page}
+                          pageSize={pagination.pageSize}
                         />
                       </TableCell>
                     </TableRow>

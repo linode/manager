@@ -50,7 +50,7 @@ const getAllDelegatedChildAccountsForUser = ({
   getAll<ChildAccount>((params) =>
     getDelegatedChildAccountsForUser({
       username,
-      ...{ ...params, ...passedParams },
+      params: { ...params, ...passedParams },
       enabled,
     }),
   )().then((data) => data.data);
