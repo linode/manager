@@ -23,6 +23,7 @@ import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { generateRandomMetricsData } from 'support/util/cloudpulse';
 
 import {
   accountFactory,
@@ -38,7 +39,6 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -52,8 +52,8 @@ import { generateRandomMetricsData } from 'support/util/cloudpulse';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const dashboardName = 'firewall nodebalancer dashboard';
-const { metrics, firewalls, region } = widgetDetails.firewall_nodebalancer;
+const { metrics, dashboardName, firewalls, region, id } =
+  widgetDetails.firewall_nodebalancer;
 const serviceType = 'firewall';
 const dimensions = [
   {
@@ -80,7 +80,7 @@ const dashboard = dashboardFactory.build({
   label: dashboardName,
   group_by: ['entity_id'],
   service_type: serviceType,
-  id:8,
+  id,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
       filters: [...dimensions],
@@ -88,7 +88,7 @@ const dashboard = dashboardFactory.build({
       metric: name,
       unit,
       y_label: yLabel,
-      namespace_id: 8,
+      namespace_id: id,
       service_type: serviceType,
     })
   ),
@@ -289,7 +289,191 @@ describe('Integration Tests for firewall Dashboard ', () => {
     ui.regionSelect.find().type(`${region}{enter}`);
 
     // Wait for all metrics query requests to resolve.
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
+      (calls) => {
+        const interceptions = calls as unknown as Interception[];
+
+        expect(interceptions).to.have.length(4);
+
+        interceptions.forEach((interception) => {
+          const { body: requestPayload } = interception.request;
+
+          // ✅ Assert group_by
+          expect(requestPayload).to.have.property('group_by');
+          expect(requestPayload.group_by).to.include('entity_id');
+        });
+      }
+    );
+  });
+  it('should apply group by at the dashboard level and verify the metrics API calls', () => {
+    // Stub metrics API calls for dashboard group by changes
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
+      protocol: 'tcp',
+      entity_id: '1',
+    }).as('refreshMetrics');
+
+    // Validate legend rows (pre "Group By")
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
+          cy.get(graphRowTitle)
+            .should('be.visible')
+            .and('have.text', `${testData.title}`);
+        });
+    });
+
+    // Locate the Dashboard Group By button and alias it
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
+
+    // Ensure the button is scrolled into view
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Verify tooltip "Group By" is present
+    ui.tooltip.findByText('Group By');
+
+    // Assert that the button has attribute data-qa-selected="true"
+    cy.get('@dashboardGroupByBtn')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
+    // Click the Group By button to open the drawer
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    // Verify the drawer title is "Global Group By"
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Global Group By');
+
+    // Verify the drawer body contains "Dbaas Dashboard"
+    cy.get('[data-testid="drawer"]')
+      .find('p')
+      .first()
+      .and('have.text', dashboardName);
+
+    // Type "Node Type" in Dimensions autocomplete field
+    ui.autocomplete
+      .findByLabel('Dimensions')
+      .should('be.visible')
+      .type('Protocol');
+
+    // Select "Node Type" from the popper options
+    ui.autocompletePopper.findByTitle('Protocol').should('be.visible').click();
+
+    // Close the drawer using ESC
+    cy.get('body').type('{esc}');
+
+    // Click Apply to confirm the Group By selection
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    // Verify the Group By button reflects the selection
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('have.attr', 'aria-label', 'Group By Dashboard Metrics')
+      .and('have.attr', 'data-qa-selected', 'true');
+
+    // Validate all intercepted metrics API calls contain correct filters and group_by values
+    cy.get('@refreshMetrics.all')
+      .should('have.length', 4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        // Ensure group_by contains entity_id and node_type in correct order
+        expect(requestPayload.group_by).to.have.ordered.members([
+          'entity_id',
+          'Protocol',
+        ]);
+        expect(requestPayload.associated_entity_region).to.equal('us-east');
+      });
+
+    // Validate legend rows (post "Group By")
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          cy.get('[data-qa-graph-row-title="Firewall-0 | tcp"]')
+            .should('be.visible')
+            .and('have.text', 'Firewall-0 | tcp');
+        });
+    });
+  });
+  it('should apply group by at widget level only  and verify the metrics API calls', () => {
+    // validate the widget level granularity selection and its metrics
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
+
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Use the alias safely
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    cy.get('[data-qa-autocomplete="Dimensions"]').within(() => {
+      cy.get('button[aria-label="Clear"]').should('be.visible').click({});
+    });
+
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+    const widgetSelector = '[data-qa-widget="Accepted Bytes"]';
+
+    cy.get(widgetSelector)
+      .should('be.visible')
+      .within(() => {
+        // Create alias for the group by button
+        ui.button
+          .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+          .as('groupByButton'); // alias
+
+        cy.get('@groupByButton').scrollIntoView();
+
+        // Click the button
+        cy.get('@groupByButton').should('be.visible').click();
+      });
+
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Group By');
+
+    cy.get('[data-qa-id="groupby-drawer-subtitle"]').and(
+      'have.text',
+      'Accepted Bytes'
+    );
+
+    ui.autocomplete
+      .findByLabel('Dimensions')
+      .should('be.visible')
+      .type('IP Version');
+
+    ui.autocompletePopper
+      .findByTitle('IP Version')
+      .should('be.visible')
+      .click();
+
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'getGroupBy'
+    );
+
+    cy.get('body').type('{esc}');
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    // Verify data-qa-selected attribute
+    cy.get('@groupByButton')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
+    cy.wait('@getGroupBy').then((interception: Interception) => {
+      const { body: requestPayload } = interception.request;
+      expect(requestPayload.group_by).to.have.ordered.members(['IP Version']);
+      expect(requestPayload.associated_entity_region).to.equal('us-east');
+    });
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
