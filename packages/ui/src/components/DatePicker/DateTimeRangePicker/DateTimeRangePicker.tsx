@@ -94,9 +94,9 @@ type TimeZoneStrategy = {
 };
 
 const strategies: Record<string, TimeZoneStrategy> = {
-  'last month': { keepStartTime: true, keepEndTime: true },
-  reset: { keepStartTime: true, keepEndTime: true },
-  'this month': { keepStartTime: true, keepEndTime: false },
+  'Last month': { keepStartTime: true, keepEndTime: true },
+  Reset: { keepStartTime: true, keepEndTime: true },
+  'This month': { keepStartTime: true, keepEndTime: false },
   default: { keepStartTime: false, keepEndTime: false },
 };
 

@@ -8,6 +8,7 @@ import KebabIcon from 'src/assets/icons/kebab.svg';
 
 export interface Action {
   disabled?: boolean;
+  hidden?: boolean;
   id?: string;
   onClick: () => void;
   title: string;
@@ -47,6 +48,8 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const { actionsList, ariaLabel, loading, onOpen, stopClickPropagation } =
     props;
 
+  const filteredActionsList = actionsList.filter((action) => !action.hidden);
+
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
 
@@ -82,7 +85,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) =>
     e.currentTarget.focus();
 
-  if (!actionsList || actionsList.length === 0) {
+  if (!filteredActionsList || filteredActionsList.length === 0) {
     return null;
   }
 
@@ -154,7 +157,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
           }}
           transitionDuration={225}
         >
-          {actionsList.map((a, idx) => (
+          {filteredActionsList.map((a, idx) => (
             <MenuItem
               data-qa-action-menu-item={a.title}
               data-testid={a.title}

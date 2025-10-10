@@ -77,7 +77,6 @@ export const UserRow = ({ onDelete, user }: Props) => {
       )}
       <TableCell actionCell>
         <UsersActionMenu
-          isProxyUser={isProxyUser}
           onDelete={onDelete}
           permissions={permissions}
           username={user.username}

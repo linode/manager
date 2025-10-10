@@ -1,6 +1,6 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { volumeFactory } from 'src/factories';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 
 import type { MockSeeder, MockState } from 'src/mocks/types';
 
@@ -15,6 +15,8 @@ export const volumesSeeder: MockSeeder = {
     const seedsCountMap = getSeedsCountMap();
     const count = seedsCountMap[volumesSeeder.id] ?? 0;
     const volumes = volumeFactory.buildList(count);
+
+    addToEntities(mockState, 'volumes', volumes);
 
     const updatedMockState = {
       ...mockState,
