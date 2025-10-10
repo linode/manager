@@ -18,7 +18,6 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetFirewalls } from 'support/intercepts/firewalls';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -235,7 +234,6 @@ describe('Integration Tests for firewall Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetLinodes(mockLinodes);
     mockGetFirewalls(mockFirewalls);
     mockGetUserPreferences({});
     mockGetRegions(mockRegions);
@@ -351,7 +349,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .and('have.text', 'Global Group By');
 
-    // Verify the drawer body contains "Dbaas Dashboard"
+    // Verify the drawer body contains "Firewall nodebalancer Dashboard"
     cy.get('[data-testid="drawer"]')
       .find('p')
       .first()
