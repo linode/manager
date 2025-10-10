@@ -1,4 +1,3 @@
-import type { FirewallEntityTypeMap } from '../shared/types';
 import type { Filter } from '@linode/api-v4';
 
 export const DASHBOARD_ID = 'dashboardId';
@@ -132,9 +131,4 @@ export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
   blockstorage: {
     ...ORDER_BY_LABLE_ASC,
   },
-};
-
-export const FIREWALL_ENTITY_TYPE_MAP: FirewallEntityTypeMap = {
-  4: ['linode', 'linode_interface'],
-  8: ['nodebalancer'],
 };

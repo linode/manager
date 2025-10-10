@@ -9,10 +9,7 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
-import {
-  FIREWALL_ENTITY_TYPE_MAP,
-  RESOURCE_FILTER_MAP,
-} from '../Utils/constants';
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
@@ -123,7 +120,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     dashboard?.service_type,
     {},
     RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
-    FIREWALL_ENTITY_TYPE_MAP[dashboardId]
+    dashboard?.id === 4
+      ? 'linode'
+      : dashboard?.id === 8
+        ? 'nodebalancer'
+        : 'both'
   );
 
   const {
