@@ -90,7 +90,12 @@ export const CloudPulseRegionSelect = React.memo(
       entities: selectedEntities,
       regions,
       serviceType,
-      dashboardId,
+      firewallEntityType:
+        dashboardId === 4
+          ? 'linode'
+          : dashboardId === 8
+            ? 'nodebalancer'
+            : 'both',
       type: 'metrics',
     });
     const linodeRegionIds = linodeRegions.map(

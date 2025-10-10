@@ -19,9 +19,3 @@ export interface FirewallEntity {
    */
   label: string;
 }
-
-// Array of entity types that are supported by the firewall dashboard
-export type FirewallEntityType = 'linode' | 'linode_interface' | 'nodebalancer';
-
-// Map of dashboard id to the firewall entity type
-export type FirewallEntityTypeMap = Record<number, FirewallEntityType[]>;
