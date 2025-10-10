@@ -106,7 +106,7 @@ export interface DatabaseInstance {
   encrypted: boolean;
   engine: Engine;
   engine_config: DatabaseInstanceAdvancedConfig;
-  hosts: DatabaseHosts;
+  hosts: DatabaseHosts | null;
   id: number;
   instance_uri?: string;
   label: string;
