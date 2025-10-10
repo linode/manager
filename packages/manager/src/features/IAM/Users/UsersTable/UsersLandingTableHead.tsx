@@ -1,9 +1,12 @@
+import { useProfile } from '@linode/queries';
 import React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+
+import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 
 export type SortOrder = 'asc' | 'desc';
 
@@ -18,6 +21,14 @@ interface Props {
 }
 
 export const UsersLandingTableHead = ({ order }: Props) => {
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { data: profile } = useProfile();
+
+  // Determine if the current user is a child account with isIAMDelegationEnabled enabled
+  // If so, we need to show the 'User Type' column in the table
+  const isChildWithDelegationEnabled =
+    isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
+
   return (
     <TableHead
       sx={{
@@ -34,18 +45,26 @@ export const UsersLandingTableHead = ({ order }: Props) => {
         >
           Username
         </TableSortCell>
+        {isChildWithDelegationEnabled && (
+          <TableCell
+            style={{ width: '20%' }}
+            sx={{ display: { lg: 'table-cell', xs: 'none' } }}
+          >
+            User Type
+          </TableCell>
+        )}
         <TableSortCell
           active={order.orderBy === 'email'}
           direction={order.order}
           handleClick={order.handleOrderChange}
           label="email"
-          style={{ width: '40%' }}
+          style={{ width: '20%' }}
           sx={{ display: { sm: 'table-cell', xs: 'none' } }}
         >
           Email Address
         </TableSortCell>
         <TableCell
-          style={{ width: '20%' }}
+          style={{ width: '15%' }}
           sx={{ display: { lg: 'table-cell', xs: 'none' } }}
         >
           Last Login
