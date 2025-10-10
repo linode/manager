@@ -83,17 +83,13 @@ export function useFirewallFetchOptions(
 
   const idFilter = {
     '+or': filteredFirewallParentEntityIds.length
-      ? filteredFirewallParentEntityIds.map((entity) => ({
-          id: entity.id,
-        }))
+      ? filteredFirewallParentEntityIds.map(({ id }) => ({ id }))
       : [{ id: '' }],
   };
 
   const labelFilter = {
     '+or': filteredFirewallParentEntityIds.length
-      ? filteredFirewallParentEntityIds.map((entity) => ({
-          label: entity.label,
-        }))
+      ? filteredFirewallParentEntityIds.map(({ label }) => ({ label }))
       : [{ label: '' }],
   };
 
