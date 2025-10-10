@@ -111,7 +111,6 @@ export const childAccountDelegates = (mockState: MockState) => [
     '*/v4*/iam/delegation/child-accounts/:euuid/users',
     async ({
       params,
-      request,
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<string>>
     > => {
@@ -127,9 +126,22 @@ export const childAccountDelegates = (mockState: MockState) => [
         .filter((d) => d.childAccountEuuid === euuid)
         .map((d) => d.username);
 
-      return makePaginatedResponse({
+      // const delegateUsers = await mswDB.getAll('users');
+      // const delegateUsernames = delegateUsers
+      //   .filter((user) => user.user_type === 'delegate')
+      //   .filter((user) => {
+      //     // Check if this delegate user is linked to this child account via delegation
+      //     return delegations.some(
+      //       (d) => d.childAccountEuuid === euuid && d.username === user.username
+      //     );
+      //   })
+      //   .map((user) => user.username);
+
+      return makeResponse({
         data: delegateUsernames,
-        request,
+        page: 1,
+        pages: 1,
+        results: delegateUsernames.length,
       });
     }
   ),
@@ -174,9 +186,11 @@ export const childAccountDelegates = (mockState: MockState) => [
         );
       }
 
-      return makePaginatedResponse({
+      return makeResponse({
         data: newUsernames,
-        request,
+        page: 1,
+        pages: 1,
+        results: newUsernames.length,
       });
     }
   ),
