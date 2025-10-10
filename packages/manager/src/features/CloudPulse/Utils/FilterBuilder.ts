@@ -588,13 +588,7 @@ export const constructWidgetDimensionFilters = (
 ): Filters[] => {
   const filters: Filters[] = [];
   for (const filter of dimensionFilters) {
-    if (
-      filter &&
-      filter.dimension_label &&
-      filter.value &&
-      filter.operator &&
-      (!Array.isArray(filter.value) || filter.value.length > 0) // Check for empty array
-    ) {
+    if (filter && filter.dimension_label && filter.value && filter.operator) {
       // push to the filters
       filters.push({
         dimension_label: filter.dimension_label,
@@ -747,7 +741,7 @@ export const filterUsingDependentFilters = (
       return resourceValue === filterValue;
     });
   });
-}
+};
 
 /**
  * @param data The endpoints for which the filter needs to be applied
