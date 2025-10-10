@@ -1,0 +1,90 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "type": "standard",
+            "service_type": "dbaas",
+            "label": "Resource Usage",
+            "group_by": [
+                "entity_id"
+            ],
+            "created": "2025-02-27T07:59:40",
+            "updated": "2025-10-07T01:16:40",
+            "widgets": [
+                {
+                    "metric": "cpu_usage",
+                    "unit": "%",
+                    "label": "CPU Usage",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "area",
+                    "y_label": "cpu_usage",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "memory_usage",
+                    "unit": "%",
+                    "label": "Memory Usage",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "area",
+                    "y_label": "memory_usage",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "available_memory",
+                    "unit": "GB",
+                    "label": "Available Memory",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "area",
+                    "y_label": "available_memory",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "disk_usage",
+                    "unit": "%",
+                    "label": "Disk Space Usage",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "area",
+                    "y_label": "disk_usage",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "available_disk",
+                    "unit": "GB",
+                    "label": "Available Disk Space",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "area",
+                    "y_label": "available_disk",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "read_iops",
+                    "unit": "IOPS",
+                    "label": "Disk I/O Read",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "area",
+                    "y_label": "read_iops",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "write_iops",
+                    "unit": "IOPS",
+                    "label": "Disk I/O Write",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "area",
+                    "y_label": "write_iops",
+                    "aggregate_function": "avg"
+                }
+            ]
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 1
+}
