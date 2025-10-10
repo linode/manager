@@ -110,6 +110,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
           onDelete={onDelete}
           permissions={permissions}
           username={user.username}
+          userType={user.user_type}
         />
       </TableCell>
     </TableRow>
