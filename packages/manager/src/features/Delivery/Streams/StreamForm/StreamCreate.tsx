@@ -37,9 +37,8 @@ export const StreamCreate = () => {
         destinations: [],
       },
       destination: {
-        type: destinationType.LinodeObjectStorage,
+        type: destinationType.AkamaiObjectStorage,
         details: {
-          region: '',
           path: '',
         },
       },

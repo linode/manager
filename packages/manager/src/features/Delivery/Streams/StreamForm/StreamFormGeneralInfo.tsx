@@ -1,7 +1,8 @@
 import { streamType } from '@linode/api-v4';
 import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
   getStreamTypeOption,
@@ -20,7 +21,20 @@ interface StreamFormGeneralInfoProps {
 export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
   const { mode } = props;
 
+  const theme = useTheme();
   const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
+
+  const description = {
+    audit_logs:
+      'Configuration and authentication audit logs that capture state-changing operations (mutations) on Linode cloud infrastructure resources and IAM authentication events. Delivered in cloudevents.io JSON format.',
+    lke_audit_logs:
+      'Kubernetes API server audit logs that capture state-changing operations (mutations) on LKE-E cluster resources.',
+  };
+
+  const selectedStreamType = useWatch({
+    control,
+    name: 'stream.type',
+  });
 
   const updateStreamDetails = (value: string) => {
     if (value === streamType.LKEAuditLogs) {
@@ -69,6 +83,14 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
           />
         )}
       />
+      <Typography
+        sx={{
+          mt: theme.spacingFunction(16),
+          maxWidth: 480,
+        }}
+      >
+        {description[selectedStreamType]}
+      </Typography>
     </Paper>
   );
 };

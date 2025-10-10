@@ -8,7 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationLinodeObjectStorageDetailsForm';
+import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
@@ -82,8 +82,8 @@ export const DestinationForm = (props: DestinationFormProps) => {
                 />
               )}
             />
-            {destination.type === destinationType.LinodeObjectStorage && (
-              <DestinationLinodeObjectStorageDetailsForm />
+            {destination.type === destinationType.AkamaiObjectStorage && (
+              <DestinationAkamaiObjectStorageDetailsForm />
             )}
           </Paper>
         </Grid>
