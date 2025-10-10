@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -6,6 +7,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
@@ -13,6 +15,9 @@ import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
 export const IdentityAccessLanding = React.memo(() => {
   const location = useLocation();
   const navigate = useNavigate();
+  const flags = useFlags();
+  const { data: profile } = useProfile();
+  const isParentUser = profile?.user_type === 'parent';
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
@@ -22,6 +27,11 @@ export const IdentityAccessLanding = React.memo(() => {
     {
       to: `/iam/roles`,
       title: 'Roles',
+    },
+    {
+      hide: !flags.iamDelegation?.enabled || !isParentUser,
+      to: `/iam/delegations`,
+      title: 'Account Delegations',
     },
   ]);
 
