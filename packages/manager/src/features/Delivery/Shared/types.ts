@@ -38,11 +38,11 @@ export const streamTypeOptions: LabelValueOption[] = [
 export const streamStatusOptions: LabelValueOption[] = [
   {
     value: streamStatus.Active,
-    label: 'Enabled',
+    label: 'Active',
   },
   {
     value: streamStatus.Inactive,
-    label: 'Disabled',
+    label: 'Inactive',
   },
 ];
 

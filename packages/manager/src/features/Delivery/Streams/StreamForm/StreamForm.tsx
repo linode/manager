@@ -123,9 +123,13 @@ export const StreamForm = (props: StreamFormProps) => {
           destinations: [destinationId],
           details: payloadDetails,
         });
-        enqueueSnackbar(`Stream ${label} created successfully`, {
-          variant: 'success',
-        });
+        enqueueSnackbar(
+          `${label} created successfully. Stream is being provisioned, which may take up to 45 minutes`,
+          {
+            variant: 'success',
+            autoHideDuration: 10000,
+          }
+        );
       } else if (mode === 'edit' && streamId) {
         await updateStream({
           id: streamId,

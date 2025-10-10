@@ -27,7 +27,7 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
       onClick: () => {
         onDisableOrEnable(stream);
       },
-      title: stream.status === streamStatus.Active ? 'Disable' : 'Enable',
+      title: stream.status === streamStatus.Active ? 'Deactivate' : 'Activate',
     },
     {
       onClick: () => {
