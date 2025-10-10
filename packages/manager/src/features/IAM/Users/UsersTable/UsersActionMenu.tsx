@@ -1,9 +1,10 @@
-import { useProfile } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 
 import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -23,12 +24,10 @@ export const UsersActionMenu = (props: Props) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
+  const { isParentAccount, profileUserName } = useDelegationRole();
 
-  const { data: profile } = useProfile();
-  const profileUsername = profile?.username;
   const isAccountAdmin = permissions.is_account_admin;
   const canDeleteUser = permissions.delete_user;
-  const isParentAccount = profile?.user_type === 'parent';
 
   const actions: Action[] = [
     {
@@ -83,13 +82,13 @@ export const UsersActionMenu = (props: Props) => {
       tooltip: undefined,
     },
     {
-      disabled: username === profileUsername || !canDeleteUser,
+      disabled: username === profileUserName || !canDeleteUser,
       onClick: () => {
         onDelete(username);
       },
       title: 'Delete User',
       tooltip:
-        username === profileUsername
+        username === profileUserName
           ? "You can't delete the currently active user."
           : !canDeleteUser
             ? 'You do not have permission to delete this user.'
@@ -100,7 +99,7 @@ export const UsersActionMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for user ${profileUsername}`}
+      ariaLabel={`Action menu for user ${profileUserName}`}
     />
   );
 };
