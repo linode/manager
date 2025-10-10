@@ -1,0 +1,160 @@
+{
+    "data": [
+        {
+            "id": 3,
+            "type": "standard",
+            "service_type": "nodebalancer",
+            "label": "NodeBalancer",
+            "group_by": [
+                "entity_id"
+            ],
+            "created": "2025-06-05T05:02:14",
+            "updated": "2025-10-07T01:16:40",
+            "widgets": [
+                {
+                    "metric": "nb_ingress_traffic_rate",
+                    "unit": "Bps",
+                    "label": "Ingress Traffic Rate",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "nb_ingress_traffic_rate",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_egress_traffic_rate",
+                    "unit": "Bps",
+                    "label": "Egress Traffic Rate",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "nb_egress_traffic_rate",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_ingress_tcp_traffic_rate",
+                    "unit": "Bps",
+                    "label": "Ingress TCP Traffic Rate",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_ingress_tcp_traffic_rate",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_egress_tcp_traffic_rate",
+                    "unit": "Bps",
+                    "label": "Egress TCP Traffic Rate",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_egress_tcp_traffic_rate",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_ingress_udp_traffic_rate",
+                    "unit": "Bps",
+                    "label": "Ingress UDP Traffic Rate",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_ingress_udp_traffic_rate",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_egress_udp_traffic_rate",
+                    "unit": "Bps",
+                    "label": "Egress UDP Traffic Rate",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_egress_udp_traffic_rate",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_total_active_sessions",
+                    "unit": "Count",
+                    "label": "Total Active Sessions",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "nb_total_active_sessions",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "nb_active_tcp_sessions",
+                    "unit": "Count",
+                    "label": "Active TCP Sessions",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_active_tcp_sessions",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "nb_active_udp_sessions",
+                    "unit": "Count",
+                    "label": "Active UDP Sessions",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_active_udp_sessions",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "nb_new_sessions_per_second",
+                    "unit": "sessions/s",
+                    "label": "New Sessions",
+                    "color": "default",
+                    "size": 12,
+                    "chart_type": "line",
+                    "y_label": "nb_new_sessions_per_second",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_new_tcp_sessions_per_second",
+                    "unit": "sessions/s",
+                    "label": "New TCP Sessions",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_new_tcp_sessions_per_second",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_new_udp_sessions_per_second",
+                    "unit": "sessions/s",
+                    "label": "New UDP Sessions",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_new_udp_sessions_per_second",
+                    "aggregate_function": "sum"
+                },
+                {
+                    "metric": "nb_active_tcp_backends",
+                    "unit": "Count",
+                    "label": "Active TCP Backends",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_active_tcp_backends",
+                    "aggregate_function": "avg"
+                },
+                {
+                    "metric": "nb_active_udp_backends",
+                    "unit": "Count",
+                    "label": "Active UDP Backends",
+                    "color": "default",
+                    "size": 6,
+                    "chart_type": "line",
+                    "y_label": "nb_active_udp_backends",
+                    "aggregate_function": "avg"
+                }
+            ]
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 1
+}

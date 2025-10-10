@@ -1,0 +1,410 @@
+{
+    "data": [
+        {
+            "label": "Ingress Traffic Rate",
+            "metric": "nb_ingress_traffic_rate",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Egress Traffic Rate",
+            "metric": "nb_egress_traffic_rate",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress TCP Traffic Rate",
+            "metric": "nb_ingress_tcp_traffic_rate",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Egress TCP Traffic Rate",
+            "metric": "nb_egress_tcp_traffic_rate",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress UDP Traffic Rate",
+            "metric": "nb_ingress_udp_traffic_rate",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Egress UDP Traffic Rate",
+            "metric": "nb_egress_udp_traffic_rate",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Total Active Sessions",
+            "metric": "nb_total_active_sessions",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg",
+                "max",
+                "sum",
+                "min"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Active TCP Sessions",
+            "metric": "nb_active_tcp_sessions",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg",
+                "max",
+                "sum",
+                "min"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Active UDP Sessions",
+            "metric": "nb_active_udp_sessions",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg",
+                "max",
+                "sum",
+                "min"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "New Sessions",
+            "metric": "nb_new_sessions_per_second",
+            "unit": "sessions/s",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "New TCP Sessions",
+            "metric": "nb_new_tcp_sessions_per_second",
+            "unit": "sessions/s",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "New UDP Sessions",
+            "metric": "nb_new_udp_sessions_per_second",
+            "unit": "sessions/s",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Total Active Backends",
+            "metric": "nb_total_active_backends",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "avg",
+                "max",
+                "sum",
+                "min"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Protocol",
+                    "dimension_label": "protocol",
+                    "values": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Active TCP Backends",
+            "metric": "nb_active_tcp_backends",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg",
+                "max",
+                "sum",
+                "min"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Active UDP Backends",
+            "metric": "nb_active_udp_backends",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "300s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg",
+                "max",
+                "sum",
+                "min"
+            ],
+            "dimensions": [
+                {
+                    "label": "Port",
+                    "dimension_label": "port",
+                    "values": null
+                },
+                {
+                    "label": "Configuration",
+                    "dimension_label": "config_id",
+                    "values": null
+                }
+            ]
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 15
+}
