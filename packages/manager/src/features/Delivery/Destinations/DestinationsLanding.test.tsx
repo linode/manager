@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
@@ -136,6 +136,12 @@ describe('Destinations Landing Table', () => {
     await userEvent.click(screen.getByText(itemText));
   };
 
+  const checkClosedModal = async (modal: HTMLElement) => {
+    await waitFor(() => {
+      expect(modal).not.toBeInTheDocument();
+    });
+  };
+
   describe('given action menu', () => {
     beforeEach(() => {
       queryMocks.useDestinationsQuery.mockReturnValue({
@@ -173,9 +179,30 @@ describe('Destinations Landing Table', () => {
         await clickOnActionMenu();
         await clickOnActionMenuItem('Delete');
 
+        const deleteDestinationModal = screen.getByText('Delete Destination');
+        expect(deleteDestinationModal).toBeInTheDocument();
+
+        // get modal Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteDestinationModal);
+
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // get delete Destination button
+        const deleteDestinationButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteDestinationButton);
+
         expect(mockDeleteDestinationMutation).toHaveBeenCalledWith({
           id: 1,
         });
+
+        await checkClosedModal(deleteDestinationModal);
       });
     });
   });
