@@ -30,6 +30,6 @@ export interface GetChildAccountDelegatesParams {
 }
 
 export interface UpdateChildAccountDelegatesParams {
-  data: string[];
+  data: { users: string[] };
   euuid: string;
 }

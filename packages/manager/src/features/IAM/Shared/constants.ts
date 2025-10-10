@@ -17,6 +17,12 @@ export const NO_DELEGATIONS_ASSIGNED_TEXT =
 export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
 
+// Delegation error messages
+export const DELEGATION_VALIDATION_ERROR =
+  'At least one user must be selected as a delegate.';
+export const DELEGATION_UPDATE_ERROR =
+  'Failed to update delegates. Please try again.';
+
 // Links
 export const IAM_DOCS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/identity-and-access-cm';
