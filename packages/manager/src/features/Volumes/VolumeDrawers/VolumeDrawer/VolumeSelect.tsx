@@ -1,5 +1,6 @@
 import { useAllVolumesQuery, useVolumeQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 
 import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
@@ -31,10 +32,28 @@ export const VolumeSelect = (props: Props) => {
   const { data: availableVolumes, isLoading: isAvailableVolumesLoading } =
     useQueryWithPermissions<Volume>(query, 'volume', ['attach_volume']);
 
-  // Filter out volumes that are already attached to a Linode
-  const filteredVolumes = availableVolumes?.filter(
-    (volume) => !volume.linode_id
-  );
+  const debouncedInputValue = useDebouncedValue(inputValue);
+
+  const filteredVolumes = React.useMemo(() => {
+    if (!availableVolumes) return [];
+
+    return availableVolumes.filter((volume) => {
+      // Filter out volumes that are already attached to a Linode
+      if (volume.linode_id) return false;
+
+      if (debouncedInputValue) {
+        const searchTerm = debouncedInputValue.toLowerCase();
+        const matchesLabel = volume.label.toLowerCase().includes(searchTerm);
+        const matchesTags = volume.tags?.some((tag) =>
+          tag.toLowerCase().includes(searchTerm)
+        );
+
+        if (!matchesLabel && !matchesTags) return false;
+      }
+
+      return true;
+    });
+  }, [availableVolumes, debouncedInputValue]);
 
   const { data: volume, isLoading: isLoadingSelected } = useVolumeQuery(
     value,
