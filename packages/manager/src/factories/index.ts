@@ -13,6 +13,7 @@ export * from './cloudpulse/channels';
 export * from './cloudpulse/services';
 export * from './dashboards';
 export * from './databases';
+export * from './delivery';
 export * from './disk';
 export * from './domain';
 export * from './entityTransfers';
