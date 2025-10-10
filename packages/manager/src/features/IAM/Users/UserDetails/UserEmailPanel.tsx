@@ -13,15 +13,15 @@ import { useDelegationRole } from '../../hooks/useDelegationRole';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  activeUser: User;
   canUpdateUser: boolean;
-  user: User;
 }
 
-export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
+export const UserEmailPanel = ({ canUpdateUser, activeUser }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { profileUserName } = useDelegationRole();
 
-  const isProxyUser = user?.user_type === 'proxy';
+  const isProxyUser = activeUser?.user_type === 'proxy';
 
   const { mutateAsync: updateProfile } = useMutateProfile();
 
@@ -32,8 +32,8 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
     setError,
   } = useForm({
     resolver: yupResolver(UpdateUserEmailSchema),
-    defaultValues: { email: user.email },
-    values: { email: user.email },
+    defaultValues: { email: activeUser.email },
+    values: { email: activeUser.email },
   });
 
   const onSubmit = async (values: { email: string }) => {
@@ -48,12 +48,13 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
 
   const disabledReason = isProxyUser
     ? RESTRICTED_FIELD_TOOLTIP
-    : profileUserName !== user.username
+    : profileUserName !== activeUser.username
       ? 'You can\u{2019}t change another user\u{2019}s email address.'
       : undefined;
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
-  const disableEmailField = profileUserName !== user.username || isProxyUser;
+  const disableEmailField =
+    profileUserName !== activeUser.username || isProxyUser;
 
   return (
     <Paper>

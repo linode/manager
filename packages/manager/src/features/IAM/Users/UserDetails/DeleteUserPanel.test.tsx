@@ -31,7 +31,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -49,7 +49,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -67,7 +67,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -85,7 +85,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -102,7 +102,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={false} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={false} />
     );
 
     const deleteButton = getByTestId('button');

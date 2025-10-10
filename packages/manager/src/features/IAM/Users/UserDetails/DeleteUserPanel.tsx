@@ -10,20 +10,20 @@ import { UserDeleteConfirmation } from './UserDeleteConfirmation';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  activeUser: User;
   canDeleteUser: boolean;
-  user: User;
 }
 
-export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
+export const DeleteUserPanel = ({ canDeleteUser, activeUser }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const navigate = useNavigate();
   const { profileUserName } = useDelegationRole();
 
-  const isProxyUser = user.user_type === 'proxy';
+  const isProxyUser = activeUser.user_type === 'proxy';
 
   const tooltipText =
-    profileUserName === user.username
+    profileUserName === activeUser.username
       ? 'You can\u{2019}t delete the currently active user.'
       : isProxyUser
         ? `You can\u{2019}t delete a ${PARENT_USER}.`
@@ -37,7 +37,9 @@ export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
           <Button
             buttonType="outlined"
             disabled={
-              profileUserName === user.username || isProxyUser || !canDeleteUser
+              profileUserName === activeUser.username ||
+              isProxyUser ||
+              !canDeleteUser
             }
             onClick={() => setIsDeleteDialogOpen(true)}
             tooltipText={
@@ -56,7 +58,7 @@ export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
           onClose={() => setIsDeleteDialogOpen(false)}
           onSuccess={() => navigate({ to: '/iam/users' })}
           open={isDeleteDialogOpen}
-          username={user.username}
+          username={activeUser.username}
         />
       </Stack>
     </Paper>
