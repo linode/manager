@@ -349,6 +349,10 @@ export interface FetchOptionsProps {
    */
   entities?: string[];
   /**
+   * The type of firewall entity to filter on.
+   */
+  firewallEntityType?: 'both' | 'linode' | 'nodebalancer';
+  /**
    * List of regions to filter on.
    */
   regions?: Region[];

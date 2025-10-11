@@ -1213,7 +1213,17 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = [
-      ...firewallFactory.buildList(10),
+      ...firewallFactory.buildList(9),
+      firewallFactory.build({
+        entities: [
+          firewallEntityfactory.build({
+            type: 'nodebalancer',
+            parent_entity: null,
+            id: 333,
+            label: 'NodeBalancer-33',
+          }),
+        ],
+      }),
       firewallFactory.build({
         entities: [
           firewallEntityfactory.build({
@@ -3259,6 +3269,13 @@ export const handlers = [
           service_type: 'firewall',
         })
       );
+      response.data.push(
+        dashboardFactory.build({
+          id: 8,
+          label: 'Firewall Nodebalancer Dashboard',
+          service_type: 'firewall',
+        })
+      );
     }
 
     if (params.serviceType === 'objectstorage') {
@@ -3576,6 +3593,9 @@ export const handlers = [
     } else if (id === '7') {
       serviceType = 'blockstorage';
       dashboardLabel = 'Block Storage Dashboard';
+    } else if (id === '8') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Firewall Nodebalancer Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

@@ -8,3 +8,14 @@ export type TransformKey =
 export type TransformFunction = (value: string) => string;
 
 export type TransformFunctionMap = Record<TransformKey, TransformFunction>;
+
+export interface FirewallEntity {
+  /**
+   * The id of the parent entity.
+   */
+  id: string;
+  /**
+   * The label of the parent entity.
+   */
+  label: string;
+}

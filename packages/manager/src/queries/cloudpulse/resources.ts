@@ -9,7 +9,8 @@ export const useResourcesQuery = (
   enabled = false,
   resourceType: string | undefined,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
+  firewallEntityType: 'both' | 'linode' | 'nodebalancer' = 'both'
 ) =>
   useQuery<any[], unknown, CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),
@@ -25,10 +26,16 @@ export const useResourcesQuery = (
         // handle separately for firewall resource type
         if (resourceType === 'firewall') {
           resource.entities?.forEach((entity: FirewallDeviceEntity) => {
-            if (entity.type === 'linode' && entity.label) {
+            if (
+              (entity.type === firewallEntityType ||
+                firewallEntityType === 'both') &&
+              entity.label
+            ) {
               entities[String(entity.id)] = entity.label;
             }
             if (
+              (firewallEntityType === 'linode' ||
+                firewallEntityType === 'both') &&
               entity.type === 'linode_interface' &&
               entity.parent_entity?.label
             ) {

@@ -119,7 +119,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
+    dashboard?.id === 4
+      ? 'linode'
+      : dashboard?.id === 8
+        ? 'nodebalancer'
+        : 'both'
   );
 
   const {

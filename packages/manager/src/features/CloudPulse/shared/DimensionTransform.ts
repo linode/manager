@@ -30,11 +30,12 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
   firewall: {
     interface_type: TRANSFORMS.uppercase,
     linode_id: TRANSFORMS.original,
+    nodebalancer_id: TRANSFORMS.original,
   },
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,
   },
   objectstorage: {
     endpoint: TRANSFORMS.original,
-  }
+  },
 };
