@@ -1,0 +1,294 @@
+{
+    "data": [
+        {
+            "label": "Total bucket size",
+            "metric": "obj_bucket_size",
+            "unit": "Bytes",
+            "metric_type": "gauge",
+            "scrape_interval": "3600s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg",
+                "sum",
+                "min",
+                "max"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Total number of objects",
+            "metric": "obj_bucket_num_objects",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "3600s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg",
+                "sum",
+                "min",
+                "max"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "All requests",
+            "metric": "obj_requests_num",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Endpoint",
+                    "dimension_label": "endpoint",
+                    "values": null
+                },
+                {
+                    "label": "Request type",
+                    "dimension_label": "request_type",
+                    "values": [
+                        "head",
+                        "get",
+                        "put",
+                        "delete",
+                        "list",
+                        "other"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "All responses",
+            "metric": "obj_responses_num",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Endpoint",
+                    "dimension_label": "endpoint",
+                    "values": null
+                },
+                {
+                    "label": "Response type",
+                    "dimension_label": "response_type",
+                    "values": [
+                        "2xx",
+                        "rate_limited",
+                        "quota_exceeded",
+                        "4xx",
+                        "5xx"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Bytes downloaded",
+            "metric": "obj_bytes_downloaded",
+            "unit": "Bytes",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Bytes uploaded",
+            "metric": "obj_bytes_uploaded",
+            "unit": "Bytes",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Egress Throughput ",
+            "metric": "obj_egress_throughput",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": [
+                {
+                    "label": "Endpoint",
+                    "dimension_label": "endpoint",
+                    "values": null
+                }
+            ]
+        },
+        {
+            "label": "Ingress Throughput",
+            "metric": "obj_ingress_throughput",
+            "unit": "Bps",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "First Byte Latency",
+            "metric": "obj_ttfb_average",
+            "unit": "ms",
+            "metric_type": "gauge",
+            "scrape_interval": "900s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "avg"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Head reqeusts",
+            "metric": "obj_requests_head",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Get requests",
+            "metric": "obj_requests_get",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Put requests",
+            "metric": "obj_requests_put",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Delete requests",
+            "metric": "obj_requests_delete",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "List requests",
+            "metric": "obj_requests_list",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Other requests",
+            "metric": "obj_requests_other",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "2xx successful responses",
+            "metric": "obj_responses_2xx",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "4xx errors",
+            "metric": "obj_responses_4xx",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "5xx errors",
+            "metric": "obj_responses_5xx",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Rate Limited responses",
+            "metric": "obj_responses_rate_limited",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        },
+        {
+            "label": "Quota Exceeded responses",
+            "metric": "obj_responses_quota_exceeds",
+            "unit": "Count",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "sum"
+            ],
+            "dimensions": []
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 20
+}
