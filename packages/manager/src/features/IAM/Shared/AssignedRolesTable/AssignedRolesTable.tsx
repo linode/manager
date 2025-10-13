@@ -1,8 +1,8 @@
-import { useAccountRoles, useUserRoles } from '@linode/queries';
+import { useAccountRoles } from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -55,6 +55,7 @@ import type {
   AccessType,
   AccountRoleType,
   EntityRoleType,
+  IamUserRoles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -66,8 +67,19 @@ const ALL_ROLES_OPTION: SelectOption = {
   value: 'all',
 };
 
-export const AssignedRolesTable = () => {
-  const { username } = useParams({ from: '/iam/users/$username' });
+interface Props {
+  assignedRoles?: IamUserRoles;
+  assignedRolesLoading?: boolean;
+  isDefaultRolesView?: boolean;
+  username?: string;
+}
+
+export const AssignedRolesTable = ({
+  isDefaultRolesView = false,
+  assignedRoles,
+  assignedRolesLoading,
+  username,
+}: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -77,7 +89,9 @@ export const AssignedRolesTable = () => {
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username/roles',
+    currentRoute: isDefaultRolesView
+      ? '/iam/roles/defaults/roles'
+      : '/iam/users/$username/roles',
     initialPage: 1,
     preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   });
@@ -139,9 +153,6 @@ export const AssignedRolesTable = () => {
     {}
   );
 
-  const { data: assignedRoles, isLoading: assignedRolesLoading } = useUserRoles(
-    username ?? ''
-  );
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
       return { filterableOptions: [], roles: [] };
@@ -174,7 +185,7 @@ export const AssignedRolesTable = () => {
     const selectedRole = roleName;
     navigate({
       to: '/iam/users/$username/entities',
-      params: { username },
+      params: { username: username || '' },
       search: { selectedRole },
     });
   };
@@ -388,7 +399,7 @@ export const AssignedRolesTable = () => {
                 : undefined
             }
           >
-            Assign New Roles
+            {isDefaultRolesView ? 'Add New Default Roles' : 'Assign New Roles'}
           </Button>
         </Grid>
       </Grid>
@@ -401,19 +412,27 @@ export const AssignedRolesTable = () => {
       />
       <AssignNewRoleDrawer
         assignedRoles={assignedRoles}
+        isDefaultRolesView={isDefaultRolesView}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
+        username={username}
       />
       <ChangeRoleDrawer
+        assignedRoles={assignedRoles}
+        isDefaultRolesView={isDefaultRolesView}
         mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
+        username={username}
       />
       <UnassignRoleConfirmationDialog
+        assignedRoles={assignedRoles}
+        isDefaultRolesView={isDefaultRolesView}
         onClose={() => setIsUnassignRoleDialogOpen(false)}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
+        username={username}
       />
       <UpdateEntitiesDrawer
         onClose={() => setIsUpdateEntitiesDrawerOpen(false)}

@@ -1,6 +1,8 @@
-import { useUserRoles, useUserRolesMutation } from '@linode/queries';
+import {
+  useUpdateDefaultDelegationAccessQuery,
+  useUserRolesMutation,
+} from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
@@ -9,18 +11,28 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { deleteUserRole, getErrorMessage } from '../utilities';
 
 import type { ExtendedRoleView } from '../types';
+import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
+  assignedRoles?: IamUserRoles;
+  isDefaultRolesView?: boolean;
   onClose: () => void;
   onSuccess?: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
+  username?: string;
 }
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
-  const { onClose: _onClose, onSuccess, open, role } = props;
-  const { username } = useParams({ from: '/iam/users/$username' });
-
+  const {
+    onClose: _onClose,
+    onSuccess,
+    open,
+    role,
+    username,
+    assignedRoles,
+    isDefaultRolesView = false,
+  } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -28,9 +40,10 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
     isPending,
     mutateAsync: updateUserRoles,
     reset,
-  } = useUserRolesMutation(username);
+  } = useUserRolesMutation(username || '');
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
+    useUpdateDefaultDelegationAccessQuery();
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
@@ -47,7 +60,11 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       initialRole,
     });
 
-    await updateUserRoles(updatedUserRoles);
+    if (isDefaultRolesView) {
+      await updateDefaultRoles(updatedUserRoles);
+    } else {
+      await updateUserRoles(updatedUserRoles);
+    }
 
     enqueueSnackbar(`Role ${role?.name} has been deleted successfully.`, {
       variant: 'success',
@@ -64,7 +81,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Remove',
-            loading: isPending,
+            loading: isPending || isDefaultRolesPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

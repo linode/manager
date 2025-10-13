@@ -1,6 +1,6 @@
 import {
   useAccountRoles,
-  useUserRoles,
+  useUpdateDefaultDelegationAccessQuery,
   useUserRolesMutation,
 } from '@linode/queries';
 import {
@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -30,24 +29,36 @@ import {
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { RolesType } from '../utilities';
+import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
+  assignedRoles?: IamUserRoles;
+  isDefaultRolesView?: boolean;
   mode: DrawerModes;
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
+  username?: string;
 }
 
-export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
+export const ChangeRoleDrawer = ({
+  mode,
+  onClose,
+  open,
+  role,
+  username,
+  assignedRoles,
+  isDefaultRolesView,
+}: Props) => {
   const theme = useTheme();
-  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username || '');
 
-  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
+  const { mutateAsync: updateDefaultRoles } =
+    useUpdateDefaultDelegationAccessQuery();
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -132,7 +143,11 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         newRole,
       });
 
-      await updateUserRoles(updatedUserRoles);
+      if (isDefaultRolesView) {
+        await updateDefaultRoles(updatedUserRoles);
+      } else {
+        await updateUserRoles(updatedUserRoles);
+      }
 
       handleClose();
     } catch (errors) {
