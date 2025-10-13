@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -12,15 +13,14 @@ type UserActionMenuPermissions = PickPermissions<
 >;
 
 interface Props {
-  isProxyUser: boolean;
   onDelete: (username: string) => void;
   permissions: Record<UserActionMenuPermissions, boolean>;
-
   username: string;
 }
 
 export const UsersActionMenu = (props: Props) => {
-  const { isProxyUser, onDelete, permissions, username } = props;
+  const { onDelete, permissions, username } = props;
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
 
@@ -28,24 +28,9 @@ export const UsersActionMenu = (props: Props) => {
   const profileUsername = profile?.username;
   const isAccountAdmin = permissions.is_account_admin;
   const canDeleteUser = permissions.delete_user;
+  const isParentAccount = profile?.user_type === 'parent';
 
-  const proxyUserActions: Action[] = [
-    {
-      onClick: () => {
-        navigate({
-          to: '/iam/users/$username/roles',
-          params: { username },
-        });
-      },
-      disabled: !isAccountAdmin,
-      tooltip: !isAccountAdmin
-        ? 'You do not have permission to manage access.'
-        : undefined,
-      title: 'Manage Access',
-    },
-  ];
-
-  const nonProxyUserActions: Action[] = [
+  const actions: Action[] = [
     {
       onClick: () => {
         navigate({
@@ -86,6 +71,18 @@ export const UsersActionMenu = (props: Props) => {
       title: 'View Entity Access',
     },
     {
+      disabled: false,
+      hidden: !isIAMDelegationEnabled || !isParentAccount,
+      onClick: () => {
+        navigate({
+          to: '/iam/users/$username/delegations',
+          params: { username },
+        });
+      },
+      title: 'View Account Delegations',
+      tooltip: undefined,
+    },
+    {
       disabled: username === profileUsername || !canDeleteUser,
       onClick: () => {
         onDelete(username);
@@ -99,8 +96,6 @@ export const UsersActionMenu = (props: Props) => {
             : undefined,
     },
   ];
-
-  const actions = isProxyUser ? proxyUserActions : nonProxyUserActions;
 
   return (
     <ActionMenu

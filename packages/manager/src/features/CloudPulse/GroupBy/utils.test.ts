@@ -85,7 +85,7 @@ describe('useGlobalDimensions method test', () => {
     expect(result).toEqual({ options: [], defaultValue: [], isLoading: true });
   });
 
-  it('should return empty options and defaultValue if no common dimensions', () => {
+  it('should return non-empty options and defaultValue if no common dimensions', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
       data: dashboardFactory.build(),
       isLoading: false,
@@ -100,6 +100,26 @@ describe('useGlobalDimensions method test', () => {
     expect(result).toEqual({
       options: [defaultOption, { label: 'Dim 2', value: 'Dim 2' }],
       defaultValue: [],
+      isLoading: false,
+    });
+  });
+
+  it('should return non-empty options and defaultValue from preferences', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: dashboardFactory.build(),
+      isLoading: false,
+    });
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: {
+        data: metricDefinitions,
+      },
+      isLoading: false,
+    });
+    const preference = ['Dim 2'];
+    const result = useGlobalDimensions(1, 'linode', preference);
+    expect(result).toEqual({
+      options: [defaultOption, { label: 'Dim 2', value: 'Dim 2' }],
+      defaultValue: [{ label: 'Dim 2', value: 'Dim 2' }],
       isLoading: false,
     });
   });
@@ -156,6 +176,32 @@ describe('useWidgetDimension method test', () => {
 
     expect(result.options).toHaveLength(1);
     expect(result.defaultValue).toHaveLength(0);
+    expect(result.isLoading).toBe(false);
+  });
+
+  it('should return non-empty options and non-empty default value from preferences', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: dashboardFactory.build(),
+      isLoading: false,
+    });
+
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: {
+        data: metricDefinitions,
+      },
+      isLoading: false,
+    });
+    const preferences = ['Dim 2'];
+    const result = useWidgetDimension(
+      1,
+      'linode',
+      [{ label: 'Dim 1', value: 'Dim 1' }],
+      'Metric 1',
+      preferences
+    );
+
+    expect(result.options).toHaveLength(1);
+    expect(result.defaultValue).toHaveLength(1);
     expect(result.isLoading).toBe(false);
   });
 });
