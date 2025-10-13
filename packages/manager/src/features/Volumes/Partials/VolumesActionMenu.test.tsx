@@ -48,6 +48,7 @@ describe('Volume action menu', () => {
       delete_volume: true,
       resize_volume: true,
       clone_volume: true,
+      detach_volume: true,
     });
   });
 
@@ -155,6 +156,80 @@ describe('Volume action menu', () => {
       await userEvent.click(actionMenuButton);
 
       expect(queryByText('Manage Tags')).not.toBeInTheDocument();
+    });
+
+    it('should enable Detach if user has delete_linode and detach_volume permission', async () => {
+      const attachedVolume = volumeFactory.build({
+        linode_id: 2,
+        linode_label: 'linode-2',
+      });
+
+      const { getByLabelText, getByText, queryByText } = renderWithTheme(
+        <VolumesActionMenu {...props} volume={attachedVolume} />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Volume ${attachedVolume.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      expect(getByText('Detach')).toBeVisible();
+      expect(queryByText('Detach')).toBeEnabled();
+    });
+
+    it('should disable Detach if user does not have delete_linode and has detach_volume permission', async () => {
+      const attachedVolume = volumeFactory.build({
+        linode_id: 2,
+        linode_label: 'linode-2',
+      });
+
+      queryMocks.usePermissions.mockReturnValue({
+        data: {
+          detach_volume: true,
+          delete_linode: false,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <VolumesActionMenu {...props} volume={attachedVolume} />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Volume ${attachedVolume.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const detachBtn = getByTestId('Detach');
+      expect(detachBtn).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should disable Detach if user does not have detach_volume and has delete_linode permission', async () => {
+      const attachedVolume = volumeFactory.build({
+        linode_id: 2,
+        linode_label: 'linode-2',
+      });
+
+      queryMocks.usePermissions.mockReturnValue({
+        data: {
+          detach_volume: false,
+          delete_linode: true,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <VolumesActionMenu {...props} volume={attachedVolume} />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Volume ${attachedVolume.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const detachBtn = getByTestId('Detach');
+      expect(detachBtn).toHaveAttribute('aria-disabled', 'true');
     });
   });
 });
