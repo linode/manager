@@ -122,7 +122,8 @@ export function useFirewallFetchOptions(
     isError: isNodebalancersError,
     isLoading: isNodebalancersLoading,
   } = useAllNodeBalancersQuery(
-    filterLabels.includes(dimensionLabel ?? '') &&
+    serviceType === 'firewall' &&
+      filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds?.length > 0 &&
       (firewallEntityType === 'nodebalancer' ||
         firewallEntityType === 'both') &&
