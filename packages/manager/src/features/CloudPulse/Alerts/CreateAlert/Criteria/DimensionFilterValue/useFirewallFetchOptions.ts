@@ -111,7 +111,7 @@ export function useFirewallFetchOptions(
     combinedFilterLinode,
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds?.length > 0 &&
+      filteredFirewallParentEntityIds.length > 0 &&
       (firewallEntityType === 'linode' || firewallEntityType === 'both') &&
       supportedRegionIds?.length > 0
   );
@@ -124,7 +124,7 @@ export function useFirewallFetchOptions(
   } = useAllNodeBalancersQuery(
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds?.length > 0 &&
+      filteredFirewallParentEntityIds.length > 0 &&
       (firewallEntityType === 'nodebalancer' ||
         firewallEntityType === 'both') &&
       supportedRegionIds?.length > 0,
