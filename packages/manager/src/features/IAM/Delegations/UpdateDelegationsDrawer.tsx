@@ -10,12 +10,13 @@ import {
   Typography,
   useTheme,
 } from '@linode/ui';
+import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import {
-  DELEGATION_UPDATE_ERROR,
   DELEGATION_VALIDATION_ERROR,
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
 } from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
 
@@ -100,12 +101,14 @@ export const UpdateDelegationsDrawer = ({
         euuid: delegation.euuid,
         data: { users: usersList },
       });
-
+      enqueueSnackbar(`Delegate users updated.`, { variant: 'success' });
       handleClose();
-    } catch {
-      setError('root', {
-        message: DELEGATION_UPDATE_ERROR,
-      });
+    } catch (errors) {
+      for (const error of errors) {
+        setError(error?.field ?? 'root', {
+          message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+        });
+      }
     }
   };
 

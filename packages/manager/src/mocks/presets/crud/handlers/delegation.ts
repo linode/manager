@@ -126,17 +126,6 @@ export const childAccountDelegates = (mockState: MockState) => [
         .filter((d) => d.childAccountEuuid === euuid)
         .map((d) => d.username);
 
-      // const delegateUsers = await mswDB.getAll('users');
-      // const delegateUsernames = delegateUsers
-      //   .filter((user) => user.user_type === 'delegate')
-      //   .filter((user) => {
-      //     // Check if this delegate user is linked to this child account via delegation
-      //     return delegations.some(
-      //       (d) => d.childAccountEuuid === euuid && d.username === user.username
-      //     );
-      //   })
-      //   .map((user) => user.username);
-
       return makeResponse({
         data: delegateUsernames,
         page: 1,

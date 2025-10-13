@@ -11,17 +11,14 @@ export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were 
 
 export const LAST_ACCOUNT_ADMIN_ERROR =
   'Failed to unassign the role. You need to have at least one user with the account_admin role on your account.';
-export const NO_DELEGATIONS_TEXT = 'No delegate users found.';
-export const NO_DELEGATIONS_ASSIGNED_TEXT =
-  'No delegate users have been assigned to this account.';
+
 export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
 
 // Delegation error messages
+export const NO_DELEGATIONS_TEXT = 'No delegate users found.';
 export const DELEGATION_VALIDATION_ERROR =
   'At least one user must be selected as a delegate.';
-export const DELEGATION_UPDATE_ERROR =
-  'Failed to update delegates. Please try again.';
 
 // Links
 export const IAM_DOCS_LINK =
@@ -52,6 +49,3 @@ export const ROLES_TABLE_PREFERENCE_KEY = 'roles';
 export const ENTITIES_TABLE_PREFERENCE_KEY = 'entities';
 
 export const ASSIGNED_ROLES_TABLE_PREFERENCE_KEY = 'assigned-roles';
-
-export const ACCOUNT_DELEGATIONS_TABLE_PREFERENCE_KEY =
-  'iam-account-delegations';
