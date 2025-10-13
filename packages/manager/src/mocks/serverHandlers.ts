@@ -203,9 +203,11 @@ const makeMockDatabase = (params: PathParams): Database => {
   }
 
   if (database.platform === 'rdbms-default' && !!database.private_network) {
-    // When a database is configured with a VPC, the primary host is prepended with 'private-'
-    const privateHost = `private-${database.hosts.primary}`;
-    database.hosts.primary = privateHost;
+    // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
+    database.hosts = {
+      primary: 'private-db-mysql-primary-0.b.linodeb.net',
+      standby: 'private-db-mysql-standby-0.b.linodeb.net',
+    };
   }
 
   return database;
