@@ -1,6 +1,5 @@
-import { useRegionsQuery } from '@linode/queries';
 import { TextField } from '@linode/ui';
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import {
   MULTISELECT_PLACEHOLDER_TEXT,
@@ -9,8 +8,9 @@ import {
   valueFieldConfig,
 } from './constants';
 import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
-import { useFetchOptions } from './useFetchOptions';
-import { getOperatorGroup, getStaticOptions } from './utils';
+import { FirewallDimensionFilterAutocomplete } from './FirewallDimensionFilterAutocomplete';
+import { ObjectStorageDimensionFilterAutocomplete } from './ObjectStorageDimensionFilterAutocomplete';
+import { getOperatorGroup } from './utils';
 
 import type { OperatorGroup, ValueFieldConfig } from './constants';
 import type {
@@ -53,7 +53,6 @@ interface ValueFieldRendererProps {
    * Callback fired when the value changes.
    */
   onChange: (value: string | string[]) => void;
-
   /**
    * The operator used in the current filter. Used to determine the type of input to show.
    */
@@ -70,7 +69,10 @@ interface ValueFieldRendererProps {
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
-
+  /**
+   * The type of monitoring to filter on.
+   */
+  type?: 'alerts' | 'metrics';
   /**
    * The currently selected value for the input field.
    */
@@ -96,6 +98,8 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     operator,
     value,
     values,
+    selectedRegions,
+    type = 'alerts',
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
@@ -111,25 +115,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     // 3. No dimension-specific config & values present → use *
     dimensionConfig = valueFieldConfig['*'];
   }
-  const { data: regions } = useRegionsQuery();
   const config = dimensionConfig[operatorGroup];
-  const customFetchItems = useFetchOptions({
-    dimensionLabel,
-    regions,
-    entities,
-    serviceType,
-    type: 'alerts',
-    scope,
-  });
-  const staticOptions = useMemo(
-    () =>
-      getStaticOptions(
-        serviceType ?? undefined,
-        dimensionLabel ?? '',
-        values ?? []
-      ),
-    [dimensionLabel, serviceType, values]
-  );
   if (!config) return null;
 
   if (config.type === 'textfield') {
@@ -158,25 +144,63 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     const autocompletePlaceholder = config.multiple
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
-    const { values, isLoading, isError } = config.useCustomFetch
-      ? customFetchItems
-      : { values: staticOptions, isLoading: false, isError: false };
-    return (
-      <DimensionFilterAutocomplete
-        disabled={disabled}
-        errorText={errorText}
-        fieldOnBlur={onBlur}
-        fieldOnChange={onChange}
-        fieldValue={value}
-        isError={isError}
-        isLoading={isLoading}
-        multiple={config.multiple}
-        name={name}
-        placeholderText={config.placeholder ?? autocompletePlaceholder}
-        values={values}
-      />
-    );
-  }
 
+    switch (config.useCustomFetch) {
+      case 'firewall':
+        return (
+          <FirewallDimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            entities={entities}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            scope={scope}
+            serviceType={serviceType ?? null}
+            type={type}
+          />
+        );
+      case 'objectstorage':
+        return (
+          <ObjectStorageDimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            entities={entities ?? []}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            scope={scope}
+            selectedRegions={selectedRegions}
+            serviceType={serviceType ?? null}
+            type={type}
+          />
+        );
+      default:
+        return (
+          <DimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            serviceType={serviceType ?? null}
+            type={type}
+            values={values}
+          />
+        );
+    }
+  }
   return null;
 };
