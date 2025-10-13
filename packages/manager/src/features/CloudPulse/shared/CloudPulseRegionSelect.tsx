@@ -6,7 +6,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { useFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFetchOptions';
+import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
 import { filterRegionByServiceType } from '../Alerts/Utils/utils';
 import {
   LINODE_REGION,
@@ -85,7 +85,7 @@ export const CloudPulseRegionSelect = React.memo(
       values: linodeRegions,
       isLoading: isLinodeRegionIdLoading,
       isError: isLinodeRegionIdError,
-    } = useFetchOptions({
+    } = useFirewallFetchOptions({
       dimensionLabel: filterKey,
       entities: selectedEntities,
       regions,

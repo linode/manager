@@ -12,16 +12,35 @@ import type {
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
 
-vi.mock('./useFetchOptions', () => ({
-  useFetchOptions: () => [
-    { label: 'TCP', value: 'tcp' },
-    { label: 'UDP', value: 'udp' },
-  ],
+// Mock child components
+vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
+  FirewallDimensionFilterAutocomplete: (props: any) => (
+    <div data-testid="firewall-autocomplete" {...props}>
+      Firewall Autocomplete
+    </div>
+  ),
+}));
+
+vi.mock('./ObjectStorageDimensionFilterAutocomplete', () => ({
+  ObjectStorageDimensionFilterAutocomplete: (props: any) => (
+    <div data-testid="objectstorage-autocomplete" {...props}>
+      ObjectStorage Autocomplete
+    </div>
+  ),
+}));
+
+vi.mock('./DimensionFilterAutocomplete', () => ({
+  DimensionFilterAutocomplete: (props: any) => (
+    <div data-testid="dimensionfilter-autocomplete" {...props}>
+      DimensionFilter Autocomplete
+    </div>
+  ),
 }));
 
 const EQ: DimensionFilterOperatorType = 'eq';
 const IN: DimensionFilterOperatorType = 'in';
 const NB: CloudPulseServiceType = 'nodebalancer';
+
 describe('<ValueFieldRenderer />', () => {
   const defaultProps = {
     serviceType: NB,
@@ -29,7 +48,7 @@ describe('<ValueFieldRenderer />', () => {
     dimensionLabel: 'protocol',
     disabled: false,
     entities: [],
-    errorText: '',
+    errorText: undefined,
     onBlur: vi.fn(),
     onChange: vi.fn(),
     operator: EQ,
@@ -40,7 +59,7 @@ describe('<ValueFieldRenderer />', () => {
   it('renders a TextField if config type is textfield', () => {
     const props = {
       ...defaultProps,
-      dimensionLabel: 'port', // assuming this maps to textfield in valueFieldConfig
+      dimensionLabel: 'port', // maps to textfield in valueFieldConfig
       operator: EQ,
     };
 
@@ -49,16 +68,38 @@ describe('<ValueFieldRenderer />', () => {
     expect(screen.getByTestId('textfield-input')).toBeVisible();
   });
 
-  it('renders an Autocomplete if config type is autocomplete', () => {
+  it('renders DimensionFilterAutocomplete if config type is autocomplete and no custom fetch', () => {
     const props = {
       ...defaultProps,
-      dimensionLabel: 'protocol', // assuming this maps to autocomplete
+      dimensionLabel: 'protocol', // maps to autocomplete in valueFieldConfig
       operator: IN,
       values: ['tcp', 'udp'],
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
-    expect(screen.getByRole('combobox')).toBeVisible();
+    expect(screen.getByTestId('dimensionfilter-autocomplete')).toBeVisible();
+  });
+
+  it('renders FirewallDimensionFilterAutocomplete if config.useCustomFetch = firewall', () => {
+    const props = {
+      ...defaultProps,
+      dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'firewall'
+      operator: IN,
+    };
+
+    renderWithTheme(<ValueFieldRenderer {...props} />);
+    expect(screen.getByTestId('firewall-autocomplete')).toBeVisible();
+  });
+
+  it('renders ObjectStorageDimensionFilterAutocomplete if config.useCustomFetch = objectstorage', () => {
+    const props = {
+      ...defaultProps,
+      dimensionLabel: 'endpoint', // assume this is configured with useCustomFetch: 'objectstorage'
+      operator: IN,
+    };
+
+    renderWithTheme(<ValueFieldRenderer {...props} />);
+    expect(screen.getByTestId('objectstorage-autocomplete')).toBeVisible();
   });
 
   it('calls onChange when typing into TextField', async () => {
@@ -83,39 +124,18 @@ describe('<ValueFieldRenderer />', () => {
     const props = {
       ...defaultProps,
       dimensionLabel: 'port',
-      operator: IN,
+      operator: EQ,
       onBlur,
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
     const input = screen.getByLabelText('Value');
     await user.click(input);
-    await user.tab(); // blur
+    await user.tab();
     expect(onBlur).toHaveBeenCalled();
   });
 
-  it('calls onChange from Autocomplete', async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
-    const props = {
-      ...defaultProps,
-      dimensionLabel: 'protocol',
-      operator: IN,
-      onChange,
-      values: ['tcp', 'udp'],
-    };
-
-    renderWithTheme(<ValueFieldRenderer {...props} />);
-    const input = screen.getByRole('combobox');
-    await user.click(input);
-    await user.type(input, 'TCP');
-    await user.click(await screen.findByText('TCP'));
-
-    expect(onChange).toHaveBeenLastCalledWith('tcp');
-  });
-
   it('returns TextField when no config and no operator is found', () => {
-    // fallback case
     const props = {
       ...defaultProps,
       dimensionLabel: 'nonexistent',
