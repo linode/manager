@@ -1,3 +1,5 @@
+import { useAccountUser } from '@linode/queries';
+import { Chip, styled } from '@linode/ui';
 import { Outlet, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -9,6 +11,7 @@ import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnable
 import { useTabs } from 'src/hooks/useTabs';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';
+import { usePermissions } from '../hooks/usePermissions';
 import {
   IAM_LABEL,
   USER_DETAILS_LINK,
@@ -19,12 +22,26 @@ import {
 export const UserDetailsLanding = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isParentAccount } = useDelegationRole();
+  const { isParentAccount, isChildAccount } = useDelegationRole();
+
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+
+  const { data: user } = useAccountUser(
+    username ?? '',
+    permissions?.is_account_admin && isIAMDelegationEnabled && isChildAccount
+  );
+  const isDelegateUser = user?.user_type === 'delegate';
+
+  // Determine if the current account is a child account with isIAMDelegationEnabled enabled
+  // If so, we need to hide 'View User Details' and 'Account Delegations' tabs for delegate users
+  const isDelegateUserForChildAccount =
+    isIAMDelegationEnabled && isChildAccount && isDelegateUser;
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/iam/users/$username/details`,
       title: 'User Details',
+      hide: isDelegateUserForChildAccount,
     },
     {
       to: `/iam/users/$username/roles`,
@@ -56,6 +73,9 @@ export const UserDetailsLanding = () => {
           ],
           labelOptions: {
             noCap: true,
+            suffixComponent: isDelegateUserForChildAccount ? (
+              <StyledChip label="delegate user" />
+            ) : null,
           },
           pathname: location.pathname,
         }}
@@ -73,3 +93,17 @@ export const UserDetailsLanding = () => {
     </>
   );
 };
+
+const StyledChip = styled(Chip, {
+  label: 'StyledChip',
+})(({ theme }) => ({
+  textTransform: theme.tokens.font.Textcase.Uppercase,
+  marginLeft: theme.spacingFunction(4),
+  color: theme.tokens.alias.Chart.Monochromatic.Default[90],
+  backgroundColor: theme.tokens.color.Ultramarine[20],
+  fontWeight: theme.tokens.font.FontWeight.Extrabold,
+  fontSize: '11px',
+  lineHeight: '12px',
+  height: 16,
+  letterSpacing: '.22px',
+}));
