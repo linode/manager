@@ -21,13 +21,17 @@ vi.mock('@linode/queries', async () => {
 
 describe('DeleteUserPanel', () => {
   it('should disable the delete button for proxy user', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
     const user = accountUserFactory.build({
       user_type: 'proxy',
       username: 'current_user',
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -45,7 +49,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -63,7 +67,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -81,7 +85,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={true} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -98,7 +102,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <DeleteUserPanel canDeleteUser={false} user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={false} />
     );
 
     const deleteButton = getByTestId('button');

@@ -23,7 +23,7 @@ describe('UsernamePanel', () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
-      <UsernamePanel canUpdateUser={true} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={true} />
     );
 
     const usernameTextField = getByLabelText('Username');
@@ -35,7 +35,7 @@ describe('UsernamePanel', () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
-      <UsernamePanel canUpdateUser={false} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={false} />
     );
 
     expect(getByLabelText('Username')).toBeDisabled();
@@ -60,7 +60,7 @@ describe('UsernamePanel', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <UsernamePanel canUpdateUser={true} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={true} />
     );
 
     const warning = getByLabelText('This field can’t be modified.');
@@ -88,7 +88,7 @@ describe('UsernamePanel', () => {
     });
 
     const { getByLabelText, getByRole, findByDisplayValue } = renderWithTheme(
-      <UsernamePanel canUpdateUser={true} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={true} />
     );
 
     await findByDisplayValue(user.username);
@@ -114,7 +114,7 @@ describe('UsernamePanel', () => {
     });
 
     const { getByRole, findByDisplayValue } = renderWithTheme(
-      <UsernamePanel canUpdateUser={false} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={false} />
     );
 
     await findByDisplayValue(user.username);
