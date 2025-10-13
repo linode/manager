@@ -29,8 +29,9 @@ describe('<DimensionFilterAutocomplete />', () => {
     scope: null,
     entities: [],
     selectedRegions: [],
-    serviceType: 'firewall',
+    serviceType: 'nodebalancer',
     values: mockOptions.map((o) => o.value),
+    type: 'alerts',
   };
 
   it('renders with label and placeholder', () => {
