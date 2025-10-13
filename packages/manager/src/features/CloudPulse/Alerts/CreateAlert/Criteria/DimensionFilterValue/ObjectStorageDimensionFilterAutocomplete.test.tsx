@@ -39,6 +39,7 @@ describe('<ObjectStorageDimensionFilterAutocomplete />', () => {
     scope: 'entity',
     selectedRegions: ['us-east'],
     serviceType: 'objectstorage',
+    type: 'alerts',
   };
 
   beforeEach(() => {
