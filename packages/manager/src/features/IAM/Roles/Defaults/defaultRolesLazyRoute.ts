@@ -1,9 +1,9 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
-import { UserDefaultRoles } from './DefaultRoles';
+import { DefaultRoles } from './DefaultRoles';
 
-export const userDefaultRolesLazyRoute = createLazyRoute(
+export const defaultRolesLazyRoute = createLazyRoute(
   '/iam/roles/defaults/roles'
 )({
-  component: UserDefaultRoles,
+  component: DefaultRoles,
 });

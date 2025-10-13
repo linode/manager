@@ -2,7 +2,7 @@ import { Box, Button, Paper, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-export const UserDefaultRolesPanel = () => {
+export const DefaultRolesPanel = () => {
   const navigate = useNavigate();
 
   return (

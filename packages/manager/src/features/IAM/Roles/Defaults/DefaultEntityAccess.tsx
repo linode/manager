@@ -1,7 +1,7 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-export const UserDefaultEntityAccess = () => {
+export const DefaultEntityAccess = () => {
   return (
     <Paper>
       <Stack>

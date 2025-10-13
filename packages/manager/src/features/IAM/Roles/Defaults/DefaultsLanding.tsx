@@ -1,5 +1,5 @@
 import { TabPanels } from '@reach/tabs';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -9,6 +9,9 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
 export const DefaultsLanding = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/iam/roles/defaults/roles`,
@@ -19,6 +22,10 @@ export const DefaultsLanding = () => {
       title: 'Default Entity Access',
     },
   ]);
+
+  if (location.pathname === '/iam/roles/defaults') {
+    navigate({ to: '/iam/roles/defaults/roles', replace: true });
+  }
 
   return (
     <>

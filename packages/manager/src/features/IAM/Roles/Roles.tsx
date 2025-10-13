@@ -8,7 +8,7 @@ import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities'
 import { useDelegationRole } from '../hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../hooks/useIsIAMEnabled';
 import { usePermissions } from '../hooks/usePermissions';
-import { UserDefaultRolesPanel } from './Defaults/DefaultRolesPanel';
+import { DefaultRolesPanel } from './Defaults/DefaultRolesPanel';
 
 export const RolesLanding = () => {
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
@@ -38,7 +38,7 @@ export const RolesLanding = () => {
 
   return (
     <>
-      {isChildAccount && isIAMDelegationEnabled && <UserDefaultRolesPanel />}
+      {isChildAccount && isIAMDelegationEnabled && <DefaultRolesPanel />}
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
         <Typography variant="h2">Roles</Typography>
         <RolesTable roles={roles} />

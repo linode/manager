@@ -1,7 +1,7 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-export const UserDefaultRoles = () => {
+export const DefaultRoles = () => {
   return (
     <Paper>
       <Stack>
