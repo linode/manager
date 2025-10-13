@@ -1,22 +1,20 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-import {
-  getStaticOptions,
-  handleValueChange,
-  resolveSelectedValues,
-} from './utils';
+import { useObjectStorageFetchOptions } from './useObjectStorageFetchOptions';
+import { handleValueChange, resolveSelectedValues } from './utils';
 
 import type { DimensionFilterAutocompleteProps } from './constants';
 
 /**
- * Renders an Autocomplete input field for the DimensionFilter value field.
- * This component supports both single and multiple selection based on config.
+ * Autocomplete for Object Storage endpoints.
  */
-export const DimensionFilterAutocomplete = (
+export const ObjectStorageDimensionFilterAutocomplete = (
   props: DimensionFilterAutocompleteProps
 ) => {
   const {
+    dimensionLabel,
     multiple,
     name,
     fieldOnChange,
@@ -24,25 +22,38 @@ export const DimensionFilterAutocomplete = (
     fieldOnBlur,
     placeholderText,
     errorText,
+    entities,
     fieldValue,
+    scope,
+    selectedRegions,
     serviceType,
-    dimensionLabel,
-    values,
+    type,
   } = props;
 
-  const options = useMemo(
-    () => getStaticOptions(serviceType, dimensionLabel ?? '', values ?? []),
-    [dimensionLabel, serviceType, values]
-  );
+  const { data: regions } = useRegionsQuery();
+  const { values, isLoading, isError } = useObjectStorageFetchOptions({
+    entities,
+    dimensionLabel,
+    regions,
+    type,
+    scope,
+    selectedRegions,
+    serviceType,
+  });
+
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
-      errorText={errorText}
+      errorText={
+        errorText ??
+        (isError ? 'Failed to fetch Object Storage endpoints.' : undefined)
+      }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
       limitTags={1}
+      loading={!disabled && isLoading && !isError}
       multiple={multiple}
       onBlur={fieldOnBlur}
       onChange={(_, selected, operation) => {
@@ -53,10 +64,10 @@ export const DimensionFilterAutocomplete = (
         );
         fieldOnChange(newValue);
       }}
-      options={options}
+      options={values}
       placeholder={placeholderText}
       sx={{ flex: 1 }}
-      value={resolveSelectedValues(options, fieldValue, multiple ?? false)}
+      value={resolveSelectedValues(values, fieldValue, multiple ?? false)}
     />
   );
 };
