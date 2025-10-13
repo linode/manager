@@ -90,9 +90,9 @@ const iamDefaultRolesRoute = createRoute({
     }
   },
 }).lazy(() =>
-  import(
-    'src/features/IAM/Users/UserRoles/UserDefaults/userDefaultRolesLazyRoute'
-  ).then((m) => m.userDefaultRolesLazyRoute)
+  import('src/features/IAM/Roles/UserDefaults/userDefaultRolesLazyRoute').then(
+    (m) => m.userDefaultRolesLazyRoute
+  )
 );
 
 const iamDefaultEntityAccessRoute = createRoute({
@@ -108,7 +108,7 @@ const iamDefaultEntityAccessRoute = createRoute({
   },
 }).lazy(() =>
   import(
-    'src/features/IAM/Users/UserRoles/UserDefaults/userDefaultEntityAccessLazyRoute'
+    'src/features/IAM/Roles/UserDefaults/userDefaultEntityAccessLazyRoute'
   ).then((m) => m.userDefaultEntityAccessLazyRoute)
 );
 
