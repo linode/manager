@@ -25,7 +25,7 @@ export const UserDefaultRolesPanel = () => {
             buttonType="outlined"
             onClick={() => navigate({ to: '/iam/roles/defaults/roles' })}
           >
-            View Default Role
+            View Default Roles
           </Button>
         </Box>
       </Box>
