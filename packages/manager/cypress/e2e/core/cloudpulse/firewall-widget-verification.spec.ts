@@ -180,7 +180,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     cy.get('@startDateInput').click();
 
-    ui.button.findByTitle('last day').click();
+    ui.button.findByTitle('Last day').click();
 
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
