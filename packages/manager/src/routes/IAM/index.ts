@@ -72,15 +72,29 @@ const iamRolesRoute = createRoute({
       });
     }
   },
+});
+
+const iamRolesIndexRoute = createRoute({
+  getParentRoute: () => iamRolesRoute,
+  path: '/',
 }).lazy(() =>
   import('src/features/IAM/Roles/rolesLandingLazyRoute').then(
     (m) => m.rolesLandingLazyRoute
   )
 );
 
+const iamDefaultsTabsRoute = createRoute({
+  getParentRoute: () => iamRoute,
+  path: 'roles/defaults',
+}).lazy(() =>
+  import('src/features/IAM/Roles/Defaults/defaultsLandingLazyRoute').then(
+    (m) => m.defaultsLandingLazyRoute
+  )
+);
+
 const iamDefaultRolesRoute = createRoute({
-  getParentRoute: () => iamRolesRoute,
-  path: 'default-roles',
+  getParentRoute: () => iamDefaultsTabsRoute,
+  path: 'roles',
   beforeLoad: async ({ context }) => {
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
     if (!isDelegationEnabled) {
@@ -90,14 +104,14 @@ const iamDefaultRolesRoute = createRoute({
     }
   },
 }).lazy(() =>
-  import('src/features/IAM/Roles/UserDefaults/userDefaultRolesLazyRoute').then(
+  import('src/features/IAM/Roles/Defaults/defaultRolesLazyRoute').then(
     (m) => m.userDefaultRolesLazyRoute
   )
 );
 
 const iamDefaultEntityAccessRoute = createRoute({
-  getParentRoute: () => iamRolesRoute,
-  path: 'default-entity-access',
+  getParentRoute: () => iamDefaultsTabsRoute,
+  path: 'entity-access',
   beforeLoad: async ({ context }) => {
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
     if (!isDelegationEnabled) {
@@ -107,9 +121,9 @@ const iamDefaultEntityAccessRoute = createRoute({
     }
   },
 }).lazy(() =>
-  import(
-    'src/features/IAM/Roles/UserDefaults/userDefaultEntityAccessLazyRoute'
-  ).then((m) => m.userDefaultEntityAccessLazyRoute)
+  import('src/features/IAM/Roles/Defaults/defaultEntityAccessLazyRoute').then(
+    (m) => m.userDefaultEntityAccessLazyRoute
+  )
 );
 
 const iamRolesCatchAllRoute = createRoute({
@@ -297,8 +311,11 @@ const iamUserNameEntitiesCatchAllRoute = createRoute({
 export const iamRouteTree = iamRoute.addChildren([
   iamTabsRoute.addChildren([
     iamRolesRoute.addChildren([
-      iamDefaultRolesRoute,
-      iamDefaultEntityAccessRoute,
+      iamRolesIndexRoute,
+      iamDefaultsTabsRoute.addChildren([
+        iamDefaultRolesRoute,
+        iamDefaultEntityAccessRoute,
+      ]),
     ]),
     iamUsersRoute,
     iamDelegationsRoute,

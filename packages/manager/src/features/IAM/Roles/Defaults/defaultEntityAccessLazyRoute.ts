@@ -1,9 +1,9 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
-import { UserDefaultEntityAccess } from './UserDefaultEntityAccess';
+import { UserDefaultEntityAccess } from './DefaultEntityAccess';
 
 export const userDefaultEntityAccessLazyRoute = createLazyRoute(
-  '/iam/roles/default-entity-access'
+  '/iam/roles/defaults/entity-access'
 )({
   component: UserDefaultEntityAccess,
 });
