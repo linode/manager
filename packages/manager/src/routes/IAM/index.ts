@@ -86,6 +86,17 @@ const iamRolesIndexRoute = createRoute({
 const iamDefaultsTabsRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'roles/defaults',
+  beforeLoad: async ({ context }) => {
+    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
+    const profile = context?.profile;
+    const userType = profile?.user_type;
+
+    if (userType !== 'child' || !isDelegationEnabled) {
+      throw redirect({
+        to: '/iam/roles',
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultsLandingLazyRoute').then(
     (m) => m.defaultsLandingLazyRoute
@@ -95,14 +106,6 @@ const iamDefaultsTabsRoute = createRoute({
 const iamDefaultRolesRoute = createRoute({
   getParentRoute: () => iamDefaultsTabsRoute,
   path: 'roles',
-  beforeLoad: async ({ context }) => {
-    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
-    if (!isDelegationEnabled) {
-      throw redirect({
-        to: '/iam/roles',
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultRolesLazyRoute').then(
     (m) => m.defaultRolesLazyRoute
@@ -112,14 +115,6 @@ const iamDefaultRolesRoute = createRoute({
 const iamDefaultEntityAccessRoute = createRoute({
   getParentRoute: () => iamDefaultsTabsRoute,
   path: 'entity-access',
-  beforeLoad: async ({ context }) => {
-    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
-    if (!isDelegationEnabled) {
-      throw redirect({
-        to: '/iam/roles',
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultEntityAccessLazyRoute').then(
     (m) => m.defaultEntityAccessLazyRoute
