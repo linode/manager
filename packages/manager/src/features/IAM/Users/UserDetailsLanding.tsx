@@ -99,11 +99,8 @@ const StyledChip = styled(Chip, {
 })(({ theme }) => ({
   textTransform: theme.tokens.font.Textcase.Uppercase,
   marginLeft: theme.spacingFunction(4),
-  color: theme.tokens.alias.Chart.Monochromatic.Default[90],
-  backgroundColor: theme.tokens.color.Ultramarine[20],
-  fontWeight: theme.tokens.font.FontWeight.Extrabold,
-  fontSize: '11px',
-  lineHeight: '12px',
-  height: 16,
-  letterSpacing: '.22px',
+  color: theme.tokens.component.Badge.Informative.Subtle.Text,
+  backgroundColor: theme.tokens.component.Badge.Informative.Subtle.Background,
+  font: theme.font.extrabold,
+  fontSize: theme.tokens.font.FontSize.Xxxs,
 }));
