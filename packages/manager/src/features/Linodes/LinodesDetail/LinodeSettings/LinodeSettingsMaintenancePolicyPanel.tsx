@@ -133,6 +133,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
           <Box>
             <Button
               buttonType="outlined"
+              data-pendo-id="linode-maintenance-policy-save-button"
               disabled={!isDirty || isDisabled}
               loading={isSubmitting}
               type="submit"
