@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
-import type { PickPermissions } from '@linode/api-v4';
+import type { PickPermissions, UserType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 type UserActionMenuPermissions = PickPermissions<
@@ -16,10 +16,11 @@ interface Props {
   onDelete: (username: string) => void;
   permissions: Record<UserActionMenuPermissions, boolean>;
   username: string;
+  userType?: UserType;
 }
 
 export const UsersActionMenu = (props: Props) => {
-  const { onDelete, permissions, username } = props;
+  const { onDelete, permissions, username, userType } = props;
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
@@ -29,6 +30,13 @@ export const UsersActionMenu = (props: Props) => {
   const isAccountAdmin = permissions.is_account_admin;
   const canDeleteUser = permissions.delete_user;
   const isParentAccount = profile?.user_type === 'parent';
+  const isChildAccount = profile?.user_type === 'child';
+  const isDelegateUser = userType === 'delegate';
+
+  // Determine if the current account is a child account with isIAMDelegationEnabled enabled
+  // If so, we need to hide 'View User Details', 'Delete User', 'View Account Delegations' in the menu
+  const shouldHideForChildDelegate =
+    isIAMDelegationEnabled && isChildAccount && isDelegateUser;
 
   const actions: Action[] = [
     {
@@ -38,6 +46,7 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
+      hidden: shouldHideForChildDelegate,
       disabled: !isAccountAdmin,
       tooltip: !isAccountAdmin
         ? 'You do not have permission to view user details.'
@@ -87,6 +96,7 @@ export const UsersActionMenu = (props: Props) => {
       onClick: () => {
         onDelete(username);
       },
+      hidden: shouldHideForChildDelegate,
       title: 'Delete User',
       tooltip:
         username === profileUsername
