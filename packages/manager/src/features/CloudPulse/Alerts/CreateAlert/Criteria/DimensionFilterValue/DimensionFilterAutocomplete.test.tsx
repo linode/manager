@@ -11,8 +11,8 @@ import type { Item } from '../../../constants';
 import type { DimensionFilterAutocompleteProps } from './constants';
 
 const mockOptions: Item<string, string>[] = [
-  { label: 'Tcp', value: 'tcp' },
-  { label: 'Udp', value: 'udp' },
+  { label: 'TCP', value: 'tcp' },
+  { label: 'UDP', value: 'udp' },
 ];
 
 describe('<DimensionFilterAutocomplete />', () => {
@@ -29,8 +29,9 @@ describe('<DimensionFilterAutocomplete />', () => {
     scope: null,
     entities: [],
     selectedRegions: [],
-    serviceType: 'firewall',
+    serviceType: 'nodebalancer',
     values: mockOptions.map((o) => o.value),
+    type: 'alerts',
   };
 
   it('renders with label and placeholder', () => {

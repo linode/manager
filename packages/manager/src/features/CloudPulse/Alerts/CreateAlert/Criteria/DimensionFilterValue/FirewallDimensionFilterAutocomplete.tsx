@@ -27,6 +27,7 @@ export const FirewallDimensionFilterAutocomplete = (
     placeholderText,
     errorText,
     fieldValue,
+    type,
   } = props;
 
   const { data: regions } = useRegionsQuery();
@@ -35,7 +36,7 @@ export const FirewallDimensionFilterAutocomplete = (
     regions,
     entities,
     serviceType,
-    type: 'alerts',
+    type,
     scope,
   });
   return (
