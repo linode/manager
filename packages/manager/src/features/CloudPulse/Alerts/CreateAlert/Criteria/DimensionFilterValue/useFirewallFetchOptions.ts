@@ -81,24 +81,24 @@ export function useFirewallFetchOptions(
     );
   }, [scope, firewallResources, entities]);
 
-  const idFilter = {
+  const idFilter: Filter = {
     '+or': filteredFirewallParentEntityIds.length
       ? filteredFirewallParentEntityIds.map(({ id }) => ({ id }))
-      : [{ id: '' }],
+      : undefined,
   };
 
-  const labelFilter = {
+  const labelFilter: Filter = {
     '+or': filteredFirewallParentEntityIds.length
       ? filteredFirewallParentEntityIds.map(({ label }) => ({ label }))
-      : [{ label: '' }],
+      : undefined,
   };
 
   const combinedFilterLinode: Filter = {
-    '+and': [idFilter, regionFilter].filter(Boolean) as Filter[],
+    '+and': [idFilter, regionFilter].filter(Boolean),
   };
 
   const combinedFilterNodebalancer: Filter = {
-    '+and': [labelFilter, regionFilter].filter(Boolean) as Filter[],
+    '+and': [labelFilter, regionFilter].filter(Boolean),
   };
 
   // Fetch all linodes with the combined filter
