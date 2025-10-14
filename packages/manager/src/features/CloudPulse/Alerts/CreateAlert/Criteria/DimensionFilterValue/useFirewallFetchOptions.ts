@@ -33,7 +33,7 @@ export function useFirewallFetchOptions(
     serviceType,
     type,
     scope,
-    firewallEntityType = 'both',
+    associatedEntityType = 'both',
   } = props;
 
   const supportedRegionIds =
@@ -67,7 +67,10 @@ export function useFirewallFetchOptions(
     isError: isResourcesError,
   } = useResourcesQuery(
     filterLabels.includes(dimensionLabel ?? ''),
-    'firewall'
+    'firewall',
+    {},
+    {},
+    associatedEntityType // To avoid fetching resources for which the associated entity type is not supported
   );
   // Decide firewall resource IDs based on scope
   const filteredFirewallParentEntityIds = useMemo(() => {
@@ -112,7 +115,7 @@ export function useFirewallFetchOptions(
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds?.length > 0 &&
-      (firewallEntityType === 'linode' || firewallEntityType === 'both') &&
+      (associatedEntityType === 'linode' || associatedEntityType === 'both') &&
       supportedRegionIds?.length > 0
   );
 
@@ -124,8 +127,8 @@ export function useFirewallFetchOptions(
   } = useAllNodeBalancersQuery(
     filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds?.length > 0 &&
-      (firewallEntityType === 'nodebalancer' ||
-        firewallEntityType === 'both') &&
+      (associatedEntityType === 'nodebalancer' ||
+        associatedEntityType === 'both') &&
       supportedRegionIds?.length > 0,
     {},
     combinedFilterNodebalancer
@@ -169,9 +172,9 @@ export function useFirewallFetchOptions(
     case 'associated_entity_region':
       return {
         values:
-          firewallEntityType === 'linode'
+          associatedEntityType === 'linode'
             ? linodeRegions
-            : firewallEntityType === 'nodebalancer'
+            : associatedEntityType === 'nodebalancer'
               ? nodebalancerRegions
               : allRegions,
         isError: isLinodesError || isResourcesError || isNodebalancersError,
