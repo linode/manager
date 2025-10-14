@@ -1,4 +1,5 @@
 import { useAccountSettings } from '@linode/queries';
+import { useProfile } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
@@ -16,6 +17,7 @@ export const Router = () => {
   const queryClient = useQueryClient();
   const globalErrors = useGlobalErrors();
 
+  const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
@@ -31,6 +33,7 @@ export const Router = () => {
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
+      profile,
       queryClient,
     },
   });
