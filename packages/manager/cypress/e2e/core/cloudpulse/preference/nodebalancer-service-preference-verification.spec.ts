@@ -1,5 +1,9 @@
 /**
- * @file Integration Tests for CloudPulse nodebalancer Dashboard.
+ * @file Integration Tests for CloudPulse NodeBalancer Preferences.
+ *
+ * These tests validate user preference behavior for the CloudPulse DBaaS Dashboard,
+ * ensuring that filters (Dashboard, Region, etc.) correctly update
+ * the user's saved ACLP preferences through API requests and responses.
  */
 import {
   linodeFactory,
@@ -38,10 +42,8 @@ import {
   widgetFactory,
 } from 'src/factories';
 
-const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, region, resource } =
-  widgetDetails.nodebalancer;
+const { dashboardName, id, metrics, resource } = widgetDetails.nodebalancer;
 const serviceType = 'nodebalancer';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -88,7 +90,7 @@ const mockNodeBalancer = nodeBalancerFactory.build({
   label: resource,
   region: 'us-east',
 });
-describe('Integration Tests for Nodebalancer Dashboard ', () => {
+describe('Integration Tests for NodeBalancer Dashboard Preferences', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
