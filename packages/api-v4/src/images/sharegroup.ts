@@ -125,11 +125,16 @@ export const updateSharegroup = (
  * @param imageId {string} ID of the Image to update
  * @param data { UpdateSharegroupImagePayload } the updated image details
  */
-export const updateSharegroupImage = (
-  sharegroupId: string,
-  imageId: string,
-  data: UpdateSharegroupImagePayload,
-) => {
+interface UpdateSharegroupImage {
+  data: UpdateSharegroupImagePayload;
+  imageId: string;
+  sharegroupId: string;
+}
+export const updateSharegroupImage = ({
+  sharegroupId,
+  imageId,
+  data,
+}: UpdateSharegroupImage) => {
   return Request<Image>(
     setURL(
       `${BETA_API_ROOT}/images/sharegroup/${encodeURIComponent(sharegroupId)}/images/${encodeURIComponent(imageId)}}`,
