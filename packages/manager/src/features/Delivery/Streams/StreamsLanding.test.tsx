@@ -176,7 +176,7 @@ describe('Streams Landing Table', () => {
       });
     });
 
-    describe('when Disable clicked', () => {
+    describe('when Deactivate clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({
@@ -185,7 +185,7 @@ describe('Streams Landing Table', () => {
 
         renderComponent();
         await clickOnActionMenu();
-        await clickOnActionMenuItem('Disable');
+        await clickOnActionMenuItem('Deactivate');
 
         expect(mockUpdateStreamMutation).toHaveBeenCalledWith({
           id: 1,
@@ -197,7 +197,7 @@ describe('Streams Landing Table', () => {
       });
     });
 
-    describe('when Enable clicked', () => {
+    describe('when Activate clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({
@@ -207,7 +207,7 @@ describe('Streams Landing Table', () => {
         stream.status = 'inactive';
         renderComponent();
         await clickOnActionMenu();
-        await clickOnActionMenuItem('Enable');
+        await clickOnActionMenuItem('Activate');
 
         expect(mockUpdateStreamMutation).toHaveBeenCalledWith({
           id: 1,
