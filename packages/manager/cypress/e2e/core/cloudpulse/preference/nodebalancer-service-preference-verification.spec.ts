@@ -128,7 +128,7 @@ describe('Integration Tests for NodeBalancer Dashboard Preferences', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices']);
+    cy.wait(['@fetchServices','@fetchDashboard','@fetchPreferences']);
 
     ui.button.findByTitle('Filters').click();
 
