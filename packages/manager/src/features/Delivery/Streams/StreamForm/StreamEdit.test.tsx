@@ -58,7 +58,7 @@ describe('StreamEdit', () => {
     });
     assertInputHasValue('Stream Type', 'Audit Logs');
     await waitFor(() => {
-      assertInputHasValue('Destination Type', 'Linode Object Storage');
+      assertInputHasValue('Destination Type', 'Akamai Object Storage');
     });
     assertInputHasValue('Destination Name', 'Destination 1');
 
@@ -66,10 +66,6 @@ describe('StreamEdit', () => {
     expect(screen.getByText('3000')).toBeVisible();
     // Bucket:
     expect(screen.getByText('Bucket Name')).toBeVisible();
-    // Region:
-    await waitFor(() => {
-      expect(screen.getByText('US, Chicago, IL')).toBeVisible();
-    });
     // Access Key ID:
     expect(screen.getByTestId('access-key-id')).toHaveTextContent(
       '*****************'
@@ -97,6 +93,19 @@ describe('StreamEdit', () => {
           { exact: false }
         );
         await userEvent.click(createNewTestDestination);
+        const hostInput = screen.getByLabelText('Host');
+        await waitFor(() => {
+          expect(hostInput).toBeDefined();
+        });
+        await userEvent.type(hostInput, 'Test');
+        const bucketInput = screen.getByLabelText('Bucket');
+        await userEvent.type(bucketInput, 'Test');
+        const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+        await userEvent.type(accessKeyIDInput, 'Test');
+        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        await userEvent.type(secretAccessKeyInput, 'Test');
+        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+        await userEvent.type(logPathPrefixInput, 'Test');
       };
 
       describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {

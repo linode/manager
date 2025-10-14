@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { type SubmitHandler, useFormContext, useWatch } from 'react-hook-form';
 
 import {
@@ -27,7 +27,6 @@ import { StreamFormDelivery } from 'src/features/Delivery/Streams/StreamForm/Del
 import { StreamFormClusters } from './Clusters/StreamFormClusters';
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
 
-import type { UpdateDestinationPayload } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
@@ -75,6 +74,9 @@ export const StreamForm = (props: StreamFormProps) => {
     setDestinationVerified(false);
   }, [destination, setDestinationVerified]);
 
+  const [disableTestConnection, setDisableTestConnection] =
+    useState<boolean>(false);
+
   const isSubmitting =
     isCreatingDestination || isCreatingStream || isUpdatingStream;
 
@@ -87,9 +89,7 @@ export const StreamForm = (props: StreamFormProps) => {
     let destinationId = destinations?.[0];
     if (!destinationId) {
       try {
-        const destinationPayload:
-          | CreateDestinationPayload
-          | UpdateDestinationPayload = {
+        const destinationPayload: CreateDestinationPayload = {
           ...destination,
           details: getDestinationPayloadDetails(destination.details),
         };
@@ -126,14 +126,17 @@ export const StreamForm = (props: StreamFormProps) => {
           destinations: [destinationId],
           details: payloadDetails,
         });
-        enqueueSnackbar(`Stream ${label} created successfully`, {
-          variant: 'success',
-        });
+        enqueueSnackbar(
+          `${label} created successfully. Stream is being provisioned, which may take up to 45 minutes`,
+          {
+            variant: 'success',
+            autoHideDuration: 10000,
+          }
+        );
       } else if (mode === 'edit' && streamId) {
         await updateStream({
           id: streamId,
           label,
-          type,
           status: status as StreamStatus,
           destinations: [destinationId],
           details: payloadDetails,
@@ -179,14 +182,17 @@ export const StreamForm = (props: StreamFormProps) => {
             {selectedStreamType === streamType.LKEAuditLogs && (
               <StreamFormClusters />
             )}
-            <StreamFormDelivery />
+            <StreamFormDelivery
+              setDisableTestConnection={setDisableTestConnection}
+            />
           </Stack>
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
           <FormSubmitBar
             blockSubmit={!selectedDestinations?.length}
             connectionTested={destinationVerified}
-            destinationType={destination.type}
+            destinationType={destination?.type}
+            disableTestConnection={disableTestConnection}
             formType={'stream'}
             isSubmitting={isSubmitting}
             isTesting={isVerifyingDestination}

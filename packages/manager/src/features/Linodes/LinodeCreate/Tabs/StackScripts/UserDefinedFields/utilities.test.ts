@@ -4,6 +4,7 @@ import {
   getIsUDFMultiSelect,
   getIsUDFPasswordField,
   getIsUDFSingleSelect,
+  getTotalClusterSize,
   separateUDFsByRequiredStatus,
 } from './utilities';
 
@@ -153,5 +154,31 @@ describe('getIsUDFPasswordField', () => {
     };
 
     expect(getIsUDFPasswordField(udf)).toBe(false);
+  });
+});
+
+describe('getTotalClusterSize', () => {
+  it('should return 0 when there is no cluster data', () => {
+    const stackscriptData = {};
+
+    expect(getTotalClusterSize(stackscriptData)).toBe(0);
+  });
+
+  it('should support normal marketplace clusters', () => {
+    const stackscriptData = {
+      cluster_size: '5',
+    };
+
+    expect(getTotalClusterSize(stackscriptData)).toBe(5);
+  });
+
+  it('should support complex marketplace clusters', () => {
+    const stackscriptData = {
+      cluster_size: '3',
+      mysql_cluster_size: '3',
+      redis_cluster_size: '5',
+    };
+
+    expect(getTotalClusterSize(stackscriptData)).toBe(11);
   });
 });

@@ -1,3 +1,4 @@
+// import { childAccountFactory } from '@linode/utilities';
 import { http } from 'msw';
 
 import { accountFactory } from 'src/factories/account';
@@ -85,14 +86,20 @@ export const getDelegatedChildAccountsForUser = () => [
         return makeNotFoundResponse();
       }
 
-      const userDelegations = delegations.filter(
-        (d) => d.username === username
-      );
+      const userDelegations =
+        delegations.filter((d) => d.username === username) || [];
 
       return makePaginatedResponse({
-        data: childAccounts.filter((account) =>
-          userDelegations.some((d) => d.childAccountEuuid === account.euuid)
-        ),
+        data:
+          userDelegations.length === 0 && childAccounts?.length > 0
+            ? [childAccounts[0]]
+            : childAccounts.filter((account) =>
+                userDelegations.some(
+                  (d) => d.childAccountEuuid === account.euuid
+                )
+              ),
+        // comment out to get a larger dataset
+        // data: childAccountFactory.buildList(300),
         request,
       });
     }

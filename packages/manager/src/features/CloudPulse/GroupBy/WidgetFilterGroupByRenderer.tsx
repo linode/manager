@@ -19,7 +19,7 @@ interface WidgetFilterGroupByRendererProps {
   /**
    * Callback function to handle the selected values
    */
-  handleChange: (selectedValue: string[]) => void;
+  handleChange: (selectedValue: string[], savePreferences?: boolean) => void;
   /**
    * Label for the widget metric
    */
@@ -29,6 +29,14 @@ interface WidgetFilterGroupByRendererProps {
    */
   metric: string;
   /**
+   * User's saved group by preference
+   */
+  preferenceGroupBy?: string[];
+  /**
+   * Indicates whether to save the selected group by options to user preferences
+   */
+  savePreferences?: boolean;
+  /**
    * Service type of the selected dashboard
    */
   serviceType: CloudPulseServiceType;
@@ -37,7 +45,15 @@ interface WidgetFilterGroupByRendererProps {
 export const WidgetFilterGroupByRenderer = (
   props: WidgetFilterGroupByRendererProps
 ) => {
-  const { metric, dashboardId, serviceType, label, handleChange } = props;
+  const {
+    metric,
+    dashboardId,
+    serviceType,
+    label,
+    handleChange,
+    savePreferences,
+    preferenceGroupBy,
+  } = props;
   const [isSelected, setIsSelected] = React.useState(false);
 
   const { isLoading: globalDimensionLoading, options: globalDimensions } =
@@ -46,22 +62,31 @@ export const WidgetFilterGroupByRenderer = (
     isLoading: widgetDimensionLoading,
     options: widgetDimensions,
     defaultValue,
-  } = useWidgetDimension(dashboardId, serviceType, globalDimensions, metric);
+  } = useWidgetDimension(
+    dashboardId,
+    serviceType,
+    globalDimensions,
+    metric,
+    preferenceGroupBy
+  );
   const [open, setOpen] = React.useState(false);
   const onCancel = React.useCallback(() => {
     setOpen(false);
   }, []);
   const onApply = React.useCallback(
-    (selectedValue: GroupByOption[]) => {
+    (selectedValue: GroupByOption[], savePref?: boolean) => {
       if (selectedValue.length === 0) {
         setIsSelected(false);
       } else {
         setIsSelected(true);
       }
-      handleChange(selectedValue.map(({ value }) => value));
+      handleChange(
+        selectedValue.map(({ value }) => value),
+        savePref ?? savePreferences
+      );
       setOpen(false);
     },
-    [handleChange]
+    [handleChange, savePreferences]
   );
 
   const isDisabled =
