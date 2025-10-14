@@ -102,12 +102,20 @@ export const parentUsersSeeder: MockSeeder = {
     const seedsCountMap = getSeedsCountMap();
     const count = seedsCountMap[parentUsersSeeder.id] ?? 0;
 
-    const userSeeds = seedWithUniqueIds<'users'>({
-      dbEntities: await mswDB.getAll('users'),
-      seedEntities: accountUserFactory.buildList(count, {
+    const existingUsers = await mswDB.getAll('users');
+    const existingUsernames = existingUsers?.map((u) => u.username) || [];
+
+    // Only create users that don't already exist
+    const newUsers = accountUserFactory
+      .buildList(count, {
         user_type: 'parent',
         restricted: false,
-      }),
+      })
+      .filter((user) => !existingUsernames.includes(user.username));
+
+    const userSeeds = seedWithUniqueIds<'users'>({
+      dbEntities: existingUsers,
+      seedEntities: newUsers,
     });
 
     const userRolesEntries: UserRolesEntry[] = [];
@@ -142,7 +150,7 @@ export const parentUsersSeeder: MockSeeder = {
       }
 
       // Create child accounts and delegations for parent users
-      const childAccounts = childAccountFactory.buildList(10);
+      const childAccounts = childAccountFactory.buildList(3);
       for (const childAccount of childAccounts) {
         childAccountsToAdd.push(childAccount);
         delegationsToAdd.push({
@@ -152,12 +160,16 @@ export const parentUsersSeeder: MockSeeder = {
         });
 
         // Create child users for each child account
-        const childUsers = accountUserFactory.buildList(2, {
-          user_type: 'child',
-          username: `child--user-${childAccount.euuid}`,
-          email: `child-user-${childAccount.euuid}@example.com`,
-          restricted: true,
-        });
+        const childUsers = accountUserFactory
+          .buildList(2, {
+            user_type: 'child',
+            restricted: true,
+          })
+          .map((user, index) => ({
+            ...user,
+            username: `child-user-${childAccount.euuid}-${index}`,
+            email: `child-user-${childAccount.euuid}-${index}@example.com`,
+          }));
 
         for (const childUser of childUsers) {
           userSeeds.push(childUser);
