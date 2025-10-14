@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -20,6 +21,7 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
@@ -28,7 +30,9 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
     {
       onClick: () => {
         navigate({
-          to: '/account/users/$username/permissions',
+          to: iamRbacPrimaryNavChanges
+            ? '/users/$username/permissions'
+            : '/account/users/$username/permissions',
           params: { username },
         });
       },
@@ -40,7 +44,9 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
     {
       onClick: () => {
         navigate({
-          to: '/account/users/$username',
+          to: iamRbacPrimaryNavChanges
+            ? '/users/$username'
+            : '/account/users/$username',
           params: { username },
         });
       },
@@ -49,7 +55,9 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
     {
       onClick: () => {
         navigate({
-          to: '/account/users/$username/permissions',
+          to: iamRbacPrimaryNavChanges
+            ? '/users/$username/permissions'
+            : '/account/users/$username/permissions',
           params: { username },
         });
       },

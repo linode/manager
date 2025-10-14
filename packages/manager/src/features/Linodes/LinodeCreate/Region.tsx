@@ -25,11 +25,9 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { getDisabledRegions } from './Region.utils';
+import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 import { TwoStepRegion } from './TwoStepRegion';
-import {
-  getGeneratedLinodeLabel,
-  useLinodeCreateQueryParams,
-} from './utilities';
+import { getGeneratedLinodeLabel } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -41,7 +39,7 @@ export const Region = React.memo(() => {
   const flags = useFlags();
   const queryClient = useQueryClient();
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const {
     control,
@@ -72,7 +70,7 @@ export const Region = React.memo(() => {
     Boolean(selectedLinode?.type)
   );
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const { data: regions } = useRegionsQuery();
 
@@ -82,12 +80,11 @@ export const Region = React.memo(() => {
   );
 
   const showTwoStepRegion =
-    isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
+    isGeckoLAEnabled && isDistributedRegionSupported(createType ?? 'OS');
 
-  const onChange = async (region: RegionType) => {
+  const onChange = async (region: null | RegionType) => {
     const values = getValues();
-
-    field.onChange(region.id);
+    field.onChange(region?.id);
 
     if (values.hasSignedEUAgreement) {
       // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
@@ -116,14 +113,14 @@ export const Region = React.memo(() => {
 
     if (
       values.metadata?.user_data &&
-      !region.capabilities.includes('Metadata')
+      !region?.capabilities.includes('Metadata')
     ) {
       // Clear metadata only if the new region does not support it
       setValue('metadata.user_data', null);
     }
 
     // Handle maintenance policy based on region capabilities
-    if (region.capabilities.includes('Maintenance Policy')) {
+    if (region?.capabilities.includes('Maintenance Policy')) {
       // If the region supports maintenance policy, set it to the default value
       // or keep the current value if it's already set
       if (!values.maintenance_policy) {
@@ -142,20 +139,20 @@ export const Region = React.memo(() => {
     // Because distributed regions do not support some features,
     // we must disable those features here. Keep in mind, we should
     // prevent the user from enabling these features in their respective components.
-    if (region.site_type === 'distributed') {
+    if (region?.site_type === 'distributed') {
       setValue('backups_enabled', false);
       setValue('private_ip', false);
     }
 
     if (isDiskEncryptionFeatureEnabled) {
-      if (region.site_type === 'distributed') {
+      if (region?.site_type === 'distributed') {
         // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
         const defaultDiskEncryptionValue =
-          region.capabilities.includes('Disk Encryption') ||
-          region.capabilities.includes('LA Disk Encryption')
+          region?.capabilities.includes('Disk Encryption') ||
+          region?.capabilities.includes('LA Disk Encryption')
             ? 'enabled'
             : undefined;
 
@@ -163,11 +160,11 @@ export const Region = React.memo(() => {
       }
     }
 
-    if (!isLabelFieldDirty) {
+    if (!isLabelFieldDirty && region) {
       // Auto-generate the Linode label because the region is included in the generated label
       const label = await getGeneratedLinodeLabel({
         queryClient,
-        tab: params.type ?? 'OS',
+        tab: createType ?? 'OS',
         values: { ...values, region: region.id },
       });
 
@@ -176,17 +173,17 @@ export const Region = React.memo(() => {
 
     // Begin tracking the Linode Create form.
     sendLinodeCreateFormStartEvent({
-      createType: params.type ?? 'OS',
+      createType: createType ?? 'OS',
     });
   };
 
   const showCrossDataCenterCloneWarning =
-    params.type === 'Clone Linode' &&
+    createType === 'Clone Linode' &&
     selectedLinode &&
     selectedLinode.region !== field.value;
 
   const showClonePriceWarning =
-    params.type === 'Clone Linode' &&
+    createType === 'Clone Linode' &&
     isLinodeTypeDifferentPriceInSelectedRegion({
       regionA: selectedLinode?.region,
       regionB: field.value,
@@ -194,8 +191,7 @@ export const Region = React.memo(() => {
     });
 
   const hideDistributedRegions =
-    !flags.gecko2?.enabled ||
-    !isDistributedRegionSupported(params.type ?? 'OS');
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(createType ?? 'OS');
 
   const disabledRegions = getDisabledRegions({
     regions: regions ?? [],
@@ -211,9 +207,7 @@ export const Region = React.memo(() => {
         onChange={onChange}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
+          hideDistributedRegions && createType !== 'Images' ? 'core' : undefined
         }
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}
@@ -230,7 +224,7 @@ export const Region = React.memo(() => {
           label={DOCS_LINK_LABEL_DC_PRICING}
           onClick={() =>
             sendLinodeCreateFormInputEvent({
-              createType: params.type ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Region',
               interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
@@ -257,9 +251,7 @@ export const Region = React.memo(() => {
         onChange={(e, region) => onChange(region)}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
+          hideDistributedRegions && createType !== 'Images' ? 'core' : undefined
         }
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}

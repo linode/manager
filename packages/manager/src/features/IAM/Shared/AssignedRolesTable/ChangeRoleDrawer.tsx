@@ -24,6 +24,8 @@ import {
   getAllRoles,
   getErrorMessage,
   getRoleByName,
+  isAccountRole,
+  isEntityRole,
 } from '../utilities';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
@@ -63,11 +65,29 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
     if (!accountRoles) {
       return [];
     }
-
-    return getAllRoles(accountRoles).filter(
-      (el) => el.entity_type === role?.entity_type && el.access === role?.access
-    );
-  }, [accountRoles, role]);
+    return getAllRoles(accountRoles).filter((el) => {
+      const matchesRoleContext =
+        el.entity_type === role?.entity_type &&
+        el.access === role?.access &&
+        el.value !== role?.name;
+      // Exclude account roles already assigned to the user
+      if (isAccountRole(el)) {
+        return (
+          !assignedRoles?.account_access.includes(el.value) &&
+          matchesRoleContext
+        );
+      }
+      // Exclude entity roles already assigned to the user
+      if (isEntityRole(el)) {
+        return (
+          !assignedRoles?.entity_access.some((entity) =>
+            entity.roles.includes(el.value)
+          ) && matchesRoleContext
+        );
+      }
+      return true;
+    });
+  }, [accountRoles, assignedRoles, role]);
 
   const {
     control,

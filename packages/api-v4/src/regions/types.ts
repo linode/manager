@@ -25,6 +25,7 @@ export type Capabilities =
   | 'Premium Plans'
   | 'StackScripts'
   | 'Vlans'
+  | 'VPC Dual Stack'
   | 'VPCs';
 
 export interface MonitoringCapabilities {
@@ -65,6 +66,12 @@ export interface Region {
 export interface RegionAvailability {
   available: boolean;
   plan: string;
+  region: string;
+}
+
+export interface RegionVPCAvailability {
+  available: boolean; // True if Region has VPC capabilities
+  available_ipv6_prefix_lengths: number[];
   region: string;
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { engineTypeMap } from '../constants';
+import { AlertsEndpointFilter } from './AlertsEndpointFilter';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsTagFilter } from './AlertsTagsFilter';
@@ -13,7 +14,7 @@ import type {
   ServiceColumns,
   ServiceFilterConfig,
 } from './types';
-import type { AlertServiceType, DatabaseTypeClass } from '@linode/api-v4';
+import type { CloudPulseServiceType, DatabaseTypeClass } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
@@ -86,12 +87,29 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'tags',
     },
   ],
+  objectstorage: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+    {
+      accessor: ({ endpoint }) => endpoint,
+      label: 'Endpoint',
+      sortingKey: 'endpoint',
+    },
+  ],
 };
 
-export const serviceToFiltersMap: Record<
-  '' | AlertServiceType,
-  ServiceFilterConfig[]
-> = {
+export const serviceToFiltersMap: Partial<
+  Record<Partial<CloudPulseServiceType>, ServiceFilterConfig[]>
+> &
+  Record<'', ServiceFilterConfig[]> = {
   '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // Default to only region for better user experience in create alert flow
   dbaas: [
     { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
@@ -103,16 +121,22 @@ export const serviceToFiltersMap: Record<
     { component: AlertsRegionFilter, filterKey: 'region' },
     { component: AlertsTagFilter, filterKey: 'tags' },
   ],
+  objectstorage: [
+    { component: AlertsRegionFilter, filterKey: 'region' },
+    { component: AlertsEndpointFilter, filterKey: 'endpoint' },
+  ],
 };
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.
   'tags',
+  'endpoint',
 ];
 
 export const alertAdditionalFilterKeyMap: Record<
   AlertAdditionalFilterKey,
   keyof AlertInstance
 > = {
+  endpoint: 'endpoint',
   engineType: 'engineType', // engineType filter selected here, will map to engineType property on AlertInstance
   tags: 'tags',
 };
@@ -125,7 +149,7 @@ export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
 };
 
 export const getSearchPlaceholderText = (
-  serviceType: AlertServiceType | undefined
+  serviceType: CloudPulseServiceType | undefined
 ): string => {
   const filters = serviceToFiltersMap[serviceType ?? ''] ?? [];
 

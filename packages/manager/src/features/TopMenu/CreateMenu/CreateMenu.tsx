@@ -18,6 +18,7 @@ import {
 import { ProductFamilyGroup } from './ProductFamilyGroup';
 
 import type { Theme } from '@mui/material';
+import type { LinkProps } from '@tanstack/react-router';
 import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
 import type { ProductFamilyLinkGroup } from 'src/components/PrimaryNav/PrimaryNav';
 
@@ -38,6 +39,7 @@ export type CreateEntity =
 
 export interface CreateMenuLink extends BaseNavLink {
   description?: string;
+  search?: LinkProps['search'];
 }
 
 export const CreateMenu = () => {
@@ -66,29 +68,30 @@ export const CreateMenu = () => {
         {
           description: 'High performance SSD Linux servers',
           display: 'Linode',
-          href: '/linodes/create',
+          to: '/linodes/create',
         },
         {
           description: 'Capture or upload Linux images',
           display: 'Image',
-          href: '/images/create',
+          to: '/images/create',
         },
         {
           description: 'Highly available container workloads',
           display: 'Kubernetes',
-          href: '/kubernetes/create',
+          to: '/kubernetes/create',
         },
         {
           description: "Control your Linodes' physical placement",
           display: 'Placement Group',
           hide: !isPlacementGroupsEnabled,
-          href: '/placement-groups?action=create',
+          to: '/placement-groups',
+          search: { action: 'create' },
         },
         {
           attr: { 'data-qa-one-click-add-new': true },
           description: 'Deploy applications with ease',
           display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
+          to: '/linodes/create/marketplace',
         },
       ],
       name: 'Compute',
@@ -99,22 +102,22 @@ export const CreateMenu = () => {
         {
           description: 'Create a private and isolated network',
           display: 'VPC',
-          href: '/vpcs/create',
+          to: '/vpcs/create',
         },
         {
           description: 'Control network access to your Linodes',
           display: 'Firewall',
-          href: '/firewalls/create',
+          to: '/firewalls/create',
         },
         {
           description: 'Ensure your services are highly available',
           display: 'NodeBalancer',
-          href: '/nodebalancers/create',
+          to: '/nodebalancers/create',
         },
         {
           description: 'Manage your DNS records',
           display: 'Domain',
-          href: '/domains/create',
+          to: '/domains/create',
         },
       ],
       name: 'Networking',
@@ -125,12 +128,12 @@ export const CreateMenu = () => {
         {
           description: 'S3-compatible object storage',
           display: 'Bucket',
-          href: '/object-storage/buckets/create',
+          to: '/object-storage/buckets/create',
         },
         {
           description: 'Attach additional storage to your Linode',
           display: 'Volume',
-          href: '/volumes/create',
+          to: '/volumes/create',
         },
       ],
       name: 'Storage',
@@ -142,7 +145,7 @@ export const CreateMenu = () => {
           description: 'High-performance managed database clusters',
           display: 'Database',
           hide: !isDatabasesEnabled,
-          href: '/databases/create',
+          to: '/databases/create',
         },
       ],
       name: 'Databases',

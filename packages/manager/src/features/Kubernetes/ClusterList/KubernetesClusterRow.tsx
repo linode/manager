@@ -8,13 +8,15 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import {
+  useAllKubernetesNodePoolQuery,
+  useKubernetesTieredVersionsQuery,
+} from 'src/queries/kubernetes';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import {
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
-  useLkeStandardOrEnterpriseVersions,
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
 import { ClusterChips } from './ClusterChips';
@@ -41,8 +43,8 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const region = regions?.find((r) => r.id === cluster.region);
 
-  const { versions } = useLkeStandardOrEnterpriseVersions(
-    cluster.tier ?? 'standard' // TODO LKE: remove fallback once LKE-E is in GA and tier is required
+  const { data: versions } = useKubernetesTieredVersionsQuery(
+    cluster?.tier ?? 'standard'
   );
 
   const isLKEClusterReadOnly = useIsResourceRestricted({
@@ -73,7 +75,7 @@ export const KubernetesClusterRow = (props: Props) => {
           justifyContent="space-between"
           spacing={1}
         >
-          <Link tabIndex={0} to={`/kubernetes/clusters/${cluster.id}/summary`}>
+          <Link to={`/kubernetes/clusters/${cluster.id}/summary`}>
             {cluster.label}
           </Link>
           <ClusterChips cluster={cluster} />

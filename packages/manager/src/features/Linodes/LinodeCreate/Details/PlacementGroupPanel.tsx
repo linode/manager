@@ -4,7 +4,7 @@ import { useController, useWatch } from 'react-hook-form';
 import { PlacementGroupsDetailPanel } from 'src/features/PlacementGroups/PlacementGroupsDetailPanel';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
-import { useLinodeCreateQueryParams } from '../utilities';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
@@ -16,10 +16,10 @@ export const PlacementGroupPanel = () => {
 
   const regionId = useWatch<CreateLinodeRequest>({ name: 'region' });
 
-  const { params } = useLinodeCreateQueryParams();
+  const createType = useGetLinodeCreateType();
 
   const placementGroupFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: params.type ?? 'OS',
+    createType: createType ?? 'OS',
     headerName: 'Details',
     interaction: 'change',
     label: 'Placement Group',

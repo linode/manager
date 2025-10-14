@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -13,7 +14,6 @@ import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
   getDoesEmployeeNeedToAssignFirewall,
   getLinodeCreatePayload,
-  useLinodeCreateQueryParams,
 } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
@@ -23,12 +23,11 @@ interface ActionProps {
 }
 
 export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
-  const { params } = useLinodeCreateQueryParams();
-
+  const createType = useGetLinodeCreateType();
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const { formState, getValues, trigger, control } =
     useFormContext<LinodeCreateFormValues>();
@@ -44,13 +43,17 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
       ],
     });
 
-  const { permissions } = usePermissions('linode', ['clone_linode'], linodeId);
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['clone_linode'],
+    linodeId
+  );
 
-  const { permissions: accountPermissions } = usePermissions('account', [
+  const { data: accountPermissions } = usePermissions('account', [
     'create_linode',
   ]);
 
-  const isCloneMode = params.type === 'Clone Linode';
+  const isCloneMode = createType === 'Clone Linode';
   const isDisabled = isCloneMode
     ? !permissions.clone_linode
     : !accountPermissions.create_linode;
@@ -66,7 +69,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
     sendLinodeCreateFormInputEvent({
-      createType: params.type ?? 'OS',
+      createType: createType ?? 'OS',
       interaction: 'click',
       label: 'View Code Snippets',
     });
@@ -96,7 +99,7 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-          isAclpIntegration: aclpBetaServices?.linode?.alerts,
+          isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
           isAclpAlertsPreferenceBeta: isAlertsBetaMode,
         })}
       />

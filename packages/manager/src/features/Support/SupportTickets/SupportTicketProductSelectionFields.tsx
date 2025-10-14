@@ -11,7 +11,6 @@ import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
@@ -71,14 +70,12 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: nodebalancersLoading,
   } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: clustersError,
     isLoading: clustersLoading,
   } = useAllKubernetesClustersQuery({
     enabled: entityType === 'lkecluster_id',
-    isUsingBetaEndpoint,
   });
 
   const {

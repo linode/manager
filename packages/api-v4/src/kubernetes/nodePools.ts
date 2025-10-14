@@ -1,7 +1,4 @@
-import {
-  nodePoolBetaSchema,
-  nodePoolSchema,
-} from '@linode/validation/lib/kubernetes.schema';
+import { CreateNodePoolSchema, EditNodePoolSchema } from '@linode/validation';
 
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
@@ -15,11 +12,8 @@ import Request, {
 import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateNodePoolData,
-  CreateNodePoolDataBeta,
   KubeNodePoolResponse,
-  KubeNodePoolResponseBeta,
   UpdateNodePoolData,
-  UpdateNodePoolDataBeta,
 } from './types';
 
 /**
@@ -36,7 +30,9 @@ export const getNodePools = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`),
+    setURL(
+      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`,
+    ),
   );
 
 /**
@@ -46,21 +42,6 @@ export const getNodePools = (
  */
 export const getNodePool = (clusterID: number, nodePoolID: number) =>
   Request<KubeNodePoolResponse>(
-    setMethod('GET'),
-    setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID,
-      )}/pools/${encodeURIComponent(nodePoolID)}`,
-    ),
-  );
-
-/**
- * getNodePoolBeta
- *
- * Returns a single node pool with additional beta fields
- */
-export const getNodePoolBeta = (clusterID: number, nodePoolID: number) =>
-  Request<KubeNodePoolResponseBeta>(
     setMethod('GET'),
     setURL(
       `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
@@ -77,25 +58,10 @@ export const getNodePoolBeta = (clusterID: number, nodePoolID: number) =>
 export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
   Request<KubeNodePoolResponse>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`),
-    setData(data, nodePoolSchema),
-  );
-
-/**
- * createNodePool
- *
- * Adds a node pool to the specified cluster with beta fields.
- */
-export const createNodePoolBeta = (
-  clusterID: number,
-  data: CreateNodePoolDataBeta,
-) =>
-  Request<KubeNodePoolResponseBeta>(
-    setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`,
     ),
-    setData(data, nodePoolBetaSchema),
+    setData(data, CreateNodePoolSchema),
   );
 
 /**
@@ -111,31 +77,11 @@ export const updateNodePool = (
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID,
-      )}/pools/${encodeURIComponent(nodePoolID)}`,
-    ),
-    setData(data, nodePoolSchema),
-  );
-
-/**
- * updateNodePoolBeta
- *
- * Change the type, count, upgrade_strategy, or k8_version of a node pool
- */
-export const updateNodePoolBeta = (
-  clusterID: number,
-  nodePoolID: number,
-  data: Partial<UpdateNodePoolDataBeta>,
-) =>
-  Request<KubeNodePoolResponseBeta>(
-    setMethod('PUT'),
-    setURL(
       `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
         clusterID,
       )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
-    setData(data, nodePoolBetaSchema),
+    setData(data, EditNodePoolSchema),
   );
 
 /**

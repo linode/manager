@@ -15,7 +15,6 @@ import Request, {
 import type { Filter, Params, ResourcePage } from '../types';
 import type {
   Alert,
-  AlertServiceType,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   EditAlertDefinitionPayload,
@@ -24,7 +23,7 @@ import type {
 
 export const createAlertDefinition = (
   data: CreateAlertDefinitionPayload,
-  serviceType: AlertServiceType,
+  serviceType: string,
 ) =>
   Request<Alert>(
     setURL(
@@ -133,9 +132,9 @@ export const updateServiceAlerts = (
   entityId: string,
   payload: CloudPulseAlertsPayload,
 ) =>
-  Request<{}>(
+  Request<Alert>(
     setURL(
-      `${API_ROOT}/${serviceType}/instances/${encodeURIComponent(entityId)}`,
+      `${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}/alert-definitions/${encodeURIComponent(entityId)}`,
     ),
     setMethod('PUT'),
     setData(payload),

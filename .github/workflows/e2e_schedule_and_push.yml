@@ -31,19 +31,19 @@ jobs:
       fail-fast: false
       matrix:
         user:
-          - { index: 1, name: 'USER_1' }
-          - { index: 2, name: 'USER_2' }
-          - { index: 3, name: 'USER_3' }
-          - { index: 4, name: 'USER_4' }
+          - { index: 1, name: "USER_1" }
+          - { index: 2, name: "USER_2" }
+          - { index: 3, name: "USER_3" }
+          - { index: 4, name: "USER_4" }
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           run_install: false
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
+          node-version-file: "package.json"
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
@@ -53,13 +53,13 @@ jobs:
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
-          echo "MANAGER_OAUTH=${{ secrets[matrix.user.name] }}" >> ./packages/manager/.env
+          echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}" >> ./packages/manager/.env
           echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}" >> ./packages/manager/.env
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
       - name: Run tests
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@b8ba51a856ba5f4c15cf39007636d4ab04f23e3c # v6.10.2
         with:
           working-directory: packages/manager
           wait-on: "http://localhost:3000"

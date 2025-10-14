@@ -5,7 +5,6 @@ import React from 'react';
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -23,11 +22,12 @@ const mockEntities = [
 ];
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
+  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -43,7 +43,7 @@ vi.mock('src/queries/entities/entities', async () => {
   const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -56,6 +56,14 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 describe('UserEntities', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -63,6 +71,11 @@ describe('UserEntities', () => {
     });
     queryMocks.useSearch.mockReturnValue({
       selectedRole: '',
+    });
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: true,
+      },
     });
   });
 
@@ -107,14 +120,13 @@ describe('UserEntities', () => {
       data: accountRolesFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<UserEntities />);
 
     expect(screen.queryByText('Assign New Roles')).toBeNull();
-
     expect(screen.getByText('firewall_admin')).toBeVisible();
     expect(screen.getByText('firewall-1')).toBeVisible();
 
@@ -138,5 +150,18 @@ describe('UserEntities', () => {
 
     renderWithTheme(<UserEntities />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
+  });
+
+  it('should not render if user does not have permissions', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: false,
+      },
+    });
+
+    renderWithTheme(<UserEntities />);
+    expect(screen.queryByText('This list is empty')).toBeNull();
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
+    expect(screen.queryByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeNull();
   });
 });

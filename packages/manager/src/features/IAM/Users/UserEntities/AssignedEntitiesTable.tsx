@@ -18,8 +18,9 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useAccountEntities } from 'src/queries/entities/entities';
+import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -48,6 +49,7 @@ export const AssignedEntitiesTable = () => {
     from: '/iam/users/$username',
   });
   const theme = useTheme();
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
     strict: false,
@@ -88,7 +90,7 @@ export const AssignedEntitiesTable = () => {
     data: entities,
     error: entitiesError,
     isLoading: entitiesLoading,
-  } = useAccountEntities();
+  } = useAllAccountEntities({});
 
   const {
     data: assignedRoles,
@@ -100,7 +102,7 @@ export const AssignedEntitiesTable = () => {
     if (!assignedRoles || !entities) {
       return { filterableOptions: [], roles: [] };
     }
-    const transformedEntities = groupAccountEntitiesByType(entities.data);
+    const transformedEntities = groupAccountEntitiesByType(entities);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
@@ -123,6 +125,16 @@ export const AssignedEntitiesTable = () => {
   const handleRemoveAssignment = (role: EntitiesRole) => {
     setIsRemoveAssignmentDialogOpen(true);
     setSelectedRole(role);
+  };
+
+  const handleRemoveAssignmentDialogClose = () => {
+    setIsRemoveAssignmentDialogOpen(false);
+    // If we just deleted the last one on a page, reset to the first page.
+    const removedLastOnPage =
+      filteredAndSortedRoles.length % pagination.pageSize === 1;
+    if (removedLastOnPage) {
+      pagination.handlePageChange(1);
+    }
   };
 
   const filteredRoles = getFilteredRoles({
@@ -174,16 +186,24 @@ export const AssignedEntitiesTable = () => {
             .map((el: EntitiesRole) => {
               const actions: Action[] = [
                 {
+                  disabled: !permissions?.is_account_admin,
                   onClick: () => {
                     handleChangeRole(el, 'change-role-for-entity');
                   },
                   title: 'Change Role ',
+                  tooltip: !permissions?.is_account_admin
+                    ? 'You do not have permission to change this role.'
+                    : undefined,
                 },
                 {
+                  disabled: !permissions?.is_account_admin,
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
                   title: 'Remove Assignment',
+                  tooltip: !permissions?.is_account_admin
+                    ? 'You do not have permission to remove this assignment.'
+                    : undefined,
                 },
               ];
 
@@ -303,7 +323,7 @@ export const AssignedEntitiesTable = () => {
         role={selectedRole}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
+        onClose={() => handleRemoveAssignmentDialogClose()}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />

@@ -8,17 +8,18 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 export const IAMRoute = () => {
-  const { isIAMEnabled } = useIsIAMEnabled();
-
-  if (!isIAMEnabled) {
-    return <NotFound />;
-  }
-
+  const { isIAMEnabled, isLoading } = useIsIAMEnabled();
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Identity and Access" />
       <ProductInformationBanner bannerLocation="Identity and Access" />
-      <Outlet />
+      {isLoading ? (
+        <SuspenseLoader />
+      ) : isIAMEnabled ? (
+        <Outlet />
+      ) : (
+        <NotFound />
+      )}
     </React.Suspense>
   );
 };

@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { DateTime } from 'luxon';
 
-import { isDiskDevice } from '../LinodesDetail/LinodeConfigs/ConfigRow';
+import { isDiskDevice } from '../LinodesDetail/LinodeConfigs/utilities';
 
 import type { Config, Devices, Disk } from '@linode/api-v4/lib/linodes';
 import type { APIError } from '@linode/api-v4/lib/types';

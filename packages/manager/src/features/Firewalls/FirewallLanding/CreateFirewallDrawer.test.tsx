@@ -10,7 +10,7 @@ import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: { create_firewall: true },
+    data: { create_firewall: true },
   })),
   useQueryWithPermissions: vi.fn().mockReturnValue({
     data: [],
@@ -84,7 +84,7 @@ describe('Create Firewall Drawer', () => {
       capabilities: ['Linode Interfaces'],
     });
 
-    server.use(http.get('*/v4/account', () => HttpResponse.json(account)));
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
     const { getByLabelText, findByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />,
@@ -120,7 +120,7 @@ describe('Create Firewall Drawer', () => {
 
   it('enables the submit button if the user has create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { create_firewall: true },
+      data: { create_firewall: true },
     });
 
     renderWithTheme(<CreateFirewallDrawer {...props} />);
@@ -130,7 +130,7 @@ describe('Create Firewall Drawer', () => {
 
   it('disables the submit button if the user does not have create_firewall permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: { create_firewall: false },
+      data: { create_firewall: false },
     });
 
     renderWithTheme(<CreateFirewallDrawer {...props} />);

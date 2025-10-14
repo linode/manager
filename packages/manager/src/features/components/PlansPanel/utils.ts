@@ -263,7 +263,7 @@ export const planTabInfoContent = {
     key: 'premium',
     title: 'Premium CPU',
     typography:
-      'Premium CPU instances guarantee a minimum processor generation of AMD EPYC\u2122 Milan or newer to ensure consistent high performance for more demanding workloads.',
+      'Run high-performance, latency-sensitive workloads on dedicated AMD EPYC\u2122 CPUs.',
   },
   prodedicated: {
     dataId: 'data-qa-prodedi',

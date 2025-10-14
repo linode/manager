@@ -1,4 +1,9 @@
-import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
+import {
+  useAllTypes,
+  useImageQuery,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -28,6 +33,8 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
 
   const { control } = useFormContext<LinodeCreateFormValues>();
 
+  const { data: types } = useAllTypes();
+
   const [
     label,
     regionId,
@@ -40,7 +47,8 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     vlanLabel,
     vpcId,
     diskEncryption,
-    clusterSize,
+    stackscriptData,
+    clusterName,
     linodeInterfaces,
     interfaceGeneration,
     alerts,
@@ -58,7 +66,8 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       'interfaces.1.label',
       'interfaces.0.vpc_id',
       'disk_encryption',
-      'stackscript_data.cluster_size',
+      'stackscript_data',
+      'stackscript_data.cluster_name',
       'linodeInterfaces',
       'interface_generation',
       'alerts',
@@ -69,7 +78,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
@@ -83,7 +92,12 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
-  const price = getLinodePrice({ clusterSize, regionId, type });
+  const price = getLinodePrice({
+    regionId,
+    types,
+    stackscriptData,
+    type,
+  });
 
   const hasVPC = isLinodeInterfacesEnabled
     ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
@@ -99,16 +113,16 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
       : firewallId;
 
   const hasBetaAclpAlertsAssigned =
-    aclpBetaServices?.linode?.alerts &&
+    aclpServices?.linode?.alerts?.enabled &&
     isAclpAlertsSupportedRegionLinode &&
     isAlertsBetaMode;
 
   const totalBetaAclpAlertsAssignedCount =
-    (alerts?.system?.length ?? 0) + (alerts?.user?.length ?? 0);
+    (alerts?.system_alerts?.length ?? 0) + (alerts?.user_alerts?.length ?? 0);
 
   const betaAclpAlertsAssignedList = [
-    ...(alerts?.system ?? []),
-    ...(alerts?.user ?? []),
+    ...(alerts?.system_alerts ?? []),
+    ...(alerts?.user_alerts ?? []),
   ].join(', ');
 
   const betaAclpAlertsAssignedDetails =
@@ -137,8 +151,8 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
     },
     {
       item: {
+        title: clusterName || (type ? formatStorageUnits(type.label) : typeId),
         details: price,
-        title: type ? formatStorageUnits(type.label) : typeId,
       },
       show: price,
     },

@@ -70,25 +70,12 @@ mockQuery.useServiceAlertsMutation.mockReturnValue({
   mutateAsync: vi.fn(),
 });
 
-const mockHistory = {
-  push: vi.fn(),
-  replace: vi.fn(),
-};
-
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
-
 describe('Alert Resuable Component for contextual view', () => {
   it('Should go to alerts definition page on clicking manage alerts button', async () => {
-    const { getByTestId } = renderWithTheme(component);
+    const { getByTestId, router } = renderWithTheme(component);
     await userEvent.click(getByTestId('manage-alerts'));
 
-    expect(mockHistory.push).toHaveBeenCalledWith('/alerts/definitions');
+    expect(router.state.location.pathname).toBe('/alerts/definitions');
   });
 
   it('Should filter alerts based on search text', async () => {
@@ -127,7 +114,10 @@ describe('Alert Resuable Component for contextual view', () => {
   });
 
   it('Should show header for edit mode', async () => {
-    renderWithTheme(component);
+    renderWithTheme(component, {
+      initialEntries: ['/alerts/definitions'],
+      initialRoute: '/alerts/definitions',
+    });
     await userEvent.click(screen.getByText('Manage Alerts'));
     expect(screen.getByText('Alerts')).toBeVisible();
   });

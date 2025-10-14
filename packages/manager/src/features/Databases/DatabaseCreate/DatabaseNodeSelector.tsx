@@ -31,6 +31,7 @@ export interface NodePricing {
 interface Props {
   currentClusterSize?: ClusterSize | undefined;
   currentPlan?: PlanSelectionWithDatabaseType | undefined;
+  disabled?: boolean;
   displayTypes: PlanSelectionType[];
   error?: string;
   handleNodeChange: (value: ClusterSize) => void;
@@ -44,6 +45,7 @@ export const DatabaseNodeSelector = (props: Props) => {
   const {
     currentClusterSize,
     currentPlan,
+    disabled,
     displayTypes,
     error,
     handleNodeChange,
@@ -79,6 +81,8 @@ export const DatabaseNodeSelector = (props: Props) => {
       (type) => type.class === 'dedicated'
     );
 
+    const hasPremium = displayTypes.some((type) => type.class === 'premium');
+
     const currentChip = currentClusterSize && initialTab === selectedTab && (
       <StyledChip
         aria-label="This is your current number of nodes"
@@ -104,7 +108,12 @@ export const DatabaseNodeSelector = (props: Props) => {
       },
     ];
 
-    if (hasDedicated && selectedTab === 0) {
+    const isDedicated = hasDedicated && selectedTab === 0;
+    const isPremium = hasPremium && selectedTab === 2;
+
+    const displayTwoNodesOption = isDedicated || isPremium;
+
+    if (displayTwoNodesOption) {
       options.push({
         label: (
           <Typography component="div">
@@ -157,14 +166,14 @@ export const DatabaseNodeSelector = (props: Props) => {
         upgrades and maintenance.
       </Typography>
       <FormControl
-        disabled={isRestricted}
+        disabled={isRestricted || disabled}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           handleNodeChange(+e.target.value as ClusterSize);
         }}
       >
         {error ? <Notice text={error} variant="error" /> : null}
         <RadioGroup
-          aria-disabled={isRestricted}
+          aria-disabled={isRestricted || disabled}
           data-testid="database-nodes"
           style={{ marginBottom: 0, marginTop: 0 }}
           value={selectedClusterSize ?? ''}

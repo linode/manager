@@ -18,7 +18,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
@@ -177,5 +177,51 @@ describe('ChangeRoleDrawer', () => {
         ],
       });
     });
+  });
+
+  it('should not list the current role in the autocomplete options', async () => {
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
+    });
+
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+
+    const autocomplete = screen.getByRole('combobox');
+
+    await userEvent.click(autocomplete);
+
+    // expect select not to have the current role as one of the options
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).not.toContain(
+      mockAccountAccessRole.name
+    );
+  });
+
+  it('should not list roles that the user already has', async () => {
+    queryMocks.useUserRoles.mockReturnValue({
+      data: {
+        account_access: ['account_linode_admin', 'account_viewer'],
+        entity_access: [],
+      },
+    });
+
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
+    });
+
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+
+    const autocomplete = screen.getByRole('combobox');
+
+    await userEvent.click(autocomplete);
+
+    // expect select not to have the current role as one of the options
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).not.toContain(
+      'account_linode_admin'
+    );
+    expect(options.map((option) => option.textContent)).not.toContain(
+      'account_viewer'
+    );
   });
 });

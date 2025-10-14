@@ -25,11 +25,13 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import { SUBNET_ACTION_PATH } from '../constants';
 import { VPC_DETAILS_ROUTE } from '../constants';
@@ -86,7 +88,14 @@ export const VPCSubnetsTable = (props: Props) => {
   });
   const { query } = search;
 
-  const flags = useIsNodebalancerVPCEnabled();
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+  const { isDualStackEnabled } = useVPCDualStack();
+
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['create_vpc_subnet'],
+    vpcId
+  );
 
   const pagination = usePaginationV2({
     currentRoute: VPC_DETAILS_ROUTE,
@@ -291,11 +300,14 @@ export const VPCSubnetsTable = (props: Props) => {
           Subnet ID
         </TableSortCell>
       </Hidden>
-      <TableCell sx={{ width: '18%' }}>Subnet IP Range</TableCell>
+      <TableCell sx={{ width: '18%' }}>
+        Subnet {isDualStackEnabled ? 'IPv4' : 'IP'} Range
+      </TableCell>
+      {isDualStackEnabled && <TableCell>Subnet IPv6 Range</TableCell>}
       <Hidden smDown>
         <TableCell
           sx={{ width: '10%' }}
-        >{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
+        >{`${isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
       </Hidden>
       <TableCell />
     </TableRow>
@@ -309,9 +321,12 @@ export const VPCSubnetsTable = (props: Props) => {
             <TableCell>{subnet.id}</TableCell>
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
+          {isDualStackEnabled && (
+            <TableCell>{subnet.ipv6?.[0]?.range ?? '—'}</TableCell>
+          )}
           <Hidden smDown>
             <TableCell>
-              {`${flags.isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
+              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
             </TableCell>
           </Hidden>
           <TableCell actionCell>
@@ -320,7 +335,6 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
-              isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
               numNodebalancers={subnet.nodebalancers.length}
               subnet={subnet}
@@ -338,7 +352,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 color: theme.tokens.color.Neutrals.White,
               }}
             >
-              {SubnetLinodeTableRowHead}
+              {SubnetLinodeTableRowHead(isDualStackEnabled)}
             </TableHead>
             <TableBody>
               {subnet.linodes.length > 0 ? (
@@ -355,31 +369,33 @@ export const VPCSubnetsTable = (props: Props) => {
                   />
                 ))
               ) : (
-                <TableRowEmpty colSpan={6} message="No Linodes" />
+                <TableRowEmpty
+                  colSpan={isDualStackEnabled ? 8 : 6}
+                  message="No Linodes"
+                />
               )}
             </TableBody>
           </Table>
-          {flags.isNodebalancerVPCEnabled &&
-            subnet.nodebalancers?.length > 0 && (
-              <Table aria-label="NodeBalancers" size="small" striped={false}>
-                <TableHead
-                  style={{
-                    color: theme.tokens.color.Neutrals.White,
-                  }}
-                >
-                  {SubnetNodebalancerTableRowHead}
-                </TableHead>
-                <TableBody>
-                  {subnet.nodebalancers.map((nb) => (
-                    <SubnetNodeBalancerRow
-                      ipv4={nb.ipv4_range}
-                      key={nb.id}
-                      nodeBalancerId={nb.id}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            )}
+          {isNodebalancerVPCEnabled && subnet.nodebalancers?.length > 0 && (
+            <Table aria-label="NodeBalancers" size="small" striped={false}>
+              <TableHead
+                style={{
+                  color: theme.tokens.color.Neutrals.White,
+                }}
+              >
+                {SubnetNodebalancerTableRowHead}
+              </TableHead>
+              <TableBody>
+                {subnet.nodebalancers.map((nb) => (
+                  <SubnetNodeBalancerRow
+                    ipv4={nb.ipv4_range}
+                    key={nb.id}
+                    nodeBalancerId={nb.id}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </>
       );
 
@@ -387,9 +403,7 @@ export const VPCSubnetsTable = (props: Props) => {
         InnerTable,
         OuterTableCells,
         id: subnet.id,
-        label: `${subnet.label}${
-          isVPCLKEEnterpriseCluster ? ' (Managed)' : ''
-        }`,
+        label: subnet.label,
       };
     });
   };
@@ -415,11 +429,16 @@ export const VPCSubnetsTable = (props: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={isVPCLKEEnterpriseCluster}
+          disabled={!permissions.create_vpc_subnet}
           onClick={handleSubnetCreate}
           sx={{
             marginBottom: theme.spacingFunction(16),
           }}
+          tooltipText={
+            !permissions.create_vpc_subnet
+              ? 'You do not have permission to create a VPC subnet.'
+              : undefined
+          }
         >
           Create Subnet
         </Button>

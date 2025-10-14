@@ -1,9 +1,8 @@
 import { useAccount } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { pluralize, useInterval } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import React, { useEffect } from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
@@ -31,14 +30,14 @@ export const SessionExpirationDialog = React.memo(
       seconds: 0,
     });
     const [logoutLoading, setLogoutLoading] = React.useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { data: account } = useAccount();
     const euuid = account?.euuid ?? '';
 
     const {
       createToken,
-      createTokenError,
-      createTokenLoading,
+      error: createTokenError,
+      loading: createTokenLoading,
       revokeToken,
       updateCurrentToken,
       validateParentToken,
@@ -82,7 +81,7 @@ export const SessionExpirationDialog = React.memo(
       setLogoutLoading(true);
 
       if (!validateParentToken()) {
-        history.push('/logout');
+        navigate({ to: '/logout' });
       }
 
       await revokeToken().catch(() => {

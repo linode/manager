@@ -2,13 +2,12 @@ import {
   Box,
   CloseIcon,
   IconButton,
+  LinkButton,
   Stack,
-  StyledLinkButton,
   Typography,
 } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import * as React from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
@@ -16,13 +15,12 @@ import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFi
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
-  UPDATE_STRATEGY_OPTIONS,
 } from 'src/features/Kubernetes/constants';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
 import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
-import type { KubeNodePoolResponseBeta, KubernetesTier } from '@linode/api-v4';
+import type { KubernetesTier } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
@@ -50,13 +48,6 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
 
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const { control } = useFormContext();
-  const nodePoolsWatcher: KubeNodePoolResponseBeta[] = useWatch({
-    control,
-    name: 'nodePools',
-  });
-  const thisPool = nodePoolsWatcher[poolIndex];
-
   // This should never happen but TS wants us to account for the situation
   // where we fail to match a selected type against our types list.
   if (poolType === null) {
@@ -74,13 +65,6 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
           <Typography>
             {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
             GB Storage
-          </Typography>
-          <Typography>
-            {isLkeEnterprisePostLAFeatureEnabled && thisPool
-              ? UPDATE_STRATEGY_OPTIONS.find(
-                  (option) => option.value === thisPool?.update_strategy
-                )?.label
-              : ''}
           </Typography>
         </Stack>
         <IconButton
@@ -118,7 +102,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
       </Box>
       {isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool && (
         <StyledLinkButtonBox>
-          <StyledLinkButton
+          <LinkButton
             onClick={() =>
               handleConfigurePool({
                 drawerMode: 'edit',
@@ -129,7 +113,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
             }
           >
             Edit Configuration
-          </StyledLinkButton>
+          </LinkButton>
         </StyledLinkButtonBox>
       )}
     </Stack>

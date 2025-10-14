@@ -12,8 +12,8 @@ import {
 } from 'src/factories/subnets';
 
 import {
+  getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
-  getLinodeInterfaceRanges,
   getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
   getVPCInterfacePayload,
@@ -298,17 +298,20 @@ describe('Linode Interface utility functions', () => {
   });
 
   it('gets the VPC Linode Interface ranges', () => {
-    expect(getLinodeInterfaceRanges(linodeInterfaceFactoryVPC.build())).toEqual(
-      ['10.0.0.1']
-    );
+    expect(
+      getLinodeInterfaceIPv4Ranges(linodeInterfaceFactoryVPC.build())
+    ).toEqual(['10.0.0.1']);
   });
 
   describe('getVPCInterfacePayload', () => {
     const inputs = {
-      autoAssignIPv4: true,
-      chosenIP: '10.0.0.3',
+      allowPublicIPv4Access: true,
+      autoAssignVPCIPv4Address: true,
+      autoAssignVPCIPv6Address: true,
+      chosenIPv4: '10.0.0.3',
+      chosenIPv6: '2600:1401:4000::1726/64',
       firewallId: 1,
-      ipRanges: [],
+      ipv4Ranges: [],
       subnetId: 1,
       vpcId: 1,
     };

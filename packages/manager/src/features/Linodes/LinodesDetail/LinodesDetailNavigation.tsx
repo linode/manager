@@ -29,7 +29,7 @@ const LinodesDetailNavigation = () => {
   const navigate = useNavigate();
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -62,7 +62,8 @@ const LinodesDetailNavigation = () => {
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       chip:
-        aclpBetaServices?.linode?.metrics &&
+        aclpServices?.linode?.metrics?.enabled &&
+        aclpServices?.linode?.metrics?.beta &&
         isAclpMetricsSupportedRegionLinode &&
         isAclpMetricsPreferenceBeta ? (
           <BetaChip />
@@ -95,7 +96,8 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        aclpBetaServices?.linode?.alerts &&
+        aclpServices?.linode?.alerts?.enabled &&
+        aclpServices?.linode?.alerts?.beta &&
         isAclpAlertsSupportedRegionLinode &&
         isAclpAlertsBetaEditFlow ? (
           <BetaChip />
@@ -110,7 +112,11 @@ const LinodesDetailNavigation = () => {
   ]);
 
   if (location.pathname === `/linodes/${linodeId}`) {
-    navigate({ to: '/linodes/$linodeId/metrics', params: { linodeId } });
+    navigate({
+      to: '/linodes/$linodeId/metrics',
+      params: { linodeId },
+      replace: true,
+    });
   }
 
   if (error) {

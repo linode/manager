@@ -10,7 +10,7 @@ import LinodeAlerts from './LinodeAlerts';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
     },
   })),
@@ -56,7 +56,7 @@ describe('LinodeAlerts', () => {
 
   it('should enable "Save" button if the user has update_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_linode: true,
       },
     });

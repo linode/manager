@@ -13,7 +13,7 @@ const meta: Meta<typeof TimePicker> = {
     format: {
       control: 'select',
       description: 'Format in which time should be displayed.',
-      options: ['HH:mm', 'hh:mm a'], // 24-hour & 12-hour formats
+      options: ['HH:mm', 'hh:mm a', 'hh:mm:ss'], // 24-hour & 12-hour formats
     },
     label: {
       control: 'text',
@@ -46,7 +46,7 @@ The **TimePicker** component provides an easy way to input time values using MUI
       },
     },
   },
-  title: 'Components/DatePicker/TimePickerV2',
+  title: 'Components/DatePicker/TimePicker',
 };
 
 export default meta;

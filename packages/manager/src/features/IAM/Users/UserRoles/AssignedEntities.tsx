@@ -1,8 +1,9 @@
 import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
-import { debounce, useTheme } from '@mui/material';
+import { sortByString } from '@linode/utilities';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
+import { TruncatedList } from '../../Shared/TruncatedList';
 
 import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';
@@ -20,26 +21,6 @@ export const AssignedEntities = ({
 }: Props) => {
   const theme = useTheme();
 
-  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
-    useCalculateHiddenItems(role.entity_names!);
-
-  const handleResize = React.useMemo(
-    () => debounce(() => calculateHiddenItems(), 100),
-    [calculateHiddenItems]
-  );
-
-  React.useEffect(() => {
-    // Ensure calculateHiddenItems runs after layout stabilization on initial render
-    const rafId = requestAnimationFrame(() => calculateHiddenItems());
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [calculateHiddenItems, handleResize]);
-
   const combinedEntities: CombinedEntity[] = React.useMemo(
     () =>
       role.entity_names!.map((name, index) => ({
@@ -49,20 +30,27 @@ export const AssignedEntities = ({
     [role.entity_names, role.entity_ids]
   );
 
-  const items = combinedEntities?.map(
-    (entity: CombinedEntity, index: number) => (
-      <div
-        key={entity.id}
-        ref={(el: HTMLDivElement) => {
-          itemRefs.current[index] = el;
-        }}
-        style={{ display: 'inline-block', marginRight: 8 }}
+  const sortedEntities = combinedEntities?.sort((a, b) => {
+    return sortByString(a.name, b.name, 'asc');
+  });
+
+  const items = sortedEntities?.map((entity: CombinedEntity) => (
+    <Box
+      key={entity.id}
+      sx={{
+        display: 'inline',
+        marginRight: theme.tokens.spacing.S8,
+      }}
+    >
+      <Tooltip
+        placement="top"
+        title={entity.name.length > 30 ? entity.name : null}
       >
         <Chip
           data-testid="entities"
           deleteIcon={<CloseIcon data-testid="CloseIcon" />}
           label={
-            entity.name.length > 20
+            entity.name.length > 30
               ? `${entity.name.slice(0, 20)}...`
               : entity.name
           }
@@ -76,59 +64,57 @@ export const AssignedEntities = ({
             '& .MuiChip-deleteIcon': {
               color: theme.tokens.alias.Content.Text.Primary.Default,
             },
+            position: 'relative',
           }}
         />
-      </div>
-    )
-  );
+      </Tooltip>
+    </Box>
+  ));
 
   return (
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-      }}
-    >
-      <div
-        ref={containerRef}
-        style={{
-          WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 1,
-          display: '-webkit-box',
+    <Box>
+      <TruncatedList
+        addEllipsis
+        customOverflowButton={(numHiddenItems) => (
+          <Box
+            sx={{
+              alignItems: 'center',
+              backgroundColor:
+                theme.name === 'light'
+                  ? theme.tokens.color.Ultramarine[20]
+                  : theme.tokens.color.Neutrals.Black,
+              borderRadius: 1,
+              display: 'flex',
+              height: '20px',
+              maxWidth: 'max-content',
+              padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S8}`,
+              position: 'relative',
+              top: 2,
+            }}
+          >
+            <Tooltip placement="top" title="Click to View All Entities">
+              <Button
+                onClick={() => onButtonClick(role.name as EntityRoleType)}
+                sx={{
+                  color: theme.tokens.alias.Content.Text.Primary.Default,
+                  font: theme.tokens.alias.Typography.Label.Regular.Xs,
+                  padding: 0,
+                }}
+              >
+                +{numHiddenItems}
+              </Button>
+            </Tooltip>
+          </Box>
+        )}
+        justifyOverflowButtonRight
+        listContainerSx={{
+          width: '100%',
           overflow: 'hidden',
+          maxHeight: 24,
         }}
       >
         {items}
-      </div>
-      {numHiddenItems > 0 && (
-        <Box
-          sx={{
-            alignItems: 'center',
-            backgroundColor:
-              theme.name === 'light'
-                ? theme.tokens.color.Ultramarine[20]
-                : theme.tokens.color.Neutrals.Black,
-            borderRadius: 1,
-            display: 'flex',
-            height: '20px',
-            maxWidth: 'max-content',
-            padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S8}`,
-          }}
-        >
-          <Tooltip placement="top" title="Click to View All Entities">
-            <Button
-              onClick={() => onButtonClick(role.name as EntityRoleType)}
-              sx={{
-                color: theme.tokens.alias.Content.Text.Primary.Default,
-                font: theme.tokens.alias.Typography.Label.Regular.Xs,
-                padding: 0,
-              }}
-            >
-              +{numHiddenItems}
-            </Button>
-          </Tooltip>
-        </Box>
-      )}
+      </TruncatedList>
     </Box>
   );
 };

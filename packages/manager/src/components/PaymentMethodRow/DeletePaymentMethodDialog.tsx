@@ -5,6 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
@@ -35,11 +36,16 @@ export const DeletePaymentMethodDialog = React.memo((props: Props) => {
   const { error, loading, onClose, onDelete, open, paymentMethod } = props;
   const { classes } = useStyles();
 
+  const { data: permissions } = usePermissions('account', [
+    'delete_payment_method',
+  ]);
+
   const actions = (
     <ActionsPanel
       primaryButtonProps={{
         label: 'Delete',
         loading,
+        disabled: !permissions?.delete_payment_method,
         onClick: onDelete,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

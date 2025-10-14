@@ -14,33 +14,28 @@ interface Props {
   onDelete: () => void;
   onRename: () => void;
   onResize: () => void;
-  readOnly?: boolean;
 }
 
 export const LinodeDiskActionMenu = (props: Props) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const {
-    disk,
-    linodeId,
-    linodeStatus,
-    onDelete,
-    onRename,
-    onResize,
-    readOnly,
-  } = props;
+  const { disk, linodeId, linodeStatus, onDelete, onRename, onResize } = props;
 
-  const { permissions } = usePermissions(
+  const { data: permissions, isLoading } = usePermissions(
     'linode',
     ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
     linodeId,
     isOpen
   );
 
+  const { data: imagePermissions } = usePermissions('account', [
+    'create_image',
+  ]);
+
   const poweredOnTooltip =
     linodeStatus !== 'offline'
-      ? 'Your Linode must be fully powered down in order to perform this action'
+      ? 'Your Linode must be fully powered down in order to perform this action.'
       : undefined;
 
   const swapTooltip =
@@ -48,20 +43,26 @@ export const LinodeDiskActionMenu = (props: Props) => {
       ? 'You cannot create images from Swap images.'
       : undefined;
 
+  const noPermissionTooltip =
+    'You do not have permission to perform this action.';
+
   const actions: Action[] = [
     {
       disabled: !permissions.update_linode,
       onClick: onRename,
       title: 'Rename',
+      tooltip: !permissions.update_linode ? noPermissionTooltip : undefined,
     },
     {
       disabled: !permissions.resize_linode || linodeStatus !== 'offline',
       onClick: onResize,
       title: 'Resize',
-      tooltip: poweredOnTooltip,
+      tooltip: !permissions.resize_linode
+        ? noPermissionTooltip
+        : poweredOnTooltip,
     },
     {
-      disabled: readOnly || !!swapTooltip,
+      disabled: !imagePermissions.create_image || !!swapTooltip,
       onClick: () =>
         navigate({
           to: `/images/create/disk`,
@@ -71,7 +72,9 @@ export const LinodeDiskActionMenu = (props: Props) => {
           },
         }),
       title: 'Create Disk Image',
-      tooltip: swapTooltip,
+      tooltip: !imagePermissions.create_image
+        ? noPermissionTooltip
+        : swapTooltip,
     },
     {
       disabled: !permissions.clone_linode,
@@ -83,13 +86,16 @@ export const LinodeDiskActionMenu = (props: Props) => {
           },
         });
       },
+      tooltip: !permissions.clone_linode ? noPermissionTooltip : undefined,
       title: 'Clone',
     },
     {
       disabled: !permissions.delete_linode || linodeStatus !== 'offline',
       onClick: onDelete,
       title: 'Delete',
-      tooltip: poweredOnTooltip,
+      tooltip: !permissions.delete_linode
+        ? noPermissionTooltip
+        : poweredOnTooltip,
     },
   ];
 
@@ -97,6 +103,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Disk ${disk.label}`}
+      loading={isLoading}
       onOpen={() => setIsOpen(true)}
     />
   );

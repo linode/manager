@@ -1,8 +1,10 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
+  BetaChip,
   Box,
   Checkbox,
+  FormHelperText,
   Notice,
   TooltipIcon,
   Typography,
@@ -10,6 +12,7 @@ import {
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../constants';
@@ -40,6 +43,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     privateNetworkValues,
   } = props;
 
+  const flags = useFlags();
   const isCreate = mode === 'create';
   const { data: selectedRegion } = useRegionQuery(selectedRegionId);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');
@@ -123,19 +127,24 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
 
   return (
     <>
-      <Typography
+      <Box
         sx={(theme: Theme) => ({
+          display: 'flex',
           marginTop: theme.spacingFunction(20),
           marginBottom: theme.spacingFunction(4),
         })}
-        variant="h3"
       >
-        Assign a VPC
-      </Typography>
+        <Typography variant="h3">Assign a VPC</Typography>
+        {flags.databaseVpcBeta && <BetaChip />}
+      </Box>
 
       <Typography>
         Assign this cluster to an existing VPC.{' '}
-        <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
+        <Link
+          to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
+        >
+          Learn more.
+        </Link>
       </Typography>
       <Box style={{ display: 'flex' }}>
         <Autocomplete
@@ -147,8 +156,8 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
           loading={isLoading}
           noOptionsText="There are no VPCs in the selected region."
           onChange={(e, value) => {
+            onChange('private_network.subnet_id', null); // Always reset subnet selection when VPC changes
             if (!value) {
-              onChange('private_network.subnet_id', null);
               onChange('private_network.public_access', false);
             }
             onConfigurationChange?.(value ?? null);
@@ -201,6 +210,16 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
                 'Adds a public endpoint to the database in addition to the private VPC endpoint.'
               }
             />
+            {errors?.private_network?.public_access && (
+              <FormHelperText
+                className="error-for-scroll"
+                error
+                role="alert"
+                sx={{ marginTop: 0 }}
+              >
+                {errors?.private_network?.public_access}
+              </FormHelperText>
+            )}
           </Box>
         </>
       ) : (

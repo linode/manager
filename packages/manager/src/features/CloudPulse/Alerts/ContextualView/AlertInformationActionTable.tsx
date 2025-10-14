@@ -1,10 +1,10 @@
 import { type Alert, type APIError } from '@linode/api-v4';
 import { Box, Button, TooltipIcon } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-// eslint-disable-next-line no-restricted-imports
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -13,16 +13,25 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
+import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
+import {
+  invalidateAclpAlerts,
+  servicePayloadTransformerMap,
+  useAlertsMutation,
+} from 'src/queries/cloudpulse/useAlertsMutation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
+import { arraysEqual } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import type {
+  CloudPulseAlertsPayload,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -54,10 +63,13 @@ export interface AlertInformationActionTableProps {
 
   /**
    * Called when an alert is toggled on or off.
-   * Only use in create flow.
    * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -67,7 +79,7 @@ export interface AlertInformationActionTableProps {
   /**
    * Service type of the selected entity
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * Flag to determine if confirmation dialog should be displayed
@@ -101,9 +113,13 @@ export interface AlertRowPropsOptions {
 
   /**
    * Callback function to handle alert toggle
-   * Only use in create flow.
+   * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 }
 
 export const AlertInformationActionTable = (
@@ -131,37 +147,58 @@ export const AlertInformationActionTable = (
 
   const isEditMode = !!entityId;
   const isCreateMode = !isEditMode;
+  const payloadAlertType = (alert: Alert) =>
+    alert.type === 'system' ? 'system_alerts' : 'user_alerts';
 
-  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
-    useContextualAlertsState(alerts, entityId);
+  const {
+    enabledAlerts,
+    setEnabledAlerts,
+    hasUnsavedChanges,
+    initialState,
+    resetToInitialState,
+  } = useContextualAlertsState(alerts, entityId);
 
-  const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
-    serviceType,
-    entityId ?? ''
-  );
+  // Mutation to update alerts as per service type
+  const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
-  // To send initial state of alerts through toggle handler function
   React.useEffect(() => {
-    if (onToggleAlert) {
+    // To send initial state of alerts through toggle handler function (For Create Flow)
+    if (!isEditMode && onToggleAlert) {
       onToggleAlert(enabledAlerts);
     }
+
+    return () => {
+      // Cleanup on unmount (For Edit flow)
+      if (isEditMode && onToggleAlert) {
+        onToggleAlert({}, false);
+      }
+    };
   }, []);
 
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
 
+  const queryClient = useQueryClient();
+
   const handleConfirm = React.useCallback(
     (alertIds: CloudPulseAlertsPayload) => {
       setIsLoading(true);
-      updateAlerts({
-        user: alertIds.user,
-        system: alertIds.system,
-      })
+      const payload: CloudPulseAlertsPayload = {
+        user_alerts: alertIds.user_alerts,
+        system_alerts: alertIds.system_alerts,
+      };
+      // call updateAlerts mutation with the transformed payload based on the service type
+      updateAlerts(
+        servicePayloadTransformerMap[serviceType]?.(payload) ?? payload
+      )
         .then(() => {
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
+          // Reset the state to sync with the updated alerts from API
+          resetToInitialState();
+          invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {
@@ -173,18 +210,18 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar]
+    [updateAlerts, enqueueSnackbar, resetToInitialState]
   );
 
   const handleToggleAlert = React.useCallback(
     (alert: Alert) => {
       setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
         const newPayload = {
-          system: [...(prev.system ?? [])],
-          user: [...(prev.user ?? [])],
+          system_alerts: [...(prev.system_alerts ?? [])],
+          user_alerts: [...(prev.user_alerts ?? [])],
         };
 
-        const alertIds = newPayload[alert.type];
+        const alertIds = newPayload[payloadAlertType(alert)];
         const isCurrentlyEnabled = alertIds.includes(alert.id);
 
         if (isCurrentlyEnabled) {
@@ -196,15 +233,19 @@ export const AlertInformationActionTable = (
           alertIds.push(alert.id);
         }
 
-        // Only call onToggleAlert in create flow
+        const hasNewUnsavedChanges =
+          !arraysEqual(newPayload.system_alerts, initialState.system_alerts) ||
+          !arraysEqual(newPayload.user_alerts, initialState.user_alerts);
+
+        // Call onToggleAlert in both create and edit flow
         if (onToggleAlert) {
-          onToggleAlert(newPayload);
+          onToggleAlert(newPayload, hasNewUnsavedChanges);
         }
 
         return newPayload;
       });
     },
-    [onToggleAlert, setEnabledAlerts]
+    [initialState, onToggleAlert, setEnabledAlerts]
   );
 
   const handleCustomPageChange = React.useCallback(
@@ -285,10 +326,9 @@ export const AlertInformationActionTable = (
                           if (!(isEditMode || isCreateMode)) {
                             return null;
                           }
-
-                          const status = enabledAlerts[alert.type]?.includes(
-                            alert.id
-                          );
+                          const status = enabledAlerts[
+                            payloadAlertType(alert)
+                          ]?.includes(alert.id);
 
                           return (
                             <AlertInformationActionRow
@@ -345,12 +385,12 @@ export const AlertInformationActionTable = (
         isOpen={isDialogOpen}
         message={
           <>
-            Are you sure you want to save (Beta) Alerts? <b>Legacy</b> settings
-            will be disabled and replaced by (Beta) Alerts settings.
+            {ALERTS_BETA_PROMPT} <b>Legacy</b> settings will be disabled and
+            replaced by (Beta) Alerts settings.
           </>
         }
         primaryButtonLabel="Confirm"
-        title="Are you sure you want to save (Beta) Alerts? "
+        title={ALERTS_BETA_PROMPT}
       />
     </>
   );

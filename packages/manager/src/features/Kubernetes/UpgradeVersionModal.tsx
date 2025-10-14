@@ -5,14 +5,11 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import {
-  getNextVersion,
-  useKubernetesBetaEndpoint,
-  useLkeStandardOrEnterpriseVersions,
-} from 'src/features/Kubernetes/kubeUtils';
+import { getNextVersion } from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
+  useKubernetesTieredVersionsQuery,
 } from 'src/queries/kubernetes';
 
 import { LocalStorageWarningNotice } from './KubernetesClusterDetail/LocalStorageWarningNotice';
@@ -38,7 +35,8 @@ const getWorkerNodeCopy = (clusterTier: KubernetesTier = 'standard') => {
     </span>
   ) : (
     <span>
-      . Worker nodes within each node pool can then be upgraded separately.{' '}
+      . Existing worker nodes are updated automatically or manually, depending
+      on the update strategy defined for each node pool.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-an-lke-enterprise-cluster-to-a-newer-kubernetes-version">
         Learn more
       </Link>
@@ -52,19 +50,16 @@ export const UpgradeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-
   const { data: cluster } = useKubernetesClusterQuery({
     id: clusterID,
-    isUsingBetaEndpoint,
   });
 
   const { mutateAsync: updateKubernetesCluster } =
     useKubernetesClusterMutation(clusterID);
 
-  const { versions } = useLkeStandardOrEnterpriseVersions(
+  const { data: versions } = useKubernetesTieredVersionsQuery(
     cluster?.tier ?? 'standard'
-  ); // TODO LKE: remove fallback once LKE-E is in GA and tier is required
+  );
 
   const nextVersion = getNextVersion(
     cluster?.k8s_version ?? '',
@@ -131,9 +126,7 @@ export const UpgradeDialog = (props: Props) => {
 
   const dialogTitle = shouldShowRecycleNodesStep
     ? 'Upgrade complete'
-    : `Upgrade Kubernetes version ${
-        nextVersion ? `to ${nextVersion}` : ''
-      } on ${cluster?.label}?`;
+    : `Upgrade Cluster ${cluster?.label} to ${nextVersion}`;
 
   const actions = (
     <ActionsPanel

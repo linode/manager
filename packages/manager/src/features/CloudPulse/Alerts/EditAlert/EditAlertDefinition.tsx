@@ -5,7 +5,7 @@ import { scrollErrorIntoView } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
@@ -20,10 +20,11 @@ import {
 } from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { EntityScopeRenderer } from '../CreateAlert/EntityScopeRenderer';
+import { AlertEntityScopeSelect } from '../CreateAlert/GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
-import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
@@ -35,10 +36,12 @@ import {
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   Alert,
-  AlertServiceType,
+  AlertDefinitionScope,
   APIError,
+  CloudPulseServiceType,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export interface EditAlertProps {
   /**
@@ -48,7 +51,7 @@ export interface EditAlertProps {
   /**
    * The type of service associated with the alert
    */
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
 }
 
 export const EditAlertDefinition = (props: EditAlertProps) => {
@@ -66,6 +69,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: {
       ...filteredAlertDefinitionValues,
       serviceType,
+      scope: alertDetails.scope,
     },
     mode: 'onBlur',
     resolver: yupResolver(
@@ -81,6 +85,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { mutateAsync: editAlert } = useEditAlertDefinition();
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
+  const scopeWatcher = useWatch<EditAlertDefintionForm>({
+    name: 'scope',
+    control,
+  }) as AlertDefinitionScope | null;
 
   const {
     data: serviceMetadata,
@@ -93,8 +101,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       values,
       serviceType,
       alertDetails.severity,
-      alertId,
-      alertDetails.scope
+      alertId
     );
     try {
       await editAlert(editPayload);
@@ -121,16 +128,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   });
   const definitionLanding = '/alerts/definitions';
 
-  const overrides = [
+  const overrides: CrumbOverridesProps[] = [
     {
       label: 'Definitions',
       linkTo: definitionLanding,
       position: 1,
-    },
-    {
-      label: 'Edit',
-      linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-      position: 2,
     },
   ];
 
@@ -186,7 +188,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CloudPulseModifyAlertResources name="entity_ids" />
+          <AlertEntityScopeSelect
+            disabled
+            formMode="edit"
+            name="scope"
+            serviceType={serviceType}
+          />
+          <EntityScopeRenderer scope={scopeWatcher} />
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

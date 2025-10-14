@@ -286,3 +286,11 @@ export const DISALLOWED_IMAGE_REGIONS = [
   'sg-sin-2',
   'jp-tyo-3',
 ];
+
+// Default tooltip text for actions without permission
+export const NO_PERMISSION_TOOLTIP_TEXT =
+  'You do not have permission to perform this action.';
+
+// Default device limit for Linode Configuration profiles. Configuration profiles can have have up to 64
+// devices depending on the Linode's RAM, but will always be able to have at least 8.
+export const DEFAULT_DEVICE_LIMIT = 8;

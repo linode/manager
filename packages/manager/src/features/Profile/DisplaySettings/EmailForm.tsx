@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutateProfile, useProfile } from '@linode/queries';
 import { Button, TextField } from '@linode/ui';
+import { UpdateUserEmailSchema } from '@linode/validation';
 import { useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -36,6 +38,7 @@ export const EmailForm = () => {
     handleSubmit,
     setError,
   } = useForm<Values>({
+    resolver: yupResolver(UpdateUserEmailSchema),
     defaultValues: values,
     values,
   });

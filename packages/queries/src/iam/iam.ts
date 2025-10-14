@@ -13,11 +13,11 @@ import type {
   PermissionType,
 } from '@linode/api-v4';
 
-export const useUserRoles = (username?: string) => {
+export const useUserRoles = (username?: string, enabled: boolean = true) => {
   return useQuery<IamUserRoles, APIError[]>({
     ...iamQueries.user(username ?? '')._ctx.roles,
     refetchOnMount: 'always',
-    enabled: Boolean(username),
+    enabled: Boolean(username) && enabled,
   });
 };
 
@@ -53,7 +53,7 @@ export const useUserAccountPermissions = (enabled = true) => {
 
 export const useUserEntityPermissions = (
   entityType: AccessType,
-  entityId: number,
+  entityId: number | string,
   enabled = true,
 ) => {
   const { data: profile } = useProfile();

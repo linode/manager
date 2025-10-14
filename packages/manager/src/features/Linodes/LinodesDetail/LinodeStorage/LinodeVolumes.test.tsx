@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeVolumes } from './LinodeVolumes';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const linodeInstanceEndpoint = '*/linode/instances/:id';
 const linodeVolumesEndpoint = '*/linode/instances/:id/volumes';
 
@@ -16,6 +16,7 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
+  usePermissions: vi.fn(),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -28,11 +29,20 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 describe('LinodeVolumes', async () => {
   beforeEach(() => {
     queryMocks.useNavigate.mockReturnValue(vi.fn());
     queryMocks.useSearch.mockReturnValue({});
     queryMocks.useParams.mockReturnValue({});
+    queryMocks.usePermissions.mockReturnValue({});
   });
 
   const volumes = volumeFactory.buildList(3);

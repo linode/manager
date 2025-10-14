@@ -1,11 +1,11 @@
 import { useDatabaseQuery } from '@linode/queries';
 import {
-  Autocomplete,
   Box,
   Button,
   Divider,
   Notice,
   Paper,
+  TimePicker,
   Typography,
 } from '@linode/ui';
 import {
@@ -24,7 +24,6 @@ import * as React from 'react';
 import {
   StyledDateCalendar,
   StyledTypography,
-  useStyles,
 } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups.style';
 import {
   isDateOutsideBackup,
@@ -32,46 +31,26 @@ import {
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
 
+import {
+  BACKUPS_INVALID_TIME_VALIDATON_TEXT,
+  BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT,
+  BACKUPS_MIN_TIME_EXCEEDED_VALIDATON_TEXT,
+  BACKUPS_UNABLE_TO_RESTORE_TEXT,
+} from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import DatabaseBackupsDialog from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';
+
+import type { TimeValidationError } from '@mui/x-date-pickers';
 
 export interface TimeOption {
   label: string;
   value: number;
 }
 
-const TIME_OPTIONS: TimeOption[] = [
-  { label: '00:00', value: 0 },
-  { label: '01:00', value: 1 },
-  { label: '02:00', value: 2 },
-  { label: '03:00', value: 3 },
-  { label: '04:00', value: 4 },
-  { label: '05:00', value: 5 },
-  { label: '06:00', value: 6 },
-  { label: '07:00', value: 7 },
-  { label: '08:00', value: 8 },
-  { label: '09:00', value: 9 },
-  { label: '10:00', value: 10 },
-  { label: '11:00', value: 11 },
-  { label: '12:00', value: 12 },
-  { label: '13:00', value: 13 },
-  { label: '14:00', value: 14 },
-  { label: '15:00', value: 15 },
-  { label: '16:00', value: 16 },
-  { label: '17:00', value: 17 },
-  { label: '18:00', value: 18 },
-  { label: '19:00', value: 19 },
-  { label: '20:00', value: 20 },
-  { label: '21:00', value: 21 },
-  { label: '22:00', value: 22 },
-  { label: '23:00', value: 23 },
-];
-
 export type VersionOption = 'dateTime' | 'newest';
 
 export const DatabaseBackups = () => {
-  const { classes } = useStyles();
   const { disabled } = useDatabaseDetailContext();
   const { databaseId, engine } = useParams({
     from: '/databases/$engine/$databaseId',
@@ -80,12 +59,11 @@ export const DatabaseBackups = () => {
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(null);
-  const [selectedTime, setSelectedTime] = React.useState<null | TimeOption>(
-    null
-  );
+  const [selectedTime, setSelectedTime] = React.useState<DateTime | null>(null);
   const [versionOption, setVersionOption] = React.useState<VersionOption>(
     isDatabasesV2GA ? 'newest' : 'dateTime'
   );
+  const [timePickerError, setTimePickerError] = React.useState<string>('');
 
   const {
     data: database,
@@ -96,37 +74,84 @@ export const DatabaseBackups = () => {
   const isDefaultDatabase = database?.platform === 'rdbms-default';
 
   const oldestBackup = database?.oldest_restore_time
-    ? DateTime.fromISO(`${database.oldest_restore_time}Z`)
+    ? DateTime.fromISO(`${database.oldest_restore_time}`, { zone: 'utc' }) // Backend uses UTC, so we explicitly set this as the timezone
     : null;
 
   const unableToRestoreCopy = !oldestBackup
-    ? 'You can restore a backup after the first backup is completed.'
+    ? BACKUPS_UNABLE_TO_RESTORE_TEXT
     : '';
 
   const onRestoreDatabase = () => {
     setIsRestoreDialogOpen(true);
   };
 
-  const handleDateChange = (newDate: DateTime) => {
-    const isSelectedTimeInvalid = isTimeOutsideBackup(
-      selectedTime?.value,
-      newDate,
-      oldestBackup!
-    );
-    // If the user has selcted a time then changes the date,
-    // that date + time might now be outside of the backup timeframe.
-    // Reset selectedTime to null so user can select a valid time.
-    if (isSelectedTimeInvalid) {
-      setSelectedTime(null);
-    }
+  /**
+   * Check whether date and time are within the valid range of available backups by providing the selected date and time.
+   * When the date and time selections are valid, clear any existing error messages for the time picker.
+   */
+  const validateDateTime = (date: DateTime | null, time: DateTime | null) => {
+    if (date && time) {
+      const isSelectedTimeInvalid = isTimeOutsideBackup(
+        time,
+        date,
+        oldestBackup!
+      );
 
+      if (!isSelectedTimeInvalid) {
+        setTimePickerError('');
+      }
+    }
+  };
+
+  const handleOnError = (error: TimeValidationError) => {
+    if (error) {
+      switch (error) {
+        case 'maxTime':
+          setTimePickerError(BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT);
+          break;
+        case 'minTime':
+          setTimePickerError(BACKUPS_MIN_TIME_EXCEEDED_VALIDATON_TEXT);
+          break;
+        case 'invalidDate':
+          setSelectedTime(null);
+          setTimePickerError(BACKUPS_INVALID_TIME_VALIDATON_TEXT);
+      }
+    }
+  };
+
+  /** Stores changes to the year, month, and day of the DateTime object provided by the calendar */
+  const handleDateChange = (newDate: DateTime) => {
+    validateDateTime(newDate, selectedTime);
     setSelectedDate(newDate);
   };
 
-  const handleOnVersionOptionChange = (_: any, value: string) => {
-    setVersionOption(value as VersionOption);
+  /** Stores changes to the hours, minutes, and seconds of the DateTime object provided by the time picker */
+  const handleTimeChange = (newTime: DateTime | null) => {
+    validateDateTime(selectedDate, newTime);
+    setSelectedTime(newTime);
+  };
+
+  const configureMinTime = () => {
+    const canApplyMinTime = !!oldestBackup && !!selectedDate;
+    const isOnMinDate = selectedDate?.day === oldestBackup?.day;
+    return canApplyMinTime && isOnMinDate ? oldestBackup : undefined;
+  };
+
+  const configureMaxTime = () => {
+    const today = DateTime.utc();
+    const isOnMaxDate = today.day === selectedDate?.day;
+    return isOnMaxDate ? today : undefined;
+  };
+
+  const handleOnVersionOptionChange = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    value: VersionOption
+  ) => {
+    setVersionOption(value);
     setSelectedDate(null);
+    // Resetting state used for time picker
     setSelectedTime(null);
+    setTimePickerError('');
   };
 
   if (isDefaultDatabase) {
@@ -202,43 +227,34 @@ export const DatabaseBackups = () => {
             </LocalizationProvider>
           </GridLegacy>
           <GridLegacy item lg={3} md={4} xs={12}>
-            <Typography variant="h3">Time (UTC)</Typography>
             <FormControl style={{ marginTop: 0 }}>
-              {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
-              <Autocomplete
-                autoComplete={false}
-                className={classes.timeAutocomplete}
+              <Typography variant="h3">Time (UTC)</Typography>
+              <TimePicker
                 disabled={
-                  disabled || !selectedDate || versionOption === 'newest'
+                  disabled || versionOption === 'newest' || !selectedDate
                 }
-                getOptionDisabled={(option) =>
-                  isTimeOutsideBackup(
-                    option.value,
-                    selectedDate!,
-                    oldestBackup!
-                  )
+                errorText={
+                  versionOption === 'dateTime' && selectedDate
+                    ? timePickerError
+                    : undefined
                 }
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
+                format="HH:mm:ss"
+                key={
+                  versionOption === 'dateTime'
+                    ? 'time-picker-active'
+                    : 'time-picker-disabled'
                 }
                 label=""
-                onChange={(_, newTime) => setSelectedTime(newTime)}
-                options={TIME_OPTIONS}
-                placeholder="Choose a time"
-                renderOption={(props, option) => {
-                  const { key, ...rest } = props;
-                  return (
-                    <li {...rest} key={key}>
-                      {option.label}
-                    </li>
-                  );
+                maxTime={configureMaxTime()}
+                minTime={configureMinTime()}
+                onChange={handleTimeChange}
+                onError={handleOnError}
+                sx={{
+                  width: '220px',
                 }}
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-time-select': true,
-                  },
-                }}
+                timeSteps={{ hours: 1, minutes: 1, seconds: 1 }}
                 value={selectedTime}
+                views={['hours', 'minutes', 'seconds']}
               />
             </FormControl>
           </GridLegacy>
@@ -249,7 +265,8 @@ export const DatabaseBackups = () => {
               buttonType="primary"
               data-qa-settings-button="restore"
               disabled={
-                versionOption === 'dateTime' && (!selectedDate || !selectedTime)
+                versionOption === 'dateTime' &&
+                (!selectedDate || !selectedTime || !!timePickerError)
               }
               onClick={onRestoreDatabase}
             >
@@ -263,7 +280,7 @@ export const DatabaseBackups = () => {
             onClose={() => setIsRestoreDialogOpen(false)}
             open={isRestoreDialogOpen}
             selectedDate={selectedDate}
-            selectedTime={selectedTime?.value}
+            selectedTime={selectedTime}
           />
         )}
       </Paper>

@@ -1,14 +1,17 @@
-import type { AccountSettings } from '@linode/api-v4';
+import type { AccountSettings, Profile } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
+import type { FlagSet } from 'src/featureFlags';
 
 export type RouterContext = {
   accountSettings?: AccountSettings;
+  flags: FlagSet;
   globalErrors?: {
     account_unactivated?: boolean;
   };
   isACLPEnabled?: boolean;
   isDatabasesEnabled?: boolean;
   isPlacementGroupsEnabled?: boolean;
+  profile?: Profile;
   queryClient: QueryClient;
 };
 

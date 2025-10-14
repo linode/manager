@@ -10,8 +10,8 @@ import { styled } from '@mui/material/styles';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
@@ -20,11 +20,14 @@ import { ContactInformation } from './BillingPanels/ContactInfoPanel/ContactInfo
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
 export const BillingDetail = () => {
+  const { data: permissions } = usePermissions('account', [
+    'list_billing_payments',
+  ]);
   const {
     data: paymentMethods,
     error: paymentMethodsError,
     isLoading: paymentMethodsLoading,
-  } = useAllPaymentMethodsQuery();
+  } = useAllPaymentMethodsQuery(permissions?.list_billing_payments ?? false);
 
   const {
     data: account,
@@ -52,7 +55,6 @@ export const BillingDetail = () => {
 
   return (
     <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-      <DocumentTitleSegment segment={`Account & Billing`} />
       <Grid
         columnSpacing={2}
         container

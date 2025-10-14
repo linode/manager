@@ -3,7 +3,7 @@ import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { Region } from './types';
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
-import type { RegionAvailability } from './types';
+import type { RegionAvailability, RegionVPCAvailability } from './types';
 
 /**
  * getRegions
@@ -64,6 +64,32 @@ export const getRegionAvailability = (regionId: string) =>
   Request<RegionAvailability[]>(
     setURL(
       `${BETA_API_ROOT}/regions/${encodeURIComponent(regionId)}/availability`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * getRegionsVPCAvailabilities
+ *
+ * Returns the availability of VPC IPv6 prefix lengths for all regions.
+ */
+export const getRegionsVPCAvailabilities = (params?: Params, filter?: Filter) =>
+  Request<Page<RegionVPCAvailability>>(
+    setURL(`${BETA_API_ROOT}/regions/vpc-availability`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  );
+
+/**
+ * getRegionVPCAvailability
+ *
+ * Returns the availability of VPC IPv6 prefix lengths for a specified region.
+ */
+export const getRegionVPCAvailability = (regionId: string) =>
+  Request<RegionVPCAvailability>(
+    setURL(
+      `${BETA_API_ROOT}/regions/${encodeURIComponent(regionId)}/vpc-availability`,
     ),
     setMethod('GET'),
   );

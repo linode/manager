@@ -14,6 +14,16 @@ import type { Handlers } from './ImagesActionMenu';
 
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({}),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 describe('Image Table Row', () => {
   const handlers: Handlers = {
     onCancelFailed: vi.fn(),
@@ -23,6 +33,18 @@ describe('Image Table Row', () => {
     onManageRegions: vi.fn(),
     onRebuild: vi.fn(),
   };
+
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        update_image: true,
+        delete_image: true,
+        rebuild_linode: true,
+        create_linode: true,
+        replicate_image: true,
+      },
+    });
+  });
 
   it('should render an image row with details', async () => {
     const image = imageFactory.build({
@@ -109,6 +131,27 @@ describe('Image Table Row', () => {
     ).toBeNull();
   });
 
+  it('should not show an unencrypted icon when an Image is still "pending_upload"', () => {
+    // The API does not populate the "distributed-sites" capability until the image is done creating.
+    // We must account for this because the image would show as "Unencrypted" while it is creating,
+    // then suddenly show as encrypted once it was done creating. We don't want that.
+    // Therefore, we decided we won't show the unencrypted icon until the image is done uploading to
+    // prevent confusion.
+    const image = imageFactory.build({
+      capabilities: ['cloud-init'],
+      status: 'pending_upload',
+      type: 'manual',
+    });
+
+    const { queryByLabelText } = renderWithTheme(
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
+    );
+
+    expect(
+      queryByLabelText('This image is not encrypted.', { exact: false })
+    ).toBeNull();
+  });
+
   it('should show N/A if Image does not have any regions', () => {
     const image = imageFactory.build({ regions: [] });
 
@@ -122,6 +165,9 @@ describe('Image Table Row', () => {
   it('calls handlers when performing actions', async () => {
     const image = imageFactory.build({
       regions: [{ region: 'us-east', status: 'available' }],
+    });
+    queryMocks.useQueryWithPermissions.mockReturnValue({
+      data: [image],
     });
 
     const { getByLabelText, getByText } = renderWithTheme(

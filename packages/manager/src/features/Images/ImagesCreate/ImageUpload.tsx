@@ -27,15 +27,13 @@ import { useDispatch } from 'react-redux';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
@@ -125,7 +123,7 @@ export const ImageUpload = () => {
         recordImageAnalytics('success', file);
 
         // Force a re-render so that `hasPendingUpload` is false when navigating away
-        // from the upload page. We need this to make the <Prompt /> work as expected.
+        // from the upload page. We need this to make the navigation prompt work as expected.
         flushSync(() => {
           dispatch(setPendingUpload(false));
         });
@@ -162,24 +160,8 @@ export const ImageUpload = () => {
     selectedRegionId,
   });
 
-  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
-
-  // Called after a user confirms they want to navigate to another part of
-  // Cloud during a pending upload. When we have refresh tokens this won't be
-  // necessary; the user will be able to navigate to other components and we
-  // will show the upload progress in the lower part of the screen. For now we
-  // box the user on this page so we can handle token expiry (semi)-gracefully.
-  const onConfirm = (nextLocation: string) => {
-    if (cancelRef.current) {
-      cancelRef.current();
-    }
-
-    dispatch(setPendingUpload(false));
-
-    navigate({ search: () => ({}), to: nextLocation });
-  };
+  const { data: permissions } = usePermissions('account', ['upload_image']);
+  const canUploadImage = permissions?.upload_image;
 
   const { proceed, reset, status } = useBlocker({
     enableBeforeUnload: hasPendingUpload,
@@ -216,7 +198,7 @@ export const ImageUpload = () => {
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
-          {isImageCreateRestricted && (
+          {!canUploadImage && (
             <Notice
               text={getRestrictedResourceText({
                 action: 'create',
@@ -253,9 +235,7 @@ export const ImageUpload = () => {
               name="label"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
@@ -273,9 +253,7 @@ export const ImageUpload = () => {
                   render={({ field }) => (
                     <Checkbox
                       checked={field.value ?? false}
-                      disabled={
-                        isImageCreateRestricted || form.formState.isSubmitting
-                      }
+                      disabled={!canUploadImage || form.formState.isSubmitting}
                       onChange={field.onChange}
                       text="This image is cloud-init compatible"
                       toolTipText={
@@ -300,9 +278,7 @@ export const ImageUpload = () => {
                 <RegionSelect
                   currentCapability={undefined} // Images don't have a region capability yet
                   disableClearable
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   errorText={fieldState.error?.message}
                   isGeckoLAEnabled={isGeckoLAEnabled}
                   label="Region"
@@ -321,9 +297,7 @@ export const ImageUpload = () => {
               name="tags"
               render={({ field, fieldState }) => (
                 <TagsInput
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
                   }
@@ -340,9 +314,7 @@ export const ImageUpload = () => {
               name="description"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   errorText={fieldState.error?.message}
                   label="Description"
                   multiline
@@ -377,7 +349,7 @@ export const ImageUpload = () => {
               name="file"
               render={({ field }) => (
                 <ImageUploader
-                  disabled={isImageCreateRestricted}
+                  disabled={!canUploadImage}
                   isUploading={form.formState.isSubmitting}
                   onDropAccepted={(files) => {
                     form.setError('file', {});
@@ -409,7 +381,7 @@ export const ImageUpload = () => {
           <Box display="flex" gap={1} justifyContent="flex-end">
             <Button
               buttonType="outlined"
-              disabled={isImageCreateRestricted}
+              disabled={!canUploadImage}
               onClick={() => setLinodeCLIModalOpen(true)}
             >
               Upload Using Command Line
@@ -417,8 +389,7 @@ export const ImageUpload = () => {
             <Button
               buttonType="primary"
               disabled={
-                isImageCreateRestricted ||
-                (showGDPRCheckbox && !hasSignedAgreement)
+                !canUploadImage || (showGDPRCheckbox && !hasSignedAgreement)
               }
               loading={form.formState.isSubmitting}
               type="submit"
@@ -433,48 +404,34 @@ export const ImageUpload = () => {
         onClose={() => setLinodeCLIModalOpen(false)}
       />
 
-      {/* Use Prompt for now until Link is coupled with Tanstack router */}
-      <Prompt
-        confirmWhenLeaving={true}
-        onConfirm={onConfirm}
-        when={hasPendingUpload}
-      >
-        {({ handleCancel, handleConfirm, isModalOpen }) => {
-          return (
-            <ConfirmationDialog
-              actions={
-                <ActionsPanel
-                  primaryButtonProps={{
-                    label: 'Leave Page',
-                    onClick: () => {
-                      handleProceedNavigation();
-                      handleConfirm();
-                    },
-                  }}
-                  secondaryButtonProps={{
-                    label: 'Cancel',
-                    onClick: () => {
-                      handleCancelNavigation();
-                      handleCancel();
-                    },
-                  }}
-                />
-              }
-              onClose={() => {
+      <ConfirmationDialog
+        actions={
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Leave Page',
+              onClick: () => {
+                handleProceedNavigation();
+              },
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: () => {
                 handleCancelNavigation();
-                handleCancel();
-              }}
-              open={status === 'blocked' || isModalOpen}
-              title="Leave this page?"
-            >
-              <Typography variant="subtitle1">
-                An upload is in progress. If you navigate away from this page,
-                the upload will be canceled.
-              </Typography>
-            </ConfirmationDialog>
-          );
+              },
+            }}
+          />
+        }
+        onClose={() => {
+          handleCancelNavigation();
         }}
-      </Prompt>
+        open={status === 'blocked'}
+        title="Leave this page?"
+      >
+        <Typography variant="subtitle1">
+          An upload is in progress. If you navigate away from this page, the
+          upload will be canceled.
+        </Typography>
+      </ConfirmationDialog>
     </FormProvider>
   );
 };

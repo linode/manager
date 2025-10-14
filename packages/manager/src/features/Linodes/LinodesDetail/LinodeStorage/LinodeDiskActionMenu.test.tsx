@@ -21,11 +21,12 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => navigate),
   useParams: vi.fn(() => ({})),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
       resize_linode: false,
       delete_linode: false,
       clone_linode: false,
+      create_image: true,
     },
   })),
 }));
@@ -126,8 +127,8 @@ describe('LinodeDiskActionMenu', () => {
 
   it('Clone should redirect to clone page', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         clone_linode: true,
       },
     });
@@ -157,6 +158,13 @@ describe('LinodeDiskActionMenu', () => {
   });
 
   it('should disable Resize and Delete when the Linode is running', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        ...queryMocks.userPermissions().data,
+        resize_linode: true,
+        delete_linode: true,
+      },
+    });
     const { getAllByLabelText, getByLabelText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
@@ -169,7 +177,7 @@ describe('LinodeDiskActionMenu', () => {
 
     expect(
       getAllByLabelText(
-        'Your Linode must be fully powered down in order to perform this action'
+        'Your Linode must be fully powered down in order to perform this action.'
       )
     ).toHaveLength(2);
   });
@@ -197,11 +205,12 @@ describe('LinodeDiskActionMenu', () => {
 
   it('should disable all actions menu if the user does not have permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_linode: false,
         resize_linode: false,
         delete_linode: false,
         clone_linode: false,
+        create_image: false,
       },
     });
 
@@ -230,11 +239,12 @@ describe('LinodeDiskActionMenu', () => {
 
   it('should enable all actions menu if the user has permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         update_linode: true,
         resize_linode: true,
         delete_linode: true,
         clone_linode: true,
+        create_image: true,
       },
     });
 

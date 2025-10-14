@@ -12,7 +12,7 @@ import type {
   AlertFilterType,
   AlertResourceFiltersProps,
 } from '../AlertsResources/types';
-import type { AlertServiceType, Region } from '@linode/api-v4';
+import type { CloudPulseServiceType, Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
   /**
@@ -62,6 +62,10 @@ interface FilterResourceProps {
 }
 
 interface FilterRendererProps {
+  /**
+   * The endpoints to be displayed according the resources associated with alerts
+   */
+  endpointOptions: string[];
   /**
    * The filter to which the props needs to built for
    */
@@ -136,6 +140,32 @@ export const getRegionOptions = (
   });
   return Array.from(uniqueRegions);
 };
+/**
+ * Builds a list of unique endpoint strings from CloudPulse resources.
+ *
+ * @param data - List of CloudPulse resources to extract endpoints from.
+ * @param isAdditionOrDeletionNeeded - Flag to include all resources regardless of `resourceIds`.
+ * @param resourceIds - Optional list of resource IDs to filter which endpoints are included.
+ * @returns A unique list of endpoint strings. Returns an empty array if no valid data.
+ */
+export const getEndpointOptions = (
+  data?: CloudPulseResources[],
+  isAdditionOrDeletionNeeded?: boolean,
+  resourceIds?: string[]
+): string[] => {
+  const isEmpty =
+    !data || (!isAdditionOrDeletionNeeded && !resourceIds?.length);
+
+  if (isEmpty) return [];
+
+  const uniqueEndpoints = new Set<string>();
+  data.forEach(({ id, endpoint }) => {
+    if (isAdditionOrDeletionNeeded || resourceIds?.includes(String(id))) {
+      if (endpoint) uniqueEndpoints.add(endpoint);
+    }
+  });
+  return Array.from(uniqueEndpoints);
+};
 
 /**
  * Filters regions based on service type and returns their IDs.
@@ -146,7 +176,7 @@ export const getRegionOptions = (
  */
 export const getSupportedRegionIds = (
   regions?: Region[],
-  serviceType?: AlertServiceType
+  serviceType?: CloudPulseServiceType
 ): string[] | undefined => {
   return filterRegionByServiceType('alerts', regions, serviceType).map(
     ({ id }) => id
@@ -242,6 +272,10 @@ const applyAdditionalFilter = (
       return value.some((obj) => resourceValue.includes(obj));
     }
 
+    // to cover the endpoint scenario where resourceValue is string and value can be string[]
+    if (Array.isArray(value) && typeof resourceValue === 'string') {
+      return resourceValue && value.includes(resourceValue);
+    }
     return resourceValue === value;
   });
 };
@@ -319,10 +353,13 @@ export const getAlertResourceFilterProps = ({
   filterKey,
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,
+  endpointOptions,
   regionOptions,
   tagOptions,
 }: FilterRendererProps): AlertResourceFiltersProps => {
   switch (filterKey) {
+    case 'endpoint':
+      return { handleFilterChange, endpointOptions };
     case 'engineType':
       return { handleFilterChange };
     case 'region':
@@ -332,4 +369,20 @@ export const getAlertResourceFilterProps = ({
     default:
       return { handleFilterChange };
   }
+};
+
+/**
+ * Filters CloudPulse resources to include only those whose region
+ * is present in the given list of ACLP supported region IDs.
+ * @param resources - The unfiltered list of CloudPulse resources.
+ * @param supportedRegionIds - Region IDs that have ACLP support and required capabilities.
+ * @returns A filtered list of CloudPulse resources located in supported regions.
+ */
+export const getOfflineRegionFilteredResources = (
+  resources: CloudPulseResources[],
+  supportedRegionIds: string[]
+): CloudPulseResources[] => {
+  return resources.filter(
+    ({ region }) => region && supportedRegionIds.includes(region)
+  );
 };

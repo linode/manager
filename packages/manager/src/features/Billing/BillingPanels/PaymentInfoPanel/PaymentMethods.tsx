@@ -11,7 +11,6 @@ import type { APIError } from '@linode/api-v4/lib/types';
 interface Props {
   error: APIError[] | null | undefined;
   isChildUser?: boolean | undefined;
-  isRestrictedUser?: boolean | undefined;
   loading: boolean;
   openDeleteDialog: (method: PaymentMethod) => void;
   paymentMethods: PaymentMethod[] | undefined;
@@ -20,7 +19,6 @@ interface Props {
 const PaymentMethods = ({
   error,
   isChildUser,
-  isRestrictedUser,
   loading,
   openDeleteDialog,
   paymentMethods,
@@ -51,7 +49,7 @@ const PaymentMethods = ({
     );
   }
 
-  if (!paymentMethods || paymentMethods?.length == 0) {
+  if (!paymentMethods || paymentMethods?.length === 0) {
     return (
       <Typography>
         No payment methods have been specified for this account.
@@ -64,7 +62,6 @@ const PaymentMethods = ({
       {paymentMethods.map((paymentMethod: PaymentMethod) => (
         <PaymentMethodRow
           isChildUser={isChildUser}
-          isRestrictedUser={isRestrictedUser}
           key={paymentMethod.id}
           onDelete={() => openDeleteDialog(paymentMethod)}
           paymentMethod={paymentMethod}

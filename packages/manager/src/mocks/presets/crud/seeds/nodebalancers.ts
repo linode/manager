@@ -5,7 +5,7 @@ import {
 } from '@linode/utilities';
 
 import { getSeedsCountMap } from 'src/dev-tools/utils';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { MockSeeder, MockState } from 'src/mocks/types';
@@ -43,6 +43,8 @@ export const nodeBalancerSeeder: MockSeeder = {
           })
         ),
       });
+
+    addToEntities(mockState, 'nodeBalancers', nodeBalancerSeeds);
 
     const updatedMockState = {
       ...mockState,

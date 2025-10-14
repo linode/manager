@@ -42,6 +42,14 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'support-tickets:crud':
       await mswDB.deleteAll('supportTickets', mockState, 'seedState');
       break;
+    case 'users:crud':
+      await mswDB.deleteAll('users', mockState, 'seedState');
+      await mswDB.deleteAll('userRoles', mockState, 'seedState');
+      await mswDB.deleteAll('userAccountPermissions', mockState, 'seedState');
+      await mswDB.deleteAll('userEntityPermissions', mockState, 'seedState');
+      await mswDB.deleteAll('childAccounts', mockState, 'seedState');
+      await mswDB.deleteAll('delegations', mockState, 'seedState');
+      break;
     case 'volumes:crud':
       await mswDB.deleteAll('volumes', mockState, 'seedState');
       break;
@@ -57,7 +65,9 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
 };
 
 type WithId = {
+  entityId: number;
   id: number;
+  username: string;
 };
 
 /**
@@ -68,7 +78,7 @@ type WithId = {
  * @returns True if the object has an 'id' property, false otherwise.
  */
 export const hasId = (obj: any): obj is WithId => {
-  return 'id' in obj;
+  return 'id' in obj || 'username' in obj || 'entityId' in obj;
 };
 
 interface SeedWithUniqueIdsArgs<T extends keyof MockState> {

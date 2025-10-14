@@ -9,22 +9,28 @@ import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.cont
 import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 
 import { SplashScreen } from './components/SplashScreen';
-import { GoTo } from './GoTo';
-import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
-import { useNewRelic } from './hooks/useNewRelic';
-import { usePendo } from './hooks/usePendo';
-import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
-import { MainContent } from './MainContent';
-import { useEventsPoller } from './queries/events/events';
-// import { Router } from './Router';
+import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
-    const { isLoading } = useInitialRequests();
+    // Skip all initialization if we're on any authentication callback - just let the router handle it
+    const isAuthCallback =
+      window.location.pathname === '/oauth/callback' ||
+      window.location.pathname === '/admin/callback';
 
+    const { isLoading } = useInitialRequests();
     const { areFeatureFlagsLoading } = useSetupFeatureFlags();
+
+    if (isAuthCallback) {
+      return (
+        <ErrorBoundaryFallback>
+          <DocumentTitleSegment segment="Akamai Cloud Manager" />
+          <Router />
+        </ErrorBoundaryFallback>
+      );
+    }
 
     if (isLoading || areFeatureFlagsLoading) {
       return <SplashScreen />;
@@ -43,24 +49,9 @@ export const App = withDocumentTitleProvider(
             Opens an external site in a new window
           </span>
         </div>
-        <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
-        {/**
-         * Eventually we will have the <Router /> here in place of <MainContent />
-         * <Router />
-         */}
-        <MainContent />
-        <GlobalListeners />
+        <Router />
       </ErrorBoundaryFallback>
     );
   })
 );
-
-const GlobalListeners = () => {
-  useEventsPoller();
-  useAdobeAnalytics();
-  usePendo();
-  useNewRelic();
-  useSessionExpiryToast();
-  return null;
-};

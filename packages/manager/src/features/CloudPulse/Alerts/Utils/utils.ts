@@ -2,9 +2,9 @@ import {
   type Alert,
   type AlertDefinitionMetricCriteria,
   type AlertDefinitionType,
-  type AlertServiceType,
   type APIError,
   capabilityServiceTypeMapping,
+  type CloudPulseServiceType,
   type EditAlertPayloadWithService,
   type NotificationChannel,
   type Region,
@@ -13,14 +13,23 @@ import {
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from '../../shared/DimensionTransform';
+import { compareArrays } from '../../Utils/FilterBuilder';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type { MonitoringCapabilities } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  AclpServices,
+} from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -80,7 +89,7 @@ export interface AlertValidationSchemaProps {
   /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
-  serviceTypeObj: null | string;
+  serviceTypeObj: CloudPulseServiceType | null;
 }
 interface HandleMultipleErrorProps<T extends FieldValues> {
   /**
@@ -107,6 +116,25 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
   singleLineErrorSeparator: string;
 }
 
+interface FilterRegionProps {
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The selected region ids
+   */
+  selectedRegions: string[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: CloudPulseServiceType | null;
+}
+
 interface SupportedRegionsProps {
   /**
    * The list of regions
@@ -119,7 +147,7 @@ interface SupportedRegionsProps {
   /**
    * The service type for which the regions are being filtered
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface FilterAlertsProps {
@@ -147,7 +175,7 @@ interface FilterAlertsProps {
  * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
-  serviceType: string,
+  serviceType: CloudPulseServiceType,
   serviceTypeList: ServiceTypesList | undefined
 ) => {
   if (!serviceTypeList) {
@@ -294,12 +322,11 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions,
-    scope,
+    regions,
   }: Alert,
-  serviceType: AlertServiceType
+  serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
   return {
-    scope,
     alertId: id,
     channel_ids: alert_channels.map((channel) => channel.id),
     description: description || undefined,
@@ -316,6 +343,7 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions,
+    regions,
   };
 };
 
@@ -371,7 +399,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
       .of(string().defined())
-      .required()
+      .optional()
       .max(
         maxSelectionCount,
         `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
@@ -455,6 +483,51 @@ export const handleMultipleError = <T extends FieldValues>(
 
 /**
  *
+ * @param props The props required to filter the regions
+ * @returns The filtered regions based on the selected regions and resources
+ */
+export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
+  const { regions, resources, selectedRegions, serviceType } = props;
+
+  const supportedRegionsFromResources = getSupportedRegions({
+    regions,
+    resources,
+    serviceType,
+  });
+
+  // map region to its resources count
+  const regionToResourceCount =
+    resources?.reduce(
+      (previous, { region }) => {
+        if (!region) return previous;
+        return {
+          ...previous,
+          [region]: (previous[region] ?? 0) + 1,
+        };
+      },
+      {} as { [region: string]: number }
+    ) ?? {};
+
+  return supportedRegionsFromResources.map(({ label, id }) => {
+    const data = { label, id };
+
+    if (selectedRegions.includes(id)) {
+      return {
+        ...data,
+        checked: true,
+        count: regionToResourceCount[id] ?? 0,
+      };
+    }
+    return {
+      ...data,
+      checked: false,
+      count: regionToResourceCount[id] ?? 0,
+    };
+  });
+};
+
+/**
+ *
  * @param props The props required to get the supported regions
  * @returns The filtered regions based on the supported and resources
  */
@@ -484,7 +557,7 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
 export const filterRegionByServiceType = (
   type: keyof MonitoringCapabilities,
   regions?: Region[],
-  serviceType?: null | string
+  serviceType?: CloudPulseServiceType | null
 ): Region[] => {
   if (!serviceType || !regions) return regions ?? [];
   const capability = capabilityServiceTypeMapping[serviceType];
@@ -510,4 +583,59 @@ export const convertSecondsToOptions = (seconds: number): string => {
     const hours = minutes / 60;
     return `${hours} hr`;
   }
+};
+
+/**
+ * Filters alerts based on the enabled services
+ * @param allAlerts list of all alerts
+ * @param aclpServices list of services with their statuses
+ * @returns list of alerts from enabled services
+ */
+export const alertsFromEnabledServices = (
+  allAlerts: Alert[] | undefined,
+  aclpServices: Partial<AclpServices> | undefined
+) => {
+  // Return the alerts whose service type is enabled in the aclpServices flag
+  return allAlerts?.filter(
+    (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
+  );
+};
+
+/**
+ * Transform a dimension value using the appropriate transform function
+ * @param serviceType - The cloud pulse service type
+ * @param dimensionLabel - The dimension label
+ * @param value - The value to transform
+ * @returns Transformed value
+ */
+export const transformDimensionValue = (
+  serviceType: CloudPulseServiceType | null,
+  dimensionLabel: string,
+  value: string
+): string => {
+  return (
+    (
+      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
+    )?.(value) ?? TRANSFORMS.capitalize(value)
+  );
+};
+
+/**
+ * Checks if two arrays are equal, ignores the order of the elements
+ * @param a The first array
+ * @param b The second array
+ * @returns True if the arrays are equal, false otherwise
+ */
+export const arraysEqual = (
+  a: number[] | undefined,
+  b: number[] | undefined
+) => {
+  if (a === undefined && b === undefined) return true;
+  if (a === undefined || b === undefined) return false;
+  if (a.length !== b.length) return false;
+
+  return compareArrays(
+    [...a].sort((x, y) => x - y),
+    [...b].sort((x, y) => x - y)
+  );
 };

@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { subnetFactory, vpcFactory, vpcIPFactory } from 'src/factories';
+import { subnetFactory, vpcFactory, vpcIPv4Factory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
+  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -135,7 +136,7 @@ export const createVPC = (mockState: MockState) => [
         mockState
       );
 
-      const vpcIp = vpcIPFactory.build({
+      const vpcIp = vpcIPv4Factory.build({
         vpc_id: createdVPC.id,
       });
 
@@ -235,6 +236,15 @@ export const deleteVPC = (mockState: MockState) => [
 
       if (!vpc) {
         return makeNotFoundResponse();
+      }
+
+      if (
+        vpc.subnets.some(
+          (subnet) =>
+            subnet.linodes.length > 0 || subnet.nodebalancers.length > 0
+        )
+      ) {
+        return makeErrorResponse('Cannot delete a VPC with resources attached');
       }
 
       const vpcsIPs = await mswDB.getAll('vpcsIps');
@@ -407,6 +417,15 @@ export const deleteSubnet = (mockState: MockState) => [
 
       if (!vpc || !subnetFromDB) {
         return makeNotFoundResponse();
+      }
+
+      if (
+        subnetFromDB[1].linodes.length > 0 ||
+        subnetFromDB[1].nodebalancers.length > 0
+      ) {
+        return makeErrorResponse(
+          'Cannot delete a subnet with resources associated with it'
+        );
       }
 
       const updatedVPC = {

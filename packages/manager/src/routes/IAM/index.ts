@@ -1,5 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+
 import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
@@ -11,6 +13,7 @@ interface IamEntitiesSearchParams {
 
 interface IamUsersSearchParams extends TableSearchParams {
   query?: string;
+  users?: string;
 }
 
 const iamRoute = createRoute({
@@ -18,11 +21,7 @@ const iamRoute = createRoute({
   getParentRoute: () => rootRoute,
   validateSearch: (search: IamUsersSearchParams) => search,
   path: 'iam',
-}).lazy(() =>
-  import('src/features/IAM/iamLandingLazyRoute').then(
-    (m) => m.iamLandingLazyRoute
-  )
-);
+});
 
 const iamCatchAllRoute = createRoute({
   getParentRoute: () => iamRoute,
@@ -32,10 +31,7 @@ const iamCatchAllRoute = createRoute({
   },
 });
 
-const iamIndexRoute = createRoute({
-  beforeLoad: async () => {
-    throw redirect({ to: '/iam/users' });
-  },
+const iamTabsRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/',
 }).lazy(() =>
@@ -45,7 +41,7 @@ const iamIndexRoute = createRoute({
 );
 
 const iamUsersRoute = createRoute({
-  getParentRoute: () => iamRoute,
+  getParentRoute: () => iamTabsRoute,
   path: 'users',
 }).lazy(() =>
   import('src/features/IAM/Users/UsersTable/usersLandingLazyRoute').then(
@@ -62,11 +58,66 @@ const iamUsersCatchAllRoute = createRoute({
 });
 
 const iamRolesRoute = createRoute({
-  getParentRoute: () => iamRoute,
+  getParentRoute: () => iamTabsRoute,
   path: 'roles',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/account/users',
+      });
+    }
+  },
+});
+
+const iamRolesIndexRoute = createRoute({
+  getParentRoute: () => iamRolesRoute,
+  path: '/',
 }).lazy(() =>
   import('src/features/IAM/Roles/rolesLandingLazyRoute').then(
     (m) => m.rolesLandingLazyRoute
+  )
+);
+
+const iamDefaultsTabsRoute = createRoute({
+  getParentRoute: () => iamRoute,
+  path: 'roles/defaults',
+  beforeLoad: async ({ context }) => {
+    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
+    const profile = context?.profile;
+    const userType = profile?.user_type;
+
+    if (userType !== 'child' || !isDelegationEnabled) {
+      throw redirect({
+        to: '/iam/roles',
+      });
+    }
+  },
+}).lazy(() =>
+  import('src/features/IAM/Roles/Defaults/defaultsLandingLazyRoute').then(
+    (m) => m.defaultsLandingLazyRoute
+  )
+);
+
+const iamDefaultRolesRoute = createRoute({
+  getParentRoute: () => iamDefaultsTabsRoute,
+  path: 'roles',
+}).lazy(() =>
+  import('src/features/IAM/Roles/Defaults/defaultRolesLazyRoute').then(
+    (m) => m.defaultRolesLazyRoute
+  )
+);
+
+const iamDefaultEntityAccessRoute = createRoute({
+  getParentRoute: () => iamDefaultsTabsRoute,
+  path: 'entity-access',
+}).lazy(() =>
+  import('src/features/IAM/Roles/Defaults/defaultEntityAccessLazyRoute').then(
+    (m) => m.defaultEntityAccessLazyRoute
   )
 );
 
@@ -78,9 +129,34 @@ const iamRolesCatchAllRoute = createRoute({
   },
 });
 
+const iamDelegationsRoute = createRoute({
+  getParentRoute: () => iamTabsRoute,
+  path: 'delegations',
+  beforeLoad: async ({ context }) => {
+    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
+    if (!isDelegationEnabled) {
+      throw redirect({
+        to: '/iam/users',
+      });
+    }
+  },
+}).lazy(() =>
+  import('src/features/IAM/Delegations/delegationsLandingLazyRoute').then(
+    (m) => m.delegationsLandingLazyRoute
+  )
+);
+
+const iamDelegationsCatchAllRoute = createRoute({
+  getParentRoute: () => iamDelegationsRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/iam/delegations' });
+  },
+});
+
 const iamUserNameRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: 'iam/users/$username',
+  getParentRoute: () => iamRoute,
+  path: '/users/$username',
 }).lazy(() =>
   import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
     (m) => m.userDetailsLandingLazyRoute
@@ -105,6 +181,19 @@ const iamUserNameIndexRoute = createRoute({
 const iamUserNameDetailsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'details',
+  beforeLoad: async ({ context, params }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+    const { username } = params;
+    if (!isIAMEnabled && username) {
+      throw redirect({
+        to: '/account/users/$username/profile',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UserDetails/userProfileLazyRoute').then(
     (m) => m.userProfileLazyRoute
@@ -114,6 +203,20 @@ const iamUserNameDetailsRoute = createRoute({
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
+  beforeLoad: async ({ context, params }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+    const { username } = params;
+
+    if (!isIAMEnabled && username) {
+      throw redirect({
+        to: '/account/users/$username/permissions',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UserRoles/userRolesLazyRoute').then(
     (m) => m.userRolesLazyRoute
@@ -124,10 +227,33 @@ const iamUserNameEntitiesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'entities',
   validateSearch: (search: IamEntitiesSearchParams) => search,
+  beforeLoad: async ({ context, params }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+    const { username } = params;
+
+    if (!isIAMEnabled && username) {
+      throw redirect({
+        to: '/account/users/$username',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UserEntities/userEntitiesLazyRoute').then(
     (m) => m.userEntitiesLazyRoute
   )
+);
+
+const iamUserNameDelegationsRoute = createRoute({
+  getParentRoute: () => iamUserNameRoute,
+  path: 'delegations',
+}).lazy(() =>
+  import(
+    'src/features/IAM/Users/UserDelegations/userDelegationsLazyRoute'
+  ).then((m) => m.userDelegationsLazyRoute)
 );
 
 // Catch all route for user details page
@@ -178,17 +304,27 @@ const iamUserNameEntitiesCatchAllRoute = createRoute({
 });
 
 export const iamRouteTree = iamRoute.addChildren([
-  iamIndexRoute,
-  iamRolesRoute,
-  iamUsersRoute,
+  iamTabsRoute.addChildren([
+    iamRolesRoute.addChildren([
+      iamRolesIndexRoute,
+      iamDefaultsTabsRoute.addChildren([
+        iamDefaultRolesRoute,
+        iamDefaultEntityAccessRoute,
+      ]),
+    ]),
+    iamUsersRoute,
+    iamDelegationsRoute,
+    iamUsersCatchAllRoute,
+    iamRolesCatchAllRoute,
+    iamDelegationsCatchAllRoute,
+  ]),
   iamCatchAllRoute,
-  iamUsersCatchAllRoute,
-  iamRolesCatchAllRoute,
   iamUserNameRoute.addChildren([
     iamUserNameIndexRoute,
     iamUserNameDetailsRoute,
     iamUserNameRolesRoute,
     iamUserNameEntitiesRoute,
+    iamUserNameDelegationsRoute,
     iamUserNameCatchAllRoute,
     iamUserNameDetailsCatchAllRoute,
     iamUserNameRolesCatchAllRoute,

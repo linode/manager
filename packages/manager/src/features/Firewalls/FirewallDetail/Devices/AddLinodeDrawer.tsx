@@ -3,8 +3,6 @@ import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
   useAllLinodesQuery,
-  useGrants,
-  useProfile,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
@@ -14,7 +12,6 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
-import { getEntityIdsByPermission } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { useQueries } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
@@ -23,6 +20,8 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -31,6 +30,7 @@ import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import type { Linode, LinodeInterfaces } from '@linode/api-v4';
 
 interface Props {
+  disabled: boolean;
   helperText: string;
   onClose: () => void;
   open: boolean;
@@ -43,25 +43,28 @@ interface InterfaceDeviceInfo {
 }
 
 export const AddLinodeDrawer = (props: Props) => {
-  const { helperText, onClose, open } = props;
+  const { helperText, onClose, open, disabled } = props;
 
   const { id } = useParams({ strict: false });
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data, error, isLoading } = useAllFirewallsQuery();
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
-  const { data: allLinodes } = useAllLinodesQuery({}, {});
+  const { data: availableLinodes, isLoading: availableLinodesLoading } =
+    useQueryWithPermissions<Linode>(
+      useAllLinodesQuery({}, {}),
+      'linode',
+      ['update_linode'],
+      open
+    );
 
   const linodesUsingLinodeInterfaces =
-    allLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
+    availableLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
 
   const allFirewallEntities = React.useMemo(
     () => data?.map((firewall) => firewall.entities).flat() ?? [],
@@ -81,15 +84,6 @@ export const AddLinodeDrawer = (props: Props) => {
   const assignedLinodes = React.useMemo(
     () => allFirewallEntities.filter((service) => service.type === 'linode'),
     [allFirewallEntities]
-  );
-
-  // If a user is restricted, they can not add a read-only Linode to a firewall.
-  const readOnlyLinodeIds = React.useMemo(
-    () =>
-      isRestrictedUser
-        ? getEntityIdsByPermission(grants, 'linode', 'read_only')
-        : [],
-    [grants, isRestrictedUser]
   );
 
   // Keeps track of Linode and its eligible Linode Interfaces if they exist (eligible = a non-vlan interface that isn't already assigned to a firewall)
@@ -123,12 +117,7 @@ export const AddLinodeDrawer = (props: Props) => {
     },
   });
 
-  const linodeOptions = allLinodes?.filter((linode) => {
-    // Exclude read only Linodes
-    if (readOnlyLinodeIds.includes(linode.id)) {
-      return false;
-    }
-
+  const linodeOptions = availableLinodes?.filter((linode) => {
     // Exclude a Linode if it uses Linode Interfaces but has no eligible interfaces
     if (linode.interface_generation === 'linode') {
       return Boolean(linodesAndEligibleInterfaces[linode.id]);
@@ -359,10 +348,19 @@ export const AddLinodeDrawer = (props: Props) => {
           handleSubmit();
         }}
       >
+        {disabled && (
+          <Notice
+            text={getRestrictedResourceText({
+              resourceType: 'Firewalls',
+            })}
+            variant="error"
+          />
+        )}
         {localError ? errorNotice() : null}
         <LinodeSelect
-          disabled={isLoading}
+          disabled={isLoading || availableLinodesLoading || disabled}
           helperText={helperText}
+          loading={availableLinodesLoading}
           multiple
           onSelectionChange={(linodes) => onSelectionChange(linodes)}
           options={linodeOptions}
@@ -371,7 +369,7 @@ export const AddLinodeDrawer = (props: Props) => {
         {isLinodeInterfacesEnabled &&
           selectedLinodesWithMultipleInterfaces.length > 0 && (
             <Typography marginTop={3}>
-              {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'} 
+              {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'}
             multiple interfaces that a firewall can be applied to. Select which interface to apply the firewall to.`}
             </Typography>
           )}
@@ -409,7 +407,7 @@ export const AddLinodeDrawer = (props: Props) => {
           })}
         <ActionsPanel
           primaryButtonProps={{
-            disabled: selectedLinodes.length === 0,
+            disabled: selectedLinodes.length === 0 || disabled,
             label: 'Add',
             loading: addDeviceIsLoading,
             onClick: handleSubmit,

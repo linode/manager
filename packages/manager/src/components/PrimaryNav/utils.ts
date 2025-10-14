@@ -1,26 +1,29 @@
 import React from 'react';
 
+import { FOOTER_HEIGHT } from 'src/features/Footer';
 import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
-import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
-export const linkIsActive = (
-  href: string,
-  locationSearch: string,
-  locationPathname: string,
-  activeLinks: Array<string> = []
-) => {
-  const currentlyOnOneClickTab = locationSearch.match(/one-click/gi);
-  const isOneClickTab = href.match(/one-click/gi);
+import type { LinkProps } from '@tanstack/react-router';
 
-  /**
-   * mark as active if the tab is "one click"
-   * Other create tabs default back to Linodes active tabs
-   */
-  if (currentlyOnOneClickTab) {
-    return isOneClickTab;
+export const linkIsActive = (locationPathname: string, to: LinkProps['to']) => {
+  const marketPlacePath = '/linodes/create/marketplace';
+  const currentlyOnOneClickTab = locationPathname === marketPlacePath;
+  const isOneClickTab = to?.match(marketPlacePath);
+
+  // Special handling for marketplace tab
+  if (currentlyOnOneClickTab || isOneClickTab) {
+    return currentlyOnOneClickTab && isOneClickTab;
   }
 
-  return isPathOneOf([href, ...activeLinks], locationPathname);
+  if (to === locationPathname) {
+    return true;
+  }
+
+  if (locationPathname.startsWith(to + '/')) {
+    return true;
+  }
+
+  return false;
 };
 
 /**
@@ -39,7 +42,9 @@ export const useIsPageScrollable = (
 
     const contentHeight = contentRef.current.scrollHeight;
     const viewportHeight = document.documentElement.clientHeight;
-    setIsPageScrollable(contentHeight + TOPMENU_HEIGHT > viewportHeight);
+    setIsPageScrollable(
+      contentHeight + TOPMENU_HEIGHT + FOOTER_HEIGHT > viewportHeight
+    );
   }, [contentRef]);
 
   React.useEffect(() => {

@@ -1,4 +1,4 @@
-import { useAccount } from '@linode/queries';
+import { useRegionsVPCAvailabilitiesQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Box,
@@ -11,31 +11,34 @@ import {
   Typography,
 } from '@linode/ui';
 import { Radio, RadioGroup } from '@linode/ui';
-import {
-  getQueryParamsFromQueryString,
-  isFeatureEnabledV2,
-} from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'react-router-dom';
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 
 import { Code } from 'src/components/Code/Code';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
-import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
+import {
+  RFC1918HelperText,
+  VPC_CREATE_FORM_VPC_HELPER_TEXT,
+} from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { CreateVPCPayload } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
-import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {
   disabled?: boolean;
@@ -45,40 +48,39 @@ interface Props {
 
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, isDrawer, regions } = props;
-  const location = useLocation();
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
+  const createType = useGetLinodeCreateType();
 
   const {
     control,
     formState: { errors },
   } = useFormContext<CreateVPCPayload>();
-  const { append, fields, remove } = useFieldArray({
+
+  const { update } = useFieldArray({
     control,
-    name: 'ipv6',
+    name: 'subnets',
   });
 
-  const isDualStackSelected = fields.some((f) => f.range);
+  const [subnets, vpcIPv6, regionId] = useWatch({
+    control,
+    name: ['subnets', 'ipv6', 'region'],
+  });
 
-  const { data: account } = useAccount();
-  const isDualStackEnabled = isFeatureEnabledV2(
-    'VPC Dual Stack',
-    Boolean(flags.vpcIpv6),
-    account?.capabilities ?? []
-  );
+  const { data: permissions } = usePermissions('account', ['create_vpc']);
 
-  const isEnterpriseCustomer = isFeatureEnabledV2(
-    'VPC IPv6 Large Prefixes',
-    Boolean(flags.vpcIpv6),
-    account?.capabilities ?? []
-  );
+  const { isDualStackEnabled, isDualStackSelected } = useVPCDualStack(vpcIPv6);
+
+  const { data: regionsVPCAvailabilities } =
+    useRegionsVPCAvailabilitiesQuery(isDualStackEnabled);
+
+  const availableRegionIPv6PrefixLengths = regionsVPCAvailabilities?.find(
+    (region) => region.region === regionId
+  )?.available_ipv6_prefix_lengths;
 
   return (
     <>
@@ -88,7 +90,7 @@ export const VPCTopSectionContent = (props: Props) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Create VPC',
               interaction: 'click',
               label: 'Learn more',
@@ -151,120 +153,155 @@ export const VPCTopSectionContent = (props: Props) => {
       />
       {isDualStackEnabled && (
         <Box marginTop={2}>
-          <FormLabel>Networking IP Stack </FormLabel>
-          <RadioGroup sx={{ display: 'block' }}>
-            <Grid container spacing={2}>
-              <SelectionCard
-                checked={!isDualStackSelected}
-                gridSize={{
-                  md: isDrawer ? 12 : 3,
-                  sm: 12,
-                  xs: 12,
-                }}
-                heading="IPv4"
-                onClick={() => {
-                  remove(0);
-                }}
-                renderIcon={() => <Radio checked={!isDualStackSelected} />}
-                renderVariant={() => (
-                  <TooltipIcon
-                    status="info"
-                    sxTooltipIcon={{
-                      padding: '8px',
+          <FormLabel>IP Stack </FormLabel>
+          <Controller
+            control={control}
+            name="ipv6"
+            render={({ field }) => (
+              <RadioGroup sx={{ display: 'block' }}>
+                <Grid container spacing={2}>
+                  <SelectionCard
+                    checked={!isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
+                    gridSize={{
+                      md: isDrawer ? 12 : 3,
+                      sm: 12,
+                      xs: 12,
                     }}
-                    text={
-                      <Typography>
-                        The VPC uses IPv4 addresses only. The VPC can use the
-                        entire RFC 1918 specified range for subnetting.
-                      </Typography>
-                    }
-                    width={250}
-                  />
-                )}
-                subheadings={[]}
-                sxCardBase={{ gap: 0 }}
-                sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
-              />
-              <SelectionCard
-                checked={isDualStackSelected}
-                gridSize={{
-                  md: isDrawer ? 12 : 3,
-                  sm: 12,
-                  xs: 12,
-                }}
-                heading="IPv4 + IPv6 (Dual Stack)"
-                onClick={() => {
-                  if (fields.length === 0) {
-                    append({
-                      range: '/52',
-                    });
-                  }
-                }}
-                renderIcon={() => <Radio checked={isDualStackSelected} />}
-                renderVariant={() => (
-                  <TooltipIcon
-                    status="info"
-                    sxTooltipIcon={{
-                      padding: '8px',
+                    heading="IPv4"
+                    onClick={() => {
+                      field.onChange([]);
+                      subnets?.forEach((subnet, idx) =>
+                        update(idx, {
+                          ...subnet,
+                          ipv6: undefined,
+                        })
+                      );
                     }}
-                    text={
-                      <Stack spacing={2}>
-                        <Typography>
-                          The VPC supports both IPv4 and IPv6 addresses.
-                        </Typography>
-                        <Typography>
-                          For IPv4, the VPC can use the entire RFC 1918
-                          specified range for subnetting.
-                        </Typography>
-                        <Typography>
-                          For IPv6, the VPC is assigned an IPv6 prefix length of{' '}
-                          <Code>/52</Code> by default.
-                        </Typography>
-                      </Stack>
-                    }
-                    width={250}
+                    renderIcon={() => (
+                      <Radio
+                        checked={!isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
+                    renderVariant={() => (
+                      <TooltipIcon
+                        status="info"
+                        sxTooltipIcon={{
+                          padding: '8px',
+                        }}
+                        text={
+                          <Stack spacing={2}>
+                            <Typography>
+                              The VPC uses IPv4 addresses only.
+                            </Typography>
+                            <Typography>{RFC1918HelperText}</Typography>
+                          </Stack>
+                        }
+                        width={250}
+                      />
+                    )}
+                    subheadings={[]}
+                    sxCardBase={{ gap: 0 }}
+                    sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
                   />
-                )}
-                subheadings={[]}
-                sxCardBase={{ gap: 0 }}
-                sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
-              />
-            </Grid>
-          </RadioGroup>
+                  <SelectionCard
+                    checked={isDualStackSelected}
+                    disabled={!permissions?.create_vpc}
+                    gridSize={{
+                      md: isDrawer ? 12 : 3,
+                      sm: 12,
+                      xs: 12,
+                    }}
+                    heading="IPv4 + IPv6 (Dual Stack)"
+                    onClick={() => {
+                      field.onChange([
+                        {
+                          range: '/52',
+                        },
+                      ]);
+                      subnets?.forEach((subnet, idx) =>
+                        update(idx, {
+                          ...subnet,
+                          ipv6: subnet.ipv6 ?? [{ range: '/56' }],
+                        })
+                      );
+                    }}
+                    renderIcon={() => (
+                      <Radio
+                        checked={isDualStackSelected}
+                        disabled={!permissions?.create_vpc}
+                      />
+                    )}
+                    renderVariant={() => (
+                      <TooltipIcon
+                        status="info"
+                        sxTooltipIcon={{
+                          padding: '8px',
+                        }}
+                        text={
+                          <Stack spacing={2}>
+                            <Typography>
+                              The VPC supports both IPv4 and IPv6 addresses.
+                            </Typography>
+                            <Typography>
+                              For IPv4, {RFC1918HelperText}
+                            </Typography>
+                            <Typography>
+                              For IPv6, the VPC is assigned an IPv6 prefix
+                              length of <Code>/52</Code> by default.
+                            </Typography>
+                          </Stack>
+                        }
+                        width={250}
+                      />
+                    )}
+                    subheadings={[]}
+                    sxCardBase={{ gap: 0 }}
+                    sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
+                  />
+                </Grid>
+              </RadioGroup>
+            )}
+          />
         </Box>
       )}
-      {isDualStackSelected && isEnterpriseCustomer && (
-        <Controller
-          control={control}
-          name="ipv6"
-          render={() => (
-            <RadioGroup
-              onChange={(_, value) => {
-                remove(0);
-                append({
-                  range: value,
-                });
-              }}
-              value={fields[0].range}
-            >
-              <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
-                VPC IPv6 Prefix Length
-              </StyledFormLabel>
-              {errors.ipv6 && (
-                <Notice
-                  sx={{ marginTop: 1 }}
-                  text={errors.ipv6[0]?.range?.message}
-                  variant="error"
-                />
-              )}
-              <>
-                <FormControlLabel control={<Radio />} label="/52" value="/52" />
-                <FormControlLabel control={<Radio />} label="/48" value="/48" />
-              </>
-            </RadioGroup>
-          )}
-        />
-      )}
+      {isDualStackSelected &&
+        availableRegionIPv6PrefixLengths &&
+        availableRegionIPv6PrefixLengths.length > 1 && ( // Hide /52 if it's the only prefix length
+          <Controller
+            control={control}
+            name="ipv6"
+            render={({ field, fieldState }) => (
+              <RadioGroup
+                onChange={(_, value) => field.onChange([{ range: value }])}
+                style={{ margin: 0 }}
+                value={field.value}
+              >
+                <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
+                  VPC IPv6 Prefix Length
+                </StyledFormLabel>
+                {errors.ipv6 && (
+                  <Notice
+                    sx={{ marginTop: 1 }}
+                    text={fieldState.error?.message}
+                    variant="error"
+                  />
+                )}
+                {availableRegionIPv6PrefixLengths.map((prefixLength) => (
+                  <FormControlLabel
+                    checked={vpcIPv6 && vpcIPv6[0].range === `/${prefixLength}`}
+                    control={<Radio />}
+                    disabled={!permissions?.create_vpc}
+                    key={prefixLength}
+                    label={`/${prefixLength}`}
+                    value={`/${prefixLength}`}
+                  />
+                ))}
+              </RadioGroup>
+            )}
+          />
+        )}
     </>
   );
 };

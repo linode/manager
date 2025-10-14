@@ -18,11 +18,13 @@ export interface FilterData {
   id: { [filterKey: string]: FilterValueType };
   label: { [filterKey: string]: string[] };
 }
+export interface CloudPulseMetricsFilter {
+  [key: string]: FilterValueType;
+}
 export interface DashboardProp {
   dashboard?: Dashboard;
-  filterValue: {
-    [key: string]: FilterValueType;
-  };
+  filterValue: CloudPulseMetricsFilter;
+  groupBy: string[];
   timeDuration?: DateTimeWithPreset;
 }
 
@@ -31,6 +33,8 @@ export const CloudPulseDashboardLanding = () => {
     id: {},
     label: {},
   });
+
+  const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
   const [timeDuration, setTimeDuration] = React.useState<
     DateTimeWithPreset | undefined
@@ -44,6 +48,10 @@ export const CloudPulseDashboardLanding = () => {
   const toggleAppliedFilter = (isVisible: boolean) => {
     setShowAppliedFilters(isVisible);
   };
+
+  const onGroupByChange = React.useCallback((selectedValues: string[]) => {
+    setGroupBy(selectedValues);
+  }, []);
 
   const onFilterChange = React.useCallback(
     (filterKey: string, filterValue: FilterValueType, labels: string[]) => {
@@ -91,13 +99,14 @@ export const CloudPulseDashboardLanding = () => {
               <GlobalFilters
                 handleAnyFilterChange={onFilterChange}
                 handleDashboardChange={onDashboardChange}
+                handleGroupByChange={onGroupByChange}
                 handleTimeDurationChange={onTimeDurationChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
               />
               {dashboard?.service_type && showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
+                  dashboardId={dashboard.id}
                   filters={filterData.label}
-                  serviceType={dashboard.service_type}
                 />
               )}
             </Box>
@@ -106,6 +115,7 @@ export const CloudPulseDashboardLanding = () => {
         <CloudPulseDashboardRenderer
           dashboard={dashboard}
           filterValue={filterData.id}
+          groupBy={groupBy}
           timeDuration={timeDuration}
         />
       </GridLegacy>

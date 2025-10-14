@@ -19,3 +19,29 @@ export const VPCRangesDescription = (props: TypographyProps) => {
     </Typography>
   );
 };
+
+/**
+ * A shared component that contains a brief description of VPC IPv4 ranges
+ */
+export const VPCIPv6RangesDescription = (props: TypographyProps) => {
+  return (
+    <Typography {...props}>
+      Assign additional IPv6 address ranges that the VPC can use to reach
+      services running on this Linode.{' '}
+      <Link to={ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK}>Learn more</Link>.
+    </Typography>
+  );
+};
+
+/**
+ * A shared component that contains a brief description of VPC IPv4 and IPv6 ranges
+ */
+export const DualStackVPCRangesDescription = (props: TypographyProps) => {
+  return (
+    <Typography {...props}>
+      You can add IPv4 and IPv6 address ranges to let your VPC connect to
+      services running on this Linode.{' '}
+      <Link to={ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK}>Learn more</Link>.
+    </Typography>
+  );
+};

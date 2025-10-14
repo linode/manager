@@ -29,6 +29,48 @@ const volumesRoute = createRoute({
   path: 'volumes',
 });
 
+const volumeDetailsRoute = createRoute({
+  getParentRoute: () => volumesRoute,
+  parseParams: (params) => ({
+    volumeId: Number(params.volumeId),
+  }),
+  // validateSearch: (search: VolumesSearchParams) => search,
+  path: '$volumeId',
+}).lazy(() =>
+  import('src/features/Volumes/VolumeDetails/volumeDetailsLazyRoute').then(
+    (m) => m.volumeDetailsLazyRoute
+  )
+);
+
+const volumeDetailsSummaryRoute = createRoute({
+  path: 'summary',
+  getParentRoute: () => volumeDetailsRoute,
+});
+
+const volumeDetailsSummaryActionRoute = createRoute({
+  path: 'summary/$action',
+  getParentRoute: () => volumeDetailsRoute,
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in volumeAction)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/volumes',
+      });
+    }
+  },
+  params: {
+    parse: ({ action, volumeId }: VolumeActionRouteParams<string>) => ({
+      action,
+      volumeId: Number(volumeId),
+    }),
+    stringify: ({ action, volumeId }: VolumeActionRouteParams<number>) => ({
+      action,
+      volumeId: String(volumeId),
+    }),
+  },
+  validateSearch: (search: VolumesSearchParams) => search,
+});
+
 const volumesIndexRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: '/',
@@ -96,4 +138,8 @@ export const volumesRouteTree = volumesRoute.addChildren([
   volumesIndexRoute.addChildren([volumeActionRoute]),
   volumesCreateRoute,
   volumesCatchAllRoute,
+  volumeDetailsRoute.addChildren([
+    volumeDetailsSummaryRoute,
+    volumeDetailsSummaryActionRoute,
+  ]),
 ]);

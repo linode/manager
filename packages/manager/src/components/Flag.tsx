@@ -1,6 +1,6 @@
-import { Box } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import { Box, omittedProps } from '@linode/ui';
 import 'flag-icons/css/flag-icons.min.css';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import type { Country } from '@linode/api-v4';
@@ -9,6 +9,13 @@ import type { BoxProps } from '@linode/ui';
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
 };
+
+// Countries that need a css border in the Flag component (countries that have DCs)
+const COUNTRIES_WITH_BORDERS = [
+  'id', // indonesia
+  'jp', // japan
+  'sg', // singapore
+];
 
 interface Props extends BoxProps {
   country: Country;
@@ -23,6 +30,7 @@ export const Flag = (props: Props) => {
   return (
     <StyledFlag
       className={`fi fi-${getFlagClass(country.toLowerCase())} fi-xx`}
+      hasBorder={COUNTRIES_WITH_BORDERS.includes(country.toLowerCase())}
       {...rest}
     />
   );
@@ -37,10 +45,18 @@ const getFlagClass = (country: Country | string) => {
   return country;
 };
 
-const StyledFlag = styled(Box, { label: 'StyledFlag' })(({ theme }) => ({
+const StyledFlag = styled(Box, {
+  label: 'StyledFlag',
+  shouldForwardProp: omittedProps(['hasBorder']),
+})<{
+  hasBorder: boolean;
+}>(({ theme, hasBorder }) => ({
   boxShadow:
     theme.palette.mode === 'light' ? `0px 0px 0px 1px #00000010` : undefined,
   fontSize: '1.5rem',
   verticalAlign: 'top',
   width: '1.41rem',
+  ...(hasBorder && {
+    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+  }),
 }));

@@ -2,22 +2,19 @@ import { useRegionsQuery } from '@linode/queries';
 import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { type Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import {
-  getIsVPCLKEEnterpriseCluster,
   getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
 } from '../utils';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   handleDeleteVPC: () => void;
@@ -35,47 +32,44 @@ export const VPCRow = ({
   const { id, label, subnets } = vpc;
   const { data: regions } = useRegionsQuery();
 
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
   const numResources = isNodebalancerVPCEnabled
     ? getUniqueResourcesFromSubnets(vpc.subnets)
     : getUniqueLinodesFromSubnets(vpc.subnets);
 
-  const isVPCReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'vpc',
-    id: vpc.id,
-  });
-
-  const isVPCLKEEnterpriseCluster = getIsVPCLKEEnterpriseCluster(vpc);
+  const { data: permissions, isLoading } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpc.id,
+    isOpen
+  );
 
   const actions: Action[] = [
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: !permissions.update_vpc,
       onClick: handleEditVPC,
       title: 'Edit',
-      tooltip: isVPCReadOnly
+      tooltip: !permissions.update_vpc
         ? getRestrictedResourceText({
             action: 'edit',
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: !permissions.delete_vpc,
       onClick: handleDeleteVPC,
       title: 'Delete',
-      tooltip: isVPCReadOnly
+      tooltip: !permissions.delete_vpc
         ? getRestrictedResourceText({
             action: 'delete',
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
   ];
 
@@ -95,16 +89,12 @@ export const VPCRow = ({
         <TableCell>{numResources}</TableCell>
       </Hidden>
       <TableCell actionCell>
-        {actions.map((action) => (
-          <InlineMenuAction
-            actionText={action.title}
-            data-testid={action.title}
-            disabled={action.disabled}
-            key={action.title}
-            onClick={action.onClick}
-            tooltip={action.tooltip}
-          />
-        ))}
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for VPC ${vpc.label}`}
+          loading={isLoading}
+          onOpen={() => setIsOpen(true)}
+        />
       </TableCell>
     </TableRow>
   );

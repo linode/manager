@@ -27,3 +27,5 @@ export const LOCAL_STORAGE_MAINTENANCE_FORM_DATA_KEY =
 
 export const LOCAL_STORAGE_NOTIFICATIONS_FORM_DATA_KEY =
   'msw-notifications-form-data';
+
+export const LOCAL_STORAGE_GRANTS_FORM_DATA_KEY = 'msw-grants-form-data';

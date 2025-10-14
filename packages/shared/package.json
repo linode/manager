@@ -1,6 +1,6 @@
 {
   "name": "@linode/shared",
-  "version": "0.5.0",
+  "version": "0.9.0",
   "description": "Linode shared feature component library",
   "main": "src/index.ts",
   "module": "src/index.ts",

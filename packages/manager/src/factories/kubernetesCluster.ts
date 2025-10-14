@@ -3,7 +3,6 @@ import { Factory } from '@linode/utilities';
 import type {
   ControlPlaneACLOptions,
   KubeNodePoolResponse,
-  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -20,6 +19,7 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
 });
 
 export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
+  label: '',
   autoscaler: {
     enabled: false,
     max: 1,
@@ -41,35 +41,12 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   type: 'g6-standard-1',
 });
 
-export const nodePoolBetaFactory =
-  Factory.Sync.makeFactory<KubeNodePoolResponseBeta>({
-    autoscaler: {
-      enabled: false,
-      max: 1,
-      min: 1,
-    },
-    count: 3,
-    disk_encryption: 'enabled',
-    id: Factory.each((id) => id),
-    labels: {},
-    nodes: kubeLinodeFactory.buildList(3),
-    tags: [],
-    taints: [
-      {
-        effect: 'NoExecute',
-        key: 'example.com/my-app',
-        value: 'my-taint',
-      },
-    ],
-    type: 'g6-standard-1',
-    firewall_id: 0,
-    k8s_version: 'v1.31.1+lke4',
-    update_strategy: 'on_recycle',
-  });
-
 export const kubernetesClusterFactory =
   Factory.Sync.makeFactory<KubernetesCluster>({
-    control_plane: { high_availability: true },
+    control_plane: {
+      audit_logs_enabled: true,
+      high_availability: true,
+    },
     created: '2020-04-08T16:58:21',
     id: Factory.each((id) => id),
     k8s_version: '1.21',

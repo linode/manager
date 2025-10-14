@@ -3,8 +3,7 @@ import {
   Box,
   CircleProgress,
   ErrorState,
-  Notice,
-  StyledLinkButton,
+  LinkButton,
   Typography,
 } from '@linode/ui';
 import { truncate } from '@linode/utilities';
@@ -12,10 +11,12 @@ import { useTheme } from '@mui/material/styles';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
@@ -53,6 +54,12 @@ const VPCDetail = () => {
   const flags = useIsNodebalancerVPCEnabled();
 
   const { data: regions } = useRegionsQuery();
+
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpcId
+  );
 
   const handleEditVPC = (vpc: VPC) => {
     navigate({
@@ -167,14 +174,24 @@ const VPCDetail = () => {
         </Box>
         <Box display="flex" justifyContent="end">
           <StyledActionButton
-            disabled={isVPCLKEEnterpriseCluster}
+            disabled={!permissions.update_vpc}
             onClick={() => handleEditVPC(vpc)}
+            tooltipText={
+              !permissions.update_vpc
+                ? 'You do not have permission to edit this VPC.'
+                : undefined
+            }
           >
             Edit
           </StyledActionButton>
           <StyledActionButton
-            disabled={isVPCLKEEnterpriseCluster}
+            disabled={!permissions.delete_vpc}
             onClick={() => handleDeleteVPC(vpc)}
+            tooltipText={
+              !permissions.delete_vpc
+                ? 'You do not have permission to delete this VPC.'
+                : undefined
+            }
           >
             Delete
           </StyledActionButton>
@@ -207,13 +224,13 @@ const VPCDetail = () => {
             <Typography sx={{ overflowWrap: 'anywhere', wordBreak: 'normal' }}>
               {description}{' '}
               {description.length > 150 && (
-                <StyledLinkButton
+                <LinkButton
                   data-testid="show-description-button"
                   onClick={() => setShowFullDescription((show) => !show)}
                   sx={{ fontSize: '0.875rem' }}
                 >
                   Read {showFullDescription ? 'Less' : 'More'}
-                </StyledLinkButton>
+                </LinkButton>
               )}
             </Typography>
           </StyledDescriptionBox>
@@ -234,14 +251,15 @@ const VPCDetail = () => {
         vpcError={error}
       />
       {isVPCLKEEnterpriseCluster && (
-        <Notice
+        <DismissibleBanner
           bgcolor={theme.palette.background.paper}
+          preferenceKey={`vpc-${vpc.id}`}
           spacingTop={24}
           style={{ padding: '8px 16px' }}
-          variant="warning"
+          variant="info"
         >
-          <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
-        </Notice>
+          <Typography>{LKE_ENTERPRISE_AUTOGEN_VPC_WARNING}</Typography>
+        </DismissibleBanner>
       )}
       <Box
         padding={`${theme.spacingFunction(16)} ${theme.spacingFunction(8)}`}

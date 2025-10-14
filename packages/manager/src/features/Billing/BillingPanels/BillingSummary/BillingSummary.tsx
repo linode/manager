@@ -1,9 +1,4 @@
-import {
-  useAccount,
-  useGrants,
-  useNotificationsQuery,
-  useProfile,
-} from '@linode/queries';
+import { useAccount, useGrants, useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -11,6 +6,8 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -33,9 +30,12 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const { data: notifications } = useNotificationsQuery();
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
 
-  const isRestrictedUser = profile?.restricted;
+  const { data: permissions } = usePermissions('account', [
+    'create_promo_code',
+  ]);
+
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
@@ -43,6 +43,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
+  const url = iamRbacPrimaryNavChanges ? '/billing' : '/account/billing';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
   const isBalanceOutsideGracePeriod = notifications?.some(
@@ -54,7 +55,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   const navigate = useNavigate();
-  const search = useSearch({ from: '/account/billing' });
+  const search = useSearch({
+    from: url,
+  });
   const { paymentMethodId } = search;
 
   const makePaymentRouteMatch = search.action === 'make-payment';
@@ -77,7 +80,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const closePaymentDrawer = React.useCallback(() => {
     setPaymentDrawerOpen(false);
     setSelectedPaymentMethod(undefined);
-    navigate({ to: '/account/billing' });
+    navigate({
+      to: url,
+    });
   }, [navigate]);
 
   const openPromoDialog = () => setIsPromoDialogOpen(true);
@@ -85,6 +90,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   React.useEffect(() => {
     if (!makePaymentRouteMatch) {
+      if (paymentDrawerOpen) {
+        closePaymentDrawer();
+      }
       return;
     }
 
@@ -134,7 +142,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         <Button
           onClick={() =>
             navigate({
-              to: '/account/billing',
+              to: url,
               search: (prev) => ({
                 ...prev,
                 action: 'make-payment',
@@ -154,7 +162,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const showAddPromoLink =
     balance <= 0 &&
-    !isRestrictedUser &&
+    permissions.create_promo_code &&
     isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 

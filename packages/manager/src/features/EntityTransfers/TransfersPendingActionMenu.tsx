@@ -3,14 +3,16 @@ import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
+import type { TransfersPermissions } from './TransfersTable';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onCancelClick: () => void;
+  permissions?: Record<TransfersPermissions, boolean>;
 }
 
 export const TransfersPendingActionMenu = (props: Props) => {
-  const { onCancelClick } = props;
+  const { onCancelClick, permissions } = props;
 
   const actions: Action[] = [
     {
@@ -18,6 +20,7 @@ export const TransfersPendingActionMenu = (props: Props) => {
         onCancelClick();
       },
       title: 'Cancel',
+      disabled: !permissions?.cancel_service_transfer,
     },
   ];
 

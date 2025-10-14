@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -6,11 +6,18 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
-import { IAM_DOCS_LINK } from './Shared/constants';
+import { useDelegationRole } from './hooks/useDelegationRole';
+import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const flags = useFlags();
+  const { isParentAccount } = useDelegationRole();
+
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/iam/users`,
@@ -20,16 +27,25 @@ export const IdentityAccessLanding = React.memo(() => {
       to: `/iam/roles`,
       title: 'Roles',
     },
+    {
+      hide: !flags.iamDelegation?.enabled || !isParentAccount,
+      to: `/iam/delegations`,
+      title: 'Account Delegations',
+    },
   ]);
 
   const landingHeaderProps = {
     breadcrumbProps: {
       pathname: '/iam',
     },
-    docsLink: IAM_DOCS_LINK,
+    docsLink: tabIndex === 0 ? IAM_DOCS_LINK : ROLES_LEARN_MORE_LINK,
     entity: 'Identity and Access',
     title: 'Identity and Access',
   };
+
+  if (location.pathname === '/iam') {
+    navigate({ to: '/iam/users' });
+  }
 
   return (
     <>

@@ -13,7 +13,7 @@ const queryMocks = vi.hoisted(() => ({
   useLinodeQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode_config_profile: false,
     },
   })),
@@ -56,7 +56,7 @@ describe('LinodeConfigs', () => {
 
   it('should show the Network Interfaces column for legacy config Linodes', async () => {
     queryMocks.useLinodeQuery.mockReturnValue({
-      data: linodeFactory.build,
+      data: linodeFactory.build(),
     });
 
     const { queryByText } = renderWithTheme(<LinodeConfigs />);
@@ -91,8 +91,8 @@ describe('LinodeConfigs', () => {
 
   it('should enable "Add Configuration" button if the user has permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
-        ...queryMocks.userPermissions().permissions,
+      data: {
+        ...queryMocks.userPermissions().data,
         create_linode_config_profile: true,
       },
     });

@@ -1,5 +1,8 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { AlertServiceType, TPAProvider } from '@linode/api-v4/lib/profile';
+import type {
+  CloudPulseServiceType,
+  TPAProvider,
+} from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
@@ -50,6 +53,21 @@ interface BaseFeatureFlag {
   enabled: boolean;
 }
 
+interface LinodeInterfacesFlag extends BaseFeatureFlag {
+  /**
+   * Shows a Beta chip for UI elements related to Linode Interfaces
+   */
+  beta?: boolean;
+  /**
+   * Enables the Interface History Table
+   */
+  interface_history?: boolean;
+  /**
+   * Shows a New chip for UI elements related to Linode Interfaces
+   */
+  new?: boolean;
+}
+
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
   new: boolean;
@@ -65,15 +83,24 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 }
 
 interface AclpFlag {
+  /**
+   * This property indicates whether the feature is in beta
+   */
   beta: boolean;
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
   bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether the feature is enabled
+   */
   enabled: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
-  phase2Mtc: boolean;
+  phase2Mtc: { byoVPC: boolean; dualStack: boolean };
   postLa: boolean;
 }
 
@@ -85,12 +112,11 @@ interface CloudNatFlag extends BetaFeatureFlag {
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 interface GpuV2 {
   egressBanner: boolean;
-  planDivider: boolean;
   transferBanner: boolean;
 }
 
@@ -105,6 +131,8 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 interface AclpAlerting {
+  accountAlertLimit: number;
+  accountMetricLimit: number;
   alertDefinitions: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;
@@ -121,35 +149,42 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpBetaServices: AclpBetaServices;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
+  aclpServices: Partial<AclpServices>;
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
   aplGeneralAvailability: boolean;
+  aplLkeE: boolean;
   blockStorageEncryption: boolean;
+  blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
+  databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseVpc: boolean;
+  databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
+  iamDelegation: BaseFeatureFlag;
+  iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
+  kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
-  linodeInterfaces: BaseFeatureFlag;
-  lkeEnterprise: LkeEnterpriseFlag;
+  linodeInterfaces: LinodeInterfacesFlag;
+  lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
@@ -158,6 +193,7 @@ export interface Flags {
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
+  objSummaryPage: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -173,6 +209,7 @@ export interface Flags {
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
+  volumeSummaryPage: boolean;
   vpcIpv6: boolean;
 }
 
@@ -262,7 +299,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
-  | 'DataStream'
+  | 'Delivery'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'
@@ -271,6 +308,7 @@ export type ProductInformationBannerLocation =
   | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Logs'
   | 'Longview'
   | 'Managed'
   | 'NodeBalancers'
@@ -308,13 +346,13 @@ export interface APIMaintenance {
 
 export interface AclpAlertServiceTypeConfig {
   maxResourceSelectionCount: number;
-  serviceType: AlertServiceType;
+  serviceType: CloudPulseServiceType;
   // This can be extended to have supportedRegions, supportedFilters and other tags
 }
 
-export interface AclpBetaServices {
-  [serviceType: string]: {
-    alerts: boolean;
-    metrics: boolean;
+export type AclpServices = {
+  [serviceType in CloudPulseServiceType]: {
+    alerts?: AclpFlag;
+    metrics?: AclpFlag;
   };
-}
+};

@@ -9,10 +9,12 @@ import {
   MAINTENANCE_POLICY_DESCRIPTION,
   MAINTENANCE_POLICY_LEARN_MORE_URL,
   MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT,
+  MAINTENANCE_POLICY_SELECT_REGION_TEXT,
   MAINTENANCE_POLICY_TITLE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { getFeatureChip } from 'src/features/Account/MaintenancePolicy';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { LinodeCreateFormValues } from '../utilities';
@@ -29,10 +31,18 @@ export const MaintenancePolicy = () => {
   const { data: region } = useRegionQuery(selectedRegion);
   const { data: type } = useTypeQuery(selectedType, Boolean(selectedType));
 
+  const { data: permissions } = usePermissions('account', ['create_linode']);
+
   const isGPUPlan = type && type.class === 'gpu';
 
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
+
+  // Determine if disabled due to missing prerequisites vs permission issues
+  const isDisabledDueToPrerequisites =
+    !selectedRegion || !regionSupportsMaintenancePolicy;
+  const isDisabledDueToPermissions = !permissions?.create_linode;
+  const isDisabled = isDisabledDueToPrerequisites || isDisabledDueToPermissions;
 
   return (
     <Accordion
@@ -62,17 +72,22 @@ export const MaintenancePolicy = () => {
         name="maintenance_policy"
         render={({ field, fieldState }) => (
           <MaintenancePolicySelect
-            disabled={!selectedRegion || !regionSupportsMaintenancePolicy}
+            disabled={isDisabled}
+            disabledReason={
+              isDisabledDueToPermissions
+                ? 'You do not have permission to update Linodes.'
+                : undefined
+            }
             errorText={fieldState.error?.message}
             onChange={(policy) => field.onChange(policy.slug)}
             textFieldProps={{
-              helperText: !region
-                ? 'Select a region to choose a maintenance policy.'
-                : selectedRegion && !regionSupportsMaintenancePolicy
+              helperText: isDisabledDueToPrerequisites
+                ? selectedRegion && !regionSupportsMaintenancePolicy
                   ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
-                  : undefined,
+                  : MAINTENANCE_POLICY_SELECT_REGION_TEXT
+                : undefined,
             }}
-            value={field.value ?? undefined}
+            value={field.value ?? null}
           />
         )}
       />

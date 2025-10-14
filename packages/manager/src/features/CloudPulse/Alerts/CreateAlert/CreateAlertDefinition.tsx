@@ -25,10 +25,11 @@ import {
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
+import { EntityScopeRenderer } from './EntityScopeRenderer';
+import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
-import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -38,6 +39,7 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type { APIError } from '@linode/api-v4';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -54,7 +56,6 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  entity_ids: [],
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
@@ -63,19 +64,15 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
-  scope: 'entity',
+  entity_ids: [],
+  scope: null,
 };
 
-const overrides = [
+const overrides: CrumbOverridesProps[] = [
   {
     label: 'Definitions',
     linkTo: '/alerts/definitions',
     position: 1,
-  },
-  {
-    label: 'Details',
-    linkTo: `/alerts/definitions/create`,
-    position: 2,
   },
 ];
 export const CreateAlertDefinition = () => {
@@ -103,7 +100,7 @@ export const CreateAlertDefinition = () => {
     getValues,
     handleSubmit,
     setError,
-    setValue,
+    resetField,
   } = formMethods;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -120,7 +117,7 @@ export const CreateAlertDefinition = () => {
     serviceTypeWatcher ?? '',
     !!serviceTypeWatcher
   );
-
+  const scopeWatcher = useWatch({ control, name: 'scope' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -157,10 +154,15 @@ export const CreateAlertDefinition = () => {
 
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
-    setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
-    setValue('entity_ids', []);
-    setValue('trigger_conditions', triggerConditionInitialValues);
-  }, [setValue]);
+    resetField('rule_criteria.rules', {
+      defaultValue: [{ ...criteriaInitialValues }],
+    });
+    resetField('entity_ids', { defaultValue: [] });
+    resetField('trigger_conditions', {
+      defaultValue: triggerConditionInitialValues,
+    });
+    resetField('scope', { defaultValue: null });
+  }, [resetField]);
 
   React.useEffect(() => {
     setValidationSchema(
@@ -219,7 +221,11 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <CloudPulseModifyAlertResources name="entity_ids" />
+            <AlertEntityScopeSelect
+              name="scope"
+              serviceType={serviceTypeWatcher}
+            />
+            <EntityScopeRenderer scope={scopeWatcher} />
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}

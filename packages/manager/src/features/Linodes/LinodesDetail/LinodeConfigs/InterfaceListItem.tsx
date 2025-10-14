@@ -37,7 +37,7 @@ export const InterfaceListItem = (props: Props) => {
   };
 
   return (
-    <li data-testid="interface-list-item" style={{ paddingBottom: 4 }}>
+    <li data-testid="interface-list-item">
       {interfaceName} – {getInterfaceLabel(interfaceEntry)}
     </li>
   );

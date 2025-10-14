@@ -1,15 +1,21 @@
 import { useAllVPCsQuery } from '@linode/queries';
-import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import {
+  BetaChip,
+  Button,
+  CircleProgress,
+  ErrorState,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { getReadOnlyHost } from '../../utilities';
-import {
-  StyledGridContainer,
-  StyledLabelTypography,
-  StyledValueGrid,
-} from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
+
+import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
+import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
+import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
+import { StyledGridContainer } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
 import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';
 
@@ -41,6 +47,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
     },
     sectionTitle: {
       marginBottom: '0.25rem',
+      display: 'flex',
     },
     sectionTitleAndText: {
       width: '100%',
@@ -53,12 +60,9 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         flexDirection: 'column',
       },
     },
-    provisioningText: {
-      font: theme.font.normal,
-      fontStyle: 'italic',
-    },
   }));
 
+  const flags = useFlags();
   const { classes } = useStyles();
   const [isManageNetworkingDrawerOpen, setIsManageNetworkingDrawerOpen] =
     React.useState(false);
@@ -68,8 +72,6 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
   const vpcId = Number(database.private_network?.vpc_id);
   const hasVPCConfigured = Boolean(vpcId);
   const gridContainerSize = { lg: 7, md: 10 };
-  const gridValueSize = { md: 8, xs: 9 };
-  const gridLabelSize = { md: 4, xs: 3 };
 
   const {
     data: vpcs,
@@ -86,12 +88,6 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
     (subnet) => subnet.id === database?.private_network?.subnet_id
   );
   const hasVPCs = Boolean(vpcs && vpcs.length > 0);
-
-  const readOnlyHost = () => {
-    const defaultValue = 'N/A';
-    const value = getReadOnlyHost(database) || defaultValue;
-    return <span>{value}</span>;
-  };
 
   const onManageAccess = () => {
     setIsManageNetworkingDrawerOpen(true);
@@ -118,9 +114,15 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
             <Typography variant="h3">Manage Networking</Typography>
+            {flags.databaseVpcBeta && <BetaChip />}
           </div>
           <Typography sx={{ maxWidth: '500px' }}>
-            Update access settings or the VPC assignment.
+            Update access settings or the VPC assignment.{' '}
+            <Link
+              to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
+            >
+              Learn more.
+            </Link>
             <br />
             Note that a change of VPC assignment settings can disrupt service
             availability. Avoid writing data to the database while a change is
@@ -140,54 +142,26 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
       </div>
 
       <StyledGridContainer container size={gridContainerSize} spacing={0}>
-        <Grid size={gridLabelSize}>
-          <StyledLabelTypography>Connection Type</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={gridValueSize}>
+        <ConnectionDetailsRow label="Connection Type">
           {hasVPCConfigured ? 'VPC' : 'Public'}
-        </StyledValueGrid>
+        </ConnectionDetailsRow>
+
         {hasVPCConfigured && (
           <>
-            <Grid size={gridLabelSize}>
-              <StyledLabelTypography>VPC</StyledLabelTypography>
-            </Grid>
-            <StyledValueGrid size={gridValueSize}>
+            <ConnectionDetailsRow label="VPC">
               {currentVPC?.label}
-            </StyledValueGrid>
-            <Grid size={gridLabelSize}>
-              <StyledLabelTypography>Subnet</StyledLabelTypography>
-            </Grid>
-            <StyledValueGrid size={gridValueSize}>
+            </ConnectionDetailsRow>
+            <ConnectionDetailsRow label="Subnet">
               {`${currentSubnet?.label} (${currentSubnet?.ipv4})`}
-            </StyledValueGrid>
+            </ConnectionDetailsRow>
           </>
         )}
 
-        <Grid size={gridLabelSize}>
-          <StyledLabelTypography>Host</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={gridValueSize}>
-          {database.hosts?.primary ? (
-            database.hosts?.primary
-          ) : (
-            <span className={classes.provisioningText}>
-              Your hostname will appear here once it is available.
-            </span>
-          )}
-        </StyledValueGrid>
-        <Grid size={gridLabelSize}>
-          <StyledLabelTypography>Read-only Host</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={gridValueSize}>{readOnlyHost()}</StyledValueGrid>
+        <ConnectionDetailsHostRows database={database} />
         {hasVPCConfigured && (
-          <>
-            <Grid size={gridLabelSize}>
-              <StyledLabelTypography>Public Access</StyledLabelTypography>
-            </Grid>
-            <StyledValueGrid size={gridValueSize}>
-              {database?.private_network?.public_access ? 'Yes' : 'No'}
-            </StyledValueGrid>
-          </>
+          <ConnectionDetailsRow label="Public Access">
+            {database?.private_network?.public_access ? 'Yes' : 'No'}
+          </ConnectionDetailsRow>
         )}
       </StyledGridContainer>
 

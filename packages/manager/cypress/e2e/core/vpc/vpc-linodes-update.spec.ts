@@ -50,9 +50,10 @@ describe('VPC assign/unassign flows', () => {
   });
 
   beforeEach(() => {
-    // TODO - Remove mock once `nodebalancerVpc` feature flag is removed.
+    // TODO - Remove mock once `nodebalancerVpc` and `vpcIpv6  feature flags are removed.
     mockAppendFeatureFlags({
       nodebalancerVpc: false,
+      vpcIpv6: false,
     }).as('getFeatureFlags');
   });
 
@@ -139,7 +140,7 @@ describe('VPC assign/unassign flows', () => {
       .click();
 
     ui.drawer
-      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
+      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label}`)
       .should('be.visible')
       .within(() => {
         // confirm that the user is warned that a reboot / shutdown is required
@@ -166,9 +167,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
 
         // Auto-assign IPv4 checkbox checked by default
-        cy.findByLabelText(
-          'Auto-assign a VPC IPv4 address for this Linode'
-        ).should('be.checked');
+        cy.findByLabelText('Auto-assign VPC IPv4').should('be.checked');
 
         cy.wait('@getLinodeConfigs');
 
@@ -278,7 +277,7 @@ describe('VPC assign/unassign flows', () => {
       .click();
 
     ui.drawer
-      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
+      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label}`)
       .should('be.visible')
       .within(() => {
         // confirm that the user is warned that a reboot / shutdown is required
@@ -305,9 +304,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
 
         // Uncheck auto-assign checkbox and type in VPC IPv4
-        cy.findByLabelText('Auto-assign a VPC IPv4 address for this Linode')
-          .should('be.checked')
-          .click();
+        cy.findByLabelText('Auto-assign VPC IPv4').should('be.checked').click();
         cy.findByLabelText('VPC IPv4').should('be.visible').click();
         cy.focused().type(mockVPCInterface.ipv4?.vpc ?? '10.0.0.7');
 
@@ -335,6 +332,7 @@ describe('VPC assign/unassign flows', () => {
 
         ui.button
           .findByTitle('Done')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();

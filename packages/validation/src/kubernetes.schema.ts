@@ -2,18 +2,73 @@ import { array, boolean, number, object, string } from 'yup';
 
 import { validateIP } from './firewalls.schema';
 
-export const nodePoolSchema = object({
-  type: string(),
-  count: number(),
+// Starts and ends with a letter or number and contains letters, numbers, hyphens, dots, and underscores
+const alphaNumericValidCharactersRegex =
+  /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
+
+export const kubernetesTaintSchema = object({
+  key: string()
+    .required('Key is required.')
+    .test(
+      'valid-key',
+      'Key must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 253 characters.',
+      (value) => {
+        return (
+          alphaNumericValidCharactersRegex.test(value) ||
+          dnsKeyRegex.test(value)
+        );
+      },
+    )
+    .max(253, 'Key must be between 1 and 253 characters.')
+    .min(1, 'Key must be between 1 and 253 characters.'),
+  value: string()
+    .matches(
+      alphaNumericValidCharactersRegex,
+      'Value must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 63 characters.',
+    )
+    .max(63, 'Value must be between 0 and 63 characters.')
+    .notOneOf(
+      ['kubernetes.io', 'linode.com'],
+      'Value cannot be "kubernetes.io" or "linode.com".',
+    )
+    .notRequired(),
 });
 
-export const nodePoolBetaSchema = nodePoolSchema.concat(
-  object({
-    upgrade_strategy: string(),
-    k8_version: string(),
-    firewall_id: number(),
-  }),
-);
+const NodePoolDiskSchema = object({
+  size: number().required(),
+  type: string()
+    .oneOf(['raw', 'ext4'] as const)
+    .required(),
+});
+
+const AutoscaleSettingsSchema = object({
+  enabled: boolean().required(),
+  max: number().required(),
+  min: number().required(),
+});
+
+export const CreateNodePoolSchema = object({
+  autoscaler: AutoscaleSettingsSchema.notRequired().default(undefined),
+  type: string().required('Type is required.'),
+  count: number().required(),
+  tags: array(string().defined()).notRequired(),
+  disks: array(NodePoolDiskSchema).notRequired(),
+  update_strategy: string()
+    .oneOf(['rolling_update', 'on_recycle'] as const)
+    .notRequired(),
+  k8_version: string().notRequired(),
+  firewall_id: number().notRequired(),
+  labels: object().notRequired(),
+  taints: array(kubernetesTaintSchema).notRequired(),
+});
+
+export const EditNodePoolSchema = object({
+  type: string(),
+  count: number(),
+  update_strategy: string(),
+  k8_version: string(),
+  firewall_id: number(),
+});
 
 export const clusterLabelSchema = string()
   .required('Label is required.')
@@ -63,7 +118,7 @@ export const createKubeClusterSchema = object({
   region: string().required('Region is required.'),
   k8s_version: string().required('Kubernetes version is required.'),
   node_pools: array()
-    .of(nodePoolSchema)
+    .of(CreateNodePoolSchema)
     .min(1, 'Please add at least one node pool.'),
 });
 
@@ -109,10 +164,6 @@ export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object({
     },
   ),
 });
-
-// Starts and ends with a letter or number and contains letters, numbers, hyphens, dots, and underscores
-const alphaNumericValidCharactersRegex =
-  /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
 // DNS subdomain key (example.com/my-app)
 const dnsKeyRegex =
@@ -174,32 +225,4 @@ export const kubernetesLabelSchema = object().test({
   name: 'validateLabels',
   message: 'Labels must be valid key-value pairs.',
   test: validateKubernetesLabel,
-});
-
-export const kubernetesTaintSchema = object({
-  key: string()
-    .required('Key is required.')
-    .test(
-      'valid-key',
-      'Key must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 253 characters.',
-      (value) => {
-        return (
-          alphaNumericValidCharactersRegex.test(value) ||
-          dnsKeyRegex.test(value)
-        );
-      },
-    )
-    .max(253, 'Key must be between 1 and 253 characters.')
-    .min(1, 'Key must be between 1 and 253 characters.'),
-  value: string()
-    .matches(
-      alphaNumericValidCharactersRegex,
-      'Value must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 63 characters.',
-    )
-    .max(63, 'Value must be between 0 and 63 characters.')
-    .notOneOf(
-      ['kubernetes.io', 'linode.com'],
-      'Value cannot be "kubernetes.io" or "linode.com".',
-    )
-    .notRequired(),
 });

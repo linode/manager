@@ -1,10 +1,8 @@
 import {
   useAllLinodeDisksQuery,
   useAllVolumesQuery,
-  useGrants,
   useLinodeQuery,
   useLinodeRescueMutation,
-  useProfile,
 } from '@linode/queries';
 import {
   ActionsPanel,
@@ -20,8 +18,11 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
+import { deviceSlots } from '../LinodeConfigs/constants';
+import { useGetDeviceLimit } from '../LinodeConfigs/utilities';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { DeviceSelection } from './DeviceSelection';
 import { RescueDescription } from './RescueDescription';
@@ -37,19 +38,10 @@ interface Props {
   open: boolean;
 }
 
-interface DeviceMap {
-  sda?: string;
-  sdb?: string;
-  sdc?: string;
-  sdd?: string;
-  sde?: string;
-  sdf?: string;
-  sdg?: string;
-}
-
 export const getDefaultDeviceMapAndCounter = (
-  disks: ExtendedDisk[]
-): [DeviceMap, number] => {
+  disks: ExtendedDisk[],
+  deviceLimit: number
+): [DevicesAsStrings, number] => {
   const defaultDisks = disks.map((thisDisk) => thisDisk._id);
   const counter = defaultDisks.reduce(
     (c, thisDisk) => (thisDisk ? c + 1 : c),
@@ -65,15 +57,11 @@ export const getDefaultDeviceMapAndCounter = (
    * value for an empty slot, so this is a safe
    * assignment.
    */
-  const deviceMap: DeviceMap = {
-    sda: defaultDisks[0],
-    sdb: defaultDisks[1],
-    sdc: defaultDisks[2],
-    sdd: defaultDisks[3],
-    sde: defaultDisks[4],
-    sdf: defaultDisks[5],
-    sdg: defaultDisks[6],
-  };
+  const deviceMap: DevicesAsStrings = {};
+  for (let i = 0; i < deviceLimit - 1; i++) {
+    deviceMap[deviceSlots[i] as keyof DevicesAsStrings] = defaultDisks[i];
+  }
+
   return [deviceMap, counter];
 };
 
@@ -86,6 +74,14 @@ export const StandardRescueDialog = (props: Props) => {
     linodeId ?? -1,
     linodeId !== undefined && open
   );
+  const availableMemory = linode?.specs.memory ?? 0;
+  if (availableMemory < 0) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid memory value:', availableMemory);
+  }
+  const overallDeviceLimit = useGetDeviceLimit(availableMemory);
+  const rescueDeviceLimit = overallDeviceLimit - 2;
+
   const {
     data: disks,
     error: disksError,
@@ -98,13 +94,12 @@ export const StandardRescueDialog = (props: Props) => {
   } = useAllVolumesQuery({}, { region: linode?.region }, open);
   const isLoading = isLoadingLinodes || isLoadingDisks || isLoadingVolumes;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const isReadOnly =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find((grant) => grant.id === linodeId)?.permissions ===
-      'read_only';
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['rescue_linode'],
+    linodeId,
+    open
+  );
 
   // We need the API to allow us to filter on `linode_id`
   // const { data: volumes } = useAllVolumesQuery(
@@ -134,7 +129,8 @@ export const StandardRescueDialog = (props: Props) => {
     }) ?? [];
 
   const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
-    linodeDisks ?? []
+    linodeDisks ?? [],
+    overallDeviceLimit
   );
 
   const { mutateAsync: rescueLinode } = useLinodeRescueMutation(linodeId ?? -1);
@@ -156,7 +152,8 @@ export const StandardRescueDialog = (props: Props) => {
       Object.entries(deviceMap).length !==
         Object.entries(prevDeviceMap ?? {}).length ||
       Object.entries(deviceMap).some(
-        ([key, value]) => prevDeviceMap?.[key as keyof DeviceMap] !== value
+        ([key, value]) =>
+          prevDeviceMap?.[key as keyof DevicesAsStrings] !== value
       )
     ) {
       setCounter(initialCounter);
@@ -174,7 +171,7 @@ export const StandardRescueDialog = (props: Props) => {
       })) ?? [],
   };
 
-  const disabled = isReadOnly;
+  const disabled = !permissions.rescue_linode;
 
   const onSubmit = () => {
     rescueLinode(createDevicesFromStrings(rescueDevices))
@@ -191,7 +188,7 @@ export const StandardRescueDialog = (props: Props) => {
   };
 
   const incrementCounter = () => {
-    setCounter(clamp(1, 6, counter + 1));
+    setCounter(clamp(1, rescueDeviceLimit, counter + 1));
   };
 
   /** string format is type-id */
@@ -225,7 +222,7 @@ export const StandardRescueDialog = (props: Props) => {
       ) : (
         <div>
           <StyledPaper>
-            {isReadOnly && <LinodePermissionsError />}
+            {!permissions.rescue_linode && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
               counter={counter}
@@ -236,12 +233,12 @@ export const StandardRescueDialog = (props: Props) => {
               }
               onChange={onChange}
               rescue
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+              slots={deviceSlots.slice(0, overallDeviceLimit)}
             />
             <Button
               buttonType="secondary"
               compactX
-              disabled={disabled || counter >= 6}
+              disabled={disabled || counter >= rescueDeviceLimit}
               onClick={incrementCounter}
               sx={{ marginTop: theme.spacing() }}
             >

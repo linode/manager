@@ -6,12 +6,20 @@ import React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { type AlertFormMode } from '../constants';
+import { RESOURCE_FILTER_MAP } from '../../Utils/constants';
+import {
+  type AlertFormMode,
+  REGION_GROUP_INFO_MESSAGE,
+  type SelectDeselectAll,
+} from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
-import { getSupportedRegions } from '../Utils/utils';
+import { scrollToElement } from '../Utils/AlertResourceUtils';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
+import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { AlertServiceType, Filter, Region } from '@linode/api-v4';
+import type { AlertRegion } from './DisplayAlertRegions';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 interface AlertRegionsProps {
   /**
@@ -27,9 +35,13 @@ interface AlertRegionsProps {
    */
   mode?: AlertFormMode;
   /**
+   * The element until which we need to scroll on pagination and order change
+   */
+  scrollElement?: HTMLDivElement | null;
+  /**
    * The service type for which the regions are being selected.
    */
-  serviceType: AlertServiceType | null;
+  serviceType: CloudPulseServiceType | null;
   /**
    * The selected regions.
    */
@@ -37,27 +49,26 @@ interface AlertRegionsProps {
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType, handleChange, value = [], errorText, mode } = props;
+  const {
+    serviceType,
+    handleChange,
+    value = [],
+    errorText,
+    mode,
+    scrollElement,
+  } = props;
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
-
-  // Todo: State variable will be added when checkbox functionality implemented
-  const [, setSelectedRegions] = React.useState<string[]>(value);
+  const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
-
-  const resourceFilterMap: Record<string, Filter> = {
-    dbaas: {
-      platform: 'rdbms-default',
-    },
-  };
   const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
-    {
-      ...(resourceFilterMap[serviceType ?? ''] ?? {}),
-    }
+    { ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}) }
   );
+
+  const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
   const handleSelectionChange = React.useCallback(
     (regionId: string, isChecked: boolean) => {
@@ -84,26 +95,50 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     [handleChange]
   );
 
-  const filteredRegionsWithStatus: Region[] = React.useMemo(
+  const filteredRegionsWithStatus: AlertRegion[] = React.useMemo(
     () =>
-      getSupportedRegions({
+      getFilteredRegions({
         serviceType,
+        selectedRegions,
         resources,
         regions,
       }),
-    [regions, resources, serviceType]
+    [regions, resources, selectedRegions, serviceType]
+  );
+
+  const handleSelectAll = React.useCallback(
+    (action: SelectDeselectAll) => {
+      let regionIds: string[] = [];
+      if (action === 'Select All') {
+        regionIds = filteredRegionsWithStatus?.map((region) => region.id) ?? [];
+      }
+
+      setSelectedRegions(regionIds);
+      if (handleChange) {
+        handleChange(regionIds);
+      }
+    },
+    [filteredRegionsWithStatus, handleChange]
   );
 
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
   const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
-    ({ label }) => label.toLowerCase().includes(searchText.toLowerCase())
+    ({ label, checked, id }) =>
+      (label.toLowerCase().includes(searchText.toLowerCase()) ||
+        id.includes(searchText.toLowerCase())) &&
+      ((mode && checked) || !mode)
   );
 
   return (
     <Stack gap={2}>
       {mode === 'view' && <Typography variant="h2">Regions</Typography>}
+
+      <AlertListNoticeMessages
+        errorMessage={REGION_GROUP_INFO_MESSAGE}
+        variant="info"
+      />
 
       <Box display="flex" gap={2}>
         <DebouncedSearchTextField
@@ -139,10 +174,30 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
         <AlertListNoticeMessages errorMessage={errorText} variant="error" />
       )}
 
+      {mode !== 'view' && (
+        <AlertSelectedInfoNotice
+          handleSelectionChange={handleSelectAll}
+          property="regions"
+          selectedCount={selectedRegions.length}
+          totalCount={filteredRegionsWithStatus.length}
+        />
+      )}
       <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
         handleSelectionChange={handleSelectionChange}
+        isAllSelected={
+          filteredRegionsWithStatus.length > 0 &&
+          selectedRegions.length === filteredRegionsWithStatus.length
+        }
+        isSomeSelected={
+          selectedRegions.length > 0 &&
+          selectedRegions.length !== filteredRegionsWithStatus.length
+        }
         mode={mode}
         regions={filteredRegionsBySearchText}
+        scrollToElement={() =>
+          scrollToElement(titleRef.current ?? scrollElement ?? null)
+        }
         showSelected={showSelected}
       />
     </Stack>

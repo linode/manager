@@ -104,4 +104,58 @@ describe('PlatformMaintenanceBanner', () => {
       )
     ).toBeVisible();
   });
+
+  it('does not show Account Maintenance link when pathname is /maintenance', () => {
+    const mockPlatformMaintenance = accountMaintenanceFactory.buildList(1, {
+      type: 'reboot',
+      entity: { type: 'linode' },
+      reason: 'Your Linode needs a critical security update',
+    });
+
+    queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
+      data: mockPlatformMaintenance,
+    });
+
+    queryMocks.useNotificationsQuery.mockReturnValue({
+      data: notificationFactory.buildList(1, {
+        type: 'security_reboot_maintenance_scheduled',
+        label: 'Platform Maintenance Scheduled',
+      }),
+    });
+
+    const { queryByTestId } = renderWithTheme(<PlatformMaintenanceBanner />, {
+      initialRoute: '/maintenance',
+    });
+
+    // Should show the platform maintenance banner but not the maintenance link section
+    expect(
+      queryByTestId('platform-maintenance-link-section')
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows Account Maintenance link when pathname is not /maintenance', () => {
+    const mockPlatformMaintenance = accountMaintenanceFactory.buildList(1, {
+      type: 'reboot',
+      entity: { type: 'linode' },
+      reason: 'Your Linode needs a critical security update',
+    });
+
+    queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
+      data: mockPlatformMaintenance,
+    });
+
+    queryMocks.useNotificationsQuery.mockReturnValue({
+      data: notificationFactory.buildList(1, {
+        type: 'security_reboot_maintenance_scheduled',
+        label: 'Platform Maintenance Scheduled',
+      }),
+    });
+
+    const { getByTestId } = renderWithTheme(<PlatformMaintenanceBanner />, {
+      initialRoute: '/dashboard',
+    });
+
+    // Should show the platform maintenance banner AND the maintenance link section
+    getByTestId('platform-maintenance-link-section');
+  });
 });

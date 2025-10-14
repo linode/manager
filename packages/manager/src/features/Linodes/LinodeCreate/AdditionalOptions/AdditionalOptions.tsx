@@ -20,7 +20,7 @@ export const AdditionalOptions = ({
   onAlertsModeChange,
   isAlertsBetaMode,
 }: AdditionalOptionProps) => {
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const selectedRegionId = useWatch<CreateLinodeRequest, 'region'>({
@@ -34,7 +34,7 @@ export const AdditionalOptions = ({
   });
 
   const showAlerts =
-    aclpBetaServices?.linode?.alerts && isAclpAlertsSupportedRegionLinode;
+    aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegionLinode;
 
   const hideAdditionalOptions = !showAlerts && !isVMHostMaintenanceEnabled;
 

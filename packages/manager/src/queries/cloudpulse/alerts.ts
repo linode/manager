@@ -15,10 +15,10 @@ import {
 } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
+import { invalidateAclpAlerts } from './useAlertsMutation';
 
 import type {
   Alert,
-  AlertServiceType,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   DeleteAlertPayload,
@@ -28,7 +28,7 @@ import type {
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
-export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
+export const useCreateAlertDefinition = (serviceType: string) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
     mutationFn: (data) => createAlertDefinition(data, serviceType),
@@ -107,14 +107,21 @@ export const useEditAlertDefinition = () => {
       editAlertDefinition(data, serviceType, alertId),
 
     onSuccess(data) {
-      const allAlertsQueryKey = queryFactory.alerts._ctx.all().queryKey;
-      queryClient.cancelQueries({ queryKey: allAlertsQueryKey });
-      queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
-        return (
-          oldData?.map((alert) => {
-            return alert.id === data.id ? data : alert;
-          }) ?? [data]
-        );
+      const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
+
+      queryClient.setQueryData<Alert[] | undefined>(allAlertsKey, (prev) => {
+        // nothing cached yet
+        if (!prev) return prev;
+
+        const idx = prev.findIndex((a) => a.id === data.id);
+        if (idx === -1) return prev;
+
+        // if no change keep referential equality
+        if (prev[idx] === data) return prev;
+
+        const next = prev.slice();
+        next[idx] = data;
+        return next;
       });
 
       queryClient.setQueryData<Alert>(
@@ -242,14 +249,12 @@ export const useServiceAlertsMutation = (
   entityId: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], CloudPulseAlertsPayload>({
+  return useMutation<Alert, APIError[], CloudPulseAlertsPayload>({
     mutationFn: (payload: CloudPulseAlertsPayload) => {
       return updateServiceAlerts(serviceType, entityId, payload);
     },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.resources(serviceType).queryKey,
-      });
+    onSuccess(_, payload) {
+      invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
     },
   });
 };

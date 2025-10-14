@@ -2,22 +2,26 @@ import { Typography } from '@linode/ui';
 import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
-import { convertSecondsToMinutes } from '../Utils/utils';
+import { convertSecondsToOptions } from '../Utils/utils';
 import { StyledAlertChip, StyledAlertTypography } from './AlertDetail';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import { RenderAlertMetricsAndDimensions } from './RenderAlertsMetricsAndDimensions';
 
-import type { Alert } from '@linode/api-v4';
+import type { Alert, CloudPulseServiceType } from '@linode/api-v4';
 
 interface CriteriaProps {
   /**
    * The alert detail object for which the criteria needs to be displayed
    */
   alertDetails: Alert;
+  /**
+   * The service type of the alert for which the criteria needs to be displayed
+   */
+  serviceType: CloudPulseServiceType;
 }
 
 export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
-  const { alertDetails } = props;
+  const { alertDetails, serviceType } = props;
   const {
     evaluation_period_seconds: evaluationPeriod,
     polling_interval_seconds: pollingIntervalSeconds,
@@ -85,16 +89,19 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           alignItems: 'center',
         }}
       >
-        <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
+        <RenderAlertMetricsAndDimensions
+          ruleCriteria={ruleCriteria}
+          serviceType={serviceType}
+        />
         <DisplayAlertDetailChips // label chip for polling interval
           label="Polling Interval"
           mergeChips
-          values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
+          values={[convertSecondsToOptions(pollingIntervalSeconds)]}
         />
         <DisplayAlertDetailChips // label chip for evaluation period
           label="Evaluation Period"
           mergeChips
-          values={[convertSecondsToMinutes(evaluationPeriod)]}
+          values={[convertSecondsToOptions(evaluationPeriod)]}
         />
         {renderTriggerCriteria} {/** Render the trigger criteria */}
       </GridLegacy>

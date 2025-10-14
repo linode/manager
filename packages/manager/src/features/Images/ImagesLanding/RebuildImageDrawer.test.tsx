@@ -18,17 +18,32 @@ const props = {
   open: true,
 };
 
-const mockHistoryPush = vi.fn();
-vi.mock('react-router-dom', async () => {
+const mockNavigate = vi.fn();
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => mockNavigate),
+  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
-    ...(await vi.importActual('react-router-dom')),
-    useHistory: () => ({
-      push: mockHistoryPush,
-    }),
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
+
 describe('RebuildImageDrawer', () => {
+  beforeEach(() => {
+    vi.mocked(queryMocks.useQueryWithPermissions).mockReturnValue({
+      loading: false,
+    });
+  });
+
   it('should render', async () => {
     const { getByText } = renderWithTheme(<RebuildImageDrawer {...props} />);
 
@@ -54,9 +69,10 @@ describe('RebuildImageDrawer', () => {
     await userEvent.click(await findByText('linode-1'));
     await userEvent.click(getByText('Rebuild Linode'));
 
-    expect(mockHistoryPush).toBeCalledWith({
-      pathname: '/linodes/1/rebuild',
-      search: 'selectedImageId=private%2F1',
+    expect(mockNavigate).toBeCalledWith({
+      to: '/linodes/$linodeId',
+      params: { linodeId: 1 },
+      search: { selectedImageId: 'private/1', rebuild: true },
     });
   });
 });

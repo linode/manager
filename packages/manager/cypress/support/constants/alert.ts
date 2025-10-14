@@ -11,8 +11,8 @@ export const dimensionOperatorTypeMap: Record<
   string
 > = {
   endswith: 'ends with',
-  eq: 'equals',
-  neq: 'not equals',
+  eq: 'equal',
+  neq: 'not equal',
   startswith: 'starts with',
   in: 'in',
 };
@@ -32,10 +32,10 @@ export const severityMap: Record<AlertSeverityType, string> = {
 };
 
 export const aggregationTypeMap: Record<MetricAggregationType, string> = {
-  avg: 'Average',
+  avg: 'Avg',
   count: 'Count',
-  max: 'Maximum',
-  min: 'Minimum',
+  max: 'Max',
+  min: 'Min',
   sum: 'Sum',
 };
 

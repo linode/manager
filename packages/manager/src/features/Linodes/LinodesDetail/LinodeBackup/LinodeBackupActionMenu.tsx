@@ -15,14 +15,16 @@ interface Props {
 
 export const LinodeBackupActionMenu = (props: Props) => {
   const { backup, linodeId, onDeploy, onRestore } = props;
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const { permissions: accountPermissions } = usePermissions('account', [
+  const { data: accountPermissions } = usePermissions('account', [
     'create_linode',
   ]);
-  const { permissions: linodePermissions } = usePermissions(
+  const { data: linodePermissions, isLoading } = usePermissions(
     'linode',
     ['update_linode'],
-    linodeId
+    linodeId,
+    isOpen
   );
 
   const disabledPropsForRestore = {
@@ -60,6 +62,8 @@ export const LinodeBackupActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Backup ${backup.label}`}
+      loading={isLoading}
+      onOpen={() => setIsOpen(true)}
     />
   );
 };

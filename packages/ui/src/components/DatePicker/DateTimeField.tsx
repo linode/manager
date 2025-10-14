@@ -1,3 +1,5 @@
+import { CalendarIcon, CloseIcon, IconButton } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTimeField as MUIDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -6,6 +8,7 @@ import React from 'react';
 import { convertToKebabCase } from '../../utilities';
 import { Box } from '../Box/Box';
 import { FormHelperText } from '../FormHelperText';
+import { InputAdornment } from '../InputAdornment/InputAdornment';
 import { InputLabel } from '../InputLabel/InputLabel';
 
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -13,7 +16,8 @@ import type { DateTimeFieldProps as MUIDateTimeFieldProps } from '@mui/x-date-pi
 import type { DateTime } from 'luxon';
 
 interface DateTimeFieldProps
-  extends Omit<MUIDateTimeFieldProps<DateTime>, 'onChange' | 'value'> {
+  extends Omit<MUIDateTimeFieldProps, 'onChange' | 'value'> {
+  disabled?: boolean;
   errorText?: string;
   format?:
     | 'dd-MM-yyyy HH:mm'
@@ -35,6 +39,7 @@ export const DateTimeField = ({
   format = 'yyyy-MM-dd hh:mm a', // Default format includes time
   inputRef,
   label,
+  disabled,
   onChange,
   onClick,
   sx,
@@ -52,6 +57,10 @@ export const DateTimeField = ({
     }
   };
 
+  const handleClear = () => {
+    onChange(null);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box display="flex" flexDirection="column" sx={sx}>
@@ -65,8 +74,10 @@ export const DateTimeField = ({
           {label}
         </InputLabel>
         <MUIDateTimeField
+          disabled={disabled}
           format={format}
           inputProps={{
+            // slotProps.htmlInput does not appear to be working for DateTimeField
             'aria-errormessage': errorText ? errorTextId : undefined,
             'aria-invalid': Boolean(errorText),
             'aria-labelledby': validInputId,
@@ -79,7 +90,35 @@ export const DateTimeField = ({
             textField: {
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),
+              disabled,
+              onClick,
               helperText: '',
+              InputProps: {
+                // Nesting slotProps.input here does not appear to work
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {value ? (
+                      <IconButton
+                        disabled={disabled}
+                        disableRipple
+                        onClick={handleClear}
+                        size="small"
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        disabled={disabled}
+                        disableRipple
+                        onClick={onClick}
+                        size="small"
+                      >
+                        <StyledCalendarIcon />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                ),
+              },
             },
           }}
           sx={{ marginTop: 1 }}
@@ -88,10 +127,10 @@ export const DateTimeField = ({
         />
         {errorText && (
           <FormHelperText
+            error
             id={errorTextId}
             role="alert"
             sx={{
-              color: (theme: Theme) => theme.palette.error.dark,
               marginTop: '4px',
             }}
           >
@@ -102,3 +141,10 @@ export const DateTimeField = ({
     </LocalizationProvider>
   );
 };
+
+const StyledCalendarIcon = styled(CalendarIcon, {
+  label: 'StyledCalendarIcon',
+})(() => ({
+  width: '16px',
+  height: '16px',
+}));

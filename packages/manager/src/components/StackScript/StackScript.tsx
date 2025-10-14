@@ -13,9 +13,9 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import type { JSX } from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -109,7 +109,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
   const { data: profile } = useProfile();
 
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { data: imagesData } = useAllImagesQuery(
     {},
@@ -177,7 +177,10 @@ export const StackScript = React.memo((props: StackScriptProps) => {
             buttonType="secondary"
             className={classes.editBtn}
             onClick={() => {
-              history.push(`/stackscripts/${stackscriptId}/edit`);
+              navigate({
+                to: '/stackscripts/$id/edit',
+                params: { id: stackscriptId },
+              });
             }}
           >
             Edit
