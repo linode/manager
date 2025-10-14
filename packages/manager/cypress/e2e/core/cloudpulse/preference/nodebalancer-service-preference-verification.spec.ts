@@ -281,7 +281,7 @@ describe('Integration Tests for NodeBalancer Dashboard Preferences', () => {
     });
   });
 
-  it.only('clears the Port Filter and verifies updated user preferences', () => {
+  it('clears the Port Filter and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
       'updateDBClustersPreference'
     );
