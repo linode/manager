@@ -433,4 +433,53 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
     });
   });
+
+  it('clears the Node Type filter and verifies updated user preferences', () => {
+    cy.intercept('PUT', apiMatcher('profile/preferences')).as(
+      'updateDBClustersPreference'
+    );
+    // clear the Region filter
+    cy.get('[data-qa-autocomplete="Node Type"]')
+      .find('button[aria-label="Clear"]')
+      .click();
+
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
+      cy.get('[data-qa-value="Database Engine MySQL"]').should('be.visible');
+      cy.get('[data-qa-value="Region US, Chicago, IL"]').should('be.visible');
+      cy.get('[data-qa-value="Node Type Primary"]').should('not.exist');
+      cy.get('[data-qa-value="Database Clusters mysql-cluster"]').should(
+        'be.visible'
+      );
+    });
+    cy.wait('@updateDBClustersPreference').then(({ request, response }) => {
+      const responseBody =
+        response?.body &&
+        (typeof response.body === 'string'
+          ? JSON.parse(response.body)
+          : response.body);
+
+      const expectedAclpPreference = {
+        dashboardId: 1,
+        engine: 'mysql',
+        region: 'us-ord',
+        resources: ['1'],
+        dateTimeDuration: {
+          preset: 'Last day',
+          timeZone: 'Etc/GMT',
+        },
+        groupBy: ['entity_id', 'region'],
+        widgets: {
+          'Disk I/O': {
+            label: 'Disk I/O',
+            groupBy: ['device'],
+          },
+        },
+      };
+
+      assertDeepEqual(responseBody?.aclpPreference, expectedAclpPreference);
+      assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
+    });
+  });
 });
