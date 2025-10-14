@@ -166,7 +166,7 @@ const databaseMock: Database = databaseFactory.build({
  *  between the UI and API, maintaining state consistency across sessions.
  */
 
-describe('Integration Tests for DBaaS Dashboard ', () => {
+describe('Integration Tests for DBaaS Dashboard Preferences', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
