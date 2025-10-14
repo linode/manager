@@ -12,10 +12,10 @@ import {
   NO_REGION_MESSAGE,
   PARENT_ENTITY_REGION,
   RESOURCE_FILTER_MAP,
-  RESOURCE_ID,
 } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { getAssociatedEntityType } from '../Utils/utils';
 
 import type { Item } from '../Alerts/constants';
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
@@ -82,12 +82,11 @@ export const CloudPulseRegionSelect = React.memo(
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
-    // Get the firewall entity type for the resource_id filter associated with the dashboard id
-    const filterConfig = FILTER_CONFIG.get(selectedDashboard?.id ?? 0);
-    const firewallEntityType =
-      filterConfig?.filters.find(
-        (filter) => filter.configuration.filterKey === RESOURCE_ID
-      )?.configuration.firewallEntityType ?? 'both';
+    // Get the associated entity type for the dashboard
+    const associatedEntityType = getAssociatedEntityType(
+      serviceType,
+      dashboardId
+    );
     const {
       values: linodeRegions,
       isLoading: isLinodeRegionIdLoading,
@@ -97,7 +96,7 @@ export const CloudPulseRegionSelect = React.memo(
       entities: selectedEntities,
       regions,
       serviceType,
-      firewallEntityType,
+      associatedEntityType,
       type: 'metrics',
     });
     const linodeRegionIds = linodeRegions.map(
