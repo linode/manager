@@ -759,7 +759,7 @@ export const filterUsingSpecialConditions = (
     return data;
   }
   if (resourceType === 'firewall') {
-    // If the entities are empty, that means the firewall is not associated with any related service
+    // If the entities are empty, that means none of the firewalls is associated with the desired service
     return data.filter(
       ({ entities }) => entities && Object.keys(entities).length > 0
     );
