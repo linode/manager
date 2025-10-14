@@ -1,11 +1,11 @@
 /**
- * @file Integration Tests for CloudPulse Linode Preferences.
- *
- * These tests validate user preference behavior for the CloudPulse DBaaS Dashboard,
- * ensuring that filters (Dashboard, Region, etc.) correctly update
- * the user's saved ACLP preferences through API requests and responses.
+ * @file Integration Tests for CloudPulse nodebalancer Dashboard.
  */
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import {
+  linodeFactory,
+  nodeBalancerFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -18,6 +18,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -37,9 +38,11 @@ import {
   widgetFactory,
 } from 'src/factories';
 
+const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, resource } = widgetDetails.linode;
-const serviceType = 'linode';
+const { dashboardName, id, metrics, region, resource } =
+  widgetDetails.nodebalancer;
+const serviceType = 'nodebalancer';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
@@ -62,22 +65,13 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
   })
 );
 
-const mockLinode = linodeFactory.build({
-  id: kubeLinodeFactory.build().instance_id ?? undefined,
-  label: resource,
-  tags: ['tag-2', 'tag-3'],
-  region: 'us-ord',
-});
-
-const mockAccount = accountFactory.build();
-
 const mockRegion = regionFactory.build({
-  capabilities: ['Linodes'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
+  capabilities: ['NodeBalancers'],
+  id: 'us-east',
+  label: 'Newark, NJ, USA',
   monitors: {
+    metrics: ['NodeBalancers'],
     alerts: [],
-    metrics: ['Linodes'],
   },
 });
 
@@ -85,11 +79,19 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-describe('Integration Tests for Linode Dashboard Preferences', () => {
+const mockLinode = linodeFactory.build({
+  id: kubeLinodeFactory.build().instance_id ?? undefined,
+  label: resource,
+  region: 'us-east',
+});
+const mockNodeBalancer = nodeBalancerFactory.build({
+  label: resource,
+  region: 'us-east',
+});
+describe('Integration Tests for Nodebalancer Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
-    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
-    mockGetLinodes([mockLinode]);
+    mockGetAccount(accountFactory.build({}));
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
@@ -99,10 +101,11 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
       'getMetrics'
     );
     mockGetRegions([mockRegion]);
+    mockGetLinodes([mockLinode]);
+    mockGetNodeBalancers([mockNodeBalancer]);
     mockGetUserPreferences({
       aclpPreference: {
-        dashboardId: 2,
-        groupBy: ['entity_id', 'state'],
+        dashboardId: 3,
         widgets: {
           'CPU Utilization': {
             label: 'CPU Utilization',
@@ -112,8 +115,10 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
             },
           },
         },
-        region: 'us-ord',
-        resources: ['4'],
+        region: 'us-east',
+        resources: ['1'],
+        port: '81',
+        groupBy: ['entity_id', 'state'],
       },
     }).as('fetchPreferences');
 
@@ -129,18 +134,21 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
     cy.get('[data-qa-applied-filter-id="applied-filter"]')
       .should('be.visible')
       .within(() => {
-        cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+        cy.get(`[data-qa-value="Region US, Newark, NJ, USA"]`)
           .should('be.visible')
-          .should('have.text', 'US, Chicago, IL');
+          .should('have.text', 'US, Newark, NJ, USA');
 
-        cy.get(`[data-qa-value="Linode Label(s) ${resource}"]`)
+        cy.get(`[data-qa-value="Nodebalancers ${resource}"]`)
           .should('be.visible')
           .should('have.text', resource);
+
+        cy.get(`[data-qa-value="Ports 81"]`)
+          .should('be.visible')
+          .should('have.text', 81);
       });
 
     ui.button.findByTitle('Filters').click();
   });
-
   it('clears the Dashboard filters and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
       'updateDashbaordPreference'
@@ -161,8 +169,8 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
 
       const expectedAclpPreference = { widgets: {} };
 
-      comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
-      comparePreferences(expectedAclpPreference, request.body.aclpPreference);
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
     });
   });
 
@@ -179,10 +187,13 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
 
     // Verify none of these applied filters exist after clear
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('[data-qa-value="Region US, Chicago, IL"]').should('not.exist');
-      cy.get(`[data-qa-value="Linode Label(s) ${resource}"]`).should(
+      cy.get('[data-qa-value="US, Newark, NJ, USA"]').should('not.exist');
+      cy.get(`[data-qa-value="Nodebalancers: ${resource}"]`).should(
         'not.exist'
       );
+      cy.get(`[data-qa-value="Ports 81"]`)
+        .should('be.visible')
+        .should('have.text', 81);
     });
     cy.wait('@updateRegionPreference').then(({ request, response }) => {
       const responseBody =
@@ -192,8 +203,66 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
           : response.body);
 
       const expectedAclpPreference = {
-        dashboardId: 2,
+        dashboardId: 3,
         groupBy: ['entity_id', 'state'],
+        port: '81',
+        widgets: {
+          'CPU Utilization': {
+            label: 'CPU Utilization',
+            timeGranularity: {
+              unit: 'hr',
+              value: 1,
+            },
+          },
+        },
+      };
+
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
+    });
+  });
+
+  it('clears the Nodebalancers Resource filter and verifies updated user preferences', () => {
+    cy.intercept('PUT', apiMatcher('profile/preferences')).as(
+      'updateDBClustersPreference'
+    );
+    // clear the Region filter
+    cy.get('[data-qa-autocomplete="Nodebalancers"]')
+      .find('button[aria-label="Clear"]')
+      .click();
+
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
+      // Region chip
+      cy.get('[data-qa-value="Region US, Newark, NJ, USA"]').should(
+        'be.visible'
+      );
+
+      // Nodebalancer chip (not exist)
+      cy.get(`[data-qa-value="Nodebalancers: ${resource}"]`).should(
+        'not.exist'
+      );
+
+      // Port chip
+      cy.get('[data-qa-value="Ports 81"]')
+        .should('be.visible')
+        .should('have.text', '81');
+    });
+
+    cy.wait('@updateDBClustersPreference').then(({ request, response }) => {
+      const responseBody =
+        response?.body &&
+        (typeof response.body === 'string'
+          ? JSON.parse(response.body)
+          : response.body);
+
+      const expectedAclpPreference = {
+        dashboardId: 3,
+        groupBy: ['entity_id', 'state'],
+        port: '81',
+        region: 'us-east',
+        resources: [],
         widgets: {
           'CPU Utilization': {
             label: 'CPU Utilization',
@@ -210,22 +279,28 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
     });
   });
 
-  it('clears the Resources filter and verifies updated user preferences', () => {
+  it.only('clears the Port Filter and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
       'updateDBClustersPreference'
     );
     // clear the Region filter
-    cy.get('[data-qa-autocomplete="Linode Label(s)"]')
-      .find('button[aria-label="Clear"]')
-      .click();
+    cy.findByPlaceholderText('e.g., 80,443,3000').clear();
 
     ui.button.findByTitle('Filters').should('be.visible').click();
 
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('[data-qa-value="Region US, Chicago, IL"]').should('be.visible');
-      cy.get(`[data-qa-value="Linode Label(s) ${resource}"]`).should(
-        'not.exist'
+      // Region chip
+      cy.get('[data-qa-value="Region US, Newark, NJ, USA"]').should(
+        'be.visible'
       );
+
+      // Nodebalancer chip (not exist)
+      cy.get(`[data-qa-value="Nodebalancers ${resource}"]`).should(
+        'be.visible'
+      );
+
+      // Port chip
+      cy.get('[data-qa-value="Ports 81"]').should('not.exist');
     });
     cy.wait('@updateDBClustersPreference').then(({ request, response }) => {
       const responseBody =
@@ -235,10 +310,11 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
           : response.body);
 
       const expectedAclpPreference = {
-        dashboardId: 2,
+        dashboardId: 3,
         groupBy: ['entity_id', 'state'],
-        region: 'us-ord',
-        resources: [],
+        region: 'us-east',
+        resources: ['1'],
+        port: '',
         widgets: {
           'CPU Utilization': {
             label: 'CPU Utilization',
