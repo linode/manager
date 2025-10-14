@@ -162,7 +162,7 @@ export const comparePreferences = <T extends Record<string, unknown>>(
       typeof expectedValue === 'object' &&
       !Array.isArray(expectedValue)
     ) {
-      validatePreference(
+      comparePreferences(
         actualValue as Record<string, unknown>,
         expectedValue as Record<string, unknown>,
         fullPath,

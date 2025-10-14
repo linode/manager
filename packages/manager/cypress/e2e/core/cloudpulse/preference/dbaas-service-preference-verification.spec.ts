@@ -169,7 +169,7 @@ const databaseMock: Database = databaseFactory.build({
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
-    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
+    mockGetAccount(mockAccount);
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
