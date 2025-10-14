@@ -177,7 +177,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             links: [
               {
                 display: 'Object Storage',
-                to: '/object-storage/buckets',
+                to: '/object-storage',
               },
               {
                 display: 'Volumes',
