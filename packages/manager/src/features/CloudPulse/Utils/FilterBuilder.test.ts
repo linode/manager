@@ -13,6 +13,7 @@ import {
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
   filterUsingDependentFilters,
+  filterUsingSpecialConditions,
   getEndpointsProperties,
   getFilters,
   getTextFilterProperties,
@@ -633,6 +634,26 @@ describe('filterEndpointsUsingRegion', () => {
     expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(
       [mockData[0]]
     );
+  });
+});
+
+describe('filterUsingSpecialConditions', () => {
+  it('should return data as is if data is undefined', () => {
+    expect(filterUsingSpecialConditions(undefined, [])).toEqual([]);
+  });
+  it('should return data as is if resourceType is undefined', () => {
+    expect(
+      filterUsingSpecialConditions(undefined, [{ id: '1', label: 'test' }])
+    ).toEqual([{ id: '1', label: 'test' }]);
+  });
+  it('should filter based on resourceType', () => {
+    // If the entities are empty, that means the firewall is not associated with the related service
+    expect(
+      filterUsingSpecialConditions('firewall', [
+        { id: '1', label: 'test', entities: { [1]: 'test' } },
+        { id: '2', label: 'test2', entities: {} },
+      ])
+    ).toEqual([{ id: '1', label: 'test', entities: { [1]: 'test' } }]);
   });
 });
 
