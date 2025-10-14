@@ -9,7 +9,8 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
-import { RESOURCE_FILTER_MAP } from '../Utils/constants';
+import { RESOURCE_FILTER_MAP, RESOURCE_ID } from '../Utils/constants';
+import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
@@ -111,6 +112,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
+  // Get the filter configuration for the dashboard and the associated firewall entity type if any
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  const firewallEntityType =
+    filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === RESOURCE_ID
+    )?.configuration.firewallEntityType ?? 'both';
+
   const {
     data: resourceList,
     isError: isResourcesApiError,
@@ -120,11 +128,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     dashboard?.service_type,
     {},
     RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
-    dashboard?.id === 4
-      ? 'linode'
-      : dashboard?.id === 8
-        ? 'nodebalancer'
-        : 'both'
+    firewallEntityType
   );
 
   const {
