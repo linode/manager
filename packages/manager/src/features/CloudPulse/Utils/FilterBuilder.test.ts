@@ -647,7 +647,7 @@ describe('filterUsingSpecialConditions', () => {
     ).toEqual([{ id: '1', label: 'test' }]);
   });
   it('should filter based on resourceType', () => {
-    // If the entities are empty, that means the firewall is not associated with the related service
+    // If the entities are empty, that means none of the firewalls is associated with the desired service
     expect(
       filterUsingSpecialConditions('firewall', [
         { id: '1', label: 'test', entities: { [1]: 'test' } },
