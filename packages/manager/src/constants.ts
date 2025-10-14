@@ -280,12 +280,7 @@ export const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
  * - the API provides us a region capability for Images
  * - or all Object Storage regions support Images
  */
-export const DISALLOWED_IMAGE_REGIONS = [
-  'gb-lon',
-  'au-mel',
-  'sg-sin-2',
-  'jp-tyo-3',
-];
+export const DISALLOWED_IMAGE_REGIONS = ['gb-lon', 'sg-sin-2', 'jp-tyo-3'];
 
 // Default tooltip text for actions without permission
 export const NO_PERMISSION_TOOLTIP_TEXT =
