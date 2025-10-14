@@ -115,7 +115,6 @@ export const DatabaseCreate = () => {
     mode: 'onBlur',
     // @ts-expect-error allow_list gets transformed to an array of strings in the onSubmit function
     resolver: yupResolver(getDynamicDatabaseSchema(isVPCSelected)),
-    values: { ...initialValues },
   });
 
   const {

@@ -73,7 +73,7 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
         </Link>
         .
       </Typography>
-      <Typography mt={1}>
+      <Typography mb={1} mt={1}>
         (Note: You can modify access controls after your database cluster is
         active.)
       </Typography>
