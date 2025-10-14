@@ -183,49 +183,6 @@ export interface UpdateImageRegionsPayload {
   regions: string[];
 }
 
-export interface SharegroupImagePayload {
-  /**
-   * A detailed description of this Image.
-   */
-  description?: string;
-  /**
-   * ID of the private image that will be added to the Sharegroup
-   */
-  id: string;
-  /**
-   * A short title of this Image.
-   *
-   * Defaults to the label of the private image it is being created from if not provided.
-   */
-  label?: string;
-}
-
-export interface CreateSharegroupPayload {
-  /**
-   * A detailed description of this Sharegroup.
-   */
-  description?: string;
-  /**
-   * An array of images that will be shared in the Sharegroup
-   */
-  images?: SharegroupImagePayload[];
-  /**
-   * A short title of this Sharegroup.
-   */
-  label: string;
-}
-
-export type UpdateSharegroupPayload = Omit<CreateImagePayload, 'images'>;
-
-export interface AddSharegroupImagesPayload {
-  /**
-   * An array of images that will be shared in the Sharegroup
-   */
-  images: SharegroupImagePayload[];
-}
-
-export type UpdateSharegroupImagePayload = Omit<SharegroupImagePayload, 'id'>;
-
 export interface Sharegroup {
   /**
    * The timestamp of when the Sharegroup was created
