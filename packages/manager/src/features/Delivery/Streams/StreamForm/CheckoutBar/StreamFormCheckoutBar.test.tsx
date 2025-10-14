@@ -23,7 +23,7 @@ describe.skip('StreamFormCheckoutBar', () => {
       useFormOptions: {
         defaultValues: {
           destination: {
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
           },
         },
       },
@@ -54,7 +54,7 @@ describe.skip('StreamFormCheckoutBar', () => {
           type: streamType.AuditLogs,
         },
         destination: {
-          type: destinationType.LinodeObjectStorage,
+          type: destinationType.AkamaiObjectStorage,
         },
       },
     });

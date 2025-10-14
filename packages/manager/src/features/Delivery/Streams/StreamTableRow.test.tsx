@@ -40,7 +40,7 @@ describe('StreamTableRow', () => {
     // Status:
     screen.getByText('Enabled');
     // Destination Type:
-    screen.getByText('Linode Object Storage');
+    screen.getByText('Akamai Object Storage');
     // ID:
     screen.getByText('1');
     // Creation Time:

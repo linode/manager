@@ -57,25 +57,22 @@ const customHTTPsDetailsSchema = object({
   endpoint_url: string().max(maxLength, maxLengthMessage).required(),
 });
 
-const linodeObjectStorageDetailsBaseSchema = object({
+const akamaiObjectStorageDetailsBaseSchema = object({
   host: string().max(maxLength, maxLengthMessage).required('Host is required.'),
   bucket_name: string()
     .max(maxLength, maxLengthMessage)
     .required('Bucket name is required.'),
-  region: string()
-    .max(maxLength, maxLengthMessage)
-    .required('Region is required.'),
   path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)
     .required('Access Key ID is required.'),
   access_key_secret: string()
     .max(maxLength, maxLengthMessage)
-    .required('Access Key Secret is required.'),
+    .required('Secret Access Key is required.'),
 });
 
-const linodeObjectStorageDetailsPayloadSchema =
-  linodeObjectStorageDetailsBaseSchema.shape({
+const akamaiObjectStorageDetailsPayloadSchema =
+  akamaiObjectStorageDetailsBaseSchema.shape({
     path: string().max(maxLength, maxLengthMessage).optional(),
   });
 
@@ -83,16 +80,16 @@ const destinationSchemaBase = object().shape({
   label: string()
     .max(maxLength, maxLengthMessage)
     .required('Destination name is required.'),
-  type: string().oneOf(['linode_object_storage', 'custom_https']).required(),
+  type: string().oneOf(['akamai_object_storage', 'custom_https']).required(),
   details: mixed<
+    | InferType<typeof akamaiObjectStorageDetailsBaseSchema>
     | InferType<typeof customHTTPsDetailsSchema>
-    | InferType<typeof linodeObjectStorageDetailsBaseSchema>
   >()
     .defined()
     .required()
     .when('type', {
-      is: 'linode_object_storage',
-      then: () => linodeObjectStorageDetailsBaseSchema,
+      is: 'akamai_object_storage',
+      then: () => akamaiObjectStorageDetailsBaseSchema,
       otherwise: () => customHTTPsDetailsSchema,
     }),
 });
@@ -101,14 +98,14 @@ export const destinationFormSchema = destinationSchemaBase;
 
 export const createDestinationSchema = destinationSchemaBase.shape({
   details: mixed<
+    | InferType<typeof akamaiObjectStorageDetailsPayloadSchema>
     | InferType<typeof customHTTPsDetailsSchema>
-    | InferType<typeof linodeObjectStorageDetailsPayloadSchema>
   >()
     .defined()
     .required()
     .when('type', {
-      is: 'linode_object_storage',
-      then: () => linodeObjectStorageDetailsPayloadSchema,
+      is: 'akamai_object_storage',
+      then: () => akamaiObjectStorageDetailsPayloadSchema,
       otherwise: () => customHTTPsDetailsSchema,
     }),
 });
@@ -118,8 +115,8 @@ export const updateDestinationSchema = createDestinationSchema
   .shape({
     details: lazy((value) => {
       if ('bucket_name' in value) {
-        return linodeObjectStorageDetailsPayloadSchema.noUnknown(
-          'Object contains unknown fields for Linode Object Storage Details.',
+        return akamaiObjectStorageDetailsPayloadSchema.noUnknown(
+          'Object contains unknown fields for Akamai Object Storage Details.',
         );
       }
       if ('client_certificate_details' in value) {

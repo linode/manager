@@ -306,6 +306,7 @@ export type ProductInformationBannerLocation =
   | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Logs'
   | 'Longview'
   | 'Managed'
   | 'NodeBalancers'

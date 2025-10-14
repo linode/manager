@@ -1,31 +1,26 @@
 import { streamType } from '@linode/api-v4';
-import { useRegionsQuery } from '@linode/queries';
 import { Stack, TooltipIcon, Typography } from '@linode/ui';
 import React from 'react';
 
 import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
 import { LabelValue } from 'src/features/Delivery/Shared/LabelValue';
 
-import type { LinodeObjectStorageDetails } from '@linode/api-v4';
+import type { AkamaiObjectStorageDetails } from '@linode/api-v4';
 
 const sxTooltipIcon = {
   marginLeft: '4px',
   padding: '0px',
 };
 
-export const DestinationLinodeObjectStorageDetailsSummary = (
-  props: LinodeObjectStorageDetails
+export const DestinationAkamaiObjectStorageDetailsSummary = (
+  props: AkamaiObjectStorageDetails
 ) => {
-  const { bucket_name, host, region, path } = props;
-  const { data: regions } = useRegionsQuery();
-
-  const regionValue = regions?.find(({ id }) => id === region)?.label || region;
+  const { bucket_name, host, path } = props;
 
   return (
     <>
       <LabelValue label="Host" value={host} />
       <LabelValue label="Bucket" value={bucket_name} />
-      <LabelValue label="Region" value={regionValue} />
       <LabelValue
         data-testid="access-key-id"
         label="Access Key ID"

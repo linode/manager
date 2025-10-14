@@ -216,7 +216,14 @@ export const StreamsLanding = () => {
                 >
                   Name
                 </TableSortCell>
-                <TableCell>Stream Type</TableCell>
+                <TableSortCell
+                  active={orderBy === 'type'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="type"
+                >
+                  Stream Type
+                </TableSortCell>
                 <TableSortCell
                   active={orderBy === 'status'}
                   direction={order}

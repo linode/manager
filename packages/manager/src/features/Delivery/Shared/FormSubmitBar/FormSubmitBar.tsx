@@ -12,6 +12,7 @@ interface StreamFormSubmitBarProps {
   blockSubmit?: boolean;
   connectionTested: boolean;
   destinationType?: DestinationType;
+  disableTestConnection?: boolean;
   formType: FormType;
   isSubmitting: boolean;
   isTesting: boolean;
@@ -31,6 +32,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
     onTestConnection,
     isSubmitting,
     isTesting,
+    disableTestConnection = false,
   } = props;
 
   const capitalizedFormType = capitalize(formType);
@@ -54,6 +56,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
         <Divider dark spacingBottom={0} spacingTop={16} />
         <Button
           buttonType="outlined"
+          disabled={disableTestConnection}
           loading={isTesting}
           onClick={onTestConnection}
           sx={(theme) => ({
