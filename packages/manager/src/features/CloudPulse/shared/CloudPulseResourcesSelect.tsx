@@ -6,9 +6,14 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
-import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import {
+  deepEqual,
+  filterUsingDependentFilters,
+  filterUsingSpecialConditions,
+} from '../Utils/FilterBuilder';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
+import type { AssociatedEntityType } from './types';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
@@ -23,6 +28,10 @@ export interface CloudPulseResources {
 }
 
 export interface CloudPulseResourcesSelectProps {
+  /**
+   * The associated entity type for the dashboard
+   */
+  associatedEntityType?: AssociatedEntityType;
   defaultValue?: Partial<FilterValue>;
   disabled?: boolean;
   handleResourcesSelection: (
@@ -50,6 +59,7 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       savePreferences,
       xFilter,
+      associatedEntityType,
     } = props;
 
     const flags = useFlags();
@@ -63,7 +73,8 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       {},
 
-      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {}
+      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {},
+      associatedEntityType // This is based on the filter configuration, used to keep entity id to label mapping for the supported entity type
     );
 
     const [selectedResources, setSelectedResources] =
@@ -77,8 +88,11 @@ export const CloudPulseResourcesSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
-      return filterUsingDependentFilters(resources, xFilter) ?? [];
-    }, [resources, xFilter]);
+      const filteredResources =
+        filterUsingDependentFilters(resources, xFilter) ?? [];
+      // Apply any additional filtering based on the resource type if required
+      return filterUsingSpecialConditions(resourceType, filteredResources);
+    }, [resourceType, resources, xFilter]);
 
     // Maximum resource selection limit is fetched from launchdarkly
     const maxResourceSelectionLimit = React.useMemo(() => {

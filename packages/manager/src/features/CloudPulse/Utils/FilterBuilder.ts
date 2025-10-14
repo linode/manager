@@ -32,6 +32,7 @@ import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWid
 import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
+  CloudPulseServiceType,
   Dashboard,
   DateTimeWithPreset,
   Filters,
@@ -182,6 +183,7 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+    associatedEntityType: config.configuration.associatedEntityType ?? 'both',
   };
 };
 
@@ -742,4 +744,25 @@ export const filterEndpointsUsingRegion = (
   }
 
   return data.filter(({ region }) => region === regionFromFilter);
+};
+
+/**
+ * @param resourceType The resource type for which the filter needs to be applied
+ * @param data The resources for which the filter needs to be applied
+ * @returns The filtered resources
+ */
+export const filterUsingSpecialConditions = (
+  resourceType: CloudPulseServiceType | undefined,
+  data: CloudPulseResources[]
+): CloudPulseResources[] => {
+  if (!resourceType || !data) {
+    return data;
+  }
+  if (resourceType === 'firewall') {
+    // If the entities are empty, that means the firewall is not associated with any related service
+    return data.filter(
+      ({ entities }) => entities && Object.keys(entities).length > 0
+    );
+  }
+  return data;
 };
