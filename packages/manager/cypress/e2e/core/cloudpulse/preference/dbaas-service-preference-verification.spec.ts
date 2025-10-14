@@ -289,7 +289,6 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
         dashboardId: 1,
         node_type: 'primary',
         groupBy: ['entity_id', 'region'],
-        resources: [],
         dateTimeDuration: {
           preset: 'Last day',
           timeZone: 'Etc/GMT',
@@ -338,7 +337,6 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
         dashboardId: 1,
         node_type: 'primary',
         engine: 'mysql',
-        resources: [],
         groupBy: ['entity_id', 'region'],
         dateTimeDuration: {
           preset: 'Last day',
@@ -386,7 +384,6 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
         dashboardId: 1,
         engine: 'mysql',
         region: 'us-ord',
-        resources: [],
         dateTimeDuration: {
           preset: 'Last day',
           timeZone: 'Etc/GMT',
