@@ -185,11 +185,17 @@ export const updateSharegroupToken = (
  * @param token_uuid {string} token UUID of the user
  * @param data {UpdateSharegroupMemberPayload} the updated label
  */
-export const updateSharegroupMember = (
-  sharegroupId: string,
-  token_uuid: string,
-  data: UpdateSharegroupMemberPayload,
-) => {
+interface UpdateSharegroupMember {
+  data: UpdateSharegroupMemberPayload;
+  sharegroupId: string;
+  token_uuid: string;
+}
+
+export const updateSharegroupMember = ({
+  sharegroupId,
+  token_uuid,
+  data,
+}: UpdateSharegroupMember) => {
   return Request<SharegroupMember>(
     setURL(
       `${BETA_API_ROOT}/images/sharegroups/${encodeURIComponent(sharegroupId)}/members/${encodeURIComponent(token_uuid)}`,
