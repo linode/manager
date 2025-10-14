@@ -1,3 +1,4 @@
+import type { AssociatedEntityType } from '../shared/types';
 import type {
   Capabilities,
   CloudPulseServiceType,
@@ -95,7 +96,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   /**
    * This is an optional field, controls the associated entity type for the dashboard
    */
-  associatedEntityType?: 'both' | 'linode' | 'nodebalancer';
+  associatedEntityType?: AssociatedEntityType;
 
   /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected
