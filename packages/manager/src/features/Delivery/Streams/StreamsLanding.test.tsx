@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
@@ -144,6 +144,12 @@ describe('Streams Landing Table', () => {
     await userEvent.click(screen.getByText(itemText));
   };
 
+  const checkClosedModal = async (modal: HTMLElement) => {
+    await waitFor(() => {
+      expect(modal).not.toBeInTheDocument();
+    });
+  };
+
   describe('given action menu', () => {
     beforeEach(() => {
       queryMocks.useStreamsQuery.mockReturnValue({
@@ -224,9 +230,30 @@ describe('Streams Landing Table', () => {
         await clickOnActionMenu();
         await clickOnActionMenuItem('Delete');
 
+        const deleteStreamModal = screen.getByText('Delete Stream');
+        expect(deleteStreamModal).toBeInTheDocument();
+
+        // get modal Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteStreamModal);
+
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // get delete Stream button
+        const deleteStreamButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteStreamButton);
+
         expect(mockDeleteStreamMutation).toHaveBeenCalledWith({
           id: 1,
         });
+
+        await checkClosedModal(deleteStreamModal);
       });
     });
   });
