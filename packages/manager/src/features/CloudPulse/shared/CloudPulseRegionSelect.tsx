@@ -83,10 +83,7 @@ export const CloudPulseRegionSelect = React.memo(
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
     // Get the associated entity type for the dashboard
-    const associatedEntityType = getAssociatedEntityType(
-      serviceType,
-      dashboardId
-    );
+    const associatedEntityType = getAssociatedEntityType(dashboardId);
     const {
       values: linodeRegions,
       isLoading: isLinodeRegionIdLoading,
