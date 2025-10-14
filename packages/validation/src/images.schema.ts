@@ -56,18 +56,6 @@ export const createSharegroupSchema = object({
   images: array(sharegroupImageSchema).notRequired(),
 });
 
-export const addSharegroupMemberSchema = object({
-  token: string().required('Token is required.'),
-  label: labelSchema.required('Label is required.'),
-});
-
-export const generateSharegroupTokenSchema = object({
-  label: labelSchema.optional(),
-  valid_for_sharegroup_uuid: boolean().required(
-    'Valid sharegroup UUID required.',
-  ),
-});
-
 export const updateSharegroupSchema = object({
   label: labelSchema.optional(),
   description: string()
@@ -76,11 +64,3 @@ export const updateSharegroupSchema = object({
 });
 
 export const updateSharegroupImageSchema = updateSharegroupSchema.shape({});
-
-export const updateSharegroupTokenSchema = object({
-  label: labelSchema.required('Label is required.'),
-});
-
-export const updateSharegroupMemberSchema = updateSharegroupTokenSchema.shape(
-  {},
-);

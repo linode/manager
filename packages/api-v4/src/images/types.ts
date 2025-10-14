@@ -4,8 +4,6 @@ export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 
 type ImageType = 'automatic' | 'manual';
 
-type SharegroupMemberStatus = 'active' | 'revoked';
-
 export type ImageRegionStatus =
   | 'available'
   | 'creating'
@@ -267,101 +265,4 @@ export interface Sharegroup {
    * A unique identifier for the sharegroup which can be used to generate member tokens
    */
   uuid: string;
-}
-
-export interface AddSharegroupMemberPayload {
-  /**
-   * The title given to the user in the sharegroup
-   */
-  label: string;
-  /**
-   * The user token shared by the user to join the sharegroup
-   */
-  token: string;
-}
-
-export type UpdateSharegroupMemberPayload = Omit<
-  AddSharegroupMemberPayload,
-  'token'
->;
-
-export interface SharegroupMember {
-  /**
-   * The timestamp of when the member was added to the sharegroup
-   */
-  created: string;
-  /**
-   * The timestamp of when the member's token expires
-   */
-  expiry: string;
-  /**
-   * The title given to the user in the sharegroup
-   */
-  label: string;
-  /**
-   * The status of the member in the current sharegroup
-   */
-  status: SharegroupMemberStatus;
-  /**
-   * A unique identifier for member tokens
-   */
-  token_uuid: string;
-  /**
-   * The timestamp of when the member's information was last updated
-   */
-  updated: string;
-}
-
-export interface GenerateSharegroupTokenPayload {
-  /**
-   * The title given to the user in the sharegroup
-   */
-  label?: string;
-  /**
-   * The sharegroup UUID for which a user token will be generated
-   */
-  valid_for_sharegroup_uuid: string;
-}
-
-export interface SharegroupToken {
-  /**
-   * The timestamp of when the token was created
-   */
-  created: string;
-  /**
-   * The timestamp of when the token will expire
-   */
-  expiry: string;
-  /**
-   * The title given to the user in the sharegroup
-   */
-  label: string;
-  /**
-   * The sharegroup label this token is created for
-   */
-  sharegroup_label: string;
-  /**
-   * The sharegroup UUID the token is created for
-   */
-  sharegroup_uuid: string;
-  /**
-   * The current status of this token
-   */
-  status: string;
-  /**
-   * A unique member token to join the sharegroup
-   */
-  token: string;
-  /**
-   * A unique identifier for each token generated
-   */
-  token_uuid: string;
-  /**
-   * The timestamp of when the token was last updated
-   */
-  updated: string;
-  /**
-   * The sharegroup UUID the token is valid for
-   */
-  valid_for_sharegroup_uuid: string;
 }
