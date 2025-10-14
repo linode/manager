@@ -304,7 +304,7 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     cy.get('@startDateInput').click();
     cy.get('@startDateInput').clear();
 
-    ui.button.findByTitle('last day').click();
+    ui.button.findByTitle('Last day').click();
 
     // Click the "Apply" button to confirm the end date and time
     cy.get('[data-qa-buttons="apply"]')
