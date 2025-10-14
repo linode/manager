@@ -341,6 +341,10 @@ export interface FetchOptions {
 
 export interface FetchOptionsProps {
   /**
+   * The type of associated entity to filter on.
+   */
+  associatedEntityType?: 'both' | 'linode' | 'nodebalancer';
+  /**
    * The dimension label determines the filtering logic and return type.
    */
   dimensionLabel: null | string;
@@ -348,10 +352,6 @@ export interface FetchOptionsProps {
    * List of firewall entity IDs to filter on.
    */
   entities?: string[];
-  /**
-   * The type of firewall entity to filter on.
-   */
-  firewallEntityType?: 'both' | 'linode' | 'nodebalancer';
   /**
    * List of regions to filter on.
    */

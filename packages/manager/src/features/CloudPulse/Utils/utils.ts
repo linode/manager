@@ -19,7 +19,9 @@ import {
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
+  RESOURCE_ID,
 } from './constants';
+import { FILTER_CONFIG } from './FilterConfig';
 
 import type {
   Alert,
@@ -391,4 +393,25 @@ export const useIsAclpSupportedRegion = (
   const region = regions?.find(({ id }) => id === regionId);
 
   return region?.monitors?.[type]?.includes(capability) ?? false;
+};
+
+/**
+ * @param serviceType The service type of the dashboard
+ * @param dashboardId The id of the dashboard
+ * @returns The firewall entity type for the dashboard
+ */
+export const getAssociatedEntityType = (
+  serviceType: CloudPulseServiceType | undefined,
+  dashboardId: number | undefined
+) => {
+  if (!serviceType || !dashboardId) {
+    return 'both';
+  }
+  // Get the associated entity type for the dashboard
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  return (
+    filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === RESOURCE_ID
+    )?.configuration.associatedEntityType ?? 'both'
+  );
 };

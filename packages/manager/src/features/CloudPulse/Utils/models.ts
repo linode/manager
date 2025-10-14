@@ -93,6 +93,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
+   * This is an optional field, controls the associated entity type for the firewall service
+   */
+  associatedEntityType?: 'both' | 'linode' | 'nodebalancer';
+
+  /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected
    */
   dependency?: string[];
@@ -106,11 +111,6 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * This is filterType like string, number
    */
   filterType: string;
-
-  /**
-   * This is an optional field, controls the entity type for the firewall service type
-   */
-  firewallEntityType?: 'both' | 'linode' | 'nodebalancer';
 
   /**
    * If this is true, we will pass the filter in the metrics api otherwise, we don't

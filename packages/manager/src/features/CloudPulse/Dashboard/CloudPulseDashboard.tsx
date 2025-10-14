@@ -9,9 +9,9 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
-import { RESOURCE_FILTER_MAP, RESOURCE_ID } from '../Utils/constants';
-import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
+import { getAssociatedEntityType } from '../Utils/utils';
 import {
   renderPlaceHolder,
   RenderWidgets,
@@ -112,12 +112,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
-  // Get the filter configuration for the dashboard and the associated firewall entity type if any
-  const filterConfig = FILTER_CONFIG.get(dashboardId);
-  const firewallEntityType =
-    filterConfig?.filters.find(
-      (filter) => filter.configuration.filterKey === RESOURCE_ID
-    )?.configuration.firewallEntityType ?? 'both';
+  // Get the associated entity type for the dashboard
+  const associatedEntityType = getAssociatedEntityType(
+    serviceType,
+    dashboardId
+  );
 
   const {
     data: resourceList,
@@ -128,7 +127,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     dashboard?.service_type,
     {},
     RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
-    firewallEntityType
+    associatedEntityType
   );
 
   const {
