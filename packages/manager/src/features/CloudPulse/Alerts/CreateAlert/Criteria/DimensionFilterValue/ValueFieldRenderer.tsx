@@ -70,6 +70,10 @@ interface ValueFieldRendererProps {
    */
   serviceType?: CloudPulseServiceType | null;
   /**
+   * The type of monitoring to filter on.
+   */
+  type?: 'alerts' | 'metrics';
+  /**
    * The currently selected value for the input field.
    */
   value: null | string;
@@ -95,6 +99,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     value,
     values,
     selectedRegions,
+    type = 'alerts',
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
@@ -156,6 +161,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
             serviceType={serviceType ?? null}
+            type={type}
           />
         );
       case 'objectstorage':
@@ -174,6 +180,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             scope={scope}
             selectedRegions={selectedRegions}
             serviceType={serviceType ?? null}
+            type={type}
           />
         );
       default:
@@ -189,6 +196,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             name={name}
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             serviceType={serviceType ?? null}
+            type={type}
             values={values}
           />
         );

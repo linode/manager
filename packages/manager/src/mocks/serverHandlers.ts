@@ -3045,14 +3045,14 @@ export const handlers = [
             id: 550,
             type: 'user',
             label: 'object-storage -testing',
-            rule_criteria: {
-              rules: [objectStorageMetricCriteria.build()],
-            },
             service_type: 'objectstorage',
             entity_ids: [
               'obj-bucket-804.ap-west.linodeobjects.com',
               'obj-bucket-230.us-iad.linodeobjects.com',
             ],
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
           })
         );
       }
@@ -3172,13 +3172,9 @@ export const handlers = [
           label: 'Block Storage',
           service_type: 'blockstorage',
           regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({ scope: ['entity'] }),
-        }),
-        serviceTypesFactory.build({
-          label: 'Block Storage',
-          service_type: 'blockstorage',
-          regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
         }),
       ],
     };
@@ -3202,7 +3198,10 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
-        scope: ['entity'],
+        scope:
+          serviceType === 'objectstorage'
+            ? ['entity', 'account', 'region']
+            : ['entity'],
       }),
     });
 
