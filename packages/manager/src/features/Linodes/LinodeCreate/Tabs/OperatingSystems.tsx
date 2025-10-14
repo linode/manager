@@ -34,7 +34,7 @@ export const OperatingSystems = () => {
 
   const { data: region } = useRegionQuery(regionId);
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);

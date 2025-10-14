@@ -8,9 +8,8 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
@@ -23,6 +22,7 @@ import { AlertInformationActionTable } from './AlertInformationActionTable';
 import type {
   AlertDefinitionType,
   CloudPulseAlertsPayload,
+  CloudPulseServiceType,
 } from '@linode/api-v4';
 
 interface AlertReusableComponentProps {
@@ -44,8 +44,12 @@ interface AlertReusableComponentProps {
   /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes
    */
-  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+  onToggleAlert?: (
+    payload: CloudPulseAlertsPayload,
+    hasUnsavedChanges?: boolean
+  ) => void;
 
   /**
    * Region ID for the selected entity
@@ -55,7 +59,7 @@ interface AlertReusableComponentProps {
   /**
    * Service type of selected entity
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
@@ -84,9 +88,9 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     [alerts, regionId, searchText, selectedType]
   );
 
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Filter unique alert types from alerts list
   const types = convertAlertsToTypeSet(alerts);
@@ -102,13 +106,13 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
-              {aclpBetaServices?.[serviceType]?.alerts && <BetaChip />}
+              {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
             </Box>
             <Button
               buttonType="outlined"
               data-qa-buttons="true"
               data-testid="manage-alerts"
-              onClick={() => history.push('/alerts/definitions')}
+              onClick={() => navigate({ to: '/alerts/definitions' })}
             >
               Manage Alerts
             </Button>

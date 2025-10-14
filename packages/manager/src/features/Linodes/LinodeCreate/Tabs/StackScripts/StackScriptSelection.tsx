@@ -1,4 +1,5 @@
 import { Notice, Paper, Typography } from '@linode/ui';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -8,21 +9,26 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
 import { StackScriptSelectionList } from './StackScriptSelectionList';
 import { getStackScriptTabIndex, tabs } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const StackScriptSelection = () => {
-  const { params, updateParams } = useLinodeCreateQueryParams();
+  const navigate = useNavigate();
+  const search = useSearch({
+    from: '/linodes/create/stackscripts',
+  });
   const { formState, reset } = useFormContext<CreateLinodeRequest>();
 
   const onTabChange = (index: number) => {
     // Update the "subtype" query param. (This switches between "Community" and "Account" tabs).
-    updateParams({
-      stackScriptID: undefined,
-      subtype: tabs[index],
+    navigate({
+      to: `/linodes/create/stackscripts`,
+      search: {
+        subtype: tabs[index],
+        stackScriptID: undefined,
+      },
     });
     // Reset the selected image, the selected StackScript, and the StackScript data when changing tabs.
     reset((prev) => ({
@@ -43,7 +49,7 @@ export const StackScriptSelection = () => {
         <Notice spacingBottom={0} spacingTop={8} text={error} variant="error" />
       )}
       <Tabs
-        index={getStackScriptTabIndex(params.subtype)}
+        index={getStackScriptTabIndex(search.subtype)}
         onChange={onTabChange}
       >
         <TabList>

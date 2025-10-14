@@ -18,6 +18,7 @@ import {
 export interface Props {
   children: JSX.Element;
   count: number;
+  disabled?: boolean;
   handleSearch: (searchText: string) => void;
   hasSelectedAll: boolean;
   headers: string[];
@@ -39,6 +40,7 @@ export const TransferTable = React.memo((props: Props) => {
     requestPage,
     searchText,
     toggleSelectAll,
+    disabled,
   } = props;
 
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +52,7 @@ export const TransferTable = React.memo((props: Props) => {
       <StyledTypography variant="h2">Linodes</StyledTypography>
       <StyledDebouncedSearchTextField
         debounceTime={400}
+        disabled={disabled}
         hideLabel
         isSearching={false}
         label="Search by label"
@@ -63,6 +66,7 @@ export const TransferTable = React.memo((props: Props) => {
             <StyledCheckAllTableCell>
               <Checkbox
                 checked={hasSelectedAll}
+                disabled={disabled}
                 inputProps={{
                   'aria-label': `Select all services on page`,
                 }}
@@ -84,10 +88,21 @@ export const TransferTable = React.memo((props: Props) => {
           count={count}
           eventCategory="Service Transfer Table"
           fixedSize
-          handlePageChange={requestPage}
+          handlePageChange={disabled ? () => {} : requestPage}
           handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
           page={page}
           pageSize={pageSize}
+          sx={
+            disabled
+              ? {
+                  opacity: 0.5,
+                  cursor: 'not-allowed',
+                  '& .MuiButtonBase-root': {
+                    cursor: 'not-allowed',
+                  },
+                }
+              : {}
+          }
         />
       ) : null}
     </>

@@ -16,15 +16,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           run_install: false
           version: 10
 
-      - name: Use Node.js v20.17 LTS
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20.17"
+          node-version-file: "package.json"
           cache: "pnpm"
 
       - name: Install Dependencies

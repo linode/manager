@@ -18,7 +18,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       clone_linode: true,
     },
   })),

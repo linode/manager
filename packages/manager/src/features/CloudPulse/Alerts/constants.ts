@@ -1,5 +1,7 @@
 import type { FieldPath } from 'react-hook-form';
 
+import { PORTS_HELPER_TEXT } from '../Utils/constants';
+
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
   AlertDefinitionScope,
@@ -59,15 +61,15 @@ export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
 
 export const metricAggregationOptions: Item<string, MetricAggregationType>[] = [
   {
-    label: 'Average',
+    label: 'Avg',
     value: 'avg',
   },
   {
-    label: 'Minimum',
+    label: 'Min',
     value: 'min',
   },
   {
-    label: 'Maximum',
+    label: 'Max',
     value: 'max',
   },
   {
@@ -89,16 +91,16 @@ export const dimensionOperatorOptions: Item<
     value: 'eq',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'Not Equal',
     value: 'neq',
   },
   {
     label: 'Starts with',
     value: 'startswith',
+  },
+  {
+    label: 'Ends with',
+    value: 'endswith',
   },
   {
     label: 'In',
@@ -113,6 +115,12 @@ export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
   { label: 'Region', value: 'region' },
   { label: 'Entity', value: 'entity' },
 ];
+
+export const entityGroupMap: Record<AlertDefinitionScope, string> = {
+  account: 'Account',
+  region: 'Region',
+  entity: 'Entity',
+};
 
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
@@ -143,10 +151,10 @@ export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   lte: '<=',
 };
 export const aggregationTypeMap: Record<MetricAggregationType, string> = {
-  avg: 'Average',
+  avg: 'Avg',
   count: 'Count',
-  max: 'Maximum',
-  min: 'Minimum',
+  max: 'Max',
+  min: 'Min',
   sum: 'Sum',
 };
 export const dimensionOperatorTypeMap: Record<
@@ -154,8 +162,8 @@ export const dimensionOperatorTypeMap: Record<
   string
 > = {
   endswith: 'ends with',
-  eq: 'equals',
-  neq: 'not equals',
+  eq: 'equal',
+  neq: 'not equal',
   startswith: 'starts with',
   in: 'in',
 };
@@ -195,6 +203,12 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
 
+export const ACCOUNT_GROUP_INFO_MESSAGE =
+  'This alert applies to all entities associated with your account, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
+
+export const REGION_GROUP_INFO_MESSAGE =
+  'This alert applies to all entities associated with selected regions, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
+
 export const ALERT_SCOPE_TOOLTIP_TEXT =
   'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
 
@@ -202,6 +216,8 @@ export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
   'Indicates whether the alert applies to all entities in the account, entities in specific regions, or just this entity.';
 
 export type AlertFormMode = 'create' | 'edit' | 'view';
+
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 
@@ -213,3 +229,43 @@ export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
 export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
+
+export const CONFIGS_HELPER_TEXT =
+  'Enter one or more configuration IDs separated by commas.';
+
+export const CONFIGS_ERROR_MESSAGE =
+  'Enter valid configuration ID numbers as integers separated by commas without spaces.';
+
+export const CONFIG_ERROR_MESSAGE = 'Enter a valid configuration ID number.';
+export const CONFIG_HELPER_TEXT = 'Enter a configuration ID number.';
+export const CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
+  'Use a single comma to separate configuration IDs.';
+
+export const CONFIG_IDS_LEADING_COMMA_ERROR_MESSAGE =
+  'First character must be an integer.';
+export const CONFIG_ID_PLACEHOLDER_TEXT = 'e.g., 12345';
+export const CONFIGS_ID_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
+
+export const INTERFACE_ID_ERROR_MESSAGE = 'Enter a valid interface ID number.';
+export const INTERFACE_ID_HELPER_TEXT = 'Enter an interface ID number.';
+export const PLACEHOLDER_TEXT_MAP: Record<string, Record<string, string>> = {
+  port: {
+    in: PORTS_PLACEHOLDER_TEXT,
+    default: PORT_PLACEHOLDER_TEXT,
+  },
+  config_id: {
+    in: CONFIGS_ID_PLACEHOLDER_TEXT,
+    default: CONFIG_ID_PLACEHOLDER_TEXT,
+  },
+};
+
+export const HELPER_TEXT_MAP: Record<string, Record<string, string>> = {
+  port: {
+    in: PORTS_HELPER_TEXT,
+    default: PORT_HELPER_TEXT,
+  },
+  config_id: {
+    in: CONFIGS_HELPER_TEXT,
+    default: CONFIG_ERROR_MESSAGE,
+  },
+};

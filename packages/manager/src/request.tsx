@@ -41,7 +41,8 @@ export const handleError = (
     error.response &&
     error.response.status === 401 &&
     !store.getState().pendingUpload &&
-    !isRedirectingToLogin
+    !isRedirectingToLogin &&
+    window.location.pathname !== '/oauth/callback'
   ) {
     isRedirectingToLogin = true;
     clearAuthDataFromLocalStorage();
@@ -133,9 +134,15 @@ export const isSuccessfulGETProfileResponse = (
 };
 
 export const setupInterceptors = (store: ApplicationStore) => {
-  baseRequest.interceptors.request.use((config) => {
-    /** Will end up being "Admin 1234" or "Bearer 1234" */
-    const token = ACCESS_TOKEN ?? storage.authentication.token.get() ?? null;
+  baseRequest.interceptors.request.use(async (config) => {
+    if (
+      window.location.pathname === '/oauth/callback' ||
+      window.location.pathname === '/admin/callback'
+    ) {
+      throw new Error(
+        'API calls blocked during authentication callback processing'
+      );
+    }
 
     const url = getURL(config);
 
@@ -145,6 +152,7 @@ export const setupInterceptors = (store: ApplicationStore) => {
     // setHeaders(), we don't want this overridden.
     const hasExplicitAuthToken = headers.hasAuthorization();
 
+    const token = ACCESS_TOKEN ?? storage.authentication.token.get() ?? null;
     const bearer = hasExplicitAuthToken ? headers.getAuthorization() : token;
 
     headers.setAuthorization(bearer);

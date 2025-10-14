@@ -14,7 +14,6 @@ import {
   getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
   getLinodeLabelFromLabelParts,
-  getTabIndex,
 } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
@@ -36,19 +35,6 @@ packages:
  */
 const base64UserData =
   'I2Nsb3VkLWNvbmZpZwpwYWNrYWdlX3VwZGF0ZTogdHJ1ZQpwYWNrYWdlX3VwZ3JhZGU6IHRydWUKcGFja2FnZXM6Ci0gbmdpbngKLSBteXNxbC1zZXJ2ZXIK';
-
-describe('getTabIndex', () => {
-  it('should return 0 when there is no value specifying the tab', () => {
-    expect(getTabIndex(undefined)).toBe(0);
-  });
-  it('should return 0 when the value is not a valid tab', () => {
-    // @ts-expect-error We are intentionally passing an invalid value.
-    expect(getTabIndex('fake tab')).toBe(0);
-  });
-  it('should return the correct index when the value is a valid tab', () => {
-    expect(getTabIndex('Images')).toBe(3);
-  });
-});
 
 describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
@@ -83,6 +69,38 @@ describe('getLinodeCreatePayload', () => {
       ...values,
       placement_group: undefined,
     });
+  });
+
+  it('should remove interface from the payload if using legacy interfaces with the new UI and the linode is being created from backups', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        interface_generation: 'legacy_config',
+        backup_id: 1,
+      }),
+      linodeInterfaces: [{ purpose: 'public', public: {} }],
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: true,
+      }).interfaces
+    ).toEqual(undefined);
+  });
+
+  it('should not remove interface from the payload when using new interfaces and creating from a backup', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        interface_generation: 'linode',
+        backup_id: 1,
+      }),
+      linodeInterfaces: [{ purpose: 'public', public: {} }],
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: true,
+      }).interfaces
+    ).toEqual([{ public: {}, vpc: null, vlan: null }]);
   });
 });
 

@@ -16,6 +16,17 @@ const queryMocks = vi.hoisted(() => ({
   useVPCQuery: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_vpc: true,
+      delete_vpc: true,
+    },
+  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -39,6 +50,10 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
 beforeAll(() => mockMatchMedia());
 
 describe('VPC Detail Summary section', () => {
@@ -175,7 +190,7 @@ describe('VPC Detail Summary section', () => {
     expect(readMoreButton.innerHTML).toBe('Read Less');
   });
 
-  it('should display a warning notice and disable actions if the VPC was automatically generated for a LKE-E cluster', async () => {
+  it('should display a notice if the VPC was automatically generated for a LKE-E cluster', async () => {
     const vpcFactory1 = vpcFactory.build({
       description: `workload VPC for LKE Enterprise Cluster lke1234567.`,
       label: 'lke1234567',
@@ -184,21 +199,39 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByRole, getByText } = renderWithTheme(<VPCDetail />);
+    const { getByText } = renderWithTheme(<VPCDetail />);
 
     expect(
       getByText(
-        'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits is disabled to avoid disruption to cluster communication.'
+        'This VPC has been automatically generated for your LKE Enterprise cluster.'
       )
     ).toBeVisible();
+  });
+  it('should disable actions if user does not have "update_vpc" or "delete_vpc" permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: false,
+        delete_vpc: false,
+      },
+    });
 
-    const editButton = getByRole('button', {
-      name: 'Edit',
+    const { getByText } = renderWithTheme(<VPCDetail />);
+
+    expect(getByText('Edit')).toBeDisabled();
+    expect(getByText('Delete')).toBeDisabled();
+  });
+
+  it('should enable actions if user has "update_vpc" or "delete_vpc" permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: true,
+        delete_vpc: true,
+      },
     });
-    const deleteButton = getByRole('button', {
-      name: 'Delete',
-    });
-    expect(editButton).toBeDisabled();
-    expect(deleteButton).toBeDisabled();
+
+    const { getByText } = renderWithTheme(<VPCDetail />);
+
+    expect(getByText('Edit')).toBeEnabled();
+    expect(getByText('Delete')).toBeEnabled();
   });
 });

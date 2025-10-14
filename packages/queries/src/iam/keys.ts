@@ -19,7 +19,10 @@ export const iamQueries = createQueryKeys('iam', {
         queryFn: () => getUserAccountPermissions(username),
         queryKey: [username],
       },
-      entityPermissions: (entityType: AccessType, entityId: number) => ({
+      entityPermissions: (
+        entityType: AccessType,
+        entityId: number | string,
+      ) => ({
         queryFn: () => getUserEntityPermissions(username, entityType, entityId),
         queryKey: [entityType, entityId],
       }),

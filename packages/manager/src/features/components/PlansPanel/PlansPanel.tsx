@@ -33,6 +33,7 @@ import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export interface PlansPanelProps {
+  additionalBanners?: React.ReactNode[];
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
@@ -42,6 +43,7 @@ export interface PlansPanelProps {
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
+  flow?: 'database' | 'kubernetes' | 'linode';
   handleTabChange?: (index: number) => void;
   header?: string;
   isCreate?: boolean;
@@ -68,6 +70,7 @@ export interface PlansPanelProps {
  */
 export const PlansPanel = (props: PlansPanelProps) => {
   const {
+    additionalBanners,
     className,
     copy,
     currentPlanHeading,
@@ -76,6 +79,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     disabledSmallerPlans,
     docsLink,
     error,
+    flow = 'linode',
     handleTabChange,
     header,
     isCreate,
@@ -156,6 +160,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
     selectedRegionID,
   });
 
+  const isDatabaseResize = flow === 'database' && isResize;
+
   const tabs = Object.keys(plans).map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
       const plansMap: PlanSelectionType[] = plans[plan]!;
@@ -168,7 +174,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disabledClasses,
         disabledSmallerPlans,
         isLegacyDatabase,
-        isResize,
+        isResize: isDatabaseResize ? false : isResize,
         plans: plansMap,
         regionAvailabilities,
         selectedRegionId: selectedRegionID,
@@ -182,8 +188,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
           return (
             <>
               <PlanInformation
+                additionalBanners={additionalBanners}
                 disabledClasses={disabledClasses}
-                flow="linode"
+                flow={flow}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 hideLimitedAvailabilityBanner={
@@ -191,6 +198,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
                   !flags.disableLargestGbPlans ||
                   plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
                 }
+                isResize={isResize}
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}

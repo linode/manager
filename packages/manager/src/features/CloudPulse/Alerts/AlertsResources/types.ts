@@ -1,9 +1,10 @@
 import type { MemoExoticComponent } from 'react';
 
+import type { AlertsEndpointFilterProps } from './AlertsEndpointFilter';
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertsTagFilterProps } from './AlertsTagsFilter';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 export interface ColumnConfig<T> {
   /**
@@ -32,20 +33,21 @@ export interface EngineType {
 
 /**
  * Represents the column configurations for different service types.
- * Each key in the record corresponds to an AlertServiceType or an empty string (default).
+ * Each key in the record corresponds to an CloudPulseServiceType or an empty string (default).
  * The value is an array of ColumnConfig objects defining the table structure for that service type.
  * @template T - The type of data displayed in the table columns.
  */
-export type ServiceColumns<T> = Record<
-  '' | AlertServiceType,
-  ColumnConfig<T>[]
->;
+
+export type ServiceColumns<T> = Partial<
+  Record<CloudPulseServiceType, ColumnConfig<T>[]>
+> &
+  Record<'', ColumnConfig<T>[]>;
 
 /**
  * Defines the available filter keys that can be used to filter alerts.
  * This type will be extended in the future to include other attributes like tags, plan, etc.
  */
-export type AlertFilterKey = 'engineType' | 'region' | 'tags'; // will be extended to have tags, plan etc.,
+export type AlertFilterKey = 'endpoint' | 'engineType' | 'region' | 'tags'; // will be extended to have tags, plan etc.,
 
 /**
  * Represents the possible types for alert filter values.
@@ -57,9 +59,10 @@ export type AlertFilterType = boolean | number | string | string[] | undefined;
  * Defines additional filter keys that can be used beyond the primary ones.
  * Future Extensions: Additional attributes like 'tags' and 'plan' can be added here.
  */
-export type AlertAdditionalFilterKey = 'engineType' | 'tags'; // will be extended to have tags, plan etc.,
+export type AlertAdditionalFilterKey = 'endpoint' | 'engineType' | 'tags'; // will be extended to have tags, plan etc.,
 
 export type AlertResourceFiltersProps =
+  | AlertsEndpointFilterProps
   | AlertsEngineOptionProps
   | AlertsRegionProps
   | AlertsTagFilterProps;

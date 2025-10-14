@@ -1,14 +1,21 @@
 import { formatPercentage } from '@linode/utilities';
 
+import { widgetFactory } from 'src/factories';
+
 import {
   generateGraphData,
   generateMaxUnit,
   getDimensionName,
+  getEntityIds,
   getLabelName,
   getTimeDurationFromPreset,
   mapResourceIdToName,
 } from './CloudPulseWidgetUtils';
 
+import type {
+  DimensionNameProperties,
+  LabelNameOptionsProps,
+} from './CloudPulseWidgetUtils';
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
@@ -60,12 +67,13 @@ describe('generateMaxUnit method', () => {
 });
 
 describe('getLabelName method', () => {
-  const baseProps = {
+  const baseProps: LabelNameOptionsProps = {
     label: 'CPU Usage',
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
     serviceType: 'linode',
     unit: '%',
+    groupBy: ['entity_id'],
   };
 
   it('returns resource label when all data is valid', () => {
@@ -116,6 +124,8 @@ it('test generateGraphData with metrics data', () => {
     resources: [{ id: '1', label: 'linode-1' }],
     status: 'success',
     unit: '%',
+    serviceType: 'linode',
+    groupBy: ['entity_id'],
   });
 
   expect(result.areas[0].dataKey).toBe('linode-1');
@@ -139,9 +149,11 @@ it('test generateGraphData with metrics data', () => {
 });
 
 describe('getDimensionName method', () => {
-  const baseProps = {
+  const baseProps: DimensionNameProperties = {
+    serviceType: 'linode',
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
+    groupBy: ['entity_id'],
   };
 
   it('returns resource label when all data is valid', () => {
@@ -203,6 +215,29 @@ describe('getDimensionName method', () => {
     const result = getDimensionName(props);
     expect(result).toBe('123');
   });
+
+  it('returns the transformed dimension value according to the service type', () => {
+    const props = {
+      ...baseProps,
+      metric: {
+        entity_id: '123',
+        metric_name: 'test',
+        node_id: 'primary-1',
+        operation: 'read',
+      },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1 | test | primary-1 | Read');
+  });
+
+  it('returns the actual value if dimension name is not found in the transform config', () => {
+    const props = {
+      ...baseProps,
+      metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1 | test | primary-1');
+  });
 });
 
 it('test mapResourceIdToName method', () => {
@@ -218,15 +253,37 @@ it('test mapResourceIdToName method', () => {
 
 describe('getTimeDurationFromPreset method', () => {
   it('should return correct time duration for Last Day preset', () => {
-    const result = getTimeDurationFromPreset('last day');
+    const result = getTimeDurationFromPreset('Last day');
     expect(result).toStrictEqual({
       unit: 'days',
       value: 1,
     });
   });
 
-  it('shoult return undefined of invalid preset', () => {
+  it('should return undefined for invalid preset', () => {
     const result = getTimeDurationFromPreset('15min');
     expect(result).toBe(undefined);
+  });
+
+  describe('getEntityIds method', () => {
+    it('should return entity ids for linode service type', () => {
+      const result = getEntityIds(
+        [{ id: '123', label: 'linode-1' }],
+        ['123'],
+        widgetFactory.build(),
+        'linode'
+      );
+      expect(result).toEqual([123]);
+    });
+
+    it('should return entity ids for objectstorage service type', () => {
+      const result = getEntityIds(
+        [{ id: 'bucket-1', label: 'bucket-name-1' }],
+        ['bucket-1'],
+        widgetFactory.build(),
+        'objectstorage'
+      );
+      expect(result).toEqual(['bucket-1']);
+    });
   });
 });

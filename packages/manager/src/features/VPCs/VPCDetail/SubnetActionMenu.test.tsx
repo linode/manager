@@ -7,6 +7,28 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetActionMenu } from './SubnetActionMenu';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_linode: true,
+      delete_linode: true,
+      update_vpc: true,
+      delete_vpc: true,
+    },
+  })),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [
+      { id: 1, label: 'linode-1' },
+      { id: 2, label: 'linode-2' },
+    ],
+    isLoading: false,
+    isError: false,
+  }),
+}));
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+}));
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -16,7 +38,6 @@ const props = {
   handleDelete: vi.fn(),
   handleEdit: vi.fn(),
   handleUnassignLinodes: vi.fn(),
-  isVPCLKEEnterpriseCluster: false,
   numLinodes: 1,
   numNodebalancers: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
@@ -107,15 +128,71 @@ describe('SubnetActionMenu', () => {
     expect(props.handleAssignLinodes).toHaveBeenCalled();
   });
 
-  it('should disable action buttons if isVPCLKEEnterpriseCluster is true', async () => {
-    const updatedProps = { ...props, isVPCLKEEnterpriseCluster: true };
-    const view = renderWithTheme(<SubnetActionMenu {...updatedProps} />);
+  it('should disable the Assign Linodes button if user does not have update_linode permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: false,
+        delete_linode: false,
+        update_vpc: false,
+        delete_vpc: false,
+      },
+    });
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
     const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
     await userEvent.click(actionMenu);
 
-    const actionButtons = view.getAllByRole('menuitem');
-    actionButtons.forEach((button) =>
-      expect(button).toHaveAttribute('aria-disabled', 'true')
-    );
+    const assignButton = view.getByRole('menuitem', { name: 'Assign Linodes' });
+    expect(assignButton).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable the Assign Linodes button if user has update_linode and update_vpc permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: true,
+        delete_linode: false,
+        update_vpc: true,
+        delete_vpc: false,
+      },
+    });
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const assignButton = view.getByRole('menuitem', { name: 'Assign Linodes' });
+    expect(assignButton).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should disable the Edit button if user does not have update_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: false,
+        delete_linode: false,
+        update_vpc: false,
+        delete_vpc: false,
+      },
+    });
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const editButton = view.getByRole('menuitem', { name: 'Edit' });
+    expect(editButton).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable the Edit button if user has update_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: false,
+        delete_linode: false,
+        update_vpc: true,
+        delete_vpc: false,
+      },
+    });
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const editButton = view.getByRole('menuitem', { name: 'Edit' });
+    expect(editButton).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

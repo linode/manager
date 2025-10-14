@@ -9,6 +9,7 @@ import {
   mockUpdateUser,
   mockUpdateUserGrants,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
@@ -168,6 +169,13 @@ const assertBillingAccessSelected = (
 };
 
 describe('User permission management', () => {
+  beforeEach(() => {
+    // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: true,
+    }).as('getFeatureFlags');
+  });
+
   /*
    * - Confirms that full account access can be toggled for account users using mock API data.
    * - Confirms that users can navigate to User Permissions pages via Users & Grants page.
@@ -193,7 +201,7 @@ describe('User permission management', () => {
     mockGetUserGrantsUnrestrictedAccess(mockUser.username).as('getUserGrants');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
     cy.findByText(mockUser.username)
       .should('be.visible')
@@ -208,10 +216,7 @@ describe('User permission management', () => {
 
     // Confirm that Cloud navigates to the user's permissions page and that user has
     // unrestricted account access.
-    cy.url().should(
-      'endWith',
-      `/account/users/${mockUser.username}/permissions`
-    );
+    cy.url().should('endWith', `/users/${mockUser.username}/permissions`);
     cy.findByText(unrestrictedAccessMessage).should('be.visible');
 
     // Restrict account access, confirm page updates to reflect change.
@@ -305,7 +310,7 @@ describe('User permission management', () => {
 
     mockGetUser(mockUser).as('getUser');
     mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
-    cy.visitWithLogin(`/account/users/${mockUser.username}/permissions`);
+    cy.visitWithLogin(`/users/${mockUser.username}/permissions`);
     cy.wait(['@getUser', '@getUserGrants']);
 
     mockUpdateUserGrants(mockUser.username, mockUserGrantsUpdatedGlobal).as(
@@ -397,7 +402,7 @@ describe('User permission management', () => {
 
     mockGetUser(mockUser);
     mockGetUserGrants(mockUser.username, mockUserGrants);
-    cy.visitWithLogin(`/account/users/${mockUser.username}/permissions`);
+    cy.visitWithLogin(`/users/${mockUser.username}/permissions`);
 
     // Test reset in Global Permissions section.
     cy.get('[data-qa-global-section]')
@@ -508,9 +513,7 @@ describe('User permission management', () => {
     mockGetUserGrants(mockActiveUser.username, mockUserGrants);
     mockGetProfile(mockProfile);
 
-    cy.visitWithLogin(
-      `/account/users/${mockRestrictedUser.username}/permissions`
-    );
+    cy.visitWithLogin(`/users/${mockRestrictedUser.username}/permissions`);
     mockGetUser(mockRestrictedUser);
     mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
 
@@ -572,9 +575,7 @@ describe('User permission management', () => {
     mockGetUser(mockRestrictedProxyUser);
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
-    cy.visitWithLogin(
-      `/account/users/${mockRestrictedProxyUser.username}/permissions`
-    );
+    cy.visitWithLogin(`/users/${mockRestrictedProxyUser.username}/permissions`);
 
     cy.findByText('Parent User Permissions', { exact: false }).should(
       'be.visible'

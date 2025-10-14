@@ -84,7 +84,7 @@ export const sxLastListItem = {
 // VPC Label Styles
 // ---------------------------------------------------------------------
 
-export const StyledIPv4Box = styled(Box, { label: 'StyledIPv4Box' })(
+export const StyledIPBox = styled(Box, { label: 'StyledIPBox' })(
   ({ theme }) => ({
     '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
       opacity: 1,
@@ -98,7 +98,7 @@ export const StyledIPv4Box = styled(Box, { label: 'StyledIPv4Box' })(
   })
 );
 
-export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
+export const StyledIPLabel = styled(Box, { label: 'StyledIPLabel' })(
   ({ theme }) => ({
     alignContent: 'center',
     backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
@@ -107,10 +107,11 @@ export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
     padding: `${theme.spacing(1)} ${theme.spacing(3)} ${theme.spacing(
       1
     )} ${theme.spacing(1.5)}`,
+    whiteSpace: 'nowrap',
   })
 );
 
-export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
+export const StyledIPItem = styled(Box, { label: 'StyledIPItem' })(
   ({ theme }) => ({
     alignItems: 'center',
     backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,

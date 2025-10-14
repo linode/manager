@@ -16,7 +16,7 @@ export const StyledInstructionGrid = styled(Grid, {
         content: "'|'",
         left: `calc(-${theme.spacing(1)} + 2px)`,
         position: 'absolute',
-        top: `calc(${theme.spacing(1)} - 3px)`,
+        top: `calc(${theme.spacing(1)} - 8px)`,
       },
       marginLeft: theme.spacing(2),
       paddingLeft: theme.spacing(2),

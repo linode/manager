@@ -15,9 +15,15 @@ import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 export const ObjectStorageSettings = () => {
   const { data: profile } = useProfile();
   const { data: accountSettings, isLoading } = useAccountSettings();
+
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
 
   const {
     error,
@@ -63,6 +69,7 @@ export const ObjectStorageSettings = () => {
             <Box>
               <Button
                 buttonType="outlined"
+                disabled={!permissions.update_account_settings}
                 onClick={() => setIsCancelDialogOpen(true)}
               >
                 Cancel Object Storage

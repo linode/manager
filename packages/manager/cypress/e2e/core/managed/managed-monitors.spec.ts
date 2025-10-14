@@ -111,6 +111,7 @@ describe('Managed Monitors tab', () => {
       });
 
     // Confirm that monitor label has been updated, then disable the monitor.
+    mockDisableServiceMonitor(monitorId, newMonitor).as('disableMonitor');
     cy.findByText(newLabel)
       .should('be.visible')
       .closest('tr')
@@ -119,14 +120,13 @@ describe('Managed Monitors tab', () => {
           .findByTitle(monitorMenuLabel)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Disable').click();
       });
-
-    mockDisableServiceMonitor(monitorId, newMonitor).as('disableMonitor');
-    ui.actionMenuItem.findByTitle('Disable').click();
 
     cy.wait('@disableMonitor');
 
     // Confirm that monitor has been disabled, then re-enable the monitor.
+    mockEnableServiceMonitor(monitorId, newMonitor).as('enableMonitor');
     ui.toast.assertMessage('Monitor disabled successfully.');
     cy.findByText(newLabel)
       .should('be.visible')
@@ -137,10 +137,8 @@ describe('Managed Monitors tab', () => {
           .findByTitle(monitorMenuLabel)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Enable').click();
       });
-
-    mockEnableServiceMonitor(monitorId, newMonitor).as('enableMonitor');
-    ui.actionMenuItem.findByTitle('Enable').click();
 
     cy.wait('@enableMonitor');
 
@@ -242,9 +240,8 @@ describe('Managed Monitors tab', () => {
           .findByTitle(monitorMenuLabel)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').click();
       });
-
-    ui.actionMenuItem.findByTitle('Delete').click();
 
     cy.wait('@getMonitor');
 

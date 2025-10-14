@@ -56,7 +56,10 @@ import {
   entityTransferFactory,
   eventFactory,
   firewallDeviceFactory,
+  firewallEntityfactory,
   firewallFactory,
+  firewallMetricDefinitionsResponse,
+  firewallMetricRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -89,6 +92,8 @@ import {
   objectStorageClusterFactory,
   objectStorageEndpointsFactory,
   objectStorageKeyFactory,
+  objectStorageMetricCriteria,
+  objectStorageMetricRules,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
   paymentFactory,
@@ -136,9 +141,9 @@ import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/consta
 import type {
   AccountMaintenance,
   AlertDefinitionType,
-  AlertServiceType,
   AlertSeverityType,
   AlertStatusType,
+  CloudPulseServiceType,
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
@@ -192,9 +197,19 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
   const database = databaseFactory.build(db);
+
   if (database.platform !== 'rdbms-default') {
     delete database.private_network;
   }
+
+  if (database.platform === 'rdbms-default' && !!database.private_network) {
+    // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
+    database.hosts = {
+      primary: 'private-db-mysql-primary-0.b.linodeb.net',
+      standby: 'private-db-mysql-standby-0.b.linodeb.net',
+    };
+  }
+
   return database;
 };
 
@@ -214,7 +229,7 @@ function sleep(ms: number) {
 }
 
 const entityTransfers = [
-  http.get('*/account/entity-transfers', () => {
+  http.get('*/account/service-transfers', () => {
     const transfers1 = entityTransferFactory.buildList(10);
     const transfers2 = entityTransferFactory.buildList(10, {
       token: 'TEST123',
@@ -239,14 +254,14 @@ const entityTransfers = [
     );
     return HttpResponse.json(makeResourcePage(combinedTransfers));
   }),
-  http.get('*/account/entity-transfers/:transferId', () => {
+  http.get('*/account/service-transfers/:transferId', () => {
     const transfer = entityTransferFactory.build();
     return HttpResponse.json(transfer);
   }),
   http.get('*/account/agreements', () =>
     HttpResponse.json(accountAgreementsFactory.build())
   ),
-  http.post('*/account/entity-transfers', async ({ request }) => {
+  http.post('*/account/service-transfers', async ({ request }) => {
     const body = await request.json();
     const payload = body as any;
     const newTransfer = entityTransferFactory.build({
@@ -254,10 +269,10 @@ const entityTransfers = [
     });
     return HttpResponse.json(newTransfer);
   }),
-  http.post('*/account/entity-transfers/:transferId/accept', () => {
+  http.post('*/account/service-transfers/:transferId/accept', () => {
     return HttpResponse.json({});
   }),
-  http.delete('*/account/entity-transfers/:transferId', () => {
+  http.delete('*/account/service-transfers/:transferId', () => {
     return HttpResponse.json({});
   }),
 ];
@@ -738,6 +753,9 @@ export const handlers = [
   }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
+    const linodesWithFirewalls = linodeFactory.buildList(10, {
+      region: 'ap-west',
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -812,8 +830,19 @@ export const handlers = [
         region: 'us-east',
         id: 1005,
       }),
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-3',
+        region: 'us-iad',
+        id: 1006,
+      }),
     ];
+    const linodeFirewall = linodeFactory.build({
+      region: 'ap-west',
+      label: 'Linode-firewall-test',
+      id: 90909,
+    });
     const linodes = [
+      ...linodesWithFirewalls,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -866,6 +895,7 @@ export const handlers = [
       }),
       eventLinode,
       multipleIPLinode,
+      linodeFirewall,
     ];
 
     if (request.headers.get('x-filter')) {
@@ -876,19 +906,62 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
-      // filter the linodes based on id or region
       if (andFilters?.length) {
-        filteredLinodes = filteredLinodes.filter((linode) => {
-          const filteredById = andFilters.every(
-            (filter: { id: number }) => filter.id === linode.id
-          );
-          const filteredByRegion = andFilters.every(
-            (filter: { region: string }) => filter.region === linode.region
-          );
+        // Check if this is a combined filter structure (multiple filter groups with +or arrays)
+        const hasCombinedFilter = andFilters.some(
+          (filterGroup: any) =>
+            filterGroup['+or'] && Array.isArray(filterGroup['+or'])
+        );
 
-          return filteredById || filteredByRegion;
-        });
+        if (hasCombinedFilter) {
+          // Handle combined filter structure for CloudPulse alerts
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            return andFilters.every((filterGroup: any) => {
+              // Handle id filter group
+              if (filterGroup['+or'] && Array.isArray(filterGroup['+or'])) {
+                const idFilters = filterGroup['+or'].filter(
+                  (f) => f.id !== undefined
+                );
+                const regionFilters = filterGroup['+or'].filter(
+                  (f) => f.region !== undefined
+                );
+
+                // Check if linode matches any id in the id filter group
+                const matchesId =
+                  idFilters.length === 0 ||
+                  idFilters.some((f) => Number(f.id) === linode.id);
+
+                // Check if linode matches any region in the region filter group
+                const matchesRegion =
+                  regionFilters.length === 0 ||
+                  regionFilters.some((f) => f.region === linode.region);
+
+                return matchesId && matchesRegion;
+              }
+
+              return false;
+            });
+          });
+        } else {
+          // Handle legacy andFilters for other use cases
+          filteredLinodes = filteredLinodes.filter((linode) => {
+            const filteredById = andFilters.every(
+              (filter: { id: number }) => filter.id === linode.id
+            );
+            const filteredByRegion = andFilters.every(
+              (filter: { region: string }) => filter.region === linode.region
+            );
+
+            return filteredById || filteredByRegion;
+          });
+        }
       }
+
+      // The legacy id/region filtering logic has been removed here because it
+      // duplicated the work done above and incorrectly trimmed results when a
+      // newer "combined" filter structure (an array of "+or" groups inside
+      // "+and") was supplied. For legacy consumers the filtering is handled
+      // in the `else` branch above (lines ~922–934).
 
       // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
       if (orFilters?.length) {
@@ -938,19 +1011,58 @@ export const handlers = [
         }),
       ];
       const linodeAclpSupportedRegionDetails = [
+        /** Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook. */
+
+        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region (mock Linode ID: 1004)
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
-          alerts: { user: [100, 101], system: [200] },
+          alerts: {
+            user_alerts: [21, 22, 23, 24, 25],
+            system_alerts: [19, 20],
+            cpu: 0,
+            io: 0,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 0,
+          },
         }),
+        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region (mock Linode ID: 1005)
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
-          alerts: { user: [], system: [] },
+          alerts: {
+            user_alerts: [],
+            system_alerts: [],
+            cpu: 10,
+            io: 10000,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 80,
+          },
+        }),
+        // 3. Example: Linode in an ACLP-supported region with NO enabled alerts (mock Linode ID: 1006)
+        // - Whether this Linode is ACLP-subscribed depends on the ACLP release stage:
+        //   a. Beta stage: NOT subscribed to ACLP
+        //   b. GA stage: Subscribed to ACLP
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-3',
+          region: 'us-iad',
+          alerts: {
+            user_alerts: [],
+            system_alerts: [],
+            cpu: 0,
+            io: 0,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 0,
+          },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -985,6 +1097,8 @@ export const handlers = [
           return linodeAclpSupportedRegionDetails[0];
         case 1005:
           return linodeAclpSupportedRegionDetails[1];
+        case 1006:
+          return linodeAclpSupportedRegionDetails[2];
         default:
           return linodeDetail;
       }
@@ -1100,7 +1214,27 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/v4beta/networking/firewalls', () => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = [
+      ...firewallFactory.buildList(10),
+      firewallFactory.build({
+        entities: [
+          firewallEntityfactory.build({
+            type: 'linode_interface',
+            parent_entity: firewallEntityfactory.build({
+              type: 'linode',
+              id: 123,
+              label: 'Linode-123',
+            }),
+          }),
+          firewallEntityfactory.build({
+            type: 'linode',
+            label: 'Linode-firewall-test',
+            parent_entity: null,
+            id: 90909,
+          }),
+        ],
+      }),
+    ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
@@ -1218,6 +1352,16 @@ export const handlers = [
         region: 'us-mia',
         s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'ap-west',
+        s3_endpoint: 'ap-west-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-iad',
+        s3_endpoint: 'us-iad-1.linodeobjects.com',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
@@ -1319,14 +1463,49 @@ export const handlers = [
       Math.random() * 4
     )}` as ObjectStorageEndpointTypes;
 
-    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
-      cluster: `${region}-1`,
-      endpoint_type: randomEndpointType,
-      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
-      label: `obj-bucket-${randomBucketNumber}`,
-      region,
-    });
-
+    const buckets =
+      region !== 'ap-west' && region !== 'us-iad'
+        ? objectStorageBucketFactoryGen2.buildList(1, {
+            cluster: `${region}-1`,
+            endpoint_type: randomEndpointType,
+            hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+            label: `obj-bucket-${randomBucketNumber}`,
+            region,
+          })
+        : [];
+    if (region === 'ap-west') {
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-804.ap-west.linodeobjects.com`,
+          label: `obj-bucket-804`,
+          region,
+        })
+      );
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-902.ap-west.linodeobjects.com`,
+          label: `obj-bucket-902`,
+          region,
+        })
+      );
+    }
+    if (region === 'us-iad')
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `us-iad-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'us-iad-1.linodeobjects.com',
+          hostname: `obj-bucket-230.us-iad.linodeobjects.com`,
+          label: `obj-bucket-230`,
+          region,
+        })
+      );
     return HttpResponse.json({
       data: buckets.slice(
         (page - 1) * pageSize,
@@ -1491,7 +1670,9 @@ export const handlers = [
       'offline',
       'resizing',
     ];
-    const volumes = statuses.map((status) => volumeFactory.build({ status }));
+    const volumes = statuses.map((status) =>
+      volumeFactory.build({ status, region: 'ap-west' })
+    );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
@@ -1642,6 +1823,10 @@ export const handlers = [
       accountMaintenance.sort((a, b) => {
         const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
         const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
+
+        if (statusA === null || statusB === null) {
+          return 0;
+        }
 
         if (statusA < statusB) {
           return -1;
@@ -2693,8 +2878,7 @@ export const handlers = [
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
-      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-
+      const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
       const reqBody = await request.json();
       const response = alertFactory.build({
         ...(reqBody as CreateAlertDefinitionPayload),
@@ -2715,11 +2899,19 @@ export const handlers = [
       alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
-          ...alertFactory.buildList(20, {
+          ...alertFactory.buildList(18, {
             rule_criteria: {
               rules: alertRulesFactory.buildList(2),
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+          }),
+          // Mocked 2 alert definitions associated with mock Linode ID '1004' (aclp-supported-region-linode-1)
+          ...alertFactory.buildList(2, {
+            rule_criteria: {
+              rules: alertRulesFactory.buildList(2),
+            },
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            entity_ids: ['1004'],
           }),
           ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
@@ -2731,6 +2923,13 @@ export const handlers = [
             type: 'user',
             scope: 'region',
             regions: ['us-east'],
+          }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'entity',
+            regions: ['us-east'],
+            entity_ids: ['5', '6'],
           }),
         ],
       });
@@ -2790,12 +2989,61 @@ export const handlers = [
         type: 'user',
         updated_by: 'user1',
       }),
+      alertFactory.build({
+        id: 999,
+        label: 'Firewall - testing',
+        service_type: 'firewall',
+        type: 'user',
+        scope: 'account',
+        created_by: 'user1',
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
+      alertFactory.build({
+        id: 550,
+        label: 'Object Storage - testing',
+        type: 'user',
+        service_type: 'objectstorage',
+        entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            scope: 'account',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            type: 'user',
+            label: 'object-storage -testing',
+            service_type: 'objectstorage',
+            entity_ids: [
+              'obj-bucket-804.ap-west.linodeobjects.com',
+              'obj-bucket-230.us-iad.linodeobjects.com',
+            ],
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
+          })
+        );
+      }
       if (params.id !== undefined) {
         return HttpResponse.json(
           alertFactory.build({
@@ -2810,6 +3058,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
+            scope: pickRandom(['account', 'region', 'entity']),
           })
         );
       }
@@ -2819,6 +3068,34 @@ export const handlers = [
   http.put(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params, request }) => {
+      if (params.id === '999' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 999,
+            label: 'Firewall - testing',
+            service_type: 'firewall',
+            type: 'user',
+            scope: 'account',
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            label: 'object-storage -testing',
+            type: 'user',
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+          })
+        );
+      }
       const body: any = request.json();
       return HttpResponse.json(
         alertFactory.build({
@@ -2868,32 +3145,47 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Object Storage',
+          service_type: 'objectstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
+        }),
+        serviceTypesFactory.build({
+          label: 'Block Storage',
+          service_type: 'blockstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
-      return HttpResponse.json({}, { status: 404 });
-    }
-
-    const response =
-      params.serviceType === 'linode'
-        ? serviceTypesFactory.build({
-            label: 'Linodes',
-            service_type: 'linode',
-            regions: 'us-iad,us-east',
-            alert: serviceAlertFactory.build({ scope: ['entity'] }),
-          })
-        : serviceTypesFactory.build({
-            label: 'Databases',
-            service_type: 'dbaas',
-            alert: serviceAlertFactory.build({
-              evaluation_period_seconds: [300],
-              polling_interval_seconds: [300],
-            }),
-          });
+    const serviceType = params.serviceType as CloudPulseServiceType;
+    const serviceTypesMap: Record<CloudPulseServiceType, string> = {
+      linode: 'Linode',
+      dbaas: 'Databases',
+      nodebalancer: 'NodeBalancers',
+      firewall: 'Firewalls',
+      objectstorage: 'Object Storage',
+      blockstorage: 'Block Storage',
+    };
+    const response = serviceTypesFactory.build({
+      service_type: `${serviceType}`,
+      label: serviceTypesMap[serviceType],
+      alert: serviceAlertFactory.build({
+        evaluation_period_seconds: [300],
+        polling_interval_seconds: [300],
+        scope:
+          serviceType === 'objectstorage'
+            ? ['entity', 'account', 'region']
+            : ['entity'],
+      }),
+    });
 
     return HttpResponse.json(response, { status: 200 });
   }),
@@ -2960,127 +3252,293 @@ export const handlers = [
       );
     }
 
-    return HttpResponse.json(response);
-  }),
-  http.get('*/monitor/services/:serviceType/metric-definitions', () => {
-    const response = {
-      data: [
-        {
-          available_aggregate_functions: ['min', 'max', 'avg'],
-          dimensions: [
-            {
-              dimension_label: 'cpu',
-              label: 'CPU name',
-              values: null,
-            },
-            {
-              dimension_label: 'state',
-              label: 'State of CPU',
-              values: [
-                'user',
-                'system',
-                'idle',
-                'interrupt',
-                'nice',
-                'softirq',
-                'steal',
-                'wait',
-              ],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'CPU utilization',
-          metric: 'system_cpu_utilization_percent',
-          metric_type: 'gauge',
-          scrape_interval: '2m',
-          unit: 'percent',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'state',
-              label: 'State of memory',
-              values: [
-                'used',
-                'free',
-                'buffered',
-                'cached',
-                'slab_reclaimable',
-                'slab_unreclaimable',
-              ],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Memory Usage',
-          metric: 'system_memory_usage_by_resource',
-          metric_type: 'gauge',
-          scrape_interval: '30s',
-          unit: 'byte',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'device',
-              label: 'Device name',
-              values: ['lo', 'eth0'],
-            },
-            {
-              dimension_label: 'direction',
-              label: 'Direction of network transfer',
-              values: ['transmit', 'receive'],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Network Traffic',
-          metric: 'system_network_io_by_resource',
-          metric_type: 'counter',
-          scrape_interval: '30s',
-          unit: 'byte',
-        },
-        {
-          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-          dimensions: [
-            {
-              dimension_label: 'device',
-              label: 'Device name',
-              values: ['loop0', 'sda', 'sdb'],
-            },
-            {
-              dimension_label: 'direction',
-              label: 'Operation direction',
-              values: ['read', 'write'],
-            },
-            {
-              dimension_label: 'LINODE_ID',
-              label: 'Linode ID',
-              values: null,
-            },
-          ],
-          label: 'Disk I/O',
-          metric: 'system_disk_OPS_total',
-          metric_type: 'counter',
-          scrape_interval: '30s',
-          unit: 'ops_per_second',
-        },
-      ],
-    };
+    if (params.serviceType === 'objectstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 6,
+          label: 'Object Storage Dashboard',
+          service_type: 'objectstorage',
+        })
+      );
+    }
+
+    if (params.serviceType === 'blockstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 7,
+          label: 'Block Storage Dashboard',
+          service_type: 'blockstorage',
+        })
+      );
+    }
 
     return HttpResponse.json(response);
   }),
+  http.get(
+    '*/monitor/services/:serviceType/metric-definitions',
+    ({ params }) => {
+      const response = {
+        data: [
+          {
+            available_aggregate_functions: ['min', 'max', 'avg'],
+            dimensions: [
+              {
+                dimension_label: 'cpu',
+                label: 'CPU name',
+                values: null,
+              },
+              {
+                dimension_label: 'state',
+                label: 'State of CPU',
+                values: [
+                  'user',
+                  'system',
+                  'idle',
+                  'interrupt',
+                  'nice',
+                  'softirq',
+                  'steal',
+                  'wait',
+                ],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'CPU utilization',
+            metric: 'system_cpu_utilization_percent',
+            metric_type: 'gauge',
+            scrape_interval: '2m',
+            unit: 'percent',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'state',
+                label: 'State of memory',
+                values: [
+                  'used',
+                  'free',
+                  'buffered',
+                  'cached',
+                  'slab_reclaimable',
+                  'slab_unreclaimable',
+                ],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Memory Usage',
+            metric: 'system_memory_usage_by_resource',
+            metric_type: 'gauge',
+            scrape_interval: '30s',
+            unit: 'Bps ',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'device',
+                label: 'Device name',
+                values: ['lo', 'eth0'],
+              },
+              {
+                dimension_label: 'direction',
+                label: 'Direction of network transfer',
+                values: ['transmit', 'receive'],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Network Traffic',
+            metric: 'system_network_io_by_resource',
+            metric_type: 'counter',
+            scrape_interval: '30s',
+            unit: 'byte',
+          },
+          {
+            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+            dimensions: [
+              {
+                dimension_label: 'device',
+                label: 'Device name',
+                values: ['loop0', 'sda', 'sdb'],
+              },
+              {
+                dimension_label: 'direction',
+                label: 'Operation direction',
+                values: ['read', 'write'],
+              },
+              {
+                dimension_label: 'LINODE_ID',
+                label: 'Linode ID',
+                values: null,
+              },
+            ],
+            label: 'Disk I/O',
+            metric: 'system_disk_OPS_total',
+            metric_type: 'counter',
+            scrape_interval: '30s',
+            unit: 'ops_per_second',
+          },
+        ],
+      };
+
+      const nodebalancerMetricsResponse = {
+        data: [
+          {
+            label: 'Ingress Traffic Rate',
+            metric: 'nb_ingress_traffic_rate',
+            unit: 'bytes_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Egress Traffic Rate',
+            metric: 'nb_egress_traffic_rate',
+            unit: 'bytes_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Total Active Sessions',
+            metric: 'nb_total_active_sessions',
+            unit: 'count',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['max', 'min', 'avg', 'sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'New Sessions',
+            metric: 'nb_new_sessions_per_second',
+            unit: 'sessions_per_second',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+          {
+            label: 'Total Active Backends',
+            metric: 'nb_total_active_backends',
+            unit: 'count',
+            metric_type: 'gauge',
+            scrape_interval: '300s',
+            is_alertable: true,
+            available_aggregate_functions: ['max', 'min', 'avg', 'sum'],
+            dimensions: [
+              {
+                label: 'Port',
+                dimension_label: 'port',
+                values: null,
+              },
+              {
+                label: 'Protocol',
+                dimension_label: 'protocol',
+                values: ['TCP', 'UDP'],
+              },
+              {
+                label: 'Configuration',
+                dimension_label: 'config_id',
+                values: null,
+              },
+            ],
+          },
+        ],
+      };
+      if (params.serviceType === 'firewall') {
+        return HttpResponse.json({ data: firewallMetricDefinitionsResponse });
+      }
+      if (params.serviceType === 'nodebalancer') {
+        return HttpResponse.json(nodebalancerMetricsResponse);
+      }
+      if (params.serviceType === 'objectstorage') {
+        return HttpResponse.json({ data: objectStorageMetricRules });
+      }
+      return HttpResponse.json(response);
+    }
+  ),
   http.post('*/monitor/services/:serviceType/token', () => {
     const response = {
       token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
@@ -3089,23 +3547,36 @@ export const handlers = [
   }),
 
   http.get('*/monitor/dashboards/:id', ({ params }) => {
+    let serviceType: string;
+    let dashboardLabel: string;
+
+    const id = params.id;
+
+    if (id === '1') {
+      serviceType = 'dbaas';
+      dashboardLabel = 'DBaaS Service I/O Statistics';
+    } else if (id === '3') {
+      serviceType = 'nodebalancer';
+      dashboardLabel = 'NodeBalancer Service I/O Statistics';
+    } else if (id === '4') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Firewall Service I/O Statistics';
+    } else if (id === '6') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Object Storage Service I/O Statistics';
+    } else if (id === '7') {
+      serviceType = 'blockstorage';
+      dashboardLabel = 'Block Storage Dashboard';
+    } else {
+      serviceType = 'linode';
+      dashboardLabel = 'Linode Service I/O Statistics';
+    }
+
     const response = {
       created: '2024-04-29T17:09:29',
-      id: params.id,
-      label:
-        params.id === '1'
-          ? 'DBaaS Service I/O Statistics'
-          : params.id === '3'
-            ? 'NodeBalancer Service I/O Statistics'
-            : 'Linode Service I/O Statistics',
-      service_type:
-        params.id === '1'
-          ? 'dbaas'
-          : params.id === '3'
-            ? 'nodebalancer'
-            : params.id === '4'
-              ? 'firewall'
-              : 'linode', // just update the service type and label and use same widget configs
+      id: Number(params.id),
+      label: dashboardLabel,
+      service_type: serviceType,
       type: 'standard',
       updated: null,
       widgets: [
@@ -3130,7 +3601,7 @@ export const handlers = [
           label: 'Memory Usage',
           metric: 'system_memory_usage_by_resource',
           size: 12,
-          unit: 'Bytes',
+          unit: 'Bps',
           group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
@@ -3215,6 +3686,7 @@ export const handlers = [
             metric: {
               entity_id: '456',
               metric_name: 'average_cpu_usage',
+              linode_id: '123',
               node_id: 'primary-2',
             },
             values: [
@@ -3235,9 +3707,8 @@ export const handlers = [
           },
           {
             metric: {
-              entity_id: '789',
+              entity_id: 'obj-bucket-383.ap-west.linodeobjects.com',
               metric_name: 'average_cpu_usage',
-              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

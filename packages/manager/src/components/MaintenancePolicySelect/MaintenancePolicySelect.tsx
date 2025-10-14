@@ -21,18 +21,22 @@ import { DefaultPolicyChip } from './DefaultPolicyChip';
 import type { MaintenancePolicy } from '@linode/api-v4';
 import type { TextFieldProps } from '@linode/ui';
 
-interface Props {
+interface MaintenancePolicySelectProps {
   disabled?: boolean;
+  disabledReason?: string;
   errorText?: string;
   hideDefaultChip?: boolean;
   onChange: (policy: MaintenancePolicy) => void;
   textFieldProps?: Partial<TextFieldProps>;
-  value?: 'linode/migrate' | 'linode/power_off_on';
+  value?: null | string;
 }
 
-export const MaintenancePolicySelect = (props: Props) => {
+export const MaintenancePolicySelect = (
+  props: MaintenancePolicySelectProps
+) => {
   const {
     disabled,
+    disabledReason,
     errorText,
     onChange,
     value,
@@ -109,16 +113,23 @@ export const MaintenancePolicySelect = (props: Props) => {
               </InputAdornment>
             ),
         },
-        tooltipText: (
-          <Stack spacing={2}>
-            <Typography>
-              <strong>Migrate:</strong> {MIGRATE_TOOLTIP_TEXT}
-            </Typography>
-            <Typography>
-              <strong>Power Off / Power On:</strong> {POWER_OFF_TOOLTIP_TEXT}
-            </Typography>
-          </Stack>
-        ),
+        tooltipText:
+          disabled && textFieldProps?.tooltipText ? (
+            textFieldProps?.tooltipText
+          ) : disabled && disabledReason ? (
+            // Show tooltip for permission issues or other specific reasons
+            disabledReason
+          ) : disabled ? undefined : ( // Don't show tooltip when disabled
+            // Show informational tooltip when not disabled
+            <Stack spacing={2}>
+              <Typography>
+                <strong>Migrate:</strong> {MIGRATE_TOOLTIP_TEXT}
+              </Typography>
+              <Typography>
+                <strong>Power Off / Power On:</strong> {POWER_OFF_TOOLTIP_TEXT}
+              </Typography>
+            </Stack>
+          ),
         tooltipWidth: 410,
         ...textFieldProps,
       }}

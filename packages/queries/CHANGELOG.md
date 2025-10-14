@@ -1,5 +1,80 @@
-## [2025-07-15] - v0.9.0
+## [2025-10-07] - v0.15.0
 
+
+### Added:
+
+- IAM RBAC: useAllAccountEntities to fetch all pages client-side via getAll, preventing missing items on large accounts ([#12888](https://github.com/linode/manager/pull/12888))
+- IAM Parent/Child - Implement new delegation query hooks ([#12895](https://github.com/linode/manager/pull/12895))
+- IAM Delegation: useAllListMyDelegatedChildAccountsQuery to fetch all data ([#12913](https://github.com/linode/manager/pull/12913))
+- Region VPC availability queries ([#12919](https://github.com/linode/manager/pull/12919))
+
+### Changed:
+
+- ACLP: update metric definition queries cache time to inifinity ([#12887](https://github.com/linode/manager/pull/12887))
+
+### Removed:
+
+- `isUsingBetaEndpoint` logic for kubernetes queries since all kubernetes endpoints
+now use /v4beta ([#12867](https://github.com/linode/manager/pull/12867))
+
+### Upcoming Features:
+
+- Logs Delivery Streams/Destinations update useAll queries ([#12802](https://github.com/linode/manager/pull/12802))
+
+## [2025-09-23] - v0.14.0
+
+### Upcoming Features:
+
+- Add infiniteQueries for Streams and Destinations ([#12811](https://github.com/linode/manager/pull/12811))
+- Add query for Destinations' POST v4beta/monitor/streams/destinations/verify endpoint ([#12823](https://github.com/linode/manager/pull/12823))
+- Rename DataStream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
+## [2025-09-11] - v0.13.1
+
+### Fixed:
+
+- Restricted user with account access unable to access billing page on new session ([#12861](https://github.com/linode/manager/pull/12861))
+
+## [2025-09-09] - v0.13.0
+
+### Upcoming Features:
+
+- Add queries for Streams DELETE, PUT API endpoints ([#12645](https://github.com/linode/manager/pull/12645))
+- Add queries for Destinations DELETE, PUT API endpoints ([#12749](https://github.com/linode/manager/pull/12749))
+
+## [2025-08-26] - v0.12.0
+
+### Added:
+
+- Implemented `enabled` parameters for payments & invoices queries ([#12660](https://github.com/linode/manager/pull/12660))
+- Enable parameters to useAccountUsers & useUserRoles ([#12714](https://github.com/linode/manager/pull/12714))
+
+### Changed:
+
+- Replace deprecated queries from /account/entity-transfers to /account/service-transfers ([#12658](https://github.com/linode/manager/pull/12658))
+- IAM RBAC - Increase getAccountEntities page size to 500 ([#12762](https://github.com/linode/manager/pull/12762))
+
+### Upcoming Features:
+
+- Add queries for destinations endpoints (paginated GET, POST) ([#12627](https://github.com/linode/manager/pull/12627))
+
+## [2025-08-12] - v0.11.0
+
+### Upcoming Features:
+
+- Add GET queries for destinations endpoints ([#12559](https://github.com/linode/manager/pull/12559))
+
+## [2025-07-29] - v0.10.0
+
+### Changed:
+
+- Fetch all nodebalancers query to accept Params and Filter ([#12510](https://github.com/linode/manager/pull/12510))
+
+### Upcoming Features:
+
+- Add queries for streams endpoints (GET, POST) ([#12524](https://github.com/linode/manager/pull/12524))
+
+## [2025-07-15] - v0.9.0
 
 ### Added:
 
@@ -8,7 +83,6 @@
 - `statusPage/` directory and migrated relevant query keys and hooks ([#12468](https://github.com/linode/manager/pull/12468))
 
 ## [2025-07-01] - v0.8.0
-
 
 ### Added:
 
@@ -21,7 +95,6 @@
 - Add CRUD CloudNAT queries ([#12379](https://github.com/linode/manager/pull/12379))
 
 ## [2025-06-17] - v0.7.0
-
 
 ### Added:
 

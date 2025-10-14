@@ -241,6 +241,8 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
               sx={(theme) => ({
                 backgroundColor: theme.tokens.alias.Background.Neutral,
                 p: 2,
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
               })}
             >
               <Typography

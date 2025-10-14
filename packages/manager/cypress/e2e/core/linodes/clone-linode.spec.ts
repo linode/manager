@@ -59,7 +59,7 @@ import type { Event, Linode } from '@linode/api-v4';
 const getLinodeCloneUrl = (linode: Linode): string => {
   const regionQuery = `&regionID=${linode.region}`;
   const typeQuery = linode.type ? `&typeID=${linode.type}` : '';
-  return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone%20Linode${typeQuery}`;
+  return `/linodes/create/clone?linodeID=${linode.id}${regionQuery}${typeQuery}`;
 };
 
 authenticate();

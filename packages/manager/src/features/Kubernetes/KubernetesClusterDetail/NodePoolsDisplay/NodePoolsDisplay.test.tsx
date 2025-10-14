@@ -11,10 +11,10 @@ const props: Props = {
   clusterCreated: '2025-01-13T02:58:58',
   clusterID: 123,
   clusterLabel: 'a cluster',
+  clusterVersion: '',
   clusterRegionId: 'us-east',
   clusterTier: 'standard',
   isLkeClusterRestricted: false,
-  regionsData: [],
 };
 
 describe('NodeTable', () => {

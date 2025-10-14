@@ -1,4 +1,4 @@
-import { convertToKebabCase, TooltipIcon } from '@linode/ui';
+import { CircleProgress, convertToKebabCase, TooltipIcon } from '@linode/ui';
 import { IconButton, ListItemText } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,6 +8,7 @@ import KebabIcon from 'src/assets/icons/kebab.svg';
 
 export interface Action {
   disabled?: boolean;
+  hidden?: boolean;
   id?: string;
   onClick: () => void;
   title: string;
@@ -23,6 +24,10 @@ export interface ActionMenuProps {
    * Gives the Menu Button an accessible name
    */
   ariaLabel: string;
+  /**
+   * If true, show a loading indicator
+   */
+  loading?: boolean;
   /**
    * A function that is called when the Menu is opened. Useful for analytics.
    */
@@ -40,7 +45,10 @@ export interface ActionMenuProps {
  * No more than 8 items should be displayed within an action menu.
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
-  const { actionsList, ariaLabel, onOpen, stopClickPropagation } = props;
+  const { actionsList, ariaLabel, loading, onOpen, stopClickPropagation } =
+    props;
+
+  const filteredActionsList = actionsList.filter((action) => !action.hidden);
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -77,7 +85,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) =>
     e.currentTarget.focus();
 
-  if (!actionsList || actionsList.length === 0) {
+  if (!filteredActionsList || filteredActionsList.length === 0) {
     return null;
   }
 
@@ -95,6 +103,8 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
         aria-label={ariaLabel}
         color="inherit"
         id={buttonId}
+        loading={loading}
+        loadingIndicator={<CircleProgress noPadding size="xs" />}
         onClick={handleClick}
         onKeyDown={handleKeyPress}
         sx={(theme) => ({
@@ -112,66 +122,74 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
       >
         <KebabIcon />
       </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
-        }}
-        data-qa-action-menu
-        disableScrollLock
-        id={menuId}
-        marginThreshold={0}
-        MenuListProps={{
-          'aria-labelledby': buttonId,
-        }}
-        onClose={handleClose}
-        open={open}
-        slotProps={{
-          paper: {
-            sx: (theme) => ({
-              backgroundColor: theme.palette.primary.main,
-            }),
-          },
-        }}
-        transformOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
-        }}
-        transitionDuration={225}
-      >
-        {actionsList.map((a, idx) => (
-          <MenuItem
-            data-qa-action-menu-item={a.title}
-            data-testid={a.title}
-            disabled={a.disabled}
-            key={idx}
-            onClick={(e) => {
-              if (!a.disabled) {
-                handleClose(e);
-                a.onClick();
-              }
-              if (stopClickPropagation) {
-                e.stopPropagation();
-              }
-            }}
-            onMouseEnter={handleMouseEnter}
-          >
-            <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
-              {a.title}
-            </ListItemText>
-            {a.tooltip && (
-              <TooltipIcon
-                data-qa-tooltip-icon
-                status="info"
-                sxTooltipIcon={sxTooltipIcon}
-                text={a.tooltip}
-                tooltipPosition="right"
-              />
-            )}
-          </MenuItem>
-        ))}
-      </Menu>
+      {!loading && (
+        <Menu
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            horizontal: 'right',
+            vertical: 'bottom',
+          }}
+          data-qa-action-menu
+          disableScrollLock
+          id={menuId}
+          marginThreshold={0}
+          MenuListProps={{
+            'aria-labelledby': buttonId,
+          }}
+          onClick={(e) => {
+            // Prevents clicks on disabled MenuItems from propagating
+            if (stopClickPropagation) {
+              e.stopPropagation();
+            }
+          }}
+          onClose={handleClose}
+          open={open}
+          slotProps={{
+            paper: {
+              sx: (theme) => ({
+                backgroundColor: theme.palette.primary.main,
+              }),
+            },
+          }}
+          transformOrigin={{
+            horizontal: 'right',
+            vertical: 'top',
+          }}
+          transitionDuration={225}
+        >
+          {filteredActionsList.map((a, idx) => (
+            <MenuItem
+              data-qa-action-menu-item={a.title}
+              data-testid={a.title}
+              disabled={a.disabled}
+              key={idx}
+              onClick={(e) => {
+                if (stopClickPropagation) {
+                  e.stopPropagation();
+                }
+                if (!a.disabled) {
+                  handleClose(e);
+                  a.onClick();
+                }
+              }}
+              onMouseEnter={handleMouseEnter}
+            >
+              <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
+                {a.title}
+              </ListItemText>
+              {a.tooltip && (
+                <TooltipIcon
+                  data-qa-tooltip-icon
+                  status="info"
+                  sxTooltipIcon={sxTooltipIcon}
+                  text={a.tooltip}
+                  tooltipPosition="right"
+                />
+              )}
+            </MenuItem>
+          ))}
+        </Menu>
+      )}
     </>
   );
 });

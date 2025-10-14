@@ -10,7 +10,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
     },
   })),
@@ -84,9 +84,8 @@ describe('Linode Create Details', () => {
     const { queryByText } = renderWithThemeAndHookFormContext({
       component: <Details />,
       options: {
-        MemoryRouter: {
-          initialEntries: ['/linodes/create?type=Clone+Linode'],
-        },
+        initialRoute: '/linodes/create/clone',
+        initialEntries: ['/linodes/create/clone'],
       },
     });
 
@@ -107,7 +106,7 @@ describe('Linode Create Details', () => {
 
   it('should enable the label and tag TextFields if the user has create_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
       },
     });

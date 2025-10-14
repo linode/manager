@@ -9,9 +9,11 @@ import { Button, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import { StyledGrid } from './EmailBounce.styles';
 
@@ -26,7 +28,9 @@ export const EmailBounceNotificationSection = React.memo(() => {
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: notifications } = useNotificationsQuery();
-  const history = useHistory();
+  const flags = useFlags();
+
+  const navigate = useNavigate();
 
   // Have to use refs here, because these values should be static. I.e. if we
   // used the raw Redux values, when the user updated their email, the text of
@@ -52,9 +56,12 @@ export const EmailBounceNotificationSection = React.memo(() => {
       {billingEmailBounceNotification && accountEmailRef && (
         <EmailBounceNotification
           changeEmail={() =>
-            history.push(
-              '/account/billing?contactDrawerOpen=true&focusEmail=true'
-            )
+            navigate({
+              to: flags?.iamRbacPrimaryNavChanges
+                ? '/billing'
+                : '/account/billing',
+              search: { contactDrawerOpen: true, focusEmail: true },
+            })
           }
           confirmEmail={confirmAccountEmail}
           text={
@@ -68,7 +75,12 @@ export const EmailBounceNotificationSection = React.memo(() => {
       )}
       {userEmailBounceNotification && profileEmailRef && (
         <EmailBounceNotification
-          changeEmail={() => history.push('/profile/display?focusEmail=true')}
+          changeEmail={() =>
+            navigate({
+              to: '/profile/display',
+              search: { focusEmail: true },
+            })
+          }
           confirmEmail={confirmProfileEmail}
           text={
             <Typography data-testid="user_email_bounce">

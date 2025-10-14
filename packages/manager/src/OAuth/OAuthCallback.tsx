@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 
@@ -12,14 +12,15 @@ import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
  *
  * We will handle taking the code, turning it into an access token, and start a Cloud Manager session.
  */
-export const OAuthCallback = (props: RouteComponentProps) => {
+export const OAuthCallback = () => {
+  const navigate = useNavigate();
   const authenticate = async () => {
     try {
       const { returnTo } = await handleOAuthCallback({
         params: location.search,
       });
 
-      props.history.push(returnTo);
+      navigate({ to: returnTo });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

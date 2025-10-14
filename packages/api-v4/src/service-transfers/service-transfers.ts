@@ -9,11 +9,8 @@ import Request, {
   setXFilter,
 } from '../request';
 
-import type {
-  CreateTransferPayload,
-  EntityTransfer,
-} from '../entity-transfers/types';
 import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { CreateTransferPayload, EntityTransfer } from './types';
 
 /**
  * getServiceTransfers

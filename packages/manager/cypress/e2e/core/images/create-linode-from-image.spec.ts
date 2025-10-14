@@ -80,7 +80,7 @@ describe('create linode from image, mocked data', () => {
     ];
 
     mockGetAllImages([]).as('getImages');
-    cy.visitWithLogin('/linodes/create?type=Images');
+    cy.visitWithLogin('/linodes/create/images');
     cy.wait('@getImages');
     noImagesMessages.forEach((message: string) => {
       cy.findByText(message, { exact: false }).should('be.visible');
@@ -88,12 +88,12 @@ describe('create linode from image, mocked data', () => {
   });
 
   it('creates linode from image on images tab', () => {
-    createLinodeWithImageMock('/linodes/create?type=Images', false);
+    createLinodeWithImageMock('/linodes/create/images', false);
   });
 
   it('creates linode from preselected image on images tab', () => {
     createLinodeWithImageMock(
-      `/linodes/create/?type=Images&imageID=${mockImage.id}`,
+      `/linodes/create/images?imageID=${mockImage.id}`,
       true
     );
   });

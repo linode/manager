@@ -8,7 +8,7 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import type { VPCInterfaceData } from '@linode/api-v4';
 
 export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
-  const { ipv4, subnet_id, vpc_id } = props;
+  const { ipv4, ipv6, subnet_id, vpc_id } = props;
   const { data: vpc } = useVPCQuery(vpc_id, Boolean(vpc_id));
 
   const subnet = vpc?.subnets.find((subnet) => subnet.id === subnet_id);
@@ -73,6 +73,38 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
         </Typography>
         {ipv4ToTypography}
       </Stack>
+      {ipv6 && (
+        <Stack>
+          <Typography>
+            <strong>IPv6 Addresses</strong>
+          </Typography>
+          {ipv6.slaac.map((address) => {
+            return (
+              <>
+                <MaskableText
+                  isToggleable
+                  key={address.address}
+                  text={`${address.address} (SLAAC)`}
+                />
+                {address.range && (
+                  <MaskableText
+                    isToggleable
+                    key={address.range}
+                    text={`${address.range} (Range)`}
+                  />
+                )}
+              </>
+            );
+          })}
+          {ipv6?.ranges.map((range) => (
+            <MaskableText
+              isToggleable
+              key={range.range}
+              text={`${range.range} (Range)`}
+            />
+          ))}
+        </Stack>
+      )}
     </>
   );
 };

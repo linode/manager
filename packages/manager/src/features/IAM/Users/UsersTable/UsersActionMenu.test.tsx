@@ -33,51 +33,18 @@ vi.mock('@tanstack/react-router', async () => {
 const mockOnDelete = vi.fn();
 
 describe('UsersActionMenu', () => {
-  it('should render proxy user actions correctly', async () => {
+  it('should render actions correctly', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ username: 'current_user' }),
     });
 
     renderWithTheme(
       <UsersActionMenu
-        isProxyUser={true}
         onDelete={mockOnDelete}
-        username="test_user"
-      />
-    );
-
-    // Check if "Manage Access" action is present
-    const actionBtn = screen.getByRole('button');
-    expect(actionBtn).toBeVisible();
-    await userEvent.click(actionBtn);
-
-    const manageAccessButton = screen.getByText('Manage Access');
-    expect(manageAccessButton).toBeVisible();
-
-    // Check if only the proxy user action is rendered
-    expect(screen.queryByText('View User Details')).not.toBeInTheDocument();
-    expect(screen.queryByText('View Assigned Roles')).not.toBeInTheDocument();
-    expect(screen.queryByText('Delete User')).not.toBeInTheDocument();
-
-    // Click "Manage Access" and verify history.push is called with the correct URL
-    await userEvent.click(manageAccessButton);
-    expect(navigate).toHaveBeenCalledWith({
-      params: {
-        username: 'test_user',
-      },
-      to: '/iam/users/$username/roles',
-    });
-  });
-
-  it('should render non-proxy user actions correctly', async () => {
-    queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ username: 'current_user' }),
-    });
-
-    renderWithTheme(
-      <UsersActionMenu
-        isProxyUser={false}
-        onDelete={mockOnDelete}
+        permissions={{
+          is_account_admin: true,
+          delete_user: true,
+        }}
         username="test_user"
       />
     );
@@ -128,8 +95,11 @@ describe('UsersActionMenu', () => {
 
     renderWithTheme(
       <UsersActionMenu
-        isProxyUser={false}
         onDelete={mockOnDelete}
+        permissions={{
+          is_account_admin: true,
+          delete_user: true,
+        }}
         username="current_user"
       />
     );

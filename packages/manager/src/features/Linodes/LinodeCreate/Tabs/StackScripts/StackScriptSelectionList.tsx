@@ -15,7 +15,7 @@ import {
   TooltipIcon,
 } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { useLocation } from '@tanstack/react-router';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
@@ -33,10 +33,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 
-import {
-  getGeneratedLinodeLabel,
-  useLinodeCreateQueryParams,
-} from '../../utilities';
+import { getGeneratedLinodeLabel } from '../../utilities';
 import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
 import { getDefaultUDFData } from './UserDefinedFields/utilities';
@@ -54,6 +51,10 @@ interface Props {
 
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
+  const search = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
   const location = useLocation();
 
   const queryClient = useQueryClient();
@@ -65,8 +66,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         orderBy: 'deployments_total',
       },
       from: location.pathname.includes('/linodes/create')
-        ? '/linodes/create'
-        : '/linodes/$linodeId',
+        ? '/linodes/create/stackscripts'
+        : location.pathname === '/linodes'
+          ? '/linodes'
+          : '/linodes/$linodeId',
     },
     preferenceKey: 'linode-clone-stackscripts',
   });
@@ -87,13 +90,11 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const [selectedStackScriptId, setSelectedStackScriptId] = useState<number>();
 
-  const { params, updateParams } = useLinodeCreateQueryParams();
-
-  const hasPreselectedStackScript = Boolean(params.stackScriptID);
+  const hasPreselectedStackScript = Boolean(search.stackScriptID);
 
   const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
     useStackScriptQuery(
-      params.stackScriptID ? Number(params.stackScriptID) : -1,
+      search.stackScriptID ? Number(search.stackScriptID) : -1,
       hasPreselectedStackScript
     );
 
@@ -156,7 +157,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             onClick={() => {
               field.onChange(null);
               setValue('image', null);
-              updateParams({ stackScriptID: undefined });
+              navigate({
+                to: `/linodes/create/stackscripts`,
+                search: {
+                  stackScriptID: undefined,
+                },
+              });
             }}
           >
             Choose Another StackScript

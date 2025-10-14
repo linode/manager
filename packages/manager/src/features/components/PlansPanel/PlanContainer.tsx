@@ -1,6 +1,7 @@
 import { Notice, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -20,7 +21,6 @@ export interface PlanSelectionFilterOptionsTable {
 }
 
 export interface PlanSelectionDividers {
-  flag: boolean;
   planType: LinodeTypeClass;
   tables: PlanSelectionFilterOptionsTable[];
 }
@@ -55,9 +55,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
     showLimits,
     wholePanelIsDisabled,
   } = props;
-  // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
-  // This works for both routers for now since the components re-rerenders on route change, but we should relay on a hook once ready.
-  const location = window.location;
+  const location = useLocation();
   const flags = useFlags();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
@@ -88,9 +86,13 @@ export const PlanContainer = (props: PlanContainerProps) => {
    */
   const planSelectionDividers: PlanSelectionDividers[] = [
     {
-      flag: Boolean(flags.gpuv2?.planDivider),
       planType: 'gpu',
       tables: [
+        {
+          header: 'NVIDIA RTX PRO 6000 Blackwell Server Edition',
+          planFilter: (plan: PlanWithAvailability) =>
+            plan.label.includes('Blackwell'),
+        },
         {
           header: 'NVIDIA RTX 4000 Ada',
           planFilter: (plan: PlanWithAvailability) =>
@@ -99,7 +101,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
         {
           header: 'NVIDIA Quadro RTX 6000',
           planFilter: (plan: PlanWithAvailability) =>
-            !plan.label.includes('Ada'),
+            !plan.label.includes('Ada') && !plan.label.includes('Blackwell'),
         },
       ],
     },
@@ -171,8 +173,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
           />
         ) : (
           planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag
+            planType === planSelectionDivider.planType
               ? planSelectionDivider.tables.map((table) => {
                   const filteredPlans = table.planFilter
                     ? plans.filter(table.planFilter)
@@ -195,8 +196,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid size={12}>
           {planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag ? (
+            planType === planSelectionDivider.planType ? (
               planSelectionDivider.tables.map((table, idx) => {
                 const filteredPlans = table.planFilter
                   ? plans.filter(table.planFilter)

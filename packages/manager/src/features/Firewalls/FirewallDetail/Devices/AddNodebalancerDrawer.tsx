@@ -1,11 +1,8 @@
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-  useGrants,
-  useProfile,
 } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
-import { getEntityIdsByPermission } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -14,6 +11,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
@@ -21,18 +19,16 @@ import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import type { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
+  disabled?: boolean;
   helperText: string;
   onClose: () => void;
   open: boolean;
 }
 
 export const AddNodebalancerDrawer = (props: Props) => {
-  const { helperText, onClose, open } = props;
+  const { helperText, onClose, open, disabled } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams({ strict: false });
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
-  const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data, error, isLoading } = useAllFirewallsQuery(open);
 
@@ -147,20 +143,14 @@ export const AddNodebalancerDrawer = (props: Props) => {
     }
   };
 
-  // If a user is restricted, they can not add a read-only Nodebalancer to a firewall.
-  const readOnlyNodebalancerIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
-    : [];
-
   const assignedNodeBalancers = data
     ?.map((firewall) => firewall.entities)
     .flat()
     ?.filter((service) => service.type === 'nodebalancer');
 
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-    return (
-      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
+    return !assignedNodeBalancers?.some(
+      (service) => service.id === nodebalancer.id
     );
   };
 
@@ -180,6 +170,14 @@ export const AddNodebalancerDrawer = (props: Props) => {
       open={open}
       title={`Add Nodebalancer to Firewall: ${firewall?.label}`}
     >
+      {disabled && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'Firewalls',
+          })}
+          variant="error"
+        />
+      )}
       <Notice variant={'warning'}>
         Only the Firewall's inbound rules apply to NodeBalancers. Any existing
         outbound rules won't be applied.{' '}
@@ -193,7 +191,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       >
         {localError ? errorNotice() : null}
         <NodeBalancerSelect
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           helperText={helperText}
           multiple
           onSelectionChange={(nodebalancers) =>
@@ -204,7 +202,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: selectedNodebalancers.length === 0,
+            disabled: selectedNodebalancers.length === 0 || disabled,
             label: 'Add',
             loading: addDeviceIsLoading,
             onClick: handleSubmit,

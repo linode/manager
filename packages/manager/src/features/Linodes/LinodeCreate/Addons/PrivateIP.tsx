@@ -23,7 +23,7 @@ export const PrivateIP = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { permissions } = usePermissions('account', ['create_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
 

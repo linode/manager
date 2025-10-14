@@ -1,4 +1,4 @@
-import type { EntityType } from 'src/entities/types';
+import type { EntityType } from '../entities/types';
 
 export type AccountType = 'account';
 
@@ -72,36 +72,65 @@ export type RoleName = AccountRoleType | EntityRoleType;
 export type AccountAdmin =
   | 'accept_service_transfer'
   | 'acknowledge_account_agreement'
+  | 'answer_profile_security_questions'
   | 'cancel_account'
   | 'cancel_service_transfer'
+  | 'create_profile_pat'
+  | 'create_profile_ssh_key'
+  | 'create_profile_tfa_secret'
   | 'create_service_transfer'
   | 'create_user'
+  | 'delete_profile_pat'
+  | 'delete_profile_phone_number'
+  | 'delete_profile_ssh_key'
   | 'delete_user'
+  | 'disable_profile_tfa'
   | 'enable_managed'
+  | 'enable_profile_tfa'
   | 'enroll_beta_program'
   | 'is_account_admin'
   | 'list_account_agreements'
   | 'list_account_logins'
   | 'list_available_services'
   | 'list_default_firewalls'
+  | 'list_enrolled_beta_programs'
   | 'list_service_transfers'
   | 'list_user_grants'
+  | 'revoke_profile_app'
+  | 'revoke_profile_device'
+  | 'send_profile_phone_number_verification_code'
   | 'update_account'
   | 'update_account_settings'
+  | 'update_default_firewalls'
+  | 'update_profile'
+  | 'update_profile_pat'
+  | 'update_profile_ssh_key'
   | 'update_user'
   | 'update_user_grants'
+  | 'update_user_preferences'
+  | 'verify_profile_phone_number'
   | 'view_account'
   | 'view_account_login'
   | 'view_account_settings'
   | 'view_enrolled_beta_program'
   | 'view_network_usage'
+  | 'view_profile_security_question'
   | 'view_region_available_service'
   | 'view_service_transfer'
   | 'view_user'
   | 'view_user_preferences'
   | AccountBillingAdmin
+  | AccountEventViewer
   | AccountFirewallAdmin
-  | AccountLinodeAdmin;
+  | AccountImageAdmin
+  | AccountLinodeAdmin
+  | AccountMaintenanceViewer
+  | AccountNodeBalancerAdmin
+  | AccountNotificationViewer
+  | AccountOauthClientAdmin
+  | AccountProfileViewer
+  | AccountVolumeAdmin
+  | AccountVPCAdmin;
 
 /** Permissions associated with the "account_billing_admin" role. */
 export type AccountBillingAdmin =
@@ -120,6 +149,7 @@ export type AccountBillingViewer =
   | 'list_payment_methods'
   | 'view_billing_invoice'
   | 'view_billing_payment'
+  | 'view_invoice_item'
   | 'view_payment_method';
 
 /** Permissions associated with the "account_event_viewer" role. */
@@ -134,11 +164,40 @@ export type AccountFirewallAdmin = AccountFirewallCreator | FirewallAdmin;
 /** Permissions associated with the "account_firewall_creator" role. */
 export type AccountFirewallCreator = 'create_firewall';
 
+/** Permissions associated with the "account_vpc_admin" role. */
+export type AccountVPCAdmin = AccountVPCCreator | VPCAdmin;
+
+/** Permissions associated with the "account_vpc_creator" role. */
+export type AccountVPCCreator = 'create_vpc';
+
 /** Permissions associated with the "account_linode_admin" role. */
 export type AccountLinodeAdmin = AccountLinodeCreator | LinodeAdmin;
 
 /** Permissions associated with the "account_linode_creator" role. */
 export type AccountLinodeCreator = 'create_linode';
+
+/** Permissions associated with the "account_nodebalancer_admin" role. */
+export type AccountNodeBalancerAdmin =
+  | AccountNodeBalancerCreator
+  | NodeBalancerAdmin;
+
+/** Permissions associated with the "account_nodebalancer_creator" role. */
+export type AccountNodeBalancerCreator = 'create_nodebalancer';
+
+/** Permissions associated with the "account_volume_admin" role. */
+export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
+
+/** Permissions associated with the "account_volume_creator" role. */
+export type AccountVolumeCreator = 'create_volume';
+
+/** Permissions associated with the "account_image_admin" role. */
+export type AccountImageAdmin = AccountImageCreator | ImageAdmin;
+
+/** Permissions associated with the "account_image_creator" role. */
+export type AccountImageCreator =
+  | 'create_image'
+  | 'list_images'
+  | 'upload_image';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';
@@ -206,7 +265,8 @@ export type AccountViewer =
   | AccountOauthClientViewer
   | AccountProfileViewer
   | FirewallViewer
-  | LinodeViewer;
+  | LinodeViewer
+  | VolumeViewer;
 
 /** Permissions associated with the "firewall_admin role. */
 export type FirewallAdmin =
@@ -229,6 +289,22 @@ export type FirewallViewer =
   | 'view_firewall'
   | 'view_firewall_device'
   | 'view_firewall_rule_version';
+
+/** Permissions associated with the "vpc_admin" role. */
+export type VPCAdmin = 'delete_vpc' | 'delete_vpc_subnet' | VPCContributor;
+
+/** Permissions associated with the "vpc_contributor role. */
+export type VPCContributor =
+  | 'create_vpc_subnet'
+  | 'update_vpc'
+  | 'update_vpc_subnet'
+  | VPCViewer;
+
+/** Permissions associated with the "vpc_viewer" role. */
+export type VPCViewer =
+  | 'list_vpc_ip_addresses'
+  | 'view_vpc'
+  | 'view_vpc_subnet';
 
 /** Permissions associated with the "linode_admin" role. */
 export type LinodeAdmin =
@@ -286,45 +362,62 @@ export type LinodeViewer =
   | 'view_linode_network_transfer'
   | 'view_linode_stats';
 
-/** Facade roles represent the existing Grant model for entities that are not yet migrated to IAM */
-export type AccountRoleFacade =
-  | 'account_database_creator'
-  | 'account_domain_creator'
-  | 'account_image_creator'
-  | 'account_ip_admin'
-  | 'account_ip_viewer'
-  | 'account_lkecluster_creator'
-  | 'account_longview_creator'
-  | 'account_longview_subscription_admin'
-  | 'account_nodebalancer_creator'
-  | 'account_placement_group_creator'
-  | 'account_stackscript_creator'
-  | 'account_vlan_admin'
-  | 'account_vlan_viewer'
-  | 'account_volume_creator'
-  | 'account_vpc_creator';
+/** Permissions associated with the "nodebalancer_admin" role. */
+// TODO: UIE-9154 - verify mapping for Nodebalancer as this is not migrated yet
+export type NodeBalancerAdmin =
+  | 'delete_nodebalancer'
+  | 'delete_nodebalancer_config'
+  | 'delete_nodebalancer_config_node'
+  | NodeBalancerContributor;
 
-/** Facade roles represent the existing Grant model for entities that are not yet migrated to IAM */
-export type EntityRoleFacade =
-  | 'database_admin'
-  | 'database_viewer'
-  | 'domain_admin'
-  | 'domain_viewer'
-  | 'image_admin'
-  | 'image_viewer'
-  | 'lkecluster_admin'
-  | 'lkecluster_viewer'
-  | 'longview_admin'
-  | 'longview_viewer'
-  | 'nodebalancer_admin'
-  | 'nodebalancer_viewer'
-  | 'placement_group_admin'
-  | 'placement_group_viewer'
-  | 'stackscript_admin'
-  | 'stackscript_viewer'
-  | 'volume_admin'
-  | 'volume_viewer'
-  | 'vpc_admin';
+/** Permissions associated with the "nodebalancer_contributor" role. */
+export type NodeBalancerContributor =
+  | 'create_nodebalancer_config'
+  | 'create_nodebalancer_config_node'
+  | 'rebuild_nodebalancer_config'
+  | 'update_nodebalancer'
+  | 'update_nodebalancer_config'
+  | 'update_nodebalancer_config_node'
+  | 'update_nodebalancer_firewalls'
+  | NodeBalancerViewer;
+
+/** Permissions associated with the "nodebalancer_viewer" role. */
+export type NodeBalancerViewer =
+  | 'list_nodebalancer_config_nodes'
+  | 'list_nodebalancer_configs'
+  | 'list_nodebalancer_firewalls'
+  | 'view_nodebalancer'
+  | 'view_nodebalancer_config'
+  | 'view_nodebalancer_config_node'
+  | 'view_nodebalancer_statistics';
+
+/** Permissions associated with the "volume_admin" role. */
+export type VolumeAdmin = 'delete_volume' | VolumeContributor;
+
+/** Permissions associated with the "volume_contributor" role. */
+export type VolumeContributor =
+  | 'attach_volume'
+  | 'clone_volume'
+  | 'delete_volume'
+  | 'detach_volume'
+  | 'resize_volume'
+  | 'update_volume'
+  | VolumeViewer;
+
+/** Permissions associated with the "volume_viewer" role. */
+export type VolumeViewer = 'view_volume';
+
+export type ImageAdmin =
+  | 'delete_image'
+  | 'replicate_image'
+  | ImageContributor
+  | ImageViewer;
+
+/** Permissions associated with the "image_contributor" role. */
+export type ImageContributor = 'update_image' | ImageViewer;
+
+/** Permissions associated with the "image_viewer" role. */
+export type ImageViewer = 'view_image';
 
 /** Union of all permissions */
 export type PermissionType = AccountAdmin;
@@ -357,3 +450,5 @@ export interface Roles {
 }
 
 export type IamAccessType = keyof IamAccountRoles;
+
+export type PickPermissions<T extends PermissionType> = T;

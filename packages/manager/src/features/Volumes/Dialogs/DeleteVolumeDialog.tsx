@@ -9,13 +9,15 @@ import type { APIError, Volume } from '@linode/api-v4';
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
+  onDeleteSuccess?: () => void;
   open: boolean;
   volume: undefined | Volume;
   volumeError?: APIError[] | null;
 }
 
 export const DeleteVolumeDialog = (props: Props) => {
-  const { isFetching, onClose, open, volume, volumeError } = props;
+  const { isFetching, onClose, onDeleteSuccess, open, volume, volumeError } =
+    props;
 
   const {
     error,
@@ -27,7 +29,12 @@ export const DeleteVolumeDialog = (props: Props) => {
 
   const onDelete = () => {
     deleteVolume({ id: volume?.id ?? -1 }).then(() => {
-      onClose();
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      } else {
+        onClose();
+      }
+
       checkForNewEvents();
     });
   };
@@ -49,7 +56,7 @@ export const DeleteVolumeDialog = (props: Props) => {
       onClick={onDelete}
       onClose={onClose}
       open={open}
-      title={`Delete Volume ${volume?.label ?? 'Unknown'}?`}
+      title={`Delete Volume${volume ? ` ${volume.label}` : ''}?`}
       typographyStyle={{ marginTop: '10px' }}
     />
   );

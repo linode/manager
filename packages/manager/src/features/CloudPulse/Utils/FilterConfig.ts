@@ -1,6 +1,12 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
-import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
+import {
+  ENDPOINT,
+  INTERFACE_IDS_PLACEHOLDER_TEXT,
+  LINODE_REGION,
+  REGION,
+  RESOURCE_ID,
+} from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
@@ -194,6 +200,20 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
       },
       name: 'Ports',
     },
+    {
+      configuration: {
+        filterKey: 'relative_time_duration',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: false,
+        name: TIME_DURATION,
+        neededInViews: [], // we will have a static time duration component, no need render from filter builder
+        placeholder: 'Select a Duration',
+        priority: 4,
+      },
+      name: TIME_DURATION,
+    },
   ],
   serviceType: 'nodebalancer',
 };
@@ -214,6 +234,24 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         priority: 1,
       },
       name: 'Firewalls',
+    },
+    {
+      configuration: {
+        dependency: ['resource_id'],
+        filterKey: LINODE_REGION,
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: false,
+        name: 'Linode Region',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        placeholder: 'Select a Linode Region',
+        priority: 2,
+      },
+      name: 'Linode Region',
     },
     {
       configuration: {
@@ -261,15 +299,114 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
       },
       name: 'Interface IDs',
     },
+    {
+      configuration: {
+        filterKey: 'relative_time_duration',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: false,
+        name: TIME_DURATION,
+        neededInViews: [], // we will have a static time duration component, no need render from filter builder
+        placeholder: 'Select a Duration',
+        priority: 4,
+      },
+      name: TIME_DURATION,
+    },
   ],
   serviceType: 'firewall',
 };
 
+export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['objectstorage'],
+    filters: [
+      {
+        configuration: {
+          filterKey: REGION,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'Region',
+          priority: 1,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Region',
+      },
+      {
+        configuration: {
+          dependency: [REGION],
+          filterKey: ENDPOINT,
+          filterType: 'string',
+          isFilterable: false,
+          isMetricsFilter: false,
+          isMultiSelect: true,
+          name: 'Endpoints',
+          priority: 2,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Endpoints',
+      },
+      {
+        configuration: {
+          dependency: [REGION, ENDPOINT],
+          filterKey: RESOURCE_ID,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          isMultiSelect: true,
+          name: 'Buckets',
+          neededInViews: [CloudPulseAvailableViews.central],
+          placeholder: 'Select Buckets',
+          priority: 3,
+        },
+        name: 'Buckets',
+      },
+    ],
+    serviceType: 'objectstorage',
+  };
+
+export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['blockstorage'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Volumes',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Volumes',
+        priority: 2,
+      },
+      name: 'Volumes',
+    },
+  ],
+  serviceType: 'blockstorage',
+};
+
 export const FILTER_CONFIG: Readonly<
-  Map<string, CloudPulseServiceTypeFilterMap>
+  Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
-  ['dbaas', DBAAS_CONFIG],
-  ['firewall', FIREWALL_CONFIG],
-  ['linode', LINODE_CONFIG],
-  ['nodebalancer', NODEBALANCER_CONFIG],
+  [1, DBAAS_CONFIG],
+  [2, LINODE_CONFIG],
+  [3, NODEBALANCER_CONFIG],
+  [4, FIREWALL_CONFIG],
+  [6, OBJECTSTORAGE_CONFIG_BUCKET],
+  [7, BLOCKSTORAGE_CONFIG],
 ]);

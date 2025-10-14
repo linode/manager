@@ -1,5 +1,5 @@
-import { useAccount, useGrants, useProfile } from '@linode/queries';
-import { Box, Divider, Stack, Typography } from '@linode/ui';
+import { useAccount, useProfile } from '@linode/queries';
+import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -10,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -27,36 +28,19 @@ interface UserMenuPopoverProps {
 interface MenuLink {
   display: string;
   hide?: boolean;
-  href: string;
+  isBeta?: boolean;
+  to: string;
 }
-
-const profileLinks: MenuLink[] = [
-  {
-    display: 'Display',
-    href: '/profile/display',
-  },
-  { display: 'Login & Authentication', href: '/profile/auth' },
-  { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Console Settings', href: '/profile/lish' },
-  {
-    display: 'API Tokens',
-    href: '/profile/tokens',
-  },
-  { display: 'OAuth Apps', href: '/profile/clients' },
-  { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'My Settings', href: '/profile/settings' },
-  { display: 'Log Out', href: '/logout' },
-];
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const flags = useFlags();
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
   const theme = useTheme();
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -64,20 +48,38 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const isRestrictedUser = profile?.restricted ?? false;
-
-  const hasAccountAccess =
-    !isRestrictedUser || Boolean(grants?.global.account_access);
-
-  const hasFullAccountAccess =
-    !isRestrictedUser || grants?.global.account_access === 'read_write';
-
   const canSwitchBetweenParentOrProxyAccount =
     (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
     profile?.user_type === 'proxy';
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
+
+  const profileLinks: MenuLink[] = [
+    {
+      display: 'Display',
+      to: '/profile/display',
+    },
+    { display: 'Login & Authentication', to: '/profile/auth' },
+    { display: 'SSH Keys', to: '/profile/keys' },
+    { display: 'LISH Console Settings', to: '/profile/lish' },
+    {
+      display: 'API Tokens',
+      to: '/profile/tokens',
+    },
+    { display: 'OAuth Apps', to: '/profile/clients' },
+    {
+      display: iamRbacPrimaryNavChanges ? 'Preferences' : 'Referrals',
+      to: iamRbacPrimaryNavChanges
+        ? '/profile/preferences'
+        : '/profile/referrals',
+    },
+    {
+      display: iamRbacPrimaryNavChanges ? 'Referrals' : 'My Settings',
+      to: iamRbacPrimaryNavChanges ? '/profile/referrals' : '/profile/settings',
+    },
+    { display: 'Log Out', to: '/logout' },
+  ];
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders = isProxyUser
@@ -98,38 +100,51 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
       {
-        display: 'Billing & Contact Information',
-        href: '/account/billing',
+        display: 'Billing',
+        to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
-      // Restricted users can't view the Users tab regardless of their grants
       {
-        display: 'Users & Grants',
-        hide: isRestrictedUser,
-        href: '/account/users',
+        display:
+          iamRbacPrimaryNavChanges && isIAMEnabled
+            ? 'Identity & Access'
+            : 'Users & Grants',
+        to:
+          iamRbacPrimaryNavChanges && isIAMEnabled
+            ? '/iam'
+            : iamRbacPrimaryNavChanges && !isIAMEnabled
+              ? '/users'
+              : '/account/users',
+        isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
       },
       {
         display: 'Quotas',
-        hide: !flags.limitsEvolution?.enabled,
-        href: '/account/quotas',
+        hide: !limitsEvolution?.enabled,
+        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/quotas',
       },
-      // Restricted users can't view the Transfers tab regardless of their grants
+      {
+        display: 'Login History',
+        to: iamRbacPrimaryNavChanges
+          ? '/login-history'
+          : '/account/login-history',
+      },
       {
         display: 'Service Transfers',
-        hide: isRestrictedUser,
-        href: '/account/service-transfers',
+        to: iamRbacPrimaryNavChanges
+          ? '/service-transfers'
+          : '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        href: '/account/maintenance',
+        to: iamRbacPrimaryNavChanges ? '/maintenance' : '/account/maintenance',
       },
-      // Restricted users with read_write account access can view Settings.
       {
-        display: 'Account Settings',
-        hide: !hasFullAccountAccess,
-        href: '/account/settings',
+        display: iamRbacPrimaryNavChanges ? 'Account Settings' : 'Settings',
+        to: iamRbacPrimaryNavChanges
+          ? '/account-settings'
+          : '/account/settings',
       },
     ],
-    [hasFullAccountAccess, isRestrictedUser]
+    [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -146,7 +161,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             color: theme.tokens.alias.Content.Text.Link.Default,
             font: theme.tokens.alias.Typography.Body.Semibold,
           }}
-          to={link.href}
+          to={link.to}
         >
           {link.display}
         </Link>
@@ -237,33 +252,34 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             </Grid>
           </Grid>
         </Box>
-        {hasAccountAccess && (
-          <Box>
-            <Heading>Account</Heading>
-            <Divider />
-            <Stack
-              gap={(theme) => theme.tokens.spacing.S8}
-              mt={(theme) => theme.tokens.spacing.S8}
-            >
-              {accountLinks.map((menuLink) =>
-                menuLink.hide ? null : (
-                  <Link
-                    data-testid={`menu-item-${menuLink.display}`}
-                    key={menuLink.display}
-                    onClick={onClose}
-                    style={{
-                      color: theme.tokens.alias.Content.Text.Link.Default,
-                      font: theme.tokens.alias.Typography.Body.Semibold,
-                    }}
-                    to={menuLink.href}
-                  >
-                    {menuLink.display}
-                  </Link>
-                )
-              )}
-            </Stack>
-          </Box>
-        )}
+        <Box>
+          <Heading>
+            {iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
+          </Heading>
+          <Divider />
+          <Stack
+            gap={(theme) => theme.tokens.spacing.S8}
+            mt={(theme) => theme.tokens.spacing.S8}
+          >
+            {accountLinks.map((menuLink) =>
+              menuLink.hide ? null : (
+                <Link
+                  data-testid={`menu-item-${menuLink.display}`}
+                  key={menuLink.display}
+                  onClick={onClose}
+                  style={{
+                    color: theme.tokens.alias.Content.Text.Link.Default,
+                    font: theme.tokens.alias.Typography.Body.Semibold,
+                  }}
+                  to={menuLink.to}
+                >
+                  {menuLink.display}
+                  {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                </Link>
+              )
+            )}
+          </Stack>
+        </Box>
       </Stack>
     </Popover>
   );

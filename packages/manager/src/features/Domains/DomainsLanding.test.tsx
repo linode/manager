@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { migrationRouteTree } from 'src/routes';
+import { routeTree } from 'src/routes';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DomainsLanding } from './DomainsLanding';
@@ -21,7 +21,7 @@ describe('Domains Landing', () => {
   it('should initially render a loading state', async () => {
     const { getByTestId } = renderWithTheme(<DomainsLanding />, {
       initialRoute: '/domains',
-      routeTree: migrationRouteTree,
+      routeTree,
     });
     expect(getByTestId('circle-progress')).toBeInTheDocument();
   });

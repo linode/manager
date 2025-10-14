@@ -1,9 +1,4 @@
-import {
-  linodeQueries,
-  useAllLinodesQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
+import { linodeQueries, useAllLinodesQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -20,12 +15,19 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import {
+  usePermissions,
+  useQueryWithPermissions,
+} from 'src/features/IAM/hooks/usePermissions';
+import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
+  getLinodeInterfaceIPv4Ranges,
+  getLinodeInterfaceIPv6Ranges,
   getLinodeInterfacePrimaryIPv4,
-  getLinodeInterfaceRanges,
 } from '../utils';
 import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
 
@@ -55,7 +57,9 @@ interface LinodeAndInterfaceData extends Linode {
   // Legacy: VPC IPv4 = interface.ipv4.vpc, VPC ranges = interface.ip_ranges
   // Linode Interface: VPC IPv4 = interface.vpc.ipv4.addresses[], VPC ranges = interface.vpc.ipv4.ranges
   vpcIPv4: null | string | undefined;
-  vpcRanges: string[] | undefined;
+  vpcIPv4Ranges: string[] | undefined;
+  vpcIPv6: null | string | undefined;
+  vpcIPv6Ranges: string[] | undefined;
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
@@ -69,10 +73,12 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     subnetError,
     vpcId,
   }: Props) => {
-    const { data: profile } = useProfile();
-    const { data: grants } = useGrants();
+    const { isDualStackEnabled } = useVPCDualStack(subnet?.ipv6 ?? []);
+    const showIPv6Content =
+      isDualStackEnabled &&
+      Boolean(subnet?.ipv6?.length && subnet?.ipv6?.length > 0);
+
     const subnetId = subnet?.id;
-    const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
     const queryClient = useQueryClient();
     const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
@@ -99,10 +105,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const { linodes: subnetLinodeIds } = subnet || {};
 
-    const userCannotUnassignLinodes =
-      Boolean(profile?.restricted) &&
-      (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
-
     // 1. We need to get all the linodes.
     const {
       data: linodes,
@@ -118,6 +120,17 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         );
       });
     }, [linodes, subnetLinodeIds]);
+
+    const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+    // TODO: change to 'delete_linode_config_profile_interface' once it's available
+    const { data: filteredLinodes } = useQueryWithPermissions(
+      useAllLinodesQuery(),
+      'linode',
+      ['delete_linode'],
+      open
+    );
+    const userCanUnassignLinodes =
+      permissions.update_vpc && filteredLinodes?.length > 0;
 
     React.useEffect(() => {
       if (linodes) {
@@ -157,7 +170,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                       configId: null,
                       vpcIPv4:
                         getLinodeInterfacePrimaryIPv4(vpcLinodeInterface),
-                      vpcRanges: getLinodeInterfaceRanges(vpcLinodeInterface),
+                      vpcIPv4Ranges:
+                        getLinodeInterfaceIPv4Ranges(vpcLinodeInterface),
+                      vpcIPv6: vpcLinodeInterface.vpc?.ipv6?.slaac[0].address,
+                      vpcIPv6Ranges:
+                        getLinodeInterfaceIPv6Ranges(vpcLinodeInterface),
                       interfaceId: vpcLinodeInterface.id,
                     };
                   }
@@ -184,7 +201,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                     configId: configWithVpcInterface.id,
                     interfaceId: vpcInterface.id,
                     vpcIPv4: vpcInterface.ipv4?.vpc,
-                    vpcRanges: vpcInterface?.ip_ranges,
+                    vpcIPv6: vpcInterface.ipv6?.slaac[0]?.address,
+                    vpcIPv4Ranges: vpcInterface?.ip_ranges,
+                    vpcIPv6Ranges: vpcInterface?.ipv6?.ranges.map(
+                      (rangeObj) => rangeObj.range
+                    ),
                   };
                 }
                 return null;
@@ -290,15 +311,14 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       }
     };
 
-    const { handleSubmit, resetForm } = useFormik<UpdateConfigInterfacePayload>(
-      {
+    const { handleSubmit, isSubmitting, resetForm } =
+      useFormik<UpdateConfigInterfacePayload>({
         enableReinitialize: true,
         initialValues: {},
         onSubmit: handleUnassignLinode,
         validateOnBlur: false,
         validateOnChange: false,
-      }
-    );
+      });
 
     const handleOnClose = () => {
       resetForm();
@@ -319,7 +339,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
-        {userCannotUnassignLinodes && (
+        {!userCanUnassignLinodes && linodeOptionsToUnassign.length > 0 && (
           <Notice
             text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
             variant="error"
@@ -339,7 +359,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Stack marginTop={!singleLinodeToBeUnassigned ? 0 : 3} spacing={3}>
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
-                disabled={userCannotUnassignLinodes}
+                disabled={!userCanUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
                 label="Linodes"
                 multiple
@@ -355,12 +375,21 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             )}
             <Box>
               <RemovableSelectionsListTable
+                displayVPCIPv6Data={showIPv6Content}
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
                 isRemovable={!singleLinodeToBeUnassigned}
                 noDataText="Select Linodes to be Unassigned from Subnet."
                 onRemove={handleRemoveLinode}
                 selectionData={selectedLinodesAndInterfaceData}
-                tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
+                tableHeaders={
+                  showIPv6Content
+                    ? [
+                        ...REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
+                        'VPC IPv6',
+                        'VPC IPv6 Ranges',
+                      ]
+                    : REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS
+                }
               />
               {selectedLinodesAndInterfaceData.length > 0 && (
                 <DownloadCSV
@@ -368,7 +397,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   csvRef={csvRef}
                   data={selectedLinodesAndInterfaceData}
                   filename={`linodes-unassigned-${formattedDate}.csv`}
-                  headers={SUBNET_LINODE_CSV_HEADERS}
+                  headers={
+                    showIPv6Content
+                      ? [
+                          ...SUBNET_LINODE_CSV_HEADERS,
+                          { key: 'vpcIPv6', label: 'IPv6 VPC' },
+                          { key: 'vpcIPv6Ranges', label: 'IPv6 VPC Ranges' },
+                        ]
+                      : SUBNET_LINODE_CSV_HEADERS
+                  }
                   onClick={downloadCSV}
                   sx={{
                     alignItems: 'flex-start',
@@ -385,8 +422,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               <ActionsPanel
                 primaryButtonProps={{
                   'data-testid': 'unassign-submit-button',
-                  disabled: interfacesToDelete.length === 0,
+                  disabled:
+                    interfacesToDelete.length === 0 || !userCanUnassignLinodes,
                   label: 'Unassign Linodes',
+                  loading: isSubmitting,
                   type: 'submit',
                 }}
                 secondaryButtonProps={{

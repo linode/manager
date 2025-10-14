@@ -1,6 +1,8 @@
 import {
   configFactory,
   linodeBackupFactory,
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVlan,
@@ -168,6 +170,7 @@ export const createLinode = (mockState: MockState) => [
     }
 
     await mswDB.add('linodes', linode, mockState);
+
     if (linode.interface_generation === 'linode') {
       if (
         payload.interfaces &&
@@ -179,10 +182,16 @@ export const createLinode = (mockState: MockState) => [
           (iface: CreateLinodeInterfacePayload) => iface.vpc
         );
 
+        const prelimVPCInterface = linodeInterfaceFactoryVPC.build(); // Created just to pull a few values from
+
         const vpcInterface = linodeInterfaceFactoryVPC.build({
           ...vpcIfacePayload,
           default_route: {
             ipv4: true,
+          },
+          vpc: {
+            ipv4: prelimVPCInterface.vpc?.ipv4,
+            ipv6: prelimVPCInterface.vpc?.ipv6,
           },
           created: DateTime.now().toISO(),
           updated: DateTime.now().toISO(),
@@ -263,11 +272,44 @@ export const createLinode = (mockState: MockState) => [
         );
       }
     } else {
-      // TODO UPDATE THIS
       const linodeConfig = configFactory.build({
         created: DateTime.now().toISO(),
       });
-      await mswDB.add('linodeConfigs', [linode.id, linodeConfig], mockState);
+      const config = await mswDB.add(
+        'linodeConfigs',
+        [linode.id, linodeConfig],
+        mockState
+      );
+      const addInterfacePromises = [];
+      for (const ifacePayload of payload.interfaces) {
+        const iface =
+          ifacePayload.purpose === 'vpc'
+            ? linodeConfigInterfaceFactoryWithVPC.build({
+                ...ifacePayload,
+              })
+            : linodeConfigInterfaceFactory.build({
+                purpose: ifacePayload.purpose,
+                label: ifacePayload.purpose === 'public' ? null : 'interface',
+                ipam_address:
+                  ifacePayload.purpose === 'public' ? null : '10.0.0.1/24',
+              });
+        addInterfacePromises.push(
+          mswDB.add('configInterfaces', [config[1].id, iface], mockState)
+        );
+      }
+      const responses = await Promise.all(addInterfacePromises);
+      const vpcIface = responses.find((iface) => iface[1].purpose === 'vpc');
+      if (vpcIface) {
+        await addInterfaceToSubnet({
+          mockState,
+          interfaceId: vpcIface[1].id,
+          isLinodeInterface: false,
+          linodeId: linode.id,
+          configId: config[1].id,
+          vpcId: vpcIface[1].vpc_id,
+          subnetId: vpcIface[1].subnet_id,
+        });
+      }
     }
 
     queueEvents({
@@ -403,6 +445,12 @@ export const deleteLinode = (mockState: MockState) => [
         sequence: [{ status: 'finished' }],
       }).then(async () => {
         await mswDB.delete('linodes', id, mockState);
+        await mswDB.delete('linodeInterfaces', linode.id, mockState);
+        await mswDB.delete('linodeConfigs', linode.id, mockState);
+        await mswDB.delete('linodeIps', linode.id, mockState);
+        await mswDB.delete('userEntityPermissions', linode.id, mockState);
+        await mswDB.delete('userAccountPermissions', linode.id, mockState);
+        await mswDB.delete('userRoles', linode.id, mockState);
       });
     });
 

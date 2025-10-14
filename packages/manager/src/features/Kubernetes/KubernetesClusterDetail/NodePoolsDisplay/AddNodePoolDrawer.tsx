@@ -1,13 +1,18 @@
-import { useAllTypes } from '@linode/queries';
-import { ActionsPanel, Box, Drawer, Notice, Typography } from '@linode/ui';
+import {
+  type CreateNodePoolData,
+  type KubernetesTier,
+  type Region,
+} from '@linode/api-v4';
+import { useAllTypes, useRegionsQuery } from '@linode/queries';
+import { Box, Button, Drawer, Notice, Stack, Typography } from '@linode/ui';
 import {
   isNumber,
   plansNoticesUtils,
   pluralize,
-  scrollErrorIntoViewV2,
+  scrollErrorIntoView,
 } from '@linode/utilities';
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import React from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import {
@@ -15,10 +20,7 @@ import {
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
   nodeWarning,
 } from 'src/features/Kubernetes/constants';
-import {
-  useCreateNodePoolBetaMutation,
-  useCreateNodePoolMutation,
-} from 'src/queries/kubernetes';
+import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
@@ -27,42 +29,8 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
+import { NodePoolConfigOptions } from '../../KubernetesPlansPanel/NodePoolConfigOptions';
 import { hasInvalidNodePoolPrice } from './utils';
-
-import type { KubernetesTier, Region } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  boxOuter: {
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-    },
-    width: '100%',
-  },
-  error: {
-    marginBottom: '0 !important',
-  },
-  plans: {
-    '& > *': {
-      '& > *': {
-        padding: 0,
-      },
-      marginTop: 0,
-    },
-  },
-  priceDisplay: {
-    '& span': {
-      font: theme.font.bold,
-    },
-    color: theme.color.headline,
-    display: 'inline',
-    fontSize: '1rem',
-    lineHeight: '1.25rem',
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-}));
 
 export interface Props {
   clusterId: number;
@@ -71,7 +39,6 @@ export interface Props {
   clusterTier: KubernetesTier;
   onClose: () => void;
   open: boolean;
-  regionsData: Region[];
 }
 
 export const AddNodePoolDrawer = (props: Props) => {
@@ -82,40 +49,35 @@ export const AddNodePoolDrawer = (props: Props) => {
     clusterTier,
     onClose,
     open,
-    regionsData,
   } = props;
-  const { classes } = useStyles();
-  const { data: types } = useAllTypes(open);
+
+  const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
+  const { data: types, isLoading: isTypesLoading } = useAllTypes(open);
 
   const {
-    error: errorBeta,
-    isPending: isPendingBeta,
-    mutateAsync: createPoolBeta,
-  } = useCreateNodePoolBetaMutation(clusterId);
-  const {
-    error,
     isPending,
     mutateAsync: createPool,
+    error,
   } = useCreateNodePoolMutation(clusterId);
 
-  const drawerRef = React.useRef<HTMLDivElement>(null);
-
-  // Only want to use current types here.
-  const extendedTypes = filterCurrentTypes(types?.map(extendType));
-
-  const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
-    undefined | { count: number; planId: string }
-  >(undefined);
-  const [addNodePoolError, setAddNodePoolError] = React.useState<string>('');
-
-  const getTypeCount = React.useCallback(
-    (planId: string) =>
-      planId === selectedTypeInfo?.planId ? selectedTypeInfo.count : 0,
-    [selectedTypeInfo]
+  // Only want to use current types here and filter out nanodes
+  const extendedTypes = filterCurrentTypes(types?.map(extendType)).filter(
+    (t) => t.class !== 'nanode'
   );
 
-  const selectedType = selectedTypeInfo
-    ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
+  const form = useForm<CreateNodePoolData>({
+    defaultValues: {
+      update_strategy: clusterTier === 'enterprise' ? 'on_recycle' : undefined,
+    },
+  });
+
+  const [type, count] = useWatch({
+    control: form.control,
+    name: ['type', 'count'],
+  });
+
+  const selectedType = type
+    ? extendedTypes.find((t) => t.id === type)
     : undefined;
 
   const pricePerNode = getLinodeRegionPrice(
@@ -124,56 +86,37 @@ export const AddNodePoolDrawer = (props: Props) => {
   )?.monthly;
 
   const totalPrice =
-    selectedTypeInfo && isNumber(pricePerNode)
-      ? selectedTypeInfo.count * pricePerNode
-      : undefined;
+    type && count && isNumber(pricePerNode) ? count * pricePerNode : undefined;
 
   const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
+  const shouldShowPricingInfo = Boolean(type) && count > 0;
 
   React.useEffect(() => {
     if (open) {
-      resetDrawer();
-      setAddNodePoolError('');
+      form.reset();
     }
   }, [open]);
 
   React.useEffect(() => {
     if (error) {
-      setAddNodePoolError(error?.[0].reason);
-      scrollErrorIntoViewV2(drawerRef);
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-    if (errorBeta) {
-      setAddNodePoolError(errorBeta?.[0].reason);
-      scrollErrorIntoViewV2(drawerRef);
-    }
-  }, [error, errorBeta]);
-
-  const resetDrawer = () => {
-    setSelectedTypeInfo(undefined);
-  };
+  }, [error]);
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    setSelectedTypeInfo(newCount > 0 ? { count: newCount, planId } : undefined);
+    form.setValue('type', newCount === 0 ? '' : planId);
+    form.setValue('count', newCount);
   };
 
-  const handleAdd = () => {
-    if (!selectedTypeInfo) {
-      return;
-    }
-    if (clusterTier === 'enterprise') {
-      return createPoolBeta({
-        count: selectedTypeInfo.count,
-        type: selectedTypeInfo.planId,
-      }).then(() => {
-        onClose();
-      });
-    }
-    return createPool({
-      count: selectedTypeInfo.count,
-      type: selectedTypeInfo.planId,
-    }).then(() => {
+  const onSubmit = async (values: CreateNodePoolData) => {
+    try {
+      await createPool(values);
       onClose();
-    });
+    } catch (errors) {
+      for (const error of errors) {
+        form.setError(error.field ?? 'root', { message: error.reason });
+      }
+    }
   };
 
   const {
@@ -181,7 +124,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    regionsData,
+    regionsData: regions,
     selectedRegionID: clusterRegionId,
   });
 
@@ -193,96 +136,105 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
+      isFetching={isRegionsLoading || isTypesLoading}
       onClose={onClose}
       open={open}
-      PaperProps={{
-        sx: { maxWidth: '790px !important' },
+      slotProps={{
+        paper: {
+          sx: { maxWidth: '810px !important' },
+        },
       }}
-      ref={drawerRef}
       title={`Add a Node Pool: ${clusterLabel}`}
       wide
     >
-      {addNodePoolError && (
-        <Notice spacingBottom={0} spacingTop={12} variant="error">
-          <ErrorMessage
-            entity={{ id: clusterId, type: 'lkecluster_id' }}
-            message={addNodePoolError}
-          />
-        </Notice>
-      )}
-      <form className={classes.plans}>
-        <KubernetesPlansPanel
-          addPool={handleAdd}
-          copy={getPlansPanelCopy()}
-          getTypeCount={getTypeCount}
-          hasSelectedRegion={hasSelectedRegion}
-          isPlanPanelDisabled={isPlanPanelDisabled}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          isSubmitting={isPending || isPendingBeta}
-          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ count: 1, planId: newType });
-            }
-          }}
-          regionsData={regionsData}
-          resetValues={resetDrawer}
-          selectedId={selectedTypeInfo?.planId}
-          selectedRegionId={clusterRegionId}
-          selectedTier={clusterTier}
-          // No nanodes in clusters
-          types={extendedTypes.filter((t) => t.class !== 'nanode')}
-          updatePlanCount={updatePlanCount}
-        />
-        {selectedTypeInfo &&
-          selectedTypeInfo.count > 0 &&
-          selectedTypeInfo.count < 3 && (
-            <Notice
-              spacingBottom={16}
-              spacingTop={8}
-              text={nodeWarning}
-              variant="warning"
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Stack spacing={2}>
+            {form.formState.errors.root?.message && (
+              <Notice variant="error">
+                <ErrorMessage
+                  entity={{ id: clusterId, type: 'lkecluster_id' }}
+                  message={form.formState.errors.root?.message}
+                />
+              </Notice>
+            )}
+            <KubernetesPlansPanel
+              copy={getPlansPanelCopy()}
+              error={form.formState.errors.type?.message}
+              getTypeCount={(plan) => {
+                if (plan === type) {
+                  return count;
+                }
+                return 0;
+              }}
+              hasSelectedRegion={hasSelectedRegion}
+              isPlanPanelDisabled={isPlanPanelDisabled}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+              isSubmitting={isPending}
+              notice={
+                <PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />
+              }
+              onSelect={(type) => form.setValue('type', type)}
+              regionsData={regions ?? []}
+              resetValues={() => {
+                form.setValue('type', '');
+                form.setValue('count', 0);
+              }}
+              selectedId={type}
+              selectedRegionId={clusterRegionId}
+              selectedTier={clusterTier}
+              types={extendedTypes}
+              updatePlanCount={updatePlanCount}
             />
-          )}
-
-        {selectedTypeInfo && hasInvalidPrice && (
-          <Notice
-            spacingBottom={16}
-            spacingTop={8}
-            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
-            variant="error"
-          />
-        )}
-
-        <Box
-          alignItems="center"
-          className={classes.boxOuter}
-          display="flex"
-          flexDirection="row"
-          justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
-        >
-          {selectedTypeInfo && (
-            <Typography className={classes.priceDisplay}>
-              This pool will add{' '}
-              <strong>
-                ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month (
-                {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-                /month)
-              </strong>{' '}
-              to this cluster.
-            </Typography>
-          )}
-          <ActionsPanel
-            primaryButtonProps={{
-              disabled: !selectedTypeInfo || hasInvalidPrice,
-              label: 'Add pool',
-              loading: isPending,
-              onClick: handleAdd,
-            }}
-          />
-        </Box>
-      </form>
+            {count > 0 && count < 3 && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={0}
+                text={nodeWarning}
+                variant="warning"
+              />
+            )}
+            {hasInvalidPrice && shouldShowPricingInfo && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={0}
+                text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
+                variant="error"
+              />
+            )}
+            <NodePoolConfigOptions clusterTier={clusterTier} />
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              justifyContent={
+                shouldShowPricingInfo ? 'space-between' : 'flex-end'
+              }
+            >
+              {shouldShowPricingInfo && (
+                <Typography>
+                  This pool will add{' '}
+                  <strong>
+                    ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month
+                    ({pluralize('node', 'nodes', count)} at $
+                    {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+                    /month)
+                  </strong>{' '}
+                  to this cluster.
+                </Typography>
+              )}
+              <Button
+                buttonType="primary"
+                disabled={!type || hasInvalidPrice}
+                loading={form.formState.isSubmitting}
+                type="submit"
+              >
+                Add pool
+              </Button>
+            </Box>
+          </Stack>
+        </form>
+      </FormProvider>
     </Drawer>
   );
 };

@@ -1,21 +1,25 @@
 import { getLinodeRegionPrice } from './linodes';
 
-import type { KubeNodePoolResponse, Region } from '@linode/api-v4/lib';
-import type { ExtendedType } from 'src/utilities/extendType';
+import type {
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+  LinodeType,
+  Region,
+} from '@linode/api-v4/lib';
 
 interface MonthlyPriceOptions {
   count: number;
   region: Region['id'] | undefined;
-  type: ExtendedType | string;
-  types: ExtendedType[];
+  type: LinodeType | string;
+  types: LinodeType[];
 }
 
 interface TotalClusterPriceOptions {
   enterprisePrice?: number;
   highAvailabilityPrice?: number;
-  pools: KubeNodePoolResponse[];
+  pools: (CreateNodePoolData | KubeNodePoolResponse)[];
   region: Region['id'] | undefined;
-  types: ExtendedType[];
+  types: LinodeType[];
 }
 
 /**
@@ -31,7 +35,7 @@ export const getKubernetesMonthlyPrice = ({
   if (!types || !type || !region) {
     return undefined;
   }
-  const thisType = types.find((t: ExtendedType) => t.id === type);
+  const thisType = types.find((t) => t.id === type);
 
   const monthlyPrice = getLinodeRegionPrice(thisType, region)?.monthly;
 

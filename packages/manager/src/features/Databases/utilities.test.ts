@@ -7,6 +7,7 @@ import {
   databaseTypeFactory,
 } from 'src/factories';
 import {
+  convertPrivateToPublicHostname,
   getDatabasesDescription,
   getReadOnlyHost,
   hasPendingUpdates,
@@ -14,7 +15,7 @@ import {
   isDefaultDatabase,
   isLegacyDatabase,
   isTimeOutsideBackup,
-  toFormatedDate,
+  toFormattedDate,
   toISOString,
   upgradableVersions,
   useIsDatabasesEnabled,
@@ -28,13 +29,12 @@ import type {
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
-import type { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
 
 const setup = (capabilities: AccountCapability[], flags: any) => {
   const account = accountFactory.build({ capabilities });
 
   server.use(
-    http.get('*/v4/account', () => {
+    http.get('*/v4*/account', () => {
       return HttpResponse.json(account);
     })
   );
@@ -158,7 +158,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V1 restricted user non-beta', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -203,7 +203,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V1 & V2 restricted user existing beta', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -248,7 +248,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V2 restricted user new beta', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -293,7 +293,7 @@ describe('useIsDatabasesEnabled', () => {
 
   it('should return correctly for V2 restricted user GA', async () => {
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
@@ -363,34 +363,64 @@ describe('isDateOutsideBackup', () => {
 });
 
 describe('isTimeOutsideBackup', () => {
-  it('should return true when hour + selected date is before oldest backup', () => {
+  it('should return true when selected date/time is before oldest backup', () => {
     const selectedDate = DateTime.fromISO('2024-10-02');
-    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00Z');
-    const result = isTimeOutsideBackup(8, selectedDate, oldestBackup);
+    const oldestBackup = DateTime.fromISO('2024-10-02T09:52:05', {
+      zone: 'utc',
+    });
+    const selectedTime = oldestBackup.minus({ second: 1 });
+    const result = isTimeOutsideBackup(
+      selectedTime,
+      selectedDate,
+      oldestBackup
+    );
     expect(result).toEqual(true);
   });
 
-  it('should return false when hour + selected date is equal to the oldest backup', () => {
+  it('should return false when selected date/time is equal to the oldest backup', () => {
     const selectedDate = DateTime.fromISO('2024-10-02');
-    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00Z');
-    const result = isTimeOutsideBackup(9, selectedDate, oldestBackup);
+    const oldestBackup = DateTime.fromISO('2024-10-02T09:12:11', {
+      zone: 'utc',
+    });
+    const selectedTime = DateTime.fromObject({
+      hour: 9,
+      minute: 12,
+      second: 11,
+    });
+    const result = isTimeOutsideBackup(
+      selectedTime,
+      selectedDate,
+      oldestBackup
+    );
     expect(result).toEqual(false);
   });
 
   it('should return false when hour + selected date is after the oldest backup', () => {
     const selectedDate = DateTime.fromISO('2024-10-03');
-    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00Z');
-    const result = isTimeOutsideBackup(1, selectedDate, oldestBackup);
+    const oldestBackup = DateTime.fromISO('2024-10-03T09:03:05', {
+      zone: 'utc',
+    });
+
+    const selectedTime = DateTime.fromObject({ hour: 9, minute: 3, second: 6 });
+    const result = isTimeOutsideBackup(
+      selectedTime,
+      selectedDate,
+      oldestBackup
+    );
     expect(result).toEqual(false);
   });
 });
 
-describe('toFormatedDate', () => {
+describe('toFormattedDate', () => {
   it('should convert a date and time to the format YYYY-MM-DD HH:mm for the dialog', () => {
     const selectedDate = DateTime.fromObject({ day: 15, month: 1, year: 2025 });
-    const selectedTime: TimeOption = { label: '14:00', value: 14 };
-    const result = toFormatedDate(selectedDate, selectedTime.value);
-    expect(result).toContain('2025-01-15 14:00');
+    const selectedTime = DateTime.fromObject({
+      hour: 14,
+      minute: 12,
+      second: 32,
+    });
+    const result = toFormattedDate(selectedDate, selectedTime);
+    expect(result).toContain('2025-01-15 14:12:32');
   });
   it('should handle newest full backup plus incremental option correctly in UTC', () => {
     const selectedDate = null;
@@ -398,11 +428,12 @@ describe('toFormatedDate', () => {
     const mockTodayWithHours = DateTime.fromObject({
       day: today.day,
       hour: today.hour,
-      minute: 0,
+      minute: today.minute,
+      second: today.second,
       month: today.month,
       year: today.year,
-    }).toFormat('yyyy-MM-dd HH:mm');
-    const result = toFormatedDate(selectedDate, undefined);
+    }).toFormat('yyyy-MM-dd HH:mm:ss');
+    const result = toFormattedDate(selectedDate, undefined);
     expect(result).toContain(mockTodayWithHours);
   });
 });
@@ -410,9 +441,13 @@ describe('toFormatedDate', () => {
 describe('toISOString', () => {
   it('should convert a date and time to ISO string format', () => {
     const selectedDate = DateTime.fromObject({ day: 15, month: 5, year: 2023 });
-    const selectedTime: TimeOption = { label: '14:00', value: 14 };
-    const result = toISOString(selectedDate, selectedTime.value);
-    expect(result).toContain('2023-05-15T14:00');
+    const selectedTime = DateTime.fromObject({
+      hour: 14,
+      minute: 12,
+      second: 32,
+    });
+    const result = toISOString(selectedDate, selectedTime);
+    expect(result).toContain('2023-05-15T14:12:32');
   });
 
   it('should handle midnight correctly', () => {
@@ -421,16 +456,24 @@ describe('toISOString', () => {
       month: 12,
       year: 2023,
     });
-    const selectedTime: TimeOption = { label: '12:00 AM', value: 0 };
-    const result = toISOString(selectedDate, selectedTime.value);
-    expect(result).toContain('2023-12-31T00:00');
+    const selectedTime = DateTime.fromObject({
+      hour: 0,
+      minute: 0,
+      second: 0,
+    });
+    const result = toISOString(selectedDate, selectedTime);
+    expect(result).toContain('2023-12-31T00:00:00');
   });
 
   it('should handle noon correctly', () => {
     const selectedDate = DateTime.fromObject({ day: 1, month: 1, year: 2024 });
-    const selectedTime: TimeOption = { label: '12:00 PM', value: 12 };
-    const result = toISOString(selectedDate, selectedTime.value);
-    expect(result).toContain('2024-01-01T12:00');
+    const selectedTime = DateTime.fromObject({
+      hour: 12,
+      minute: 0,
+      second: 0,
+    });
+    const result = toISOString(selectedDate, selectedTime);
+    expect(result).toContain('2024-01-01T12:00:00');
   });
 });
 
@@ -578,6 +621,7 @@ describe('getReadOnlyHost', () => {
     expect(result).toBe(mockHosts.standby);
   });
 
+  // TODO (UIE-8214) POST GA - Remove this test as secondary is only present for legacy databases
   it('should return the secondary host from the database if standby is not present', () => {
     const db: Database = databaseFactory.build();
     const mockHosts = {
@@ -592,5 +636,14 @@ describe('getReadOnlyHost', () => {
   it('should return an empty string when no database data is provided', () => {
     const result = getReadOnlyHost({} as Database);
     expect(result).toBe('');
+  });
+});
+
+describe('convertPrivateToPublicHostname', () => {
+  it('should return the public hostname url from private hostname', () => {
+    const baseHostname = 'primary.example.com';
+    const mockPrivateHost = `private-${baseHostname}`; // mock private hostname URL returned from backend
+    const result = convertPrivateToPublicHostname(mockPrivateHost);
+    expect(result).toBe(`public-${baseHostname}`);
   });
 });

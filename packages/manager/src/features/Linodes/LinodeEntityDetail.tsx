@@ -74,7 +74,7 @@ export const LinodeEntityDetail = (props: Props) => {
     linodeId: linode.id,
   });
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['update_linode'],
     linode.id
@@ -92,15 +92,6 @@ export const LinodeEntityDetail = (props: Props) => {
     regions ?? [],
     linode.region
   );
-
-  const regionSupportsDiskEncryption =
-    (regions
-      ?.find((r) => r.id === linode.region)
-      ?.capabilities.includes('Disk Encryption') ||
-      regions
-        ?.find((r) => r.id === linode.region)
-        ?.capabilities.includes('LA Disk Encryption')) ??
-    false;
 
   let progress;
   let transitionText;
@@ -132,7 +123,6 @@ export const LinodeEntityDetail = (props: Props) => {
             interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
-            isLKELinode={Boolean(linode.lke_cluster_id)}
             isUnreachablePublicIPv4={isUnreachablePublicIPv4}
             isUnreachablePublicIPv6={isUnreachablePublicIPv6}
             linodeCapabilities={linode.capabilities}
@@ -143,7 +133,6 @@ export const LinodeEntityDetail = (props: Props) => {
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}
             region={linode.region}
-            regionSupportsDiskEncryption={regionSupportsDiskEncryption}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }

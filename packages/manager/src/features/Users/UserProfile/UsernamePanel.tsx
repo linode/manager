@@ -1,11 +1,14 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useUpdateUserMutation } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
+import { UpdateUserNameSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { User } from '@linode/api-v4';
 
@@ -16,6 +19,7 @@ interface Props {
 export const UsernamePanel = ({ user }: Props) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const isProxyUserProfile = user?.user_type === 'proxy';
 
@@ -27,6 +31,7 @@ export const UsernamePanel = ({ user }: Props) => {
     handleSubmit,
     setError,
   } = useForm({
+    resolver: yupResolver(UpdateUserNameSchema),
     defaultValues: { username: user.username },
     values: { username: user.username },
   });
@@ -37,7 +42,9 @@ export const UsernamePanel = ({ user }: Props) => {
 
       // Because the username changed, we need to update the username in the URL
       navigate({
-        to: '/account/users/$username',
+        to: iamRbacPrimaryNavChanges
+          ? '/users/$username'
+          : '/account/users/$username',
         params: { username: user.username },
       });
 

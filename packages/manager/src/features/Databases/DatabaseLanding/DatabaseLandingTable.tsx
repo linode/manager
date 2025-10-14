@@ -16,7 +16,7 @@ import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/Database
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
@@ -42,13 +42,17 @@ const DatabaseLandingTable = ({
   order,
   orderBy,
   results,
-  showSuspend,
 }: Props) => {
   const { data: events } = useInProgressEvents();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
-  const pagination = usePagination(1, preferenceKey, dbPlatformType);
+  const pagination = usePaginationV2({
+    currentRoute: '/databases',
+    initialPage: 1,
+    preferenceKey,
+    queryParamsPrefix: dbPlatformType,
+  });
   const PAGE_SIZES = [25, 50, 75, 100];
   const MIN_PAGE_SIZE = 25;
 
@@ -122,10 +126,10 @@ const DatabaseLandingTable = ({
             {isNewDatabase && (
               <TableHeaderCell
                 sort={() =>
-                  handleOrderChange('plan', order === 'asc' ? 'desc' : 'asc')
+                  handleOrderChange('type', order === 'asc' ? 'desc' : 'asc')
                 }
                 sortable
-                sorted={orderBy === 'plan' ? order : undefined}
+                sorted={orderBy === 'type' ? order : undefined}
               >
                 Plan
               </TableHeaderCell>

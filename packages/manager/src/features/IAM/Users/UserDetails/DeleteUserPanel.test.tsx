@@ -21,12 +21,18 @@ vi.mock('@linode/queries', async () => {
 
 describe('DeleteUserPanel', () => {
   it('should disable the delete button for proxy user', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
     const user = accountUserFactory.build({
       user_type: 'proxy',
       username: 'current_user',
     });
 
-    const { getByTestId } = renderWithTheme(<DeleteUserPanel user={user} />);
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
 
     const deleteButton = getByTestId('button');
     expect(deleteButton).toBeDisabled();
@@ -42,7 +48,9 @@ describe('DeleteUserPanel', () => {
       username: 'current_user',
     });
 
-    const { getByTestId } = renderWithTheme(<DeleteUserPanel user={user} />);
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
 
     const deleteButton = getByTestId('button');
     expect(deleteButton).toBeDisabled();
@@ -58,7 +66,9 @@ describe('DeleteUserPanel', () => {
       username: 'user',
     });
 
-    const { getByTestId } = renderWithTheme(<DeleteUserPanel user={user} />);
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
 
     const deleteButton = getByTestId('button');
     expect(deleteButton).toBeEnabled();
@@ -75,7 +85,7 @@ describe('DeleteUserPanel', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <DeleteUserPanel user={user} />
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
     );
 
     const deleteButton = getByTestId('button');
@@ -84,5 +94,18 @@ describe('DeleteUserPanel', () => {
     expect(
       getByText('The user will be deleted permanently.')
     ).toBeInTheDocument();
+  });
+
+  it('disables the delete button when the user does not have delete_user permission', async () => {
+    const user = accountUserFactory.build({
+      username: 'my-linode-username',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={false} />
+    );
+
+    const deleteButton = getByTestId('button');
+    expect(deleteButton).toBeDisabled();
   });
 });

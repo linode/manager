@@ -24,6 +24,7 @@ import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
+import { alertsFromEnabledServices } from '../Utils/utils';
 import { AlertsListTable } from './AlertListTable';
 import {
   alertLimitMessage,
@@ -32,7 +33,11 @@ import {
 } from './constants';
 
 import type { Item } from '../constants';
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertStatusType,
+  CloudPulseServiceType,
+} from '@linode/api-v4';
 
 const searchAndSelectSx = {
   lg: '250px',
@@ -40,9 +45,6 @@ const searchAndSelectSx = {
   sm: '400px',
   xs: '300px',
 };
-// hardcoding the value is temporary solution until a solution from API side is confirmed.
-const maxAllowedAlerts = 100;
-const maxAllowedMetrics = 100;
 interface AlertsLimitErrorMessageProps {
   isAlertLimitReached: boolean;
   isMetricLimitReached: boolean;
@@ -50,39 +52,50 @@ interface AlertsLimitErrorMessageProps {
 
 export const AlertListing = () => {
   const navigate = useNavigate();
-  const { data: alerts, error, isLoading } = useAllAlertDefinitionsQuery();
+  const { data: allAlerts, error, isLoading } = useAllAlertDefinitionsQuery();
   const {
     data: serviceOptions,
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-  const { aclpBetaServices } = useFlags();
+
+  const { aclpServices, aclpAlerting } = useFlags();
+
+  // Filter alerts based on the enabled services from the LD flag
+  const alerts = alertsFromEnabledServices(allAlerts, aclpServices);
+
   const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
-  const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
+  const isAlertLimitReached =
+    userAlerts.length >= (aclpAlerting?.accountAlertLimit ?? 10);
 
   const isMetricLimitReached =
     userAlerts.reduce(
       (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
       0
-    ) >= maxAllowedMetrics;
+    ) >= (aclpAlerting?.accountMetricLimit ?? 10);
 
   const topRef = React.useRef<HTMLButtonElement>(null);
   const getServicesList = React.useMemo((): Item<
     string,
-    AlertServiceType
+    CloudPulseServiceType
   >[] => {
     return serviceOptions && serviceOptions.data.length > 0
-      ? serviceOptions.data.map((service) => ({
-          label: service.label,
-          value: service.service_type as AlertServiceType,
-        }))
+      ? serviceOptions.data
+          .filter(
+            (service) =>
+              aclpServices?.[service.service_type]?.alerts?.enabled ?? false
+          )
+          .map((service) => ({
+            label: service.label,
+            value: service.service_type,
+          }))
       : [];
-  }, [serviceOptions]);
+  }, [aclpServices, serviceOptions]);
 
   const [searchText, setSearchText] = React.useState<string>('');
 
   const [serviceFilters, setServiceFilters] = React.useState<
-    Item<string, AlertServiceType>[]
+    Item<string, CloudPulseServiceType>[]
   >([]);
   const [statusFilters, setStatusFilters] = React.useState<
     Item<string, AlertStatusType>[]
@@ -250,7 +263,7 @@ export const AlertListing = () => {
               return (
                 <ListItem {...rest} data-qa-option key={key}>
                   <Box flexGrow={1}>{option.label}</Box>{' '}
-                  {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
+                  {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                   <SelectedIcon visible={selected} />
                 </ListItem>
               );

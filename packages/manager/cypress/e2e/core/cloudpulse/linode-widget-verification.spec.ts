@@ -24,6 +24,7 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
+  flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
@@ -31,7 +32,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -46,27 +46,12 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-    },
-  ],
-};
-const { dashboardName, id, metrics, region, resource, serviceType } =
-  widgetDetails.linode;
-
+const { dashboardName, id, metrics, region, resource } = widgetDetails.linode;
+const serviceType = 'linode';
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
+  id,
   widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
@@ -88,6 +73,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
 const mockLinode = linodeFactory.build({
   id: kubeLinodeFactory.build().instance_id ?? undefined,
   label: resource,
+  tags: ['tag-2', 'tag-3'],
   region: 'us-ord',
 });
 
@@ -104,7 +90,7 @@ const mockRegion = regionFactory.build({
 });
 
 const extendedMockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
+  capabilities: ['Linodes'],
   id: 'us-east',
   label: 'Newark,NL',
 });
@@ -144,6 +130,8 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
+    serviceType,
+    groupBy: ['entity_id'],
   });
 
   // Destructure metrics data from the first legend row
@@ -157,9 +145,10 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
+// Tests will be modified
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
+    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
@@ -190,22 +179,19 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .should('be.visible')
       .click();
     // Select a time duration from the autocomplete input.
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').click();
-    cy.get('@startDateInput').clear();
+    // Updated selector for MUI x-date-pickers v8 - click on the wrapper div
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
 
-    ui.button.findByTitle('last day').click();
+    cy.get('@startDateInput').click();
+
+    cy.get('[data-qa-preset="Last day"]').click();
 
     // Click the "Apply" button to confirm the end date and time
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
       .click();
-    ui.regionSelect.find().click();
-
     //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
     ui.regionSelect.find().type(extendedMockRegion.label);
 
     // Since Linode does not support this region, we expect it to not be in the dropdown.
@@ -230,8 +216,14 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     cy.findByText(resource).should('be.visible');
 
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+
+    // Scroll to the top of the page to ensure consistent test behavior
+    cy.scrollTo('top');
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
@@ -284,10 +276,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.unit
             );
 
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.log('expectedWidgetValues ', expectedWidgetValues.max);
 
@@ -340,13 +332,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${testData.title} (${testData.unit.trim()})`
-              );
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
@@ -369,9 +358,9 @@ describe('Integration Tests for Linode Dashboard ', () => {
     );
 
     // click the global refresh button
-    ui.button
-      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
+    cy.get('[data-testid="global-refresh"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // validate the API calls are going with intended payload
@@ -414,10 +403,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.title,
               testData.unit
             );
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should('have.text', `${testData.title} (${testData.unit})`);
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
@@ -448,13 +437,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
               testData.unit
             );
 
-            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${testData.title} (${testData.unit.trim()})`
-              );
+              .should('have.text', `${testData.title}`);
 
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')

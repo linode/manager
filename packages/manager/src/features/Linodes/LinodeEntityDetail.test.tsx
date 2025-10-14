@@ -19,16 +19,15 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
-import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
+import { getSubnetsString, getVPCIPv4 } from './utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       update_linode: false,
     },
   })),
@@ -51,28 +50,6 @@ describe('Linode Entity Detail', () => {
   const assignedVPCLabelTestId = 'assigned-vpc-label';
   const assignedLKEClusterLabelTestId = 'assigned-lke-cluster-label';
   const assignedFirewallTestId = 'assigned-firewall';
-
-  const mocks = vi.hoisted(() => {
-    return {
-      useIsDiskEncryptionFeatureEnabled: vi.fn(),
-    };
-  });
-
-  vi.mock('src/components/Encryption/utils.ts', async () => {
-    const actual = await vi.importActual<any>(
-      'src/components/Encryption/utils.ts'
-    );
-    return {
-      ...actual,
-      __esModule: true,
-      useIsDiskEncryptionFeatureEnabled:
-        mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(() => {
-          return {
-            isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
-          };
-        }),
-    };
-  });
 
   it('should not display the VPC section if the linode is not assigned to a VPC', async () => {
     const account = accountFactory.build({
@@ -228,7 +205,7 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/linode/instances/:linodeId', () => {
@@ -261,7 +238,7 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/linode/instances/:linodeId', () => {
@@ -298,7 +275,7 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      http.get('*/v4/account', () => {
+      http.get('*/v4*/account', () => {
         return HttpResponse.json(account);
       }),
       http.get('*/linode/instances/:linodeId', () => {
@@ -338,28 +315,26 @@ describe('Linode Entity Detail', () => {
   });
 
   it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', async () => {
-    // situation where isDiskEncryptionFeatureEnabled === false
-    const { queryByTestId } = renderWithTheme(
-      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
+    const { queryByTestId, queryByText } = renderWithTheme(
+      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />,
+      { flags: { linodeDiskEncryption: false } }
     );
-    const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
-
-    expect(encryptionStatusFragment).not.toBeInTheDocument();
+    expect(queryByTestId('linode-encryption-status')).toBeNull();
+    expect(queryByText('Encrypted')).toBeNull();
+    expect(queryByText('Not Encrypted')).toBeNull();
   });
 
   it('should display the encryption status of the linode when Disk Encryption is enabled and the user has the account capability', async () => {
-    mocks.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(() => {
-      return {
-        isDiskEncryptionFeatureEnabled: true,
-      };
-    });
+    const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
 
-    const { queryByTestId } = renderWithTheme(
-      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
+    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
+
+    const { findByTestId } = renderWithTheme(
+      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />,
+      { flags: { linodeDiskEncryption: true } }
     );
-    const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
-    expect(encryptionStatusFragment).toBeInTheDocument();
+    expect(await findByTestId('linode-encryption-status')).toBeVisible();
   });
 });
 

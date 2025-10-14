@@ -8,6 +8,12 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useFlags: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({ id: undefined }),
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_firewall: true,
+      create_nodebalancer: true,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -28,9 +34,7 @@ vi.mock('src/hooks/useFlags', () => {
 });
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: vi.fn(() => ({
-    permissions: { create_firewall: true },
-  })),
+  usePermissions: queryMocks.userPermissions,
 }));
 
 // Note: see nodeblaancers-create-in-complex-form.spec.ts for an e2e test of this flow
@@ -73,5 +77,18 @@ describe('NodeBalancerCreate', () => {
     expect(getByText('Configs')).toBeVisible();
     expect(getByText('Nodes')).toBeVisible();
     expect(getByText('Create NodeBalancer')).toBeVisible();
+  });
+
+  it('should disable "Create NodeBalancer" button if user lacks permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_firewall: false,
+        create_nodebalancer: false,
+      },
+    });
+    const { getByText } = renderWithTheme(<NodeBalancerCreate />);
+
+    const createButton = getByText('Create NodeBalancer');
+    expect(createButton).toBeDisabled();
   });
 });

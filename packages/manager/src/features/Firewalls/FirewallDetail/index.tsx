@@ -2,14 +2,13 @@ import {
   useAllFirewallDevicesQuery,
   useFirewallQuery,
   useFirewallSettingsQuery,
-  useGrants,
   useMutateFirewall,
-  useProfile,
 } from '@linode/queries';
 import {
   Chip,
   CircleProgress,
   ErrorState,
+  LinkButton,
   Paper,
   Typography,
 } from '@linode/ui';
@@ -21,7 +20,6 @@ import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LinkButton } from 'src/components/LinkButton';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -38,7 +36,6 @@ import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
   getFirewallDefaultEntities,
 } from '../components/FirewallSelectOption.utils';
-import { checkIfUserCanModifyFirewall } from '../shared';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -56,8 +53,7 @@ export const FirewallDetail = () => {
   const { id } = useParams({
     strict: false,
   });
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
@@ -77,15 +73,9 @@ export const FirewallDetail = () => {
     firewallSettings &&
     getFirewallDefaultEntities(firewallId, firewallSettings);
 
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallId,
-    profile,
-    grants
-  );
-
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'firewall',
-    ['update_firewall_rules'],
+    ['update_firewall_rules', 'update_firewall'],
     firewallId
   );
 
@@ -183,6 +173,7 @@ export const FirewallDetail = () => {
           },
           pathname: `/firewalls/${firewall.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_firewall}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         spacingBottom={4}
@@ -244,7 +235,6 @@ export const FirewallDetail = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="linode"
@@ -252,7 +242,6 @@ export const FirewallDetail = () => {
             </SafeTabPanel>
             <SafeTabPanel index={2}>
               <FirewallDeviceLanding
-                disabled={!userCanModifyFirewall}
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="nodebalancer"

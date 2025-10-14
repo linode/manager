@@ -12,11 +12,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { AlertMaxSelectionText } from '../Utils/AlertMaxSelectionText';
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
-import { AlertMaxSelectionText } from './AlertMaxSelectionText';
 import { serviceTypeBasedColumns } from './constants';
 
-import type { AlertServiceType } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface AlertInstance {
@@ -24,6 +24,10 @@ export interface AlertInstance {
    * Indicates if the instance is selected or not
    */
   checked?: boolean;
+  /**
+   * The endpoint associated with the object storage instance
+   */
+  endpoint?: string;
   /**
    * The region associated with the instance
    */
@@ -88,7 +92,7 @@ export interface DisplayAlertResourceProp {
   /**
    * The service type associated with the alert
    */
-  serviceType?: AlertServiceType;
+  serviceType?: CloudPulseServiceType;
 }
 
 export const DisplayAlertResources = React.memo(

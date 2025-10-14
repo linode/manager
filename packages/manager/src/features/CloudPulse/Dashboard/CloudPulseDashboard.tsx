@@ -9,11 +9,19 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
-import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
+import {
+  renderPlaceHolder,
+  RenderWidgets,
+} from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DateTimeWithPreset,
+  JWETokenPayLoad,
+} from '@linode/api-v4';
 
 export interface DashboardProperties {
   /**
@@ -30,6 +38,16 @@ export interface DashboardProperties {
    * time duration to fetch the metrics data in this widget
    */
   duration: DateTimeWithPreset;
+
+  /**
+   * list of fields to group the metrics data by
+   */
+  groupBy: string[];
+
+  /**
+   * Selected linode region for the dashboard
+   */
+  linodeRegion?: string;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -52,6 +70,11 @@ export interface DashboardProperties {
   savePref?: boolean;
 
   /**
+   * Selected service type for the dashboard
+   */
+  serviceType: CloudPulseServiceType;
+
+  /**
    * Selected tags for the dashboard
    */
   tags?: string[];
@@ -65,11 +88,18 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    serviceType,
+    groupBy,
+    linodeRegion,
+    region,
   } = props;
 
   const { preferences } = useAclpPreference();
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
+    if (serviceType === 'objectstorage') {
+      return {};
+    }
     return {
       entity_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
@@ -89,7 +119,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
   );
 
   const {
@@ -128,19 +158,33 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
-    return <CircleProgress />;
+    return (
+      <CircleProgress
+        sx={(theme) => ({
+          padding: theme.spacingFunction(16),
+        })}
+      />
+    );
   }
 
+  if (!dashboard) {
+    return renderPlaceHolder(
+      'No visualizations are available at this moment. Create Dashboards to list here.'
+    );
+  }
   return (
     <RenderWidgets
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}
+      groupBy={groupBy}
       isJweTokenFetching={isJweTokenFetching}
       jweToken={jweToken}
+      linodeRegion={linodeRegion}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
+      region={region}
       resourceList={resourceList}
       resources={resources}
       savePref={savePref}

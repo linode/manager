@@ -9,7 +9,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   useSearch: vi.fn(),
   userPermissions: vi.fn(() => ({
-    permissions: {
+    data: {
       create_linode: false,
       clone_linode: false,
     },
@@ -65,7 +65,7 @@ describe('Actions', () => {
 
   it('should render an enabled create button, if user has create_linode permission', () => {
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
         clone_linode: true,
       },
@@ -84,7 +84,7 @@ describe('Actions', () => {
   it('should render an enabled create button for cloning, if user has clone_linode permission', () => {
     queryMocks.useParams.mockReturnValue({ type: 'Clone Linode' });
     queryMocks.userPermissions.mockReturnValue({
-      permissions: {
+      data: {
         create_linode: true,
         clone_linode: true,
       },

@@ -6,6 +6,8 @@ import { alertFactory, serviceTypesFactory } from 'src/factories';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
+  alertsFromEnabledServices,
+  arraysEqual,
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
@@ -15,6 +17,7 @@ import {
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
+  transformDimensionValue,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -23,7 +26,10 @@ import type {
   APIError,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  AclpServices,
+} from 'src/featureFlags';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -33,8 +39,6 @@ it('test getServiceTypeLabel method', () => {
       service.label
     );
   });
-  expect(getServiceTypeLabel('test', { data: services })).toBe('test');
-  expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
 it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(0)).toBe('0 minutes');
@@ -53,6 +57,7 @@ it('test convertSecondsToOptions method', () => {
 });
 
 it('test filterAlerts method', () => {
+  alertFactory.resetSequenceNumber();
   const alerts = [
     ...alertFactory.buildList(12, { created_by: 'system' }),
     alertFactory.build({
@@ -99,7 +104,7 @@ it('should correctly convert an alert definition values to the required format',
     severity,
     tags,
     trigger_conditions,
-    scope,
+    regions,
   } = alert;
   const expected: EditAlertPayloadWithService = {
     alertId: id,
@@ -118,7 +123,7 @@ it('should correctly convert an alert definition values to the required format',
     severity,
     tags,
     trigger_conditions,
-    scope,
+    regions,
   };
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
@@ -139,7 +144,7 @@ describe('getSchemaWithEntityIdValidation', () => {
   it('should return baseSchema if maxSelectionCount is undefined', () => {
     const schema = getSchemaWithEntityIdValidation({
       ...props,
-      serviceTypeObj: 'unknown',
+      serviceTypeObj: 'firewall',
     });
     expect(schema).toBe(baseSchema);
   });
@@ -247,7 +252,10 @@ describe('useContextualAlertsState', () => {
   it('should return empty initial state when no entityId provided', () => {
     const alerts = alertFactory.buildList(3);
     const { result } = renderHook(() => useContextualAlertsState(alerts));
-    expect(result.current.initialState).toEqual({ system: [], user: [] });
+    expect(result.current.initialState).toEqual({
+      system_alerts: [],
+      user_alerts: [],
+    });
   });
 
   it('should include alerts that match entityId or account/region level alerts in initial states', () => {
@@ -280,9 +288,9 @@ describe('useContextualAlertsState', () => {
       useContextualAlertsState(alerts, entityId)
     );
 
-    expect(result.current.initialState.system).toContain(1);
-    expect(result.current.initialState.system).toContain(3);
-    expect(result.current.initialState.user).toContain(2);
+    expect(result.current.initialState.system_alerts).toContain(1);
+    expect(result.current.initialState.system_alerts).toContain(3);
+    expect(result.current.initialState.user_alerts).toContain(2);
   });
 
   it('should detect unsaved changes when alerts are modified', () => {
@@ -305,7 +313,7 @@ describe('useContextualAlertsState', () => {
     act(() => {
       result.current.setEnabledAlerts((prev) => ({
         ...prev,
-        system: [...(prev.system ?? []), 999],
+        system_alerts: [...(prev.system_alerts ?? []), 999],
       }));
     });
 
@@ -362,8 +370,8 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for nodebalancer service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'nodebalancer');
 
     expect(result).toHaveLength(0);
   });
@@ -416,9 +424,101 @@ describe('filterRegionByServiceType', () => {
     );
   });
 
-  it('should return no regions for unknown service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'unknown');
+  it('should return no regions for firewall service type', () => {
+    const result = filterRegionByServiceType('alerts', regions, 'firewall');
 
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('alertsFromEnabledServices', () => {
+  const allAlerts = [
+    ...alertFactory.buildList(3, { service_type: 'dbaas' }),
+    ...alertFactory.buildList(3, { service_type: 'linode' }),
+  ];
+  const aclpServicesFlag: Partial<AclpServices> = {
+    linode: {
+      alerts: { enabled: true, beta: true },
+      metrics: { enabled: true, beta: true },
+    },
+    dbaas: {
+      alerts: { enabled: false, beta: true },
+      metrics: { enabled: false, beta: true },
+    },
+  };
+
+  it('should return empty list when no alerts are provided', () => {
+    const result = alertsFromEnabledServices([], aclpServicesFlag);
+    expect(result).toHaveLength(0);
+  });
+
+  it('should return alerts from enabled services', () => {
+    const result = alertsFromEnabledServices(allAlerts, aclpServicesFlag);
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        alerts: { enabled: true, beta: true },
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(3);
+  });
+
+  it('should not return alerts from services that are missing the alerts property in the flag', () => {
+    const result = alertsFromEnabledServices(allAlerts, {
+      linode: {
+        metrics: { enabled: true, beta: true },
+      },
+    });
+    expect(result).toHaveLength(0);
+  });
+});
+
+describe('transformDimensionValue', () => {
+  it('should apply service-specific transformations', () => {
+    expect(transformDimensionValue('linode', 'type', '')).toBe('');
+    expect(transformDimensionValue('linode', 'operation', 'read')).toBe('Read');
+    expect(transformDimensionValue('dbaas', 'node_type', 'primary')).toBe(
+      'Primary'
+    );
+    expect(
+      transformDimensionValue('firewall', 'interface_type', 'public')
+    ).toBe('PUBLIC');
+    expect(transformDimensionValue('nodebalancer', 'protocol', 'http')).toBe(
+      'HTTP'
+    );
+  });
+
+  it('should fallback to capitalize for unknown dimensions', () => {
+    expect(
+      transformDimensionValue('linode', 'unknown_dimension', 'test_value')
+    ).toBe('Test_value');
+  });
+});
+
+describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are undefined', () => {
+    expect(arraysEqual(undefined, undefined)).toBe(true);
+  });
+  it('should return false when one of the arrays is undefined', () => {
+    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+  });
+  it('should return false when arrays are not equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
+  });
+  it('should return true when arrays have same elements but in different order', () => {
+    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
   });
 });

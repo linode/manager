@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
@@ -69,9 +68,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       />,
       {
         initialRoute: '/linodes/create',
-        MemoryRouter: {
-          initialEntries: ['/linodes/create'],
-        },
+        initialEntries: ['/linodes/create'],
       }
     );
 
@@ -109,33 +106,6 @@ describe('PlacementGroupsCreateDrawer', () => {
         placement_group_type: 'anti_affinity:local',
         region: 'us-east',
       });
-    });
-  });
-
-  it('should display an error message if the region has reached capacity', async () => {
-    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
-      data: [placementGroupFactory.build({ region: 'us-west' })],
-    });
-    const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer {...commonProps} />
-    );
-
-    const regionSelect = getByPlaceholderText('Select a Region');
-    fireEvent.focus(regionSelect);
-    fireEvent.change(regionSelect, {
-      target: { value: regionWithoutCapacity },
-    });
-    await waitFor(() => {
-      expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        getByText(
-          'You’ve reached the limit of placement groups you can create in this region.'
-        )
-      ).toBeInTheDocument();
     });
   });
 });

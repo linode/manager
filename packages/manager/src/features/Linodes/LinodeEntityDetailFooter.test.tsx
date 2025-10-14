@@ -1,5 +1,8 @@
-import * as React from 'react';
+import { profileFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
+import React from 'react';
 
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
@@ -13,40 +16,48 @@ const props = {
   linodeTags: ['test', 'linode'],
 };
 
-const queryMocks = vi.hoisted(() => ({
-  userPermissions: vi.fn(() => ({
-    permissions: { update_account: false },
-  })),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
-}));
-
 describe('LinodeEntityDetailFooter', () => {
-  it('should disable "Add a tag" button if the user does not have update_account permission', async () => {
+  it('should disable the "Add a tag" button by default', async () => {
     const { getByRole } = renderWithTheme(
       <LinodeEntityDetailFooter {...props} />
     );
 
-    const addTagBtn = getByRole('button', {
-      name: 'Add a tag',
-    });
-    expect(addTagBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(getByRole('button', { name: 'Add a tag' })).toBeDisabled();
   });
 
-  it('should enable "Add a tag" button if the user has update_account permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      permissions: { update_account: true },
-    });
+  it('should enable the "Add a tag" button if the user is unrestricted (legacy grants)', async () => {
+    server.use(
+      http.get('*/v4*/profile', () =>
+        HttpResponse.json(profileFactory.build({ restricted: false }))
+      )
+    );
 
     const { getByRole } = renderWithTheme(
       <LinodeEntityDetailFooter {...props} />
     );
 
-    const addTagBtn = getByRole('button', {
-      name: 'Add a tag',
+    await waitFor(() => {
+      expect(getByRole('button', { name: 'Add a tag' })).toBeEnabled();
     });
-    expect(addTagBtn).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable the "Add a tag" button if the user is an account admin (IAM)', async () => {
+    server.use(
+      http.get('*/v4*/profile', () =>
+        HttpResponse.json(profileFactory.build({ restricted: true }))
+      ),
+      http.get('*/v4*/iam/users/:username/permissions/account', () =>
+        HttpResponse.json(['is_account_admin'])
+      )
+    );
+
+    const { getByRole } = renderWithTheme(
+      <LinodeEntityDetailFooter {...props} />,
+      { flags: { iam: { enabled: true, beta: true } } }
+    );
+
+    await waitFor(() => {
+      expect(getByRole('button', { name: 'Add a tag' })).toBeEnabled();
+    });
   });
 });

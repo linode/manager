@@ -1,7 +1,6 @@
 import {
   useAccountAgreements,
   useCreateVolumeMutation,
-  useGrants,
   useLinodeQuery,
   useMutateAccountAgreements,
   useProfile,
@@ -58,9 +57,10 @@ import {
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { SIZE_FIELD_WIDTH } from './constants';
-import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
-import { SizeField } from './Drawers/VolumeDrawer/SizeField';
+import { ConfigSelect } from './VolumeDrawers/VolumeDrawer/ConfigSelect';
+import { SizeField } from './VolumeDrawers/VolumeDrawer/SizeField';
 
 import type { APIError, Region, VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
@@ -134,7 +134,8 @@ export const VolumeCreate = () => {
   const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+
+  const { data: permissions } = usePermissions('account', ['create_volume']);
 
   const { data: regions } = useRegionsQuery();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
@@ -168,25 +169,6 @@ export const VolumeCreate = () => {
         thisRegion.capabilities.includes('Block Storage')
       )
       .map((thisRegion) => thisRegion.id) ?? [];
-
-  const doesNotHavePermission =
-    profile?.restricted && !grants?.global.add_volumes;
-
-  const renderSelectTooltip = (tooltipText: string) => {
-    return (
-      <TooltipIcon
-        classes={{ popper: classes.tooltip }}
-        status="info"
-        sxTooltipIcon={{
-          marginBottom: '6px',
-          marginLeft: theme.spacing(),
-          padding: 0,
-        }}
-        text={tooltipText}
-        tooltipPosition="right"
-      />
-    );
-  };
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -284,8 +266,10 @@ export const VolumeCreate = () => {
 
   const isInvalidPrice = !types || isError;
 
+  const canCreateVolume = permissions?.create_volume;
+
   const disabled = Boolean(
-    doesNotHavePermission ||
+    !canCreateVolume ||
       (showGDPRCheckbox && !hasSignedAgreement) ||
       isInvalidPrice
   );
@@ -348,7 +332,7 @@ export const VolumeCreate = () => {
         }}
         title="Create"
       />
-      {doesNotHavePermission && (
+      {!canCreateVolume && (
         <Notice
           spacingTop={16}
           text={getRestrictedResourceText({
@@ -380,7 +364,7 @@ export const VolumeCreate = () => {
             <TextField
               className={classes.select}
               data-qa-volume-label
-              disabled={doesNotHavePermission}
+              disabled={!canCreateVolume}
               errorText={touched.label ? errors.label : undefined}
               label="Label"
               name="label"
@@ -394,7 +378,7 @@ export const VolumeCreate = () => {
             />
             <Box className={classes.select}>
               <TagsInput
-                disabled={doesNotHavePermission}
+                disabled={!canCreateVolume}
                 label="Tags"
                 name="tags"
                 onChange={(items) =>
@@ -419,19 +403,17 @@ export const VolumeCreate = () => {
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
                 currentCapability="Block Storage"
-                disabled={doesNotHavePermission}
+                disabled={!canCreateVolume}
                 errorText={touched.region ? errors.region : undefined}
                 isGeckoLAEnabled={isGeckoLAEnabled}
                 label="Region"
                 onBlur={handleBlur}
                 onChange={(e, region) => handleRegionChange(region)}
                 regions={regions ?? []}
+                tooltipText="Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region."
                 value={values.region}
                 width={400}
               />
-              {renderSelectTooltip(
-                'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
-              )}
             </Box>
             <Box
               alignItems="baseline"
@@ -446,7 +428,7 @@ export const VolumeCreate = () => {
                 >
                   <LinodeSelect
                     clearable
-                    disabled={doesNotHavePermission}
+                    disabled={!canCreateVolume}
                     errorText={linodeError}
                     onBlur={handleBlur}
                     onSelectionChange={handleLinodeChange}
@@ -472,9 +454,12 @@ export const VolumeCreate = () => {
                     }}
                     value={values.linode_id}
                   />
-                  {renderSelectTooltip(
-                    'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
-                  )}
+                  <TooltipIcon
+                    placement="right"
+                    status="info"
+                    sxTooltipIcon={{ position: 'relative', top: 4 }}
+                    text="If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation."
+                  />
                 </Box>
                 {shouldDisplayClientLibraryCopy &&
                   values.encryption === 'enabled' && (
@@ -486,7 +471,7 @@ export const VolumeCreate = () => {
                   )}
               </Stack>
               <ConfigSelect
-                disabled={doesNotHavePermission || config_id === null}
+                disabled={!canCreateVolume || config_id === null}
                 error={touched.config_id ? errors.config_id : undefined}
                 linodeId={linode_id}
                 name="configId"
@@ -498,7 +483,7 @@ export const VolumeCreate = () => {
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
               <SizeField
-                disabled={doesNotHavePermission}
+                disabled={!canCreateVolume}
                 error={touched.size ? errors.size : undefined}
                 hasSelectedRegion={!isNilOrEmpty(values.region)}
                 name="size"
@@ -550,6 +535,7 @@ export const VolumeCreate = () => {
                   onChange={() =>
                     toggleVolumeEncryptionEnabled(values.encryption)
                   }
+                  sxCheckbox={{ paddingLeft: '0px' }}
                 />
               </Box>
             )}

@@ -21,13 +21,13 @@ export const Alerts = ({
   onAlertsModeChange,
   isAlertsBetaMode,
 }: AlertsProps) => {
-  const { aclpBetaServices } = useFlags();
+  const { aclpServices } = useFlags();
 
   const { control } = useFormContext<LinodeCreateFormValues>();
   const { field } = useController({
     control,
     name: 'alerts',
-    defaultValue: { system: [], user: [] },
+    defaultValue: { system_alerts: [], user_alerts: [] },
   });
 
   const handleToggleAlert = (updatedAlerts: CloudPulseAlertsPayload) => {
@@ -53,21 +53,21 @@ export const Alerts = ({
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        aclpBetaServices?.linode?.alerts && isAlertsBetaMode ? (
+        aclpServices?.linode?.alerts?.beta && isAlertsBetaMode ? (
           <BetaChip />
         ) : null
       }
       subHeading={subHeading}
       summaryProps={{ sx: { p: 0 } }}
     >
-      {aclpBetaServices?.linode?.alerts && (
+      {aclpServices?.linode?.alerts?.enabled && (
         <AclpPreferenceToggle
           isAlertsBetaMode={isAlertsBetaMode}
           onAlertsModeChange={onAlertsModeChange}
           type="alerts"
         />
       )}
-      {aclpBetaServices?.linode?.alerts && isAlertsBetaMode ? (
+      {aclpServices?.linode?.alerts?.enabled && isAlertsBetaMode ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}

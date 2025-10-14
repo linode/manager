@@ -1,10 +1,11 @@
-import { useAllDatabasesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { PRIMARY_NODE } from '../Utils/constants';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import type { DatabaseInstance, FilterValue } from '@linode/api-v4';
+import { PRIMARY_NODE, RESOURCE_FILTER_MAP } from '../Utils/constants';
+
+import type { FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseNodeType {
   id: string;
@@ -88,7 +89,12 @@ export const CloudPulseNodeTypeFilter = React.memo(
       data: databaseClusters,
       isError,
       isLoading,
-    } = useAllDatabasesQuery(); // fetch all databases
+    } = useResourcesQuery(
+      !disabled,
+      'dbaas',
+      {},
+      RESOURCE_FILTER_MAP['dbaas'] ?? {}
+    ); // fetch all databases
 
     const isClusterSizeGreaterThanOne = React.useMemo<
       boolean | undefined
@@ -98,8 +104,8 @@ export const CloudPulseNodeTypeFilter = React.memo(
       }
       // check if any cluster has a size greater than 1 for selected database ids
       return databaseClusters.some(
-        (cluster: DatabaseInstance) =>
-          database_ids.includes(cluster.id) && cluster.cluster_size > 1
+        ({ id, clusterSize }) =>
+          database_ids.includes(Number(id)) && clusterSize && clusterSize > 1
       );
     }, [databaseClusters, database_ids]);
 

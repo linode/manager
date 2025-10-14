@@ -18,6 +18,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -54,7 +55,7 @@ const LinodeConfigs = () => {
 
   const id = Number(linodeId);
 
-  const { permissions } = usePermissions(
+  const { data: permissions } = usePermissions(
     'linode',
     ['create_linode_config_profile'],
     id
@@ -188,6 +189,11 @@ const LinodeConfigs = () => {
           buttonType="primary"
           disabled={!permissions.create_linode_config_profile}
           onClick={onCreate}
+          tooltipText={
+            !permissions.create_linode_config_profile
+              ? NO_PERMISSION_TOOLTIP_TEXT
+              : undefined
+          }
         >
           Add Configuration
         </Button>

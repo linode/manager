@@ -38,14 +38,12 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
-  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -79,18 +77,21 @@ import { NodePoolPanel } from './NodePoolPanel';
 
 import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type {
+  APIError,
   CreateKubeClusterPayload,
-  CreateNodePoolDataBeta,
-  KubeNodePoolResponseBeta,
+  CreateNodePoolData,
+  KubernetesStackType,
   KubernetesTier,
-} from '@linode/api-v4/lib/kubernetes';
-import type { Region } from '@linode/api-v4/lib/regions';
-import type { APIError } from '@linode/api-v4/lib/types';
+  Region,
+} from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-type FormValues = {
-  nodePools: KubeNodePoolResponseBeta[];
-};
+export interface CreateClusterFormValues {
+  nodePools: CreateNodePoolData[];
+  stack_type: KubernetesStackType | null;
+  subnet_id?: number;
+  vpc_id?: number;
+}
 
 export interface NodePoolConfigDrawerHandlerParams {
   drawerMode: NodePoolConfigDrawerMode;
@@ -123,7 +124,6 @@ export const CreateCluster = () => {
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const { showAPL } = useAPLAvailability();
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
@@ -141,13 +141,26 @@ export const CreateCluster = () => {
   const [selectedType, setSelectedType] = React.useState<string>();
   const [selectedPoolIndex, setSelectedPoolIndex] = React.useState<number>();
 
+  const {
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+    isLkeEnterprisePhase2DualStackFeatureEnabled,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled,
+    isLkeEnterprisePostLAFeatureEnabled,
+  } = useIsLkeEnterpriseEnabled();
+
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, ...form } = useForm<FormValues>({
-    defaultValues: {
-      nodePools: [],
-    },
-  });
+  const { control, trigger, formState, ...form } =
+    useForm<CreateClusterFormValues>({
+      defaultValues: {
+        nodePools: [],
+        stack_type: isLkeEnterprisePhase2DualStackFeatureEnabled
+          ? 'ipv4'
+          : null,
+      },
+      shouldUnregister: true,
+    });
   const nodePools = useWatch({ control, name: 'nodePools' });
   const { update } = useFieldArray({
     control,
@@ -158,10 +171,13 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
-  // LKE-E does not support APL at this time.
-  const isAPLSupported = showAPL && selectedTier === 'standard';
+  // APL is supported for standard clusters, and for enterprise clusters when the APL_LKE_E flag is enabled
+  const isAPLSupported =
+    showAPL &&
+    (selectedTier === 'standard' ||
+      (selectedTier === 'enterprise' && flags.aplLkeE));
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -182,9 +198,17 @@ export const CreateCluster = () => {
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
+
+      // If switching to standard tier and APL is enabled, enable HA
+      if (aplEnabled) {
+        setHighAvailability(true);
+      }
     }
 
-    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    // If a user configures node pools in the LKE-E flow, but then switches to LKE, reset configurations that are incompatible with LKE-E:
+    // - If a user added > 100 nodes, set the max node count to 100 for correct price display.
+    // - Clear the firewall selection.
+    // - Clear the update strategy selection.
     if (isLkeEnterpriseLAFeatureEnabled) {
       nodePools.forEach((nodePool, idx) =>
         update(idx, {
@@ -195,6 +219,8 @@ export const CreateCluster = () => {
               ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
               : MAX_NODES_PER_POOL_STANDARD_TIER
           ),
+          firewall_id: undefined,
+          update_strategy: undefined,
         })
       );
     }
@@ -224,17 +250,11 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesCluster } =
     useCreateKubernetesClusterMutation();
 
-  const { mutateAsync: createKubernetesClusterBeta } =
-    useCreateKubernetesClusterBetaMutation();
-
-  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
-    useIsLkeEnterpriseEnabled();
-
   const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+    data: versionData,
+    isLoading: isLoadingVersions,
+    error: versionsError,
+  } = useKubernetesTieredVersionsQuery(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -269,8 +289,12 @@ export const CreateCluster = () => {
     setSubmitting(true);
 
     const node_pools = nodePools.map(
-      pick(['type', 'count', 'update_strategy'])
-    ) as CreateNodePoolDataBeta[];
+      pick(['type', 'count', 'update_strategy', 'firewall_id'])
+    ) as CreateNodePoolData[];
+
+    const vpcId = form.getValues('vpc_id');
+    const subnetId = form.getValues('subnet_id');
+    const stackType = form.getValues('stack_type');
 
     const _ipv4 = ipV4Addr
       .map((ip) => {
@@ -320,9 +344,33 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    const createClusterFn = isUsingBetaEndpoint
-      ? createKubernetesClusterBeta
-      : createKubernetesCluster;
+    if (
+      isLkeEnterprisePhase2DualStackFeatureEnabled ||
+      isLkeEnterprisePhase2BYOVPCFeatureEnabled
+    ) {
+      payload = {
+        ...payload,
+        vpc_id: vpcId,
+        subnet_id: subnetId,
+        stack_type: stackType ?? undefined,
+      };
+    }
+
+    // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
+    if (
+      (isLkeEnterprisePostLAFeatureEnabled ||
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled) &&
+      selectedTier === 'enterprise'
+    ) {
+      // Trigger the React Hook Form validation for BYO VPC selection.
+      const isValid = await trigger();
+      // Don't submit the form while RHF errors persist.
+      if (!isValid) {
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+        return;
+      }
+    }
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
@@ -339,7 +387,7 @@ export const CreateCluster = () => {
       }
     }
 
-    createClusterFn(payload)
+    createKubernetesCluster(payload)
       .then((cluster) => {
         navigate({
           to: '/kubernetes/clusters/$clusterId/summary',
@@ -379,6 +427,8 @@ export const CreateCluster = () => {
       'k8s_version',
       'versionLoad',
       'control_plane',
+      'vpc_id',
+      'subnet_id',
     ],
     errors
   );
@@ -404,7 +454,12 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} {...form}>
+    <FormProvider
+      control={control}
+      formState={formState}
+      trigger={trigger}
+      {...form}
+    >
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
@@ -447,7 +502,7 @@ export const CreateCluster = () => {
             />
             {isLkeEnterpriseLAFlagEnabled && (
               <>
-                <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
+                <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
                 <ClusterTierPanel
                   handleClusterTierSelection={handleClusterTierSelection}
                   isUserRestricted={isCreateClusterRestricted}
@@ -455,7 +510,7 @@ export const CreateCluster = () => {
                 />
               </>
             )}
-            <Divider sx={{ marginTop: 4 }} />
+            <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
             <StyledStackWithTabletBreakpoint>
               <Stack>
                 <RegionSelect
@@ -481,7 +536,7 @@ export const CreateCluster = () => {
                       ? 'Only regions that support LKE Enterprise clusters are listed.'
                       : undefined
                   }
-                  value={selectedRegion?.id}
+                  value={selectedRegion?.id || null}
                 />
               </Stack>
               <StyledDocsLinkContainer
@@ -493,7 +548,7 @@ export const CreateCluster = () => {
                 />
               </StyledDocsLinkContainer>
             </StyledStackWithTabletBreakpoint>
-            <Divider sx={{ marginTop: 4 }} />
+            <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
             <StyledStackWithTabletBreakpoint>
               <Stack>
                 <Select
@@ -521,10 +576,11 @@ export const CreateCluster = () => {
             </StyledStackWithTabletBreakpoint>
             {showAPL && (
               <>
-                <Divider sx={{ marginTop: 4 }} />
+                <Divider sx={{ marginTop: 4, marginBottom: 2 }} />
                 <StyledStackWithTabletBreakpoint>
                   <Stack>
                     <ApplicationPlatform
+                      isEnterpriseTier={selectedTier === 'enterprise'}
                       isSectionDisabled={!isAPLSupported}
                       setAPL={setAplEnabled}
                       setHighAvailability={setHighAvailability}
@@ -535,8 +591,8 @@ export const CreateCluster = () => {
             )}
             <Divider
               sx={{
-                marginBottom: selectedTier === 'enterprise' ? 3 : 1,
-                marginTop: showAPL ? 1 : 4,
+                marginBottom: selectedTier === 'enterprise' ? 4 : 2,
+                marginTop: showAPL ? 2 : 4,
               }}
             />
             {selectedTier !== 'enterprise' && (
@@ -555,10 +611,19 @@ export const CreateCluster = () => {
                 />
               </Box>
             )}
-            {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
+            {selectedTier === 'enterprise' && (
+              <ClusterNetworkingPanel
+                selectedRegionId={selectedRegion?.id}
+                subnetErrorText={errorMap.subnet_id}
+                vpcErrorText={errorMap.vpc_id}
+              />
+            )}
             <>
               <Divider
-                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+                sx={{
+                  marginTop: selectedTier === 'enterprise' ? 4 : 2,
+                  marginBottom: 2,
+                }}
               />
               <ControlPlaneACLPane
                 enableControlPlaneACL={controlPlaneACL}
@@ -590,7 +655,7 @@ export const CreateCluster = () => {
               />
             </>
 
-            <Divider sx={{ marginBottom: 4 }} />
+            <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
             <NodePoolPanel
               apiError={errorMap.node_pools}
               handleConfigurePool={handleOpenNodePoolConfigDrawer}

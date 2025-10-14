@@ -34,7 +34,7 @@ describe('Edit Alert Landing tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: true, // simulate error
-      isFetching: false,
+      isLoading: false,
     });
 
     const { getByText } = renderWithTheme(<EditAlertLanding />, {
@@ -50,7 +50,7 @@ describe('Edit Alert Landing tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: false,
-      isFetching: true, // simulate loading
+      isLoading: true, // simulate loading
     });
 
     const { getByTestId } = renderWithTheme(<EditAlertLanding />, {
@@ -64,7 +64,7 @@ describe('Edit Alert Landing tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined, // simulate empty
       isError: false,
-      isFetching: false,
+      isLoading: false,
     });
 
     const { getByText } = renderWithTheme(<EditAlertLanding />, {

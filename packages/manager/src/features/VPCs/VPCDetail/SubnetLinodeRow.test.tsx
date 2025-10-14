@@ -2,6 +2,7 @@ import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
+  linodeInterfaceFactoryDualStackVPC,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
@@ -31,6 +32,7 @@ const queryMocks = vi.hoisted(() => ({
   useLinodeConfigQuery: vi.fn().mockReturnValue({}),
   useLinodeInterfaceQuery: vi.fn().mockReturnValue({}),
   useLinodeInterfaceFirewallsQuery: vi.fn().mockReturnValue({}),
+  useAccount: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -43,6 +45,7 @@ vi.mock('@linode/queries', async () => {
     useLinodeInterfaceQuery: queryMocks.useLinodeInterfaceQuery,
     useLinodeInterfaceFirewallsQuery:
       queryMocks.useLinodeInterfaceFirewallsQuery,
+    useAccount: queryMocks.useAccount,
   };
 });
 
@@ -110,6 +113,8 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
+    // @TODO VPC IPv6: This assertion assumes the VPC IPv6 feature flag is off. Once the feature is fully rolled out, update the checks to ensure the
+    // VPC IPv6 and VPC IPv6 Ranges cells are displayed/populated.
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const config = linodeConfigFactory.build({
@@ -119,7 +124,7 @@ describe('SubnetLinodeRow', () => {
       data: config,
     });
 
-    const { getByLabelText, getByRole, getByText, findByText } =
+    const { getByLabelText, getByRole, getByText, findByText, queryByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -130,7 +135,8 @@ describe('SubnetLinodeRow', () => {
             subnet={subnetFactory1}
             subnetId={1}
             subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-          />
+          />,
+          { flags: { vpcIpv6: false } }
         )
       );
 
@@ -141,6 +147,10 @@ describe('SubnetLinodeRow', () => {
     );
 
     expect(getByText('10.0.0.0')).toBeVisible();
+
+    // VPC IPv6 and VPC IPv6 Ranges columns not present, so contents of those cells should not be in the document
+    expect(queryByText('2001:db8::1')).toBeNull();
+    expect(queryByText('2001:db8::/64')).toBeNull();
 
     const plusChipButton = getByRole('button', { name: '+1' });
     expect(plusChipButton).toHaveTextContent('+1');
@@ -196,6 +206,95 @@ describe('SubnetLinodeRow', () => {
     expect(getByText('10.0.0.1')).toBeVisible();
     const firewall = await findByText(mockFirewall0);
     expect(firewall).toBeVisible();
+  });
+
+  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled and user has VPC Dual Stack account capability (config/legacy interface)', async () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['VPC Dual Stack'],
+      },
+    });
+
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
+    const config = linodeConfigFactory.build({
+      interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
+    });
+    queryMocks.useLinodeInterfaceQuery.mockReturnValue({});
+    queryMocks.useLinodeConfigQuery.mockReturnValue({
+      data: config,
+    });
+
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory1}
+          subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
+        />,
+        {
+          flags: { vpcIpv6: true },
+        }
+      )
+    );
+
+    // VPC IPv6 and VPC IPv6 Ranges columns present, so contents of those cells should be populated
+    await findByText('2001:db8::1');
+    await findByText('2001:db8::/64');
+  });
+
+  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled and user has VPC Dual Stack account capability (Linode Interface)', async () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['VPC Dual Stack'],
+      },
+    });
+
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const vpcLinodeInterface = linodeInterfaceFactoryDualStackVPC.build({
+      id: 1,
+    });
+    queryMocks.useLinodeInterfaceQuery.mockReturnValue({
+      data: vpcLinodeInterface,
+    });
+    queryMocks.useLinodeConfigQuery.mockReturnValue({});
+
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
+
+    const { getByTestId } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={1}
+          subnetInterfaces={[
+            { active: true, config_id: null, id: vpcLinodeInterface.id },
+          ]}
+        />,
+        {
+          flags: { vpcIpv6: true },
+        }
+      )
+    );
+
+    // VPC IPv6 and VPC IPv6 Ranges columns present, so contents of those cells should be populated
+    expect(getByTestId('vpc-ipv6-cell')).toHaveTextContent(
+      '2600:3c19:e418:1:2000:4fff:fed1:38c4'
+    );
+    expect(getByTestId('linode-ipv6-ranges-cell')).toHaveTextContent(
+      '2600:3c19:e418:2::/64'
+    );
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
@@ -291,31 +390,6 @@ describe('SubnetLinodeRow', () => {
     await waitFor(() => {
       expect(warningIcon).toBeInTheDocument();
     });
-  });
-
-  it('should hide action-menu buttons for LKE-E Linodes', async () => {
-    queryMocks.useLinodeConfigQuery.mockReturnValue({
-      data: configurationProfile,
-    });
-
-    const { queryByText } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={true}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={0}
-          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-        />
-      )
-    );
-
-    const powerOffButton = queryByText('Power Off');
-    expect(powerOffButton).not.toBeInTheDocument();
-    const unassignLinodeButton = queryByText('Unassign Linode');
-    expect(unassignLinodeButton).not.toBeInTheDocument();
   });
 
   it('should not display a warning icon for LKE-E Linodes', async () => {

@@ -8,6 +8,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateDiskDrawer } from './CreateDiskDrawer';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_linode_disk: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
+const props = {
+  onClose: vi.fn(),
+  disabled: !queryMocks.userPermissions().data.create_linode_disk,
+  linodeId: 1,
+  open: true,
+};
+
 describe('CreateDiskDrawer', () => {
   it('should render', async () => {
     server.use(
@@ -22,7 +41,7 @@ describe('CreateDiskDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <CreateDiskDrawer linodeId={1} onClose={vi.fn()} open={true} />
+      <CreateDiskDrawer {...props} />
     );
 
     // Title
@@ -54,10 +73,37 @@ describe('CreateDiskDrawer', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
-      <CreateDiskDrawer linodeId={1} onClose={vi.fn()} open={true} />
-    );
+    const { findByText } = renderWithTheme(<CreateDiskDrawer {...props} />);
 
     await findByText('Maximum size: 1000 MB');
+  });
+
+  it('should enable the "Create" button when user has permission', () => {
+    const { getByRole } = renderWithTheme(<CreateDiskDrawer {...props} />);
+
+    const createBtn = getByRole('button', {
+      name: 'Create',
+    });
+    expect(createBtn).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should disable the "Create" button when user does not have permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        create_linode_disk: false,
+      },
+    });
+
+    const { getByRole } = renderWithTheme(
+      <CreateDiskDrawer
+        {...props}
+        disabled={!queryMocks.userPermissions().data.create_linode_disk}
+      />
+    );
+
+    const createBtn = getByRole('button', {
+      name: 'Create',
+    });
+    expect(createBtn).toHaveAttribute('aria-disabled', 'true');
   });
 });

@@ -1,6 +1,7 @@
 import { useCreateFirewall } from '@linode/queries';
 import {
   ActionsPanel,
+  CircleProgress,
   Drawer,
   FormControlLabel,
   Notice,
@@ -10,17 +11,15 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'react-router-dom';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -30,7 +29,6 @@ import { TemplateFirewallFields } from './TemplateFirewallFields';
 
 import type { CreateFirewallFormValues } from './formUtilities';
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
-import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface CreateFirewallDrawerProps {
@@ -65,18 +63,18 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
 
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  const { permissions } = usePermissions('account', ['create_firewall']);
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
+    'account',
+    ['create_firewall']
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const location = useLocation();
+  const createType = useGetLinodeCreateType();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: queryParams.type ?? 'OS',
+    createType: createType ?? 'OS',
     headerName: createFirewallText,
     interaction: 'click',
     label: '',
@@ -139,6 +137,10 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
       }
     }
   };
+
+  if (isPermissionsLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <FormProvider {...form}>
