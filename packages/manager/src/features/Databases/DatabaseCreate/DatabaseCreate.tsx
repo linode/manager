@@ -214,9 +214,15 @@ export const DatabaseCreate = () => {
       return accum;
     }, []);
 
+    const hasVpc =
+      values.private_network &&
+      values.private_network.vpc_id &&
+      values.private_network.subnet_id;
+
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: _allowList,
+      private_network: hasVpc ? values.private_network : null,
     };
 
     // TODO (UIE-8831): Remove post VPC release, since it will always be in create payload
