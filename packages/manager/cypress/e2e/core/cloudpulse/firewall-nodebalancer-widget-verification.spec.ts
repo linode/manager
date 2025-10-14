@@ -1,4 +1,7 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
+/**
+ * @file Integration Tests for CloudPulse Firewall Nodebalancer Dashboard.
+ */
+import { nodeBalancerFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -11,12 +14,11 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetFirewalls } from 'support/intercepts/firewalls';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { randomNumber } from 'support/util/random';
 
 import {
   accountFactory,
@@ -30,7 +32,10 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type { CloudPulseMetricsResponse, Filters } from '@linode/api-v4';
+import type {
+  CloudPulseMetricsResponse,
+  FirewallDeviceEntityType,
+} from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -45,39 +50,57 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, firewalls, region } =
-  widgetDetails.firewall;
+const { metrics, dashboardName, firewalls, region, id } =
+  widgetDetails.firewall_nodebalancer;
 const serviceType = 'firewall';
+const dimensions = [
+  {
+    label: 'Region',
+    dimension_label: 'region',
+    value: 'us-ord',
+  },
+];
+
+// Convert widget filters to dashboard filters
+const getFiltersForMetric = (metricName: string) => {
+  const metric = metrics.find((m) => m.name === metricName);
+  if (!metric) return [];
+
+  return metric.filters.map((filter) => ({
+    dimension_label: filter.dimension_label,
+    label: filter.dimension_label,
+    values: filter.value ? [filter.value] : undefined,
+  }));
+};
+
+// Dashboard creation
 const dashboard = dashboardFactory.build({
   label: dashboardName,
-  id,
+  group_by: ['entity_id'],
   service_type: serviceType,
-  widgets: metrics.map(({ name, title, unit, yLabel }) => {
-    return widgetFactory.build({
+  id,
+  widgets: metrics.map(({ name, title, unit, yLabel }) =>
+    widgetFactory.build({
+      filters: [...dimensions],
       label: title,
       metric: name,
       unit,
       y_label: yLabel,
-    });
-  }),
+      namespace_id: id,
+      service_type: serviceType,
+    })
+  ),
 });
 
+// Metric definitions
 const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
     unit,
+    dimensions: [...dimensions, ...getFiltersForMetric(name)],
   })
 );
-
-const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
-  data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
-});
-
-const findFilter = (filters: Filters[], label: string): Filters | undefined => {
-  return filters.find((f) => f.dimension_label === label);
-};
-
 /**
  * Generates graph data from a given CloudPulse metrics response and
  * extracts average, last, and maximum metric values from the first
@@ -124,21 +147,95 @@ const getWidgetLegendRowValuesFromResponse = (
   // Return the rounded values in an object
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
-const mockLinode = linodeFactory.build({
-  id: 1,
-  label: firewalls,
-  region: 'us-east',
+
+const mockRegions = [
+  regionFactory.build({
+    capabilities: ['Linodes', 'Cloud Firewall'],
+    id: 'us-east',
+    label: 'Newark, NJ',
+    monitors: {
+      alerts: [],
+      metrics: ['Cloud Firewall', 'Linodes'],
+    },
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    monitors: {
+      alerts: [],
+      metrics: ['Linodes'],
+    },
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes', 'Cloud Firewall'],
+    id: 'br-gru',
+    label: 'Sao Paulo, BR',
+    country: 'br',
+    monitors: {
+      alerts: [],
+      metrics: ['Linodes', 'Cloud Firewall'],
+    },
+  }),
+];
+const mockFirewalls = [
+  firewallFactory.build({
+    id: 1,
+    label: firewalls,
+    status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
+  }),
+  firewallFactory.build({
+    id: 2,
+    label: 'Firewall-1',
+    status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
+  }),
+  firewallFactory.build({
+    id: 3,
+    label: 'Firewall-2',
+    status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
+  }),
+];
+
+const mockNodeBalancers = [
+  nodeBalancerFactory.build({
+    label: 'mockNodeBalancer-resource-1',
+    region: 'us-east',
+  }),
+  nodeBalancerFactory.build({
+    label: 'mockNodeBalancer-resource-2',
+    region: 'us-ord',
+  }),
+];
+const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
+  data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
-const mockRegion = regionFactory.build({
-  capabilities: ['Linodes', 'Cloud Firewall'],
-  id: 'us-east',
-  label: 'Newark, NJ',
-  monitors: {
-    alerts: [],
-    metrics: ['Cloud Firewall', 'Linodes'],
-  },
-});
-const mockFirewalls = firewallFactory.build({ label: firewalls });
 
 // Tests will be modified
 describe('Integration Tests for firewall Dashboard ', () => {
@@ -148,15 +245,15 @@ describe('Integration Tests for firewall Dashboard ', () => {
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
-    mockGetCloudPulseDashboard(id, dashboard);
+    mockGetCloudPulseDashboard(8, dashboard);
+    mockGetNodeBalancers(mockNodeBalancers);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetLinodes([mockLinode]);
-    mockGetFirewalls([mockFirewalls]);
+    mockGetFirewalls(mockFirewalls);
     mockGetUserPreferences({});
-    mockGetRegions([mockRegion]);
+    mockGetRegions(mockRegions);
 
     // navigate to the metrics page
     cy.visitWithLogin('/metrics');
@@ -195,71 +292,202 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     ui.autocomplete.findByLabel('Firewalls').click();
 
+    // us-ord → Cloud Firewall feature is missing from its capabilities, so the region is not available.
+    // br-gru → Although Cloud Firewall is in its capabilities, NodeBalancer is not available in this region.
     ui.regionSelect.find().click();
+    ['br-gru', 'us-ord'].forEach((regionId) => {
+      cy.get('[data-qa-autocomplete-popper="true"]')
+        .find(`[data-qa-option="${regionId}"], [data-testid="${regionId}"]`)
+        .should('not.exist');
+    });
     ui.regionSelect.find().clear();
     ui.regionSelect.find().type(`${region}{enter}`);
 
-    ui.autocomplete.findByLabel('Linode Region').click();
-
     // Wait for all metrics query requests to resolve.
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-    cy.get('@getMetrics.all').then((calls) => {
-      const lastCall = (calls as unknown as Interception[]).slice(-1)[0];
-      const filters = lastCall.request.body.filters as Filters[];
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
+      (calls) => {
+        const interceptions = calls as unknown as Interception[];
 
-      // Collect all dimension labels
-      const dimensionLabels = filters.map((f) => f.dimension_label);
+        expect(interceptions).to.have.length(4);
 
-      // Check that interface_id and interface_type are NOT in the list
-      expect(dimensionLabels).to.not.include('interface_id');
-      expect(dimensionLabels).to.not.include('interface_type');
+        interceptions.forEach((interception) => {
+          const { body: requestPayload } = interception.request;
+
+          // ✅ Assert group_by
+          expect(requestPayload).to.have.property('group_by');
+          expect(requestPayload.group_by).to.include('entity_id');
+        });
+      }
+    );
+  });
+  it('should apply group by at the dashboard level and verify the metrics API calls', () => {
+    // Stub metrics API calls for dashboard group by changes
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
+      protocol: 'tcp',
+      entity_id: '1',
+    }).as('refreshMetrics');
+
+    // Validate legend rows (pre "Group By")
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          const graphRowTitle = `[data-qa-graph-row-title="${testData.title}"]`;
+          cy.get(graphRowTitle)
+            .should('be.visible')
+            .and('have.text', `${testData.title}`);
+        });
+    });
+
+    // Locate the Dashboard Group By button and alias it
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
+
+    // Ensure the button is scrolled into view
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Verify tooltip "Group By" is present
+    ui.tooltip.findByText('Group By');
+
+    // Assert that the button has attribute data-qa-selected="true"
+    cy.get('@dashboardGroupByBtn')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
+    // Click the Group By button to open the drawer
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    // Verify the drawer title is "Global Group By"
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Global Group By');
+
+    // Verify the drawer body contains "Firewall nodebalancer Dashboard"
+    cy.get('[data-testid="drawer"]')
+      .find('p')
+      .first()
+      .and('have.text', dashboardName);
+
+    // Type "Node Type" in Dimensions autocomplete field
+    ui.autocomplete
+      .findByLabel('Dimensions')
+      .should('be.visible')
+      .type('Protocol');
+
+    // Select "Node Type" from the popper options
+    ui.autocompletePopper.findByTitle('Protocol').should('be.visible').click();
+
+    // Close the drawer using ESC
+    cy.get('body').type('{esc}');
+
+    // Click Apply to confirm the Group By selection
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    // Verify the Group By button reflects the selection
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('have.attr', 'aria-label', 'Group By Dashboard Metrics')
+      .and('have.attr', 'data-qa-selected', 'true');
+
+    // Validate all intercepted metrics API calls contain correct filters and group_by values
+    cy.get('@refreshMetrics.all')
+      .should('have.length', 4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        // Ensure group_by contains entity_id and node_type in correct order
+        expect(requestPayload.group_by).to.have.ordered.members([
+          'entity_id',
+          'Protocol',
+        ]);
+        expect(requestPayload.associated_entity_region).to.equal('us-east');
+      });
+
+    // Validate legend rows (post "Group By")
+    metrics.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .within(() => {
+          cy.get('[data-qa-graph-row-title="Firewall-0 | tcp"]')
+            .should('be.visible')
+            .and('have.text', 'Firewall-0 | tcp');
+        });
     });
   });
-
-  it('should apply optional filter (InterfaceIds,InterfaceTypes) and verify API request payloads', () => {
-    const randomInterfaceids = `${randomNumber(0, 100)},${randomNumber(101, 200)}`;
-    cy.findByPlaceholderText('e.g., 1234,5678')
+  it('should apply group by at widget level only  and verify the metrics API calls', () => {
+    // validate the widget level granularity selection and its metrics
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('be.visible')
-      .type(randomInterfaceids);
+      .first()
+      .as('dashboardGroupByBtn');
 
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
 
-    cy.get('@getMetrics.all').then((calls) => {
-      const lastFourCalls = (calls as unknown as Interception[]).slice(-4);
+    // Use the alias safely
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
 
-      lastFourCalls.forEach((call) => {
-        const filters = call.request.body.filters as Filters[];
-
-        const interfaceIdFilter = findFilter(filters, 'interface_id');
-        expect(interfaceIdFilter).to.exist;
-        expect(interfaceIdFilter?.operator).to.equal('in');
-        expect(interfaceIdFilter?.value).to.equal(randomInterfaceids);
-      });
+    cy.get('[data-qa-autocomplete="Dimensions"]').within(() => {
+      cy.get('button[aria-label="Clear"]').should('be.visible').click({});
     });
 
-    ui.autocomplete
-      .findByLabel('Interface Types')
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+    const widgetSelector = '[data-qa-widget="Accepted Bytes"]';
+
+    cy.get(widgetSelector)
       .should('be.visible')
-      .type('VPC{enter}');
+      .within(() => {
+        // Create alias for the group by button
+        ui.button
+          .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+          .as('groupByButton'); // alias
 
-    ui.autocomplete.findByLabel('Interface Types').click();
+        cy.get('@groupByButton').scrollIntoView();
 
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+        // Click the button
+        cy.get('@groupByButton').should('be.visible').click();
+      });
 
-    cy.get('@getMetrics.all').then((calls) => {
-      const lastCall = (calls as unknown as Interception[]).slice(-1)[0];
-      const filters = lastCall.request.body.filters as Filters[];
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Group By');
 
-      const interfaceIdFilter = findFilter(filters, 'interface_id');
-      const interfaceTypeFilter = findFilter(filters, 'interface_type');
+    cy.get('[data-qa-id="groupby-drawer-subtitle"]').and(
+      'have.text',
+      'Accepted Bytes'
+    );
 
-      expect(interfaceIdFilter).to.exist;
-      expect(interfaceIdFilter?.operator).to.equal('in');
-      expect(interfaceIdFilter?.value).to.equal(randomInterfaceids);
+    ui.autocomplete
+      .findByLabel('Dimensions')
+      .should('be.visible')
+      .type('IP Version');
 
-      expect(interfaceTypeFilter).to.exist;
-      expect(interfaceTypeFilter?.operator).to.equal('in');
-      expect(interfaceTypeFilter?.value).to.include('vpc');
+    ui.autocompletePopper
+      .findByTitle('IP Version')
+      .should('be.visible')
+      .click();
+
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'getGroupBy'
+    );
+
+    cy.get('body').type('{esc}');
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
+    // Verify data-qa-selected attribute
+    cy.get('@groupByButton')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
+    cy.wait('@getGroupBy').then((interception: Interception) => {
+      const { body: requestPayload } = interception.request;
+      expect(requestPayload.group_by).to.have.ordered.members(['IP Version']);
+      expect(requestPayload.associated_entity_region).to.equal('us-east');
     });
   });
 
