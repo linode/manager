@@ -108,6 +108,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   filterType: string;
 
   /**
+   * This is an optional field, controls the entity type for the firewall service type
+   */
+  firewallEntityType?: 'both' | 'linode' | 'nodebalancer';
+
+  /**
    * If this is true, we will pass the filter in the metrics api otherwise, we don't
    */
   isFilterable: boolean;
