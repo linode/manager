@@ -192,6 +192,7 @@ export interface Flags {
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
+  objSummaryPage: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -306,6 +307,7 @@ export type ProductInformationBannerLocation =
   | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Logs'
   | 'Longview'
   | 'Managed'
   | 'NodeBalancers'
