@@ -92,6 +92,8 @@ import {
   objectStorageClusterFactory,
   objectStorageEndpointsFactory,
   objectStorageKeyFactory,
+  objectStorageMetricCriteria,
+  objectStorageMetricRules,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
   paymentFactory,
@@ -201,9 +203,11 @@ const makeMockDatabase = (params: PathParams): Database => {
   }
 
   if (database.platform === 'rdbms-default' && !!database.private_network) {
-    // When a database is configured with a VPC, the primary host is prepended with 'private-'
-    const privateHost = `private-${database.hosts.primary}`;
-    database.hosts.primary = privateHost;
+    // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
+    database.hosts = {
+      primary: 'private-db-mysql-primary-0.b.linodeb.net',
+      standby: 'private-db-mysql-standby-0.b.linodeb.net',
+    };
   }
 
   return database;
@@ -3030,7 +3034,13 @@ export const handlers = [
             type: 'user',
             label: 'object-storage -testing',
             service_type: 'objectstorage',
-            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+            entity_ids: [
+              'obj-bucket-804.ap-west.linodeobjects.com',
+              'obj-bucket-230.us-iad.linodeobjects.com',
+            ],
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
           })
         );
       }
@@ -3069,6 +3079,20 @@ export const handlers = [
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            label: 'object-storage -testing',
+            type: 'user',
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
           })
         );
       }
@@ -3125,7 +3149,9 @@ export const handlers = [
           label: 'Object Storage',
           service_type: 'objectstorage',
           regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
         }),
         serviceTypesFactory.build({
           label: 'Block Storage',
@@ -3154,7 +3180,10 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
-        scope: ['entity'],
+        scope:
+          serviceType === 'objectstorage'
+            ? ['entity', 'account', 'region']
+            : ['entity'],
       }),
     });
 
@@ -3503,6 +3532,9 @@ export const handlers = [
       }
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
+      }
+      if (params.serviceType === 'objectstorage') {
+        return HttpResponse.json({ data: objectStorageMetricRules });
       }
       return HttpResponse.json(response);
     }

@@ -51,9 +51,8 @@ export const DestinationEdit = () => {
 
   const form = useForm<DestinationFormType>({
     defaultValues: {
-      type: destinationType.LinodeObjectStorage,
+      type: destinationType.AkamaiObjectStorage,
       details: {
-        region: '',
         path: '',
       },
     },
