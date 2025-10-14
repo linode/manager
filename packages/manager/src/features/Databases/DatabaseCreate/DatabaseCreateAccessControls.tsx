@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import { useState } from 'react';
 import * as React from 'react';
 import type { ChangeEvent } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -57,8 +57,8 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
     }
   };
 
-  const { control, setValue, watch } = useFormContext<DatabaseCreateValues>();
-  const ips = watch('allow_list');
+  const { control, setValue } = useFormContext<DatabaseCreateValues>();
+  const ips = useWatch({ control, name: 'allow_list' });
 
   return (
     <Box>

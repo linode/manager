@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
@@ -28,13 +28,12 @@ interface DatabaseVPCSelectorProps {
 export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
   const { onChange } = props;
   const flags = useFlags();
-  const { control, setValue, watch } = useFormContext<DatabaseCreateValues>();
+  const { control, setValue } = useFormContext<DatabaseCreateValues>();
 
-  const [region, vpcId, subnetId] = watch([
-    'region',
-    'private_network.vpc_id',
-    'private_network.subnet_id',
-  ]);
+  const [region, vpcId, subnetId] = useWatch({
+    control,
+    name: ['region', 'private_network.vpc_id', 'private_network.subnet_id'],
+  });
 
   const { data: selectedRegion } = useRegionQuery(region);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');

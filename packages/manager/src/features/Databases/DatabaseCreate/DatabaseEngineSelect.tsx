@@ -2,7 +2,7 @@ import { useDatabaseEnginesQuery } from '@linode/queries';
 import { Autocomplete, Box, InputAdornment } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -22,9 +22,9 @@ export const DatabaseEngineSelect = () => {
     return getEngineOptions(engines);
   }, [engines]);
 
-  const { control, watch } = useFormContext<DatabaseCreateValues>();
+  const { control } = useFormContext<DatabaseCreateValues>();
 
-  const engineValue = watch('engine');
+  const engineValue = useWatch({ control, name: 'engine' });
   const selectedEngine = React.useMemo(() => {
     return engineOptions.find((val) => val.value === engineValue);
   }, [engineValue, engineOptions]);
