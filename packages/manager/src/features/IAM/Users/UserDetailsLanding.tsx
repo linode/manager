@@ -1,6 +1,5 @@
-import { useAccountUser } from '@linode/queries';
 import { Chip, styled } from '@linode/ui';
-import { Outlet, useParams } from '@tanstack/react-router';
+import { Outlet, useLoaderData, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -11,7 +10,6 @@ import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnable
 import { useTabs } from 'src/hooks/useTabs';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';
-import { usePermissions } from '../hooks/usePermissions';
 import {
   IAM_LABEL,
   USER_DETAILS_LINK,
@@ -22,20 +20,10 @@ import {
 export const UserDetailsLanding = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isParentAccount, isChildAccount } = useDelegationRole();
-
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
-
-  const { data: user } = useAccountUser(
-    username ?? '',
-    permissions?.is_account_admin && isIAMDelegationEnabled && isChildAccount
-  );
-  const isDelegateUser = user?.user_type === 'delegate';
-
-  // Determine if the current account is a child account with isIAMDelegationEnabled enabled
-  // If so, we need to hide 'View User Details' and 'Account Delegations' tabs for delegate users
-  const isDelegateUserForChildAccount =
-    isIAMDelegationEnabled && isChildAccount && isDelegateUser;
+  const { isParentAccount } = useDelegationRole();
+  const { isDelegateUserForChildAccount } = useLoaderData({
+    from: '/iam/users/$username',
+  });
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
