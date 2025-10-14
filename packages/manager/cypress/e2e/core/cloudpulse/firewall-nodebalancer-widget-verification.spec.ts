@@ -32,7 +32,10 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type { CloudPulseMetricsResponse } from '@linode/api-v4';
+import type {
+  CloudPulseMetricsResponse,
+  FirewallDeviceEntityType,
+} from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -180,22 +183,53 @@ const mockFirewalls = [
     id: 1,
     label: firewalls,
     status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
   }),
   firewallFactory.build({
     id: 2,
     label: 'Firewall-1',
     status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
   }),
-  firewallFactory.build({ id: 3, label: 'Firewall-2', status: 'enabled' }),
+  firewallFactory.build({
+    id: 3,
+    label: 'Firewall-2',
+    status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
+  }),
 ];
 
 const mockNodeBalancers = [
   nodeBalancerFactory.build({
-    label: 'mockNodeBalancer-resource',
+    label: 'mockNodeBalancer-resource-1',
     region: 'us-east',
   }),
   nodeBalancerFactory.build({
-    label: 'mockNodeBalancer-resource-ord',
+    label: 'mockNodeBalancer-resource-2',
     region: 'us-ord',
   }),
 ];

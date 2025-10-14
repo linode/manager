@@ -9,6 +9,8 @@ export type TransformFunction = (value: string) => string;
 
 export type TransformFunctionMap = Record<TransformKey, TransformFunction>;
 
+export type AssociatedEntityType = 'both' | 'linode' | 'nodebalancer';
+
 export interface FirewallEntity {
   /**
    * The id of the parent entity.

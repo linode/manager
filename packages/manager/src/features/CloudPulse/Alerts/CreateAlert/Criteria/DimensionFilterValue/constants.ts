@@ -21,6 +21,7 @@ import type {
   CloudPulseServiceType,
   Region,
 } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 export const MULTISELECT_PLACEHOLDER_TEXT = 'Select Values';
 export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a Value';
@@ -341,6 +342,10 @@ export interface FetchOptions {
 
 export interface FetchOptionsProps {
   /**
+   * The type of associated entity to filter on.
+   */
+  associatedEntityType?: AssociatedEntityType;
+  /**
    * The dimension label determines the filtering logic and return type.
    */
   dimensionLabel: null | string;
@@ -348,10 +353,6 @@ export interface FetchOptionsProps {
    * List of firewall entity IDs to filter on.
    */
   entities?: string[];
-  /**
-   * The type of firewall entity to filter on.
-   */
-  firewallEntityType?: 'both' | 'linode' | 'nodebalancer';
   /**
    * List of regions to filter on.
    */
