@@ -1,6 +1,11 @@
 /**
- * @file Integration Tests for CloudPulse Dbass Dashboard.
+ * @file Integration Tests for CloudPulse DBaaS Preferences.
+ *
+ * These tests validate user preference behavior for the CloudPulse DBaaS Dashboard,
+ * ensuring that filters (Dashboard, Database Engine, Region, etc.) correctly update
+ * the user's saved ACLP preferences through API requests and responses.
  */
+
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -18,7 +23,10 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
+import {
+  comparePreferences,
+  generateRandomMetricsData,
+} from 'support/util/cloudpulse';
 import { apiMatcher } from 'support/util/intercepts';
 
 import {
@@ -132,68 +140,31 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
 });
 
-const assertDeepEqual = <T extends Record<string, unknown>>(
-  actual: T,
-  expected: T,
-  path = '',
-  errors: string[] = []
-): void => {
-  Object.keys(expected).forEach((key) => {
-    const fullPath = path ? `${path}.${key}` : key;
-    const expectedValue = expected[key as keyof T];
-    const actualValue = actual?.[key as keyof T];
-
-    // Key missing
-    if (!(key in (actual || {}))) {
-      errors.push(`Missing key: ${fullPath}`);
-      return;
-    }
-
-    // Nested object (not array)
-    if (
-      expectedValue &&
-      typeof expectedValue === 'object' &&
-      !Array.isArray(expectedValue)
-    ) {
-      assertDeepEqual(
-        actualValue as Record<string, unknown>,
-        expectedValue as Record<string, unknown>,
-        fullPath,
-        errors
-      );
-      return;
-    }
-
-    // Array comparison
-    if (Array.isArray(expectedValue)) {
-      if (!Array.isArray(actualValue)) {
-        errors.push(`🔸 ${fullPath} should be an array`);
-      } else if (
-        JSON.stringify(actualValue) !== JSON.stringify(expectedValue)
-      ) {
-        errors.push(
-          `🔸 Array mismatch at ${fullPath}: expected ${JSON.stringify(
-            expectedValue
-          )} but got ${JSON.stringify(actualValue)}`
-        );
-      }
-      return;
-    }
-
-    // Primitive comparison
-    if (expectedValue !== actualValue) {
-      errors.push(
-        `🔸 Value mismatch at ${fullPath}: expected "${expectedValue}" but got "${actualValue}"`
-      );
-    }
-  });
-
-  // Show all mismatches at the end
-  if (path === '' && errors.length > 0) {
-    cy.log(errors.join('\n'));
-    throw new Error(`Found ${errors.length} mismatches:\n${errors.join('\n')}`);
-  }
-};
+/**
+ * This test suite validates CloudPulse DBaaS user preference updates in the Dashboard UI.
+ *
+ * Each test simulates clearing a specific filter (Dashboard, Database Engine, Region, Database Cluster, or Node Type)
+ * and verifies that:
+ *  - The filter is visually removed from the applied filters section.
+ *  - The correct `PUT /profile/preferences` API call is triggered.
+ *  - The request and response objects match the expected `aclpPreference` structure.
+ *
+ * The suite uses:
+ *  - Mocked API intercepts for dashboards, regions, databases, metrics, and user preferences.
+ *  - A reusable `comparePreferences` utility for deep object validation between actual and expected preferences.
+ *  - Dynamic setup of widgets and dimensions to simulate realistic CloudPulse DBaaS data.
+ *
+ * Test Flow:
+ *  1. The page is initialized with a full set of filters applied via mock user preferences.
+ *  2. Each test clears one filter and asserts that:
+ *     - The UI correctly reflects the cleared state.
+ *     - The updated preference payload excludes only the cleared key(s).
+ *     - Remaining preferences (e.g., time range, widgets, or groupBy) persist as expected.
+ *
+ * Purpose:
+ *  Ensures that CloudPulse DBaaS filter interactions properly persist and sync user preferences
+ *  between the UI and API, maintaining state consistency across sessions.
+ */
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
@@ -282,8 +253,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
       const expectedAclpPreference = { widgets: {} };
 
-      assertDeepEqual(responseBody?.aclpPreference, expectedAclpPreference);
-      assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
     });
   });
 
@@ -331,8 +302,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         },
       };
 
-      assertDeepEqual(responseBody?.aclpPreference, expectedAclpPreference);
-      assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
     });
   });
 
@@ -381,8 +352,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         },
       };
 
-      assertDeepEqual(responseBody?.aclpPreference, expectedAclpPreference);
-      assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
     });
   });
   it('clears the Database Clusters filter and verifies updated user preferences', () => {
@@ -429,8 +400,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         },
       };
 
-      assertDeepEqual(responseBody?.aclpPreference, expectedAclpPreference);
-      assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
     });
   });
 
@@ -478,8 +449,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         },
       };
 
-      assertDeepEqual(responseBody?.aclpPreference, expectedAclpPreference);
-      assertDeepEqual(request.body.aclpPreference, expectedAclpPreference);
+      comparePreferences(responseBody?.aclpPreference, expectedAclpPreference);
+      comparePreferences(request.body.aclpPreference, expectedAclpPreference);
     });
   });
 });

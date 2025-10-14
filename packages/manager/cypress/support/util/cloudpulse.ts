@@ -112,3 +112,92 @@ export const generateMockLegacyStats = (): Stats => {
     title: 'mock title',
   };
 };
+
+/**
+ * Utility that recursively compares two preference objects and returns an array of mismatches.
+ *
+ * This function deeply traverses both `actual` and `expected` objects, comparing:
+ * - Primitive values for equality
+ * - Arrays for length and element-by-element matches
+ * - Nested objects for structural and value equality
+ *
+ * It does **not** mutate inputs or throw errors — instead, it returns a list of
+ * human-readable mismatch descriptions, which can be used for debugging or
+ * validation in tests.
+ *
+ * Example:
+ * ```ts
+ * const errors = comparePreferencesDeep(actualPref, expectedPref);
+ * if (errors.length > 0) {
+ *   throw new Error(`Preference mismatch:\n${errors.join('\n')}`);
+ * }
+ * ```
+ *
+ * @template T - Type of the preference object (usually Record<string, unknown>)
+ * @param actual - The actual preference object received (e.g., from API response)
+ * @param expected - The expected preference object to compare against
+ * @param path - Internal recursive key path (used for error trace readability)
+ * @returns {string[]} A list of mismatch messages (empty if both objects match)
+ */
+export const comparePreferences = <T extends Record<string, unknown>>(
+  actual: T,
+  expected: T,
+  path = '',
+  errors: string[] = []
+): void => {
+  Object.keys(expected).forEach((key) => {
+    const fullPath = path ? `${path}.${key}` : key;
+    const expectedValue = expected[key as keyof T];
+    const actualValue = actual?.[key as keyof T];
+
+    // Key missing
+    if (!(key in (actual || {}))) {
+      errors.push(`Missing key: ${fullPath}`);
+      return;
+    }
+
+    // Nested object (not array)
+    if (
+      expectedValue &&
+      typeof expectedValue === 'object' &&
+      !Array.isArray(expectedValue)
+    ) {
+      validatePreference(
+        actualValue as Record<string, unknown>,
+        expectedValue as Record<string, unknown>,
+        fullPath,
+        errors
+      );
+      return;
+    }
+
+    // Array comparison
+    if (Array.isArray(expectedValue)) {
+      if (!Array.isArray(actualValue)) {
+        errors.push(`🔸 ${fullPath} should be an array`);
+      } else if (
+        JSON.stringify(actualValue) !== JSON.stringify(expectedValue)
+      ) {
+        errors.push(
+          `🔸 Array mismatch at ${fullPath}: expected ${JSON.stringify(
+            expectedValue
+          )} but got ${JSON.stringify(actualValue)}`
+        );
+      }
+      return;
+    }
+
+    // Primitive comparison
+    if (expectedValue !== actualValue) {
+      errors.push(
+        `🔸 Value mismatch at ${fullPath}: expected "${expectedValue}" but got "${actualValue}"`
+      );
+    }
+  });
+
+  // Show all mismatches at the end
+  if (path === '' && errors.length > 0) {
+    cy.log(errors.join('\n'));
+    throw new Error(`Found ${errors.length} mismatches:\n${errors.join('\n')}`);
+  }
+};
