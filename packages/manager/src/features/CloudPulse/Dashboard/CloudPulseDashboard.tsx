@@ -113,10 +113,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
   // Get the associated entity type for the dashboard
-  const associatedEntityType = getAssociatedEntityType(
-    serviceType,
-    dashboardId
-  );
+  const associatedEntityType = getAssociatedEntityType(dashboardId);
 
   const {
     data: resourceList,

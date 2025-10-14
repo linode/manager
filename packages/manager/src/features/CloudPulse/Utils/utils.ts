@@ -396,15 +396,11 @@ export const useIsAclpSupportedRegion = (
 };
 
 /**
- * @param serviceType The service type of the dashboard
  * @param dashboardId The id of the dashboard
- * @returns The firewall entity type for the dashboard
+ * @returns The associated entity type for the dashboard
  */
-export const getAssociatedEntityType = (
-  serviceType: CloudPulseServiceType | undefined,
-  dashboardId: number | undefined
-) => {
-  if (!serviceType || !dashboardId) {
+export const getAssociatedEntityType = (dashboardId: number | undefined) => {
+  if (!dashboardId) {
     return 'both';
   }
   // Get the associated entity type for the dashboard

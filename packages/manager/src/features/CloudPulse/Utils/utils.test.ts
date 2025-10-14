@@ -341,20 +341,16 @@ describe('getEnabledServiceTypes', () => {
   });
 
   describe('getAssociatedEntityType', () => {
-    it('should return both if the service type is undefined', () => {
-      expect(getAssociatedEntityType(undefined, 1)).toBe('both');
-    });
-
     it('should return both if the dashboard id is not provided', () => {
-      expect(getAssociatedEntityType('firewall', undefined)).toBe('both');
+      expect(getAssociatedEntityType(undefined)).toBe('both');
     });
 
     it('should return the associated entity type for linode firewall dashboard', () => {
-      expect(getAssociatedEntityType('firewall', 4)).toBe('linode');
+      expect(getAssociatedEntityType(4)).toBe('linode');
     });
 
     it('should return the associated entity type for nodebalancer firewall dashboard', () => {
-      expect(getAssociatedEntityType('firewall', 8)).toBe('nodebalancer');
+      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
     });
   });
 });

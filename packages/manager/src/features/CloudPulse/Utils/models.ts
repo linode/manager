@@ -93,7 +93,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
-   * This is an optional field, controls the associated entity type for the firewall service
+   * This is an optional field, controls the associated entity type for the dashboard
    */
   associatedEntityType?: 'both' | 'linode' | 'nodebalancer';
 
