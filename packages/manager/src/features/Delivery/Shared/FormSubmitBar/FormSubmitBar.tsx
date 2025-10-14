@@ -54,6 +54,9 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
           </>
         )}
         <Divider dark spacingBottom={0} spacingTop={16} />
+        <Typography mb={1}>
+          Stream provisioning may take up to 45 minutes.
+        </Typography>
         <Button
           buttonType="outlined"
           disabled={disableTestConnection}
