@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { type SubmitHandler, useFormContext, useWatch } from 'react-hook-form';
 
 import {
@@ -73,6 +73,9 @@ export const StreamForm = (props: StreamFormProps) => {
   useEffect(() => {
     setDestinationVerified(false);
   }, [destination, setDestinationVerified]);
+
+  const [disableTestConnection, setDisableTestConnection] =
+    useState<boolean>(false);
 
   const isSubmitting =
     isCreatingDestination || isCreatingStream || isUpdatingStream;
@@ -175,7 +178,9 @@ export const StreamForm = (props: StreamFormProps) => {
             {selectedStreamType === streamType.LKEAuditLogs && (
               <StreamFormClusters />
             )}
-            <StreamFormDelivery />
+            <StreamFormDelivery
+              setDisableTestConnection={setDisableTestConnection}
+            />
           </Stack>
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
@@ -183,6 +188,7 @@ export const StreamForm = (props: StreamFormProps) => {
             blockSubmit={!selectedDestinations?.length}
             connectionTested={destinationVerified}
             destinationType={destination?.type}
+            disableTestConnection={disableTestConnection}
             formType={'stream'}
             isSubmitting={isSubmitting}
             isTesting={isVerifyingDestination}
