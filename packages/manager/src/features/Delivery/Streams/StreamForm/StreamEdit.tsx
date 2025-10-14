@@ -55,9 +55,8 @@ export const StreamEdit = () => {
         destinations: [],
       },
       destination: {
-        type: destinationType.LinodeObjectStorage,
+        type: destinationType.AkamaiObjectStorage,
         details: {
-          region: '',
           path: '',
         },
       },

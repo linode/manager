@@ -47,15 +47,12 @@ describe('DestinationEdit', () => {
     expect(loadingElement).toBeInTheDocument();
     await waitForElementToBeRemoved(loadingElement);
 
-    assertInputHasValue('Destination Type', 'Linode Object Storage');
+    assertInputHasValue('Destination Type', 'Akamai Object Storage');
     await waitFor(() => {
       assertInputHasValue('Destination Name', 'Destination 123');
     });
     assertInputHasValue('Host', '3000');
     assertInputHasValue('Bucket', 'Bucket Name');
-    await waitFor(() => {
-      assertInputHasValue('Region', 'US, Chicago, IL (us-ord)');
-    });
     assertInputHasValue('Access Key ID', 'Access Id');
     assertInputHasValue('Secret Access Key', 'Access Secret');
     assertInputHasValue('Log Path Prefix', 'file');
