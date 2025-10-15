@@ -234,7 +234,7 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
     cy.scrollTo('top');
   });
 
-  it.only('reloads the page and verifies preferences are restored from API', () => {
+  it('reloads the page and verifies preferences are restored from API', () => {
     cy.intercept('GET', apiMatcher('profile/preferences')).as(
       'fetchPreferencesReload'
     );
