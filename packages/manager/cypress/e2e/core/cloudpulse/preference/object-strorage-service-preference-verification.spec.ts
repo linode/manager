@@ -243,6 +243,69 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
       });
 
     ui.button.findByTitle('Filters').click();
+    // Wait for all metrics query requests to resolve.
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+
+    // Scroll to the top of the page to ensure consistent test behavior
+    cy.scrollTo('top');
+  });
+
+  it('reloads the page and verifies preferences are restored from API', () => {
+    cy.intercept('GET', apiMatcher('profile/preferences')).as(
+      'fetchPreferencesReload'
+    );
+    // On page refresh, the second API call for buckets returns null, so we are mocking it to ensure consistent responses.
+    mockGetBuckets(bucketMock).as('getBuckets');
+
+    cy.reload();
+    cy.wait('@fetchPreferencesReload');
+    cy.get('[data-qa-paper="true"]').within(() => {
+      // Dashboard autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
+      ).should('have.value', dashboardName);
+
+      // Region autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Region"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'US, Chicago, IL (us-ord)');
+
+      // Endpoints
+      ui.autocomplete
+        .findByLabel('Endpoints')
+        .parent() // wrapper containing chips
+        .find('[role="button"][data-tag-index="0"]') // select the inner span only
+        .should('have.text', 'endpoint_type-E2-us-sea-2.linodeobjects.com');
+
+      // Buckets
+      ui.autocomplete
+        .findByLabel('Buckets')
+        .parent()
+        .find('[role="button"][data-tag-index="0"]')
+        .should('have.text', 'bucket-2.us-ord-2.linodeobjects.com');
+
+      // Refresh button (tooltip)
+      cy.get('[data-qa-tooltip="Refresh"]').should('exist');
+
+      // Group By button
+      cy.get('[data-testid="group-by"]').should(
+        'have.attr',
+        'data-qa-selected',
+        'true'
+      );
+    });
+
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('button[data-qa-preset="Last day"]')
+      .should('be.visible')
+      .and('have.text', 'Last day');
+
+    ui.buttonGroup
+      .findButtonByTitle('Cancel')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
   });
   it('clears the Dashboard filters and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(

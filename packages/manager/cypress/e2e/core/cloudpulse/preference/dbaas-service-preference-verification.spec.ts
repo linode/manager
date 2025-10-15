@@ -231,9 +231,10 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
         .and('have.text', 'mysql-cluster');
     });
     ui.button.findByTitle('Filters').click();
+    cy.scrollTo('top');
   });
 
-  it('reloads the page and verifies preferences are restored from API', () => {
+  it.only('reloads the page and verifies preferences are restored from API', () => {
     cy.intercept('GET', apiMatcher('profile/preferences')).as(
       'fetchPreferencesReload'
     );

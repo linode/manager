@@ -205,6 +205,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       });
 
     ui.button.findByTitle('Filters').click();
+    cy.scrollTo('top');
   });
 
   it('clears the Dashboard filters and verifies updated user preferences', () => {

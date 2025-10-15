@@ -205,7 +205,10 @@ describe('Integration Tests for NodeBalancer Dashboard Preferences', () => {
       .should('be.visible')
       .and('be.enabled')
       .click();
+
+    cy.scrollTo('top');
   });
+
   it('clears the Dashboard filters and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
       'updateDashbaordPreference'

@@ -208,6 +208,7 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
       });
 
     ui.button.findByTitle('Filters').click();
+    cy.scrollTo('top');
   });
   it('clears the Dashboard filters and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
