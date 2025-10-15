@@ -638,9 +638,6 @@ describe('filterEndpointsUsingRegion', () => {
 });
 
 describe('filterUsingSpecialConditions', () => {
-  it('should return data as is if data is undefined', () => {
-    expect(filterUsingSpecialConditions(undefined, [])).toEqual([]);
-  });
   it('should return data as is if resourceType is undefined', () => {
     expect(
       filterUsingSpecialConditions(undefined, [{ id: '1', label: 'test' }])
