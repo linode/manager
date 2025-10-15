@@ -60,6 +60,7 @@ export const MaintenancePolicySelect = (
 
   return (
     <Autocomplete
+      data-pendo-id="maintenance-policy-select"
       disableClearable={!!selectedOption}
       disabled={disabled}
       errorText={errorText}
@@ -75,7 +76,7 @@ export const MaintenancePolicySelect = (
       renderOption={(props, policy, state) => {
         const { key } = props;
         return (
-          <li {...props} key={key}>
+          <li {...props} data-pendo-id={policy.slug} key={key}>
             <Stack gap={0.5} width="100%">
               <Stack
                 alignItems="center"
