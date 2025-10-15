@@ -111,6 +111,7 @@ export const childAccountDelegates = (mockState: MockState) => [
     '*/v4*/iam/delegation/child-accounts/:euuid/users',
     async ({
       params,
+      request,
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<string>>
     > => {
@@ -126,11 +127,9 @@ export const childAccountDelegates = (mockState: MockState) => [
         .filter((d) => d.childAccountEuuid === euuid)
         .map((d) => d.username);
 
-      return makeResponse({
+      return makePaginatedResponse({
         data: delegateUsernames,
-        page: 1,
-        pages: 1,
-        results: delegateUsernames.length,
+        request,
       });
     }
   ),
@@ -175,11 +174,9 @@ export const childAccountDelegates = (mockState: MockState) => [
         );
       }
 
-      return makeResponse({
+      return makePaginatedResponse({
         data: newUsernames,
-        page: 1,
-        pages: 1,
-        results: newUsernames.length,
+        request,
       });
     }
   ),

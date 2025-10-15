@@ -44,9 +44,10 @@ export const UpdateDelegationsDrawer = ({
 }: Props) => {
   const theme = useTheme();
 
-  // Get all account users as options for delegation
-  const { data: allAccountUsers, isLoading } = useAccountUsers({
+  // Get all parent accounts as options for delegation
+  const { data: allParentAccounts, isLoading } = useAccountUsers({
     enabled: open,
+    filters: { user_type: 'parent' },
   });
 
   const { mutateAsync: updateDelegates } =
@@ -60,16 +61,19 @@ export const UpdateDelegationsDrawer = ({
   }, [delegation]);
 
   const userOptions = React.useMemo(() => {
-    if (!allAccountUsers?.data) return [];
-    return allAccountUsers.data.map((user) => ({
+    if (!allParentAccounts?.data) return [];
+    return allParentAccounts.data.map((user) => ({
       label: user.username,
       value: user.username,
     }));
-  }, [allAccountUsers]);
+  }, [allParentAccounts]);
 
   const form = useForm<UpdateDelegationsFormValues>({
     defaultValues: {
-      users: [],
+      users: currentUsers.map((username) => ({
+        label: username,
+        value: username,
+      })),
     },
   });
   const {
@@ -78,18 +82,10 @@ export const UpdateDelegationsDrawer = ({
     handleSubmit,
     reset,
     setError,
+    watch,
   } = form;
 
-  React.useEffect(() => {
-    if (delegation && userOptions.length > 0) {
-      const selectedUsers = currentUsers
-        .map((username) =>
-          userOptions.find((option) => option.value === username)
-        )
-        .filter((option): option is UserOption => option !== undefined);
-      reset({ users: selectedUsers });
-    }
-  }, [delegation, currentUsers, userOptions, reset]);
+  watch('users');
 
   const onSubmit = async (values: UpdateDelegationsFormValues) => {
     if (!delegation) return;
@@ -99,7 +95,7 @@ export const UpdateDelegationsDrawer = ({
     try {
       await updateDelegates({
         euuid: delegation.euuid,
-        data: { users: usersList },
+        users: usersList,
       });
       enqueueSnackbar(`Delegate users updated.`, { variant: 'success' });
       handleClose();
@@ -151,7 +147,7 @@ export const UpdateDelegationsDrawer = ({
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
-                label={''}
+                label={'Delegate Users'}
                 loading={isLoading}
                 multiple
                 noMarginTop
@@ -164,6 +160,9 @@ export const UpdateDelegationsDrawer = ({
                   field.value.length,
                   userOptions.length
                 )}
+                textFieldProps={{
+                  hideLabel: true,
+                }}
                 value={field.value}
               />
             )}

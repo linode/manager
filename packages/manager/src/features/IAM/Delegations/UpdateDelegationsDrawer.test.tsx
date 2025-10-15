@@ -113,7 +113,7 @@ describe('UpdateDelegationsDrawer', () => {
     await waitFor(() => {
       expect(mocks.mockMutateAsync).toHaveBeenCalledWith({
         euuid: mockChildAccountWithDelegates.euuid,
-        data: { users: ['user1', 'user2'] },
+        users: ['user1', 'user2'],
       });
     });
   });
