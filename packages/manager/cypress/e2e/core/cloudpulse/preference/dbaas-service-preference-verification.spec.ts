@@ -207,7 +207,7 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices','@fetchDashboard','@fetchPreferences']);
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
 
     ui.button.findByTitle('Filters').click();
 
@@ -231,6 +231,48 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
         .and('have.text', 'mysql-cluster');
     });
     ui.button.findByTitle('Filters').click();
+  });
+
+  it('reloads the page and verifies preferences are restored from API', () => {
+    cy.intercept('GET', apiMatcher('profile/preferences')).as(
+      'fetchPreferencesReload'
+    );
+    cy.reload();
+    cy.wait('@fetchPreferencesReload');
+    cy.get('[data-qa-paper="true"]').within(() => {
+      // Dashboard autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'Dbaas Dashboard');
+
+      // Database Engine autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Database Engine"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'MySQL');
+
+      // Region autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Region"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'US, Chicago, IL (us-ord)');
+
+      // Refresh button (tooltip)
+      cy.get('[data-qa-tooltip="Refresh"]').should('exist');
+
+      // Group By button
+      cy.get('[data-testid="group-by"]').should(
+        'have.attr',
+        'data-qa-selected',
+        'true'
+      );
+      cy.get(
+        '[data-qa-autocomplete="Node Type"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'Primary');
+    });
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('button[data-qa-preset="Last day"]')
+      .should('be.visible') 
+      .and('have.text', 'Last day');
   });
 
   it('clears the Dashboard filters and verifies updated user preferences', () => {
