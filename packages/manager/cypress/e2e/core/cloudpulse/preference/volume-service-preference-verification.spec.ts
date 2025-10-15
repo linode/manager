@@ -210,6 +210,54 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
     ui.button.findByTitle('Filters').click();
     cy.scrollTo('top');
   });
+
+  it('reloads the page and verifies preferences are restored from API', () => {
+    cy.intercept('GET', apiMatcher('profile/preferences')).as(
+      'fetchPreferencesReload'
+    );
+    cy.reload();
+    cy.wait('@fetchPreferencesReload');
+    cy.get('[data-qa-paper="true"]').within(() => {
+      // Dashboard autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
+      ).should('have.value', dashboardName);
+
+      // Region autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Region"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'US, Chicago, IL (us-ord)');
+
+      // Volumes
+      ui.autocomplete
+        .findByLabel('Volumes')
+        .parent() // wrapper containing chips
+        .find('[role="button"][data-tag-index="0"]') // select the inner span only
+        .should('have.text', 'test-volume-ord');
+
+      // Refresh button (tooltip)
+      cy.get('[data-qa-tooltip="Refresh"]').should('exist');
+
+      // Group By button
+      cy.get('[data-testid="group-by"]').should(
+        'have.attr',
+        'data-qa-selected',
+        'true'
+      );
+    });
+
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('button[data-qa-preset="Last day"]')
+      .should('be.visible')
+      .and('have.text', 'Last day');
+
+    ui.buttonGroup
+      .findButtonByTitle('Cancel')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
+  });
   it('clears the Dashboard filters and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
       'updateDashbaordPreference'

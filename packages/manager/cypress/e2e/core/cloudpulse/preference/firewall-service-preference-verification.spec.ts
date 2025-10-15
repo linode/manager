@@ -125,7 +125,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices','@fetchDashboard','@fetchPreferences']);
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
 
     ui.button.findByTitle('Filters').click();
 
@@ -151,6 +151,62 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     ui.button.findByTitle('Filters').click();
     cy.scrollTo('top');
+  });
+
+  it('reloads the page and verifies preferences are restored from API', () => {
+    cy.intercept('GET', apiMatcher('profile/preferences')).as(
+      'fetchPreferencesReload'
+    );
+    cy.reload();
+    cy.wait('@fetchPreferencesReload');
+    cy.get('[data-qa-paper="true"]').within(() => {
+      // Dashboard autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
+      ).should('have.value', dashboardName);
+
+      // Region autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Linode Region"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'US, Newark, NJ (us-east)');
+
+      // Firewalls autocomplete
+      ui.autocomplete
+        .findByLabel('Firewalls')
+        .parent() // wrapper containing chips
+        .find('[role="button"][data-tag-index="0"]') // select the inner span only
+        .should('have.text', firewalls);
+
+      ui.autocomplete
+        .findByLabel('Interface Types')
+        .parent() // wrapper containing chips
+        .find('[role="button"][data-tag-index="0"]') // select the inner span only
+        .should('have.text', 'VPC');
+
+      cy.findByPlaceholderText('e.g., 1234,5678').should('have.value', '12');
+
+      // Refresh button (tooltip)
+      cy.get('[data-qa-tooltip="Refresh"]').should('exist');
+
+      // Group By button
+      cy.get('[data-testid="group-by"]').should(
+        'have.attr',
+        'data-qa-selected',
+        'true'
+      );
+    });
+
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('button[data-qa-preset="Last day"]')
+      .should('be.visible')
+      .and('have.text', 'Last day');
+
+    ui.buttonGroup
+      .findButtonByTitle('Cancel')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
   });
 
   it('clears the Dashboard filters and verifies updated user preferences', () => {
@@ -286,7 +342,9 @@ describe('Integration Tests for firewall Dashboard ', () => {
     ui.button.findByTitle('Filters').should('be.visible').click();
 
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('[data-qa-value="Linode Region US, Newark, NJ"]').should('be.visible');
+      cy.get('[data-qa-value="Linode Region US, Newark, NJ"]').should(
+        'be.visible'
+      );
       cy.get(`[data-qa-value="Firewalls ${firewalls}"]`).should('be.visible');
       cy.get('[data-qa-value="Interface Types VPC"]').should('not.exist');
       cy.get('[data-qa-value="Interface IDs 12"]').should('be.visible');
@@ -331,7 +389,9 @@ describe('Integration Tests for firewall Dashboard ', () => {
     ui.button.findByTitle('Filters').should('be.visible').click();
 
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('[data-qa-value="Linode Region US, Newark, NJ"]').should('be.visible');
+      cy.get('[data-qa-value="Linode Region US, Newark, NJ"]').should(
+        'be.visible'
+      );
       cy.get(`[data-qa-value="Firewalls ${firewalls}"]`).should('be.visible');
       cy.get('[data-qa-value="Interface Types VPC"]').should('be.visible');
       cy.get('[data-qa-value="Interface IDs 12"]').should('not.exist');

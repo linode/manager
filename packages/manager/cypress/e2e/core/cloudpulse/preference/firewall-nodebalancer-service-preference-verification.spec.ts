@@ -38,6 +38,7 @@ import {
   widgetFactory,
 } from 'src/factories';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 const timeDurationToSelect = 'Last 24 Hours';
@@ -127,13 +128,16 @@ const mockFirewalls = [
     id: 1,
     label: firewalls,
     status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'nodebalancer-1',
+        type: 'nodebalancer' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
   }),
-  firewallFactory.build({
-    id: 2,
-    label: 'Firewall-1',
-    status: 'enabled',
-  }),
-  firewallFactory.build({ id: 3, label: 'Firewall-2', status: 'enabled' }),
 ];
 
 const mockNodeBalancers = [
@@ -206,6 +210,53 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     ui.button.findByTitle('Filters').click();
     cy.scrollTo('top');
+  });
+  it('reloads the page and verifies preferences are restored from API', () => {
+    cy.intercept('GET', apiMatcher('profile/preferences')).as(
+      'fetchPreferencesReload'
+    );
+    cy.reload();
+    cy.wait('@fetchPreferencesReload');
+    cy.get('[data-qa-paper="true"]').within(() => {
+      // Dashboard autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
+      ).should('have.value', dashboardName);
+
+      // Region autocomplete
+      cy.get(
+        '[data-qa-autocomplete="NodeBalancer Region"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'US, Newark, NJ (us-east)');
+
+      // Firewalls autocomplete
+      ui.autocomplete
+        .findByLabel('Firewalls')
+        .parent() // wrapper containing chips
+        .find('[role="button"][data-tag-index="0"]') // select the inner span only
+        .should('have.text', firewalls);
+
+      // Refresh button (tooltip)
+      cy.get('[data-qa-tooltip="Refresh"]').should('exist');
+
+      // Group By button
+      cy.get('[data-testid="group-by"]').should(
+        'have.attr',
+        'data-qa-selected',
+        'true'
+      );
+    });
+
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('button[data-qa-preset="Last day"]')
+      .should('be.visible')
+      .and('have.text', 'Last day');
+
+    ui.buttonGroup
+      .findButtonByTitle('Cancel')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
   });
 
   it('clears the Dashboard filters and verifies updated user preferences', () => {
