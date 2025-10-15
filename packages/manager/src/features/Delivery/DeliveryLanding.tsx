@@ -32,7 +32,7 @@ export const DeliveryLanding = React.memo(() => {
     },
     removeCrumbX: 1,
     entity: 'Delivery',
-    title: 'Delivery',
+    title: 'Logs', // TODO: Change to "Delivery" all "Logs" occurrences after adding LogsLanding page
   };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
@@ -48,8 +48,8 @@ export const DeliveryLanding = React.memo(() => {
 
   return (
     <>
-      <ProductInformationBanner bannerLocation="Delivery" />
-      <DocumentTitleSegment segment="Delivery" />
+      <ProductInformationBanner bannerLocation="Logs" />
+      <DocumentTitleSegment segment="Logs" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 
       <Tabs index={tabIndex} onChange={handleTabChange}>
