@@ -162,6 +162,8 @@ export type MockPresetCrudId =
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'
+  | 'users(default):crud'
+  | 'users(parent):crud'
   | 'users:crud'
   | 'volumes:crud'
   | 'vpcs:crud';
