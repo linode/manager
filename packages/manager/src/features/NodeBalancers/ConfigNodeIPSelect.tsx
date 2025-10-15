@@ -73,7 +73,6 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
   const { linodes, error, isLoading, vpc, vpcIPs } = useGetLinodeIPAndVPCData({
     region,
     vpcId,
-    subnetId,
   });
 
   let options: NodeOption[] = [];
