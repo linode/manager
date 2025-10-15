@@ -1,5 +1,6 @@
-import type { Linode, LinodeIPsResponse, Subnet, VPCIP } from '@linode/api-v4';
 import { listToItemsByID } from '@linode/queries';
+
+import type { Linode, Subnet, VPCIP } from '@linode/api-v4';
 
 export interface PrivateIPOption {
   /**
@@ -9,14 +10,14 @@ export interface PrivateIPOption {
   /**
    * The Linode associated with the private IPv4 address
    */
-  linode: Partial<Linode>;
+  linode: Linode;
 }
 
 export interface VPCIPOption extends PrivateIPOption {
   /**
    * The Subnet associated with the VPC IPv4 address
    */
-  subnet: Partial<Subnet>;
+  subnet: Subnet;
 }
 
 /**
@@ -58,6 +59,7 @@ export const getVPCIPOptions = (
     if (!ip.address || !ip.linode_id) {
       continue;
     }
+
     const subnet = subnetsMap[ip.subnet_id];
     const linode = linodesMap[ip.linode_id];
 
@@ -68,5 +70,5 @@ export const getVPCIPOptions = (
     });
   }
 
-  return options.sort((a, b) => a.label.localeCompare(b.label));
+  return options;
 };

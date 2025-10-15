@@ -6,7 +6,6 @@ import {
 
 export const useGetLinodeIPAndVPCData = (props: {
   region?: string;
-  subnetId?: number;
   vpcId?: null | number;
 }) => {
   const { region, vpcId } = props;
