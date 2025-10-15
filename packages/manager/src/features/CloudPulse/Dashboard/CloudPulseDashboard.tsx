@@ -11,6 +11,7 @@ import {
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
+import { getAssociatedEntityType } from '../Utils/utils';
 import {
   renderPlaceHolder,
   RenderWidgets,
@@ -111,6 +112,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
+  // Get the associated entity type for the dashboard
+  const associatedEntityType = getAssociatedEntityType(dashboardId);
+
   const {
     data: resourceList,
     isError: isResourcesApiError,
@@ -119,7 +123,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
+    associatedEntityType
   );
 
   const {
