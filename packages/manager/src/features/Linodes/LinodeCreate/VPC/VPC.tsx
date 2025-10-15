@@ -2,13 +2,10 @@ import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Notice,
   Paper,
   Stack,
-  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -17,10 +14,10 @@ import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  VPCIPv6PublicIPLabel,
-  VPCPublicIPLabel,
-} from 'src/features/VPCs/components/VPCPublicIPLabel';
+import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
+import { PublicIPv6Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv6Access';
+import { VPCIPv4Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv4Address';
+import { VPCIPv6Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv6Address';
 import {
   DualStackVPCRangesDescription,
   VPCRangesDescription,
@@ -28,10 +25,7 @@ import {
 import {
   ASSIGN_IP_RANGES_TITLE,
   REGION_CAVEAT_HELPER_TEXT,
-  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
-  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
-import { generateVPCIPv6InputHelperText } from 'src/features/VPCs/utils';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -50,13 +44,7 @@ export const VPC = () => {
   const { control, getValues, formState, setValue } =
     useFormContext<CreateLinodeRequest>();
 
-  const [
-    regionId,
-    selectedVPCId,
-    selectedSubnetId,
-    linodeVPCIPv4Address,
-    linodeVPCIPv6Address,
-  ] = useWatch({
+  const [regionId, selectedVPCId, selectedSubnetId] = useWatch({
     control,
     name: [
       'region',
@@ -242,108 +230,27 @@ export const VPC = () => {
                     <Controller
                       control={control}
                       name="interfaces.0.ipv4.vpc"
-                      render={({ field }) => (
-                        <Box>
-                          <FormControlLabel
-                            checked={
-                              field.value === null || field.value === undefined
-                            }
-                            control={<Checkbox sx={{ ml: 0.5 }} />}
-                            label={
-                              <Stack alignItems="center" direction="row">
-                                <Typography>
-                                  Auto-assign VPC IPv4 address
-                                </Typography>
-                                <TooltipIcon
-                                  status="info"
-                                  text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
-                                />
-                              </Stack>
-                            }
-                            onChange={(e, checked) =>
-                              // If "Auto-assign" is checked, set the VPC IP to null
-                              // so that it gets auto-assigned. Otherwise, set it to
-                              // an empty string so that the TextField renders and a
-                              // user can enter one.
-                              field.onChange(checked ? null : '')
-                            }
-                          />
-                        </Box>
+                      render={({ field, fieldState }) => (
+                        <VPCIPv4Address
+                          errorMessage={fieldState.error?.message}
+                          fieldValue={field.value}
+                          onChange={field.onChange}
+                        />
                       )}
                     />
-                    {linodeVPCIPv4Address !== null &&
-                      linodeVPCIPv4Address !== undefined && (
-                        <Controller
-                          control={control}
-                          name="interfaces.0.ipv4.vpc"
-                          render={({ field, fieldState }) => (
-                            <TextField
-                              containerProps={{ sx: { mb: 1, mt: 1 } }}
-                              errorText={fieldState.error?.message}
-                              label="VPC IPv4"
-                              noMarginTop
-                              onBlur={field.onBlur}
-                              onChange={field.onChange}
-                              required
-                              value={field.value}
-                            />
-                          )}
-                        />
-                      )}
                     {showIPv6Fields && (
-                      <>
-                        <Controller
-                          control={control}
-                          name="interfaces.0.ipv6.slaac.0.range"
-                          render={({ field }) => (
-                            <Box>
-                              <FormControlLabel
-                                checked={field.value === 'auto'}
-                                control={<Checkbox sx={{ ml: 0.5 }} />}
-                                label={
-                                  <Stack alignItems="center" direction="row">
-                                    <Typography>
-                                      Auto-assign VPC IPv6 address
-                                    </Typography>
-                                    <TooltipIcon
-                                      status="info"
-                                      text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
-                                    />
-                                  </Stack>
-                                }
-                                onChange={(e, checked) =>
-                                  // If "Auto-assign" is checked, set the VPC IPv6 to null
-                                  // so that it gets auto-assigned. Otherwise, set it to
-                                  // an empty string so that the TextField renders and a
-                                  // user can enter one.
-                                  field.onChange(checked ? 'auto' : '')
-                                }
-                              />
-                            </Box>
-                          )}
-                        />
-                        {linodeVPCIPv6Address !== 'auto' && (
-                          <Controller
-                            control={control}
-                            name="interfaces.0.ipv6.slaac.0.range"
-                            render={({ field, fieldState }) => (
-                              <TextField
-                                containerProps={{ sx: { mb: 1, mt: 1 } }}
-                                errorText={fieldState.error?.message}
-                                helperText={generateVPCIPv6InputHelperText(
-                                  selectedSubnet?.ipv6?.[0].range ?? ''
-                                )}
-                                label="VPC IPv6"
-                                noMarginTop
-                                onBlur={field.onBlur}
-                                onChange={field.onChange}
-                                required
-                                value={field.value}
-                              />
-                            )}
+                      <Controller
+                        control={control}
+                        name="interfaces.0.ipv6.slaac.0.range"
+                        render={({ field, fieldState }) => (
+                          <VPCIPv6Address
+                            errorMessage={fieldState.error?.message}
+                            fieldValue={field.value}
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
                           />
                         )}
-                      </>
+                      />
                     )}
                   </Stack>
                   <Box>
@@ -358,15 +265,12 @@ export const VPC = () => {
                     <Controller
                       control={control}
                       name="interfaces.0.ipv4.nat_1_1"
-                      render={({ field }) => (
-                        <FormControlLabel
-                          checked={field.value === 'any'}
-                          control={<Checkbox sx={{ ml: 0.5 }} />}
-                          label={<VPCPublicIPLabel />}
-                          onChange={(e, checked) =>
-                            field.onChange(checked ? 'any' : null)
-                          }
-                          sx={{ mt: 0 }}
+                      render={({ field, fieldState }) => (
+                        <PublicIPv4Access
+                          checked={Boolean(field.value)}
+                          errorMessage={fieldState.error?.message}
+                          isConfigInterface
+                          onChange={field.onChange}
                         />
                       )}
                     />
@@ -375,21 +279,12 @@ export const VPC = () => {
                         control={control}
                         name={`interfaces.0.ipv6.is_public`}
                         render={({ field, fieldState }) => (
-                          <Box>
-                            {fieldState.error?.message && (
-                              <Notice
-                                text={fieldState.error.message}
-                                variant="error"
-                              />
-                            )}
-                            <FormControlLabel
-                              checked={field.value === true}
-                              control={<Checkbox sx={{ ml: 0.4 }} />}
-                              disabled={!regionSupportsVPCs}
-                              label={<VPCIPv6PublicIPLabel />}
-                              onChange={() => field.onChange(!field.value)}
-                            />
-                          </Box>
+                          <PublicIPv6Access
+                            checked={field.value === true}
+                            disabled={!regionSupportsVPCs}
+                            errorMessage={fieldState.error?.message}
+                            onChange={field.onChange}
+                          />
                         )}
                       />
                     )}

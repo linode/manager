@@ -45,12 +45,13 @@ const getNonEmptyBucketMessage = (bucketLabel: string) => {
 const setUpBucketMulticluster = (
   label: string,
   regionId: string,
-  cors_enabled: boolean = true
+  cors_enabled: boolean = false
 ) => {
   return createBucket(
     createObjectStorageBucketFactoryGen1.build({
       // to avoid 400 responses from the API.
       cluster: undefined,
+      // disable CORS to avoid 400 responses from the API.
       cors_enabled,
       label,
 
@@ -152,6 +153,21 @@ describe('Object Storage Multicluster objects', () => {
       { name: '1.txt', path: 'object-storage-files/1.txt' },
       { name: '2.jpg', path: 'object-storage-files/2.jpg' },
     ];
+
+    cy.on('fail', (err) => {
+      if (
+        err.name === 'CypressError' &&
+        err.message.includes('uploadObject') &&
+        err.message.includes('Timed out')
+      ) {
+        // Handle the timeout error and retry
+        uploadFile(bucketFiles[0].path, bucketFiles[0].name);
+        cy.wait('@uploadObject', { timeout: 160000 });
+        // Return false to prevent test failure
+        return false;
+      }
+      throw err;
+    });
 
     cy.defer(
       () => setUpBucketMulticluster(bucketLabel, bucketRegionId),

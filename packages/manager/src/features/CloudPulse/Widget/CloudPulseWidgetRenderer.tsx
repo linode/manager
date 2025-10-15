@@ -37,6 +37,10 @@ interface WidgetProps {
   manualRefreshTimeStamp?: number;
   metricDefinitions: ResourcePage<MetricDefinition> | undefined;
   preferences?: AclpConfig;
+  /**
+   * Selected region for the widget
+   */
+  region?: string;
   resourceList: CloudPulseResources[] | undefined;
   resources: string[];
   savePref?: boolean;
@@ -68,6 +72,7 @@ export const RenderWidgets = React.memo(
       savePref,
       groupBy,
       linodeRegion,
+      region,
     } = props;
 
     const getCloudPulseGraphProperties = (
@@ -87,10 +92,11 @@ export const RenderWidgets = React.memo(
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
         dashboardId: dashboard.id,
+        globalFilterGroupBy: groupBy,
         widget: {
           ...widget,
           time_granularity: autoIntervalOption,
-          group_by: groupBy.length === 0 ? undefined : groupBy,
+          group_by: undefined,
         },
       };
       if (savePref) {
@@ -117,11 +123,13 @@ export const RenderWidgets = React.memo(
           time_granularity: {
             ...(pref.timeGranularity ?? autoIntervalOption),
           },
+          group_by: pref.groupBy,
         };
       } else {
         return {
           ...widgetObj,
           time_granularity: autoIntervalOption,
+          group_by: undefined,
         };
       }
     };
@@ -176,6 +184,7 @@ export const RenderWidgets = React.memo(
                 availableMetrics={availMetrics}
                 isJweTokenFetching={isJweTokenFetching}
                 linodeRegion={linodeRegion}
+                region={region}
                 resources={resourceList!}
                 savePref={savePref}
               />

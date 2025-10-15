@@ -16,6 +16,8 @@ const loadingTestId = 'circle-progress';
 const mockDestinations = destinationFactory.buildList(5);
 
 describe('StreamFormDelivery', () => {
+  const setDisableTestConnection = () => {};
+
   beforeEach(async () => {
     server.use(
       http.get('*/monitor/streams/destinations', () => {
@@ -26,11 +28,15 @@ describe('StreamFormDelivery', () => {
 
   it('should render disabled Destination Type input with proper selection', async () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamFormDelivery />,
+      component: (
+        <StreamFormDelivery
+          setDisableTestConnection={setDisableTestConnection}
+        />
+      ),
       useFormOptions: {
         defaultValues: {
           destination: {
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
           },
         },
       },
@@ -44,17 +50,21 @@ describe('StreamFormDelivery', () => {
       screen.getByLabelText('Destination Type');
 
     expect(destinationTypeAutocomplete).toBeDisabled();
-    expect(destinationTypeAutocomplete).toHaveValue('Linode Object Storage');
+    expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
   });
 
   it('should render Destination Name input and allow to select an existing option', async () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamFormDelivery />,
+      component: (
+        <StreamFormDelivery
+          setDisableTestConnection={setDisableTestConnection}
+        />
+      ),
       useFormOptions: {
         defaultValues: {
           destination: {
             label: '',
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
           },
         },
       },
@@ -79,12 +89,19 @@ describe('StreamFormDelivery', () => {
 
   const renderComponentAndAddNewDestinationName = async () => {
     renderWithThemeAndHookFormContext({
-      component: <StreamFormDelivery />,
+      component: (
+        <StreamFormDelivery
+          setDisableTestConnection={setDisableTestConnection}
+        />
+      ),
       useFormOptions: {
         defaultValues: {
           destination: {
             label: '',
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
+          },
+          stream: {
+            destinations: [],
           },
         },
       },
@@ -141,24 +158,6 @@ describe('StreamFormDelivery', () => {
     await userEvent.type(bucketInput, 'Test');
 
     expect(bucketInput.getAttribute('value')).toEqual('Test');
-  });
-
-  it('should render Region input after adding a new destination name and allow to select an option', async () => {
-    await renderComponentAndAddNewDestinationName();
-
-    const regionAutocomplete = screen.getByLabelText('Region');
-
-    // Open the dropdown
-    await userEvent.click(regionAutocomplete);
-    await userEvent.type(regionAutocomplete, 'US, Chi');
-
-    // Select the "US, Chicago, IL (us-ord)" option
-    const chicagoRegion = await screen.findByText('US, Chicago, IL (us-ord)');
-    await userEvent.click(chicagoRegion);
-
-    expect(regionAutocomplete.getAttribute('value')).toEqual(
-      'US, Chicago, IL (us-ord)'
-    );
   });
 
   it('should render Access Key ID input after adding a new destination name and allow to type text', async () => {

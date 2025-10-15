@@ -78,7 +78,7 @@ describe('VPC', () => {
         },
       });
 
-    expect(getByLabelText('Auto-assign VPC IPv4 address')).toBeInTheDocument();
+    expect(getByLabelText('Auto-assign VPC IPv4')).toBeInTheDocument();
 
     expect(
       getByLabelText('Allow public IPv4 access (1:1 NAT)')
@@ -103,7 +103,7 @@ describe('VPC', () => {
         },
       });
 
-    expect(getByLabelText('Auto-assign VPC IPv4 address')).toBeChecked();
+    expect(getByLabelText('Auto-assign VPC IPv4')).toBeChecked();
   });
 
   it('should uncheck the VPC IPv4 if a "ipv4.vpc" is a string value and show the VPC IP TextField', async () => {
@@ -122,7 +122,7 @@ describe('VPC', () => {
         },
       });
 
-    expect(getByLabelText('Auto-assign VPC IPv4 address')).not.toBeChecked();
+    expect(getByLabelText('Auto-assign VPC IPv4')).not.toBeChecked();
 
     expect(getByLabelText('VPC IPv4 (required)')).toBeVisible();
   });
