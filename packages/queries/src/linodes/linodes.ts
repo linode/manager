@@ -383,6 +383,14 @@ export const useCreateLinodeMutation = () => {
           });
         }
 
+        // Invalidate all VPC queries if the Linode was created with a VPC.
+        // We have to invalidate all VPC queries becuase the new "Linode Interfaces" payload
+        // does not include the VPC ID. It only includes the Subnet ID.
+        // The VPC ID is nessesary to for more ganular invalidation, but it is not available here.
+        if (variables.interfaces?.some((i) => i.vpc)) {
+          queryClient.invalidateQueries({ queryKey: vpcQueries._def });
+        }
+
         for (const linodeInterface of variables.interfaces ?? []) {
           if (linodeInterface.firewall_id) {
             // If the interface has a Firewall, invalidate that Firewall

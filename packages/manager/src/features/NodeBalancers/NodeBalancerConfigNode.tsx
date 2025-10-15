@@ -188,6 +188,7 @@ export const NodeBalancerConfigNode = React.memo(
                 disabled={disabled}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.port}
+                inputId={`node-port-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Port"
                 noMarginTop
@@ -208,6 +209,7 @@ export const NodeBalancerConfigNode = React.memo(
                 disabled={disabled}
                 errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.weight}
+                inputId={`node-weight-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Weight"
                 noMarginTop
