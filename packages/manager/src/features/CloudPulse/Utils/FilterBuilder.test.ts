@@ -638,13 +638,13 @@ describe('filterEndpointsUsingRegion', () => {
 });
 
 describe('filterUsingSpecialConditions', () => {
-  it('should return data as is if resourceType is undefined', () => {
+  it('should return data as is if serviceType is undefined', () => {
     expect(
       filterUsingSpecialConditions(undefined, [{ id: '1', label: 'test' }])
     ).toEqual([{ id: '1', label: 'test' }]);
   });
-  it('should filter based on resourceType', () => {
-    // If the entities are empty, that means the firewall is not associated with the desired service
+  it('should filter based on serviceType', () => {
+    // If the entities are empty, that means the firewall is not associated with the desired service and so should be filtered out
     expect(
       filterUsingSpecialConditions('firewall', [
         { id: '1', label: 'test', entities: { [1]: 'test' } },

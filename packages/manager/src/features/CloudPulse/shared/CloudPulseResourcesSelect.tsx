@@ -74,7 +74,7 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
 
       RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {},
-      associatedEntityType // This is based on the filter configuration, used to keep entity id to label mapping for the supported entity type
+      associatedEntityType // This is based on the filter configuration, used to keep associated entity id to label mapping for the supported entity type
     );
 
     const [selectedResources, setSelectedResources] =
@@ -90,7 +90,7 @@ export const CloudPulseResourcesSelect = React.memo(
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       const filteredResources =
         filterUsingDependentFilters(resources, xFilter) ?? [];
-      // Apply any additional filtering based on the resource type if required
+      // Apply any additional filtering based on the service type if required
       return filterUsingSpecialConditions(resourceType, filteredResources);
     }, [resourceType, resources, xFilter]);
 
