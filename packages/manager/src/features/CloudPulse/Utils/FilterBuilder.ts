@@ -747,18 +747,18 @@ export const filterEndpointsUsingRegion = (
 };
 
 /**
- * @param resourceType The resource type for which the filter needs to be applied
+ * @param serviceType The service type for which the filter needs to be applied
  * @param data The resources for which the filter needs to be applied
  * @returns The filtered resources
  */
 export const filterUsingSpecialConditions = (
-  resourceType: CloudPulseServiceType | undefined,
+  serviceType: CloudPulseServiceType | undefined,
   data: CloudPulseResources[]
 ): CloudPulseResources[] => {
-  if (!resourceType) {
+  if (!serviceType) {
     return data;
   }
-  if (resourceType === 'firewall') {
+  if (serviceType === 'firewall') {
     // If the entities are empty, that means the firewall is not associated with the desired service
     return data.filter(
       ({ entities }) => entities && Object.keys(entities).length > 0
