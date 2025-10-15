@@ -7,9 +7,11 @@ import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
   Linode,
+  NodeBalancer,
   VPC,
 } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+import type { FirewallEntity } from 'src/features/CloudPulse/shared/types';
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.
@@ -99,13 +101,19 @@ export const getStaticOptions = (
 export const getFilteredFirewallParentEntities = (
   firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
-): string[] => {
+): FirewallEntity[] => {
   if (!(firewallResources?.length && entities?.length)) return [];
 
   return firewallResources
     .filter((firewall) => entities.includes(firewall.id))
     .flatMap((firewall) =>
-      firewall.entities ? Object.keys(firewall.entities) : []
+      // combine key as id and value as label for each entity
+      firewall.entities
+        ? Object.entries(firewall.entities).map(([id, label]) => ({
+            id,
+            label,
+          }))
+        : []
     );
 };
 
@@ -133,6 +141,23 @@ export const getLinodeRegions = (linodes: Linode[]): Item<string, string>[] => {
   if (!linodes) return [];
   const regions = new Set<string>();
   linodes.forEach(({ region }) => region && regions.add(region));
+  return Array.from(regions).map((region) => ({
+    label: transformDimensionValue('firewall', 'region_id', region),
+    value: region,
+  }));
+};
+
+/**
+ * Extracts unique region values from a list of nodebalancers.
+ * @param nodebalancers - Nodebalancer objects with region information.
+ * @returns - Deduplicated list of regions as options.
+ */
+export const getNodebalancerRegions = (
+  nodebalancers: NodeBalancer[]
+): Item<string, string>[] => {
+  if (!nodebalancers) return [];
+  const regions = new Set<string>();
+  nodebalancers.forEach(({ region }) => region && regions.add(region));
   return Array.from(regions).map((region) => ({
     label: transformDimensionValue('firewall', 'region_id', region),
     value: region,

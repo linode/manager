@@ -216,6 +216,23 @@ describe('getDimensionName method', () => {
     expect(result).toBe('123');
   });
 
+  it('returns the associated nodebalancer label as is when key is nodebalancer_id', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      resources: [
+        {
+          id: '123',
+          label: 'firewall-1',
+          entities: { a: 'nodebalancer-1' },
+        },
+      ],
+      serviceType: 'firewall',
+      metric: { nodebalancer_id: 'a' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('nodebalancer-1');
+  });
+
   it('returns the transformed dimension value according to the service type', () => {
     const props = {
       ...baseProps,
