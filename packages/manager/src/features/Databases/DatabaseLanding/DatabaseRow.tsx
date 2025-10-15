@@ -36,23 +36,21 @@ interface Props {
 
 const DatabaseActionMenuStyledWrapper = styled(TableCell, {
   label: 'DatabaseActionMenuStyledWrapper',
-})({
+})(({ theme }) => ({
   justifyContent: 'flex-end',
   display: 'flex',
   alignItems: 'center',
   maxWidth: 40,
   '& button': {
     padding: 0,
-    color:
-      'var(--token-alias-content-icon-primary-default, light-dark(#3d3d42, #ffffff))',
+    color: theme.tokens.alias.Content.Icon.Primary.Default,
     backgroundColor: 'transparent',
   },
   '& button:hover': {
-    backgroundColor:
-      'color: var(--token-alias-content-icon-primary-hover, light-dark(#009cde, #96cff0))',
-    color: '#009cde',
+    backgroundColor: 'transparent',
+    color: theme.tokens.alias.Content.Icon.Primary.Hover,
   },
-});
+}));
 
 export const DatabaseRow = ({
   database,
@@ -110,13 +108,15 @@ export const DatabaseRow = ({
       key={`database-row-${id}`}
       zebra
     >
-      <TableCell>
-        {isDatabasesV2GA && isLinkInactive ? (
-          label
-        ) : (
-          <Link to={`/databases/${engine}/${id}`}>{label}</Link>
-        )}
-      </TableCell>
+      <div style={{ width: 230 }}>
+        <TableCell>
+          {isDatabasesV2GA && isLinkInactive ? (
+            label
+          ) : (
+            <Link to={`/databases/${engine}/${id}`}>{label}</Link>
+          )}
+        </TableCell>
+      </div>
       <TableCell>
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
@@ -134,7 +134,9 @@ export const DatabaseRow = ({
         />
       </TableCell>
       <Hidden mdDown>
-        <TableCell>{actualRegion?.label ?? region}</TableCell>
+        <div style={{ width: 125 }}>
+          <TableCell>{actualRegion?.label ?? region}</TableCell>
+        </div>
       </Hidden>
       <Hidden lgDown>
         <TableCell>

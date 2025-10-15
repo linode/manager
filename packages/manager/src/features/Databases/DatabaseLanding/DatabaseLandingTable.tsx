@@ -1,4 +1,5 @@
 import { Hidden } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   Table,
@@ -43,6 +44,7 @@ const DatabaseLandingTable = ({
   orderBy,
   results,
 }: Props) => {
+  const theme = useTheme();
   const { data: events } = useInProgressEvents();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
@@ -97,23 +99,33 @@ const DatabaseLandingTable = ({
     <>
       <Table
         aria-label={`List of ${isNewDatabase ? 'New' : 'Legacy'} Database Clusters`}
-        style={{
-          border: '1px solid #d6d6dd',
-          marginTop: '10px',
-        }}
+        style={
+          {
+            border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+            marginTop: '10px',
+            '--token-component-table-header-outlined-border':
+              theme.tokens.component.Table.Row.Border,
+          } as React.CSSProperties
+        }
       >
         <TableHead>
-          <TableRow headerborder>
-            <TableHeaderCell
-              sort={() =>
-                handleOrderChange('label', order === 'asc' ? 'desc' : 'asc')
-              }
-              sortable
-              sorted={orderBy === 'label' ? order : undefined}
-              style={{ maxWidth: 375 }}
-            >
-              Cluster Label
-            </TableHeaderCell>
+          <TableRow
+            headerbackground={
+              theme.tokens.component.Table.HeaderNested.Background
+            }
+            headerborder
+          >
+            <div style={{ width: 230 }}>
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('label', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'label' ? order : undefined}
+              >
+                Cluster Label
+              </TableHeaderCell>
+            </div>
             <TableHeaderCell
               sort={() =>
                 handleOrderChange('status', order === 'asc' ? 'desc' : 'asc')
@@ -158,15 +170,20 @@ const DatabaseLandingTable = ({
               Engine
             </TableHeaderCell>
             <Hidden mdDown>
-              <TableHeaderCell
-                sort={() =>
-                  handleOrderChange('region', order === 'asc' ? 'desc' : 'asc')
-                }
-                sortable
-                sorted={orderBy === 'region' ? order : undefined}
-              >
-                Region
-              </TableHeaderCell>
+              <div style={{ width: 125 }}>
+                <TableHeaderCell
+                  sort={() =>
+                    handleOrderChange(
+                      'region',
+                      order === 'asc' ? 'desc' : 'asc'
+                    )
+                  }
+                  sortable
+                  sorted={orderBy === 'region' ? order : undefined}
+                >
+                  Region
+                </TableHeaderCell>
+              </div>
             </Hidden>
             <Hidden lgDown>
               <TableHeaderCell
@@ -226,8 +243,8 @@ const DatabaseLandingTable = ({
           pageSize={pagination.pageSize}
           pageSizes={PAGE_SIZES}
           style={{
-            borderLeft: '1px solid #d6d6dd',
-            borderRight: '1px solid #d6d6dd',
+            borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
+            borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
             borderTop: 0,
           }}
         />
