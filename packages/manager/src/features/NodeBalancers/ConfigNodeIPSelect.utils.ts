@@ -1,4 +1,5 @@
-import type { Linode, LinodeIPsResponse, Subnet } from '@linode/api-v4';
+import type { Linode, LinodeIPsResponse, Subnet, VPCIP } from '@linode/api-v4';
+import { listToItemsByID } from '@linode/queries';
 
 export interface PrivateIPOption {
   /**
@@ -40,7 +41,7 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 };
 
 export const getVPCIPOptions = (
-  vpcIps: LinodeIPsResponse[] | undefined,
+  vpcIps: undefined | VPCIP[],
   linodes: Linode[] | undefined,
   subnets?: Subnet[] | undefined
 ) => {
@@ -48,47 +49,24 @@ export const getVPCIPOptions = (
     return [];
   }
 
+  const linodesMap = listToItemsByID(linodes ?? [], 'id');
+  const subnetsMap = listToItemsByID(subnets ?? [], 'id');
+
   const options: VPCIPOption[] = [];
 
-  const linodeLabelMap = (linodes ?? []).reduce(
-    (acc: Record<number, string>, linode) => {
-      acc[linode.id] = linode.label;
-      return acc;
-    },
-    {}
-  );
-  const subnetLabelMap = (subnets ?? []).reduce(
-    (acc: Record<number, string>, subnet) => {
-      acc[subnet.id] = subnet.label;
-      return acc;
-    },
-    {}
-  );
-
-  vpcIps.forEach(({ ipv4 }) => {
-    if (ipv4.vpc) {
-      const vpcData = ipv4.vpc
-        .filter((vpc) => vpc.address && vpc.subnet_id in subnetLabelMap)
-        .map((vpc) => {
-          const linode: Partial<Linode> = {
-            label: linodeLabelMap[vpc.linode_id],
-            id: vpc.linode_id,
-          };
-          return {
-            label: vpc.address,
-            linode,
-            subnet: {
-              id: vpc.subnet_id,
-              label: subnetLabelMap[vpc.subnet_id],
-            },
-          };
-        });
-
-      if (vpcData) {
-        options.push(...vpcData);
-      }
+  for (const ip of vpcIps) {
+    if (!ip.address || !ip.linode_id) {
+      continue;
     }
-  });
+    const subnet = subnetsMap[ip.subnet_id];
+    const linode = linodesMap[ip.linode_id];
+
+    options.push({
+      label: ip.address,
+      subnet,
+      linode
+    });
+  }
 
   return options.sort((a, b) => a.label.localeCompare(b.label));
 };
