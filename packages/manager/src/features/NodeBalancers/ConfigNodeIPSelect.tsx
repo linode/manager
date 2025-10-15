@@ -70,7 +70,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     subnetId,
   } = props;
 
-  const { linodesData, error, isLoading, subnetsData, vpcIPs } = useGetLinodeIPAndVPCData({
+  const { linodes, error, isLoading, vpc, vpcIPs } = useGetLinodeIPAndVPCData({
     region,
     vpcId,
     subnetId,
@@ -79,9 +79,9 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
   let options: NodeOption[] = [];
 
   if (region && !vpcId) {
-    options = getPrivateIPOptions(linodesData);
+    options = getPrivateIPOptions(linodes);
   } else if (region && vpcId && subnetId) {
-    options = getVPCIPOptions(vpcIPs, linodesData, subnetsData?.data);
+    options = getVPCIPOptions(vpcIPs, linodes, vpc?.subnets);
   }
 
   const noOptionsText = useMemo(() => {

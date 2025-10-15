@@ -43,7 +43,7 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 export const getVPCIPOptions = (
   vpcIps: undefined | VPCIP[],
   linodes: Linode[] | undefined,
-  subnets?: Subnet[] | undefined
+  subnets: Subnet[] | undefined
 ) => {
   if (!vpcIps || !subnets) {
     return [];
@@ -64,7 +64,7 @@ export const getVPCIPOptions = (
     options.push({
       label: ip.address,
       subnet,
-      linode
+      linode,
     });
   }
 

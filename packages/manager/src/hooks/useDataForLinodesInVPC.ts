@@ -1,7 +1,7 @@
 import {
   useAllLinodesQuery,
-  useSubnetsQuery,
-  useVPCsIPsQuery,
+  useVPCIPsQuery,
+  useVPCQuery,
 } from '@linode/queries';
 
 export const useGetLinodeIPAndVPCData = (props: {
@@ -9,43 +9,43 @@ export const useGetLinodeIPAndVPCData = (props: {
   subnetId?: number;
   vpcId?: null | number;
 }) => {
-  const { region, vpcId, subnetId } = props;
+  const { region, vpcId } = props;
 
   const {
-    data: linodesData,
+    data: linodes,
     error: linodesError,
     isLoading: linodesIsLoading,
   } = useAllLinodesQuery({}, { region }, region !== undefined);
 
   const {
-    data: subnetsData,
-    error: subnetsError,
-    isLoading: subnetsIsLoading,
-  } = useSubnetsQuery(Number(vpcId), {}, {}, subnetId !== undefined);
+    data: vpc,
+    error: vpcError,
+    isLoading: vpcLoading,
+  } = useVPCQuery(vpcId ?? -1, vpcId !== undefined);
 
   const {
     data: vpcIPs,
     error: vpcIPsError,
     isLoading: isVPCIPsLoading,
-  } = useVPCsIPsQuery({ vpc_id: vpcId }, vpcId !== undefined);
+  } = useVPCIPsQuery(vpcId ?? -1, {}, vpcId !== undefined);
 
   if (region && !vpcId) {
     return {
-      linodesData,
+      linodes,
       error: linodesError,
       isLoading: linodesIsLoading,
     };
   }
 
   return {
-    linodesData,
+    linodes,
     vpcIPs,
     error: [
       ...(linodesError ?? []),
-      ...(subnetsError ?? []),
+      ...(vpcError ?? []),
       ...(vpcIPsError ?? []),
     ],
-    isLoading: linodesIsLoading ?? subnetsIsLoading ?? isVPCIPsLoading,
-    subnetsData,
+    isLoading: linodesIsLoading ?? vpcLoading ?? isVPCIPsLoading,
+    vpc,
   };
 };
