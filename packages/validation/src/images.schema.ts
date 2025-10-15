@@ -56,6 +56,6 @@ export const updateSharegroupTokenSchema = object({
   label: labelSchema.required('Label is required.'),
 });
 
-export const updateSharegroupMemberSchema = updateSharegroupTokenSchema.shape(
-  {},
-);
+export const updateSharegroupMemberSchema = object({
+  label: labelSchema.required('Label is required.'),
+});
