@@ -13,9 +13,9 @@ import {
 } from 'src/mocks/utilities/response';
 
 import type {
+  AkamaiObjectStorageDetails,
   CreateDestinationPayload,
   Destination,
-  LinodeObjectStorageDetails,
   Stream,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -73,7 +73,7 @@ export const createStreams = (mockState: MockState) => [
         destinations: payload['destinations'].map((destinationId: number) =>
           destinations?.find(({ id }) => id === destinationId)
         ),
-        details: payload['details'],
+        details: payload['details'] ?? null,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });
@@ -227,8 +227,8 @@ export const createDestinations = (mockState: MockState) => [
         type: payload.type,
         details: {
           ...details,
-          ...(payload.type === destinationType.LinodeObjectStorage
-            ? { path: (details as LinodeObjectStorageDetails).path ?? null }
+          ...(payload.type === destinationType.AkamaiObjectStorage
+            ? { path: (details as AkamaiObjectStorageDetails).path ?? null }
             : {}),
         },
         created: DateTime.now().toISO(),

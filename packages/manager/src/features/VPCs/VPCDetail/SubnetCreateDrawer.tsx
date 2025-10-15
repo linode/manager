@@ -147,7 +147,7 @@ export const SubnetCreateDrawer = (props: Props) => {
                 errorText={fieldState.error?.message}
                 label={
                   shouldDisplayIPv6
-                    ? 'Subnet IPv4 Address Range'
+                    ? 'Subnet IPv4 Range (CIDR)'
                     : 'Subnet IP Address Range'
                 }
                 onBlur={field.onBlur}

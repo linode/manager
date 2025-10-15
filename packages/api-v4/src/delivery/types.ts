@@ -21,7 +21,7 @@ export interface AuditData {
 
 export interface Stream extends AuditData {
   destinations: Destination[];
-  details: StreamDetails;
+  details: StreamDetailsType;
   id: number;
   label: string;
   primary_destination_id: number;
@@ -36,9 +36,11 @@ export interface StreamDetails {
   is_auto_add_all_clusters_enabled?: boolean;
 }
 
+export type StreamDetailsType = null | StreamDetails;
+
 export const destinationType = {
   CustomHttps: 'custom_https',
-  LinodeObjectStorage: 'linode_object_storage',
+  AkamaiObjectStorage: 'akamai_object_storage',
 } as const;
 
 export type DestinationType =
@@ -53,16 +55,15 @@ export interface Destination extends AuditData {
 }
 
 export type DestinationDetails =
-  | CustomHTTPsDetails
-  | LinodeObjectStorageDetails;
+  | AkamaiObjectStorageDetails
+  | CustomHTTPsDetails;
 
-export interface LinodeObjectStorageDetails {
+export interface AkamaiObjectStorageDetails {
   access_key_id: string;
   access_key_secret: string;
   bucket_name: string;
   host: string;
   path: string;
-  region: string;
 }
 
 type ContentType = 'application/json' | 'application/json; charset=utf-8';
@@ -103,7 +104,7 @@ interface CustomHeader {
 
 export interface CreateStreamPayload {
   destinations: number[];
-  details: StreamDetails;
+  details?: StreamDetailsType;
   label: string;
   status?: StreamStatus;
   type: StreamType;
@@ -111,24 +112,23 @@ export interface CreateStreamPayload {
 
 export interface UpdateStreamPayload {
   destinations: number[];
-  details: StreamDetails;
+  details?: StreamDetailsType;
   label: string;
   status: StreamStatus;
-  type: StreamType;
 }
 
 export interface UpdateStreamPayloadWithId extends UpdateStreamPayload {
   id: number;
 }
 
-export interface LinodeObjectStorageDetailsPayload
-  extends Omit<LinodeObjectStorageDetails, 'path'> {
+export interface AkamaiObjectStorageDetailsPayload
+  extends Omit<AkamaiObjectStorageDetails, 'path'> {
   path?: string;
 }
 
 export type DestinationDetailsPayload =
-  | CustomHTTPsDetails
-  | LinodeObjectStorageDetailsPayload;
+  | AkamaiObjectStorageDetailsPayload
+  | CustomHTTPsDetails;
 
 export interface CreateDestinationPayload {
   details: DestinationDetailsPayload;
@@ -136,7 +136,7 @@ export interface CreateDestinationPayload {
   type: DestinationType;
 }
 
-export type UpdateDestinationPayload = CreateDestinationPayload;
+export type UpdateDestinationPayload = Omit<CreateDestinationPayload, 'type'>;
 
 export interface UpdateDestinationPayloadWithId
   extends UpdateDestinationPayload {
