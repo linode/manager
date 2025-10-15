@@ -5,7 +5,7 @@ import {
   uploadImageSchema,
 } from '@linode/validation/lib/images.schema';
 
-import { API_ROOT, BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -19,7 +19,6 @@ import type {
   CreateImagePayload,
   Image,
   ImageUploadPayload,
-  Sharegroup,
   UpdateImagePayload,
   UpdateImageRegionsPayload,
   UploadImageResponse,
@@ -115,23 +114,5 @@ export const updateImageRegions = (
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}/regions`),
     setMethod('POST'),
     setData(data, updateImageRegionsSchema),
-  );
-};
-
-/**
- * Lists all the sharegroups a given image is present in.
- *
- * @param imageId { string } ID of the Image to look up.
- */
-export const getSharegroupsFromImage = (
-  imageId: string,
-  params: Params = {},
-  filters: Filter = {},
-) => {
-  Request<Page<Sharegroup>>(
-    setURL(`${BETA_API_ROOT}/images/${imageId}/sharegroups`),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filters),
   );
 };

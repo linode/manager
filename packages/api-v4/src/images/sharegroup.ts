@@ -81,6 +81,23 @@ export const getSharegroup = (sharegroupId: string) =>
   );
 
 /**
+ * Lists all the sharegroups a given private image is present in.
+ *
+ * @param imageId { string } ID of the Image to look up.
+ */
+export const getSharegroupsFromImage = (
+  imageId: string,
+  params: Params = {},
+  filters: Filter = {},
+) =>
+  Request<Page<Sharegroup>>(
+    setURL(`${BETA_API_ROOT}/images/${imageId}/sharegroups`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  );
+
+/**
  * Get a paginated list of Images present in a Sharegroup
  *
  * @param sharegroupId {string} ID of the Sharegroup to look up

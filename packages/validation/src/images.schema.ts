@@ -58,9 +58,10 @@ export const createSharegroupSchema = object({
 
 export const updateSharegroupSchema = object({
   label: labelSchema.optional(),
-  description: string()
-    .optional()
-    .max(65000, 'Length must be 65000 characters or less.'),
+  description: string().optional(),
 });
 
-export const updateSharegroupImageSchema = updateSharegroupSchema.shape({});
+export const updateSharegroupImageSchema = object({
+  label: labelSchema.optional(),
+  description: string().optional(),
+});
