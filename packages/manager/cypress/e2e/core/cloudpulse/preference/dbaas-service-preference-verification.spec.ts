@@ -243,8 +243,18 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
       // Dashboard autocomplete
       cy.get(
         '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
-      ).should('have.value', 'Dbaas Dashboard');
+      ).should('have.value', dashboardName);
 
+      cy.get('[data-qa-autocomplete="Database Clusters"]').within(() => {
+        // get the first chip using only data attributes
+        cy.get('[data-tag-index="0"]').should('have.text', clusterName);
+
+        // check the helper text
+        cy.get('[data-qa-textfield-helper-text="true"]').should(
+          'contain.text',
+          'Select up to 10 Database Clusters'
+        );
+      });
       // Database Engine autocomplete
       cy.get(
         '[data-qa-autocomplete="Database Engine"] input[data-testid="textfield-input"]'
@@ -271,8 +281,14 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
     cy.get('button[data-qa-preset="Last day"]')
-      .should('be.visible') 
+      .should('be.visible')
       .and('have.text', 'Last day');
+
+    ui.buttonGroup
+      .findButtonByTitle('Cancel')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
   });
 
   it('clears the Dashboard filters and verifies updated user preferences', () => {

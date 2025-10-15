@@ -121,7 +121,7 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices','@fetchDashboard','@fetchPreferences']);
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
 
     ui.button.findByTitle('Filters').click();
 
@@ -141,6 +141,56 @@ describe('Integration Tests for Linode Dashboard Preferences', () => {
     ui.button.findByTitle('Filters').click();
   });
 
+  it('reloads the page and verifies preferences are restored from API', () => {
+    cy.intercept('GET', apiMatcher('profile/preferences')).as(
+      'fetchPreferencesReload'
+    );
+    cy.reload();
+    cy.wait('@fetchPreferencesReload');
+    cy.get('[data-qa-paper="true"]').within(() => {
+      // Dashboard autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Dashboard"] input[data-testid="textfield-input"]'
+      ).should('have.value', dashboardName);
+
+      // Region autocomplete
+      cy.get(
+        '[data-qa-autocomplete="Region"] input[data-testid="textfield-input"]'
+      ).should('have.value', 'US, Chicago, IL (us-ord)');
+
+      cy.get('[data-qa-autocomplete="Linode Label(s)"]').within(() => {
+        // get the first chip using only data attributes
+        cy.get('[data-tag-index="0"]').should('have.text', resource);
+
+        // check the helper text
+        cy.get('[data-qa-textfield-helper-text="true"]').should(
+          'contain.text',
+          'Select up to 10 Linode Label(s)'
+        );
+      });
+
+      // Refresh button (tooltip)
+      cy.get('[data-qa-tooltip="Refresh"]').should('exist');
+
+      // Group By button
+      cy.get('[data-testid="group-by"]').should(
+        'have.attr',
+        'data-qa-selected',
+        'true'
+      );
+    });
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('button[data-qa-preset="Last day"]')
+      .should('be.visible')
+      .and('have.text', 'Last day');
+
+    ui.buttonGroup
+      .findButtonByTitle('Cancel')
+      .should('be.visible')
+      .and('be.enabled')
+      .click();
+  });
   it('clears the Dashboard filters and verifies updated user preferences', () => {
     cy.intercept('PUT', apiMatcher('profile/preferences')).as(
       'updateDashbaordPreference'
