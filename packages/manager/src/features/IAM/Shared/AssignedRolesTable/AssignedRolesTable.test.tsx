@@ -53,6 +53,9 @@ const mockEntities = [
   }),
 ];
 
+const mockUserRoles = userRolesFactory.build();
+const mockAccountRoles = accountRolesFactory.build();
+
 describe('AssignedRolesTable', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -65,25 +68,37 @@ describe('AssignedRolesTable', () => {
       data: {},
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithTheme(
+      <AssignedRolesTable
+        assignedRoles={{ account_access: [], entity_access: [] }}
+        assignedRolesLoading={false}
+        username="test_user"
+      />
+    );
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: mockUserRoles,
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: mockAccountRoles,
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithTheme(
+      <AssignedRolesTable
+        assignedRoles={mockUserRoles}
+        assignedRolesLoading={false}
+        username="test_user"
+      />
+    );
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -100,18 +115,24 @@ describe('AssignedRolesTable', () => {
 
   it('should display empty state when no roles match filters', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: mockUserRoles,
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: mockAccountRoles,
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithTheme(
+      <AssignedRolesTable
+        assignedRoles={mockUserRoles}
+        assignedRolesLoading={false}
+        username="test_user"
+      />
+    );
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -123,18 +144,24 @@ describe('AssignedRolesTable', () => {
 
   it('should filter roles based on search query', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: mockUserRoles,
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: mockAccountRoles,
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithTheme(
+      <AssignedRolesTable
+        assignedRoles={mockUserRoles}
+        assignedRolesLoading={false}
+        username="test_user"
+      />
+    );
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'account_linode_admin');
@@ -146,18 +173,24 @@ describe('AssignedRolesTable', () => {
 
   it('should filter roles based on selected resource type', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: mockUserRoles,
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: mockAccountRoles,
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithTheme(
+      <AssignedRolesTable
+        assignedRoles={mockUserRoles}
+        assignedRolesLoading={false}
+        username="test_user"
+      />
+    );
 
     const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
     await userEvent.type(autocomplete, 'Firewall Roles');
@@ -165,5 +198,26 @@ describe('AssignedRolesTable', () => {
     await waitFor(() => {
       expect(screen.queryByText('account_firewall_creator')).toBeVisible();
     });
+  });
+
+  it('should show different button text for default roles view', async () => {
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: mockAccountRoles,
+    });
+
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
+    });
+
+    renderWithTheme(
+      <AssignedRolesTable
+        assignedRoles={mockUserRoles}
+        assignedRolesLoading={false}
+        isDefaultRolesView={true}
+      />
+    );
+
+    expect(screen.getByText('Add New Default Roles')).toBeVisible();
+    expect(screen.queryByText('Assign New Roles')).not.toBeInTheDocument();
   });
 });
