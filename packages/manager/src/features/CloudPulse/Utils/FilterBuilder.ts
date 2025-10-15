@@ -755,7 +755,7 @@ export const filterUsingSpecialConditions = (
   resourceType: CloudPulseServiceType | undefined,
   data: CloudPulseResources[]
 ): CloudPulseResources[] => {
-  if (!resourceType || !data) {
+  if (!resourceType) {
     return data;
   }
   if (resourceType === 'firewall') {
