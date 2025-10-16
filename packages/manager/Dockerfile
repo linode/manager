@@ -6,7 +6,7 @@ ARG IMAGE_REGISTRY=docker.io
 ARG NODE_VERSION=22.19.0
 
 # Cypress version.
-ARG CYPRESS_VERSION=15.2.0
+ARG CYPRESS_VERSION=15.4.0
 
 # Node.js base image for Cloud Manager CI tasks.
 #
