@@ -36,6 +36,7 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
   useResourcesQuery: vi.fn().mockReturnValue({}),
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
+  useAllNodeBalancersQuery: vi.fn().mockReturnValue({}),
 }));
 
 const allRegions: Region[] = [
@@ -86,6 +87,7 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
   useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+  useAllNodeBalancersQuery: queryMocks.useAllNodeBalancersQuery,
 }));
 
 vi.mock('src/queries/cloudpulse/resources', async () => {
@@ -232,17 +234,20 @@ describe('CloudPulseRegionSelect', () => {
     renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
-        selectedDashboard={dashboardFactory.build({ service_type: 'dbaas' })}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'dbaas',
+          id: 1,
+        })}
       />
     );
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByText(NO_REGION_MESSAGE['dbaas'])).toBeVisible();
+    expect(screen.getByText(NO_REGION_MESSAGE[1])).toBeVisible();
   });
 
   it('should render a Region Select component with correct info message when no regions are available for linode service type', async () => {
     const user = userEvent.setup();
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(3, {
+      data: linodeFactory.buildList(2, {
         region: 'ap-west',
       }),
       isError: false,
@@ -251,11 +256,14 @@ describe('CloudPulseRegionSelect', () => {
     renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
-        selectedDashboard={dashboardFactory.build({ service_type: 'linode' })}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'linode',
+          id: 2,
+        })}
       />
     );
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByText(NO_REGION_MESSAGE['linode'])).toBeVisible();
+    expect(screen.getByText(NO_REGION_MESSAGE[2])).toBeVisible();
   });
 
   it('should render a Region Select component with correct info message when no regions are available for nodebalancer service type', async () => {
@@ -272,11 +280,12 @@ describe('CloudPulseRegionSelect', () => {
         {...props}
         selectedDashboard={dashboardFactory.build({
           service_type: 'nodebalancer',
+          id: 3,
         })}
       />
     );
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByText(NO_REGION_MESSAGE['nodebalancer'])).toBeVisible();
+    expect(screen.getByText(NO_REGION_MESSAGE[3])).toBeVisible();
   });
 
   it('should render a Region Select component with correct info message when no regions are available for firewall service type', async () => {
@@ -285,11 +294,14 @@ describe('CloudPulseRegionSelect', () => {
     renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
-        selectedDashboard={dashboardFactory.build({ service_type: 'firewall' })}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'firewall',
+          id: 4,
+        })}
       />
     );
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByText(NO_REGION_MESSAGE['firewall'])).toBeVisible();
+    expect(screen.getByText(NO_REGION_MESSAGE[4])).toBeVisible();
   });
 
   it('Should show the correct linode region in the dropdown for firewall service type when savePreferences is true', async () => {
@@ -381,7 +393,56 @@ describe('CloudPulseRegionSelect', () => {
         {...props}
         filterKey="associated_entity_region"
         savePreferences={false}
-        selectedDashboard={dashboardFactory.build({ service_type: 'firewall' })}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'firewall',
+          id: 4,
+        })}
+        selectedEntities={['1']}
+      />
+    );
+    expect(screen.getByDisplayValue('IN, Mumbai (ap-west)')).toBeVisible();
+  });
+  it('Should select the first region automatically from the nodebalancer regions if savePreferences is false', async () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'ap-west',
+          label: 'IN, Mumbai',
+          capabilities: [capabilityServiceTypeMapping['firewall']],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: [
+        firewallFactory.build({
+          id: 1,
+          entities: [{ id: 1, type: 'nodebalancer' }],
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    queryMocks.useAllNodeBalancersQuery.mockReturnValue({
+      data: [
+        nodeBalancerFactory.build({
+          id: 1,
+          region: 'ap-west',
+        }),
+      ],
+      isError: false,
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        filterKey="associated_entity_region"
+        savePreferences={false}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'firewall',
+          id: 8,
+        })}
         selectedEntities={['1']}
       />
     );
