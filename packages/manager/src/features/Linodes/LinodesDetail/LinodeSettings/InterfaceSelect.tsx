@@ -202,7 +202,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
       vpc_id: vpcId,
     });
 
-  const handleIPv4Input = (IPv4Input: string | undefined) =>
+  const handleIPv4Input = (IPv4Input: null | string) =>
     handleChange({
       ip_ranges: _additionalIPv4RangesForVPC,
       ipv4: {
@@ -411,11 +411,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
             subnetError={errors.subnetError}
-            toggleAssignPublicIPv4Address={() =>
-              handleIPv4Input(
-                nattedIPv4Address === undefined ? 'any' : undefined
-              )
-            }
+            toggleAssignPublicIPv4Address={handleIPv4Input}
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               handleVPCIPv4Input(vpcIPv4 === undefined ? '' : undefined)
             }

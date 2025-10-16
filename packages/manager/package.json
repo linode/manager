@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.152.0",
+  "version": "1.153.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -35,7 +35,7 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@mui/utils": "^7.1.0",
-    "@mui/x-date-pickers": "^7.27.0",
+    "@mui/x-date-pickers": "^8.11.2",
     "@paypal/react-paypal-js": "^8.8.3",
     "@reach/tabs": "^0.18.0",
     "@sentry/react": "^9.19.0",
