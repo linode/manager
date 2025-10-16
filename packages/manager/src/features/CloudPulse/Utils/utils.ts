@@ -5,6 +5,11 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import {
+  type FetchOptions,
+  valueFieldConfig,
+} from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
   INTERFACE_ID,
@@ -19,10 +24,8 @@ import {
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
-  VALID_OPERATORS,
 } from './constants';
 
-import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
@@ -397,6 +400,36 @@ export const useIsAclpSupportedRegion = (
   return region?.monitors?.[type]?.includes(capability) ?? false;
 };
 
+/** check whether a string value represents a valid number for the config */
+const isValueANumberValid = (
+  raw: string,
+  config: undefined | { max?: number; min?: number }
+): boolean => {
+  const trimmed = raw.trim();
+  if (trimmed === '') return false;
+  // try to parse as finite number
+  const num = Number(trimmed);
+  if (!Number.isFinite(num)) return false;
+
+  // If min/max are integers (or present) enforce range.
+  if (config?.min !== undefined && num < config.min) return false;
+  if (config?.max !== undefined && num > config.max) return false;
+
+  // If min/max are integers and config min/max are integers, it likely expects integer inputs
+  // (e.g. ports, ids). We'll enforce integer if both min and max are integer values.
+  if (
+    config &&
+    Number.isInteger(config.min ?? 0) &&
+    Number.isInteger(config.max ?? 0)
+  ) {
+    // If both min and max exist and are integers, require the input be integer.
+    // If only one exists and it's an integer, still reasonable to require integer.
+    if (!Number.isInteger(num)) return false;
+  }
+
+  return true;
+};
+
 /**
  * @param filter The filter associated with the metric
  * @param options The dimension options associated with the metric
@@ -406,8 +439,13 @@ export const isValidFilter = (
   filter: MetricsDimensionFilter,
   options: Dimension[]
 ): boolean => {
+  if (!filter.operator || !filter.dimension_label || !filter.value)
+    return false;
+
   const operator = filter.operator;
-  if (!operator || !VALID_OPERATORS.includes(operator)) return false;
+  const operatorGroup = getOperatorGroup(operator);
+
+  if (!operatorGroup.includes(operator)) return false;
 
   const dimension = options.find(
     ({ dimension_label: dimensionLabel }) =>
@@ -415,10 +453,22 @@ export const isValidFilter = (
   );
   if (!dimension) return false;
 
-  if (!dimension.values.length) return true; // static value dimensions
+  const dimConfig =
+    valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
 
-  // allow pattern operators without value check
-  if (operator === 'endswith' || operator === 'startswith') return true;
+  const dimensionFieldConfig = dimConfig[operatorGroup];
+
+  if (
+    dimensionFieldConfig.type === 'textfield' &&
+    dimensionFieldConfig.inputType === 'number'
+  ) {
+    return isValueANumberValid(
+      String(filter.value ?? ''),
+      dimensionFieldConfig
+    );
+  } else if (dimensionFieldConfig.type === 'textfield') {
+    return true;
+  }
 
   const validValues = new Set(dimension.values);
   return (filter.value ?? '')
