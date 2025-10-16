@@ -108,15 +108,17 @@ export const DatabaseRow = ({
       key={`database-row-${id}`}
       zebra
     >
-      <div style={{ width: 230 }}>
-        <TableCell>
-          {isDatabasesV2GA && isLinkInactive ? (
-            label
-          ) : (
-            <Link to={`/databases/${engine}/${id}`}>{label}</Link>
-          )}
-        </TableCell>
-      </div>
+      <TableCell
+        style={{
+          flex: '0 1 20.5%',
+        }}
+      >
+        {isDatabasesV2GA && isLinkInactive ? (
+          label
+        ) : (
+          <Link to={`/databases/${engine}/${id}`}>{label}</Link>
+        )}
+      </TableCell>
       <TableCell>
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
@@ -134,9 +136,7 @@ export const DatabaseRow = ({
         />
       </TableCell>
       <Hidden mdDown>
-        <div style={{ width: 125 }}>
-          <TableCell>{actualRegion?.label ?? region}</TableCell>
-        </div>
+        <TableCell>{actualRegion?.label ?? region}</TableCell>
       </Hidden>
       <Hidden lgDown>
         <TableCell>
