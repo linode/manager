@@ -19,8 +19,8 @@ export const destinationTypeOptions: LabelValueOption[] = [
     label: 'Custom HTTPS',
   },
   {
-    value: destinationType.LinodeObjectStorage,
-    label: 'Linode Object Storage',
+    value: destinationType.AkamaiObjectStorage,
+    label: 'Akamai Object Storage',
   },
 ];
 
@@ -38,11 +38,11 @@ export const streamTypeOptions: LabelValueOption[] = [
 export const streamStatusOptions: LabelValueOption[] = [
   {
     value: streamStatus.Active,
-    label: 'Enabled',
+    label: 'Active',
   },
   {
     value: streamStatus.Inactive,
-    label: 'Disabled',
+    label: 'Inactive',
   },
 ];
 
