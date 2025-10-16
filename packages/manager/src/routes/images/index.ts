@@ -4,9 +4,11 @@ import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
+import type { ImagesSubTabType } from 'src/features/Images/ImagesLanding/utilities';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
+  subType?: ImagesSubTabType;
 }
 
 export interface ImageCreateDiskSearchParams {
@@ -44,6 +46,56 @@ const imagesRoute = createRoute({
 const imagesIndexRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: '/',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
+);
+
+const imagesImagesRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  path: 'images',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
+);
+
+// const imagesCustomRoute = createRoute({
+//   getParentRoute: () => imagesRoute,
+//   path: 'custom',
+//   validateSearch: (search: ImagesSearchParams) => search,
+// }).lazy(() =>
+//   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+//     (m) => m.imagesLandingLazyRoute
+//   )
+// );
+
+// const imagesSharedRoute = createRoute({
+//   getParentRoute: () => imagesRoute,
+//   path: 'shared',
+//   validateSearch: (search: ImagesSearchParams) => search,
+// }).lazy(() =>
+//   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+//     (m) => m.imagesLandingLazyRoute
+//   )
+// );
+
+// const imagesRecoveryRoute = createRoute({
+//   getParentRoute: () => imagesRoute,
+//   path: 'recovery',
+//   validateSearch: (search: ImagesSearchParams) => search,
+// }).lazy(() =>
+//   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+//     (m) => m.imagesLandingLazyRoute
+//   )
+// );
+
+const imagesShareGroupsRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  path: 'sharegroups',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
@@ -119,7 +171,13 @@ const imagesCreateUploadRoute = createRoute({
 );
 
 export const imagesRouteTree = imagesRoute.addChildren([
-  imagesIndexRoute.addChildren([imageActionRoute]),
+  imagesIndexRoute,
+  imageActionRoute,
+  imagesImagesRoute,
+  // imagesCustomRoute,
+  // imagesSharedRoute,
+  // imagesRecoveryRoute,
+  imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
     imagesCreateDiskRoute,
