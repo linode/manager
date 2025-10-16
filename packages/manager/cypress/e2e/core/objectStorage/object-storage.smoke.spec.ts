@@ -49,7 +49,7 @@ describe('object storage smoke tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockCreateBucket(mockBucket).as('createBucket');
 
-    cy.visitWithLogin('/object-storage');
+    cy.visitWithLogin('/object-storage/buckets');
     cy.wait('@getBuckets');
 
     ui.landingPageEmptyStateResources.find().within(() => {
@@ -187,7 +187,7 @@ describe('object storage smoke tests', () => {
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
 
-    cy.visitWithLogin('/object-storage');
+    cy.visitWithLogin('/object-storage/buckets');
     cy.wait('@getBuckets');
 
     cy.findByText(bucketLabel)

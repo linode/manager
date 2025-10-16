@@ -12,8 +12,8 @@ import {
 } from 'src/features/Delivery/deliveryUtils';
 import { StreamActionMenu } from 'src/features/Delivery/Streams/StreamActionMenu';
 
-import type { Handlers as StreamHandlers } from './StreamActionMenu';
 import type { Stream, StreamStatus } from '@linode/api-v4';
+import type { StreamHandlers } from 'src/features/Delivery/Streams/StreamActionMenu';
 
 interface StreamTableRowProps extends StreamHandlers {
   stream: Stream;
@@ -59,9 +59,9 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
 const humanizeStreamStatus = (status: StreamStatus) => {
   switch (status) {
     case 'active':
-      return 'Enabled';
+      return 'Active';
     case 'inactive':
-      return 'Disabled';
+      return 'Inactive';
     default:
       return 'Unknown';
   }

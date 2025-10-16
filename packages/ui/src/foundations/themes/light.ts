@@ -7,6 +7,7 @@ import {
   Color,
   Component,
   Content,
+  DateRangeField,
   Dropdown,
   Font,
   GlobalHeader,
@@ -968,6 +969,7 @@ export const lightTheme: ThemeOptions = {
           letterSpacing: 'inherit',
           maxWidth: 416,
           textTransform: 'none',
+          color: TextField.Placeholder.HintText,
           marginTop: '4px',
         },
       },
@@ -1032,11 +1034,6 @@ export const lightTheme: ThemeOptions = {
         },
       },
     },
-    MuiInput: {
-      defaultProps: {
-        disableUnderline: true,
-      },
-    },
     MuiInputAdornment: {
       styleOverrides: {
         positionEnd: {
@@ -1056,6 +1053,111 @@ export const lightTheme: ThemeOptions = {
         root: {
           color: Search.Filled.Icon,
         },
+      },
+    },
+    MuiPickersInputBase: {
+      styleOverrides: {
+        root: {
+          '&.MuiPickersInputBase-adornedEnd': {
+            '.MuiInputAdornment-positionEnd': {
+              marginLeft: Spacing.S12,
+            },
+            '&.Mui-focused, & :active, & :focus, &.Mui-focused:hover, & :hover':
+              {
+                svg: {
+                  color: DateRangeField.Focus.Icon,
+                },
+              },
+            svg: {
+              color: DateRangeField.Default.Icon,
+            },
+          },
+        },
+      },
+    },
+    MuiPickersSectionList: {
+      styleOverrides: {
+        section: {
+          '&&': {
+            lineHeight: Font.LineHeight.Xxs, // Important for picker height (34px)
+          },
+        },
+        sectionContent: {
+          '&&': {
+            lineHeight: Font.LineHeight.Xxs, // Important for picker height (34px)
+          },
+        },
+      },
+    },
+    MuiPickersOutlinedInput: {
+      styleOverrides: {
+        root: {
+          background: DateRangeField.Default.Background,
+          paddingLeft: Spacing.S12,
+          paddingRight: Spacing.S8,
+          borderRadius: 0,
+          '&:hover': {
+            '& .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: DateRangeField.Hover.Border,
+            },
+          },
+          '&.Mui-focused, &:active, &:focus, &.Mui-focused:hover': {
+            '& .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: DateRangeField.Focus.Border,
+              borderWidth: 1,
+            },
+            '& .MuiPickersInputBase-sectionsContainer': {
+              color: DateRangeField.Filled.Text,
+              font: Typography.Label.Regular.S,
+              fontStyle: 'normal',
+            },
+          },
+          '&.Mui-error': {
+            '& .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: DateRangeField.Error.Border,
+            },
+          },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover':
+            {
+              '& .MuiPickersOutlinedInput-notchedOutline': {
+                borderColor: DateRangeField.Disabled.Border,
+                color: DateRangeField.Disabled.Text,
+              },
+              '& .MuiPickersInputBase-sectionsContainer': {
+                'span[aria-valuenow]:not([aria-valuenow="Empty"])': {
+                  color: DateRangeField.Disabled.Text,
+                },
+              },
+              backgroundColor: DateRangeField.Disabled.Background,
+              cursor: 'not-allowed',
+            },
+        },
+        sectionsContainer: {
+          padding: `${Spacing.S8} 0`,
+          color: DateRangeField.Default.Text,
+          font: Typography.Label.Regular.Placeholder,
+          fontStyle: 'italic',
+
+          /**
+           * Our design calls for filled text to be normal, not italic.
+           * There is no css property for this, so we need to target the aria-valuenow attribute.
+           * The same applies for the sectionAfter.
+           */
+          'span[aria-valuenow]:not([aria-valuenow="Empty"]), span[aria-valuenow]:not([aria-valuenow="Empty"]) ~ .MuiPickersInputBase-sectionAfter':
+            {
+              color: DateRangeField.Filled.Text,
+              font: Typography.Label.Regular.S,
+              fontStyle: 'normal',
+            },
+        },
+        notchedOutline: {
+          borderColor: DateRangeField.Default.Border,
+        },
+      },
+    },
+    MuiInput: {
+      defaultProps: {
+        disableUnderline: true,
       },
     },
     MuiInputBase: {

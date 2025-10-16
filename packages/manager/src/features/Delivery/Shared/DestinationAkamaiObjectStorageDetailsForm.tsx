@@ -1,22 +1,17 @@
-import { useRegionsQuery } from '@linode/queries';
-import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Divider, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { PathSample } from 'src/features/Delivery/Shared/PathSample';
-import { useFlags } from 'src/hooks/useFlags';
 
-interface DestinationLinodeObjectStorageDetailsFormProps {
+interface DestinationAkamaiObjectStorageDetailsFormProps {
   controlPaths?: {
     accessKeyId: string;
     accessKeySecret: string;
     bucketName: string;
     host: string;
     path: string;
-    region: string;
   };
 }
 
@@ -26,15 +21,11 @@ const defaultPaths = {
   bucketName: 'details.bucket_name',
   host: 'details.host',
   path: 'details.path',
-  region: 'details.region',
 };
 
-export const DestinationLinodeObjectStorageDetailsForm = ({
+export const DestinationAkamaiObjectStorageDetailsForm = ({
   controlPaths = defaultPaths,
-}: DestinationLinodeObjectStorageDetailsFormProps) => {
-  const { gecko2 } = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
-  const { data: regions } = useRegionsQuery();
+}: DestinationAkamaiObjectStorageDetailsFormProps) => {
   const { control } = useFormContext();
   const path = useWatch({
     control,
@@ -73,27 +64,6 @@ export const DestinationLinodeObjectStorageDetailsForm = ({
               field.onChange(value);
             }}
             placeholder="Bucket"
-            value={field.value}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name={controlPaths.region}
-        render={({ field, fieldState }) => (
-          <RegionSelect
-            currentCapability="Object Storage"
-            disableClearable
-            errorText={fieldState.error?.message}
-            isGeckoLAEnabled={isGeckoLAEnabled}
-            label="Region"
-            onBlur={field.onBlur}
-            onChange={(_, region) => {
-              field.onChange(region.id);
-              field.onBlur();
-            }}
-            regionFilter="core"
-            regions={regions ?? []}
             value={field.value}
           />
         )}

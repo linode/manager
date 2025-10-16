@@ -1,4 +1,8 @@
-import { useAllLinodesQuery, useAllVPCsQuery } from '@linode/queries';
+import {
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVPCsQuery,
+} from '@linode/queries';
 import { useMemo } from 'react';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -8,49 +12,29 @@ import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
+  getNodebalancerRegions,
   getVPCSubnets,
 } from './utils';
 
-import type { FetchOptions } from './constants';
-import type {
-  AlertDefinitionScope,
-  CloudPulseServiceType,
-  Filter,
-  Region,
-} from '@linode/api-v4';
-interface FetchOptionsProps {
-  /**
-   * The dimension label determines the filtering logic and return type.
-   */
-  dimensionLabel: null | string;
-  /**
-   * List of firewall entity IDs to filter on.
-   */
-  entities?: string[];
-  /**
-   * List of regions to filter on.
-   */
-  regions?: Region[];
-  /**
-   * Scope of fetching: account (all resources) or entity (filtered subset).
-   */
-  scope?: AlertDefinitionScope | null;
-  /**
-   * Service to apply specific transformations to dimension values.
-   */
-  serviceType?: CloudPulseServiceType | null;
-  /**
-   * The type of monitoring to filter on.
-   */
-  type: 'alerts' | 'metrics';
-}
+import type { FetchOptions, FetchOptionsProps } from './constants';
+import type { Filter } from '@linode/api-v4';
 
 /**
  * Custom hook to return selectable options based on the dimension type.
  * Handles fetching and transforming data for edge-cases.
  */
-export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
-  const { dimensionLabel, regions, entities, serviceType, type, scope } = props;
+export function useFirewallFetchOptions(
+  props: FetchOptionsProps
+): FetchOptions {
+  const {
+    dimensionLabel,
+    regions,
+    entities,
+    serviceType,
+    type,
+    scope,
+    associatedEntityType = 'both',
+  } = props;
 
   const supportedRegionIds =
     (serviceType &&
@@ -83,9 +67,11 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     isError: isResourcesError,
   } = useResourcesQuery(
     filterLabels.includes(dimensionLabel ?? ''),
-    'firewall'
+    'firewall',
+    {},
+    {},
+    associatedEntityType // To avoid fetching resources for which the associated entity type is not supported
   );
-
   // Decide firewall resource IDs based on scope
   const filteredFirewallParentEntityIds = useMemo(() => {
     const selectedEntities =
@@ -98,14 +84,24 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     );
   }, [scope, firewallResources, entities]);
 
-  const idFilter = {
+  const idFilter: Filter = {
     '+or': filteredFirewallParentEntityIds.length
-      ? filteredFirewallParentEntityIds.map((id) => ({ id }))
-      : [{ id: '' }],
+      ? filteredFirewallParentEntityIds.map(({ id }) => ({ id }))
+      : undefined,
   };
 
-  const combinedFilter: Filter = {
-    '+and': [idFilter, regionFilter].filter(Boolean) as Filter[],
+  const labelFilter: Filter = {
+    '+or': filteredFirewallParentEntityIds.length
+      ? filteredFirewallParentEntityIds.map(({ label }) => ({ label }))
+      : undefined,
+  };
+
+  const combinedFilterLinode: Filter = {
+    '+and': [idFilter, regionFilter].filter(Boolean),
+  };
+
+  const combinedFilterNodebalancer: Filter = {
+    '+and': [labelFilter, regionFilter].filter(Boolean),
   };
 
   // Fetch all linodes with the combined filter
@@ -115,10 +111,28 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     isLoading: isLinodesLoading,
   } = useAllLinodesQuery(
     {},
-    combinedFilter,
-    filterLabels.includes(dimensionLabel ?? '') &&
+    combinedFilterLinode,
+    serviceType === 'firewall' &&
+      filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds.length > 0 &&
+      (associatedEntityType === 'linode' || associatedEntityType === 'both') &&
       supportedRegionIds?.length > 0
+  );
+
+  // Fetch all nodebalancers with the combined filter
+  const {
+    data: nodebalancers,
+    isError: isNodebalancersError,
+    isLoading: isNodebalancersLoading,
+  } = useAllNodeBalancersQuery(
+    serviceType === 'firewall' &&
+      filterLabels.includes(dimensionLabel ?? '') &&
+      filteredFirewallParentEntityIds.length > 0 &&
+      (associatedEntityType === 'nodebalancer' ||
+        associatedEntityType === 'both') &&
+      supportedRegionIds?.length > 0,
+    {},
+    combinedFilterNodebalancer
   );
 
   // Extract linodes from filtered firewall resources
@@ -133,12 +147,23 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
     [linodes]
   );
 
+  // Extract unique regions from nodebalancers
+  const nodebalancerRegions = useMemo(
+    () => getNodebalancerRegions(nodebalancers ?? []),
+    [nodebalancers]
+  );
+
+  const allRegions = useMemo(
+    () => Array.from(new Set([...linodeRegions, ...nodebalancerRegions])),
+    [linodeRegions, nodebalancerRegions]
+  );
+
   const {
     data: vpcs,
     isLoading: isVPCsLoading,
     isError: isVPCsError,
   } = useAllVPCsQuery({
-    enabled: dimensionLabel === 'vpc_subnet_id',
+    enabled: serviceType === 'firewall' && dimensionLabel === 'vpc_subnet_id',
   });
 
   const vpcSubnets = useMemo(() => getVPCSubnets(vpcs ?? []), [vpcs]);
@@ -146,15 +171,26 @@ export function useFetchOptions(props: FetchOptionsProps): FetchOptions {
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
     case 'associated_entity_region':
-    case 'region_id':
       return {
-        values: linodeRegions,
-        isError: isLinodesError || isResourcesError,
-        isLoading: isLinodesLoading || isResourcesLoading,
+        values:
+          associatedEntityType === 'linode'
+            ? linodeRegions
+            : associatedEntityType === 'nodebalancer'
+              ? nodebalancerRegions
+              : allRegions,
+        isError: isLinodesError || isResourcesError || isNodebalancersError,
+        isLoading:
+          isLinodesLoading || isResourcesLoading || isNodebalancersLoading,
       };
     case 'linode_id':
       return {
         values: firewallLinodes,
+        isError: isLinodesError || isResourcesError,
+        isLoading: isLinodesLoading || isResourcesLoading,
+      };
+    case 'region_id':
+      return {
+        values: linodeRegions,
         isError: isLinodesError || isResourcesError,
         isLoading: isLinodesLoading || isResourcesLoading,
       };

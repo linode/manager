@@ -4,6 +4,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type CloudPulseServiceType =
+  | 'blockstorage'
   | 'dbaas'
   | 'firewall'
   | 'linode'
@@ -110,6 +111,7 @@ export interface AclpConfig {
 
 export interface AclpWidget {
   aggregateFunction: string;
+  groupBy?: string[];
   label: string;
   size: number;
   timeGranularity: TimeGranularity;
@@ -377,6 +379,7 @@ export const capabilityServiceTypeMapping: Record<
   nodebalancer: 'NodeBalancers',
   firewall: 'Cloud Firewall',
   objectstorage: 'Object Storage',
+  blockstorage: 'Block Storage',
 };
 
 /**

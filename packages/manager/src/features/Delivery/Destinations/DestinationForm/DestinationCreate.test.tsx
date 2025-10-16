@@ -1,10 +1,6 @@
 import { destinationType } from '@linode/api-v4';
 import { profileFactory } from '@linode/utilities';
-import {
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
@@ -24,7 +20,7 @@ describe('DestinationCreate', () => {
       component: <DestinationCreate />,
       useFormOptions: {
         defaultValues: {
-          type: destinationType.LinodeObjectStorage,
+          type: destinationType.AkamaiObjectStorage,
           ...defaultValues,
         },
       },
@@ -38,11 +34,11 @@ describe('DestinationCreate', () => {
       screen.getByLabelText('Destination Type');
 
     expect(destinationTypeAutocomplete).toBeDisabled();
-    expect(destinationTypeAutocomplete).toHaveValue('Linode Object Storage');
+    expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
   });
 
   it(
-    'should render all inputs for Linode Object Storage type and allow to fill out them',
+    'should render all inputs for Akamai Object Storage type and allow to fill out them',
     { timeout: 10000 },
     async () => {
       renderDestinationCreate({ label: '' });
@@ -53,11 +49,6 @@ describe('DestinationCreate', () => {
       await userEvent.type(hostInput, 'Test');
       const bucketInput = screen.getByLabelText('Bucket');
       await userEvent.type(bucketInput, 'Test');
-      const regionAutocomplete = screen.getByLabelText('Region');
-      await userEvent.click(regionAutocomplete);
-      await userEvent.type(regionAutocomplete, 'US, Chi');
-      const chicagoRegion = await screen.findByText('US, Chicago, IL (us-ord)');
-      await userEvent.click(chicagoRegion);
       const accessKeyIDInput = screen.getByLabelText('Access Key ID');
       await userEvent.type(accessKeyIDInput, 'Test');
       const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
@@ -68,7 +59,6 @@ describe('DestinationCreate', () => {
       expect(destinationNameInput).toHaveValue('Test');
       expect(hostInput).toHaveValue('Test');
       expect(bucketInput).toHaveValue('Test');
-      expect(regionAutocomplete).toHaveValue('US, Chicago, IL (us-ord)');
       expect(accessKeyIDInput).toHaveValue('Test');
       expect(secretAccessKeyInput).toHaveValue('Test');
       expect(logPathPrefixInput).toHaveValue('Test');
@@ -86,32 +76,31 @@ describe('DestinationCreate', () => {
 
     renderDestinationCreate();
 
-    const loadingElement = screen.queryByTestId('circle-progress');
-    await waitForElementToBeRemoved(loadingElement);
-
-    const samplePath = screen.getByText(
-      `/audit_logs/com.akamai.audit.login/${profileUid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597.gz`
-    );
-    expect(samplePath).toBeInTheDocument();
-
+    let samplePath;
+    await waitFor(() => {
+      samplePath = screen.getByText(
+        `/audit_logs/com.akamai.audit.login/${profileUid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597.gz`
+      );
+      expect(samplePath).toBeInTheDocument();
+    });
     // Type the test value inside the input
     const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
 
     await userEvent.type(logPathPrefixInput, 'test');
     // sample path should be created based on *log path* value
-    expect(samplePath.textContent).toEqual(
+    expect(samplePath!.textContent).toEqual(
       '/test/akamai_log-000166-1756015362-319597.gz'
     );
 
     await userEvent.clear(logPathPrefixInput);
     await userEvent.type(logPathPrefixInput, '/test');
-    expect(samplePath.textContent).toEqual(
+    expect(samplePath!.textContent).toEqual(
       '/test/akamai_log-000166-1756015362-319597.gz'
     );
 
     await userEvent.clear(logPathPrefixInput);
     await userEvent.type(logPathPrefixInput, '/');
-    expect(samplePath.textContent).toEqual(
+    expect(samplePath!.textContent).toEqual(
       '/akamai_log-000166-1756015362-319597.gz'
     );
   });
@@ -127,11 +116,6 @@ describe('DestinationCreate', () => {
       await userEvent.type(hostInput, 'Test');
       const bucketInput = screen.getByLabelText('Bucket');
       await userEvent.type(bucketInput, 'Test');
-      const regionAutocomplete = screen.getByLabelText('Region');
-      await userEvent.click(regionAutocomplete);
-      await userEvent.type(regionAutocomplete, 'US, Chi');
-      const chicagoRegion = await screen.findByText('US, Chicago, IL (us-ord)');
-      await userEvent.click(chicagoRegion);
       const accessKeyIDInput = screen.getByLabelText('Access Key ID');
       await userEvent.type(accessKeyIDInput, 'Test');
       const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');

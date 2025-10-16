@@ -3,13 +3,13 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-export interface Handlers {
+export interface StreamHandlers {
   onDelete: (stream: Stream) => void;
   onDisableOrEnable: (stream: Stream) => void;
   onEdit: (stream: Stream) => void;
 }
 
-interface StreamActionMenuProps extends Handlers {
+interface StreamActionMenuProps extends StreamHandlers {
   stream: Stream;
 }
 
@@ -27,7 +27,7 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
       onClick: () => {
         onDisableOrEnable(stream);
       },
-      title: stream.status === streamStatus.Active ? 'Disable' : 'Enable',
+      title: stream.status === streamStatus.Active ? 'Deactivate' : 'Activate',
     },
     {
       onClick: () => {

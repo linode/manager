@@ -8,7 +8,11 @@ import {
   SUMMARY_PRIVATE_HOST_COPY,
   SUMMARY_PRIVATE_HOST_LEGACY_COPY,
 } from '../constants';
-import { getReadOnlyHost, isLegacyDatabase } from '../utilities';
+import {
+  convertPrivateToPublicHostname,
+  getReadOnlyHost,
+  isLegacyDatabase,
+} from '../utilities';
 import { ConnectionDetailsRow } from './ConnectionDetailsRow';
 import { useStyles } from './DatabaseSummary/DatabaseSummaryConnectionDetails.style';
 
@@ -17,6 +21,8 @@ import type { Database } from '@linode/api-v4/lib/databases/types';
 interface ConnectionDetailsHostRowsProps {
   database: Database;
 }
+
+type HostContentMode = 'default' | 'private' | 'public';
 
 /**
  * This component is responsible for conditionally rendering the Private Host, Public Host, and Read-only Host rows that get displayed in
@@ -40,20 +46,15 @@ export const ConnectionDetailsHostRows = (
     },
   };
 
-  const isLegacy = isLegacyDatabase(database);
+  const isLegacy = isLegacyDatabase(database); // TODO (UIE-8214) POST GA - Remove legacy check and legacy content as it is no longer necessary
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database?.private_network?.public_access;
 
-  const getHostContent = (
-    mode: 'default' | 'private' | 'public' = 'default'
-  ) => {
+  const getHostContent = (mode: HostContentMode = 'default') => {
     let primaryHostName = database.hosts?.primary;
 
     if (mode === 'public' && primaryHostName) {
-      // Remove 'private-' substring at the beginning of the hostname and replace it with 'public-'
-      const privateStrIndex = database.hosts.primary.indexOf('-');
-      const baseHostName = database.hosts.primary.slice(privateStrIndex + 1);
-      primaryHostName = `public-${baseHostName}`;
+      primaryHostName = convertPrivateToPublicHostname(primaryHostName);
     }
 
     if (primaryHostName) {
@@ -89,15 +90,22 @@ export const ConnectionDetailsHostRows = (
     );
   };
 
-  const getReadOnlyHostContent = () => {
+  const getReadOnlyHostContent = (mode: HostContentMode = 'default') => {
     const defaultValue = isLegacy ? '-' : 'N/A';
-    const value = getReadOnlyHost(database) || defaultValue;
-    const hasHost = value !== '-' && value !== 'N/A';
+    const hostValue = getReadOnlyHost(database) || defaultValue;
+    const hasHost = hostValue !== '-' && hostValue !== 'N/A';
+    const displayedHost =
+      mode === 'public' && hasHost
+        ? convertPrivateToPublicHostname(hostValue)
+        : hostValue;
     return (
       <>
-        {value}
-        {value && hasHost && (
-          <CopyTooltip className={classes.inlineCopyToolTip} text={value} />
+        {displayedHost}
+        {displayedHost && hasHost && (
+          <CopyTooltip
+            className={classes.inlineCopyToolTip}
+            text={displayedHost}
+          />
         )}
         {isLegacy && (
           <TooltipIcon
@@ -111,12 +119,20 @@ export const ConnectionDetailsHostRows = (
             componentsProps={hostTooltipComponentProps}
             status="info"
             sxTooltipIcon={sxTooltipIcon}
-            text={SUMMARY_HOST_TOOLTIP_COPY}
+            text={
+              mode === 'private'
+                ? SUMMARY_PRIVATE_HOST_COPY
+                : SUMMARY_HOST_TOOLTIP_COPY
+            }
           />
         )}
       </>
     );
   };
+
+  const readonlyHostLabel = isLegacy
+    ? 'Private Network Host'
+    : 'Read-only Host';
 
   return (
     <>
@@ -129,10 +145,15 @@ export const ConnectionDetailsHostRows = (
         </ConnectionDetailsRow>
       )}
       <ConnectionDetailsRow
-        label={isLegacy ? 'Private Network Host' : 'Read-only Host'}
+        label={hasVPC ? 'Private Read-only Host' : readonlyHostLabel}
       >
-        {getReadOnlyHostContent()}
+        {getReadOnlyHostContent(hasVPC ? 'private' : 'default')}
       </ConnectionDetailsRow>
+      {hasPublicVPC && (
+        <ConnectionDetailsRow label="Public Read-only Host">
+          {getReadOnlyHostContent('public')}
+        </ConnectionDetailsRow>
+      )}
     </>
   );
 };

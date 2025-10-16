@@ -1,3 +1,9 @@
+## [2025-10-21] - v0.16.0
+
+### Added:
+
+- `useAllGetDelegatedChildAccountsForUserQuery` for IAM User Delegation ([#12920](https://github.com/linode/manager/pull/12920))
+
 ## [2025-10-07] - v0.15.0
 
 

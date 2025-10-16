@@ -19,6 +19,11 @@ export const widgetDetails = {
         title: 'Disk I/O',
         unit: 'OPS',
         yLabel: 'system_disk_operations_total',
+        filters: [
+          { dimension_label: 'device', operator: 'eq', value: 'loop0' },
+          { dimension_label: 'direction', operator: 'eq', value: 'write' },
+          { dimension_label: 'Linode', operator: 'eq', value: '1' },
+        ],
       },
       {
         expectedAggregation: 'max',
@@ -28,6 +33,10 @@ export const widgetDetails = {
         title: 'CPU Utilization',
         unit: '%',
         yLabel: 'system_cpu_utilization_ratio',
+        filters: [
+          { dimension_label: 'cpu', operator: 'eq', value: 'cpu' },
+          { dimension_label: 'state', operator: 'eq', value: 'user' },
+        ],
       },
       {
         expectedAggregation: 'max',
@@ -37,6 +46,7 @@ export const widgetDetails = {
         title: 'Memory Usage',
         unit: 'B',
         yLabel: 'system_memory_usage_bytes',
+        filters: [{ dimension_label: 'state', operator: 'eq', value: 'used' }],
       },
       {
         expectedAggregation: 'max',
@@ -46,6 +56,10 @@ export const widgetDetails = {
         title: 'Network Traffic',
         unit: 'B',
         yLabel: 'system_network_io_bytes_total',
+        filters: [
+          { dimension_label: 'device', operator: 'eq', value: 'lo' },
+          { dimension_label: 'direction', operator: 'eq', value: 'transmit' },
+        ],
       },
     ],
     nodeType: 'Secondary',
@@ -53,6 +67,7 @@ export const widgetDetails = {
     resource: 'Dbaas-resource',
     serviceType: 'dbaas',
   },
+
   linode: {
     dashboardName: 'Linode Dashboard',
     id: 2,

@@ -3,12 +3,15 @@ import { transformDimensionValue } from '../../../Utils/utils';
 import type { Item } from '../../../constants';
 import type { OperatorGroup } from './constants';
 import type {
+  AlertDefinitionScope,
   CloudPulseServiceType,
   DimensionFilterOperatorType,
   Linode,
+  NodeBalancer,
   VPC,
 } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+import type { FirewallEntity } from 'src/features/CloudPulse/shared/types';
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.
@@ -77,9 +80,9 @@ export const getOperatorGroup = (
  * @returns - List of label/value option objects.
  */
 export const getStaticOptions = (
-  serviceType: CloudPulseServiceType | undefined,
+  serviceType: CloudPulseServiceType | null,
   dimensionLabel: string,
-  values: null | string[]
+  values: string[]
 ): Item<string, string>[] => {
   return (
     values?.map((val: string) => ({
@@ -90,7 +93,7 @@ export const getStaticOptions = (
 };
 
 /**
- * Filters firewall resources and returns matching entity IDs.
+ * Filters firewall resources and returns matching parent entity IDs.
  * @param firewallResources - List of firewall resource objects.
  * @param entities - List of target firewall entity IDs.
  * @returns - Flattened array of matching entity IDs.
@@ -98,13 +101,19 @@ export const getStaticOptions = (
 export const getFilteredFirewallParentEntities = (
   firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
-): string[] => {
+): FirewallEntity[] => {
   if (!(firewallResources?.length && entities?.length)) return [];
 
   return firewallResources
     .filter((firewall) => entities.includes(firewall.id))
     .flatMap((firewall) =>
-      firewall.entities ? Object.keys(firewall.entities) : []
+      // combine key as id and value as label for each entity
+      firewall.entities
+        ? Object.entries(firewall.entities).map(([id, label]) => ({
+            id,
+            label,
+          }))
+        : []
     );
 };
 
@@ -139,6 +148,23 @@ export const getLinodeRegions = (linodes: Linode[]): Item<string, string>[] => {
 };
 
 /**
+ * Extracts unique region values from a list of nodebalancers.
+ * @param nodebalancers - Nodebalancer objects with region information.
+ * @returns - Deduplicated list of regions as options.
+ */
+export const getNodebalancerRegions = (
+  nodebalancers: NodeBalancer[]
+): Item<string, string>[] => {
+  if (!nodebalancers) return [];
+  const regions = new Set<string>();
+  nodebalancers.forEach(({ region }) => region && regions.add(region));
+  return Array.from(regions).map((region) => ({
+    label: transformDimensionValue('firewall', 'region_id', region),
+    value: region,
+  }));
+};
+
+/**
  *
  * @param vpcs List of VPCs
  * @returns a flat list of VPC subnets with transformed labels
@@ -152,4 +178,52 @@ export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
       value: String(subnetId),
     }))
   );
+};
+
+interface ScopeBasedFilteredBucketsProps {
+  /**
+   * The full list of available CloudPulse resources (buckets).
+   */
+  buckets: CloudPulseResources[];
+  /**
+   * A list of entity IDs (bucket IDs) to filter by when scope is `entity`.
+   */
+  entities?: string[];
+  /**
+   * The scope of the alert definition (`account`, `entity`, `region`, or `null`).
+   */
+  scope: AlertDefinitionScope | null;
+  /**
+   * A list of region IDs to filter by when scope is `region`.
+   */
+  selectedRegions?: null | string[];
+}
+
+/**
+ * Filters a list of Object Storage buckets based on the given alert definition scope.
+ *
+ * @param props - Object containing filter parameters.
+ * @returns A filtered list of buckets based on the provided scope.
+ */
+export const scopeBasedFilteredBuckets = (
+  props: ScopeBasedFilteredBucketsProps
+): CloudPulseResources[] => {
+  const { scope, buckets, selectedRegions, entities } = props;
+
+  switch (scope) {
+    case 'account':
+      return buckets;
+    case 'entity':
+      return entities
+        ? buckets.filter((bucket) => entities.includes(bucket.id))
+        : [];
+    case 'region':
+      return selectedRegions
+        ? buckets.filter((bucket) =>
+            selectedRegions.includes(bucket.region ?? '')
+          )
+        : [];
+    default:
+      return buckets;
+  }
 };
