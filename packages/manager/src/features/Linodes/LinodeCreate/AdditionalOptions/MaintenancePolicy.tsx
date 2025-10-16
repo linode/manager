@@ -52,7 +52,13 @@ export const MaintenancePolicy = () => {
       subHeading={
         <>
           {MAINTENANCE_POLICY_DESCRIPTION}{' '}
-          <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
+          <Link
+            data-pendo-id="linode-create-maintenance-policy-learn-more"
+            to={MAINTENANCE_POLICY_LEARN_MORE_URL}
+          >
+            Learn more
+          </Link>
+          .
         </>
       }
       summaryProps={{ sx: { p: 0 } }}

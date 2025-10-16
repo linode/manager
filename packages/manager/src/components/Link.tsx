@@ -54,6 +54,10 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    */
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   /**
+   * Optional prop to pass a pendo id to the link.
+   */
+  pendoId?: string;
+  /**
    * Optional prop to pass a sx style to the link.
    */
   style?: React.CSSProperties;
@@ -99,6 +103,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       forceCopyColor,
       hideIcon,
       onClick,
+      pendoId,
       style,
       title,
       to,
@@ -131,6 +136,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       'external',
       'forceCopyColor',
       'to',
+      'pendoId',
     ]);
 
     return shouldOpenInNewTab ? (
@@ -143,6 +149,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           },
           className
         )}
+        data-pendo-id={pendoId}
         data-testid={external ? 'external-site-link' : 'external-link'}
         href={processedUrl()}
         onClick={onClick}
@@ -166,6 +173,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     ) : (
       <RouterLink
         aria-label={ariaLabel}
+        data-pendo-id={pendoId}
         data-testid="internal-link"
         {...routerLinkProps}
         className={cx(

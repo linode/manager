@@ -62,7 +62,13 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
           )}
         </strong>
         . For more details, view{' '}
-        <Link to="/account/maintenance">Account Maintenance</Link>.
+        <Link
+          pendoId="linode-maintenance-banner-link"
+          to="/account/maintenance"
+        >
+          Account Maintenance
+        </Link>
+        .
       </Typography>
     </Notice>
   );

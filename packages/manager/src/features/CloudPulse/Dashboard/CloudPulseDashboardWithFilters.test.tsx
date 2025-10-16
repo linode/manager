@@ -238,4 +238,22 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     const startDate = screen.getByText('Start Date');
     expect(startDate).toBeInTheDocument();
   });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for firewall nodebalancer', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: { ...mockDashboard, service_type: 'firewall', id: 8 },
+      error: false,
+      isError: false,
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters dashboardId={8} resource={1} />
+    );
+    const startDate = screen.getByText('Start Date');
+    expect(startDate).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Select a NodeBalancer Region')
+    ).toBeVisible();
+  });
 });
