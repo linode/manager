@@ -1239,11 +1239,20 @@ describe('LKE cluster updates', () => {
     });
 
     it('can add a node pool with an update strategy on an LKE enterprise cluster', () => {
-      const cluster = kubernetesClusterFactory.build({
+      const clusterRegion = regionFactory.build({
+        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+        id: 'us-east',
+      });
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+        region: clusterRegion.id,
         tier: 'enterprise',
       });
+      const mockNodePool = nodePoolFactory.build({
+        type: 'g6-dedicated-4',
+      });
       const account = accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
       });
       const type = linodeTypeFactory.build({
         class: 'dedicated',
@@ -1258,13 +1267,15 @@ describe('LKE cluster updates', () => {
       });
 
       mockGetAccount(account).as('getAccount');
-      mockGetCluster(cluster).as('getCluster');
-      mockGetClusterPools(cluster.id, []).as('getNodePools');
+      mockGetRegions([clusterRegion]).as('getRegions');
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+      mockGetClusterPools(mockCluster.id, []).as('getNodePools');
       mockGetLinodeTypes([type]).as('getTypes');
 
-      cy.visitWithLogin(`/kubernetes/clusters/${cluster.id}`);
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
 
-      cy.wait(['@getCluster', '@getNodePools', '@getAccount']);
+      cy.wait(['@getAccount', '@getCluster', '@getNodePools', '@getRegions']);
 
       ui.button
         .findByTitle('Add a Node Pool')
@@ -1282,33 +1293,35 @@ describe('LKE cluster updates', () => {
         cy.findByLabelText('Add 1').should('be.enabled').click();
       });
 
-      interceptCreateNodePool(cluster.id).as('createNodePool');
+      interceptCreateNodePool(mockCluster.id).as('createNodePool');
 
-      ui.drawer.findByTitle(`Add a Node Pool: ${cluster.label}`).within(() => {
-        cy.findByLabelText('Update Strategy')
-          .should('be.visible')
-          .should('be.enabled')
-          .should('have.value', 'On Recycle Updates') // Should default to "On Recycle"
-          .click(); // Open the Autocomplete
+      ui.drawer
+        .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+        .within(() => {
+          cy.findByLabelText('Update Strategy')
+            .should('be.visible')
+            .should('be.enabled')
+            .should('have.value', 'On Recycle Updates') // Should default to "On Recycle"
+            .click(); // Open the Autocomplete
 
-        ui.autocompletePopper
-          .findByTitle('Rolling Updates') // Select "Rolling Updates"
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+          ui.autocompletePopper
+            .findByTitle('Rolling Updates') // Select "Rolling Updates"
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
 
-        // Verify the field's value actually changed
-        cy.findByLabelText('Update Strategy').should(
-          'have.value',
-          'Rolling Updates'
-        );
+          // Verify the field's value actually changed
+          cy.findByLabelText('Update Strategy').should(
+            'have.value',
+            'Rolling Updates'
+          );
 
-        ui.button
-          .findByTitle('Add pool')
-          .should('be.enabled')
-          .should('be.visible')
-          .click();
-      });
+          ui.button
+            .findByTitle('Add pool')
+            .should('be.enabled')
+            .should('be.visible')
+            .click();
+        });
 
       cy.wait('@createNodePool').then((intercept) => {
         const payload = intercept.request.body;
