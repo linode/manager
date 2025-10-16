@@ -184,6 +184,7 @@ export const getResourcesProperties = (
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
     associatedEntityType: config.configuration.associatedEntityType ?? 'both',
+    filterFn: config.configuration.filterFn,
   };
 };
 
@@ -248,6 +249,7 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
     isOptional,
+    filterFn,
   } = props.config.configuration;
   const {
     dashboard,
@@ -286,6 +288,7 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
+    filterFn,
   };
 };
 
@@ -744,25 +747,4 @@ export const filterEndpointsUsingRegion = (
   }
 
   return data.filter(({ region }) => region === regionFromFilter);
-};
-
-/**
- * @param serviceType The service type for which the filter needs to be applied
- * @param data The resources for which the filter needs to be applied
- * @returns The filtered resources
- */
-export const filterUsingSpecialConditions = (
-  serviceType: CloudPulseServiceType | undefined,
-  data: CloudPulseResources[]
-): CloudPulseResources[] => {
-  if (!serviceType) {
-    return data;
-  }
-  if (serviceType === 'firewall') {
-    // If the entities are empty, that means the firewall is not associated with the desired service
-    return data.filter(
-      ({ entities }) => entities && Object.keys(entities).length > 0
-    );
-  }
-  return data;
 };
