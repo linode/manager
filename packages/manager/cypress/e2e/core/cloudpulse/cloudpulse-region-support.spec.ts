@@ -45,8 +45,10 @@ import type { CloudPulseServiceType, Database } from '@linode/api-v4';
 
 const { dashboardName, id, metrics } = widgetDetails.dbaas;
 const serviceType = 'dbaas';
+const dashboardId = 1;
 const dashboard = dashboardFactory.build({
   label: dashboardName,
+  id: dashboardId,
   service_type: serviceType,
   widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
@@ -372,7 +374,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     cy.get('[data-qa-autocomplete-popper="true"]')
       .should('be.visible')
-      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+      .and('have.text', NO_REGION_MESSAGE[id]);
   });
 
   it('should show a region-unavailable message for linode when no linodes are available', () => {
@@ -416,7 +418,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     cy.get('[data-qa-autocomplete-popper="true"]')
       .should('be.visible')
-      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+      .and('have.text', NO_REGION_MESSAGE[id]);
   });
 
   it('should show a region-unavailable message for nodeblancer when no nodeblancers are available', () => {
@@ -463,7 +465,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.regionSelect.find().click();
     cy.get('[data-qa-autocomplete-popper="true"]')
       .should('be.visible')
-      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+      .and('have.text', NO_REGION_MESSAGE[id]);
   });
 
   it('should show a region-unavailable message for firewall when no linodes-region are available', () => {
@@ -533,6 +535,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     cy.get('[data-qa-autocomplete-popper="true"]')
       .should('be.visible')
-      .and('have.text', NO_REGION_MESSAGE[serviceType]);
+      .and('have.text', NO_REGION_MESSAGE[id]);
   });
 });

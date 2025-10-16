@@ -201,9 +201,161 @@ export const widgetDetails = {
         yLabel: 'system_disk_operations_total',
       },
     ],
-    firewalls: 'Firewall-resource',
+    firewalls: 'Firewall-0',
     serviceType: 'firewall',
     region: 'Newark',
+  },
+
+  firewall_nodebalancer: {
+    dashboardName: 'NodeBalancer - Firewall Metrics',
+    id: 8,
+    serviceType: 'firewall',
+    region: 'Newark',
+    firewalls: 'Firewall-0',
+
+    mandatoryFilters: [
+      { name: 'Region', type: 'single', api: 'list regions' },
+      {
+        name: 'Cloud Firewall',
+        type: 'single',
+        api: 'list firewalls',
+        comment: 'Show only firewalls attached to nodebalancer entities',
+      },
+      { name: 'NodeBalancer Region', type: 'single', api: 'list regions' }, // added filter
+    ],
+
+    optionalFilters: [
+      {
+        name: 'NodeBalancer',
+        type: 'multi',
+        api: 'list devices',
+        comment: 'Show only nodebalancers',
+      },
+    ],
+
+    metrics: [
+      {
+        name: 'ingress_bytes_accepted',
+        title: 'Accepted Bytes',
+        unit: 'B',
+        chartType: 'line',
+        widgetSize: 'large',
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        breakdown: ['Cloud Firewall', 'NodeBalancer'],
+        yLabel: 'ingress_bytes_accepted',
+        filters: [
+          // new property added
+          {
+            dimension_label: 'Protocol',
+            type: 'single',
+            value: 'list protocols',
+          },
+          {
+            dimension_label: 'IP Version',
+            type: 'single',
+            value: 'list ip_versions',
+          },
+        ],
+      },
+      {
+        name: 'ingress_bytes_dropped',
+        title: 'Dropped Bytes',
+        unit: 'B',
+        chartType: 'line',
+        widgetSize: 'large',
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        breakdown: ['Cloud Firewall', 'NodeBalancer'],
+        yLabel: 'ingress_bytes_dropped',
+        filters: [
+          {
+            dimension_label: 'Protocol',
+            type: 'single',
+            value: 'list protocols',
+          },
+          {
+            dimension_label: 'IP Version',
+            type: 'single',
+            value: 'list ip_versions',
+          },
+        ],
+      },
+      {
+        name: 'ingress_packets_accepted',
+        title: 'Accepted Packets',
+        unit: 'count',
+        chartType: 'line',
+        widgetSize: 'large',
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        breakdown: ['Cloud Firewall', 'NodeBalancer'],
+        yLabel: 'ingress_packets_accepted',
+        filters: [
+          {
+            dimension_label: 'Protocol',
+            type: 'single',
+            value: 'list protocols',
+          },
+          {
+            dimension_label: 'Protocol',
+            type: 'single',
+            value: 'list protocols',
+          },
+        ],
+      },
+      {
+        name: 'ingress_packets_dropped',
+        title: 'Dropped Packets',
+        unit: 'count',
+        chartType: 'line',
+        widgetSize: 'large',
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['sum'],
+        expectedGranularity: '1 hr',
+        breakdown: ['Cloud Firewall', 'NodeBalancer'],
+        yLabel: 'ingress_packets_dropped',
+        filters: [
+          // new property added
+          {
+            dimension_label: 'Protocol',
+            type: 'single',
+            value: 'list protocols',
+          },
+          {
+            dimension_label: 'IP Version',
+            type: 'single',
+            value: 'list ip_versions',
+          },
+          {
+            dimension_label: 'nodebalancer_id',
+            type: 'single',
+            value: 'list ip_versions',
+          },
+        ],
+      },
+    ],
+
+    dimensions: [
+      { key: 'region_id', exposed: false },
+      { key: 'entity_id', displayName: 'Cloud Firewall', exposed: true },
+      { key: 'nodebalancer_id', displayName: 'NodeBalancer', exposed: true },
+      {
+        key: 'ip_version',
+        displayName: 'IP Version',
+        values: ['v4', 'v6'],
+        exposed: true,
+      },
+      {
+        key: 'protocol',
+        displayName: 'Protocol',
+        values: ['tcp', 'udp'],
+        exposed: true,
+      },
+    ],
   },
 
   objectstorage: {

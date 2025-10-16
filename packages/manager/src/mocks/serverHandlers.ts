@@ -203,9 +203,11 @@ const makeMockDatabase = (params: PathParams): Database => {
   }
 
   if (database.platform === 'rdbms-default' && !!database.private_network) {
-    // When a database is configured with a VPC, the primary host is prepended with 'private-'
-    const privateHost = `private-${database.hosts.primary}`;
-    database.hosts.primary = privateHost;
+    // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
+    database.hosts = {
+      primary: 'private-db-mysql-primary-0.b.linodeb.net',
+      standby: 'private-db-mysql-standby-0.b.linodeb.net',
+    };
   }
 
   return database;
@@ -1213,7 +1215,17 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = [
-      ...firewallFactory.buildList(10),
+      ...firewallFactory.buildList(9),
+      firewallFactory.build({
+        entities: [
+          firewallEntityfactory.build({
+            type: 'nodebalancer',
+            parent_entity: null,
+            id: 333,
+            label: 'NodeBalancer-33',
+          }),
+        ],
+      }),
       firewallFactory.build({
         entities: [
           firewallEntityfactory.build({
@@ -3035,14 +3047,14 @@ export const handlers = [
             id: 550,
             type: 'user',
             label: 'object-storage -testing',
-            rule_criteria: {
-              rules: [objectStorageMetricCriteria.build()],
-            },
             service_type: 'objectstorage',
             entity_ids: [
               'obj-bucket-804.ap-west.linodeobjects.com',
               'obj-bucket-230.us-iad.linodeobjects.com',
             ],
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
           })
         );
       }
@@ -3162,13 +3174,9 @@ export const handlers = [
           label: 'Block Storage',
           service_type: 'blockstorage',
           regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({ scope: ['entity'] }),
-        }),
-        serviceTypesFactory.build({
-          label: 'Block Storage',
-          service_type: 'blockstorage',
-          regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
         }),
       ],
     };
@@ -3192,7 +3200,10 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
-        scope: ['entity'],
+        scope:
+          serviceType === 'objectstorage'
+            ? ['entity', 'account', 'region']
+            : ['entity'],
       }),
     });
 
@@ -3256,6 +3267,13 @@ export const handlers = [
         dashboardFactory.build({
           id: 4,
           label: 'Firewall Dashboard',
+          service_type: 'firewall',
+        })
+      );
+      response.data.push(
+        dashboardFactory.build({
+          id: 8,
+          label: 'Firewall Nodebalancer Dashboard',
           service_type: 'firewall',
         })
       );
@@ -3670,6 +3688,9 @@ export const handlers = [
     } else if (id === '7') {
       serviceType = 'blockstorage';
       dashboardLabel = 'Block Storage Dashboard';
+    } else if (id === '8') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Firewall Nodebalancer Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

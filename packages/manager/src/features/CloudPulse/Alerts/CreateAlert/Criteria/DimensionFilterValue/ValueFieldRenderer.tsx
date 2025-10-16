@@ -72,6 +72,10 @@ interface ValueFieldRendererProps {
   type?: 'alerts' | 'metrics';
 
   /**
+   * The type of monitoring to filter on.
+   */
+  type?: 'alerts' | 'metrics';
+  /**
    * The currently selected value for the input field.
    */
   value: null | string;
@@ -98,6 +102,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     values,
     type = 'alerts',
     selectedRegions,
+    type = 'alerts',
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);

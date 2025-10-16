@@ -117,7 +117,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         node_type: 'secondary',
         dateTimeDuration: {
           end: end.toISOString(),
-          preset: 'last day',
+          preset: 'Last day',
           start: start.toISOString(),
           timeZone: 'Etc/GMT',
         },
@@ -206,7 +206,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startDateInput').click();
     cy.get('@startDateInput').clear();
 
-    ui.button.findByTitle('last 7 days').click();
+    ui.button.findByTitle('Last 7 days').click();
 
     // Click the "Apply" button to confirm the end date and time
     cy.get('[data-qa-buttons="apply"]')

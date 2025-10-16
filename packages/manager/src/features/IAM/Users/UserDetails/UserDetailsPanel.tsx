@@ -12,11 +12,11 @@ import { getTotalAssignedRoles } from './utils';
 import type { IamUserRoles, User } from '@linode/api-v4';
 
 interface Props {
+  activeUser: User;
   assignedRoles?: IamUserRoles;
-  user: User;
 }
 
-export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
+export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
   const assignRolesCount = assignedRoles
     ? getTotalAssignedRoles(assignedRoles)
     : 0;
@@ -24,11 +24,11 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <MaskableText isToggleable text={user.username} />,
+      value: <MaskableText isToggleable text={activeUser.username} />,
     },
     {
       label: 'Email',
-      value: <MaskableText isToggleable text={user.email} />,
+      value: <MaskableText isToggleable text={activeUser.email} />,
     },
     {
       label: 'Assigned Roles',
@@ -39,12 +39,14 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       value: (
         <Stack direction="row" spacing={1}>
           <Typography textTransform="capitalize">
-            {user.last_login?.status ?? 'N/A'}
+            {activeUser.last_login?.status ?? 'N/A'}
           </Typography>
-          {user.last_login && (
+          {activeUser.last_login && (
             <StatusIcon
               status={
-                user.last_login?.status === 'successful' ? 'active' : 'error'
+                activeUser.last_login?.status === 'successful'
+                  ? 'active'
+                  : 'error'
               }
               sx={{ alignSelf: 'center' }}
             />
@@ -54,16 +56,16 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     },
     {
       label: 'Last login',
-      value: user.last_login ? (
-        <DateTimeDisplay value={user.last_login.login_datetime} />
+      value: activeUser.last_login ? (
+        <DateTimeDisplay value={activeUser.last_login.login_datetime} />
       ) : (
         <Typography>N/A</Typography>
       ),
     },
     {
       label: 'Password Created',
-      value: user.password_created ? (
-        <DateTimeDisplay value={user.password_created} />
+      value: activeUser.password_created ? (
+        <DateTimeDisplay value={activeUser.password_created} />
       ) : (
         <Typography>N/A</Typography>
       ),
@@ -71,7 +73,9 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     {
       label: '2FA',
       value: (
-        <Typography>{user.tfa_enabled ? 'Enabled' : 'Disabled'}</Typography>
+        <Typography>
+          {activeUser.tfa_enabled ? 'Enabled' : 'Disabled'}
+        </Typography>
       ),
     },
     {
@@ -79,18 +83,18 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       value: (
         <MaskableText
           isToggleable
-          text={user.verified_phone_number ?? 'None'}
+          text={activeUser.verified_phone_number ?? 'None'}
         />
       ),
     },
     {
       label: 'SSH Keys',
       value:
-        user.ssh_keys.length > 0 ? (
+        activeUser.ssh_keys.length > 0 ? (
           <TextTooltip
-            displayText={String(user.ssh_keys.length)}
+            displayText={String(activeUser.ssh_keys.length)}
             minWidth={1}
-            tooltipText={user.ssh_keys.join(', ')}
+            tooltipText={activeUser.ssh_keys.join(', ')}
           />
         ) : (
           <Typography>0</Typography>
