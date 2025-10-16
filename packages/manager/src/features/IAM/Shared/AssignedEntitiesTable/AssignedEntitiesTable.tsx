@@ -4,7 +4,7 @@ import {
 } from '@linode/queries';
 import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { useLocation, useSearch } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -23,8 +23,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
-import { useDelegationRole } from '../../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   addEntityNamesToRoles,
@@ -60,23 +59,8 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount } = useDelegationRole();
-  const location = useLocation();
-
-  /**
-   * isDefaultDelegationRolesForChildAccount is true if:
-   * - IAM Delegation is enabled for the account
-   * - The current user is a child account
-   * - The current route is '/iam/roles/defaults/entity-access'
-   *
-   * This flag is used to determine if the table should show or fetch delegated default roles
-   * instead of regular user roles, and to adjust UI/logic for the delegate context.
-   */
-  const isDefaultDelegationRolesForChildAccount =
-    isIAMDelegationEnabled &&
-    isChildAccount &&
-    location.pathname === '/iam/roles/defaults/entity-access';
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
     strict: false,

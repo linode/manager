@@ -12,14 +12,12 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
-import { useDelegationRole } from '../../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
@@ -46,18 +44,9 @@ export const ChangeRoleForEntityDrawer = ({
   username,
 }: Props) => {
   const theme = useTheme();
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount } = useDelegationRole();
-  const location = useLocation();
 
-  /**
-   * This flag is used to determine if the drawer should update delegated default roles
-   * instead of regular user roles, and to adjust mutation logic for the delegate context.
-   */
-  const isDefaultDelegationRolesForChildAccount =
-    isIAMDelegationEnabled &&
-    isChildAccount &&
-    location.pathname === '/iam/roles/defaults/entity-access';
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();

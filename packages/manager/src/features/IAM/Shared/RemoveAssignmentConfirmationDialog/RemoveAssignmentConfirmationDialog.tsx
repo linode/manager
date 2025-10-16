@@ -4,14 +4,12 @@ import {
   useUserRolesMutation,
 } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
-import { useLocation } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import { useDelegationRole } from '../../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { deleteUserEntity, getErrorMessage } from '../utilities';
 
 import type { EntitiesRole } from '../types';
@@ -27,18 +25,8 @@ interface Props {
 export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role, username } = props;
 
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount } = useDelegationRole();
-  const location = useLocation();
-
-  /**
-   * This flag is used to determine if the drawer should update delegated default roles
-   * instead of regular user roles, and to adjust mutation logic for the delegate context.
-   */
-  const isDefaultDelegationRolesForChildAccount =
-    isIAMDelegationEnabled &&
-    isChildAccount &&
-    location.pathname === '/iam/roles/defaults/entity-access';
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
 
   const { enqueueSnackbar } = useSnackbar();
 
