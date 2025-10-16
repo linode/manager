@@ -53,7 +53,7 @@ export const generateSharegroupToken = (
   data: GenerateSharegroupTokenPayload,
 ) => {
   return Request<SharegroupToken>(
-    setURL(`${BETA_API_ROOT}/images/sharegroup/tokens`),
+    setURL(`${BETA_API_ROOT}/images/sharegroups/tokens`),
     setMethod('POST'),
     setData(data, generateSharegroupTokenSchema),
   );
@@ -85,7 +85,7 @@ export const getSharegroupImagesFromToken = (
 ) => {
   Request<Page<Image>>(
     setURL(
-      `${BETA_API_ROOT}/images/sharegroups/tokens/${encodeURIComponent(token_uuid)}/sharegroup/images`,
+      `${BETA_API_ROOT}/images/sharegroups/tokens/${encodeURIComponent(token_uuid)}/sharegroups/images`,
     ),
     setMethod('GET'),
     setParams(params),
@@ -105,7 +105,7 @@ export const getSharegroupMembers = (
 ) => {
   Request<Page<SharegroupMember>>(
     setURL(
-      `${BETA_API_ROOT}/images/sharegroup/${encodeURIComponent(sharegroupId)}/members`,
+      `${BETA_API_ROOT}/images/sharegroups/${encodeURIComponent(sharegroupId)}/members`,
     ),
     setMethod('GET'),
     setParams(params),
@@ -125,7 +125,7 @@ export const getSharegroupMember = (
 ) => {
   Request<SharegroupMember>(
     setURL(
-      `${BETA_API_ROOT}/images/sharegroup/${encodeURIComponent(sharegroupId)}/members/${encodeURIComponent(token_uuid)}`,
+      `${BETA_API_ROOT}/images/sharegroups/${encodeURIComponent(sharegroupId)}/members/${encodeURIComponent(token_uuid)}`,
     ),
     setMethod('GET'),
   );

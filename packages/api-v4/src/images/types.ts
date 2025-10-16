@@ -28,7 +28,7 @@ export interface ImageSharingData {
     source_image_id: number;
   };
   shared_with: null | {
-    shared_count: number;
+    sharegroup_count: number;
     sharegroup_list_url: string;
   };
 }
