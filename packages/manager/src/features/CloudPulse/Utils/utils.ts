@@ -23,6 +23,7 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { AssociatedEntityType } from '../shared/types';
 import type {
   Alert,
   APIError,
@@ -30,6 +31,8 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
   Dashboard,
+  Firewall,
+  FirewallDeviceEntity,
   MonitoringCapabilities,
   ResourcePage,
   Service,
@@ -410,5 +413,22 @@ export const getAssociatedEntityType = (dashboardId: number | undefined) => {
     filterConfig?.filters.find(
       (filter) => filter.configuration.filterKey === RESOURCE_ID
     )?.configuration.associatedEntityType ?? 'both'
+  );
+};
+
+/**
+ *
+ * @param resources Firewall resources
+ * @param entityType Associated entity type
+ * @returns Filtered firewall resources based on the associated entity type
+ */
+export const filterFirewallResources = (
+  resources: Firewall[],
+  entityType: AssociatedEntityType
+) => {
+  return resources.filter((resource) =>
+    resource.entities.some(
+      (entity: FirewallDeviceEntity) => entity.type === entityType
+    )
   );
 };

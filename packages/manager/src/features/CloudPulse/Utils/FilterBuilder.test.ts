@@ -13,7 +13,6 @@ import {
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
   filterUsingDependentFilters,
-  filterUsingSpecialConditions,
   getEndpointsProperties,
   getFilters,
   getTextFilterProperties,
@@ -132,6 +131,37 @@ it('test getResourceSelectionProperties method', () => {
     expect(disabled).toEqual(false);
     expect(JSON.stringify(xFilter)).toEqual('{"region":"us-east"}');
     expect(label).toEqual(name);
+  }
+});
+
+it('test getResourceSelectionProperties method for linode-firewall', () => {
+  const resourceSelectionConfig = firewallConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Firewalls'
+  );
+
+  expect(resourceSelectionConfig).toBeDefined();
+
+  if (resourceSelectionConfig) {
+    const {
+      disabled,
+      handleResourcesSelection,
+      label,
+      savePreferences,
+      filterFn,
+    } = getResourcesProperties(
+      {
+        config: resourceSelectionConfig,
+        dashboard: { ...mockDashboard, id: 4 },
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    const { name } = resourceSelectionConfig.configuration;
+    expect(handleResourcesSelection).toBeDefined();
+    expect(savePreferences).toEqual(false);
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+    expect(filterFn).toBeDefined();
   }
 });
 
@@ -350,6 +380,7 @@ it('test getCustomSelectProperties method', () => {
       isMultiSelect: isMultiSelectApi,
       savePreferences: savePreferencesApi,
       type,
+      filterFn,
     } = getCustomSelectProperties(
       {
         config: customSelectEngineConfig,
@@ -366,6 +397,7 @@ it('test getCustomSelectProperties method', () => {
     expect(savePreferencesApi).toEqual(false);
     expect(isMultiSelectApi).toEqual(true);
     expect(label).toEqual(name);
+    expect(filterFn).not.toBeDefined();
   }
 });
 
@@ -634,23 +666,6 @@ describe('filterEndpointsUsingRegion', () => {
     expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(
       [mockData[0]]
     );
-  });
-});
-
-describe('filterUsingSpecialConditions', () => {
-  it('should return data as is if serviceType is undefined', () => {
-    expect(
-      filterUsingSpecialConditions(undefined, [{ id: '1', label: 'test' }])
-    ).toEqual([{ id: '1', label: 'test' }]);
-  });
-  it('should filter based on serviceType', () => {
-    // If the entities are empty, that means the firewall is not associated with the desired service and so should be filtered out
-    expect(
-      filterUsingSpecialConditions('firewall', [
-        { id: '1', label: 'test', entities: { [1]: 'test' } },
-        { id: '2', label: 'test2', entities: {} },
-      ])
-    ).toEqual([{ id: '1', label: 'test', entities: { [1]: 'test' } }]);
   });
 });
 

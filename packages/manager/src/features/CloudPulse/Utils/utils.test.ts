@@ -2,6 +2,10 @@ import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
 import { serviceTypesFactory } from 'src/factories';
+import {
+  firewallEntityfactory,
+  firewallFactory,
+} from 'src/factories/firewalls';
 
 import {
   INTERFACE_ID,
@@ -20,6 +24,7 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  filterFirewallResources,
   getAssociatedEntityType,
   getEnabledServiceTypes,
   isValidPort,
@@ -351,6 +356,32 @@ describe('getEnabledServiceTypes', () => {
 
     it('should return the associated entity type for nodebalancer firewall dashboard', () => {
       expect(getAssociatedEntityType(8)).toBe('nodebalancer');
+    });
+  });
+
+  describe('filterFirewallResources', () => {
+    it('should return the filtered firewall resources for linode', () => {
+      const resources = [
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 1,
+              label: 'linode-1',
+              type: 'linode',
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 2,
+              label: 'nodebalancer-1',
+              type: 'nodebalancer',
+            }),
+          ],
+        }),
+      ];
+      expect(filterFirewallResources(resources, 'linode')).toHaveLength(1);
     });
   });
 });
