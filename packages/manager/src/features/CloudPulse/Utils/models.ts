@@ -118,7 +118,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   dependency?: string[];
 
   /**
-   * This is an optional field, it is used to filter the resources based on the associated entity type
+   * This is an optional field, it is used to filter the resources
    */
   filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
 
