@@ -7,7 +7,10 @@ import {
   getLinodes,
   getNodePools,
 } from '@linode/api-v4';
+import { readdirSync, statSync } from 'fs';
+import { unlink } from 'fs/promises';
 import { DateTime } from 'luxon';
+import { resolve } from 'path';
 
 import { depaginate } from '../util/paginate';
 
@@ -152,7 +155,7 @@ const resourceCleanUpItems = [
   { name: 'Firewalls', cleanUp: deleteTestFirewalls },
 ];
 
-export const postRunCleanup: CypressPlugin = async (on) => {
+export const postRunCleanup: CypressPlugin = async (on, config) => {
   on('after:run', async () => {
     console.log('Performing post-run clean up:\n');
 
@@ -172,5 +175,24 @@ export const postRunCleanup: CypressPlugin = async (on) => {
       }
     }
     console.log('\nPost-run clean up is complete');
+
+    /*
+     * Mitigate an issue in Cypress 15.x where 0-byte MP4 files get leftover for passing tests.
+     * This relates to our plugin in `./discard-passed-test-recordings.ts`, which uses
+     * a solution provided by Cypress here:
+     *
+     * https://docs.cypress.io/app/guides/screenshots-and-videos#Delete-videos-for-specs-without-failing-or-retried-tests
+     *
+     * Unfortunately, this no longer functions correctly and instead 0-byte files
+     * are being saved. This mitigates the issue by deleting all 0-byte recording
+     * files.
+     */
+    // TODO Find related GitHub issue link or open one on Cypress GitHub.
+    const recordingDir = config.videosFolder;
+    const recordingsToDelete = readdirSync(recordingDir)
+      .map((recordingFile) => resolve(recordingDir, recordingFile))
+      .filter((recordingFile) => statSync(recordingFile).size === 0);
+
+    await Promise.all(recordingsToDelete.map((recording) => unlink(recording)));
   });
 };
