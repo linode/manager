@@ -187,6 +187,63 @@ export const newEgressConnectionsRulesFactory = {
   ...ingressBytesAcceptedRulesFactory,
   metric: 'new_egress_connections',
 };
+const endpoints = [
+  'endpoint_type-E2-us-sea-2.linodeobjects.com',
+  'endpoint_type-E3-us-sea-3.linodeobjects.com',
+  'endpoint_type-E2-us-sea-4.linodeobjects.com',
+];
+
+export const baseObjectStorageRuleFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      {
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'Chicago, IL',
+      },
+      {
+        dimension_label: 'endpoint',
+        operator: 'eq',
+        value: 'endpoint_type-E2-us-sea-4.linodeobjects.com',
+      },
+      {
+        dimension_label: 'endpoint',
+        operator: 'in',
+        value: endpoints.join(','), // ✅ join with commas
+      },
+    ],
+    operator: 'eq',
+    threshold: 1000,
+    metric: '', // override later per rule
+  });
+
+export const metricBuilder = {
+  metric: 'obj_bucket_size',
+  ...baseObjectStorageRuleFactory,
+};
+
+export const bucketResponsesRule = baseObjectStorageRuleFactory.build({
+  metric: 'obj_responses_num',
+  dimension_filters: [
+    {
+      dimension_label: 'endpoint',
+      operator: 'eq',
+      value: 'endpoint_type-E3-us-sea-3iL',
+    },
+  ],
+});
+
+export const bytesDownloadedRule = baseObjectStorageRuleFactory.build({
+  metric: 'obj_bytes_downloaded',
+  dimension_filters: [
+    {
+      dimension_label: 'endpoint',
+      operator: 'eq',
+      value: 'endpoint_type-E3-us-sea-3iL',
+    },
+  ],
+});
 
 export const alertDefinitionFactory =
   Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
