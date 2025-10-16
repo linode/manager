@@ -5,9 +5,8 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { subnetFactory, vpcFactory } from 'src/factories';
+import { DatabaseVPCSelector } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseVPCSelector';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
-import { DatabaseVPCSelector } from './DatabaseVPCSelector';
 
 import type { PrivateNetwork } from '@linode/api-v4';
 
