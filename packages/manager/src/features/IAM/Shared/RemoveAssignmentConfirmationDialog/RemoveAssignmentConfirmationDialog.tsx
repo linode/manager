@@ -1,11 +1,17 @@
-import { useUserRoles, useUserRolesMutation } from '@linode/queries';
+import {
+  useUpdateDefaultDelegationAccessQuery,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { deleteUserEntity, getErrorMessage } from '../utilities';
 
 import type { EntitiesRole } from '../types';
@@ -15,11 +21,24 @@ interface Props {
   onSuccess?: () => void;
   open: boolean;
   role: EntitiesRole | undefined;
+  username?: string;
 }
 
 export const RemoveAssignmentConfirmationDialog = (props: Props) => {
-  const { onClose: _onClose, onSuccess, open, role } = props;
-  const { username } = useParams({ from: '/iam/users/$username' });
+  const { onClose: _onClose, onSuccess, open, role, username } = props;
+
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { isChildAccount } = useDelegationRole();
+  const location = useLocation();
+
+  /**
+   * This flag is used to determine if the drawer should update delegated default roles
+   * instead of regular user roles, and to adjust mutation logic for the delegate context.
+   */
+  const isDefaultDelegationRolesForChildAccount =
+    isIAMDelegationEnabled &&
+    isChildAccount &&
+    location.pathname === '/iam/roles/defaults/entity-access';
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -28,7 +47,10 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     isPending,
     mutateAsync: updateUserRoles,
     reset,
-  } = useUserRolesMutation(username);
+  } = useUserRolesMutation(username ?? '');
+
+  const { mutateAsync: updateDefaultDelegationRoles } =
+    useUpdateDefaultDelegationAccessQuery();
 
   const { data: assignedRoles } = useUserRoles(username ?? '');
 
@@ -36,6 +58,10 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     reset(); // resets the error state of the useMutation
     _onClose();
   };
+
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultDelegationRoles
+    : updateUserRoles;
 
   const onDelete = async () => {
     if (!role || !assignedRoles) return;
@@ -49,7 +75,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       entity_type
     );
 
-    await updateUserRoles({
+    await mutationFn({
       ...assignedRoles,
       entity_access: updatedUserEntityRoles,
     });
@@ -81,14 +107,26 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       error={getErrorMessage(error)}
       onClose={onClose}
       open={open}
-      title={`Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`}
+      title={
+        isDefaultDelegationRolesForChildAccount
+          ? `Remove the ${role?.entity_name} entity from the list?`
+          : `Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`
+      }
     >
       <Notice variant="warning">
-        <Typography>
-          You’re about to remove the <strong>{role?.entity_name}</strong> entity
-          from the <strong>{role?.role_name}</strong> role for{' '}
-          <strong>{username}</strong>. This change will be applied immediately.
-        </Typography>
+        {isDefaultDelegationRolesForChildAccount ? (
+          <Typography>
+            Delegated users won’t get the {role?.role_name} access on the{' '}
+            {role?.entity_name} entity by default.
+          </Typography>
+        ) : (
+          <Typography>
+            You’re about to remove the <strong>{role?.entity_name}</strong>{' '}
+            entity from the <strong>{role?.role_name}</strong> role for{' '}
+            <strong>{username}</strong>. This change will be applied
+            immediately.
+          </Typography>
+        )}
       </Notice>
     </ConfirmationDialog>
   );

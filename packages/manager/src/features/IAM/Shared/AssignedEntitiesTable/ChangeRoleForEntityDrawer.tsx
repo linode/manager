@@ -1,5 +1,6 @@
 import {
   useAccountRoles,
+  useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
@@ -11,31 +12,30 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useParams } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
-import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
+import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
-} from '../../Shared/constants';
-import {
-  changeRoleForEntity,
-  getAllRoles,
-  getRoleByName,
-} from '../../Shared/utilities';
+} from '../constants';
+import { changeRoleForEntity, getAllRoles, getRoleByName } from '../utilities';
 
-import type { DrawerModes, EntitiesRole } from '../../Shared/types';
-import type { ExtendedEntityRole } from '../../Shared/utilities';
+import type { DrawerModes, EntitiesRole } from '../types';
+import type { ExtendedEntityRole } from '../utilities';
 
 interface Props {
   mode: DrawerModes;
   onClose: () => void;
   open: boolean;
   role: EntitiesRole | undefined;
+  username?: string;
 }
 
 export const ChangeRoleForEntityDrawer = ({
@@ -43,18 +43,31 @@ export const ChangeRoleForEntityDrawer = ({
   onClose,
   open,
   role,
+  username,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams({
-    from: '/iam/users/$username',
-  });
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { isChildAccount } = useDelegationRole();
+  const location = useLocation();
+
+  /**
+   * This flag is used to determine if the drawer should update delegated default roles
+   * instead of regular user roles, and to adjust mutation logic for the delegate context.
+   */
+  const isDefaultDelegationRolesForChildAccount =
+    isIAMDelegationEnabled &&
+    isChildAccount &&
+    location.pathname === '/iam/roles/defaults/entity-access';
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
   const { data: assignedRoles } = useUserRoles(username ?? '');
 
-  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username ?? '');
+
+  const { mutateAsync: updateDefaultDelegationRoles } =
+    useUpdateDefaultDelegationAccessQuery();
 
   // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
@@ -93,6 +106,10 @@ export const ChangeRoleForEntityDrawer = ({
     return getRoleByName(accountRoles, selectedOptions.value);
   }, [selectedOptions, accountRoles]);
 
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultDelegationRoles
+    : updateUserRoles;
+
   const onSubmit = async (data: { roleName: ExtendedEntityRole }) => {
     if (role?.role_name === data.roleName.label) {
       handleClose();
@@ -112,7 +129,7 @@ export const ChangeRoleForEntityDrawer = ({
         newRole
       );
 
-      await updateUserRoles({
+      await mutationFn({
         ...assignedRoles!,
         entity_access: updatedEntityRoles,
       });
