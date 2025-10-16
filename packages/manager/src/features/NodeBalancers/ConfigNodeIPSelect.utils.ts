@@ -63,6 +63,11 @@ export const getVPCIPOptions = (
     const subnet = subnetsMap[ip.subnet_id];
     const linode = linodesMap[ip.linode_id];
 
+    if (!linode || !subnet) {
+      // Safeguard against linode or subnet being undefined
+      continue;
+    }
+
     options.push({
       label: ip.address,
       subnet,
