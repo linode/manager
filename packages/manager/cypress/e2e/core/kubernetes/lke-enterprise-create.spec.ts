@@ -6,12 +6,10 @@ import { linodeTypeFactory, regionFactory } from '@linode/utilities';
 import {
   clusterPlans,
   latestEnterpriseTierKubernetesVersion,
-  latestKubernetesVersion,
   mockedLKEClusterTypes,
   mockedLKEEnterprisePrices,
   mockTieredEnterpriseVersions,
   mockTieredStandardVersions,
-  mockTieredVersions,
 } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -21,7 +19,6 @@ import {
   mockCreateCluster,
   mockCreateClusterError,
   mockGetCluster,
-  mockGetKubernetesVersions,
   mockGetLKEClusterTypes,
   mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
@@ -68,28 +65,47 @@ const mockVpcs = [
   },
 ];
 
+const mockDualStackVPCRegion = regionFactory.build({
+  capabilities: [
+    'Linodes',
+    'Kubernetes',
+    'Kubernetes Enterprise',
+    'VPCs',
+    'VPC Dual Stack',
+  ],
+  id: 'us-iad',
+  label: 'Washington, DC',
+});
+const mockNoDualStackVPCRegion = regionFactory.build({
+  capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise', 'VPCs'],
+});
+
 describe('LKE Cluster Creation with LKE-E', () => {
   beforeEach(() => {
     // TODO LKE-E: Remove feature flag mocks once we're in GA
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: false,
-        phase2Mtc: true,
+        phase2Mtc: { byoVPC: true, dualStack: true },
       },
     }).as('getFeatureFlags');
     mockGetAccount(
       accountFactory.build({
-        capabilities: ['Kubernetes Enterprise'],
+        capabilities: [
+          'Kubernetes Enterprise',
+          'Kubernetes Enterprise BYO VPC',
+          'Kubernetes Enterprise Dual Stack',
+        ],
       })
     ).as('getAccount');
 
     mockGetTieredKubernetesVersions('enterprise', [
       latestEnterpriseTierKubernetesVersion,
-    ]).as('getTieredKubernetesVersions');
-    mockGetKubernetesVersions([latestKubernetesVersion]).as(
-      'getKubernetesVersions'
+    ]).as('getEnterpriseTieredVersions');
+    mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions).as(
+      'getStandardTieredVersions'
     );
 
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
@@ -98,19 +114,9 @@ describe('LKE Cluster Creation with LKE-E', () => {
     );
     mockCreateCluster(mockEnterpriseCluster).as('createCluster');
 
-    mockGetRegions([
-      regionFactory.build({
-        capabilities: [
-          'Linodes',
-          'Kubernetes',
-          'Kubernetes Enterprise',
-          'VPCs',
-        ],
-        id: 'us-iad',
-        label: 'Washington, DC',
-      }),
-    ]).as('getRegions');
-
+    mockGetRegions([mockNoDualStackVPCRegion, mockDualStackVPCRegion]).as(
+      'getRegions'
+    );
     mockGetVPCs(mockVpcs).as('getVPCs');
 
     cy.visitWithLogin('/kubernetes/clusters');
@@ -118,11 +124,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     ui.button.findByTitle('Create Cluster').click();
     cy.url().should('endWith', '/kubernetes/create');
-    cy.wait([
-      '@getKubernetesVersions',
-      '@getTieredKubernetesVersions',
-      '@getLinodeTypes',
-    ]);
+    cy.wait(['@getLinodeTypes']);
   });
 
   describe('LKE-E Phase 2 Networking Configurations', () => {
@@ -404,11 +406,40 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.findByLabelText('Use an existing VPC').click();
       cy.findByText(errorText).should('not.exist');
     });
+
+    it('disables the dual stack IP Stack option if the region capability is not present', () => {
+      cy.findByLabelText('Cluster Label').type(clusterLabel);
+      cy.findByText('LKE Enterprise').click();
+
+      // Before region selection, confirm both IP Stack options are enabled initially and the default is selected.
+      cy.findByLabelText('IPv4').should('be.checked');
+      cy.findByLabelText('IPv4 + IPv6 (dual-stack)').should('be.enabled');
+
+      ui.regionSelect
+        .find()
+        .clear()
+        .type(`${mockDualStackVPCRegion.label}{enter}`);
+
+      // Confirm the dual stack option is available for a region with VPC IPv6.
+      cy.findByLabelText('IPv4 + IPv6 (dual-stack)')
+        .should('be.enabled')
+        .click();
+
+      // Change the region.
+      ui.regionSelect
+        .find()
+        .clear()
+        .type(`${mockNoDualStackVPCRegion.label}{enter}`);
+
+      // Confirm the dual stack option is disabled and default is reset after the region changes to a non-VPC IPv6 capable region.
+      cy.findByLabelText('IPv4 + IPv6 (dual-stack)').should('be.disabled');
+      cy.findByLabelText('IPv4').should('be.checked');
+    });
   });
 });
 
 /*
- * Tests for the LKE-E create flow when the `lkeEnterprise.postLa` feature flag is enabled.
+ * Tests for the LKE-E create flow when the `lkeEnterprise2.postLa` feature flag is enabled.
  * The main change introduced by this feature flag is a new flow when adding node pools:
  * Node pool size is specified inside of a configuration drawer instead of directly in the plan table,
  * and additional node pool options have been added exclusively for LKE Enterprise clusters.
@@ -449,11 +480,11 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
 
   beforeEach(() => {
     mockAppendFeatureFlags({
-      lkeEnterprise: {
+      lkeEnterprise2: {
         enabled: true,
         la: true,
         postLa: true,
-        phase2Mtc: false,
+        phase2Mtc: { byoVPC: false, dualStack: false },
       },
     });
     mockGetAccount(
@@ -461,7 +492,6 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
         capabilities: ['Kubernetes Enterprise'],
       })
     );
-    mockGetKubernetesVersions(mockTieredVersions.map((version) => version.id));
     mockGetTieredKubernetesVersions('standard', mockTieredStandardVersions);
     mockGetTieredKubernetesVersions('enterprise', mockTieredEnterpriseVersions);
   });
@@ -552,10 +582,8 @@ describe('LKE Enterprise cluster creation with LKE-E Post-LA', () => {
       mockSecondPlan.formattedLabel,
       () => {
         cy.findByText('Select existing firewall').click();
-        cy.get('[data-qa-autocomplete="Firewall"]').within(() => {
-          cy.findByLabelText('Firewall').type(mockFirewall.label);
-          ui.autocompletePopper.findByTitle(mockFirewall.label).click();
-        });
+        cy.get('[aria-label="Firewall"]').type(mockFirewall.label);
+        ui.autocompletePopper.findByTitle(mockFirewall.label).click();
 
         ui.button
           .findByTitle('Add Pool')

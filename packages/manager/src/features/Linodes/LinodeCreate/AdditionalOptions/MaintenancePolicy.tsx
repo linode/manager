@@ -31,8 +31,7 @@ export const MaintenancePolicy = () => {
   const { data: region } = useRegionQuery(selectedRegion);
   const { data: type } = useTypeQuery(selectedType, Boolean(selectedType));
 
-  // Check if user has permission to update linodes (needed for maintenance policy)
-  const { data: permissions } = usePermissions('linode', ['update_linode']);
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const isGPUPlan = type && type.class === 'gpu';
 
@@ -42,7 +41,7 @@ export const MaintenancePolicy = () => {
   // Determine if disabled due to missing prerequisites vs permission issues
   const isDisabledDueToPrerequisites =
     !selectedRegion || !regionSupportsMaintenancePolicy;
-  const isDisabledDueToPermissions = !permissions?.update_linode;
+  const isDisabledDueToPermissions = !permissions?.create_linode;
   const isDisabled = isDisabledDueToPrerequisites || isDisabledDueToPermissions;
 
   return (
@@ -53,7 +52,13 @@ export const MaintenancePolicy = () => {
       subHeading={
         <>
           {MAINTENANCE_POLICY_DESCRIPTION}{' '}
-          <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
+          <Link
+            data-pendo-id="linode-create-maintenance-policy-learn-more"
+            to={MAINTENANCE_POLICY_LEARN_MORE_URL}
+          >
+            Learn more
+          </Link>
+          .
         </>
       }
       summaryProps={{ sx: { p: 0 } }}

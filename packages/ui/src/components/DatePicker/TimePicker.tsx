@@ -13,12 +13,9 @@ import type { TimePickerProps as MUITimePickerProps } from '@mui/x-date-pickers/
 import type { DateTime } from 'luxon';
 
 interface TimePickerProps
-  extends Omit<
-    MUITimePickerProps<DateTime>,
-    'onChange' | 'renderInput' | 'value'
-  > {
+  extends Omit<MUITimePickerProps, 'onChange' | 'renderInput' | 'value'> {
   errorText?: string;
-  format?: 'HH:mm' | 'hh:mm a'; // 24-hour or 12-hour format
+  format?: 'HH:mm' | 'HH:mm:ss' | 'hh:mm a'; // 24-hour or 12-hour format
   inputRef?: React.RefObject<HTMLInputElement | null>;
   label: string;
   onChange: (time: DateTime | null) => void;
@@ -61,7 +58,6 @@ export const TimePicker = ({
         </InputLabel>
         <MuiTimePicker
           ampm={format === 'hh:mm a'} // Toggle 12-hour or 24-hour format
-          key={value?.toISO() || ''}
           onChange={handleChange}
           slotProps={{
             actionBar: {

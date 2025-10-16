@@ -4,13 +4,14 @@ import React from 'react';
 
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 
+import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
-import { LINODE_REGION } from '../Utils/constants';
+import { PARENT_ENTITY_REGION } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -28,20 +29,26 @@ export interface CloudPulseDashboardWithFiltersProp {
    */
   dashboardId: number;
   /**
+   * The region for which the metrics will be listed
+   */
+  region?: string;
+  /**
    * The resource id for which the metrics will be listed
    */
-  resource: number;
+  resource: number | string;
 }
 
 export const CloudPulseDashboardWithFilters = React.memo(
   (props: CloudPulseDashboardWithFiltersProp) => {
-    const { dashboardId, resource } = props;
+    const { dashboardId, resource, region } = props;
     const { data: dashboard, isError } =
       useCloudPulseDashboardByIdQuery(dashboardId);
     const [filterData, setFilterData] = React.useState<FilterData>({
       id: {},
       label: {},
     });
+
+    const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
     const [timeDuration, setTimeDuration] =
       React.useState<DateTimeWithPreset>();
@@ -70,6 +77,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
       },
       []
     );
+
+    const handleGroupByChange = React.useCallback((groupBy: string[]) => {
+      setGroupBy(groupBy);
+    }, []);
 
     const handleTimeRangeChange = React.useCallback(
       (timeDuration: DateTimeWithPreset) => {
@@ -115,7 +126,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
       dashboardObj: dashboard,
       filterValue: filterData.id,
       resource,
+      region,
       timeDuration,
+      groupBy,
     });
 
     return (
@@ -139,11 +152,21 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   defaultValue={dashboardId}
                   isServiceIntegration
                 />
-
-                <CloudPulseDateTimeRangePicker
-                  handleStatsChange={handleTimeRangeChange}
-                  savePreferences
-                />
+                <Box
+                  display="flex"
+                  flexDirection={{ md: 'row', xs: 'column' }}
+                  flexWrap="wrap"
+                  gap={2}
+                >
+                  <CloudPulseDateTimeRangePicker
+                    handleStatsChange={handleTimeRangeChange}
+                    savePreferences
+                  />
+                  <GlobalFilterGroupByRenderer
+                    handleChange={handleGroupByChange}
+                    selectedDashboard={dashboard}
+                  />
+                </Box>
               </Box>
             </GridLegacy>
 
@@ -162,7 +185,13 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
-                resource_ids={[resource]}
+                resource_ids={
+                  dashboard.service_type !== 'objectstorage'
+                    ? typeof resource === 'number'
+                      ? [resource]
+                      : undefined
+                    : undefined
+                }
               />
             )}
             <GridLegacy
@@ -188,11 +217,13 @@ export const CloudPulseDashboardWithFilters = React.memo(
               dashboardObj: dashboard,
               filterValue: filterData.id,
               resource,
+              region,
               timeDuration,
+              groupBy,
             })}
             linodeRegion={
-              filterData.id[LINODE_REGION]
-                ? (filterData.id[LINODE_REGION] as string)
+              filterData.id[PARENT_ENTITY_REGION]
+                ? (filterData.id[PARENT_ENTITY_REGION] as string)
                 : undefined
             }
           />

@@ -22,11 +22,14 @@ export const getStateSeederGroups = (
 };
 
 export const emptyStore: MockState = {
+  childAccounts: [],
   cloudnats: [],
   configInterfaces: [],
+  delegations: [],
   destinations: [],
   domainRecords: [],
   domains: [],
+  entities: [],
   eventQueue: [],
   firewallDevices: [],
   firewalls: [],
@@ -41,6 +44,10 @@ export const emptyStore: MockState = {
   nodeBalancerConfigs: [],
   nodeBalancers: [],
   notificationQueue: [],
+  accountRoles: [],
+  userRoles: [],
+  userAccountPermissions: [],
+  userEntityPermissions: [],
   placementGroups: [],
   regionAvailability: [],
   regions: [],
@@ -48,6 +55,7 @@ export const emptyStore: MockState = {
   subnets: [],
   supportReplies: [],
   supportTickets: [],
+  users: [],
   volumes: [],
   vpcs: [],
   vpcsIps: [],

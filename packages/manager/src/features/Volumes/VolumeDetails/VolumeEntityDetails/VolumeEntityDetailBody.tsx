@@ -7,19 +7,20 @@ import React from 'react';
 
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
-import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { formatDate } from 'src/utilities/formatDate';
 
+import { AttachedToValue } from '../../Partials/AttachedToValue';
 import { volumeStatusIconMap } from '../../utils';
 
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  detachHandler: () => void;
   volume: Volume;
 }
 
-export const VolumeEntityDetailBody = ({ volume }: Props) => {
+export const VolumeEntityDetailBody = ({ volume, detachHandler }: Props) => {
   const theme = useTheme();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -102,16 +103,7 @@ export const VolumeEntityDetailBody = ({ volume }: Props) => {
         <Box>
           <Typography>Attached To</Typography>
           <Typography sx={(theme) => ({ font: theme.font.bold })}>
-            {volume.linode_id !== null ? (
-              <Link
-                className="link secondaryLink"
-                to={`/linodes/${volume.linode_id}/storage`}
-              >
-                {volume.linode_label}
-              </Link>
-            ) : (
-              'Unattached'
-            )}
+            <AttachedToValue onDetach={detachHandler} volume={volume} />
           </Typography>
         </Box>
 

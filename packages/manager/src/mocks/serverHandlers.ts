@@ -92,6 +92,8 @@ import {
   objectStorageClusterFactory,
   objectStorageEndpointsFactory,
   objectStorageKeyFactory,
+  objectStorageMetricCriteria,
+  objectStorageMetricRules,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
   paymentFactory,
@@ -195,9 +197,19 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
   const database = databaseFactory.build(db);
+
   if (database.platform !== 'rdbms-default') {
     delete database.private_network;
   }
+
+  if (database.platform === 'rdbms-default' && !!database.private_network) {
+    // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
+    database.hosts = {
+      primary: 'private-db-mysql-primary-0.b.linodeb.net',
+      standby: 'private-db-mysql-standby-0.b.linodeb.net',
+    };
+  }
+
   return database;
 };
 
@@ -1008,8 +1020,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
           alerts: {
-            user: [21, 22, 23, 24, 25],
-            system: [19, 20],
+            user_alerts: [21, 22, 23, 24, 25],
+            system_alerts: [19, 20],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -1024,8 +1036,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 10,
             io: 10000,
             network_in: 0,
@@ -1043,8 +1055,8 @@ export const handlers = [
           label: 'aclp-supported-region-linode-3',
           region: 'us-iad',
           alerts: {
-            user: [],
-            system: [],
+            user_alerts: [],
+            system_alerts: [],
             cpu: 0,
             io: 0,
             network_in: 0,
@@ -1203,7 +1215,17 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = [
-      ...firewallFactory.buildList(10),
+      ...firewallFactory.buildList(9),
+      firewallFactory.build({
+        entities: [
+          firewallEntityfactory.build({
+            type: 'nodebalancer',
+            parent_entity: null,
+            id: 333,
+            label: 'NodeBalancer-33',
+          }),
+        ],
+      }),
       firewallFactory.build({
         entities: [
           firewallEntityfactory.build({
@@ -1340,6 +1362,16 @@ export const handlers = [
         region: 'us-mia',
         s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'ap-west',
+        s3_endpoint: 'ap-west-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-iad',
+        s3_endpoint: 'us-iad-1.linodeobjects.com',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
@@ -1441,14 +1473,49 @@ export const handlers = [
       Math.random() * 4
     )}` as ObjectStorageEndpointTypes;
 
-    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
-      cluster: `${region}-1`,
-      endpoint_type: randomEndpointType,
-      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
-      label: `obj-bucket-${randomBucketNumber}`,
-      region,
-    });
-
+    const buckets =
+      region !== 'ap-west' && region !== 'us-iad'
+        ? objectStorageBucketFactoryGen2.buildList(1, {
+            cluster: `${region}-1`,
+            endpoint_type: randomEndpointType,
+            hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+            label: `obj-bucket-${randomBucketNumber}`,
+            region,
+          })
+        : [];
+    if (region === 'ap-west') {
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-804.ap-west.linodeobjects.com`,
+          label: `obj-bucket-804`,
+          region,
+        })
+      );
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `ap-west-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'ap-west-1.linodeobjects.com',
+          hostname: `obj-bucket-902.ap-west.linodeobjects.com`,
+          label: `obj-bucket-902`,
+          region,
+        })
+      );
+    }
+    if (region === 'us-iad')
+      buckets.push(
+        objectStorageBucketFactoryGen2.build({
+          cluster: `us-iad-1`,
+          endpoint_type: 'E3',
+          s3_endpoint: 'us-iad-1.linodeobjects.com',
+          hostname: `obj-bucket-230.us-iad.linodeobjects.com`,
+          label: `obj-bucket-230`,
+          region,
+        })
+      );
     return HttpResponse.json({
       data: buckets.slice(
         (page - 1) * pageSize,
@@ -1613,7 +1680,9 @@ export const handlers = [
       'offline',
       'resizing',
     ];
-    const volumes = statuses.map((status) => volumeFactory.build({ status }));
+    const volumes = statuses.map((status) =>
+      volumeFactory.build({ status, region: 'ap-west' })
+    );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
@@ -2865,6 +2934,13 @@ export const handlers = [
             scope: 'region',
             regions: ['us-east'],
           }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'entity',
+            regions: ['us-east'],
+            entity_ids: ['5', '6'],
+          }),
         ],
       });
     }
@@ -2928,10 +3004,18 @@ export const handlers = [
         label: 'Firewall - testing',
         service_type: 'firewall',
         type: 'user',
+        scope: 'account',
         created_by: 'user1',
         rule_criteria: {
           rules: [firewallMetricRulesFactory.build()],
         },
+      }),
+      alertFactory.build({
+        id: 550,
+        label: 'Object Storage - testing',
+        type: 'user',
+        service_type: 'objectstorage',
+        entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
       }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
@@ -2946,8 +3030,26 @@ export const handlers = [
             label: 'Firewall - testing',
             service_type: 'firewall',
             type: 'user',
+            scope: 'account',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            type: 'user',
+            label: 'object-storage -testing',
+            service_type: 'objectstorage',
+            entity_ids: [
+              'obj-bucket-804.ap-west.linodeobjects.com',
+              'obj-bucket-230.us-iad.linodeobjects.com',
+            ],
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
             },
           })
         );
@@ -2983,9 +3085,24 @@ export const handlers = [
             label: 'Firewall - testing',
             service_type: 'firewall',
             type: 'user',
+            scope: 'account',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
+          })
+        );
+      }
+      if (params.id === '550' && params.serviceType === 'objectstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 550,
+            label: 'object-storage -testing',
+            type: 'user',
+            rule_criteria: {
+              rules: [objectStorageMetricCriteria.build()],
+            },
+            service_type: 'objectstorage',
+            entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
           })
         );
       }
@@ -3038,6 +3155,20 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Object Storage',
+          service_type: 'objectstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
+        }),
+        serviceTypesFactory.build({
+          label: 'Block Storage',
+          service_type: 'blockstorage',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3050,6 +3181,8 @@ export const handlers = [
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
+      objectstorage: 'Object Storage',
+      blockstorage: 'Block Storage',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -3057,6 +3190,10 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
+        scope:
+          serviceType === 'objectstorage'
+            ? ['entity', 'account', 'region']
+            : ['entity'],
       }),
     });
 
@@ -3121,6 +3258,33 @@ export const handlers = [
           id: 4,
           label: 'Firewall Dashboard',
           service_type: 'firewall',
+        })
+      );
+      response.data.push(
+        dashboardFactory.build({
+          id: 8,
+          label: 'Firewall Nodebalancer Dashboard',
+          service_type: 'firewall',
+        })
+      );
+    }
+
+    if (params.serviceType === 'objectstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 6,
+          label: 'Object Storage Dashboard',
+          service_type: 'objectstorage',
+        })
+      );
+    }
+
+    if (params.serviceType === 'blockstorage') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 7,
+          label: 'Block Storage Dashboard',
+          service_type: 'blockstorage',
         })
       );
     }
@@ -3191,7 +3355,7 @@ export const handlers = [
             metric: 'system_memory_usage_by_resource',
             metric_type: 'gauge',
             scrape_interval: '30s',
-            unit: 'byte',
+            unit: 'Bps ',
           },
           {
             available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
@@ -3386,6 +3550,9 @@ export const handlers = [
       if (params.serviceType === 'nodebalancer') {
         return HttpResponse.json(nodebalancerMetricsResponse);
       }
+      if (params.serviceType === 'objectstorage') {
+        return HttpResponse.json({ data: objectStorageMetricRules });
+      }
       return HttpResponse.json(response);
     }
   ),
@@ -3411,6 +3578,15 @@ export const handlers = [
     } else if (id === '4') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
+    } else if (id === '6') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Object Storage Service I/O Statistics';
+    } else if (id === '7') {
+      serviceType = 'blockstorage';
+      dashboardLabel = 'Block Storage Dashboard';
+    } else if (id === '8') {
+      serviceType = 'firewall';
+      dashboardLabel = 'Firewall Nodebalancer Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
@@ -3445,7 +3621,7 @@ export const handlers = [
           label: 'Memory Usage',
           metric: 'system_memory_usage_by_resource',
           size: 12,
-          unit: 'Bytes',
+          unit: 'Bps',
           group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
@@ -3551,9 +3727,8 @@ export const handlers = [
           },
           {
             metric: {
-              entity_id: '789',
+              entity_id: 'obj-bucket-383.ap-west.linodeobjects.com',
               metric_name: 'average_cpu_usage',
-              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

@@ -12,6 +12,8 @@ import * as React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
+import { GROUP_BY_SELECTION_LIMIT } from './constants';
+
 import type { CloudPulseServiceType } from '@linode/api-v4';
 
 export interface GroupByDrawerProps {
@@ -26,7 +28,7 @@ export interface GroupByDrawerProps {
   /**
    * Callback function triggered when apply button is clicked
    */
-  onApply: (value: GroupByOption[]) => void;
+  onApply: (value: GroupByOption[], savePref?: boolean) => void;
   /**
    * Callback function triggered when cancel button is clicked
    */
@@ -57,8 +59,6 @@ export interface GroupByOption {
   label: string;
   value: string;
 }
-
-const groupBySelectionLimit = 3;
 export const CloudPulseGroupByDrawer = React.memo(
   (props: GroupByDrawerProps) => {
     const {
@@ -76,13 +76,13 @@ export const CloudPulseGroupByDrawer = React.memo(
     const [selectedValue, setSelectedValue] = React.useState<GroupByOption[]>(
       defaultValue.slice(
         0,
-        Math.min(defaultValue.length, groupBySelectionLimit)
+        Math.min(defaultValue.length, GROUP_BY_SELECTION_LIMIT)
       )
     );
     const previousValueRef = React.useRef<GroupByOption[]>(
       defaultValue.slice(
         0,
-        Math.min(defaultValue.length, groupBySelectionLimit)
+        Math.min(defaultValue.length, GROUP_BY_SELECTION_LIMIT)
       )
     );
 
@@ -94,9 +94,9 @@ export const CloudPulseGroupByDrawer = React.memo(
     React.useEffect(() => {
       const value = defaultValue.slice(
         0,
-        Math.min(defaultValue.length, groupBySelectionLimit)
+        Math.min(defaultValue.length, GROUP_BY_SELECTION_LIMIT)
       );
-      onApply(value);
+      onApply(value, false);
       setSelectedValue(value);
     }, [serviceType]);
     const handleClose = () => {
@@ -116,10 +116,10 @@ export const CloudPulseGroupByDrawer = React.memo(
       const isSelected = props['aria-selected'] === true;
       const ListItem = isSelectAllORDeselectAllOption ? StyledListItem : 'li';
       const isDisabled =
-        selectedValue.length >= groupBySelectionLimit && !isSelected;
+        selectedValue.length >= GROUP_BY_SELECTION_LIMIT && !isSelected;
       const isHidden =
         isSelectAllORDeselectAllOption &&
-        options.length > groupBySelectionLimit;
+        options.length > GROUP_BY_SELECTION_LIMIT;
 
       if (isHidden) {
         return <NullComponent />;
@@ -138,9 +138,10 @@ export const CloudPulseGroupByDrawer = React.memo(
 
     return (
       <Drawer onClose={(_) => handleClose()} open={open} title={title}>
-        <Stack gap={4}>
+        <Stack gap={3}>
           <Typography
             component="p"
+            data-qa-id="groupby-drawer-subtitle"
             sx={(theme) => ({ marginTop: -1, font: theme.font.normal })}
             variant="h3"
           >
@@ -151,19 +152,19 @@ export const CloudPulseGroupByDrawer = React.memo(
             data-testid="dimension-select"
             helperText={
               options.length > 3
-                ? `You can select up to ${groupBySelectionLimit} dimensions.`
+                ? `You can select up to ${GROUP_BY_SELECTION_LIMIT} dimensions.`
                 : undefined
             }
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
             }
-            label="Select Dimensions"
+            label="Dimensions"
             multiple
             onChange={(_event, value) => {
               setSelectedValue(value);
             }}
             options={options}
-            placeholder="Select Dimensions"
+            placeholder={selectedValue.length > 0 ? '' : 'Select Dimensions'}
             renderOption={renderOptions}
             value={selectedValue}
           />

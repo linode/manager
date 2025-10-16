@@ -25,6 +25,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclpLogs', label: 'ACLP Logs' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
+  { flag: 'aplLkeE', label: 'Akamai App Platform LKE-E' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'blockStorageVolumeLimit', label: 'Block Storage Volume Limit' },
   { flag: 'cloudNat', label: 'Cloud NAT' },
@@ -33,7 +34,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
-  { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
+  { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
   { flag: 'mtc2025', label: 'MTC 2025' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
@@ -46,6 +47,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },
+  { flag: 'databaseVpcBeta', label: 'Database VPC Beta' },
   { flag: 'databasePremium', label: 'Database Premium' },
   {
     flag: 'databaseRestrictPlanResize',
@@ -53,6 +55,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',
@@ -63,6 +66,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'VM Host Maintenance Policy',
   },
   { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
+  { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
 

@@ -8,6 +8,7 @@ import {
   ActionsPanel,
   Autocomplete,
   Drawer,
+  LinkButton,
   Notice,
   Typography,
 } from '@linode/ui';
@@ -19,7 +20,6 @@ import React, { useCallback, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
@@ -143,11 +143,14 @@ export const AssignSelectedRolesDrawer = ({
 
   const handleScroll = (event: React.SyntheticEvent) => {
     const listboxNode = event.currentTarget;
-    if (
-      listboxNode.scrollTop + listboxNode.clientHeight >=
-        listboxNode.scrollHeight &&
-      hasNextPage
-    ) {
+    const isAtBottom =
+      Math.abs(
+        listboxNode.scrollHeight -
+          listboxNode.clientHeight -
+          listboxNode.scrollTop
+      ) < 1;
+
+    if (isAtBottom && hasNextPage) {
       fetchNextPage();
     }
   };

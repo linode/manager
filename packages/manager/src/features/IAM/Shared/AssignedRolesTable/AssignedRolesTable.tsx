@@ -15,7 +15,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useAccountEntities } from 'src/queries/entities/entities';
+import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
@@ -135,11 +135,13 @@ export const AssignedRolesTable = () => {
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
-  const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
+  const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
+    {}
+  );
+
   const { data: assignedRoles, isLoading: assignedRolesLoading } = useUserRoles(
     username ?? ''
   );
-
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
       return { filterableOptions: [], roles: [] };
@@ -154,7 +156,7 @@ export const AssignedRolesTable = () => {
     ];
 
     if (entities) {
-      const transformedEntities = groupAccountEntitiesByType(entities.data);
+      const transformedEntities = groupAccountEntitiesByType(entities);
 
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
@@ -256,6 +258,7 @@ export const AssignedRolesTable = () => {
             <Typography
               sx={{
                 font: theme.tokens.alias.Typography.Label.Bold.S,
+                marginBottom: theme.tokens.spacing.S4,
               }}
             >
               Description
@@ -397,6 +400,7 @@ export const AssignedRolesTable = () => {
         TableRowHead={RoleTableRowHead}
       />
       <AssignNewRoleDrawer
+        assignedRoles={assignedRoles}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
       />

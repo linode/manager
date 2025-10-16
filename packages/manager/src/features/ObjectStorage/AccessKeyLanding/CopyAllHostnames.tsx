@@ -1,4 +1,4 @@
-import { Box, InputLabel, StyledLinkButton, Tooltip } from '@linode/ui';
+import { Box, InputLabel, LinkButton, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
@@ -28,14 +28,14 @@ export const CopyAllHostnames = (props: Props) => {
           placement="top"
           title={copied ? 'Copied!' : 'Copy'}
         >
-          <StyledLinkButton
+          <LinkButton
             aria-label={`Copy ${text} to clipboard`}
             name={text}
             onClick={handleIconClick}
             type="button"
           >
             Copy all
-          </StyledLinkButton>
+          </LinkButton>
         </Tooltip>
       )}
     </StyledBox>

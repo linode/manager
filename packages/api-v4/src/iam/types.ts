@@ -72,38 +72,63 @@ export type RoleName = AccountRoleType | EntityRoleType;
 export type AccountAdmin =
   | 'accept_service_transfer'
   | 'acknowledge_account_agreement'
+  | 'answer_profile_security_questions'
   | 'cancel_account'
   | 'cancel_service_transfer'
+  | 'create_profile_pat'
+  | 'create_profile_ssh_key'
+  | 'create_profile_tfa_secret'
   | 'create_service_transfer'
   | 'create_user'
+  | 'delete_profile_pat'
+  | 'delete_profile_phone_number'
+  | 'delete_profile_ssh_key'
   | 'delete_user'
+  | 'disable_profile_tfa'
   | 'enable_managed'
+  | 'enable_profile_tfa'
   | 'enroll_beta_program'
   | 'is_account_admin'
   | 'list_account_agreements'
   | 'list_account_logins'
   | 'list_available_services'
   | 'list_default_firewalls'
+  | 'list_enrolled_beta_programs'
   | 'list_service_transfers'
   | 'list_user_grants'
+  | 'revoke_profile_app'
+  | 'revoke_profile_device'
+  | 'send_profile_phone_number_verification_code'
   | 'update_account'
   | 'update_account_settings'
+  | 'update_default_firewalls'
+  | 'update_profile'
+  | 'update_profile_pat'
+  | 'update_profile_ssh_key'
   | 'update_user'
   | 'update_user_grants'
+  | 'update_user_preferences'
+  | 'verify_profile_phone_number'
   | 'view_account'
   | 'view_account_login'
   | 'view_account_settings'
   | 'view_enrolled_beta_program'
   | 'view_network_usage'
+  | 'view_profile_security_question'
   | 'view_region_available_service'
   | 'view_service_transfer'
   | 'view_user'
   | 'view_user_preferences'
   | AccountBillingAdmin
+  | AccountEventViewer
   | AccountFirewallAdmin
+  | AccountImageAdmin
   | AccountLinodeAdmin
+  | AccountMaintenanceViewer
   | AccountNodeBalancerAdmin
+  | AccountNotificationViewer
   | AccountOauthClientAdmin
+  | AccountProfileViewer
   | AccountVolumeAdmin
   | AccountVPCAdmin;
 
@@ -124,6 +149,7 @@ export type AccountBillingViewer =
   | 'list_payment_methods'
   | 'view_billing_invoice'
   | 'view_billing_payment'
+  | 'view_invoice_item'
   | 'view_payment_method';
 
 /** Permissions associated with the "account_event_viewer" role. */
@@ -163,6 +189,15 @@ export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
 
 /** Permissions associated with the "account_volume_creator" role. */
 export type AccountVolumeCreator = 'create_volume';
+
+/** Permissions associated with the "account_image_admin" role. */
+export type AccountImageAdmin = AccountImageCreator | ImageAdmin;
+
+/** Permissions associated with the "account_image_creator" role. */
+export type AccountImageCreator =
+  | 'create_image'
+  | 'list_images'
+  | 'upload_image';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';
@@ -371,6 +406,18 @@ export type VolumeContributor =
 
 /** Permissions associated with the "volume_viewer" role. */
 export type VolumeViewer = 'view_volume';
+
+export type ImageAdmin =
+  | 'delete_image'
+  | 'replicate_image'
+  | ImageContributor
+  | ImageViewer;
+
+/** Permissions associated with the "image_contributor" role. */
+export type ImageContributor = 'update_image' | ImageViewer;
+
+/** Permissions associated with the "image_viewer" role. */
+export type ImageViewer = 'view_image';
 
 /** Union of all permissions */
 export type PermissionType = AccountAdmin;

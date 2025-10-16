@@ -34,7 +34,7 @@ interface DimensionFilterFieldProps {
 export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
 
-  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, resetField } = useFormContext<CreateAlertDefinitionForm>();
 
   const dataFieldOptions =
     dimensionOptions.map((dimension) => ({
@@ -52,13 +52,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       value: null,
     };
     if (operation === 'selectOption') {
-      setValue(`${name}.dimension_label`, selected.value, {
-        shouldValidate: true,
+      resetField(name, {
+        defaultValue: { ...fieldValue, dimension_label: selected.value },
       });
-      setValue(`${name}.operator`, fieldValue.operator);
-      setValue(`${name}.value`, fieldValue.value);
     } else {
-      setValue(name, fieldValue);
+      resetField(name, { defaultValue: fieldValue });
     }
   };
 
@@ -80,6 +78,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     control,
     name: 'serviceType',
   });
+  const scopeWatcher = useWatch({
+    control,
+    name: 'scope',
+  });
+  const selectedRegionsWatcher = useWatch({ control, name: 'regions' });
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -144,7 +147,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 field.onChange(
                   operation === 'selectOption' ? newValue.value : null
                 );
-                setValue(`${name}.value`, null);
+                resetField(`${name}.value`, { defaultValue: null });
               }}
               options={dimensionOperatorOptions}
               placeholder="Select an Operator"
@@ -171,6 +174,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               onBlur={field.onBlur}
               onChange={field.onChange}
               operator={dimensionOperatorWatcher}
+              scope={scopeWatcher}
+              selectedRegions={selectedRegionsWatcher}
               serviceType={serviceType}
               value={field.value}
               values={selectedDimension?.values ?? []}

@@ -1,3 +1,47 @@
+## [2025-10-07] - v0.150.0
+
+
+### Added:
+
+- IAM Parent/Child - Implement new delegation types and endpoints definitions ([#12895](https://github.com/linode/manager/pull/12895))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` and constant `capabilityServiceTypeMapping` at `types.ts` ([#12905](https://github.com/linode/manager/pull/12905))
+- Region VPC availability types and endpoints ([#12919](https://github.com/linode/manager/pull/12919))
+
+### Changed:
+
+- All kubernetes endpoints from `/v4` to `/v4beta`; clean up duplicate endpoints ([#12867](https://github.com/linode/manager/pull/12867))
+- CloudPulse-Alerts: Update `CloudPulseAlertsPayload` in types.ts ([#12870](https://github.com/linode/manager/pull/12870))
+- ACLP: update `group_by` property to optional for `Widgets` and `CloudPulseMetricRequest` interface ([#12887](https://github.com/linode/manager/pull/12887))
+- CloudPulse-Metrics: Update `CloudPulseMetricsRequest` and `JWETokenPayLoad` type at `types.ts` ([#12912](https://github.com/linode/manager/pull/12912))
+
+### Upcoming Features:
+
+- Update Destination's details interface ([#12851](https://github.com/linode/manager/pull/12851))
+- Logs Delivery Stream details type update and UpdateDestinationPayload update according to API docs ([#12898](https://github.com/linode/manager/pull/12898))
+
+## [2025-09-23] - v0.149.0
+
+### Added:
+
+- Images IAM RBAC types ([#12782](https://github.com/linode/manager/pull/12782))
+- LKE-E Phase 2 account capabilities (Kubernetes Enterprise BYO VPC, Kubernetes Enterprise Dual Stack) ([#12826](https://github.com/linode/manager/pull/12826))
+- VPC Dual Stack capability for regions ([#12826](https://github.com/linode/manager/pull/12826))
+- ACLP: `group_by` property in Dashboard interface ([#12843](https://github.com/linode/manager/pull/12843))
+
+### Changed:
+
+- Update `UpdateVolumeRequest` to reflect optional `label` ([#12800](https://github.com/linode/manager/pull/12800))
+- Update `DiskDevice` and `VolumeDevice` to more closely align with the API's behavior ([#12809](https://github.com/linode/manager/pull/12809))
+- GET and PUT /account to /v4beta endpoint ([#12826](https://github.com/linode/manager/pull/12826))
+
+### Upcoming Features:
+
+- Update LinodeInterfaceHistory type as per API type changes ([#12321](https://github.com/linode/manager/pull/12321))
+- Add audit_logs_enabled property to KubernetesCluster's ControlPlaneOptions interface ([#12696](https://github.com/linode/manager/pull/12696))
+- Make `address` an optional property on the IPv6SLAAC object ([#12778](https://github.com/linode/manager/pull/12778))
+- POST v4beta/monitor/streams/destinations/verify API endpoint for Destinations ([#12823](https://github.com/linode/manager/pull/12823))
+- Rename DataStream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
 ## [2025-09-09] - v0.148.0
 
 ### Added:

@@ -1,9 +1,4 @@
-import {
-  linodeQueries,
-  useAllLinodesQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
+import { linodeQueries, useAllLinodesQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -20,6 +15,10 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import {
+  usePermissions,
+  useQueryWithPermissions,
+} from 'src/features/IAM/hooks/usePermissions';
 import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -74,16 +73,12 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     subnetError,
     vpcId,
   }: Props) => {
-    const { data: profile } = useProfile();
-    const { data: grants } = useGrants();
-
     const { isDualStackEnabled } = useVPCDualStack(subnet?.ipv6 ?? []);
     const showIPv6Content =
       isDualStackEnabled &&
       Boolean(subnet?.ipv6?.length && subnet?.ipv6?.length > 0);
 
     const subnetId = subnet?.id;
-    const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
     const queryClient = useQueryClient();
     const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
@@ -110,10 +105,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const { linodes: subnetLinodeIds } = subnet || {};
 
-    const userCannotUnassignLinodes =
-      Boolean(profile?.restricted) &&
-      (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
-
     // 1. We need to get all the linodes.
     const {
       data: linodes,
@@ -129,6 +120,17 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         );
       });
     }, [linodes, subnetLinodeIds]);
+
+    const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
+    // TODO: change to 'delete_linode_config_profile_interface' once it's available
+    const { data: filteredLinodes } = useQueryWithPermissions(
+      useAllLinodesQuery(),
+      'linode',
+      ['delete_linode'],
+      open
+    );
+    const userCanUnassignLinodes =
+      permissions.update_vpc && filteredLinodes?.length > 0;
 
     React.useEffect(() => {
       if (linodes) {
@@ -337,7 +339,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
-        {userCannotUnassignLinodes && (
+        {!userCanUnassignLinodes && linodeOptionsToUnassign.length > 0 && (
           <Notice
             text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
             variant="error"
@@ -357,7 +359,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Stack marginTop={!singleLinodeToBeUnassigned ? 0 : 3} spacing={3}>
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
-                disabled={userCannotUnassignLinodes}
+                disabled={!userCanUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
                 label="Linodes"
                 multiple
@@ -420,7 +422,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               <ActionsPanel
                 primaryButtonProps={{
                   'data-testid': 'unassign-submit-button',
-                  disabled: interfacesToDelete.length === 0,
+                  disabled:
+                    interfacesToDelete.length === 0 || !userCanUnassignLinodes,
                   label: 'Unassign Linodes',
                   loading: isSubmitting,
                   type: 'submit',

@@ -216,6 +216,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
               'data-testid': isAddMode ? 'add' : 'update',
               label: isAddMode ? 'Add Pool' : 'Update Pool',
               type: 'submit',
+              disabled: nodeCountWatcher === 0,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
