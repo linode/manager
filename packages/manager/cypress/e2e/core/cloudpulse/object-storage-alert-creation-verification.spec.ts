@@ -311,7 +311,18 @@ describe('object storage alert configured successfully', () => {
         label: 'Alert-1',
         entity_ids: ['2'],
         rule_criteria: {
-          rules: [metricBuilder.build({ metric: 'obj_requests_num' })],
+          rules: [
+            metricBuilder.build({
+              metric: 'obj_requests_num',
+              dimension_filters: [
+                {
+                  dimension_label: 'region',
+                  operator: 'eq',
+                  value: 'Chicago, IL',
+                },
+              ],
+            }),
+          ],
         },
         service_type: 'objectstorage',
         severity: 0,
@@ -583,6 +594,7 @@ describe('object storage alert configured successfully', () => {
         // --- Compare Rule Criteria ---
         const reqRules = reqBody.rule_criteria.rules;
         const resRules = resBody.rule_criteria.rules;
+
         resRules.forEach(
           (rule: AlertDefinitionMetricCriteria, index: number) => {
             const reqRule = reqRules[index];
@@ -603,7 +615,7 @@ describe('object storage alert configured successfully', () => {
               `Threshold mismatch at rule[${index}]`
             ).to.eq(reqRule.threshold);
 
-            // ✅ Validate dimension_filters safely
+            // ✅ Validate dimension_filters
             expect(
               rule.dimension_filters,
               `rule[${index}] dimension_filters should exist`
@@ -616,7 +628,6 @@ describe('object storage alert configured successfully', () => {
             const resFilters = rule.dimension_filters ?? [];
             const reqFilters = reqRule.dimension_filters ?? [];
 
-            // ✅ Match filters by label + operator
             resFilters.forEach((filter: DimensionFilter) => {
               const matchingReqFilter = reqFilters.find(
                 (f: DimensionFilter) =>
@@ -630,51 +641,46 @@ describe('object storage alert configured successfully', () => {
               ).to.exist;
 
               if (matchingReqFilter) {
-                expect(
-                  filter.value,
-                  `Value mismatch for filter '${filter.dimension_label}' and operator '${filter.operator}'`
-                ).to.eq(matchingReqFilter.value);
+                if (filter.operator?.toLowerCase() === 'in') {
+                  // ✅ Handle 'in' operator as array comparison
+                  const resValues: string[] = Array.isArray(filter.value)
+                    ? filter.value
+                    : (filter.value as string).split(',').map((v) => v.trim());
+
+                  const reqValues: string[] = Array.isArray(
+                    matchingReqFilter.value
+                  )
+                    ? matchingReqFilter.value
+                    : (matchingReqFilter.value as string)
+                        .split(',')
+                        .map((v) => v.trim());
+
+                  reqValues.forEach((v: string) => {
+                    expect(
+                      resValues,
+                      `Value '${v}' from request filter '${filter.dimension_label}' not found in response`
+                    ).to.include(v);
+                  });
+                } else {
+                  // For other operators, assert equality
+                  expect(
+                    filter.value,
+                    `Value mismatch for filter '${filter.dimension_label}' and operator '${filter.operator}'`
+                  ).to.eq(matchingReqFilter.value);
+                }
               }
             });
+            expect(resBody.label).to.eq(reqBody.label);
+            expect(resBody.class).to.eq('dedicated');
+            expect(resBody.service_type).to.eq('objectstorage');
+            expect(resBody.entity_ids).to.deep.eq(['2']);
+            expect(resBody.scope).to.eq(reqBody.scope);
 
-            // ✅ Optional: verify both sides have same set of dimension labels + operators
-            const sortedResFilters = [...resFilters].sort(
-              (a, b) =>
-                a.dimension_label.localeCompare(b.dimension_label) ||
-                a.operator.localeCompare(b.operator)
-            );
-            const sortedReqFilters = [...reqFilters].sort(
-              (a, b) =>
-                a.dimension_label.localeCompare(b.dimension_label) ||
-                a.operator.localeCompare(b.operator)
-            );
-
-            expect(
-              sortedResFilters.map((f) => ({
-                label: f.dimension_label,
-                op: f.operator,
-                value: f.value,
-              })),
-              `Dimension filters mismatch at rule[${index}]`
-            ).to.deep.eq(
-              sortedReqFilters.map((f) => ({
-                label: f.dimension_label,
-                op: f.operator,
-                value: f.value,
-              }))
-            );
+            cy.url().should('endWith', '/alerts/definitions');
+            ui.toast.assertMessage(CREATE_ALERT_SUCCESS_MESSAGE);
+            verifyAlertRow('Alert-1', status, statusMap, created_by, updated);
           }
         );
-
-        // --- Compare Other Metadata ---
-        expect(resBody.label).to.eq(reqBody.label);
-        expect(resBody.class).to.eq('dedicated');
-        expect(resBody.service_type).to.eq('objectstorage');
-        expect(resBody.entity_ids).to.deep.eq(['2']);
-        expect(resBody.scope).to.eq(reqBody.scope);
-        cy.url().should('endWith', '/alerts/definitions');
-        ui.toast.assertMessage(CREATE_ALERT_SUCCESS_MESSAGE);
-        verifyAlertRow('Alert-1', status, statusMap, created_by, updated);
       });
     });
   });

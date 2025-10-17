@@ -187,21 +187,35 @@ export const newEgressConnectionsRulesFactory = {
   ...ingressBytesAcceptedRulesFactory,
   metric: 'new_egress_connections',
 };
+
+// Example endpoints list (for the 'in' operator)
 const endpoints = [
   'endpoint_type-E2-us-sea-2.linodeobjects.com',
   'endpoint_type-E3-us-sea-3.linodeobjects.com',
   'endpoint_type-E2-us-sea-4.linodeobjects.com',
 ];
+/**
+ * Factory for a single Object Storage dimension filter
+ */
+export const objectStorageDimensionFactory =
+  Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>({
+    dimension_label: 'region',
+    label: 'Object Storage Region',
+    operator: 'eq',
+    value: 'Chicago, IL',
+  });
 
+/**
+ * Base Object Storage rule factory (like your baseObjectStorageRuleFactory)
+ */
 export const baseObjectStorageRuleFactory =
   Factory.Sync.makeFactory<MetricCriteria>({
     aggregate_function: 'avg',
+    operator: 'eq',
+    threshold: 1000,
+    metric: '',
     dimension_filters: [
-      {
-        dimension_label: 'region',
-        operator: 'eq',
-        value: 'Chicago, IL',
-      },
+      { dimension_label: 'region', operator: 'eq', value: 'Chicago, IL' },
       {
         dimension_label: 'endpoint',
         operator: 'eq',
@@ -210,40 +224,18 @@ export const baseObjectStorageRuleFactory =
       {
         dimension_label: 'endpoint',
         operator: 'in',
-        value: endpoints.join(','), // ✅ join with commas
+        value: endpoints.join(','), // joined list of endpoints
       },
     ],
-    operator: 'eq',
-    threshold: 1000,
-    metric: '', // override later per rule
   });
-
-export const metricBuilder = {
-  metric: 'obj_bucket_size',
-  ...baseObjectStorageRuleFactory,
-};
-
-export const bucketResponsesRule = baseObjectStorageRuleFactory.build({
-  metric: 'obj_responses_num',
-  dimension_filters: [
-    {
-      dimension_label: 'endpoint',
-      operator: 'eq',
-      value: 'endpoint_type-E3-us-sea-3iL',
-    },
-  ],
-});
-
-export const bytesDownloadedRule = baseObjectStorageRuleFactory.build({
-  metric: 'obj_bytes_downloaded',
-  dimension_filters: [
-    {
-      dimension_label: 'endpoint',
-      operator: 'eq',
-      value: 'endpoint_type-E3-us-sea-3iL',
-    },
-  ],
-});
+export const metricBuilder =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    ...baseObjectStorageRuleFactory.build(),
+    label: 'Total bucket size',
+    unit: 'Bytes',
+    metric: 'obj_bucket_size',
+    dimension_filters: objectStorageDimensionFactory.buildList(2),
+  });
 
 export const alertDefinitionFactory =
   Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
