@@ -92,7 +92,7 @@ const alertDetails = alertFactory.build({
   created: '2023-10-01T12:00:00Z',
   updated: new Date().toISOString(),
 });
-const { id, rule_criteria, service_type } = alertDetails;
+const { rule_criteria } = alertDetails;
 const { rules } = rule_criteria;
 const notificationChannels = notificationChannelFactory.build();
 
