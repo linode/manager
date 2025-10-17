@@ -215,7 +215,6 @@ export const baseObjectStorageRuleFactory =
     threshold: 1000,
     metric: '',
     dimension_filters: [
-      { dimension_label: 'region', operator: 'eq', value: 'Chicago, IL' },
       {
         dimension_label: 'endpoint',
         operator: 'eq',
@@ -234,7 +233,14 @@ export const metricBuilder =
     label: 'Total bucket size',
     unit: 'Bytes',
     metric: 'obj_bucket_size',
-    dimension_filters: objectStorageDimensionFactory.buildList(2),
+    dimension_filters: [
+      {
+        dimension_label: 'region',
+        label: 'Region',
+        operator: 'eq',
+        value: 'us-east',
+      },
+    ],
   });
 
 export const alertDefinitionFactory =

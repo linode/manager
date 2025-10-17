@@ -302,6 +302,11 @@ describe('object storage alert configured successfully', () => {
   // The scoping strategies include 'Per Account', 'Per Entity'.
   // Temporary: Only testing entity-level for Object Storage alerts.
   // Once account-level is supported, remove `value === 'entity'` condition.
+  const endpoints = [
+    'endpoint_type-E2-us-sea-2.linodeobjects.com',
+    'endpoint_type-E3-us-sea-3.linodeobjects.com',
+    'endpoint_type-E2-us-sea-4.linodeobjects.com',
+  ];
   entityGroupingOptions.forEach(({ label: groupLabel, value }) => {
     it(`should successfully create a new alert for ${groupLabel} level`, () => {
       const alerts = alertFactory.build({
@@ -319,6 +324,16 @@ describe('object storage alert configured successfully', () => {
                   dimension_label: 'region',
                   operator: 'eq',
                   value: 'Chicago, IL',
+                },
+                {
+                  dimension_label: 'endpoint',
+                  operator: 'eq',
+                  value: 'endpoint_type-E2-us-sea-4.linodeobjects.com',
+                },
+                {
+                  dimension_label: 'endpoint',
+                  operator: 'in',
+                  value: endpoints.join(','), // joined list of endpoints
                 },
               ],
             }),
@@ -670,6 +685,32 @@ describe('object storage alert configured successfully', () => {
                 }
               }
             });
+
+            // ✅ Optional: verify dimension labels and operators only (ignore value for order issues)
+            const sortedResFilters = [...resFilters].sort(
+              (a, b) =>
+                a.dimension_label.localeCompare(b.dimension_label) ||
+                a.operator.localeCompare(b.operator)
+            );
+            const sortedReqFilters = [...reqFilters].sort(
+              (a, b) =>
+                a.dimension_label.localeCompare(b.dimension_label) ||
+                a.operator.localeCompare(b.operator)
+            );
+            expect(
+              sortedResFilters.map((f) => ({
+                label: f.dimension_label,
+                op: f.operator,
+              })),
+              `Dimension labels/operators mismatch at rule[${index}]`
+            ).to.deep.eq(
+              sortedReqFilters.map((f) => ({
+                label: f.dimension_label,
+                op: f.operator,
+              }))
+            );
+
+            // --- Compare Other Metadata ---
             expect(resBody.label).to.eq(reqBody.label);
             expect(resBody.class).to.eq('dedicated');
             expect(resBody.service_type).to.eq('objectstorage');
