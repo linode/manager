@@ -1,5 +1,6 @@
 import {
   useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
   useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
@@ -51,7 +52,18 @@ export const ChangeRoleForEntityDrawer = ({
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { data: assignedUserRoles } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const { data: delegateDefaultRoles } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRoles
+    : assignedUserRoles;
 
   const { mutateAsync: updateUserRoles } = useUserRolesMutation(username ?? '');
 

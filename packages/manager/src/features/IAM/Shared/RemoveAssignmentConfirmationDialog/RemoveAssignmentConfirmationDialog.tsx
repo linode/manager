@@ -1,4 +1,5 @@
 import {
+  useGetDefaultDelegationAccessQuery,
   useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
@@ -40,7 +41,14 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { mutateAsync: updateDefaultDelegationRoles } =
     useUpdateDefaultDelegationAccessQuery();
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { data: assignedUserRoles } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const { data: delegateDefaultRoles } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
@@ -50,6 +58,10 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const mutationFn = isDefaultDelegationRolesForChildAccount
     ? updateDefaultDelegationRoles
     : updateUserRoles;
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRoles
+    : assignedUserRoles;
 
   const onDelete = async () => {
     if (!role || !assignedRoles) return;

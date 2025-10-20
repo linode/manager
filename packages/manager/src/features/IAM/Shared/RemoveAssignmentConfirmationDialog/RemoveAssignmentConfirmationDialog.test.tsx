@@ -28,6 +28,14 @@ const props = {
 const queryMocks = vi.hoisted(() => ({
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
+}));
+
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -117,5 +125,23 @@ describe('RemoveAssignmentConfirmationDialog', () => {
         entity_access: [],
       });
     });
+  });
+
+  it('should render when isDefaultDelegationRolesForChildAccount is true', async () => {
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+
+    const headerText = screen.getByText(
+      'Remove the Test entity from the list?'
+    );
+    expect(headerText).toBeVisible();
+
+    const paragraph = screen.getByText(/Delegated users won’t get the/i);
+
+    expect(paragraph).toBeVisible();
+    expect(paragraph).toHaveTextContent(mockRole.entity_name);
+    expect(paragraph).toHaveTextContent(mockRole.role_name);
   });
 });
