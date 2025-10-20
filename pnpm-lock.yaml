@@ -96,6 +96,9 @@ importers:
       '@linode/api-v4':
         specifier: workspace:*
         version: link:../../packages/api-v4
+      '@linode/oauth':
+        specifier: workspace:*
+        version: link:../../packages/oauth
       '@linode/queries':
         specifier: workspace:*
         version: link:../../packages/queries
