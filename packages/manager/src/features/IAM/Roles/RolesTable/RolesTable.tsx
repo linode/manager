@@ -42,6 +42,16 @@ const ALL_ROLES_OPTION: SelectOption = {
   value: 'all',
 };
 
+const COLUMN_WIDTHS = {
+  name: '26%',
+  access: '14%',
+  description: '38%',
+  actions: '10%',
+};
+
+const TABLE_CELL_BASE_STYLE = {
+  boxSizing: 'border-box' as const,
+};
 interface Props {
   roles?: RoleView[];
 }
@@ -154,17 +164,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
     const newSize = event.detail.pageSize;
     pagination.handlePageSizeChange(newSize);
     pagination.handlePageChange(1);
-  };
-
-  const COLUMN_WIDTHS = {
-    name: '26%',
-    access: '14%',
-    description: '38%',
-    actions: '10%',
-  };
-
-  const TABLE_CELL_BASE_STYLE = {
-    boxSizing: 'border-box' as const,
   };
 
   return (
