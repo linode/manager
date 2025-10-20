@@ -65,7 +65,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
     useState<null | SelectOption>(ALL_ROLES_OPTION);
   const [sort, setSort] = useState<
     undefined | { column: string; order: Order }
-  >(undefined);
+  >({ column: 'name', order: 'asc' });
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
