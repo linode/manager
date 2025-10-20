@@ -3,18 +3,22 @@ import React from 'react';
 import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { convertPrivateToPublicHostname } from '../utilities';
 import { ConnectionDetailsHostRows } from './ConnectionDetailsHostRows';
 
 import type { Database } from '@linode/api-v4/lib/databases';
 
-const DEFAULT_PRIMARY = 'private-db-mysql-default-primary.net';
+const DEFAULT_PRIMARY = 'db-mysql-default-primary.net';
 const DEFAULT_STANDBY = 'db-mysql-default-standby.net';
+
+const PRIVATE_PRIMARY = `private-${DEFAULT_PRIMARY}`;
+const PRIVATE_STANDBY = `private-${DEFAULT_STANDBY}`;
 
 const LEGACY_PRIMARY = 'db-mysql-legacy-primary.net';
 const LEGACY_SECONDARY = 'db-mysql-legacy-secondary.net';
 
 describe('ConnectionDetailsHostRows', () => {
-  it('should display correctly for default database', () => {
+  it('should display Host and Read-only Host fields for a default database with no VPC configured', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: DEFAULT_PRIMARY,
@@ -22,7 +26,7 @@ describe('ConnectionDetailsHostRows', () => {
         standby: DEFAULT_STANDBY,
       },
       platform: 'rdbms-default',
-      private_network: null, // Added to test that Host field renders
+      private_network: null, // No VPC configured, so Host and Read-only Host fields render
     }) as Database;
 
     const { queryAllByText } = renderWithTheme(
@@ -33,6 +37,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText(DEFAULT_PRIMARY)).toHaveLength(1);
 
     expect(queryAllByText('Read-only Host')).toHaveLength(1);
+    expect(queryAllByText(DEFAULT_STANDBY)).toHaveLength(1);
   });
 
   it('should display N/A for default DB with blank read-only Host field', () => {
@@ -52,7 +57,7 @@ describe('ConnectionDetailsHostRows', () => {
     expect(queryAllByText('N/A')).toHaveLength(1);
   });
 
-  it('should display Host rows correctly for legacy db', () => {
+  it('should display Host and Private Network Host rows for legacy db', () => {
     const database = databaseFactory.build({
       hosts: {
         primary: LEGACY_PRIMARY,
@@ -93,94 +98,68 @@ describe('ConnectionDetailsHostRows', () => {
     expect(hostNameProvisioningText).toBeInTheDocument();
   });
 
-  it('should display Host when VPC is not configured', () => {
-    const privateStrIndex = DEFAULT_PRIMARY.indexOf('-');
-    const baseHostName = DEFAULT_PRIMARY.slice(privateStrIndex + 1);
-
+  it('should display Private variations of Host and Read-only fields when a VPC is configured with public access set to false', () => {
     const database = databaseFactory.build({
       hosts: {
-        primary: baseHostName,
-      },
-      platform: 'rdbms-default',
-      private_network: null, // VPC not configured
-    }) as Database;
-
-    const { queryAllByText } = renderWithTheme(
-      <ConnectionDetailsHostRows database={database} />
-    );
-
-    expect(queryAllByText('Host')).toHaveLength(1);
-    expect(queryAllByText(baseHostName)).toHaveLength(1);
-  });
-
-  it('should display Private Host field when VPC is configured with public access as false', () => {
-    const database = databaseFactory.build({
-      hosts: {
-        primary: DEFAULT_PRIMARY,
+        primary: PRIVATE_PRIMARY,
         secondary: undefined,
-        standby: undefined,
+        standby: PRIVATE_STANDBY,
       },
       platform: 'rdbms-default',
       private_network: {
         public_access: false,
         subnet_id: 1,
         vpc_id: 123,
-      },
+      }, // VPC configuration with public access set to false
     }) as Database;
 
     const { queryAllByText } = renderWithTheme(
       <ConnectionDetailsHostRows database={database} />
     );
     expect(queryAllByText('Private Host')).toHaveLength(1);
-    expect(queryAllByText(DEFAULT_PRIMARY)).toHaveLength(1);
+    expect(queryAllByText(PRIVATE_PRIMARY)).toHaveLength(1);
+    expect(queryAllByText('Private Read-only Host')).toHaveLength(1);
+    expect(queryAllByText(PRIVATE_STANDBY)).toHaveLength(1);
   });
 
-  it('should display both Private Host and Public Host fields when VPC is configured with public access as true', () => {
+  it('should display Private and Public variations of Host and Read-only Host fields when a VPC is configured with public access set to true', () => {
     const database = databaseFactory.build({
       hosts: {
-        primary: DEFAULT_PRIMARY,
+        primary: PRIVATE_PRIMARY,
         secondary: undefined,
-        standby: undefined,
+        standby: PRIVATE_STANDBY,
       },
       platform: 'rdbms-default',
       private_network: {
         public_access: true,
         subnet_id: 1,
         vpc_id: 123,
-      },
+      }, // VPC configuration with public access set to true
     }) as Database;
 
     const { queryAllByText } = renderWithTheme(
       <ConnectionDetailsHostRows database={database} />
     );
-    // Verify that both Private Host and Public Host fields are rendered
+    // Verify that Private and Public Host and Readonly-host fields are rendered
     expect(queryAllByText('Private Host')).toHaveLength(1);
     expect(queryAllByText('Public Host')).toHaveLength(1);
+    expect(queryAllByText('Private Read-only Host')).toHaveLength(1);
+    expect(queryAllByText('Public Read-only Host')).toHaveLength(1);
 
     // Verify that the Private hostname is rendered correctly
-    expect(queryAllByText(DEFAULT_PRIMARY)).toHaveLength(1);
+    expect(queryAllByText(PRIVATE_PRIMARY)).toHaveLength(1);
     // Verify that the Public hostname is rendered correctly
-    const privateStrIndex = DEFAULT_PRIMARY.indexOf('-');
-    const baseHostName = DEFAULT_PRIMARY.slice(privateStrIndex + 1);
-    const expectedPublicHostname = `public-${baseHostName}`;
-    expect(queryAllByText(expectedPublicHostname)).toHaveLength(1);
-  });
-
-  it('should display Read-only Host when read-only host is available', () => {
-    const database = databaseFactory.build({
-      hosts: {
-        primary: DEFAULT_PRIMARY,
-        secondary: undefined,
-        standby: DEFAULT_STANDBY,
-      },
-      platform: 'rdbms-default',
-    }) as Database;
-
-    const { queryAllByText } = renderWithTheme(
-      <ConnectionDetailsHostRows database={database} />
+    const expectedPublicHostname = convertPrivateToPublicHostname(
+      database.hosts!.primary
     );
+    expect(queryAllByText(expectedPublicHostname)).toHaveLength(1);
 
-    expect(queryAllByText('Read-only Host')).toHaveLength(1);
-    expect(queryAllByText(DEFAULT_STANDBY)).toHaveLength(1);
+    // Verify that the Private hostname is rendered correctly
+    expect(queryAllByText(PRIVATE_PRIMARY)).toHaveLength(1);
+    // Verify that the Public hostname is rendered correctly
+    const expectedPublicReadOnlyHostname = convertPrivateToPublicHostname(
+      database.hosts!.standby!
+    );
+    expect(queryAllByText(expectedPublicReadOnlyHostname)).toHaveLength(1);
   });
 });

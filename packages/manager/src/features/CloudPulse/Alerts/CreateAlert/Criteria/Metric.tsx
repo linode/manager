@@ -57,7 +57,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     onMetricDelete,
     showDeleteIcon,
   } = props;
-  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, resetField } = useFormContext<CreateAlertDefinitionForm>();
 
   const handleDataFieldChange = (
     selected: { label: string; value: string },
@@ -71,13 +71,11 @@ export const Metric = (props: MetricCriteriaProps) => {
       threshold: 0,
     };
     if (operation === 'selectOption') {
-      setValue(`${name}.metric`, selected.value, { shouldValidate: true });
-      setValue(`${name}.aggregate_function`, fieldValue.aggregate_function);
-      setValue(`${name}.dimension_filters`, fieldValue.dimension_filters);
-      setValue(`${name}.operator`, fieldValue.operator);
-      setValue(`${name}.threshold`, fieldValue.threshold);
+      resetField(name, {
+        defaultValue: { ...fieldValue, metric: selected.value },
+      });
     } else {
-      setValue(name, fieldValue);
+      resetField(name, { defaultValue: fieldValue });
     }
   };
 

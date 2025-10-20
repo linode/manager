@@ -13,7 +13,7 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
+      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
     );
 
     expect(getByText(/Username/)).toBeVisible();
@@ -28,7 +28,7 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getAllByText, getByText } = renderWithTheme(
-      <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
+      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
     );
 
     expect(getByText(/Assigned Roles/)).toBeVisible();
@@ -58,7 +58,7 @@ describe('UserDetailsPanel', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
+      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
     );
 
     expect(getByText(/Assigned Roles/)).toBeVisible();
@@ -79,7 +79,7 @@ describe('UserDetailsPanel', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
+      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
     );
 
     expect(getByText(/Assigned Roles/)).toBeVisible();
@@ -93,7 +93,7 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
+      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
     );
 
     expect(getByText(/Verified number/)).toBeVisible();
@@ -105,7 +105,7 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
+      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
     );
 
     expect(getByText(/2FA/)).toBeVisible();

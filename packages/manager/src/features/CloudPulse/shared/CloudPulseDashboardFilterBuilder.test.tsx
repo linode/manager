@@ -60,7 +60,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     expect(getByPlaceholderText('e.g., 80,443,3000')).toBeVisible();
   });
 
-  it('it should render successfully when the required props are passed for service type firewall', async () => {
+  it('it should render successfully when the required props are passed for firewall linode dashboard', async () => {
     const { getByPlaceholderText } = renderWithTheme(
       <CloudPulseDashboardFilterBuilder
         dashboard={dashboardFactory.build({
@@ -115,5 +115,23 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     expect(getByPlaceholderText('Select a Region')).toBeVisible();
     expect(getByPlaceholderText('Select Volumes')).toBeVisible();
+  });
+
+  it('it should render successfully when the required props are passed for firewall nodebalancer dashboard', async () => {
+    const { getByPlaceholderText } = renderWithTheme(
+      <CloudPulseDashboardFilterBuilder
+        dashboard={dashboardFactory.build({
+          service_type: 'firewall',
+          id: 8,
+        })}
+        emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
+        isServiceAnalyticsIntegration={false}
+        resource_ids={[1, 2]}
+      />
+    );
+
+    expect(getByPlaceholderText('Select Firewalls')).toBeVisible();
+    expect(getByPlaceholderText('Select a NodeBalancer Region')).toBeVisible();
   });
 });

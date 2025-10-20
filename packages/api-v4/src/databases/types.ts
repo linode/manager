@@ -106,7 +106,7 @@ export interface DatabaseInstance {
   encrypted: boolean;
   engine: Engine;
   engine_config: DatabaseInstanceAdvancedConfig;
-  hosts: DatabaseHosts;
+  hosts: DatabaseHosts | null;
   id: number;
   instance_uri?: string;
   label: string;
@@ -139,7 +139,7 @@ type ReadonlyCount = 0 | 2;
 export type MySQLReplicationType = 'asynch' | 'none' | 'semi_synch';
 
 export interface CreateDatabasePayload {
-  allow_list?: string[];
+  allow_list: string[];
   cluster_size?: ClusterSize;
   /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
   encrypted?: boolean;

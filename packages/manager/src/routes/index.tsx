@@ -95,6 +95,7 @@ export const router = createRouter({
     isACLPEnabled: false,
     isDatabasesEnabled: false,
     isPlacementGroupsEnabled: false,
+    profile: undefined,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
