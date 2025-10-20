@@ -1,10 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useCreateSubnetMutation,
-  useGrants,
-  useProfile,
-  useVPCQuery,
-} from '@linode/queries';
+import { useCreateSubnetMutation, useVPCQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -21,6 +16,7 @@ import {
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   calculateAvailableIPv4sRFC1918,
@@ -42,12 +38,15 @@ interface Props {
 export const SubnetCreateDrawer = (props: Props) => {
   const { onClose, open, vpcId } = props;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
   const { data: vpc } = useVPCQuery(vpcId, open);
 
-  const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['create_vpc_subnet'],
+    vpcId
+  );
 
+  const canCreateSubnet = permissions?.create_vpc_subnet;
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
     vpc?.subnets?.map((subnet: Subnet) => subnet.ipv4 ?? '') ?? []
@@ -82,9 +81,11 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const ipv4 = watch('ipv4');
   const numberOfAvailableIPv4IPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
-  const numberOfAvailableIPv4Linodes = numberOfAvailableIPv4IPs
-    ? numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
-    : 0;
+
+  const numberOfAvailableIPv4Linodes =
+    numberOfAvailableIPv4IPs && numberOfAvailableIPv4IPs > 4
+      ? numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
+      : 0;
 
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {
@@ -108,7 +109,7 @@ export const SubnetCreateDrawer = (props: Props) => {
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
-      {userCannotAddSubnet && (
+      {!canCreateSubnet && (
         <Notice
           spacingBottom={8}
           spacingTop={16}
@@ -126,7 +127,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter a subnet label"
-                disabled={userCannotAddSubnet}
+                disabled={!canCreateSubnet}
                 errorText={fieldState.error?.message}
                 label="Subnet Label"
                 onBlur={field.onBlur}
@@ -142,11 +143,11 @@ export const SubnetCreateDrawer = (props: Props) => {
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter an IPv4"
-                disabled={userCannotAddSubnet}
+                disabled={!canCreateSubnet}
                 errorText={fieldState.error?.message}
                 label={
                   shouldDisplayIPv6
-                    ? 'Subnet IPv4 Address Range'
+                    ? 'Subnet IPv4 Range (CIDR)'
                     : 'Subnet IP Address Range'
                 }
                 onBlur={field.onBlur}
@@ -193,7 +194,7 @@ export const SubnetCreateDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-subnet-drawer-button',
-            disabled: !isDirty || userCannotAddSubnet,
+            disabled: !isDirty || !canCreateSubnet,
             label: 'Create Subnet',
             loading: isPending || isSubmitting,
             type: 'submit',

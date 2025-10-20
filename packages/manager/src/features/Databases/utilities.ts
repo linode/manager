@@ -118,8 +118,8 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
  * @param {DateTime} date - The date you want to check.
  * @param {DateTime | null} oldestBackup - The date of the oldest backup. If there are no backups (i.e., `null`), the function will return `true`.
  * @returns {boolean}
- *   - `true` if the date is before the oldest backup or after today.
- *   - `false` if the date is within the range between the oldest backup and today.
+ *   - `true` if the date/time is before the oldest backup or after today.
+ *   - `false` if the date/time is within the range between the oldest backup and today.
  */
 export const isDateOutsideBackup = (
   date: DateTime,
@@ -135,20 +135,20 @@ export const isDateOutsideBackup = (
 /**
  * Check if the time added to the selectedDate is outside the backup window.
  *
- * @param hour
+ * @param selectedTime
  * @param selectedDate
  * @param oldestBackup
- * @returns true when the selectedDate + hour is before the oldest backup DateTime or later than DateTime.now()
+ * @returns true when the selectedDate and selectedTime is before the oldest backup DateTime or later than the current date/time using DateTime.utc()
  */
 export const isTimeOutsideBackup = (
-  time: number | undefined,
+  selectedTime: DateTime | null,
   selectedDate: DateTime,
   oldestBackup: DateTime
 ) => {
-  if (time == null) {
+  if (selectedTime === null) {
     return false;
   }
-  const selectedDateTime = toSelectedDateTime(selectedDate, time);
+  const selectedDateTime = toSelectedDateTime(selectedDate, selectedTime);
   return isDateOutsideBackup(selectedDateTime, oldestBackup);
 };
 
@@ -159,45 +159,48 @@ export const isTimeOutsideBackup = (
  * @param selectedTime
  * @returns date as a string value in ISO format.
  */
-export const toISOString = (selectedDate: DateTime, selectedTime: number) => {
+export const toISOString = (selectedDate: DateTime, selectedTime: DateTime) => {
   const selectedDateTime = toSelectedDateTime(selectedDate, selectedTime);
   return selectedDateTime.toISO({ includeOffset: false });
 };
 
 export const toSelectedDateTime = (
   selectedDate: DateTime,
-  time: number = 0
+  selectedTime: DateTime | null
 ) => {
   const isoDate = selectedDate?.toISODate();
   const isoTime = DateTime.utc()
-    .set({ hour: time, minute: 0 })
+    .set({
+      hour: selectedTime?.hour,
+      minute: selectedTime?.minute,
+      second: selectedTime?.second,
+    })
     ?.toISOTime({ includeOffset: false });
   return DateTime.fromISO(`${isoDate}T${isoTime}`, { zone: 'UTC' });
 };
 
 /**
  * Format the selectedDate and time as a modified (i.e. shortened) ISO format
- * If no date/time is provided it will default to DateTime.now()
+ * If no date/time is provided it will default to the current date/time using DateTime.utc()
  *
  * @param selectedDate
  * @param selectedTime
  * @returns date string in the format 'YYYY-MM-ddThh:mm:ss'
  */
-export const toFormatedDate = (
+export const toFormattedDate = (
   selectedDate?: DateTime | null,
-  selectedTime?: number
+  selectedTime?: DateTime | null
 ) => {
   const today = DateTime.utc();
   const isoDate =
     selectedDate && selectedTime
       ? toISOString(selectedDate!, selectedTime)
-      : toISOString(today, today.hour);
-
-  return `${isoDate?.split('T')[0]} ${isoDate?.split('T')[1].slice(0, 5)}`;
+      : toISOString(today, today);
+  return `${isoDate?.split('T')[0]} ${isoDate?.split('T')[1].slice(0, 8)}`;
 };
 
 /**
- * Convert the sourceId and optional selectedDate and selecteTime into the DatabaseFork payload.
+ * Convert the sourceId and optional selectedDate and selectedTime into the DatabaseFork payload.
  *
  * @param sourceId
  * @param selectedDate
@@ -207,7 +210,7 @@ export const toFormatedDate = (
 export const toDatabaseFork = (
   sourceId: number,
   selectedDate?: DateTime | null,
-  selectedTime?: number
+  selectedTime?: DateTime | null
 ) => {
   const fork: DatabaseFork = {
     source: sourceId,
@@ -246,5 +249,16 @@ export const upgradableVersions = (
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
 ) => engines?.filter((e) => e.engine === engine && e.version > version);
 
+// TODO (UIE-8214) POST GA - Remove reference to secondary from this function as it is only present for legacy databases
 export const getReadOnlyHost = (database: Database | undefined) =>
   database?.hosts?.standby ?? database?.hosts?.secondary ?? '';
+
+/** This function converts a private hostname string to public by replacing 'private-' at the beginning of the private hostname string with 'public-'.
+ * This is used to format the hostname string returned from the backend when a VPC is configured for a database cluster
+ * and the backend provides the hostname with 'private-' prepended.
+ */
+export const convertPrivateToPublicHostname = (host: string) => {
+  const privateStrIndex = host.indexOf('-');
+  const baseHostName = host.slice(privateStrIndex + 1);
+  return `public-${baseHostName}`;
+};

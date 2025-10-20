@@ -27,6 +27,7 @@ const props: CloudPulseWidgetProperties = {
     scrape_interval: '2m',
     unit: 'percent',
   },
+  dashboardId: 1,
   duration: {
     end: DateTime.now().toISO(),
     preset: '30minutes',
@@ -50,6 +51,7 @@ const props: CloudPulseWidgetProperties = {
   widget: widgetFactory.build({
     label: 'CPU Utilization',
   }),
+  globalFilterGroupBy: [],
 };
 
 const queryMocks = vi.hoisted(() => ({

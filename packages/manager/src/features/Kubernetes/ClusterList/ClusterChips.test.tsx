@@ -58,11 +58,11 @@ describe('Kubernetes cluster action menu', () => {
       <ClusterChips cluster={mockEnterpriseCluster} />,
       {
         flags: {
-          lkeEnterprise: {
+          lkeEnterprise2: {
             enabled: true,
             ga: false,
             la: true,
-            phase2Mtc: false,
+            phase2Mtc: { byoVPC: false, dualStack: false },
             postLa: false,
           },
         },
@@ -71,32 +71,6 @@ describe('Kubernetes cluster action menu', () => {
 
     expect(getByText('HA', { exact: false })).toBeVisible();
     expect(getByText('ENTERPRISE')).toBeVisible();
-  });
-
-  it('does not render an enterprise chip for an enterprise cluster if the feature is disabled', async () => {
-    queryMocks.useAccount.mockReturnValue({
-      data: {
-        capabilities: ['Kubernetes Enterprise'],
-      },
-    });
-
-    const { getByText, queryByText } = renderWithTheme(
-      <ClusterChips cluster={mockEnterpriseCluster} />,
-      {
-        flags: {
-          lkeEnterprise: {
-            enabled: false,
-            ga: false,
-            la: true,
-            phase2Mtc: false,
-            postLa: false,
-          },
-        },
-      }
-    );
-
-    expect(getByText('HA', { exact: false })).toBeVisible();
-    expect(queryByText('ENTERPRISE')).toBe(null);
   });
 
   it('does not render an enterprise chip for a standard cluster', async () => {
@@ -110,11 +84,11 @@ describe('Kubernetes cluster action menu', () => {
       <ClusterChips cluster={mockStandardCluster} />,
       {
         flags: {
-          lkeEnterprise: {
+          lkeEnterprise2: {
             enabled: true,
             ga: false,
             la: true,
-            phase2Mtc: false,
+            phase2Mtc: { byoVPC: false, dualStack: false },
             postLa: false,
           },
         },

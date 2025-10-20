@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useUpdateUserMutation } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
+import { UpdateUserNameSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -12,17 +14,17 @@ import { usePermissions } from '../../hooks/usePermissions';
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  activeUser: User;
   canUpdateUser: boolean;
-  user: User;
 }
 
-export const UsernamePanel = ({ user, canUpdateUser }: Props) => {
+export const UsernamePanel = ({ activeUser, canUpdateUser }: Props) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isProxyUserProfile = user?.user_type === 'proxy';
+  const isProxyUser = activeUser?.user_type === 'proxy';
 
-  const { mutateAsync } = useUpdateUserMutation(user.username);
+  const { mutateAsync } = useUpdateUserMutation(activeUser.username);
 
   const { data: permissions } = usePermissions('account', ['update_user']);
 
@@ -32,8 +34,9 @@ export const UsernamePanel = ({ user, canUpdateUser }: Props) => {
     handleSubmit,
     setError,
   } = useForm({
-    defaultValues: { username: user.username },
-    values: { username: user.username },
+    resolver: yupResolver(UpdateUserNameSchema),
+    defaultValues: { username: activeUser.username },
+    values: { username: activeUser.username },
   });
 
   const onSubmit = async (values: Partial<User>) => {
@@ -54,7 +57,7 @@ export const UsernamePanel = ({ user, canUpdateUser }: Props) => {
 
   const tooltipForDisabledUsernameField = !permissions.update_user
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
-    : isProxyUserProfile
+    : isProxyUser
       ? RESTRICTED_FIELD_TOOLTIP
       : undefined;
 

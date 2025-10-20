@@ -34,7 +34,7 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
   if (!linodeMaintenance) return null;
 
   return (
-    <Notice variant="warning">
+    <Notice data-qa-maintenance-banner="true" variant="warning">
       <Typography>
         Linode {linodeMaintenance.entity.label} {linodeMaintenance.description}{' '}
         maintenance {maintenanceTypeLabel} will begin{' '}
@@ -62,7 +62,13 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
           )}
         </strong>
         . For more details, view{' '}
-        <Link to="/account/maintenance">Account Maintenance</Link>.
+        <Link
+          pendoId="linode-maintenance-banner-link"
+          to="/account/maintenance"
+        >
+          Account Maintenance
+        </Link>
+        .
       </Typography>
     </Notice>
   );

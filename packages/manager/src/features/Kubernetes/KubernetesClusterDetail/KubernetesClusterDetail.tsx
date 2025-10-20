@@ -6,10 +6,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import {
-  useAPLAvailability,
-  useKubernetesBetaEndpoint,
-} from 'src/features/Kubernetes/kubeUtils';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -31,7 +28,6 @@ export const KubernetesClusterDetail = () => {
   });
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const {
     data: cluster,
@@ -39,7 +35,6 @@ export const KubernetesClusterDetail = () => {
     isLoading,
   } = useKubernetesClusterQuery({
     id,
-    isUsingBetaEndpoint,
   });
 
   const { mutateAsync: updateKubernetesCluster } =
@@ -156,6 +151,7 @@ export const KubernetesClusterDetail = () => {
             clusterLabel={cluster.label}
             clusterRegionId={cluster.region}
             clusterTier={cluster.tier ?? 'standard'}
+            clusterVersion={cluster.k8s_version}
             isLkeClusterRestricted={isClusterReadOnly}
           />
         </Stack>

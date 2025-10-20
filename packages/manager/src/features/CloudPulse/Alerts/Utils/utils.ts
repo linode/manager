@@ -17,6 +17,7 @@ import {
   DIMENSION_TRANSFORM_CONFIG,
   TRANSFORMS,
 } from '../../shared/DimensionTransform';
+import { compareArrays } from '../../Utils/FilterBuilder';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
@@ -321,12 +322,11 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions,
-    scope,
+    regions,
   }: Alert,
   serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
   return {
-    scope,
     alertId: id,
     channel_ids: alert_channels.map((channel) => channel.id),
     description: description || undefined,
@@ -343,6 +343,7 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions,
+    regions,
   };
 };
 
@@ -398,7 +399,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
       .of(string().defined())
-      .required()
+      .optional()
       .max(
         maxSelectionCount,
         `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
@@ -616,5 +617,25 @@ export const transformDimensionValue = (
     (
       serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
     )?.(value) ?? TRANSFORMS.capitalize(value)
+  );
+};
+
+/**
+ * Checks if two arrays are equal, ignores the order of the elements
+ * @param a The first array
+ * @param b The second array
+ * @returns True if the arrays are equal, false otherwise
+ */
+export const arraysEqual = (
+  a: number[] | undefined,
+  b: number[] | undefined
+) => {
+  if (a === undefined && b === undefined) return true;
+  if (a === undefined || b === undefined) return false;
+  if (a.length !== b.length) return false;
+
+  return compareArrays(
+    [...a].sort((x, y) => x - y),
+    [...b].sort((x, y) => x - y)
   );
 };

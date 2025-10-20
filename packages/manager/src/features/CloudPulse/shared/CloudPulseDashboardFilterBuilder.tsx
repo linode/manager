@@ -10,9 +10,10 @@ import NullComponent from 'src/components/NullComponent';
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
+  ENDPOINT,
   INTERFACE_ID,
-  LINODE_REGION,
   NODE_TYPE,
+  PARENT_ENTITY_REGION,
   PORT,
   REGION,
   RESOURCE_ID,
@@ -21,6 +22,7 @@ import {
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
+  getEndpointsProperties,
   getFilters,
   getNodeTypeProperties,
   getRegionProperties,
@@ -214,6 +216,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           savePref,
           {
             [NODE_TYPE]: undefined,
+            [PARENT_ENTITY_REGION]: undefined,
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),
@@ -234,6 +237,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           filterKey === REGION
             ? {
                 [filterKey]: region,
+                [ENDPOINT]: undefined,
                 [RESOURCES]: undefined,
                 [TAGS]: undefined,
               }
@@ -247,6 +251,16 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           savePref,
           updatedPreferenceData
         );
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
+    const handleEndpointsChange = React.useCallback(
+      (endpoints: string[], savePref: boolean = false) => {
+        emitFilterChangeByFilterKey(ENDPOINT, endpoints, endpoints, savePref, {
+          [ENDPOINT]: endpoints,
+          [RESOURCES]: undefined,
+        });
       },
       [emitFilterChangeByFilterKey]
     );
@@ -296,7 +310,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleRegionChange
           );
-        } else if (config.configuration.filterKey === LINODE_REGION) {
+        } else if (config.configuration.filterKey === PARENT_ENTITY_REGION) {
           return getRegionProperties(
             {
               config,
@@ -304,7 +318,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               dependentFilters: resource_ids?.length
-                ? { [RESOURCE_ID]: resource_ids }
+                ? { [RESOURCE_ID]: resource_ids.map(String) }
                 : dependentFilterReference.current,
               shouldDisable: isError || isLoading,
             },
@@ -351,12 +365,22 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               isServiceAnalyticsIntegration,
               preferences,
-              dependentFilters: resource_ids?.length
-                ? { [RESOURCE_ID]: resource_ids }
-                : dependentFilterReference.current,
+              dependentFilters: dependentFilterReference.current,
               shouldDisable: isError || isLoading,
             },
             handleTextFilterChange
+          );
+        } else if (config.configuration.filterKey === ENDPOINT) {
+          return getEndpointsProperties(
+            {
+              config,
+              dashboard,
+              dependentFilters: dependentFilterReference.current,
+              isServiceAnalyticsIntegration,
+              preferences,
+              shouldDisable: isError || isLoading,
+            },
+            handleEndpointsChange
           );
         } else {
           return getCustomSelectProperties(
@@ -381,6 +405,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleRegionChange,
         handleTextFilterChange,
         handleResourceChange,
+        handleEndpointsChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
         preferences,

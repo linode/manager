@@ -1,5 +1,6 @@
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
+import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
 import Networking from 'src/assets/icons/entityIcons/networking.svg';
 import Storage from 'src/assets/icons/entityIcons/storage.svg';
 
@@ -15,6 +16,7 @@ import type {
 export const emptyResults: SearchResultsByEntity = {
   bucket: [],
   database: [],
+  destination: [],
   domain: [],
   firewall: [],
   image: [],
@@ -22,12 +24,14 @@ export const emptyResults: SearchResultsByEntity = {
   linode: [],
   nodebalancer: [],
   stackscript: [],
+  stream: [],
   volume: [],
 };
 
 export const emptyErrors: Record<SearchableEntityType, null | string> = {
   bucket: null,
   database: null,
+  destination: null,
   domain: null,
   firewall: null,
   image: null,
@@ -35,6 +39,7 @@ export const emptyErrors: Record<SearchableEntityType, null | string> = {
   linode: null,
   nodebalancer: null,
   stackscript: null,
+  stream: null,
   volume: null,
 };
 
@@ -44,6 +49,7 @@ export const searchableEntityIconMap: Record<
 > = {
   bucket: Storage,
   database: Database,
+  destination: Monitor,
   domain: Networking,
   firewall: Networking,
   image: Storage,
@@ -51,6 +57,7 @@ export const searchableEntityIconMap: Record<
   linode: Compute,
   nodebalancer: Networking,
   stackscript: Compute,
+  stream: Monitor,
   volume: Storage,
 };
 
@@ -60,6 +67,7 @@ export const searchableEntityDisplayNameMap: Record<
 > = {
   bucket: 'Buckets',
   database: 'Databases',
+  destination: 'Destination',
   domain: 'Domains',
   firewall: 'Firewalls',
   image: 'Images',
@@ -67,6 +75,7 @@ export const searchableEntityDisplayNameMap: Record<
   linode: 'Linodes',
   nodebalancer: 'NodeBalancers',
   stackscript: 'StackScripts',
+  stream: 'Stream',
   volume: 'Volumes',
 };
 
@@ -92,6 +101,7 @@ export const separateResultsByEntity = (
   const separatedResults: SearchResultsByEntity = {
     bucket: [],
     database: [],
+    destination: [],
     domain: [],
     firewall: [],
     image: [],
@@ -99,6 +109,7 @@ export const separateResultsByEntity = (
     linode: [],
     nodebalancer: [],
     stackscript: [],
+    stream: [],
     volume: [],
   };
 

@@ -4,11 +4,12 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type CloudPulseServiceType =
+  | 'blockstorage'
   | 'dbaas'
   | 'firewall'
   | 'linode'
-  | 'nodebalancer';
-
+  | 'nodebalancer'
+  | 'objectstorage';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -39,6 +40,7 @@ type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   created: string;
+  group_by?: string[];
   id: number;
   label: string;
   service_type: CloudPulseServiceType;
@@ -71,7 +73,7 @@ export interface Widgets {
   color: string;
   entity_ids: string[];
   filters: Filters[];
-  group_by: string[];
+  group_by?: string[];
   label: string;
   metric: string;
   namespace_id: number;
@@ -109,6 +111,7 @@ export interface AclpConfig {
 
 export interface AclpWidget {
   aggregateFunction: string;
+  groupBy?: string[];
   label: string;
   size: number;
   timeGranularity: TimeGranularity;
@@ -132,7 +135,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  entity_ids: number[];
+  entity_ids?: number[];
 }
 
 export interface JWEToken {
@@ -147,9 +150,10 @@ export interface Metric {
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   associated_entity_region?: string;
-  entity_ids: number[];
+  entity_ids: number[] | string[];
+  entity_region?: string;
   filters?: Filters[];
-  group_by: string[];
+  group_by?: string[];
   metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
@@ -196,6 +200,7 @@ export interface CreateAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: MetricCriteria[];
   };
@@ -337,10 +342,10 @@ export interface EditAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label?: string;
+  regions?: string[];
   rule_criteria?: {
     rules: MetricCriteria[];
   };
-  scope?: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
@@ -373,6 +378,8 @@ export const capabilityServiceTypeMapping: Record<
   dbaas: 'Managed Databases',
   nodebalancer: 'NodeBalancers',
   firewall: 'Cloud Firewall',
+  objectstorage: 'Object Storage',
+  blockstorage: 'Block Storage',
 };
 
 /**
@@ -387,10 +394,10 @@ export interface CloudPulseAlertsPayload {
    * Array of enabled system alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  system?: number[];
+  system_alerts?: number[];
   /**
    * Array of enabled user alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  user?: number[];
+  user_alerts?: number[];
 }

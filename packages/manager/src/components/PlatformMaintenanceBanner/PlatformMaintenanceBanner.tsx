@@ -1,4 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 
 import { usePlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
@@ -12,20 +13,17 @@ import { Link } from '../Link';
  * them separately from the standard MaintenanceBanner.
  */
 
-export const PlatformMaintenanceBanner = ({
-  pathname,
-}: {
-  pathname?: string;
-}) => {
+export const PlatformMaintenanceBanner = () => {
   const { accountHasPlatformMaintenance, linodesWithPlatformMaintenance } =
     usePlatformMaintenance();
+  const location = useLocation();
 
-  const hideAccountMaintenanceLink = pathname === '/account/maintenance';
+  const hideAccountMaintenanceLink = location.pathname === '/maintenance';
 
   if (!accountHasPlatformMaintenance) return null;
 
   return (
-    <Notice variant="warning">
+    <Notice data-testid="platform-maintenance-banner" variant="warning">
       <Typography>
         <strong>
           {linodesWithPlatformMaintenance.size > 0
@@ -36,11 +34,14 @@ export const PlatformMaintenanceBanner = ({
         need{linodesWithPlatformMaintenance.size === 1 && 's'} to be rebooted
         for critical platform maintenance.
         {!hideAccountMaintenanceLink && (
-          <>
+          <span data-testid="platform-maintenance-link-section">
             {' '}
             See which Linodes are <strong>scheduled</strong> for reboot on the{' '}
-            <Link to="/account/maintenance">Account Maintenance</Link> page.
-          </>
+            <Link pendoId="platform-maintenance-banner-link" to="/maintenance">
+              Account Maintenance
+            </Link>{' '}
+            page.
+          </span>
         )}
       </Typography>
     </Notice>

@@ -15,10 +15,19 @@ export const objectStorageRoute = createRoute({
 
 const objectStorageIndexRoute = createRoute({
   beforeLoad: async () => {
-    throw redirect({ to: '/object-storage/buckets' });
+    throw redirect({ to: '/object-storage/summary' });
   },
   getParentRoute: () => objectStorageRoute,
   path: '/',
+}).lazy(() =>
+  import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
+const objectStorageSummaryLandingRoute = createRoute({
+  getParentRoute: () => objectStorageRoute,
+  path: 'summary',
 }).lazy(() =>
   import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -97,12 +106,14 @@ const objectStorageBucketSSLRoute = createRoute({
     'src/features/ObjectStorage/BucketDetail/bucketDetailLandingLazyRoute'
   ).then((m) => m.bucketDetailLandingLazyRoute)
 );
+
 export const objectStorageRouteTree = objectStorageRoute.addChildren([
   objectStorageIndexRoute.addChildren([
-    objectStorageBucketCreateRoute,
-    objectStorageAccessKeyCreateRoute,
+    objectStorageSummaryLandingRoute,
     objectStorageBucketsLandingRoute,
     objectStorageAccessKeysLandingRoute,
+    objectStorageBucketCreateRoute,
+    objectStorageAccessKeyCreateRoute,
   ]),
   objectStorageBucketDetailRoute.addChildren([
     objectStorageBucketDetailObjectsRoute,

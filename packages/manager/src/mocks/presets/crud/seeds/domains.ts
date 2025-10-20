@@ -1,6 +1,6 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { domainFactory } from 'src/factories';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { MockSeeder, MockState } from 'src/mocks/types';
@@ -19,6 +19,8 @@ export const domainSeeder: MockSeeder = {
       dbEntities: await mswDB.getAll('domains'),
       seedEntities: domainFactory.buildList(count),
     });
+
+    addToEntities(mockState, 'domains', domainSeeds);
 
     const updatedMockState = {
       ...mockState,

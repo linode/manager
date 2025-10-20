@@ -4,27 +4,39 @@ import { queryFactory } from './queries';
 
 import type { Filter, FirewallDeviceEntity, Params } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 export const useResourcesQuery = (
   enabled = false,
   resourceType: string | undefined,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
+  associatedEntityType: AssociatedEntityType = 'both'
 ) =>
   useQuery<any[], unknown, CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),
     enabled,
+    retry: resourceType === 'objectstorage' ? false : 3,
     select: (resources) => {
+      if (!enabled) {
+        return []; // Return empty array if the query is not enabled
+      }
       return resources.map((resource) => {
         const entities: Record<string, string> = {};
 
         // handle separately for firewall resource type
         if (resourceType === 'firewall') {
           resource.entities?.forEach((entity: FirewallDeviceEntity) => {
-            if (entity.type === 'linode' && entity.label) {
+            if (
+              (entity.type === associatedEntityType ||
+                associatedEntityType === 'both') &&
+              entity.label
+            ) {
               entities[String(entity.id)] = entity.label;
             }
             if (
+              (associatedEntityType === 'linode' ||
+                associatedEntityType === 'both') &&
               entity.type === 'linode_interface' &&
               entity.parent_entity?.label
             ) {
@@ -33,13 +45,18 @@ export const useResourcesQuery = (
             }
           });
         }
+        const id =
+          resourceType === 'objectstorage'
+            ? resource.hostname
+            : String(resource.id);
         return {
           engineType: resource.engine,
-          id: String(resource.id),
-          label: resource.label,
+          id,
+          label: resourceType === 'objectstorage' ? id : resource.label,
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
           tags: resource.tags,
+          endpoint: resource.s3_endpoint,
           entities,
           clusterSize: resource.cluster_size,
         };

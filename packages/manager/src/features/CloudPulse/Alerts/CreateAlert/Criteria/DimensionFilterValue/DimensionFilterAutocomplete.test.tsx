@@ -8,6 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
 
 import type { Item } from '../../../constants';
+import type { DimensionFilterAutocompleteProps } from './constants';
 
 const mockOptions: Item<string, string>[] = [
   { label: 'TCP', value: 'tcp' },
@@ -15,8 +16,9 @@ const mockOptions: Item<string, string>[] = [
 ];
 
 describe('<DimensionFilterAutocomplete />', () => {
-  const defaultProps = {
+  const defaultProps: DimensionFilterAutocompleteProps = {
     name: `rule_criteria.rules.${0}.dimension_filters.%{0}.value`,
+    dimensionLabel: 'protocol',
     disabled: false,
     errorText: '',
     fieldOnBlur: vi.fn(),
@@ -24,7 +26,12 @@ describe('<DimensionFilterAutocomplete />', () => {
     fieldValue: 'tcp',
     multiple: false,
     placeholderText: 'Select a value',
-    values: mockOptions,
+    scope: null,
+    entities: [],
+    selectedRegions: [],
+    serviceType: 'nodebalancer',
+    values: mockOptions.map((o) => o.value),
+    type: 'alerts',
   };
 
   it('renders with label and placeholder', () => {
@@ -92,9 +99,6 @@ describe('<DimensionFilterAutocomplete />', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    expect(
-      screen.getByRole('option', { name: mockOptions[1].label })
-    ).toBeVisible();
     await user.click(
       screen.getByRole('option', { name: mockOptions[1].label })
     );
@@ -105,22 +109,30 @@ describe('<DimensionFilterAutocomplete />', () => {
       <DimensionFilterAutocomplete
         {...defaultProps}
         fieldOnChange={fieldOnChange}
-        fieldValue={fieldOnChange.mock.calls[0][0]} // simulate form state update
+        fieldValue={fieldOnChange.mock.calls[0][0]}
         multiple
       />
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    expect(
-      screen.getByRole('option', { name: mockOptions[0].label })
-    ).toBeVisible();
     await user.click(
       screen.getByRole('option', { name: mockOptions[0].label })
     );
 
-    // Assert both values were selected
     expect(fieldOnChange).toHaveBeenCalledWith(
       `${mockOptions[1].value},${mockOptions[0].value}`
     );
+  });
+
+  it('should render the error message', () => {
+    renderWithTheme(
+      <DimensionFilterAutocomplete
+        {...defaultProps}
+        errorText={'Failed to fetch the values.'}
+        fieldValue={null}
+        multiple
+      />
+    );
+    expect(screen.getByText('Failed to fetch the values.')).toBeVisible();
   });
 });

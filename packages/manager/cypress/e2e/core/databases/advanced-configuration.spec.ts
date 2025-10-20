@@ -2,7 +2,6 @@
  * @file DBaaS integration tests for advanced configuration operations.
  */
 
-import { ConfigCategoryValues, DatabaseEngineConfig } from '@linode/api-v4';
 import { accountFactory } from '@src/factories';
 import {
   databaseConfigurationsAdvConfig,
@@ -26,6 +25,10 @@ import {
   postgresConfigResponse,
 } from 'src/factories/databases';
 
+import type {
+  ConfigCategoryValues,
+  DatabaseEngineConfig,
+} from '@linode/api-v4';
 import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 /**

@@ -29,10 +29,14 @@ import {
   useVMHostMaintenanceEnabled,
 } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
+import {
+  getLinodeCreateType,
+  useGetLinodeCreateType,
+} from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
@@ -93,6 +97,8 @@ export const LinodeCreate = () => {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
+  const { isDualStackEnabled } = useVPCDualStack();
+
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
     context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
     defaultValues: () =>
@@ -146,8 +152,10 @@ export const LinodeCreate = () => {
     handleTabChange(index);
 
     if (index !== tabIndex) {
+      const newTab = tabs[index];
+      const newLinodeCreateType = getLinodeCreateType(newTab.to);
       // Get the default values for the new tab and reset the form
-      defaultValues(linodeCreateType, search, queryClient, {
+      defaultValues(newLinodeCreateType, search, queryClient, {
         isLinodeInterfacesEnabled,
         isVMHostMaintenanceEnabled,
       }).then(form.reset);
@@ -156,6 +164,7 @@ export const LinodeCreate = () => {
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
+      isDualStackEnabled,
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
       isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,

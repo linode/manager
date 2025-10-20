@@ -5,6 +5,7 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { arraysEqual } from '../Alerts/Utils/utils';
 import {
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -18,8 +19,9 @@ import {
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
+  RESOURCE_ID,
 } from './constants';
-import { compareArrays } from './FilterBuilder';
+import { FILTER_CONFIG } from './FilterConfig';
 
 import type {
   Alert,
@@ -93,8 +95,8 @@ export const useContextualAlertsState = (
   const calculateInitialState = React.useCallback(
     (alerts: Alert[], entityId?: string): CloudPulseAlertsPayload => {
       const initialStates: CloudPulseAlertsPayload = {
-        system: [],
-        user: [],
+        system_alerts: [],
+        user_alerts: [],
       };
 
       alerts.forEach((alert) => {
@@ -107,7 +109,9 @@ export const useContextualAlertsState = (
           : isAccountOrRegion;
 
         if (shouldInclude) {
-          initialStates[alert.type]?.push(alert.id);
+          const payloadAlertType =
+            alert.type === 'system' ? 'system_alerts' : 'user_alerts';
+          initialStates[payloadAlertType]?.push(alert.id);
         }
       });
 
@@ -131,8 +135,8 @@ export const useContextualAlertsState = (
   // Check if the enabled alerts have changed from the initial state
   const hasUnsavedChanges = React.useMemo(() => {
     return (
-      !compareArrays(enabledAlerts.system ?? [], initialState.system ?? []) ||
-      !compareArrays(enabledAlerts.user ?? [], initialState.user ?? [])
+      !arraysEqual(enabledAlerts.system_alerts, initialState.system_alerts) ||
+      !arraysEqual(enabledAlerts.user_alerts, initialState.user_alerts)
     );
   }, [enabledAlerts, initialState]);
 
@@ -305,6 +309,10 @@ export const arePortsValid = (ports: string): string | undefined => {
     return undefined;
   }
 
+  if (ports.length > 100) {
+    return PORTS_LIMIT_ERROR_MESSAGE;
+  }
+
   if (ports.startsWith(',')) {
     return PORTS_LEADING_COMMA_ERROR_MESSAGE;
   }
@@ -318,18 +326,12 @@ export const arePortsValid = (ports: string): string | undefined => {
   }
 
   const portList = ports.split(',');
-  let portLimitCount = 0;
 
   for (const port of portList) {
     const result = isValidPort(port);
     if (result !== undefined) {
       return result;
     }
-    portLimitCount++;
-  }
-
-  if (portLimitCount > 15) {
-    return PORTS_LIMIT_ERROR_MESSAGE;
   }
 
   return undefined;
@@ -347,6 +349,10 @@ export const areValidInterfaceIds = (
     return undefined;
   }
 
+  if (interfaceIds.length > 100) {
+    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
+  }
+
   if (interfaceIds.startsWith(',')) {
     return INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE;
   }
@@ -356,13 +362,6 @@ export const areValidInterfaceIds = (
   }
   if (!/^[\d,]+$/.test(interfaceIds)) {
     return INTERFACE_IDS_ERROR_MESSAGE;
-  }
-
-  const interfaceIdList = interfaceIds.split(',');
-  const interfaceIdLimitCount = interfaceIdList.length;
-
-  if (interfaceIdLimitCount > 15) {
-    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
   }
 
   return undefined;
@@ -395,4 +394,21 @@ export const useIsAclpSupportedRegion = (
   const region = regions?.find(({ id }) => id === regionId);
 
   return region?.monitors?.[type]?.includes(capability) ?? false;
+};
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The associated entity type for the dashboard
+ */
+export const getAssociatedEntityType = (dashboardId: number | undefined) => {
+  if (!dashboardId) {
+    return 'both';
+  }
+  // Get the associated entity type for the dashboard
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  return (
+    filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === RESOURCE_ID
+    )?.configuration.associatedEntityType ?? 'both'
+  );
 };

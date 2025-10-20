@@ -1,7 +1,7 @@
-import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
+import { useVolumesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -18,9 +18,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,
@@ -28,28 +28,22 @@ import {
 import { VOLUME_TABLE_PREFERENCE_KEY } from 'src/routes/volumes/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { DeleteVolumeDialog } from './Dialogs/DeleteVolumeDialog';
-import { DetachVolumeDialog } from './Dialogs/DetachVolumeDialog';
-import { UpgradeVolumeDialog } from './Dialogs/UpgradeVolumeDialog';
-import { AttachVolumeDrawer } from './Drawers/AttachVolumeDrawer';
-import { CloneVolumeDrawer } from './Drawers/CloneVolumeDrawer';
-import { EditVolumeDrawer } from './Drawers/EditVolumeDrawer';
-import { ManageTagsDrawer } from './Drawers/ManageTagsDrawer';
-import { ResizeVolumeDrawer } from './Drawers/ResizeVolumeDrawer';
-import { VolumeDetailsDrawer } from './Drawers/VolumeDetailsDrawer';
+import { useVolumeActionHandlers } from './hooks/useVolumeActionHandlers';
+import { VolumeTableRow } from './Partials/VolumeTableRow';
+import { VolumeDrawers } from './VolumeDrawers/VolumeDrawers';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
-import { VolumeTableRow } from './VolumeTableRow';
 
-import type { Filter, Volume } from '@linode/api-v4';
-import type { VolumeAction } from 'src/routes/volumes/index';
+import type { Filter } from '@linode/api-v4';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
-  const params = useParams({ strict: false });
+
   const search = useSearch({
     from: '/volumes/',
     shouldThrow: false,
   });
+  const { data: permissions } = usePermissions('account', ['create_volume']);
+
   const pagination = usePaginationV2({
     currentRoute: '/volumes',
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
@@ -58,9 +52,8 @@ export const VolumesLanding = () => {
       query: search?.query,
     }),
   });
-  const isVolumeCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_volumes',
-  });
+
+  const canCreateVolume = permissions?.create_volume;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -72,6 +65,8 @@ export const VolumesLanding = () => {
     },
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
   });
+
+  const { getActionHandlers } = useVolumeActionHandlers('/volumes/$volumeId');
 
   const { filter: searchFilter, error: searchError } = getAPIFilterFromQuery(
     search?.query,
@@ -101,20 +96,6 @@ export const VolumesLanding = () => {
 
   const { isBlockStorageEncryptionFeatureEnabled } =
     useIsBlockStorageEncryptionFeatureEnabled();
-
-  const {
-    data: selectedVolume,
-    isFetching: isFetchingVolume,
-    error: selectedVolumeError,
-  } = useVolumeQuery(Number(params.volumeId), !!params.volumeId);
-
-  const handleVolumeAction = (action: VolumeAction, volume: Volume) => {
-    navigate({
-      params: { action, volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
 
   const onSearch = (query: string) => {
     navigate({
@@ -169,7 +150,7 @@ export const VolumesLanding = () => {
             resourceType: 'Volumes',
           }),
         }}
-        disabledCreateButton={isVolumeCreationRestricted}
+        disabledCreateButton={!canCreateVolume}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
@@ -235,18 +216,7 @@ export const VolumesLanding = () => {
           )}
           {volumes?.data.map((volume) => (
             <VolumeTableRow
-              handlers={{
-                handleAttach: () => handleVolumeAction('attach', volume),
-                handleClone: () => handleVolumeAction('clone', volume),
-                handleDelete: () => handleVolumeAction('delete', volume),
-                handleDetach: () => handleVolumeAction('detach', volume),
-                handleDetails: () => handleVolumeAction('details', volume),
-                handleEdit: () => handleVolumeAction('edit', volume),
-                handleManageTags: () =>
-                  handleVolumeAction('manage-tags', volume),
-                handleResize: () => handleVolumeAction('resize', volume),
-                handleUpgrade: () => handleVolumeAction('upgrade', volume),
-              }}
+              handlers={getActionHandlers(volume.id)}
               isBlockStorageEncryptionFeatureEnabled={
                 isBlockStorageEncryptionFeatureEnabled
               }
@@ -264,67 +234,10 @@ export const VolumesLanding = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <AttachVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'attach'}
-        volume={selectedVolume}
-      />
-      <VolumeDetailsDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'details'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <ManageTagsDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'manage-tags'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <EditVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'edit'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <ResizeVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'resize'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <CloneVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'clone'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <DetachVolumeDialog
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'detach'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <UpgradeVolumeDialog
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'upgrade'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
-      />
-      <DeleteVolumeDialog
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'delete'}
-        volume={selectedVolume}
-        volumeError={selectedVolumeError}
+
+      <VolumeDrawers
+        onCloseHandler={navigateToVolumes}
+        onDeleteSuccessHandler={navigateToVolumes}
       />
     </Stack>
   );

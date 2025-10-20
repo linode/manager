@@ -2,8 +2,8 @@ import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAlertDefinition } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
+  interceptUpdateLinode,
   mockGetLinodeDetails,
-  mockUpdateLinode,
 } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -37,21 +37,21 @@ const mockEnabledLegacyAlerts = {
 };
 
 const mockDisabledBetaAlerts = {
-  system: [],
-  user: [],
+  system_alerts: [],
+  user_alerts: [],
 };
 
 const mockEnabledBetaAlerts = {
-  system: [1, 2],
-  user: [3],
+  system_alerts: [1, 2],
+  user_alerts: [3],
 };
 
 /*
  * UI of Linode alerts tab based on beta and legacy alert values in linode.alerts. Dependent on region support for alerts
  * Legacy alerts = 0, Beta alerts = [] (empty arrays or no values at all) => legacy disabled for `beta` stage OR beta disabled for `ga` stage
  * Legacy alerts > 0, Beta alerts = [] (empty arrays or no values at all) => legacy enabled
- * Legacy alerts = 0, Beta alerts has values (either system, user, or both) => beta enabled
- * Legacy alerts > 0, Beta alerts has values (either system, user, or both) => beta enabled
+ * Legacy alerts = 0, Beta alerts has values (either system_alerts, user_alerts, or both) => beta enabled
+ * Legacy alerts > 0, Beta alerts has values (either system_alerts, user_alerts, or both) => beta enabled
  *
  * Note: Here, "disabled" means that all toggles are in the OFF state, but it's still editable (not read-only)
  */
@@ -234,7 +234,7 @@ describe('region enables alerts', function () {
         // toggles in table are on but can be turned off
         assertLinodeAlertsEnabled(this.alertDefinitions);
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         ui.button
           .findByTitle('Save')
           .should('be.visible')
@@ -366,7 +366,7 @@ describe('region enables alerts', function () {
           .click({ multiple: true });
         ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         cy.scrollTo('bottom');
         // save changes
         ui.button
@@ -411,7 +411,7 @@ describe('region enables alerts', function () {
         // toggles in table are on but can be turned off
         assertLinodeAlertsEnabled(this.alertDefinitions);
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         ui.button
           .findByTitle('Save')
           .should('be.visible')
@@ -492,7 +492,7 @@ describe('region enables alerts', function () {
             });
           });
 
-        mockUpdateLinode(mockLinode.id).as('updateLinode');
+        interceptUpdateLinode(mockLinode.id).as('updateLinode');
         ui.button
           .findByTitle('Save')
           .should('be.visible')

@@ -20,6 +20,7 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  getAssociatedEntityType,
   getEnabledServiceTypes,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -64,10 +65,17 @@ describe('arePortsValid', () => {
     expect(arePortsValid('abc')).toBe(PORTS_ERROR_MESSAGE);
   });
 
-  it('should return invalid for more than 15 ports', () => {
-    const ports = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
-    const result = arePortsValid(ports);
-    expect(result).toBe(PORTS_LIMIT_ERROR_MESSAGE);
+  it('should return invalid for input length more than 100 characters', () => {
+    expect(
+      arePortsValid(
+        '12345,23456,34567,45678,56789,123,456,789,1111,2222,3333,4444,5555,6666,7777,8888,9999,12,34,56,1055'
+      )
+    ).toBe(undefined);
+    expect(
+      arePortsValid(
+        '12345,23456,34567,45678,56789,123,456,789,1111,2222,3333,4444,5555,6666,7777,8888,9999,12,34,56,10455'
+      )
+    ).toBe(PORTS_LIMIT_ERROR_MESSAGE);
   });
 });
 
@@ -93,10 +101,17 @@ describe('areValidInterfaceIds', () => {
     expect(areValidInterfaceIds('abc')).toBe(INTERFACE_IDS_ERROR_MESSAGE);
   });
 
-  it('should return invalid for more than 15 interface ids', () => {
-    const interfaceIds = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
-    const result = areValidInterfaceIds(interfaceIds);
-    expect(result).toBe(INTERFACE_IDS_LIMIT_ERROR_MESSAGE);
+  it('should return invalid for input length more than 100 characters', () => {
+    expect(
+      areValidInterfaceIds(
+        '12345,23456,34567,45678,56789,123,456,789,1111,2222,3333,4444,5555,6666,7777,8888,9999,12,34,56,1455'
+      )
+    ).toBe(undefined);
+    expect(
+      areValidInterfaceIds(
+        '12345,23456,34567,45678,56789,123,456,789,1111,2222,3333,4444,5555,6666,7777,8888,9999,12,34,56,14055'
+      )
+    ).toBe(INTERFACE_IDS_LIMIT_ERROR_MESSAGE);
   });
 });
 
@@ -323,5 +338,19 @@ describe('getEnabledServiceTypes', () => {
     };
     const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
     expect(result).not.toContain('linode');
+  });
+
+  describe('getAssociatedEntityType', () => {
+    it('should return both if the dashboard id is not provided', () => {
+      expect(getAssociatedEntityType(undefined)).toBe('both');
+    });
+
+    it('should return the associated entity type for linode firewall dashboard', () => {
+      expect(getAssociatedEntityType(4)).toBe('linode');
+    });
+
+    it('should return the associated entity type for nodebalancer firewall dashboard', () => {
+      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
+    });
   });
 });

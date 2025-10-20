@@ -12,6 +12,7 @@ import {
   getLinodeInterface,
   getLinodeInterfaceFirewalls,
   getLinodeInterfaces,
+  getLinodeInterfacesHistory,
   getLinodeInterfacesSettings,
   getLinodeIPs,
   getLinodeKernel,
@@ -145,6 +146,10 @@ export const linodeQueries = createQueryKeys('linodes', {
             queryFn: () => getLinodeInterfacesSettings(id),
             queryKey: null,
           },
+          interfacesHistory: (params: Params = {}, filter: Filter = {}) => ({
+            queryFn: () => getLinodeInterfacesHistory(id, params, filter),
+            queryKey: [params, filter],
+          }),
         },
         queryKey: null,
       },
@@ -376,6 +381,14 @@ export const useCreateLinodeMutation = () => {
           queryClient.invalidateQueries({
             queryKey: vlanQueries._def,
           });
+        }
+
+        // Invalidate all VPC queries if the Linode was created with a VPC.
+        // We have to invalidate all VPC queries because the new "Linode Interfaces" payload
+        // does not include the VPC ID. It only includes the Subnet ID.
+        // The VPC ID is necessary for more granular invalidation, but it is not available here.
+        if (variables.interfaces?.some((i) => i.vpc)) {
+          queryClient.invalidateQueries({ queryKey: vpcQueries._def });
         }
 
         for (const linodeInterface of variables.interfaces ?? []) {

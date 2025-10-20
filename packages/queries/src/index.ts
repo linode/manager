@@ -3,7 +3,7 @@ export * from './base';
 export * from './betas';
 export * from './cloudnats';
 export * from './databases';
-export * from './datastreams';
+export * from './delivery';
 export * from './domains';
 export * from './eventHandlers';
 export * from './firewalls';

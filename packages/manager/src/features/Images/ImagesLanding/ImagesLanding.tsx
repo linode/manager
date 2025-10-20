@@ -1,16 +1,9 @@
-import {
-  imageQueries,
-  useDeleteImageMutation,
-  useImageQuery,
-  useImagesQuery,
-} from '@linode/queries';
+import { imageQueries, useImageQuery, useImagesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
-  ActionsPanel,
   CircleProgress,
   Drawer,
   ErrorState,
-  Notice,
   Paper,
   Stack,
   Typography,
@@ -18,11 +11,9 @@ import {
 import { Hidden } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -36,16 +27,14 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
   AUTOMATIC_IMAGES_DEFAULT_ORDER,
@@ -57,6 +46,7 @@ import {
   MANUAL_IMAGES_PREFERENCE_KEY,
 } from '../constants';
 import { getEventsForImages } from '../utils';
+import { DeleteImageDialog } from './DeleteImageDialog';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
@@ -64,7 +54,7 @@ import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { Filter, Image, ImageStatus } from '@linode/api-v4';
+import type { Filter, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { ImageAction } from 'src/routes/images';
 
@@ -84,37 +74,19 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface ImageDialogState {
-  error?: string;
-  status?: ImageStatus;
-  submitting: boolean;
-}
-
-const defaultDialogState: ImageDialogState = {
-  error: undefined,
-  submitting: false,
-};
-
 export const ImagesLanding = () => {
   const { classes } = useStyles();
-  const {
-    action,
-    imageId: selectedImageId,
-  }: { action: ImageAction; imageId: string } = useParams({
-    strict: false,
+  const params = useParams({
+    from: '/images/$imageId/$action',
+    shouldThrow: false,
   });
   const search = useSearch({ from: '/images' });
   const { query } = search;
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-  const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
   const queryClient = useQueryClient();
-  const [dialogState, setDialogState] =
-    React.useState<ImageDialogState>(defaultDialogState);
-  const dialogStatus =
-    dialogState.status === 'pending_upload' ? 'cancel' : 'delete';
+
+  const { data: permissions } = usePermissions('account', ['create_image']);
+  const canCreateImage = permissions?.create_image;
 
   /**
    * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
@@ -258,8 +230,7 @@ export const ImagesLanding = () => {
     data: selectedImage,
     isLoading: isFetchingSelectedImage,
     error: selectedImageError,
-  } = useImageQuery(selectedImageId, !!selectedImageId);
-  const { mutateAsync: deleteImage } = useDeleteImageMutation();
+  } = useImageQuery(params?.imageId ?? '', !!params?.imageId);
 
   const { events } = useEventsInfiniteQuery();
 
@@ -302,56 +273,11 @@ export const ImagesLanding = () => {
   };
 
   const handleCloseDialog = () => {
-    setDialogState(defaultDialogState);
     navigate({ search: (prev) => prev, to: '/images' });
   };
 
   const handleManageRegions = (image: Image) => {
     actionHandler(image, 'manage-replicas');
-  };
-
-  const handleDeleteImage = (image: Image) => {
-    if (!image.id) {
-      setDialogState((dialog) => ({
-        ...dialog,
-        error: 'Image is not available.',
-      }));
-    }
-
-    setDialogState((dialog) => ({
-      ...dialog,
-      error: undefined,
-      submitting: true,
-    }));
-
-    deleteImage({ imageId: image.id })
-      .then(() => {
-        handleCloseDialog();
-        /**
-         * request generated by the Pagey HOC.
-         *
-         * We're making a request here because the image is being
-         * optimistically deleted on the API side, so a GET to /images
-         * will not return the image scheduled for deletion. This request
-         * is ensuring the image is removed from the list, to prevent the user
-         * from taking any action on the Image.
-         */
-        enqueueSnackbar('Image has been scheduled for deletion.', {
-          variant: 'info',
-        });
-      })
-      .catch((err) => {
-        const _error = getErrorStringOrDefault(
-          err,
-          'There was an error deleting the image.'
-        );
-        setDialogState({
-          ...dialogState,
-          error: _error,
-          submitting: false,
-        });
-        handleCloseDialog();
-      });
   };
 
   const onCancelFailedClick = () => {
@@ -416,13 +342,11 @@ export const ImagesLanding = () => {
           removeCrumbX: 1,
         }}
         buttonDataAttrs={{
-          tooltipText: getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          }),
+          tooltipText: canCreateImage
+            ? false
+            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
         }}
-        disabledCreateButton={isCreateImageRestricted}
+        disabledCreateButton={!canCreateImage}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
         onButtonClick={() =>
@@ -614,20 +538,20 @@ export const ImagesLanding = () => {
           imageError={selectedImageError}
           isFetching={isFetchingSelectedImage}
           onClose={handleCloseDialog}
-          open={action === 'edit'}
+          open={params?.action === 'edit'}
         />
         <RebuildImageDrawer
           image={selectedImage}
           imageError={selectedImageError}
           isFetching={isFetchingSelectedImage}
           onClose={handleCloseDialog}
-          open={action === 'rebuild'}
+          open={params?.action === 'rebuild'}
         />
         <Drawer
           error={selectedImageError}
           isFetching={isFetchingSelectedImage}
           onClose={handleCloseDialog}
-          open={action === 'manage-replicas'}
+          open={params?.action === 'manage-replicas'}
           title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
         >
           <ManageImageReplicasForm
@@ -635,42 +559,11 @@ export const ImagesLanding = () => {
             onClose={handleCloseDialog}
           />
         </Drawer>
-        <ConfirmationDialog
-          actions={
-            <ActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'submit',
-                label:
-                  dialogStatus === 'cancel' ? 'Cancel Upload' : 'Delete Image',
-                loading: dialogState.submitting,
-                onClick: () => handleDeleteImage(selectedImage!),
-              }}
-              secondaryButtonProps={{
-                'data-testid': 'cancel',
-                label: dialogStatus === 'cancel' ? 'Keep Image' : 'Cancel',
-                onClick: handleCloseDialog,
-              }}
-            />
-          }
-          entityError={selectedImageError}
-          isFetching={isFetchingSelectedImage}
+        <DeleteImageDialog
+          imageId={params?.imageId}
           onClose={handleCloseDialog}
-          open={action === 'delete'}
-          title={
-            dialogStatus === 'cancel'
-              ? 'Cancel Upload'
-              : `Delete Image ${selectedImage?.label}`
-          }
-        >
-          {dialogState.error && (
-            <Notice text={dialogState.error} variant="error" />
-          )}
-          <Typography>
-            {dialogStatus === 'cancel'
-              ? 'Are you sure you want to cancel this Image upload?'
-              : 'Are you sure you want to delete this Image?'}
-          </Typography>
-        </ConfirmationDialog>
+          open={params?.action === 'delete'}
+        />
       </Stack>
     </>
   );

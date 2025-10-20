@@ -3,10 +3,10 @@
 ARG IMAGE_REGISTRY=docker.io
 
 # Node.js version to use.
-ARG NODE_VERSION=20.17.0
+ARG NODE_VERSION=22.19.0
 
 # Cypress version.
-ARG CYPRESS_VERSION=14.3.0
+ARG CYPRESS_VERSION=15.4.0
 
 # Node.js base image for Cloud Manager CI tasks.
 #
@@ -41,21 +41,21 @@ CMD pnpm start:manager:ci
 #
 # Uses Cypress factory image. For more information, see:
 # https://github.com/cypress-io/cypress-docker-images/tree/master/factory#usage
-FROM ${IMAGE_REGISTRY}/cypress/factory:5.2.1 AS e2e-build
+FROM ${IMAGE_REGISTRY}/cypress/factory:6.0.1 AS e2e-build
 ARG CYPRESS_VERSION
 ARG NODE_VERSION
 # Add Chrome apt repo
 RUN apt-get update \
-    && apt-get install -y wget gnupg2 \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
-    && apt-get update
+  && apt-get install -y wget gnupg2 \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-chrome-archive-keyring.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/google-chrome-archive-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+  && apt-get update
 
 RUN apt-get install -y google-chrome-stable \
-    && rm -rf /var/cache/apt/* \
-    && rm -rf /var/lib/apt/lists* \
-    && apt-get clean \
-    && npm install -g cypress@${CYPRESS_VERSION} pnpm bun yarn
+  && rm -rf /var/cache/apt/* \
+  && rm -rf /var/lib/apt/lists* \
+  && apt-get clean \
+  && npm install -g cypress@${CYPRESS_VERSION} pnpm bun yarn
 
 USER node
 WORKDIR /home/node/app

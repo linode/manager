@@ -1,7 +1,7 @@
 import type { Capabilities, Region } from '../regions';
 import type { APIWarning, RequestOptions } from '../types';
 
-export type UserType = 'child' | 'default' | 'parent' | 'proxy';
+export type UserType = 'child' | 'default' | 'delegate' | 'parent' | 'proxy';
 
 export interface User {
   email: string;
@@ -69,6 +69,8 @@ export const accountCapabilities = [
   'Disk Encryption',
   'Kubernetes',
   'Kubernetes Enterprise',
+  'Kubernetes Enterprise BYO VPC',
+  'Kubernetes Enterprise Dual Stack',
   'Linodes',
   'Linode Interfaces',
   'LKE HA Control Planes',
@@ -344,6 +346,8 @@ export const EventActionKeys = [
   'database_migrate',
   'database_upgrade',
   'destination_create',
+  'destination_delete',
+  'destination_update',
   'disk_create',
   'disk_delete',
   'disk_duplicate',

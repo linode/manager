@@ -1,5 +1,23 @@
-## [2025-08-12] - v0.7.0
+## [2025-10-07] - v0.10.0
 
+
+### Added:
+
+- Added `regionVPCAvailabilityFactory` in regions.ts ([#12919](https://github.com/linode/manager/pull/12919))
+
+## [2025-09-23] - v0.9.0
+
+### Changed:
+
+- Separate VPC IPv6 from `linodeInterfaceFactoryVPC` into `linodeInterfaceFactoryDualStackVPC`
+
+## [2025-09-09] - v0.8.0
+
+### Changed:
+
+- Update `createDevicesFromStrings` to allow undefined values for all device slots ([#12791](https://github.com/linode/manager/pull/12791))
+
+## [2025-08-12] - v0.7.0
 
 ### Removed:
 
@@ -11,7 +29,6 @@
 
 ## [2025-07-29] - v0.6.0
 
-
 ### Removed:
 
 - `isAclpSupportedRegion` helper method ([#12517](https://github.com/linode/manager/pull/12517))
@@ -22,7 +39,6 @@
 
 ## [2025-07-01] - v0.5.0
 
-
 ### Upcoming Features:
 
 - Add factory methods to create mock VM Host Maintenance Policy data for testing ([#12334](https://github.com/linode/manager/pull/12334))
@@ -30,7 +46,6 @@
 - Add maintenance policy utilities for VM maintenance API ([#12417](https://github.com/linode/manager/pull/12417))
 
 ## [2025-06-17] - v0.4.0
-
 
 ### Added:
 

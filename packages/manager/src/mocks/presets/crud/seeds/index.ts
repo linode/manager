@@ -7,6 +7,7 @@ import { ipAddressSeeder } from './networking';
 import { nodeBalancerSeeder } from './nodebalancers';
 import { placementGroupSeeder } from './placementGroups';
 import { supportTicketsSeeder } from './supportTickets';
+import { defaultUsersSeeder, parentUsersSeeder } from './users';
 import { volumesSeeder } from './volumes';
 import { vpcSeeder } from './vpcs';
 
@@ -20,6 +21,8 @@ export const dbSeeders = [
   nodeBalancerSeeder,
   placementGroupSeeder,
   supportTicketsSeeder,
+  defaultUsersSeeder,
+  parentUsersSeeder,
   volumesSeeder,
   vpcSeeder,
 ];

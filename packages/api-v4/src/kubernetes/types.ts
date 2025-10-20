@@ -70,6 +70,12 @@ export interface KubeNodePoolResponse {
    * @note Only returned for LKE Enterprise clusters
    */
   k8s_version?: string;
+  /**
+   * A label/name for the Node Pool
+   *
+   * @default ""
+   */
+  label: string;
   labels: Label;
   nodes: PoolNodeResponse[];
   tags: string[];
@@ -104,7 +110,7 @@ export interface CreateNodePoolData {
    *
    * @note Only supported on LKE Enterprise clusters
    */
-  firewall_id?: number;
+  firewall_id?: null | number;
   /**
    * The LKE version that the node pool should use.
    *
@@ -113,14 +119,20 @@ export interface CreateNodePoolData {
    */
   k8s_version?: string;
   /**
+   * An optional label/name for the Node Pool.
+   *
+   * @default ""
+   */
+  label?: string;
+  /**
    * Key-value pairs added as labels to nodes in the node pool.
    */
-  labels?: Label;
-  tags?: string[];
+  labels?: Label | null;
+  tags?: null | string[];
   /**
    * Kubernetes taints to add to node pool nodes.
    */
-  taints?: Taint[];
+  taints?: null | Taint[];
   /**
    * The Linode Type for all of the nodes in the Node Pool.
    */
@@ -132,7 +144,7 @@ export interface CreateNodePoolData {
    * @note Only supported on LKE Enterprise clusters
    * @default on_recycle
    */
-  update_strategy?: NodePoolUpdateStrategy;
+  update_strategy?: NodePoolUpdateStrategy | null;
 }
 
 export type UpdateNodePoolData = Partial<CreateNodePoolData>;
@@ -179,6 +191,10 @@ export interface ControlPlaneACLOptions {
 
 export interface ControlPlaneOptions {
   acl?: ControlPlaneACLOptions;
+  /**
+   * Upcoming Feature, Beta - Delivery logs
+   */
+  audit_logs_enabled?: boolean;
   high_availability?: boolean;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import {
-  LINODE_REGION,
+  PARENT_ENTITY_REGION,
   REFRESH,
   REGION,
   RESOURCE_ID,
@@ -19,8 +19,7 @@ import type { DashboardProp } from './CloudPulseDashboardLanding';
 
 export const CloudPulseDashboardRenderer = React.memo(
   (props: DashboardProp) => {
-    const { dashboard, filterValue, timeDuration } = props;
-
+    const { dashboard, filterValue, timeDuration, groupBy } = props;
     const selectDashboardAndFilterMessage =
       'Select a dashboard and apply filters to visualize metrics.';
 
@@ -63,10 +62,11 @@ export const CloudPulseDashboardRenderer = React.memo(
         additionalFilters={getMetricsCall}
         dashboardId={dashboard.id}
         duration={timeDuration}
+        groupBy={groupBy}
         linodeRegion={
-          filterValue[LINODE_REGION] &&
-          typeof filterValue[LINODE_REGION] === 'string'
-            ? (filterValue[LINODE_REGION] as string)
+          filterValue[PARENT_ENTITY_REGION] &&
+          typeof filterValue[PARENT_ENTITY_REGION] === 'string'
+            ? (filterValue[PARENT_ENTITY_REGION] as string)
             : undefined
         }
         manualRefreshTimeStamp={
@@ -85,6 +85,7 @@ export const CloudPulseDashboardRenderer = React.memo(
             : []
         }
         savePref={true}
+        serviceType={dashboard.service_type}
         tags={
           filterValue[TAGS] && Array.isArray(filterValue[TAGS])
             ? (filterValue[TAGS] as string[])

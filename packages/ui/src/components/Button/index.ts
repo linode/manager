@@ -1,4 +1,4 @@
 export * from './Button';
+export * from './LinkButton';
 export * from './StyledActionButton';
-export * from './StyledLinkButton';
 export * from './StyledTagButton';
