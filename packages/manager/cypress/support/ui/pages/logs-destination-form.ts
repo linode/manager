@@ -1,12 +1,10 @@
-import { regions } from 'support/constants/delivery';
 /**
  * @file Page utilities for Logs Delivery Destination Form.
  * Create/Edit Destination Page
  * Create/Edit Stream Page
  */
-import { ui } from 'support/ui';
 
-import type { LinodeObjectStorageDetails } from '@linode/api-v4';
+import type { AkamaiObjectStorageDetails } from '@linode/api-v4';
 
 export const logsDestinationForm = {
   /**
@@ -52,26 +50,6 @@ export const logsDestinationForm = {
   },
 
   /**
-   * Selects destination's region
-   *
-   * @param region - region to select
-   */
-  selectRegion: (region: string) => {
-    // Find Region select and open it
-    cy.findByLabelText('Region')
-      .should('be.visible')
-      .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Select a Region')
-      .clear();
-    // Select the Region
-    ui.autocompletePopper
-      .findByTitle(getRegionLabel(region))
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-  },
-
-  /**
    * Sets destination's Access Key ID
    *
    * @param accessKeyId - destination access key id to set
@@ -104,15 +82,12 @@ export const logsDestinationForm = {
    *
    * @param data - object with destination details of LinodeObjectStorageDetails type
    */
-  fillDestinationDetailsForm: (data: LinodeObjectStorageDetails) => {
+  fillDestinationDetailsForm: (data: AkamaiObjectStorageDetails) => {
     // Give Destination a host
     logsDestinationForm.setHost(data.host);
 
     // Give Destination a bucket
     logsDestinationForm.setBucket(data.bucket_name);
-
-    // Find Region select and open it
-    logsDestinationForm.selectRegion(data.region);
 
     // Give the Destination Access Key ID
     logsDestinationForm.setAccessKeyId(data.access_key_id);
@@ -121,6 +96,3 @@ export const logsDestinationForm = {
     logsDestinationForm.setSecretAccessKey(data.access_key_secret);
   },
 };
-
-const getRegionLabel = (regionId: string): string =>
-  regions.find(({ id }) => id === regionId)?.label ?? '';

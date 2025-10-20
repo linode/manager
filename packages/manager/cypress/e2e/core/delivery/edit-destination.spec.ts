@@ -15,7 +15,7 @@ import { randomLabel } from 'support/util/random';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
 
-import type { LinodeObjectStorageDetails } from '@linode/api-v4';
+import type { AkamaiObjectStorageDetails } from '@linode/api-v4';
 
 describe('Edit Destination', () => {
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe('Edit Destination', () => {
 
   it('edit destination with incorrect data', () => {
     logsDestinationForm.fillDestinationDetailsForm(
-      mockDestinationPayload.details as LinodeObjectStorageDetails
+      mockDestinationPayload.details as AkamaiObjectStorageDetails
     );
 
     // Create Destination should be disabled before test connection
@@ -66,7 +66,7 @@ describe('Edit Destination', () => {
     logsDestinationForm.setLabel(newLabel);
 
     logsDestinationForm.fillDestinationDetailsForm(
-      mockDestinationPayload.details as LinodeObjectStorageDetails
+      mockDestinationPayload.details as AkamaiObjectStorageDetails
     );
 
     // Create Destination should be disabled before test connection

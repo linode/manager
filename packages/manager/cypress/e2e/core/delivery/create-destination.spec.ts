@@ -11,7 +11,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { logsDestinationForm } from 'support/ui/pages/logs-destination-form';
 
-import type { LinodeObjectStorageDetails } from '@linode/api-v4';
+import type { AkamaiObjectStorageDetails } from '@linode/api-v4';
 
 describe('Create Destination', () => {
   before(() => {
@@ -27,7 +27,7 @@ describe('Create Destination', () => {
     logsDestinationForm.setLabel(mockDestinationPayload.label);
 
     logsDestinationForm.fillDestinationDetailsForm(
-      mockDestinationPayload.details as LinodeObjectStorageDetails
+      mockDestinationPayload.details as AkamaiObjectStorageDetails
     );
 
     // Create Destination should be disabled before test connection

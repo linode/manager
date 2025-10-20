@@ -14,7 +14,7 @@ export const regions = [
 
 export const mockDestinationPayload = {
   label: randomLabel(),
-  type: destinationType.LinodeObjectStorage,
+  type: destinationType.AkamaiObjectStorage,
   details: {
     host: randomString(),
     bucket_name: randomString(),

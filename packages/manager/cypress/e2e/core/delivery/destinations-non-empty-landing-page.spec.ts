@@ -1,5 +1,6 @@
 import {
   interceptDeleteDestination,
+  mockDeleteDestination,
   mockGetDestination,
   mockGetDestinations,
 } from 'support/intercepts/delivery';
@@ -50,11 +51,22 @@ function deleteItem(tableAlias: string, destination: Destination) {
         .should('be.visible')
         .click();
 
+      mockDeleteDestination(404); // @TODO remove after API release on prod
       interceptDeleteDestination().as('deleteDestination');
 
       // Delete destination
       ui.actionMenuItem.findByTitle('Delete').click();
+
+      // Find confirmation modal
+      cy.findByText(
+        `Are you sure you want to delete "${destination.label}" destination?`
+      );
+      ui.button.findByTitle('Delete').click();
+
       cy.wait('@deleteDestination');
+
+      // Close confirmation modal after failure
+      ui.button.findByTitle('Cancel').click();
     });
 }
 

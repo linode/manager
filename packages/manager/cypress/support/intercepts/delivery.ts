@@ -55,7 +55,7 @@ export const interceptCreateDestination = (): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts POST request to create a Destination record.
+ * Intercepts DELETE request to delete Destination record.
  *
  * @returns Cypress chainable.
  */
@@ -117,5 +117,20 @@ export const mockTestConnection = (
     'POST',
     apiMatcher(`monitor/streams/destinations/verify`),
     makeResponse(responseBody, responseCode)
+  );
+};
+
+/**
+ * Intercept DELETE mock request to delete a Destination record.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteDestination = (
+  responseCode = 200
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`monitor/streams/destinations/*`),
+    makeResponse({}, responseCode)
   );
 };
