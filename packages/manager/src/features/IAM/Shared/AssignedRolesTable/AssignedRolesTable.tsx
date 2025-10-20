@@ -17,6 +17,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { useAssignedRoles } from '../../hooks/useAssignedRoles';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -55,7 +56,6 @@ import type {
   AccessType,
   AccountRoleType,
   EntityRoleType,
-  IamUserRoles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -66,22 +66,16 @@ const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Assigned Roles',
   value: 'all',
 };
-
 interface Props {
-  assignedRoles?: IamUserRoles;
-  assignedRolesLoading?: boolean;
-  isDefaultRolesView?: boolean;
   username?: string;
 }
-
-export const AssignedRolesTable = ({
-  isDefaultRolesView = false,
-  assignedRoles,
-  assignedRolesLoading,
-  username,
-}: Props) => {
+export const AssignedRolesTable = (props: Props) => {
+  const { username } = props;
   const navigate = useNavigate();
   const theme = useTheme();
+
+  const { assignedRoles, assignedRolesLoading, isDefaultRolesView } =
+    useAssignedRoles(username);
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');

@@ -68,13 +68,7 @@ describe('AssignedRolesTable', () => {
       data: {},
     });
 
-    renderWithTheme(
-      <AssignedRolesTable
-        assignedRoles={{ account_access: [], entity_access: [] }}
-        assignedRolesLoading={false}
-        username="test_user"
-      />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -92,13 +86,7 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
-      <AssignedRolesTable
-        assignedRoles={mockUserRoles}
-        assignedRolesLoading={false}
-        username="test_user"
-      />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -126,13 +114,7 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
-      <AssignedRolesTable
-        assignedRoles={mockUserRoles}
-        assignedRolesLoading={false}
-        username="test_user"
-      />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -155,13 +137,7 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
-      <AssignedRolesTable
-        assignedRoles={mockUserRoles}
-        assignedRolesLoading={false}
-        username="test_user"
-      />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'account_linode_admin');
@@ -184,13 +160,7 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
-      <AssignedRolesTable
-        assignedRoles={mockUserRoles}
-        assignedRolesLoading={false}
-        username="test_user"
-      />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
     const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
     await userEvent.type(autocomplete, 'Firewall Roles');
@@ -209,13 +179,7 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
-      <AssignedRolesTable
-        assignedRoles={mockUserRoles}
-        assignedRolesLoading={false}
-        isDefaultRolesView={true}
-      />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
     expect(screen.getByText('Add New Default Roles')).toBeVisible();
     expect(screen.queryByText('Assign New Roles')).not.toBeInTheDocument();
