@@ -1,5 +1,6 @@
-import { Button, Select, Typography } from '@linode/ui';
+import { Button, Hidden, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
+import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
@@ -35,6 +36,7 @@ import {
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
+
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
   value: 'all',
@@ -46,6 +48,7 @@ interface Props {
 const DEFAULT_PAGE_SIZE = 10;
 
 export const RolesTable = ({ roles = [] }: Props) => {
+  const theme = useTheme();
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
   const [filterableEntityType, setFilterableEntityType] =
@@ -61,6 +64,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/roles',
+    defaultPageSize: DEFAULT_PAGE_SIZE,
     initialPage: 1,
     preferenceKey: ROLES_TABLE_PREFERENCE_KEY,
   });
@@ -201,6 +205,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
             buttonType="primary"
             disabled={selectedRows.length === 0 || !isAccountAdmin}
             onClick={() => handleAssignSelectedRoles()}
+            sx={{ height: 34 }}
             tooltipText={
               selectedRows.length === 0
                 ? 'You must select some roles to assign them.'
@@ -212,13 +217,14 @@ export const RolesTable = ({ roles = [] }: Props) => {
             Assign Selected Roles
           </Button>
         </Grid>
-
         <Table data-testid="roles-table">
           <TableHead>
             <TableRow
+              headerbackground={
+                theme.tokens.component.Table.HeaderNested.Background
+              }
               headerborder
               select={(event) => handleSelect(event, 'all')}
-              selectable
               selected={areAllSelected}
             >
               <TableHeaderCell
@@ -229,17 +235,21 @@ export const RolesTable = ({ roles = [] }: Props) => {
               >
                 Role
               </TableHeaderCell>
-              <TableHeaderCell
-                sort={(event) => handleSort(event, 'access')}
-                sortable
-                sorted={sort?.column === 'access' ? sort.order : undefined}
-                style={{ minWidth: '14%' }}
-              >
-                Role Type
-              </TableHeaderCell>
-              <TableHeaderCell style={{ minWidth: '38%' }}>
-                Description
-              </TableHeaderCell>
+              <Hidden smDown>
+                <TableHeaderCell
+                  sort={(event) => handleSort(event, 'access')}
+                  sortable
+                  sorted={sort?.column === 'access' ? sort.order : undefined}
+                  style={{ minWidth: '14%' }}
+                >
+                  Role Type
+                </TableHeaderCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableHeaderCell style={{ minWidth: '38%' }}>
+                  Description
+                </TableHeaderCell>
+              </Hidden>
               <TableHeaderCell style={{ minWidth: '10%' }} />
             </TableRow>
           </TableHead>
@@ -262,27 +272,41 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
-                    style={{ minWidth: '26%', wordBreak: 'break-word' }}
+                    style={{
+                      minWidth: '26%',
+                      wordBreak: 'break-word',
+                      flex: theme.breakpoints.down('sm') ? 1 : 0,
+                    }}
                   >
                     {roleRow.name}
                   </TableCell>
-                  <TableCell style={{ minWidth: '14%' }}>
-                    {capitalizeAllWords(roleRow.access, '_')}
-                  </TableCell>
-                  <TableCell style={{ minWidth: '38%' }}>
-                    {roleRow.permissions.length ? (
-                      roleRow.description
-                    ) : (
-                      <Typography>
-                        {getFacadeRoleDescription(roleRow)}{' '}
-                        <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-                      </Typography>
-                    )}
-                  </TableCell>
+                  <Hidden smDown>
+                    <TableCell style={{ minWidth: '14%' }}>
+                      {capitalizeAllWords(roleRow.access, '_')}
+                    </TableCell>
+                  </Hidden>
+                  <Hidden smDown>
+                    <TableCell
+                      style={{
+                        minWidth: theme.breakpoints.down('md') ? '25%' : '38%',
+                      }}
+                    >
+                      {roleRow.permissions.length ? (
+                        roleRow.description
+                      ) : (
+                        <Typography>
+                          {getFacadeRoleDescription(roleRow)}{' '}
+                          <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
+                        </Typography>
+                      )}
+                    </TableCell>
+                  </Hidden>
                   <TableCell
                     style={{
                       minWidth: '10%',
                       justifyContent: 'flex-end',
+                      padding: `0 0 0 ${theme.spacingFunction(4)}`,
+                      flex: theme.breakpoints.down('sm') ? '0 0 auto' : 1,
                     }}
                   >
                     <RolesTableActionMenu
@@ -294,7 +318,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   </TableCell>
                   <TableRowExpanded
                     slot="expanded"
-                    style={{ marginBottom: 12, padding: 0, width: '100%' }}
+                    style={{
+                      marginBottom: theme.spacingFunction(12),
+                      marginLeft: theme.spacingFunction(44),
+                      padding: `0 ${theme.spacingFunction(4)}`,
+                      width: '100%',
+                    }}
                   >
                     <RolesTableExpandedRow permissions={roleRow.permissions} />
                   </TableRowExpanded>
