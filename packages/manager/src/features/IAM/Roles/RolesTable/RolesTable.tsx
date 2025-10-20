@@ -339,7 +339,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
             onPageSizeChange={handlePageSizeChange}
             page={pagination.page}
             pageSize={pagination.pageSize}
-            style={{ borderTop: 0 }}
+            style={{ border: 0 }}
           />
         )}
       </Paper>
