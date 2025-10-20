@@ -156,6 +156,17 @@ export const RolesTable = ({ roles = [] }: Props) => {
     pagination.handlePageChange(1);
   };
 
+  const COLUMN_WIDTHS = {
+    name: '26%',
+    access: '14%',
+    description: '38%',
+    actions: '10%',
+  };
+
+  const TABLE_CELL_BASE_STYLE = {
+    boxSizing: 'border-box' as const,
+  };
+
   return (
     <>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -231,7 +242,10 @@ export const RolesTable = ({ roles = [] }: Props) => {
                 sort={(event) => handleSort(event, 'name')}
                 sortable
                 sorted={sort?.column === 'name' ? sort.order : undefined}
-                style={{ minWidth: '26%' }}
+                style={{
+                  minWidth: COLUMN_WIDTHS.name,
+                  ...TABLE_CELL_BASE_STYLE,
+                }}
               >
                 Role
               </TableHeaderCell>
@@ -240,17 +254,31 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   sort={(event) => handleSort(event, 'access')}
                   sortable
                   sorted={sort?.column === 'access' ? sort.order : undefined}
-                  style={{ minWidth: '14%' }}
+                  style={{
+                    minWidth: COLUMN_WIDTHS.access,
+                    ...TABLE_CELL_BASE_STYLE,
+                  }}
                 >
                   Role Type
                 </TableHeaderCell>
               </Hidden>
               <Hidden smDown>
-                <TableHeaderCell style={{ minWidth: '38%' }}>
+                <TableHeaderCell
+                  style={{
+                    minWidth: COLUMN_WIDTHS.description,
+                    ...TABLE_CELL_BASE_STYLE,
+                    // minWidth: theme.breakpoints.down('md') ? '25%' : '38%',
+                  }}
+                >
                   Description
                 </TableHeaderCell>
               </Hidden>
-              <TableHeaderCell style={{ minWidth: '10%' }} />
+              <TableHeaderCell
+                style={{
+                  minWidth: COLUMN_WIDTHS.actions,
+                  ...TABLE_CELL_BASE_STYLE,
+                }}
+              />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -273,22 +301,29 @@ export const RolesTable = ({ roles = [] }: Props) => {
                 >
                   <TableCell
                     style={{
-                      minWidth: '26%',
                       wordBreak: 'break-word',
-                      flex: theme.breakpoints.down('sm') ? 1 : 0,
+                      minWidth: COLUMN_WIDTHS.name,
+                      ...TABLE_CELL_BASE_STYLE,
+                      // flex: theme.breakpoints.down('sm') ? 1 : 0,
                     }}
                   >
                     {roleRow.name}
                   </TableCell>
                   <Hidden smDown>
-                    <TableCell style={{ minWidth: '14%' }}>
+                    <TableCell
+                      style={{
+                        minWidth: COLUMN_WIDTHS.access,
+                        ...TABLE_CELL_BASE_STYLE,
+                      }}
+                    >
                       {capitalizeAllWords(roleRow.access, '_')}
                     </TableCell>
                   </Hidden>
                   <Hidden smDown>
                     <TableCell
                       style={{
-                        minWidth: theme.breakpoints.down('md') ? '25%' : '38%',
+                        minWidth: COLUMN_WIDTHS.description,
+                        ...TABLE_CELL_BASE_STYLE,
                       }}
                     >
                       {roleRow.permissions.length ? (
@@ -303,10 +338,10 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   </Hidden>
                   <TableCell
                     style={{
-                      minWidth: '10%',
                       justifyContent: 'flex-end',
-                      padding: `0 0 0 ${theme.spacingFunction(4)}`,
-                      flex: theme.breakpoints.down('sm') ? '0 0 auto' : 1,
+                      minWidth: COLUMN_WIDTHS.actions,
+                      ...TABLE_CELL_BASE_STYLE,
+                      // flex: theme.breakpoints.down('sm') ? '0 0 auto' : 1,
                     }}
                   >
                     <RolesTableActionMenu
