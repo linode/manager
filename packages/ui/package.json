@@ -20,6 +20,8 @@
     "@emotion/styled": "^11.11.0",
     "@linode/design-language-system": "^5.0.0",
     "@mui/icons-material": "^7.1.0",
+    "@fontsource/fira-code": "^5.1.1",
+    "@fontsource/nunito-sans": "^5.1.1",
     "@mui/material": "^7.1.0",
     "@mui/utils": "^7.1.0",
     "@mui/x-date-pickers": "^7.27.0",

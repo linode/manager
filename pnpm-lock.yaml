@@ -790,6 +790,12 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.0
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react@19.1.0)
+      '@fontsource/fira-code':
+        specifier: ^5.1.1
+        version: 5.1.1
+      '@fontsource/nunito-sans':
+        specifier: ^5.1.1
+        version: 5.1.1
       '@linode/design-language-system':
         specifier: ^5.0.0
         version: 5.0.0
