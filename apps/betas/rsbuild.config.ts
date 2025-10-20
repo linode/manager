@@ -1,10 +1,14 @@
-import { defineConfig } from '@rsbuild/core';
+import { defineConfig, loadEnv } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 import { pluginSvgr } from '@rsbuild/plugin-svgr';
 
+const { publicVars } = loadEnv({ prefixes: ['REACT_APP_'] });
 
 export default defineConfig(({ env }) => ({
+  source: {
+    define: publicVars,
+  },
   plugins: [
     pluginReact(),
     pluginSvgr({ svgrOptions: { exportType: 'default' } }),
