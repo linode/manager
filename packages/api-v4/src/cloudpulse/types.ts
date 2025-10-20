@@ -4,11 +4,12 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type CloudPulseServiceType =
+  | 'blockstorage'
   | 'dbaas'
   | 'firewall'
   | 'linode'
-  | 'nodebalancer';
-
+  | 'nodebalancer'
+  | 'objectstorage';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -133,7 +134,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  entity_ids: number[];
+  entity_ids?: number[];
 }
 
 export interface JWEToken {
@@ -148,7 +149,8 @@ export interface Metric {
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   associated_entity_region?: string;
-  entity_ids: number[];
+  entity_ids: number[] | string[];
+  entity_region?: string;
   filters?: Filters[];
   group_by?: string[];
   metrics: Metric[];
@@ -375,6 +377,8 @@ export const capabilityServiceTypeMapping: Record<
   dbaas: 'Managed Databases',
   nodebalancer: 'NodeBalancers',
   firewall: 'Cloud Firewall',
+  objectstorage: 'Object Storage',
+  blockstorage: 'Block Storage',
 };
 
 /**
@@ -389,10 +393,10 @@ export interface CloudPulseAlertsPayload {
    * Array of enabled system alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  system?: number[];
+  system_alerts?: number[];
   /**
    * Array of enabled user alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  user?: number[];
+  user_alerts?: number[];
 }

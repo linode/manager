@@ -1,6 +1,7 @@
 import { regionFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
+import { expect } from 'vitest';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -39,6 +40,7 @@ describe('DestinationLinodeObjectStorageDetailsSummary', () => {
     expect(screen.getByText('test bucket')).toBeVisible();
     // Log Path:
     expect(screen.getByText('test/path')).toBeVisible();
+    expect(screen.queryByTestId('tooltip-info-icon')).not.toBeInTheDocument();
     // Region:
     await waitFor(() => {
       expect(screen.getByText('US, Chicago, IL')).toBeVisible();
@@ -51,5 +53,31 @@ describe('DestinationLinodeObjectStorageDetailsSummary', () => {
     expect(screen.getByTestId('secret-access-key')).toHaveTextContent(
       '*****************'
     );
+  });
+
+  it('renders info icon next to path when it is empty', async () => {
+    server.use(
+      http.get('*/regions', () => {
+        const regions = regionFactory.buildList(1, {
+          id: 'us-ord',
+          label: 'Chicago, IL',
+        });
+        return HttpResponse.json(makeResourcePage(regions));
+      })
+    );
+
+    const details = {
+      bucket_name: 'test bucket',
+      host: 'test host',
+      path: '',
+      region: 'us-ord',
+    } as LinodeObjectStorageDetails;
+
+    renderWithTheme(
+      <DestinationLinodeObjectStorageDetailsSummary {...details} />
+    );
+
+    // Log Path info icon:
+    expect(screen.getByTestId('tooltip-info-icon')).toBeVisible();
   });
 });

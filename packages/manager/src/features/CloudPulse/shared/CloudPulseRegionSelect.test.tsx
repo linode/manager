@@ -331,7 +331,10 @@ describe('CloudPulseRegionSelect', () => {
         {...props}
         filterKey="associated_entity_region"
         savePreferences={true}
-        selectedDashboard={dashboardFactory.build({ service_type: 'firewall' })}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'firewall',
+          id: 4,
+        })}
         selectedEntities={['1']}
       />
     );

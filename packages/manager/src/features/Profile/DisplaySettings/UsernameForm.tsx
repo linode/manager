@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useProfile, useUpdateUserMutation } from '@linode/queries';
 import { Button, TextField } from '@linode/ui';
+import { UpdateUserNameSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -30,6 +32,7 @@ export const UsernameForm = () => {
     handleSubmit,
     setError,
   } = useForm<Values>({
+    resolver: yupResolver(UpdateUserNameSchema),
     defaultValues: values,
     values,
   });

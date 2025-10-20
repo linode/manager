@@ -40,7 +40,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -114,7 +114,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             : iamRbacPrimaryNavChanges && !isIAMEnabled
               ? '/users'
               : '/account/users',
-        isBeta: iamRbacPrimaryNavChanges && isIAMEnabled,
+        isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
       },
       {
         display: 'Quotas',

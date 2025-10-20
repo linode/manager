@@ -1,7 +1,6 @@
 import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
-import { setAuthDataInLocalStorage } from './OAuth/oauth';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
 import { storage } from './utilities/storage';
@@ -9,6 +8,7 @@ import { storage } from './utilities/storage';
 import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
 import type { AxiosError, AxiosResponse } from 'axios';
+import { oauthClient } from './OAuth/oauth';
 
 const store = storeFactory();
 
@@ -40,7 +40,7 @@ const error400: AxiosError<LinodeError> = {
 
 describe('Expiring Tokens', () => {
   it('should just promise reject if a non-401 error', () => {
-    setAuthDataInLocalStorage({
+    oauthClient.setAuthDataInLocalStorage({
       expires: 'never',
       scopes: '*',
       token: 'helloworld',

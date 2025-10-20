@@ -1,3 +1,16 @@
+## [2025-10-07] - v0.10.0
+
+
+### Added:
+
+- Added `regionVPCAvailabilityFactory` in regions.ts ([#12919](https://github.com/linode/manager/pull/12919))
+
+## [2025-09-23] - v0.9.0
+
+### Changed:
+
+- Separate VPC IPv6 from `linodeInterfaceFactoryVPC` into `linodeInterfaceFactoryDualStackVPC`
+
 ## [2025-09-09] - v0.8.0
 
 ### Changed:

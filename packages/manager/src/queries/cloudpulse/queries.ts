@@ -16,6 +16,11 @@ import {
 } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
+import { objectStorageQueries } from '../object-storage/queries';
+import {
+  getAllBucketsFromEndpoints,
+  getAllObjectStorageEndpoints,
+} from '../object-storage/requests';
 import { fetchCloudPulseMetrics } from './metrics';
 import {
   getAllAlertsRequest,
@@ -112,6 +117,8 @@ export const queryFactory = createQueryKeys(key, {
     filters?: Filter
   ) => {
     switch (resourceType) {
+      case 'blockstorage':
+        return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
       case 'dbaas':
         return databaseQueries.databases._ctx.all(params, filters);
       case 'firewall':
@@ -121,12 +128,18 @@ export const queryFactory = createQueryKeys(key, {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys
           queryKey: ['linodes', params, filters],
         };
-
       case 'nodebalancer':
         return nodebalancerQueries.nodebalancers._ctx.all(params, filters);
+      case 'objectstorage':
+        return {
+          queryFn: () => getAllBuckets(),
+          queryKey: [
+            ...objectStorageQueries.endpoints.queryKey,
+            objectStorageQueries.buckets.queryKey[1],
+          ],
+        };
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
-
       default:
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes
     }
@@ -134,6 +147,23 @@ export const queryFactory = createQueryKeys(key, {
 
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
-    queryKey: [serviceType, { resource_ids: request.entity_ids.sort() }],
+    queryKey: [serviceType, { resource_ids: request.entity_ids?.sort() }],
   }),
 });
+
+const getAllBuckets = async () => {
+  const endpoints = await getAllObjectStorageEndpoints();
+
+  // Get all the buckets from the endpoints
+  const allBuckets = await getAllBucketsFromEndpoints(endpoints);
+
+  // Throw the error if we encounter any error for any single call.
+  if (allBuckets.errors.length) {
+    throw new Error('Unable to fetch the data.');
+  }
+
+  // Filter the E0, E1 endpoint_type out and return the buckets
+  return allBuckets.buckets.filter(
+    (bucket) => bucket.endpoint_type !== 'E0' && bucket.endpoint_type !== 'E1'
+  );
+};

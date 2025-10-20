@@ -1,3 +1,4 @@
+import { destinationType } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
@@ -11,7 +12,12 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { Destination, Stream } from '@linode/api-v4';
+import type {
+  CreateDestinationPayload,
+  Destination,
+  LinodeObjectStorageDetails,
+  Stream,
+} from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -67,7 +73,7 @@ export const createStreams = (mockState: MockState) => [
         destinations: payload['destinations'].map((destinationId: number) =>
           destinations?.find(({ id }) => id === destinationId)
         ),
-        details: payload['details'],
+        details: payload['details'] ?? null,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });
@@ -214,11 +220,17 @@ export const createDestinations = (mockState: MockState) => [
     async ({
       request,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
-      const payload = await request.clone().json();
+      const payload: CreateDestinationPayload = await request.clone().json();
+      const details = payload.details;
       const destination = destinationFactory.build({
-        label: payload['label'],
-        type: payload['type'],
-        details: payload['details'],
+        label: payload.label,
+        type: payload.type,
+        details: {
+          ...details,
+          ...(payload.type === destinationType.LinodeObjectStorage
+            ? { path: (details as LinodeObjectStorageDetails).path ?? null }
+            : {}),
+        },
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });

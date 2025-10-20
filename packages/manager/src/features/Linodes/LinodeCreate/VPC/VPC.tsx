@@ -2,13 +2,10 @@ import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Notice,
   Paper,
   Stack,
-  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -17,17 +14,25 @@ import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
-import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
+import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
+import { PublicIPv6Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv6Access';
+import { VPCIPv4Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv4Address';
+import { VPCIPv6Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv6Address';
 import {
+  DualStackVPCRangesDescription,
+  VPCRangesDescription,
+} from 'src/features/VPCs/components/VPCRangesDescription';
+import {
+  ASSIGN_IP_RANGES_TITLE,
   REGION_CAVEAT_HELPER_TEXT,
-  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
 import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { VPCIPv6Ranges } from './VPCIPv6Ranges';
 import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -36,23 +41,26 @@ import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
-  const { control, formState, setValue } =
+  const { control, getValues, formState, setValue } =
     useFormContext<CreateLinodeRequest>();
 
-  const [regionId, selectedVPCId, selectedSubnetId, linodeVPCIPAddress] =
-    useWatch({
-      control,
-      name: [
-        'region',
-        'interfaces.0.vpc_id',
-        'interfaces.0.subnet_id',
-        'interfaces.0.ipv4.vpc',
-      ],
-    });
+  const [regionId, selectedVPCId, selectedSubnetId] = useWatch({
+    control,
+    name: [
+      'region',
+      'interfaces.0.vpc_id',
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      'interfaces.0.subnet_id',
+      'interfaces.0.ipv4.vpc',
+      'interfaces.0.ipv6.slaac.0.range',
+    ],
+  });
 
   const { data: region } = useRegionQuery(regionId);
 
   const regionSupportsVPCs = region?.capabilities.includes('VPCs') ?? false;
+
+  const { isDualStackEnabled } = useVPCDualStack();
 
   const {
     data: vpcs,
@@ -64,6 +72,15 @@ export const VPC = () => {
   });
 
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+
+  // Check that selected subnet supports IPv6
+  const selectedSubnet = selectedVPC?.subnets.find(
+    (subnet) => subnet.id === getValues('interfaces.0.subnet_id')
+  );
+
+  const showIPv6Fields =
+    isDualStackEnabled &&
+    Boolean(selectedSubnet?.ipv6?.length && selectedSubnet?.ipv6?.length > 0);
 
   const copy =
     vpcs?.length === 0
@@ -213,75 +230,68 @@ export const VPC = () => {
                     <Controller
                       control={control}
                       name="interfaces.0.ipv4.vpc"
-                      render={({ field }) => (
-                        <Box>
-                          <FormControlLabel
-                            checked={
-                              field.value === null || field.value === undefined
-                            }
-                            control={<Checkbox sx={{ ml: 0.5 }} />}
-                            label={
-                              <Stack alignItems="center" direction="row">
-                                <Typography>
-                                  Auto-assign a VPC IPv4 address for this Linode
-                                  in the VPC
-                                </Typography>
-                                <TooltipIcon
-                                  status="info"
-                                  text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
-                                />
-                              </Stack>
-                            }
-                            onChange={(e, checked) =>
-                              // If "Auto-assign" is checked, set the VPC IP to null
-                              // so that it gets auto-assigned. Otherwise, set it to
-                              // an empty string so that the TextField renders and a
-                              // user can enter one.
-                              field.onChange(checked ? null : '')
-                            }
-                          />
-                        </Box>
-                      )}
-                    />
-                    {linodeVPCIPAddress !== null &&
-                      linodeVPCIPAddress !== undefined && (
-                        <Controller
-                          control={control}
-                          name="interfaces.0.ipv4.vpc"
-                          render={({ field, fieldState }) => (
-                            <TextField
-                              containerProps={{ sx: { mb: 1, mt: 1 } }}
-                              errorText={fieldState.error?.message}
-                              label="VPC IPv4"
-                              noMarginTop
-                              onBlur={field.onBlur}
-                              onChange={field.onChange}
-                              required
-                              value={field.value}
-                            />
-                          )}
+                      render={({ field, fieldState }) => (
+                        <VPCIPv4Address
+                          errorMessage={fieldState.error?.message}
+                          fieldValue={field.value}
+                          onChange={field.onChange}
                         />
                       )}
+                    />
+                    {showIPv6Fields && (
+                      <Controller
+                        control={control}
+                        name="interfaces.0.ipv6.slaac.0.range"
+                        render={({ field, fieldState }) => (
+                          <VPCIPv6Address
+                            errorMessage={fieldState.error?.message}
+                            fieldValue={field.value}
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
+                          />
+                        )}
+                      />
+                    )}
+                  </Stack>
+                  <Box>
+                    <Divider
+                      sx={(theme) => ({
+                        marginBottom: theme.spacingFunction(16),
+                      })}
+                    />
+                    <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                      Public access
+                    </Typography>
                     <Controller
                       control={control}
                       name="interfaces.0.ipv4.nat_1_1"
-                      render={({ field }) => (
-                        <FormControlLabel
-                          checked={field.value === 'any'}
-                          control={<Checkbox sx={{ ml: 0.5 }} />}
-                          label={<VPCPublicIPLabel />}
-                          onChange={(e, checked) =>
-                            field.onChange(checked ? 'any' : null)
-                          }
-                          sx={{ mt: 0 }}
+                      render={({ field, fieldState }) => (
+                        <PublicIPv4Access
+                          checked={Boolean(field.value)}
+                          errorMessage={fieldState.error?.message}
+                          isConfigInterface
+                          onChange={field.onChange}
                         />
                       )}
                     />
-                  </Stack>
-                  <Divider />
-                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                    Assign additional IPv4 ranges
-                  </Typography>
+                    {showIPv6Fields && (
+                      <Controller
+                        control={control}
+                        name={`interfaces.0.ipv6.is_public`}
+                        render={({ field, fieldState }) => (
+                          <PublicIPv6Access
+                            checked={field.value === true}
+                            disabled={!regionSupportsVPCs}
+                            errorMessage={fieldState.error?.message}
+                            onChange={field.onChange}
+                          />
+                        )}
+                      />
+                    )}
+                    <Divider
+                      sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
+                    />
+                  </Box>
                   {formState.errors.interfaces?.[1] &&
                     formState.errors.interfaces[1] &&
                     'ip_ranges' in formState.errors.interfaces[1] && (
@@ -290,8 +300,30 @@ export const VPC = () => {
                         variant="error"
                       />
                     )}
-                  <VPCRangesDescription />
+                  <Box
+                    alignItems={showIPv6Fields ? 'center' : 'flex-start'}
+                    display="flex"
+                    flexDirection={showIPv6Fields ? 'row' : 'column'}
+                  >
+                    <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                      {showIPv6Fields
+                        ? ASSIGN_IP_RANGES_TITLE
+                        : 'Assign additional IPv4 ranges'}
+                    </Typography>
+                    {showIPv6Fields ? (
+                      <TooltipIcon
+                        status="info"
+                        sxTooltipIcon={(theme) => ({
+                          padding: theme.spacingFunction(8),
+                        })}
+                        text={<DualStackVPCRangesDescription />}
+                      />
+                    ) : (
+                      <VPCRangesDescription />
+                    )}
+                  </Box>
                   <VPCRanges />
+                  {showIPv6Fields && <VPCIPv6Ranges />}
                 </>
               )}
             </>
