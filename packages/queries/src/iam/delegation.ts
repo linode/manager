@@ -242,11 +242,14 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
     APIError[],
     UpdateChildAccountDelegatesParams
   >({
-    mutationFn: updateChildAccountDelegates,
+    mutationFn: (data) => updateChildAccountDelegates(data),
     onSuccess(_data, { euuid }) {
       queryClient.invalidateQueries({
         queryKey: delegationQueries.childAccounts({ params: {}, users: true })
           .queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.allChildAccounts._def,
       });
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
