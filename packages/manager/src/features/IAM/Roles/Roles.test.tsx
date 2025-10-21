@@ -6,9 +6,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RolesLanding } from './Roles';
 
+const DEFAULT_ROLES_PANEL_TEXT = 'Default Roles for Delegate Users';
+
 const queryMocks = vi.hoisted(() => ({
   useAccountRoles: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -16,6 +19,7 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -79,5 +83,39 @@ describe('RolesLanding', () => {
     expect(
       screen.getByText('You do not have permission to view roles.')
     ).toBeInTheDocument();
+  });
+
+  it('should not show the default roles panel for non-child accounts', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: true,
+      },
+    });
+    queryMocks.useProfile.mockReturnValue({ data: { user_type: 'parent' } });
+
+    renderWithTheme(<RolesLanding />, {
+      flags: {
+        iamDelegation: { enabled: true },
+      },
+    });
+    expect(
+      screen.queryByText(DEFAULT_ROLES_PANEL_TEXT)
+    ).not.toBeInTheDocument();
+  });
+
+  it('should show the default roles panel for child accounts', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        is_account_admin: true,
+      },
+    });
+    queryMocks.useProfile.mockReturnValue({ data: { user_type: 'child' } });
+
+    renderWithTheme(<RolesLanding />, {
+      flags: {
+        iamDelegation: { enabled: true },
+      },
+    });
+    expect(screen.getByText(DEFAULT_ROLES_PANEL_TEXT)).toBeInTheDocument();
   });
 });

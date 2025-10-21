@@ -242,9 +242,8 @@ const multipleInterfacesSchema = string()
 
 const baseValueSchema = string()
   .nullable()
-  .transform((value) => (value === null ? '' : value)) // normalize null to empty string to avoid the empty string case for TextField components
   .required(fieldErrorMessage)
-  .test('nonEmpty', fieldErrorMessage, (value) => value !== '');
+  .test('nonEmpty', fieldErrorMessage, (value) => value !== null);
 
 interface GetValueSchemaParams {
   dimensionLabel: string;
@@ -271,7 +270,7 @@ export const getDimensionFilterValueSchema = ({
     return interfaceSchema.concat(baseValueSchema);
   }
   if (['endswith', 'startswith'].includes(operator)) {
-    return baseValueSchema.concat(string().max(100, LENGTH_ERROR_MESSAGE));
+    return string().max(100, LENGTH_ERROR_MESSAGE).concat(baseValueSchema);
   }
   return baseValueSchema;
 };

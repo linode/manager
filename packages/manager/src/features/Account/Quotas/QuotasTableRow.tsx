@@ -1,10 +1,9 @@
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { BarPercent } from 'src/components/BarPercent/BarPercent';
+import { QuotaUsageBar } from 'src/components/QuotaUsageBar/QuotaUsageBar';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
@@ -45,7 +44,6 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     setSupportModalOpen,
     setConvertedResourceMetrics,
   } = props;
-  const theme = useTheme();
   const flags = useFlags();
   const { isAkamaiAccount } = useIsAkamaiAccount();
   // These conditions are meant to achieve a couple things:
@@ -56,15 +54,14 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
       isAkamaiAccount);
 
-  const { convertedUsage, convertedLimit, convertedResourceMetric } =
-    convertResourceMetric({
-      initialResourceMetric: pluralizeMetric(
-        quota.quota_limit,
-        quota.resource_metric
-      ),
-      initialUsage: quota.usage?.usage ?? 0,
-      initialLimit: quota.quota_limit,
-    });
+  const { convertedLimit, convertedResourceMetric } = convertResourceMetric({
+    initialResourceMetric: pluralizeMetric(
+      quota.quota_limit,
+      quota.resource_metric
+    ),
+    initialUsage: quota.usage?.usage ?? 0,
+    initialLimit: quota.quota_limit,
+  });
 
   const requestIncreaseAction: Action = {
     disabled: isRequestForQuotaButtonDisabled,
@@ -126,33 +123,11 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
               {getQuotaError(quotaUsageQueries, index)}
             </Typography>
           ) : hasQuotaUsage ? (
-            <>
-              <BarPercent
-                customColors={[
-                  {
-                    color: theme.tokens.color.Red[80],
-                    percentage: 81,
-                  },
-                  {
-                    color: theme.tokens.color.Orange[80],
-                    percentage: 61,
-                  },
-                  {
-                    color: theme.tokens.color.Brand[80],
-                    percentage: 1,
-                  },
-                ]}
-                max={quota.quota_limit}
-                rounded
-                sx={{ mb: 1, mt: 2, padding: '3px' }}
-                value={quota.usage?.usage ?? 0}
-              />
-              <Typography sx={{ mb: 1, mt: -0.5 }}>
-                {`${convertedUsage?.toLocaleString() ?? 'unknown'} of ${
-                  convertedLimit?.toLocaleString() ?? 'unknown'
-                } ${convertedResourceMetric} used`}
-              </Typography>
-            </>
+            <QuotaUsageBar
+              limit={quota.quota_limit}
+              resourceMetric={quota.resource_metric}
+              usage={quota.usage?.usage ?? 0}
+            />
           ) : (
             <Typography>Data not available</Typography>
           )}

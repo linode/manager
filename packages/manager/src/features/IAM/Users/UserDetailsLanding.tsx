@@ -5,8 +5,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { useDelegationRole } from '../hooks/useDelegationRole';
 import {
   IAM_LABEL,
   USER_DETAILS_LINK,
@@ -16,6 +18,9 @@ import {
 
 export const UserDetailsLanding = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { isParentAccount } = useDelegationRole();
+
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/iam/users/$username/details`,
@@ -28,6 +33,11 @@ export const UserDetailsLanding = () => {
     {
       to: `/iam/users/$username/entities`,
       title: 'Entity Access',
+    },
+    {
+      to: `/iam/users/$username/delegations`,
+      title: 'Account Delegations',
+      hide: !isIAMDelegationEnabled || !isParentAccount,
     },
   ]);
 

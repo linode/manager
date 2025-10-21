@@ -8,8 +8,8 @@ import { TableRow } from 'src/components/TableRow';
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
 import { DestinationActionMenu } from 'src/features/Delivery/Destinations/DestinationActionMenu';
 
-import type { DestinationHandlers } from './DestinationActionMenu';
 import type { Destination } from '@linode/api-v4';
+import type { DestinationHandlers } from 'src/features/Delivery/Destinations/DestinationActionMenu';
 
 interface DestinationTableRowProps extends DestinationHandlers {
   destination: Destination;

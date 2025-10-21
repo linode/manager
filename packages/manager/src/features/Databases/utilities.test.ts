@@ -7,6 +7,7 @@ import {
   databaseTypeFactory,
 } from 'src/factories';
 import {
+  convertPrivateToPublicHostname,
   getDatabasesDescription,
   getReadOnlyHost,
   hasPendingUpdates,
@@ -620,6 +621,7 @@ describe('getReadOnlyHost', () => {
     expect(result).toBe(mockHosts.standby);
   });
 
+  // TODO (UIE-8214) POST GA - Remove this test as secondary is only present for legacy databases
   it('should return the secondary host from the database if standby is not present', () => {
     const db: Database = databaseFactory.build();
     const mockHosts = {
@@ -634,5 +636,14 @@ describe('getReadOnlyHost', () => {
   it('should return an empty string when no database data is provided', () => {
     const result = getReadOnlyHost({} as Database);
     expect(result).toBe('');
+  });
+});
+
+describe('convertPrivateToPublicHostname', () => {
+  it('should return the public hostname url from private hostname', () => {
+    const baseHostname = 'primary.example.com';
+    const mockPrivateHost = `private-${baseHostname}`; // mock private hostname URL returned from backend
+    const result = convertPrivateToPublicHostname(mockPrivateHost);
+    expect(result).toBe(`public-${baseHostname}`);
   });
 });

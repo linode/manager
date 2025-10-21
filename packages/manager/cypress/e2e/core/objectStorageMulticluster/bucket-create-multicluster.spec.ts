@@ -62,7 +62,7 @@ describe('Object Storage Multicluster Bucket create', () => {
     mockGetBuckets([]).as('getBuckets');
     mockCreateBucketError(mockErrorMessage).as('createBucket');
 
-    cy.visitWithLogin('/object-storage');
+    cy.visitWithLogin('/object-storage/buckets');
     cy.wait(['@getRegions', '@getBuckets']);
 
     cy.get('[data-reach-tab-panels]')

@@ -26,7 +26,7 @@ describe('UserEmailPanel', () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={true} user={user} />
+      <UserEmailPanel activeUser={user} canUpdateUser={true} />
     );
 
     const emailTextField = getByLabelText('Email');
@@ -45,7 +45,7 @@ describe('UserEmailPanel', () => {
     );
 
     const { findByLabelText, getByLabelText, getByText } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={false} user={user} />
+      <UserEmailPanel activeUser={user} canUpdateUser={false} />
     );
 
     const warning = await findByLabelText(
@@ -70,7 +70,7 @@ describe('UserEmailPanel', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={false} user={user} />
+      <UserEmailPanel activeUser={user} canUpdateUser={false} />
     );
 
     const warning = getByLabelText('This field can’t be modified.');
@@ -94,7 +94,7 @@ describe('UserEmailPanel', () => {
       username: 'user-1',
     });
 
-    renderWithTheme(<UserEmailPanel canUpdateUser={true} user={user} />);
+    renderWithTheme(<UserEmailPanel activeUser={user} canUpdateUser={true} />);
 
     const emailInput = screen.getByLabelText('Email');
 
@@ -114,7 +114,7 @@ describe('UserEmailPanel', () => {
     });
 
     const { getByRole, findByDisplayValue } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={false} user={user} />
+      <UserEmailPanel activeUser={user} canUpdateUser={false} />
     );
 
     await findByDisplayValue(user.email);

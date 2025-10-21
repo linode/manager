@@ -62,3 +62,13 @@ export const userRolesFactory = Factory.Sync.makeFactory<IamUserRoles>({
   ],
   entity_access: entityAccessList,
 });
+
+export const userDefaultRolesFactory = Factory.Sync.makeFactory<IamUserRoles>({
+  account_access: [
+    'account_event_viewer',
+    'account_maintenance_viewer',
+    'account_notification_viewer',
+    'account_oauth_client_admin',
+  ],
+  entity_access: [],
+});

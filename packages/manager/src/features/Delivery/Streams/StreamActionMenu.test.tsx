@@ -30,7 +30,7 @@ describe('StreamActionMenu', () => {
 
       await userEvent.click(actionMenuButton);
 
-      for (const action of ['Edit', 'Disable', 'Delete']) {
+      for (const action of ['Edit', 'Deactivate', 'Delete']) {
         expect(screen.getByText(action)).toBeVisible();
       }
     });
@@ -44,7 +44,7 @@ describe('StreamActionMenu', () => {
 
       await userEvent.click(actionMenuButton);
 
-      for (const action of ['Edit', 'Enable', 'Delete']) {
+      for (const action of ['Edit', 'Activate', 'Delete']) {
         expect(screen.getByText(action)).toBeVisible();
       }
     });

@@ -1,31 +1,31 @@
-import { useProfile } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { PARENT_USER } from 'src/features/Account/constants';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { UserDeleteConfirmation } from './UserDeleteConfirmation';
 
 import type { User } from '@linode/api-v4';
 
 interface Props {
+  activeUser: User;
   canDeleteUser: boolean;
-  user: User;
 }
 
-export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
+export const DeleteUserPanel = ({ canDeleteUser, activeUser }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { data: profile } = useProfile();
+  const { profileUserName } = useDelegationRole();
 
-  const isProxyUserProfile = user.user_type === 'proxy';
+  const isProxyUser = activeUser.user_type === 'proxy';
 
   const tooltipText =
-    profile?.username === user.username
+    profileUserName === activeUser.username
       ? 'You can\u{2019}t delete the currently active user.'
-      : isProxyUserProfile
+      : isProxyUser
         ? `You can\u{2019}t delete a ${PARENT_USER}.`
         : undefined;
 
@@ -37,8 +37,8 @@ export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
           <Button
             buttonType="outlined"
             disabled={
-              profile?.username === user.username ||
-              isProxyUserProfile ||
+              profileUserName === activeUser.username ||
+              isProxyUser ||
               !canDeleteUser
             }
             onClick={() => setIsDeleteDialogOpen(true)}
@@ -58,7 +58,7 @@ export const DeleteUserPanel = ({ canDeleteUser, user }: Props) => {
           onClose={() => setIsDeleteDialogOpen(false)}
           onSuccess={() => navigate({ to: '/iam/users' })}
           open={isDeleteDialogOpen}
-          username={user.username}
+          username={activeUser.username}
         />
       </Stack>
     </Paper>

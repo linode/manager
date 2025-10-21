@@ -37,7 +37,10 @@ export const PlatformMaintenanceBanner = () => {
           <span data-testid="platform-maintenance-link-section">
             {' '}
             See which Linodes are <strong>scheduled</strong> for reboot on the{' '}
-            <Link to="/maintenance">Account Maintenance</Link> page.
+            <Link pendoId="platform-maintenance-banner-link" to="/maintenance">
+              Account Maintenance
+            </Link>{' '}
+            page.
           </span>
         )}
       </Typography>

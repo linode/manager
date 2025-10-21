@@ -1,7 +1,7 @@
 import type { Capabilities, Region } from '../regions';
 import type { APIWarning, RequestOptions } from '../types';
 
-export type UserType = 'child' | 'default' | 'parent' | 'proxy';
+export type UserType = 'child' | 'default' | 'delegate' | 'parent' | 'proxy';
 
 export interface User {
   email: string;

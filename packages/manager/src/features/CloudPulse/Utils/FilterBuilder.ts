@@ -719,7 +719,7 @@ export const filterUsingDependentFilters = (
       return resourceValue === filterValue;
     });
   });
-}
+};
 
 /**
  * @param data The endpoints for which the filter needs to be applied

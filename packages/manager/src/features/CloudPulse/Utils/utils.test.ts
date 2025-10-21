@@ -20,6 +20,7 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  getAssociatedEntityType,
   getEnabledServiceTypes,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -337,5 +338,19 @@ describe('getEnabledServiceTypes', () => {
     };
     const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
     expect(result).not.toContain('linode');
+  });
+
+  describe('getAssociatedEntityType', () => {
+    it('should return both if the dashboard id is not provided', () => {
+      expect(getAssociatedEntityType(undefined)).toBe('both');
+    });
+
+    it('should return the associated entity type for linode firewall dashboard', () => {
+      expect(getAssociatedEntityType(4)).toBe('linode');
+    });
+
+    it('should return the associated entity type for nodebalancer firewall dashboard', () => {
+      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
+    });
   });
 });

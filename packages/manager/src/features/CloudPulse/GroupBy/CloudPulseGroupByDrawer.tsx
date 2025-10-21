@@ -28,7 +28,7 @@ export interface GroupByDrawerProps {
   /**
    * Callback function triggered when apply button is clicked
    */
-  onApply: (value: GroupByOption[]) => void;
+  onApply: (value: GroupByOption[], savePref?: boolean) => void;
   /**
    * Callback function triggered when cancel button is clicked
    */
@@ -96,7 +96,7 @@ export const CloudPulseGroupByDrawer = React.memo(
         0,
         Math.min(defaultValue.length, GROUP_BY_SELECTION_LIMIT)
       );
-      onApply(value);
+      onApply(value, false);
       setSelectedValue(value);
     }, [serviceType]);
     const handleClose = () => {
@@ -141,6 +141,7 @@ export const CloudPulseGroupByDrawer = React.memo(
         <Stack gap={3}>
           <Typography
             component="p"
+            data-qa-id="groupby-drawer-subtitle"
             sx={(theme) => ({ marginTop: -1, font: theme.font.normal })}
             variant="h3"
           >
