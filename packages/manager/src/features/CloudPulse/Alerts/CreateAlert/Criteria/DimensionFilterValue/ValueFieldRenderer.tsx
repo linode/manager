@@ -69,7 +69,6 @@ interface ValueFieldRendererProps {
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
-  type?: 'alerts' | 'metrics';
 
   /**
    * The type of monitoring to filter on.
@@ -102,7 +101,6 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     values,
     type = 'alerts',
     selectedRegions,
-    type = 'alerts',
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
