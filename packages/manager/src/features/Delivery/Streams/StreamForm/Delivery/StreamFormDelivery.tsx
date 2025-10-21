@@ -10,17 +10,17 @@ import {
 } from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationLinodeObjectStorageDetailsForm';
+import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
-import { DestinationLinodeObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationLinodeObjectStorageDetailsSummary';
+import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
 
 import type {
+  AkamaiObjectStorageDetails,
   DestinationType,
-  LinodeObjectStorageDetails,
 } from '@linode/api-v4';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
@@ -37,14 +37,23 @@ const controlPaths = {
   bucketName: 'destination.details.bucket_name',
   host: 'destination.details.host',
   path: 'destination.details.path',
-  region: 'destination.details.region',
 } as const;
 
-export const StreamFormDelivery = () => {
+interface StreamFormDeliveryProps {
+  setDisableTestConnection: (disable: boolean) => void;
+}
+
+export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
+  const { setDisableTestConnection } = props;
+
   const theme = useTheme();
   const { control, setValue, clearErrors } =
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
+
+  useEffect(() => {
+    setDisableTestConnection(isLoading || !!error);
+  }, [isLoading, error, setDisableTestConnection]);
 
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
@@ -149,9 +158,9 @@ export const StreamFormDelivery = () => {
             )}
             placeholder="Create or Select Destination Name"
             renderOption={(props, option) => {
-              const { key, ...optionProps } = props;
+              const { id, ...optionProps } = props;
               return (
-                <li key={key} {...optionProps}>
+                <li {...optionProps} key={id}>
                   {option.create ? (
                     <>
                       <strong>Create&nbsp;</strong> &quot;{option.label}&quot;
@@ -166,17 +175,17 @@ export const StreamFormDelivery = () => {
           />
         )}
       />
-      {selectedDestinationType === destinationType.LinodeObjectStorage && (
+      {selectedDestinationType === destinationType.AkamaiObjectStorage && (
         <>
           {creatingNewDestination && !selectedDestinations?.length && (
-            <DestinationLinodeObjectStorageDetailsForm
+            <DestinationAkamaiObjectStorageDetailsForm
               controlPaths={controlPaths}
             />
           )}
           {selectedDestinations?.[0] && (
-            <DestinationLinodeObjectStorageDetailsSummary
+            <DestinationAkamaiObjectStorageDetailsSummary
               {...(findDestination(selectedDestinations[0])
-                ?.details as LinodeObjectStorageDetails)}
+                ?.details as AkamaiObjectStorageDetails)}
             />
           )}
         </>

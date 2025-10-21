@@ -3,7 +3,7 @@ import { capabilityServiceTypeMapping } from '@linode/api-v4';
 import {
   ENDPOINT,
   INTERFACE_IDS_PLACEHOLDER_TEXT,
-  LINODE_REGION,
+  PARENT_ENTITY_REGION,
   REGION,
   RESOURCE_ID,
 } from './constants';
@@ -232,13 +232,14 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Firewalls',
         priority: 1,
+        associatedEntityType: 'linode',
       },
       name: 'Firewalls',
     },
     {
       configuration: {
         dependency: ['resource_id'],
-        filterKey: LINODE_REGION,
+        filterKey: PARENT_ENTITY_REGION,
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,
@@ -317,6 +318,46 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   serviceType: 'firewall',
 };
 
+export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['firewall'],
+    filters: [
+      {
+        configuration: {
+          filterKey: RESOURCE_ID,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          isMultiSelect: true,
+          name: 'Firewalls',
+          neededInViews: [CloudPulseAvailableViews.central],
+          associatedEntityType: 'nodebalancer',
+          placeholder: 'Select Firewalls',
+          priority: 1,
+        },
+        name: 'Firewalls',
+      },
+      {
+        configuration: {
+          dependency: [RESOURCE_ID],
+          filterKey: PARENT_ENTITY_REGION,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'NodeBalancer Region',
+          priority: 2,
+          neededInViews: [
+            CloudPulseAvailableViews.central,
+            CloudPulseAvailableViews.service,
+          ],
+          placeholder: 'Select a NodeBalancer Region',
+        },
+        name: 'NodeBalancer Region',
+      },
+    ],
+    serviceType: 'firewall',
+  };
+
 export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMap> =
   {
     capability: capabilityServiceTypeMapping['objectstorage'],
@@ -366,6 +407,40 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
     serviceType: 'objectstorage',
   };
 
+export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['blockstorage'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Volumes',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Volumes',
+        priority: 2,
+      },
+      name: 'Volumes',
+    },
+  ],
+  serviceType: 'blockstorage',
+};
+
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -374,4 +449,6 @@ export const FILTER_CONFIG: Readonly<
   [3, NODEBALANCER_CONFIG],
   [4, FIREWALL_CONFIG],
   [6, OBJECTSTORAGE_CONFIG_BUCKET],
+  [7, BLOCKSTORAGE_CONFIG],
+  [8, FIREWALL_NODEBALANCER_CONFIG],
 ]);

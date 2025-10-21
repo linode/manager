@@ -403,6 +403,16 @@ describe('LKE Cluster Creation with APL enabled', () => {
       dedicated8Type,
       nanodeType,
     ];
+    const mockRegionAvailability = mockedAPLLKEClusterTypes.map((type) =>
+      regionAvailabilityFactory.build({
+        plan: type.label,
+        available: true,
+        region: clusterRegion.id,
+      })
+    );
+    mockGetRegionAvailability(clusterRegion.id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
     mockAppendFeatureFlags({
       apl: true,
       aplGeneralAvailability: true,
@@ -433,6 +443,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
     cy.focused().type(`${clusterLabel}{enter}`);
 
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+
+    cy.wait('@getRegionAvailability');
 
     cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
     cy.findByTestId('newFeatureChip')
