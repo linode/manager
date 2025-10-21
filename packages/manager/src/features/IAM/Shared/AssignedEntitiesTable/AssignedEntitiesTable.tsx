@@ -123,29 +123,13 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     ? delegateDefaultRoles
     : assignedUserRoles;
 
-  const error = React.useMemo(
-    () =>
-      isDefaultDelegationRolesForChildAccount
-        ? delegateDefaultRolesError
-        : assignedUserRolesError,
-    [
-      isDefaultDelegationRolesForChildAccount,
-      assignedUserRolesError,
-      delegateDefaultRolesError,
-    ]
-  );
+  const error = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRolesError
+    : assignedUserRolesError;
 
-  const loading = React.useMemo(
-    () =>
-      isDefaultDelegationRolesForChildAccount
-        ? delegateDefaultRolesLoading
-        : assignedUserRolesLoading,
-    [
-      isDefaultDelegationRolesForChildAccount,
-      assignedUserRolesLoading,
-      delegateDefaultRolesLoading,
-    ]
-  );
+  const loading = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRolesLoading
+    : assignedUserRolesLoading;
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
