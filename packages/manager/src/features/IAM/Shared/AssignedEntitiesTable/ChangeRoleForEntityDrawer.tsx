@@ -24,7 +24,13 @@ import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
 } from '../constants';
-import { changeRoleForEntity, getAllRoles, getRoleByName } from '../utilities';
+import {
+  changeRoleForEntity,
+  getAllRoles,
+  getRoleByName,
+  isAccountRole,
+  isEntityRole,
+} from '../utilities';
 
 import type { DrawerModes, EntitiesRole } from '../types';
 import type { ExtendedEntityRole } from '../utilities';
@@ -76,10 +82,30 @@ export const ChangeRoleForEntityDrawer = ({
       return [];
     }
 
-    return getAllRoles(accountRoles).filter(
-      (el) => el.entity_type === role?.entity_type && el.access === role?.access
-    );
-  }, [accountRoles, role]);
+    return getAllRoles(accountRoles).filter((el) => {
+      const matchesRoleContext =
+        el.entity_type === role?.entity_type &&
+        el.access === role?.access &&
+        el.value !== role?.role_name;
+
+      // Exclude account roles already assigned to the user
+      if (isAccountRole(el)) {
+        return (
+          !assignedRoles?.account_access.includes(el.value) &&
+          matchesRoleContext
+        );
+      }
+      // Exclude entity roles already assigned to the user
+      if (isEntityRole(el)) {
+        return (
+          !assignedRoles?.entity_access.some((entity) =>
+            entity.roles.includes(el.value)
+          ) && matchesRoleContext
+        );
+      }
+      return true;
+    });
+  }, [accountRoles, role, assignedRoles]);
 
   const {
     control,
