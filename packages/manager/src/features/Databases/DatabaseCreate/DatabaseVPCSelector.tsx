@@ -12,10 +12,9 @@ import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
+import { MANAGE_NETWORKING_LEARN_MORE_LINK } from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../constants';
 
 import type { DatabaseCreateValues } from './DatabaseCreate';
 import type { VPC } from '@linode/api-v4';
@@ -108,7 +107,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
               }}
               options={vpcs ?? []}
               placeholder="Select a VPC"
-              sx={{ width: '354px' }}
+              sx={{ width: '390px' }}
               textFieldProps={{
                 tooltipText:
                   'A cluster may be assigned only to a VPC in the same region',
