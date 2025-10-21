@@ -180,7 +180,7 @@
     "pdfreader": "^3.0.7",
     "redux-mock-store": "^1.5.3",
     "storybook": "^9.0.12",
-    "vite": "^6.3.6",
+    "vite": "^6.4.1",
     "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [
