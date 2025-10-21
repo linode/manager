@@ -25,6 +25,7 @@ import type {
   Params,
   ResourcePage,
   Token,
+  UpdateChildAccountDelegatesParams,
 } from '@linode/api-v4';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -212,7 +213,7 @@ export const useGetChildAccountDelegatesQuery = ({
   euuid,
   params,
 }: GetChildAccountDelegatesParams): UseQueryResult<
-  ResourcePage<string[]>,
+  ResourcePage<string>,
   APIError[]
 > => {
   return useQuery({
@@ -233,16 +234,23 @@ export const useGetChildAccountDelegatesQuery = ({
 export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
   ResourcePage<string>,
   APIError[],
-  { data: string[]; euuid: string }
+  UpdateChildAccountDelegatesParams
 > => {
   const queryClient = useQueryClient();
   return useMutation<
     ResourcePage<string>,
     APIError[],
-    { data: string[]; euuid: string }
+    UpdateChildAccountDelegatesParams
   >({
-    mutationFn: updateChildAccountDelegates,
+    mutationFn: (data) => updateChildAccountDelegates(data),
     onSuccess(_data, { euuid }) {
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts({ params: {}, users: true })
+          .queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.allChildAccounts._def,
+      });
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
         queryKey: delegationQueries.childAccountDelegates({ euuid }).queryKey,
