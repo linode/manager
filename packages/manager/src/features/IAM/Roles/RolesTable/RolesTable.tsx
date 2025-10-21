@@ -266,7 +266,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   style={{
                     minWidth: COLUMN_WIDTHS.description,
                     ...TABLE_CELL_BASE_STYLE,
-                    // minWidth: theme.breakpoints.down('md') ? '25%' : '38%',
                   }}
                 >
                   Description
