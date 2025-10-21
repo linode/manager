@@ -302,7 +302,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
                       wordBreak: 'break-word',
                       minWidth: COLUMN_WIDTHS.name,
                       ...TABLE_CELL_BASE_STYLE,
-                      // flex: theme.breakpoints.down('sm') ? 1 : 0,
                     }}
                   >
                     {roleRow.name}
@@ -339,7 +338,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
                       justifyContent: 'flex-end',
                       minWidth: COLUMN_WIDTHS.actions,
                       ...TABLE_CELL_BASE_STYLE,
-                      // flex: theme.breakpoints.down('sm') ? '0 0 auto' : 1,
                     }}
                   >
                     <RolesTableActionMenu
