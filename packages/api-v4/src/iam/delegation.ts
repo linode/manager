@@ -57,14 +57,14 @@ export const getChildAccountDelegates = ({
 
 export const updateChildAccountDelegates = ({
   euuid,
-  data,
+  users,
 }: UpdateChildAccountDelegatesParams) =>
   Request<Page<string>>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
     ),
     setMethod('PUT'),
-    setData(data),
+    setData(users),
   );
 
 export const getMyDelegatedChildAccounts = ({
