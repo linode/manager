@@ -1,3 +1,5 @@
+import { accountQueries, profileQueries } from '@linode/queries';
+import { queryOptions } from '@tanstack/react-query';
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
@@ -157,6 +159,61 @@ const iamDelegationsCatchAllRoute = createRoute({
 const iamUserNameRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/users/$username',
+  loader: async ({ context, params, location }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags
+    );
+    const { username } = params;
+    const isIAMDelegationEnabled = context.flags?.iamDelegation?.enabled;
+
+    if (isIAMEnabled && username && isIAMDelegationEnabled) {
+      const profile = await context.queryClient.ensureQueryData(
+        queryOptions(profileQueries.profile())
+      );
+
+      const isChildAccount = profile?.user_type === 'child';
+
+      if (!profile.restricted && isChildAccount) {
+        const user = await context.queryClient.ensureQueryData(
+          queryOptions(accountQueries.users._ctx.user(username))
+        );
+
+        const isChildAccount = profile?.user_type === 'child';
+        const isDelegateUser = user?.user_type === 'delegate';
+
+        // Determine if the current account is a child account with isIAMDelegationEnabled enabled
+        // If so, we need to hide 'View User Details' and 'Account Delegations' tabs for delegate users
+        const isDelegateUserForChildAccount = isChildAccount && isDelegateUser;
+
+        // There is no detail view for delegate users in a child account
+        if (
+          isDelegateUserForChildAccount &&
+          location.pathname.endsWith('/details')
+        ) {
+          throw redirect({
+            to: '/iam/users/$username/roles',
+            params: { username },
+            replace: true,
+          });
+        }
+
+        // We may not need to return all this data tho I can't think of a reason why we wouldn't,
+        // considering several views served by this route rely on it.
+        return {
+          user,
+          profile,
+          isIAMDelegationEnabled,
+          isDelegateUserForChildAccount,
+        };
+      }
+    }
+
+    return {
+      isIAMEnabled,
+      username,
+    };
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/userDetailsLandingLazyRoute').then(
     (m) => m.userDetailsLandingLazyRoute
