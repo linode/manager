@@ -41,6 +41,7 @@ export const UserDelegations = () => {
 
   const handleSearch = (value: string) => {
     setSearch(value);
+    pagination.handlePageChange(1);
   };
 
   const childAccounts = React.useMemo(() => {
@@ -92,6 +93,7 @@ export const UserDelegations = () => {
       <Stack>
         <Typography variant="h2">Account Delegations</Typography>
         <DebouncedSearchTextField
+          clearable
           debounceTime={250}
           hideLabel
           isSearching={allDelegatedChildAccountsLoading}

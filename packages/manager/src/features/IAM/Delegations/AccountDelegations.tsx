@@ -85,6 +85,7 @@ export const AccountDelegations = () => {
   }, [filteredDelegations, order]);
 
   const handleSearch = (value: string) => {
+    pagination.handlePageChange(1);
     navigate({
       to: DELEGATIONS_ROUTE,
       search: { query: value || undefined },
