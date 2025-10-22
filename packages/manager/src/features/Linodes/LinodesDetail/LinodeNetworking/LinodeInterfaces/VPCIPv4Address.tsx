@@ -37,13 +37,13 @@ export const VPCIPv4Address = (props: Props) => {
     autoAssignIdentifier,
   } = props;
 
+  const shouldAutoAssign = fieldValue === autoAssignIdentifier || fieldValue === undefined;
+
   return (
     <Stack rowGap={1}>
       <Stack direction="row">
         <FormControlLabel
-          checked={
-            fieldValue === autoAssignIdentifier || fieldValue === undefined
-          }
+          checked={shouldAutoAssign}
           control={<Checkbox />}
           disabled={disabled}
           label="Auto-assign VPC IPv4"
@@ -54,8 +54,7 @@ export const VPCIPv4Address = (props: Props) => {
         />
         <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
       </Stack>
-      {/* Not sure about the condition below. We should double check this... */}
-      {fieldValue !== autoAssignIdentifier && fieldValue !== undefined && (
+      {!shouldAutoAssign && (
         <TextField
           containerProps={{ sx: { mb: 1.5, mt: 1 } }}
           errorText={errorMessage}
