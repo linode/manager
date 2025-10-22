@@ -22,7 +22,7 @@ import type {
 interface Props {
   delegations: ChildAccount[] | ChildAccountWithDelegates[] | undefined;
   error: APIError[] | null;
-  handleOrderChange: (orderBy: string) => void;
+  handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
   isLoading: boolean;
   numCols: number;
   order: 'asc' | 'desc';
@@ -49,7 +49,7 @@ export const AccountDelegationsTable = ({
           <TableSortCell
             active={orderBy === 'company'}
             direction={order}
-            handleClick={() => handleOrderChange('company')}
+            handleClick={handleOrderChange}
             label="company"
             style={{ width: '27%' }}
           >
