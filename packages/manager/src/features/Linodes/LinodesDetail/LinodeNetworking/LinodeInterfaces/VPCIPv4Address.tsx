@@ -37,9 +37,9 @@ export const VPCIPv4Address = (props: Props) => {
     autoAssignIdentifier,
   } = props;
 
-  // Auto-assign should be checked if
-  // - the field value matches the identifier
-  // - or the field value is undefined (because the API's default behavior is to auto-assign)
+  // Auto-assign should be checked if any of the following are true
+  // - field value matches the identifier
+  // - field value is undefined (because the API's default behavior is to auto-assign)
   const shouldAutoAssign = fieldValue === autoAssignIdentifier || fieldValue === undefined;
 
   return (
