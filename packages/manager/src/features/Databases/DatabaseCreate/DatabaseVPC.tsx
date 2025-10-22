@@ -31,7 +31,7 @@ interface DatabaseVPCProps {
   region: string;
   setValue: UseFormSetValue<NetworkValues>;
   subnetId: null | number;
-  trigger: UseFormTrigger<NetworkValues>;
+  trigger?: UseFormTrigger<NetworkValues>;
   vpcId: null | number;
 }
 
@@ -113,7 +113,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
               noOptionsText="There are no VPCs in the selected region."
               onChange={(e, value) => {
                 setValue('private_network.subnet_id', null); // Always reset subnet selection when VPC changes
-                trigger('private_network.subnet_id');
+                trigger?.('private_network.subnet_id');
                 if (!value) {
                   setValue('private_network.public_access', false);
                 }
@@ -146,7 +146,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
                 label="Subnet"
                 onChange={(e, value) => {
                   field.onChange(value?.id ?? null);
-                  trigger('private_network.subnet_id');
+                  trigger?.('private_network.subnet_id');
                 }}
                 options={selectedVPC?.subnets ?? []}
                 placeholder="Select a subnet"

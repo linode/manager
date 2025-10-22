@@ -16,11 +16,8 @@ export const DatabaseCreateVPC = (props: DatabaseCreateVPCProps) => {
   const { control } =
     useFormContext<Omit<DatabaseCreateValues, 'private_network'>>();
 
-  const {
-    control: networkControl,
-    setValue,
-    trigger,
-  } = useFormContext<Pick<DatabaseCreateValues, 'private_network'>>();
+  const { control: networkControl, setValue } =
+    useFormContext<Pick<DatabaseCreateValues, 'private_network'>>();
 
   const region = useWatch({
     control,
@@ -40,7 +37,6 @@ export const DatabaseCreateVPC = (props: DatabaseCreateVPCProps) => {
       region={region}
       setValue={setValue}
       subnetId={subnetId}
-      trigger={trigger}
       vpcId={vpcId}
     />
   );
