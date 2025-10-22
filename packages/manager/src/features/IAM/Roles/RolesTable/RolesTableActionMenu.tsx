@@ -18,6 +18,9 @@ export const RolesTableActionMenu = ({
       buttonHeight={40}
       disabled={!canUpdateUserGrants}
       onClick={onClick}
+      sx={{
+        whiteSpace: 'nowrap',
+      }}
       tooltip={
         !canUpdateUserGrants
           ? 'You do not have permission to assign roles.'
