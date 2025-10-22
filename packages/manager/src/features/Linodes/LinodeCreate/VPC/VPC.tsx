@@ -158,6 +158,11 @@ export const VPC = () => {
                     setValue('interfaces.0.subnet_id', null);
                   }
 
+                  // Clear any previously selected dual-stack values if the current vpc is not dual-stack
+                  if (isDualStackEnabled && !vpc?.ipv6) {
+                    setValue(`interfaces.0.ipv6`, undefined);
+                  }
+
                   // Capture analytics
                   if (!vpc?.id) {
                     sendLinodeCreateFormInputEvent({
@@ -232,6 +237,7 @@ export const VPC = () => {
                       name="interfaces.0.ipv4.vpc"
                       render={({ field, fieldState }) => (
                         <VPCIPv4Address
+                          autoAssignValue={null}
                           errorMessage={fieldState.error?.message}
                           fieldValue={field.value}
                           onChange={field.onChange}
@@ -292,11 +298,11 @@ export const VPC = () => {
                       sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
                     />
                   </Box>
-                  {formState.errors.interfaces?.[1] &&
-                    formState.errors.interfaces[1] &&
-                    'ip_ranges' in formState.errors.interfaces[1] && (
+                  {formState.errors.interfaces?.[0] &&
+                    formState.errors.interfaces[0] &&
+                    'ip_ranges' in formState.errors.interfaces[0] && (
                       <Notice
-                        text={formState.errors.interfaces[1].ip_ranges?.message}
+                        text={formState.errors.interfaces[0].ip_ranges?.message}
                         variant="error"
                       />
                     )}
