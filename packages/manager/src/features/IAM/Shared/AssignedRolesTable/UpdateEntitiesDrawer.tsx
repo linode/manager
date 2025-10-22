@@ -1,7 +1,6 @@
 import { useUserRoles, useUserRolesMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -17,16 +16,20 @@ interface Props {
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
+  username?: string;
 }
 
-export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
+export const UpdateEntitiesDrawer = ({
+  onClose,
+  open,
+  role,
+  username,
+}: Props) => {
   const theme = useTheme();
 
-  const { username } = useParams({ from: '/iam/users/$username' });
+  const { data: assignedRoles } = useUserRoles(username || '');
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
-
-  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username || '');
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {

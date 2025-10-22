@@ -4,6 +4,7 @@ import {
 } from '@linode/queries';
 import { useLocation } from '@tanstack/react-router';
 
+import { useIsDefaultDelegationRolesForChildAccount } from './useDelegationRole';
 import { usePermissions } from './usePermissions';
 
 /**
@@ -25,12 +26,15 @@ import { usePermissions } from './usePermissions';
 export const useAssignedRoles = (username?: string) => {
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
   const location = useLocation();
+
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
   // Check if we're on the default roles view based on the current path
   const isDefaultRolesView = location.pathname.includes(
     '/iam/roles/defaults/roles'
   );
-  // TODO: use useIsDefaultDelegationRolesForChildAccount when available
-  const shouldFetchDefaultRoles = isDefaultRolesView && !username;
+  const shouldFetchDefaultRoles =
+    isDefaultDelegationRolesForChildAccount && isDefaultRolesView && !username;
   const shouldFetchUserRoles =
     !isDefaultRolesView && permissions?.is_account_admin;
 
@@ -38,7 +42,7 @@ export const useAssignedRoles = (username?: string) => {
     data: defaultRolesData,
     isLoading: defaultRolesLoading,
     error: defaultRolesError,
-  } = useGetDefaultDelegationAccessQuery(shouldFetchDefaultRoles);
+  } = useGetDefaultDelegationAccessQuery({ enabled: shouldFetchDefaultRoles });
 
   const {
     data: userRolesData,
