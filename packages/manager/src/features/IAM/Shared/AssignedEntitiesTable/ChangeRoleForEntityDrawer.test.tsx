@@ -6,7 +6,7 @@ import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
+import { ChangeRoleForEntityDrawer } from '../../Shared/AssignedEntitiesTable/ChangeRoleForEntityDrawer';
 
 import type { EntitiesRole } from '../../Shared/types';
 
