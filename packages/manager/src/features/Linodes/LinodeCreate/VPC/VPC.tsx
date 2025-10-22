@@ -293,11 +293,11 @@ export const VPC = () => {
                       sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
                     />
                   </Box>
-                  {formState.errors.interfaces?.[1] &&
-                    formState.errors.interfaces[1] &&
-                    'ip_ranges' in formState.errors.interfaces[1] && (
+                  {formState.errors.interfaces?.[0] &&
+                    formState.errors.interfaces[0] &&
+                    'ip_ranges' in formState.errors.interfaces[0] && (
                       <Notice
-                        text={formState.errors.interfaces[1].ip_ranges?.message}
+                        text={formState.errors.interfaces[0].ip_ranges?.message}
                         variant="error"
                       />
                     )}
