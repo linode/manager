@@ -13,12 +13,12 @@ import React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
+import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_ENTITIES_TEXT,
 } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
-import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 
 export const UserEntities = () => {
   const theme = useTheme();
@@ -71,7 +71,7 @@ export const UserEntities = () => {
             View and manage entities attached to user&apos;s entity access
             roles.
           </Typography>
-          <AssignedEntitiesTable />
+          <AssignedEntitiesTable username={username} />
         </Paper>
       ) : (
         <NoAssignedRoles

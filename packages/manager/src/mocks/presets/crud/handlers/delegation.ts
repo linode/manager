@@ -293,12 +293,12 @@ export const defaultDelegationAccess = () => [
         ],
         entity_access: [
           {
-            id: 12345678,
+            id: 1,
             type: 'linode' as const,
             roles: ['linode_contributor'],
           },
           {
-            id: 45678901,
+            id: 1,
             type: 'firewall' as const,
             roles: ['firewall_admin'],
           },
