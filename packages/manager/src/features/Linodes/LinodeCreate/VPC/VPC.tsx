@@ -72,6 +72,7 @@ export const VPC = () => {
   });
 
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+  const isDualStackVPCSelected = Boolean(selectedVPC?.ipv6);
 
   // Check that selected subnet supports IPv6
   const selectedSubnet = selectedVPC?.subnets.find(
@@ -156,6 +157,11 @@ export const VPC = () => {
                   } else {
                     // Otherwise, just clear the selected subnet
                     setValue('interfaces.0.subnet_id', null);
+                  }
+
+                  // Clear any previously selected dual-stack values if the current vpc is not dual-stack
+                  if (isDualStackEnabled && !isDualStackVPCSelected) {
+                    setValue(`interfaces.0.vpc.ipv6`, undefined);
                   }
 
                   // Capture analytics

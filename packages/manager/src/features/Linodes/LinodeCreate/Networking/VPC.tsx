@@ -55,6 +55,7 @@ export const VPC = ({ index }: Props) => {
   const { isDualStackEnabled } = useVPCDualStack();
 
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+  const isDualStackVPCSelected = Boolean(selectedVPC?.ipv6);
 
   // Check that selected subnet supports IPv6
   const selectedSubnet = selectedVPC?.subnets.find(
@@ -99,6 +100,11 @@ export const VPC = ({ index }: Props) => {
                 } else {
                   // Otherwise, just clear the selected subnet
                   resetField(`linodeInterfaces.${index}.vpc.subnet_id`);
+                }
+
+                // Clear any previously selected dual-stack values if the current vpc is not dual-stack
+                if (isDualStackEnabled && !isDualStackVPCSelected) {
+                  resetField(`linodeInterfaces.${index}.vpc.ipv6`);
                 }
               }}
               options={vpcs ?? []}
