@@ -237,7 +237,7 @@ export const VPC = () => {
                       name="interfaces.0.ipv4.vpc"
                       render={({ field, fieldState }) => (
                         <VPCIPv4Address
-                          autoAssignIdentifier={null}
+                          autoAssignValue={null}
                           errorMessage={fieldState.error?.message}
                           fieldValue={field.value}
                           onChange={field.onChange}

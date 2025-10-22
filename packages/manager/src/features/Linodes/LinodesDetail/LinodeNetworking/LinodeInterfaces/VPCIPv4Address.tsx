@@ -17,7 +17,7 @@ interface Props {
    * Linode Interfaces use "auto" to auto-assign IP addresses
    * Legacy Config Interfaces use `null` to auto-assign IP addresseses
    */
-  autoAssignIdentifier: 'auto' | null;
+  autoAssignValue: 'auto' | null;
   disabled?: boolean;
   errorMessage?: string;
   fieldValue?: null | string;
@@ -34,13 +34,13 @@ export const VPCIPv4Address = (props: Props) => {
     disabled,
     onChange,
     ipv4Address,
-    autoAssignIdentifier,
+    autoAssignValue,
   } = props;
 
   // Auto-assign should be checked if any of the following are true
   // - field value matches the identifier
   // - field value is undefined (because the API's default behavior is to auto-assign)
-  const shouldAutoAssign = fieldValue === autoAssignIdentifier || fieldValue === undefined;
+  const shouldAutoAssign = fieldValue === autoAssignValue || fieldValue === undefined;
 
   return (
     <Stack rowGap={1}>
@@ -51,7 +51,7 @@ export const VPCIPv4Address = (props: Props) => {
           disabled={disabled}
           label="Auto-assign VPC IPv4"
           onChange={(e, checked) =>
-            onChange(checked ? autoAssignIdentifier : (ipv4Address ?? ''))
+            onChange(checked ? autoAssignValue : (ipv4Address ?? ''))
           }
           sx={{ pl: 0.4, mr: 0 }}
         />
