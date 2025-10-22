@@ -15,7 +15,7 @@ import {
 interface Props {
   /**
    * Linode Interfaces use "auto" to auto-assign IP addresses
-   * Legacy Config Interfaces use `null` to auto-assign IP addresseses
+   * Legacy Config Interfaces use `null` to auto-assign IP addresses
    */
   autoAssignValue: 'auto' | null;
   disabled?: boolean;
