@@ -100,6 +100,11 @@ export const VPC = ({ index }: Props) => {
                   // Otherwise, just clear the selected subnet
                   resetField(`linodeInterfaces.${index}.vpc.subnet_id`);
                 }
+
+                // Clear any previously selected dual-stack values if the current vpc is not dual-stack
+                if (isDualStackEnabled && !vpc?.ipv6) {
+                  resetField(`linodeInterfaces.${index}.vpc.ipv6`);
+                }
               }}
               options={vpcs ?? []}
               placeholder="None"
@@ -145,6 +150,7 @@ export const VPC = ({ index }: Props) => {
             name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
             render={({ field, fieldState }) => (
               <VPCIPv4Address
+                autoAssignValue="auto"
                 disabled={!regionSupportsVPCs}
                 errorMessage={
                   fieldState.error?.message ??

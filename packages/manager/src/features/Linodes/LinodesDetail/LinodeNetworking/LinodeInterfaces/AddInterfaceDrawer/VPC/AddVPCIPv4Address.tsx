@@ -32,6 +32,7 @@ export const AddVPCIPv4Address = (props: Props) => {
         name={`vpc.ipv4.addresses.${index}.address`}
         render={({ field, fieldState }) => (
           <VPCIPv4Address
+            autoAssignValue="auto"
             errorMessage={fieldState.error?.message}
             fieldValue={field.value}
             onChange={field.onChange}
