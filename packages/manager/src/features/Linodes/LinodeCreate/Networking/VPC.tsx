@@ -145,6 +145,7 @@ export const VPC = ({ index }: Props) => {
             name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
             render={({ field, fieldState }) => (
               <VPCIPv4Address
+                autoAssignIdentifier="auto"
                 disabled={!regionSupportsVPCs}
                 errorMessage={
                   fieldState.error?.message ??
