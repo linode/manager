@@ -5,7 +5,7 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { subnetFactory, vpcFactory } from 'src/factories';
-import { DatabaseVPCSelector } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseVPCSelector';
+import { DatabaseDetailVPC } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseDetailVPC';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import type { PrivateNetwork } from '@linode/api-v4';
@@ -64,7 +64,7 @@ const vpcPlaceholder = 'Select a VPC';
 const subnetPlaceholder = 'Select a subnet';
 const mockMode: 'create' | 'networking' = 'create';
 
-describe('DatabaseVPCSelector', () => {
+describe('DatabaseDetailVPC', () => {
   const mockProps = {
     errors: {},
     onChange: vi.fn(),
@@ -92,13 +92,13 @@ describe('DatabaseVPCSelector', () => {
   });
 
   it('Should render the VPC selector heading', () => {
-    renderWithTheme(<DatabaseVPCSelector {...mockProps} />);
+    renderWithTheme(<DatabaseDetailVPC {...mockProps} />);
     const vpcField = screen.getByText('Assign a VPC', { exact: true });
     expect(vpcField).toBeInTheDocument();
   });
 
   it('Should render VPC autocomplete in initial disabled state', () => {
-    renderWithTheme(<DatabaseVPCSelector {...mockProps} />);
+    renderWithTheme(<DatabaseDetailVPC {...mockProps} />);
     const vpcSelector = screen.getByTestId(vpcSelectorTestId);
     expect(vpcSelector).toBeInTheDocument();
     const vpcSelectorInput = screen.getByPlaceholderText(vpcPlaceholder);
@@ -127,7 +127,7 @@ describe('DatabaseVPCSelector', () => {
     });
 
     const mockEnabledProps = { ...mockProps, selectedRegionId: 'us-east' };
-    renderWithTheme(<DatabaseVPCSelector {...mockEnabledProps} />);
+    renderWithTheme(<DatabaseDetailVPC {...mockEnabledProps} />);
 
     const vpcSelector = screen.getByTestId(vpcSelectorTestId);
     expect(vpcSelector).toBeInTheDocument();
@@ -156,7 +156,7 @@ describe('DatabaseVPCSelector', () => {
       privateNetworkValues: mockPrivateNetwork,
       selectedRegionId: 'us-east',
     };
-    renderWithTheme(<DatabaseVPCSelector {...mockEnabledProps} />);
+    renderWithTheme(<DatabaseDetailVPC {...mockEnabledProps} />);
 
     const vpcInput = screen.getByPlaceholderText(
       vpcPlaceholder
@@ -189,7 +189,7 @@ describe('DatabaseVPCSelector', () => {
       privateNetworkValues: mockPrivateNetwork,
       selectedRegionId: 'us-east',
     };
-    renderWithTheme(<DatabaseVPCSelector {...mockEnabledProps} />);
+    renderWithTheme(<DatabaseDetailVPC {...mockEnabledProps} />);
 
     const vpcInput = screen.getByPlaceholderText(
       vpcPlaceholder
@@ -244,7 +244,7 @@ describe('DatabaseVPCSelector', () => {
     const onConfigurationChange = vi.fn();
 
     const { rerender } = renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onConfigurationChange={onConfigurationChange}
         privateNetworkValues={mockPrivateNetwork}
@@ -258,7 +258,7 @@ describe('DatabaseVPCSelector', () => {
     queryMocks.useAllVPCsQuery.mockReturnValue({ data: [], isLoading: false });
 
     rerender(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onConfigurationChange={onConfigurationChange}
         privateNetworkValues={mockPrivateNetwork}
@@ -284,7 +284,7 @@ describe('DatabaseVPCSelector', () => {
     const onConfigurationChange = vi.fn();
 
     const { rerender } = renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onConfigurationChange={onConfigurationChange}
         resetFormFields={resetFormFields}
@@ -297,7 +297,7 @@ describe('DatabaseVPCSelector', () => {
     queryMocks.useAllVPCsQuery.mockReturnValue({ data: [], isLoading: false });
 
     rerender(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onConfigurationChange={onConfigurationChange}
         resetFormFields={resetFormFields}
@@ -310,7 +310,7 @@ describe('DatabaseVPCSelector', () => {
   });
 
   it('Should show long helper text when no region is selected', () => {
-    renderWithTheme(<DatabaseVPCSelector {...mockProps} selectedRegionId="" />);
+    renderWithTheme(<DatabaseDetailVPC {...mockProps} selectedRegionId="" />);
     const expectedHelperText = screen.getByText(initialHelperText, {
       exact: true,
     });
@@ -322,7 +322,7 @@ describe('DatabaseVPCSelector', () => {
     queryMocks.useAllVPCsQuery.mockReturnValue({ data: [], isLoading: false });
 
     renderWithTheme(
-      <DatabaseVPCSelector {...mockProps} selectedRegionId="us-east" />
+      <DatabaseDetailVPC {...mockProps} selectedRegionId="us-east" />
     );
 
     const expectedHelperText = screen.getByText(altHelperText, { exact: true });
@@ -341,7 +341,7 @@ describe('DatabaseVPCSelector', () => {
     });
 
     renderWithTheme(
-      <DatabaseVPCSelector {...mockProps} selectedRegionId="us-east" />
+      <DatabaseDetailVPC {...mockProps} selectedRegionId="us-east" />
     );
     const expectedAltHelperText = screen.queryByText(altHelperText);
     const expectedInitialHelperText = screen.queryByText(initialHelperText);
@@ -364,7 +364,7 @@ describe('DatabaseVPCSelector', () => {
     };
 
     renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         errors={mockErrors}
         privateNetworkValues={mockPrivateNetwork}
@@ -393,7 +393,7 @@ describe('DatabaseVPCSelector', () => {
     };
 
     renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         errors={mockErrors}
         privateNetworkValues={mockPrivateNetwork}
@@ -419,7 +419,7 @@ describe('DatabaseVPCSelector', () => {
     };
 
     renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onChange={onChange}
         privateNetworkValues={mockPrivateNetwork}
@@ -454,7 +454,7 @@ describe('DatabaseVPCSelector', () => {
     };
 
     renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onChange={onChange}
         privateNetworkValues={mockPrivateNetwork}
@@ -491,7 +491,7 @@ describe('DatabaseVPCSelector', () => {
     };
 
     renderWithTheme(
-      <DatabaseVPCSelector
+      <DatabaseDetailVPC
         {...mockProps}
         onChange={onChange}
         privateNetworkValues={mockPrivateNetwork}

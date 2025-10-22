@@ -7,7 +7,7 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { DatabaseVPCSelector } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseVPCSelector';
+import { DatabaseDetailVPC } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseDetailVPC';
 
 import type { Database, UpdateDatabasePayload, VPC } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
@@ -110,7 +110,7 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DatabaseVPCSelector region={database?.region ?? ''} />
+          <DatabaseDetailVPC region={database?.region ?? ''} />
           <Box
             sx={(theme: Theme) => ({
               marginTop: theme.spacingFunction(50),

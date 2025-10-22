@@ -9,30 +9,44 @@ import {
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import type { Control, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { DatabaseCreateValues } from './DatabaseCreate';
-import type { VPC } from '@linode/api-v4';
+import type { PrivateNetwork, VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
-interface DatabaseVPCSelectorProps {
-  onChange: (selectedVPC: null | VPC) => void;
+interface NetworkValues {
+  private_network?: null | PrivateNetwork;
 }
 
-export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
-  const { onChange } = props;
-  const flags = useFlags();
-  const { control, setValue } = useFormContext<DatabaseCreateValues>();
+interface DatabaseVPCProps {
+  control: Control<NetworkValues>;
+  mode: 'create' | 'networking';
+  onChange?: (selectedVPC: null | VPC) => void;
+  region: string;
+  setValue: UseFormSetValue<NetworkValues>;
+  subnetId: null | number;
+  trigger: UseFormTrigger<NetworkValues>;
+  vpcId: null | number;
+}
 
-  const [region, vpcId, subnetId] = useWatch({
+export const DatabaseVPC = (props: DatabaseVPCProps) => {
+  const {
+    onChange,
+    setValue,
+    trigger,
     control,
-    name: ['region', 'private_network.vpc_id', 'private_network.subnet_id'],
-  });
+    region,
+    vpcId,
+    subnetId,
+    mode,
+  } = props;
+  const flags = useFlags();
 
   const { data: selectedRegion } = useRegionQuery(region);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');
@@ -40,7 +54,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
   const {
     data: vpcs,
     error: vpcsError,
-    isLoading,
+    isLoading: vpcsLoading,
   } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region },
@@ -95,14 +109,15 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
               errorText={vpcErrorMessage || fieldState.error?.message}
               helperText={disableVPCSelectors ? vpcHelperTextCopy : undefined}
               label="VPC"
-              loading={isLoading}
+              loading={vpcsLoading}
               noOptionsText="There are no VPCs in the selected region."
               onChange={(e, value) => {
                 setValue('private_network.subnet_id', null); // Always reset subnet selection when VPC changes
+                trigger('private_network.subnet_id');
                 if (!value) {
                   setValue('private_network.public_access', false);
                 }
-                onChange(value ?? null); // Update VPC in DatabaseCreate.tsx
+                onChange?.(value ?? null); // Update VPC in DatabaseCreate.tsx
                 field.onChange(value?.id ?? null);
               }}
               options={vpcs ?? []}
@@ -131,6 +146,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
                 label="Subnet"
                 onChange={(e, value) => {
                   field.onChange(value?.id ?? null);
+                  trigger('private_network.subnet_id');
                 }}
                 options={selectedVPC?.subnets ?? []}
                 placeholder="Select a subnet"
@@ -175,13 +191,15 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
           </Box>
         </>
       ) : (
-        <Notice
-          sx={(theme: Theme) => ({
-            marginTop: theme.spacingFunction(20),
-          })}
-          text="The cluster will have public access by default if a VPC is not assigned."
-          variant="info"
-        />
+        mode === 'create' && (
+          <Notice
+            sx={(theme: Theme) => ({
+              marginTop: theme.spacingFunction(20),
+            })}
+            text="The cluster will have public access by default if a VPC is not assigned."
+            variant="info"
+          />
+        )
       )}
     </>
   );
