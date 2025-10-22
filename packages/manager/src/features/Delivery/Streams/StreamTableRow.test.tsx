@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { streamFactory } from 'src/factories/delivery';
+import { streamFactory } from 'src/factories';
 import { StreamTableRow } from 'src/features/Delivery/Streams/StreamTableRow';
 import {
   mockMatchMedia,
