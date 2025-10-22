@@ -24,6 +24,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { AssociatedEntityType } from '../shared/types';
+import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type {
   Alert,
   APIError,
@@ -401,19 +402,19 @@ export const useIsAclpSupportedRegion = (
 
 /**
  * @param dashboardId The id of the dashboard
- * @returns The associated entity type for the dashboard
+ * @returns The resources filter configuration for the dashboard
  */
-export const getAssociatedEntityType = (dashboardId: number | undefined) => {
+export const getResourcesFilterConfig = (
+  dashboardId: number | undefined
+): CloudPulseServiceTypeFiltersConfiguration | undefined => {
   if (!dashboardId) {
-    return 'both';
+    return undefined;
   }
   // Get the associated entity type for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
-  return (
-    filterConfig?.filters.find(
-      (filter) => filter.configuration.filterKey === RESOURCE_ID
-    )?.configuration.associatedEntityType ?? 'both'
-  );
+  return filterConfig?.filters.find(
+    (filter) => filter.configuration.filterKey === RESOURCE_ID
+  )?.configuration;
 };
 
 /**

@@ -25,8 +25,8 @@ import {
   arePortsValid,
   areValidInterfaceIds,
   filterFirewallResources,
-  getAssociatedEntityType,
   getEnabledServiceTypes,
+  getResourcesFilterConfig,
   isValidPort,
   useIsAclpSupportedRegion,
   validationFunction,
@@ -345,17 +345,23 @@ describe('getEnabledServiceTypes', () => {
     expect(result).not.toContain('linode');
   });
 
-  describe('getAssociatedEntityType', () => {
-    it('should return both if the dashboard id is not provided', () => {
-      expect(getAssociatedEntityType(undefined)).toBe('both');
+  describe('getResourcesFilterConfig', () => {
+    it('should return undefined if the dashboard id is not provided', () => {
+      expect(getResourcesFilterConfig(undefined)).toBeUndefined();
     });
 
-    it('should return the associated entity type for linode firewall dashboard', () => {
-      expect(getAssociatedEntityType(4)).toBe('linode');
+    it('should return the resources filter configuration for the linode-firewalldashboard', () => {
+      const resourcesFilterConfig = getResourcesFilterConfig(4);
+      expect(resourcesFilterConfig).toBeDefined();
+      expect(resourcesFilterConfig?.associatedEntityType).toBe('linode');
+      expect(resourcesFilterConfig?.filterFn).toBeDefined();
     });
 
-    it('should return the associated entity type for nodebalancer firewall dashboard', () => {
-      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
+    it('should return the resources filter configuration for the nodebalancer-firewall dashboard', () => {
+      const resourcesFilterConfig = getResourcesFilterConfig(8);
+      expect(resourcesFilterConfig).toBeDefined();
+      expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
+      expect(resourcesFilterConfig?.filterFn).toBeDefined();
     });
   });
 
