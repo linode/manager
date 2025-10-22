@@ -1,6 +1,5 @@
 import {
   type Destination,
-  type DestinationDetails,
   type DestinationDetailsPayload,
   isEmpty,
   type Stream,
@@ -16,6 +15,7 @@ import {
 } from 'src/features/Delivery/Shared/types';
 
 import type {
+  DestinationDetailsForm,
   FormMode,
   LabelValueOption,
 } from 'src/features/Delivery/Shared/types';
@@ -52,7 +52,7 @@ export const getStreamPayloadDetails = (
 };
 
 export const getDestinationPayloadDetails = (
-  details: DestinationDetails
+  details: DestinationDetailsForm
 ): DestinationDetailsPayload => {
   if ('path' in details && details.path === '') {
     return omitProps(details, ['path']);

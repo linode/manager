@@ -145,7 +145,10 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               setValue('stream.destinations', id ? [id] : []);
               const selectedDestination = id ? findDestination(id) : undefined;
               if (selectedDestination) {
-                setValue('destination.details', selectedDestination.details);
+                setValue('destination.details', {
+                  ...selectedDestination.details,
+                  access_key_secret: '',
+                });
               } else {
                 clearErrors('destination.details');
               }
