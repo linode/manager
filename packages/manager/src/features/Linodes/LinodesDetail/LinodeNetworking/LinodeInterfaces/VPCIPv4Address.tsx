@@ -54,6 +54,7 @@ export const VPCIPv4Address = (props: Props) => {
         />
         <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
       </Stack>
+      {/* Not sure about the condition below. We should double check this... */}
       {fieldValue !== autoAssignIdentifier && fieldValue !== undefined && (
         <TextField
           containerProps={{ sx: { mb: 1.5, mt: 1 } }}
