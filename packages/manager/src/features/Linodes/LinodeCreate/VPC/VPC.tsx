@@ -160,7 +160,7 @@ export const VPC = () => {
 
                   // Clear any previously selected dual-stack values if the current vpc is not dual-stack
                   if (isDualStackEnabled && !vpc?.ipv6) {
-                    setValue(`interfaces.0.vpc.ipv6`, undefined);
+                    setValue(`interfaces.0.ipv6`, undefined);
                   }
 
                   // Capture analytics
