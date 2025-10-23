@@ -14,19 +14,25 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi.fn().mockReturnValue({
+    isDefaultDelegationRolesForChildAccount: false,
+  }),
 }));
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
+    useGetDefaultDelegationAccessQuery:
+      queryMocks.useGetDefaultDelegationAccessQuery,
   };
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAllAccountEntities: queryMocks.useAllAccountEntities,
@@ -40,6 +46,11 @@ vi.mock('@tanstack/react-router', async () => {
     useParams: queryMocks.useParams,
   };
 });
+
+vi.mock('../../hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
+}));
 
 const mockEntities = [
   accountEntityFactory.build({
@@ -171,6 +182,14 @@ describe('AssignedRolesTable', () => {
   });
 
   it('should show different button text for default roles view', async () => {
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+
+    queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
+      data: mockUserRoles,
+    });
+
     queryMocks.useAccountRoles.mockReturnValue({
       data: mockAccountRoles,
     });
