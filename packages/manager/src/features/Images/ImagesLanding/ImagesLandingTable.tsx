@@ -351,7 +351,7 @@ export const ImagesLandingTable = () => {
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
   const onTabChange = (index: number) => {
-    // Update the "subType" query param. (This switches between "My custom images" and "Shared with me" and "Recovery images" tabs).
+    // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
     navigate({
       to: `/images/images`,
       search: {
