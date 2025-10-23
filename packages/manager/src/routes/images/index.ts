@@ -63,36 +63,6 @@ const imagesImagesRoute = createRoute({
   )
 );
 
-// const imagesCustomRoute = createRoute({
-//   getParentRoute: () => imagesRoute,
-//   path: 'custom',
-//   validateSearch: (search: ImagesSearchParams) => search,
-// }).lazy(() =>
-//   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
-//     (m) => m.imagesLandingLazyRoute
-//   )
-// );
-
-// const imagesSharedRoute = createRoute({
-//   getParentRoute: () => imagesRoute,
-//   path: 'shared',
-//   validateSearch: (search: ImagesSearchParams) => search,
-// }).lazy(() =>
-//   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
-//     (m) => m.imagesLandingLazyRoute
-//   )
-// );
-
-// const imagesRecoveryRoute = createRoute({
-//   getParentRoute: () => imagesRoute,
-//   path: 'recovery',
-//   validateSearch: (search: ImagesSearchParams) => search,
-// }).lazy(() =>
-//   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
-//     (m) => m.imagesLandingLazyRoute
-//   )
-// );
-
 const imagesShareGroupsRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: 'sharegroups',
@@ -174,9 +144,6 @@ export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute,
   imageActionRoute,
   imagesImagesRoute,
-  // imagesCustomRoute,
-  // imagesSharedRoute,
-  // imagesRecoveryRoute,
   imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
