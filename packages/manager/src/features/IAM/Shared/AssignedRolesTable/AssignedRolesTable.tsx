@@ -87,17 +87,14 @@ export const AssignedRolesTable = (props: Props) => {
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
-  const shouldFetchDefaultRoles =
-    isDefaultDelegationRolesForChildAccount && !username;
-  const shouldFetchUserRoles =
-    !isDefaultDelegationRolesForChildAccount && permissions?.is_account_admin;
-
   const { data: defaultRolesData, isLoading: defaultRolesLoading } =
-    useGetDefaultDelegationAccessQuery({ enabled: shouldFetchDefaultRoles });
+    useGetDefaultDelegationAccessQuery({
+      enabled: isDefaultDelegationRolesForChildAccount,
+    });
 
   const { data: userRolesData, isLoading: userRolesLoading } = useUserRoles(
     username ?? '',
-    shouldFetchUserRoles
+    !isDefaultDelegationRolesForChildAccount
   );
 
   const assignedRoles = isDefaultDelegationRolesForChildAccount
@@ -432,14 +429,11 @@ export const AssignedRolesTable = (props: Props) => {
       />
       <AssignNewRoleDrawer
         assignedRoles={assignedRoles}
-        isDefaultRolesView={isDefaultDelegationRolesForChildAccount}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
         username={username}
       />
       <ChangeRoleDrawer
-        assignedRoles={assignedRoles}
-        isDefaultRolesView={isDefaultDelegationRolesForChildAccount}
         mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
@@ -447,8 +441,6 @@ export const AssignedRolesTable = (props: Props) => {
         username={username}
       />
       <UnassignRoleConfirmationDialog
-        assignedRoles={assignedRoles}
-        isDefaultRolesView={isDefaultDelegationRolesForChildAccount}
         onClose={() => setIsUnassignRoleDialogOpen(false)}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}

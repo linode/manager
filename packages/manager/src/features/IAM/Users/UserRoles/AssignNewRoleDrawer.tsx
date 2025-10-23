@@ -1,5 +1,8 @@
 import {
+  delegationQueries,
+  iamQueries,
   useAccountRoles,
+  useQueryClient,
   useUpdateDefaultDelegationAccessQuery,
   useUserRolesMutation,
 } from '@linode/queries';
@@ -20,6 +23,7 @@ import { Link } from 'src/components/Link';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
@@ -36,7 +40,6 @@ import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
   assignedRoles?: IamUserRoles;
-  isDefaultRolesView?: boolean;
   onClose: () => void;
   open: boolean;
   username?: string;
@@ -44,15 +47,16 @@ interface Props {
 
 export const AssignNewRoleDrawer = ({
   assignedRoles,
-  isDefaultRolesView = false,
   username,
   onClose,
   open,
 }: Props) => {
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const { data: accountRoles } = useAccountRoles();
-
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
       roles: [
@@ -103,12 +107,21 @@ export const AssignNewRoleDrawer = ({
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
+      const queryKey = iamQueries.user(username ?? '')._ctx.roles.queryKey;
+      const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
+      const currentDefaultRoles = queryClient.getQueryData<IamUserRoles>(
+        delegationQueries.defaultAccess.queryKey
+      );
       const mergedRoles = mergeAssignedRolesIntoExistingRoles(
         values,
-        structuredClone(assignedRoles)
+        structuredClone(currentRoles)
       );
-      if (isDefaultRolesView) {
-        await updateDefaultRoles(mergedRoles);
+      if (isDefaultDelegationRolesForChildAccount) {
+        const mergedDefaultRoles = mergeAssignedRolesIntoExistingRoles(
+          values,
+          structuredClone(currentDefaultRoles)
+        );
+        await updateDefaultRoles(mergedDefaultRoles);
       } else {
         if (!username) {
           return;
@@ -141,7 +154,11 @@ export const AssignNewRoleDrawer = ({
     <Drawer
       onClose={handleClose}
       open={open}
-      title={isDefaultRolesView ? 'Add New Default Roles' : 'Assign New Roles'}
+      title={
+        isDefaultDelegationRolesForChildAccount
+          ? 'Add New Default Roles'
+          : 'Assign New Roles'
+      }
     >
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -150,7 +167,7 @@ export const AssignNewRoleDrawer = ({
           )}
 
           <Typography sx={{ marginBottom: 2.5 }}>
-            {isDefaultRolesView
+            {isDefaultDelegationRolesForChildAccount
               ? 'Select roles to be assigned to new delegate users by default. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'
               : 'Select a role you want to assign to a user. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'}{' '}
             <Link to={ROLES_LEARN_MORE_LINK}>
@@ -202,7 +219,9 @@ export const AssignNewRoleDrawer = ({
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              label: isDefaultRolesView ? 'Add Default Roles' : 'Assign',
+              label: isDefaultDelegationRolesForChildAccount
+                ? 'Add Default Roles'
+                : 'Assign',
               type: 'submit',
               loading:
                 isUserRolesPending ||

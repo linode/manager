@@ -1,6 +1,8 @@
 import {
   useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
   useUpdateDefaultDelegationAccessQuery,
+  useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
 import {
@@ -16,6 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import {
@@ -29,11 +32,8 @@ import {
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { RolesType } from '../utilities';
-import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
-  assignedRoles?: IamUserRoles;
-  isDefaultRolesView?: boolean;
   mode: DrawerModes;
   onClose: () => void;
   open: boolean;
@@ -47,19 +47,34 @@ export const ChangeRoleDrawer = ({
   open,
   role,
   username,
-  assignedRoles,
-  isDefaultRolesView,
 }: Props) => {
   const theme = useTheme();
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+  const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
+
+  const { data: userRolesData } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
   const { mutateAsync: updateUserRoles } = useUserRolesMutation(username || '');
 
   const { mutateAsync: updateDefaultRoles } =
     useUpdateDefaultDelegationAccessQuery();
 
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultRoles
+    : updateUserRoles;
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
       return [];
@@ -143,11 +158,7 @@ export const ChangeRoleDrawer = ({
         newRole,
       });
 
-      if (isDefaultRolesView) {
-        await updateDefaultRoles(updatedUserRoles);
-      } else {
-        await updateUserRoles(updatedUserRoles);
-      }
+      await mutationFn(updatedUserRoles);
 
       handleClose();
     } catch (errors) {

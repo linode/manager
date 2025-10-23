@@ -27,7 +27,7 @@ export const UpdateEntitiesDrawer = ({
 }: Props) => {
   const theme = useTheme();
 
-  const { data: assignedRoles } = useUserRoles(username || '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
   const { mutateAsync: updateUserRoles } = useUserRolesMutation(username || '');
 

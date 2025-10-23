@@ -1,5 +1,7 @@
 import {
+  useGetDefaultDelegationAccessQuery,
   useUpdateDefaultDelegationAccessQuery,
+  useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
@@ -8,14 +10,12 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { deleteUserRole, getErrorMessage } from '../utilities';
 
 import type { ExtendedRoleView } from '../types';
-import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
-  assignedRoles?: IamUserRoles;
-  isDefaultRolesView?: boolean;
   onClose: () => void;
   onSuccess?: () => void;
   open: boolean;
@@ -24,17 +24,22 @@ interface Props {
 }
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
-  const {
-    onClose: _onClose,
-    onSuccess,
-    open,
-    role,
-    username,
-    assignedRoles,
-    isDefaultRolesView = false,
-  } = props;
+  const { onClose: _onClose, onSuccess, open, role, username } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+  const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
 
+  const { data: userRolesData } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
   const {
     error,
     isPending,
@@ -60,7 +65,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       initialRole,
     });
 
-    if (isDefaultRolesView) {
+    if (isDefaultDelegationRolesForChildAccount) {
       await updateDefaultRoles(updatedUserRoles);
     } else {
       await updateUserRoles(updatedUserRoles);
