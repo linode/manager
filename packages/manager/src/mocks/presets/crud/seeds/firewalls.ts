@@ -1,6 +1,6 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { firewallFactory } from 'src/factories';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { MockSeeder, MockState } from 'src/mocks/types';
@@ -19,6 +19,8 @@ export const firewallSeeder: MockSeeder = {
       dbEntities: await mswDB.getAll('firewalls'),
       seedEntities: firewallFactory.buildList(count),
     });
+
+    addToEntities(mockState, 'firewalls', firewallSeeds);
 
     const updatedMockState = {
       ...mockState,

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { destinationFactory } from 'src/factories';
 import { StreamCreate } from 'src/features/Delivery/Streams/StreamForm/StreamCreate';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -25,9 +25,8 @@ describe('StreamCreate', () => {
             details: {},
           },
           destination: {
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
             details: {
-              region: '',
               path: '',
             },
           },
@@ -60,13 +59,6 @@ describe('StreamCreate', () => {
         await userEvent.type(hostInput, 'Test');
         const bucketInput = screen.getByLabelText('Bucket');
         await userEvent.type(bucketInput, 'Test');
-        const regionAutocomplete = screen.getByLabelText('Region');
-        await userEvent.click(regionAutocomplete);
-        await userEvent.type(regionAutocomplete, 'US, Chi');
-        const chicagoRegion = await screen.findByText(
-          'US, Chicago, IL (us-ord)'
-        );
-        await userEvent.click(chicagoRegion);
         const accessKeyIDInput = screen.getByLabelText('Access Key ID');
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');

@@ -1,3 +1,18 @@
+## [2025-10-21] - v0.11.0
+
+
+### Added:
+
+- `Block Storage` to ap-west's `monitors.metrics` field in `regions` ([#12931](https://github.com/linode/manager/pull/12931))
+
+
+## [2025-10-07] - v0.10.0
+
+
+### Added:
+
+- Added `regionVPCAvailabilityFactory` in regions.ts ([#12919](https://github.com/linode/manager/pull/12919))
+
 ## [2025-09-23] - v0.9.0
 
 ### Changed:

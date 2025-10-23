@@ -312,3 +312,51 @@ export const firewallMetricRulesFactory =
       },
     ],
   });
+
+export const objectStorageMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'All requests',
+    metric: 'obj_requests_num',
+    unit: 'Count',
+    aggregate_function: 'sum',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'Endpoint',
+        dimension_label: 'endpoint',
+        operator: 'eq',
+        value: 'us-iad-1.linodeobjects.com',
+      },
+      {
+        label: 'Endpoint',
+        dimension_label: 'endpoint',
+        operator: 'in',
+        value: 'ap-west-1.linodeobjects.com,us-iad-1.linodeobjects.com',
+      },
+    ],
+  });
+
+export const objectStorageMetricRules: MetricDefinition[] = [
+  {
+    label: 'All requests',
+    metric_type: 'gauge',
+    metric: 'obj_requests_num',
+    unit: 'Count',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['sum'],
+    dimensions: [
+      {
+        label: 'Endpoint',
+        dimension_label: 'endpoint',
+        values: [],
+      },
+      {
+        label: 'Request type',
+        dimension_label: 'request_type',
+        values: ['head', 'get', 'put', 'delete', 'list', 'other'],
+      },
+    ],
+  },
+];

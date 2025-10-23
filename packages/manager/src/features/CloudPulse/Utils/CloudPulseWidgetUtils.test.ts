@@ -216,6 +216,23 @@ describe('getDimensionName method', () => {
     expect(result).toBe('123');
   });
 
+  it('returns the associated nodebalancer label as is when key is nodebalancer_id', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      resources: [
+        {
+          id: '123',
+          label: 'firewall-1',
+          entities: { a: 'nodebalancer-1' },
+        },
+      ],
+      serviceType: 'firewall',
+      metric: { nodebalancer_id: 'a' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('nodebalancer-1');
+  });
+
   it('returns the transformed dimension value according to the service type', () => {
     const props = {
       ...baseProps,
@@ -253,14 +270,14 @@ it('test mapResourceIdToName method', () => {
 
 describe('getTimeDurationFromPreset method', () => {
   it('should return correct time duration for Last Day preset', () => {
-    const result = getTimeDurationFromPreset('last day');
+    const result = getTimeDurationFromPreset('Last day');
     expect(result).toStrictEqual({
       unit: 'days',
       value: 1,
     });
   });
 
-  it('shoult return undefined of invalid preset', () => {
+  it('should return undefined for invalid preset', () => {
     const result = getTimeDurationFromPreset('15min');
     expect(result).toBe(undefined);
   });

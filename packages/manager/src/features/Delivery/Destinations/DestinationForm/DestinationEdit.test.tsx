@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { destinationFactory } from 'src/factories';
 import { DestinationEdit } from 'src/features/Delivery/Destinations/DestinationForm/DestinationEdit';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -47,15 +47,12 @@ describe('DestinationEdit', () => {
     expect(loadingElement).toBeInTheDocument();
     await waitForElementToBeRemoved(loadingElement);
 
-    assertInputHasValue('Destination Type', 'Linode Object Storage');
+    assertInputHasValue('Destination Type', 'Akamai Object Storage');
     await waitFor(() => {
       assertInputHasValue('Destination Name', 'Destination 123');
     });
     assertInputHasValue('Host', '3000');
     assertInputHasValue('Bucket', 'Bucket Name');
-    await waitFor(() => {
-      assertInputHasValue('Region', 'US, Chicago, IL (us-ord)');
-    });
     assertInputHasValue('Access Key ID', 'Access Id');
     assertInputHasValue('Secret Access Key', 'Access Secret');
     assertInputHasValue('Log Path Prefix', 'file');

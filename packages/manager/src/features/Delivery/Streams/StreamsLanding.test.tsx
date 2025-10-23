@@ -1,9 +1,9 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { streamFactory } from 'src/factories/delivery';
+import { streamFactory } from 'src/factories';
 import { StreamsLanding } from 'src/features/Delivery/Streams/StreamsLanding';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -144,6 +144,12 @@ describe('Streams Landing Table', () => {
     await userEvent.click(screen.getByText(itemText));
   };
 
+  const checkClosedModal = async (modal: HTMLElement) => {
+    await waitFor(() => {
+      expect(modal).not.toBeInTheDocument();
+    });
+  };
+
   describe('given action menu', () => {
     beforeEach(() => {
       queryMocks.useStreamsQuery.mockReturnValue({
@@ -170,7 +176,7 @@ describe('Streams Landing Table', () => {
       });
     });
 
-    describe('when Disable clicked', () => {
+    describe('when Deactivate clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({
@@ -179,7 +185,7 @@ describe('Streams Landing Table', () => {
 
         renderComponent();
         await clickOnActionMenu();
-        await clickOnActionMenuItem('Disable');
+        await clickOnActionMenuItem('Deactivate');
 
         expect(mockUpdateStreamMutation).toHaveBeenCalledWith({
           id: 1,
@@ -191,7 +197,7 @@ describe('Streams Landing Table', () => {
       });
     });
 
-    describe('when Enable clicked', () => {
+    describe('when Activate clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({
@@ -201,7 +207,7 @@ describe('Streams Landing Table', () => {
         stream.status = 'inactive';
         renderComponent();
         await clickOnActionMenu();
-        await clickOnActionMenuItem('Enable');
+        await clickOnActionMenuItem('Activate');
 
         expect(mockUpdateStreamMutation).toHaveBeenCalledWith({
           id: 1,
@@ -224,9 +230,30 @@ describe('Streams Landing Table', () => {
         await clickOnActionMenu();
         await clickOnActionMenuItem('Delete');
 
+        const deleteStreamModal = screen.getByText('Delete Stream');
+        expect(deleteStreamModal).toBeInTheDocument();
+
+        // get modal Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteStreamModal);
+
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // get delete Stream button
+        const deleteStreamButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteStreamButton);
+
         expect(mockDeleteStreamMutation).toHaveBeenCalledWith({
           id: 1,
         });
+
+        await checkClosedModal(deleteStreamModal);
       });
     });
   });

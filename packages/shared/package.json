@@ -1,6 +1,6 @@
 {
   "name": "@linode/shared",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Linode shared feature component library",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -47,6 +47,6 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.6",
-    "vite-plugin-svgr": "^3.2.0"
+    "vite-plugin-svgr": "^4.5.0"
   }
 }

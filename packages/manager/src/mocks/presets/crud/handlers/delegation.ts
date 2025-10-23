@@ -1,3 +1,4 @@
+// import { childAccountFactory } from '@linode/utilities';
 import { http } from 'msw';
 
 import { accountFactory } from 'src/factories/account';
@@ -85,14 +86,20 @@ export const getDelegatedChildAccountsForUser = () => [
         return makeNotFoundResponse();
       }
 
-      const userDelegations = delegations.filter(
-        (d) => d.username === username
-      );
+      const userDelegations =
+        delegations.filter((d) => d.username === username) || [];
 
       return makePaginatedResponse({
-        data: childAccounts.filter((account) =>
-          userDelegations.some((d) => d.childAccountEuuid === account.euuid)
-        ),
+        data:
+          userDelegations.length === 0 && childAccounts?.length > 0
+            ? [childAccounts[0]]
+            : childAccounts.filter((account) =>
+                userDelegations.some(
+                  (d) => d.childAccountEuuid === account.euuid
+                )
+              ),
+        // comment out to get a larger dataset
+        // data: childAccountFactory.buildList(300),
         request,
       });
     }
@@ -136,8 +143,7 @@ export const childAccountDelegates = (mockState: MockState) => [
       StrictResponse<APIErrorResponse | APIPaginatedResponse<string>>
     > => {
       const euuid = params.euuid as string;
-      const requestData = (await request.json()) as { users: string[] };
-      const newUsernames = requestData?.users || [];
+      const newUsernames = (await request.json()) as string[];
 
       // Get current delegations
       const allDelegations = await mswDB.getAll('delegations');
@@ -287,12 +293,12 @@ export const defaultDelegationAccess = () => [
         ],
         entity_access: [
           {
-            id: 12345678,
+            id: 1,
             type: 'linode' as const,
             roles: ['linode_contributor'],
           },
           {
-            id: 45678901,
+            id: 1,
             type: 'firewall' as const,
             roles: ['firewall_admin'],
           },

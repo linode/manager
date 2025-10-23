@@ -19,8 +19,10 @@ import {
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
+  RESOURCE_ID,
   VALID_OPERATORS,
 } from './constants';
+import { FILTER_CONFIG } from './FilterConfig';
 
 import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
@@ -451,4 +453,21 @@ export const getFilteredDimensions = (
         isValidFilter(filter, mergedDimensions ?? [])
       )
     : [];
+};
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The associated entity type for the dashboard
+ */
+export const getAssociatedEntityType = (dashboardId: number | undefined) => {
+  if (!dashboardId) {
+    return 'both';
+  }
+  // Get the associated entity type for the dashboard
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  return (
+    filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === RESOURCE_ID
+    )?.configuration.associatedEntityType ?? 'both'
+  );
 };

@@ -1,3 +1,40 @@
+## [2025-10-21] - v0.151.0
+
+
+### Added:
+
+- Volume io_ready property ([#12903](https://github.com/linode/manager/pull/12903))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` type and `capabilityServiceTypeMapping` constant in `types.ts` ([#12931](https://github.com/linode/manager/pull/12931))
+
+### Changed:
+
+- DatabaseInstance interface host prop to include null type ([#12976](https://github.com/linode/manager/pull/12976))
+
+### Upcoming Features:
+
+- ACLP: add `groupBy` in `AclpWidget` interface of cloudpulse types ([#12969](https://github.com/linode/manager/pull/12969))
+
+## [2025-10-07] - v0.150.0
+
+
+### Added:
+
+- IAM Parent/Child - Implement new delegation types and endpoints definitions ([#12895](https://github.com/linode/manager/pull/12895))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` and constant `capabilityServiceTypeMapping` at `types.ts` ([#12905](https://github.com/linode/manager/pull/12905))
+- Region VPC availability types and endpoints ([#12919](https://github.com/linode/manager/pull/12919))
+
+### Changed:
+
+- All kubernetes endpoints from `/v4` to `/v4beta`; clean up duplicate endpoints ([#12867](https://github.com/linode/manager/pull/12867))
+- CloudPulse-Alerts: Update `CloudPulseAlertsPayload` in types.ts ([#12870](https://github.com/linode/manager/pull/12870))
+- ACLP: update `group_by` property to optional for `Widgets` and `CloudPulseMetricRequest` interface ([#12887](https://github.com/linode/manager/pull/12887))
+- CloudPulse-Metrics: Update `CloudPulseMetricsRequest` and `JWETokenPayLoad` type at `types.ts` ([#12912](https://github.com/linode/manager/pull/12912))
+
+### Upcoming Features:
+
+- Update Destination's details interface ([#12851](https://github.com/linode/manager/pull/12851))
+- Logs Delivery Stream details type update and UpdateDestinationPayload update according to API docs ([#12898](https://github.com/linode/manager/pull/12898))
+
 ## [2025-09-23] - v0.149.0
 
 ### Added:

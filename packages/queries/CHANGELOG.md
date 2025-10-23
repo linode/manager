@@ -1,3 +1,32 @@
+## [2025-10-21] - v0.16.0
+
+### Added:
+
+- `useAllGetDelegatedChildAccountsForUserQuery` for IAM User Delegation ([#12920](https://github.com/linode/manager/pull/12920))
+
+## [2025-10-07] - v0.15.0
+
+
+### Added:
+
+- IAM RBAC: useAllAccountEntities to fetch all pages client-side via getAll, preventing missing items on large accounts ([#12888](https://github.com/linode/manager/pull/12888))
+- IAM Parent/Child - Implement new delegation query hooks ([#12895](https://github.com/linode/manager/pull/12895))
+- IAM Delegation: useAllListMyDelegatedChildAccountsQuery to fetch all data ([#12913](https://github.com/linode/manager/pull/12913))
+- Region VPC availability queries ([#12919](https://github.com/linode/manager/pull/12919))
+
+### Changed:
+
+- ACLP: update metric definition queries cache time to inifinity ([#12887](https://github.com/linode/manager/pull/12887))
+
+### Removed:
+
+- `isUsingBetaEndpoint` logic for kubernetes queries since all kubernetes endpoints
+now use /v4beta ([#12867](https://github.com/linode/manager/pull/12867))
+
+### Upcoming Features:
+
+- Logs Delivery Streams/Destinations update useAll queries ([#12802](https://github.com/linode/manager/pull/12802))
+
 ## [2025-09-23] - v0.14.0
 
 ### Upcoming Features:
