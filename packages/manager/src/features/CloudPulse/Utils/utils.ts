@@ -5,6 +5,11 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import {
+  type FetchOptions,
+  valueFieldConfig,
+} from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
   INTERFACE_ID,
@@ -20,11 +25,9 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
   RESOURCE_ID,
-  VALID_OPERATORS,
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
-import { valueFieldConfig, type FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
@@ -46,7 +49,6 @@ import type {
   StatWithDummyPoint,
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
-import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 
 interface AclpSupportedRegionProps {
   /**

@@ -145,11 +145,3 @@ export const GLOBAL_DIMENSION_FILTER_LIST: Record<
   objectstorage: ['endpoint'],
   blockstorage: [],
 };
-
-export const VALID_OPERATORS: MetricsDimensionFilterOperatorType[] = [
-  'endswith',
-  'eq',
-  'in',
-  'neq',
-  'startswith',
-];
