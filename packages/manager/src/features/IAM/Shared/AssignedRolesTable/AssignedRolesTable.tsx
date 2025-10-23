@@ -1,4 +1,8 @@
-import { useAccountRoles } from '@linode/queries';
+import {
+  useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
+  useUserRoles,
+} from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -17,7 +21,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
-import { useAssignedRoles } from '../../hooks/useAssignedRoles';
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -74,16 +78,36 @@ export const AssignedRolesTable = (props: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const { assignedRoles, assignedRolesLoading, isDefaultRolesView } =
-    useAssignedRoles(username);
-
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
+  // Determine if we're on the default roles view based on delegation role and path
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+
+  const shouldFetchDefaultRoles =
+    isDefaultDelegationRolesForChildAccount && !username;
+  const shouldFetchUserRoles =
+    !isDefaultDelegationRolesForChildAccount && permissions?.is_account_admin;
+
+  const { data: defaultRolesData, isLoading: defaultRolesLoading } =
+    useGetDefaultDelegationAccessQuery({ enabled: shouldFetchDefaultRoles });
+
+  const { data: userRolesData, isLoading: userRolesLoading } = useUserRoles(
+    username ?? '',
+    shouldFetchUserRoles
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
+  const assignedRolesLoading = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesLoading
+    : userRolesLoading;
   const pagination = usePaginationV2({
-    currentRoute: isDefaultRolesView
+    currentRoute: isDefaultDelegationRolesForChildAccount
       ? '/iam/roles/defaults/roles'
       : '/iam/users/$username/roles',
     initialPage: 1,
@@ -393,7 +417,9 @@ export const AssignedRolesTable = (props: Props) => {
                 : undefined
             }
           >
-            {isDefaultRolesView ? 'Add New Default Roles' : 'Assign New Roles'}
+            {isDefaultDelegationRolesForChildAccount
+              ? 'Add New Default Roles'
+              : 'Assign New Roles'}
           </Button>
         </Grid>
       </Grid>
@@ -406,14 +432,14 @@ export const AssignedRolesTable = (props: Props) => {
       />
       <AssignNewRoleDrawer
         assignedRoles={assignedRoles}
-        isDefaultRolesView={isDefaultRolesView}
+        isDefaultRolesView={isDefaultDelegationRolesForChildAccount}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
         username={username}
       />
       <ChangeRoleDrawer
         assignedRoles={assignedRoles}
-        isDefaultRolesView={isDefaultRolesView}
+        isDefaultRolesView={isDefaultDelegationRolesForChildAccount}
         mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
@@ -422,7 +448,7 @@ export const AssignedRolesTable = (props: Props) => {
       />
       <UnassignRoleConfirmationDialog
         assignedRoles={assignedRoles}
-        isDefaultRolesView={isDefaultRolesView}
+        isDefaultRolesView={isDefaultDelegationRolesForChildAccount}
         onClose={() => setIsUnassignRoleDialogOpen(false)}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
