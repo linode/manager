@@ -1,4 +1,3 @@
-import type { MetricsDimensionFilterOperatorType } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceType, Filter } from '@linode/api-v4';
 
 export const DASHBOARD_ID = 'dashboardId';
