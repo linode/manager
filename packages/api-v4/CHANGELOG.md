@@ -1,3 +1,19 @@
+## [2025-10-21] - v0.151.0
+
+
+### Added:
+
+- Volume io_ready property ([#12903](https://github.com/linode/manager/pull/12903))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` type and `capabilityServiceTypeMapping` constant in `types.ts` ([#12931](https://github.com/linode/manager/pull/12931))
+
+### Changed:
+
+- DatabaseInstance interface host prop to include null type ([#12976](https://github.com/linode/manager/pull/12976))
+
+### Upcoming Features:
+
+- ACLP: add `groupBy` in `AclpWidget` interface of cloudpulse types ([#12969](https://github.com/linode/manager/pull/12969))
+
 ## [2025-10-07] - v0.150.0
 
 
