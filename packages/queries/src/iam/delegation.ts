@@ -331,11 +331,11 @@ export const useGenerateChildAccountTokenQuery = (): UseMutationResult<
  * - Audience: Child account administrators reviewing default delegate access.
  * - Data: IamUserRoles with `account_access` and `entity_access` for `GET /iam/delegation/default-role-permissions`.
  */
-export const useGetDefaultDelegationAccessQuery = (): UseQueryResult<
-  IamUserRoles,
-  APIError[]
-> => {
+export const useGetDefaultDelegationAccessQuery = ({
+  enabled = true,
+}): UseQueryResult<IamUserRoles, APIError[]> => {
   return useQuery<IamUserRoles, APIError[]>({
+    enabled,
     ...delegationQueries.defaultAccess,
   });
 };
