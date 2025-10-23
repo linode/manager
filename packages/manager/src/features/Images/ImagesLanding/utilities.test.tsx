@@ -1,6 +1,6 @@
 import { getImagesSubTabIndex } from './utilities';
 
-describe('getStackScriptTabIndex', () => {
+describe('getImagesSubTabIndex', () => {
   it("should return 0 for 'My Custom Images' tab", () => {
     expect(getImagesSubTabIndex('custom')).toBe(0);
   });
