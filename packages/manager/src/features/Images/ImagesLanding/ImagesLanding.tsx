@@ -12,12 +12,11 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
-import { ImagesLandingTable } from './ImagesLandingTable';
-// const ImagesLandingTable = React.lazy(() =>
-//   import('./ImagesLandingTable').then((module) => ({
-//     default: module.ImagesLandingTable,
-//   }))
-// );
+const ImagesLandingTable = React.lazy(() =>
+  import('./ImagesLandingTable').then((module) => ({
+    default: module.ImagesLandingTable,
+  }))
+);
 
 export const ImagesLanding = () => {
   const navigate = useNavigate();
@@ -77,5 +76,3 @@ export const ImagesLanding = () => {
     </>
   );
 };
-
-export default ImagesLanding;

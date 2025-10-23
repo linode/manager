@@ -62,6 +62,7 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 import { getImagesSubTabIndex, subTabs } from './utilities';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
+import type { ImagesSubTabType } from './utilities';
 import type { Filter, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { ImageAction } from 'src/routes/images';
@@ -69,6 +70,7 @@ import type { ImageAction } from 'src/routes/images';
 interface ImagesSubTab {
   content: React.ReactNode;
   isBeta?: boolean;
+  key: ImagesSubTabType;
   title: string;
 }
 
@@ -530,12 +532,14 @@ export const ImagesLandingTable = () => {
 
   const imagesSubTabs: ImagesSubTab[] = [
     {
+      key: 'custom',
       title: 'My custom images',
       content: customImages,
     },
     ...(flags.privateImageSharing
       ? [
           {
+            key: 'shared' as ImagesSubTabType,
             title: 'Shared with me',
             isBeta: true,
             content: (
@@ -545,6 +549,7 @@ export const ImagesLandingTable = () => {
         ]
       : []),
     {
+      key: 'recovery',
       title: 'Recovery images',
       content: recoveryImages,
     },
@@ -564,8 +569,8 @@ export const ImagesLandingTable = () => {
       />
       <Tabs index={getImagesSubTabIndex(search.subType)} onChange={onTabChange}>
         <TabList>
-          {imagesSubTabs.map((tab, idx) => (
-            <Tab key={`images-sub-tab-${idx}`}>
+          {imagesSubTabs.map((tab) => (
+            <Tab key={`images-${tab.key}`}>
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
           ))}
@@ -573,7 +578,7 @@ export const ImagesLandingTable = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             {imagesSubTabs.map((tab, idx) => (
-              <SafeTabPanel index={idx} key={`images-sub-tab-content-${idx}`}>
+              <SafeTabPanel index={idx} key={`images-${tab.key}-content`}>
                 {tab.content}
               </SafeTabPanel>
             ))}
