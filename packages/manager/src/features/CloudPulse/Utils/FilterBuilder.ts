@@ -587,19 +587,13 @@ export const constructWidgetDimensionFilters = (
   dimensionFilters: MetricsDimensionFilter[]
 ): Filters[] => {
   const filters: Filters[] = [];
-  for (const filter of dimensionFilters) {
-    if (
-      filter &&
-      filter.dimension_label &&
-      filter.value &&
-      filter.operator &&
-      (!Array.isArray(filter.value) || filter.value.length > 0) // Check for empty array
-    ) {
+  for (const { dimension_label, operator, value } of dimensionFilters) {
+    if (dimension_label && operator && value) {
       // push to the filters
       filters.push({
-        dimension_label: filter.dimension_label,
-        operator: filter.operator,
-        value: filter.value,
+        dimension_label,
+        operator,
+        value,
       });
     }
   }

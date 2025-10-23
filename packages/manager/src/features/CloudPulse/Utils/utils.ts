@@ -24,7 +24,7 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
-import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { valueFieldConfig, type FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
@@ -46,6 +46,7 @@ import type {
   StatWithDummyPoint,
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
+import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 
 interface AclpSupportedRegionProps {
   /**
@@ -401,6 +402,40 @@ export const useIsAclpSupportedRegion = (
 };
 
 /**
+ * Checks if the given value is a valid number according to the specified config.
+ * @param raw The value to validate
+ * @param config Optional configuration object with min and max properties
+ */
+const isValueANumberValid = (
+  raw: string,
+  config: undefined | { max?: number; min?: number }
+): boolean => {
+  const trimmed = raw.trim();
+  if (trimmed === '') return false;
+  // try to parse as finite number
+  const num = Number(trimmed);
+  if (!Number.isFinite(num)) return false;
+
+  // If min/max are integers (or present) enforce range.
+  if (config?.min !== undefined && num < config.min) return false;
+  if (config?.max !== undefined && num > config.max) return false;
+
+  // If min/max are integers and config min/max are integers, it likely expects integer inputs
+  // (e.g. ports, ids). We'll enforce integer if both min and max are integer values.
+  if (
+    config &&
+    Number.isInteger(config.min ?? 0) &&
+    Number.isInteger(config.max ?? 0)
+  ) {
+    // If both min and max exist and are integers, require the input be integer.
+    // If only one exists and it's an integer, still reasonable to require integer.
+    if (!Number.isInteger(num)) return false;
+  }
+
+  return true;
+};
+
+/**
  * @param filter The filter associated with the metric
  * @param options The dimension options associated with the metric
  * @returns boolean
@@ -409,8 +444,13 @@ export const isValidFilter = (
   filter: MetricsDimensionFilter,
   options: Dimension[]
 ): boolean => {
+  if (!filter.operator || !filter.dimension_label || !filter.value)
+    return false;
+
   const operator = filter.operator;
-  if (!operator || !VALID_OPERATORS.includes(operator)) return false;
+  const operatorGroup = getOperatorGroup(operator);
+
+  if (!operatorGroup.includes(operator)) return false;
 
   const dimension = options.find(
     ({ dimension_label: dimensionLabel }) =>
@@ -418,10 +458,26 @@ export const isValidFilter = (
   );
   if (!dimension) return false;
 
-  if (!dimension.values.length) return true; // static value dimensions
+  const dimConfig =
+    valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
 
-  // allow pattern operators without value check
-  if (operator === 'endswith' || operator === 'startswith') return true;
+  const dimensionFieldConfig = dimConfig[operatorGroup];
+
+  if (
+    dimensionFieldConfig.type === 'textfield' &&
+    dimensionFieldConfig.inputType === 'number'
+  ) {
+    return isValueANumberValid(
+      String(filter.value ?? ''),
+      dimensionFieldConfig
+    );
+  } else if (
+    dimensionFieldConfig.type === 'textfield' ||
+    !dimension.values ||
+    !dimension.values.length
+  ) {
+    return true;
+  }
 
   const validValues = new Set(dimension.values);
   return (filter.value ?? '')

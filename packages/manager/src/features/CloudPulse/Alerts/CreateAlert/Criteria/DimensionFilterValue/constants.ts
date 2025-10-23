@@ -339,6 +339,7 @@ export interface FetchOptions {
   isLoading: boolean;
   values: Item<string, string>[];
 }
+
 export interface FetchOptionsProps {
   /**
    * The type of associated entity to filter on.
