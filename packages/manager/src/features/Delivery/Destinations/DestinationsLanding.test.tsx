@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { destinationFactory } from 'src/factories';
 import { DestinationsLanding } from 'src/features/Delivery/Destinations/DestinationsLanding';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 

@@ -259,7 +259,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (endpoints: string[], savePref: boolean = false) => {
         emitFilterChangeByFilterKey(ENDPOINT, endpoints, endpoints, savePref, {
           [ENDPOINT]: endpoints,
-          [RESOURCE_ID]: undefined,
+          [RESOURCES]: undefined,
         });
       },
       [emitFilterChangeByFilterKey]

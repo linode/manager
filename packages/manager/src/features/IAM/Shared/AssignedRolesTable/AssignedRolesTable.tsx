@@ -424,6 +424,7 @@ export const AssignedRolesTable = () => {
         onClose={() => setIsRemoveAssignmentDialogOpen(false)}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRoleDetails}
+        username={username}
       />
       {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
         <PaginationFooter
