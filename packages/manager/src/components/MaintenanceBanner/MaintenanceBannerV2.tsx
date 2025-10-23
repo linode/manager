@@ -47,7 +47,10 @@ export const MaintenanceBannerV2 = () => {
             <span data-testid="maintenance-link-section">
               {' '}
               For more details, view{' '}
-              <Link to="/maintenance">Account Maintenance</Link>.
+              <Link pendoId="maintenance-banner-link" to="/maintenance">
+                Account Maintenance
+              </Link>
+              .
             </span>
           )}
         </Typography>
