@@ -43,7 +43,7 @@ export const updateImageRegionsSchema = object({
 export const sharegroupImageSchema = object({
   id: string().required('Image ID is required'),
   label: labelSchema.optional(),
-  description: string().optional().max(65000),
+  description: string().optional(),
 });
 
 export const addSharegroupImagesSchema = object({
@@ -52,7 +52,7 @@ export const addSharegroupImagesSchema = object({
 
 export const createSharegroupSchema = object({
   label: labelSchema.required('Label is required.'),
-  description: string().optional().max(65000),
+  description: string().optional(),
   images: array(sharegroupImageSchema).notRequired(),
 });
 
