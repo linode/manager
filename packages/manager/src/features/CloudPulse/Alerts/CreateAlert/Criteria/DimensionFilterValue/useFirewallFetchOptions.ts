@@ -84,24 +84,24 @@ export function useFirewallFetchOptions(
     );
   }, [scope, firewallResources, entities]);
 
-  const idFilter = {
+  const idFilter: Filter = {
     '+or': filteredFirewallParentEntityIds.length
       ? filteredFirewallParentEntityIds.map(({ id }) => ({ id }))
-      : [{ id: '' }],
+      : undefined,
   };
 
-  const labelFilter = {
+  const labelFilter: Filter = {
     '+or': filteredFirewallParentEntityIds.length
       ? filteredFirewallParentEntityIds.map(({ label }) => ({ label }))
-      : [{ label: '' }],
+      : undefined,
   };
 
   const combinedFilterLinode: Filter = {
-    '+and': [idFilter, regionFilter].filter(Boolean) as Filter[],
+    '+and': [idFilter, regionFilter].filter(Boolean),
   };
 
   const combinedFilterNodebalancer: Filter = {
-    '+and': [labelFilter, regionFilter].filter(Boolean) as Filter[],
+    '+and': [labelFilter, regionFilter].filter(Boolean),
   };
 
   // Fetch all linodes with the combined filter
@@ -114,7 +114,7 @@ export function useFirewallFetchOptions(
     combinedFilterLinode,
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds?.length > 0 &&
+      filteredFirewallParentEntityIds.length > 0 &&
       (associatedEntityType === 'linode' || associatedEntityType === 'both') &&
       supportedRegionIds?.length > 0
   );
@@ -125,8 +125,9 @@ export function useFirewallFetchOptions(
     isError: isNodebalancersError,
     isLoading: isNodebalancersLoading,
   } = useAllNodeBalancersQuery(
-    filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds?.length > 0 &&
+    serviceType === 'firewall' &&
+      filterLabels.includes(dimensionLabel ?? '') &&
+      filteredFirewallParentEntityIds.length > 0 &&
       (associatedEntityType === 'nodebalancer' ||
         associatedEntityType === 'both') &&
       supportedRegionIds?.length > 0,
