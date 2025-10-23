@@ -44,6 +44,11 @@ const imagesRoute = createRoute({
 });
 
 const imagesIndexRoute = createRoute({
+  beforeLoad: () => {
+    throw redirect({
+      to: '/images/images',
+    });
+  },
   getParentRoute: () => imagesRoute,
   path: '/',
   validateSearch: (search: ImagesSearchParams) => search,

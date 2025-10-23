@@ -9,12 +9,19 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 import { ImagesLandingTable } from './ImagesLandingTable';
+// const ImagesLandingTable = React.lazy(() =>
+//   import('./ImagesLandingTable').then((module) => ({
+//     default: module.ImagesLandingTable,
+//   }))
+// );
 
 export const ImagesLanding = () => {
   const navigate = useNavigate();
+  const flags = useFlags();
 
   const { data: permissions } = usePermissions('account', ['create_image']);
   const canCreateImage = permissions?.create_image;
@@ -22,12 +29,13 @@ export const ImagesLanding = () => {
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Images',
-      to: `/images/images`,
+      to: '/images/images',
     },
     {
       title: 'Share Groups',
-      to: `/images/sharegroups`,
+      to: '/images/sharegroups',
       chip: <BetaChip />,
+      hide: !flags.privateImageSharing,
     },
   ]);
 
@@ -52,6 +60,7 @@ export const ImagesLanding = () => {
         spacingBottom={16}
         title="Images"
       />
+
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>

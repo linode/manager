@@ -20,7 +20,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-// import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -34,10 +34,9 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-// import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-// import { useTabs } from 'src/hooks/useTabs';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
@@ -60,12 +59,18 @@ import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
-import { getImagesSubTabIndex, tabs } from './utilities';
+import { getImagesSubTabIndex, subTabs } from './utilities';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Filter, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { ImageAction } from 'src/routes/images';
+
+interface ImagesSubTab {
+  content: React.ReactNode;
+  isBeta?: boolean;
+  title: string;
+}
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -85,6 +90,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const ImagesLandingTable = () => {
   const navigate = useNavigate();
+  const flags = useFlags();
   const { classes } = useStyles();
   const params = useParams({
     from: '/images/$imageId/$action',
@@ -310,7 +316,7 @@ export const ImagesLandingTable = () => {
         page: undefined,
         query: query || undefined,
       }),
-      to: '/images',
+      to: '/images/images',
     });
   };
 
@@ -342,28 +348,12 @@ export const ImagesLandingTable = () => {
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
-  // const { handleTabChange, tabIndex, tabs } = useTabs([
-  //   {
-  //     title: 'My custom images',
-  //     to: `/images/custom`,
-  //   },
-  //   {
-  //     title: 'Shared with me',
-  //     to: `/images/shared`,
-  //     chip: <BetaChip />,
-  //   },
-  //   {
-  //     title: 'Recovery images',
-  //     to: `/images/recovery`,
-  //   },
-  // ]);
-
   const onTabChange = (index: number) => {
     // Update the "subType" query param. (This switches between "My custom images" and "Shared with me" and "Recovery images" tabs).
     navigate({
-      to: `/images`,
+      to: `/images/images`,
       search: {
-        subType: tabs[index],
+        subType: subTabs[index],
       },
     });
   };
@@ -538,6 +528,28 @@ export const ImagesLandingTable = () => {
     </Paper>
   );
 
+  const imagesSubTabs: ImagesSubTab[] = [
+    {
+      title: 'My custom images',
+      content: customImages,
+    },
+    ...(flags.privateImageSharing
+      ? [
+          {
+            title: 'Shared with me',
+            isBeta: true,
+            content: (
+              <Notice variant="info">Share with me is coming soon...</Notice>
+            ),
+          },
+        ]
+      : []),
+    {
+      title: 'Recovery images',
+      content: recoveryImages,
+    },
+  ];
+
   return (
     <Stack spacing={3}>
       <DebouncedSearchTextField
@@ -551,23 +563,22 @@ export const ImagesLandingTable = () => {
         value={query ?? ''}
       />
       <Tabs index={getImagesSubTabIndex(search.subType)} onChange={onTabChange}>
-        {/* <TanStackTabLinkList tabs={tabs} /> */}
         <TabList>
-          <Tab>My custom images</Tab>
-          <Tab>
-            Shared with me <BetaChip />
-          </Tab>
-          <Tab>Recovery images</Tab>
+          {imagesSubTabs.map((tab, idx) => (
+            <Tab key={`images-sub-tab-${idx}`}>
+              {tab.title} {tab.isBeta ? <BetaChip /> : null}
+            </Tab>
+          ))}
         </TabList>
-        {/* <React.Suspense fallback={<SuspenseLoader />}> */}
-        <TabPanels>
-          <SafeTabPanel index={0}>{customImages}</SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <Notice variant="info">Share with me is coming soon...</Notice>
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>{recoveryImages}</SafeTabPanel>
-        </TabPanels>
-        {/* </React.Suspense> */}
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            {imagesSubTabs.map((tab, idx) => (
+              <SafeTabPanel index={idx} key={`images-sub-tab-content-${idx}`}>
+                {tab.content}
+              </SafeTabPanel>
+            ))}
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
 
       <EditImageDrawer
