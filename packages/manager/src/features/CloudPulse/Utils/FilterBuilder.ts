@@ -182,6 +182,8 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+    associatedEntityType: config.configuration.associatedEntityType ?? 'both',
+    filterFn: config.configuration.filterFn,
   };
 };
 
@@ -246,6 +248,7 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
     isOptional,
+    filterFn,
   } = props.config.configuration;
   const {
     dashboard,
@@ -284,6 +287,7 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
+    filterFn,
   };
 };
 
