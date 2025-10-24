@@ -23,6 +23,8 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { AssociatedEntityType } from '../shared/types';
+import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type {
   Alert,
   APIError,
@@ -30,6 +32,8 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
   Dashboard,
+  Firewall,
+  FirewallDeviceEntity,
   MonitoringCapabilities,
   ResourcePage,
   Service,
@@ -397,17 +401,42 @@ export const useIsAclpSupportedRegion = (
 
 /**
  * @param dashboardId The id of the dashboard
- * @returns The associated entity type for the dashboard
+ * @returns The resources filter configuration for the dashboard
  */
-export const getAssociatedEntityType = (dashboardId: number | undefined) => {
+export const getResourcesFilterConfig = (
+  dashboardId: number | undefined
+): CloudPulseServiceTypeFiltersConfiguration | undefined => {
   if (!dashboardId) {
-    return 'both';
+    return undefined;
   }
   // Get the associated entity type for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
-  return (
-    filterConfig?.filters.find(
-      (filter) => filter.configuration.filterKey === RESOURCE_ID
-    )?.configuration.associatedEntityType ?? 'both'
+  return filterConfig?.filters.find(
+    (filter) => filter.configuration.filterKey === RESOURCE_ID
+  )?.configuration;
+};
+
+/**
+ *
+ * @param resources Firewall resources
+ * @param entityType Associated entity type
+ * @returns Filtered firewall resources based on the associated entity type
+ */
+export const filterFirewallResources = (
+  resources: Firewall[],
+  entityType: AssociatedEntityType
+) => {
+  return resources.filter((resource) =>
+    resource.entities.some((entity: FirewallDeviceEntity) => {
+      // If the entity type is linode_interface, it should be associated with a linode and have a parent entity label
+      if (
+        entity.type === 'linode_interface' &&
+        entityType === 'linode' &&
+        entity.parent_entity?.label
+      ) {
+        return true;
+      }
+      return entity.label && entity.type === entityType;
+    })
   );
 };
