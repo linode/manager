@@ -180,13 +180,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('be.visible')
         .should('be.enabled')
         .click();
-
-    // Click the "Apply" button to confirm the end date and time
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
+        
     // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
