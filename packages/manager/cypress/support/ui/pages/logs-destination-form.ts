@@ -78,9 +78,9 @@ export const logsDestinationForm = {
   },
 
   /**
-   * Fills all form fields related to destination's details (LinodeObjectStorageDetails type)
+   * Fills all form fields related to destination's details (AkamaiObjectStorageDetails type)
    *
-   * @param data - object with destination details of LinodeObjectStorageDetails type
+   * @param data - object with destination details of AkamaiObjectStorageDetails type
    */
   fillDestinationDetailsForm: (data: AkamaiObjectStorageDetails) => {
     // Give Destination a host
