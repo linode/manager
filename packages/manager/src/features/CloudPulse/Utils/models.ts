@@ -104,6 +104,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   dependency?: string[];
 
   /**
+   * If it is a dimension filter coming from metric-definitions API, this field holds the dimension key
+   */
+  dimensionKey?: string;
+
+  /**
    * This is the field that will be sent in the metrics api call or xFilter
    */
   filterKey: string;
@@ -117,11 +122,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * If this is true, we will pass the filter in the metrics api otherwise, we don't
    */
   isFilterable: boolean;
-
   /**
    * If this is true, we will pass the filter as a explicit key in the request else inside the filters object of metrics request
    */
   isMetricsFilter: boolean;
+
   /**
    * If this is true, multiselect will be enabled for the filter, only applicable for static and dynamic, not for predefined ones
    */
@@ -131,7 +136,6 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * If this is true, we will pass filter as an optional filter
    */
   isOptional?: boolean;
-
   /**
    * If this is true, we will only allow users to select a certain threshold, only applicable for static and dynamic, not for predefined ones
    */
@@ -156,6 +160,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    *  This controls the order of rendering the filtering componenents
    */
   priority: number;
+
   /**
    * default is predefined filters like (region, resources, timeduration) or dynamic / static
    */

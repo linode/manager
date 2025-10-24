@@ -146,6 +146,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         ],
         placeholder: 'Select a Node Type',
         priority: 5,
+        dimensionKey: 'node_type',
       },
       name: 'Node Type',
     },
@@ -186,6 +187,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'port',
+        dimensionKey: 'port',
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: false,
@@ -238,6 +240,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
+        dimensionKey: 'region_id',
         dependency: ['resource_id'],
         filterKey: PARENT_ENTITY_REGION,
         filterType: 'string',
@@ -256,6 +259,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
+        dimensionKey: 'interface_type',
         filterKey: 'interface_type',
         filterType: 'string',
         isFilterable: true,
@@ -285,6 +289,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
+        dimensionKey: 'interface_id',
         filterKey: 'interface_id',
         filterType: 'string',
         isFilterable: true,
@@ -339,6 +344,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       },
       {
         configuration: {
+          dimensionKey: 'region_id',
           dependency: [RESOURCE_ID],
           filterKey: PARENT_ENTITY_REGION,
           filterType: 'string',
@@ -376,6 +382,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
       },
       {
         configuration: {
+          dimensionKey: 'endpoint',
           dependency: [REGION],
           filterKey: ENDPOINT,
           filterType: 'string',
