@@ -1,5 +1,4 @@
 import { BetaChip, Notice } from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -8,7 +7,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
@@ -19,11 +17,7 @@ const ImagesLandingTable = React.lazy(() =>
 );
 
 export const ImagesLanding = () => {
-  const navigate = useNavigate();
   const flags = useFlags();
-
-  const { data: permissions } = usePermissions('account', ['create_image']);
-  const canCreateImage = permissions?.create_image;
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -45,17 +39,6 @@ export const ImagesLanding = () => {
           pathname: 'Images',
           removeCrumbX: 1,
         }}
-        buttonDataAttrs={{
-          tooltipText: canCreateImage
-            ? false
-            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
-        }}
-        disabledCreateButton={!canCreateImage}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
-        entity="Image"
-        onButtonClick={() =>
-          navigate({ search: () => ({}), to: '/images/create' })
-        }
         spacingBottom={16}
         title="Images"
       />

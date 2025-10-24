@@ -102,7 +102,9 @@ describe('Images Landing Table', () => {
     await waitForElementToBeRemoved(loadingElement);
 
     // Custom Images table should render
-    getByText('Custom Images');
+
+    // Header
+    getByText('My Custom Images');
 
     // Static text and table column headers
     expect(getByText('Image')).toBeVisible();
@@ -140,6 +142,8 @@ describe('Images Landing Table', () => {
     await waitForElementToBeRemoved(loadingElement);
 
     // Recovery Images table should render
+
+    // Header
     getByText('Recovery Images');
 
     // Static text and table column headers
@@ -422,4 +426,60 @@ describe('Images Landing Table', () => {
     expect(disabledDeleteText).toBeVisible();
     expect(disabledLinodeCreationText).toBeVisible();
   });
+
+  it('should disable create button if user lacks create_image permission', async () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: false },
+    });
+
+    const { getByText, queryByTestId } = renderWithTheme(
+      <ImagesLandingTable />,
+      {
+        initialRoute: '/images',
+      }
+    );
+
+    const loadingElement = queryByTestId(loadingTestId);
+    await waitForElementToBeRemoved(loadingElement);
+
+    const createButton = getByText('Create Image');
+    expect(createButton).toBeDisabled();
+    expect(createButton).toHaveAttribute(
+      'data-qa-tooltip',
+      "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
+    );
+  });
+
+  it('should enable create button if user has create_image permission', async () => {
+    queryMocks.usePermissions.mockReturnValue({ data: { create_image: true } });
+
+    const { getByText, queryByTestId } = renderWithTheme(
+      <ImagesLandingTable />,
+      {
+        initialRoute: '/images',
+      }
+    );
+
+    const loadingElement = queryByTestId(loadingTestId);
+    await waitForElementToBeRemoved(loadingElement);
+
+    const createButton = getByText('Create Image');
+    expect(createButton).toBeEnabled();
+  });
+
+  // it('should trigger navigation to /images/create when create button is clicked', async () => {
+  //   queryMocks.usePermissions.mockReturnValue({ data: { create_image: true } });
+
+  //   const { getByText } = renderWithTheme(<ImagesLandingTable />, {
+  //     initialRoute: '/images',
+  //   });
+
+  //   const createButton = getByText('Create Image');
+  //   await userEvent.click(createButton);
+
+  //   expect(queryMocks.useNavigate).toHaveBeenCalledWith({
+  //     to: '/images/create',
+  //     search: expect.any(Function),
+  //   });
+  // });
 });

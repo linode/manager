@@ -2,6 +2,8 @@ import { imageQueries, useImageQuery, useImagesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   BetaChip,
+  Box,
+  Button,
   CircleProgress,
   Drawer,
   ErrorState,
@@ -17,6 +19,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -34,6 +37,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -57,7 +61,6 @@ import { DeleteImageDialog } from './DeleteImageDialog';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
-import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 import { getImagesSubTabIndex, subTabs } from './utilities';
 
@@ -98,6 +101,8 @@ export const ImagesLandingTable = () => {
     from: '/images/$imageId/$action',
     shouldThrow: false,
   });
+  const { data: permissions } = usePermissions('account', ['create_image']);
+  const canCreateImage = permissions?.create_image;
 
   const search = useSearch({ from: '/images' });
   const { query } = search;
@@ -344,9 +349,9 @@ export const ImagesLandingTable = () => {
     );
   }
 
-  if (manualImages?.results === 0 && automaticImages?.results === 0 && !query) {
-    return <ImagesLandingEmptyState />;
-  }
+  // if (manualImages?.results === 0 && automaticImages?.results === 0 && !query) {
+  //   return <ImagesLandingEmptyState />;
+  // }
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
@@ -363,7 +368,35 @@ export const ImagesLandingTable = () => {
   const customImages = (
     <Paper className={classes.imageTable}>
       <div className={classes.imageTableHeader}>
-        <Typography variant="h3">Custom Images</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant="h3">My Custom Images</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <DocsLink
+              analyticsLabel={'Custom Images'}
+              href={'https://techdocs.akamai.com/cloud-computing/docs/images'}
+            />
+            <Button
+              buttonType="primary"
+              disabled={!canCreateImage}
+              onClick={() =>
+                navigate({ search: () => ({}), to: '/images/create' })
+              }
+              tooltipText={
+                !canCreateImage
+                  ? "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
+                  : undefined
+              }
+            >
+              Create Image
+            </Button>
+          </Box>
+        </Box>
         <Typography className={classes.imageTableSubheader}>
           These are{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
