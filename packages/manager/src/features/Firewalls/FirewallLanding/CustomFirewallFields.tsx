@@ -56,7 +56,8 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
 
   const { control } = useFormContext<CreateFirewallFormValues>();
 
-  const { data: firewalls } = useAllFirewallsQuery(open);
+  const { data: firewalls, isLoading: isLoadingAllFirewalls } =
+    useAllFirewallsQuery(open);
 
   const {
     data: permissableLinodes,
@@ -208,12 +209,13 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
         name="devices.linodes"
         render={({ field, fieldState }) => (
           <LinodeSelect
-            disabled={userCannotAddFirewall}
+            disabled={userCannotAddFirewall || isLoadingAllFirewalls}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             label={
               createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
             }
+            loading={isLoadingAllFirewalls}
             multiple
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
