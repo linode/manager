@@ -166,12 +166,12 @@ const mockFirewalls = [
       {
         id: 2,
         label: 'linode_interface-2',
-        type: 'linode_interface' as FirewallDeviceEntityType,
+        type: 'linode_interface',
         url: '/test',
         parent_entity: {
           id: 1,
           label: 'linode-1',
-          type: 'linode' as FirewallDeviceEntityType,
+          type: 'linode',
           url: '/parent-test',
           parent_entity: null,
         },

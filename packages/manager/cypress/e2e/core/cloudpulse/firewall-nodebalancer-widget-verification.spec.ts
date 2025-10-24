@@ -187,7 +187,7 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'nodebalancer-1',
-        type: 'nodebalancer' as FirewallDeviceEntityType,
+        type: 'nodebalancer',
         url: '/test',
         parent_entity: null,
       },
@@ -201,7 +201,7 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'nodebalancer-1',
-        type: 'linode_interface' as FirewallDeviceEntityType,
+        type: 'linode_interface',
         url: '/test',
         parent_entity: null,
       },
@@ -221,7 +221,7 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'linode-1',
-        type: 'linode' as FirewallDeviceEntityType,
+        type: 'linode',
         url: '/test',
         parent_entity: null,
       },
