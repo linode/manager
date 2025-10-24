@@ -13,7 +13,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import type { KubernetesCluster, ResourcePage } from '@linode/api-v4';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
-export type OrderByKeys = 'label' | 'logGeneration' | 'region';
+export type OrderByKeys = 'label' | 'region';
 
 interface StreamFormClusterTableContentProps {
   clusters: ResourcePage<KubernetesCluster> | undefined;
@@ -91,15 +91,7 @@ export const StreamFormClusterTableContent = ({
           >
             Region
           </TableSortCell>
-          <TableSortCell
-            active={orderBy === 'logGeneration'}
-            direction={order}
-            handleClick={() => onOrderChange('logGeneration')}
-            label="logGeneration"
-            sx={{ width: '25%' }}
-          >
-            Log Generation
-          </TableSortCell>
+          <TableCell sx={{ width: '25%' }}>Log Generation</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
