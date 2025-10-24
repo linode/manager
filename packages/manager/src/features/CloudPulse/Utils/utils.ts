@@ -408,11 +408,11 @@ export const useIsAclpSupportedRegion = (
  * @param raw The value to validate
  * @param config Optional configuration object with min and max properties
  */
-const isValueANumberValid = (
-  raw: string,
+const isValueAValidNumber = (
+  value: string,
   config: undefined | { max?: number; min?: number }
 ): boolean => {
-  const trimmed = raw.trim();
+  const trimmed = value.trim();
   if (trimmed === '') return false;
   // try to parse as finite number
   const num = Number(trimmed);
@@ -469,7 +469,7 @@ export const isValidFilter = (
     dimensionFieldConfig.type === 'textfield' &&
     dimensionFieldConfig.inputType === 'number'
   ) {
-    return isValueANumberValid(
+    return isValueAValidNumber(
       String(filter.value ?? ''),
       dimensionFieldConfig
     );
