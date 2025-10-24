@@ -194,6 +194,7 @@ export interface Flags {
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
