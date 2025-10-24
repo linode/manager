@@ -48,6 +48,8 @@ export const PORT = 'port';
 
 export const INTERFACE_ID = 'interface_id';
 
+export const FIREWALL = 'Firewall';
+
 export const PORTS_HELPER_TEXT =
   'Enter one or more port numbers (1-65535) separated by commas.';
 

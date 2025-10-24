@@ -3,6 +3,8 @@ import { groupAccountEntitiesByType } from '../utilities';
 import type { EntitiesOption } from '../types';
 import type { AccessType, AccountEntity, EntityType } from '@linode/api-v4';
 
+type PlaceholderType = 'delegates' | AccessType;
+
 export const placeholderMap: Record<string, string> = {
   account: 'Select Account',
   database: 'Select Databases',
@@ -17,6 +19,7 @@ export const placeholderMap: Record<string, string> = {
   stackscript: 'Select Stackscripts',
   volume: 'Select Volumes',
   vpc: 'Select VPCs',
+  delegates: 'Select Users',
 };
 
 export const getCreateLinkForEntityType = (entityType: AccessType): string => {
@@ -34,7 +37,7 @@ export const getCreateLinkForEntityType = (entityType: AccessType): string => {
 };
 
 export const getPlaceholder = (
-  type: AccessType,
+  type: PlaceholderType,
   currentValueLength: number,
   possibleEntitiesLength: number
 ): string => {

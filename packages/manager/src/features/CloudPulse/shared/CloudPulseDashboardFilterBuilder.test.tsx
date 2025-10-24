@@ -131,7 +131,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       />
     );
 
-    expect(getByPlaceholderText('Select Firewalls')).toBeVisible();
+    expect(getByPlaceholderText('Select a Firewall')).toBeVisible();
     expect(getByPlaceholderText('Select a NodeBalancer Region')).toBeVisible();
     expect(getByPlaceholderText('Select NodeBalancers')).toBeVisible();
   });
