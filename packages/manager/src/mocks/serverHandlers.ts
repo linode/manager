@@ -3655,7 +3655,7 @@ export const handlers = [
           aggregate_function: 'sum',
         },
       ];
-    } else if (id === '4') {
+    } else if (id === '4' || id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
       widgets = [

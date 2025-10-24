@@ -36,6 +36,7 @@ export const regions: Region[] = [
         'Linodes',
         'Managed Databases',
         'Block Storage',
+        'NodeBalancers',
       ],
     },
   },
@@ -92,7 +93,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: [], metrics: [] },
+    monitors: { alerts: [], metrics: ['NodeBalancers'] },
   },
   {
     capabilities: [
@@ -130,6 +131,7 @@ export const regions: Region[] = [
         'Cloud Firewall',
         'Linodes',
         'Managed Databases',
+        'NodeBalancers',
       ],
     },
   },
@@ -632,7 +634,10 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Linodes'], metrics: ['NodeBalancers'] },
+    monitors: {
+      alerts: ['Linodes'],
+      metrics: ['NodeBalancers', 'Cloud Firewall'],
+    },
   },
   {
     capabilities: [
