@@ -56,12 +56,12 @@ export const AccountDelegationsTable = ({
             Account
           </TableSortCell>
           <TableCell
-            style={{ width: '53%' }}
+            style={{ width: '59%' }}
             sx={{ display: { sm: 'table-cell', xs: 'none' } }}
           >
             Delegate Users
           </TableCell>
-          <TableCell style={{ width: '20%' }} />
+          <TableCell style={{ width: '14%' }} />
         </TableRow>
       </TableHead>
       <TableBody>
