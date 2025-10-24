@@ -33,6 +33,7 @@ export const DefaultsLanding = () => {
         breadcrumbProps={{
           pathname: '/iam/roles/defaults',
         }}
+        spacingBottom={4}
         title="Default Roles for Delegate Users"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
