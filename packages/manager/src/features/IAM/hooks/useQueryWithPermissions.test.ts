@@ -18,24 +18,6 @@ const queryMocks = vi.hoisted(() => {
     useProfile: vi
       .fn()
       .mockReturnValue({ data: { username: 'user-1', restricted: true } }),
-    useAccountRoles: vi.fn().mockReturnValue({
-      data: {
-        entity_access: [
-          {
-            type: 'linode',
-            roles: [
-              {
-                name: 'linode_admin',
-                description: 'Admin',
-                permissions: ['update_linode', 'delete_linode'],
-              },
-            ],
-          },
-        ],
-        account_access: [],
-      },
-      isLoading: false,
-    }),
     useUserRoles: vi.fn().mockReturnValue({
       data: {
         entity_access: [{ id: 1, type: 'linode', roles: ['linode_admin'] }],
@@ -53,7 +35,6 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
     ...actual,
     useGrants: queryMocks.useGrants,
     useProfile: queryMocks.useProfile,
-    useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
   };
 });
@@ -130,10 +111,7 @@ describe('useQueryWithPermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', true);
-    expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(true);
-
-    // Only entity 1 has permissions
-    expect(result.current.data.map((e) => e.id)).toEqual([1]);
+    expect(result.current.data.map((e) => e.id)).toEqual([]);
     expect(result.current.hasFiltered).toBe(true);
     expect(result.current.isLoading).toBe(false);
   });
@@ -158,8 +136,6 @@ describe('useQueryWithPermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', false);
-    expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(false);
-
     expect(result.current.data.map((e) => e.id)).toEqual([1, 2]);
     expect(result.current.hasFiltered).toBe(false);
   });
@@ -184,7 +160,6 @@ describe('useQueryWithPermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', false);
-    expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(false);
   });
 
   it('falls back to grants when Beta true but permission is in the LA exclusion list', () => {
@@ -229,7 +204,6 @@ describe('useQueryWithPermissions', () => {
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', true);
-    expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(true);
   });
 
   it('marks loading when entity permissions queries are loading', () => {

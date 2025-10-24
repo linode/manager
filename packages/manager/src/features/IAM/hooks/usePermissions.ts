@@ -1,5 +1,4 @@
 import {
-  useAccountRoles,
   useGrants,
   useProfile,
   useUserAccountPermissions,
@@ -264,7 +263,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     ...restQueryResult
   } = useQueryResult;
   const { data: profile } = useProfile();
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled, accountRoles } = useIsIAMEnabled();
 
   const accessType = entityType;
 
@@ -291,10 +290,6 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     profile?.username,
     shouldUsePermissionMap && enabled
   );
-
-  // NEW: Fetch account roles to map role names to permissions
-  const { data: accountRoles, isLoading: areAccountRolesLoading } =
-    useAccountRoles(shouldUsePermissionMap && enabled);
 
   const { data: grants } = useGrants(
     (!isIAMEnabled || !shouldUsePermissionMap) && enabled
@@ -325,8 +320,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
     isError: isEntitiesError,
-    isLoading:
-      areEntitiesLoading || areUserRolesLoading || areAccountRolesLoading,
+    isLoading: areEntitiesLoading || areUserRolesLoading,
     ...restQueryResult,
   } as const;
 };
