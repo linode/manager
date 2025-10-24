@@ -80,6 +80,10 @@ export const widgetDetails = {
         title: 'CPU Utilization',
         unit: '%',
         yLabel: 'system_cpu_utilization_ratio',
+        filters: [
+          { dimension_label: 'device', operator: 'eq', value: 'loop0' },
+          { dimension_label: 'state', operator: 'eq', value: 'used' },
+        ],
       },
       {
         expectedAggregation: 'max',

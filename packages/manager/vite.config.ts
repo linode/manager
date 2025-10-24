@@ -13,7 +13,11 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  plugins: [react(), svgr({ exportAsDefault: true }), urlCanParsePolyfill()],
+  plugins: [
+    react(),
+    svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
+    urlCanParsePolyfill(),
+  ],
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
