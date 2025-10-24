@@ -380,6 +380,43 @@ describe('getEnabledServiceTypes', () => {
         firewallFactory.build({
           entities: [
             firewallEntityfactory.build({
+              id: 33,
+              label: null,
+              type: 'linode_interface',
+              parent_entity: {
+                id: 2,
+                label: 'linode-2',
+                type: 'linode',
+              },
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 3,
+              label: null,
+              type: 'linode',
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 4,
+              label: null,
+              type: 'linode_interface',
+              parent_entity: {
+                id: 3,
+                label: null,
+                type: 'linode',
+              },
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
               id: 2,
               label: 'nodebalancer-1',
               type: 'nodebalancer',
@@ -387,7 +424,10 @@ describe('getEnabledServiceTypes', () => {
           ],
         }),
       ];
-      expect(filterFirewallResources(resources, 'linode')).toHaveLength(1);
+      expect(filterFirewallResources(resources, 'linode')).toEqual([
+        resources[0],
+        resources[1],
+      ]);
     });
   });
 });
