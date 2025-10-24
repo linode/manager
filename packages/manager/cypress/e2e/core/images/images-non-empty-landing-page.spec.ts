@@ -80,6 +80,7 @@ describe('image landing checks for non-empty state with restricted user', () => 
 
     // Alias the mockImages array
     cy.wrap(mockCustomImages).as('mockCustomImages');
+    cy.wrap(mockRecoveryImages).as('mockRecoveryImages');
   });
 
   it('checks restricted user with read access has no access to create image and can see existing images', () => {
@@ -117,20 +118,6 @@ describe('image landing checks for non-empty state with restricted user', () => 
       .should('exist')
       .as('customImageTable');
 
-    // cy.visitWithLogin(`images/images?subType=recovery`);
-
-    // ui.tabList.find().within(() => {
-    //   cy.findByText('Recovery images').click();
-    // });
-
-    // ui.tabList.findTabByTitle('Recovery images').should('be.visible').click();
-
-    cy.contains('h3', 'Recovery Images')
-      .closest('div[data-qa-paper="true"]')
-      .find('[role="table"]')
-      .should('exist')
-      .as('recoveryImageTable');
-
     // Assert that Create Image button is visible and disabled
     ui.button
       .findByTitle('Create Image')
@@ -145,18 +132,39 @@ describe('image landing checks for non-empty state with restricted user', () => 
       )
       .should('be.visible');
 
+    // End hover on the Create Image button to prevent the tooltip from blocking other clicks
+    ui.button.findByTitle('Create Image').trigger('mouseout');
+
     cy.get<Image[]>('@mockCustomImages').then((mockImages) => {
       // Assert that the correct number of Image entries are present in the customImageTable
       cy.get('@customImageTable')
         .find('tbody tr')
         .should('have.length', mockImages.length);
 
+      checkActionMenu('@customImageTable', mockImages); // For the custom image table
+    });
+
+    // Go to Recovery Images tab
+    cy.contains('Recovery images').should('exist');
+    ui.tabList
+      .find()
+      .find('[role="tab"]')
+      .contains('Recovery images')
+      .should('be.visible')
+      .click();
+
+    cy.contains('h3', 'Recovery Images')
+      .closest('div[data-qa-paper="true"]')
+      .find('[role="table"]')
+      .should('exist')
+      .as('recoveryImageTable');
+
+    cy.get<Image[]>('@mockRecoveryImages').then((mockImages) => {
       // Assert that the correct number of Image entries are present in the recoveryImageTable
       cy.get('@recoveryImageTable')
         .find('tbody tr')
         .should('have.length', mockImages.length);
 
-      checkActionMenu('@customImageTable', mockImages); // For the custom image table
       checkActionMenu('@recoveryImageTable', mockImages); // For the recovery image table
     });
   });
