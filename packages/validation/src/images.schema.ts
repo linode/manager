@@ -39,3 +39,29 @@ export const updateImageRegionsSchema = object({
     .required('Regions are required.')
     .min(1, 'Must specify at least one region.'),
 });
+
+export const sharegroupImageSchema = object({
+  id: string().required('Image ID is required'),
+  label: labelSchema.optional(),
+  description: string().optional(),
+});
+
+export const addSharegroupImagesSchema = object({
+  images: array(sharegroupImageSchema).required('Images are required.'),
+});
+
+export const createSharegroupSchema = object({
+  label: labelSchema.required('Label is required.'),
+  description: string().optional(),
+  images: array(sharegroupImageSchema).notRequired(),
+});
+
+export const updateSharegroupSchema = object({
+  label: labelSchema.optional(),
+  description: string().optional(),
+});
+
+export const updateSharegroupImageSchema = object({
+  label: labelSchema.optional(),
+  description: string().optional(),
+});

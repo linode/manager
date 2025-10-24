@@ -18,6 +18,19 @@ export interface ImageRegion {
   status: ImageRegionStatus;
 }
 
+export interface ImageSharingData {
+  shared_by: null | {
+    sharegroup_id: number;
+    sharegroup_label: string;
+    sharegroup_uuid: string;
+    source_image_id: number;
+  };
+  shared_with: null | {
+    shared_count: number;
+    sharegroup_list_url: string;
+  };
+}
+
 export interface Image {
   /**
    * A list of the capabilities of this image.
@@ -60,9 +73,19 @@ export interface Image {
   id: string;
 
   /**
+   * Image sharing attributes for private and shared images.
+   */
+  image_sharing?: ImageSharingData;
+
+  /**
    * Whether this image is marked for public distribution.
    */
   is_public: boolean;
+
+  /**
+   * Whether this image has a shared copy.
+   */
+  is_shared?: boolean;
 
   /**
    * A short description of this image.
@@ -156,4 +179,90 @@ export interface UpdateImageRegionsPayload {
    * An array of region ids
    */
   regions: string[];
+}
+
+export interface SharegroupImagePayload {
+  /**
+   * A detailed description of this Image.
+   */
+  description?: string;
+  /**
+   * ID of the private image that will be added to the Sharegroup
+   */
+  id: string;
+  /**
+   * A short title of this Image.
+   *
+   * Defaults to the label of the private image it is being created from if not provided.
+   */
+  label?: string;
+}
+
+export interface CreateSharegroupPayload {
+  /**
+   * A detailed description of this Sharegroup.
+   */
+  description?: string;
+  /**
+   * An array of images that will be shared in the Sharegroup
+   */
+  images?: SharegroupImagePayload[];
+  /**
+   * A short title of this Sharegroup.
+   */
+  label: string;
+}
+
+export type UpdateSharegroupPayload = Omit<CreateImagePayload, 'images'>;
+
+export interface AddSharegroupImagesPayload {
+  /**
+   * An array of images that will be shared in the Sharegroup
+   */
+  images: SharegroupImagePayload[];
+}
+
+export type UpdateSharegroupImagePayload = Omit<SharegroupImagePayload, 'id'>;
+
+export interface Sharegroup {
+  /**
+   * The timestamp of when the Sharegroup was created
+   */
+  created: string;
+  /**
+   * A detailed description for the Sharegroup
+   */
+  description: string;
+  /**
+   * The timestamp of when the Sharegroup would expire
+   */
+  expiry?: string;
+  /**
+   * The ID of the this Sharegroup.
+   */
+  id: number;
+  /**
+   * The number of images shared in the Sharegroup
+   */
+  images_count?: number;
+  /**
+   * A boolean that indicates if the Sharegroup is suspended
+   */
+  is_suspended: boolean;
+  /**
+   * A short title for the Sharegroup
+   */
+  label: string;
+  /**
+   * The number of members present in the Sharegroup
+   */
+  members_count?: number;
+  /**
+   * The timestamp of when the Sharegroup was last updated
+   */
+  updated: string;
+  /**
+   * A unique identifier for the sharegroup which can be used to generate member tokens
+   */
+  uuid: string;
 }
