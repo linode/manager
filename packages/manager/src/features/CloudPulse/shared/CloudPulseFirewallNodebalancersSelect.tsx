@@ -7,7 +7,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { PARENT_ENTITY_REGION, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterFirewallNodebalancers } from '../Utils/FilterBuilder';
-import { getAssociatedEntityType } from '../Utils/utils';
+import { getResourcesFilterConfig } from '../Utils/utils';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type {
@@ -93,7 +93,9 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
     } = props;
 
     // Get the associated entity type for the selected dashboard
-    const associatedEntityType = getAssociatedEntityType(selectedDashboard.id);
+    const associatedEntityType = getResourcesFilterConfig(
+      selectedDashboard.id
+    )?.associatedEntityType;
     const region = xFilter?.[PARENT_ENTITY_REGION];
 
     const { data: firewalls } = useResourcesQuery(
