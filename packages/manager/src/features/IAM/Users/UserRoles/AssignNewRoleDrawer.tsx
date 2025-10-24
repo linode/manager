@@ -1,6 +1,9 @@
 import {
+  delegationQueries,
   iamQueries,
   useAccountRoles,
+  useQueryClient,
+  useUpdateDefaultDelegationAccessQuery,
   useUserRolesMutation,
 } from '@linode/queries';
 import {
@@ -12,8 +15,6 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useQueryClient } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -22,6 +23,7 @@ import { Link } from 'src/components/Link';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
@@ -40,21 +42,21 @@ interface Props {
   assignedRoles?: IamUserRoles;
   onClose: () => void;
   open: boolean;
+  username?: string;
 }
 
 export const AssignNewRoleDrawer = ({
   assignedRoles,
+  username,
   onClose,
   open,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams({
-    from: '/iam/users/$username',
-  });
   const queryClient = useQueryClient();
 
   const { data: accountRoles } = useAccountRoles();
-
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
       roles: [
@@ -95,23 +97,37 @@ export const AssignNewRoleDrawer = ({
 
       return true;
     });
-  }, [accountRoles, assignedRoles, roles]);
+  }, [accountRoles, assignedRoles]);
 
-  const { mutateAsync: updateUserRoles, isPending } =
-    useUserRolesMutation(username);
+  const { mutateAsync: updateUserRoles, isPending: isUserRolesPending } =
+    useUserRolesMutation(username || '');
+
+  const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
+    useUpdateDefaultDelegationAccessQuery();
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
-      const queryKey = iamQueries.user(username)._ctx.roles.queryKey;
+      const queryKey = iamQueries.user(username ?? '')._ctx.roles.queryKey;
       const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
-
+      const currentDefaultRoles = queryClient.getQueryData<IamUserRoles>(
+        delegationQueries.defaultAccess.queryKey
+      );
       const mergedRoles = mergeAssignedRolesIntoExistingRoles(
         values,
         structuredClone(currentRoles)
       );
-
-      await updateUserRoles(mergedRoles);
-
+      if (isDefaultDelegationRolesForChildAccount) {
+        const mergedDefaultRoles = mergeAssignedRolesIntoExistingRoles(
+          values,
+          structuredClone(currentDefaultRoles)
+        );
+        await updateDefaultRoles(mergedDefaultRoles);
+      } else {
+        if (!username) {
+          return;
+        }
+        await updateUserRoles(mergedRoles);
+      }
       enqueueSnackbar(`Roles added.`, { variant: 'success' });
       handleClose();
     } catch (error) {
@@ -135,7 +151,15 @@ export const AssignNewRoleDrawer = ({
   }, [open, reset]);
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Assign New Roles">
+    <Drawer
+      onClose={handleClose}
+      open={open}
+      title={
+        isDefaultDelegationRolesForChildAccount
+          ? 'Add New Default Roles'
+          : 'Assign New Roles'
+      }
+    >
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
@@ -143,9 +167,9 @@ export const AssignNewRoleDrawer = ({
           )}
 
           <Typography sx={{ marginBottom: 2.5 }}>
-            Select a role you want to assign to a user. Some roles require
-            selecting entities they should apply to. Configure the first role
-            and continue adding roles or save the assignment.{' '}
+            {isDefaultDelegationRolesForChildAccount
+              ? 'Select roles to be assigned to new delegate users by default. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'
+              : 'Select a role you want to assign to a user. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'}{' '}
             <Link to={ROLES_LEARN_MORE_LINK}>
               Learn more about roles and permissions
             </Link>
@@ -195,9 +219,14 @@ export const AssignNewRoleDrawer = ({
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              label: 'Assign',
+              label: isDefaultDelegationRolesForChildAccount
+                ? 'Add Default Roles'
+                : 'Assign',
               type: 'submit',
-              loading: isPending || formState.isSubmitting,
+              loading:
+                isUserRolesPending ||
+                isDefaultRolesPending ||
+                formState.isSubmitting,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',

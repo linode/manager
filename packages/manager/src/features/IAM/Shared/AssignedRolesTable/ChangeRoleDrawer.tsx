@@ -1,5 +1,7 @@
 import {
   useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
+  useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
@@ -11,12 +13,12 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import {
@@ -36,19 +38,43 @@ interface Props {
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
+  username?: string;
 }
 
-export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
+export const ChangeRoleDrawer = ({
+  mode,
+  onClose,
+  open,
+  role,
+  username,
+}: Props) => {
   const theme = useTheme();
-  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+  const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
 
-  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
+  const { data: userRolesData } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
 
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username || '');
+
+  const { mutateAsync: updateDefaultRoles } =
+    useUpdateDefaultDelegationAccessQuery();
+
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultRoles
+    : updateUserRoles;
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
       return [];
@@ -132,7 +158,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         newRole,
       });
 
-      await updateUserRoles(updatedUserRoles);
+      await mutationFn(updatedUserRoles);
 
       handleClose();
     } catch (errors) {
