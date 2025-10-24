@@ -1,4 +1,5 @@
 import { databaseQueries } from '@linode/queries';
+import { nodeBalancerFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 import {
@@ -12,9 +13,11 @@ import {
   deepEqual,
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
+  filterFirewallNodebalancers,
   filterUsingDependentFilters,
   getEndpointsProperties,
   getFilters,
+  getFirewallNodebalancersProperties,
   getTextFilterProperties,
 } from './FilterBuilder';
 import {
@@ -43,7 +46,9 @@ const dbaasConfig = FILTER_CONFIG.get(1);
 
 const nodeBalancerConfig = FILTER_CONFIG.get(3);
 
-const firewallConfig = FILTER_CONFIG.get(4);
+const linodeFirewallConfig = FILTER_CONFIG.get(4);
+
+const nodebalancerFirewallConfig = FILTER_CONFIG.get(8);
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas', id: 1 });
 
@@ -393,7 +398,7 @@ it('test getTextFilterProperties method for port', () => {
 });
 
 it('test getTextFilterProperties method for interface_id', () => {
-  const interfaceIdFilterConfig = firewallConfig?.filters.find(
+  const interfaceIdFilterConfig = linodeFirewallConfig?.filters.find(
     (filterObj) => filterObj.name === 'Interface IDs'
   );
 
@@ -453,6 +458,49 @@ it('test getEndpointsProperties method', () => {
     expect(defaultValue).toEqual(undefined);
     expect(region).toEqual('us-east');
     expect(xFilter).toEqual({ region: 'us-east' });
+  }
+});
+it('test getFirewallNodebalancersProperties', () => {
+  const nodebalancersConfig = nodebalancerFirewallConfig?.filters.find(
+    (filterObj) => filterObj.name === 'NodeBalancers'
+  );
+
+  expect(nodebalancersConfig).toBeDefined();
+
+  if (nodebalancersConfig) {
+    const nodebalancersProperties = getFirewallNodebalancersProperties(
+      {
+        config: nodebalancersConfig,
+        dashboard: dashboardFactory.build({ service_type: 'firewall', id: 8 }),
+        dependentFilters: {
+          resource_id: '1',
+          associated_entity_region: 'us-east',
+        },
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+    const {
+      label,
+      serviceType,
+      disabled,
+      savePreferences,
+      handleNodebalancersSelection,
+      defaultValue,
+      xFilter,
+    } = nodebalancersProperties;
+
+    expect(nodebalancersProperties).toBeDefined();
+    expect(label).toEqual(nodebalancersConfig.configuration.name);
+    expect(serviceType).toEqual('firewall');
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(handleNodebalancersSelection).toBeDefined();
+    expect(defaultValue).toEqual(undefined);
+    expect(xFilter).toEqual({
+      resource_id: '1',
+      associated_entity_region: 'us-east',
+    });
   }
 });
 
@@ -633,6 +681,73 @@ describe('filterEndpointsUsingRegion', () => {
     expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(
       [mockData[0]]
     );
+  });
+});
+
+describe('filterFirewallNodebalancers', () => {
+  const mockData = [
+    nodeBalancerFactory.build({
+      id: 1,
+      label: 'nodebalancer-1',
+      region: 'us-east',
+    }),
+    nodeBalancerFactory.build({
+      id: 2,
+      label: 'nodebalancer-2',
+      region: 'us-west',
+    }),
+  ];
+  const mockFirewalls: CloudPulseResources[] = [
+    {
+      id: '1',
+      label: 'firewall-1',
+      entities: { '1': 'nodebalancer-1' },
+    },
+  ];
+
+  it('should return undefined if data is undefined', () => {
+    expect(
+      filterFirewallNodebalancers(
+        undefined,
+        { associated_entity_region: 'us-east', resource_id: [1] },
+        mockFirewalls
+      )
+    ).toEqual(undefined);
+  });
+
+  it('should return mapped CloudPulseNodebalancers if xFilter is undefined', () => {
+    const result = filterFirewallNodebalancers(
+      mockData,
+      undefined,
+      mockFirewalls
+    );
+    expect(result).toEqual([
+      {
+        id: '1',
+        label: 'nodebalancer-1',
+        associated_entity_region: 'us-east',
+      },
+      {
+        id: '2',
+        label: 'nodebalancer-2',
+        associated_entity_region: 'us-west',
+      },
+    ]);
+  });
+
+  it('should filter nodebalancers based on xFilter', () => {
+    const result = filterFirewallNodebalancers(
+      mockData,
+      { associated_entity_region: 'us-east', resource_id: [1] },
+      mockFirewalls
+    );
+    expect(result).toEqual([
+      {
+        id: '1',
+        label: 'nodebalancer-1',
+        associated_entity_region: 'us-east',
+      },
+    ]);
   });
 });
 
