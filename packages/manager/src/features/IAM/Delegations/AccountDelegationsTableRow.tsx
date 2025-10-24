@@ -33,7 +33,17 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
       key={`delegation-${delegation.euuid}-${index}`}
     >
       <TableCell>
-        <Typography variant="body1">{delegation.company}</Typography>
+        <Typography
+          sx={{
+            maxWidth: 272,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+          variant="body1"
+        >
+          {delegation.company}
+        </Typography>
       </TableCell>
       <TableCell
         sx={(theme) => ({

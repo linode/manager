@@ -1,14 +1,16 @@
 import { Hidden } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import { Pagination } from 'akamai-cds-react-components/Pagination';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
 import AddAccessControlDrawer from 'src/features/Databases/DatabaseDetail/AddAccessControlDrawer';
 import DatabaseSettingsDeleteClusterDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
@@ -42,6 +44,7 @@ const DatabaseLandingTable = ({
   orderBy,
   results,
 }: Props) => {
+  const theme = useTheme();
   const { data: events } = useInProgressEvents();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
@@ -52,6 +55,8 @@ const DatabaseLandingTable = ({
     preferenceKey,
     queryParamsPrefix: dbPlatformType,
   });
+  const PAGE_SIZES = [25, 50, 75, 100];
+  const MIN_PAGE_SIZE = 25;
 
   const [selectedDatabase, setSelectedDatabase] =
     React.useState<DatabaseInstance>({} as DatabaseInstance);
@@ -92,117 +97,164 @@ const DatabaseLandingTable = ({
 
   return (
     <>
-      <Table
-        aria-label={`List of ${
-          isNewDatabase ? 'New' : 'Legacy'
-        } Database Clusters`}
-        sx={{ marginTop: '10px' }}
-      >
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              Cluster Label
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            {isNewDatabase && (
-              <TableSortCell
-                active={orderBy === 'type'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="type"
-              >
-                Plan
-              </TableSortCell>
-            )}
-            <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'cluster_size'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="cluster_size"
-              >
-                {isNewDatabase ? 'Nodes' : 'Configuration'}
-              </TableSortCell>
-            </Hidden>
-            <TableSortCell
-              active={orderBy === 'engine'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="engine"
-            >
-              Engine
-            </TableSortCell>
-            <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'region'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="region"
-              >
-                Region
-              </TableSortCell>
-            </Hidden>
-            <Hidden lgDown>
-              <TableSortCell
-                active={orderBy === 'created'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="created"
-              >
-                Created
-              </TableSortCell>
-            </Hidden>
-            {isDatabasesV2GA && isNewDatabase && <TableCell />}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.map((database: DatabaseInstance) => (
-            <DatabaseRow
-              database={database}
-              events={events}
-              handlers={{
-                handleDelete: () => handleDelete(database),
-                handleManageAccessControls: () =>
-                  handleManageAccessControls(database),
-                handleResetPassword: () => handleResetPassword(database),
-                handleSuspend: () => handleSuspend(database),
-              }}
-              isNewDatabase={isNewDatabase}
-              key={database.id}
-            />
-          ))}
-          {data?.length === 0 && (
-            <TableRowEmpty
-              colSpan={8}
-              message={
-                isNewDatabase
-                  ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
-                  : ''
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <Table
+          aria-label={`List of ${isNewDatabase ? 'New' : 'Legacy'} Database Clusters`}
+          style={
+            {
+              border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+              marginTop: '10px',
+              minWidth: '800px',
+              '--token-component-table-header-outlined-border':
+                theme.tokens.component.Table.Row.Border,
+            } as React.CSSProperties
+          }
+        >
+          <TableHead>
+            <TableRow
+              headerbackground={
+                theme.tokens.component.Table.HeaderNested.Background
               }
-            />
-          )}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={results || 0}
-        eventCategory="Databases Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+              headerborder
+            >
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('label', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'label' ? order : undefined}
+                style={{
+                  flex: '0 1 20.5%',
+                }}
+              >
+                Cluster Label
+              </TableHeaderCell>
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('status', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'status' ? order : undefined}
+              >
+                Status
+              </TableHeaderCell>
+              {isNewDatabase && (
+                <TableHeaderCell
+                  sort={() =>
+                    handleOrderChange('type', order === 'asc' ? 'desc' : 'asc')
+                  }
+                  sortable
+                  sorted={orderBy === 'type' ? order : undefined}
+                >
+                  Plan
+                </TableHeaderCell>
+              )}
+              <Hidden smDown>
+                <TableHeaderCell
+                  sort={() =>
+                    handleOrderChange(
+                      'cluster_size',
+                      order === 'asc' ? 'desc' : 'asc'
+                    )
+                  }
+                  sortable
+                  sorted={orderBy === 'cluster_size' ? order : undefined}
+                >
+                  {isNewDatabase ? 'Nodes' : 'Configuration'}
+                </TableHeaderCell>
+              </Hidden>
+              <TableHeaderCell
+                sort={() =>
+                  handleOrderChange('engine', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'engine' ? order : undefined}
+              >
+                Engine
+              </TableHeaderCell>
+              <Hidden mdDown>
+                <TableHeaderCell
+                  sort={() =>
+                    handleOrderChange(
+                      'region',
+                      order === 'asc' ? 'desc' : 'asc'
+                    )
+                  }
+                  sortable
+                  sorted={orderBy === 'region' ? order : undefined}
+                >
+                  Region
+                </TableHeaderCell>
+              </Hidden>
+              <Hidden lgDown>
+                <TableHeaderCell
+                  sort={() =>
+                    handleOrderChange(
+                      'created',
+                      order === 'asc' ? 'desc' : 'asc'
+                    )
+                  }
+                  sortable
+                  sorted={orderBy === 'created' ? order : undefined}
+                >
+                  Created
+                </TableHeaderCell>
+              </Hidden>
+              {isDatabasesV2GA && isNewDatabase && (
+                <TableHeaderCell style={{ maxWidth: 40 }} />
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.length === 0 ? (
+              <TableRowEmpty
+                colSpan={8}
+                message={
+                  isNewDatabase
+                    ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
+                    : ''
+                }
+              />
+            ) : (
+              data?.map((database: DatabaseInstance) => (
+                <DatabaseRow
+                  database={database}
+                  events={events}
+                  handlers={{
+                    handleDelete: () => handleDelete(database),
+                    handleManageAccessControls: () =>
+                      handleManageAccessControls(database),
+                    handleResetPassword: () => handleResetPassword(database),
+                    handleSuspend: () => handleSuspend(database),
+                  }}
+                  isNewDatabase={isNewDatabase}
+                  key={database.id}
+                />
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      {(results || 0) > MIN_PAGE_SIZE && (
+        <Pagination
+          count={results || 0}
+          onPageChange={(e: CustomEvent<number>) =>
+            pagination.handlePageChange(Number(e.detail))
+          }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          pageSizes={PAGE_SIZES}
+          style={{
+            borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
+            borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
+            borderTop: 0,
+          }}
+        />
+      )}
+
       {isNewDatabase && (
         <>
           <DatabaseLogo />
