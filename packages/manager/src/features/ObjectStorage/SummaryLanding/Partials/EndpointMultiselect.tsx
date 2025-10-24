@@ -36,7 +36,9 @@ export const EndpointMultiselect = ({ values, onChange }: Props) => {
       placeholder={
         isFetching
           ? `Loading S3 endpoints...`
-          : 'Select an Object Storage S3 endpoint'
+          : !values.length
+            ? 'Select an Object Storage S3 endpoint'
+            : ''
       }
       value={values}
     />
