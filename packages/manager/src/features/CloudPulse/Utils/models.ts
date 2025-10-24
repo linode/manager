@@ -104,6 +104,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   dependency?: string[];
 
   /**
+   * If this filter is part of metric-definitions API, this field holds the dimension key
+   */
+  dimensionKey?: string;
+
+  /**
    * This is the field that will be sent in the metrics api call or xFilter
    */
   filterKey: string;
