@@ -34,7 +34,6 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type {
   CloudPulseMetricsResponse,
-  FirewallDeviceEntityType,
 } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 

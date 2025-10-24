@@ -47,9 +47,6 @@ import {
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
-
-import type { FirewallDeviceEntityType, Linode } from '@linode/api-v4';
-
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
@@ -223,7 +220,7 @@ const mockFirewalls = firewallFactory.build({
     {
       id: 1,
       label: 'my-linode',
-      type: 'linode' as FirewallDeviceEntityType,
+      type: 'linode',
       parent_entity: null,
     },
   ],

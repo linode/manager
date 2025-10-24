@@ -38,7 +38,6 @@ import {
   widgetFactory,
 } from 'src/factories';
 
-import type { FirewallDeviceEntityType } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 const timeDurationToSelect = 'Last 24 Hours';
