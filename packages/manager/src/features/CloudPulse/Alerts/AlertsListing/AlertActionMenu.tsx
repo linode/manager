@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { getAlertTypeToActionsList } from '../Utils/AlertsActionMenu';
 
@@ -48,9 +49,18 @@ export interface AlertActionMenuProps {
 
 export const AlertActionMenu = (props: AlertActionMenuProps) => {
   const { alertLabel, alertStatus, alertType, handlers } = props;
+
+  const { aclpAlerting } = useFlags();
+
   return (
     <ActionMenu
-      actionsList={getAlertTypeToActionsList(handlers, alertStatus)[alertType]}
+      actionsList={
+        getAlertTypeToActionsList(
+          handlers,
+          alertStatus,
+          aclpAlerting?.editDisabledStatuses
+        )[alertType]
+      }
       ariaLabel={`Action menu for Alert ${alertLabel}`}
     />
   );
