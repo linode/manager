@@ -21,6 +21,7 @@ const mockChildAccounts = [
 const queryMocks = vi.hoisted(() => ({
   useAllGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -37,6 +38,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -48,6 +50,9 @@ describe('UserDelegations', () => {
     queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
       data: mockChildAccounts,
       isLoading: false,
+    });
+    queryMocks.useSearch.mockReturnValue({
+      query: '',
     });
   });
 
