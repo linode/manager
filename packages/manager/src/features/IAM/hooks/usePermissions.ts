@@ -1,16 +1,15 @@
-import { getUserEntityPermissions } from '@linode/api-v4';
 import {
   useGrants,
   useProfile,
-  useQueries,
   useUserAccountPermissions,
   useUserEntityPermissions,
+  useUserRoles,
 } from '@linode/queries';
 
 import {
+  buildEntityPermissionMapFromUserRoles,
   entityPermissionMapFrom,
   fromGrants,
-  toEntityPermissionMap,
   toPermissionMap,
 } from './adapters/permissionAdapters';
 import { useIsIAMEnabled } from './useIsIAMEnabled';
@@ -35,7 +34,6 @@ import type {
   NodeBalancerContributor,
   NodeBalancerViewer,
   PermissionType,
-  Profile,
   VolumeAdmin,
   VolumeContributor,
   VolumeViewer,
@@ -240,33 +238,6 @@ export function usePermissions<
 
 export type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
 
-export const useEntitiesPermissions = <T extends EntityBase>(
-  entities: T[] | undefined,
-  entityType: EntityType,
-  profile?: Profile,
-  enabled = true
-) => {
-  const queries = useQueries({
-    queries: (entities || []).map((entity: T) => ({
-      queryKey: [entityType, entity.id],
-      queryFn: () =>
-        getUserEntityPermissions(
-          profile?.username || '',
-          entityType,
-          entity.id
-        ),
-      enabled,
-    })),
-  });
-
-  const data = queries.map((query) => query.data);
-  const error = queries.map((query) => query.error);
-  const isError = queries.some((query) => query.isError);
-  const isLoading = queries.some((query) => query.isLoading);
-
-  return { data, error, isError, isLoading };
-};
-
 export type QueryWithPermissionsResult<T> = {
   data: T[];
   error: APIError[] | null;
@@ -292,7 +263,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     ...restQueryResult
   } = useQueryResult;
   const { data: profile } = useProfile();
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled, accountRoles } = useIsIAMEnabled();
 
   const accessType = entityType;
 
@@ -315,21 +286,21 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const useLAPermissions = isIAMEnabled && !isIAMBeta;
   const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
 
-  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(
-      allEntities,
-      entityType,
-      profile,
-      shouldUsePermissionMap && enabled
-    );
+  const { data: userRoles, isLoading: areUserRolesLoading } = useUserRoles(
+    profile?.username,
+    shouldUsePermissionMap && enabled
+  );
+
   const { data: grants } = useGrants(
     (!isIAMEnabled || !shouldUsePermissionMap) && enabled
   );
 
   const entityPermissionsMap = shouldUsePermissionMap
-    ? toEntityPermissionMap(
+    ? buildEntityPermissionMapFromUserRoles(
         allEntities,
-        entityPermissions,
+        userRoles,
+        accountRoles,
+        entityType,
         permissionsToCheck,
         profile?.restricted
       )
@@ -349,7 +320,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
     isError: isEntitiesError,
-    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
+    isLoading: areEntitiesLoading || areUserRolesLoading,
     ...restQueryResult,
   } as const;
 };

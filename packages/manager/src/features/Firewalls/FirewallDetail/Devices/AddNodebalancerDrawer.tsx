@@ -193,6 +193,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
         <NodeBalancerSelect
           disabled={isLoading || disabled}
           helperText={helperText}
+          loading={isLoading}
           multiple
           onSelectionChange={(nodebalancers) =>
             setSelectedNodebalancers(nodebalancers)

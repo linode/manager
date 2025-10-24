@@ -9,8 +9,12 @@ import { vpcGrantsToPermissions } from './vpcGrantsToPermissions';
 import type { EntityBase } from '../usePermissions';
 import type {
   AccessType,
+  EntityRoleType,
+  EntityType,
   Grants,
   GrantType,
+  IamAccountRoles,
+  IamUserRoles,
   PermissionType,
   Profile,
 } from '@linode/api-v4';
@@ -202,6 +206,74 @@ export const toPermissionMap = (
       (permissionMap[permission] =
         (unrestricted || usersPermissionMap[permission]) ?? false)
   );
+
+  return permissionMap;
+};
+
+export const buildEntityPermissionMapFromUserRoles = <T extends EntityBase>(
+  allEntities: T[] | undefined,
+  userRoles: IamUserRoles | undefined,
+  accountRoles: IamAccountRoles | undefined,
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[],
+  isRestricted?: boolean
+): Record<number, Record<PermissionType, boolean>> => {
+  const permissionMap: Record<number, Record<PermissionType, boolean>> = {};
+
+  if (!allEntities || !userRoles || !accountRoles) {
+    return permissionMap;
+  }
+
+  // Build a map of role names to their permissions
+  const rolePermissionsMap = new Map<string, PermissionType[]>();
+
+  // Get all role definitions for this entity type from accountRoles
+  accountRoles.entity_access.forEach((access) => {
+    if (access.type === entityType) {
+      access.roles.forEach((role) => {
+        rolePermissionsMap.set(role.name, role.permissions);
+      });
+    }
+  });
+
+  // Filter entity_access for the specific entityType we care about
+  const relevantEntityAccess = userRoles.entity_access.filter(
+    (access) => access.type === entityType
+  );
+
+  // Build a lookup map of entity ID to roles
+  const entityRolesMap = new Map<number, EntityRoleType[]>();
+  relevantEntityAccess.forEach((access) => {
+    entityRolesMap.set(access.id, access.roles);
+  });
+
+  // For each entity, determine if they have the required permissions
+  allEntities.forEach((entity) => {
+    const entityRoles = entityRolesMap.get(entity.id) || [];
+
+    // Collect all permissions granted by the user's roles for this entity
+    const grantedPermissions = new Set<PermissionType>();
+    entityRoles.forEach((roleName) => {
+      const rolePermissions = rolePermissionsMap.get(roleName) || [];
+      rolePermissions.forEach((permission) => {
+        grantedPermissions.add(permission);
+      });
+    });
+
+    // Build the permission map for this entity
+    const entityPermissions: Record<string, boolean> = {};
+    permissionsToCheck.forEach((permission) => {
+      // If user is unrestricted, they have all permissions
+      // Otherwise, check if the permission is in their granted permissions
+      entityPermissions[permission] =
+        isRestricted === false || grantedPermissions.has(permission);
+    });
+
+    permissionMap[entity.id] = entityPermissions as Record<
+      PermissionType,
+      boolean
+    >;
+  });
 
   return permissionMap;
 };

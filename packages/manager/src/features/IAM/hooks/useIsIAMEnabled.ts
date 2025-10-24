@@ -30,6 +30,7 @@ export const useIsIAMEnabled = () => {
     isIAMBeta: flags.iam?.beta,
     isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
     isLoading: isLoadingRoles || isLoadingPermissions,
+    accountRoles: roles,
   };
 };
 
