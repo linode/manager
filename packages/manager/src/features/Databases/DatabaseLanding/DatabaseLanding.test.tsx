@@ -7,11 +7,7 @@ import {
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import {
-  accountFactory,
-  databaseInstanceFactory,
-  databaseTypeFactory,
-} from 'src/factories';
+import { accountFactory, databaseInstanceFactory } from 'src/factories';
 import { DatabaseLanding } from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -88,10 +84,6 @@ describe('Database Table', () => {
           platform: 'rdbms-default',
         });
         return HttpResponse.json(makeResourcePage(databases));
-      }),
-      http.get('*/databases/types', () => {
-        const databases = databaseTypeFactory.buildList(3);
-        return HttpResponse.json(makeResourcePage(databases));
       })
     );
 
@@ -103,7 +95,9 @@ describe('Database Table', () => {
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    await waitForElementToBeRemoved(getByTestId(loadingTestId), {
+      timeout: 3000,
+    });
 
     // Static text and table column headers
     getAllByText('Cluster Label');
