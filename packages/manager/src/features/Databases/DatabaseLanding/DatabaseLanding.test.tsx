@@ -7,7 +7,11 @@ import {
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { accountFactory, databaseInstanceFactory } from 'src/factories';
+import {
+  accountFactory,
+  databaseInstanceFactory,
+  databaseTypeFactory,
+} from 'src/factories';
 import { DatabaseLanding } from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -83,6 +87,10 @@ describe('Database Table', () => {
           status: 'active',
           platform: 'rdbms-default',
         });
+        return HttpResponse.json(makeResourcePage(databases));
+      }),
+      http.get('*/databases/types', () => {
+        const databases = databaseTypeFactory.buildList(3);
         return HttpResponse.json(makeResourcePage(databases));
       })
     );
