@@ -156,7 +156,7 @@ describe('useIsDatabasesEnabled', () => {
     });
   });
 
-  it('should return correctly for V1 restricted user non-beta', async () => {
+  it('should return correctly for V2 restricted user existing beta', async () => {
     server.use(
       http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
@@ -164,11 +164,6 @@ describe('useIsDatabasesEnabled', () => {
     );
 
     // default
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: null,
-    });
-
-    // legacy
     queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
       data: databaseTypeFactory.buildList(1),
     });
@@ -182,56 +177,6 @@ describe('useIsDatabasesEnabled', () => {
     expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
       1,
       ...[{ platform: 'rdbms-default' }, true]
-    );
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      2,
-      ...[{ platform: 'rdbms-legacy' }, true]
-    );
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(false);
-
-      expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V1 & V2 restricted user existing beta', async () => {
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json({}, { status: 403 });
-      })
-    );
-
-    // default
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: databaseTypeFactory.buildList(1),
-    });
-
-    // legacy
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: databaseTypeFactory.buildList(1),
-    });
-
-    const flags = { dbaasV2: { beta: true, enabled: true } };
-
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
-    });
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      1,
-      ...[{ platform: 'rdbms-default' }, true]
-    );
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      2,
-      ...[{ platform: 'rdbms-legacy' }, true]
     );
 
     await waitFor(() => {
@@ -240,7 +185,7 @@ describe('useIsDatabasesEnabled', () => {
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
       expect(result.current.isUserExistingBeta).toBe(true);
-      expect(result.current.isUserNewBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(true);
 
       expect(result.current.isDatabasesV2GA).toBe(false);
     });
@@ -258,11 +203,6 @@ describe('useIsDatabasesEnabled', () => {
       data: databaseTypeFactory.buildList(1),
     });
 
-    // legacy
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: null,
-    });
-
     const flags = { dbaasV2: { beta: true, enabled: true } };
 
     const { result } = renderHook(() => useIsDatabasesEnabled(), {
@@ -274,17 +214,12 @@ describe('useIsDatabasesEnabled', () => {
       ...[{ platform: 'rdbms-default' }, true]
     );
 
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      2,
-      ...[{ platform: 'rdbms-legacy' }, true]
-    );
-
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(true);
       expect(result.current.isUserNewBeta).toBe(true);
 
       expect(result.current.isDatabasesV2GA).toBe(false);
@@ -303,11 +238,6 @@ describe('useIsDatabasesEnabled', () => {
       data: databaseTypeFactory.buildList(1),
     });
 
-    // legacy
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: null,
-    });
-
     const flags = { dbaasV2: { beta: false, enabled: true } };
 
     const { result } = renderHook(() => useIsDatabasesEnabled(), {
@@ -317,11 +247,6 @@ describe('useIsDatabasesEnabled', () => {
     expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
       1,
       ...[{ platform: 'rdbms-default' }, true]
-    );
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      2,
-      ...[{ platform: 'rdbms-legacy' }, true]
     );
 
     await waitFor(() => {

@@ -5,17 +5,10 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { DatabaseEmptyState } from 'src/features/Databases/DatabaseLanding/DatabaseEmptyState';
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { DatabaseClusterInfoBanner } from 'src/features/GlobalNotifications/DatabaseClusterInfoBanner';
-import { DatabaseMigrationInfoBanner } from 'src/features/GlobalNotifications/DatabaseMigrationInfoBanner';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -28,35 +21,26 @@ export const DatabaseLanding = () => {
   const newDatabasesPagination = usePaginationV2({
     currentRoute: '/databases',
     preferenceKey,
-    queryParamsPrefix: 'new',
-  });
-  const legacyDatabasesPagination = usePaginationV2({
-    currentRoute: '/databases',
-    preferenceKey,
-    queryParamsPrefix: 'legacy',
+    queryParamsPrefix: 'new', // TODO (UIE-8634): Determine if we still need this prefix
   });
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
 
-  const {
-    isDatabasesV2Enabled,
-    isDatabasesV2GA,
-    isUserExistingBeta,
-    isUserNewBeta,
-  } = useIsDatabasesEnabled();
+  const { isDatabasesV2GA, isUserExistingBeta, isUserNewBeta } =
+    useIsDatabasesEnabled();
 
-  const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
-    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: 'rdbms-default',
   });
 
   const isDefaultEnabled =
     isUserExistingBeta || isUserNewBeta || isDatabasesV2GA;
 
   const {
-    handleOrderChange: newDatabaseHandleOrderChange,
-    order: newDatabaseOrder,
-    orderBy: newDatabaseOrderBy,
+    handleOrderChange: databaseHandleOrderChange,
+    order: databaseOrder,
+    orderBy: databaseOrderBy,
   } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -65,122 +49,49 @@ export const DatabaseLanding = () => {
       },
       from: '/databases',
     },
-    preferenceKey: `new-${preferenceKey}-order`,
+    preferenceKey: `new-${preferenceKey}-order`, // TODO (UIE-8634): Determine if we still need 'new-' prefix
   });
 
-  const newDatabasesFilter: Record<string, string> = {
-    ['+order']: newDatabaseOrder,
-    ['+order_by']: newDatabaseOrderBy,
+  const databasesFilter: Record<string, string> = {
+    ['+order']: databaseOrder,
+    ['+order_by']: databaseOrderBy,
     ['platform']: 'rdbms-default',
   };
 
   const {
-    data: newDatabases,
-    error: newDatabasesError,
-    isLoading: newDatabasesIsLoading,
+    data: databases,
+    error: databasesError,
+    isLoading: databasesIsLoading,
   } = useDatabasesQuery(
     {
       page: newDatabasesPagination.page,
       page_size: newDatabasesPagination.pageSize,
     },
-    newDatabasesFilter,
-    isDefaultEnabled
+    databasesFilter,
+    isDefaultEnabled // TODO (UIE-8634): Determine if check if still necessary
   );
 
-  const {
-    handleOrderChange: legacyDatabaseHandleOrderChange,
-    order: legacyDatabaseOrder,
-    orderBy: legacyDatabaseOrderBy,
-  } = useOrderV2({
-    initialRoute: {
-      defaultOrder: {
-        order: 'desc',
-        orderBy: 'label',
-      },
-      from: '/databases',
-    },
-    preferenceKey: `legacy-${preferenceKey}-order`,
-  });
-
-  const legacyDatabasesFilter: Record<string, string> = {
-    ['+order']: legacyDatabaseOrder,
-    ['+order_by']: legacyDatabaseOrderBy,
-  };
-
-  if (isUserExistingBeta || isDatabasesV2GA) {
-    legacyDatabasesFilter['platform'] = 'rdbms-legacy';
-  }
-
-  const {
-    data: legacyDatabases,
-    error: legacyDatabasesError,
-    isLoading: legacyDatabasesIsLoading,
-  } = useDatabasesQuery(
-    {
-      page: legacyDatabasesPagination.page,
-      page_size: legacyDatabasesPagination.pageSize,
-    },
-    legacyDatabasesFilter,
-    !isUserNewBeta
-  );
-
-  const error = newDatabasesError || legacyDatabasesError;
-  if (error) {
+  if (databasesError) {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].reason
+          getAPIErrorOrDefault(
+            databasesError,
+            'Error loading your databases.'
+          )[0].reason
         }
       />
     );
   }
 
-  if (newDatabasesIsLoading || legacyDatabasesIsLoading || isTypeLoading) {
+  if (databasesIsLoading || isTypesLoading) {
     return <CircleProgress />;
   }
 
-  const showEmpty = !newDatabases?.data.length && !legacyDatabases?.data.length;
+  const showEmpty = !databases?.data.length;
   if (showEmpty) {
     return <DatabaseEmptyState />;
   }
-
-  const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
-  const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
-  const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
-  const showSuspend = isDatabasesV2GA && !!newDatabases?.data.length;
-  const docsLink = isV2Enabled
-    ? 'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters'
-    : 'https://techdocs.akamai.com/cloud-computing/docs/managed-databases';
-
-  const legacyTable = () => {
-    return (
-      <DatabaseLandingTable
-        data={legacyDatabases?.data}
-        handleOrderChange={legacyDatabaseHandleOrderChange}
-        order={legacyDatabaseOrder}
-        orderBy={legacyDatabaseOrderBy}
-        results={legacyDatabases?.results}
-      />
-    );
-  };
-
-  const defaultTable = () => {
-    return (
-      <DatabaseLandingTable
-        data={newDatabases?.data}
-        handleOrderChange={newDatabaseHandleOrderChange}
-        isNewDatabase={true}
-        order={newDatabaseOrder}
-        orderBy={newDatabaseOrderBy}
-        results={newDatabases?.results}
-        showSuspend={showSuspend}
-      />
-    );
-  };
-
-  const singleTable = () => {
-    return isNewDatabase ? defaultTable() : legacyTable();
-  };
 
   return (
     <React.Fragment>
@@ -194,27 +105,19 @@ export const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink={docsLink}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters"
         onButtonClick={() => navigate({ to: '/databases/create' })}
         title="Database Clusters"
       />
-      {showTabs && !isDatabasesV2GA && <DatabaseClusterInfoBanner />}
-      {showTabs && isDatabasesV2GA && <DatabaseMigrationInfoBanner />}
       <Box>
-        {showTabs ? (
-          <Tabs>
-            <TabList>
-              <Tab>New Database Clusters</Tab>
-              <Tab>Legacy Database Clusters</Tab>
-            </TabList>
-            <TabPanels>
-              <SafeTabPanel index={0}>{defaultTable()}</SafeTabPanel>
-              <SafeTabPanel index={1}>{legacyTable()}</SafeTabPanel>
-            </TabPanels>
-          </Tabs>
-        ) : (
-          singleTable()
-        )}
+        <DatabaseLandingTable
+          data={databases?.data}
+          handleOrderChange={databaseHandleOrderChange}
+          isNewDatabase={true} // TODO (UIE-8634): Remove logic around isNewDatabase flag in LandingTable component
+          order={databaseOrder}
+          orderBy={databaseOrderBy}
+          results={databases?.results}
+        />
       </Box>
     </React.Fragment>
   );
