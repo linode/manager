@@ -140,7 +140,7 @@ it('test getResourceSelectionProperties method', () => {
 });
 
 it('test getResourceSelectionProperties method for linode-firewall', () => {
-  const resourceSelectionConfig = firewallConfig?.filters.find(
+  const resourceSelectionConfig = linodeFirewallConfig?.filters.find(
     (filterObj) => filterObj.name === 'Firewalls'
   );
 
