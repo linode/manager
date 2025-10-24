@@ -2,8 +2,10 @@ import { useDeleteDestinationMutation } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Destination } from '@linode/api-v4';
 
@@ -15,23 +17,36 @@ interface Props {
 
 export const DeleteDestinationDialog = React.memo((props: Props) => {
   const { onClose, open, destination } = props;
-  const {
-    mutateAsync: deleteDestination,
-    isPending,
-    error,
-  } = useDeleteDestinationMutation();
+  const { mutateAsync: deleteDestination, isPending } =
+    useDeleteDestinationMutation();
+  const [deleteError, setDeleteError] = React.useState<string | undefined>();
 
   const handleDelete = () => {
     const { id, label } = destination as Destination;
     deleteDestination({
       id,
-    }).then(() => {
-      onClose();
-      return enqueueSnackbar(`Destination ${label} deleted successfully`, {
-        variant: 'success',
+    })
+      .then(() => {
+        onClose();
+        return enqueueSnackbar(`Destination ${label} deleted successfully`, {
+          variant: 'success',
+        });
+      })
+      .catch((error) => {
+        setDeleteError(
+          getAPIErrorOrDefault(
+            error,
+            'There was an issue deleting your destination'
+          )[0].reason
+        );
       });
-    });
   };
+
+  useEffect(() => {
+    if (open) {
+      setDeleteError(undefined);
+    }
+  }, [open]);
 
   const actions = (
     <ActionsPanel
@@ -49,7 +64,7 @@ export const DeleteDestinationDialog = React.memo((props: Props) => {
   return (
     <ConfirmationDialog
       actions={actions}
-      error={error}
+      error={deleteError}
       onClose={onClose}
       open={open}
       title="Delete Destination"
