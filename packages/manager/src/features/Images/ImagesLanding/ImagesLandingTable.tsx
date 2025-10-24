@@ -38,7 +38,6 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import {
@@ -56,26 +55,17 @@ import {
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
 } from '../constants';
-import { getEventsForImages } from '../utils';
+import { getEventsForImages, useImagesSubTabs } from '../utils';
 import { DeleteImageDialog } from './DeleteImageDialog';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
-import { getImagesSubTabIndex, subTabs } from './utilities';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { ImagesSubTabType } from './utilities';
 import type { Filter, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { ImageAction } from 'src/routes/images';
-
-interface ImagesSubTab {
-  content: React.ReactNode;
-  isBeta?: boolean;
-  key: ImagesSubTabType;
-  title: string;
-}
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -95,7 +85,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const ImagesLandingTable = () => {
   const navigate = useNavigate();
-  const flags = useFlags();
+
   const { classes } = useStyles();
   const params = useParams({
     from: '/images/$imageId/$action',
@@ -105,6 +95,8 @@ export const ImagesLandingTable = () => {
   const canCreateImage = permissions?.create_image;
 
   const search = useSearch({ from: '/images' });
+  const { subTabIndex, subTabs } = useImagesSubTabs(search.subType);
+
   const { query } = search;
 
   const queryClient = useQueryClient();
@@ -349,21 +341,12 @@ export const ImagesLandingTable = () => {
     );
   }
 
+  // @todo - Check If we need ImagesLandingEmptyState
   // if (manualImages?.results === 0 && automaticImages?.results === 0 && !query) {
   //   return <ImagesLandingEmptyState />;
   // }
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
-
-  const onTabChange = (index: number) => {
-    // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
-    navigate({
-      to: `/images/images`,
-      search: {
-        subType: subTabs[index],
-      },
-    });
-  };
 
   const customImages = (
     <Paper className={classes.imageTable}>
@@ -563,30 +546,15 @@ export const ImagesLandingTable = () => {
     </Paper>
   );
 
-  const imagesSubTabs: ImagesSubTab[] = [
-    {
-      key: 'custom',
-      title: 'My custom images',
-      content: customImages,
-    },
-    ...(flags.privateImageSharing
-      ? [
-          {
-            key: 'shared' as ImagesSubTabType,
-            title: 'Shared with me',
-            isBeta: true,
-            content: (
-              <Notice variant="info">Share with me is coming soon...</Notice>
-            ),
-          },
-        ]
-      : []),
-    {
-      key: 'recovery',
-      title: 'Recovery images',
-      content: recoveryImages,
-    },
-  ];
+  const onTabChange = (index: number) => {
+    // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
+    navigate({
+      to: `/images/images`,
+      search: {
+        subType: subTabs[index]['key'],
+      },
+    });
+  };
 
   return (
     <Stack spacing={3}>
@@ -600,9 +568,9 @@ export const ImagesLandingTable = () => {
         placeholder="Search Images"
         value={query ?? ''}
       />
-      <Tabs index={getImagesSubTabIndex(search.subType)} onChange={onTabChange}>
+      <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
-          {imagesSubTabs.map((tab) => (
+          {subTabs.map((tab) => (
             <Tab key={`images-${tab.key}`}>
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
@@ -610,9 +578,15 @@ export const ImagesLandingTable = () => {
         </TabList>
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            {imagesSubTabs.map((tab, idx) => (
+            {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.key}-content`}>
-                {tab.content}
+                {tab.key === 'custom' && customImages}
+                {tab.key === 'shared' && (
+                  <Notice variant="info">
+                    Share with me is coming soon...
+                  </Notice>
+                )}
+                {tab.key === 'recovery' && recoveryImages}
               </SafeTabPanel>
             ))}
           </TabPanels>

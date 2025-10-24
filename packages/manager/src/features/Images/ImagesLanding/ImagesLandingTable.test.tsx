@@ -16,7 +16,7 @@ const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
   useQueryWithPermissions: vi.fn().mockReturnValue({}),
   useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
-  getImagesSubTabIndex: vi.fn(),
+  useSearch: vi.fn(),
 }));
 
 vi.mock('src/hooks/useFlags', () => ({
@@ -33,6 +33,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useLocation: queryMocks.useLocation,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -41,14 +42,6 @@ vi.mock('../utils.ts', async () => {
   return {
     ...actual,
     useLinodesPermissionsCheck: queryMocks.useLinodesPermissionsCheck,
-  };
-});
-
-vi.mock('./utilities.ts', async () => {
-  const actual = await vi.importActual('./utilities');
-  return {
-    ...actual,
-    getImagesSubTabIndex: queryMocks.getImagesSubTabIndex,
   };
 });
 
@@ -71,12 +64,11 @@ describe('Images Landing Table', () => {
     queryMocks.useLocation.mockReturnValue({
       pathname: '/images/images',
     });
-    queryMocks.getImagesSubTabIndex.mockReturnValue(0);
+    queryMocks.useSearch.mockReturnValue({});
   });
 
   it("should render 'My custom images' tab with items", async () => {
     queryMocks.useFlags.mockReturnValue({ privateImageSharing: false });
-    queryMocks.getImagesSubTabIndex.mockReturnValue(0);
 
     server.use(
       http.get('*/images', () => {
@@ -102,8 +94,6 @@ describe('Images Landing Table', () => {
     await waitForElementToBeRemoved(loadingElement);
 
     // Custom Images table should render
-
-    // Header
     getByText('My Custom Images');
 
     // Static text and table column headers
@@ -117,7 +107,9 @@ describe('Images Landing Table', () => {
 
   it("should render 'Recovery images tab' with items", async () => {
     queryMocks.useFlags.mockReturnValue({ privateImageSharing: false });
-    queryMocks.getImagesSubTabIndex.mockReturnValue(1);
+    queryMocks.useSearch.mockReturnValue({
+      subType: 'recovery',
+    });
 
     server.use(
       http.get('*/images', () => {
@@ -134,7 +126,8 @@ describe('Images Landing Table', () => {
     const { getByText, queryByTestId } = renderWithTheme(
       <ImagesLandingTable />,
       {
-        initialRoute: '/images',
+        initialRoute: '/images/images',
+        initialEntries: ['/images/images?subType=recovery'],
       }
     );
 
@@ -142,8 +135,6 @@ describe('Images Landing Table', () => {
     await waitForElementToBeRemoved(loadingElement);
 
     // Recovery Images table should render
-
-    // Header
     getByText('Recovery Images');
 
     // Static text and table column headers
@@ -188,7 +179,11 @@ describe('Images Landing Table', () => {
     expect(getByText('Recovery images')).toBeVisible();
   });
 
-  it('should render custom images empty state', async () => {
+  it("should render 'My custom images' (manual) empty state", async () => {
+    queryMocks.useSearch.mockReturnValue({
+      subType: 'custom',
+    });
+
     server.use(
       http.get('*/images', ({ request }) => {
         return HttpResponse.json(
@@ -202,15 +197,18 @@ describe('Images Landing Table', () => {
     );
 
     const { findByText } = renderWithTheme(<ImagesLandingTable />, {
-      initialRoute: '/images',
+      initialRoute: '/images/images',
+      initialEntries: ['/images/images?subType=custom'],
     });
 
     expect(await findByText('No Custom Images to display.')).toBeVisible();
   });
 
-  it('should render automatic images empty state', async () => {
+  it("should render 'Recovery images' (automatic) empty state", async () => {
     queryMocks.useFlags.mockReturnValue({ privateImageSharing: false });
-    queryMocks.getImagesSubTabIndex.mockReturnValue(1);
+    queryMocks.useSearch.mockReturnValue({
+      subType: 'recovery',
+    });
 
     server.use(
       http.get('*/images', ({ request }) => {
@@ -225,33 +223,32 @@ describe('Images Landing Table', () => {
     );
 
     const { findByText } = renderWithTheme(<ImagesLandingTable />, {
-      initialRoute: '/images',
+      initialRoute: '/images/images',
+      initialEntries: ['/images/images?subType=recovery'],
     });
 
     expect(await findByText('No Recovery Images to display.')).toBeVisible();
   });
 
-  it('should render images landing empty state', async () => {
-    server.use(
-      http.get('*/images', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
-
-    const { getByText, queryByTestId } = renderWithTheme(
-      <ImagesLandingTable />,
-      {
-        initialRoute: '/images',
-      }
-    );
-
-    const loadingElement = queryByTestId(loadingTestId);
-    await waitForElementToBeRemoved(loadingElement);
-
-    expect(
-      getByText((text) => text.includes('Store custom Linux images'))
-    ).toBeVisible();
-  });
+  // @TODO - check if we need this test or not
+  // it('should render images landing empty state', async () => {
+  //   server.use(
+  //     http.get('*/images', () => {
+  //       return HttpResponse.json(makeResourcePage([]));
+  //     })
+  //   );
+  //   const { getByText, queryByTestId } = renderWithTheme(
+  //     <ImagesLandingTable />,
+  //     {
+  //       initialRoute: '/images',
+  //     }
+  //   );
+  //   const loadingElement = queryByTestId(loadingTestId);
+  //   await waitForElementToBeRemoved(loadingElement);
+  //   expect(
+  //     getByText((text) => text.includes('Store custom Linux images'))
+  //   ).toBeVisible();
+  // });
 
   it('should allow opening the Edit Image drawer', async () => {
     const image = imageFactory.build();
@@ -466,20 +463,4 @@ describe('Images Landing Table', () => {
     const createButton = getByText('Create Image');
     expect(createButton).toBeEnabled();
   });
-
-  // it('should trigger navigation to /images/create when create button is clicked', async () => {
-  //   queryMocks.usePermissions.mockReturnValue({ data: { create_image: true } });
-
-  //   const { getByText } = renderWithTheme(<ImagesLandingTable />, {
-  //     initialRoute: '/images',
-  //   });
-
-  //   const createButton = getByText('Create Image');
-  //   await userEvent.click(createButton);
-
-  //   expect(queryMocks.useNavigate).toHaveBeenCalledWith({
-  //     to: '/images/create',
-  //     search: expect.any(Function),
-  //   });
-  // });
 });

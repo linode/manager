@@ -4,7 +4,7 @@ import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
-import type { ImagesSubTabType } from 'src/features/Images/ImagesLanding/utilities';
+import type { ImagesSubTabType } from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;

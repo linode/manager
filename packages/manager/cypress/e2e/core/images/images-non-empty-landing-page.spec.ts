@@ -117,6 +117,14 @@ describe('image landing checks for non-empty state with restricted user', () => 
       .should('exist')
       .as('customImageTable');
 
+    // cy.visitWithLogin(`images/images?subType=recovery`);
+
+    // ui.tabList.find().within(() => {
+    //   cy.findByText('Recovery images').click();
+    // });
+
+    // ui.tabList.findTabByTitle('Recovery images').should('be.visible').click();
+
     cy.contains('h3', 'Recovery Images')
       .closest('div[data-qa-paper="true"]')
       .find('[role="table"]')
