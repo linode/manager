@@ -30,7 +30,11 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type { CloudPulseMetricsResponse, Filters } from '@linode/api-v4';
+import type {
+  CloudPulseMetricsResponse,
+  Filters,
+  FirewallDeviceEntityType,
+} from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -138,9 +142,66 @@ const mockRegion = regionFactory.build({
     metrics: ['Cloud Firewall', 'Linodes'],
   },
 });
-const mockFirewalls = firewallFactory.build({ label: firewalls });
 
-// Tests will be modified
+const mockFirewalls = [
+  firewallFactory.build({
+    id: 1,
+    label: firewalls,
+    status: 'enabled',
+    entities: [
+      {
+        id: 1,
+        label: 'linode-1',
+        type: 'linode' ,
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
+  }),
+  firewallFactory.build({
+    id: 2,
+    label: 'firewall-linode_interface-2',
+    status: 'enabled',
+    entities: [
+      {
+        id: 2,
+        label: 'linode_interface-2',
+        type: 'linode_interface' as FirewallDeviceEntityType,
+        url: '/test',
+        parent_entity: {
+          id: 1,
+          label: 'linode-1',
+          type: 'linode' as FirewallDeviceEntityType,
+          url: '/parent-test',
+          parent_entity: null,
+        },
+      },
+    ],
+  }),
+  firewallFactory.build({
+    id: 3,
+    label: 'firewall-no-entities-3',
+    status: 'enabled',
+    entities: [],
+  }),
+  firewallFactory.build({
+    id: 4,
+    label: 'firewall-nodebalancer-4',
+    status: 'enabled',
+    entities: [
+      {
+        id: 4,
+        label: 'nodebalancer-4',
+        type: 'nodebalancer',
+        url: '/test',
+        parent_entity: null,
+      },
+    ],
+  }),
+];
+
+
+
 describe('Integration Tests for firewall Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -154,7 +215,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       'getMetrics'
     );
     mockGetLinodes([mockLinode]);
-    mockGetFirewalls([mockFirewalls]);
+    mockGetFirewalls(mockFirewalls);
     mockGetUserPreferences({});
     mockGetRegions([mockRegion]);
 
@@ -175,24 +236,27 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .click();
 
-    // Select a time duration from the autocomplete input.
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-
-    cy.get('@startDateInput').click();
-
-    ui.button.findByTitle('Last day').click();
-
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
+      cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+      cy.get('@startDateInput').click();
+      cy.get(`[data-qa-preset="Last day"]`).click();
+      cy.get('[data-qa-buttons="apply"]')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
     // Select a resource from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Firewalls')
-      .should('be.visible')
-      .type(`${firewalls}{enter}`);
+    cy.findByPlaceholderText('Select Firewalls').should('be.visible').click();
 
+    // Verify the firewall with type 'nodebalancer' exists
+    cy.findByRole('option', { name: firewalls }).should('exist');
+
+    // Verify the others (non-nodebalancer) do NOT exist
+    cy.findByRole('option', { name: 'firewall-linode_interface-2' }).should('exist');
+    cy.findByRole('option', { name: 'firewall-no-entities-3' }).should('not.exist');
+    cy.findByRole('option', { name: 'firewall-nodebalancer-4' }).should('not.exist');
+    
+
+    // Optionally, select the visible one
+    cy.findByPlaceholderText('Select Firewalls').type(`${firewalls}{enter}`);
     ui.autocomplete.findByLabel('Firewalls').click();
 
     ui.regionSelect.find().click();

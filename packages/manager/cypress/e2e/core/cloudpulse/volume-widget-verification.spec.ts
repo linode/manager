@@ -265,17 +265,13 @@ describe('Integration Tests for Blockstorage Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').click();
-    cy.get('@startDateInput').clear();
-
-    ui.button.findByTitle('Last day').click();
-
-    // Click the "Apply" button to confirm the end date and time
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+      cy.get('@startDateInput').click();
+      cy.get(`[data-qa-preset="Last day"]`).click();
+      cy.get('[data-qa-buttons="apply"]')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
     //  Select a region from the dropdown.
 

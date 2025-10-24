@@ -132,9 +132,8 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'nodebalancer-1',
-        type: 'nodebalancer' as FirewallDeviceEntityType,
+        type: 'nodebalancer',
         url: '/test',
-        parent_entity: null,
       },
     ],
   }),
@@ -155,7 +154,7 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
 });
 
 // Tests will be modified
-describe('Integration Tests for firewall Dashboard ', () => {
+describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
@@ -179,11 +178,12 @@ describe('Integration Tests for firewall Dashboard ', () => {
             groupBy: ['IP Version'],
           },
         },
-        associated_entity_region: 'us-east',
-        resources: ['1'],
+        associated_entity_region: 'us-east', // added this field
         groupBy: ['entity_id', 'region', 'Protocol'],
+        resource_id: '1', // optional if needed
       },
     }).as('fetchPreferences');
+    
 
     // navigate to the metrics page
     cy.visitWithLogin('/metrics');
@@ -198,7 +198,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .within(() => {
         // Check Firewalls
-        cy.get('[data-qa-value="Firewalls Firewall-0"]')
+        cy.get('[data-qa-value="Firewall Firewall-0"]')
           .should('be.visible')
           .should('have.text', 'Firewall-0');
 
@@ -229,11 +229,10 @@ describe('Integration Tests for firewall Dashboard ', () => {
       ).should('have.value', 'US, Newark, NJ (us-east)');
 
       // Firewalls autocomplete
-      ui.autocomplete
-        .findByLabel('Firewalls')
-        .parent() // wrapper containing chips
-        .find('[role="button"][data-tag-index="0"]') // select the inner span only
-        .should('have.text', firewalls);
+      cy.get('[data-qa-autocomplete="Firewall"] input[data-testid="textfield-input"]')
+      .should('be.visible')       // input is visible
+      .should('have.value', 'Firewall-0') // input has correct value
+      .click();                   // open the dropdown
 
       // Refresh button (tooltip)
       cy.get('[data-qa-tooltip="Refresh"]').should('exist');
@@ -289,7 +288,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       'updateRegionPreference'
     );
     // clear the Region filter
-    cy.get('[data-qa-autocomplete="Firewalls"]')
+    cy.get('[data-qa-autocomplete="Firewall"]')
       .find('button[aria-label="Clear"]')
       .click();
 
@@ -300,7 +299,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .within(() => {
         // Check Firewalls
-        cy.get('[data-qa-value="Firewalls Firewall-0"]').should('not.exist');
+        cy.get('[data-qa-value="Firewall Firewall-0"]').should('not.exist');
 
         // Check NodeBalancer Region
         cy.get('[data-qa-value="NodeBalancer Region US, Newark, NJ"]').should(
@@ -322,7 +321,6 @@ describe('Integration Tests for firewall Dashboard ', () => {
             groupBy: ['IP Version'],
           },
         },
-        resources: [],
         groupBy: ['entity_id', 'region', 'Protocol'],
       };
 
@@ -346,7 +344,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .within(() => {
         // Check Firewalls
-        cy.get('[data-qa-value="Firewalls Firewall-0"]')
+        cy.get('[data-qa-value="Firewall Firewall-0"]')
           .should('be.visible')
           .should('have.text', 'Firewall-0');
 
@@ -371,7 +369,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
             groupBy: ['IP Version'],
           },
         },
-        resources: ['1'],
+        resource_id: '1',
         groupBy: ['entity_id', 'region', 'Protocol'],
       };
       comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
@@ -427,7 +425,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
             groupBy: ['IP Version'],
           },
         },
-        resources: ['1'],
+        resource_id: '1',
         groupBy: [],
       };
       comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
@@ -484,7 +482,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
             groupBy: ['IP Version'],
           },
         },
-        resources: ['1'],
+        resource_id: '1',
       };
       comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
       comparePreferences(expectedAclpPreference, request.body.aclpPreference);
@@ -549,7 +547,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
             groupBy: [],
           },
         },
-        resources: ['1'],
+        resource_id: '1',
       };
       comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
       comparePreferences(expectedAclpPreference, request.body.aclpPreference);
@@ -657,7 +655,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
             },
           },
           associated_entity_region: 'us-east',
-          resources: ['1'],
+          resource_id: '1',
           groupBy: [],
         };
 
