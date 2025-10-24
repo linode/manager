@@ -47,6 +47,7 @@ import {
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
+import { Linode } from '@linode/api-v4';
 export interface MetricDetails {
   aggregationType: string;
   dataField: string;
