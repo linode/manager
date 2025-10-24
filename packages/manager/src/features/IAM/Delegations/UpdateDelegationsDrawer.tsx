@@ -97,7 +97,7 @@ export const UpdateDelegationsDrawer = ({
         euuid: delegation.euuid,
         users: usersList,
       });
-      enqueueSnackbar(`Delegate users updated.`, { variant: 'success' });
+      enqueueSnackbar(`Delegation updated`, { variant: 'success' });
       handleClose();
     } catch (errors) {
       for (const error of errors) {
@@ -131,6 +131,9 @@ export const UpdateDelegationsDrawer = ({
             <Typography
               sx={{
                 marginBottom: theme.tokens.spacing.S8,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
               Update delegation for <strong>{delegation.company}:</strong>
