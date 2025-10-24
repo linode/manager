@@ -428,8 +428,16 @@ export const filterFirewallResources = (
   entityType: AssociatedEntityType
 ) => {
   return resources.filter((resource) =>
-    resource.entities.some(
-      (entity: FirewallDeviceEntity) => entity.type === entityType
-    )
+    resource.entities.some((entity: FirewallDeviceEntity) => {
+      // If the entity type is linode_interface, it should be associated with a linode and have a parent entity label
+      if (
+        entity.type === 'linode_interface' &&
+        entityType === 'linode' &&
+        entity.parent_entity?.label
+      ) {
+        return true;
+      }
+      return entity.label && entity.type === entityType;
+    })
   );
 };
