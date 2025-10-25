@@ -9,7 +9,9 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
-describe('Images empty landing page', () => {
+// NOTE - Temporarily skipping!
+// @TODO - Check if we need this Empty State Landing page
+describe.skip('Images empty landing page', () => {
   beforeEach(() => {
     // Mock setup to display the Image landing page in an empty state
     mockGetAllImages([]).as('getImages');
@@ -20,8 +22,7 @@ describe('Images empty landing page', () => {
    * - Confirms that "Getting Started Guides" and "Video Playlist" are listed on landing page.
    * - Confirms that clicking "Create Image" navigates user to image create page.
    */
-  // @TODO - Temporarily skipping! Check if we need this Empty State Landing page
-  it.skip('shows the empty state when there are no images', () => {
+  it('shows the empty state when there are no images', () => {
     cy.visitWithLogin('/images');
     cy.wait(['@getImages']);
 
@@ -64,8 +65,7 @@ describe('Images empty landing page', () => {
    * - Confirms that "Create Image" button is disabled for restricted user.
    * - Confirms that hovering "Create Image" button shows a Warning for restricted user.
    */
-  // @TODO - Temporarily skipping!
-  it.skip('checks restricted user has no access to create Image on Image landing page', () => {
+  it('checks restricted user has no access to create Image on Image landing page', () => {
     // object to create a mockProfile for non-restricted user
     const mockProfile = profileFactory.build({
       restricted: true,
