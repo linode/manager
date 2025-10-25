@@ -276,7 +276,7 @@ describe('Images Landing Table', () => {
     await userEvent.click(getByText('Edit'));
 
     expect(router.state.location.pathname).toBe(
-      `/images/${encodeURIComponent(image.id)}/edit`
+      `/images/images/${encodeURIComponent(image.id)}/edit`
     );
   });
 
@@ -306,7 +306,7 @@ describe('Images Landing Table', () => {
     await userEvent.click(getByText('Rebuild an Existing Linode'));
 
     expect(router.state.location.pathname).toBe(
-      `/images/${encodeURIComponent(image.id)}/rebuild`
+      `/images/images/${encodeURIComponent(image.id)}/rebuild`
     );
   });
 
@@ -372,7 +372,7 @@ describe('Images Landing Table', () => {
     await userEvent.click(getByText('Delete'));
 
     expect(router.state.location.pathname).toBe(
-      `/images/${encodeURIComponent(image.id)}/delete`
+      `/images/images/${encodeURIComponent(image.id)}/delete`
     );
   });
 
