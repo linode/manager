@@ -88,7 +88,7 @@ export const ImagesLandingTable = () => {
 
   const { classes } = useStyles();
   const params = useParams({
-    from: '/images/$imageId/$action',
+    from: '/images/images/$imageId/$action',
     shouldThrow: false,
   });
   const { data: permissions } = usePermissions('account', ['create_image']);
@@ -269,7 +269,7 @@ export const ImagesLandingTable = () => {
     navigate({
       params: { action, imageId: image.id },
       search: (prev) => prev,
-      to: '/images/$imageId/$action',
+      to: '/images/images/$imageId/$action',
     });
   };
 

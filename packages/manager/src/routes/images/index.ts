@@ -87,7 +87,7 @@ const imageActionRoute = createRoute({
       });
     }
   },
-  getParentRoute: () => imagesRoute,
+  getParentRoute: () => imagesImagesRoute,
   params: {
     parse: ({ action, imageId }: ImageActionRouteParams) => ({
       action,
@@ -147,8 +147,7 @@ const imagesCreateUploadRoute = createRoute({
 
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute,
-  imageActionRoute,
-  imagesImagesRoute,
+  imagesImagesRoute.addChildren([imageActionRoute]),
   imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
