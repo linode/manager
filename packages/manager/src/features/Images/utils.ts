@@ -1,9 +1,18 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useMemo } from 'react';
 
 import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
+
+interface ImagesSubTab {
+  isBeta?: boolean;
+  key: ImagesSubTabType;
+  title: string;
+}
+
+export type ImagesSubTabType = 'custom' | 'recovery' | 'shared';
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
@@ -54,4 +63,42 @@ export const useIsPrivateImageSharingEnabled = () => {
 
   // @TODO Private Image Sharing: check for customer tag/account capability when it exists
   return { isPrivateImageSharingEnabled: flags.privateImageSharing ?? false };
+};
+
+/**
+ * Returns the currently selected Images sub-tab index and the list of available sub-tabs.
+ *
+ * @param tab - the current tab. Currently, this value comes from 'subType' query param on the Images Landing Page.
+ * @returns An object containing:
+ *   - `subTabIndex`: the index of the selected sub-tab
+ *   - `subTabs`: the array of available sub-tabs
+ */
+export const useImagesSubTabs = (tab: ImagesSubTabType | undefined) => {
+  const flags = useFlags();
+
+  const subTabs = useMemo(() => {
+    const tabs: ImagesSubTab[] = [
+      { key: 'custom', title: 'My custom images' },
+      ...(flags.privateImageSharing
+        ? [
+            {
+              key: 'shared' as ImagesSubTabType,
+              title: 'Shared with me',
+              isBeta: true,
+            },
+          ]
+        : []),
+      { key: 'recovery', title: 'Recovery images' },
+    ];
+
+    return tabs;
+  }, [flags.privateImageSharing]);
+
+  const subTabIndex = useMemo(() => {
+    const keys = subTabs.map((t) => t.key);
+    const foundIndex = tab ? keys.indexOf(tab) : -1;
+    return foundIndex >= 0 ? foundIndex : 0;
+  }, [tab, subTabs]);
+
+  return { subTabIndex, subTabs };
 };

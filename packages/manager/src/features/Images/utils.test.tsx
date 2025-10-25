@@ -7,6 +7,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   getEventsForImages,
   getImageLabelForLinode,
+  useImagesSubTabs,
   useIsPrivateImageSharingEnabled,
 } from './utils';
 
@@ -87,5 +88,61 @@ describe('useIsPrivateImageSharingEnabled', () => {
     await waitFor(() => {
       expect(result.current.isPrivateImageSharingEnabled).toBe(false);
     });
+  });
+});
+
+describe('useImagesSubTabs', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns correct subTabs and index when privateImageSharing is false', () => {
+    const options = { flags: { privateImageSharing: false } };
+    const { result } = renderHook(() => useImagesSubTabs('recovery'), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current.subTabs.map((t) => t.key)).toEqual([
+      'custom',
+      'recovery',
+    ]);
+    expect(result.current.subTabIndex).toBe(1);
+  });
+
+  it('returns correct subTabs and index when privateImageSharing is true', () => {
+    const options = { flags: { privateImageSharing: true } };
+    const { result } = renderHook(() => useImagesSubTabs('shared'), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current.subTabs.map((t) => t.key)).toEqual([
+      'custom',
+      'shared',
+      'recovery',
+    ]);
+    expect(result.current.subTabIndex).toBe(1);
+  });
+
+  it('defaults to index 0 if tab is undefined or invalid', () => {
+    const options = { flags: { privateImageSharing: true } };
+
+    const { result: undefinedResult } = renderHook(
+      () => useImagesSubTabs(undefined),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
+
+    expect(undefinedResult.current.subTabIndex).toBe(0);
+
+    const { result: invalidResult } = renderHook(
+      // @ts-expect-error intentionally passing an unexpected value
+      () => useImagesSubTabs('hey'),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
+
+    expect(invalidResult.current.subTabIndex).toBe(0);
   });
 });

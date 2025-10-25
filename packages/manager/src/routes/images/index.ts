@@ -4,9 +4,11 @@ import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
+import type { ImagesSubTabType } from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
+  subType?: ImagesSubTabType;
 }
 
 export interface ImageCreateDiskSearchParams {
@@ -42,8 +44,33 @@ const imagesRoute = createRoute({
 });
 
 const imagesIndexRoute = createRoute({
+  beforeLoad: () => {
+    throw redirect({
+      to: '/images/images',
+    });
+  },
   getParentRoute: () => imagesRoute,
   path: '/',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
+);
+
+const imagesImagesRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  path: 'images',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
+);
+
+const imagesShareGroupsRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  path: 'sharegroups',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
   import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
@@ -60,7 +87,7 @@ const imageActionRoute = createRoute({
       });
     }
   },
-  getParentRoute: () => imagesRoute,
+  getParentRoute: () => imagesImagesRoute,
   params: {
     parse: ({ action, imageId }: ImageActionRouteParams) => ({
       action,
@@ -119,7 +146,9 @@ const imagesCreateUploadRoute = createRoute({
 );
 
 export const imagesRouteTree = imagesRoute.addChildren([
-  imagesIndexRoute.addChildren([imageActionRoute]),
+  imagesIndexRoute,
+  imagesImagesRoute.addChildren([imageActionRoute]),
+  imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
     imagesCreateDiskRoute,
