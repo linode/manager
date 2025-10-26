@@ -10,11 +10,7 @@ import { deepEqual, filterFirewallNodebalancers } from '../Utils/FilterBuilder';
 import { getResourcesFilterConfig } from '../Utils/utils';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
-import type {
-  CloudPulseServiceType,
-  Dashboard,
-  FilterValue,
-} from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseNodebalancers {
   /**
@@ -68,10 +64,6 @@ export interface CloudPulseFirewallNodebalancersSelectProps {
    */
   selectedDashboard: Dashboard;
   /**
-   * The service type
-   */
-  serviceType: CloudPulseServiceType | undefined;
-  /**
    * The dependent filters of the nodebalancers
    */
   xFilter?: CloudPulseMetricsFilter;
@@ -85,25 +77,26 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
       handleNodebalancersSelection,
       label,
       placeholder,
-      serviceType,
       savePreferences,
       xFilter,
       isOptional,
       selectedDashboard,
     } = props;
 
+    const serviceType = selectedDashboard.service_type;
+    const region = xFilter?.[PARENT_ENTITY_REGION];
+
     // Get the associated entity type for the selected dashboard
     const associatedEntityType = getResourcesFilterConfig(
       selectedDashboard.id
     )?.associatedEntityType;
-    const region = xFilter?.[PARENT_ENTITY_REGION];
 
     const { data: firewalls } = useResourcesQuery(
-      disabled !== undefined ? !disabled : Boolean(region && serviceType),
+      disabled !== undefined ? !disabled : Boolean(region),
       serviceType,
       {},
 
-      RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {},
+      RESOURCE_FILTER_MAP[serviceType] ?? {},
       associatedEntityType
     );
 
@@ -113,7 +106,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
     /**
      * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
      * When the autocomplete is already closed, we should publish the resources on clear action and deselect action as well since onclose will not be triggered at that time
-     * When the autocomplete is open, we should publish any resources on clear action until the autocomplete is close
+     * When the autocomplete is open, we should not publish any resources on clear action until the autocomplete is close
      */
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
@@ -137,7 +130,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
       if (disabled && !selectedNodebalancers) {
         return;
       }
-      // To save default values, go through side effects if disabled is false
+      // To save default values, go through side effects
       if (!getNodebalancersList || !savePreferences || selectedNodebalancers) {
         if (selectedNodebalancers) {
           setSelectedNodebalancers([]);
@@ -157,7 +150,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
         setSelectedNodebalancers(nodebalancers);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getNodebalancersList, xFilter, serviceType]);
+    }, [getNodebalancersList]);
 
     return (
       <Autocomplete
@@ -247,14 +240,8 @@ function compareProps(
   prevProps: CloudPulseFirewallNodebalancersSelectProps,
   nextProps: CloudPulseFirewallNodebalancersSelectProps
 ): boolean {
-  const keysToCompare: (keyof CloudPulseFirewallNodebalancersSelectProps)[] = [
-    'serviceType',
-  ];
-
-  for (const key of keysToCompare) {
-    if (prevProps[key] !== nextProps[key]) {
-      return false;
-    }
+  if (prevProps.selectedDashboard.id !== nextProps.selectedDashboard.id) {
+    return false;
   }
   if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
     return false;

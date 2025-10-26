@@ -93,7 +93,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         isOptional
         label="NodeBalancers"
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
       />
     );
 
@@ -118,7 +117,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         handleNodebalancersSelection={mockNodebalancerHandler}
         label="NodeBalancers"
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
       />
     );
 
@@ -141,7 +139,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         handleNodebalancersSelection={mockNodebalancerHandler}
         label="NodeBalancers"
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
         xFilter={{ associated_entity_region: 'us-east', resource_id: '1' }}
       />
     );
@@ -185,7 +182,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         label="NodeBalancers"
         savePreferences
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
         xFilter={{ associated_entity_region: 'us-east', resource_id: '1' }}
       />
     );
@@ -261,7 +257,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         handleNodebalancersSelection={mockNodebalancerHandler}
         label="NodeBalancers"
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
       />
     );
 
@@ -285,7 +280,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         handleNodebalancersSelection={mockNodebalancerHandler}
         label="NodeBalancers"
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
         xFilter={{ associated_entity_region: 'us-east', resource_id: '1' }}
       />
     );
@@ -333,7 +327,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         label="NodeBalancers"
         savePreferences={true}
         selectedDashboard={mockDashboard}
-        serviceType="firewall"
         xFilter={{ associated_entity_region: 'us-east', resource_id: '1' }}
       />
     );

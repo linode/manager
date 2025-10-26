@@ -515,8 +515,8 @@ it('test getFirewallNodebalancersProperties', () => {
     );
     const {
       label,
-      serviceType,
       disabled,
+      selectedDashboard,
       savePreferences,
       handleNodebalancersSelection,
       defaultValue,
@@ -525,7 +525,7 @@ it('test getFirewallNodebalancersProperties', () => {
 
     expect(nodebalancersProperties).toBeDefined();
     expect(label).toEqual(nodebalancersConfig.configuration.name);
-    expect(serviceType).toEqual('firewall');
+    expect(selectedDashboard.service_type).toEqual('firewall');
     expect(savePreferences).toEqual(true);
     expect(disabled).toEqual(false);
     expect(handleNodebalancersSelection).toBeDefined();
