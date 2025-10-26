@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { dashboardFactory, nodeBalancerTypeFactory } from 'src/factories';
+import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseFirewallNodebalancersSelect } from './CloudPulseFirewallNodebalancersSelect';
@@ -74,7 +74,6 @@ const mockDashboard = dashboardFactory.build({
 describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    nodeBalancerTypeFactory.resetSequenceNumber();
   });
 
   it('renders with the correct label and placeholder', () => {
@@ -83,13 +82,11 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       isError: false,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
       isLoading: false,
     });
-
     renderWithTheme(
       <CloudPulseFirewallNodebalancersSelect
         handleNodebalancersSelection={mockNodebalancerHandler}
@@ -110,13 +107,11 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       isError: false,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
       isLoading: false,
     });
-
     renderWithTheme(
       <CloudPulseFirewallNodebalancersSelect
         disabled
@@ -136,13 +131,11 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       isError: false,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
       isLoading: false,
     });
-
     renderWithTheme(
       <CloudPulseFirewallNodebalancersSelect
         handleNodebalancersSelection={mockNodebalancerHandler}
@@ -161,7 +154,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         name: 'nodebalancer-1',
       })
     ).toBeVisible();
-
     expect(
       await screen.findByRole('option', {
         name: 'nodebalancer-3',
@@ -176,23 +168,22 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should be able to deselect the selected nodebalancers', async () => {
+  it('should be able to select and deselect the nodebalancers', async () => {
     queryMocks.useAllNodeBalancersQuery.mockReturnValue({
       data: mockNodebalancers,
       isError: false,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
       isLoading: false,
     });
-
     renderWithTheme(
       <CloudPulseFirewallNodebalancersSelect
         handleNodebalancersSelection={mockNodebalancerHandler}
         label="NodeBalancers"
+        savePreferences
         selectedDashboard={mockDashboard}
         serviceType="firewall"
         xFilter={{ associated_entity_region: 'us-east', resource_id: '1' }}
@@ -216,6 +207,27 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
 
+    // Close the autocomplete to trigger the handler call
+    await userEvent.click(await screen.findByRole('button', { name: 'Close' }));
+
+    // Should call the handler with the selected nodebalancers
+    expect(mockNodebalancerHandler).toHaveBeenCalledWith(
+      [
+        {
+          id: '1',
+          label: 'nodebalancer-1',
+          associated_entity_region: 'us-east',
+        },
+        {
+          id: '3',
+          label: 'nodebalancer-3',
+          associated_entity_region: 'us-east',
+        },
+      ],
+      true
+    );
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', { name: 'Deselect All' })
     );
@@ -239,13 +251,11 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       isError: true,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
       isLoading: false,
     });
-
     renderWithTheme(
       <CloudPulseFirewallNodebalancersSelect
         handleNodebalancersSelection={mockNodebalancerHandler}
@@ -265,13 +275,11 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       isError: false,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
       isLoading: false,
     });
-
     renderWithTheme(
       <CloudPulseFirewallNodebalancersSelect
         handleNodebalancersSelection={mockNodebalancerHandler}
@@ -290,7 +298,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         name: 'nodebalancer-1',
       })
     ).toBeVisible();
-
     expect(
       await screen.findByRole('option', {
         name: 'nodebalancer-3',
@@ -311,7 +318,6 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
       isError: false,
       isLoading: false,
     });
-
     queryMocks.useResourcesQuery.mockReturnValue({
       data: mockFirewalls,
       isError: false,
@@ -345,51 +351,5 @@ describe('CloudPulseFirewallNodebalancersSelect component tests', () => {
         name: 'nodebalancer-3',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
-  });
-
-  it('should call handleNodebalancersSelection when selections change', async () => {
-    queryMocks.useAllNodeBalancersQuery.mockReturnValue({
-      data: mockNodebalancers,
-      isError: false,
-      isLoading: false,
-    });
-
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockFirewalls,
-      isError: false,
-      isLoading: false,
-    });
-
-    renderWithTheme(
-      <CloudPulseFirewallNodebalancersSelect
-        handleNodebalancersSelection={mockNodebalancerHandler}
-        label="NodeBalancers"
-        selectedDashboard={mockDashboard}
-        serviceType="firewall"
-        xFilter={{ associated_entity_region: 'us-east', resource_id: '1' }}
-      />
-    );
-
-    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
-    await userEvent.click(
-      await screen.findByRole('option', {
-        name: 'nodebalancer-1',
-      })
-    );
-
-    // Close the autocomplete to trigger the handler call
-    await userEvent.click(await screen.findByRole('button', { name: 'Close' }));
-
-    // Should call the handler with the selected nodebalancer
-    expect(mockNodebalancerHandler).toHaveBeenCalledWith(
-      [
-        {
-          id: '1',
-          label: 'nodebalancer-1',
-          associated_entity_region: 'us-east',
-        },
-      ],
-      undefined
-    );
   });
 });
