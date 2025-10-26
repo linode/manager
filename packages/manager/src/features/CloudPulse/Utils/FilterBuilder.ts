@@ -448,7 +448,6 @@ export const getFirewallNodebalancersProperties = (
     handleNodebalancersSelection: handleFirewallNodebalancersChange,
     label,
     placeholder,
-    serviceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
     isOptional: config.configuration.isOptional,
