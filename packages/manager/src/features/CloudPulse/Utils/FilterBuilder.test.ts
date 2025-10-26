@@ -742,13 +742,13 @@ describe('filterFirewallNodebalancers', () => {
     expect(
       filterFirewallNodebalancers(
         undefined,
-        { associated_entity_region: 'us-east', resource_id: [1] },
+        { associated_entity_region: 'us-east', resource_id: '1' },
         mockFirewalls
       )
     ).toEqual(undefined);
   });
 
-  it('should return mapped CloudPulseNodebalancers if xFilter is undefined', () => {
+  it('should return mapped nodebalancers if xFilter is undefined', () => {
     const result = filterFirewallNodebalancers(
       mockData,
       undefined,
@@ -771,7 +771,7 @@ describe('filterFirewallNodebalancers', () => {
   it('should filter nodebalancers based on xFilter', () => {
     const result = filterFirewallNodebalancers(
       mockData,
-      { associated_entity_region: 'us-east', resource_id: [1] },
+      { associated_entity_region: 'us-east', resource_id: '1' },
       mockFirewalls
     );
     expect(result).toEqual([

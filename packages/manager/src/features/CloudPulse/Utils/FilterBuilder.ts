@@ -415,7 +415,7 @@ export const getEndpointsProperties = (
 /**
  *
  * @param props The cloudpulse filter properties selected so far
- * @param handleFirewallNodebalancersChange The callback function when a firewall nodebalancers selection changes
+ * @param handleFirewallNodebalancersChange The callback function when selection of nodebalancers changes
  * @returns CloudPulseFirewallNodebalancersSelectProps
  */
 export const getFirewallNodebalancersProperties = (
