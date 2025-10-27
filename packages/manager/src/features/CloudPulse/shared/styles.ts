@@ -4,7 +4,7 @@ import type { TextFieldProps } from '@linode/ui';
  * Shared text field props for CloudPulse components
  * Provides consistent scrollbar hiding and height constraints
  */
-export const CloudPulseTextFieldProps: Partial<TextFieldProps> = {
+export const CLOUD_PULSE_TEXT_FIELD_PROPS: Partial<TextFieldProps> = {
   InputProps: {
     sx: {
       '::-webkit-scrollbar': {

@@ -6,7 +6,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
-import { CloudPulseTextFieldProps } from './styles';
+import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type {
   CloudPulseMetricsFilter,
@@ -206,7 +206,7 @@ export const CloudPulseEndpointsSelect = React.memo(
             </ListItem>
           );
         }}
-        textFieldProps={{ ...CloudPulseTextFieldProps }}
+        textFieldProps={{ ...CLOUD_PULSE_TEXT_FIELD_PROPS }}
         value={selectedEndpoints ?? []}
       />
     );
