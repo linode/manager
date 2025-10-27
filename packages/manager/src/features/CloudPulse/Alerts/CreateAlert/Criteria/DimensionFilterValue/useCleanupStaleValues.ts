@@ -1,4 +1,3 @@
-// useCleanupStaleValues.ts
 import { useEffect } from 'react';
 
 import type { Item } from '../../../constants';
