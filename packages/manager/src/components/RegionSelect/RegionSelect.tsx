@@ -125,7 +125,7 @@ export const RegionSelect = <
         noMarginTop={noMarginTop}
         noOptionsText={props.noOptionsText ?? 'No results'}
         onChange={onChange}
-        options={!accountAvailabilityLoading ? regionOptions : []}
+        options={regionOptions}
         placeholder={placeholder ?? 'Select a Region'}
         renderOption={(props, region, state) => {
           const { key, ...rest } = props;
