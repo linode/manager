@@ -23,7 +23,7 @@ describe('CloudPulse dimension filter drawer tests', () => {
 
     const drawerOpen = screen.getByText('Test Metric');
     expect(drawerOpen).toBeInTheDocument();
-    const selectText = screen.getByText('Select up to 5 Filters');
+    const selectText = screen.getByText('Select up to 5 filters.');
     expect(selectText).toBeInTheDocument();
     await userEvent.click(screen.getByText('Add Filter'));
     // validate for form fields to be present
@@ -56,7 +56,7 @@ describe('CloudPulse dimension filter drawer tests', () => {
 
     const drawerOpen = screen.getByText('Test Metric');
     expect(drawerOpen).toBeInTheDocument();
-    const selectText = screen.getByText('Select up to 5 Filters');
+    const selectText = screen.getByText('Select up to 5 filters.');
     expect(selectText).toBeInTheDocument();
     expect(screen.getByText('Clear All')).toHaveAttribute(ariaDisabled, 'true'); // nothing is done in form
     await userEvent.click(screen.getByText('Add Filter'));

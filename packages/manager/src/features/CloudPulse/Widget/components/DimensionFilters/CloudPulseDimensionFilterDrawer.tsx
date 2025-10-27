@@ -105,7 +105,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
               data-qa-id="filter-drawer-selection-title"
               sx={(theme) => ({ font: theme.font.semibold })}
             >
-              Select up to 5 Filters
+              Select up to 5 filters.
             </Typography>
             <Button
               aria-hidden={hideClearAll}
