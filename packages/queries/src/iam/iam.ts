@@ -30,15 +30,26 @@ export const useAccountRoles = (enabled = true) => {
   });
 };
 
-export const useUserRolesMutation = (username: string) => {
+export const useUserRolesMutation = (
+  username?: string,
+  enabled: boolean = true,
+) => {
   const queryClient = useQueryClient();
+
   return useMutation<IamUserRoles, APIError[], IamUserRoles>({
-    mutationFn: (data) => updateUserRoles(username, data),
+    mutationFn: (data) => {
+      if (!username) {
+        throw new Error('Username is required');
+      }
+      return updateUserRoles(username, data);
+    },
     onSuccess: (role) => {
-      queryClient.setQueryData<IamUserRoles>(
-        iamQueries.user(username)._ctx.roles.queryKey,
-        role,
-      );
+      if (username && enabled) {
+        queryClient.setQueryData<IamUserRoles>(
+          iamQueries.user(username)._ctx.roles.queryKey,
+          role,
+        );
+      }
     },
   });
 };

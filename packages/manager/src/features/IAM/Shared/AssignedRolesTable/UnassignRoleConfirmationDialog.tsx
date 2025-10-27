@@ -5,6 +5,7 @@ import {
   useUserRolesMutation,
 } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
@@ -20,12 +21,12 @@ interface Props {
   onSuccess?: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
-  username?: string;
 }
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
-  const { onClose: _onClose, onSuccess, open, role, username } = props;
+  const { onClose: _onClose, onSuccess, open, role } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const { username } = useParams({ strict: false });
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
   const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
@@ -45,10 +46,14 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
     isPending,
     mutateAsync: updateUserRoles,
     reset,
-  } = useUserRolesMutation(username || '');
+  } = useUserRolesMutation(username, Boolean(username));
 
   const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
     useUpdateDefaultDelegationAccessQuery();
+
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultRoles
+    : updateUserRoles;
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
@@ -65,11 +70,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       initialRole,
     });
 
-    if (isDefaultDelegationRolesForChildAccount) {
-      await updateDefaultRoles(updatedUserRoles);
-    } else {
-      await updateUserRoles(updatedUserRoles);
-    }
+    await mutationFn(updatedUserRoles);
 
     enqueueSnackbar(`Role ${role?.name} has been deleted successfully.`, {
       variant: 'success',

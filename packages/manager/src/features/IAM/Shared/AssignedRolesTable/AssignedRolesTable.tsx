@@ -6,7 +6,7 @@ import {
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -70,11 +70,8 @@ const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Assigned Roles',
   value: 'all',
 };
-interface Props {
-  username?: string;
-}
-export const AssignedRolesTable = (props: Props) => {
-  const { username } = props;
+export const AssignedRolesTable = () => {
+  const { username } = useParams({ strict: false });
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -431,26 +428,22 @@ export const AssignedRolesTable = (props: Props) => {
         assignedRoles={assignedRoles}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
-        username={username}
       />
       <ChangeRoleDrawer
         mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
-        username={username}
       />
       <UnassignRoleConfirmationDialog
         onClose={() => setIsUnassignRoleDialogOpen(false)}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
-        username={username}
       />
       <UpdateEntitiesDrawer
         onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
         open={isUpdateEntitiesDrawerOpen}
         role={selectedRole}
-        username={username}
       />
       <RemoveAssignmentConfirmationDialog
         onClose={() => setIsRemoveAssignmentDialogOpen(false)}

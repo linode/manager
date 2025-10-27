@@ -15,6 +15,7 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -42,18 +43,16 @@ interface Props {
   assignedRoles?: IamUserRoles;
   onClose: () => void;
   open: boolean;
-  username?: string;
 }
 
 export const AssignNewRoleDrawer = ({
   assignedRoles,
-  username,
   onClose,
   open,
 }: Props) => {
   const theme = useTheme();
   const queryClient = useQueryClient();
-
+  const { username } = useParams({ strict: false });
   const { data: accountRoles } = useAccountRoles();
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
@@ -100,23 +99,17 @@ export const AssignNewRoleDrawer = ({
   }, [accountRoles, assignedRoles]);
 
   const { mutateAsync: updateUserRoles, isPending: isUserRolesPending } =
-    useUserRolesMutation(username || '');
+    useUserRolesMutation(username, Boolean(username));
 
   const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
     useUpdateDefaultDelegationAccessQuery();
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
-      const queryKey = iamQueries.user(username ?? '')._ctx.roles.queryKey;
-      const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
-      const currentDefaultRoles = queryClient.getQueryData<IamUserRoles>(
-        delegationQueries.defaultAccess.queryKey
-      );
-      const mergedRoles = mergeAssignedRolesIntoExistingRoles(
-        values,
-        structuredClone(currentRoles)
-      );
       if (isDefaultDelegationRolesForChildAccount) {
+        const currentDefaultRoles = queryClient.getQueryData<IamUserRoles>(
+          delegationQueries.defaultAccess.queryKey
+        );
         const mergedDefaultRoles = mergeAssignedRolesIntoExistingRoles(
           values,
           structuredClone(currentDefaultRoles)
@@ -126,6 +119,13 @@ export const AssignNewRoleDrawer = ({
         if (!username) {
           return;
         }
+        const queryKey = iamQueries.user(username ?? '')._ctx.roles.queryKey;
+        const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
+
+        const mergedRoles = mergeAssignedRolesIntoExistingRoles(
+          values,
+          structuredClone(currentRoles)
+        );
         await updateUserRoles(mergedRoles);
       }
       enqueueSnackbar(`Roles added.`, { variant: 'success' });

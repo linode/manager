@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -38,18 +39,11 @@ interface Props {
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
-  username?: string;
 }
 
-export const ChangeRoleDrawer = ({
-  mode,
-  onClose,
-  open,
-  role,
-  username,
-}: Props) => {
+export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
-
+  const { username } = useParams({ strict: false });
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
@@ -67,7 +61,10 @@ export const ChangeRoleDrawer = ({
   const assignedRoles = isDefaultDelegationRolesForChildAccount
     ? defaultRolesData
     : userRolesData;
-  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username || '');
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(
+    username,
+    Boolean(username)
+  );
 
   const { mutateAsync: updateDefaultRoles } =
     useUpdateDefaultDelegationAccessQuery();

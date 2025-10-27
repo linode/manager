@@ -71,7 +71,7 @@ export const UserRoles = () => {
           >
             View and manage roles assigned to the user.
           </Typography>
-          <AssignedRolesTable username={username} />
+          <AssignedRolesTable />
         </Paper>
       ) : (
         <NoAssignedRoles

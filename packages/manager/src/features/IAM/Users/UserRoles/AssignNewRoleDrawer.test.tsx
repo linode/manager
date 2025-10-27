@@ -52,7 +52,6 @@ const props = {
     account_access: [mockAccountAccessRole.id],
     entity_access: [],
   } as IamUserRoles,
-  username: 'test_user',
 };
 
 const mockUpdateUserRole = vi.fn();
