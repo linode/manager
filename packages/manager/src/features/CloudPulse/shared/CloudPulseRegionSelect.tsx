@@ -16,6 +16,7 @@ import {
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { getResourcesFilterConfig } from '../Utils/utils';
+import { CloudPulseTextFieldProps } from './styles';
 
 import type { Item } from '../Alerts/constants';
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
@@ -211,6 +212,7 @@ export const CloudPulseRegionSelect = React.memo(
         }}
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegionsFromResources}
+        textFieldProps={{ ...CloudPulseTextFieldProps }}
         value={
           supportedRegionsFromResources?.length
             ? (selectedRegion ?? null)
