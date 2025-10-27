@@ -9,6 +9,8 @@ import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
+import type { QueryFunctionType } from '../Utils/models';
+import type { AssociatedEntityType } from './types';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
@@ -24,8 +26,16 @@ export interface CloudPulseResources {
 }
 
 export interface CloudPulseResourcesSelectProps {
+  /**
+   * The associated entity type for the dashboard
+   */
+  associatedEntityType?: AssociatedEntityType;
   defaultValue?: Partial<FilterValue>;
   disabled?: boolean;
+  /**
+   * The filter function to apply to the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
   handleResourcesSelection: (
     resources: CloudPulseResources[],
     savePref?: boolean
@@ -51,6 +61,8 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       savePreferences,
       xFilter,
+      associatedEntityType,
+      filterFn,
     } = props;
 
     const flags = useFlags();
@@ -64,7 +76,9 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       {},
 
-      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {}
+      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {},
+      associatedEntityType, // This is based on the filter configuration, used to keep associated entity id to label mapping for the supported entity type
+      filterFn
     );
 
     const [selectedResources, setSelectedResources] =
