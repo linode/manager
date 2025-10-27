@@ -484,15 +484,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 />
               )}
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <WidgetFilterGroupByRenderer
-                  dashboardId={dashboardId}
-                  handleChange={handleGroupByChange}
-                  label={widget.label}
-                  metric={widget.metric}
-                  preferenceGroupBy={groupBy}
-                  savePreferences={savePref}
-                  serviceType={serviceType}
-                />
                 {flags.aclp?.showWidgetDimensionFilters && (
                   <CloudPulseDimensionFiltersSelect
                     dimensionOptions={filteredDimensions ?? []}
@@ -503,6 +494,15 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                     serviceType={serviceType}
                   />
                 )}
+                <WidgetFilterGroupByRenderer
+                  dashboardId={dashboardId}
+                  handleChange={handleGroupByChange}
+                  label={widget.label}
+                  metric={widget.metric}
+                  preferenceGroupBy={groupBy}
+                  savePreferences={savePref}
+                  serviceType={serviceType}
+                />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}
