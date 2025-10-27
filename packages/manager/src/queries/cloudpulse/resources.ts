@@ -45,6 +45,9 @@ export const useResourcesQuery = (
             }
           });
         }
+        if (resourceType === 'blockstorage') {
+          entities[String(resource.linode_id)] = resource.linode_label;
+        }
         const id =
           resourceType === 'objectstorage'
             ? resource.hostname

@@ -93,23 +93,22 @@ export const getStaticOptions = (
 };
 
 /**
- * Filters firewall resources and returns matching parent entity IDs.
- * @param firewallResources - List of firewall resource objects.
- * @param entities - List of target firewall entity IDs.
+ * Filters resource objects and returns matching parent entity IDs.
+ * @param resources - List of resource objects.
+ * @param entities - List of target resource entity IDs.
  * @returns - Flattened array of matching entity IDs.
  */
-export const getFilteredFirewallParentEntities = (
-  firewallResources: CloudPulseResources[] | undefined,
+export const getFilteredResourceParentEntities = (
+  resources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
 ): FirewallEntity[] => {
-  if (!(firewallResources?.length && entities?.length)) return [];
-
-  return firewallResources
-    .filter((firewall) => entities.includes(firewall.id))
-    .flatMap((firewall) =>
+  if (!(resources?.length && entities?.length)) return [];
+  return resources
+    .filter((resource) => entities.includes(resource.id))
+    .flatMap((resource) =>
       // combine key as id and value as label for each entity
-      firewall.entities
-        ? Object.entries(firewall.entities).map(([id, label]) => ({
+      resource.entities
+        ? Object.entries(resource.entities).map(([id, label]) => ({
             id,
             label,
           }))
@@ -180,15 +179,15 @@ export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
   );
 };
 
-interface ScopeBasedFilteredBucketsProps {
+interface ScopeBasedFilteredResourcesProps {
   /**
-   * The full list of available CloudPulse resources (buckets).
-   */
-  buckets: CloudPulseResources[];
-  /**
-   * A list of entity IDs (bucket IDs) to filter by when scope is `entity`.
+   * A list of entity IDs to filter by when scope is `entity`.
    */
   entities?: string[];
+  /**
+   * The full list of available CloudPulse resources.
+   */
+  resources: CloudPulseResources[];
   /**
    * The scope of the alert definition (`account`, `entity`, `region`, or `null`).
    */
@@ -200,30 +199,45 @@ interface ScopeBasedFilteredBucketsProps {
 }
 
 /**
- * Filters a list of Object Storage buckets based on the given alert definition scope.
+ * Filters a list of Resource objects based on the given alert definition scope.
  *
  * @param props - Object containing filter parameters.
- * @returns A filtered list of buckets based on the provided scope.
+ * @returns A filtered list of resources based on the provided scope.
  */
-export const scopeBasedFilteredBuckets = (
-  props: ScopeBasedFilteredBucketsProps
+export const scopeBasedFilteredResources = (
+  props: ScopeBasedFilteredResourcesProps
 ): CloudPulseResources[] => {
-  const { scope, buckets, selectedRegions, entities } = props;
+  const { scope, resources, selectedRegions, entities } = props;
 
   switch (scope) {
     case 'account':
-      return buckets;
+      return resources;
     case 'entity':
       return entities
-        ? buckets.filter((bucket) => entities.includes(bucket.id))
+        ? resources.filter((resource) => entities.includes(resource.id))
         : [];
     case 'region':
       return selectedRegions
-        ? buckets.filter((bucket) =>
-            selectedRegions.includes(bucket.region ?? '')
+        ? resources.filter((resource) =>
+            selectedRegions.includes(resource.region ?? '')
           )
         : [];
     default:
-      return buckets;
+      return resources;
   }
+};
+
+/**
+ * Extracts linode items from firewall resources by merging entities.
+ * @param resources - List of firewall resources with entity mappings.
+ * @returns - Flattened list of linode ID/label pairs as options.
+ */
+export const getBlockStorageLinodes = (
+  linodes: Linode[]
+): Item<string, string>[] => {
+  if (!linodes) return [];
+  return linodes.map((linode) => ({
+    label: transformDimensionValue('blockstorage', 'linode_id', linode.label),
+    value: String(linode.id),
+  }));
 };
