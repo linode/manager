@@ -39,3 +39,23 @@ export const updateImageRegionsSchema = object({
     .required('Regions are required.')
     .min(1, 'Must specify at least one region.'),
 });
+
+export const addSharegroupMemberSchema = object({
+  token: string().required('Token is required.'),
+  label: labelSchema.required('Label is required.'),
+});
+
+export const generateSharegroupTokenSchema = object({
+  label: labelSchema.optional(),
+  valid_for_sharegroup_uuid: boolean().required(
+    'Valid sharegroup UUID required.',
+  ),
+});
+
+export const updateSharegroupTokenSchema = object({
+  label: labelSchema.required('Label is required.'),
+});
+
+export const updateSharegroupMemberSchema = object({
+  label: labelSchema.required('Label is required.'),
+});
