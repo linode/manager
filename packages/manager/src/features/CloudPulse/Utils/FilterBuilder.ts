@@ -8,6 +8,7 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { getAssociatedEntityType } from './utils';
 
 import type {
   CloudPulseMetricsFilter,
@@ -187,7 +188,7 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
-    associatedEntityType: config.configuration.associatedEntityType ?? 'both',
+    associatedEntityType: getAssociatedEntityType(dashboard.id),
     filterFn: config.configuration.filterFn,
   };
 };

@@ -7,7 +7,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { PARENT_ENTITY_REGION, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterFirewallNodebalancers } from '../Utils/FilterBuilder';
-import { getResourcesFilterConfig } from '../Utils/utils';
+import { getAssociatedEntityType } from '../Utils/utils';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, FilterValue } from '@linode/api-v4';
@@ -87,9 +87,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
     const region = xFilter?.[PARENT_ENTITY_REGION];
 
     // Get the associated entity type for the selected dashboard
-    const associatedEntityType = getResourcesFilterConfig(
-      selectedDashboard.id
-    )?.associatedEntityType;
+    const associatedEntityType = getAssociatedEntityType(selectedDashboard.id);
 
     const { data: firewalls } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region),

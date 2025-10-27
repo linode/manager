@@ -323,6 +323,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
   ],
   serviceType: 'firewall',
+  associatedEntityType: 'linode',
 };
 
 export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
@@ -384,6 +385,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       },
     ],
     serviceType: 'firewall',
+    associatedEntityType: 'nodebalancer',
   };
 
 export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMap> =
