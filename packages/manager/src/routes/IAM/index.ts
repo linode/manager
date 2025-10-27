@@ -307,6 +307,19 @@ const iamUserNameEntitiesRoute = createRoute({
 const iamUserNameDelegationsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'delegations',
+  beforeLoad: async ({ context, params }) => {
+    const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
+    const profile = context?.profile;
+    const userType = profile?.user_type;
+    const { username } = params;
+
+    if (userType !== 'parent' || !isDelegationEnabled) {
+      throw redirect({
+        to: '/iam/users/$username/details',
+        params: { username },
+      });
+    }
+  },
 }).lazy(() =>
   import(
     'src/features/IAM/Users/UserDelegations/userDelegationsLazyRoute'

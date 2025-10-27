@@ -1,7 +1,10 @@
-import { useUserRoles } from '@linode/queries';
+import {
+  useGetDefaultDelegationAccessQuery,
+  useUserRoles,
+} from '@linode/queries';
 import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { useParams, useSearch } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -20,19 +23,23 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
-import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
-import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
+import {
+  addEntityNamesToRoles,
+  getSearchableFields,
+} from '../../Users/UserEntities/utils';
+import { ENTITIES_TABLE_PREFERENCE_KEY } from '../constants';
+import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   getFilteredRoles,
   getFormattedEntityType,
   groupAccountEntitiesByType,
   mapEntityTypesForSelect,
-} from '../../Shared/utilities';
+} from '../utilities';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
-import { addEntityNamesToRoles, getSearchableFields } from './utils';
 
-import type { DrawerModes, EntitiesRole } from '../../Shared/types';
+import type { DrawerModes, EntitiesRole } from '../types';
 import type { EntityType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -44,12 +51,16 @@ const ALL_ENTITIES_OPTION: SelectOption = {
 
 type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 
-export const AssignedEntitiesTable = () => {
-  const { username } = useParams({
-    from: '/iam/users/$username',
-  });
+interface Props {
+  username?: string;
+}
+
+export const AssignedEntitiesTable = ({ username }: Props) => {
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
+
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
     strict: false,
@@ -59,7 +70,9 @@ export const AssignedEntitiesTable = () => {
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
 
   const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username/entities',
+    currentRoute: isDefaultDelegationRolesForChildAccount
+      ? '/iam/roles/defaults/entity-access'
+      : `/iam/users/$username/entities`,
     initialPage: 1,
     preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
   });
@@ -93,10 +106,30 @@ export const AssignedEntitiesTable = () => {
   } = useAllAccountEntities({});
 
   const {
-    data: assignedRoles,
-    error: assignedRolesError,
-    isLoading: assignedRolesLoading,
-  } = useUserRoles(username ?? '');
+    data: assignedUserRoles,
+    error: assignedUserRolesError,
+    isLoading: assignedUserRolesLoading,
+  } = useUserRoles(username ?? '', !isDefaultDelegationRolesForChildAccount);
+
+  const {
+    data: delegateDefaultRoles,
+    error: delegateDefaultRolesError,
+    isLoading: delegateDefaultRolesLoading,
+  } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRoles
+    : assignedUserRoles;
+
+  const error = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRolesError
+    : assignedUserRolesError;
+
+  const loading = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRolesLoading
+    : assignedUserRolesLoading;
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
@@ -158,11 +191,11 @@ export const AssignedEntitiesTable = () => {
   });
 
   const renderTableBody = () => {
-    if (entitiesLoading || assignedRolesLoading) {
+    if (entitiesLoading || loading) {
       return <TableRowLoading columns={3} rows={1} />;
     }
 
-    if (entitiesError || assignedRolesError) {
+    if (entitiesError || error) {
       return (
         <TableRowError
           colSpan={3}
@@ -321,11 +354,13 @@ export const AssignedEntitiesTable = () => {
         onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
         open={isChangeRoleForEntityDrawerOpen}
         role={selectedRole}
+        username={username}
       />
       <RemoveAssignmentConfirmationDialog
         onClose={() => handleRemoveAssignmentDialogClose()}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
+        username={username}
       />
       {filteredRoles.length > PAGE_SIZES[0] && (
         <PaginationFooter
