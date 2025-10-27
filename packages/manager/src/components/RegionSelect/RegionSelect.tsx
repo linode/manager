@@ -125,7 +125,7 @@ export const RegionSelect = <
         noMarginTop={noMarginTop}
         noOptionsText={props.noOptionsText ?? 'No results'}
         onChange={onChange}
-        options={regionOptions}
+        options={!accountAvailabilityLoading ? regionOptions : []}
         placeholder={placeholder ?? 'Select a Region'}
         renderOption={(props, region, state) => {
           const { key, ...rest } = props;
@@ -150,6 +150,7 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
+            ...props.textFieldProps?.InputProps,
             endAdornment: isGeckoLAEnabled && selectedRegion && (
               <InputAdornment position="end">
                 ({selectedRegion?.id})
