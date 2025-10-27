@@ -2,7 +2,7 @@ import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 
 import { transformDimensionValue } from '../../../Utils/utils';
 import {
-  getFilteredResourceParentEntities,
+  getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
   getNodebalancerRegions,
@@ -129,13 +129,13 @@ describe('Utils', () => {
     ];
 
     it('should return matched resources by entity IDs', () => {
-      expect(getFilteredResourceParentEntities(resources, ['1'])).toEqual([
+      expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual([
         {
           label: 'linode-1',
           id: 'a',
         },
       ]);
-      expect(getFilteredResourceParentEntities(resources, ['3'])).toEqual([
+      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([
         {
           label: 'nodebalancer-1',
           id: 'c',
@@ -144,12 +144,12 @@ describe('Utils', () => {
     });
 
     it('should return empty array if no match', () => {
-      expect(getFilteredResourceParentEntities(resources, ['4'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, ['4'])).toEqual([]);
     });
 
     it('should handle undefined inputs', () => {
-      expect(getFilteredResourceParentEntities(undefined, ['1'])).toEqual([]);
-      expect(getFilteredResourceParentEntities(resources, undefined)).toEqual(
+      expect(getFilteredFirewallParentEntities(undefined, ['1'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, undefined)).toEqual(
         []
       );
     });

@@ -5,11 +5,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { getOfflineRegionFilteredResources } from '../../../Utils/AlertResourceUtils';
 import { filterRegionByServiceType } from '../../../Utils/utils';
-import {
-  getBlockStorageLinodes,
-  getFilteredResourceParentEntities,
-  scopeBasedFilteredResources,
-} from './utils';
+import { getBlockStorageLinodes, scopeBasedFilteredResources } from './utils';
 
 import type { FetchOptions, FetchOptionsProps } from './constants';
 import type { Filter } from '@linode/api-v4';
@@ -63,16 +59,13 @@ export function useBlockStorageFetchOptions(
     selectedRegions,
   });
 
-  const filteredBlockStorageParentEntityIds = useMemo(() => {
-    return getFilteredResourceParentEntities(
-      blockStorageResources,
-      filteredResources.map((r) => r.id)
-    );
-  }, [blockStorageResources, filteredResources]);
+  const filteredBlockStorageParentEntityIds = filteredResources?.map(
+    ({ volumeLinodeId }) => volumeLinodeId
+  );
 
   const idFilter: Filter = {
     '+or': filteredBlockStorageParentEntityIds.length
-      ? filteredBlockStorageParentEntityIds.map(({ id }) => ({ id }))
+      ? filteredBlockStorageParentEntityIds.map((id) => ({ id }))
       : undefined,
   };
 

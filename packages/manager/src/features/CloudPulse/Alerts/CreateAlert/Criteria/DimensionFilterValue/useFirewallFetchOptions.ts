@@ -9,7 +9,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { filterRegionByServiceType } from '../../../Utils/utils';
 import {
-  getFilteredResourceParentEntities,
+  getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
   getNodebalancerRegions,
@@ -78,7 +78,7 @@ export function useFirewallFetchOptions(
       scope && scope === 'account'
         ? firewallResources?.map((r) => r.id)
         : entities;
-    return getFilteredResourceParentEntities(
+    return getFilteredFirewallParentEntities(
       firewallResources,
       selectedEntities
     );

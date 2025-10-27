@@ -93,22 +93,23 @@ export const getStaticOptions = (
 };
 
 /**
- * Filters resource objects and returns matching parent entity IDs.
- * @param resources - List of resource objects.
- * @param entities - List of target resource entity IDs.
+ * Filters firewall resources and returns matching parent entity IDs.
+ * @param firewallResources - List of firewall resource objects.
+ * @param entities - List of target firewall entity IDs.
  * @returns - Flattened array of matching entity IDs.
  */
-export const getFilteredResourceParentEntities = (
-  resources: CloudPulseResources[] | undefined,
+export const getFilteredFirewallParentEntities = (
+  firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
 ): FirewallEntity[] => {
-  if (!(resources?.length && entities?.length)) return [];
-  return resources
-    .filter((resource) => entities.includes(resource.id))
-    .flatMap((resource) =>
+  if (!(firewallResources?.length && entities?.length)) return [];
+
+  return firewallResources
+    .filter((firewall) => entities.includes(firewall.id))
+    .flatMap((firewall) =>
       // combine key as id and value as label for each entity
-      resource.entities
-        ? Object.entries(resource.entities).map(([id, label]) => ({
+      firewall.entities
+        ? Object.entries(firewall.entities).map(([id, label]) => ({
             id,
             label,
           }))

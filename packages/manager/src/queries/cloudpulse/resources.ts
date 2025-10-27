@@ -45,9 +45,6 @@ export const useResourcesQuery = (
             }
           });
         }
-        if (resourceType === 'blockstorage') {
-          entities[String(resource.linode_id)] = resource.linode_label;
-        }
         const id =
           resourceType === 'objectstorage'
             ? resource.hostname
@@ -62,6 +59,7 @@ export const useResourcesQuery = (
           endpoint: resource.s3_endpoint,
           entities,
           clusterSize: resource.cluster_size,
+          volumeLinodeId: String(resource.linode_id),
         };
       });
     },
