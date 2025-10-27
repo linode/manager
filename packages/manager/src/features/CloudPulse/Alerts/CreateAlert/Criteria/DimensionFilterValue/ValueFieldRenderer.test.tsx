@@ -13,6 +13,14 @@ import type {
 } from '@linode/api-v4';
 
 // Mock child components
+vi.mock('./BlockStorageDimensionFilterAutocomplete', () => ({
+  BlockStorageDimensionFilterAutocomplete: (props: any) => (
+    <div data-testid="blockstorage-autocomplete" {...props}>
+      BlockStorage Autocomplete
+    </div>
+  ),
+}));
+
 vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
   FirewallDimensionFilterAutocomplete: (props: any) => (
     <div data-testid="firewall-autocomplete" {...props}>
@@ -40,7 +48,9 @@ vi.mock('./DimensionFilterAutocomplete', () => ({
 const EQ: DimensionFilterOperatorType = 'eq';
 const IN: DimensionFilterOperatorType = 'in';
 const NB: CloudPulseServiceType = 'nodebalancer';
-
+const CF: CloudPulseServiceType = 'firewall';
+const OS: CloudPulseServiceType = 'objectstorage';
+const BS: CloudPulseServiceType = 'blockstorage';
 describe('<ValueFieldRenderer />', () => {
   const defaultProps = {
     serviceType: NB,
@@ -85,6 +95,7 @@ describe('<ValueFieldRenderer />', () => {
       ...defaultProps,
       dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'firewall'
       operator: IN,
+      serviceType: CF,
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
@@ -96,10 +107,22 @@ describe('<ValueFieldRenderer />', () => {
       ...defaultProps,
       dimensionLabel: 'endpoint', // assume this is configured with useCustomFetch: 'objectstorage'
       operator: IN,
+      serviceType: OS,
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
     expect(screen.getByTestId('objectstorage-autocomplete')).toBeVisible();
+  });
+  it('renders BlockStorageDimensionFilter if config.useCustomFetch = blockstorage', () => {
+    const props = {
+      ...defaultProps,
+      serviceType: BS,
+      dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'blockstorage'
+      operator: IN,
+    };
+
+    renderWithTheme(<ValueFieldRenderer {...props} />);
+    expect(screen.getByTestId('blockstorage-autocomplete')).toBeVisible();
   });
 
   it('calls onChange when typing into TextField', async () => {
