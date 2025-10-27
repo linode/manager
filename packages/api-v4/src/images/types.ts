@@ -4,6 +4,8 @@ export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 
 type ImageType = 'automatic' | 'manual';
 
+type SharegroupMemberStatus = 'active' | 'revoked';
+
 export type ImageRegionStatus =
   | 'available'
   | 'creating'
@@ -26,7 +28,7 @@ export interface ImageSharingData {
     source_image_id: number;
   };
   shared_with: null | {
-    shared_count: number;
+    sharegroup_count: number;
     sharegroup_list_url: string;
   };
 }
@@ -181,6 +183,49 @@ export interface UpdateImageRegionsPayload {
   regions: string[];
 }
 
+export interface Sharegroup {
+  /**
+   * The timestamp of when the Sharegroup was created
+   */
+  created: string;
+  /**
+   * A detailed description for the Sharegroup
+   */
+  description: string;
+  /**
+   * The timestamp of when the Sharegroup would expire
+   */
+  expiry?: string;
+  /**
+   * The ID of the this Sharegroup.
+   */
+  id: number;
+  /**
+   * The number of images shared in the Sharegroup
+   */
+  images_count?: number;
+  /**
+   * A boolean that indicates if the Sharegroup is suspended
+   */
+  is_suspended: boolean;
+  /**
+   * A short title for the Sharegroup
+   */
+  label: string;
+  /**
+   * The number of members present in the Sharegroup
+   */
+  members_count?: number;
+  /**
+   * The timestamp of when the Sharegroup was last updated
+   */
+  updated: string;
+  /**
+   * A unique identifier for the sharegroup which can be used to generate member tokens
+   */
+  uuid: string;
+}
+
 export interface SharegroupImagePayload {
   /**
    * A detailed description of this Image.
@@ -224,45 +269,99 @@ export interface AddSharegroupImagesPayload {
 
 export type UpdateSharegroupImagePayload = Omit<SharegroupImagePayload, 'id'>;
 
-export interface Sharegroup {
+export interface AddSharegroupMemberPayload {
   /**
-   * The timestamp of when the Sharegroup was created
-   */
-  created: string;
-  /**
-   * A detailed description for the Sharegroup
-   */
-  description: string;
-  /**
-   * The timestamp of when the Sharegroup would expire
-   */
-  expiry?: string;
-  /**
-   * The ID of the this Sharegroup.
-   */
-  id: number;
-  /**
-   * The number of images shared in the Sharegroup
-   */
-  images_count?: number;
-  /**
-   * A boolean that indicates if the Sharegroup is suspended
-   */
-  is_suspended: boolean;
-  /**
-   * A short title for the Sharegroup
+   * The title given to the user in the sharegroup
    */
   label: string;
   /**
-   * The number of members present in the Sharegroup
+   * The user token shared by the user to join the sharegroup
    */
-  members_count?: number;
+  token: string;
+}
+
+export type UpdateSharegroupMemberPayload = Omit<
+  AddSharegroupMemberPayload,
+  'token'
+>;
+
+export interface SharegroupMember {
   /**
-   * The timestamp of when the Sharegroup was last updated
+   * The timestamp of when the member was added to the sharegroup
+   */
+  created: string;
+  /**
+   * The timestamp of when the member's token expires
+   */
+  expiry: string;
+  /**
+   * The title given to the user in the sharegroup
+   */
+  label: string;
+  /**
+   * The status of the member in the current sharegroup
+   */
+  status: SharegroupMemberStatus;
+  /**
+   * A unique identifier for member tokens
+   */
+  token_uuid: string;
+  /**
+   * The timestamp of when the member's information was last updated
+   */
+  updated: string;
+}
+
+export interface GenerateSharegroupTokenPayload {
+  /**
+   * The title given to the user in the sharegroup
+   */
+  label?: string;
+  /**
+   * The sharegroup UUID for which a user token will be generated
+   */
+  valid_for_sharegroup_uuid: string;
+}
+
+export interface SharegroupToken {
+  /**
+   * The timestamp of when the token was created
+   */
+  created: string;
+  /**
+   * The timestamp of when the token will expire
+   */
+  expiry: string;
+  /**
+   * The title given to the user in the sharegroup
+   */
+  label: string;
+  /**
+   * The sharegroup label this token is created for
+   */
+  sharegroup_label: string;
+  /**
+   * The sharegroup UUID the token is created for
+   */
+  sharegroup_uuid: string;
+  /**
+   * The current status of this token
+   */
+  status: string;
+  /**
+   * A unique member token to join the sharegroup
+   */
+  token: string;
+  /**
+   * A unique identifier for each token generated
+   */
+  token_uuid: string;
+  /**
+   * The timestamp of when the token was last updated
    */
   updated: string;
   /**
-   * A unique identifier for the sharegroup which can be used to generate member tokens
+   * The sharegroup UUID the token is valid for
    */
-  uuid: string;
+  valid_for_sharegroup_uuid: string;
 }

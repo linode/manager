@@ -70,19 +70,17 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     subnetId,
   } = props;
 
-  const { linodesData, linodeIpsData, error, isLoading, subnetsData } =
-    useGetLinodeIPAndVPCData({
-      region,
-      vpcId,
-      subnetId,
-    });
+  const { linodes, error, isLoading, vpc, vpcIPs } = useGetLinodeIPAndVPCData({
+    region,
+    vpcId,
+  });
 
   let options: NodeOption[] = [];
 
   if (region && !vpcId) {
-    options = getPrivateIPOptions(linodesData);
+    options = getPrivateIPOptions(linodes);
   } else if (region && vpcId && subnetId) {
-    options = getVPCIPOptions(linodeIpsData, linodesData, subnetsData?.data);
+    options = getVPCIPOptions(vpcIPs, linodes, vpc?.subnets);
   }
 
   const noOptionsText = useMemo(() => {
