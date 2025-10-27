@@ -4,11 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2025-10-24] - v1.153.2
+## [2025-10-27] - v1.153.2
 
-### Fixed:
+### Changed:
 
-- Add self-service maintenance action in LinodeMaintenanceBanner for power_off_on and include all maintenance types in dev tools preset. ([#13016](https://github.com/linode/manager/pull/13016))
+- Linode invoice US address ([#13019](https://github.com/linode/manager/pull/13019))
+
+### Added:
+
+- Self-service maintenance action in LinodeMaintenanceBanner for `power_off_on` ([#13016](https://github.com/linode/manager/pull/13016))
+
+### Tech Stories:
+
+- Include all maintenance types in dev tools preset ([#13016](https://github.com/linode/manager/pull/13016))
 
 ## [2025-10-22] - v1.153.1
 
@@ -20,12 +28,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2025-10-21] - v1.153.0
 
-
 ### Added:
 
 - Volume attached to state ([#12903](https://github.com/linode/manager/pull/12903))
 - Profile Update client side validation ([#12963](https://github.com/linode/manager/pull/12963))
-- IAM DX: useDelegationRole hook  ([#12979](https://github.com/linode/manager/pull/12979))
+- IAM DX: useDelegationRole hook ([#12979](https://github.com/linode/manager/pull/12979))
 
 ### Changed:
 
@@ -74,7 +81,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2025-10-07] - v1.152.0
 
-
 ### Added:
 
 - IAM RBAC: disable fields in the drawer ([#12892](https://github.com/linode/manager/pull/12892))
@@ -93,7 +99,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Getting started link on the volume details page ([#12904](https://github.com/linode/manager/pull/12904))
 - ACLP: update default `ACLP Time Range Picker Preset` to `1 hour` ([#12915](https://github.com/linode/manager/pull/12915))
 - Check Region VPC availability for IPv6 prefix lengths instead of hardcoded prefix lengths ([#12919](https://github.com/linode/manager/pull/12919))
-- IAM Delegation: remove ProxyUserTable         ([#12921](https://github.com/linode/manager/pull/12921))
+- IAM Delegation: remove ProxyUserTable ([#12921](https://github.com/linode/manager/pull/12921))
 - Add padding inside the ManagedDashboardCard component ([#12923](https://github.com/linode/manager/pull/12923))
 - Assorted VPC IPv4 and VPC IPv6 copy ([#12924](https://github.com/linode/manager/pull/12924))
 - IAM RBAC: replace grants with usePermission hook in Linodes ([#12932](https://github.com/linode/manager/pull/12932))
