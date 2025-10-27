@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { ConfirmationDialog } from '../ConfirmationDialog/ConfirmationDialog';
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
+  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
   const { data: allMaintenance } = useAllAccountMaintenanceQuery(
     {},
@@ -45,7 +47,9 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
     ? 'enter the migration queue'
     : 'schedule your migration';
   const showMigrateAction =
-    linodeId !== undefined && linodeMaintenance?.type === 'power_off_on';
+    Boolean(flags.vmHostMaintenance?.hasQueue) &&
+    linodeId !== undefined &&
+    linodeMaintenance?.type === 'power_off_on';
 
   const onSubmit = () => {
     if (!linodeId) {
@@ -133,21 +137,23 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
           )}
         </Typography>
       </Notice>
-      <ConfirmationDialog
-        actions={actions}
-        error={dialog.error}
-        onClose={() => closeDialog()}
-        open={dialog.isOpen}
-        title="Confirm Migration"
-      >
-        <Typography variant="subtitle1">
-          Are you sure you want to{' '}
-          {isScheduled
-            ? 'enter the migration queue now'
-            : 'schedule your migration now'}
-          ?
-        </Typography>
-      </ConfirmationDialog>
+      {showMigrateAction && (
+        <ConfirmationDialog
+          actions={actions}
+          error={dialog.error}
+          onClose={() => closeDialog()}
+          open={dialog.isOpen}
+          title="Confirm Migration"
+        >
+          <Typography variant="subtitle1">
+            Are you sure you want to{' '}
+            {isScheduled
+              ? 'enter the migration queue now'
+              : 'schedule your migration now'}
+            ?
+          </Typography>
+        </ConfirmationDialog>
+      )}
     </>
   );
 };
