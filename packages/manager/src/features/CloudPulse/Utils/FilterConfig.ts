@@ -1,5 +1,7 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
+import { queryFactory } from 'src/queries/cloudpulse/queries';
+
 import {
   ENDPOINT,
   INTERFACE_IDS_PLACEHOLDER_TEXT,
@@ -8,8 +10,10 @@ import {
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { filterFirewallResources } from './utils';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
+import type { Firewall } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -235,6 +239,8 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         placeholder: 'Select Firewalls',
         priority: 1,
         associatedEntityType: 'linode',
+        filterFn: (resources: Firewall[]) =>
+          filterFirewallResources(resources, 'linode'),
       },
       name: 'Firewalls',
     },
@@ -333,14 +339,16 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
-          isMultiSelect: true,
-          name: 'Firewalls',
+          name: 'Firewall',
           neededInViews: [CloudPulseAvailableViews.central],
           associatedEntityType: 'nodebalancer',
-          placeholder: 'Select Firewalls',
+          placeholder: 'Select a Firewall',
           priority: 1,
+          apiV4QueryKey: queryFactory.resources('firewall'),
+          filterFn: (resources: Firewall[]) =>
+            filterFirewallResources(resources, 'nodebalancer'),
         },
-        name: 'Firewalls',
+        name: 'Firewall',
       },
       {
         configuration: {

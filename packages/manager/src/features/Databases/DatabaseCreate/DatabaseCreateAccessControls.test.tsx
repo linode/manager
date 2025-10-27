@@ -1,12 +1,13 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { useIsDatabasesEnabled } from '../utilities';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 
 import type { IsDatabasesEnabled } from '../utilities';
+import type { DatabaseCreateValues } from './DatabaseCreate';
 
 vi.mock('src/features/Databases/utilities');
 
@@ -21,13 +22,11 @@ describe('DatabaseCreateAccessControls', () => {
     } as IsDatabasesEnabled);
 
     const ips = [{ address: '' }];
-    const { container, getAllByText, getAllByTestId } = renderWithTheme(
-      <DatabaseCreateAccessControls
-        ips={ips}
-        onBlur={() => {}}
-        onChange={() => {}}
-      />
-    );
+    const { container, getAllByText, getAllByTestId } =
+      renderWithThemeAndHookFormContext<DatabaseCreateValues>({
+        component: <DatabaseCreateAccessControls />,
+        useFormOptions: { defaultValues: { allow_list: ips } },
+      });
 
     expect(getAllByText('Manage Access')).toHaveLength(1);
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(1);
@@ -56,13 +55,11 @@ describe('DatabaseCreateAccessControls', () => {
       { address: '2.2.2.2' },
       { address: '3.3.3.3/128' },
     ];
-    const { container, getAllByText, getAllByTestId } = renderWithTheme(
-      <DatabaseCreateAccessControls
-        ips={ips}
-        onBlur={() => {}}
-        onChange={() => {}}
-      />
-    );
+    const { container, getAllByText, getAllByTestId } =
+      renderWithThemeAndHookFormContext<DatabaseCreateValues>({
+        component: <DatabaseCreateAccessControls />,
+        useFormOptions: { defaultValues: { allow_list: ips } },
+      });
 
     expect(getAllByText('Manage Access')).toHaveLength(1);
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(3);
@@ -87,13 +84,11 @@ describe('DatabaseCreateAccessControls', () => {
     } as IsDatabasesEnabled);
 
     const ips = [{ address: '1.1.1.1/32' }];
-    const { container, getAllByText, getAllByTestId } = renderWithTheme(
-      <DatabaseCreateAccessControls
-        ips={ips}
-        onBlur={() => {}}
-        onChange={() => {}}
-      />
-    );
+    const { container, getAllByText, getAllByTestId } =
+      renderWithThemeAndHookFormContext<DatabaseCreateValues>({
+        component: <DatabaseCreateAccessControls />,
+        useFormOptions: { defaultValues: { allow_list: ips } },
+      });
 
     expect(getAllByText('Manage Access')).toHaveLength(1);
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(1);
