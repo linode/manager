@@ -1,4 +1,4 @@
-// useCleanupInvalidValues.ts
+// useCleanupStaleValues.ts
 import { useEffect } from 'react';
 
 import type { Item } from '../../../constants';
@@ -6,7 +6,7 @@ import type { Item } from '../../../constants';
 /**
  * Cleans up stale form values that are no longer in the options list.
  */
-export const useCleanupInvalidValues = ({
+export const useCleanupStaleValues = ({
   options,
   fieldValue,
   multiple,
