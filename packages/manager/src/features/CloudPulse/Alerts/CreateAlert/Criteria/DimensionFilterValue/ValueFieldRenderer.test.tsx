@@ -13,8 +13,8 @@ import type {
 } from '@linode/api-v4';
 
 // Mock child components
-vi.mock('./BlockStorageDimensionFilter', () => ({
-  BlockStorageDimensionFilter: (props: any) => (
+vi.mock('./BlockStorageDimensionFilterAutocomplete', () => ({
+  BlockStorageDimensionFilterAutocomplete: (props: any) => (
     <div data-testid="blockstorage-autocomplete" {...props}>
       BlockStorage Autocomplete
     </div>

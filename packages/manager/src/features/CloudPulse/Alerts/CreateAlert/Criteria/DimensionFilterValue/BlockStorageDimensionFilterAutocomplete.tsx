@@ -3,11 +3,12 @@ import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
 import { useBlockStorageFetchOptions } from './useBlockStorageFetchOptions';
+import { useCleanupStaleValues } from './useCleanupStaleValues';
 import { handleValueChange, resolveSelectedValues } from './utils';
 
 import type { DimensionFilterAutocompleteProps } from './constants';
 
-export const BlockStorageDimensionFilter = (
+export const BlockStorageDimensionFilterAutocomplete = (
   props: DimensionFilterAutocompleteProps
 ) => {
   const {
@@ -36,6 +37,14 @@ export const BlockStorageDimensionFilter = (
     scope,
     selectedRegions,
     serviceType,
+  });
+
+  useCleanupStaleValues({
+    options: values,
+    fieldValue,
+    multiple,
+    onChange: fieldOnChange,
+    isLoading,
   });
 
   return (

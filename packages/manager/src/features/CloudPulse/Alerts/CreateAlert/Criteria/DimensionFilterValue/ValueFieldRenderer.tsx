@@ -1,7 +1,7 @@
 import { TextField } from '@linode/ui';
 import React from 'react';
 
-import { BlockStorageDimensionFilter } from './BlockStorageDimensionFilter';
+import { BlockStorageDimensionFilterAutocomplete } from './BlockStorageDimensionFilterAutocomplete';
 import {
   MULTISELECT_PLACEHOLDER_TEXT,
   SINGLESELECT_PLACEHOLDER_TEXT,
@@ -158,7 +158,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     switch (customFetch) {
       case 'blockstorage':
         return (
-          <BlockStorageDimensionFilter
+          <BlockStorageDimensionFilterAutocomplete
             dimensionLabel={dimensionLabel}
             disabled={disabled}
             entities={entities}
