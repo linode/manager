@@ -1462,7 +1462,7 @@ describe('Linode Interfaces enabled', () => {
           .should('be.visible')
           .within(() => {
             // confirm VPC IPv4 address and public IPv4 address checkboxes exist
-            cy.findByLabelText('VPC IPv4 address').should('be.visible');
+            cy.findByLabelText('VPC IPv4 (required)').should('be.visible');
             cy.findByText('Auto-assign VPC IPv4')
               .should('be.visible')
               .should('be.enabled');
@@ -1518,7 +1518,7 @@ describe('Linode Interfaces enabled', () => {
               'have.value',
               '10.0.0.1'
             );
-            cy.findByLabelText('VPC IPv4 address').should(
+            cy.findByLabelText('VPC IPv4 (required)').should(
               'have.value',
               '10.0.0.0'
             );
