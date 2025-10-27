@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -28,7 +28,10 @@ import type { Theme } from '@mui/material';
 export const UserDelegations = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const [search, setSearch] = React.useState('');
+  const { query } = useSearch({
+    from: '/iam/users/$username/delegations',
+  });
+  const navigate = useNavigate();
 
   // TODO: UIE-9298 - Replace with API filtering
   const {
@@ -40,7 +43,12 @@ export const UserDelegations = () => {
   });
 
   const handleSearch = (value: string) => {
-    setSearch(value);
+    pagination.handlePageChange(1);
+    navigate({
+      to: '/iam/users/$username/delegations',
+      params: { username },
+      search: { query: value || undefined },
+    });
   };
 
   const childAccounts = React.useMemo(() => {
@@ -48,14 +56,14 @@ export const UserDelegations = () => {
       return [];
     }
 
-    if (search.length === 0) {
+    if (query?.trim() === '') {
       return allDelegatedChildAccounts;
     }
 
     return allDelegatedChildAccounts.filter((childAccount) =>
-      childAccount.company.toLowerCase().includes(search.toLowerCase())
+      childAccount.company.toLowerCase().includes(query?.toLowerCase() ?? '')
     );
-  }, [allDelegatedChildAccounts, search]);
+  }, [allDelegatedChildAccounts, query]);
 
   const { handleOrderChange, order, orderBy, sortedData } = useOrderV2({
     data: childAccounts,
@@ -92,6 +100,7 @@ export const UserDelegations = () => {
       <Stack>
         <Typography variant="h2">Account Delegations</Typography>
         <DebouncedSearchTextField
+          clearable
           debounceTime={250}
           hideLabel
           isSearching={allDelegatedChildAccountsLoading}
@@ -99,7 +108,7 @@ export const UserDelegations = () => {
           onSearch={handleSearch}
           placeholder="Search"
           sx={{ mt: 3 }}
-          value={search}
+          value={query ?? ''}
         />
         <Table sx={{ mt: 2 }}>
           <TableHead>
