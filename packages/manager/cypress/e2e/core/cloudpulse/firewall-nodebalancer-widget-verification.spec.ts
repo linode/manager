@@ -34,7 +34,6 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type {
   CloudPulseMetricsResponse,
-  FirewallDeviceEntityType,
 } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
@@ -187,7 +186,7 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'nodebalancer-1',
-        type: 'nodebalancer' as FirewallDeviceEntityType,
+        type: 'nodebalancer',
         url: '/test',
         parent_entity: null,
       },
@@ -201,7 +200,7 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'nodebalancer-1',
-        type: 'nodebalancer' as FirewallDeviceEntityType,
+        type: 'linode_interface',
         url: '/test',
         parent_entity: null,
       },
@@ -211,11 +210,17 @@ const mockFirewalls = [
     id: 3,
     label: 'Firewall-2',
     status: 'enabled',
+    entities: [{}],
+  }),
+  firewallFactory.build({
+    id: 4,
+    label: 'Firewall-3',
+    status: 'enabled',
     entities: [
       {
         id: 1,
-        label: 'nodebalancer-1',
-        type: 'nodebalancer' as FirewallDeviceEntityType,
+        label: 'linode-1',
+        type: 'linode',
         url: '/test',
         parent_entity: null,
       },
@@ -237,7 +242,6 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-// Tests will be modified
 describe('Integration Tests for firewall Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -272,25 +276,29 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .click();
 
-    // Select a time duration from the autocomplete input.
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-
-    cy.get('@startDateInput').click();
-
-    ui.button.findByTitle('Last day').click();
-
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    // // Select a time duration from the autocomplete input.
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+      cy.get('@startDateInput').click();
+      cy.get(`[data-qa-preset="Last day"]`).click();
+      cy.get('[data-qa-buttons="apply"]')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
     // Select a resource from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Firewalls')
-      .should('be.visible')
-      .type(`${firewalls}{enter}`);
 
-    ui.autocomplete.findByLabel('Firewalls').click();
+    cy.findByPlaceholderText('Select a Firewall').should('be.visible').click();
+
+    // Verify the firewall with type 'nodebalancer' exists
+    cy.findByRole('option', { name: firewalls }).should('exist');
+
+    // Verify the others (non-nodebalancer) do NOT exist
+    cy.findByRole('option', { name: 'Firewall-1' }).should('not.exist');
+    cy.findByRole('option', { name: 'Firewall-2' }).should('not.exist');
+    cy.findByRole('option', { name: 'Firewall-3' }).should('not.exist');
+
+    // Optionally, select the visible one
+    cy.findByPlaceholderText('Select a Firewall').type(`${firewalls}{enter}`);
 
     // us-ord → Cloud Firewall feature is missing from its capabilities, so the region is not available.
     // br-gru → Although Cloud Firewall is in its capabilities, NodeBalancer is not available in this region.

@@ -15,7 +15,7 @@ import {
 } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { getAssociatedEntityType } from '../Utils/utils';
+import { getResourcesFilterConfig } from '../Utils/utils';
 
 import type { Item } from '../Alerts/constants';
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
@@ -83,7 +83,8 @@ export const CloudPulseRegionSelect = React.memo(
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
     // Get the associated entity type for the dashboard
-    const associatedEntityType = getAssociatedEntityType(dashboardId);
+    const associatedEntityType =
+      getResourcesFilterConfig(dashboardId)?.associatedEntityType;
     const {
       values: linodeRegions,
       isLoading: isLinodeRegionIdLoading,

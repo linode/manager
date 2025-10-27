@@ -173,18 +173,14 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .and('have.value', 'Dbaas Dashboard'); // Ensure value is set
 
     // Select a time duration
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').click();
-    cy.get('@startDateInput').clear();
-
-    ui.button.findByTitle('Last day').click();
-
-    // Click the "Apply" button to confirm the end date and time
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+      cy.get('@startDateInput').click();
+      cy.get(`[data-qa-preset="Last day"]`).click();
+      cy.get('[data-qa-buttons="apply"]')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+        
     // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')

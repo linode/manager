@@ -134,6 +134,37 @@ it('test getResourceSelectionProperties method', () => {
   }
 });
 
+it('test getResourceSelectionProperties method for linode-firewall', () => {
+  const resourceSelectionConfig = firewallConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Firewalls'
+  );
+
+  expect(resourceSelectionConfig).toBeDefined();
+
+  if (resourceSelectionConfig) {
+    const {
+      disabled,
+      handleResourcesSelection,
+      label,
+      savePreferences,
+      filterFn,
+    } = getResourcesProperties(
+      {
+        config: resourceSelectionConfig,
+        dashboard: { ...mockDashboard, id: 4 },
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    const { name } = resourceSelectionConfig.configuration;
+    expect(handleResourcesSelection).toBeDefined();
+    expect(savePreferences).toEqual(false);
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+    expect(filterFn).toBeDefined();
+  }
+});
+
 it('test getResourceSelectionProperties method with disabled true', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
     (filterObj) => filterObj.name === 'Resources'
@@ -349,6 +380,7 @@ it('test getCustomSelectProperties method', () => {
       isMultiSelect: isMultiSelectApi,
       savePreferences: savePreferencesApi,
       type,
+      filterFn,
     } = getCustomSelectProperties(
       {
         config: customSelectEngineConfig,
@@ -365,6 +397,7 @@ it('test getCustomSelectProperties method', () => {
     expect(savePreferencesApi).toEqual(false);
     expect(isMultiSelectApi).toEqual(true);
     expect(label).toEqual(name);
+    expect(filterFn).not.toBeDefined();
   }
 });
 

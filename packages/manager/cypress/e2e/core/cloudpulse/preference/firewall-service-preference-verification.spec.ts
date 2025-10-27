@@ -85,7 +85,7 @@ const mockRegion = regionFactory.build({
 const mockFirewalls = firewallFactory.build({ label: firewalls });
 
 // Tests will be modified
-describe('Integration Tests for firewall Dashboard ', () => {
+describe('Integration Tests for firewall linode Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
