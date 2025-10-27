@@ -41,6 +41,7 @@ import {
   alertFactory,
   alertRulesFactory,
   appTokenFactory,
+  blockStorageMetricRules,
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
@@ -1683,6 +1684,8 @@ export const handlers = [
     const volumes = statuses.map((status) =>
       volumeFactory.build({ status, region: 'ap-west' })
     );
+    volumes.push(...volumeFactory.buildList(10, { region: 'us-east' }));
+    volumes.push(...volumeFactory.buildList(10, { region: 'eu-central' }));
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
@@ -3201,7 +3204,7 @@ export const handlers = [
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
         scope:
-          serviceType === 'objectstorage'
+          serviceType === 'objectstorage' || serviceType === 'blockstorage'
             ? ['entity', 'account', 'region']
             : ['entity'],
       }),
@@ -3562,6 +3565,9 @@ export const handlers = [
       }
       if (params.serviceType === 'objectstorage') {
         return HttpResponse.json({ data: objectStorageMetricRules });
+      }
+      if (params.serviceType === 'blockstorage') {
+        return HttpResponse.json({ data: blockStorageMetricRules });
       }
       return HttpResponse.json(response);
     }
