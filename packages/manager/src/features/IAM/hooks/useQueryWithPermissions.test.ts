@@ -4,12 +4,15 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useQueryWithPermissions } from './usePermissions';
 
-import type { APIError } from '@linode/api-v4';
+import type { EntityBase } from './usePermissions';
+import type { APIError, PermissionType } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 type Entity = { id: number; label: string };
 
 const queryMocks = vi.hoisted(() => {
+  let entitiesPermsLoading = false;
+
   return {
     useIsIAMEnabled: vi
       .fn()
@@ -18,13 +21,21 @@ const queryMocks = vi.hoisted(() => {
     useProfile: vi
       .fn()
       .mockReturnValue({ data: { username: 'user-1', restricted: true } }),
-    useUserRoles: vi.fn().mockReturnValue({
-      data: {
-        entity_access: [{ id: 1, type: 'linode', roles: ['linode_admin'] }],
-        account_access: [],
-      },
-      isLoading: false,
-    }),
+    useQueries: Object.assign(
+      vi.fn().mockImplementation(({ queries }) =>
+        (queries || []).map(() => ({
+          data: null,
+          error: null,
+          isError: false,
+          isLoading: entitiesPermsLoading,
+        }))
+      ),
+      {
+        setEntitiesPermsLoading: (b: boolean) => {
+          entitiesPermsLoading = b;
+        },
+      }
+    ),
   };
 });
 
@@ -35,7 +46,7 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
     ...actual,
     useGrants: queryMocks.useGrants,
     useProfile: queryMocks.useProfile,
-    useUserRoles: queryMocks.useUserRoles,
+    useQueries: queryMocks.useQueries,
   };
 });
 
@@ -50,19 +61,30 @@ vi.mock('src/features/IAM/hooks/useIsIAMEnabled', async () => {
   };
 });
 
-vi.mock('./adapters/permissionAdapters', async () => {
-  const actual = await vi.importActual('./adapters/permissionAdapters');
+vi.mock('./adapters/permissionAdapters', () => ({
+  toEntityPermissionMap: vi.fn(
+    (entities: EntityBase[] = [], entitiesPermissions: PermissionType[]) => {
+      const map: Record<number, Record<string, boolean>> = {};
+      entities.forEach((e) => {
+        map[e.id] = entitiesPermissions?.reduce<Record<string, boolean>>(
+          (acc, p) => {
+            acc[p] = e.id === 1;
+            return acc;
+          },
+          {}
+        );
+      });
 
-  return {
-    ...actual,
-    entityPermissionMapFrom: vi.fn(() => {
-      return {
-        1: { update_linode: true, resize_volume: true, create_volume: true },
-        2: { update_linode: true, resize_volume: true, create_volume: true },
-      };
-    }),
-  };
-});
+      return map;
+    }
+  ),
+  entityPermissionMapFrom: vi.fn(() => {
+    return {
+      1: { update_linode: true, resize_volume: true, create_volume: true },
+      2: { update_linode: true, resize_volume: true, create_volume: true },
+    };
+  }),
+}));
 
 describe('useQueryWithPermissions', () => {
   const entities: Entity[] = [
@@ -79,6 +101,7 @@ describe('useQueryWithPermissions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    queryMocks.useQueries.setEntitiesPermsLoading(false);
   });
 
   it('uses Beta permissions when IAM enabled + beta true + in scope; filters restricted entities', () => {
@@ -89,13 +112,6 @@ describe('useQueryWithPermissions', () => {
     });
     queryMocks.useProfile.mockReturnValue({
       data: { username: 'user-1', restricted: true },
-    });
-    queryMocks.useUserRoles.mockReturnValue({
-      data: {
-        entity_access: [{ id: 1, type: 'linode', roles: ['linode_admin'] }],
-        account_access: [],
-      },
-      isLoading: false,
     });
 
     const { result } = renderHook(
@@ -110,7 +126,14 @@ describe('useQueryWithPermissions', () => {
     );
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', true);
+
+    const calls = queryMocks.useQueries.mock.calls;
+    expect(calls.length).toBeGreaterThan(0);
+    const queryArgs = calls[0][0];
+    expect(
+      queryArgs.queries.every((q: { enabled?: boolean }) => q.enabled === true)
+    ).toBe(true);
+
     expect(result.current.data.map((e) => e.id)).toEqual([]);
     expect(result.current.hasFiltered).toBe(true);
     expect(result.current.isLoading).toBe(false);
@@ -135,7 +158,12 @@ describe('useQueryWithPermissions', () => {
     );
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', false);
+
+    const queryArgs = queryMocks.useQueries.mock.calls[0][0];
+    expect(
+      queryArgs.queries.every((q: { enabled?: boolean }) => q.enabled === false)
+    ).toBe(true);
+
     expect(result.current.data.map((e) => e.id)).toEqual([1, 2]);
     expect(result.current.hasFiltered).toBe(false);
   });
@@ -159,7 +187,10 @@ describe('useQueryWithPermissions', () => {
     );
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', false);
+    const qArg = queryMocks.useQueries.mock.calls[0][0];
+    expect(
+      qArg.queries.every((q: { enabled?: boolean }) => q.enabled === false)
+    ).toBe(true);
   });
 
   it('falls back to grants when Beta true but permission is in the LA exclusion list', () => {
@@ -181,7 +212,10 @@ describe('useQueryWithPermissions', () => {
     );
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(true);
-    expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', false);
+    const queryArgs = queryMocks.useQueries.mock.calls[0][0];
+    expect(
+      queryArgs.queries.every((q: { enabled?: boolean }) => q.enabled === false)
+    ).toBe(true);
   });
 
   it('uses LA permissions when IAM enabled + beta false', () => {
@@ -203,7 +237,10 @@ describe('useQueryWithPermissions', () => {
     );
 
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
-    expect(queryMocks.useUserRoles).toHaveBeenCalledWith('user-1', true);
+    const queryArgs = queryMocks.useQueries.mock.calls[0][0];
+    expect(
+      queryArgs.queries.every((q: { enabled?: boolean }) => q.enabled === true)
+    ).toBe(true);
   });
 
   it('marks loading when entity permissions queries are loading', () => {
@@ -212,10 +249,7 @@ describe('useQueryWithPermissions', () => {
       isIAMEnabled: true,
       isIAMBeta: true,
     });
-    queryMocks.useUserRoles.mockReturnValue({
-      data: undefined,
-      isLoading: true,
-    });
+    queryMocks.useQueries.setEntitiesPermsLoading(true);
 
     const { result } = renderHook(
       () =>
@@ -231,21 +265,14 @@ describe('useQueryWithPermissions', () => {
     expect(result.current.isLoading).toBe(true);
   });
 
-  it('grants all permissions to unrestricted users', () => {
+  it('grants all permissions to unrestricted (admin) users without making permission API calls', () => {
     const flags = { iam: { beta: true, enabled: true } };
     queryMocks.useIsIAMEnabled.mockReturnValue({
       isIAMEnabled: true,
       isIAMBeta: true,
     });
     queryMocks.useProfile.mockReturnValue({
-      data: { username: 'user-1', restricted: false },
-    });
-    queryMocks.useUserRoles.mockReturnValue({
-      data: {
-        entity_access: [], // Unrestricted users have no entity access entries
-        account_access: [],
-      },
-      isLoading: false,
+      data: { username: 'admin-user', restricted: false },
     });
 
     const { result } = renderHook(
@@ -253,14 +280,24 @@ describe('useQueryWithPermissions', () => {
         useQueryWithPermissions(
           baseQueryResult,
           'linode',
-          ['update_linode'],
+          ['update_linode', 'delete_linode', 'reboot_linode'],
           true
         ),
       { wrapper: (ui) => wrapWithTheme(ui, { flags }) }
     );
 
-    // Unrestricted users should see all entities
+    // Verify grants are NOT fetched (IAM is enabled)
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
+
+    // Verify permission queries are disabled (no N API calls for unrestricted users!)
+    const queryArgs = queryMocks.useQueries.mock.calls[0][0];
+    expect(
+      queryArgs.queries.every((q: { enabled?: boolean }) => q.enabled === false)
+    ).toBe(true);
+
+    // Unrestricted users should see ALL entities
     expect(result.current.data.map((e) => e.id)).toEqual([1, 2]);
     expect(result.current.hasFiltered).toBe(false);
+    expect(result.current.isLoading).toBe(false);
   });
 });

@@ -1,15 +1,16 @@
+import { getUserEntityPermissions } from '@linode/api-v4';
 import {
   useGrants,
   useProfile,
+  useQueries,
   useUserAccountPermissions,
   useUserEntityPermissions,
-  useUserRoles,
 } from '@linode/queries';
 
 import {
-  buildEntityPermissionMapFromUserRoles,
   entityPermissionMapFrom,
   fromGrants,
+  toEntityPermissionMap,
   toPermissionMap,
 } from './adapters/permissionAdapters';
 import { useIsIAMEnabled } from './useIsIAMEnabled';
@@ -34,6 +35,7 @@ import type {
   NodeBalancerContributor,
   NodeBalancerViewer,
   PermissionType,
+  Profile,
   VolumeAdmin,
   VolumeContributor,
   VolumeViewer,
@@ -238,6 +240,60 @@ export function usePermissions<
 
 export type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
 
+export const useEntitiesPermissions = <T extends EntityBase>(
+  entities: T[] | undefined,
+  entityType: EntityType,
+  profile?: Profile,
+  enabled = true
+) => {
+  const queries = useQueries({
+    queries: (entities || []).map((entity: T) => ({
+      queryKey: [entityType, entity.id],
+      queryFn: () =>
+        getUserEntityPermissions(
+          profile?.username || '',
+          entityType,
+          entity.id
+        ),
+      enabled: enabled && Boolean(profile?.restricted),
+    })),
+  });
+
+  const data = queries.map((query) => query.data);
+  const error = queries.map((query) => query.error);
+  const isError = queries.some((query) => query.isError);
+  const isLoading = queries.some((query) => query.isLoading);
+
+  return { data, error, isError, isLoading };
+};
+
+/**
+ * Helper function to build a user permission map that grants all permissions to all entities.
+ * Used for unrestricted users who have full access.
+ */
+const buildUnrestrictedUserPermissionMap = <T extends EntityBase>(
+  entities: T[] | undefined,
+  permissionsToCheck: PermissionType[]
+): Record<number, Record<PermissionType, boolean>> => {
+  if (!entities) {
+    return {};
+  }
+
+  const permissionMap: Record<number, Record<PermissionType, boolean>> = {};
+
+  for (const entity of entities) {
+    permissionMap[entity.id] = permissionsToCheck.reduce(
+      (perms, permission) => {
+        perms[permission] = true;
+        return perms;
+      },
+      {} as Record<PermissionType, boolean>
+    );
+  }
+
+  return permissionMap;
+};
+
 export type QueryWithPermissionsResult<T> = {
   data: T[];
   error: APIError[] | null;
@@ -263,7 +319,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     ...restQueryResult
   } = useQueryResult;
   const { data: profile } = useProfile();
-  const { isIAMBeta, isIAMEnabled, accountRoles } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
   const accessType = entityType;
 
@@ -286,25 +342,42 @@ export const useQueryWithPermissions = <T extends EntityBase>(
   const useLAPermissions = isIAMEnabled && !isIAMBeta;
   const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
 
-  const { data: userRoles, isLoading: areUserRolesLoading } = useUserRoles(
-    profile?.username,
-    shouldUsePermissionMap && enabled
-  );
-
+  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
+    useEntitiesPermissions<T>(
+      allEntities,
+      entityType,
+      profile,
+      shouldUsePermissionMap && enabled
+    );
   const { data: grants } = useGrants(
     (!isIAMEnabled || !shouldUsePermissionMap) && enabled
   );
 
-  const entityPermissionsMap = shouldUsePermissionMap
-    ? buildEntityPermissionMapFromUserRoles(
-        allEntities,
-        userRoles,
-        accountRoles,
-        entityType,
-        permissionsToCheck,
-        profile?.restricted
-      )
-    : entityPermissionMapFrom(grants, entityType as GrantType, profile);
+  let entityPermissionsMap: Record<number, Record<PermissionType, boolean>>;
+
+  // Unrestricted users: grant all permissions (no API calls)
+  if (!profile?.restricted && shouldUsePermissionMap) {
+    entityPermissionsMap = buildUnrestrictedUserPermissionMap(
+      allEntities,
+      permissionsToCheck
+    );
+  }
+  // Restricted users with IAM: per-entity permission checks (N API calls)
+  if (shouldUsePermissionMap) {
+    entityPermissionsMap = toEntityPermissionMap(
+      allEntities,
+      entityPermissions,
+      permissionsToCheck,
+      profile?.restricted
+    );
+  } else {
+    // Non-IAM users: use grants-based permissions
+    entityPermissionsMap = entityPermissionMapFrom(
+      grants,
+      entityType as GrantType,
+      profile
+    );
+  }
 
   const entities: T[] | undefined = allEntities?.filter((entity: T) => {
     const permissions = entityPermissionsMap[entity.id] ?? {};
@@ -320,7 +393,7 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     error: allEntitiesError,
     hasFiltered: allEntities?.length !== entities?.length,
     isError: isEntitiesError,
-    isLoading: areEntitiesLoading || areUserRolesLoading,
+    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
     ...restQueryResult,
   } as const;
 };
