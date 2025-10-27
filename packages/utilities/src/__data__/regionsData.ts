@@ -135,7 +135,7 @@ export const regions: Region[] = [
       'Placement Group',
     ],
     country: 'no',
-    id: 'no-east',
+    id: 'no-osl-1',
     label: 'Oslo',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,

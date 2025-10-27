@@ -814,7 +814,7 @@ export const handlers = [
       }),
       linodeFactory.build({
         label: 'mtc-custom-plan-linode-2',
-        region: 'no-east',
+        region: 'no-osl-1',
         type: 'g8-premium-128-ht',
         id: 1002,
       }),
@@ -1006,7 +1006,7 @@ export const handlers = [
           id,
           backups: { enabled: false },
           label: 'mtc-custom-plan-linode-2',
-          region: 'no-east',
+          region: 'no-osl-1',
           type: 'g8-premium-128-ht',
         }),
       ];
