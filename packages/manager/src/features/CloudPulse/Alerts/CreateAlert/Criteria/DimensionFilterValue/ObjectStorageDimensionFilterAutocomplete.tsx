@@ -2,7 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { useCleanupInvalidValues } from './useCleanupInvalidateValues';
+import { useCleanupStaleValues } from './useCleanupStaleValues';
 import { useObjectStorageFetchOptions } from './useObjectStorageFetchOptions';
 import { handleValueChange, resolveSelectedValues } from './utils';
 
@@ -42,7 +42,7 @@ export const ObjectStorageDimensionFilterAutocomplete = (
     serviceType,
   });
 
-  useCleanupInvalidValues({
+  useCleanupStaleValues({
     options: values,
     fieldValue,
     multiple,
