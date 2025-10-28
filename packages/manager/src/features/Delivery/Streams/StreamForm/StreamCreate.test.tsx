@@ -124,16 +124,11 @@ describe('StreamCreate', () => {
         describe('and selected existing destination', () => {
           const createStreamSpy = vi.fn();
           const createDestinationSpy = vi.fn();
-          const verifyDestinationSpy = vi.fn();
 
           it("should enable Create Stream button and perform proper calls when it's clicked", async () => {
             server.use(
               http.get('*/monitor/streams/destinations', () => {
                 return HttpResponse.json(makeResourcePage(mockDestinations));
-              }),
-              http.post('*/monitor/streams/destinations/verify', () => {
-                verifyDestinationSpy();
-                return HttpResponse.json({});
               }),
               http.post('*/monitor/streams/destinations', () => {
                 createDestinationSpy();
@@ -166,13 +161,8 @@ describe('StreamCreate', () => {
             // Create stream button should not be disabled with existing destination selected
             expect(createStreamButton).toBeEnabled();
 
-            // Test connection
-            await userEvent.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
-
-            await waitFor(() => {
-              expect(createStreamButton).toBeEnabled();
-            });
+            // Test connection should be disabled when using existing destination
+            expect(testConnectionButton).toBeDisabled();
 
             // Create stream
             await userEvent.click(createStreamButton);
