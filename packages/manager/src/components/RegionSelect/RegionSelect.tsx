@@ -150,6 +150,7 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
+            ...props.textFieldProps?.InputProps,
             endAdornment: isGeckoLAEnabled && selectedRegion && (
               <InputAdornment position="end">
                 ({selectedRegion?.id})
