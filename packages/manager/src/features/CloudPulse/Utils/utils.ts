@@ -5,10 +5,7 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
-import {
-  type FetchOptions,
-  valueFieldConfig,
-} from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
@@ -28,6 +25,7 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
@@ -63,6 +61,25 @@ interface AclpSupportedRegionProps {
    * The type of monitoring capability to check
    */
   type: keyof MonitoringCapabilities;
+}
+
+interface FilterProps {
+  /**
+   * The dimension filters to be validated
+   */
+  dimensionFilters: MetricsDimensionFilter[] | undefined;
+  /**
+   * The dimension options associated with the metric
+   */
+  dimensions: Dimension[];
+  /**
+   * The fetch options for linodes
+   */
+  linodes: FetchOptions;
+  /**
+   * The fetch options for vpcs
+   */
+  vpcs: FetchOptions;
 }
 
 /**
@@ -460,10 +477,10 @@ export const isValidFilter = (
   );
   if (!dimension) return false;
 
-  const dimConfig =
+  const dimensionConfig =
     valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
 
-  const dimensionFieldConfig = dimConfig[operatorGroup];
+  const dimensionFieldConfig = dimensionConfig[operatorGroup];
 
   if (
     dimensionFieldConfig.type === 'textfield' &&
@@ -494,11 +511,10 @@ export const isValidFilter = (
  * @returns The filtered dimension filter based on the selections
  */
 export const getFilteredDimensions = (
-  dimensions: Dimension[],
-  linodes: FetchOptions,
-  vpcs: FetchOptions,
-  dimensionFilters: MetricsDimensionFilter[] | undefined
+  filterProps: FilterProps
 ): MetricsDimensionFilter[] => {
+  const { dimensions, linodes, vpcs, dimensionFilters } = filterProps;
+
   const mergedDimensions = dimensions.map((dim) =>
     dim.dimension_label === 'linode_id'
       ? { ...dim, values: linodes.values.map((lin) => lin.value) }
