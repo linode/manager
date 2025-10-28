@@ -181,7 +181,6 @@ export const StreamsLanding = () => {
       <DeliveryTabHeader
         entity="Stream"
         isSearching={isFetching}
-        loading={isLoading}
         onButtonClick={navigateToCreate}
         onSearch={onSearch}
         onSelect={onSelect}
