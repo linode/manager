@@ -21,6 +21,8 @@ export const PlatformMaintenanceBanner = () => {
   const hideAccountMaintenanceLink = location.pathname === '/maintenance';
 
   if (!accountHasPlatformMaintenance) return null;
+  // Do not render if there are no specific Linodes with platform maintenance
+  if (linodesWithPlatformMaintenance.size === 0) return null;
 
   return (
     <Notice data-testid="platform-maintenance-banner" variant="warning">
