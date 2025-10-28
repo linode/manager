@@ -80,7 +80,8 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       mode: 'onBlur',
       resolver: yupResolver(metricDimensionFiltersSchema),
     });
-    const { control, handleSubmit, formState, setValue } = formMethods;
+    const { control, handleSubmit, formState, setValue, clearErrors } =
+      formMethods;
 
     const { isDirty } = formState;
 
@@ -106,9 +107,11 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       if (clearAllTrigger > 0) {
         setValue('dimension_filters', [], {
           shouldDirty: true,
+          shouldValidate: false,
         });
+        clearErrors('dimension_filters');
       }
-    }, [clearAllTrigger, setValue]);
+    }, [clearAllTrigger, clearErrors, setValue]);
 
     React.useEffect(() => {
       if (fields.length) {
