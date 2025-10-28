@@ -36,7 +36,7 @@ export const ACCELERATED_COMPUTE_INSTANCES_LINK =
 export const MTC_AVAILABLE_PLAN_TYPES = ['g8-premium-128-ht'];
 
 // NOTE:
-// - Only use this for the RegionSelect dropdown in the Linode Migration flow and for mocks in serverHandlers.ts
+// - ONLY use this for the RegionSelect dropdown in the Linode Migration flow and for mocks in serverHandlers.ts
 // - We need to find a way to determine MTC supported regions from the API rather than relying on client-side hardcoded values here.
 export const MTC_SUPPORTED_REGIONS = ['no-osl-1', 'us-iad', 'us-iad-2'];
 
