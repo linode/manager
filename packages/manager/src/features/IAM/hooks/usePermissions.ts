@@ -267,33 +267,6 @@ export const useEntitiesPermissions = <T extends EntityBase>(
   return { data, error, isError, isLoading };
 };
 
-/**
- * Helper function to build a user permission map that grants all permissions to all entities.
- * Used for unrestricted users who have full access.
- */
-const buildUnrestrictedUserPermissionMap = <T extends EntityBase>(
-  entities: T[] | undefined,
-  permissionsToCheck: PermissionType[]
-): Record<number, Record<PermissionType, boolean>> => {
-  if (!entities) {
-    return {};
-  }
-
-  const permissionMap: Record<number, Record<PermissionType, boolean>> = {};
-
-  for (const entity of entities) {
-    permissionMap[entity.id] = permissionsToCheck.reduce(
-      (perms, permission) => {
-        perms[permission] = true;
-        return perms;
-      },
-      {} as Record<PermissionType, boolean>
-    );
-  }
-
-  return permissionMap;
-};
-
 export type QueryWithPermissionsResult<T> = {
   data: T[];
   error: APIError[] | null;
@@ -353,31 +326,14 @@ export const useQueryWithPermissions = <T extends EntityBase>(
     (!isIAMEnabled || !shouldUsePermissionMap) && enabled
   );
 
-  let entityPermissionsMap: Record<number, Record<PermissionType, boolean>>;
-
-  // Unrestricted users: grant all permissions (no API calls)
-  if (!profile?.restricted && shouldUsePermissionMap) {
-    entityPermissionsMap = buildUnrestrictedUserPermissionMap(
-      allEntities,
-      permissionsToCheck
-    );
-  }
-  // Restricted users with IAM: per-entity permission checks (N API calls)
-  if (shouldUsePermissionMap) {
-    entityPermissionsMap = toEntityPermissionMap(
-      allEntities,
-      entityPermissions,
-      permissionsToCheck,
-      profile?.restricted
-    );
-  } else {
-    // Non-IAM users: use grants-based permissions
-    entityPermissionsMap = entityPermissionMapFrom(
-      grants,
-      entityType as GrantType,
-      profile
-    );
-  }
+  const entityPermissionsMap = shouldUsePermissionMap
+    ? toEntityPermissionMap(
+        allEntities,
+        entityPermissions,
+        permissionsToCheck,
+        profile?.restricted
+      )
+    : entityPermissionMapFrom(grants, entityType as GrantType, profile);
 
   const entities: T[] | undefined = allEntities?.filter((entity: T) => {
     const permissions = entityPermissionsMap[entity.id] ?? {};
