@@ -610,3 +610,27 @@ export const blockStorageMetricRules: MetricDefinition[] = [
     ],
   },
 ];
+
+export const blockStorageMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Volume Read Operations',
+    metric: 'volume_read_ops',
+    unit: 'Count',
+    aggregate_function: 'avg',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        operator: 'in',
+        value: '1,2,3',
+      },
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        operator: 'eq',
+        value: '5',
+      },
+    ],
+  });

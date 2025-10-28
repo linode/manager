@@ -41,6 +41,7 @@ import {
   alertFactory,
   alertRulesFactory,
   appTokenFactory,
+  blockStorageMetricCriteria,
   blockStorageMetricRules,
   contactFactory,
   credentialFactory,
@@ -3024,6 +3025,16 @@ export const handlers = [
         service_type: 'objectstorage',
         entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
       }),
+      alertFactory.build({
+        id: 300,
+        type: 'user',
+        label: 'block-storage - testing',
+        service_type: 'blockstorage',
+        entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
+        rule_criteria: {
+          rules: [blockStorageMetricCriteria.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3057,6 +3068,20 @@ export const handlers = [
             ],
             rule_criteria: {
               rules: [objectStorageMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '300' && params.serviceType === 'blockstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 300,
+            type: 'user',
+            label: 'block-storage - testing',
+            service_type: 'blockstorage',
+            entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
+            rule_criteria: {
+              rules: [blockStorageMetricCriteria.build()],
             },
           })
         );
@@ -3110,6 +3135,20 @@ export const handlers = [
             },
             service_type: 'objectstorage',
             entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+          })
+        );
+      }
+      if (params.id === '300' && params.serviceType === 'blockstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 300,
+            type: 'user',
+            label: 'block-storage - testing',
+            service_type: 'blockstorage',
+            entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
+            rule_criteria: {
+              rules: [blockStorageMetricCriteria.build()],
+            },
           })
         );
       }
