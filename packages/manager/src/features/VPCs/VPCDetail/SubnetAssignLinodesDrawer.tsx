@@ -153,12 +153,13 @@ export const SubnetAssignLinodesDrawer = (
   // TODO: change update_linode to create_linode_config_profile_interface once it's available
   // TODO: change delete_linode to delete_linode_config_profile_interface once it's available
   // TODO: refactor useQueryWithPermissions once API filter is available
-  const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery(),
-    'linode',
-    ['update_linode', 'delete_linode'],
-    open
-  );
+  const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
+    useQueryWithPermissions<Linode>(
+      useAllLinodesQuery(),
+      'linode',
+      ['update_linode', 'delete_linode'],
+      open
+    );
 
   const userCanAssignLinodes =
     permissions?.update_vpc && filteredLinodes?.length > 0;
@@ -179,10 +180,17 @@ export const SubnetAssignLinodesDrawer = (
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
   const findUnassignedLinodes = React.useCallback(() => {
-    return linodes?.filter((linode) => {
+    if (!linodes || !filteredLinodes) return [];
+
+    // First filter linodes by region, then by permissions
+    const availableLinodes = linodes.filter((linode) =>
+      filteredLinodes.some((filteredLinode) => filteredLinode.id === linode.id)
+    );
+
+    return availableLinodes?.filter((linode) => {
       return !subnet?.linodes.some((linodeInfo) => linodeInfo.id === linode.id);
     });
-  }, [subnet, linodes]);
+  }, [subnet, linodes, filteredLinodes]);
 
   const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState<
     Linode[]
@@ -192,10 +200,15 @@ export const SubnetAssignLinodesDrawer = (
   // and update that list whenever this subnet or the list of all linodes in this subnet's region changes. This takes
   // care of the MUI invalid value warning that was occurring before in the Linodes autocomplete [M3-6752]
   React.useEffect(() => {
-    if (linodes) {
+    if (linodes && filteredLinodes) {
       setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
     }
-  }, [linodes, setLinodeOptionsToAssign, findUnassignedLinodes]);
+  }, [
+    linodes,
+    filteredLinodes,
+    setLinodeOptionsToAssign,
+    findUnassignedLinodes,
+  ]);
 
   // Determine the configId based on the number of configurations
   function getConfigId(inputs: {
@@ -585,7 +598,7 @@ export const SubnetAssignLinodesDrawer = (
   return (
     <Drawer
       error={subnetError}
-      isFetching={isFetching}
+      isFetching={isFetching || isLoadingFilteredLinodes}
       onClose={handleOnClose}
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'}`}
