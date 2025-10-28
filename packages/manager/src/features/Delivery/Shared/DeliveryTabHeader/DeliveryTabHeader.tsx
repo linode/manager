@@ -15,7 +15,6 @@ export interface DeliveryTabHeaderProps {
   disabledCreateButton?: boolean;
   entity?: string;
   isSearching?: boolean;
-  loading?: boolean;
   onButtonClick?: () => void;
   onSearch?: (label: string) => void;
   onSelect?: (status: string) => void;
@@ -30,7 +29,6 @@ export const DeliveryTabHeader = ({
   createButtonText,
   disabledCreateButton,
   entity,
-  loading,
   onButtonClick,
   spacingBottom = 24,
   isSearching,
@@ -115,7 +113,6 @@ export const DeliveryTabHeader = ({
             <Button
               buttonType="primary"
               disabled={disabledCreateButton}
-              loading={loading}
               onClick={onButtonClick}
               {...buttonDataAttrs}
             >
