@@ -417,6 +417,19 @@ export const getResourcesFilterConfig = (
 };
 
 /**
+ * @param dashboardId The id of the dashboard
+ * @returns The associated entity type for the dashboard
+ */
+export const getAssociatedEntityType = (
+  dashboardId: number | undefined
+): AssociatedEntityType | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
+};
+
+/**
  *
  * @param resources Firewall resources
  * @param entityType Associated entity type
