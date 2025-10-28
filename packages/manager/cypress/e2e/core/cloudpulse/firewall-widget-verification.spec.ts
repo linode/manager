@@ -30,10 +30,7 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type {
-  CloudPulseMetricsResponse,
-  Filters,
-} from '@linode/api-v4';
+import type { CloudPulseMetricsResponse, Filters } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -151,7 +148,7 @@ const mockFirewalls = [
       {
         id: 1,
         label: 'linode-1',
-        type: 'linode' ,
+        type: 'linode',
         url: '/test',
         parent_entity: null,
       },
@@ -199,8 +196,6 @@ const mockFirewalls = [
   }),
 ];
 
-
-
 describe('Integration Tests for firewall Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -235,13 +230,13 @@ describe('Integration Tests for firewall Dashboard ', () => {
       .should('be.visible')
       .click();
 
-      cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
-      cy.get('@startDateInput').click();
-      cy.get(`[data-qa-preset="Last day"]`).click();
-      cy.get('[data-qa-buttons="apply"]')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get(`[data-qa-preset="Last day"]`).click();
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
     // Select a resource from the autocomplete input.
     cy.findByPlaceholderText('Select Firewalls').should('be.visible').click();
 
@@ -249,10 +244,15 @@ describe('Integration Tests for firewall Dashboard ', () => {
     cy.findByRole('option', { name: firewalls }).should('exist');
 
     // Verify the others (non-nodebalancer) do NOT exist
-    cy.findByRole('option', { name: 'firewall-linode_interface-2' }).should('exist');
-    cy.findByRole('option', { name: 'firewall-no-entities-3' }).should('not.exist');
-    cy.findByRole('option', { name: 'firewall-nodebalancer-4' }).should('not.exist');
-    
+    cy.findByRole('option', { name: 'firewall-linode_interface-2' }).should(
+      'exist'
+    );
+    cy.findByRole('option', { name: 'firewall-no-entities-3' }).should(
+      'not.exist'
+    );
+    cy.findByRole('option', { name: 'firewall-nodebalancer-4' }).should(
+      'not.exist'
+    );
 
     // Optionally, select the visible one
     cy.findByPlaceholderText('Select Firewalls').type(`${firewalls}{enter}`);
