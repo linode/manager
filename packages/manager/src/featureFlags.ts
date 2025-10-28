@@ -95,6 +95,11 @@ interface AclpFlag {
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
+
+  /**
+   * This property indicates whether to show widget dimension filters or not
+   */
+  showWidgetDimensionFilters?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -194,6 +199,7 @@ export interface Flags {
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
