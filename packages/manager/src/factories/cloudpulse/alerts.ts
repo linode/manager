@@ -188,6 +188,61 @@ export const newEgressConnectionsRulesFactory = {
   metric: 'new_egress_connections',
 };
 
+// Example endpoints list (for the 'in' operator)
+const endpoints = [
+  'endpoint_type-E2-us-sea-2.linodeobjects.com',
+  'endpoint_type-E3-us-sea-3.linodeobjects.com',
+  'endpoint_type-E2-us-sea-4.linodeobjects.com',
+];
+/**
+ * Factory for a single Object Storage dimension filter
+ */
+export const objectStorageDimensionFactory =
+  Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>({
+    dimension_label: 'region',
+    label: 'Object Storage Region',
+    operator: 'eq',
+    value: 'Chicago, IL',
+  });
+
+/**
+ * Base Object Storage rule factory (like your baseObjectStorageRuleFactory)
+ */
+export const baseObjectStorageRuleFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    operator: 'eq',
+    threshold: 1000,
+    metric: '',
+    dimension_filters: [
+      {
+        dimension_label: 'endpoint',
+        operator: 'eq',
+        value: 'endpoint_type-E2-us-sea-4.linodeobjects.com',
+      },
+      {
+        dimension_label: 'endpoint',
+        operator: 'in',
+        value: endpoints.join(','), // joined list of endpoints
+      },
+    ],
+  });
+export const metricBuilder =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    ...baseObjectStorageRuleFactory.build(),
+    label: 'Total bucket size',
+    unit: 'Bytes',
+    metric: 'obj_bucket_size',
+    dimension_filters: [
+      {
+        dimension_label: 'region',
+        label: 'Region',
+        operator: 'eq',
+        value: 'us-east',
+      },
+    ],
+  });
+
 export const alertDefinitionFactory =
   Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
     channel_ids: [1, 2, 3],
