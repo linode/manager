@@ -27,7 +27,7 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
     <TableRow key={id}>
       <TableCell>
         <Link
-          data-pendo-id="Logs Delivery Streams-Name"
+          pendoId="Logs Delivery Streams-Name"
           to={`/logs/delivery/streams/${id}/edit`}
         >
           {stream.label}

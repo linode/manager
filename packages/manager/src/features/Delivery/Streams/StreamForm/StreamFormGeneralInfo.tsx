@@ -1,5 +1,12 @@
 import { streamType } from '@linode/api-v4';
-import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Paper,
+  SelectedIcon,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -96,6 +103,25 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
               updateStreamDetails(value);
             }}
             options={streamTypeOptionsWithPendo}
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li
+                  {...props}
+                  data-pendo-id={option.pendoId}
+                  data-qa-option
+                  key={props.key}
+                >
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                    }}
+                  >
+                    {option.label}
+                  </Box>
+                  <SelectedIcon visible={selected} />
+                </li>
+              );
+            }}
             value={getStreamTypeOption(field.value)}
           />
         )}

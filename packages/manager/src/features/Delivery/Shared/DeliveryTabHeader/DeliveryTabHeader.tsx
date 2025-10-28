@@ -1,4 +1,4 @@
-import { Autocomplete, Button } from '@linode/ui';
+import { Autocomplete, Box, Button, SelectedIcon } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -108,6 +108,25 @@ export const DeliveryTabHeader = ({
               }}
               options={selectList}
               placeholder="Select"
+              renderOption={(props, option, { selected }) => {
+                return (
+                  <li
+                    {...props}
+                    data-pendo-id={option.pendoId}
+                    data-qa-option
+                    key={props.key}
+                  >
+                    <Box
+                      sx={{
+                        flexGrow: 1,
+                      }}
+                    >
+                      {option.label}
+                    </Box>
+                    <SelectedIcon visible={selected} />
+                  </li>
+                );
+              }}
               value={selectList.find(({ value }) => value === selectValue)}
             />
           )}
