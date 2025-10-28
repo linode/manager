@@ -36,6 +36,15 @@ const imageActions = {
 
 export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
 
+export const redirectToDefaultImageSubType = (search: ImagesSearchParams) => {
+  if (!search.subType) {
+    throw redirect({
+      to: '/images/images',
+      search: { subType: 'custom' },
+    });
+  }
+};
+
 const imagesRoute = createRoute({
   component: ImagesRoute,
   getParentRoute: () => rootRoute,
@@ -44,11 +53,7 @@ const imagesRoute = createRoute({
 });
 
 const imagesIndexRoute = createRoute({
-  beforeLoad: () => {
-    throw redirect({
-      to: '/images/images',
-    });
-  },
+  beforeLoad: ({ search }) => redirectToDefaultImageSubType(search),
   getParentRoute: () => imagesRoute,
   path: '/',
   validateSearch: (search: ImagesSearchParams) => search,
@@ -59,6 +64,7 @@ const imagesIndexRoute = createRoute({
 );
 
 const imagesImagesRoute = createRoute({
+  beforeLoad: ({ search }) => redirectToDefaultImageSubType(search),
   getParentRoute: () => imagesRoute,
   path: 'images',
   validateSearch: (search: ImagesSearchParams) => search,

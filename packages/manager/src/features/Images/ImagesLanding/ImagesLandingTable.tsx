@@ -126,7 +126,7 @@ export const ImagesLandingTable = () => {
   });
 
   const paginationForManualImages = usePaginationV2({
-    currentRoute: '/images',
+    currentRoute: '/images/images',
     preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
     searchParams: (prev) => ({
       ...prev,
@@ -144,7 +144,7 @@ export const ImagesLandingTable = () => {
         order: MANUAL_IMAGES_DEFAULT_ORDER,
         orderBy: MANUAL_IMAGES_DEFAULT_ORDER_BY,
       },
-      from: '/images',
+      from: '/images/images',
     },
     preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
     prefix: 'manual',
@@ -172,6 +172,7 @@ export const ImagesLandingTable = () => {
       type: 'manual',
     },
     {
+      enabled: search.subType === 'custom',
       // Refetch custom images every 30 seconds.
       // We do this because we have no /v4/account/events we can use
       // to update Image region statuses. We should make the API
@@ -186,7 +187,7 @@ export const ImagesLandingTable = () => {
 
   // Pagination, order, and query hooks for automatic/recovery images
   const paginationForAutomaticImages = usePaginationV2({
-    currentRoute: '/images',
+    currentRoute: '/images/images',
     preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
     searchParams: (prev) => ({
       ...prev,
@@ -204,7 +205,7 @@ export const ImagesLandingTable = () => {
         order: AUTOMATIC_IMAGES_DEFAULT_ORDER,
         orderBy: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
       },
-      from: '/images',
+      from: '/images/images',
     },
     preferenceKey: AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
     prefix: 'automatic',
@@ -232,6 +233,7 @@ export const ImagesLandingTable = () => {
       type: 'automatic',
     },
     {
+      enabled: search.subType === 'recovery',
       // If we have a search query, disable retries to keep the UI
       // snappy if the user inputs an invalid X-Filter. Otherwise,
       // pass undefined to use the default retry behavior.
@@ -331,10 +333,6 @@ export const ImagesLandingTable = () => {
     onRebuild: handleRebuild,
   };
 
-  if (manualImagesLoading || automaticImagesLoading) {
-    return <CircleProgress />;
-  }
-
   if (!query && (manualImagesError || automaticImagesError)) {
     return (
       <React.Fragment>
@@ -351,7 +349,9 @@ export const ImagesLandingTable = () => {
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
-  const customImages = (
+  const customImages = manualImagesLoading ? (
+    <CircleProgress />
+  ) : (
     <Paper className={classes.imageTable}>
       <div className={classes.imageTableHeader}>
         <Box
@@ -468,7 +468,9 @@ export const ImagesLandingTable = () => {
     </Paper>
   );
 
-  const recoveryImages = (
+  const recoveryImages = automaticImagesLoading ? (
+    <CircleProgress />
+  ) : (
     <Paper className={classes.imageTable}>
       <div className={classes.imageTableHeader}>
         <Typography variant="h3">Recovery Images</Typography>
@@ -556,6 +558,14 @@ export const ImagesLandingTable = () => {
       search: (prev) => ({
         ...prev,
         subType: subTabs[index]['key'],
+        // Reset pagination and sorting query params
+        query: undefined,
+        page: undefined,
+        pageSize: undefined,
+        'manual-order': undefined,
+        'manual-orderBy': undefined,
+        'automatic-order': undefined,
+        'automatic-orderBy': undefined,
       }),
     });
   };
@@ -570,7 +580,7 @@ export const ImagesLandingTable = () => {
         label="Search"
         onSearch={onSearch}
         placeholder="Search Images"
-        value={query ?? ''}
+        value={query}
       />
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
