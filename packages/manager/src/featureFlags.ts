@@ -1,5 +1,4 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { Region } from '@linode/api-v4';
 import type {
   CloudPulseServiceType,
   TPAProvider,
@@ -145,17 +144,6 @@ interface LimitsEvolution {
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
 }
 
-interface MTC2025 {
-  /**
-   * Whether the mtc2025 feature is enabled.
-   */
-  enabled: boolean;
-  /**
-   * Region IDs where MTC is supported (Only used for Linode Migration region dropdown).
-   */
-  supportedRegions: Region['id'][];
-}
-
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -200,7 +188,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  mtc2025: MTC2025;
+  mtc2025: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
