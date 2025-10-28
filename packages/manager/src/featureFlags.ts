@@ -95,6 +95,11 @@ interface AclpFlag {
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
+
+  /**
+   * This property indicates whether to show widget dimension filters or not
+   */
+  showWidgetDimensionFilters?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {

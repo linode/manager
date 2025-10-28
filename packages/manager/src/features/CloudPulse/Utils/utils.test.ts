@@ -22,11 +22,16 @@ import {
   areValidInterfaceIds,
   getAssociatedEntityType,
   getEnabledServiceTypes,
+  getFilteredDimensions,
+  isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
   validationFunction,
 } from './utils';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
+import type { Dimension } from '@linode/api-v4';
 import type { AclpServices } from 'src/featureFlags';
 
 describe('isValidPort', () => {
@@ -352,5 +357,230 @@ describe('getEnabledServiceTypes', () => {
     it('should return the associated entity type for nodebalancer firewall dashboard', () => {
       expect(getAssociatedEntityType(8)).toBe('nodebalancer');
     });
+  });
+});
+
+describe('isValidFilter', () => {
+  const valuedDim: Dimension = {
+    dimension_label: 'browser',
+    label: 'Browser',
+    values: ['chrome', 'firefox', 'safari'],
+  };
+
+  const staticDim: Dimension = {
+    dimension_label: 'browser',
+    label: 'Browser',
+    values: [],
+  };
+
+  it('returns false when operator is missing', () => {
+    const filter = {
+      dimension_label: 'browser',
+      operator: null,
+      value: 'chrome',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(false);
+  });
+
+  it('returns false when the dimension_label is not present in options', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'os',
+      operator: 'eq',
+      value: 'linux',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(false);
+  });
+
+  it('returns true for static dimensions (no values array) regardless of value', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'eq',
+      value: 'chrome',
+    };
+    expect(isValidFilter(filter, [staticDim])).toBe(true);
+  });
+
+  it('allows pattern operators ("endswith" / "startswith") even without validating values', () => {
+    const f1: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'endswith',
+      value: 'fox',
+    };
+    const f2: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'startswith',
+      value: 'chr',
+    };
+    expect(isValidFilter(f1, [valuedDim])).toBe(true);
+    expect(isValidFilter(f2, [valuedDim])).toBe(true);
+  });
+
+  it('returns true when multiple comma-separated values are all valid', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'in',
+      value: 'chrome,firefox',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(true);
+  });
+
+  it('returns false when value is empty string for a dimension that expects values', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'eq',
+      value: '',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(false);
+  });
+});
+
+describe('getFilteredDimensions', () => {
+  it('returns [] when no dimensionFilters provided', () => {
+    const dimensions: Dimension[] = [
+      { dimension_label: 'linode_id', values: [], label: 'Linode' },
+      { dimension_label: 'vpc_subnet_id', values: [], label: 'Linode' },
+    ];
+
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: [],
+    });
+    expect(result).toEqual([]);
+  });
+
+  it('merges linode and vpc values into metric dimensions and keeps valid filters', () => {
+    const dimensions: Dimension[] = [
+      { dimension_label: 'linode_id', values: [], label: 'Linode' },
+      { dimension_label: 'vpc_subnet_id', values: [], label: 'VPC subnet ID' },
+      {
+        dimension_label: 'browser',
+        values: ['chrome', 'firefox'],
+        label: 'browser',
+      },
+    ];
+
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const filters: MetricsDimensionFilter[] = [
+      { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: 'vpc-1' },
+      { dimension_label: 'browser', operator: 'in', value: 'chrome' },
+    ];
+
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
+
+    // all three filters are valid against mergedDimensions
+    expect(result).toHaveLength(3);
+    expect(result).toEqual(expect.arrayContaining(filters));
+  });
+
+  it('filters out invalid filters (values not present in merged dimension values)', () => {
+    const dimensions: Dimension[] = [
+      { dimension_label: 'linode_id', values: [], label: 'Linode' },
+      {
+        dimension_label: 'vpc_subnet_id',
+        values: [],
+        label: 'VPC subnet Id',
+      },
+      {
+        dimension_label: 'browser',
+        values: ['chrome', 'firefox'],
+        label: 'Browser',
+      },
+    ];
+
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const filters: MetricsDimensionFilter[] = [
+      { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: 'vpc-1' },
+      // invalid browser value -- should be removed
+      { dimension_label: 'browser', operator: 'in', value: 'edge' },
+    ];
+
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
+
+    // only the two valid filters should remain
+    expect(result).toHaveLength(2);
+    expect(result).toEqual(
+      expect.arrayContaining([
+        { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+        { dimension_label: 'vpc_subnet_id', operator: 'eq', value: 'vpc-1' },
+      ])
+    );
+    // invalid 'browser' filter must be absent
+    expect(result).toEqual(
+      expect.not.arrayContaining([
+        { dimension_label: 'browser', operator: 'in', value: 'edge' },
+      ])
+    );
+  });
+
+  it('returns [] when dimensions is empty', () => {
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const filters: MetricsDimensionFilter[] = [
+      { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+    ];
+
+    const result = getFilteredDimensions({
+      dimensions: [],
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
+
+    // with no metric definitions, mergedDimensions is undefined and filters should not pass validation
+    expect(result).toEqual([]);
   });
 });

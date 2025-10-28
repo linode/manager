@@ -89,7 +89,7 @@ export interface Widgets {
 
 export interface Filters {
   dimension_label: string;
-  operator: string;
+  operator: DimensionFilterOperatorType;
   value: string;
 }
 
@@ -111,6 +111,7 @@ export interface AclpConfig {
 
 export interface AclpWidget {
   aggregateFunction: string;
+  filters: Filters[];
   groupBy?: string[];
   label: string;
   size: number;
