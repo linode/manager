@@ -385,7 +385,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         alert_channels: [{ id: 1 }],
         created_by: 'user1',
         description: 'My Custom Description',
-        entity_ids: ['endpoint_type-E2-us-sea-1.linodeobjects.com'],
+        entity_ids: ['bucket-3.us-ord-3.linodeobjects.com'],
         label: 'Alert-1',
         rule_criteria: { rules: metricBuilder.buildList(1) },
         service_type: 'objectstorage',
