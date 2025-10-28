@@ -34,7 +34,6 @@ interface Props {
   order: 'asc' | 'desc';
   orderBy: string;
   results: number | undefined;
-  showSuspend?: boolean;
 }
 const DatabaseLandingTable = ({
   data,
