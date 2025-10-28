@@ -48,6 +48,7 @@ describe('create a database cluster, mocked data', () => {
           status: 'provisioning',
           type: configuration.linodeType,
           version: configuration.version,
+          platform: 'rdbms-default',
         });
 
         // Database mock once instance has been provisioned.
