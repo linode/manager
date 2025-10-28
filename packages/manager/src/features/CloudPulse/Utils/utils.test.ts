@@ -2,6 +2,10 @@ import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
 import { serviceTypesFactory } from 'src/factories';
+import {
+  firewallEntityfactory,
+  firewallFactory,
+} from 'src/factories/firewalls';
 
 import {
   INTERFACE_ID,
@@ -20,9 +24,10 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
-  getAssociatedEntityType,
+  filterFirewallResources,
   getEnabledServiceTypes,
   getFilteredDimensions,
+  getResourcesFilterConfig,
   isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -345,17 +350,89 @@ describe('getEnabledServiceTypes', () => {
     expect(result).not.toContain('linode');
   });
 
-  describe('getAssociatedEntityType', () => {
-    it('should return both if the dashboard id is not provided', () => {
-      expect(getAssociatedEntityType(undefined)).toBe('both');
+  describe('getResourcesFilterConfig', () => {
+    it('should return undefined if the dashboard id is not provided', () => {
+      expect(getResourcesFilterConfig(undefined)).toBeUndefined();
     });
 
-    it('should return the associated entity type for linode firewall dashboard', () => {
-      expect(getAssociatedEntityType(4)).toBe('linode');
+    it('should return the resources filter configuration for the linode-firewalldashboard', () => {
+      const resourcesFilterConfig = getResourcesFilterConfig(4);
+      expect(resourcesFilterConfig).toBeDefined();
+      expect(resourcesFilterConfig?.associatedEntityType).toBe('linode');
+      expect(resourcesFilterConfig?.filterFn).toBeDefined();
     });
 
-    it('should return the associated entity type for nodebalancer firewall dashboard', () => {
-      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
+    it('should return the resources filter configuration for the nodebalancer-firewall dashboard', () => {
+      const resourcesFilterConfig = getResourcesFilterConfig(8);
+      expect(resourcesFilterConfig).toBeDefined();
+      expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
+      expect(resourcesFilterConfig?.filterFn).toBeDefined();
+    });
+  });
+
+  describe('filterFirewallResources', () => {
+    it('should return the filtered firewall resources for linode', () => {
+      const resources = [
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 1,
+              label: 'linode-1',
+              type: 'linode',
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 33,
+              label: null,
+              type: 'linode_interface',
+              parent_entity: {
+                id: 2,
+                label: 'linode-2',
+                type: 'linode',
+              },
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 3,
+              label: null,
+              type: 'linode',
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 4,
+              label: null,
+              type: 'linode_interface',
+              parent_entity: {
+                id: 3,
+                label: null,
+                type: 'linode',
+              },
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 2,
+              label: 'nodebalancer-1',
+              type: 'nodebalancer',
+            }),
+          ],
+        }),
+      ];
+      expect(filterFirewallResources(resources, 'linode')).toEqual([
+        resources[0],
+        resources[1],
+      ]);
     });
   });
 });
