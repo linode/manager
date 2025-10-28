@@ -553,9 +553,10 @@ export const ImagesLandingTable = () => {
     // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
     navigate({
       to: `/images/images`,
-      search: {
+      search: (prev) => ({
+        ...prev,
         subType: subTabs[index]['key'],
-      },
+      }),
     });
   };
 
