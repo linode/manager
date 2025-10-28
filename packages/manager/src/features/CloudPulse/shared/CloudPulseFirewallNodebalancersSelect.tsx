@@ -112,7 +112,14 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
       data: nodebalancers,
       isError,
       isLoading,
-    } = useAllNodeBalancersQuery();
+    } = useAllNodeBalancersQuery(
+      true,
+      {},
+      {
+        '+order': 'asc',
+        '+order_by': 'label',
+      }
+    );
 
     // Get the list of nodebalancers that are associated with the selected firewall
     const getNodebalancersList = React.useMemo<
