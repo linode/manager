@@ -286,7 +286,10 @@ export const ImagesLandingTable = () => {
   };
 
   const handleCloseDialog = () => {
-    navigate({ search: (prev) => prev, to: '/images' });
+    navigate({
+      search: (prev) => ({ ...prev, subType: search.subType }),
+      to: '/images/images',
+    });
   };
 
   const handleManageRegions = (image: Image) => {
