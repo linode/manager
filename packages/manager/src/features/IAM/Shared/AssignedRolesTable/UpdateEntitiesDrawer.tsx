@@ -35,7 +35,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   });
 
   const { data: userRolesData } = useUserRoles(
-    username ?? '',
+    username,
     !isDefaultDelegationRolesForChildAccount
   );
 

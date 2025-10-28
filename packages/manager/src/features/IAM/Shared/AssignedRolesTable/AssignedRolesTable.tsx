@@ -196,7 +196,9 @@ export const AssignedRolesTable = () => {
   const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     const selectedRole = roleName;
     navigate({
-      to: '/iam/users/$username/entities',
+      to: isDefaultDelegationRolesForChildAccount
+        ? '/iam/roles/defaults/entity-access'
+        : '/iam/users/$username/entities',
       params: { username: username || '' },
       search: { selectedRole },
     });
