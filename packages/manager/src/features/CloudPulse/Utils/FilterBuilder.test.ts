@@ -748,24 +748,27 @@ describe('filterFirewallNodebalancers', () => {
     ).toEqual(undefined);
   });
 
-  it('should return mapped nodebalancers if xFilter is undefined', () => {
+  it('should return undefined if xFilter/firewalls is empty or undefined', () => {
     const result = filterFirewallNodebalancers(
       mockData,
       undefined,
       mockFirewalls
     );
-    expect(result).toEqual([
-      {
-        id: '1',
-        label: 'nodebalancer-1',
-        associated_entity_region: 'us-east',
-      },
-      {
-        id: '2',
-        label: 'nodebalancer-2',
-        associated_entity_region: 'us-west',
-      },
-    ]);
+    const result2 = filterFirewallNodebalancers(mockData, {}, mockFirewalls);
+    const result3 = filterFirewallNodebalancers(
+      mockData,
+      { associated_entity_region: 'us-east', resource_id: '1' },
+      []
+    );
+    const result4 = filterFirewallNodebalancers(
+      mockData,
+      { associated_entity_region: 'us-east', resource_id: '1' },
+      undefined
+    );
+    expect(result).toEqual(undefined);
+    expect(result2).toEqual(undefined);
+    expect(result3).toEqual(undefined);
+    expect(result4).toEqual(undefined);
   });
 
   it('should filter nodebalancers based on xFilter', () => {

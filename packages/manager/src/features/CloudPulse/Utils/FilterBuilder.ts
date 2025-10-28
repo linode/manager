@@ -808,21 +808,18 @@ export const filterFirewallNodebalancers = (
   xFilter?: CloudPulseMetricsFilter,
   firewalls?: CloudPulseResources[]
 ): CloudPulseNodebalancers[] | undefined => {
-  if (!data) {
-    return data;
+  // If data is undefined or xFilter/firewalls is undefined or empty, return undefined
+  if (!data || !xFilter || !Object.keys(xFilter).length || !firewalls?.length) {
+    return undefined;
   }
 
   // Map the nodebalancers to the CloudPulseNodebalancers interface
-  const nodebalancers = data.map((nodebalancer) => ({
+  const nodebalancers: CloudPulseNodebalancers[] = data.map((nodebalancer) => ({
     id: String(nodebalancer.id),
     label: nodebalancer.label,
     associated_entity_region: nodebalancer.region,
   }));
 
-  if (!xFilter || !firewalls) {
-    return nodebalancers;
-  }
-  // Find the firewall object for the selected firewall id
   const firewallObj = firewalls.find(
     (firewall) => firewall.id === String(xFilter[RESOURCE_ID])
   );
