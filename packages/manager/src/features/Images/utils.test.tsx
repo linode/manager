@@ -7,6 +7,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   getEventsForImages,
   getImageLabelForLinode,
+  getImageTypeToSubType,
   useImagesSubTabs,
   useIsPrivateImageSharingEnabled,
 } from './utils';
@@ -144,5 +145,19 @@ describe('useImagesSubTabs', () => {
     );
 
     expect(invalidResult.current.subTabIndex).toBe(0);
+  });
+});
+
+describe('getImageTypeToSubType', () => {
+  it('returns "custom" when image type is "manual"', () => {
+    expect(getImageTypeToSubType('manual')).toBe('custom');
+  });
+
+  it('returns "recovery" when image type is "automatic"', () => {
+    expect(getImageTypeToSubType('automatic')).toBe('recovery');
+  });
+
+  it('returns "shared" when image type is "shared"', () => {
+    expect(getImageTypeToSubType('shared')).toBe('shared');
   });
 });

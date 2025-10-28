@@ -2,7 +2,7 @@ export type ImageStatus = 'available' | 'creating' | 'pending_upload';
 
 export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 
-type ImageType = 'automatic' | 'manual';
+type ImageType = 'automatic' | 'manual' | 'shared';
 
 type SharegroupMemberStatus = 'active' | 'revoked';
 

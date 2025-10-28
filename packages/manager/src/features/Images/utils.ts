@@ -104,13 +104,12 @@ export const useImagesSubTabs = (tab: ImagesSubTabType | undefined) => {
 };
 
 export const getImageTypeToSubType = (imageType: Image['type']) => {
-  if (imageType === 'manual') {
-    return 'custom';
+  switch (imageType) {
+    case 'automatic':
+      return 'recovery';
+    case 'manual':
+      return 'custom';
+    case 'shared':
+      return 'shared';
   }
-
-  if (imageType === 'automatic') {
-    return 'recovery';
-  }
-
-  return 'shared';
 };
