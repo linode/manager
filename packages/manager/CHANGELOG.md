@@ -10,14 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Linode invoice US address ([#13019](https://github.com/linode/manager/pull/13019))
 
-### Added:
-
-- Self-service maintenance action in LinodeMaintenanceBanner for `power_off_on` ([#13016](https://github.com/linode/manager/pull/13016))
-
-### Tech Stories:
-
-- Include all maintenance types in dev tools preset ([#13016](https://github.com/linode/manager/pull/13016))
-
 ## [2025-10-22] - v1.153.1
 
 ### Fixed:
