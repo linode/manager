@@ -136,7 +136,6 @@ import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -2656,7 +2655,7 @@ export const handlers = [
       }),
       // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
-      ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
+      ...(['no-osl-1', 'us-iad', 'us-iad-2'].includes(selectedRegion)
         ? [
             regionAvailabilityFactory.build({
               available: true, // In supported regions, this can be `true` (plan available) or `false` (plan sold-out).

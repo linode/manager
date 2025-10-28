@@ -87,7 +87,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const _types = types.filter((type) => {
     // Do not display MTC plans if the feature flag is not enabled.
-    if (!flags.mtc2025 && isMTCPlan(type)) {
+    if (!flags.mtc2025?.enabled && isMTCPlan(type)) {
       return false;
     }
 

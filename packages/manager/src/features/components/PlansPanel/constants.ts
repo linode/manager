@@ -35,11 +35,6 @@ export const ACCELERATED_COMPUTE_INSTANCES_LINK =
 // List of plan types that belong to the MTC plan group.
 export const MTC_AVAILABLE_PLAN_TYPES = ['g8-premium-128-ht'];
 
-// NOTE:
-// - ONLY use this for the RegionSelect dropdown in the Linode Migration flow and for mocks in serverHandlers.ts
-// - We need to find a way to determine MTC supported regions from the API rather than relying on client-side hardcoded values here.
-export const MTC_SUPPORTED_REGIONS = ['no-osl-1', 'us-iad', 'us-iad-2'];
-
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,
   addons: {
