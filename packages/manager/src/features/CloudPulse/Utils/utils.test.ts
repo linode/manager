@@ -25,6 +25,7 @@ import {
   arePortsValid,
   areValidInterfaceIds,
   filterFirewallResources,
+  getAssociatedEntityType,
   getEnabledServiceTypes,
   getResourcesFilterConfig,
   isValidPort,
@@ -362,6 +363,20 @@ describe('getEnabledServiceTypes', () => {
       expect(resourcesFilterConfig).toBeDefined();
       expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
       expect(resourcesFilterConfig?.filterFn).toBeDefined();
+    });
+  });
+
+  describe('getAssociatedEntityType', () => {
+    it('should return undefined if the dashboard id is not provided', () => {
+      expect(getAssociatedEntityType(undefined)).toBeUndefined();
+    });
+
+    it('should return the associated entity type for the linode-firewall dashboard', () => {
+      expect(getAssociatedEntityType(4)).toBe('linode');
+    });
+
+    it('should return the associated entity type for the nodebalancer-firewall dashboard', () => {
+      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
     });
   });
 
