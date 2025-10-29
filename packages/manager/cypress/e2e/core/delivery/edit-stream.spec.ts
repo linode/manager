@@ -65,8 +65,8 @@ describe('Edit Stream', () => {
       // Edit Stream button should be enabled initially
       ui.button.findByTitle('Edit Stream').should('be.enabled');
 
-      // Test connection button should be enabled
-      ui.button.findByTitle('Test Connection').should('be.enabled');
+      // Test Connection should be disabled for existing destination
+      ui.button.findByTitle('Test Connection').should('be.disabled');
 
       const newDestinationLabel = randomLabel();
       // Change Destination to a new one
@@ -206,20 +206,23 @@ describe('Edit Stream', () => {
       logsStreamForm.findClusterCheckbox('cluster-1').should('not.be.checked');
       logsStreamForm.findClusterCheckbox('cluster-3').should('not.be.checked');
 
-      // Enable auto-add all clusters
-      cy.findByLabelText(
-        'Automatically include all existing and recently configured clusters.'
-      ).click();
+      // TODO: uncomment when "Automatically include all existing and recently configured clusters" feature is available
+      // Use "Automatically include all existing and recently configured clusters" to select all eligible clusters
+      // cy.findByLabelText(
+      //   'Automatically include all existing and recently configured clusters.'
+      // ).click();
+      // logsStreamForm.findClusterCheckbox('all').should('be.disabled');
+      // logsStreamForm
+      //   .findClusterCheckbox('cluster-1')
+      //   .should('be.disabled')
+      //   .should('be.checked');
+      // logsStreamForm
+      //   .findClusterCheckbox('cluster-3')
+      //   .should('be.disabled')
+      //   .should('be.checked');
 
-      logsStreamForm.findClusterCheckbox('all').should('be.disabled');
-      logsStreamForm
-        .findClusterCheckbox('cluster-1')
-        .should('be.disabled')
-        .should('be.checked');
-      logsStreamForm
-        .findClusterCheckbox('cluster-3')
-        .should('be.disabled')
-        .should('be.checked');
+      // Use "Toggle all clusters" to select all eligible clusters
+      logsStreamForm.findClusterCheckbox('all').check();
 
       // Edit Stream button should be enabled
       ui.button.findByTitle('Edit Stream').should('be.enabled');
@@ -251,7 +254,7 @@ describe('Edit Stream', () => {
           status: 'active',
           destinations: [mockDestination.id],
           details: {
-            is_auto_add_all_clusters_enabled: true,
+            cluster_ids: [1, 3], // TODO: change to is_auto_add_all_clusters_enabled: true when "Automatically include all existing and recently configured clusters" feature is available
           },
         },
         mockLKEAuditLogsStream
@@ -266,7 +269,7 @@ describe('Edit Stream', () => {
             status: 'active',
             destinations: [mockDestination.id],
             details: {
-              is_auto_add_all_clusters_enabled: true,
+              cluster_ids: [1, 3], // TODO: change to is_auto_add_all_clusters_enabled: true when "Automatically include all existing and recently configured clusters" feature is available
             },
           });
         });

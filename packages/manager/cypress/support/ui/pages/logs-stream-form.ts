@@ -9,7 +9,10 @@ import { randomLabel } from 'support/util/random';
 
 import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
 
-import type { AkamaiObjectStorageDetails, StreamType } from '@linode/api-v4';
+import type {
+  AkamaiObjectStorageDetailsExtended,
+  StreamType,
+} from '@linode/api-v4';
 
 export const logsStreamForm = {
   /**
@@ -84,7 +87,7 @@ export const logsStreamForm = {
    */
   fillOutNewAkamaiObjectStorageDestination: (
     label = randomLabel(),
-    details: AkamaiObjectStorageDetails = mockDestinationPayload.details as AkamaiObjectStorageDetails
+    details: AkamaiObjectStorageDetailsExtended = mockDestinationPayload.details as AkamaiObjectStorageDetailsExtended
   ) => {
     // Create new destination label
     cy.findByLabelText('Destination Name')

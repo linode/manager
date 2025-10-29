@@ -122,13 +122,13 @@ describe('Create Stream', () => {
       // Select existing destination
       logsStreamForm.selectExistingDestination(mockDestination.label);
 
-      // Test Connection should be enabled
+      // Test Connection should be disabled for existing destination
       ui.button
         .findByTitle('Test Connection')
-        .should('be.enabled')
+        .should('be.disabled')
         .should('have.attr', 'type', 'button');
 
-      // Create Stream should be enabled without testing connection for existing destination
+      // Create Stream should be enabled
       cy.findByRole('button', { name: 'Create Stream' })
         .should('be.enabled')
         .should('have.attr', 'type', 'button');
@@ -223,32 +223,33 @@ describe('Create Stream', () => {
       logsStreamForm.findClusterCheckbox('cluster-3').should('be.checked');
       cy.findByLabelText('Toggle cluster-2 cluster').should('be.disabled');
 
+      // TODO: uncomment when "Automatically include all existing and recently configured clusters" feature is available
       // Use "Toggle all clusters" to unselect all eligible clusters
-      logsStreamForm.findClusterCheckbox('all').uncheck();
-      logsStreamForm.findClusterCheckbox('all').should('not.be.checked');
-      logsStreamForm.findClusterCheckbox('cluster-1').should('not.be.checked');
-      logsStreamForm.findClusterCheckbox('cluster-3').should('not.be.checked');
+      // logsStreamForm.findClusterCheckbox('all').uncheck();
+      // logsStreamForm.findClusterCheckbox('all').should('not.be.checked');
+      // logsStreamForm.findClusterCheckbox('cluster-1').should('not.be.checked');
+      // logsStreamForm.findClusterCheckbox('cluster-3').should('not.be.checked');
 
       // Use "Automatically include all existing and recently configured clusters" to select all eligible clusters
-      cy.findByLabelText(
-        'Automatically include all existing and recently configured clusters.'
-      )
-        .should('exist')
-        .should('be.enabled');
-      cy.findByLabelText(
-        'Automatically include all existing and recently configured clusters.'
-      ).click();
-
-      logsStreamForm.findClusterCheckbox('all').should('be.disabled');
-      logsStreamForm
-        .findClusterCheckbox('cluster-1')
-        .should('be.disabled')
-        .should('be.checked');
-      logsStreamForm
-        .findClusterCheckbox('cluster-3')
-        .should('be.disabled')
-        .should('be.checked');
-      cy.findByLabelText('Toggle cluster-2 cluster').should('be.disabled');
+      // cy.findByLabelText(
+      //   'Automatically include all existing and recently configured clusters.'
+      // )
+      //   .should('exist')
+      //   .should('be.enabled');
+      // cy.findByLabelText(
+      //   'Automatically include all existing and recently configured clusters.'
+      // ).click();
+      //
+      // logsStreamForm.findClusterCheckbox('all').should('be.disabled');
+      // logsStreamForm
+      //   .findClusterCheckbox('cluster-1')
+      //   .should('be.disabled')
+      //   .should('be.checked');
+      // logsStreamForm
+      //   .findClusterCheckbox('cluster-3')
+      //   .should('be.disabled')
+      //   .should('be.checked');
+      // cy.findByLabelText('Toggle cluster-2 cluster').should('be.disabled');
 
       // Select existing destination
       logsStreamForm.selectExistingDestination(mockDestination.label);
@@ -269,7 +270,7 @@ describe('Create Stream', () => {
             type: streamType.LKEAuditLogs,
             destinations: [mockDestination.id],
             details: {
-              is_auto_add_all_clusters_enabled: true,
+              cluster_ids: [1, 3], // TODO: change to is_auto_add_all_clusters_enabled: true when "Automatically include all existing and recently configured clusters" feature is available
             },
           });
         });
