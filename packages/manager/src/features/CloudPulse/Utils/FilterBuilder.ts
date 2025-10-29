@@ -29,6 +29,7 @@ import type {
 import type { CloudPulseTextFilterProps } from '../shared/CloudPulseTextFilter';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
+import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
@@ -182,6 +183,8 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+    associatedEntityType: config.configuration.associatedEntityType ?? 'both',
+    filterFn: config.configuration.filterFn,
   };
 };
 
@@ -246,6 +249,7 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
     isOptional,
+    filterFn,
   } = props.config.configuration;
   const {
     dashboard,
@@ -284,6 +288,7 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
+    filterFn,
   };
 };
 
@@ -572,6 +577,27 @@ export const constructAdditionalRequestFilters = (
         value: Array.isArray(filter.filterValue)
           ? filter.filterValue.join(',')
           : String(filter.filterValue),
+      });
+    }
+  }
+  return filters;
+};
+
+/**
+ * @param dimensionFilters The selected dimension filters from the dimension filter component
+ * @returns The list of filters for the metric API call, based the additional custom select components
+ */
+export const constructWidgetDimensionFilters = (
+  dimensionFilters: MetricsDimensionFilter[]
+): Filters[] => {
+  const filters: Filters[] = [];
+  for (const { dimension_label, operator, value } of dimensionFilters) {
+    if (dimension_label && operator && value) {
+      // push to the filters
+      filters.push({
+        dimension_label,
+        operator,
+        value,
       });
     }
   }
