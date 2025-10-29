@@ -7,6 +7,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { QueryFunctionType } from '../Utils/models';
@@ -202,19 +203,7 @@ export const CloudPulseResourcesSelect = React.memo(
             </ListItem>
           );
         }}
-        textFieldProps={{
-          InputProps: {
-            sx: {
-              '::-webkit-scrollbar': {
-                display: 'none',
-              },
-              maxHeight: '55px',
-              msOverflowStyle: 'none',
-              overflow: 'auto',
-              scrollbarWidth: 'none',
-            },
-          },
-        }}
+        textFieldProps={{ ...CLOUD_PULSE_TEXT_FIELD_PROPS }}
         value={selectedResources ?? []}
       />
     );
