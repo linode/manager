@@ -166,7 +166,12 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                 })
               }
               size="small"
-              sx={{ justifyContent: 'start', width: '160px', height: '20px' }}
+              sx={(theme) => ({
+                justifyContent: 'start',
+                width: '160px',
+                height: '20px',
+                marginTop: theme.spacingFunction(12),
+              })}
             >
               Add Filter
             </Button>
