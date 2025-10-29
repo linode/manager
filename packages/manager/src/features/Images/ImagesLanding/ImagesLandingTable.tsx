@@ -151,8 +151,7 @@ export const ImagesLandingTable = () => {
       search: (prev) => ({
         ...prev,
         subType: subTabs[index]['key'],
-        // Reset pagination and sorting query params
-        query: undefined,
+        // Reset pagination and sorting query paramss
         page: undefined,
         pageSize: undefined,
         'manual-order': undefined,
