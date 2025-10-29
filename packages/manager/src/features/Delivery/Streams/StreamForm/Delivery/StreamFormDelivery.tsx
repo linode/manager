@@ -51,12 +51,12 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
 
-  useEffect(() => {
-    setDisableTestConnection(isLoading || !!error);
-  }, [isLoading, error, setDisableTestConnection]);
-
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    setDisableTestConnection(isLoading || !!error || !creatingNewDestination);
+  }, [isLoading, error, setDisableTestConnection, creatingNewDestination]);
 
   const destinationNameOptions: DestinationName[] = (destinations || []).map(
     ({ id, label, type }) => ({
@@ -145,7 +145,10 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               setValue('stream.destinations', id ? [id] : []);
               const selectedDestination = id ? findDestination(id) : undefined;
               if (selectedDestination) {
-                setValue('destination.details', selectedDestination.details);
+                setValue('destination.details', {
+                  ...selectedDestination.details,
+                  access_key_secret: '',
+                });
               } else {
                 clearErrors('destination.details');
               }

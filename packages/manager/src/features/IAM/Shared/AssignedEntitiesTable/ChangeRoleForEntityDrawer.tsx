@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -51,6 +52,7 @@ export const ChangeRoleForEntityDrawer = ({
   username,
 }: Props) => {
   const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
@@ -159,6 +161,10 @@ export const ChangeRoleForEntityDrawer = ({
       await mutationFn({
         ...assignedRoles!,
         entity_access: updatedEntityRoles,
+      });
+
+      enqueueSnackbar(`Role changed`, {
+        variant: 'success',
       });
 
       handleClose();

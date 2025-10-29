@@ -2,19 +2,24 @@ import { useVerifyDestinationQuery } from '@linode/queries';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { getDestinationPayloadDetails } from 'src/features/Delivery/deliveryUtils';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { CreateDestinationPayload } from '@linode/api-v4';
+import type { DestinationForm } from 'src/features/Delivery/Shared/types';
 
 export const useVerifyDestination = () => {
   const [isPending, setIsPending] = useState(false);
   const [destinationVerified, setDestinationVerified] = useState(false);
   const { mutateAsync: callVerifyDestination } = useVerifyDestinationQuery();
 
-  const verifyDestination = async (destination: CreateDestinationPayload) => {
+  const verifyDestination = async (destination: DestinationForm) => {
     setIsPending(true);
     try {
-      await callVerifyDestination(destination);
+      const payload = {
+        ...destination,
+        details: getDestinationPayloadDetails(destination.details),
+      };
+      await callVerifyDestination(payload);
 
       setDestinationVerified(true);
       enqueueSnackbar(

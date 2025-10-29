@@ -6,7 +6,6 @@ import type { Destination } from '@linode/api-v4';
 export const destinationFactory = Factory.Sync.makeFactory<Destination>({
   details: {
     access_key_id: 'Access Id',
-    access_key_secret: 'Access Secret',
     bucket_name: 'Bucket Name',
     host: '3000',
     path: 'file',

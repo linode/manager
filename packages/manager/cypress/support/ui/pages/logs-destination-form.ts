@@ -4,7 +4,7 @@
  * Create/Edit Stream Page
  */
 
-import type { AkamaiObjectStorageDetails } from '@linode/api-v4';
+import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 
 export const logsDestinationForm = {
   /**
@@ -82,7 +82,7 @@ export const logsDestinationForm = {
    *
    * @param data - object with destination details of AkamaiObjectStorageDetails type
    */
-  fillDestinationDetailsForm: (data: AkamaiObjectStorageDetails) => {
+  fillDestinationDetailsForm: (data: AkamaiObjectStorageDetailsExtended) => {
     // Give Destination a host
     logsDestinationForm.setHost(data.host);
 

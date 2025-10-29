@@ -8,7 +8,7 @@ import {
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 
 import type {
-  AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsExtended,
   AkamaiObjectStorageDetailsPayload,
 } from '@linode/api-v4';
 
@@ -28,7 +28,7 @@ describe('delivery utils functions', () => {
   });
 
   describe('getDestinationPayloadDetails ', () => {
-    const testDetails: AkamaiObjectStorageDetails = {
+    const testDetails: AkamaiObjectStorageDetailsExtended = {
       path: 'testpath',
       access_key_id: 'keyId',
       access_key_secret: 'secret',
