@@ -28,10 +28,8 @@ export const PlatformMaintenanceBanner = () => {
     <Notice data-testid="platform-maintenance-banner" variant="warning">
       <Typography>
         <strong>
-          {linodesWithPlatformMaintenance.size > 0
-            ? linodesWithPlatformMaintenance.size
-            : 'One or more'}{' '}
-          Linode{linodesWithPlatformMaintenance.size !== 1 && 's'}
+          {linodesWithPlatformMaintenance.size} Linode
+          {linodesWithPlatformMaintenance.size !== 1 && 's'}
         </strong>{' '}
         need{linodesWithPlatformMaintenance.size === 1 && 's'} to be rebooted
         for critical platform maintenance.
