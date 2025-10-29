@@ -30,7 +30,13 @@ export const regions: Region[] = [
     status: 'ok',
     monitors: {
       alerts: ['Cloud Firewall', 'Object Storage'],
-      metrics: ['Block Storage', 'Object Storage'],
+      metrics: [
+        'Object Storage',
+        'Cloud Firewall',
+        'Linodes',
+        'Managed Databases',
+        'Block Storage',
+      ],
     },
   },
   {
@@ -117,7 +123,15 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Linodes', 'Object Storage'], metrics: ['Linodes'] },
+    monitors: {
+      alerts: ['Linodes', 'Object Storage'],
+      metrics: [
+        'Object Storage',
+        'Cloud Firewall',
+        'Linodes',
+        'Managed Databases',
+      ],
+    },
   },
   {
     capabilities: [
@@ -208,7 +222,15 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: [], metrics: [] },
+    monitors: {
+      alerts: ['Cloud Firewall'],
+      metrics: [
+        'Linodes',
+        'Managed Databases',
+        'Cloud Firewall',
+        'NodeBalancers',
+      ],
+    },
   },
   {
     capabilities: [
@@ -641,7 +663,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Linodes'], metrics: [] },
+    monitors: { alerts: ['Linodes'], metrics: ['NodeBalancers'] },
   },
   {
     capabilities: [

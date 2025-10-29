@@ -123,7 +123,6 @@ export const DestinationsLanding = () => {
       <DeliveryTabHeader
         entity="Destination"
         isSearching={isFetching}
-        loading={isLoading}
         onButtonClick={navigateToCreate}
         onSearch={onSearch}
         searchValue={search?.label ?? ''}

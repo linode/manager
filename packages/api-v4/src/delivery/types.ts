@@ -60,10 +60,14 @@ export type DestinationDetails =
 
 export interface AkamaiObjectStorageDetails {
   access_key_id: string;
-  access_key_secret: string;
   bucket_name: string;
   host: string;
   path: string;
+}
+
+export interface AkamaiObjectStorageDetailsExtended
+  extends AkamaiObjectStorageDetails {
+  access_key_secret: string;
 }
 
 type ContentType = 'application/json' | 'application/json; charset=utf-8';
@@ -122,7 +126,7 @@ export interface UpdateStreamPayloadWithId extends UpdateStreamPayload {
 }
 
 export interface AkamaiObjectStorageDetailsPayload
-  extends Omit<AkamaiObjectStorageDetails, 'path'> {
+  extends Omit<AkamaiObjectStorageDetailsExtended, 'path'> {
   path?: string;
 }
 
