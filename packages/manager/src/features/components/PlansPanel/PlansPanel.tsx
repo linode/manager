@@ -117,7 +117,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     }
 
     // Do not display MTC plans if the feature flag is not enabled.
-    if (!flags.mtc2025 && isMTCPlan(type)) {
+    if (!flags.mtc?.enabled && isMTCPlan(type)) {
       return false;
     }
 

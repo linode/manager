@@ -1,8 +1,15 @@
+import type { AssociatedEntityType } from '../shared/types';
 import type {
   Capabilities,
   CloudPulseServiceType,
   DatabaseEngine,
+  DatabaseInstance,
   DatabaseType,
+  Firewall,
+  Linode,
+  NodeBalancer,
+  ObjectStorageBucket,
+  Volume,
 } from '@linode/api-v4';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
@@ -45,7 +52,15 @@ export interface CloudPulseServiceTypeFilters {
 /**
  * As of now, the list of possible custom filters are engine, database type, this union type will be expanded if we start enhancing our custom select config
  */
-export type QueryFunctionType = DatabaseEngine[] | DatabaseType[];
+export type QueryFunctionType =
+  | DatabaseEngine[]
+  | DatabaseInstance[]
+  | DatabaseType[]
+  | Firewall[]
+  | Linode[]
+  | NodeBalancer[]
+  | ObjectStorageBucket[]
+  | Volume[];
 
 /**
  * The non array types of QueryFunctionType like DatabaseEngine|DatabaseType
@@ -93,9 +108,24 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
+   * This is an optional field, controls the associated entity type for the dashboard
+   */
+  associatedEntityType?: AssociatedEntityType;
+
+  /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected
    */
   dependency?: string[];
+
+  /**
+   * If this filter is part of metric-definitions API, this field holds the dimension key
+   */
+  dimensionKey?: string;
+
+  /**
+   * This is an optional field, it is used to filter the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
 
   /**
    * This is the field that will be sent in the metrics api call or xFilter

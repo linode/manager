@@ -1,8 +1,9 @@
 import { destinationType } from '@linode/api-v4';
+import { omitProps } from '@linode/ui';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { destinationFactory, streamFactory } from 'src/factories/delivery';
+import { destinationFactory, streamFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
@@ -14,6 +15,7 @@ import {
 
 import type {
   AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsPayload,
   CreateDestinationPayload,
   Destination,
   Stream,
@@ -221,7 +223,10 @@ export const createDestinations = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
       const payload: CreateDestinationPayload = await request.clone().json();
-      const details = payload.details;
+      const details = omitProps(
+        payload.details as AkamaiObjectStorageDetailsPayload,
+        ['access_key_secret']
+      );
       const destination = destinationFactory.build({
         label: payload.label,
         type: payload.type,

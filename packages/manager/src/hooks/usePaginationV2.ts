@@ -19,6 +19,13 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
    */
   currentRoute: ToSubOptions['to'];
   /**
+   * The default page size to use when no preference exists.
+   * @default MIN_PAGE_SIZE
+   *
+   * @warning For API-driven data, this should be set to the minimum page size supported by the API (25 to 500).
+   */
+  defaultPageSize?: number;
+  /**
    * The initial page pagination is set to - defaults to 1, it's unusual to set this.
    * @default 1
    */
@@ -40,6 +47,7 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
 
 export const usePaginationV2 = <T extends TableSearchParams>({
   currentRoute,
+  defaultPageSize = MIN_PAGE_SIZE,
   initialPage = 1,
   preferenceKey,
   queryParamsPrefix,
@@ -64,8 +72,8 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     search[pageSizeKey as keyof TableSearchParams] || search.pageSize;
 
   const preferredPageSize = preferenceKey
-    ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
-    : MIN_PAGE_SIZE;
+    ? (pageSizePreferences?.[preferenceKey] ?? defaultPageSize)
+    : defaultPageSize;
 
   const page = searchParamPage ? Number(searchParamPage) : initialPage;
   const pageSize = searchParamPageSize

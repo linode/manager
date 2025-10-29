@@ -11,9 +11,10 @@ import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
   ENDPOINT,
+  FIREWALL,
   INTERFACE_ID,
-  LINODE_REGION,
   NODE_TYPE,
+  PARENT_ENTITY_REGION,
   PORT,
   REGION,
   RESOURCE_ID,
@@ -216,7 +217,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           savePref,
           {
             [NODE_TYPE]: undefined,
-            [LINODE_REGION]: undefined,
+            [PARENT_ENTITY_REGION]: undefined,
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),
@@ -259,7 +260,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (endpoints: string[], savePref: boolean = false) => {
         emitFilterChangeByFilterKey(ENDPOINT, endpoints, endpoints, savePref, {
           [ENDPOINT]: endpoints,
-          [RESOURCE_ID]: undefined,
+          [RESOURCES]: undefined,
         });
       },
       [emitFilterChangeByFilterKey]
@@ -310,7 +311,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleRegionChange
           );
-        } else if (config.configuration.filterKey === LINODE_REGION) {
+        } else if (config.configuration.filterKey === PARENT_ENTITY_REGION) {
           return getRegionProperties(
             {
               config,
@@ -324,7 +325,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleRegionChange
           );
-        } else if (config.configuration.filterKey === RESOURCE_ID) {
+        } else if (
+          config.configuration.filterKey === RESOURCE_ID &&
+          config.configuration.name !== FIREWALL
+        ) {
           return getResourcesProperties(
             {
               config,
@@ -387,9 +391,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
-              dependentFilters: resource_ids?.length
-                ? { [RESOURCE_ID]: resource_ids }
-                : dependentFilterReference.current,
+              dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
               shouldDisable: isError || isLoading,
@@ -443,7 +445,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         >
           {RenderComponent({
             componentKey:
-              filter.configuration.type !== undefined
+              filter.configuration.type !== undefined ||
+              filter.configuration.name === FIREWALL
                 ? 'customSelect'
                 : filter.configuration.filterKey,
             componentProps: { ...getProps(filter) },
