@@ -1,4 +1,4 @@
-import { useProfile } from '@linode/queries';
+import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Box, Paper, Typography } from '@linode/ui';
 import { GridLegacy, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
@@ -203,21 +203,24 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
+  const { data: regions } = useRegionsQuery();
   const linodesFetch = useFirewallFetchOptions({
     dimensionLabel: 'linode_id',
     type: 'metrics',
     entities: entityIds,
-    regions: [],
+    regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
     scope: 'entity',
     serviceType,
+    associatedEntityType: 'linode',
   });
   const vpcFetch = useFirewallFetchOptions({
     dimensionLabel: 'vpc_subnet_id',
     type: 'metrics',
     entities: entityIds,
-    regions: [],
+    regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
     scope: 'entity',
     serviceType,
+    associatedEntityType: 'linode',
   });
 
   const filteredSelections = React.useMemo(

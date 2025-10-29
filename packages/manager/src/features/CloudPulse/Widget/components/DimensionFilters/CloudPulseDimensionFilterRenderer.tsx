@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ActionsPanel, Box, Button, Divider, Stack } from '@linode/ui';
+import theme from '@shikijs/themes/one-dark-pro';
 import React from 'react';
 import {
   FormProvider,
@@ -165,7 +166,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                 })
               }
               size="small"
-              sx={{ justifyContent: 'start', width: '160px' }}
+              sx={{ justifyContent: 'start', width: '160px', height: '20px' }}
             >
               Add Filter
             </Button>
@@ -190,7 +191,11 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                 width: '70px',
               },
             }}
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+            sx={(theme) => ({
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: theme.spacingFunction(12),
+            })}
           />
         </form>
       </FormProvider>
