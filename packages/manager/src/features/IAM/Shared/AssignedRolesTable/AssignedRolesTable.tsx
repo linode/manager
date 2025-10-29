@@ -17,6 +17,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -74,7 +75,17 @@ export const AssignedRolesTable = () => {
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_default_delegate_access',
+  ]);
+
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
 
   const pagination = usePaginationV2({
     currentRoute: '/iam/users/$username/roles',
@@ -380,10 +391,10 @@ export const AssignedRolesTable = () => {
         <Grid sx={{ alignSelf: 'flex-start' }}>
           <Button
             buttonType="primary"
-            disabled={!permissions?.is_account_admin}
+            disabled={!permissionToCheck}
             onClick={() => setIsAssignNewRoleDrawerOpen(true)}
             tooltipText={
-              !permissions?.is_account_admin
+              !permissionToCheck
                 ? 'You do not have permission to assign roles.'
                 : undefined
             }
