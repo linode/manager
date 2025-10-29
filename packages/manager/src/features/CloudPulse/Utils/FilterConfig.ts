@@ -5,6 +5,7 @@ import { queryFactory } from 'src/queries/cloudpulse/queries';
 import {
   ENDPOINT,
   INTERFACE_IDS_PLACEHOLDER_TEXT,
+  NODEBALANCER_ID,
   PARENT_ENTITY_REGION,
   REGION,
   RESOURCE_ID,
@@ -322,6 +323,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
   ],
   serviceType: 'firewall',
+  associatedEntityType: 'linode',
 };
 
 export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
@@ -362,8 +364,28 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
         },
         name: 'NodeBalancer Region',
       },
+      {
+        configuration: {
+          dependency: [PARENT_ENTITY_REGION, RESOURCE_ID],
+          filterKey: NODEBALANCER_ID,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: false,
+          isMultiSelect: true,
+          isOptional: true,
+          name: 'NodeBalancers',
+          neededInViews: [
+            CloudPulseAvailableViews.central,
+            CloudPulseAvailableViews.service,
+          ],
+          placeholder: 'Select NodeBalancers',
+          priority: 3,
+        },
+        name: 'NodeBalancers',
+      },
     ],
     serviceType: 'firewall',
+    associatedEntityType: 'nodebalancer',
   };
 
 export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMap> =
