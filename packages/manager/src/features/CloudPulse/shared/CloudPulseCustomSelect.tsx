@@ -12,6 +12,7 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
+  QueryFunctionType,
 } from '../Utils/models';
 import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
@@ -55,6 +56,10 @@ export interface CloudPulseCustomSelectProps {
    */
   errorText?: string;
 
+  /**
+   * The filter function to apply to the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
   /**
    * The filterKey that needs to be used
    */
@@ -144,6 +149,7 @@ export const CloudPulseCustomSelect = React.memo(
       savePreferences,
       type,
       isOptional,
+      filterFn,
     } = props;
 
     const [selectedResource, setResource] = React.useState<
@@ -162,6 +168,7 @@ export const CloudPulseCustomSelect = React.memo(
       filter: {},
       idField: apiResponseIdField ?? 'id',
       labelField: apiResponseLabelField ?? 'label',
+      filterFn,
     });
 
     React.useEffect(() => {
