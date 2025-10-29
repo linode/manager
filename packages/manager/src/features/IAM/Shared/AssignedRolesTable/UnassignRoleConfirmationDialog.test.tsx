@@ -28,7 +28,7 @@ const props = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useParams: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({ username: 'test_user' }),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
