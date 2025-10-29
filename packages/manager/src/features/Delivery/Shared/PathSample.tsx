@@ -44,7 +44,7 @@ export const PathSample = (props: PathSampleProps) => {
   });
 
   const { data: profile } = useProfile();
-  const [month, day, year] = new Date().toLocaleDateString().split('/');
+  const [month, day, year] = new Date().toLocaleDateString('en-US').split('/');
 
   const setStreamType = (): StreamType => {
     return streamTypeFormValue ?? streamType.AuditLogs;

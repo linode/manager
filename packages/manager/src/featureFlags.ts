@@ -1,4 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
+import type { Region } from '@linode/api-v4';
 import type {
   CloudPulseServiceType,
   TPAProvider,
@@ -96,6 +97,11 @@ interface AclpFlag {
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
+
+  /**
+   * This property indicates whether to show widget dimension filters or not
+   */
+  showWidgetDimensionFilters?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -145,6 +151,17 @@ interface LimitsEvolution {
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
 }
 
+interface MTC {
+  /**
+   * Whether the MTC feature is enabled.
+   */
+  enabled: boolean;
+  /**
+   * Region IDs where MTC is supported (Only used for Linode Migration region dropdown).
+   */
+  supportedRegions: Region['id'][];
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -189,7 +206,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  mtc2025: boolean;
+  mtc: MTC;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
