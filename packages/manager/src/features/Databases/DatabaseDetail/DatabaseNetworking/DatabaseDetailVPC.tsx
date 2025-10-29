@@ -23,7 +23,7 @@ export const DatabaseDetailVPC = (props: DatabaseDetailVPCProps) => {
   return (
     <DatabaseVPC
       control={control}
-      mode="create"
+      mode="networking"
       region={region}
       setValue={setValue}
       subnetId={subnetId}
