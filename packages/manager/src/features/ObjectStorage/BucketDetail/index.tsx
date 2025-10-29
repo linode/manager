@@ -97,9 +97,9 @@ export const BucketDetailLanding = React.memo(() => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            <SafeTabPanel index={tabs.length - 1}>
+            {/* <SafeTabPanel index={2}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
-            </SafeTabPanel>
+            </SafeTabPanel> */}
             <SafeTabPanel index={tabs.length - 1}>
               <CloudPulseDashboardWithFilters
                 dashboardId={6}
