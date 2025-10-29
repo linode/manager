@@ -386,6 +386,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           ],
           placeholder: 'Select NodeBalancers',
           priority: 3,
+          dimensionKey: 'nodebalancer_id',
         },
         name: 'NodeBalancers',
       },

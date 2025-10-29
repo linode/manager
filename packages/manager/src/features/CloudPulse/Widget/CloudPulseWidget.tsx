@@ -211,7 +211,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
     scope: 'entity',
     serviceType,
-    associatedEntityType: 'linode',
+    associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
   });
   const vpcFetch = useFirewallFetchOptions({
     dimensionLabel: 'vpc_subnet_id',
@@ -220,7 +220,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
     scope: 'entity',
     serviceType,
-    associatedEntityType: 'linode',
+    associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
   });
 
   const filteredSelections = React.useMemo(
