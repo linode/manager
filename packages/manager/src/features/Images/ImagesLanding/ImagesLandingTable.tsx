@@ -1,103 +1,45 @@
-import { imageQueries, useImageQuery, useImagesQuery } from '@linode/queries';
+import { imageQueries, useImageQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import {
-  BetaChip,
-  Box,
-  Button,
-  CircleProgress,
-  Drawer,
-  ErrorState,
-  Hidden,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { BetaChip, Drawer, Notice, Stack } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Link } from 'src/components/Link';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import {
-  isEventImageUpload,
-  isEventInProgressDiskImagize,
-} from 'src/queries/events/event.helpers';
-import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
-import {
-  AUTOMATIC_IMAGES_DEFAULT_ORDER,
-  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
-  AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
-  AUTOMATIC_IMAGES_PREFERENCE_KEY,
-  MANUAL_IMAGES_DEFAULT_ORDER,
-  MANUAL_IMAGES_DEFAULT_ORDER_BY,
-  MANUAL_IMAGES_PREFERENCE_KEY,
-} from '../constants';
-import { getEventsForImages, useImagesSubTabs } from '../utils';
+import { useImagesSubTabs } from '../utils';
 import { DeleteImageDialog } from './DeleteImageDialog';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
-import { ImageRow } from './ImageRow';
+import { ImagesCustom } from './ImagesCustom';
+import { ImagesRecovery } from './ImagesRecovery';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { Filter, Image } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
+import type { Image } from '@linode/api-v4';
 import type { ImageAction } from 'src/routes/images';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  imageTable: {
-    marginBottom: theme.spacingFunction(24),
-    padding: 0,
-  },
-  imageTableHeader: {
-    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
-    borderBottom: 0,
-    padding: theme.spacingFunction(8),
-    paddingLeft: theme.spacingFunction(12),
-  },
-  imageTableSubheader: {
-    marginTop: theme.spacingFunction(8),
-  },
-}));
 
 export const ImagesLandingTable = () => {
   const navigate = useNavigate();
 
-  const { classes } = useStyles();
   const params = useParams({
     from: '/images/images/$imageId/$action',
     shouldThrow: false,
   });
-  const { data: permissions } = usePermissions('account', ['create_image']);
-  const canCreateImage = permissions?.create_image;
 
   const search = useSearch({ from: '/images' });
   const { subTabIndex, subTabs } = useImagesSubTabs(search.subType);
 
-  const { query } = search;
+  const [manualImagesIsFetching, setManualImagesIsFetching] =
+    React.useState(false);
+  const [automaticImagesIsFetching, setAutomaticImagesIsFetching] =
+    React.useState(false);
 
   const queryClient = useQueryClient();
 
@@ -108,136 +50,23 @@ export const ImagesLandingTable = () => {
    *
    * Using `tags` in a '+or' is currently broken. See ARB-5792
    */
-  const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
-    // Because Images have an array of region objects, we need to transform
-    // search queries like "region: us-east" to { regions: { region: "us-east" } }
-    // rather than the default behavior which is { region: { '+contains': "us-east" } }
-    filterShapeOverrides: {
-      '+contains': {
-        field: 'region',
-        filter: (value) => ({ regions: { region: value } }),
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(
+    search.query,
+    {
+      // Because Images have an array of region objects, we need to transform
+      // search queries like "region: us-east" to { regions: { region: "us-east" } }
+      // rather than the default behavior which is { region: { '+contains': "us-east" } }
+      filterShapeOverrides: {
+        '+contains': {
+          field: 'region',
+          filter: (value) => ({ regions: { region: value } }),
+        },
+        '+eq': {
+          field: 'region',
+          filter: (value) => ({ regions: { region: value } }),
+        },
       },
-      '+eq': {
-        field: 'region',
-        filter: (value) => ({ regions: { region: value } }),
-      },
-    },
-    searchableFieldsWithoutOperator: ['label', 'tags'],
-  });
-
-  const paginationForManualImages = usePaginationV2({
-    currentRoute: '/images/images',
-    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
-    searchParams: (prev) => ({
-      ...prev,
-      query: search.query,
-    }),
-  });
-
-  const {
-    handleOrderChange: handleManualImagesOrderChange,
-    order: manualImagesOrder,
-    orderBy: manualImagesOrderBy,
-  } = useOrderV2({
-    initialRoute: {
-      defaultOrder: {
-        order: MANUAL_IMAGES_DEFAULT_ORDER,
-        orderBy: MANUAL_IMAGES_DEFAULT_ORDER_BY,
-      },
-      from: '/images/images',
-    },
-    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
-    prefix: 'manual',
-  });
-
-  const manualImagesFilter: Filter = {
-    ['+order']: manualImagesOrder,
-    ['+order_by']: manualImagesOrderBy,
-    ...filter,
-  };
-
-  const {
-    data: manualImages,
-    error: manualImagesError,
-    isFetching: manualImagesIsFetching,
-    isLoading: manualImagesLoading,
-  } = useImagesQuery(
-    {
-      page: paginationForManualImages.page,
-      page_size: paginationForManualImages.pageSize,
-    },
-    {
-      ...manualImagesFilter,
-      is_public: false,
-      type: 'manual',
-    },
-    {
-      enabled: search.subType === 'custom',
-      // Refetch custom images every 30 seconds.
-      // We do this because we have no /v4/account/events we can use
-      // to update Image region statuses. We should make the API
-      // team and Images team implement events for this.
-      refetchInterval: 30_000,
-      // If we have a search query, disable retries to keep the UI
-      // snappy if the user inputs an invalid X-Filter. Otherwise,
-      // pass undefined to use the default retry behavior.
-      retry: query ? false : undefined,
-    }
-  );
-
-  // Pagination, order, and query hooks for automatic/recovery images
-  const paginationForAutomaticImages = usePaginationV2({
-    currentRoute: '/images/images',
-    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
-    searchParams: (prev) => ({
-      ...prev,
-      query: search.query,
-    }),
-  });
-
-  const {
-    handleOrderChange: handleAutomaticImagesOrderChange,
-    order: automaticImagesOrder,
-    orderBy: automaticImagesOrderBy,
-  } = useOrderV2({
-    initialRoute: {
-      defaultOrder: {
-        order: AUTOMATIC_IMAGES_DEFAULT_ORDER,
-        orderBy: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
-      },
-      from: '/images/images',
-    },
-    preferenceKey: AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
-    prefix: 'automatic',
-  });
-
-  const automaticImagesFilter: Filter = {
-    ['+order']: automaticImagesOrder,
-    ['+order_by']: automaticImagesOrderBy,
-    ...filter,
-  };
-
-  const {
-    data: automaticImages,
-    error: automaticImagesError,
-    isFetching: automaticImagesIsFetching,
-    isLoading: automaticImagesLoading,
-  } = useImagesQuery(
-    {
-      page: paginationForAutomaticImages.page,
-      page_size: paginationForAutomaticImages.pageSize,
-    },
-    {
-      ...automaticImagesFilter,
-      is_public: false,
-      type: 'automatic',
-    },
-    {
-      enabled: search.subType === 'recovery',
-      // If we have a search query, disable retries to keep the UI
-      // snappy if the user inputs an invalid X-Filter. Otherwise,
-      // pass undefined to use the default retry behavior.
-      retry: query ? false : undefined,
+      searchableFieldsWithoutOperator: ['label', 'tags'],
     }
   );
 
@@ -246,26 +75,6 @@ export const ImagesLandingTable = () => {
     isLoading: isFetchingSelectedImage,
     error: selectedImageError,
   } = useImageQuery(params?.imageId ?? '', !!params?.imageId);
-
-  const { events } = useEventsInfiniteQuery();
-
-  const imageEvents =
-    events?.filter(
-      (event) =>
-        isEventInProgressDiskImagize(event) || isEventImageUpload(event)
-    ) ?? [];
-
-  // Private images with the associated events tied in.
-  const manualImagesEvents = getEventsForImages(
-    manualImages?.data ?? [],
-    imageEvents
-  );
-
-  // Automatic images with the associated events tied in.
-  const automaticImagesEvents = getEventsForImages(
-    automaticImages?.data ?? [],
-    imageEvents
-  );
 
   const actionHandler = (image: Image, action: ImageAction) => {
     navigate({
@@ -333,223 +142,7 @@ export const ImagesLandingTable = () => {
     onRebuild: handleRebuild,
   };
 
-  if (!query && (manualImagesError || automaticImagesError)) {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Images" />
-        <ErrorState errorText="There was an error retrieving your images. Please reload and try again." />
-      </React.Fragment>
-    );
-  }
-
-  // @todo - Check If we need ImagesLandingEmptyState
-  // if (manualImages?.results === 0 && automaticImages?.results === 0 && !query) {
-  //   return <ImagesLandingEmptyState />;
-  // }
-
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
-
-  const customImages = manualImagesLoading ? (
-    <CircleProgress />
-  ) : (
-    <Paper className={classes.imageTable}>
-      <div className={classes.imageTableHeader}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Typography variant="h3">My Custom Images</Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <DocsLink
-              analyticsLabel={'Custom Images'}
-              href={'https://techdocs.akamai.com/cloud-computing/docs/images'}
-            />
-            <Button
-              buttonType="primary"
-              disabled={!canCreateImage}
-              onClick={() =>
-                navigate({ search: () => ({}), to: '/images/create' })
-              }
-              tooltipText={
-                !canCreateImage
-                  ? "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
-                  : undefined
-              }
-            >
-              Create Image
-            </Button>
-          </Box>
-        </Box>
-        <Typography className={classes.imageTableSubheader}>
-          These are{' '}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
-            encrypted
-          </Link>{' '}
-          images you manually uploaded or captured from an existing compute
-          instance disk. You can deploy an image to a compute instance in any
-          region.
-        </Typography>
-      </div>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={manualImagesOrderBy === 'label'}
-              direction={manualImagesOrder}
-              handleClick={handleManualImagesOrderChange}
-              label="label"
-            >
-              Image
-            </TableSortCell>
-            <Hidden smDown>
-              <TableCell>Status</TableCell>
-            </Hidden>
-            <Hidden smDown>
-              <TableCell>Replicated in</TableCell>
-            </Hidden>
-            <TableSortCell
-              active={manualImagesOrderBy === 'size'}
-              direction={manualImagesOrder}
-              handleClick={handleManualImagesOrderChange}
-              label="size"
-            >
-              Original Image
-            </TableSortCell>
-            <Hidden mdDown>
-              <TableCell>All Replicas</TableCell>
-            </Hidden>
-            <Hidden mdDown>
-              <TableSortCell
-                active={manualImagesOrderBy === 'created'}
-                direction={manualImagesOrder}
-                handleClick={handleManualImagesOrderChange}
-                label="created"
-              >
-                Created
-              </TableSortCell>
-            </Hidden>
-            <Hidden mdDown>
-              <TableCell>Image ID</TableCell>
-            </Hidden>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {manualImages?.results === 0 && (
-            <TableRowEmpty
-              colSpan={9}
-              message={`No Custom Images to display.`}
-            />
-          )}
-          {manualImagesError && query && (
-            <TableRowError colSpan={9} message={manualImagesError[0].reason} />
-          )}
-          {manualImages?.data.map((manualImage) => (
-            <ImageRow
-              event={manualImagesEvents[manualImage.id]}
-              handlers={handlers}
-              image={manualImage}
-              key={manualImage.id}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={manualImages?.results ?? 0}
-        eventCategory="Custom Images Table"
-        handlePageChange={paginationForManualImages.handlePageChange}
-        handleSizeChange={paginationForManualImages.handlePageSizeChange}
-        page={paginationForManualImages.page}
-        pageSize={paginationForManualImages.pageSize}
-      />
-    </Paper>
-  );
-
-  const recoveryImages = automaticImagesLoading ? (
-    <CircleProgress />
-  ) : (
-    <Paper className={classes.imageTable}>
-      <div className={classes.imageTableHeader}>
-        <Typography variant="h3">Recovery Images</Typography>
-        <Typography className={classes.imageTableSubheader}>
-          These are images we automatically capture when Linode disks are
-          deleted. They will be deleted after the indicated expiration date.
-        </Typography>
-      </div>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={automaticImagesOrderBy === 'label'}
-              direction={automaticImagesOrder}
-              handleClick={handleAutomaticImagesOrderChange}
-              label="label"
-            >
-              Image
-            </TableSortCell>
-            <Hidden smDown>
-              <TableCell>Status</TableCell>
-            </Hidden>
-            <TableSortCell
-              active={automaticImagesOrderBy === 'size'}
-              direction={automaticImagesOrder}
-              handleClick={handleAutomaticImagesOrderChange}
-              label="size"
-            >
-              Size
-            </TableSortCell>
-            <Hidden smDown>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'created'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="created"
-              >
-                Created
-              </TableSortCell>
-            </Hidden>
-            <Hidden smDown>
-              <TableCell>Expires</TableCell>
-            </Hidden>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {automaticImages?.results === 0 && (
-            <TableRowEmpty
-              colSpan={6}
-              message={`No Recovery Images to display.`}
-            />
-          )}
-          {automaticImagesError && query && (
-            <TableRowError
-              colSpan={9}
-              message={automaticImagesError[0].reason}
-            />
-          )}
-          {automaticImages?.data.map((automaticImage) => (
-            <ImageRow
-              event={automaticImagesEvents[automaticImage.id]}
-              handlers={handlers}
-              image={automaticImage}
-              key={automaticImage.id}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={automaticImages?.results ?? 0}
-        eventCategory="Recovery Images Table"
-        handlePageChange={paginationForAutomaticImages.handlePageChange}
-        handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
-        page={paginationForAutomaticImages.page}
-        pageSize={paginationForAutomaticImages.pageSize}
-      />
-    </Paper>
-  );
 
   const onTabChange = (index: number) => {
     // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
@@ -580,7 +173,7 @@ export const ImagesLandingTable = () => {
         label="Search"
         onSearch={onSearch}
         placeholder="Search Images"
-        value={query}
+        value={search.query}
       />
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
@@ -594,13 +187,25 @@ export const ImagesLandingTable = () => {
           <TabPanels>
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.key}-content`}>
-                {tab.key === 'custom' && customImages}
+                {tab.key === 'custom' && (
+                  <ImagesCustom
+                    filter={filter}
+                    handlers={handlers}
+                    onFetchingChange={setManualImagesIsFetching}
+                  />
+                )}
                 {tab.key === 'shared' && (
                   <Notice variant="info">
                     Share with me is coming soon...
                   </Notice>
                 )}
-                {tab.key === 'recovery' && recoveryImages}
+                {tab.key === 'recovery' && (
+                  <ImagesRecovery
+                    filter={filter}
+                    handlers={handlers}
+                    onFetchingChange={setAutomaticImagesIsFetching}
+                  />
+                )}
               </SafeTabPanel>
             ))}
           </TabPanels>

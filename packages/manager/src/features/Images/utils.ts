@@ -113,3 +113,23 @@ export const getImageTypeToSubType = (imageType: Image['type']) => {
       return 'shared';
   }
 };
+
+import { makeStyles } from 'tss-react/mui';
+
+import type { Theme } from '@mui/material/styles';
+
+export const useImgesTableStyles = makeStyles()((theme: Theme) => ({
+  imageTable: {
+    marginBottom: theme.spacingFunction(24),
+    padding: 0,
+  },
+  imageTableHeader: {
+    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+    borderBottom: 0,
+    padding: theme.spacingFunction(8),
+    paddingLeft: theme.spacingFunction(12),
+  },
+  imageTableSubheader: {
+    marginTop: theme.spacingFunction(8),
+  },
+}));
