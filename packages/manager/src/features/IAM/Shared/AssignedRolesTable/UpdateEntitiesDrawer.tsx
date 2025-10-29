@@ -42,10 +42,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   const assignedRoles = isDefaultDelegationRolesForChildAccount
     ? defaultRolesData
     : userRolesData;
-  const { mutateAsync: updateUserRoles } = useUserRolesMutation(
-    username,
-    Boolean(username)
-  );
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
   const { mutateAsync: updateDefaultRoles } =
     useUpdateDefaultDelegationAccessQuery();

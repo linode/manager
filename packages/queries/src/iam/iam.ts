@@ -30,10 +30,7 @@ export const useAccountRoles = (enabled = true) => {
   });
 };
 
-export const useUserRolesMutation = (
-  username?: string,
-  enabled: boolean = true,
-) => {
+export const useUserRolesMutation = (username: string | undefined) => {
   const queryClient = useQueryClient();
 
   return useMutation<IamUserRoles, APIError[], IamUserRoles>({
@@ -44,7 +41,7 @@ export const useUserRolesMutation = (
       return updateUserRoles(username, data);
     },
     onSuccess: (role) => {
-      if (username && enabled) {
+      if (username) {
         queryClient.setQueryData<IamUserRoles>(
           iamQueries.user(username)._ctx.roles.queryKey,
           role,

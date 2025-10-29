@@ -46,7 +46,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
     isPending,
     mutateAsync: updateUserRoles,
     reset,
-  } = useUserRolesMutation(username, Boolean(username));
+  } = useUserRolesMutation(username);
 
   const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
     useUpdateDefaultDelegationAccessQuery();

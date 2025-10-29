@@ -99,7 +99,7 @@ export const AssignNewRoleDrawer = ({
   }, [accountRoles, assignedRoles]);
 
   const { mutateAsync: updateUserRoles, isPending: isUserRolesPending } =
-    useUserRolesMutation(username, Boolean(username));
+    useUserRolesMutation(username);
 
   const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
     useUpdateDefaultDelegationAccessQuery();
