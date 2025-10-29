@@ -45,12 +45,6 @@ export const getImages = (mockState: MockState) => [
       return await getImageInfo(String(params.id));
     }
   ),
-
-  http.get(
-    '*/v4beta/images/:id',
-    async ({ params }): Promise<StrictResponse<APIErrorResponse | Image>> =>
-      await getImageInfo(String(params.id))
-  ),
 ];
 
 export const createImage = (mockState: MockState) => [
