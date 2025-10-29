@@ -21,15 +21,15 @@ export const PlatformMaintenanceBanner = () => {
   const hideAccountMaintenanceLink = location.pathname === '/maintenance';
 
   if (!accountHasPlatformMaintenance) return null;
-  // Do not render if there are no specific Linodes with platform maintenance
-  if (linodesWithPlatformMaintenance.size === 0) return null;
 
   return (
     <Notice data-testid="platform-maintenance-banner" variant="warning">
       <Typography>
         <strong>
-          {linodesWithPlatformMaintenance.size} Linode
-          {linodesWithPlatformMaintenance.size !== 1 && 's'}
+          {linodesWithPlatformMaintenance.size > 0
+            ? linodesWithPlatformMaintenance.size
+            : 'One or more'}{' '}
+          Linode{linodesWithPlatformMaintenance.size !== 1 && 's'}
         </strong>{' '}
         need{linodesWithPlatformMaintenance.size === 1 && 's'} to be rebooted
         for critical platform maintenance.

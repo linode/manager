@@ -33,10 +33,9 @@ describe('QEMU reboot upgrade notification', () => {
   const NOTIFICATION_BANNER_TEXT = 'critical platform maintenance';
   const noticeMessageShort =
     'One or more Linodes need to be rebooted for critical platform maintenance.';
-  // Banner always renders a numeric count (e.g., "1 Linode", "3 Linodes").
-  const tailSuffix = ' to be rebooted for critical platform maintenance.';
+  const noticeMessage = `${noticeMessageShort} See which Linodes are scheduled for reboot on the Account Maintenance page.`;
   const rebootReason =
-    'This maintenance applies a critical platform update to upgrade the QEMU version.';
+    'This maintenance is scheduled to upgrade the QEMU version.';
 
   const notifications: Notification[] = [
     notificationFactory.build({
@@ -114,15 +113,7 @@ describe('QEMU reboot upgrade notification', () => {
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
-          const count = parseInt(noticeText, 10);
-          const hasNumericPrefix =
-            !Number.isNaN(count) && noticeText.includes(' Linode');
-          expect(hasNumericPrefix).to.be.true;
-          const expectedTail = `${count === 1 ? 'needs' : 'need'}${tailSuffix}`;
-          expect(noticeText).to.include(expectedTail);
-          expect(noticeText).to.include(
-            'See which Linodes are scheduled for reboot on the Account Maintenance page.'
-          );
+          expect(noticeText).to.include(noticeMessage);
         });
       });
 
@@ -334,30 +325,20 @@ describe('QEMU reboot upgrade notification', () => {
       .within(() => {
         cy.get('p').then(($el) => {
           const noticeText = $el.text();
-          const count = parseInt(noticeText, 10);
-          const hasNumericPrefix =
-            !Number.isNaN(count) && noticeText.includes(' Linode');
-          expect(hasNumericPrefix).to.be.true;
-          const expectedTail = `${count === 1 ? 'needs' : 'need'}${tailSuffix}`;
-          expect(noticeText).to.include(expectedTail);
+          expect(noticeText).to.include(noticeMessageShort);
         });
       });
-    // MaintenanceBannerV2 filters out platform maintenance; it may not render in this scenario.
-    // If present, validate it mentions 'scheduled maintenance'.
-    cy.get('body').then(($body) => {
-      const $banner = $body.find('[data-testid="maintenance-banner"]');
-      if ($banner.length) {
-        cy.wrap($banner)
-          .should('be.visible')
-          .within(() => {
-            cy.get('p')
-              .invoke('text')
-              .then((text) => {
-                expect(text).to.include('scheduled maintenance');
-              });
-          });
-      }
-    });
+    cy.findByText(' upcoming', { exact: false })
+      .closest('[data-testid="maintenance-banner"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('p').then(($el) => {
+          const noticeText = $el.text();
+          expect(noticeText).to.include(
+            `${accountpendingMaintenance.length} Linode has upcoming scheduled maintenance.`
+          );
+        });
+      });
 
     cy.get('button[aria-label="Notifications"]').click();
     cy.findByText(notifications[0].message).should('be.visible');
