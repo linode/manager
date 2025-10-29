@@ -8,6 +8,7 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { getAssociatedEntityType } from './utils';
 
 import type {
   CloudPulseMetricsFilter,
@@ -16,6 +17,10 @@ import type {
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseEndpointsSelectProps } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
+import type {
+  CloudPulseFirewallNodebalancersSelectProps,
+  CloudPulseNodebalancers,
+} from '../shared/CloudPulseFirewallNodebalancersSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
@@ -36,6 +41,7 @@ import type {
   Dashboard,
   DateTimeWithPreset,
   Filters,
+  NodeBalancer,
   TimeDuration,
 } from '@linode/api-v4';
 
@@ -183,7 +189,7 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
-    associatedEntityType: config.configuration.associatedEntityType ?? 'both',
+    associatedEntityType: getAssociatedEntityType(dashboard.id),
     filterFn: config.configuration.filterFn,
   };
 };
@@ -408,6 +414,47 @@ export const getEndpointsProperties = (
   };
 };
 
+/**
+ *
+ * @param props The cloudpulse filter properties selected so far
+ * @param handleFirewallNodebalancersChange The callback function when selection of nodebalancers changes
+ * @returns CloudPulseFirewallNodebalancersSelectProps
+ */
+export const getFirewallNodebalancersProperties = (
+  props: CloudPulseFilterProperties,
+  handleFirewallNodebalancersChange: (
+    nodebalancers: CloudPulseNodebalancers[],
+    savePref?: boolean
+  ) => void
+): CloudPulseFirewallNodebalancersSelectProps => {
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    config,
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+    shouldDisable,
+  } = props;
+  return {
+    defaultValue: preferences?.[config.configuration.filterKey],
+    selectedDashboard: dashboard,
+    disabled:
+      shouldDisable ||
+      shouldDisableFilterByFilterKey(
+        filterKey,
+        dependentFilters ?? {},
+        dashboard,
+        preferences
+      ),
+    handleNodebalancersSelection: handleFirewallNodebalancersChange,
+    label,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
+    xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+    isOptional: config.configuration.isOptional,
+  };
+};
 /**
  * This function helps in builder the xFilter needed to passed in a apiV4 call
  *
@@ -768,4 +815,46 @@ export const filterEndpointsUsingRegion = (
   }
 
   return data.filter(({ region }) => region === regionFromFilter);
+};
+
+/**
+ *
+ * @param data The nodebalancers for which the filter needs to be applied
+ * @param xFilter The selected filters that will be used to filter the nodebalancers
+ * @param firewalls The firewalls for which the filter needs to be applied
+ * @returns The filtered nodebalancers
+ */
+
+export const filterFirewallNodebalancers = (
+  data?: NodeBalancer[],
+  xFilter?: CloudPulseMetricsFilter,
+  firewalls?: CloudPulseResources[]
+): CloudPulseNodebalancers[] | undefined => {
+  // If data is undefined or xFilter/firewalls is undefined or empty, return undefined
+  if (!data || !xFilter || !Object.keys(xFilter).length || !firewalls?.length) {
+    return undefined;
+  }
+
+  // Map the nodebalancers to the CloudPulseNodebalancers interface
+  const nodebalancers: CloudPulseNodebalancers[] = data.map((nodebalancer) => ({
+    id: String(nodebalancer.id),
+    label: nodebalancer.label,
+    associated_entity_region: nodebalancer.region,
+  }));
+
+  const firewallObj = firewalls.find(
+    (firewall) => firewall.id === String(xFilter[RESOURCE_ID])
+  );
+
+  return nodebalancers.filter((nodebalancer) => {
+    return Object.entries(xFilter).every(([key, filterValue]) => {
+      // If the filter key is the resource id, check if the nodebalancer is associated with the selected firewall
+      if (key === RESOURCE_ID) {
+        return firewallObj?.entities?.[nodebalancer.id];
+      }
+      const nodebalancerValue =
+        nodebalancer[key as keyof CloudPulseNodebalancers];
+      return nodebalancerValue === filterValue;
+    });
+  });
 };

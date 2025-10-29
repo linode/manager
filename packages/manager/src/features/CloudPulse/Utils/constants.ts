@@ -16,6 +16,8 @@ export const PARENT_ENTITY_REGION = 'associated_entity_region';
 
 export const RESOURCES = 'resources';
 
+export const NODEBALANCER_ID = 'nodebalancer_id';
+
 export const INTERVAL = 'interval';
 
 export const TIME_DURATION = 'dateTimeDuration';

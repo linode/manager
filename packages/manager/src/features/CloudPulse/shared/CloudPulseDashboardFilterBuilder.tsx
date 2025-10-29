@@ -14,6 +14,7 @@ import {
   FIREWALL,
   INTERFACE_ID,
   NODE_TYPE,
+  NODEBALANCER_ID,
   PARENT_ENTITY_REGION,
   PORT,
   REGION,
@@ -25,6 +26,7 @@ import {
   getCustomSelectProperties,
   getEndpointsProperties,
   getFilters,
+  getFirewallNodebalancersProperties,
   getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
@@ -38,6 +40,7 @@ import type {
   CloudPulseMetricsFilter,
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseNodebalancers } from './CloudPulseFirewallNodebalancersSelect';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -244,6 +247,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               }
             : {
                 [filterKey]: region,
+                [NODEBALANCER_ID]: undefined,
               };
         emitFilterChangeByFilterKey(
           filterKey,
@@ -262,6 +266,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           [ENDPOINT]: endpoints,
           [RESOURCES]: undefined,
         });
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
+    const handleFirewallNodebalancersChange = React.useCallback(
+      (nodebalancers: CloudPulseNodebalancers[], savePref: boolean = false) => {
+        emitFilterChangeByFilterKey(
+          NODEBALANCER_ID,
+          nodebalancers.map((nodebalancer) => nodebalancer.id),
+          nodebalancers.map((nodebalancer) => nodebalancer.label),
+          savePref,
+          {
+            [NODEBALANCER_ID]: nodebalancers.map(
+              (nodebalancer) => nodebalancer.id
+            ),
+          }
+        );
       },
       [emitFilterChangeByFilterKey]
     );
@@ -386,6 +407,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleEndpointsChange
           );
+        } else if (config.configuration.filterKey === NODEBALANCER_ID) {
+          return getFirewallNodebalancersProperties(
+            {
+              config,
+              dashboard,
+              dependentFilters: resource_ids?.length
+                ? {
+                    ...dependentFilterReference.current,
+                    [RESOURCE_ID]: resource_ids.map(String),
+                  }
+                : dependentFilterReference.current,
+              isServiceAnalyticsIntegration,
+              preferences,
+              shouldDisable: isError || isLoading,
+            },
+            handleFirewallNodebalancersChange
+          );
         } else {
           return getCustomSelectProperties(
             {
@@ -409,6 +447,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleResourceChange,
         handleEndpointsChange,
         handleCustomSelectChange,
+        handleFirewallNodebalancersChange,
         isServiceAnalyticsIntegration,
         preferences,
         isError,

@@ -18,15 +18,17 @@ import type { QueryFunction, QueryKey } from '@tanstack/react-query';
  */
 export interface CloudPulseServiceTypeFilterMap {
   /**
+   * The associated entity type for the service type
+   */
+  readonly associatedEntityType?: AssociatedEntityType;
+  /**
    * Current capability corresponding to a service type
    */
   readonly capability: Capabilities;
   /**
    * The list of filters for a service type
    */
-
   readonly filters: CloudPulseServiceTypeFilters[];
-
   /**
    * The service types like dbaas, linode etc.,
    */
