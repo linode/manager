@@ -107,8 +107,8 @@ describe('create image (using mocks)', () => {
 
     ui.toast.assertMessage('Image scheduled for creation.');
 
-    // Verify we redirect to the images landing page upon successful creation
-    cy.url().should('endWith', 'images');
+    // Verify we redirect to the images landing page custom tab upon successful creation
+    cy.url().should('endWith', '/images/images?subType=custom');
 
     mockGetEvents([
       eventFactory.build({ action: 'disk_imagize', status: 'finished' }),

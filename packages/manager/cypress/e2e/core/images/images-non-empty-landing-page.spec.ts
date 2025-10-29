@@ -109,8 +109,8 @@ describe('image landing checks for non-empty state with restricted user', () => 
     // Login and wait for application to load
     cy.visitWithLogin('/images');
     cy.wait('@getCustomImages');
-    cy.wait('@getRecoveryImages');
-    cy.url().should('endWith', '/images');
+
+    cy.url().should('endWith', '/images/images?subType=custom');
 
     cy.contains('h3', 'Custom Images')
       .closest('div[data-qa-paper="true"]')
@@ -152,6 +152,8 @@ describe('image landing checks for non-empty state with restricted user', () => 
       .contains('Recovery images')
       .should('be.visible')
       .click();
+
+    cy.wait('@getRecoveryImages');
 
     cy.contains('h3', 'Recovery Images')
       .closest('div[data-qa-paper="true"]')
