@@ -127,11 +127,12 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
         emitFilterChange={vi.fn()}
         handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
-        resource_ids={[1, 2]}
+        resource_ids={[1]}
       />
     );
 
-    expect(getByPlaceholderText('Select Firewalls')).toBeVisible();
+    expect(getByPlaceholderText('Select a Firewall')).toBeVisible();
     expect(getByPlaceholderText('Select a NodeBalancer Region')).toBeVisible();
+    expect(getByPlaceholderText('Select NodeBalancers')).toBeVisible();
   });
 });

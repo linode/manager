@@ -1,4 +1,8 @@
-import { useAccountRoles, useUserRoles } from '@linode/queries';
+import {
+  useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
+  useUserRoles,
+} from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -66,9 +70,8 @@ const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Assigned Roles',
   value: 'all',
 };
-
 export const AssignedRolesTable = () => {
-  const { username } = useParams({ from: '/iam/users/$username' });
+  const { username } = useParams({ strict: false });
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -87,8 +90,30 @@ export const AssignedRolesTable = () => {
     ? permissions?.update_default_delegate_access
     : permissions?.is_account_admin;
 
+  // Determine if we're on the default roles view based on delegation role and path
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+
+  const { data: defaultRolesData, isLoading: defaultRolesLoading } =
+    useGetDefaultDelegationAccessQuery({
+      enabled: isDefaultDelegationRolesForChildAccount,
+    });
+
+  const { data: userRolesData, isLoading: userRolesLoading } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
+  const assignedRolesLoading = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesLoading
+    : userRolesLoading;
   const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username/roles',
+    currentRoute: isDefaultDelegationRolesForChildAccount
+      ? '/iam/roles/defaults/roles'
+      : '/iam/users/$username/roles',
     initialPage: 1,
     preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   });
@@ -150,9 +175,6 @@ export const AssignedRolesTable = () => {
     {}
   );
 
-  const { data: assignedRoles, isLoading: assignedRolesLoading } = useUserRoles(
-    username ?? ''
-  );
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
       return { filterableOptions: [], roles: [] };
@@ -184,8 +206,10 @@ export const AssignedRolesTable = () => {
   const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     const selectedRole = roleName;
     navigate({
-      to: '/iam/users/$username/entities',
-      params: { username },
+      to: isDefaultDelegationRolesForChildAccount
+        ? '/iam/roles/defaults/entity-access'
+        : '/iam/users/$username/entities',
+      params: { username: username || '' },
       search: { selectedRole },
     });
   };
@@ -399,7 +423,9 @@ export const AssignedRolesTable = () => {
                 : undefined
             }
           >
-            Assign New Roles
+            {isDefaultDelegationRolesForChildAccount
+              ? 'Add New Default Roles'
+              : 'Assign New Roles'}
           </Button>
         </Grid>
       </Grid>

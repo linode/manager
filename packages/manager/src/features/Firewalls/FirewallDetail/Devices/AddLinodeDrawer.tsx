@@ -51,7 +51,11 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const { data, error, isLoading } = useAllFirewallsQuery();
+  const {
+    data,
+    error,
+    isLoading: isLoadingAllFirewalls,
+  } = useAllFirewallsQuery();
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
@@ -358,9 +362,11 @@ export const AddLinodeDrawer = (props: Props) => {
         )}
         {localError ? errorNotice() : null}
         <LinodeSelect
-          disabled={isLoading || availableLinodesLoading || disabled}
+          disabled={
+            isLoadingAllFirewalls || availableLinodesLoading || disabled
+          }
           helperText={helperText}
-          loading={availableLinodesLoading}
+          loading={isLoadingAllFirewalls || availableLinodesLoading}
           multiple
           onSelectionChange={(linodes) => onSelectionChange(linodes)}
           options={linodeOptions}
