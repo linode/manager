@@ -13,10 +13,10 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import { ImageRow } from './ImageRow';
+import { ImageRow } from '../ImageRow';
 
-import type { ColumnConfig } from '../utils';
-import type { Handlers as ImageHandlers } from './ImagesActionMenu';
+import type { ColumnConfig } from '../../utils';
+import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { APIError, Event, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Order } from 'src/hooks/useOrderV2';

@@ -1,4 +1,3 @@
-import { linodeFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -8,7 +7,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ImagesLandingTable } from './ImagesLandingTable';
+import { ImagesView } from './ImagesView';
 
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn(),
@@ -39,6 +38,14 @@ vi.mock('../utils.ts', async () => {
     useLinodesPermissionsCheck: queryMocks.useLinodesPermissionsCheck,
   };
 });
+
+const mockHandlers = {
+  onDelete: vi.fn(),
+  onDeploy: vi.fn(),
+  onEdit: vi.fn(),
+  onRebuild: vi.fn(),
+  onManageReplicas: vi.fn(),
+};
 
 beforeAll(() => mockMatchMedia());
 
@@ -83,7 +90,7 @@ describe('ImagesView component', () => {
       );
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesLandingTable />,
+        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -118,150 +125,15 @@ describe('ImagesView component', () => {
         })
       );
 
-      const { findByText } = renderWithTheme(<ImagesLandingTable />, {
-        initialRoute: '/images/images',
-        initialEntries: ['/images/images?subType=custom'],
-      });
+      const { findByText } = renderWithTheme(
+        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        {
+          initialRoute: '/images/images',
+          initialEntries: ['/images/images?subType=custom'],
+        }
+      );
 
       expect(await findByText('No Custom Images to display.')).toBeVisible();
-    });
-
-    it('should allow opening the Edit Image drawer', async () => {
-      const image = imageFactory.build();
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('manual')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { getByText, findByLabelText, router } = renderWithTheme(
-        <ImagesLandingTable />,
-        {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=custom'],
-        }
-      );
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Edit'));
-
-      expect(router.state.location.pathname).toBe(
-        `/images/images/${encodeURIComponent(image.id)}/edit`
-      );
-    });
-
-    it('should allow opening the Restore Image drawer', async () => {
-      const image = imageFactory.build();
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('manual')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { router, getByText, findByLabelText } = renderWithTheme(
-        <ImagesLandingTable />,
-        {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=custom'],
-        }
-      );
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Rebuild an Existing Linode'));
-
-      expect(router.state.location.pathname).toBe(
-        `/images/images/${encodeURIComponent(image.id)}/rebuild`
-      );
-    });
-
-    it('should allow deploying to a new Linode', async () => {
-      const image = imageFactory.build();
-      queryMocks.useLinodesPermissionsCheck.mockReturnValue({
-        availableLinodes: [linodeFactory.build()],
-      });
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('manual')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { findByLabelText, getByText, queryAllByTestId, router } =
-        renderWithTheme(<ImagesLandingTable />, {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=custom'],
-        });
-
-      const loadingElement = queryAllByTestId(loadingTestId);
-      await waitForElementToBeRemoved(loadingElement);
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Deploy to New Linode'));
-
-      expect(router.state.location.pathname).toBe('/linodes/create/images');
-
-      expect(router.state.location.search).toStrictEqual({
-        imageID: image.id,
-      });
-    });
-
-    it('should allow deleting an image', async () => {
-      const image = imageFactory.build();
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('manual')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { router, findByLabelText, getByText } = renderWithTheme(
-        <ImagesLandingTable />,
-        {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=custom'],
-        }
-      );
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Delete'));
-
-      expect(router.state.location.pathname).toBe(
-        `/images/images/${encodeURIComponent(image.id)}/delete`
-      );
     });
 
     it('disables the action menu buttons if user does not have permissions to edit images', async () => {
@@ -287,10 +159,13 @@ describe('ImagesView component', () => {
         })
       );
 
-      const { findByLabelText } = renderWithTheme(<ImagesLandingTable />, {
-        initialRoute: '/images/images',
-        initialEntries: ['/images/images?subType=custom'],
-      });
+      const { findByLabelText } = renderWithTheme(
+        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        {
+          initialRoute: '/images/images',
+          initialEntries: ['/images/images?subType=custom'],
+        }
+      );
 
       const actionMenu = await findByLabelText(
         `Action menu for Image ${image.label}`
@@ -319,7 +194,7 @@ describe('ImagesView component', () => {
       });
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesLandingTable />,
+        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -343,7 +218,7 @@ describe('ImagesView component', () => {
       });
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesLandingTable />,
+        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -380,7 +255,7 @@ describe('ImagesView component', () => {
       );
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesLandingTable />,
+        <ImagesView filter={{}} handlers={mockHandlers} variant="recovery" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=recovery'],
@@ -418,150 +293,15 @@ describe('ImagesView component', () => {
         })
       );
 
-      const { findByText } = renderWithTheme(<ImagesLandingTable />, {
-        initialRoute: '/images/images',
-        initialEntries: ['/images/images?subType=recovery'],
-      });
+      const { findByText } = renderWithTheme(
+        <ImagesView filter={{}} handlers={mockHandlers} variant="recovery" />,
+        {
+          initialRoute: '/images/images',
+          initialEntries: ['/images/images?subType=recovery'],
+        }
+      );
 
       expect(await findByText('No Recovery Images to display.')).toBeVisible();
-    });
-
-    it('should allow opening the Edit Image drawer', async () => {
-      const image = imageFactory.build();
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('automatic')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { getByText, findByLabelText, router } = renderWithTheme(
-        <ImagesLandingTable />,
-        {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=recovery'],
-        }
-      );
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Edit'));
-
-      expect(router.state.location.pathname).toBe(
-        `/images/images/${encodeURIComponent(image.id)}/edit`
-      );
-    });
-
-    it('should allow opening the Restore Image drawer', async () => {
-      const image = imageFactory.build();
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('automatic')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { router, getByText, findByLabelText } = renderWithTheme(
-        <ImagesLandingTable />,
-        {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=recovery'],
-        }
-      );
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Rebuild an Existing Linode'));
-
-      expect(router.state.location.pathname).toBe(
-        `/images/images/${encodeURIComponent(image.id)}/rebuild`
-      );
-    });
-
-    it('should allow deploying to a new Linode', async () => {
-      const image = imageFactory.build();
-      queryMocks.useLinodesPermissionsCheck.mockReturnValue({
-        availableLinodes: [linodeFactory.build()],
-      });
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('automatic')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { findByLabelText, getByText, queryAllByTestId, router } =
-        renderWithTheme(<ImagesLandingTable />, {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=recovery'],
-        });
-
-      const loadingElement = queryAllByTestId(loadingTestId);
-      await waitForElementToBeRemoved(loadingElement);
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Deploy to New Linode'));
-
-      expect(router.state.location.pathname).toBe('/linodes/create/images');
-
-      expect(router.state.location.search).toStrictEqual({
-        imageID: image.id,
-      });
-    });
-
-    it('should allow deleting an image', async () => {
-      const image = imageFactory.build();
-
-      server.use(
-        http.get('*/images', ({ request }) => {
-          const filter = request.headers.get('x-filter');
-
-          if (filter?.includes('automatic')) {
-            return HttpResponse.json(makeResourcePage([image]));
-          }
-          return HttpResponse.json(makeResourcePage([]));
-        })
-      );
-
-      const { router, findByLabelText, getByText } = renderWithTheme(
-        <ImagesLandingTable />,
-        {
-          initialRoute: '/images/images',
-          initialEntries: ['/images/images?subType=recovery'],
-        }
-      );
-
-      const actionMenu = await findByLabelText(
-        `Action menu for Image ${image.label}`
-      );
-      await userEvent.click(actionMenu);
-      await userEvent.click(getByText('Delete'));
-
-      expect(router.state.location.pathname).toBe(
-        `/images/images/${encodeURIComponent(image.id)}/delete`
-      );
     });
 
     it('disables the action menu buttons if user does not have permissions to edit images', async () => {
@@ -587,10 +327,13 @@ describe('ImagesView component', () => {
         })
       );
 
-      const { findByLabelText } = renderWithTheme(<ImagesLandingTable />, {
-        initialRoute: '/images/images',
-        initialEntries: ['/images/images?subType=recovery'],
-      });
+      const { findByLabelText } = renderWithTheme(
+        <ImagesView filter={{}} handlers={mockHandlers} variant="recovery" />,
+        {
+          initialRoute: '/images/images',
+          initialEntries: ['/images/images?subType=recovery'],
+        }
+      );
 
       const actionMenu = await findByLabelText(
         `Action menu for Image ${image.label}`

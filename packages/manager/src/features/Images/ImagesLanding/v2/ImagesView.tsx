@@ -13,12 +13,11 @@ import {
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
-import { getEventsForImages } from '../utils';
-import { IMAGES_CONFIG } from './imagesConfig';
+import { getEventsForImages, type ImagesVariant } from '../../utils';
+import { IMAGES_CONFIG } from '../imagesConfig';
 import { ImagesTable } from './ImagesTable';
 
-import type { ImagesVariant } from '../utils';
-import type { Handlers as ImageHandlers } from './ImagesActionMenu';
+import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { Filter } from '@linode/api-v4';
 
 interface Props {

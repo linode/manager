@@ -13,18 +13,18 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { useImagesSubTabs } from '../utils';
-import { DeleteImageDialog } from './DeleteImageDialog';
-import { EditImageDrawer } from './EditImageDrawer';
-import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
+import { useImagesSubTabs } from '../../utils';
+import { DeleteImageDialog } from '../DeleteImageDialog';
+import { EditImageDrawer } from '../EditImageDrawer';
+import { ManageImageReplicasForm } from '../ImageRegions/ManageImageRegionsForm';
+import { RebuildImageDrawer } from '../RebuildImageDrawer';
 import { ImagesView } from './ImagesView';
-import { RebuildImageDrawer } from './RebuildImageDrawer';
 
-import type { Handlers as ImageHandlers } from './ImagesActionMenu';
+import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { Image } from '@linode/api-v4';
 import type { ImageAction } from 'src/routes/images';
 
-export const ImagesLandingTable = () => {
+export const ImagesTabContainer = () => {
   const navigate = useNavigate();
 
   const params = useParams({

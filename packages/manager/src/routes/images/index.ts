@@ -53,7 +53,7 @@ const imagesRoute = createRoute({
 });
 
 const imagesIndexRoute = createRoute({
-  beforeLoad: ({ search }) => redirectToDefaultImageSubType(search),
+  // beforeLoad: ({ search }) => redirectToDefaultImageSubType(search),
   getParentRoute: () => imagesRoute,
   path: '/',
   validateSearch: (search: ImagesSearchParams) => search,
@@ -112,6 +112,34 @@ const imageActionRoute = createRoute({
   )
 );
 
+const imageActionRouteV2 = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in imageActions)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/images',
+      });
+    }
+  },
+  getParentRoute: () => imagesRoute,
+  params: {
+    parse: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+    stringify: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+  },
+  path: '$imageId/$action',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
+    (m) => m.imagesLandingLazyRoute
+  )
+);
+
 const imagesCreateRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: 'create',
@@ -152,8 +180,8 @@ const imagesCreateUploadRoute = createRoute({
 );
 
 export const imagesRouteTree = imagesRoute.addChildren([
-  imagesIndexRoute,
-  imagesImagesRoute.addChildren([imageActionRoute]),
+  imagesIndexRoute.addChildren([imageActionRoute]),
+  imagesImagesRoute.addChildren([imageActionRouteV2]),
   imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
