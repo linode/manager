@@ -253,15 +253,6 @@ describe('restricted user details pages', () => {
     cy.reload();
 
     // Confirm that action menu items of each image are disabled in "Recovery Images" table
-    cy.contains('Recovery images').should('exist');
-    ui.tabList
-      .find()
-      .find('[role="tab"]')
-      .contains('Recovery images')
-      .should('be.visible')
-      .click();
-    cy.url().should('endWith', '/images/images?subType=recovery');
-
     cy.get(`[id="action-menu-for-image-${mockRecoveryImage.label}-button"]`)
       .first()
       .should('be.visible')

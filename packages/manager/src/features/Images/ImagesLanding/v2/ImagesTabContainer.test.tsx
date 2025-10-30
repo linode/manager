@@ -59,7 +59,7 @@ beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
 
-describe('Images Landing Table', () => {
+describe('ImagesTabContainer component', () => {
   beforeEach(() => {
     queryMocks.usePermissions.mockReturnValue({
       data: {

@@ -36,15 +36,6 @@ const imageActions = {
 
 export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
 
-export const redirectToDefaultImageSubType = (search: ImagesSearchParams) => {
-  if (!search.subType) {
-    throw redirect({
-      to: '/images/images',
-      search: { subType: 'custom' },
-    });
-  }
-};
-
 const imagesRoute = createRoute({
   component: ImagesRoute,
   getParentRoute: () => rootRoute,
@@ -53,7 +44,14 @@ const imagesRoute = createRoute({
 });
 
 const imagesIndexRoute = createRoute({
-  // beforeLoad: ({ search }) => redirectToDefaultImageSubType(search),
+  beforeLoad: ({ search, context }) => {
+    if (!search.subType && context.flags.privateImageSharing) {
+      throw redirect({
+        to: '/images/images',
+        search: { subType: 'custom' },
+      });
+    }
+  },
   getParentRoute: () => imagesRoute,
   path: '/',
   validateSearch: (search: ImagesSearchParams) => search,
@@ -64,13 +62,27 @@ const imagesIndexRoute = createRoute({
 );
 
 const imagesImagesRoute = createRoute({
-  beforeLoad: ({ search }) => redirectToDefaultImageSubType(search),
+  beforeLoad: ({ search, context }) => {
+    if (!context.flags.privateImageSharing) {
+      throw redirect({
+        to: '/images',
+        search: (prev) => ({ ...prev, subType: undefined }),
+      });
+    }
+
+    if (!search.subType) {
+      throw redirect({
+        to: '/images/images',
+        search: { subType: 'custom' },
+      });
+    }
+  },
   getParentRoute: () => imagesRoute,
   path: 'images',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
-  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
-    (m) => m.imagesLandingLazyRoute
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
   )
 );
 
@@ -79,8 +91,8 @@ const imagesShareGroupsRoute = createRoute({
   path: 'sharegroups',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
-  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
-    (m) => m.imagesLandingLazyRoute
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
   )
 );
 
@@ -93,7 +105,7 @@ const imageActionRoute = createRoute({
       });
     }
   },
-  getParentRoute: () => imagesImagesRoute,
+  getParentRoute: () => imagesRoute,
   params: {
     parse: ({ action, imageId }: ImageActionRouteParams) => ({
       action,
@@ -121,7 +133,7 @@ const imageActionRouteV2 = createRoute({
       });
     }
   },
-  getParentRoute: () => imagesRoute,
+  getParentRoute: () => imagesImagesRoute,
   params: {
     parse: ({ action, imageId }: ImageActionRouteParams) => ({
       action,
@@ -135,8 +147,8 @@ const imageActionRouteV2 = createRoute({
   path: '$imageId/$action',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
-  import('src/features/Images/ImagesLanding/imagesLandingLazyRoute').then(
-    (m) => m.imagesLandingLazyRoute
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
   )
 );
 

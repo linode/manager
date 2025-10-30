@@ -9,9 +9,7 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
-// NOTE - Temporarily skipping!
-// @TODO - Check if we need this Empty State Landing page
-describe.skip('Images empty landing page', () => {
+describe('Images empty landing page', () => {
   beforeEach(() => {
     // Mock setup to display the Image landing page in an empty state
     mockGetAllImages([]).as('getImages');

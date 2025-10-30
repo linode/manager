@@ -14,7 +14,7 @@ import {
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import { getEventsForImages, type ImagesVariant } from '../../utils';
-import { IMAGES_CONFIG } from '../imagesConfig';
+import { IMAGES_CONFIG } from './imagesConfig';
 import { ImagesTable } from './ImagesTable';
 
 import type { Handlers as ImageHandlers } from '../ImagesActionMenu';

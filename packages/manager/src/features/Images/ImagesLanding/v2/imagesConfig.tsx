@@ -13,9 +13,9 @@ import {
   SHARED_IMAGES_DEFAULT_ORDER,
   SHARED_IMAGES_DEFAULT_ORDER_BY,
   SHARED_IMAGES_PREFERENCE_KEY,
-} from '../constants';
+} from '../../constants';
 
-import type { ColumnConfig, ImagesVariant } from '../utils';
+import type { ColumnConfig, ImagesVariant } from '../../utils';
 import type { Image } from '@linode/api-v4';
 
 export interface ImageConfig {

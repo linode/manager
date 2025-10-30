@@ -28,7 +28,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import {
@@ -53,7 +52,6 @@ import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
-import { ImagesLandingV2 } from './v2/ImagesLandingV2';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Filter, Image } from '@linode/api-v4';
@@ -77,8 +75,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const ImagesLanding = () => {
-  const flags = useFlags();
-
   const { classes } = useStyles();
   const params = useParams({
     from: '/images/$imageId/$action',
@@ -172,8 +168,6 @@ export const ImagesLanding = () => {
       // snappy if the user inputs an invalid X-Filter. Otherwise,
       // pass undefined to use the default retry behavior.
       retry: query ? false : undefined,
-      // NOTE: This query is disabled for this component when PRIVATE IMAGE SHARING feature is enabled
-      enabled: !flags.privateImageSharing,
     }
   );
 
@@ -229,20 +223,14 @@ export const ImagesLanding = () => {
       // snappy if the user inputs an invalid X-Filter. Otherwise,
       // pass undefined to use the default retry behavior.
       retry: query ? false : undefined,
-      // NOTE: This query is disabled for this component when PRIVATE IMAGE SHARING feature is enabled
-      enabled: !flags.privateImageSharing,
     }
   );
 
-  // NOTE: This query is disabled for this component when PRIVATE IMAGE SHARING feature is enabled
   const {
     data: selectedImage,
     isLoading: isFetchingSelectedImage,
     error: selectedImageError,
-  } = useImageQuery(
-    params?.imageId ?? '',
-    !!params?.imageId && !flags.privateImageSharing
-  );
+  } = useImageQuery(params?.imageId ?? '', !!params?.imageId);
 
   const { events } = useEventsInfiniteQuery();
 
@@ -326,10 +314,6 @@ export const ImagesLanding = () => {
     onManageRegions: handleManageRegions,
     onRebuild: handleRebuild,
   };
-
-  if (flags.privateImageSharing) {
-    return <ImagesLandingV2 />;
-  }
 
   if (manualImagesLoading || automaticImagesLoading) {
     return <CircleProgress />;

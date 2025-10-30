@@ -73,8 +73,8 @@ describe('create image (e2e)', () => {
 
       ui.toast.assertMessage('Image scheduled for creation.');
 
-      // Verify we redirect to the images landing page custom tab upon successful creation
-      cy.url().should('endWith', '/images/images?subType=custom');
+      // Verify we redirect to the images landing page upon successful creation
+      cy.url().should('endWith', 'images');
 
       // Verify the newly created image shows on the Images landing page
       cy.findByText(label)

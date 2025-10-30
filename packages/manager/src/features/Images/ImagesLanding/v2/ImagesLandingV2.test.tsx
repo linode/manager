@@ -12,9 +12,9 @@ vi.mock('src/hooks/useFlags', () => ({
   useFlags: queryMocks.useFlags,
 }));
 
-// Mock ImagesLandingTable component so it doesn't lazy load in tests
-vi.mock('./ImagesLandingTable', () => ({
-  ImagesLandingTable: () => <div>ImagesLandingTable Component</div>,
+// Mock ImagesTabContainer component so it doesn't lazy load in tests
+vi.mock('./ImagesTabContainer', () => ({
+  ImagesTabContainer: () => <div>ImagesTabContainer Component</div>,
 }));
 
 describe('ImagesLandingV2', () => {
@@ -40,11 +40,11 @@ describe('ImagesLandingV2', () => {
     expect(getByRole('tab', { name: /share groups/i })).toBeVisible();
   });
 
-  it('should render ImagesLandingTable component in the Images tab panel', () => {
+  it('should render ImagesTabContainer component in the Images tab panel', () => {
     const { getByText } = renderWithTheme(<ImagesLandingV2 />, {
       initialRoute: '/images',
     });
 
-    expect(getByText('ImagesLandingTable Component')).toBeVisible();
+    expect(getByText('ImagesTabContainer Component')).toBeVisible();
   });
 });
