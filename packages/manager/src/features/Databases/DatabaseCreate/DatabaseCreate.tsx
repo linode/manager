@@ -53,7 +53,7 @@ export interface DatabaseCreateValues {
   cluster_size: ClusterSize;
   engine: Engine;
   label: string;
-  private_network?: PrivateNetwork;
+  private_network?: null | PrivateNetwork;
   region: string;
   type: string;
 }
