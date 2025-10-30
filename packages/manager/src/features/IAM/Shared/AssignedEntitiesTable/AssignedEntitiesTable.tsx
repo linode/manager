@@ -230,7 +230,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
                   onClick: () => {
                     handleChangeRole(el, 'change-role-for-entity');
                   },
-                  title: 'Change Role ',
+                  title: 'Change Role',
                   tooltip: !permissionToCheck
                     ? 'You do not have permission to change this role.'
                     : undefined,
