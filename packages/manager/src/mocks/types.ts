@@ -14,6 +14,7 @@ import type {
   FirewallDevice,
   IamAccountRoles,
   IamUserRoles,
+  Image,
   Interface,
   IPAddress,
   KubeNodePoolResponse,
@@ -28,6 +29,9 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  Sharegroup,
+  SharegroupMember,
+  SharegroupToken,
   Stream,
   Subnet,
   SupportReply,
@@ -134,6 +138,7 @@ export type MockPresetCrudGroup = {
     | 'Domains'
     | 'Entities'
     | 'Firewalls'
+    | 'Image Sharegroups'
     | 'IP Addresses'
     | 'Kubernetes'
     | 'Linodes'
@@ -154,6 +159,7 @@ export type MockPresetCrudId =
   | 'domains:crud'
   | 'entities:crud'
   | 'firewalls:crud'
+  | 'imageSharegroups:crud'
   | 'ip-addresses:crud'
   | 'kubernetes:crud'
   | 'linodes:crud'
@@ -213,6 +219,10 @@ export interface MockState {
   eventQueue: Event[];
   firewallDevices: [number, FirewallDevice][]; // number is Firewall ID
   firewalls: Firewall[];
+  images: Image[];
+  imageSharegroups: Sharegroup[];
+  imageSharegroupMembers: [number, SharegroupMember[]][]; // number is Sharegroup ID
+  imageSharegroupTokens: SharegroupToken[];
   ipAddresses: IPAddress[];
   kubernetesClusters: KubernetesCluster[];
   kubernetesNodePools: KubeNodePoolResponse[];
