@@ -45,6 +45,11 @@ interface CloudPulseDimensionFilterDrawerProps {
   selectedEntities?: string[];
 
   /**
+   * The selected regions of the associated entities
+   */
+  selectedRegions?: string[];
+
+  /**
    * The service type of the associated metric
    */
   serviceType: CloudPulseServiceType;
@@ -61,6 +66,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
       drawerLabel,
       selectedEntities,
       serviceType,
+      selectedRegions,
     } = props;
 
     const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
@@ -133,6 +139,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
             onSubmit={handleFormSubmit}
             selectedDimensions={selectedDimensions}
             selectedEntities={selectedEntities}
+            selectedRegions={selectedRegions}
             serviceType={serviceType}
           />
         </Stack>

@@ -53,6 +53,11 @@ interface CloudPulseDimensionFilterRendererProps {
   selectedEntities?: string[];
 
   /**
+   * The selected regions of the associated entities
+   */
+  selectedRegions?: string[];
+
+  /**
    * The service type of the associated metric
    */
   serviceType: CloudPulseServiceType;
@@ -68,6 +73,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       onClose,
       serviceType,
       onDimensionChange,
+      selectedRegions,
     } = props;
 
     const formMethods = useForm<MetricsDimensionFilterForm>({
@@ -135,6 +141,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                       name={`dimension_filters.${index}`}
                       onFilterDelete={() => remove(index)}
                       selectedEntities={selectedEntities}
+                      selectedRegions={selectedRegions}
                       serviceType={serviceType}
                     />
                     <Divider

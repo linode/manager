@@ -29,12 +29,15 @@ export const FirewallDimensionFilterAutocomplete = (
     errorText,
     fieldValue,
     type,
+    selectedRegions,
   } = props;
 
   const { data: regions } = useRegionsQuery();
   const { values, isLoading, isError } = useFirewallFetchOptions({
     dimensionLabel,
-    regions,
+    regions: selectedRegions
+      ? regions?.filter(({ id }) => selectedRegions.includes(id))
+      : regions,
     entities,
     serviceType,
     type,

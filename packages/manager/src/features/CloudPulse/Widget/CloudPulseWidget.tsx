@@ -494,6 +494,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                     handleSelectionChange={handleDimensionFiltersChange}
                     selectedDimensions={filteredSelections}
                     selectedEntities={entityIds}
+                    selectedRegions={linodeRegion ? [linodeRegion] : undefined}
                     serviceType={serviceType}
                   />
                 )}

@@ -161,6 +161,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             name={name}
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
+            selectedRegions={selectedRegions ?? []}
             serviceType={serviceType ?? null}
             type={type}
           />
