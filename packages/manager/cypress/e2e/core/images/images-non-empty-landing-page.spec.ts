@@ -109,7 +109,6 @@ describe('image landing checks for non-empty state with restricted user', () => 
     cy.visitWithLogin('/images');
     cy.wait('@getCustomImages');
     cy.wait('@getRecoveryImages');
-
     cy.url().should('endWith', '/images');
 
     cy.contains('h3', 'Custom Images')

@@ -7,10 +7,12 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   getEventsForImages,
   getImageLabelForLinode,
+  getImagesSubTabIndex,
   getImageTypeToSubType,
-  useImagesSubTabs,
   useIsPrivateImageSharingEnabled,
 } from './utils';
+
+import type { ImagesSubTab } from './utils';
 
 describe('getImageLabelForLinode', () => {
   it('handles finding an image and getting the label', () => {
@@ -92,59 +94,30 @@ describe('useIsPrivateImageSharingEnabled', () => {
   });
 });
 
-describe('useImagesSubTabs', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
+describe('getImagesSubTabIndex', () => {
+  const subTabs: ImagesSubTab[] = [
+    { variant: 'custom', title: 'My custom images' },
+    { variant: 'shared', title: 'Shared with me', isBeta: true },
+    { variant: 'recovery', title: 'Recovery images' },
+  ];
+
+  it('returns 0 if selectedTab is undefined', () => {
+    expect(getImagesSubTabIndex(subTabs, undefined)).toBe(0);
   });
 
-  it('returns correct subTabs and index when privateImageSharing is false', () => {
-    const options = { flags: { privateImageSharing: false } };
-    const { result } = renderHook(() => useImagesSubTabs('recovery'), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
-
-    expect(result.current.subTabs.map((t) => t.key)).toEqual([
-      'custom',
-      'recovery',
-    ]);
-    expect(result.current.subTabIndex).toBe(1);
+  it('returns the correct index when selectedTab matches a tab key', () => {
+    expect(getImagesSubTabIndex(subTabs, 'custom')).toBe(0);
+    expect(getImagesSubTabIndex(subTabs, 'shared')).toBe(1);
+    expect(getImagesSubTabIndex(subTabs, 'recovery')).toBe(2);
   });
 
-  it('returns correct subTabs and index when privateImageSharing is true', () => {
-    const options = { flags: { privateImageSharing: true } };
-    const { result } = renderHook(() => useImagesSubTabs('shared'), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
-
-    expect(result.current.subTabs.map((t) => t.key)).toEqual([
-      'custom',
-      'shared',
-      'recovery',
-    ]);
-    expect(result.current.subTabIndex).toBe(1);
+  it('returns 0 if selectedTab does not exist in subTabs', () => {
+    // @ts-expect-error intentionally passing an unexpected value
+    expect(getImagesSubTabIndex(subTabs, 'hey')).toBe(0);
   });
 
-  it('defaults to index 0 if tab is undefined or invalid', () => {
-    const options = { flags: { privateImageSharing: true } };
-
-    const { result: undefinedResult } = renderHook(
-      () => useImagesSubTabs(undefined),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, options),
-      }
-    );
-
-    expect(undefinedResult.current.subTabIndex).toBe(0);
-
-    const { result: invalidResult } = renderHook(
-      // @ts-expect-error intentionally passing an unexpected value
-      () => useImagesSubTabs('hey'),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, options),
-      }
-    );
-
-    expect(invalidResult.current.subTabIndex).toBe(0);
+  it('works with an empty subTabs array', () => {
+    expect(getImagesSubTabIndex([], 'custom')).toBe(0);
   });
 });
 

@@ -1,5 +1,4 @@
 import { useRegionsQuery } from '@linode/queries';
-import { useMemo } from 'react';
 
 import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -7,10 +6,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import type { Event, Image, Linode } from '@linode/api-v4';
 import type { Hidden } from '@linode/ui';
 
-interface ImagesSubTab {
+export interface ImagesSubTab {
   isBeta?: boolean;
-  key: ImagesVariant;
   title: string;
+  variant: ImagesVariant;
 }
 
 export interface ColumnConfig {
@@ -81,34 +80,27 @@ export const useIsPrivateImageSharingEnabled = () => {
  *   - `subTabIndex`: the index of the selected sub-tab
  *   - `subTabs`: the array of available sub-tabs
  */
-export const useImagesSubTabs = (tab: ImagesVariant | undefined) => {
-  const flags = useFlags();
+/**
+ * Returns the index of the currently selected Images sub-tab
+ *
+ * @param tab the current tab. Currently, this value comes from 'subtype' query param on the Images Landing Page.
+ * @returns the index of the selected tab
+ */
+export const getImagesSubTabIndex = (
+  subTabs: ImagesSubTab[],
+  selectedTab: ImagesVariant | undefined
+) => {
+  if (selectedTab === undefined) {
+    return 0;
+  }
 
-  const subTabs = useMemo(() => {
-    const tabs: ImagesSubTab[] = [
-      { key: 'custom', title: 'My custom images' },
-      ...(flags.privateImageSharing
-        ? [
-            {
-              key: 'shared' as ImagesVariant,
-              title: 'Shared with me',
-              isBeta: true,
-            },
-          ]
-        : []),
-      { key: 'recovery', title: 'Recovery images' },
-    ];
+  const tabIndex = subTabs.findIndex((tab) => tab.variant === selectedTab);
 
-    return tabs;
-  }, [flags.privateImageSharing]);
+  if (tabIndex === -1) {
+    return 0;
+  }
 
-  const subTabIndex = useMemo(() => {
-    const keys = subTabs.map((t) => t.key);
-    const foundIndex = tab ? keys.indexOf(tab) : -1;
-    return foundIndex >= 0 ? foundIndex : 0;
-  }, [tab, subTabs]);
-
-  return { subTabIndex, subTabs };
+  return tabIndex;
 };
 
 export const getImageTypeToSubType = (imageType: Image['type']) => {

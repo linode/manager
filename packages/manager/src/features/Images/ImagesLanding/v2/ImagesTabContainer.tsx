@@ -13,13 +13,14 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { useImagesSubTabs } from '../../utils';
+import { getImagesSubTabIndex } from '../../utils';
 import { DeleteImageDialog } from '../DeleteImageDialog';
 import { EditImageDrawer } from '../EditImageDrawer';
 import { ManageImageReplicasForm } from '../ImageRegions/ManageImageRegionsForm';
 import { RebuildImageDrawer } from '../RebuildImageDrawer';
 import { ImagesView } from './ImagesView';
 
+import type { ImagesSubTab } from '../../utils';
 import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { Image } from '@linode/api-v4';
 import type { ImageAction } from 'src/routes/images';
@@ -33,7 +34,6 @@ export const ImagesTabContainer = () => {
   });
 
   const search = useSearch({ from: '/images' });
-  const { subTabIndex, subTabs } = useImagesSubTabs(search.subType);
 
   const [manualImagesIsFetching, setManualImagesIsFetching] =
     React.useState(false);
@@ -143,14 +143,26 @@ export const ImagesTabContainer = () => {
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
+  const subTabs: ImagesSubTab[] = [
+    { variant: 'custom', title: 'My custom images' },
+    {
+      variant: 'shared',
+      title: 'Shared with me',
+      isBeta: true,
+    },
+    { variant: 'recovery', title: 'Recovery images' },
+  ];
+
+  const subTabIndex = getImagesSubTabIndex(subTabs, search.subType);
+
   const onTabChange = (index: number) => {
     // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
     navigate({
       to: `/images/images`,
       search: (prev) => ({
         ...prev,
-        subType: subTabs[index]['key'],
-        // Reset pagination and sorting query paramss
+        subType: subTabs[index]['variant'],
+        // Reset pagination and sorting query params
         page: undefined,
         pageSize: undefined,
         'manual-order': undefined,
@@ -176,7 +188,7 @@ export const ImagesTabContainer = () => {
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
           {subTabs.map((tab) => (
-            <Tab key={`images-${tab.key}`}>
+            <Tab key={`images-${tab.variant}`}>
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
           ))}
@@ -184,8 +196,8 @@ export const ImagesTabContainer = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             {subTabs.map((tab, idx) => (
-              <SafeTabPanel index={idx} key={`images-${tab.key}-content`}>
-                {tab.key === 'custom' && (
+              <SafeTabPanel index={idx} key={`images-${tab.variant}-content`}>
+                {tab.variant === 'custom' && (
                   <ImagesView
                     filter={filter}
                     handlers={handlers}
@@ -193,12 +205,12 @@ export const ImagesTabContainer = () => {
                     variant="custom"
                   />
                 )}
-                {tab.key === 'shared' && (
+                {tab.variant === 'shared' && (
                   <Notice variant="info">
                     Share with me is coming soon...
                   </Notice>
                 )}
-                {tab.key === 'recovery' && (
+                {tab.variant === 'recovery' && (
                   <ImagesView
                     filter={filter}
                     handlers={handlers}
