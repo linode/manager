@@ -233,6 +233,23 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       ),
     [availableMetrics, dimensionFilters, linodesFetch, vpcFetch]
   );
+  const convertToFilters = (
+    selectedFilters: MetricsDimensionFilter[]
+  ): Filters[] => {
+    const dimensionFilters: Filters[] = [];
+    for (const filter of selectedFilters) {
+      if (filter.value && filter.dimension_label && filter.operator) {
+        dimensionFilters.push({
+          dimension_label: filter.dimension_label,
+          operator: filter.operator,
+          value: filter.value,
+        });
+      }
+    }
+
+    return dimensionFilters;
+  };
+
   const filters: Filters[] | undefined = React.useMemo(() => {
     return additionalFilters?.length ||
       widget?.filters?.length ||
@@ -324,23 +341,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
-
-  const convertToFilters = (
-    selectedFilters: MetricsDimensionFilter[]
-  ): Filters[] => {
-    const dimensionFilters: Filters[] = [];
-    for (const filter of selectedFilters) {
-      if (filter.value && filter.dimension_label && filter.operator) {
-        dimensionFilters.push({
-          dimension_label: filter.dimension_label,
-          operator: filter.operator,
-          value: filter.value,
-        });
-      }
-    }
-
-    return dimensionFilters;
-  };
 
   const handleDimensionFiltersChange = React.useCallback(
     (selectedFilters: MetricsDimensionFilter[]) => {

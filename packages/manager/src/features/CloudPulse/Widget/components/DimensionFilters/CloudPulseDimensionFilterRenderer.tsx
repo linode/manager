@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ActionsPanel, Box, Button, Divider, Stack } from '@linode/ui';
-import theme from '@shikijs/themes/one-dark-pro';
 import React from 'react';
 import {
   FormProvider,
