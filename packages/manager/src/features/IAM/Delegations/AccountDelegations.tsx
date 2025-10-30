@@ -8,6 +8,8 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { useFlags } from 'src/hooks/useFlags';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { AccountDelegationsTable } from './AccountDelegationsTable';
 
@@ -37,17 +39,22 @@ export const AccountDelegations = () => {
     users: true,
   });
 
-  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = React.useState<string>('company');
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/delegations',
+    initialPage: 1,
+    preferenceKey: 'iam-delegations-pagination',
+  });
 
-  const handleOrderChange = (newOrderBy: string) => {
-    if (orderBy === newOrderBy) {
-      setOrder(order === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrderBy(newOrderBy);
-      setOrder('asc');
-    }
-  };
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'company',
+      },
+      from: '/iam/delegations',
+    },
+    preferenceKey: 'iam-delegations-order',
+  });
 
   // Apply search filter
   const filteredDelegations = React.useMemo(() => {
@@ -78,6 +85,7 @@ export const AccountDelegations = () => {
   }, [filteredDelegations, order]);
 
   const handleSearch = (value: string) => {
+    pagination.handlePageChange(1);
     navigate({
       to: DELEGATIONS_ROUTE,
       search: { query: value || undefined },
@@ -114,14 +122,18 @@ export const AccountDelegations = () => {
         />
       </Stack>
 
-      <Paginate data={sortedDelegations} pageSize={25}>
+      <Paginate
+        data={sortedDelegations}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        pageSizeSetter={pagination.handlePageSizeChange}
+        updatePageUrl={pagination.handlePageChange}
+      >
         {({
           count,
           data: paginatedData,
           handlePageChange,
           handlePageSizeChange,
-          page,
-          pageSize,
         }) => (
           <>
             <AccountDelegationsTable
@@ -137,8 +149,8 @@ export const AccountDelegations = () => {
               count={count}
               handlePageChange={handlePageChange}
               handleSizeChange={handlePageSizeChange}
-              page={page}
-              pageSize={pageSize}
+              page={pagination.page}
+              pageSize={pagination.pageSize}
             />
           </>
         )}

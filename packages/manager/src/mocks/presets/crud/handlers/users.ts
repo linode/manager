@@ -72,7 +72,9 @@ export const addUserToMockState = async (mockState: MockState, user: User) => {
     await mswDB.add('users', delegateUser, mockState);
 
     // Create child accounts
-    const childAccounts = childAccountFactory.buildList(4);
+    const childAccounts = childAccountFactory.buildList(4, {
+      company: `child-account-${user.username}`,
+    });
 
     // Create delegations pointing to our active user (parent)
     for (const childAccount of childAccounts) {

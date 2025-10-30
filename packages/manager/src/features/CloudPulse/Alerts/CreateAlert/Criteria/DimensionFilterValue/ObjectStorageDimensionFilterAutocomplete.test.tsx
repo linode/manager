@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
@@ -219,5 +219,50 @@ describe('<ObjectStorageDimensionFilterAutocomplete />', () => {
     expect(fieldOnChange).toHaveBeenCalledWith(
       'us-east-1.linodeobjects.com,us-west-1.linodeobjects.com'
     );
+  });
+  it('field cleanup removes invalid values', async () => {
+    queryMocks.useObjectStorageFetchOptions.mockReturnValue({
+      values: [
+        {
+          label: 'us-east-1.linodeobjects.com',
+          value: 'us-east-1.linodeobjects.com',
+        },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+
+    const fieldOnChange = vi.fn();
+
+    const { rerender } = renderWithTheme(
+      <ObjectStorageDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="invalid-endpoint.linodeobjects.com"
+      />
+    );
+
+    queryMocks.useObjectStorageFetchOptions.mockReturnValue({
+      values: [
+        {
+          label: 'us-west-1.linodeobjects.com',
+          value: 'us-west-1.linodeobjects.com',
+        },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    // Trigger the effect by rerendering with the same props
+    rerender(
+      <ObjectStorageDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="invalid-endpoint.linodeobjects.com"
+      />
+    );
+    // fieldOnChange should be called to clean up the invalid value
+    await waitFor(() => {
+      expect(fieldOnChange).toHaveBeenCalledWith(null);
+    });
   });
 });

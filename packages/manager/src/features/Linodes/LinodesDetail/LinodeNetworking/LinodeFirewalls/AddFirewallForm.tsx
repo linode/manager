@@ -39,11 +39,12 @@ export const AddFirewallForm = (props: Props) => {
 
   const { mutateAsync } = useAddFirewallDeviceMutation();
 
-  const { data: availableFirewalls } = useQueryWithPermissions<Firewall>(
-    useAllFirewallsQuery(),
-    'firewall',
-    ['create_firewall_device']
-  );
+  const {
+    data: availableFirewalls,
+    isLoading: isLoadingAllAvailableFirewalls,
+  } = useQueryWithPermissions<Firewall>(useAllFirewallsQuery(), 'firewall', [
+    'create_firewall_device',
+  ]);
 
   const form = useForm<Values>({
     resolver: yupResolver(schema) as Resolver<Values>,
@@ -73,8 +74,10 @@ export const AddFirewallForm = (props: Props) => {
           name="firewallId"
           render={({ field, fieldState }) => (
             <FirewallSelect
+              disabled={isLoadingAllAvailableFirewalls}
               errorText={fieldState.error?.message}
               label="Firewall"
+              loading={isLoadingAllAvailableFirewalls}
               onChange={(e, value) => field.onChange(value?.id)}
               options={availableFirewalls}
               placeholder="Select a Firewall"

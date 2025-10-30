@@ -35,6 +35,7 @@ export const Toggle = (props: ToggleProps) => {
       sx={{
         position: 'relative',
         display: 'inline-flex',
+        overflow: 'visible',
       }}
     >
       <SvgIcon
@@ -42,8 +43,8 @@ export const Toggle = (props: ToggleProps) => {
         height="16px"
         sx={{
           position: 'absolute',
-          top: size === 'medium' ? '18px' : '15.5px',
-          left: size === 'medium' ? '20px' : tooltipText ? '18px' : '25px',
+          top: size === 'medium' ? '20px' : '15.5px',
+          left: size === 'medium' ? '22px' : tooltipText ? '18px' : '25px',
           fill: 'white',
           zIndex: 1,
           pointerEvents: 'none',
@@ -76,6 +77,8 @@ export const Toggle = (props: ToggleProps) => {
               left: '-6px',
             },
           }),
+          overflow: 'visible',
+          margin: '2px',
           ...sx,
         }}
       />

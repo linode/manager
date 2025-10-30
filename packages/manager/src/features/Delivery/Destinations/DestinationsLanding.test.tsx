@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { destinationFactory } from 'src/factories';
 import { DestinationsLanding } from 'src/features/Delivery/Destinations/DestinationsLanding';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -203,6 +203,56 @@ describe('Destinations Landing Table', () => {
         });
 
         await checkClosedModal(deleteDestinationModal);
+      });
+
+      it('should show error when cannot delete destination', async () => {
+        const mockDeleteDestinationMutation = vi.fn().mockRejectedValue([
+          {
+            reason:
+              'Destination with id 1 is attached to a stream and cannot be deleted',
+          },
+        ]);
+        queryMocks.useDeleteDestinationMutation.mockReturnValue({
+          mutateAsync: mockDeleteDestinationMutation,
+        });
+
+        renderComponent();
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        const deleteDestinationModal = screen.getByText('Delete Destination');
+        expect(deleteDestinationModal).toBeInTheDocument();
+
+        let errorIcon = screen.queryByTestId('ErrorOutlineIcon');
+        expect(errorIcon).not.toBeInTheDocument();
+
+        // get delete Destination button
+        const deleteDestinationButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteDestinationButton);
+
+        expect(mockDeleteDestinationMutation).toHaveBeenCalledWith({
+          id: 1,
+        });
+
+        // check for error state in modal
+        screen.getByTestId('ErrorOutlineIcon');
+
+        // close modal with Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteDestinationModal);
+
+        // open delete confirmation modal again
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // check for error state to be reset
+        errorIcon = screen.queryByTestId('ErrorOutlineIcon');
+        expect(errorIcon).not.toBeInTheDocument();
       });
     });
   });

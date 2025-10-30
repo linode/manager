@@ -1,10 +1,12 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
+import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
+
 export const DefaultEntityAccess = () => {
   return (
     <Paper>
-      <Stack>
+      <Stack marginBottom={2.5}>
         <Typography variant="h2">
           Default Entity Access for Delegate Users
         </Typography>
@@ -15,6 +17,7 @@ export const DefaultEntityAccess = () => {
           the assignment.
         </Typography>
       </Stack>
+      <AssignedEntitiesTable />
     </Paper>
   );
 };

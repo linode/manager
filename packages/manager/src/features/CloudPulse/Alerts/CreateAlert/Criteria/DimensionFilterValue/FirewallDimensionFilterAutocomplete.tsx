@@ -2,6 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
+import { useCleanupStaleValues } from './useCleanupStaleValues';
 import { useFirewallFetchOptions } from './useFirewallFetchOptions';
 import { handleValueChange, resolveSelectedValues } from './utils';
 
@@ -39,6 +40,15 @@ export const FirewallDimensionFilterAutocomplete = (
     type,
     scope,
   });
+
+  useCleanupStaleValues({
+    options: values,
+    fieldValue,
+    multiple,
+    onChange: fieldOnChange,
+    isLoading,
+  });
+
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}

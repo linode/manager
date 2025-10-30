@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { RolesTable } from './RolesTable';
 
@@ -59,6 +59,7 @@ beforeEach(() => {
       is_account_admin: true,
     },
   });
+  resizeScreenSize(1200);
 });
 
 describe('RolesTable', () => {

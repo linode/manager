@@ -102,7 +102,7 @@ export const NodeBalancerSelect = (
     error: availableNodebalancersError,
     isLoading: availableNodebalancersLoading,
   } = useQueryWithPermissions<NodeBalancer>(
-    useAllNodeBalancersQuery(),
+    useAllNodeBalancersQuery(Boolean(optionsFilter)),
     'nodebalancer',
     ['update_nodebalancer'],
     Boolean(optionsFilter)

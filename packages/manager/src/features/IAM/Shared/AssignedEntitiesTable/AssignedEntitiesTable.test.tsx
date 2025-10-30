@@ -6,7 +6,7 @@ import { accountEntityFactory } from 'src/factories/accountEntities';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AssignedEntitiesTable } from '../../Users/UserEntities/AssignedEntitiesTable';
+import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
 
 const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),

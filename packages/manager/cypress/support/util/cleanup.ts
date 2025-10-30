@@ -1,3 +1,4 @@
+import { deleteAllTestDestinations } from 'support/api/delivery';
 import { deleteAllTestDomains } from 'support/api/domains';
 import { cancelAllTestEntityTransfers } from 'support/api/entityTransfer';
 import { deleteAllTestFirewalls } from 'support/api/firewalls';
@@ -17,6 +18,7 @@ import { deleteAllTestVolumes } from 'support/api/volumes';
 
 /** Types of resources that can be cleaned up. */
 export type CleanUpResource =
+  | 'destinations'
   | 'domains'
   | 'firewalls'
   | 'images'
@@ -39,6 +41,7 @@ type CleanUpMap = {
 
 // Map `CleanUpResource` strings to the clean up functions they execute.
 const cleanUpMap: CleanUpMap = {
+  destinations: () => deleteAllTestDestinations(),
   domains: () => deleteAllTestDomains(),
   firewalls: () => deleteAllTestFirewalls(),
   images: () => deleteAllTestImages(),
