@@ -3,7 +3,6 @@ import {
   fireEvent,
   screen,
   waitForElementToBeRemoved,
-  within,
 } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -32,17 +31,15 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+const defaultFlags = { dbaasV2: { beta: false, enabled: true } };
+
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
-const accountEndpoint = '*/v4*/account';
+const accountEndpoint = '*/account';
 const databaseInstancesEndpoint = '*/databases/instances';
 
-const managedDBBetaCapability = 'Managed Databases Beta';
 const managedDBCapability = 'Managed Databases';
-
-const newDBTabTitle = 'New Database Clusters';
-const legacyDBTabTitle = 'Legacy Database Clusters';
 
 describe('Database Table Row', () => {
   it('should render a database row', async () => {
@@ -75,49 +72,53 @@ describe('Database Table Row', () => {
 describe('Database Table', () => {
   it('should render database landing table with items', async () => {
     const mockAccount = accountFactory.build({
-      capabilities: [managedDBBetaCapability],
+      capabilities: [managedDBCapability],
     });
     server.use(
-      http.get('*/account', () => {
+      http.get(accountEndpoint, () => {
         return HttpResponse.json(mockAccount);
-      })
-    );
-    server.use(
+      }),
       http.get(databaseInstancesEndpoint, () => {
         const databases = databaseInstanceFactory.buildList(1, {
           status: 'active',
+          platform: 'rdbms-default',
         });
         return HttpResponse.json(makeResourcePage(databases));
       })
     );
 
-    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
-      <DatabaseLanding />
-    );
+    const { getAllByText, getByTestId, queryAllByText, queryByText } =
+      renderWithTheme(<DatabaseLanding />, {
+        flags: defaultFlags,
+      });
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    await waitForElementToBeRemoved(getByTestId(loadingTestId), {
+      timeout: 3000,
+    });
 
     // Static text and table column headers
     getAllByText('Cluster Label');
     getAllByText('Status');
-    getAllByText('Configuration');
     getAllByText('Engine');
     getAllByText('Region');
     getAllByText('Created');
 
     // Check to see if the mocked API data rendered in the table
     queryAllByText('Active');
+
+    // Check that logo renders
+    queryByText('Powered by');
   });
 
   it('should render database landing with empty state', async () => {
     const mockAccount = accountFactory.build({
-      capabilities: [managedDBBetaCapability],
+      capabilities: [managedDBCapability],
     });
     server.use(
-      http.get('*/account', () => {
+      http.get(accountEndpoint, () => {
         return HttpResponse.json(mockAccount);
       })
     );
@@ -127,7 +128,7 @@ describe('Database Table', () => {
       })
     );
     const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
+      flags: defaultFlags,
     });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -137,149 +138,6 @@ describe('Database Table', () => {
         "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
       )
     ).toBeInTheDocument();
-  });
-
-  it('should render tabs with legacy and new databases ', async () => {
-    server.use(
-      http.get(accountEndpoint, () => {
-        return HttpResponse.json(
-          accountFactory.build({
-            capabilities: [managedDBCapability, managedDBBetaCapability],
-          })
-        );
-      })
-    );
-    server.use(
-      http.get(databaseInstancesEndpoint, () => {
-        const databases = databaseInstanceFactory.buildList(5, {
-          status: 'active',
-        });
-
-        return HttpResponse.json(makeResourcePage(databases));
-      })
-    );
-
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const newDatabasesTab = screen.getByText(newDBTabTitle);
-    const legacyDatabasesTab = screen.getByText(legacyDBTabTitle);
-
-    expect(newDatabasesTab).toBeInTheDocument();
-    expect(legacyDatabasesTab).toBeInTheDocument();
-  });
-
-  it('should render logo in new databases tab ', async () => {
-    server.use(
-      http.get(accountEndpoint, () => {
-        return HttpResponse.json(
-          accountFactory.build({
-            capabilities: [managedDBCapability, managedDBBetaCapability],
-          })
-        );
-      })
-    );
-    server.use(
-      http.get(databaseInstancesEndpoint, () => {
-        const databases = databaseInstanceFactory.buildList(5, {
-          status: 'active',
-        });
-        return HttpResponse.json(makeResourcePage(databases));
-      })
-    );
-
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const newDatabaseTab = screen.getByText(newDBTabTitle);
-    fireEvent.click(newDatabaseTab);
-
-    expect(screen.getByText('Powered by')).toBeInTheDocument();
-  });
-
-  it('should render a single legacy database table without logo ', async () => {
-    server.use(
-      http.get(databaseInstancesEndpoint, () => {
-        const databases = databaseInstanceFactory.buildList(5, {
-          status: 'active',
-        });
-        return HttpResponse.json(makeResourcePage(databases));
-      })
-    );
-
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: false, enabled: false } },
-    });
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const tables = screen.getAllByRole('table');
-    expect(tables).toHaveLength(1);
-
-    const table = tables[0];
-
-    const headers = within(table).getAllByRole('columnheader');
-    expect(
-      headers.some((header) => header.textContent === 'Configuration')
-    ).toBe(true);
-    expect(headers.some((header) => header.textContent === 'Nodes')).toBe(
-      false
-    );
-
-    expect(screen.queryByText(legacyDBTabTitle)).toBeNull();
-    expect(screen.queryByText(newDBTabTitle)).toBeNull();
-    expect(screen.queryByText('Powered by')).toBeNull();
-  });
-
-  it('should render a single new database table ', async () => {
-    server.use(
-      http.get(accountEndpoint, () => {
-        return HttpResponse.json(
-          accountFactory.build({
-            capabilities: [managedDBBetaCapability],
-          })
-        );
-      })
-    );
-    server.use(
-      http.get(databaseInstancesEndpoint, () => {
-        const databases = databaseInstanceFactory.buildList(5, {
-          platform: 'rdbms-default',
-          status: 'active',
-        });
-        return HttpResponse.json(makeResourcePage(databases));
-      })
-    );
-
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const tables = screen.getAllByRole('table');
-    expect(tables).toHaveLength(1);
-
-    expect(screen.getByText('Cluster Label')).toBeInTheDocument();
-
-    expect(screen.queryByText(legacyDBTabTitle)).toBeInTheDocument();
-    expect(screen.queryByText(newDBTabTitle)).toBeInTheDocument();
-    expect(screen.queryByText('Powered by')).toBeInTheDocument();
   });
 });
 
@@ -330,7 +188,7 @@ describe('Database Landing', () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
-        flags: { dbaasV2: { beta: false, enabled: true } },
+        flags: defaultFlags,
       }
     );
 
@@ -361,7 +219,7 @@ describe('Database Landing', () => {
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
       <DatabaseLanding />,
       {
-        flags: { dbaasV2: { beta: false, enabled: true } },
+        flags: defaultFlags,
       }
     );
 

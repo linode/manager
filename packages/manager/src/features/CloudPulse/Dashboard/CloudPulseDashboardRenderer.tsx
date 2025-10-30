@@ -81,7 +81,7 @@ export const CloudPulseDashboardRenderer = React.memo(
         }
         resources={
           Array.isArray(filterValue[RESOURCE_ID])
-            ? (filterValue[RESOURCE_ID] as string[])
+            ? filterValue[RESOURCE_ID].map(String)
             : typeof filterValue[RESOURCE_ID] === 'string'
               ? [filterValue[RESOURCE_ID]]
               : []
