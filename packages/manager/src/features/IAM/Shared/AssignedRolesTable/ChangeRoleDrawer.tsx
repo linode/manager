@@ -1,5 +1,7 @@
 import {
   useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
+  useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
@@ -17,6 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import {
@@ -40,15 +43,32 @@ interface Props {
 
 export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
-  const { username } = useParams({ from: '/iam/users/$username' });
-
+  const { username } = useParams({ strict: false });
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+  const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
 
+  const { data: userRolesData } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
   const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
+  const { mutateAsync: updateDefaultRoles } =
+    useUpdateDefaultDelegationAccessQuery();
+
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultRoles
+    : updateUserRoles;
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
       return [];
@@ -132,7 +152,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         newRole,
       });
 
-      await updateUserRoles(updatedUserRoles);
+      await mutationFn(updatedUserRoles);
 
       handleClose();
     } catch (errors) {

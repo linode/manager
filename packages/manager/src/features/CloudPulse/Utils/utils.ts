@@ -5,6 +5,8 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
   INTERFACE_ID,
@@ -23,7 +25,9 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { AssociatedEntityType } from '../shared/types';
+import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type {
   Alert,
@@ -32,6 +36,7 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
   Dashboard,
+  Dimension,
   Firewall,
   FirewallDeviceEntity,
   MonitoringCapabilities,
@@ -60,6 +65,25 @@ interface AclpSupportedRegionProps {
    * The type of monitoring capability to check
    */
   type: keyof MonitoringCapabilities;
+}
+
+interface FilterProps {
+  /**
+   * The dimension filters to be validated
+   */
+  dimensionFilters: MetricsDimensionFilter[] | undefined;
+  /**
+   * The dimension options associated with the metric
+   */
+  dimensions: Dimension[];
+  /**
+   * The fetch options for linodes
+   */
+  linodes: FetchOptions;
+  /**
+   * The fetch options for vpcs
+   */
+  vpcs: FetchOptions;
 }
 
 /**
@@ -397,6 +421,115 @@ export const useIsAclpSupportedRegion = (
   const region = regions?.find(({ id }) => id === regionId);
 
   return region?.monitors?.[type]?.includes(capability) ?? false;
+};
+
+/**
+ * Checks if the given value is a valid number according to the specified config.
+ * @param raw The value to validate
+ * @param config Optional configuration object with min and max properties
+ */
+const isValueAValidNumber = (
+  value: string,
+  config: undefined | { max?: number; min?: number }
+): boolean => {
+  const trimmed = value.trim();
+  if (trimmed === '') return false;
+  // try to parse as finite number
+  const num = Number(trimmed);
+  if (!Number.isFinite(num)) return false;
+
+  // If min/max are integers (or present) enforce range.
+  if (config?.min !== undefined && num < config.min) return false;
+  if (config?.max !== undefined && num > config.max) return false;
+
+  // If min/max are integers and config min/max are integers, it likely expects integer inputs
+  // (e.g. ports, ids). We'll enforce integer if both min and max are integer values.
+  if (
+    config &&
+    Number.isInteger(config.min ?? 0) &&
+    Number.isInteger(config.max ?? 0)
+  ) {
+    // If both min and max exist and are integers, require the input be integer.
+    // If only one exists and it's an integer, still reasonable to require integer.
+    if (!Number.isInteger(num)) return false;
+  }
+
+  return true;
+};
+
+/**
+ * @param filter The filter associated with the metric
+ * @param options The dimension options associated with the metric
+ * @returns boolean
+ */
+export const isValidFilter = (
+  filter: MetricsDimensionFilter,
+  options: Dimension[]
+): boolean => {
+  if (!filter.operator || !filter.dimension_label || !filter.value)
+    return false;
+
+  const operator = filter.operator;
+  const operatorGroup = getOperatorGroup(operator);
+
+  if (!operatorGroup.includes(operator)) return false;
+
+  const dimension = options.find(
+    ({ dimension_label: dimensionLabel }) =>
+      dimensionLabel === filter.dimension_label
+  );
+  if (!dimension) return false;
+
+  const dimensionConfig =
+    valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
+
+  const dimensionFieldConfig = dimensionConfig[operatorGroup];
+
+  if (
+    dimensionFieldConfig.type === 'textfield' &&
+    dimensionFieldConfig.inputType === 'number'
+  ) {
+    return isValueAValidNumber(
+      String(filter.value ?? ''),
+      dimensionFieldConfig
+    );
+  } else if (
+    dimensionFieldConfig.type === 'textfield' ||
+    !dimension.values ||
+    !dimension.values.length
+  ) {
+    return true;
+  }
+
+  const validValues = new Set(dimension.values);
+  return (filter.value ?? '')
+    .split(',')
+    .every((value) => validValues.has(value));
+};
+
+/**
+ * @param linodes The list of linode according to the supported regions
+ * @param vpcs The list of vpcs according to the supported regions
+ * @param dimensionFilters The array of dimension filters selected
+ * @returns The filtered dimension filter based on the selections
+ */
+export const getFilteredDimensions = (
+  filterProps: FilterProps
+): MetricsDimensionFilter[] => {
+  const { dimensions, linodes, vpcs, dimensionFilters } = filterProps;
+
+  const mergedDimensions = dimensions.map((dim) =>
+    dim.dimension_label === 'linode_id'
+      ? { ...dim, values: linodes.values.map((lin) => lin.value) }
+      : dim.dimension_label === 'vpc_subnet_id'
+        ? { ...dim, values: vpcs.values.map((vpc) => vpc.value) }
+        : dim
+  );
+  return dimensionFilters?.length
+    ? dimensionFilters.filter((filter) =>
+        isValidFilter(filter, mergedDimensions ?? [])
+      )
+    : [];
 };
 
 /**
