@@ -4,6 +4,7 @@ import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/clou
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
   CloudPulseServiceType,
+  Dashboard,
   Dimension,
   MetricDefinition,
 } from '@linode/api-v4';
@@ -54,7 +55,10 @@ export const useGlobalDimensions = (
   if (metricLoading || dashboardLoading) {
     return { options: [], defaultValue: [], isLoading: true };
   }
-  const metricDimensions = getMetricDimensions(metricDefinition?.data ?? []);
+  const metricDimensions = getMetricDimensions(
+    metricDefinition?.data ?? [],
+    dashboard
+  );
   const commonDimensions = [
     defaultOption,
     ...getCommonDimensions(metricDimensions),
@@ -167,14 +171,22 @@ export const useWidgetDimension = (
  * @returns transform dimension object with metric as key and dimensions as value
  */
 export const getMetricDimensions = (
-  metricDefinition: MetricDefinition[]
+  metricDefinition: MetricDefinition[],
+  dashboard?: Dashboard
 ): MetricDimension => {
-  return metricDefinition.reduce((acc, { metric, dimensions }) => {
-    return {
-      ...acc,
-      [metric]: dimensions,
-    };
-  }, {});
+  if (!dashboard) {
+    return {};
+  }
+  const dashboardMetrics =
+    dashboard.widgets.map((widget) => widget.metric) ?? [];
+  return metricDefinition
+    .filter(({ metric }) => dashboardMetrics.includes(metric))
+    .reduce((acc, { metric, dimensions }) => {
+      return {
+        ...acc,
+        [metric]: dimensions,
+      };
+    }, {});
 };
 
 /**
