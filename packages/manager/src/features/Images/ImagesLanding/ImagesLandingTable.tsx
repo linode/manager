@@ -17,8 +17,7 @@ import { useImagesSubTabs } from '../utils';
 import { DeleteImageDialog } from './DeleteImageDialog';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
-import { ImagesCustom } from './ImagesCustom';
-import { ImagesRecovery } from './ImagesRecovery';
+import { ImagesView } from './ImagesView';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
@@ -187,10 +186,11 @@ export const ImagesLandingTable = () => {
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.key}-content`}>
                 {tab.key === 'custom' && (
-                  <ImagesCustom
+                  <ImagesView
                     filter={filter}
                     handlers={handlers}
                     onFetchingChange={setManualImagesIsFetching}
+                    variant="custom"
                   />
                 )}
                 {tab.key === 'shared' && (
@@ -199,10 +199,11 @@ export const ImagesLandingTable = () => {
                   </Notice>
                 )}
                 {tab.key === 'recovery' && (
-                  <ImagesRecovery
+                  <ImagesView
                     filter={filter}
                     handlers={handlers}
                     onFetchingChange={setAutomaticImagesIsFetching}
+                    variant="recovery"
                   />
                 )}
               </SafeTabPanel>

@@ -5,14 +5,22 @@ import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
+import type { Hidden } from '@linode/ui';
 
 interface ImagesSubTab {
   isBeta?: boolean;
-  key: ImagesSubTabType;
+  key: ImagesVariant;
   title: string;
 }
 
-export type ImagesSubTabType = 'custom' | 'recovery' | 'shared';
+export interface ColumnConfig {
+  header: React.ReactNode | string;
+  hiddenProps?: React.ComponentProps<typeof Hidden>;
+  label?: string; // Field name (used for sorting)
+  sortable?: boolean;
+}
+
+export type ImagesVariant = 'custom' | 'recovery' | 'shared';
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
@@ -73,7 +81,7 @@ export const useIsPrivateImageSharingEnabled = () => {
  *   - `subTabIndex`: the index of the selected sub-tab
  *   - `subTabs`: the array of available sub-tabs
  */
-export const useImagesSubTabs = (tab: ImagesSubTabType | undefined) => {
+export const useImagesSubTabs = (tab: ImagesVariant | undefined) => {
   const flags = useFlags();
 
   const subTabs = useMemo(() => {
@@ -82,7 +90,7 @@ export const useImagesSubTabs = (tab: ImagesSubTabType | undefined) => {
       ...(flags.privateImageSharing
         ? [
             {
-              key: 'shared' as ImagesSubTabType,
+              key: 'shared' as ImagesVariant,
               title: 'Shared with me',
               isBeta: true,
             },
@@ -113,23 +121,3 @@ export const getImageTypeToSubType = (imageType: Image['type']) => {
       return 'shared';
   }
 };
-
-import { makeStyles } from 'tss-react/mui';
-
-import type { Theme } from '@mui/material/styles';
-
-export const useImgesTableStyles = makeStyles()((theme: Theme) => ({
-  imageTable: {
-    marginBottom: theme.spacingFunction(24),
-    padding: 0,
-  },
-  imageTableHeader: {
-    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
-    borderBottom: 0,
-    padding: theme.spacingFunction(8),
-    paddingLeft: theme.spacingFunction(12),
-  },
-  imageTableSubheader: {
-    marginTop: theme.spacingFunction(8),
-  },
-}));

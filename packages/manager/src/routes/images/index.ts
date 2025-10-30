@@ -4,11 +4,11 @@ import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
-import type { ImagesSubTabType } from 'src/features/Images/utils';
+import type { ImagesVariant } from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
-  subType?: ImagesSubTabType;
+  subType?: ImagesVariant;
 }
 
 export interface ImageCreateDiskSearchParams {
