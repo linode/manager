@@ -1,15 +1,3 @@
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-  y="0px" style="enable-background:new 0 0 64 64;" xml:space="preserve" fill="none">
-  <title>Group</title>
-  <circle id="background" class="outerCircle" stroke-width="2" cx="31.9" cy="31.9" r="29.9"></circle>
-  <g id="Status-page-icon" fill-rule="evenodd" class="insidePath" transform="translate(16.000000, 19.000000)">
-    <g id="Artboard-Copy" transform="translate(-319.000000, -396.000000)">
-      <g id="Group" transform="translate(319.000000, 396.000000)">
-        <rect id="Rectangle" stroke-width="2" x="1" y="1" width="30" height="21"></rect>
-        <line x1="10.5" y1="25.5" x2="22.5" y2="25.5" id="Line" stroke-width="2" stroke-linecap="square"></line>
-        <polyline id="Path-2"
-          points="5.40261339 17.5963174 13.2194757 9.11530643 19.1871196 14.7389396 27.3256132 5.65051209"></polyline>
-      </g>
-    </g>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M15.4716 3.00041C15.9256 2.98751 16.3312 3.28214 16.4594 3.71784L18.7482 11.5H21C21.5523 11.5 22 11.9477 22 12.5C22 13.0523 21.5523 13.5 21 13.5H18C17.5564 13.5 17.1658 13.2078 17.0406 12.7822L15.6115 7.92306L12.9738 19.2272C12.8716 19.6655 12.4891 19.9815 12.0394 19.9992C11.5897 20.017 11.1835 19.7321 11.0471 19.3032L8.345 10.811L7.41381 12.9061C7.25331 13.2673 6.89519 13.5 6.5 13.5H3C2.44772 13.5 2 13.0523 2 12.5C2 11.9477 2.44772 11.5 3 11.5H5.85013L7.58619 7.59387C7.75484 7.21441 8.14044 6.97866 8.55506 7.00152C8.96968 7.02438 9.32702 7.3011 9.45293 7.6968L11.8516 15.2354L14.5262 3.77277C14.6294 3.3305 15.0176 3.01331 15.4716 3.00041Z" fill="currentColor"/>
 </svg>

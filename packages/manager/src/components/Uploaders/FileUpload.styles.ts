@@ -81,10 +81,16 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& g': {
       stroke: theme.palette.error.dark,
     },
+    '& path': {
+      fill: theme.palette.error.dark,
+    },
     color: theme.palette.error.dark,
   },
   iconRight: {
     color: theme.textColors.headlineStatic,
+  },
+  success: {
+    color: theme.palette.success.dark,
   },
   overwriteNotice: {
     alignItems: 'center',
