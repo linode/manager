@@ -109,7 +109,7 @@ export const CreateImageTab = () => {
   );
 
   const { data: linodes, isLoading } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery(),
+    useAllLinodesQuery({}, {}, Boolean(imagePermissions.create_image)),
     'linode',
     ['view_linode', 'update_linode'],
     Boolean(imagePermissions.create_image)
