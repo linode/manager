@@ -24,7 +24,7 @@ interface Props {
   filter: Filter;
   handlers: ImageHandlers;
   onFetchingChange?: (fetching: boolean) => void;
-  variant: ImagesVariant;
+  variant: Exclude<ImagesVariant, 'shared'>;
 }
 
 export const ImagesView = (props: Props) => {

@@ -6,13 +6,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import type { Event, Image, Linode } from '@linode/api-v4';
 import type { Hidden } from '@linode/ui';
 
-export interface ImagesSubTab {
-  isBeta?: boolean;
-  title: string;
-  variant: ImagesVariant;
-}
-
-export interface ColumnConfig {
+export interface ImageViewTableColConfig {
   header: React.ReactNode | string;
   hiddenProps?: React.ComponentProps<typeof Hidden>;
   label?: string; // Field name (used for sorting)
@@ -20,6 +14,12 @@ export interface ColumnConfig {
 }
 
 export type ImagesVariant = 'custom' | 'recovery' | 'shared';
+
+export interface ImagesSubTab {
+  isBeta?: boolean;
+  title: string;
+  variant: ImagesVariant;
+}
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
@@ -73,17 +73,11 @@ export const useIsPrivateImageSharingEnabled = () => {
 };
 
 /**
- * Returns the currently selected Images sub-tab index and the list of available sub-tabs.
+ * Returns the index of the currently selected tab from an array of sub-tabs.
  *
- * @param tab - the current tab. Currently, this value comes from 'subType' query param on the Images Landing Page.
- * @returns An object containing:
- *   - `subTabIndex`: the index of the selected sub-tab
- *   - `subTabs`: the array of available sub-tabs
- */
-/**
- * Returns the index of the currently selected Images sub-tab
+ * @param subTabs - Array of sub-tabs with `variant` and `title` properties.
+ * @param tab - The variant of currently selected tab. Currently, this value comes from 'subType' query param on the Images Landing Page.
  *
- * @param tab the current tab. Currently, this value comes from 'subtype' query param on the Images Landing Page.
  * @returns the index of the selected tab
  */
 export const getImagesSubTabIndex = (

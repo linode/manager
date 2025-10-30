@@ -15,7 +15,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 
 import { ImageRow } from '../ImageRow';
 
-import type { ColumnConfig } from '../../utils';
+import type { ImageViewTableColConfig } from '../../utils';
 import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { APIError, Event, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
@@ -34,7 +34,7 @@ interface HeaderProps {
 }
 
 interface ImagesTableProps {
-  columns: ColumnConfig[];
+  columns: ImageViewTableColConfig[];
   emptyMessage: string;
   error?: APIError[] | null;
   eventCategory: string;

@@ -10,12 +10,9 @@ import {
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
-  SHARED_IMAGES_DEFAULT_ORDER,
-  SHARED_IMAGES_DEFAULT_ORDER_BY,
-  SHARED_IMAGES_PREFERENCE_KEY,
 } from '../../constants';
 
-import type { ColumnConfig, ImagesVariant } from '../../utils';
+import type { ImagesVariant, ImageViewTableColConfig } from '../../utils';
 import type { Image } from '@linode/api-v4';
 
 export interface ImageConfig {
@@ -24,7 +21,7 @@ export interface ImageConfig {
     disabledToolTipText?: string;
     navigateTo?: string;
   };
-  columns: ColumnConfig[];
+  columns: ImageViewTableColConfig[];
   description: React.ReactNode;
   docsLink?: string;
   emptyMessage: string;
@@ -83,7 +80,10 @@ const RECOVERY_IMAGES_TABLE_COLUMNS = [
   },
 ];
 
-export const IMAGES_CONFIG: Record<ImagesVariant, ImageConfig> = {
+export const IMAGES_CONFIG: Omit<
+  Record<ImagesVariant, ImageConfig>,
+  'shared'
+> = {
   custom: {
     title: 'My Custom Images',
     description: (
@@ -132,16 +132,5 @@ export const IMAGES_CONFIG: Record<ImagesVariant, ImageConfig> = {
     eventCategory: 'Recovery Images Table',
     emptyMessage: 'No Recovery Images to display.',
   },
-  shared: {
-    title: 'Shared Images',
-    description: '',
-    type: 'shared',
-    orderByDefault: SHARED_IMAGES_DEFAULT_ORDER_BY,
-    orderDefault: SHARED_IMAGES_DEFAULT_ORDER,
-    preferenceKey: SHARED_IMAGES_PREFERENCE_KEY,
-    isEnabled: (subType) => subType === 'shared',
-    columns: [],
-    eventCategory: 'Shared Images Table',
-    emptyMessage: 'No Shared Images to display.',
-  },
+  // "shared" images config will go here...
 };
