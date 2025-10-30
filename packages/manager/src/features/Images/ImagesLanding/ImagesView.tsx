@@ -61,7 +61,7 @@ export const ImagesView = (props: Props) => {
       from: '/images/images',
     },
     preferenceKey: config.preferenceKey,
-    prefix: variant,
+    prefix: config.type,
   });
 
   const imagesFilter: Filter = {
