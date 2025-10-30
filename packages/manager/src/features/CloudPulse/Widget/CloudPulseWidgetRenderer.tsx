@@ -159,7 +159,7 @@ export const RenderWidgets = React.memo(
       <GridLegacy columnSpacing={2} container item rowSpacing={2} xs={12}>
         {{ ...newDashboard }.widgets.map((widget, index) => {
           // check if widget metric definition is available or not
-          if (widget && index===0) {
+          if (widget) {
             // find the metric defintion of the widget label
             const availMetrics = metricDefinitions?.data.find(
               (availMetrics: MetricDefinition) =>
