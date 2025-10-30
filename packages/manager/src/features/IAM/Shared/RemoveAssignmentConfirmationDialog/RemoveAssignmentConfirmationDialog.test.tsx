@@ -23,6 +23,7 @@ const props = {
   onSuccess: vi.fn(),
   open: true,
   role: mockRole,
+  username: 'test_user',
 };
 
 const queryMocks = vi.hoisted(() => ({
