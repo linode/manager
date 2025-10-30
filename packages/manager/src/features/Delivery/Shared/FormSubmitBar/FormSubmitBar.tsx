@@ -39,7 +39,8 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
   const capitalizedFormType = capitalize(formType);
   const enableSubmit = !blockSubmit || connectionTested;
   const buttonLabel = useMemo(
-    () => `${capitalize(mode)} ${capitalizedFormType}`,
+    () =>
+      mode === 'edit' ? 'Save' : `${capitalize(mode)} ${capitalizedFormType}`,
     [mode, capitalizedFormType]
   );
   const pagePendoId = useMemo(
