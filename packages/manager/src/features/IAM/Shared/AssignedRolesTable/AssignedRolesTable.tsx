@@ -83,16 +83,13 @@ export const AssignedRolesTable = () => {
     'update_default_delegate_access',
   ]);
 
+  // Determine if we're on the default roles view based on delegation role and path
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
   const permissionToCheck = isDefaultDelegationRolesForChildAccount
     ? permissions?.update_default_delegate_access
     : permissions?.is_account_admin;
-
-  // Determine if we're on the default roles view based on delegation role and path
-  const { isDefaultDelegationRolesForChildAccount } =
-    useIsDefaultDelegationRolesForChildAccount();
 
   const { data: defaultRolesData, isLoading: defaultRolesLoading } =
     useGetDefaultDelegationAccessQuery({
