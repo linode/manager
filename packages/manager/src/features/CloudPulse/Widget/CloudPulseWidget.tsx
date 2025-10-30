@@ -225,12 +225,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const filteredSelections = React.useMemo(
     () =>
-      getFilteredDimensions(
-        availableMetrics?.dimensions ?? [],
-        linodesFetch,
-        vpcFetch,
-        dimensionFilters
-      ),
+      getFilteredDimensions({
+        dimensions: availableMetrics?.dimensions ?? [],
+        linodes: linodesFetch,
+        vpcs: vpcFetch,
+        dimensionFilters,
+      }),
     [availableMetrics, dimensionFilters, linodesFetch, vpcFetch]
   );
   const convertToFilters = (

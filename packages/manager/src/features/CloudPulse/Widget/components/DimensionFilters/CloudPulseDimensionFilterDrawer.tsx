@@ -109,7 +109,10 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
           <Stack direction="row" justifyContent="space-between">
             <Typography
               data-qa-id="filter-drawer-selection-title"
-              sx={(theme) => ({ font: theme.font.semibold })}
+              sx={(theme) => ({
+                font: theme.font.semibold,
+                marginTop: theme.spacingFunction(12),
+              })}
             >
               Select up to 5 filters.
             </Typography>

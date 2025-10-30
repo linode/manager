@@ -176,6 +176,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                 justifyContent: 'start',
                 width: '160px',
                 height: '20px',
+                fontSize: '16px',
                 marginTop: theme.spacingFunction(12),
               })}
             >
