@@ -143,8 +143,7 @@ export const childAccountDelegates = (mockState: MockState) => [
       StrictResponse<APIErrorResponse | APIPaginatedResponse<string>>
     > => {
       const euuid = params.euuid as string;
-      const requestData = (await request.json()) as { users: string[] };
-      const newUsernames = requestData?.users || [];
+      const newUsernames = (await request.json()) as string[];
 
       // Get current delegations
       const allDelegations = await mswDB.getAll('delegations');
@@ -292,18 +291,7 @@ export const defaultDelegationAccess = () => [
           'account_linode_creator',
           'account_firewall_creator',
         ],
-        entity_access: [
-          {
-            id: 12345678,
-            type: 'linode' as const,
-            roles: ['linode_contributor'],
-          },
-          {
-            id: 45678901,
-            type: 'firewall' as const,
-            roles: ['firewall_admin'],
-          },
-        ],
+        entity_access: [],
       };
 
       return makeResponse(mockDefaultAccess);

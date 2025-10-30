@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
@@ -241,5 +241,116 @@ describe('<FirewallDimensionFilterAutocomplete />', () => {
     expect(
       await screen.findByRole('option', { name: 'us-east' })
     ).toBeVisible();
+  });
+  it('cleans up invalid single value (string)', async () => {
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [{ label: 'Linode-1', value: '1' }],
+      isLoading: false,
+      isError: false,
+    });
+    const fieldOnChange = vi.fn();
+    const { rerender } = renderWithTheme(
+      <FirewallDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="invalid"
+        multiple={false}
+      />
+    );
+    // Simulate update to trigger effect
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [{ label: 'Linode-1', value: '1' }],
+      isLoading: false,
+      isError: false,
+    });
+    rerender(
+      <FirewallDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="invalid"
+        multiple={false}
+      />
+    );
+    await waitFor(() => {
+      expect(fieldOnChange).toHaveBeenCalledWith(null);
+    });
+  });
+
+  it('cleans up invalid multi value (comma-separated string)', async () => {
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [
+        { label: 'Linode-1', value: '1' },
+        { label: 'Linode-2', value: '2' },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    const fieldOnChange = vi.fn();
+    const { rerender } = renderWithTheme(
+      <FirewallDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="1,3,2"
+        multiple={true}
+      />
+    );
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [
+        { label: 'Linode-1', value: '1' },
+        { label: 'Linode-2', value: '2' },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    rerender(
+      <FirewallDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="1,3,2"
+        multiple={true}
+      />
+    );
+    await waitFor(() => {
+      expect(fieldOnChange).toHaveBeenCalledWith('1,2');
+    });
+  });
+
+  it('cleans up all invalid multi values (comma-separated string)', async () => {
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [
+        { label: 'Linode-1', value: '1' },
+        { label: 'Linode-2', value: '2' },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    const fieldOnChange = vi.fn();
+    const { rerender } = renderWithTheme(
+      <FirewallDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="3,4"
+        multiple={true}
+      />
+    );
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [
+        { label: 'Linode-1', value: '1' },
+        { label: 'Linode-2', value: '2' },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    rerender(
+      <FirewallDimensionFilterAutocomplete
+        {...defaultProps}
+        fieldOnChange={fieldOnChange}
+        fieldValue="3,4"
+        multiple={true}
+      />
+    );
+    await waitFor(() => {
+      expect(fieldOnChange).toHaveBeenCalledWith('');
+    });
   });
 });
