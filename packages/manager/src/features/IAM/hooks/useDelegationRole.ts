@@ -10,13 +10,14 @@ type DelegationRole = {
   isDefaultAccount: boolean;
   isDelegateAccount: boolean;
   isParentAccount: boolean;
+  isProfileLoading: boolean;
   isProxyAccount: boolean;
   profileUserName: string | undefined;
   profileUserType: undefined | UserType;
 };
 
 export const useDelegationRole = (): DelegationRole => {
-  const { data: profile } = useProfile();
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
 
   return {
     isProxyAccount: profile?.user_type === 'proxy',
@@ -26,6 +27,7 @@ export const useDelegationRole = (): DelegationRole => {
     isDelegateAccount: profile?.user_type === 'delegate',
     profileUserType: profile?.user_type,
     profileUserName: profile?.username,
+    isProfileLoading,
   };
 };
 

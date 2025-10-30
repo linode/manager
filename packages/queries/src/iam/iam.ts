@@ -55,7 +55,7 @@ export const useUserAccountPermissions = (enabled = true) => {
   const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries.user(profile?.username || '')._ctx.accountPermissions,
-    enabled: Boolean(profile?.username) && profile?.restricted && enabled,
+    enabled: Boolean(profile?.username) && enabled,
   });
 };
 
