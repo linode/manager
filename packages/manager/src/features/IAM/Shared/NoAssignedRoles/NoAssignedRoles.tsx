@@ -1,4 +1,5 @@
 import { Box, Button, Typography, useTheme } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 
 import EmptyState from 'src/assets/icons/empty-state-cloud.svg';
@@ -15,6 +16,9 @@ export const NoAssignedRoles = (props: Props) => {
   const { text, hasAssignNewRoleDrawer } = props;
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
+
+  const location = useLocation();
+  const isDefaultRolesPage = location.pathname.includes('roles/defaults/roles');
 
   const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
     React.useState<boolean>(false);
@@ -52,7 +56,7 @@ export const NoAssignedRoles = (props: Props) => {
               : undefined
           }
         >
-          Assign New Roles
+          {isDefaultRolesPage ? 'Add New Default Roles' : 'Assign New Roles'}
         </Button>
       )}
       <AssignNewRoleDrawer
