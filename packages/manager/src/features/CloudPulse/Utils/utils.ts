@@ -28,6 +28,7 @@ import {
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { AssociatedEntityType } from '../shared/types';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
@@ -67,6 +68,25 @@ interface AclpSupportedRegionProps {
    * The type of monitoring capability to check
    */
   type: keyof MonitoringCapabilities;
+}
+
+interface FilterProps {
+  /**
+   * The dimension filters to be validated
+   */
+  dimensionFilters: MetricsDimensionFilter[] | undefined;
+  /**
+   * The dimension options associated with the metric
+   */
+  dimensions: Dimension[];
+  /**
+   * The fetch options for linodes
+   */
+  linodes: FetchOptions;
+  /**
+   * The fetch options for vpcs
+   */
+  vpcs: FetchOptions;
 }
 
 /**
@@ -406,12 +426,16 @@ export const useIsAclpSupportedRegion = (
   return region?.monitors?.[type]?.includes(capability) ?? false;
 };
 
-/** check whether a string value represents a valid number for the config */
-const isValueANumberValid = (
-  raw: string,
+/**
+ * Checks if the given value is a valid number according to the specified config.
+ * @param raw The value to validate
+ * @param config Optional configuration object with min and max properties
+ */
+const isValueAValidNumber = (
+  value: string,
   config: undefined | { max?: number; min?: number }
 ): boolean => {
-  const trimmed = raw.trim();
+  const trimmed = value.trim();
   if (trimmed === '') return false;
   // try to parse as finite number
   const num = Number(trimmed);
@@ -459,16 +483,16 @@ export const isValidFilter = (
   );
   if (!dimension) return false;
 
-  const dimConfig =
+  const dimensionConfig =
     valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
 
-  const dimensionFieldConfig = dimConfig[operatorGroup];
+  const dimensionFieldConfig = dimensionConfig[operatorGroup];
 
   if (
     dimensionFieldConfig.type === 'textfield' &&
     dimensionFieldConfig.inputType === 'number'
   ) {
-    return isValueANumberValid(
+    return isValueAValidNumber(
       String(filter.value ?? ''),
       dimensionFieldConfig
     );
@@ -493,11 +517,10 @@ export const isValidFilter = (
  * @returns The filtered dimension filter based on the selections
  */
 export const getFilteredDimensions = (
-  dimensions: Dimension[],
-  linodes: FetchOptions,
-  vpcs: FetchOptions,
-  dimensionFilters: MetricsDimensionFilter[] | undefined
+  filterProps: FilterProps
 ): MetricsDimensionFilter[] => {
+  const { dimensions, linodes, vpcs, dimensionFilters } = filterProps;
+
   const mergedDimensions = dimensions.map((dim) =>
     dim.dimension_label === 'linode_id'
       ? { ...dim, values: linodes.values.map((lin) => lin.value) }

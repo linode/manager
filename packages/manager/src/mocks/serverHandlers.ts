@@ -136,7 +136,6 @@ import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -814,7 +813,7 @@ export const handlers = [
       }),
       linodeFactory.build({
         label: 'mtc-custom-plan-linode-2',
-        region: 'no-east',
+        region: 'no-osl-1',
         type: 'g8-premium-128-ht',
         id: 1002,
       }),
@@ -1006,7 +1005,7 @@ export const handlers = [
           id,
           backups: { enabled: false },
           label: 'mtc-custom-plan-linode-2',
-          region: 'no-east',
+          region: 'no-osl-1',
           type: 'g8-premium-128-ht',
         }),
       ];
@@ -1241,6 +1240,12 @@ export const handlers = [
             label: 'Linode-fireall-test',
             parent_entity: null,
             id: 90909,
+          }),
+          firewallEntityfactory.build({
+            type: 'linode',
+            label: 'Linode-fireall-test',
+            parent_entity: null,
+            id: 90901,
           }),
         ],
       }),
@@ -2656,7 +2661,7 @@ export const handlers = [
       }),
       // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
-      ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
+      ...(['no-osl-1', 'us-iad', 'us-iad-2'].includes(selectedRegion)
         ? [
             regionAvailabilityFactory.build({
               available: true, // In supported regions, this can be `true` (plan available) or `false` (plan sold-out).
@@ -3655,7 +3660,7 @@ export const handlers = [
           aggregate_function: 'sum',
         },
       ];
-    } else if (id === '4' || id === '8') {
+    } else if (id === '4') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Service I/O Statistics';
       widgets = [
@@ -3691,6 +3696,30 @@ export const handlers = [
     } else if (id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
+      widgets = [
+        {
+          metric: 'fw_active_connections',
+          unit: 'Count',
+          label: 'Current Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'fw_active_connections',
+          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'fw_available_connections',
+          unit: 'Count',
+          label: 'Available Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'fw_available_connections',
+          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          aggregate_function: 'avg',
+        },
+      ];
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

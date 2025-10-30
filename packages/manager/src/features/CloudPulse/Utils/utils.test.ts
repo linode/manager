@@ -544,7 +544,12 @@ describe('getFilteredDimensions', () => {
       isLoading: false,
     };
 
-    const result = getFilteredDimensions(dimensions, linodes, vpcs, undefined);
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: [],
+    });
     expect(result).toEqual([]);
   });
 
@@ -576,7 +581,12 @@ describe('getFilteredDimensions', () => {
       { dimension_label: 'browser', operator: 'in', value: 'chrome' },
     ];
 
-    const result = getFilteredDimensions(dimensions, linodes, vpcs, filters);
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
 
     // all three filters are valid against mergedDimensions
     expect(result).toHaveLength(3);
@@ -616,7 +626,12 @@ describe('getFilteredDimensions', () => {
       { dimension_label: 'browser', operator: 'in', value: 'edge' },
     ];
 
-    const result = getFilteredDimensions(dimensions, linodes, vpcs, filters);
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
 
     // only the two valid filters should remain
     expect(result).toHaveLength(2);
@@ -650,7 +665,12 @@ describe('getFilteredDimensions', () => {
       { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
     ];
 
-    const result = getFilteredDimensions([], linodes, vpcs, filters);
+    const result = getFilteredDimensions({
+      dimensions: [],
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
 
     // with no metric definitions, mergedDimensions is undefined and filters should not pass validation
     expect(result).toEqual([]);

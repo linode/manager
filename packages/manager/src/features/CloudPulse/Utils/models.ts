@@ -120,7 +120,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   dependency?: string[];
 
   /**
-   * If it is a dimension filter coming from metric-definitions API, this field holds the dimension key
+   * If this filter is part of metric-definitions API, this field holds the dimension key
    */
   dimensionKey?: string;
 
