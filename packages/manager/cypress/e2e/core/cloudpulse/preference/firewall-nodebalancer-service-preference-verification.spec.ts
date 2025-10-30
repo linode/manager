@@ -180,9 +180,9 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
         associated_entity_region: 'us-east', // added this field
         groupBy: ['entity_id', 'region', 'Protocol'],
         resource_id: '1', // optional if needed
+        nodebalancer_id: ['1'],
       },
     }).as('fetchPreferences');
-    
 
     // navigate to the metrics page
     cy.visitWithLogin('/metrics');
@@ -205,6 +205,10 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
         cy.get('[data-qa-value="NodeBalancer Region US, Newark, NJ"]')
           .should('be.visible')
           .should('have.text', 'US, Newark, NJ');
+
+        cy.get('[data-qa-value="NodeBalancers mockNodeBalancer-resource"]')
+          .should('be.visible')
+          .should('have.text', 'mockNodeBalancer-resource');
       });
 
     ui.button.findByTitle('Filters').click();
@@ -228,10 +232,18 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
       ).should('have.value', 'US, Newark, NJ (us-east)');
 
       // Firewalls autocomplete
-      cy.get('[data-qa-autocomplete="Firewall"] input[data-testid="textfield-input"]')
-      .should('be.visible')       // input is visible
-      .should('have.value', 'Firewall-0') // input has correct value
-      .click();                   // open the dropdown
+      cy.get(
+        '[data-qa-autocomplete="Firewall"] input[data-testid="textfield-input"]'
+      )
+        .should('be.visible') // input is visible
+        .should('have.value', 'Firewall-0'); // input has correct value
+
+      cy.get('[data-qa-autocomplete="NodeBalancers"]')
+        .should('be.visible')
+        .within(() => {
+          cy.get('input[data-testid="textfield-input"]').should('be.visible');
+          cy.contains('mockNodeBalancer-resource').should('exist');
+        });
 
       // Refresh button (tooltip)
       cy.get('[data-qa-tooltip="Refresh"]').should('exist');
@@ -418,6 +430,7 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
       const expectedAclpPreference = {
         dashboardId: 8,
         associated_entity_region: 'us-east',
+        nodebalancer_id: ['1'],
         widgets: {
           'Accepted Bytes': {
             label: 'Accepted Bytes',
@@ -475,6 +488,58 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
         dashboardId: 8,
         associated_entity_region: 'us-east',
         groupBy: ['region', 'Protocol'],
+        nodebalancer_id: ['1'],
+        widgets: {
+          'Accepted Bytes': {
+            label: 'Accepted Bytes',
+            groupBy: ['IP Version'],
+          },
+        },
+        resource_id: '1',
+      };
+      comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
+      comparePreferences(expectedAclpPreference, request.body.aclpPreference);
+    });
+  });
+  it('clears the "NodeBalncer" verifies that user preferences are updated accordingly', () => {
+    cy.intercept('PUT', apiMatcher('profile/preferences')).as(
+      'updatePreference'
+    );
+    cy.get('[data-qa-autocomplete="NodeBalancers"]')
+      .find('button[aria-label="Clear"]')
+      .click();
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        // Check Firewalls
+        cy.get('[data-qa-value="Firewall Firewall-0"]')
+          .should('be.visible')
+          .should('have.text', 'Firewall-0');
+
+        // Check NodeBalancer Region
+        cy.get('[data-qa-value="NodeBalancer Region US, Newark, NJ"]')
+          .should('be.visible')
+          .should('have.text', 'US, Newark, NJ');
+
+        cy.get(
+          '[data-qa-value="NodeBalancers mockNodeBalancer-resource"]'
+        ).should('not.exist');
+      });
+
+    cy.wait('@updatePreference').then(({ request, response }) => {
+      const responseBody =
+        response?.body &&
+        (typeof response.body === 'string'
+          ? JSON.parse(response.body)
+          : response.body);
+
+      const expectedAclpPreference = {
+        dashboardId: 8,
+        associated_entity_region: 'us-east',
+        groupBy: ['entity_id', 'region', 'Protocol'],
+        nodebalancer_id: [],
         widgets: {
           'Accepted Bytes': {
             label: 'Accepted Bytes',
@@ -540,6 +605,7 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
         dashboardId: 8,
         associated_entity_region: 'us-east',
         groupBy: ['entity_id', 'region', 'Protocol'],
+        nodebalancer_id: ['1'],
         widgets: {
           'Accepted Bytes': {
             label: 'Accepted Bytes',
@@ -647,6 +713,7 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
 
         const expectedAclpPreference = {
           dashboardId: 8,
+          nodebalancer_id: ['1'],
           widgets: {
             'Accepted Bytes': {
               label: 'Accepted Bytes',

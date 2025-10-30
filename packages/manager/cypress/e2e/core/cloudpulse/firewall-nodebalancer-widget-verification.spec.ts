@@ -32,9 +32,7 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type {
-  CloudPulseMetricsResponse,
-} from '@linode/api-v4';
+import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -52,13 +50,6 @@ const timeDurationToSelect = 'Last 24 Hours';
 const { metrics, dashboardName, firewalls, region, id } =
   widgetDetails.firewall_nodebalancer;
 const serviceType = 'firewall';
-const dimensions = [
-  {
-    label: 'Region',
-    dimension_label: 'region',
-    value: 'us-ord',
-  },
-];
 
 // Convert widget filters to dashboard filters
 const getFiltersForMetric = (metricName: string) => {
@@ -80,7 +71,7 @@ const dashboard = dashboardFactory.build({
   id,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
-      filters: [...dimensions],
+      filters: [],
       label: title,
       metric: name,
       unit,
@@ -97,7 +88,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
     label: title,
     metric: name,
     unit,
-    dimensions: [...dimensions, ...getFiltersForMetric(name)],
+    dimensions: [...getFiltersForMetric(name)],
   })
 );
 /**
@@ -177,20 +168,27 @@ const mockRegions = [
     },
   }),
 ];
+// ✅ Define mockNodeBalancers first
+const mockNodeBalancers = Array.from({ length: 11 }, (_, i) =>
+  nodeBalancerFactory.build({
+    label: `mockNodeBalancer-resource-${i + 1}`,
+    region: i < 10 ? 'us-east' : 'us-ord',
+  })
+);
+
+// ✅ Now build mockFirewalls using the nodebalancers
 const mockFirewalls = [
   firewallFactory.build({
     id: 1,
     label: firewalls,
     status: 'enabled',
-    entities: [
-      {
-        id: 1,
-        label: 'nodebalancer-1',
-        type: 'nodebalancer',
-        url: '/test',
-        parent_entity: null,
-      },
-    ],
+    entities: mockNodeBalancers.map((nb, index) => ({
+      id: index + 1,
+      label: nb.label,
+      type: 'nodebalancer',
+      url: '/test',
+      parent_entity: null,
+    })),
   }),
   firewallFactory.build({
     id: 2,
@@ -210,7 +208,7 @@ const mockFirewalls = [
     id: 3,
     label: 'Firewall-2',
     status: 'enabled',
-    entities: [{}],
+    entities: [],
   }),
   firewallFactory.build({
     id: 4,
@@ -228,16 +226,6 @@ const mockFirewalls = [
   }),
 ];
 
-const mockNodeBalancers = [
-  nodeBalancerFactory.build({
-    label: 'mockNodeBalancer-resource-1',
-    region: 'us-east',
-  }),
-  nodeBalancerFactory.build({
-    label: 'mockNodeBalancer-resource-2',
-    region: 'us-ord',
-  }),
-];
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
@@ -278,12 +266,12 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     // // Select a time duration from the autocomplete input.
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
-      cy.get('@startDateInput').click();
-      cy.get(`[data-qa-preset="Last day"]`).click();
-      cy.get('[data-qa-buttons="apply"]')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
+    cy.get('@startDateInput').click();
+    cy.get(`[data-qa-preset="Last day"]`).click();
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     // Select a resource from the autocomplete input.
 
@@ -311,17 +299,22 @@ describe('Integration Tests for firewall Dashboard ', () => {
     ui.regionSelect.find().clear();
     ui.regionSelect.find().type(`${region}{enter}`);
 
+    cy.findByPlaceholderText('Select NodeBalancers')
+      .should('be.visible')
+      .click();
+    cy.findByPlaceholderText('Select NodeBalancers').type(
+      'mockNodeBalancer-resource-1{enter}'
+    );
+
+    ui.autocomplete.findByLabel('NodeBalancers').click();
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
       (calls) => {
         const interceptions = calls as unknown as Interception[];
-
         expect(interceptions).to.have.length(4);
 
         interceptions.forEach((interception) => {
-          const { body: requestPayload } = interception.request;
-
-          // ✅ Assert group_by
+          const requestPayload = interception.request.body;
           expect(requestPayload).to.have.property('group_by');
           expect(requestPayload.group_by).to.include('entity_id');
         });
