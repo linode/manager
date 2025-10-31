@@ -1,11 +1,14 @@
 import { Box, Divider, TextField, Typography } from '@linode/ui';
+import { capitalize } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import { PathSample } from 'src/features/Delivery/Shared/PathSample';
 
-interface DestinationAkamaiObjectStorageDetailsFormProps {
+import type { FormMode, FormType } from 'src/features/Delivery/Shared/types';
+
+interface DestinationLinodeObjectStorageDetailsFormProps {
   controlPaths?: {
     accessKeyId: string;
     accessKeySecret: string;
@@ -13,6 +16,8 @@ interface DestinationAkamaiObjectStorageDetailsFormProps {
     host: string;
     path: string;
   };
+  entity: FormType;
+  mode: FormMode;
 }
 
 const defaultPaths = {
@@ -25,12 +30,15 @@ const defaultPaths = {
 
 export const DestinationAkamaiObjectStorageDetailsForm = ({
   controlPaths = defaultPaths,
-}: DestinationAkamaiObjectStorageDetailsFormProps) => {
+  entity,
+  mode,
+}: DestinationLinodeObjectStorageDetailsFormProps) => {
   const { control } = useFormContext();
   const path = useWatch({
     control,
     name: controlPaths?.path,
   });
+  const pendoPageId = `Logs Delivery ${capitalize(entity)}s ${capitalize(mode)}${entity === 'destination' ? '' : ' New Destination'}-`;
 
   return (
     <>
@@ -40,6 +48,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
         render={({ field, fieldState }) => (
           <TextField
             aria-required
+            data-pendo-id={`${pendoPageId}Host`}
             errorText={fieldState.error?.message}
             label="Host"
             onBlur={field.onBlur}
@@ -57,6 +66,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
         render={({ field, fieldState }) => (
           <TextField
             aria-required
+            data-pendo-id={`${pendoPageId}Bucket`}
             errorText={fieldState.error?.message}
             label="Bucket"
             onBlur={field.onBlur}
@@ -74,6 +84,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
         render={({ field, fieldState }) => (
           <HideShowText
             aria-required
+            data-pendo-id={`${pendoPageId}Access Key ID`}
             errorText={fieldState.error?.message}
             label="Access Key ID"
             onBlur={field.onBlur}
@@ -89,6 +100,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
         render={({ field, fieldState }) => (
           <HideShowText
             aria-required
+            data-pendo-id={`${pendoPageId}Secret Access Key`}
             errorText={fieldState.error?.message}
             label="Secret Access Key"
             onBlur={field.onBlur}
@@ -113,6 +125,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
           render={({ field, fieldState }) => (
             <TextField
               aria-required
+              data-pendo-id={`${pendoPageId}Log Path Prefix`}
               errorText={fieldState.error?.message}
               label="Log Path Prefix"
               onBlur={field.onBlur}
