@@ -7,7 +7,7 @@ import { IPv4List } from 'src/factories/databases';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import AccessControls from './AccessControls';
-import AddAccessControlDrawer from './AddAccessControlDrawer';
+import { ManageAccessControlDrawer } from './ManageAccessControlDrawer';
 
 import type { DatabaseInstance } from '@linode/api-v4';
 
@@ -35,7 +35,11 @@ describe('Add Access Controls drawer', () => {
       id: 123,
     } as DatabaseInstance;
     const { getAllByTestId } = renderWithTheme(
-      <AddAccessControlDrawer database={db} onClose={() => null} open={true} />
+      <ManageAccessControlDrawer
+        database={db}
+        onClose={() => null}
+        open={true}
+      />
     );
 
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(
@@ -54,7 +58,11 @@ describe('Add Access Controls drawer', () => {
       id: 123,
     } as DatabaseInstance;
     const { getByText } = renderWithTheme(
-      <AddAccessControlDrawer database={db} onClose={() => null} open={true} />
+      <ManageAccessControlDrawer
+        database={db}
+        onClose={() => null}
+        open={true}
+      />
     );
 
     const addAccessControlsButton = getByText('Update Access Controls').closest(

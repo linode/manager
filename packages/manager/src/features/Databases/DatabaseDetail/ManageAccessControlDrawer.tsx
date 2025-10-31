@@ -37,7 +37,7 @@ interface ManageAccessControlValues {
   allow_list: ExtendedIP[];
 }
 
-const AddAccessControlDrawer = (props: Props) => {
+export const ManageAccessControlDrawer = (props: Props) => {
   const { database, onClose, open } = props;
 
   const [allowListErrors, setAllowListErrors] = React.useState<APIError[]>();
@@ -196,5 +196,3 @@ const AddAccessControlDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-export default AddAccessControlDrawer;
