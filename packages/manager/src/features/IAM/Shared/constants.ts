@@ -9,7 +9,7 @@ export const NO_ASSIGNED_DEFAULT_ROLES_TEXT = `There are no default roles assign
 
 export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity access roles assigned yet. Once you assign the user a role on specific entities, these entities will show up here.`;
 
-export const NO_ASSIGNED_DEFAULT_ENTITIES_TEXT = `The user doesn't have any default entity access roles assigned yet. Once you assign the user a role on specific entities, these entities will show up here.`;
+export const NO_ASSIGNED_DEFAULT_ENTITIES_TEXT = `There are no default entity access roles assigned yet. Once you assign the default role on specific entities, these entities will show up here.`;
 
 export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were saved.`;
 
