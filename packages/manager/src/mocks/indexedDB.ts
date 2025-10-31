@@ -20,9 +20,17 @@ const findItem = (item: unknown, id: number | string) => {
   const itemToFind = hasId(item) && item.id === id;
   const entityIdToFind = hasId(item) && item.entityId === id;
   const stringIdToFind =
-    hasId(item) && typeof id === 'string' && item.username === id;
+    hasId(item) && typeof id === 'string' && item?.username === id;
+  const uuidToFind =
+    hasId(item) && typeof id === 'string' && item.token_uuid === id;
 
-  return itemTupleToFind || itemToFind || entityIdToFind || stringIdToFind;
+  return (
+    itemTupleToFind ||
+    itemToFind ||
+    entityIdToFind ||
+    stringIdToFind ||
+    uuidToFind
+  );
 };
 
 const addEntityToEntities = (
@@ -459,7 +467,7 @@ export const mswDB = {
 
   get: async <T extends keyof MockState>(
     entity: T,
-    id: number
+    id: number | string
   ): Promise<
     (MockState[T] extends Array<infer U> ? U : MockState[T]) | undefined
   > => {

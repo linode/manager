@@ -2,7 +2,7 @@ export type ImageStatus = 'available' | 'creating' | 'pending_upload';
 
 export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 
-type ImageType = 'automatic' | 'manual';
+type ImageType = 'automatic' | 'manual' | 'shared';
 
 type SharegroupMemberStatus = 'active' | 'revoked';
 
@@ -25,10 +25,11 @@ export interface ImageSharingData {
     sharegroup_id: number;
     sharegroup_label: string;
     sharegroup_uuid: string;
-    source_image_id: number;
+    source_image_id: string;
   };
   shared_with: null | {
     sharegroup_count: number;
+    sharegroup_list?: number[]; // adding this field for easier handling of sharegroup lists in msw
     sharegroup_list_url: string;
   };
 }
@@ -339,11 +340,11 @@ export interface SharegroupToken {
   /**
    * The sharegroup label this token is created for
    */
-  sharegroup_label: string;
+  sharegroup_label: null | string;
   /**
    * The sharegroup UUID the token is created for
    */
-  sharegroup_uuid: string;
+  sharegroup_uuid: null | string;
   /**
    * The current status of this token
    */
