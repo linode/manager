@@ -45,7 +45,7 @@ const imagesRoute = createRoute({
 
 const imagesIndexRoute = createRoute({
   beforeLoad: ({ search, context }) => {
-    if (!search.subType && context.flags.privateImageSharing) {
+    if (!search.subType && context.isPrivateImageSharingEnabled) {
       throw redirect({
         to: '/images/images',
         search: { subType: 'custom' },
@@ -63,7 +63,7 @@ const imagesIndexRoute = createRoute({
 
 const imagesImagesRoute = createRoute({
   beforeLoad: ({ search, context }) => {
-    if (!context.flags.privateImageSharing) {
+    if (!context.isPrivateImageSharingEnabled) {
       throw redirect({
         to: '/images',
         search: (prev) => ({ ...prev, subType: undefined }),

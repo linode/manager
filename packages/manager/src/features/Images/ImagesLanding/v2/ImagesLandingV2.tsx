@@ -7,7 +7,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 const ImagesTabContainer = React.lazy(() =>
@@ -17,8 +16,6 @@ const ImagesTabContainer = React.lazy(() =>
 );
 
 export const ImagesLandingV2 = () => {
-  const flags = useFlags();
-
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Images',
@@ -28,7 +25,6 @@ export const ImagesLandingV2 = () => {
       title: 'Share Groups',
       to: '/images/sharegroups',
       chip: <BetaChip />,
-      hide: !flags.privateImageSharing,
     },
   ]);
 

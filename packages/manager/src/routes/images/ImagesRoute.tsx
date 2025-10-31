@@ -7,28 +7,29 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsPrivateImageSharingEnabled } from 'src/features/Images/utils';
 
 export const ImagesRoute = () => {
-  const flags = useFlags();
   const navigate = useNavigate();
+
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
 
   useEffect(() => {
     if (location.pathname.startsWith('/images')) {
-      if (flags.privateImageSharing && location.pathname === '/images') {
+      if (isPrivateImageSharingEnabled && location.pathname === '/images') {
         navigate({
           to: '/images/images',
           search: { subType: 'custom' },
           replace: true,
         });
       } else if (
-        !flags.privateImageSharing &&
+        !isPrivateImageSharingEnabled &&
         location.pathname.startsWith('/images/images')
       ) {
         navigate({ to: '/images', replace: true });
       }
     }
-  }, [flags.privateImageSharing, location.pathname, navigate]);
+  }, [isPrivateImageSharingEnabled, location.pathname, navigate]);
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>

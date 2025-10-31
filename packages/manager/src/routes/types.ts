@@ -11,6 +11,7 @@ export type RouterContext = {
   isACLPEnabled?: boolean;
   isDatabasesEnabled?: boolean;
   isPlacementGroupsEnabled?: boolean;
+  isPrivateImageSharingEnabled?: boolean;
   profile?: Profile;
   queryClient: QueryClient;
 };
