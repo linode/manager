@@ -188,7 +188,8 @@ export const toEntityPermissionMap = (
 export const toPermissionMap = (
   permissionsToCheck: readonly PermissionType[],
   usersPermissions: PermissionType[],
-  isRestricted?: boolean
+  isRestricted?: boolean,
+  accessType?: AccessType
 ): PermissionMap => {
   const unrestricted = isRestricted === false; // explicit === false since the profile can be undefined
   const usersPermissionMap = {} as PermissionMap;
@@ -197,11 +198,15 @@ export const toPermissionMap = (
   );
 
   const permissionMap = {} as PermissionMap;
-  permissionsToCheck?.forEach(
-    (permission) =>
-      (permissionMap[permission] =
-        (unrestricted || usersPermissionMap[permission]) ?? false)
-  );
+
+  permissionsToCheck?.forEach((permission) => {
+    if (accessType === 'account') {
+      permissionMap[permission] = usersPermissionMap[permission] ?? false;
+    } else {
+      permissionMap[permission] =
+        (unrestricted || usersPermissionMap[permission]) ?? false;
+    }
+  });
 
   return permissionMap;
 };

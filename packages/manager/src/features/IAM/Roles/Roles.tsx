@@ -11,12 +11,15 @@ import { usePermissions } from '../hooks/usePermissions';
 import { DefaultRolesPanel } from './Defaults/DefaultRolesPanel';
 
 export const RolesLanding = () => {
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
+    'account',
+    ['is_account_admin']
+  );
   const { data: accountRoles, isLoading } = useAccountRoles(
     permissions?.is_account_admin
   );
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount } = useDelegationRole();
+  const { isChildAccount, isProfileLoading } = useDelegationRole();
 
   const { roles } = React.useMemo(() => {
     if (!accountRoles) {
@@ -26,7 +29,7 @@ export const RolesLanding = () => {
     return { roles };
   }, [accountRoles]);
 
-  if (isLoading) {
+  if (isLoading || isPermissionsLoading || isProfileLoading) {
     return <CircleProgress />;
   }
 
