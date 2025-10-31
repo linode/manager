@@ -18,16 +18,6 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn(),
 }));
 
-// Mock ImagesCustom component so it doesn't lazy load in tests
-vi.mock('./ImagesCustom', () => ({
-  ImagesCustom: () => <div>ImagesCustom Component</div>,
-}));
-
-// Mock ImagesRecovery component so it doesn't lazy load in tests
-vi.mock('./ImagesRecovery', () => ({
-  ImagesRecovery: () => <div>ImagesCustom Component</div>,
-}));
-
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
   useQueryWithPermissions: queryMocks.useQueryWithPermissions,
