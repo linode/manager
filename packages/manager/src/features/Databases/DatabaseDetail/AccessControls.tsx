@@ -12,7 +12,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import AddAccessControlDrawer from './AddAccessControlDrawer';
+import { ManageAccessControlDrawer } from './ManageAccessControlDrawer';
 
 import type { APIError, Database } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
@@ -93,7 +93,7 @@ export const AccessControls = (props: Props) => {
   const [accessControlToBeRemoved, setAccessControlToBeRemoved] =
     React.useState<null | string>(null);
 
-  const [addAccessControlDrawerOpen, setAddAccessControlDrawerOpen] =
+  const [manageAccessControlDrawerOpen, setManageAccessControlDrawerOpen] =
     React.useState<boolean>(false);
 
   const { isPending: databaseUpdating, mutateAsync: updateDatabase } =
@@ -176,7 +176,7 @@ export const AccessControls = (props: Props) => {
           className={classes.addAccessControlBtn}
           data-testid="button-access-control"
           disabled={disabled}
-          onClick={() => setAddAccessControlDrawerOpen(true)}
+          onClick={() => setManageAccessControlDrawerOpen(true)}
           variant="secondary"
         >
           Manage Access
@@ -197,10 +197,10 @@ export const AccessControls = (props: Props) => {
           address.
         </Typography>
       </ConfirmationDialog>
-      <AddAccessControlDrawer
+      <ManageAccessControlDrawer
         database={database}
-        onClose={() => setAddAccessControlDrawerOpen(false)}
-        open={addAccessControlDrawerOpen}
+        onClose={() => setManageAccessControlDrawerOpen(false)}
+        open={manageAccessControlDrawerOpen}
       />
     </>
   );
