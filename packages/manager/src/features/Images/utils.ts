@@ -4,6 +4,29 @@ import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
+import type { HiddenProps } from '@linode/ui';
+
+export interface ImageViewTableColConfig {
+  /** Column header */
+  header: React.ReactNode | string;
+
+  /** Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
+  hiddenOn?: Exclude<keyof HiddenProps, 'children'>;
+
+  /** Field name for sorting (required if sortable is `true`) */
+  label?: string;
+
+  /** Enable sorting for this column */
+  sortable?: boolean;
+}
+
+export type ImagesVariant = 'custom' | 'recovery' | 'shared';
+
+export interface ImagesSubTab {
+  isBeta?: boolean;
+  title: string;
+  variant: ImagesVariant;
+}
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
@@ -54,4 +77,40 @@ export const useIsPrivateImageSharingEnabled = () => {
 
   // @TODO Private Image Sharing: check for customer tag/account capability when it exists
   return { isPrivateImageSharingEnabled: flags.privateImageSharing ?? false };
+};
+
+/**
+ * Returns the index of the currently selected tab from an array of sub-tabs.
+ *
+ * @param subTabs - Array of sub-tabs with `variant` and `title` properties.
+ * @param tab - The variant of currently selected tab. Currently, this value comes from 'subType' query param on the Images Landing Page.
+ *
+ * @returns the index of the selected tab
+ */
+export const getImagesSubTabIndex = (
+  subTabs: ImagesSubTab[],
+  selectedTab: ImagesVariant | undefined
+) => {
+  if (selectedTab === undefined) {
+    return 0;
+  }
+
+  const tabIndex = subTabs.findIndex((tab) => tab.variant === selectedTab);
+
+  if (tabIndex === -1) {
+    return 0;
+  }
+
+  return tabIndex;
+};
+
+export const getImageTypeToSubType = (imageType: Image['type']) => {
+  switch (imageType) {
+    case 'automatic':
+      return 'recovery';
+    case 'manual':
+      return 'custom';
+    case 'shared':
+      return 'shared';
+  }
 };

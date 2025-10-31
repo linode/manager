@@ -568,5 +568,3 @@ export const ImagesLanding = () => {
     </>
   );
 };
-
-export default ImagesLanding;

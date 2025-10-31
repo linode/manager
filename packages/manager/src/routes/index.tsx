@@ -102,6 +102,7 @@ export const router = createRouter({
     isACLPEnabled: false,
     isDatabasesEnabled: false,
     isPlacementGroupsEnabled: false,
+    isPrivateImageSharingEnabled: false,
     profile: undefined,
     queryClient: new QueryClient(),
   },

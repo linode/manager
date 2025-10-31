@@ -10,6 +10,7 @@ import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { ErrorBoundaryFallback } from './features/ErrorBoundary/ErrorBoundaryFallback';
+import { useIsPrivateImageSharingEnabled } from './features/Images/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { router } from './routes';
 
@@ -22,6 +23,7 @@ export const Router = () => {
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
   const flags = useFlags();
 
   // Update the router's context
@@ -31,6 +33,7 @@ export const Router = () => {
       flags,
       globalErrors,
       isACLPEnabled,
+      isPrivateImageSharingEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
       profile,

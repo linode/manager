@@ -7,6 +7,7 @@ import {
   getStreamDescription,
 } from 'src/features/Delivery/deliveryUtils';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
+import { getImageTypeToSubType } from 'src/features/Images/utils';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 
 import type {
@@ -86,7 +87,7 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
             image.regions.length
           )}`,
     icon: 'image',
-    path: `/images?query="${image.label}"`,
+    path: `/images/images?subType=${getImageTypeToSubType(image.type)}&query="${image.label}"`,
     tags: image.tags,
   },
   entityType: 'image',
