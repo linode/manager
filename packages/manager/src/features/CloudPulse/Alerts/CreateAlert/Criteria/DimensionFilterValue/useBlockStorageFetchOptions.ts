@@ -44,7 +44,7 @@ export function useBlockStorageFetchOptions(
         ? supportedRegionIds.map((regionId) => ({
             region: regionId,
           }))
-        : [{ region: '' }],
+        : undefined,
   };
 
   const regionFilteredBuckets = getOfflineRegionFilteredResources(

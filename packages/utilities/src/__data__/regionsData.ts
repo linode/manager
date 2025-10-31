@@ -30,7 +30,13 @@ export const regions: Region[] = [
     status: 'ok',
     monitors: {
       alerts: ['Cloud Firewall', 'Object Storage', 'Block Storage'],
-      metrics: ['Block Storage', 'Object Storage'],
+      metrics: [
+        'Object Storage',
+        'Cloud Firewall',
+        'Linodes',
+        'Managed Databases',
+        'Block Storage',
+      ],
     },
   },
   {
@@ -117,6 +123,45 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: {
+      alerts: ['Linodes', 'Object Storage'],
+      metrics: [
+        'Object Storage',
+        'Cloud Firewall',
+        'Linodes',
+        'Managed Databases',
+      ],
+    },
+  },
+  {
+    capabilities: [
+      'Linodes',
+      'NodeBalancers',
+      'Block Storage',
+      'Object Storage',
+      'Kubernetes',
+      'Cloud Firewall',
+      'Vlans',
+      'VPCs',
+      'Managed Databases',
+      'Metadata',
+      'Premium Plans',
+      'Placement Group',
+      'Maintenance Policy',
+    ],
+    country: 'us',
+    id: 'us-iad-2',
+    label: 'Washington 2, DC',
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
+    resolvers: {
+      ipv4: '139.144.192.62,   139.144.192.60,   139.144.192.61,   139.144.192.53,   139.144.192.54,   139.144.192.67,   139.144.192.69,    139.144.192.66,   139.144.192.52,   139.144.192.68',
+      ipv6: '2600:3c05::f03c:93ff:feb6:43b6,   2600:3c05::f03c:93ff:feb6:4365,   2600:3c05::f03c:93ff:feb6:43c2,   2600:3c05::f03c:93ff:feb6:e441,   2600:3c05::f03c:93ff:feb6:94ef,   2600:3c05::f03c:93ff:feb6:94ba,   2600:3c05::f03c:93ff:feb6:94a8,   2600:3c05::f03c:93ff:feb6:9413,   2600:3c05::f03c:93ff:feb6:9443,   2600:3c05::f03c:93ff:feb6:94e0',
+    },
+    site_type: 'core',
+    status: 'ok',
     monitors: { alerts: ['Linodes', 'Object Storage'], metrics: ['Linodes'] },
   },
   {
@@ -135,7 +180,7 @@ export const regions: Region[] = [
       'Placement Group',
     ],
     country: 'no',
-    id: 'no-east',
+    id: 'no-osl-1',
     label: 'Oslo',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
@@ -177,7 +222,15 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Cloud Firewall'], metrics: [] },
+    monitors: {
+      alerts: ['Cloud Firewall'],
+      metrics: [
+        'Linodes',
+        'Managed Databases',
+        'Cloud Firewall',
+        'NodeBalancers',
+      ],
+    },
   },
   {
     capabilities: [
@@ -610,7 +663,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: { alerts: ['Linodes', 'Block Storage'], metrics: [] },
+    monitors: { alerts: ['Linodes', 'Block Storage'], metrics: ['NodeBalancers'] },
   },
   {
     capabilities: [
