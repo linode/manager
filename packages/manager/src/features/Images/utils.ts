@@ -4,12 +4,19 @@ import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
-import type { Hidden } from '@linode/ui';
+import type { HiddenProps } from '@linode/ui';
 
 export interface ImageViewTableColConfig {
+  /** Column header */
   header: React.ReactNode | string;
-  hiddenProps?: React.ComponentProps<typeof Hidden>;
-  label?: string; // Field name (used for sorting)
+
+  /** Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
+  hiddenOn?: Exclude<keyof HiddenProps, 'children'>;
+
+  /** Field name for sorting (required if sortable is `true`) */
+  label?: string;
+
+  /** Enable sorting for this column */
   sortable?: boolean;
 }
 

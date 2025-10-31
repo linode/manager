@@ -44,7 +44,6 @@ interface ImagesTableProps {
   handleOrderChange: (newOrderBy: string, newOrder: Order) => void;
   handlers: ImageHandlers;
   headerProps?: HeaderProps;
-  hideActionMenu?: boolean;
   images: Image[];
   order: Order;
   orderBy: string;
@@ -89,7 +88,6 @@ export const ImagesTable = (props: ImagesTableProps) => {
     pagination,
     eventCategory,
     emptyMessage,
-    hideActionMenu,
   } = props;
 
   const { classes } = useStyles();
@@ -136,8 +134,8 @@ export const ImagesTable = (props: ImagesTableProps) => {
         <TableHead>
           <TableRow>
             {columns.map((col, idx) => {
-              if (col.sortable && col.label) {
-                return (
+              const cell =
+                col.sortable && col.label ? (
                   <TableSortCell
                     active={orderBy === col.label}
                     direction={order}
@@ -147,16 +145,19 @@ export const ImagesTable = (props: ImagesTableProps) => {
                   >
                     {col.header}
                   </TableSortCell>
+                ) : (
+                  <TableCell key={idx}>{col.header}</TableCell>
                 );
-              } else {
-                return (
-                  <Hidden key={idx} {...col.hiddenProps}>
-                    <TableCell>{col.header}</TableCell>
-                  </Hidden>
-                );
-              }
+
+              return col.hiddenOn ? (
+                <Hidden key={idx} {...{ [col.hiddenOn]: true }}>
+                  {cell}
+                </Hidden>
+              ) : (
+                cell
+              );
             })}
-            {!hideActionMenu && <TableCell />}
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

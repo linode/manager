@@ -34,49 +34,49 @@ export interface ImageConfig {
   type: Image['type'];
 }
 
-const CUSTOM_IMAGES_TABLE_COLUMNS = [
+const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
   { header: 'Image', label: 'label', sortable: true },
   {
     header: 'Status',
-    hiddenProps: { smDown: true },
+    hiddenOn: 'smDown',
   },
   {
     header: 'Replicated in',
-    hiddenProps: { smDown: true },
+    hiddenOn: 'smDown',
   },
   { header: 'Original Image', label: 'size', sortable: true },
   {
     header: 'All Replicas',
-    hiddenProps: { mdDown: true },
+    hiddenOn: 'mdDown',
   },
   {
     header: 'Created',
     label: 'created',
     sortable: true,
-    hiddenProps: { mdDown: true },
+    hiddenOn: 'mdDown',
   },
   {
     header: 'Image ID',
-    hiddenProps: { mdDown: true },
+    hiddenOn: 'mdDown',
   },
 ];
 
-const RECOVERY_IMAGES_TABLE_COLUMNS = [
+const RECOVERY_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
   { header: 'Image', label: 'label', sortable: true },
   {
     header: 'Status',
-    hiddenProps: { smDown: true },
+    hiddenOn: 'smDown',
   },
   { header: 'Size', label: 'size', sortable: true },
   {
     header: 'Created',
     label: 'created',
     sortable: true,
-    hiddenProps: { smDown: true },
+    hiddenOn: 'smDown',
   },
   {
     header: 'Expires',
-    hiddenProps: { smDown: true },
+    hiddenOn: 'smDown',
   },
 ];
 
