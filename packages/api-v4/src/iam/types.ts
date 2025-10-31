@@ -373,6 +373,7 @@ export type NodeBalancerAdmin =
 /** Permissions associated with the "nodebalancer_contributor" role. */
 export type NodeBalancerContributor =
   | 'create_nodebalancer_config'
+  | 'create_nodebalancer_config_node'
   | 'rebuild_nodebalancer_config'
   | 'update_nodebalancer'
   | 'update_nodebalancer_config'
