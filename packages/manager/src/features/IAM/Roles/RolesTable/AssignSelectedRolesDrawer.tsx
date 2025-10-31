@@ -179,7 +179,7 @@ export const AssignSelectedRolesDrawer = ({
             })}
           >
             <Typography mb={theme.spacingFunction(8)} variant="h3">
-              Users
+              User
             </Typography>
 
             <Controller
