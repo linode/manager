@@ -1,20 +1,20 @@
+import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
 import { CircleProgress, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { useAllAccountEntities } from 'src/queries/entities/entities';
-
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
-import { NO_ASSIGNED_ENTITIES_TEXT } from '../../Shared/constants';
+import { NO_ASSIGNED_DEFAULT_ENTITIES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultEntityAccess = () => {
-  const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
-    {}
-  );
+  const { data: defaultAccess, isLoading: defaultAccessLoading } =
+    useGetDefaultDelegationAccessQuery({ enabled: true });
 
-  const hasAssignedEntities = entities ? entities.length > 0 : false;
+  const hasAssignedEntities = defaultAccess
+    ? defaultAccess.entity_access.length > 0
+    : false;
 
-  if (entitiesLoading) {
+  if (defaultAccessLoading) {
     return <CircleProgress />;
   }
 
@@ -38,7 +38,7 @@ export const DefaultEntityAccess = () => {
       ) : (
         <NoAssignedRoles
           hasAssignNewRoleDrawer={false}
-          text={NO_ASSIGNED_ENTITIES_TEXT}
+          text={NO_ASSIGNED_DEFAULT_ENTITIES_TEXT}
         />
       )}
     </Paper>
