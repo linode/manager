@@ -175,7 +175,7 @@ export const ImagesView = (props: Props) => {
         label="Search"
         onSearch={onSearch}
         placeholder="Search Images"
-        value={search.query}
+        value={search.query ?? ''}
       />
       <ImagesTable
         columns={config.columns}

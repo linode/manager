@@ -53,7 +53,7 @@ export interface DebouncedSearchProps extends TextFieldProps {
   /**
    * Value of the input.
    */
-  value?: string;
+  value: string;
 }
 
 export const DebouncedSearchTextField = React.memo(
@@ -103,8 +103,8 @@ export const DebouncedSearchTextField = React.memo(
 
     // Synchronize the internal state with the prop value when the value prop changes.
     React.useEffect(() => {
-      if (value !== textFieldValue) {
-        setTextFieldValue(value ?? '');
+      if (value && value !== textFieldValue) {
+        setTextFieldValue(value);
       }
     }, [value]);
 
