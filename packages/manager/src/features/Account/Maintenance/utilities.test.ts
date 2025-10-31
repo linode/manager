@@ -132,5 +132,25 @@ describe('Account Maintenance utilities', () => {
       const label = getUpcomingRelativeLabel(m, policies);
       expect(label).toBe('in 2 days 16 hours');
     });
+
+    it('shows exact minutes when under one hour', () => {
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        // NOW is 12:00Z; start in 37 minutes
+        start_time: '2025-10-27T12:37:00.000Z',
+      };
+      const label = getUpcomingRelativeLabel(m, policies);
+      expect(label).toBe('in 37 minutes');
+    });
+
+    it('shows seconds when under one minute', () => {
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        // NOW is 12:00Z; start in 30 seconds
+        start_time: '2025-10-27T12:00:30.000Z',
+      };
+      const label = getUpcomingRelativeLabel(m, policies);
+      expect(label).toBe('in 30 seconds');
+    });
   });
 });

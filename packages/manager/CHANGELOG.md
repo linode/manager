@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - IAM Account Delegation Tables sorting & filtering ([#13003](https://github.com/linode/manager/pull/13003))
 - IAM - Ensure useEntitiesPermissions does not run for admin users ([#13012](https://github.com/linode/manager/pull/13012))
 - IAM Parent/Child: fix spacing and add notification ([#13013](https://github.com/linode/manager/pull/13013))
-- Upcoming maintenance "When" shows time until start using start_time or policy‑derived start; shows "X days Y hours" when ≥ 1 day ([#13020](https://github.com/linode/manager/pull/13020))
+- Upcoming maintenance "When" shows time until start using start_time or policy‑derived start; shows "X days Y hours" when ≥ 1 day ([#13020](https://github.com/linode/manager/pull/13020), [#13045](https://github.com/linode/manager/pull/13045))
 - Add self-service maintenance action in LinodeMaintenanceBanner for power_off_on and include all maintenance types in dev tools preset ([#13024](https://github.com/linode/manager/pull/13024))
 - IAM: Linodes without required permissions visible and selectable in Assign/Unassign Linodes selector ([#13030](https://github.com/linode/manager/pull/13030))
 - Enhance `enabled` checks for queries ran within `useQueryWithPermissions` ([#13039](https://github.com/linode/manager/pull/13039))

@@ -1,6 +1,10 @@
 ## [2025-11-04] - v0.152.0
 
 
+### Changed:
+
+- Change `/linode/instances/<id>/clone` endpoint to use `v4beta` ([#13045](https://github.com/linode/manager/pull/13045))
+
 ### Upcoming Features:
 
 - Add endpoints for `/v4/images/sharegroups/members` and `/v4/images/sharegroups/tokens` ([#12984](https://github.com/linode/manager/pull/12984))

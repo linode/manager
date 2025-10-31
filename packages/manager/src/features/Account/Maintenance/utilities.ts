@@ -83,9 +83,17 @@ export const deriveMaintenanceStartISO = (
 
 /**
  * Build a user-friendly relative label for the Upcoming table.
- * - Prefers the actual/derived start time to express time until maintenance
- * - Falls back to the notice relative time when start cannot be determined
+ *
+ * Behavior:
+ * - Prefers the actual or policy-derived start time to express time until maintenance
+ * - Falls back to the notice relative time when the start cannot be determined
  * - Avoids day-only rounding by showing days + hours when >= 1 day
+ *
+ * Formatting rules:
+ * - "in X days Y hours" when >= 1 day
+ * - "in X hours" when >= 1 hour and < 1 day
+ * - "in N minutes" when < 1 hour
+ * - "in N seconds" when < 1 minute
  */
 export const getUpcomingRelativeLabel = (
   maintenance: AccountMaintenance,
@@ -107,18 +115,39 @@ export const getUpcomingRelativeLabel = (
     return startDT.toRelative() ?? '—';
   }
 
-  // Avoid day-only rounding near boundaries by including hours alongside days
-  const diff = startDT.diff(now, ['days', 'hours']).toObject();
+  // Avoid day-only rounding near boundaries by including hours alongside days.
+  // For times under an hour, show exact minutes remaining; under a minute, show seconds.
+  const diff = startDT
+    .diff(now, ['days', 'hours', 'minutes', 'seconds'])
+    .toObject();
   let days = Math.floor(diff.days ?? 0);
-  let hours = Math.round(diff.hours ?? 0);
+  let hours = Math.floor(diff.hours ?? 0);
+  let minutes = Math.round(diff.minutes ?? 0);
+  const seconds = Math.round(diff.seconds ?? 0);
+
+  // Normalize minute/hour boundaries
+  if (minutes === 60) {
+    hours += 1;
+    minutes = 0;
+  }
   if (hours === 24) {
     days += 1;
     hours = 0;
   }
+
   if (days >= 1) {
     const dayPart = pluralize('day', 'days', days);
     const hourPart = hours ? ` ${pluralize('hour', 'hours', hours)}` : '';
     return `in ${dayPart}${hourPart}`;
   }
-  return startDT.toRelative({ unit: 'hours', round: true }) ?? '—';
+
+  if (hours >= 1) {
+    return `in ${pluralize('hour', 'hours', hours)}`;
+  }
+
+  // Under one hour: show minutes; under one minute: show seconds
+  if (minutes === 0) {
+    return `in ${pluralize('second', 'seconds', Math.max(0, seconds))}`;
+  }
+  return `in ${pluralize('minute', 'minutes', Math.max(0, minutes))}`;
 };
