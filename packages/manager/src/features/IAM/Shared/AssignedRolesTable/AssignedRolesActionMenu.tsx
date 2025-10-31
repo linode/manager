@@ -2,11 +2,15 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+
 import type { ExtendedRoleView } from '../types';
 import type { PickPermissions } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
-type RolesActionsPermissions = PickPermissions<'is_account_admin'>;
+type RolesActionsPermissions = PickPermissions<
+  'is_account_admin' | 'update_default_delegate_access'
+>;
 interface Props {
   handleChangeRole: (role: ExtendedRoleView) => void;
   handleUnassignRole: (role: ExtendedRoleView) => void;
@@ -24,24 +28,31 @@ export const AssignedRolesActionMenu = ({
   handleViewEntities,
   role,
 }: Props) => {
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
+
   const accountMenu: Action[] = [
     {
-      disabled: !permissions.is_account_admin,
+      disabled: !permissionToCheck,
       onClick: () => {
         handleChangeRole(role);
       },
       title: 'Change Role',
-      tooltip: !permissions.is_account_admin
+      tooltip: !permissionToCheck
         ? 'You do not have permission to change this role.'
         : undefined,
     },
     {
-      disabled: !permissions.is_account_admin,
+      disabled: !permissionToCheck,
       onClick: () => {
         handleUnassignRole(role);
       },
       title: 'Unassign Role',
-      tooltip: !permissions.is_account_admin
+      tooltip: !permissionToCheck
         ? 'You do not have permission to unassign this role.'
         : undefined,
     },
@@ -53,8 +64,8 @@ export const AssignedRolesActionMenu = ({
       title: 'View Entities',
     },
     {
-      disabled: !permissions.is_account_admin,
-      tooltip: !permissions.is_account_admin
+      disabled: !permissionToCheck,
+      tooltip: !permissionToCheck
         ? 'You do not have permission to update this role.'
         : undefined,
       onClick: () => {
@@ -63,8 +74,8 @@ export const AssignedRolesActionMenu = ({
       title: 'Update List of Entities',
     },
     {
-      disabled: !permissions.is_account_admin,
-      tooltip: !permissions.is_account_admin
+      disabled: !permissionToCheck,
+      tooltip: !permissionToCheck
         ? 'You do not have permission to change this role.'
         : undefined,
       onClick: () => {
@@ -73,8 +84,8 @@ export const AssignedRolesActionMenu = ({
       title: 'Change Role',
     },
     {
-      disabled: !permissions.is_account_admin,
-      tooltip: !permissions.is_account_admin
+      disabled: !permissionToCheck,
+      tooltip: !permissionToCheck
         ? 'You do not have permission to unassign this role.'
         : undefined,
       onClick: () => {

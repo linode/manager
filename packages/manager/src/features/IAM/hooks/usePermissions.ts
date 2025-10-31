@@ -218,7 +218,8 @@ export function usePermissions<
     ? toPermissionMap(
         permissionsToCheck,
         usersPermissions!,
-        profile?.restricted
+        profile?.restricted,
+        accessType
       )
     : fromGrants(
         accessType,
