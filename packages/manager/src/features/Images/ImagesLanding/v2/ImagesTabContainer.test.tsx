@@ -11,16 +11,11 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 import { ImagesTabContainer } from './ImagesTabContainer';
 
 const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({ privateImageSharing: false }),
   useLocation: vi.fn(),
   usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
   useQueryWithPermissions: vi.fn().mockReturnValue({}),
   useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
   useSearch: vi.fn(),
-}));
-
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: queryMocks.useFlags,
 }));
 
 // Mock ImagesCustom component so it doesn't lazy load in tests
@@ -388,45 +383,13 @@ describe('ImagesTabContainer component', () => {
     });
   });
 
-  it("should render 'Shared with me' tab only if 'privateImageSharing' feature flag enabled", async () => {
-    queryMocks.useFlags.mockReturnValue({ privateImageSharing: true });
-
-    const { getByText } = renderWithTheme(<ImagesTabContainer />, {
-      initialRoute: '/images',
-    });
-
-    expect(getByText('Shared with me')).toBeVisible();
-  });
-
-  it("should not render 'Shared with me' tab if 'privateImageSharing' feature flag disabled", async () => {
-    queryMocks.useFlags.mockReturnValue({ privateImageSharing: false });
-
+  it('should not render Custom, Shared and Reovery tabs under Images Tab', async () => {
     const { getByText, queryByText } = renderWithTheme(<ImagesTabContainer />, {
       initialRoute: '/images',
     });
 
     expect(getByText('My custom images')).toBeVisible();
-    expect(queryByText('Shared with me')).toBeNull(); // Not visible
+    expect(queryByText('Shared with me')).toBeVisible();
     expect(getByText('Recovery images')).toBeVisible();
   });
-
-  // @TODO - check if we need this test or not
-  // it('should render images landing empty state', async () => {
-  //   server.use(
-  //     http.get('*/images', () => {
-  //       return HttpResponse.json(makeResourcePage([]));
-  //     })
-  //   );
-  //   const { getByText, queryByTestId } = renderWithTheme(
-  //     <ImagesTabContainer />,
-  //     {
-  //       initialRoute: '/images',
-  //     }
-  //   );
-  //   const loadingElement = queryByTestId(loadingTestId);
-  //   await waitForElementToBeRemoved(loadingElement);
-  //   expect(
-  //     getByText((text) => text.includes('Store custom Linux images'))
-  //   ).toBeVisible();
-  // });
 });

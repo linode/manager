@@ -1,8 +1,10 @@
 import { useImagesQuery } from '@linode/queries';
+import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -21,14 +23,12 @@ import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { Filter } from '@linode/api-v4';
 
 interface Props {
-  filter: Filter;
   handlers: ImageHandlers;
-  onFetchingChange?: (fetching: boolean) => void;
   variant: Exclude<ImagesVariant, 'shared'>;
 }
 
 export const ImagesView = (props: Props) => {
-  const { filter, handlers, onFetchingChange, variant } = props;
+  const { handlers, variant } = props;
 
   const config = IMAGES_CONFIG[variant];
 
@@ -37,6 +37,33 @@ export const ImagesView = (props: Props) => {
 
   const { data: permissions } = usePermissions('account', ['create_image']);
   const canCreateImage = permissions?.create_image;
+
+  /**
+   * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
+   *
+   * Some fields like `status` and `region` can't be used in complex filters using '+or' / '+and'
+   *
+   * Using `tags` in a '+or' is currently broken. See ARB-5792
+   */
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(
+    search.query,
+    {
+      // Because Images have an array of region objects, we need to transform
+      // search queries like "region: us-east" to { regions: { region: "us-east" } }
+      // rather than the default behavior which is { region: { '+contains': "us-east" } }
+      filterShapeOverrides: {
+        '+contains': {
+          field: 'region',
+          filter: (value) => ({ regions: { region: value } }),
+        },
+        '+eq': {
+          field: 'region',
+          filter: (value) => ({ regions: { region: value } }),
+        },
+      },
+      searchableFieldsWithoutOperator: ['label', 'tags'],
+    }
+  );
 
   const pagination = usePaginationV2({
     currentRoute: '/images/images',
@@ -109,10 +136,16 @@ export const ImagesView = (props: Props) => {
   // Private images with the associated events tied in.
   const imagesEvents = getEventsForImages(images?.data ?? [], imageEvents);
 
-  // Notifies parent (search) whenever fetching changes
-  React.useEffect(() => {
-    onFetchingChange?.(imagesIsFetching);
-  }, [imagesIsFetching, onFetchingChange]);
+  const onSearch = (query: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: query || undefined,
+      }),
+      to: '/images/images',
+    });
+  };
 
   if (imagesLoading) {
     return <CircleProgress />;
@@ -128,44 +161,61 @@ export const ImagesView = (props: Props) => {
   }
 
   return (
-    <ImagesTable
-      columns={config.columns}
-      emptyMessage={config.emptyMessage}
-      error={imagesError}
-      eventCategory={config.eventCategory}
-      events={imagesEvents}
-      handleOrderChange={handleImagesOrderChange}
-      handlers={handlers}
-      headerProps={{
-        title: config.title,
-        buttonProps: config.buttonProps
-          ? {
-              buttonText: config.buttonProps.buttonText,
-              onButtonClick: () =>
-                navigate({
-                  search: () => ({}),
-                  to: config.buttonProps?.navigateTo ?? '/',
-                }),
-              disabled: !canCreateImage,
-              tooltipText: !canCreateImage
-                ? config.buttonProps.disabledToolTipText
-                : undefined,
-            }
-          : undefined,
-        docsLink: config.docsLink,
-        description: config.description,
-      }}
-      images={images?.data ?? []}
-      order={imagesOrder}
-      orderBy={imagesOrderBy}
-      pagination={{
-        page: pagination.page,
-        pageSize: pagination.pageSize,
-        count: images?.results ?? 0,
-        handlePageChange: pagination.handlePageChange,
-        handlePageSizeChange: pagination.handlePageSizeChange,
-      }}
-      query={search.query}
-    />
+    <>
+      <DebouncedSearchTextField
+        clearable
+        containerProps={{
+          sx: {
+            mb: 2,
+          },
+        }}
+        errorText={searchParseError?.message}
+        hideLabel
+        isSearching={imagesIsFetching}
+        label="Search"
+        onSearch={onSearch}
+        placeholder="Search Images"
+        value={search.query}
+      />
+      <ImagesTable
+        columns={config.columns}
+        emptyMessage={config.emptyMessage}
+        error={imagesError}
+        eventCategory={config.eventCategory}
+        events={imagesEvents}
+        handleOrderChange={handleImagesOrderChange}
+        handlers={handlers}
+        headerProps={{
+          title: config.title,
+          buttonProps: config.buttonProps
+            ? {
+                buttonText: config.buttonProps.buttonText,
+                onButtonClick: () =>
+                  navigate({
+                    search: () => ({}),
+                    to: config.buttonProps?.navigateTo ?? '/',
+                  }),
+                disabled: !canCreateImage,
+                tooltipText: !canCreateImage
+                  ? config.buttonProps.disabledToolTipText
+                  : undefined,
+              }
+            : undefined,
+          docsLink: config.docsLink,
+          description: config.description,
+        }}
+        images={images?.data ?? []}
+        order={imagesOrder}
+        orderBy={imagesOrderBy}
+        pagination={{
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          count: images?.results ?? 0,
+          handlePageChange: pagination.handlePageChange,
+          handlePageSizeChange: pagination.handlePageSizeChange,
+        }}
+        query={search.query}
+      />
+    </>
   );
 };

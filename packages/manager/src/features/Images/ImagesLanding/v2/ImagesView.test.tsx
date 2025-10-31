@@ -90,7 +90,7 @@ describe('ImagesView component', () => {
       );
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        <ImagesView handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -126,7 +126,7 @@ describe('ImagesView component', () => {
       );
 
       const { findByText } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        <ImagesView handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -160,7 +160,7 @@ describe('ImagesView component', () => {
       );
 
       const { findByLabelText } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        <ImagesView handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -194,7 +194,7 @@ describe('ImagesView component', () => {
       });
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        <ImagesView handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -218,7 +218,7 @@ describe('ImagesView component', () => {
       });
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="custom" />,
+        <ImagesView handlers={mockHandlers} variant="custom" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=custom'],
@@ -255,7 +255,7 @@ describe('ImagesView component', () => {
       );
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="recovery" />,
+        <ImagesView handlers={mockHandlers} variant="recovery" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=recovery'],
@@ -294,7 +294,7 @@ describe('ImagesView component', () => {
       );
 
       const { findByText } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="recovery" />,
+        <ImagesView handlers={mockHandlers} variant="recovery" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=recovery'],
@@ -328,7 +328,7 @@ describe('ImagesView component', () => {
       );
 
       const { findByLabelText } = renderWithTheme(
-        <ImagesView filter={{}} handlers={mockHandlers} variant="recovery" />,
+        <ImagesView handlers={mockHandlers} variant="recovery" />,
         {
           initialRoute: '/images/images',
           initialEntries: ['/images/images?subType=recovery'],

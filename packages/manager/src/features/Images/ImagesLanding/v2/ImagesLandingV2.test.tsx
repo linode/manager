@@ -4,14 +4,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImagesLandingV2 } from './ImagesLandingV2';
 
-const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({ privateImageSharing: false }),
-}));
-
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: queryMocks.useFlags,
-}));
-
 // Mock ImagesTabContainer component so it doesn't lazy load in tests
 vi.mock('./ImagesTabContainer', () => ({
   ImagesTabContainer: () => <div>ImagesTabContainer Component</div>,

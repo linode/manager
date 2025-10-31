@@ -1,11 +1,9 @@
 import { imageQueries, useImageQuery } from '@linode/queries';
-import { getAPIFilterFromQuery } from '@linode/search';
 import { BetaChip, Drawer, Notice, Stack } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
@@ -35,39 +33,7 @@ export const ImagesTabContainer = () => {
 
   const search = useSearch({ from: '/images' });
 
-  const [manualImagesIsFetching, setManualImagesIsFetching] =
-    React.useState(false);
-  const [automaticImagesIsFetching, setAutomaticImagesIsFetching] =
-    React.useState(false);
-
   const queryClient = useQueryClient();
-
-  /**
-   * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
-   *
-   * Some fields like `status` and `region` can't be used in complex filters using '+or' / '+and'
-   *
-   * Using `tags` in a '+or' is currently broken. See ARB-5792
-   */
-  const { error: searchParseError, filter } = getAPIFilterFromQuery(
-    search.query,
-    {
-      // Because Images have an array of region objects, we need to transform
-      // search queries like "region: us-east" to { regions: { region: "us-east" } }
-      // rather than the default behavior which is { region: { '+contains': "us-east" } }
-      filterShapeOverrides: {
-        '+contains': {
-          field: 'region',
-          filter: (value) => ({ regions: { region: value } }),
-        },
-        '+eq': {
-          field: 'region',
-          filter: (value) => ({ regions: { region: value } }),
-        },
-      },
-      searchableFieldsWithoutOperator: ['label', 'tags'],
-    }
-  );
 
   const {
     data: selectedImage,
@@ -121,17 +87,6 @@ export const ImagesTabContainer = () => {
     });
   };
 
-  const onSearch = (query: string) => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        page: undefined,
-        query: query || undefined,
-      }),
-      to: '/images/images',
-    });
-  };
-
   const handlers: ImageHandlers = {
     onCancelFailed: onCancelFailedClick,
     onDelete: handleDelete,
@@ -140,8 +95,6 @@ export const ImagesTabContainer = () => {
     onManageRegions: handleManageRegions,
     onRebuild: handleRebuild,
   };
-
-  const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
   const subTabs: ImagesSubTab[] = [
     { variant: 'custom', title: 'My custom images' },
@@ -156,13 +109,15 @@ export const ImagesTabContainer = () => {
   const subTabIndex = getImagesSubTabIndex(subTabs, search.subType);
 
   const onTabChange = (index: number) => {
-    // Update the "subType" query param. (This switches between "My custom images", "Shared with me" and "Recovery images" tabs).
+    // - Update the "subType" query param.
+    // - This switches between "My custom images", "Shared with me" and "Recovery images" tabs.
     navigate({
       to: `/images/images`,
       search: (prev) => ({
         ...prev,
         subType: subTabs[index]['variant'],
-        // Reset pagination and sorting query params
+        // Reset search, pagination and sorting query params
+        query: undefined,
         page: undefined,
         pageSize: undefined,
         'manual-order': undefined,
@@ -175,16 +130,6 @@ export const ImagesTabContainer = () => {
 
   return (
     <Stack spacing={3}>
-      <DebouncedSearchTextField
-        clearable
-        errorText={searchParseError?.message}
-        hideLabel
-        isSearching={isFetching}
-        label="Search"
-        onSearch={onSearch}
-        placeholder="Search Images"
-        value={search.query}
-      />
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
           {subTabs.map((tab) => (
@@ -198,12 +143,7 @@ export const ImagesTabContainer = () => {
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.variant}-content`}>
                 {tab.variant === 'custom' && (
-                  <ImagesView
-                    filter={filter}
-                    handlers={handlers}
-                    onFetchingChange={setManualImagesIsFetching}
-                    variant="custom"
-                  />
+                  <ImagesView handlers={handlers} variant="custom" />
                 )}
                 {tab.variant === 'shared' && (
                   <Notice variant="info">
@@ -211,19 +151,13 @@ export const ImagesTabContainer = () => {
                   </Notice>
                 )}
                 {tab.variant === 'recovery' && (
-                  <ImagesView
-                    filter={filter}
-                    handlers={handlers}
-                    onFetchingChange={setAutomaticImagesIsFetching}
-                    variant="recovery"
-                  />
+                  <ImagesView handlers={handlers} variant="recovery" />
                 )}
               </SafeTabPanel>
             ))}
           </TabPanels>
         </React.Suspense>
       </Tabs>
-
       <EditImageDrawer
         image={selectedImage}
         imageError={selectedImageError}
