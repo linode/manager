@@ -206,9 +206,9 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
         cy.get('[data-qa="region-tabls"]').within(() => {
           // Verify column headers
-          cy.get('[data-qa-header="Region"]').should('contain.text', 'Region');
+          cy.get('[data-qa-header="Region"]').should('have.text', 'Region');
           cy.get('[data-qa-header="associated-entities"]').should(
-            'contain.text',
+            'have.text',
             'Associated Entities'
           );
 
