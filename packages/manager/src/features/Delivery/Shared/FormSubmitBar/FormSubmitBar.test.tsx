@@ -82,7 +82,7 @@ describe('StreamFormSubmitBar', () => {
     describe('and in edit mode', () => {
       it('should render enabled Edit Stream button', async () => {
         renderComponent('stream', 'edit');
-        const submitButton = screen.getByText('Edit Stream');
+        const submitButton = screen.getByText('Save');
 
         expect(submitButton).toBeEnabled();
       });
@@ -111,7 +111,7 @@ describe('StreamFormSubmitBar', () => {
     describe('and in edit mode', () => {
       it('should render enabled Edit Destination button', async () => {
         renderComponent('destination', 'edit');
-        const submitButton = screen.getByText('Edit Destination');
+        const submitButton = screen.getByText('Save');
 
         expect(submitButton).toBeEnabled();
       });

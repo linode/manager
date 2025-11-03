@@ -109,6 +109,9 @@ const renderMaintenanceFields = (
       <option value="reboot">Reboot</option>
       <option value="cold_migration">Cold Migration</option>
       <option value="live_migration">Live Migration</option>
+      <option value="migrate">Migrate</option>
+      <option value="power_off_on">Power Off / On</option>
+      <option value="volume_migration">Volume Migration</option>
     </select>
   </label>,
 

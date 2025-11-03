@@ -71,6 +71,7 @@ interface LinodeInterfacesFlag extends BaseFeatureFlag {
 
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
+  hasQueue?: boolean;
   new: boolean;
 }
 

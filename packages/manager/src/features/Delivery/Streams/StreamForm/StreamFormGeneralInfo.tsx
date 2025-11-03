@@ -1,5 +1,13 @@
 import { streamType } from '@linode/api-v4';
-import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Paper,
+  SelectedIcon,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -11,7 +19,11 @@ import {
 import { streamTypeOptions } from 'src/features/Delivery/Shared/types';
 
 import type { StreamAndDestinationFormType } from './types';
-import type { FormMode } from 'src/features/Delivery/Shared/types';
+import type { StreamType } from '@linode/api-v4';
+import type {
+  AutocompleteOption,
+  FormMode,
+} from 'src/features/Delivery/Shared/types';
 
 interface StreamFormGeneralInfoProps {
   mode: FormMode;
@@ -24,12 +36,22 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
   const theme = useTheme();
   const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
 
+  const capitalizedMode = capitalize(mode);
   const description = {
     audit_logs:
       'Configuration and authentication audit logs that capture state-changing operations (mutations) on Linode cloud infrastructure resources and IAM authentication events. Delivered in cloudevents.io JSON format.',
     lke_audit_logs:
       'Kubernetes API server audit logs that capture state-changing operations (mutations) on LKE-E cluster resources.',
   };
+  const pendoIds = {
+    audit_logs: `Logs Delivery Streams ${capitalizedMode}-Audit Logs`,
+    lke_audit_logs: `Logs Delivery Streams ${capitalizedMode}-Kubernetes Audit Logs`,
+  };
+  const streamTypeOptionsWithPendo: AutocompleteOption[] =
+    streamTypeOptions.map((option) => ({
+      ...option,
+      pendoId: pendoIds[option.value as StreamType],
+    }));
 
   const selectedStreamType = useWatch({
     control,
@@ -53,6 +75,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
         render={({ field, fieldState }) => (
           <TextField
             aria-required
+            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Name`}
             errorText={fieldState.error?.message}
             label="Name"
             onBlur={field.onBlur}
@@ -69,6 +92,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
         name="stream.type"
         render={({ field, fieldState }) => (
           <Autocomplete
+            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Stream Type`}
             disableClearable
             disabled={isFormInEditMode(mode)}
             errorText={fieldState.error?.message}
@@ -78,7 +102,26 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
               field.onChange(value);
               updateStreamDetails(value);
             }}
-            options={streamTypeOptions}
+            options={streamTypeOptionsWithPendo}
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li
+                  {...props}
+                  data-pendo-id={option.pendoId}
+                  data-qa-option
+                  key={props.key}
+                >
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                    }}
+                  >
+                    {option.label}
+                  </Box>
+                  <SelectedIcon visible={selected} />
+                </li>
+              );
+            }}
             value={getStreamTypeOption(field.value)}
           />
         )}
