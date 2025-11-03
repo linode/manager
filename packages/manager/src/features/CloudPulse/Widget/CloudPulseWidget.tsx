@@ -226,7 +226,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const linodeFromVolumes = useBlockStorageFetchOptions({
     entities: entityIds,
     dimensionLabel: 'linode_id',
-    regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
+    regions: regions?.filter(({ id }) => id === region) ?? [],
     type: 'metrics',
     scope: 'entity',
     serviceType,
@@ -236,7 +236,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     () =>
       getFilteredDimensions({
         dimensions: availableMetrics?.dimensions ?? [],
-        linodes: linodesFetch ?? linodeFromVolumes,
+        linodes:
+          serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch,
         vpcs: vpcFetch,
         dimensionFilters,
       }),
