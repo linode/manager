@@ -1,6 +1,7 @@
 import { accountQueries, profileQueries } from '@linode/queries';
 import { queryOptions } from '@tanstack/react-query';
 import { createRoute, redirect } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
 
 import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
@@ -175,9 +176,21 @@ const iamUserNameRoute = createRoute({
       const isChildAccount = profile?.user_type === 'child';
 
       if (!profile.restricted && isChildAccount) {
-        const user = await context.queryClient.ensureQueryData(
-          queryOptions(accountQueries.users._ctx.user(username))
-        );
+        let user;
+        try {
+          user = await context.queryClient.ensureQueryData(
+            queryOptions(accountQueries.users._ctx.user(username))
+          );
+        } catch (error) {
+          enqueueSnackbar(error[0].reason, {
+            variant: 'error',
+          });
+          throw redirect({
+            to: '/account/users',
+            params: { username },
+            replace: true,
+          });
+        }
 
         const isChildAccount = profile?.user_type === 'child';
         const isDelegateUser = user?.user_type === 'delegate';
