@@ -22,6 +22,15 @@ const queryMocks = vi.hoisted(() => ({
   useMatch: vi.fn(() => ({})),
   useNavigate: vi.fn(() => navigate),
   usePreferences: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      delete_nodebalancer: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -76,5 +85,27 @@ describe('NodeBalancerDeleteDialog', () => {
 
     await userEvent.click(getByText('Cancel'));
     expect(navigate).toHaveBeenCalled();
+  });
+
+  it('enables inputs and buttons if there is a delete_nodebalancer permissions', () => {
+    const { getByTestId } = renderWithTheme(
+      <NodeBalancerDeleteDialog {...props} />
+    );
+
+    expect(getByTestId('textfield-input')).toBeEnabled();
+  });
+
+  it('disables inputs and buttons if no delete_nodebalancer permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_nodebalancer: false,
+      },
+    });
+    const { getByTestId } = renderWithTheme(
+      <NodeBalancerDeleteDialog {...props} />
+    );
+
+    expect(getByTestId('confirm')).toBeDisabled();
+    expect(getByTestId('textfield-input')).toBeDisabled();
   });
 });
