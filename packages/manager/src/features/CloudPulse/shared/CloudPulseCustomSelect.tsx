@@ -41,6 +41,8 @@ export interface CloudPulseCustomSelectProps {
    */
   clearDependentSelections?: string[];
 
+  dashboardId: number;
+
   /**
    * Last selected values from user preferences
    */
@@ -146,6 +148,7 @@ export const CloudPulseCustomSelect = React.memo(
       options,
       placeholder,
       preferences,
+      dashboardId,
       savePreferences,
       type,
       isOptional,
@@ -203,6 +206,7 @@ export const CloudPulseCustomSelect = React.memo(
         maxSelections,
         savePreferences,
         value,
+        dashboardId,
       });
       setResource(
         Array.isArray(filteredValue)
