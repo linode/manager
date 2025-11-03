@@ -129,6 +129,10 @@ export const usePreferencesToggle = <K extends keyof ManagerPreferences>({
   };
 };
 
+const preferenceToFilterKeyMap: Record<string, string> = {
+  resource_id: 'resources',
+};
+
 export const clearChildPreferences = (
   dashboardId: number,
   parentFilterKey: string
@@ -165,7 +169,7 @@ export const clearChildPreferences = (
       if (!clearedPreferences.has(childKey)) {
         clearedPreferences.add(childKey);
         filterKeyQueue.push(childKey);
-        response[childKey] = undefined;
+        response[preferenceToFilterKeyMap[childKey] ?? childKey] = undefined;
       }
     });
   }
