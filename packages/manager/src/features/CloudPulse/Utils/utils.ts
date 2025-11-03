@@ -5,10 +5,7 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
-import {
-  type FetchOptions,
-  valueFieldConfig,
-} from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
@@ -496,7 +493,7 @@ export const isValidFilter = (
       String(filter.value ?? ''),
       dimensionFieldConfig
     );
-  } else if (dimensionFieldConfig.type === 'textfield' || !dimension.values) {
+  } else if (dimensionFieldConfig.type === 'textfield') {
     return true;
   }
 

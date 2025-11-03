@@ -231,24 +231,32 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     scope: 'entity',
     serviceType,
   });
+  // Determine which fetch object is relevant for linodes
+  const activeLinodeFetch =
+    serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch;
 
-  const filteredSelections = React.useMemo(
-    () =>
-      getFilteredDimensions({
-        dimensions: availableMetrics?.dimensions ?? [],
-        linodes:
-          serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch,
-        vpcs: vpcFetch,
-        dimensionFilters,
-      }),
-    [
-      availableMetrics?.dimensions,
+  // Combine loading states
+  const isLoadingFilters = activeLinodeFetch.isLoading || vpcFetch.isLoading;
+
+  const filteredSelections = React.useMemo(() => {
+    if (isLoadingFilters) {
+      return dimensionFilters ?? [];
+    }
+
+    return getFilteredDimensions({
+      dimensions: availableMetrics?.dimensions ?? [],
+      linodes: activeLinodeFetch,
+      vpcs: vpcFetch,
       dimensionFilters,
-      linodeFromVolumes,
-      linodesFetch,
-      vpcFetch,
-    ]
-  );
+    });
+  }, [
+    activeLinodeFetch,
+    availableMetrics?.dimensions,
+    dimensionFilters,
+    isLoadingFilters,
+    vpcFetch,
+  ]);
+
   const convertToFilters = (
     selectedFilters: MetricsDimensionFilter[]
   ): Filters[] => {
@@ -444,10 +452,22 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   }, [availableMetrics?.dimensions, excludeDimensionFilters]);
 
   React.useEffect(() => {
-    if (filteredSelections.length !== (dimensionFilters?.length ?? 0)) {
+    if (
+      filteredSelections.length !== (dimensionFilters?.length ?? 0) &&
+      !linodesFetch.isLoading &&
+      !vpcFetch.isLoading &&
+      !linodeFromVolumes.isLoading
+    ) {
       handleDimensionFiltersChange(filteredSelections);
     }
-  }, [filteredSelections, dimensionFilters, handleDimensionFiltersChange]);
+  }, [
+    filteredSelections,
+    dimensionFilters,
+    handleDimensionFiltersChange,
+    linodesFetch.isLoading,
+    vpcFetch.isLoading,
+    linodeFromVolumes.isLoading,
+  ]);
   return (
     <GridLegacy container item lg={widget.size} xs={12}>
       <Stack
