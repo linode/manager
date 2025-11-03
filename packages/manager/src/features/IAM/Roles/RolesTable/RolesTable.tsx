@@ -3,6 +3,7 @@ import { capitalizeAllWords } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   sortRows,
@@ -59,8 +60,12 @@ const DEFAULT_PAGE_SIZE = 10;
 
 export const RolesTable = ({ roles = [] }: Props) => {
   const theme = useTheme();
-  // Filter string for the search bar
-  const [filterString, setFilterString] = React.useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { query } = useSearch({
+    strict: false,
+  });
+
   const [filterableEntityType, setFilterableEntityType] =
     useState<null | SelectOption>(ALL_ROLES_OPTION);
   const [sort, setSort] = useState<
@@ -94,10 +99,11 @@ export const RolesTable = ({ roles = [] }: Props) => {
     );
   };
 
-  const filteredRows = React.useMemo(
-    () => getFilteredRows(filterString, filterableEntityType?.value),
-    [roles, filterString, filterableEntityType]
-  );
+  const filteredRows = React.useMemo(() => {
+    if (!query) return roles;
+
+    return getFilteredRows(query, filterableEntityType?.value);
+  }, [roles, query, filterableEntityType]);
 
   // Get just the list of entity types from this list of roles, to be used in the selection filter
   const filterableOptions = React.useMemo(() => {
@@ -137,7 +143,10 @@ export const RolesTable = ({ roles = [] }: Props) => {
   };
 
   const handleTextFilter = (fs: string) => {
-    setFilterString(fs);
+    navigate({
+      to: location.pathname,
+      search: { query: fs !== '' ? fs : undefined },
+    });
     pagination.handlePageChange(1);
   };
 
@@ -199,7 +208,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
               label="Search"
               onSearch={handleTextFilter}
               placeholder="Search"
-              value={filterString}
+              value={query ?? ''}
             />
             <Select
               hideLabel
