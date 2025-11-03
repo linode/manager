@@ -13,6 +13,14 @@ import type {
 } from '@linode/api-v4';
 
 // Mock child components
+vi.mock('./BlockStorageDimensionFilterAutocomplete', () => ({
+  BlockStorageDimensionFilterAutocomplete: (props: any) => (
+    <div data-testid="blockstorage-autocomplete" {...props}>
+      BlockStorage Autocomplete
+    </div>
+  ),
+}));
+
 vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
   FirewallDimensionFilterAutocomplete: (props: any) => (
     <div data-testid="firewall-autocomplete" {...props}>
@@ -40,6 +48,9 @@ vi.mock('./DimensionFilterAutocomplete', () => ({
 const EQ: DimensionFilterOperatorType = 'eq';
 const IN: DimensionFilterOperatorType = 'in';
 const NB: CloudPulseServiceType = 'nodebalancer';
+const CF: CloudPulseServiceType = 'firewall';
+const OS: CloudPulseServiceType = 'objectstorage';
+const BS: CloudPulseServiceType = 'blockstorage';
 
 describe('<ValueFieldRenderer />', () => {
   const defaultProps = {
@@ -83,6 +94,7 @@ describe('<ValueFieldRenderer />', () => {
   it('renders FirewallDimensionFilterAutocomplete if config.useCustomFetch = firewall', () => {
     const props = {
       ...defaultProps,
+      serviceType: CF,
       dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'firewall'
       operator: IN,
     };
@@ -94,6 +106,7 @@ describe('<ValueFieldRenderer />', () => {
   it('renders ObjectStorageDimensionFilterAutocomplete if config.useCustomFetch = objectstorage', () => {
     const props = {
       ...defaultProps,
+      serviceType: OS,
       dimensionLabel: 'endpoint', // assume this is configured with useCustomFetch: 'objectstorage'
       operator: IN,
     };
@@ -102,6 +115,17 @@ describe('<ValueFieldRenderer />', () => {
     expect(screen.getByTestId('objectstorage-autocomplete')).toBeVisible();
   });
 
+  it('renders BlockStorageDimensionFilter if config.useCustomFetch = blockstorage', () => {
+    const props = {
+      ...defaultProps,
+      serviceType: BS,
+      dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'blockstorage'
+      operator: IN,
+    };
+
+    renderWithTheme(<ValueFieldRenderer {...props} />);
+    expect(screen.getByTestId('blockstorage-autocomplete')).toBeVisible();
+  });
   it('calls onChange when typing into TextField', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();

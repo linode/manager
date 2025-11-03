@@ -8,6 +8,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { PARENT_ENTITY_REGION, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterFirewallNodebalancers } from '../Utils/FilterBuilder';
 import { getAssociatedEntityType } from '../Utils/utils';
+import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, FilterValue } from '@linode/api-v4';
@@ -221,17 +222,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
           );
         }}
         textFieldProps={{
-          InputProps: {
-            sx: {
-              '::-webkit-scrollbar': {
-                display: 'none',
-              },
-              maxHeight: '55px',
-              msOverflowStyle: 'none',
-              overflow: 'auto',
-              scrollbarWidth: 'none',
-            },
-          },
+          ...CLOUD_PULSE_TEXT_FIELD_PROPS,
           optional: isOptional,
         }}
         value={selectedNodebalancers ?? []}
