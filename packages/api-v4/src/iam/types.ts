@@ -370,8 +370,8 @@ export type LinodeViewer =
   | 'view_linode_stats';
 
 /** Permissions associated with the "nodebalancer_admin" role. */
-// TODO: UIE-9154 - verify mapping for Nodebalancer as this is not migrated yet
 export type NodeBalancerAdmin =
+  | 'create_nodebalancer_config_node'
   | 'delete_nodebalancer'
   | 'delete_nodebalancer_config'
   | 'delete_nodebalancer_config_node'
@@ -391,12 +391,13 @@ export type NodeBalancerContributor =
 /** Permissions associated with the "nodebalancer_viewer" role. */
 export type NodeBalancerViewer =
   | 'list_nodebalancer_config_nodes'
-  | 'list_nodebalancer_configs'
   | 'list_nodebalancer_firewalls'
+  | 'list_nodebalancer_vpc_configs'
   | 'view_nodebalancer'
   | 'view_nodebalancer_config'
   | 'view_nodebalancer_config_node'
-  | 'view_nodebalancer_statistics';
+  | 'view_nodebalancer_statistics'
+  | 'view_nodebalancer_vpc_config';
 
 /** Permissions associated with the "volume_admin" role. */
 export type VolumeAdmin = 'delete_volume' | VolumeContributor;
