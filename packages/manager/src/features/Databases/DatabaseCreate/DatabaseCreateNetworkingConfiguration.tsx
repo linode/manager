@@ -2,7 +2,7 @@ import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
-import { DatabaseVPCSelector } from './DatabaseVPCSelector';
+import { DatabaseCreateVPC } from './DatabaseCreateVPC';
 
 import type { AccessProps } from './DatabaseCreateAccessControls';
 import type { VPC } from '@linode/api-v4';
@@ -30,7 +30,7 @@ export const DatabaseCreateNetworkingConfiguration = (
       </Typography>
 
       <DatabaseCreateAccessControls {...accessControlsConfiguration} />
-      <DatabaseVPCSelector onChange={onChange} />
+      <DatabaseCreateVPC onChange={onChange} />
     </>
   );
 };

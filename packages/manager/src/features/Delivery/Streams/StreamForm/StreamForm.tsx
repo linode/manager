@@ -180,9 +180,10 @@ export const StreamForm = (props: StreamFormProps) => {
           <Stack spacing={2}>
             <StreamFormGeneralInfo mode={mode} />
             {selectedStreamType === streamType.LKEAuditLogs && (
-              <StreamFormClusters />
+              <StreamFormClusters mode={mode} />
             )}
             <StreamFormDelivery
+              mode={mode}
               setDisableTestConnection={setDisableTestConnection}
             />
           </Stack>
