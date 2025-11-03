@@ -102,10 +102,10 @@ export const BucketDetailLanding = React.memo(() => {
             </SafeTabPanel>
             <SafeTabPanel index={tabs.length - 1}>
               <CloudPulseDashboardWithFilters
-                dashboardId={6}
                 region={bucket?.region}
                 // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                 resource={bucket?.hostname!}
+                serviceType="objectstorage"
               />
             </SafeTabPanel>
           </TabPanels>
