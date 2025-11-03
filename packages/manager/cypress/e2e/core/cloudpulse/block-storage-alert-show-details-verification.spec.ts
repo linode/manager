@@ -71,7 +71,13 @@ const regions = [
     monitors: { alerts: [BLOCK_STORAGE_CAPABILITY] },
   }),
 ];
-
+// ✅ Verify region table
+const REGION_NAME_US_ORD = 'US, Chicago, IL (us-ord)';
+const REGION_US_ORD = {
+  id: 'us-ord',
+  name: REGION_NAME_US_ORD,
+  entities: '2',
+};
 const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
   ...db,
   region: regions[index % regions.length].id,
@@ -99,7 +105,7 @@ const notificationChannels = notificationChannelFactory.build();
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
-
+const BE_VISIBLE = 'be.visible';
 /**
  * Asserts that the given dimension filter's label, operator, and value
  * are correctly displayed in the UI as visible chips.
@@ -109,19 +115,19 @@ const mockProfile = profileFactory.build({
  */
 const assertDimensionFilter = (filter: AlertDefinitionDimensionFilter) => {
   cy.get(`[data-qa-chip="${filter.label}"]`)
-    .should('be.visible')
+    .should(BE_VISIBLE)
     .each(($chip) => {
       expect($chip).to.have.text(filter.label);
     });
 
   cy.get(`[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
-    .should('be.visible')
+    .should(BE_VISIBLE)
     .each(($chip) => {
       expect($chip).to.have.text(dimensionOperatorTypeMap[filter.operator]);
     });
 
   cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
-    .should('be.visible')
+    .should(BE_VISIBLE)
     .each(($chip) => {
       expect($chip).to.have.text(capitalize(filter.value));
     });
@@ -148,23 +154,23 @@ export const assertRuleBlock = (rules: AlertDefinitionMetricCriteria[]) => {
           const opLabel = metricOperatorTypeMap[rule.operator];
 
           cy.get(`[data-qa-chip="${aggLabel}"]`)
-            .should('be.visible')
+            .should(BE_VISIBLE)
             .should('have.text', aggLabel);
 
           cy.get(`[data-qa-chip="${rule.label}"]`)
-            .should('be.visible')
+            .should(BE_VISIBLE)
             .should('have.text', rule.label);
 
           cy.get(`[data-qa-chip="${opLabel}"]`)
-            .should('be.visible')
+            .should(BE_VISIBLE)
             .should('have.text', opLabel);
 
           cy.get(`[data-qa-chip="${rule.threshold}"]`)
-            .should('be.visible')
+            .should(BE_VISIBLE)
             .should('have.text', String(rule.threshold));
 
           cy.get(`[data-qa-chip="${rule.unit}"]`)
-            .should('be.visible')
+            .should(BE_VISIBLE)
             .should('have.text', rule.unit);
         });
 
@@ -192,17 +198,14 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       cy.get('[data-qa-section="Resources"]').within(() => {
         // ✅ Verify section heading
-        cy.contains('h2', 'Regions').should('be.visible');
+        cy.contains('h2', 'Regions').should(BE_VISIBLE);
 
         // ✅ Verify info notice
         cy.get('[data-qa-notice="true"] [data-testid="alert_message_notice"]')
-          .should('be.visible')
+          .should(BE_VISIBLE)
           .and('have.text', REGION_GROUP_INFO_MESSAGE);
 
-        // ✅ Verify region table
-        const expectedRegions = [
-          { id: 'us-ord', name: 'US, Chicago, IL (us-ord)', entities: '2' },
-        ];
+        const expectedRegions = [REGION_US_ORD];
 
         cy.get('[data-qa="region-tabls"]').within(() => {
           // Verify column headers
@@ -242,17 +245,17 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       cy.get('[data-qa-section="Resources"]').within(() => {
         // ✅ Validate table headers
-        cy.get('[data-qa-header="entity"]').should('contain.text', 'Entity');
-        cy.get('[data-qa-header="region"]').should('contain.text', 'Region');
+        cy.get('[data-qa-header="entity"]').should('have.text', 'Entity');
+        cy.get('[data-qa-header="region"]').should('have.text', 'Region');
 
         // ✅ Validate search inputs
-        cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
-        cy.findByPlaceholderText('Select Regions').should('be.visible');
+        cy.findByPlaceholderText(searchPlaceholder).should(BE_VISIBLE);
+        cy.findByPlaceholderText('Select Regions').should(BE_VISIBLE);
 
         // ✅ Expected table data
         const expectedRows = [
-          { entity: 'test-volume-ord', region: 'US, Chicago, IL (us-ord)' },
-          { entity: 'test-volume-ord1', region: 'US, Chicago, IL (us-ord)' },
+          { entity: 'test-volume-ord', region: REGION_NAME_US_ORD },
+          { entity: 'test-volume-ord1', region: REGION_NAME_US_ORD },
         ];
 
         // ✅ Verify rows count
@@ -266,11 +269,11 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           const rowNumber = i + 1;
           cy.get(`[data-qa-alert-row="${rowNumber}"]`).within(() => {
             cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`)
-              .should('be.visible')
+              .should(BE_VISIBLE)
               .and('have.text', row.entity);
 
             cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`)
-              .should('be.visible')
+              .should(BE_VISIBLE)
               .and('have.text', row.region);
           });
         });
@@ -365,49 +368,49 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       // Validating contents of Overview Section
       cy.get('[data-qa-section="Overview"]').within(() => {
         // Validate Name field
-        cy.findByText('Name:').should('be.visible');
-        cy.findByText(label).should('be.visible');
+        cy.findByText('Name:').should(BE_VISIBLE);
+        cy.findByText(label).should(BE_VISIBLE);
 
         // Validate Description field
-        cy.findByText('Description:').should('be.visible');
-        cy.findByText(description).should('be.visible');
+        cy.findByText('Description:').should(BE_VISIBLE);
+        cy.findByText(description).should(BE_VISIBLE);
 
         // Validate Status field
-        cy.findByText('Status:').should('be.visible');
-        cy.findByText('Enabled').should('be.visible');
+        cy.findByText('Status:').should(BE_VISIBLE);
+        cy.findByText('Enabled').should(BE_VISIBLE);
 
-        cy.findByText('Severity:').should('be.visible');
-        cy.findByText(severityMap[severity]).should('be.visible');
+        cy.findByText('Severity:').should(BE_VISIBLE);
+        cy.findByText(severityMap[severity]).should(BE_VISIBLE);
 
         // Validate Service field
-        cy.findByText('Service:').should('be.visible');
-        cy.findByText('BlockStorage').should('be.visible');
+        cy.findByText('Service:').should(BE_VISIBLE);
+        cy.findByText('BlockStorage').should(BE_VISIBLE);
 
         // Validate Type field
-        cy.findByText('Type:').should('be.visible');
-        cy.findByText('User').should('be.visible');
+        cy.findByText('Type:').should(BE_VISIBLE);
+        cy.findByText('User').should(BE_VISIBLE);
 
         // Validate Created By field
-        cy.findByText('Created By:').should('be.visible');
-        cy.findByText(created_by).should('be.visible');
+        cy.findByText('Created By:').should(BE_VISIBLE);
+        cy.findByText(created_by).should(BE_VISIBLE);
 
         // Validate Last Modified field
-        cy.findByText('Last Modified:').should('be.visible');
+        cy.findByText('Last Modified:').should(BE_VISIBLE);
         cy.findByText(
           formatDate(updated, {
             format: 'MMM dd, yyyy, h:mm a',
             timezone: 'GMT',
           })
-        ).should('be.visible');
+        ).should(BE_VISIBLE);
         cy.findByText(
           formatDate(created, {
             format: 'MMM dd, yyyy, h:mm a',
             timezone: 'GMT',
           })
-        ).should('be.visible');
+        ).should(BE_VISIBLE);
 
-        cy.findByText('Scope:').should('be.visible');
-        cy.findByText(groupLabel).should('be.visible');
+        cy.findByText('Scope:').should(BE_VISIBLE);
+        cy.findByText(groupLabel).should(BE_VISIBLE);
       });
       // Validate the Criteria section by checking each metric rule's threshold details
       // and all related dimension filters for correct visibility and text content.
@@ -415,30 +418,30 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       // Validating contents of Polling Interval
       cy.get('[data-qa-item="Polling Interval"]')
         .find('[data-qa-chip]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('have.text', '5 min');
 
       // Validating contents of Evaluation Periods
       cy.get('[data-qa-item="Evaluation Period"]')
         .find('[data-qa-chip]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('have.text', '5 min');
 
       // Validating contents of Trigger Alert
       cy.get('[data-qa-chip="All"]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('have.text', 'All');
 
       cy.get('[data-qa-chip="5 min"]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('contain.text', '5 min');
 
       cy.get('[data-qa-item="criteria are met for"]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('have.text', 'criteria are met for');
 
       cy.get('[data-qa-item="consecutive occurrences"]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('have.text', 'consecutive occurrences.');
       // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
 
@@ -446,13 +449,13 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       scopeActions[groupLabel]?.();
       // Validate Notification Channels Section
       cy.get('[data-qa-section="Notification Channels"]').within(() => {
-        cy.findByText('Type:').should('be.visible');
-        cy.findByText('Email').should('be.visible');
-        cy.findByText('Channel:').should('be.visible');
-        cy.findByText('Channel-1').should('be.visible');
-        cy.findByText('To:').should('be.visible');
-        cy.findByText('test@test.com').should('be.visible');
-        cy.findByText('test2@test.com').should('be.visible');
+        cy.findByText('Type:').should(BE_VISIBLE);
+        cy.findByText('Email').should(BE_VISIBLE);
+        cy.findByText('Channel:').should(BE_VISIBLE);
+        cy.findByText('Channel-1').should(BE_VISIBLE);
+        cy.findByText('To:').should(BE_VISIBLE);
+        cy.findByText('test@test.com').should(BE_VISIBLE);
+        cy.findByText('test2@test.com').should(BE_VISIBLE);
       });
     });
   });

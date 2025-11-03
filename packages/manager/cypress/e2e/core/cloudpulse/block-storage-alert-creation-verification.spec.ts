@@ -22,7 +22,6 @@ import {
   mockGetCloudPulseServiceByType,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
-import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
@@ -34,7 +33,6 @@ import {
   accountFactory,
   alertFactory,
   dashboardMetricFactory,
-  databaseFactory,
   flagsFactory,
   metricBuilder,
   notificationChannelFactory,
@@ -65,13 +63,6 @@ const mockAccount = accountFactory.build();
 const { metrics, serviceType } = widgetDetails.blockstorage;
 const regionList = ['us-ord', 'us-east'];
 
-const databaseMock = regionList.map((region) =>
-  databaseFactory.build({
-    engine: 'mysql',
-    region,
-  })
-);
-
 const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
   id: 1,
@@ -101,13 +92,13 @@ const dimensions = [
 
 // Convert widget filters to dashboard filters
 const getFiltersForMetric = (metricName: string) => {
-  const metric = metrics.find((m) => m.name === metricName);
+  const metric = metrics.find(({ name }) => name === metricName);
   if (!metric) return [];
 
-  return metric.filters.map((f) => ({
-    dimension_label: f.dimension_label,
-    label: f.dimension_label, // or friendly name
-    values: f.value ? [f.value] : undefined,
+  return metric.filters.map((filter) => ({
+    dimension_label: filter.dimension_label,
+    label: filter.dimension_label, // or friendly name
+    values: filter.value ? [filter.value] : undefined,
   }));
 };
 
@@ -130,6 +121,11 @@ const mockAlerts = alertFactory.build({
 });
 
 const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
+
+const DataField = 'Data Field';
+const BE_VISIBLE = 'be.visible';
+const ADD_DIMENSION_FILTER = 'Add dimension filter';
+
 /**
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
@@ -147,32 +143,29 @@ const fillMetricDetailsForSpecificRule = ({
 }: MetricDetails) => {
   cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
     // Fill Data Field
-    ui.autocomplete
-      .findByLabel('Data Field')
-      .should('be.visible')
-      .type(dataField);
+    ui.autocomplete.findByLabel(DataField).should(BE_VISIBLE).type(dataField);
 
-    ui.autocompletePopper.findByTitle(dataField).should('be.visible').click();
+    ui.autocompletePopper.findByTitle(dataField).should(BE_VISIBLE).click();
 
     // Validate Aggregation Type
     ui.autocomplete
       .findByLabel('Aggregation Type')
-      .should('be.visible')
+      .should(BE_VISIBLE)
       .type(aggregationType);
 
     ui.autocompletePopper
       .findByTitle(aggregationType)
-      .should('be.visible')
+      .should(BE_VISIBLE)
       .click();
 
     // Fill Operator
-    ui.autocomplete.findByLabel('Operator').should('be.visible').type(operator);
+    ui.autocomplete.findByLabel('Operator').should(BE_VISIBLE).type(operator);
 
-    ui.autocompletePopper.findByTitle(operator).should('be.visible').click();
+    ui.autocompletePopper.findByTitle(operator).should(BE_VISIBLE).click();
 
     // Fill Threshold
-    cy.get('[data-qa-threshold]').should('be.visible').clear();
-    cy.get('[data-qa-threshold]').should('be.visible').type(threshold);
+    cy.get('[data-qa-threshold]').should(BE_VISIBLE).clear();
+    cy.get('[data-qa-threshold]').should(BE_VISIBLE).type(threshold);
   });
 };
 /**
@@ -200,16 +193,16 @@ const verifyAlertRow = (
     .should('exist')
     .then(($row) => {
       cy.wrap($row).within(() => {
-        cy.findByText(label).should('be.visible');
-        cy.findByText(statusMap[status]).should('be.visible');
-        cy.findByText('Block Storage').should('be.visible');
-        cy.findByText(createdBy).should('be.visible');
+        cy.findByText(label).should(BE_VISIBLE);
+        cy.findByText(statusMap[status]).should(BE_VISIBLE);
+        cy.findByText('Block Storage').should(BE_VISIBLE);
+        cy.findByText(createdBy).should(BE_VISIBLE);
         cy.findByText(
           formatDate(updated, {
             format: 'MMM dd, yyyy, h:mm a',
             timezone: 'GMT',
           })
-        ).should('be.visible');
+        ).should(BE_VISIBLE);
       });
     });
 };
@@ -317,7 +310,6 @@ describe('Blockstorage alert configured successfully', () => {
       mockGetProfile(mockProfile);
       mockGetCloudPulseServices([serviceType]);
       mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-      mockGetDatabases(databaseMock);
       mockGetVolumes(mockVolumesEncrypted);
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
       mockGetAlertChannels([notificationChannels]);
@@ -351,14 +343,11 @@ describe('Blockstorage alert configured successfully', () => {
 
       ui.autocomplete
         .findByLabel('Scope')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .clear()
         .type(groupLabel);
 
-      ui.autocompletePopper
-        .findByTitle(groupLabel)
-        .should('be.visible')
-        .click();
+      ui.autocompletePopper.findByTitle(groupLabel).should(BE_VISIBLE).click();
 
       groupLabel !== 'Account' &&
         cy.get('[data-testid="select_all_notice"]').click();
@@ -432,66 +421,60 @@ describe('Blockstorage alert configured successfully', () => {
 
       // Add metrics
       cy.findByRole('button', { name: 'Add metric' })
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .click();
 
       ui.buttonGroup
-        .findButtonByTitle('Add dimension filter')
-        .should('be.visible')
+        .findButtonByTitle(ADD_DIMENSION_FILTER)
+        .should(BE_VISIBLE)
         .click();
 
       ui.autocomplete
-        .findByLabel('Data Field')
-        .should('be.visible')
+        .findByLabel(DataField)
+        .should(BE_VISIBLE)
         .eq(1)
         .type('Region');
 
-      ui.autocompletePopper.findByTitle('Region').should('be.visible').click();
+      ui.autocompletePopper.findByTitle('Region').should(BE_VISIBLE).click();
 
-      ui.autocomplete
-        .findByLabel('Operator')
-        .eq(1)
-        .should('be.visible')
-        .clear();
+      ui.autocomplete.findByLabel('Operator').eq(1).should(BE_VISIBLE).clear();
 
       ui.autocomplete.findByLabel('Operator').eq(1).type('Equal');
 
-      cy.findByText('Equal').should('be.visible').click();
+      cy.findByText('Equal').should(BE_VISIBLE).click();
 
       cy.findByPlaceholderText('Enter a Value')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .type(REGION_LABEL);
 
       ui.buttonGroup
-        .findButtonByTitle('Add dimension filter')
-        .should('be.visible')
+        .findButtonByTitle(ADD_DIMENSION_FILTER)
+        .should(BE_VISIBLE)
         .click();
 
       // IN operator flow
-      ui.autocomplete
-        .findByLabel('Data Field')
-        .eq(2)
-        .should('be.visible')
-        .clear();
+      ui.autocomplete.findByLabel(DataField).eq(2).should(BE_VISIBLE).clear();
 
       ui.autocomplete
-        .findByLabel('Data Field')
-        .should('be.visible')
+        .findByLabel(DataField)
+        .should(BE_VISIBLE)
         .eq(2)
         .type('response_type');
 
-      cy.findByText('response_type').should('be.visible').click();
+      cy.findByText('response_type').should(BE_VISIBLE).click();
       ui.autocomplete.findByLabel('Operator').eq(2).type('In');
 
-      cy.findByText('In').should('be.visible').click();
+      cy.findByText('In').should(BE_VISIBLE).click();
+
+      // Define a constant for the alias
+      const VALUE_INPUT_ALIAS = '@valueInput';
 
       // Create an alias for the input field
       cy.get(
         '[data-qa-dimension-filter="rule_criteria.rules.0.dimension_filters.1-value"] input'
-      )
-        .should('be.visible')
-        .as('valueInput');
-
+      ).should(BE_VISIBLE);
+      cy.get(VALUE_INPUT_ALIAS).click();
+      cy.get(VALUE_INPUT_ALIAS).type('200,400,500{enter}');
       // Reuse the alias for further actions
       cy.get('@valueInput').click();
       cy.get('@valueInput').type('200,400,500{enter}');
@@ -499,35 +482,31 @@ describe('Blockstorage alert configured successfully', () => {
       // Equal operator flow
 
       ui.buttonGroup
-        .findButtonByTitle('Add dimension filter')
-        .should('be.visible')
+        .findButtonByTitle(ADD_DIMENSION_FILTER)
+        .should(BE_VISIBLE)
         .click();
 
-      ui.autocomplete
-        .findByLabel('Data Field')
-        .eq(3)
-        .should('be.visible')
-        .clear();
+      ui.autocomplete.findByLabel(DataField).eq(3).should(BE_VISIBLE).clear();
 
       ui.autocomplete
-        .findByLabel('Data Field')
-        .should('be.visible')
+        .findByLabel(DataField)
+        .should(BE_VISIBLE)
         .eq(3)
         .type('entity_id');
 
-      cy.findByText('entity_id').should('be.visible').click();
+      cy.findByText('entity_id').should(BE_VISIBLE).click();
       ui.autocomplete.findByLabel('Operator').eq(3).type('Equal');
 
-      cy.findByText('Equal').should('be.visible').click();
+      cy.findByText('Equal').should(BE_VISIBLE).click();
 
       // Alias the input
       cy.get(
         '[data-qa-dimension-filter="rule_criteria.rules.0.dimension_filters.2-value"] input'
       )
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .as('valueInput');
 
-      // Click and type with Enter
+      cy.get(VALUE_INPUT_ALIAS).type('blocket{enter}');
       cy.get('@valueInput').click();
 
       cy.get('@valueInput').type('blocket{enter}');
@@ -547,46 +526,43 @@ describe('Blockstorage alert configured successfully', () => {
       // Set evaluation period
       ui.autocomplete
         .findByLabel('Evaluation Period')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .type('5 min');
-      ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
+      ui.autocompletePopper.findByTitle('5 min').should(BE_VISIBLE).click();
 
       // Set polling interval
       ui.autocomplete
         .findByLabel('Polling Interval')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .type('5 min');
-      ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
+      ui.autocompletePopper.findByTitle('5 min').should(BE_VISIBLE).click();
 
       // Set trigger occurrences
-      cy.get('[data-qa-trigger-occurrences]').should('be.visible').clear();
+      cy.get('[data-qa-trigger-occurrences]').should(BE_VISIBLE).clear();
 
-      cy.get('[data-qa-trigger-occurrences]').should('be.visible').type('5');
+      cy.get('[data-qa-trigger-occurrences]').should(BE_VISIBLE).type('5');
 
       // Add notification channel
       ui.buttonGroup.find().contains('Add notification channel').click();
 
-      ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
-      ui.autocompletePopper.findByTitle('Email').should('be.visible').click();
+      ui.autocomplete.findByLabel('Type').should(BE_VISIBLE).type('Email');
+      ui.autocompletePopper.findByTitle('Email').should(BE_VISIBLE).click();
 
       ui.autocomplete
         .findByLabel('Channel')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .type('channel-1');
 
-      ui.autocompletePopper
-        .findByTitle('channel-1')
-        .should('be.visible')
-        .click();
+      ui.autocompletePopper.findByTitle('channel-1').should(BE_VISIBLE).click();
 
       // Add channel
       ui.drawer
         .findByTitle('Add Notification Channel')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .within(() => {
           ui.buttonGroup
             .findButtonByTitle('Add channel')
-            .should('be.visible')
+            .should(BE_VISIBLE)
             .click();
         });
       // Click on submit button
@@ -594,7 +570,7 @@ describe('Blockstorage alert configured successfully', () => {
         .find()
         .find('button')
         .filter('[type="submit"]')
-        .should('be.visible')
+        .should(BE_VISIBLE)
         .should('be.enabled')
         .click();
 
