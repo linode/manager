@@ -11,6 +11,9 @@ const loadingTestId = 'circle-progress';
 const queryMocks = vi.hoisted(() => ({
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
   useLocation: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: true }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -29,7 +32,10 @@ vi.mock('@linode/queries', async () => {
       queryMocks.useGetDefaultDelegationAccessQuery,
   };
 });
-
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
+}));
 describe('DefaultRoles', () => {
   it('should render', async () => {
     queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
