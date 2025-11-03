@@ -496,11 +496,7 @@ export const isValidFilter = (
       String(filter.value ?? ''),
       dimensionFieldConfig
     );
-  } else if (
-    dimensionFieldConfig.type === 'textfield' ||
-    !dimension.values ||
-    !dimension.values.length
-  ) {
+  } else if (dimensionFieldConfig.type === 'textfield' || !dimension.values) {
     return true;
   }
 

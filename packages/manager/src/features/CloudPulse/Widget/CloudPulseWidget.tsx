@@ -7,6 +7,7 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
+import { useBlockStorageFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useBlockStorageFetchOptions';
 import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
 import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
@@ -222,16 +223,30 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     serviceType,
     associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
   });
+  const linodeFromVolumes = useBlockStorageFetchOptions({
+    entities: entityIds,
+    dimensionLabel: 'linode_id',
+    regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
+    type: 'metrics',
+    scope: 'entity',
+    serviceType,
+  });
 
   const filteredSelections = React.useMemo(
     () =>
       getFilteredDimensions({
         dimensions: availableMetrics?.dimensions ?? [],
-        linodes: linodesFetch,
+        linodes: linodesFetch ?? linodeFromVolumes,
         vpcs: vpcFetch,
         dimensionFilters,
       }),
-    [availableMetrics, dimensionFilters, linodesFetch, vpcFetch]
+    [
+      availableMetrics?.dimensions,
+      dimensionFilters,
+      linodeFromVolumes,
+      linodesFetch,
+      vpcFetch,
+    ]
   );
   const convertToFilters = (
     selectedFilters: MetricsDimensionFilter[]
