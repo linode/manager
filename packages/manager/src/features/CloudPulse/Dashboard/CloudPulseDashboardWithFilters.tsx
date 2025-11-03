@@ -2,7 +2,7 @@ import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
 import React from 'react';
 
-import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
+import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 
 import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
@@ -18,16 +18,17 @@ import {
   checkMandatoryFiltersSelected,
   getDashboardProperties,
 } from '../Utils/ReusableDashboardFilterUtils';
+import { getAllDashboards } from '../Utils/utils';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { DateTimeWithPreset } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dashboard,
+  DateTimeWithPreset,
+} from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
-  /**
-   * The id of the dashboard that needs to be rendered
-   */
-  dashboardId: number;
   /**
    * The region for which the metrics will be listed
    */
@@ -36,17 +37,33 @@ export interface CloudPulseDashboardWithFiltersProp {
    * The resource id for which the metrics will be listed
    */
   resource: number | string;
+  /**
+   * The service type for which the metrics will be listed
+   */
+  serviceType: CloudPulseServiceType;
 }
 
 export const CloudPulseDashboardWithFilters = React.memo(
   (props: CloudPulseDashboardWithFiltersProp) => {
-    const { dashboardId, resource, region } = props;
-    const { data: dashboard, isError } =
-      useCloudPulseDashboardByIdQuery(dashboardId);
+    const { resource, region, serviceType } = props;
+    const { data: dashboardsList, error: isError } = getAllDashboards(
+      useCloudPulseDashboardsQuery([serviceType]),
+      [serviceType]
+    );
+
     const [filterData, setFilterData] = React.useState<FilterData>({
       id: {},
       label: {},
     });
+
+    const [dashboard, setDashboard] = React.useState<Dashboard | undefined>();
+
+    // Update dashboard when dashboardsList loads
+    React.useEffect(() => {
+      if (dashboardsList.length > 0 && !dashboard) {
+        setDashboard(dashboardsList[0]);
+      }
+    }, [dashboardsList, dashboard]);
 
     const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
@@ -82,6 +99,14 @@ export const CloudPulseDashboardWithFilters = React.memo(
       setGroupBy(groupBy);
     }, []);
 
+    const handleDashboardChange = React.useCallback(
+      (dashboard: Dashboard | undefined) => {
+        setFilterData({ id: {}, label: {} });
+        setDashboard(dashboard);
+      },
+      []
+    );
+
     const handleTimeRangeChange = React.useCallback(
       (timeDuration: DateTimeWithPreset) => {
         setTimeDuration({
@@ -104,7 +129,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     if (isError) {
       return (
         <ErrorState
-          errorText={`Error while loading Dashboard with Id - ${dashboardId}`}
+          errorText={`Error while loading ${serviceType} dashboards`}
         />
       );
     }
@@ -113,10 +138,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
       return <CircleProgress />;
     }
 
-    if (!FILTER_CONFIG.get(dashboardId)) {
+    if (!FILTER_CONFIG.get(dashboard.id)) {
       return (
         <ErrorState
-          errorText={`No Filters Configured for Service Type - ${dashboard.service_type}`}
+          errorText={`No Filters Configured for Dashboard with Id - ${dashboard.id}`}
         />
       );
     }
@@ -149,8 +174,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 m={3}
               >
                 <CloudPulseDashboardSelect
-                  defaultValue={dashboardId}
-                  isServiceIntegration
+                  defaultValue={dashboard?.id}
+                  handleDashboardChange={handleDashboardChange}
+                  integrationServiceType={serviceType}
                 />
                 <Box
                   display="flex"

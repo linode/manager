@@ -24,7 +24,7 @@ const LinodeMetrics = () => {
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
-  const linodeDashboardId = 2;
+  const serviceType = 'linode';
 
   return (
     <Box>
@@ -37,8 +37,8 @@ const LinodeMetrics = () => {
       isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View
         <CloudPulseDashboardWithFilters
-          dashboardId={linodeDashboardId}
           resource={linodeId}
+          serviceType={serviceType}
         />
       ) : (
         // Legacy Metrics View

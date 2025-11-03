@@ -9,7 +9,7 @@ export const DatabaseMonitor = () => {
   const navigate = useNavigate();
   const { database, engine, isMonitorEnabled } = useDatabaseDetailContext();
   const databaseId = database?.id;
-  const dbaasDashboardId = 1;
+  const serviceType = 'dbaas';
 
   if (!isMonitorEnabled) {
     navigate({
@@ -24,8 +24,8 @@ export const DatabaseMonitor = () => {
 
   return (
     <CloudPulseDashboardWithFilters
-      dashboardId={dbaasDashboardId}
       resource={databaseId}
+      serviceType={serviceType}
     />
   );
 };

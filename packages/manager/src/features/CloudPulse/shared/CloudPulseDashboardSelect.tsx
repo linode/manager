@@ -28,6 +28,10 @@ export interface CloudPulseDashboardSelectProps {
     savePref?: boolean
   ) => void;
   /**
+   * The service type to be used for the dashboard select in service level integration
+   */
+  integrationServiceType?: CloudPulseServiceType;
+  /**
    * flag value to identify whether this component is being used in service level integration or not
    */
   isServiceIntegration?: boolean;
@@ -42,23 +46,28 @@ export const CloudPulseDashboardSelect = React.memo(
     const {
       defaultValue,
       handleDashboardChange = () => {},
-      isServiceIntegration,
       savePreferences,
+      integrationServiceType,
     } = props;
 
     const {
       data: serviceTypesList,
       error: serviceTypesError,
       isLoading: serviceTypesLoading,
-    } = useCloudPulseServiceTypes(true);
+    } = useCloudPulseServiceTypes(!integrationServiceType);
 
     const { aclpServices } = useFlags();
+    // Check if the integration service type is enabled
+    const serviceType =
+      integrationServiceType &&
+      aclpServices?.[integrationServiceType]?.metrics?.enabled
+        ? integrationServiceType
+        : undefined;
 
     // Get formatted enabled service types based on the LD flag
-    const serviceTypes: CloudPulseServiceType[] = getEnabledServiceTypes(
-      serviceTypesList,
-      aclpServices
-    );
+    const serviceTypes: CloudPulseServiceType[] = serviceType
+      ? [serviceType]
+      : getEnabledServiceTypes(serviceTypesList, aclpServices);
 
     const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
       (serviceTypesList?.data || [])
@@ -104,7 +113,7 @@ export const CloudPulseDashboardSelect = React.memo(
     React.useEffect(() => {
       // only call this code when the component is rendered initially
       if (
-        (savePreferences || isServiceIntegration) &&
+        (savePreferences || !!serviceType) &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
@@ -121,7 +130,10 @@ export const CloudPulseDashboardSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
-        disabled={isServiceIntegration || !dashboardsList}
+        disableClearable={!!serviceType}
+        disabled={
+          (serviceType && dashboardsList.length === 1) || !dashboardsList
+        }
         errorText={dashboardsList?.length ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
@@ -143,11 +155,13 @@ export const CloudPulseDashboardSelect = React.memo(
                 sx={{ marginLeft: '3.5%' }}
                 variant="h3"
               >
-                {serviceTypeMap.get(params.group as CloudPulseServiceType) ||
-                  params.group}
+                {!serviceType &&
+                  (serviceTypeMap.get(params.group as CloudPulseServiceType) ||
+                    params.group)}
               </Typography>
-              {aclpServices?.[params.group as CloudPulseServiceType]?.metrics
-                ?.beta && <BetaChip />}
+              {!serviceType &&
+                aclpServices?.[params.group as CloudPulseServiceType]?.metrics
+                  ?.beta && <BetaChip />}
             </Box>
             {params.children}
           </Box>
