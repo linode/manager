@@ -291,18 +291,7 @@ export const defaultDelegationAccess = () => [
           'account_linode_creator',
           'account_firewall_creator',
         ],
-        entity_access: [
-          {
-            id: 1,
-            type: 'linode' as const,
-            roles: ['linode_contributor'],
-          },
-          {
-            id: 1,
-            type: 'firewall' as const,
-            roles: ['firewall_admin'],
-          },
-        ],
+        entity_access: [],
       };
 
       return makeResponse(mockDefaultAccess);
