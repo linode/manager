@@ -15,10 +15,7 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -121,7 +118,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       });
     }, [linodes, subnetLinodeIds]);
 
-    const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
     // TODO: change to 'delete_linode_config_profile_interface' once it's available
     const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
       useQueryWithPermissions<Linode>(
@@ -130,8 +126,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         ['delete_linode'],
         open
       );
-    const userCanUnassignLinodes =
-      permissions.update_vpc && filteredLinodes?.length > 0;
+    const userCanUnassignLinodes = filteredLinodes?.length > 0;
 
     React.useEffect(() => {
       if (linodes) {
@@ -340,12 +335,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
-        {!userCanUnassignLinodes && linodeOptionsToUnassign.length > 0 && (
-          <Notice
-            text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
-            variant="error"
-          />
-        )}
         {unassignLinodesErrors.length > 0 && (
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}

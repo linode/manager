@@ -162,15 +162,8 @@ export const SubnetAssignLinodesDrawer = (
   };
 
   // TODO: change update_linode to create_linode_config_profile_interface once it's available
-  // TODO: change delete_linode to delete_linode_config_profile_interface once it's available
-  // TODO: refactor useQueryWithPermissions once API filter is available
   const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
-    useQueryWithPermissions<Linode>(
-      query,
-      'linode',
-      ['update_linode', 'delete_linode'],
-      open
-    );
+    useQueryWithPermissions<Linode>(query, 'linode', ['update_linode'], open);
 
   const userCanAssignLinodes = filteredLinodes?.length > 0;
   // We need to filter to the linodes from this region that are not already
