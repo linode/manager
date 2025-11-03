@@ -1688,10 +1688,23 @@ export const handlers = [
       'resizing',
     ];
     const volumes = statuses.map((status) =>
-      volumeFactory.build({ status, region: 'ap-west' })
+      volumeFactory.build({ status, region: 'ap-west', linode_id: 1 })
     );
-    volumes.push(...volumeFactory.buildList(10, { region: 'us-east' }));
-    volumes.push(...volumeFactory.buildList(10, { region: 'eu-central' }));
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 2 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 3 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 4 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 5 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(5, { region: 'eu-central', linode_id: 1 })
+    );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
   http.get('*/volumes/types', () => {
