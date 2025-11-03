@@ -30,6 +30,10 @@ export const EditImageDrawer = (props: Props) => {
   );
   const canUpdateImage = permissions?.update_image;
 
+  const { data: accountPermissions } = usePermissions('account', [
+    'is_account_admin',
+  ]);
+
   const defaultValues = {
     description: image?.description ?? undefined,
     label: image?.label,
@@ -154,7 +158,7 @@ export const EditImageDrawer = (props: Props) => {
         name="tags"
         render={({ field, fieldState }) => (
           <TagsInput
-            disabled={!canUpdateImage}
+            disabled={!accountPermissions?.is_account_admin}
             label="Tags"
             onChange={(tags) => field.onChange(tags.map((tag) => tag.value))}
             tagError={fieldState.error?.message}
