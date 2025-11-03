@@ -426,6 +426,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         !excludeDimensionFilters.includes(dimensionLabel)
     );
   }, [availableMetrics?.dimensions, excludeDimensionFilters]);
+
+  React.useEffect(() => {
+    if (filteredSelections.length !== (dimensionFilters?.length ?? 0)) {
+      handleDimensionFiltersChange(filteredSelections);
+    }
+  }, [filteredSelections, dimensionFilters, handleDimensionFiltersChange]);
   return (
     <GridLegacy container item lg={widget.size} xs={12}>
       <Stack

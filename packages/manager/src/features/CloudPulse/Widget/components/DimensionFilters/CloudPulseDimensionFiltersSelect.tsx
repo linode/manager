@@ -66,10 +66,6 @@ export const CloudPulseDimensionFiltersSelect = React.memo(
       [handleSelectionChange]
     );
 
-    React.useEffect(() => {
-      handleSelectionChange(selectedDimensions ?? []);
-    }, [selectedDimensions?.length]);
-
     const selectionCount = selectedDimensions?.length ?? 0;
 
     return (

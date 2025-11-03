@@ -8,6 +8,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
@@ -25,6 +26,10 @@ export const VolumeDetails = () => {
     {
       to: '/volumes/$volumeId/summary',
       title: 'Summary',
+    },
+    {
+      to: '/volumes/$volumeId/metrics',
+      title: 'Metrics',
     },
   ]);
 
@@ -64,6 +69,12 @@ export const VolumeDetails = () => {
           <TabPanels>
             <SafeTabPanel index={getTabIndex('/volumes/$volumeId/summary')}>
               <VolumeEntityDetail volume={volume} />
+            </SafeTabPanel>
+            <SafeTabPanel index={getTabIndex('/volumes/$volumeId/metrics')}>
+              <CloudPulseDashboardWithFilters
+                dashboardId={7}
+                resource={volume.id}
+              />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>

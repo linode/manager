@@ -177,8 +177,7 @@ export const getMetricDimensions = (
   if (!dashboard) {
     return {};
   }
-  const dashboardMetrics =
-    dashboard.widgets.map((widget) => widget.metric) ?? [];
+  const dashboardMetrics = dashboard.widgets.map(({ metric }) => metric) ?? [];
   return metricDefinition
     .filter(({ metric }) => dashboardMetrics.includes(metric))
     .reduce((acc, { metric, dimensions }) => {
