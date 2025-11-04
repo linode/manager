@@ -106,3 +106,28 @@ export interface FirewallSettings {
 export interface UpdateFirewallSettings {
   default_firewall_ids: Partial<DefaultFirewallIDs>;
 }
+
+export interface FirewallRuleSet {
+  created: string;
+  deleted: null | string;
+  description: string;
+  id: number;
+  is_service_defined: boolean;
+  label: string;
+  rules: FirewallRuleType[];
+  type: string;
+  updated: string;
+  version: number;
+}
+
+export interface FirewallPrefixList {
+  created: string;
+  description: string;
+  id: number;
+  ipv4?: null | string[];
+  ipv6?: null | string[];
+  name: string;
+  updated: string;
+  version: number;
+  visibility: string;
+}
