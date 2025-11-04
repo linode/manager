@@ -8,6 +8,7 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -19,6 +20,7 @@ import { Table } from 'src/components/Table';
 import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTable';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 
+import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { OrderByKeys } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTable';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
@@ -28,7 +30,12 @@ const controlPaths = {
   clusterIds: 'stream.details.cluster_ids',
 } as const;
 
-export const StreamFormClusters = () => {
+interface StreamFormClustersProps {
+  mode: FormMode;
+}
+
+export const StreamFormClusters = (props: StreamFormClustersProps) => {
+  const { mode } = props;
   const { control, setValue, formState, trigger } =
     useFormContext<StreamAndDestinationFormType>();
 
@@ -109,6 +116,7 @@ export const StreamFormClusters = () => {
               render={({ field }) => (
                 <Checkbox
                   checked={field.value}
+                  data-pendo-id={`Logs Delivery Streams ${capitalize(mode)}-Clusters-Include All`}
                   onChange={async (_, checked) => {
                     field.onChange(checked);
                     if (checked) {
@@ -132,6 +140,7 @@ export const StreamFormClusters = () => {
                 mt: 2,
               },
             }}
+            data-pendo-id={`Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`}
             debounceTime={250}
             errorText={searchParseError?.message}
             hideLabel

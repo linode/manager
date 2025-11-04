@@ -125,7 +125,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     // TODO: change to 'delete_linode_config_profile_interface' once it's available
     const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
       useQueryWithPermissions<Linode>(
-        useAllLinodesQuery(),
+        useAllLinodesQuery({}, {}, open),
         'linode',
         ['delete_linode'],
         open
