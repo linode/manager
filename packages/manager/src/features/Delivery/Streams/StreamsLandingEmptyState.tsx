@@ -35,6 +35,7 @@ export const StreamsLandingEmptyState = (
               });
               navigateToCreate();
             },
+            'data-pendo-id': 'Logs Delivery Streams Empty-Create Stream',
           },
         ]}
         gettingStartedGuidesData={gettingStartedGuides}
