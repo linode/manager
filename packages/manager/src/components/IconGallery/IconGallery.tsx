@@ -3,9 +3,9 @@ import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
-const iconModules = import.meta.glob('../../assets/icons/**/*.svg', {
-  eager: true,
-});
+const iconModules = import.meta.glob<{
+  default: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}>('../../assets/icons/**/*.svg', { eager: true });
 
 export const allIcons = Object.entries(iconModules)
   .map(([path, module]) => {
@@ -19,7 +19,7 @@ export const allIcons = Object.entries(iconModules)
 
     return {
       name,
-      component: (module as any).default,
+      component: module.default,
       path,
     };
   })
@@ -53,10 +53,10 @@ export const IconGallery: React.FC<IconGalleryProps> = ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: 2,
+        padding: theme.spacingFunction(2),
         minWidth: 120,
         textAlign: 'center',
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid ${theme.tokens.alias.Border.Normal}`,
         borderRadius: 1,
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
@@ -71,7 +71,7 @@ export const IconGallery: React.FC<IconGalleryProps> = ({
           justifyContent: 'center',
           width: size,
           height: size,
-          mb: 1,
+          mb: theme.tokens.spacing.S8,
           '& svg': {
             width: '100%',
             height: '100%',
@@ -91,7 +91,10 @@ export const IconGallery: React.FC<IconGalleryProps> = ({
         />
       </Box>
       <Typography
-        sx={{ fontSize: '0.75rem', wordBreak: 'break-word' }}
+        sx={{
+          fontSize: theme.typography.caption.fontSize,
+          wordBreak: 'break-word',
+        }}
         variant="caption"
       >
         {iconName}

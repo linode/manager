@@ -45,7 +45,6 @@ const StyledProxyUserIcon = styled(ProxyUserIcon, {
   left: 0,
   position: 'absolute',
   '& path': {
-    fill:
-      theme.palette.mode === 'dark' ? theme.palette.text.primary : '#333333',
+    fill: theme.tokens.alias.Content.Icon.Secondary.Default,
   },
 }));
