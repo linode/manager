@@ -123,12 +123,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
     // TODO: change to 'delete_linode_config_profile_interface' once it's available
-    const { data: filteredLinodes } = useQueryWithPermissions(
-      useAllLinodesQuery(),
-      'linode',
-      ['delete_linode'],
-      open
-    );
+    const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
+      useQueryWithPermissions<Linode>(
+        useAllLinodesQuery({}, {}, open),
+        'linode',
+        ['delete_linode'],
+        open
+      );
     const userCanUnassignLinodes =
       permissions.update_vpc && filteredLinodes?.length > 0;
 
@@ -362,6 +363,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 disabled={!userCanUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
                 label="Linodes"
+                loading={isLoadingFilteredLinodes}
                 multiple
                 onChange={(_, value) => {
                   setSelectedLinodes(value);

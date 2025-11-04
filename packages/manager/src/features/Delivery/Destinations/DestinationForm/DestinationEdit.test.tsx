@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { destinationFactory } from 'src/factories';
 import { DestinationEdit } from 'src/features/Delivery/Destinations/DestinationForm/DestinationEdit';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -54,7 +54,7 @@ describe('DestinationEdit', () => {
     assertInputHasValue('Host', '3000');
     assertInputHasValue('Bucket', 'Bucket Name');
     assertInputHasValue('Access Key ID', 'Access Id');
-    assertInputHasValue('Secret Access Key', 'Access Secret');
+    assertInputHasValue('Secret Access Key', '');
     assertInputHasValue('Log Path Prefix', 'file');
   });
 
@@ -93,6 +93,10 @@ describe('DestinationEdit', () => {
           name: editDestinationButtonText,
         });
 
+        // Enter Secret Access Key
+        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        await userEvent.type(secretAccessKeyInput, 'Test');
+
         expect(editDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
@@ -130,6 +134,10 @@ describe('DestinationEdit', () => {
         const editDestinationButton = screen.getByRole('button', {
           name: editDestinationButtonText,
         });
+
+        // Enter Secret Access Key
+        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        await userEvent.type(secretAccessKeyInput, 'Test');
 
         expect(editDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);

@@ -98,30 +98,32 @@ export const StreamFormClusters = () => {
         <ErrorState errorText="There was an error loading your Kubernetes clusters." />
       ) : (
         <>
-          <Notice sx={{ mt: 2 }} variant="info">
-            Disabling this option allows you to manually define which clusters
-            will be included in the stream. Stream will not be updated
-            automatically with newly configured clusters.
-          </Notice>
-          <Controller
-            name={controlPaths.isAutoAddAllClustersEnabled}
-            render={({ field }) => (
-              <Checkbox
-                checked={field.value}
-                onChange={async (_, checked) => {
-                  field.onChange(checked);
-                  if (checked) {
-                    setValue(controlPaths.clusterIds, idsWithLogsEnabled);
-                  } else {
-                    setValue(controlPaths.clusterIds, []);
-                  }
-                  await trigger('stream.details');
-                }}
-                sxFormLabel={{ ml: -1 }}
-                text="Automatically include all existing and recently configured clusters."
-              />
-            )}
-          />
+          <div hidden={true}>
+            <Notice sx={{ mt: 2 }} variant="info">
+              Disabling this option allows you to manually define which clusters
+              will be included in the stream. Stream will not be updated
+              automatically with newly configured clusters.
+            </Notice>
+            <Controller
+              name={controlPaths.isAutoAddAllClustersEnabled}
+              render={({ field }) => (
+                <Checkbox
+                  checked={field.value}
+                  onChange={async (_, checked) => {
+                    field.onChange(checked);
+                    if (checked) {
+                      setValue(controlPaths.clusterIds, idsWithLogsEnabled);
+                    } else {
+                      setValue(controlPaths.clusterIds, []);
+                    }
+                    await trigger('stream.details');
+                  }}
+                  sxFormLabel={{ ml: -1 }}
+                  text="Automatically include all existing and recently configured clusters."
+                />
+              )}
+            />
+          </div>
           <DebouncedSearchTextField
             clearable
             containerProps={{

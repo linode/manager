@@ -1,15 +1,12 @@
 import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockGetLinodeIPAddresses,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockCreateNodeBalancer,
   mockGetNodeBalancer,
 } from 'support/intercepts/nodebalancers';
-import { mockGetSubnets, mockGetVPCs } from 'support/intercepts/vpc';
+import { mockGetVPC, mockGetVPCIPs, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -28,11 +25,22 @@ describe('Create a NodeBalancer with VPCs', () => {
       capabilities: ['VPCs', 'NodeBalancers'],
     });
 
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: region.id,
+    });
+
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
       ipv4: `10.0.0.0/24`,
       label: randomLabel(),
-      linodes: [],
+      linodes: [
+        {
+          id: mockLinode.id,
+          interfaces: [],
+        },
+      ],
     });
 
     const mockVPC = vpcFactory.build({
@@ -40,12 +48,6 @@ describe('Create a NodeBalancer with VPCs', () => {
       label: randomLabel(),
       region: region.id,
       subnets: [mockSubnet],
-    });
-
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: region.id,
     });
 
     const mockLinodeVPCIPv4 = vpcIPv4Factory.build({
@@ -63,40 +65,16 @@ describe('Create a NodeBalancer with VPCs', () => {
       ipv4: randomIp(),
     });
 
-    const mockUpdatedSubnet = {
-      ...mockSubnet,
-      linodes: [
-        {
-          id: mockLinode.id,
-          interfaces: [],
-        },
-      ],
-      nodebalancers: [
-        {
-          id: mockNodeBalancer.id,
-          ipv4_range: '10.0.0.4/30',
-        },
-      ],
-    };
-
     mockAppendFeatureFlags({
       nodebalancerVpc: true,
     }).as('getFeatureFlags');
 
     mockGetVPCs([mockVPC]).as('getVPCs');
-    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
+    mockGetVPC(mockVPC).as('getVPC');
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockCreateNodeBalancer(mockNodeBalancer).as('createNodeBalancer');
     mockGetNodeBalancer(mockNodeBalancer);
-    mockGetLinodeIPAddresses(mockLinode.id, {
-      ipv4: {
-        private: [],
-        public: [],
-        reserved: [],
-        shared: [],
-        vpc: [mockLinodeVPCIPv4],
-      },
-    }).as('getLinodeIPAddresses');
+    mockGetVPCIPs(mockVPC.id, [mockLinodeVPCIPv4]).as('getVPCIPs');
 
     cy.visitWithLogin('/nodebalancers/create');
     cy.wait('@getFeatureFlags');
@@ -118,6 +96,9 @@ describe('Create a NodeBalancer with VPCs', () => {
       .should('be.visible')
       .click();
 
+    // The "Node IP Address Select" should fetch the selected VPC and its IPs to render options.
+    cy.wait(['@getVPC', '@getVPCIPs']);
+
     // Confirm that VPC's subnet gets selected
     cy.findByLabelText('Subnet').should(
       'have.value',
@@ -132,7 +113,7 @@ describe('Create a NodeBalancer with VPCs', () => {
 
     cy.findByText(`NodeBalancer IPv4 CIDR for ${mockSubnet.label}`).click();
     cy.focused().clear();
-    cy.focused().type(`${mockUpdatedSubnet.nodebalancers[0].ipv4_range}`);
+    cy.focused().type('10.0.0.4/30');
     // node backend config
     cy.findByText('Label').click();
     cy.focused().type(randomLabel());
