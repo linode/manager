@@ -58,7 +58,7 @@ const renderComponentWithoutSelectedClusters = async () => {
   );
 
   const utils = renderWithThemeAndHookFormContext({
-    component: <StreamFormClusters />,
+    component: <StreamFormClusters mode="edit" />,
     useFormOptions: {
       defaultValues: {
         stream: {
@@ -181,7 +181,7 @@ describe('StreamFormClusters', () => {
       );
 
       renderWithThemeAndHookFormContext({
-        component: <StreamFormClusters />,
+        component: <StreamFormClusters mode="edit" />,
         useFormOptions: {
           defaultValues: {
             stream: {

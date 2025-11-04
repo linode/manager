@@ -1,6 +1,7 @@
 import { TextField } from '@linode/ui';
 import React from 'react';
 
+import { BlockStorageDimensionFilterAutocomplete } from './BlockStorageDimensionFilterAutocomplete';
 import {
   MULTISELECT_PLACEHOLDER_TEXT,
   SINGLESELECT_PLACEHOLDER_TEXT,
@@ -150,7 +151,35 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
 
-    switch (config.useCustomFetch) {
+    // Determine custom fetch behaviour if there are same dimension_labels across service types
+    const customFetch = Array.isArray(config.useCustomFetch)
+      ? config.useCustomFetch.includes(serviceType ?? '')
+        ? serviceType
+        : undefined
+      : config.useCustomFetch === serviceType
+        ? serviceType
+        : undefined;
+
+    switch (customFetch) {
+      case 'blockstorage':
+        return (
+          <BlockStorageDimensionFilterAutocomplete
+            dimensionLabel={dimensionLabel}
+            disabled={disabled}
+            entities={entities}
+            errorText={errorText}
+            fieldOnBlur={onBlur}
+            fieldOnChange={onChange}
+            fieldValue={value}
+            multiple={config.multiple}
+            name={name}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            scope={scope}
+            selectedRegions={selectedRegions}
+            serviceType={serviceType ?? null}
+            type={type}
+          />
+        );
       case 'firewall':
         return (
           <FirewallDimensionFilterAutocomplete

@@ -52,7 +52,7 @@ export function useFirewallFetchOptions(
         ? supportedRegionIds.map((regionId) => ({
             region: regionId,
           }))
-        : [{ region: '' }],
+        : undefined,
   };
 
   const filterLabels: string[] = [
