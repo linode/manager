@@ -114,12 +114,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
   const {
-    data: collapsedSideNavPreference,
+    data: preferences,
     error: preferencesError,
     isLoading: preferencesLoading,
-  } = usePreferences(
-    (preferences) => preferences?.collapsedSideNavProductFamilies
-  );
+  } = usePreferences();
+
+  const collapsedSideNavPreference =
+    preferences?.collapsedSideNavProductFamilies;
 
   const collapsedAccordions = collapsedSideNavPreference ?? [
     1, 2, 3, 4, 5, 6, 7,
@@ -338,20 +339,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     );
 
   const accordionClicked = (index: number) => {
-    let updatedCollapsedAccordions: number[] = [1, 2, 3, 4, 5, 6, 7];
+    let updatedCollapsedAccordions: number[];
     if (collapsedAccordions.includes(index)) {
       updatedCollapsedAccordions = collapsedAccordions.filter(
         (accIndex) => accIndex !== index
       );
-      updatePreferences({
-        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
-      });
     } else {
       updatedCollapsedAccordions = [...collapsedAccordions, index];
-      updatePreferences({
-        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
-      });
     }
+    updatePreferences({
+      collapsedSideNavProductFamilies: updatedCollapsedAccordions,
+    });
   };
 
   const checkOverflow = React.useCallback(() => {
@@ -404,10 +402,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   // When a user lands on a page and does not have any preference set,
   // we want to expand the accordion that contains the active link for convenience and discoverability
   React.useEffect(() => {
+    // Wait for preferences to load or if there's an error
     if (preferencesLoading || preferencesError) {
       return;
     }
 
+    // Wait for preferences data to be available (not just the field, but the whole object)
+    // This prevents the race condition where isLoading is false but data hasn't populated yet
+    if (!preferences) {
+      return;
+    }
+
+    // If user has already set collapsedSideNavProductFamilies preference, don't override it
     if (collapsedSideNavPreference) {
       return;
     }
@@ -424,13 +430,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     if (activeGroupIndex !== -1) {
       accordionClicked(activeGroupIndex);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    accordionClicked,
     location.pathname,
     location.search,
     productFamilyLinkGroups,
     collapsedSideNavPreference,
+    preferences,
     preferencesLoading,
     preferencesError,
   ]);
