@@ -1,8 +1,14 @@
 import { linodeFactory } from '@linode/utilities';
+import { renderHook, waitFor } from '@testing-library/react';
 
 import { eventFactory, imageFactory } from 'src/factories';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { getEventsForImages, getImageLabelForLinode } from './utils';
+import {
+  getEventsForImages,
+  getImageLabelForLinode,
+  useIsPrivateImageSharingEnabled,
+} from './utils';
 
 describe('getImageLabelForLinode', () => {
   it('handles finding an image and getting the label', () => {
@@ -54,6 +60,32 @@ describe('getEventsForImages', () => {
     ).toEqual({
       ['private/1']: successfulEvent,
       ['private/2']: failedEvent,
+    });
+  });
+});
+
+describe('useIsPrivateImageSharingEnabled', () => {
+  it('returns true if the feature is enabled', async () => {
+    const options = { flags: { privateImageSharing: true } };
+
+    const { result } = renderHook(() => useIsPrivateImageSharingEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isPrivateImageSharingEnabled).toBe(true);
+    });
+  });
+
+  it('returns false if the feature is NOT enabled', async () => {
+    const options = { flags: { privateImageSharing: false } };
+
+    const { result } = renderHook(() => useIsPrivateImageSharingEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isPrivateImageSharingEnabled).toBe(false);
     });
   });
 });

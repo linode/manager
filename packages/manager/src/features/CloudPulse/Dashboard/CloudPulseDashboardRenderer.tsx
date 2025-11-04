@@ -80,9 +80,11 @@ export const CloudPulseDashboardRenderer = React.memo(
             : undefined
         }
         resources={
-          filterValue[RESOURCE_ID] && Array.isArray(filterValue[RESOURCE_ID])
-            ? (filterValue[RESOURCE_ID] as string[])
-            : []
+          Array.isArray(filterValue[RESOURCE_ID])
+            ? filterValue[RESOURCE_ID].map(String)
+            : typeof filterValue[RESOURCE_ID] === 'string'
+              ? [filterValue[RESOURCE_ID]]
+              : []
         }
         savePref={true}
         serviceType={dashboard.service_type}

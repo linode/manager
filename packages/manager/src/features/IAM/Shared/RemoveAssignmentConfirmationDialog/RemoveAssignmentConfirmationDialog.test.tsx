@@ -23,12 +23,20 @@ const props = {
   onSuccess: vi.fn(),
   open: true,
   role: mockRole,
+  username: 'test_user',
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
+}));
+
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -37,14 +45,6 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
   };
 });
 
@@ -60,14 +60,10 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('RemoveAssignmentConfirmationDialog', () => {
-  beforeEach(() => {
-    queryMocks.useParams.mockReturnValue({
-      username: 'test_user',
-    });
-  });
-
   it('should render', async () => {
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    renderWithTheme(
+      <RemoveAssignmentConfirmationDialog {...props} username="test_user" />
+    );
 
     const headerText = screen.getByText(
       'Remove the Test entity from the firewall_admin role assignment?'
@@ -130,5 +126,23 @@ describe('RemoveAssignmentConfirmationDialog', () => {
         entity_access: [],
       });
     });
+  });
+
+  it('should render when isDefaultDelegationRolesForChildAccount is true', async () => {
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+
+    const headerText = screen.getByText(
+      'Remove the Test entity from the list?'
+    );
+    expect(headerText).toBeVisible();
+
+    const paragraph = screen.getByText(/Delegated users won’t get the/i);
+
+    expect(paragraph).toBeVisible();
+    expect(paragraph).toHaveTextContent(mockRole.entity_name);
+    expect(paragraph).toHaveTextContent(mockRole.role_name);
   });
 });

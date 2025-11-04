@@ -17,6 +17,17 @@ const queryMocks = vi.hoisted(() => ({
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
 }));
 
+const iamMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({ data: { update_vpc: true } }),
+  useQueryWithPermissions: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    error: null,
+    isError: false,
+    hasFiltered: false,
+  }),
+}));
+
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
@@ -24,6 +35,11 @@ vi.mock('@linode/queries', async () => {
     useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: iamMocks.usePermissions,
+  useQueryWithPermissions: iamMocks.useQueryWithPermissions,
+}));
 
 const props = {
   isFetching: false,
@@ -46,6 +62,17 @@ describe('Subnet Assign Linodes Drawer', () => {
   const linode = linodeFactory.build({
     label: 'this-linode',
     region: props.vpcRegion,
+  });
+
+  beforeEach(() => {
+    // Set up the default mock to return the linode
+    iamMocks.useQueryWithPermissions.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+      isError: false,
+      hasFiltered: false,
+    });
   });
 
   server.use(

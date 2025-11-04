@@ -1,8 +1,9 @@
 import { destinationType, streamStatus, streamType } from '@linode/api-v4';
 
 import type {
+  AkamaiObjectStorageDetailsExtended,
   CreateDestinationPayload,
-  DestinationDetails,
+  CustomHTTPsDetails,
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
@@ -46,9 +47,13 @@ export const streamStatusOptions: LabelValueOption[] = [
   },
 ];
 
+export type DestinationDetailsForm =
+  | AkamaiObjectStorageDetailsExtended
+  | CustomHTTPsDetails;
+
 export interface DestinationForm
   extends Omit<CreateDestinationPayload, 'details'> {
-  details: DestinationDetails;
+  details: DestinationDetailsForm;
 }
 
 export type DestinationFormType = DestinationForm;

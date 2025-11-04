@@ -25,6 +25,10 @@ interface CustomFilterQueryProps {
    */
   filter?: Filter;
   /**
+   * The filter function to filter the results
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
+  /**
    * The id field to consider from the response of the custom filter call
    */
   idField: string;
@@ -46,7 +50,7 @@ interface CustomFilterQueryProps {
 export const useGetCustomFiltersQuery = (
   queryProps: CustomFilterQueryProps
 ) => {
-  const { apiV4QueryKey, enabled, idField, labelField } = queryProps;
+  const { apiV4QueryKey, enabled, idField, labelField, filterFn } = queryProps;
   return useQuery<
     QueryFunctionType,
     unknown,
@@ -56,14 +60,16 @@ export const useGetCustomFiltersQuery = (
     enabled: enabled && apiV4QueryKey !== undefined,
     ...(apiV4QueryKey ?? { queryFn: () => [], queryKey: [''] }),
     select: (
-      filters: QueryFunctionType
+      filterOptions: QueryFunctionType
     ): CloudPulseServiceTypeFiltersOptions[] => {
+      // apply the filter function if it is provided
+      const filteredFilterOptions = filterFn?.(filterOptions) ?? filterOptions;
       // whatever field we receive, just return id and label
-      return filters
-        .map((filter): CloudPulseServiceTypeFiltersOptions => {
+      return filteredFilterOptions
+        .map((filterOption): CloudPulseServiceTypeFiltersOptions => {
           return {
-            id: getStringValue(filter, idField) ?? '',
-            label: getStringValue(filter, labelField) ?? '',
+            id: getStringValue(filterOption, idField) ?? '',
+            label: getStringValue(filterOption, labelField) ?? '',
           };
         })
         .filter(({ id, label }) => id.length && label.length);

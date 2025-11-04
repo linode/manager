@@ -56,11 +56,6 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
     checkRestrictedUser
   );
 
-  const { data: legacyTypes } = useDatabaseTypesQuery(
-    { platform: 'rdbms-legacy' },
-    checkRestrictedUser
-  );
-
   if (account) {
     const isDatabasesV1Enabled = isFeatureEnabledV2(
       'Managed Databases',
@@ -97,18 +92,17 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
     };
   }
 
-  const hasLegacyTypes: boolean = !!legacyTypes;
   const hasDefaultTypes: boolean = !!types && hasV2Flag;
 
   return {
-    isDatabasesEnabled: hasLegacyTypes || hasDefaultTypes,
+    isDatabasesEnabled: hasDefaultTypes,
 
     isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
     isDatabasesV2Enabled: hasDefaultTypes,
-    isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
+    isDatabasesV2GA: hasDefaultTypes && hasV2GAFlag,
 
-    isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
-    isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
+    isUserExistingBeta: hasDefaultTypes && hasV2BetaFlag,
+    isUserNewBeta: hasDefaultTypes && hasV2BetaFlag,
   };
 };
 

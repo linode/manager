@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 
-import type { AccountMaintenance } from '@linode/api-v4';
+import type { AccountMaintenance, MaintenancePolicy } from '@linode/api-v4';
 import type { MockPresetExtra } from 'src/mocks/types';
 
 let customMaintenanceData: AccountMaintenance[] | null = null;
@@ -13,6 +13,7 @@ export const setCustomMaintenanceData = (data: AccountMaintenance[] | null) => {
 
 const mockCustomMaintenance = () => {
   return [
+    // Account maintenance items (supports filtering and pagination similar to prod)
     http.get('*/account/maintenance', ({ request }) => {
       const url = new URL(request.url);
 
@@ -58,6 +59,30 @@ const mockCustomMaintenance = () => {
       }
 
       return HttpResponse.json(makeResourcePage(accountMaintenance));
+    }),
+
+    // Maintenance policies used to derive start times from notice `when`
+    http.get('*/maintenance/policies', () => {
+      const policies: MaintenancePolicy[] = [
+        {
+          description: 'Migrate',
+          is_default: true,
+          label: 'Migrate',
+          notification_period_sec: 3 * 60 * 60, // 3 hours
+          slug: 'linode/migrate',
+          type: 'linode_migrate',
+        },
+        {
+          description: 'Power Off / Power On',
+          is_default: false,
+          label: 'Power Off / Power On',
+          notification_period_sec: 72 * 60 * 60, // 72 hours
+          slug: 'linode/power_off_on',
+          type: 'linode_power_off_on',
+        },
+      ];
+
+      return HttpResponse.json(makeResourcePage(policies));
     }),
   ];
 };

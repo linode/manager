@@ -196,10 +196,10 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
     if (
       !a ||
       !b ||
-      !(orderBy in a) ||
-      !(orderBy in b) ||
       typeof a !== 'object' ||
-      typeof b !== 'object'
+      typeof b !== 'object' ||
+      !(orderBy in a) ||
+      !(orderBy in b)
     ) {
       return 0;
     }

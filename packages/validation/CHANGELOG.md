@@ -1,3 +1,10 @@
+## [2025-11-04] - v0.78.0
+
+### Upcoming Features:
+
+- Add validation schemas for creating and updating Sharegroup Members and Tokens ([#12984](https://github.com/linode/manager/pull/12984))
+- Add validation schemas for creating and updating Sharegroups and Sharegroup Images ([#12985](https://github.com/linode/manager/pull/12985))
+
 ## [2025-10-21] - v0.77.0
 
 ### Changed:

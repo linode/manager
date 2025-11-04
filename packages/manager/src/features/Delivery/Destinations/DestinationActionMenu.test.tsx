@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { destinationFactory } from 'src/factories';
 import { DestinationActionMenu } from 'src/features/Delivery/Destinations/DestinationActionMenu';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

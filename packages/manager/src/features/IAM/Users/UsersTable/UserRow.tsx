@@ -55,7 +55,14 @@ export const UserRow = ({ onDelete, user }: Props) => {
           <MaskableText isToggleable text={user.username}>
             <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {canViewUser ? (
-                <Link to={`/iam/users/${user.username}/details`}>
+                <Link
+                  to={
+                    isChildWithDelegationEnabled &&
+                    user.user_type === 'delegate'
+                      ? `/iam/users/${user.username}/roles`
+                      : `/iam/users/${user.username}/details`
+                  }
+                >
                   {user.username}
                 </Link>
               ) : (

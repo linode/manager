@@ -264,4 +264,40 @@ describe('useQueryWithPermissions', () => {
 
     expect(result.current.isLoading).toBe(true);
   });
+
+  it('grants all permissions to unrestricted (admin) users without making permission API calls', () => {
+    const flags = { iam: { beta: true, enabled: true } };
+    queryMocks.useIsIAMEnabled.mockReturnValue({
+      isIAMEnabled: true,
+      isIAMBeta: true,
+    });
+    queryMocks.useProfile.mockReturnValue({
+      data: { username: 'admin-user', restricted: false },
+    });
+
+    const { result } = renderHook(
+      () =>
+        useQueryWithPermissions(
+          baseQueryResult,
+          'linode',
+          ['update_linode', 'delete_linode', 'reboot_linode'],
+          true
+        ),
+      { wrapper: (ui) => wrapWithTheme(ui, { flags }) }
+    );
+
+    // Verify grants are NOT fetched (IAM is enabled)
+    expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
+
+    // Verify permission queries are disabled (no N API calls for unrestricted users!)
+    const queryArgs = queryMocks.useQueries.mock.calls[0][0];
+    expect(
+      queryArgs.queries.every((q: { enabled?: boolean }) => q.enabled === false)
+    ).toBe(true);
+
+    // Unrestricted users should see ALL entities
+    expect(result.current.data.map((e) => e.id)).toEqual([1, 2]);
+    expect(result.current.hasFiltered).toBe(false);
+    expect(result.current.isLoading).toBe(false);
+  });
 });

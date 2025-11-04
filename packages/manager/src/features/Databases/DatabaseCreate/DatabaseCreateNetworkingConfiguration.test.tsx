@@ -3,10 +3,11 @@ import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, it, vi } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { DatabaseCreateNetworkingConfiguration } from './DatabaseCreateNetworkingConfiguration';
 
+import type { DatabaseCreateValues } from './DatabaseCreate';
 import type { AccessProps } from './DatabaseCreateAccessControls';
 import type { PrivateNetwork } from '@linode/api-v4';
 
@@ -35,9 +36,6 @@ describe('DatabaseCreateNetworkingConfiguration', () => {
   const mockAccessControlConfig: AccessProps = {
     disabled: false,
     errors: [],
-    ips: [],
-    onBlur: vi.fn(),
-    onChange: vi.fn(),
     variant: 'networking',
   };
 
@@ -57,6 +55,8 @@ describe('DatabaseCreateNetworkingConfiguration', () => {
     selectedRegionId: 'us-east',
   };
 
+  const ips = [{ address: '' }];
+
   beforeEach(() => {
     vi.resetAllMocks();
     queryMocks.useRegionQuery.mockReturnValue({ data: mockRegion });
@@ -67,7 +67,10 @@ describe('DatabaseCreateNetworkingConfiguration', () => {
   });
 
   it('renders the networking configuration heading and description', () => {
-    renderWithTheme(<DatabaseCreateNetworkingConfiguration {...mockProps} />);
+    renderWithThemeAndHookFormContext<DatabaseCreateValues>({
+      component: <DatabaseCreateNetworkingConfiguration {...mockProps} />,
+      useFormOptions: { defaultValues: { allow_list: ips } },
+    });
     const ConfigureNetworkingLabel = screen.getByText('Configure Networking', {
       exact: true,
     });
@@ -82,7 +85,10 @@ describe('DatabaseCreateNetworkingConfiguration', () => {
   });
 
   it('renders DatabaseCreateAccessControls and DatabaseVPCSelector', () => {
-    renderWithTheme(<DatabaseCreateNetworkingConfiguration {...mockProps} />);
+    renderWithThemeAndHookFormContext<DatabaseCreateValues>({
+      component: <DatabaseCreateNetworkingConfiguration {...mockProps} />,
+      useFormOptions: { defaultValues: { allow_list: ips } },
+    });
     const vpcSelector = screen.getByTestId('database-vpc-selector');
     expect(vpcSelector).toBeInTheDocument();
     const manageAccessLabel = screen.getByText('Manage Access');

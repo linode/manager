@@ -6,10 +6,10 @@ import {
   Checkbox,
   FormHelperText,
   Notice,
-  TooltipIcon,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
@@ -17,35 +17,25 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../constants';
 
-import type { DatabaseCreateValues } from './DatabaseClusterData';
-import type { PrivateNetwork, VPC } from '@linode/api-v4';
+import type { DatabaseCreateValues } from './DatabaseCreate';
+import type { VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { FormikErrors } from 'formik';
 
 interface DatabaseVPCSelectorProps {
-  errors: FormikErrors<DatabaseCreateValues>; // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
-  mode: 'create' | 'networking';
-  onChange: (field: string, value: boolean | null | number) => void;
-  onConfigurationChange?: (vpc: null | VPC) => void;
-  privateNetworkValues: PrivateNetwork;
-  resetFormFields?: (partialValues?: Partial<DatabaseCreateValues>) => void;
-  selectedRegionId: string;
+  onChange: (selectedVPC: null | VPC) => void;
 }
 
 export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
-  const {
-    errors,
-    mode,
-    onConfigurationChange,
-    onChange,
-    selectedRegionId,
-    resetFormFields,
-    privateNetworkValues,
-  } = props;
-
+  const { onChange } = props;
   const flags = useFlags();
-  const isCreate = mode === 'create';
-  const { data: selectedRegion } = useRegionQuery(selectedRegionId);
+  const { control, setValue } = useFormContext<DatabaseCreateValues>();
+
+  const [region, vpcId, subnetId] = useWatch({
+    control,
+    name: ['region', 'private_network.vpc_id', 'private_network.subnet_id'],
+  });
+
+  const { data: selectedRegion } = useRegionQuery(region);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');
 
   const {
@@ -54,76 +44,26 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     isLoading,
   } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
-    filter: { region: selectedRegionId },
+    filter: { region },
   });
 
   const vpcErrorMessage =
     vpcsError &&
     getAPIErrorOrDefault(vpcsError, 'Unable to load VPCs')[0].reason;
 
-  const selectedVPC = vpcs?.find(
-    (vpc) => vpc.id === privateNetworkValues.vpc_id
-  );
+  const selectedVPC = vpcs?.find((vpc) => vpc.id === vpcId);
 
   const selectedSubnet = selectedVPC?.subnets.find(
-    (subnet) => subnet.id === privateNetworkValues.subnet_id
+    (subnet) => subnet.id === subnetId
   );
 
-  const prevRegionId = React.useRef<string | undefined>(undefined);
   const regionHasVPCs = Boolean(vpcs && vpcs.length > 0);
   const disableVPCSelectors =
     !!vpcsError || !regionSupportsVPCs || !regionHasVPCs;
 
-  const resetVPCConfiguration = () => {
-    resetFormFields?.({
-      private_network: {
-        vpc_id: null,
-        subnet_id: null,
-        public_access: false,
-      },
-    });
-  };
-
-  React.useEffect(() => {
-    // When the selected region has changed, reset VPC configuration.
-    // Then switch back to default validation behavior
-    if (prevRegionId.current && prevRegionId.current !== selectedRegionId) {
-      resetVPCConfiguration();
-      onConfigurationChange?.(null);
-    }
-    prevRegionId.current = selectedRegionId;
-  }, [selectedRegionId]);
-
-  const vpcHelperTextCopy = !selectedRegionId
+  const vpcHelperTextCopy = !region
     ? 'In the Select Engine and Region section, select a region with an existing VPC to see available VPCs.'
     : 'No VPC is available in the selected region.';
-
-  /** Returns dynamic marginTop value used to center TooltipIcon in different scenarios */
-  const getVPCTooltipIconMargin = () => {
-    const margins = {
-      longHelperText: '.75rem',
-      shortHelperText: '1.75rem',
-      noHelperText: '2.75rem',
-      errorText: '1.5rem',
-      errorTextWithLongHelperText: '-.5rem',
-    };
-    if (disableVPCSelectors && vpcsError)
-      return margins.errorTextWithLongHelperText;
-    if (errors?.private_network?.vpc_id) return margins.errorText;
-    if (disableVPCSelectors && !selectedRegionId) return margins.longHelperText;
-    if (disableVPCSelectors && selectedRegionId) return margins.shortHelperText;
-    return margins.noHelperText;
-  };
-
-  const accessNotice = isCreate && (
-    <Notice
-      sx={(theme: Theme) => ({
-        marginTop: theme.spacingFunction(20),
-      })}
-      text="The cluster will have public access by default if a VPC is not assigned."
-      variant="info"
-    />
-  );
 
   return (
     <>
@@ -137,7 +77,6 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
         <Typography variant="h3">Assign a VPC</Typography>
         {flags.databaseVpcBeta && <BetaChip />}
       </Box>
-
       <Typography>
         Assign this cluster to an existing VPC.{' '}
         <Link
@@ -146,84 +85,104 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
           Learn more.
         </Link>
       </Typography>
-      <Box style={{ display: 'flex' }}>
-        <Autocomplete
-          data-testid="database-vpc-selector"
-          disabled={disableVPCSelectors}
-          errorText={vpcErrorMessage || errors?.private_network?.vpc_id}
-          helperText={disableVPCSelectors ? vpcHelperTextCopy : undefined}
-          label="VPC"
-          loading={isLoading}
-          noOptionsText="There are no VPCs in the selected region."
-          onChange={(e, value) => {
-            onChange('private_network.subnet_id', null); // Always reset subnet selection when VPC changes
-            if (!value) {
-              onChange('private_network.public_access', false);
-            }
-            onConfigurationChange?.(value ?? null);
-            onChange('private_network.vpc_id', value?.id ?? null);
-          }}
-          options={vpcs ?? []}
-          placeholder="Select a VPC"
-          sx={{ width: '354px' }}
-          value={selectedVPC ?? null}
-        />
-        <TooltipIcon
-          status="info"
-          sxTooltipIcon={{
-            marginTop: getVPCTooltipIconMargin(),
-            padding: '0px 8px',
-          }}
-          text="A cluster may be assigned only to a VPC in the same region."
-          tooltipPosition="top"
+      <Box display="flex">
+        <Controller
+          control={control}
+          name="private_network.vpc_id"
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              data-testid="database-vpc-selector"
+              disabled={disableVPCSelectors}
+              errorText={vpcErrorMessage || fieldState.error?.message}
+              helperText={disableVPCSelectors ? vpcHelperTextCopy : undefined}
+              label="VPC"
+              loading={isLoading}
+              noOptionsText="There are no VPCs in the selected region."
+              onChange={(e, value) => {
+                setValue('private_network.subnet_id', null); // Always reset subnet selection when VPC changes
+                if (!value) {
+                  setValue('private_network.public_access', false);
+                }
+                onChange(value ?? null); // Update VPC in DatabaseCreate.tsx
+                field.onChange(value?.id ?? null);
+              }}
+              options={vpcs ?? []}
+              placeholder="Select a VPC"
+              sx={{ width: '354px' }}
+              textFieldProps={{
+                tooltipText:
+                  'A cluster may be assigned only to a VPC in the same region',
+              }}
+              value={selectedVPC ?? null}
+            />
+          )}
         />
       </Box>
-
       {selectedVPC ? (
         <>
-          <Autocomplete
-            data-testid="database-subnet-selector"
-            disabled={disableVPCSelectors}
-            errorText={errors?.private_network?.subnet_id}
-            getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
-            label="Subnet"
-            onChange={(e, value) => {
-              onChange('private_network.subnet_id', value?.id ?? null);
-            }}
-            options={selectedVPC?.subnets ?? []}
-            placeholder="Select a subnet"
-            value={selectedSubnet ?? null}
+          <Controller
+            control={control}
+            name="private_network.subnet_id"
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                data-testid="database-subnet-selector"
+                disabled={disableVPCSelectors}
+                errorText={fieldState.error?.message}
+                getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
+                label="Subnet"
+                onChange={(e, value) => {
+                  field.onChange(value?.id ?? null);
+                }}
+                options={selectedVPC?.subnets ?? []}
+                placeholder="Select a subnet"
+                value={selectedSubnet ?? null}
+              />
+            )}
           />
           <Box
             sx={(theme: Theme) => ({
               marginTop: theme.spacingFunction(20),
             })}
           >
-            <Checkbox
-              checked={privateNetworkValues.public_access ?? false}
-              data-testid="database-public-access-checkbox"
-              onChange={(e, value) => {
-                onChange('private_network.public_access', value ?? null);
-              }}
-              text={'Enable public access'}
-              toolTipText={
-                'Adds a public endpoint to the database in addition to the private VPC endpoint.'
-              }
+            <Controller
+              control={control}
+              name="private_network.public_access"
+              render={({ field, fieldState }) => (
+                <>
+                  <Checkbox
+                    checked={field.value}
+                    data-testid="database-public-access-checkbox"
+                    onChange={(e, value) => {
+                      field.onChange(value ?? null);
+                    }}
+                    text={'Enable public access'}
+                    toolTipText={
+                      'Adds a public endpoint to the database in addition to the private VPC endpoint.'
+                    }
+                  />
+                  {fieldState.error?.message && (
+                    <FormHelperText
+                      className="error-for-scroll"
+                      error
+                      role="alert"
+                      sx={{ marginTop: 0 }}
+                    >
+                      {fieldState.error?.message}
+                    </FormHelperText>
+                  )}
+                </>
+              )}
             />
-            {errors?.private_network?.public_access && (
-              <FormHelperText
-                className="error-for-scroll"
-                error
-                role="alert"
-                sx={{ marginTop: 0 }}
-              >
-                {errors?.private_network?.public_access}
-              </FormHelperText>
-            )}
           </Box>
         </>
       ) : (
-        accessNotice
+        <Notice
+          sx={(theme: Theme) => ({
+            marginTop: theme.spacingFunction(20),
+          })}
+          text="The cluster will have public access by default if a VPC is not assigned."
+          variant="info"
+        />
       )}
     </>
   );

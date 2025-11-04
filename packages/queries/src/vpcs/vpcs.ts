@@ -65,7 +65,7 @@ export const vpcQueries = createQueryKeys('vpcs', {
         },
         queryKey: null,
       },
-      vpcIps: (vpcId: number, filter: Filter = {}) => ({
+      vpcIps: (filter: Filter = {}) => ({
         queryFn: () => getAllVPCIPsRequest(vpcId, filter),
         queryKey: [filter],
       }),
@@ -121,7 +121,7 @@ export const useVPCIPsQuery = (
   enabled: boolean = false,
 ) =>
   useQuery<VPCIP[], APIError[]>({
-    ...vpcQueries.vpc(id)._ctx.vpcIps(id, filter),
+    ...vpcQueries.vpc(id)._ctx.vpcIps(filter),
     enabled,
   });
 

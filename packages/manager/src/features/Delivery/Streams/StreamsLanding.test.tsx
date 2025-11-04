@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { streamFactory } from 'src/factories/delivery';
+import { streamFactory } from 'src/factories';
 import { StreamsLanding } from 'src/features/Delivery/Streams/StreamsLanding';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -254,6 +254,52 @@ describe('Streams Landing Table', () => {
         });
 
         await checkClosedModal(deleteStreamModal);
+      });
+
+      it('should show error when cannot delete stream', async () => {
+        const mockDeleteStreamMutation = vi
+          .fn()
+          .mockRejectedValue([{ reason: 'Unexpected error' }]);
+        queryMocks.useDeleteStreamMutation.mockReturnValue({
+          mutateAsync: mockDeleteStreamMutation,
+        });
+
+        renderComponent();
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        const deleteStreamModal = screen.getByText('Delete Stream');
+        expect(deleteStreamModal).toBeInTheDocument();
+
+        const errorIcon = screen.queryByTestId('ErrorOutlineIcon');
+        expect(errorIcon).not.toBeInTheDocument();
+
+        // get delete Stream button
+        const deleteStreamButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteStreamButton);
+
+        expect(mockDeleteStreamMutation).toHaveBeenCalledWith({
+          id: 1,
+        });
+
+        // check for error state in modal
+        screen.getByTestId('ErrorOutlineIcon');
+
+        // get modal Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteStreamModal);
+
+        // open delete confirmation modal again
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // check for error state to be reset
+        expect(errorIcon).not.toBeInTheDocument();
       });
     });
   });
