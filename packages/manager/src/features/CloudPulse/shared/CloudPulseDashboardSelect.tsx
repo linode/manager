@@ -32,10 +32,6 @@ export interface CloudPulseDashboardSelectProps {
    */
   integrationServiceType?: CloudPulseServiceType;
   /**
-   * flag value to identify whether this component is being used in service level integration or not
-   */
-  isServiceIntegration?: boolean;
-  /**
    * boolean value to identify whether changes to be saved on preferences or not
    */
   savePreferences?: boolean;
