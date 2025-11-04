@@ -78,15 +78,27 @@ export const Metric = (props: MetricCriteriaProps) => {
       resetField(name, { defaultValue: fieldValue });
     }
   };
-
+  const serviceType = useWatch({ control, name: 'serviceType' });
+  const entityType = useWatch({ control, name: 'entity_type' });
   const metricOptions = React.useMemo(() => {
-    return data
-      ? data.map((metric) => ({
+    let filteredData = data;
+
+    // Filter firewall metrics based on entity type
+    if (serviceType === 'firewall' && entityType) {
+      const entityLabel =
+        entityType === 'linode' ? '(Linode)' : '(Node Balancer)';
+      filteredData = data.filter((metric) =>
+        metric.label.includes(entityLabel)
+      );
+    }
+
+    return filteredData
+      ? filteredData.map((metric) => ({
           label: metric.label,
           value: metric.metric,
         }))
       : [];
-  }, [data]);
+  }, [data, entityType, serviceType]);
 
   const metricWatcher = useWatch({ control, name: `${name}.metric` });
 

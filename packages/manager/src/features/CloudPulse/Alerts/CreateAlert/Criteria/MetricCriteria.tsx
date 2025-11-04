@@ -42,10 +42,10 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     isError: isMetricDefinitionError,
     isLoading: isMetricDefinitionLoading,
   } = useGetCloudPulseMetricDefinitionsByServiceType(
-    serviceType!,
+    serviceType ?? '',
     serviceType !== null,
-    {},
-    { is_alertable: true }
+    {}
+    // { is_alertable: true }
   );
 
   const { control } = useFormContext<CreateAlertDefinitionForm>();

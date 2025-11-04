@@ -11,6 +11,7 @@ import { filterRegionByServiceType } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
+  getFirewallNodebalancers,
   getLinodeRegions,
   getNodebalancerRegions,
   getVPCSubnets,
@@ -58,6 +59,7 @@ export function useFirewallFetchOptions(
     'linode_id',
     'region_id',
     'associated_entity_region',
+    'nodebalancer_id',
   ];
 
   // Fetch all firewall resources when dimension requires it
@@ -141,6 +143,12 @@ export function useFirewallFetchOptions(
     [linodes]
   );
 
+  // Extract nodebalancers from filtered firewall resources
+  const firewallNodebalancers = useMemo(
+    () => getFirewallNodebalancers(nodebalancers ?? []),
+    [nodebalancers]
+  );
+
   // Extract unique regions from linodes
   const linodeRegions = useMemo(
     () => getLinodeRegions(linodes ?? []),
@@ -187,6 +195,12 @@ export function useFirewallFetchOptions(
         values: firewallLinodes,
         isError: isLinodesError || isResourcesError,
         isLoading: isLinodesLoading || isResourcesLoading,
+      };
+    case 'nodebalancer_id':
+      return {
+        values: firewallNodebalancers,
+        isError: isNodebalancersError || isResourcesError,
+        isLoading: isNodebalancersLoading || isResourcesLoading,
       };
     case 'region_id':
       return {

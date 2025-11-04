@@ -60,6 +60,7 @@ import {
   firewallFactory,
   firewallMetricDefinitionsResponse,
   firewallMetricRulesFactory,
+  firewallNodebalancerMetricCriteria,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -1241,11 +1242,17 @@ export const handlers = [
             parent_entity: null,
             id: 90909,
           }),
+        ],
+      }),
+      firewallFactory.build({
+        label: 'Firewall - Nodebalancer',
+        id: 25,
+        entities: [
           firewallEntityfactory.build({
-            type: 'linode',
-            label: 'Linode-fireall-test',
+            type: 'nodebalancer',
+            label: 'Nodebalancer-test',
             parent_entity: null,
-            id: 90901,
+            id: 333,
           }),
         ],
       }),
@@ -1284,6 +1291,13 @@ export const handlers = [
   }),
   http.get('*/v4/nodebalancers', () => {
     const nodeBalancers = nodeBalancerFactory.buildList(3);
+    nodeBalancers.push(
+      nodeBalancerFactory.build({
+        id: 333,
+        label: 'NodeBalancer-33',
+        region: 'ap-west',
+      })
+    );
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -3026,6 +3040,16 @@ export const handlers = [
         service_type: 'objectstorage',
         entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
       }),
+      alertFactory.build({
+        id: 650,
+        label: 'Firewall - nodebalancer',
+        type: 'user',
+        service_type: 'firewall',
+        entity_ids: ['25'],
+        rule_criteria: {
+          rules: [firewallNodebalancerMetricCriteria.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3059,6 +3083,20 @@ export const handlers = [
             ],
             rule_criteria: {
               rules: [objectStorageMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '650' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 650,
+            label: 'Firewall - nodebalancer',
+            type: 'user',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [firewallNodebalancerMetricCriteria.build()],
             },
           })
         );
@@ -3097,6 +3135,20 @@ export const handlers = [
             type: 'user',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '650' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 650,
+            label: 'Firewall - nodebalancer',
+            type: 'user',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [firewallNodebalancerMetricCriteria.build()],
             },
           })
         );

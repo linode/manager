@@ -17,28 +17,39 @@ export const FirewallDimensionFilterAutocomplete = (
 ) => {
   const {
     dimensionLabel,
-    serviceType,
-    scope,
+    disabled,
     entities,
+    entityType,
+    errorText,
+    fieldOnBlur,
+    fieldOnChange,
+    fieldValue,
     multiple,
     name,
-    fieldOnChange,
-    disabled,
-    fieldOnBlur,
     placeholderText,
-    errorText,
-    fieldValue,
+    scope,
+    serviceType,
     type,
   } = props;
 
   const { data: regions } = useRegionsQuery();
+
+  // Map entity_type to associatedEntityType
+  const associatedEntityType =
+    entityType === 'linode'
+      ? 'linode'
+      : entityType === 'nodebalancer'
+        ? 'nodebalancer'
+        : 'both';
+
   const { values, isLoading, isError } = useFirewallFetchOptions({
+    associatedEntityType,
     dimensionLabel,
-    regions,
     entities,
+    regions,
+    scope,
     serviceType,
     type,
-    scope,
   });
 
   useCleanupStaleValues({

@@ -35,6 +35,10 @@ interface ValueFieldRendererProps {
    */
   entities?: string[];
   /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: 'linode' | 'nodebalancer' | null;
+  /**
    * Error message to be displayed under the input field, if any.
    */
   errorText: string | undefined;
@@ -86,20 +90,21 @@ interface ValueFieldRendererProps {
 
 export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const {
-    serviceType,
-    scope,
     dimensionLabel,
     disabled,
     entities,
+    entityType,
     errorText,
     name,
     onBlur,
     onChange,
     operator,
+    scope,
+    selectedRegions,
+    serviceType,
+    type = 'alerts',
     value,
     values,
-    selectedRegions,
-    type = 'alerts',
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
@@ -152,6 +157,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             dimensionLabel={dimensionLabel}
             disabled={disabled}
             entities={entities}
+            entityType={entityType}
             errorText={errorText}
             fieldOnBlur={onBlur}
             fieldOnChange={onChange}

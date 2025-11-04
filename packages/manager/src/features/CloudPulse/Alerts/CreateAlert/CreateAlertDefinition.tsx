@@ -28,6 +28,7 @@ import { TriggerConditions } from './Criteria/TriggerConditions';
 import { EntityScopeRenderer } from './EntityScopeRenderer';
 import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
+import { EntityTypeSelect } from './GeneralInformation/EntityTypeSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { alertDefinitionFormSchema } from './schemas';
@@ -56,16 +57,17 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
+  entity_ids: [],
+  entity_type: null,
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
   },
+  scope: null,
   serviceType: null,
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
-  entity_ids: [],
-  scope: null,
 };
 
 const overrides: CrumbOverridesProps[] = [
@@ -106,7 +108,7 @@ export const CreateAlertDefinition = () => {
 
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
-    getValues('serviceType')!
+    getValues('serviceType') ?? ''
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
@@ -162,6 +164,14 @@ export const CreateAlertDefinition = () => {
       defaultValue: triggerConditionInitialValues,
     });
     resetField('scope', { defaultValue: null });
+    resetField('entity_type', { defaultValue: null });
+  }, [resetField]);
+
+  const handleEntityTypeChange = React.useCallback(() => {
+    // Reset the criteria when entity type changes
+    resetField('rule_criteria.rules', {
+      defaultValue: [{ ...criteriaInitialValues }],
+    });
   }, [resetField]);
 
   React.useEffect(() => {
@@ -220,6 +230,12 @@ export const CreateAlertDefinition = () => {
               handleServiceTypeChange={handleServiceTypeChange}
               name="serviceType"
             />
+            {serviceTypeWatcher === 'firewall' && (
+              <EntityTypeSelect
+                name="entity_type"
+                onEntityTypeChange={handleEntityTypeChange}
+              />
+            )}
             <CloudPulseAlertSeveritySelect name="severity" />
             <AlertEntityScopeSelect
               name="scope"
@@ -228,7 +244,7 @@ export const CreateAlertDefinition = () => {
             <EntityScopeRenderer scope={scopeWatcher} />
             <MetricCriteriaField
               name="rule_criteria.rules"
-              serviceType={serviceTypeWatcher!}
+              serviceType={serviceTypeWatcher ?? null}
               setMaxInterval={(interval: number) =>
                 setMaxScrapeInterval(interval)
               }

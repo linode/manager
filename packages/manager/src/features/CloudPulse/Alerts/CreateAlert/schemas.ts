@@ -73,6 +73,10 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
     entity_ids: array().of(string().defined()).optional(),
+    entity_type: string()
+      .oneOf(['linode', 'nodebalancer'])
+      .nullable()
+      .optional(),
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)
