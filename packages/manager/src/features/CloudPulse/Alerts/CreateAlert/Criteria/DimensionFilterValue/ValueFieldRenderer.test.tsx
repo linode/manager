@@ -7,6 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ValueFieldRenderer } from './ValueFieldRenderer';
 
+import type { DimensionFilterAutocompleteProps } from './constants';
 import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
@@ -14,7 +15,9 @@ import type {
 
 // Mock child components
 vi.mock('./BlockStorageDimensionFilterAutocomplete', () => ({
-  BlockStorageDimensionFilterAutocomplete: (props: any) => (
+  BlockStorageDimensionFilterAutocomplete: (
+    props: DimensionFilterAutocompleteProps
+  ) => (
     <div data-testid="blockstorage-autocomplete" {...props}>
       BlockStorage Autocomplete
     </div>
@@ -22,7 +25,9 @@ vi.mock('./BlockStorageDimensionFilterAutocomplete', () => ({
 }));
 
 vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
-  FirewallDimensionFilterAutocomplete: (props: any) => (
+  FirewallDimensionFilterAutocomplete: (
+    props: DimensionFilterAutocompleteProps
+  ) => (
     <div data-testid="firewall-autocomplete" {...props}>
       Firewall Autocomplete
     </div>
@@ -30,7 +35,9 @@ vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
 }));
 
 vi.mock('./ObjectStorageDimensionFilterAutocomplete', () => ({
-  ObjectStorageDimensionFilterAutocomplete: (props: any) => (
+  ObjectStorageDimensionFilterAutocomplete: (
+    props: DimensionFilterAutocompleteProps
+  ) => (
     <div data-testid="objectstorage-autocomplete" {...props}>
       ObjectStorage Autocomplete
     </div>
@@ -38,7 +45,7 @@ vi.mock('./ObjectStorageDimensionFilterAutocomplete', () => ({
 }));
 
 vi.mock('./DimensionFilterAutocomplete', () => ({
-  DimensionFilterAutocomplete: (props: any) => (
+  DimensionFilterAutocomplete: (props: DimensionFilterAutocompleteProps) => (
     <div data-testid="dimensionfilter-autocomplete" {...props}>
       DimensionFilter Autocomplete
     </div>
