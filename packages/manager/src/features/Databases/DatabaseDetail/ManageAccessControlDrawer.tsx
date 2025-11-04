@@ -136,18 +136,15 @@ export const ManageAccessControlDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Manage Access">
-      {errors.root ? (
-        <Notice text={errors.root.message} variant="error" />
-      ) : null}
-      {allowListErrors
-        ? allowListErrors.map((allowListError) => (
-            <Notice
-              key={allowListError.reason}
-              text={allowListError.reason}
-              variant="error"
-            />
-          ))
-        : null}
+      {errors.root && <Notice text={errors.root.message} variant="error" />}
+      {allowListErrors &&
+        allowListErrors.map((allowListError) => (
+          <Notice
+            key={allowListError.reason}
+            text={allowListError.reason}
+            variant="error"
+          />
+        ))}
       <Typography marginBottom={4} variant="body1">
         {isDefaultDB
           ? ACCESS_CONTROLS_DRAWER_TEXT
