@@ -1,3 +1,16 @@
+## [2025-11-04] - v0.152.0
+
+
+### Changed:
+
+- Change `/linode/instances/<id>/clone` endpoint to use `v4beta` ([#13045](https://github.com/linode/manager/pull/13045))
+
+### Upcoming Features:
+
+- Add endpoints for `/v4/images/sharegroups/members` and `/v4/images/sharegroups/tokens` ([#12984](https://github.com/linode/manager/pull/12984))
+- Add endpoints for `/v4/images/sharegroups` and `/v4/images/sharegroups/images` ([#12985](https://github.com/linode/manager/pull/12985))
+- Add new `filters` prop in AclpWidget type and update `Filters` type to use `DimensionFilterOperatorType` for operator ([#13006](https://github.com/linode/manager/pull/13006))
+
 ## [2025-10-21] - v0.151.0
 
 
