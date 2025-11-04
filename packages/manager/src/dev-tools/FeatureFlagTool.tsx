@@ -30,6 +30,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'blockStorageVolumeLimit', label: 'Block Storage Volume Limit' },
   { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
+  {
+    flag: 'firewallRulesetsPrefixlists',
+    label: 'Firewall Rulesets & Prefixlists',
+  },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
