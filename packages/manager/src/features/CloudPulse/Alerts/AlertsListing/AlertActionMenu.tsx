@@ -50,6 +50,7 @@ export interface AlertActionMenuProps {
 export const AlertActionMenu = (props: AlertActionMenuProps) => {
   const { alertLabel, alertStatus, alertType, handlers } = props;
 
+  // Get the statuses to be disabled in alert action menu based on the flag etc..
   const { aclpAlerting } = useFlags();
 
   return (
