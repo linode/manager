@@ -167,10 +167,10 @@ export const EditImageDrawer = (props: Props) => {
           <Stack
             alignItems="center"
             direction="row"
-            justifyContent="space-between"
             spacing={1}
+            sx={{ display: 'flex' }}
           >
-            <Box sx={{ width: '92%' }}>
+            <Box sx={{ flex: 1 }}>
               <TagsInput
                 disabled={!accountPermissions?.is_account_admin}
                 label="Tags"
