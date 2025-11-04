@@ -3,6 +3,7 @@ import React from 'react';
 
 import EmptyState from 'src/assets/icons/empty-state-cloud.svg';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
 
@@ -16,6 +17,8 @@ export const NoAssignedRoles = (props: Props) => {
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
   const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
     React.useState<boolean>(false);
 
@@ -52,7 +55,9 @@ export const NoAssignedRoles = (props: Props) => {
               : undefined
           }
         >
-          Assign New Roles
+          {isDefaultDelegationRolesForChildAccount
+            ? 'Add New Default Roles'
+            : 'Assign New Roles'}
         </Button>
       )}
       <AssignNewRoleDrawer
