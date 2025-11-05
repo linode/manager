@@ -408,7 +408,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     }
 
     // Wait for preferences data to be available (not just the field, but the whole object)
-    // This prevents the race condition where isLoading is false but data hasn't populated yet
     if (!preferences) {
       return;
     }
