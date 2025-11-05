@@ -127,11 +127,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     };
 
     if (isError) {
-      return (
-        <ErrorState
-          errorText={`Error while loading ${serviceType} dashboards`}
-        />
-      );
+      return <ErrorState errorText="Error loading dashboards" />;
     }
 
     if (!dashboard) {

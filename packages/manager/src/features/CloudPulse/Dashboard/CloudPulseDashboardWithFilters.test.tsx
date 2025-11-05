@@ -36,7 +36,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters resource={1} serviceType="dbaas" />
     );
 
-    const error = screen.getByText('Error while loading dbaas dashboards');
+    const error = screen.getByText('Error loading dashboards');
     expect(error).toBeDefined();
   });
 
