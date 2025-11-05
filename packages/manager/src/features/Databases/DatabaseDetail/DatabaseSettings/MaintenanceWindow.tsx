@@ -6,64 +6,22 @@ import {
   Notice,
   Radio,
   RadioGroup,
+  Stack,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import { Button } from 'akamai-cds-react-components';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useWatch } from 'react-hook-form';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { SelectOption } from '@linode/ui';
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  formControlDropdown: {
-    '& label': {
-      overflow: 'visible',
-    },
-    marginRight: '3rem',
-    minWidth: '125px',
-  },
-  sectionButton: {
-    alignSelf: 'end',
-    marginBottom: '1rem',
-    marginTop: '1rem',
-    minWidth: 214,
-    [theme.breakpoints.down('md')]: {
-      alignSelf: 'flex-start',
-    },
-  },
-  sectionText: {
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '1rem',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    width: '65%',
-  },
-  sectionTitle: {
-    marginBottom: '0.25rem',
-  },
-  sectionTitleAndText: {
-    width: '100%',
-  },
-  topSection: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('lg')]: {
-      flexDirection: 'column',
-    },
-  },
-}));
 
 interface Props {
   database: Database;
@@ -77,7 +35,6 @@ export const MaintenanceWindow = (props: Props) => {
   const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
     React.useState<SelectOption<number>[]>([]);
 
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(
@@ -172,9 +129,9 @@ export const MaintenanceWindow = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={classes.topSection}>
-          <div className={classes.sectionTitleAndText}>
-            <Typography className={classes.sectionTitle} variant="h3">
+        <StyledStack direction="row">
+          <Stack>
+            <Typography mb={0.5} variant="h3">
               {isLegacy
                 ? 'Maintenance Window'
                 : 'Set a Weekly Maintenance Window'}
@@ -184,13 +141,13 @@ export const MaintenanceWindow = (props: Props) => {
                 {errors.root?.message}
               </Notice>
             )}
-            <Typography className={classes.sectionText}>
+            <StyledTypography>
               {isLegacy ? typographyLegacyDatabase : typographyDatabase}{' '}
               {database.cluster_size !== 3 &&
                 'For non-HA plans, expect downtime during this window.'}
-            </Typography>
-            <div>
-              <FormControl className={classes.formControlDropdown}>
+            </StyledTypography>
+            <Stack direction="row" mt={2} spacing={6}>
+              <FormControl>
                 <Controller
                   control={control}
                   name="day_of_week"
@@ -226,7 +183,7 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                 />
               </FormControl>
-              <FormControl className={classes.formControlDropdown}>
+              <FormControl>
                 <div style={{ alignItems: 'center', display: 'flex' }}>
                   <Controller
                     control={control}
@@ -278,7 +235,7 @@ export const MaintenanceWindow = (props: Props) => {
                   />
                 </div>
               </FormControl>
-            </div>
+            </Stack>
             {isLegacy && (
               <Controller
                 control={control}
@@ -333,10 +290,7 @@ export const MaintenanceWindow = (props: Props) => {
                   control={control}
                   name="week_of_month"
                   render={({ field, fieldState }) => (
-                    <FormControl
-                      className={classes.formControlDropdown}
-                      style={{ minWidth: '250px' }}
-                    >
+                    <FormControl style={{ minWidth: '250px' }}>
                       <Autocomplete
                         autoHighlight
                         defaultValue={modifiedWeekSelectionMap[0]}
@@ -366,19 +320,20 @@ export const MaintenanceWindow = (props: Props) => {
                 />
               )}
             </div>
-          </div>
-          <Button
-            className={classes.sectionButton}
-            data-testid="save-changes-button"
-            disabled={!isDirty || isSubmitting || disabled}
-            processing={isSubmitting}
-            title="Save Changes"
-            type="submit"
-            variant="primary"
-          >
-            Save Changes
-          </Button>
-        </div>
+          </Stack>
+          <StyledButtonStack>
+            <Button
+              data-testid="save-changes-button"
+              disabled={!isDirty || isSubmitting || disabled}
+              processing={isSubmitting}
+              title="Save Changes"
+              type="submit"
+              variant="primary"
+            >
+              Save Changes
+            </Button>
+          </StyledButtonStack>
+        </StyledStack>
       </form>
     </FormProvider>
   );
@@ -445,4 +400,35 @@ const utcOffsetText = (utcOffsetInHours: number) => {
     : `-${utcOffsetInHours}`;
 };
 
-export default MaintenanceWindow;
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    marginBottom: '1rem',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+  width: '65%',
+}));
+
+const StyledStack = styled(Stack, {
+  label: 'StyledStack',
+})(({ theme }) => ({
+  flexDirection: 'row',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
+
+const StyledButtonStack = styled(Stack, {
+  label: 'StyledButtonStack',
+})(({ theme }) => ({
+  alignSelf: 'end',
+  marginBottom: '1rem',
+  marginTop: '1rem',
+  minWidth: 214,
+  [theme.breakpoints.down('md')]: {
+    alignSelf: 'flex-start',
+  },
+}));
