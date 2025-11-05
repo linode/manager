@@ -5,6 +5,7 @@ import {
 } from '@linode/queries';
 import { useMemo } from 'react';
 
+import { filterFirewallResources } from 'src/features/CloudPulse/Utils/utils';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { filterRegionByServiceType } from '../../../Utils/utils';
@@ -18,7 +19,7 @@ import {
 } from './utils';
 
 import type { FetchOptions, FetchOptionsProps } from './constants';
-import type { Filter } from '@linode/api-v4';
+import type { Filter, Firewall } from '@linode/api-v4';
 
 /**
  * Custom hook to return selectable options based on the dimension type.
@@ -72,7 +73,12 @@ export function useFirewallFetchOptions(
     'firewall',
     {},
     {},
-    associatedEntityType // To avoid fetching resources for which the associated entity type is not supported
+    associatedEntityType,
+    associatedEntityType !== 'both'
+      ? (resources: Firewall[]) =>
+          filterFirewallResources(resources, associatedEntityType)
+      : undefined
+    // To avoid fetching resources for which the associated entity type is not supported
   );
   // Decide firewall resource IDs based on scope
   const filteredFirewallParentEntityIds = useMemo(() => {

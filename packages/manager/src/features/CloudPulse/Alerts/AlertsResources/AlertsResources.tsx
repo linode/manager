@@ -210,9 +210,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     serviceType,
     {},
     xFilterToBeApplied,
-    associatedEntityType,
-    (resources: Firewall[]) =>
-      filterFirewallResources(resources, associatedEntityType)
+    serviceType === 'firewall' ? associatedEntityType : undefined,
+    serviceType === 'firewall' && associatedEntityType !== 'both'
+      ? (resources: Firewall[]) =>
+          filterFirewallResources(resources, associatedEntityType)
+      : undefined
   );
 
   const regionFilteredResources = React.useMemo(() => {

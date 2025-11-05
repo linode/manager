@@ -142,6 +142,7 @@ import { userRolesFactory } from 'src/factories/userRoles';
 
 import type {
   AccountMaintenance,
+  AlertDefinitionScope,
   AlertDefinitionType,
   AlertSeverityType,
   AlertStatusType,
@@ -3087,6 +3088,7 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             scope: 'account',
+            entity_ids: ['1', '2', '3'],
             id: 999,
             label: 'Firewall - testing',
             service_type: 'firewall',
@@ -3134,6 +3136,7 @@ export const handlers = [
             id: 650,
             label: 'Firewall - nodebalancer',
             type: 'user',
+            scope: 'entity',
             service_type: 'firewall',
             entity_ids: ['25'],
             rule_criteria: {
@@ -3306,16 +3309,24 @@ export const handlers = [
       objectstorage: 'Object Storage',
       blockstorage: 'Block Storage',
     };
+    const serviceTypeScopeMap: Record<
+      CloudPulseServiceType,
+      AlertDefinitionScope[]
+    > = {
+      linode: ['entity'],
+      dbaas: ['entity'],
+      nodebalancer: ['entity'],
+      firewall: ['entity', 'account'],
+      objectstorage: ['entity', 'account', 'region'],
+      blockstorage: ['entity', 'account', 'region'],
+    };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
       label: serviceTypesMap[serviceType],
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
-        scope:
-          serviceType === 'objectstorage' || serviceType === 'blockstorage'
-            ? ['entity', 'account', 'region']
-            : ['entity'],
+        scope: serviceTypeScopeMap[serviceType],
       }),
     });
 
