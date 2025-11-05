@@ -382,7 +382,7 @@ export const capabilityServiceTypeMapping: Record<
   firewall: 'Cloud Firewall',
   objectstorage: 'Object Storage',
   blockstorage: 'Block Storage',
-  lke: 'Kubernetes Enterprise',
+  lke: 'Kubernetes',
 };
 
 /**
