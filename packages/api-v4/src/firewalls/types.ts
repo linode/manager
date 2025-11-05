@@ -120,6 +120,8 @@ export interface FirewallRuleSet {
   version: number;
 }
 
+export type FirewallPrefixListVisibility = 'private' | 'public' | 'restricted';
+
 export interface FirewallPrefixList {
   created: string;
   description: string;
@@ -129,5 +131,5 @@ export interface FirewallPrefixList {
   name: string;
   updated: string;
   version: number;
-  visibility: string;
+  visibility: FirewallPrefixListVisibility;
 }
