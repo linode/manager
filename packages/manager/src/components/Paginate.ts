@@ -53,6 +53,24 @@ export default class Paginate<T> extends React.Component<Props<T>, State> {
     pageSize: this.props.pageSize || storage.pageSize.get() || 25,
   };
 
+  componentDidUpdate(prevProps: Props<T>) {
+    if (
+      this.props.page !== undefined &&
+      this.props.page !== prevProps.page &&
+      this.props.page !== this.state.page
+    ) {
+      this.setState({ page: this.props.page });
+    }
+
+    if (
+      this.props.pageSize !== undefined &&
+      this.props.pageSize !== prevProps.pageSize &&
+      this.props.pageSize !== this.state.pageSize
+    ) {
+      this.setState({ pageSize: this.props.pageSize });
+    }
+  }
+
   handlePageChange = (page: number) => {
     if (this.props.shouldScroll ?? true) {
       const { scrollToRef } = this.props;

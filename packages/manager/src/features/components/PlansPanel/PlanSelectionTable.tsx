@@ -18,9 +18,10 @@ import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
+  planRows?: React.JSX.Element[];
   plans?: PlanWithAvailability[];
   planType?: LinodeTypeClass;
-  renderPlanSelection: (
+  renderPlanSelection?: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
@@ -49,6 +50,7 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
+    planRows,
     planType,
     plans,
     renderPlanSelection,
@@ -58,6 +60,12 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showUsableStorage,
   } = props;
   const flags = useFlags();
+
+  // Auto-detect pagination mode:
+  // - If planRows is provided, we're in pagination mode (modern) -> spacingBottom={0}
+  // - If only renderPlanSelection is provided, we're in legacy mode -> spacingBottom={16}
+  const isPaginationMode = planRows !== undefined;
+  const spacingBottom = isPaginationMode ? 0 : 16;
 
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>
@@ -101,7 +109,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   return (
     <StyledTable
       aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
-      spacingBottom={16}
+      spacingBottom={spacingBottom}
     >
       <TableHead>
         <TableRow>
@@ -160,7 +168,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection()
+          (planRows ?? renderPlanSelection?.(filterOptions) ?? null)
         )}
       </TableBody>
     </StyledTable>
