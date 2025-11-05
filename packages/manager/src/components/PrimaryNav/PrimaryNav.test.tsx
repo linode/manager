@@ -26,13 +26,7 @@ const queryMocks = vi.hoisted(() => ({
     isIAMBeta: false,
     isIAMEnabled: false,
   })),
-  usePreferences: vi.fn().mockReturnValue({
-    data: {
-      collapsedSideNavProductFamilies: [], // Empty array = nothing collapsed
-    },
-    isLoading: false,
-    error: null,
-  }),
+  usePreferences: vi.fn().mockReturnValue({}),
   useAccount: vi.fn().mockReturnValue({}),
   useAccountSettings: vi.fn().mockReturnValue({}),
 }));
