@@ -94,8 +94,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
-    const [linodeOptionsToUnassign, setLinodeOptionsToUnassign] =
-      React.useState<Linode[]>([]);
     const [interfacesToDelete, setInterfacesToDelete] = React.useState<
       DeleteInterfaceIds[]
     >([]);
@@ -103,36 +101,30 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { linodes: subnetLinodeIds } = subnet || {};
 
     // 1. We need to get all the linodes.
+    // TODO: change to 'delete_linode_config_profile_interface' once it's available
     const {
-      data: linodes,
+      data: filteredLinodes,
       error: linodesError,
+      isLoading: isLoadingFilteredLinodes,
       refetch: getCSVData,
-    } = useAllLinodesQuery();
+    } = useQueryWithPermissions<Linode>(
+      useAllLinodesQuery({}, {}, open),
+      'linode',
+      ['delete_linode'],
+      open
+    );
+    const userCanUnassignLinodes = filteredLinodes?.length > 0;
 
-    // 2. We need to filter only the linodes that are assigned to the subnet.
-    const findAssignedLinodes = React.useCallback(() => {
-      return linodes?.filter((linode) => {
+    const linodeOptionsToUnassign = React.useMemo(() => {
+      // 2. We need to filter only the linodes that are assigned to the subnet.
+      if (!filteredLinodes) return [];
+
+      return filteredLinodes?.filter((linode) => {
         return subnetLinodeIds?.some(
           (linodeInfo) => linodeInfo.id === linode.id
         );
       });
-    }, [linodes, subnetLinodeIds]);
-
-    // TODO: change to 'delete_linode_config_profile_interface' once it's available
-    const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
-      useQueryWithPermissions<Linode>(
-        useAllLinodesQuery({}, {}, open),
-        'linode',
-        ['delete_linode'],
-        open
-      );
-    const userCanUnassignLinodes = filteredLinodes?.length > 0;
-
-    React.useEffect(() => {
-      if (linodes) {
-        setLinodeOptionsToUnassign(findAssignedLinodes() ?? []);
-      }
-    }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
+    }, [subnetLinodeIds, filteredLinodes]);
 
     // 3. When a linode is selected, we need to get the VPC interface to unassign.
     const getVPCInterface = React.useCallback(
