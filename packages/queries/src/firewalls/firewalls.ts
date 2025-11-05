@@ -68,8 +68,16 @@ const getAllFirewallDevices = (
 const getAllFirewallTemplates = () =>
   getAll<FirewallTemplate>(getTemplates)().then((data) => data.data);
 
-const getAllFirewallRuleSets = () =>
-  getAll<FirewallRuleSet>(getFirewallRuleSets)().then((data) => data.data);
+export const getAllFirewallRuleSets = (
+  passedParams: Params = {},
+  passedFilter: Filter = {},
+) =>
+  getAll<FirewallRuleSet>((params, filter) =>
+    getFirewallRuleSets(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
+  )().then((data) => data.data);
 
 export const getAllFirewallPrefixLists = (
   passedParams: Params = {},
@@ -139,7 +147,16 @@ export const firewallQueries = createQueryKeys('firewalls', {
     queryKey: [id],
   }),
   rulesets: {
-    queryFn: getAllFirewallRuleSets,
+    contextQueries: {
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllFirewallRuleSets(params, filter),
+        queryKey: [params, filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getFirewallRuleSets(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
     queryKey: null,
   },
   prefixlist: (id: number) => ({
@@ -151,11 +168,6 @@ export const firewallQueries = createQueryKeys('firewalls', {
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllFirewallPrefixLists(params, filter),
         queryKey: [params, filter],
-      }),
-      infinite: (filter: Filter = {}) => ({
-        queryFn: ({ pageParam }) =>
-          getFirewallPrefixLists({ page: pageParam as number }, filter),
-        queryKey: [filter],
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getFirewallPrefixLists(params, filter),
@@ -355,22 +367,29 @@ export const useFirewallTemplatesQuery = () => {
   });
 };
 
-export const useFirewallRuleSetsQuery = (enabled: boolean) => {
-  return useQuery<FirewallRuleSet[], APIError[]>({
-    ...firewallQueries.rulesets,
-    enabled,
-  });
-};
-
-export const useFirewallRuleSetQuery = (id: number, enabled: boolean) => {
+export const useFirewallRuleSetQuery = (
+  id: number,
+  enabled: boolean = true,
+) => {
   return useQuery<FirewallRuleSet, APIError[]>({
     ...firewallQueries.ruleset(id),
     enabled,
   });
 };
 
-export const useFirewallPrefixListsQuery = (
-  enabled: boolean,
+export const useAllFirewallRuleSetsQuery = (
+  enabled: boolean = true,
+  params?: Params,
+  filter?: Filter,
+) => {
+  return useQuery<FirewallRuleSet[], APIError[]>({
+    ...firewallQueries.rulesets._ctx.all(params, filter),
+    enabled,
+  });
+};
+
+export const useAllFirewallPrefixListsQuery = (
+  enabled: boolean = true,
   params?: Params,
   filter?: Filter,
 ) => {
