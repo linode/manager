@@ -40,7 +40,10 @@ function checkActionMenu(tableAlias: string, mockDestinations: Destination[]) {
   });
 }
 
-function deleteItem(tableAlias: string, destination: Destination) {
+function deleteDestinationViaActionMenu(
+  tableAlias: string,
+  destination: Destination
+) {
   cy.get(tableAlias)
     .find('tbody tr')
     .should('contain', destination.label)
@@ -70,7 +73,10 @@ function deleteItem(tableAlias: string, destination: Destination) {
     });
 }
 
-function editItemViaActionMenu(tableAlias: string, destination: Destination) {
+function editDestinationViaActionMenu(
+  tableAlias: string,
+  destination: Destination
+) {
   cy.get(tableAlias)
     .find('tbody tr')
     .should('contain', destination.label)
@@ -137,7 +143,7 @@ describe('destinations landing checks for non-empty state', () => {
     cy.get('table').should('exist').as('destinationsTable');
 
     const exampleDestination = mockDestinations[0];
-    deleteItem('@destinationsTable', exampleDestination);
+    deleteDestinationViaActionMenu('@destinationsTable', exampleDestination);
 
     mockGetDestination(exampleDestination).as('getDestination');
 
@@ -149,6 +155,6 @@ describe('destinations landing checks for non-empty state', () => {
     cy.visit('/logs/delivery/destinations');
     cy.get('table').should('exist').as('destinationsTable');
     cy.wait('@getDestinations');
-    editItemViaActionMenu('@destinationsTable', exampleDestination);
+    editDestinationViaActionMenu('@destinationsTable', exampleDestination);
   });
 });
