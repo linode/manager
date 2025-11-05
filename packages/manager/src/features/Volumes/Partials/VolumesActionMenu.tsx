@@ -35,6 +35,7 @@ export const VolumesActionMenu = (props: Props) => {
 
   const { data: accountPermissions } = usePermissions('account', [
     'create_volume',
+    'is_account_admin',
   ]);
   const { data: volumePermissions, isLoading } = usePermissions(
     'volume',
@@ -76,15 +77,11 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     MANAGE_TAGS: {
-      disabled: !volumePermissions?.update_volume,
+      disabled: !accountPermissions?.is_account_admin,
       onClick: handlers.handleManageTags,
       title: 'Manage Tags',
-      tooltip: !volumePermissions?.update_volume
-        ? getRestrictedResourceText({
-            action: 'edit',
-            isSingular: true,
-            resourceType: 'Volumes',
-          })
+      tooltip: !accountPermissions?.is_account_admin
+        ? "You don't have permissions to manage tags. Please contact an account administrator for details."
         : undefined,
     },
     RESIZE: {
