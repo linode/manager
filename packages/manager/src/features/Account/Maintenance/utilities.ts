@@ -110,7 +110,7 @@ export const getUpcomingRelativeLabel = (
 
   // Prefer the actual or policy-derived start time to express "time until maintenance"
   const startDT = parseAPIDate(startISO);
-  const now = DateTime.local();
+  const now = DateTime.utc();
   if (startDT <= now) {
     return startDT.toRelative() ?? '—';
   }
