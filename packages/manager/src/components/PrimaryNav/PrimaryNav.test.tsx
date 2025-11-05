@@ -8,7 +8,6 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
 
-import type { ManagerPreferences } from '@linode/utilities';
 import type { Flags } from 'src/featureFlags';
 
 const props = {
@@ -27,7 +26,15 @@ const queryMocks = vi.hoisted(() => ({
     isIAMBeta: false,
     isIAMEnabled: false,
   })),
-  usePreferences: vi.fn().mockReturnValue({}),
+  usePreferences: vi.fn().mockReturnValue({
+    data: {
+      collapsedSideNavProductFamilies: [], // Empty array = nothing collapsed
+    },
+    isLoading: false,
+    error: null,
+  }),
+  useAccount: vi.fn().mockReturnValue({}),
+  useAccountSettings: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/useIsIAMEnabled', () => ({
@@ -39,28 +46,42 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     usePreferences: queryMocks.usePreferences,
+    useAccount: queryMocks.useAccount,
+    useAccountSettings: queryMocks.useAccountSettings,
   };
 });
 
 describe('PrimaryNav', () => {
-  const preference: ManagerPreferences['collapsedSideNavProductFamilies'] = [];
+  beforeEach(() => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: {
+        collapsedSideNavProductFamilies: [],
+      },
+      isLoading: false,
+      error: null,
+    });
+  });
 
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
-    server.use(
-      http.get('*/account/maintenance', () => {
-        return HttpResponse.json({ managed: false });
-      })
-    );
+    queryMocks.useAccountSettings.mockReturnValue({
+      data: {
+        managed: false,
+      },
+      isLoading: false,
+      error: null,
+    });
 
     const { findByTestId, getByTestId, queryByTestId, rerender } =
       renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
-    server.use(
-      http.get('*/account/maintenance', () => {
-        return HttpResponse.json({ managed: true });
-      })
-    );
+    queryMocks.useAccountSettings.mockReturnValue({
+      data: {
+        managed: true,
+      },
+      isLoading: false,
+      error: null,
+    });
 
     rerender(wrapWithTheme(<PrimaryNav {...props} />, { queryClient }));
 
@@ -70,6 +91,13 @@ describe('PrimaryNav', () => {
   });
 
   it('should have aria-current attribute for accessible links', () => {
+    queryMocks.useAccountSettings.mockReturnValue({
+      data: {
+        managed: true,
+      },
+      isLoading: false,
+      error: null,
+    });
     const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
       queryClient,
     });
@@ -78,19 +106,15 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V1', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags: Partial<Flags> = {
       dbaasV2: {
@@ -99,33 +123,26 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByTestId, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />,
-      {
-        flags,
-      }
-    );
+    renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
 
-    const databaseNavItem = await findByTestId('menu-item-Databases');
+    const databaseNavItem = screen.getByTestId('menu-item-Databases');
 
     expect(databaseNavItem).toBeVisible();
-    expect(queryByTestId('betaChip')).toBeNull();
+    expect(screen.queryByTestId('betaChip')).toBeNull();
   });
 
   it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const account = accountFactory.build({
       capabilities: ['Managed Databases Beta'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags: Partial<Flags> = {
       dbaasV2: {
@@ -146,19 +163,15 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags: Partial<Flags> = {
       dbaasV2: {
@@ -181,19 +194,15 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const account = accountFactory.build({
       capabilities: ['Managed Databases Beta'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags: Partial<Flags> = {
       dbaasV2: {
@@ -216,11 +225,11 @@ describe('PrimaryNav', () => {
       capabilities: ['Akamai Cloud Pulse'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclp: {

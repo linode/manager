@@ -96,6 +96,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const location = useLocation();
 
   const { data: accountSettings } = useAccountSettings();
+
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
@@ -122,9 +123,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const collapsedSideNavPreference =
     preferences?.collapsedSideNavProductFamilies;
 
-  const collapsedAccordions = collapsedSideNavPreference ?? [
-    1, 2, 3, 4, 5, 6, 7,
-  ]; // by default, we collapse all categories if no preference is set;
+  const collapsedAccordions = React.useMemo(
+    () => collapsedSideNavPreference ?? [1, 2, 3, 4, 5, 6, 7], // by default, we collapse all categories if no preference is set;
+    [collapsedSideNavPreference]
+  );
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
@@ -338,19 +340,22 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       ]
     );
 
-  const accordionClicked = (index: number) => {
-    let updatedCollapsedAccordions: number[];
-    if (collapsedAccordions.includes(index)) {
-      updatedCollapsedAccordions = collapsedAccordions.filter(
-        (accIndex) => accIndex !== index
-      );
-    } else {
-      updatedCollapsedAccordions = [...collapsedAccordions, index];
-    }
-    updatePreferences({
-      collapsedSideNavProductFamilies: updatedCollapsedAccordions,
-    });
-  };
+  const accordionClicked = React.useCallback(
+    (index: number) => {
+      let updatedCollapsedAccordions: number[];
+      if (collapsedAccordions.includes(index)) {
+        updatedCollapsedAccordions = collapsedAccordions.filter(
+          (accIndex) => accIndex !== index
+        );
+      } else {
+        updatedCollapsedAccordions = [...collapsedAccordions, index];
+      }
+      updatePreferences({
+        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
+      });
+    },
+    [collapsedAccordions, updatePreferences]
+  );
 
   const checkOverflow = React.useCallback(() => {
     if (navItemsRef.current && primaryNavRef.current) {
