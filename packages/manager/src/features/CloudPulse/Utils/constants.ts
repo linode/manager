@@ -1,3 +1,4 @@
+import type { AssociatedEntityType } from '../shared/types';
 import type { Filter } from '@linode/api-v4';
 
 export const DASHBOARD_ID = 'dashboardId';
@@ -135,4 +136,13 @@ export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
   blockstorage: {
     ...ORDER_BY_LABLE_ASC,
   },
+};
+
+export const ASSOCIATED_ENTITY_METRIC_MAP: Record<
+  AssociatedEntityType,
+  string
+> = {
+  linode: 'Linode',
+  nodebalancer: 'Node Balancer',
+  both: '',
 };
