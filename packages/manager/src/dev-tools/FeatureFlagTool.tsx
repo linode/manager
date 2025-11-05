@@ -35,6 +35,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'Firewall Rulesets & Prefixlists',
   },
   { flag: 'gecko2', label: 'Gecko' },
+  { flag: 'generationalPlans', label: 'Generational compute plans' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
