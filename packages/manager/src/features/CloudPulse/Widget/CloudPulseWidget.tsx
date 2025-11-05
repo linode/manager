@@ -375,6 +375,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       }
       setDimensionFilters(selectedFilters);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const {
@@ -439,9 +440,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     return (
       FILTER_CONFIG.get(dashboardId)
         ?.filters.filter(
-          (filter) => filter.configuration.dimensionKey !== undefined
+          ({ configuration }) => configuration.dimensionKey !== undefined
         )
-        .map((filter) => filter.configuration.dimensionKey) ?? []
+        .map(({ configuration }) => configuration.dimensionKey) ?? []
     );
   }, [dashboardId]);
   const filteredDimensions = React.useMemo(() => {

@@ -4,6 +4,7 @@ import { transformDimensionValue } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
+  getFirewallNodeBalancers,
   getLinodeRegions,
   getNodebalancerRegions,
   getOperatorGroup,
@@ -13,7 +14,7 @@ import {
   scopeBasedFilteredResources,
 } from './utils';
 
-import type { Linode } from '@linode/api-v4';
+import type { Linode, NodeBalancer } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 
 describe('Utils', () => {
@@ -174,6 +175,28 @@ describe('Utils', () => {
 
     it('should handle empty linode list', () => {
       expect(getFirewallLinodes([])).toEqual([]);
+    });
+  });
+
+  describe('getFirewallNodeBalancers', () => {
+    const nodebalancers: NodeBalancer[] = nodeBalancerFactory.buildList(2);
+
+    it('should return nodebalancer options with transformed labels', () => {
+      // checking for same label as nodebalancer_id dimension filter should not have any transformation
+      expect(getFirewallNodeBalancers(nodebalancers)).toEqual([
+        {
+          label: nodebalancers[0].label,
+          value: nodebalancers[0].id.toString(),
+        },
+        {
+          label: nodebalancers[1].label,
+          value: nodebalancers[1].id.toString(),
+        },
+      ]);
+    });
+
+    it('should handle empty nodebalancer list', () => {
+      expect(getFirewallNodeBalancers([])).toEqual([]);
     });
   });
 

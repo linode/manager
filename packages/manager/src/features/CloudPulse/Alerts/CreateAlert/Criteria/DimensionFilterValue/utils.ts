@@ -141,13 +141,9 @@ export const getFirewallNodeBalancers = (
   nodebalancers: NodeBalancer[]
 ): Item<string, string>[] => {
   if (!nodebalancers) return [];
-  return nodebalancers.map((nodebalancer) => ({
-    label: transformDimensionValue(
-      'firewall',
-      'nodebalancer_id',
-      nodebalancer.label
-    ),
-    value: String(nodebalancer.id),
+  return nodebalancers.map(({ id, label }) => ({
+    label: transformDimensionValue('firewall', 'nodebalancer_id', label),
+    value: String(id),
   }));
 };
 

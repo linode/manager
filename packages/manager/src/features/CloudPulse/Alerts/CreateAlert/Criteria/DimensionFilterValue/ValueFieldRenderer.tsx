@@ -70,7 +70,6 @@ interface ValueFieldRendererProps {
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
-
   /**
    * The type of monitoring to filter on.
    */
@@ -190,7 +189,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             name={name}
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
-            selectedRegions={selectedRegions ?? []}
+            selectedRegions={selectedRegions ?? undefined}
             serviceType={serviceType ?? null}
             type={type}
           />
