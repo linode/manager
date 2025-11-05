@@ -114,3 +114,6 @@ export const SESSION_STICKINESS_DEFAULTS: Record<Protocol, Stickiness> = {
   tcp: 'table',
   udp: 'session',
 };
+
+export const NO_PERMISSIONS_TOOLTIP_TEXT =
+  "You don't have permissions to edit this NodeBalancer.";

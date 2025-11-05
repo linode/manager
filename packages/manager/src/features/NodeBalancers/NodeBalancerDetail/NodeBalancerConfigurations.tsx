@@ -538,6 +538,11 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
               data-qa-add-config
               disabled={!this.props.permissions.update_nodebalancer}
               onClick={() => this.addNodeBalancerConfig()}
+              tooltipText={
+                !this.props.permissions.update_nodebalancer
+                  ? 'You do not have permission to add a configuration to this NodeBalancer.'
+                  : undefined
+              }
             >
               {configs.length === 0
                 ? 'Add a Configuration'
