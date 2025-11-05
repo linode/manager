@@ -12,7 +12,8 @@ import type { PlanSelectionFilterOptionsTable } from 'src/features/components/Pl
 
 interface KubernetesPlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  renderPlanSelection: (
+  planRows?: React.JSX.Element[];
+  renderPlanSelection?: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
@@ -33,12 +34,22 @@ export const KubernetesPlanSelectionTable = (
 ) => {
   const {
     filterOptions,
+    planRows,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
   } = props;
 
+  // Auto-detect pagination mode:
+  // - If planRows is provided, we're in pagination mode (modern) -> spacingBottom={0}
+  // - If only renderPlanSelection is provided, we're in legacy mode -> spacingBottom={16}
+  const isPaginationMode = planRows !== undefined;
+  const spacingBottom = isPaginationMode ? 0 : 16;
+
   return (
-    <Table aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}>
+    <Table
+      aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
+      spacingBottom={spacingBottom}
+    >
       <TableHead>
         <TableRow>
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
@@ -69,7 +80,7 @@ export const KubernetesPlanSelectionTable = (
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection()
+          (planRows ?? renderPlanSelection?.(filterOptions) ?? null)
         )}
       </TableBody>
     </Table>
