@@ -1,4 +1,4 @@
-import { Autocomplete, Button } from '@linode/ui';
+import { Autocomplete, Box, Button, SelectedIcon } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -7,19 +7,19 @@ import * as React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 
 import type { Theme } from '@mui/material/styles';
-import type { LabelValueOption } from 'src/features/Delivery/Shared/types';
+import type { AutocompleteOption } from 'src/features/Delivery/Shared/types';
 
 export interface DeliveryTabHeaderProps {
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
-  entity?: string;
+  entity: string;
   isSearching?: boolean;
   onButtonClick?: () => void;
   onSearch?: (label: string) => void;
   onSelect?: (status: string) => void;
   searchValue?: string;
-  selectList?: LabelValueOption[];
+  selectList?: AutocompleteOption[];
   selectValue?: string;
   spacingBottom?: 0 | 4 | 16 | 24;
 }
@@ -88,6 +88,7 @@ export const DeliveryTabHeader = ({
         {onSearch && searchValue !== undefined && (
           <DebouncedSearchTextField
             clearable
+            data-pendo-id={`Logs Delivery ${entity}s-Search`}
             hideLabel
             isSearching={isSearching}
             label={searchLabel}
@@ -99,6 +100,7 @@ export const DeliveryTabHeader = ({
         <StyledActions>
           {selectList && onSelect && (
             <Autocomplete
+              data-pendo-id={`Logs Delivery ${entity}s-Status`}
               label={'Status'}
               noMarginTop
               onChange={(_, option) => {
@@ -106,12 +108,32 @@ export const DeliveryTabHeader = ({
               }}
               options={selectList}
               placeholder="Select"
+              renderOption={(props, option, { selected }) => {
+                return (
+                  <li
+                    {...props}
+                    data-pendo-id={option.pendoId}
+                    data-qa-option
+                    key={props.key}
+                  >
+                    <Box
+                      sx={{
+                        flexGrow: 1,
+                      }}
+                    >
+                      {option.label}
+                    </Box>
+                    <SelectedIcon visible={selected} />
+                  </li>
+                );
+              }}
               value={selectList.find(({ value }) => value === selectValue)}
             />
           )}
           {onButtonClick && (
             <Button
               buttonType="primary"
+              data-pendo-id={`Logs Delivery ${entity}s-Create ${entity}`}
               disabled={disabledCreateButton}
               onClick={onButtonClick}
               {...buttonDataAttrs}

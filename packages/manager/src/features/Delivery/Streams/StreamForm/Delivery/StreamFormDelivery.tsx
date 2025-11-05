@@ -8,6 +8,7 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
@@ -22,12 +23,14 @@ import type {
   AkamaiObjectStorageDetails,
   DestinationType,
 } from '@linode/api-v4';
+import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 interface DestinationName {
   create?: boolean;
   id?: number;
   label: string;
+  pendoId?: string;
   type?: DestinationType;
 }
 
@@ -40,16 +43,19 @@ const controlPaths = {
 } as const;
 
 interface StreamFormDeliveryProps {
+  mode: FormMode;
   setDisableTestConnection: (disable: boolean) => void;
 }
 
 export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
-  const { setDisableTestConnection } = props;
+  const { mode, setDisableTestConnection } = props;
 
   const theme = useTheme();
   const { control, setValue, clearErrors } =
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
+
+  const capitalizedMode = capitalize(mode);
 
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
@@ -96,6 +102,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         name="destination.type"
         render={({ field, fieldState }) => (
           <Autocomplete
+            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Destination Type`}
             disableClearable
             disabled
             errorText={fieldState.error?.message}
@@ -114,6 +121,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         name="destination.label"
         render={({ field, fieldState }) => (
           <Autocomplete
+            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Destination Name`}
             errorText={fieldState.error?.message}
             filterOptions={(options, params) => {
               const filtered = destinationNameFilterOptions(options, params);
@@ -127,6 +135,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                   create: true,
                   label: inputValue,
                   type: selectedDestinationType,
+                  pendoId: `Logs Delivery Streams ${capitalizedMode}-Destination Name-New`,
                 });
               }
 
@@ -163,7 +172,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
             renderOption={(props, option) => {
               const { id, ...optionProps } = props;
               return (
-                <li {...optionProps} key={id}>
+                <li data-pendo-id={option.pendoId} {...optionProps} key={id}>
                   {option.create ? (
                     <>
                       <strong>Create&nbsp;</strong> &quot;{option.label}&quot;
@@ -183,6 +192,8 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
           {creatingNewDestination && !selectedDestinations?.length && (
             <DestinationAkamaiObjectStorageDetailsForm
               controlPaths={controlPaths}
+              entity="stream"
+              mode={mode}
             />
           )}
           {selectedDestinations?.[0] && (
