@@ -194,6 +194,7 @@ export interface Flags {
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   gecko2: GeckoFeatureFlag;
+  generationalPlans: boolean;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
