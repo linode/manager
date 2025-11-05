@@ -31,6 +31,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
+  { flag: 'generationalPlans', label: 'Generational compute plans' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
