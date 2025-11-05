@@ -16,7 +16,6 @@ import {
 import { isDefaultDatabase } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import {
-  extendedIPToString,
   ipFieldPlaceholder,
   ipV6FieldPlaceholder,
   stringToExtendedIP,
@@ -42,7 +41,7 @@ export const ManageAccessControlDrawer = (props: Props) => {
 
   const [allowListErrors, setAllowListErrors] = React.useState<APIError[]>();
 
-  const handleIPBlur = (_ips: ExtendedIP[]) => {
+  const handleValidateIPs = (_ips: ExtendedIP[]) => {
     const _ipsWithMasks = enforceIPMasks(_ips);
 
     const validatedIPs = validateIPs(_ipsWithMasks, {
@@ -63,27 +62,16 @@ export const ManageAccessControlDrawer = (props: Props) => {
   const isDefaultDB = isDefaultDatabase(database);
 
   const onSubmit = async (values: ManageAccessControlValues) => {
-    if (values.allow_list.some((ip) => ip.error)) {
+    handleValidateIPs(values.allow_list);
+
+    const allowList = getValues('allow_list');
+
+    if (allowList.some((ip) => ip.error)) {
       return;
     }
 
-    // Get the IP address strings out of the objects and filter empty strings out.
-    // Ensure we append /32 to all IPs if / is not already present.
-    const allowListRetracted = values.allow_list.reduce((acc, currentIP) => {
-      let ipString = extendedIPToString(currentIP);
-      if (ipString === '') {
-        return acc;
-      }
-
-      if (ipString.indexOf('/') === -1) {
-        ipString += '/32';
-      }
-
-      return [...acc, ipString];
-    }, []);
-
     try {
-      await updateDatabase({ allow_list: [...allowListRetracted] });
+      await updateDatabase({ allow_list: allowList.map((ip) => ip.address) });
       onClose();
     } catch (errors) {
       // Surface allow_list errors -- for example, "Invalid IPv4 address(es): ..."
@@ -122,6 +110,7 @@ export const ManageAccessControlDrawer = (props: Props) => {
     handleSubmit,
     setError,
     reset,
+    getValues,
     setValue,
   } = form;
 
@@ -167,7 +156,7 @@ export const ManageAccessControlDrawer = (props: Props) => {
                 forDatabaseAccessControls
                 inputProps={{ autoFocus: true }}
                 ips={field.value}
-                onBlur={handleIPBlur}
+                onBlur={handleValidateIPs}
                 onChange={field.onChange}
                 placeholder={
                   isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
