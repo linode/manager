@@ -192,13 +192,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return { ...platformFilter, '+and': [typeFilter, regionFilter] };
   }, [alertClass, alertType, serviceType, supportedRegionIds]);
 
-  const associatedEntityType =
-    entityType === 'linode'
-      ? 'linode'
-      : entityType === 'nodebalancer'
-        ? 'nodebalancer'
-        : 'both';
-
   const {
     data: resources,
     isError: isResourcesError,
@@ -210,10 +203,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     serviceType,
     {},
     xFilterToBeApplied,
-    serviceType === 'firewall' ? associatedEntityType : undefined,
-    serviceType === 'firewall' && associatedEntityType !== 'both'
+    serviceType === 'firewall' && entityType ? entityType : undefined,
+    serviceType === 'firewall' && entityType
       ? (resources: Firewall[]) =>
-          filterFirewallResources(resources, associatedEntityType)
+          filterFirewallResources(resources, entityType)
       : undefined
   );
 

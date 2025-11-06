@@ -19,6 +19,7 @@ import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface ValueFieldRendererProps {
   /**
@@ -38,7 +39,7 @@ interface ValueFieldRendererProps {
   /**
    * The entity type for firewall filtering (linode or nodebalancer).
    */
-  entityType?: 'linode' | 'nodebalancer' | null;
+  entityType?: AssociatedEntityType;
   /**
    * Error message to be displayed under the input field, if any.
    */

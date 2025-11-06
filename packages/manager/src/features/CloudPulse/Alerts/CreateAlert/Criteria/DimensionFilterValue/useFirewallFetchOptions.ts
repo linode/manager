@@ -35,7 +35,7 @@ export function useFirewallFetchOptions(
     serviceType,
     type,
     scope,
-    associatedEntityType = 'both',
+    associatedEntityType,
   } = props;
 
   const supportedRegionIds =
@@ -74,7 +74,7 @@ export function useFirewallFetchOptions(
     {},
     {},
     associatedEntityType,
-    associatedEntityType !== 'both'
+    associatedEntityType
       ? (resources: Firewall[]) =>
           filterFirewallResources(resources, associatedEntityType)
       : undefined
@@ -123,7 +123,7 @@ export function useFirewallFetchOptions(
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds.length > 0 &&
-      (associatedEntityType === 'linode' || associatedEntityType === 'both') &&
+      associatedEntityType === 'linode' &&
       supportedRegionIds?.length > 0
   );
 
@@ -136,8 +136,7 @@ export function useFirewallFetchOptions(
     serviceType === 'firewall' &&
       filterLabels.includes(dimensionLabel ?? '') &&
       filteredFirewallParentEntityIds.length > 0 &&
-      (associatedEntityType === 'nodebalancer' ||
-        associatedEntityType === 'both') &&
+      associatedEntityType === 'nodebalancer' &&
       supportedRegionIds?.length > 0,
     {},
     combinedFilterNodebalancer

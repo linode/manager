@@ -80,13 +80,16 @@ export const Metric = (props: MetricCriteriaProps) => {
   };
   const serviceType = useWatch({ control, name: 'serviceType' });
   const entityType = useWatch({ control, name: 'entity_type' });
+  const entityLabelMap = {
+    linode: 'Linode',
+    nodebalancer: 'Node Balancer',
+  }
   const metricOptions = React.useMemo(() => {
     let filteredData = data;
 
     // Filter firewall metrics based on entity type
     if (serviceType === 'firewall' && entityType) {
-      const entityLabel =
-        entityType === 'linode' ? '(Linode)' : '(Node Balancer)';
+      const entityLabel = entityLabelMap[entityType];
       filteredData = data.filter((metric) =>
         metric.label.includes(entityLabel)
       );

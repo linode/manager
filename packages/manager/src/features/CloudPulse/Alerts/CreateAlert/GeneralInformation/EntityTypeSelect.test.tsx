@@ -7,9 +7,15 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { EntityTypeSelect } from './EntityTypeSelect';
 
 describe('EntityTypeSelect component tests', () => {
+  const onEntityChange = vi.fn();
   it('should render the Autocomplete component', () => {
     const { getAllByText, getByTestId } = renderWithThemeAndHookFormContext({
-      component: <EntityTypeSelect name="entity_type" />,
+      component: (
+        <EntityTypeSelect
+          name="entity_type"
+          onEntityTypeChange={onEntityChange}
+        />
+      ),
     });
     getByTestId('entity-type-select');
     getAllByText('Entity Type');
@@ -17,7 +23,12 @@ describe('EntityTypeSelect component tests', () => {
 
   it('should render entity type options', async () => {
     renderWithThemeAndHookFormContext({
-      component: <EntityTypeSelect name="entity_type" />,
+      component: (
+        <EntityTypeSelect
+          name="entity_type"
+          onEntityTypeChange={onEntityChange}
+        />
+      ),
     });
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
@@ -34,7 +45,12 @@ describe('EntityTypeSelect component tests', () => {
 
   it('should be able to select an entity type', async () => {
     renderWithThemeAndHookFormContext({
-      component: <EntityTypeSelect name="entity_type" />,
+      component: (
+        <EntityTypeSelect
+          name="entity_type"
+          onEntityTypeChange={onEntityChange}
+        />
+      ),
     });
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await userEvent.click(
@@ -44,12 +60,11 @@ describe('EntityTypeSelect component tests', () => {
   });
 
   it('should call onEntityTypeChange when selection changes', async () => {
-    const onEntityTypeChange = vi.fn();
     renderWithThemeAndHookFormContext({
       component: (
         <EntityTypeSelect
           name="entity_type"
-          onEntityTypeChange={onEntityTypeChange}
+          onEntityTypeChange={onEntityChange}
         />
       ),
     });
@@ -57,12 +72,17 @@ describe('EntityTypeSelect component tests', () => {
     await userEvent.click(
       await screen.findByRole('option', { name: 'NodeBalancers' })
     );
-    expect(onEntityTypeChange).toHaveBeenCalled();
+    expect(onEntityChange).toHaveBeenCalled();
   });
 
   it('should clear the selection', async () => {
     renderWithThemeAndHookFormContext({
-      component: <EntityTypeSelect name="entity_type" />,
+      component: (
+        <EntityTypeSelect
+          name="entity_type"
+          onEntityTypeChange={onEntityChange}
+        />
+      ),
     });
     const entityTypeDropdown = screen.getByTestId('entity-type-select');
     await userEvent.click(

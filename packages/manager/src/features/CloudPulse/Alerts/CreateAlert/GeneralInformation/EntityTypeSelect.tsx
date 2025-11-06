@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { FieldPathByValue } from 'react-hook-form';
+import type { ControllerRenderProps, FieldPathByValue } from 'react-hook-form';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
@@ -17,7 +17,7 @@ interface EntityTypeSelectProps {
   /**
    * Callback function triggered when entity type changes
    */
-  onEntityTypeChange?: () => void;
+  onEntityTypeChange: () => void;
 }
 
 const entityTypeOptions: Item<string, 'linode' | 'nodebalancer'>[] = [
@@ -28,6 +28,24 @@ const entityTypeOptions: Item<string, 'linode' | 'nodebalancer'>[] = [
 export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
   const { name, onEntityTypeChange } = props;
   const { control } = useFormContext<CreateAlertDefinitionForm>();
+
+  const handleAutocompleteChange = (
+    field: ControllerRenderProps<CreateAlertDefinitionForm, 'entity_type'>
+  ) => {
+    return (
+      _: unknown,
+      selected: null | { label: string; value: 'linode' | 'nodebalancer' },
+      reason: string
+    ) => {
+      if (selected) {
+        field.onChange(selected.value);
+      }
+      if (reason === 'clear') {
+        field.onChange(null);
+      }
+      onEntityTypeChange();
+    };
+  };
 
   return (
     <Controller
@@ -40,21 +58,7 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
           fullWidth
           label="Entity Type"
           onBlur={field.onBlur}
-          onChange={(
-            _,
-            selected: { label: string; value: 'linode' | 'nodebalancer' },
-            reason
-          ) => {
-            if (selected) {
-              field.onChange(selected.value);
-            }
-            if (reason === 'clear') {
-              field.onChange(null);
-            }
-            if (onEntityTypeChange) {
-              onEntityTypeChange();
-            }
-          }}
+          onChange={handleAutocompleteChange(field)}
           options={entityTypeOptions}
           placeholder="Select an Entity Type"
           sx={{ marginTop: '5px' }}

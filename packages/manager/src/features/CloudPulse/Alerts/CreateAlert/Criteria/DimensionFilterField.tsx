@@ -173,7 +173,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               dimensionLabel={dimensionFieldWatcher}
               disabled={!dimensionFieldWatcher}
               entities={entities}
-              entityType={entityType}
+              entityType={entityType ?? undefined}
               errorText={fieldState.error?.message}
               name={name}
               onBlur={field.onBlur}

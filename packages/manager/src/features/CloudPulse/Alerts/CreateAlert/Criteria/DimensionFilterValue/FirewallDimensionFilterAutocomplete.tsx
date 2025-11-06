@@ -34,16 +34,8 @@ export const FirewallDimensionFilterAutocomplete = (
 
   const { data: regions } = useRegionsQuery();
 
-  // Map entity_type to associatedEntityType
-  const associatedEntityType =
-    entityType === 'linode'
-      ? 'linode'
-      : entityType === 'nodebalancer'
-        ? 'nodebalancer'
-        : 'both';
-
   const { values, isLoading, isError } = useFirewallFetchOptions({
-    associatedEntityType,
+    associatedEntityType: entityType,
     dimensionLabel,
     entities,
     regions,
