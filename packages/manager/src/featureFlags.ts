@@ -1,6 +1,7 @@
 import type { OCA } from './features/OneClickApps/types';
 import type { Region } from '@linode/api-v4';
 import type {
+  AlertStatusType,
   CloudPulseServiceType,
   TPAProvider,
 } from '@linode/api-v4/lib/profile';
@@ -141,6 +142,7 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
 }
