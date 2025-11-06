@@ -15,7 +15,8 @@ export const getAlertTypeToActionsList = (
     handleEdit,
     handleStatusChange,
   }: ActionHandlers,
-  alertStatus: AlertStatusType
+  alertStatus: AlertStatusType,
+  editDisableStatuses: AlertStatusType[] = []
 ): Record<AlertDefinitionType, Action[]> => ({
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
   system: [
@@ -34,7 +35,7 @@ export const getAlertTypeToActionsList = (
       title: 'Show Details',
     },
     {
-      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
+      disabled: editDisableStatuses.includes(alertStatus),
       onClick: handleEdit,
       title: 'Edit',
     },
@@ -44,7 +45,7 @@ export const getAlertTypeToActionsList = (
       title: getTitleForStatusChange(alertStatus),
     },
     {
-      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
+      disabled: editDisableStatuses.includes(alertStatus),
       onClick: handleDelete,
       title: 'Delete',
     },
