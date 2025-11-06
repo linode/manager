@@ -193,6 +193,7 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  firewallRulesetsPrefixlists: boolean;
   gecko2: GeckoFeatureFlag;
   generationalPlans: boolean;
   gpuv2: GpuV2;
