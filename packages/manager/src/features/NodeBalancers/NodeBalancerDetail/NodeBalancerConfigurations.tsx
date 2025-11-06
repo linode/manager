@@ -26,6 +26,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { NO_PERMISSIONS_TOOLTIP_TEXT } from '../constants';
 import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
 import {
@@ -540,7 +541,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
               onClick={() => this.addNodeBalancerConfig()}
               tooltipText={
                 !this.props.permissions.update_nodebalancer
-                  ? 'You do not have permission to add a configuration to this NodeBalancer.'
+                  ? NO_PERMISSIONS_TOOLTIP_TEXT
                   : undefined
               }
             >

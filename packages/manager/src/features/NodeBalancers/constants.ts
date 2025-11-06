@@ -1,3 +1,5 @@
+import { getRestrictedResourceText } from '../Account/utils';
+
 import type { Algorithm, Protocol, Stickiness } from '@linode/api-v4';
 
 export interface AlgorithmOption {
@@ -115,5 +117,8 @@ export const SESSION_STICKINESS_DEFAULTS: Record<Protocol, Stickiness> = {
   udp: 'session',
 };
 
-export const NO_PERMISSIONS_TOOLTIP_TEXT =
-  "You don't have permissions to edit this NodeBalancer.";
+export const NO_PERMISSIONS_TOOLTIP_TEXT = getRestrictedResourceText({
+  resourceType: 'NodeBalancers',
+  isSingular: true,
+  action: 'edit',
+});
