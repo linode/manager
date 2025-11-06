@@ -8,15 +8,15 @@ import {
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 
 import type {
-  LinodeObjectStorageDetails,
-  LinodeObjectStorageDetailsPayload,
+  AkamaiObjectStorageDetailsExtended,
+  AkamaiObjectStorageDetailsPayload,
 } from '@linode/api-v4';
 
 describe('delivery utils functions', () => {
   describe('getDestinationTypeOption ', () => {
     it('should return option object matching provided value', () => {
       const result = getDestinationTypeOption(
-        destinationType.LinodeObjectStorage
+        destinationType.AkamaiObjectStorage
       );
       expect(result).toEqual(destinationTypeOptions[1]);
     });
@@ -28,19 +28,18 @@ describe('delivery utils functions', () => {
   });
 
   describe('getDestinationPayloadDetails ', () => {
-    const testDetails: LinodeObjectStorageDetails = {
+    const testDetails: AkamaiObjectStorageDetailsExtended = {
       path: 'testpath',
       access_key_id: 'keyId',
       access_key_secret: 'secret',
       bucket_name: 'name',
       host: 'host',
-      region: 'us-ord',
     };
 
     it('should return payload details with path', () => {
       const result = getDestinationPayloadDetails(
         testDetails
-      ) as LinodeObjectStorageDetailsPayload;
+      ) as AkamaiObjectStorageDetailsPayload;
 
       expect(result.path).toEqual(testDetails.path);
     });
@@ -49,7 +48,7 @@ describe('delivery utils functions', () => {
       const result = getDestinationPayloadDetails({
         ...testDetails,
         path: '',
-      }) as LinodeObjectStorageDetailsPayload;
+      }) as AkamaiObjectStorageDetailsPayload;
 
       expect(result.path).toEqual(undefined);
     });

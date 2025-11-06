@@ -14,6 +14,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { getDestinationPayloadDetails } from 'src/features/Delivery/deliveryUtils';
 import { DestinationForm } from 'src/features/Delivery/Destinations/DestinationForm/DestinationForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -51,9 +52,8 @@ export const DestinationEdit = () => {
 
   const form = useForm<DestinationFormType>({
     defaultValues: {
-      type: destinationType.LinodeObjectStorage,
+      type: destinationType.AkamaiObjectStorage,
       details: {
-        region: '',
         path: '',
       },
     },
@@ -78,9 +78,11 @@ export const DestinationEdit = () => {
   }, [destination, form]);
 
   const onSubmit = () => {
+    const formValues = form.getValues();
     const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
-      ...omitProps(form.getValues(), ['type']),
+      ...omitProps(formValues, ['type']),
+      details: getDestinationPayloadDetails(formValues.details),
     };
 
     updateDestination(destination)

@@ -1,3 +1,19 @@
+## [2025-11-04] - v0.23.0
+
+
+### Fixed:
+
+- Misaligned focus indicator on the Toggle component causing visual inconsistency when navigating via keyboard ([#12988](https://github.com/linode/manager/pull/12988))
+
+## [2025-10-21] - v0.22.0
+
+
+### Fixed:
+
+- Align date pickers to latest CDS design styling ([#12864](https://github.com/linode/manager/pull/12864))
+- DateTimeRangePicker: time will not change on changing timezone for custom dates ([#12971](https://github.com/linode/manager/pull/12971))
+- Prevent range background for single selections in DatePicker/Calendar ([#12972](https://github.com/linode/manager/pull/12972))
+
 ## [2025-09-23] - v0.21.0
 
 ### Changed:

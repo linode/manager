@@ -19,6 +19,7 @@ export interface GetMyDelegatedChildAccountsParams {
 }
 
 export interface GetDelegatedChildAccountsForUserParams {
+  enabled?: boolean;
   params?: Params;
   username: string;
 }
@@ -29,6 +30,6 @@ export interface GetChildAccountDelegatesParams {
 }
 
 export interface UpdateChildAccountDelegatesParams {
-  data: string[];
   euuid: string;
+  users: string[];
 }

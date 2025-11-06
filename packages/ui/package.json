@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.21.0",
+  "version": "0.23.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -22,7 +22,7 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@mui/utils": "^7.1.0",
-    "@mui/x-date-pickers": "^7.27.0",
+    "@mui/x-date-pickers": "^8.11.2",
     "luxon": "3.4.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -54,6 +54,6 @@
     "@types/luxon": "3.4.2",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.6",
-    "vite-plugin-svgr": "^3.2.0"
+    "vite-plugin-svgr": "^4.5.0"
   }
 }

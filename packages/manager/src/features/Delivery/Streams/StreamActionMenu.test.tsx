@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import { streamFactory } from 'src/factories/delivery';
+import { streamFactory } from 'src/factories';
 import { StreamActionMenu } from 'src/features/Delivery/Streams/StreamActionMenu';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -30,7 +30,7 @@ describe('StreamActionMenu', () => {
 
       await userEvent.click(actionMenuButton);
 
-      for (const action of ['Edit', 'Disable', 'Delete']) {
+      for (const action of ['Edit', 'Deactivate', 'Delete']) {
         expect(screen.getByText(action)).toBeVisible();
       }
     });
@@ -44,7 +44,7 @@ describe('StreamActionMenu', () => {
 
       await userEvent.click(actionMenuButton);
 
-      for (const action of ['Edit', 'Enable', 'Delete']) {
+      for (const action of ['Edit', 'Activate', 'Delete']) {
         expect(screen.getByText(action)).toBeVisible();
       }
     });

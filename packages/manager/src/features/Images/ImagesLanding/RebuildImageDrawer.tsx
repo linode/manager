@@ -24,7 +24,7 @@ export const RebuildImageDrawer = (props: Props) => {
 
   const navigate = useNavigate();
   const { data: linodes, isLoading } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery(),
+    useAllLinodesQuery({}, {}, open),
     'linode',
     ['rebuild_linode', 'view_linode'],
     open

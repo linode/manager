@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Paper, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
+import { useMemo } from 'react';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
 import { StyledHeader } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar.styles';
@@ -12,6 +13,7 @@ interface StreamFormSubmitBarProps {
   blockSubmit?: boolean;
   connectionTested: boolean;
   destinationType?: DestinationType;
+  disableTestConnection?: boolean;
   formType: FormType;
   isSubmitting: boolean;
   isTesting: boolean;
@@ -31,10 +33,20 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
     onTestConnection,
     isSubmitting,
     isTesting,
+    disableTestConnection = false,
   } = props;
 
   const capitalizedFormType = capitalize(formType);
   const enableSubmit = !blockSubmit || connectionTested;
+  const buttonLabel = useMemo(
+    () =>
+      mode === 'edit' ? 'Save' : `${capitalize(mode)} ${capitalizedFormType}`,
+    [mode, capitalizedFormType]
+  );
+  const pagePendoId = useMemo(
+    () => `Logs Delivery ${capitalizedFormType}s ${capitalize(mode)}`,
+    [mode, capitalizedFormType]
+  );
 
   return (
     <Paper sx={{ position: 'sticky', top: 0 }}>
@@ -52,8 +64,13 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
           </>
         )}
         <Divider dark spacingBottom={0} spacingTop={16} />
+        <Typography mb={1}>
+          Stream provisioning may take up to 45 minutes.
+        </Typography>
         <Button
           buttonType="outlined"
+          data-pendo-id={`${pagePendoId}-Test Connection`}
+          disabled={disableTestConnection}
           loading={isTesting}
           onClick={onTestConnection}
           sx={(theme) => ({
@@ -67,6 +84,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
         </Button>
         <Button
           buttonType="primary"
+          data-pendo-id={`${pagePendoId}-${buttonLabel}`}
           disabled={!enableSubmit}
           loading={isSubmitting}
           onClick={onSubmit}
@@ -76,7 +94,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
             },
           })}
         >
-          {capitalize(mode)} {capitalizedFormType}
+          {buttonLabel}
         </Button>
       </Stack>
     </Paper>

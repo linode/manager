@@ -8,11 +8,15 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { useDelegationRole } from './hooks/useDelegationRole';
+import { useIsIAMDelegationEnabled } from './hooks/useIsIAMEnabled';
 import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isParentAccount } = useDelegationRole();
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
@@ -22,6 +26,11 @@ export const IdentityAccessLanding = React.memo(() => {
     {
       to: `/iam/roles`,
       title: 'Roles',
+    },
+    {
+      hide: !isIAMDelegationEnabled || !isParentAccount,
+      to: `/iam/delegations`,
+      title: 'Account Delegations',
     },
   ]);
 

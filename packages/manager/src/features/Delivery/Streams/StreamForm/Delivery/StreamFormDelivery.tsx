@@ -8,26 +8,29 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationLinodeObjectStorageDetailsForm';
+import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
-import { DestinationLinodeObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationLinodeObjectStorageDetailsSummary';
+import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
 
 import type {
+  AkamaiObjectStorageDetails,
   DestinationType,
-  LinodeObjectStorageDetails,
 } from '@linode/api-v4';
+import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 interface DestinationName {
   create?: boolean;
   id?: number;
   label: string;
+  pendoId?: string;
   type?: DestinationType;
 }
 
@@ -37,17 +40,29 @@ const controlPaths = {
   bucketName: 'destination.details.bucket_name',
   host: 'destination.details.host',
   path: 'destination.details.path',
-  region: 'destination.details.region',
 } as const;
 
-export const StreamFormDelivery = () => {
+interface StreamFormDeliveryProps {
+  mode: FormMode;
+  setDisableTestConnection: (disable: boolean) => void;
+}
+
+export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
+  const { mode, setDisableTestConnection } = props;
+
   const theme = useTheme();
   const { control, setValue, clearErrors } =
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
 
+  const capitalizedMode = capitalize(mode);
+
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    setDisableTestConnection(isLoading || !!error || !creatingNewDestination);
+  }, [isLoading, error, setDisableTestConnection, creatingNewDestination]);
 
   const destinationNameOptions: DestinationName[] = (destinations || []).map(
     ({ id, label, type }) => ({
@@ -87,6 +102,7 @@ export const StreamFormDelivery = () => {
         name="destination.type"
         render={({ field, fieldState }) => (
           <Autocomplete
+            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Destination Type`}
             disableClearable
             disabled
             errorText={fieldState.error?.message}
@@ -105,6 +121,7 @@ export const StreamFormDelivery = () => {
         name="destination.label"
         render={({ field, fieldState }) => (
           <Autocomplete
+            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Destination Name`}
             errorText={fieldState.error?.message}
             filterOptions={(options, params) => {
               const filtered = destinationNameFilterOptions(options, params);
@@ -118,6 +135,7 @@ export const StreamFormDelivery = () => {
                   create: true,
                   label: inputValue,
                   type: selectedDestinationType,
+                  pendoId: `Logs Delivery Streams ${capitalizedMode}-Destination Name-New`,
                 });
               }
 
@@ -136,7 +154,10 @@ export const StreamFormDelivery = () => {
               setValue('stream.destinations', id ? [id] : []);
               const selectedDestination = id ? findDestination(id) : undefined;
               if (selectedDestination) {
-                setValue('destination.details', selectedDestination.details);
+                setValue('destination.details', {
+                  ...selectedDestination.details,
+                  access_key_secret: '',
+                });
               } else {
                 clearErrors('destination.details');
               }
@@ -151,7 +172,7 @@ export const StreamFormDelivery = () => {
             renderOption={(props, option) => {
               const { id, ...optionProps } = props;
               return (
-                <li {...optionProps} key={id}>
+                <li data-pendo-id={option.pendoId} {...optionProps} key={id}>
                   {option.create ? (
                     <>
                       <strong>Create&nbsp;</strong> &quot;{option.label}&quot;
@@ -166,17 +187,19 @@ export const StreamFormDelivery = () => {
           />
         )}
       />
-      {selectedDestinationType === destinationType.LinodeObjectStorage && (
+      {selectedDestinationType === destinationType.AkamaiObjectStorage && (
         <>
           {creatingNewDestination && !selectedDestinations?.length && (
-            <DestinationLinodeObjectStorageDetailsForm
+            <DestinationAkamaiObjectStorageDetailsForm
               controlPaths={controlPaths}
+              entity="stream"
+              mode={mode}
             />
           )}
           {selectedDestinations?.[0] && (
-            <DestinationLinodeObjectStorageDetailsSummary
+            <DestinationAkamaiObjectStorageDetailsSummary
               {...(findDestination(selectedDestinations[0])
-                ?.details as LinodeObjectStorageDetails)}
+                ?.details as AkamaiObjectStorageDetails)}
             />
           )}
         </>

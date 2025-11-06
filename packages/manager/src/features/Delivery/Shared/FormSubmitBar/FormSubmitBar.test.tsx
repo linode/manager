@@ -22,7 +22,7 @@ describe('StreamFormSubmitBar', () => {
         <FormSubmitBar
           blockSubmit={blockSubmit}
           connectionTested={connectionTested}
-          destinationType={destinationType.LinodeObjectStorage}
+          destinationType={destinationType.AkamaiObjectStorage}
           formType={formType}
           isSubmitting={false}
           isTesting={false}
@@ -38,7 +38,7 @@ describe('StreamFormSubmitBar', () => {
             details: {},
           },
           destination: {
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
             details: {
               region: '',
             },
@@ -82,7 +82,7 @@ describe('StreamFormSubmitBar', () => {
     describe('and in edit mode', () => {
       it('should render enabled Edit Stream button', async () => {
         renderComponent('stream', 'edit');
-        const submitButton = screen.getByText('Edit Stream');
+        const submitButton = screen.getByText('Save');
 
         expect(submitButton).toBeEnabled();
       });
@@ -91,7 +91,7 @@ describe('StreamFormSubmitBar', () => {
     it('should render Delivery summary with destination type', () => {
       renderComponent('stream', 'create');
       const deliveryTitle = screen.getByText('Delivery');
-      const deliveryType = screen.getByText('Linode Object Storage');
+      const deliveryType = screen.getByText('Akamai Object Storage');
 
       expect(deliveryTitle).toBeInTheDocument();
       expect(deliveryType).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('StreamFormSubmitBar', () => {
     describe('and in edit mode', () => {
       it('should render enabled Edit Destination button', async () => {
         renderComponent('destination', 'edit');
-        const submitButton = screen.getByText('Edit Destination');
+        const submitButton = screen.getByText('Save');
 
         expect(submitButton).toBeEnabled();
       });

@@ -5,7 +5,11 @@ export const IAM_LABEL = 'Identity and Access';
 
 export const NO_ASSIGNED_ROLES_TEXT = `The user doesn't have any roles assigned yet. Once you assign the role, it will show up here.`;
 
+export const NO_ASSIGNED_DEFAULT_ROLES_TEXT = `There are no default roles assigned yet. Once you assign a role, it will appear here.`;
+
 export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity access roles assigned yet. Once you assign the user a role on specific entities, these entities will show up here.`;
+
+export const NO_ASSIGNED_DEFAULT_ENTITIES_TEXT = `There are no default entity access roles assigned yet. Once you assign the default role on specific entities, these entities will show up here.`;
 
 export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were saved.`;
 
@@ -14,6 +18,11 @@ export const LAST_ACCOUNT_ADMIN_ERROR =
 
 export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
+
+// Delegation error messages
+export const NO_DELEGATIONS_TEXT = 'No delegate users found.';
+export const DELEGATION_VALIDATION_ERROR =
+  'At least one user must be selected as a delegate.';
 
 // Links
 export const IAM_DOCS_LINK =

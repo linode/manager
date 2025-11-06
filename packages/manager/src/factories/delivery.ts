@@ -6,15 +6,13 @@ import type { Destination } from '@linode/api-v4';
 export const destinationFactory = Factory.Sync.makeFactory<Destination>({
   details: {
     access_key_id: 'Access Id',
-    access_key_secret: 'Access Secret',
     bucket_name: 'Bucket Name',
     host: '3000',
     path: 'file',
-    region: 'us-ord',
   },
   id: Factory.each((id) => id),
   label: Factory.each((id) => `Destination ${id}`),
-  type: destinationType.LinodeObjectStorage,
+  type: destinationType.AkamaiObjectStorage,
   version: '1.0',
   updated: '2025-07-30',
   updated_by: 'username',

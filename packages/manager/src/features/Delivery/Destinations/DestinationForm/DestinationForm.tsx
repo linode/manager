@@ -1,5 +1,6 @@
 import { destinationType } from '@linode/api-v4';
 import { Autocomplete, Paper, TextField } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -8,7 +9,7 @@ import { useFormContext } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationLinodeObjectStorageDetailsForm';
+import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
@@ -53,6 +54,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
               name="type"
               render={({ field }) => (
                 <Autocomplete
+                  data-pendo-id={`Logs Delivery Destinations ${capitalize(mode)}-Destination Type`}
                   disableClearable
                   disabled
                   label="Destination Type"
@@ -71,6 +73,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
               render={({ field, fieldState }) => (
                 <TextField
                   aria-required
+                  data-pendo-id={`Logs Delivery Destinations ${capitalize(mode)}-Destination Name`}
                   errorText={fieldState.error?.message}
                   label="Destination Name"
                   onBlur={field.onBlur}
@@ -82,8 +85,11 @@ export const DestinationForm = (props: DestinationFormProps) => {
                 />
               )}
             />
-            {destination.type === destinationType.LinodeObjectStorage && (
-              <DestinationLinodeObjectStorageDetailsForm />
+            {destination.type === destinationType.AkamaiObjectStorage && (
+              <DestinationAkamaiObjectStorageDetailsForm
+                entity="destination"
+                mode={mode}
+              />
             )}
           </Paper>
         </Grid>

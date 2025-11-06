@@ -41,12 +41,12 @@ import type { Interception } from 'support/cypress-exports';
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 const timeRanges = [
-  { label: 'last 30 minutes', unit: 'min', value: 30 },
-  { label: 'last 12 hours', unit: 'hr', value: 12 },
-  { label: 'last 30 days', unit: 'days', value: 30 },
-  { label: 'last 7 days', unit: 'days', value: 7 },
-  { label: 'last hour', unit: 'hr', value: 1 },
-  { label: 'last day', unit: 'days', value: 1 },
+  { label: 'Last 30 minutes', unit: 'min', value: 30 },
+  { label: 'Last 12 hours', unit: 'hr', value: 12 },
+  { label: 'Last 30 days', unit: 'days', value: 30 },
+  { label: 'Last 7 days', unit: 'days', value: 7 },
+  { label: 'Last hour', unit: 'hr', value: 1 },
+  { label: 'Last day', unit: 'days', value: 1 },
 ];
 
 const mockRegion = regionFactory.build({
@@ -194,6 +194,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       '@fetchPreferences',
       '@fetchDatabases',
     ]);
+
+    // Scroll to the top of the page to ensure consistent test behavior
+    cy.scrollTo('top');
   });
 
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
@@ -208,15 +211,16 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.wait(1000);
     // --- Select start date ---
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    // Updated selector for MUI x-date-pickers v8 - click on the wrapper div
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
     cy.get('[role="dialog"]').within(() => {
       cy.findAllByText(day).first().click();
       cy.findAllByText(day).first().click();
     });
 
-    ui.button
-      .findByAttribute('aria-label^', 'Choose time')
+    // Updated selector for MUI x-date-pickers v8 time picker button
+    cy.get('button[aria-label*="time"]')
       .first()
       .should('be.visible', { timeout: 10000 }) // waits up to 10 seconds
       .as('timePickerButton');
@@ -251,8 +255,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Select end time ---
-    ui.button
-      .findByAttribute('aria-label^', 'Choose time')
+    // Updated selector for MUI x-date-pickers v8 time picker button
+    cy.get('button[aria-label*="time"]')
       .last()
       .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
@@ -288,6 +292,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click();
 
     // --- Re-validate after apply ---
+
     cy.get('[aria-labelledby="start-date"]').should(
       'have.value',
       `${startActualDate} PM`
@@ -308,12 +313,17 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         const {
           request: { body },
         } = xhr as Interception;
+
         expect(formatToUtcDateTime(body.absolute_time_duration.start)).to.equal(
           convertToGmt(startActualDate)
         );
         expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
           convertToGmt(endActualDate)
         );
+
+        // Keep a minimal structural assertion so the request shape is still validated
+        expect(body).to.have.nested.property('absolute_time_duration.start');
+        expect(body).to.have.nested.property('absolute_time_duration.end');
       });
 
     // --- Test Time Range Presets ---
@@ -322,7 +332,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     );
 
     cy.get('@startDateInput').click();
-    ui.button.findByTitle('last 30 days').click();
+    cy.get('[data-qa-preset="Last 30 days"]').click();
 
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
@@ -348,9 +358,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
   timeRanges.forEach((range) => {
     it(`Select and validate the functionality of the "${range.label}" preset from the "Time Range" dropdown`, () => {
-      cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+      cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
       cy.get('@startDateInput').click();
-      ui.button.findByTitle(range.label).click();
+      cy.get(`[data-qa-preset="${range.label}"]`).click();
       cy.get('[data-qa-buttons="apply"]')
         .should('be.visible')
         .should('be.enabled')
@@ -381,9 +391,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     const { end, start } = getLastMonthRange();
 
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
-    ui.button.findByTitle('last month').click();
+    cy.get('[data-qa-preset="Last month"]').click();
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
@@ -409,9 +419,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     const { end, start } = getThisMonthRange();
 
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
-    ui.button.findByTitle('this month').click();
+    cy.get('[data-qa-preset="This month"]').click();
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')

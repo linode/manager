@@ -56,11 +56,6 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
     checkRestrictedUser
   );
 
-  const { data: legacyTypes } = useDatabaseTypesQuery(
-    { platform: 'rdbms-legacy' },
-    checkRestrictedUser
-  );
-
   if (account) {
     const isDatabasesV1Enabled = isFeatureEnabledV2(
       'Managed Databases',
@@ -97,18 +92,17 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
     };
   }
 
-  const hasLegacyTypes: boolean = !!legacyTypes;
   const hasDefaultTypes: boolean = !!types && hasV2Flag;
 
   return {
-    isDatabasesEnabled: hasLegacyTypes || hasDefaultTypes,
+    isDatabasesEnabled: hasDefaultTypes,
 
     isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
     isDatabasesV2Enabled: hasDefaultTypes,
-    isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
+    isDatabasesV2GA: hasDefaultTypes && hasV2GAFlag,
 
-    isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
-    isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
+    isUserExistingBeta: hasDefaultTypes && hasV2BetaFlag,
+    isUserNewBeta: hasDefaultTypes && hasV2BetaFlag,
   };
 };
 
@@ -249,5 +243,16 @@ export const upgradableVersions = (
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
 ) => engines?.filter((e) => e.engine === engine && e.version > version);
 
+// TODO (UIE-8214) POST GA - Remove reference to secondary from this function as it is only present for legacy databases
 export const getReadOnlyHost = (database: Database | undefined) =>
   database?.hosts?.standby ?? database?.hosts?.secondary ?? '';
+
+/** This function converts a private hostname string to public by replacing 'private-' at the beginning of the private hostname string with 'public-'.
+ * This is used to format the hostname string returned from the backend when a VPC is configured for a database cluster
+ * and the backend provides the hostname with 'private-' prepended.
+ */
+export const convertPrivateToPublicHostname = (host: string) => {
+  const privateStrIndex = host.indexOf('-');
+  const baseHostName = host.slice(privateStrIndex + 1);
+  return `public-${baseHostName}`;
+};

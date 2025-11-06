@@ -1,5 +1,7 @@
 import type { OCA } from './features/OneClickApps/types';
+import type { Region } from '@linode/api-v4';
 import type {
+  AlertStatusType,
   CloudPulseServiceType,
   TPAProvider,
 } from '@linode/api-v4/lib/profile';
@@ -70,6 +72,7 @@ interface LinodeInterfacesFlag extends BaseFeatureFlag {
 
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
+  hasQueue?: boolean;
   new: boolean;
 }
 
@@ -95,6 +98,11 @@ interface AclpFlag {
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
+
+  /**
+   * This property indicates whether to show widget dimension filters or not
+   */
+  showWidgetDimensionFilters?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -134,6 +142,7 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
 }
@@ -142,6 +151,17 @@ interface LimitsEvolution {
   enabled: boolean;
   requestForIncreaseDisabledForAll: boolean;
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
+}
+
+interface MTC {
+  /**
+   * Whether the MTC feature is enabled.
+   */
+  enabled: boolean;
+  /**
+   * Region IDs where MTC is supported (Only used for Linode Migration region dropdown).
+   */
+  supportedRegions: Region['id'][];
 }
 
 export interface Flags {
@@ -157,6 +177,7 @@ export interface Flags {
   apiMaintenance: APIMaintenance;
   apl: boolean;
   aplGeneralAvailability: boolean;
+  aplLkeE: boolean;
   blockStorageEncryption: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -172,7 +193,9 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  firewallRulesetsPrefixlists: boolean;
   gecko2: GeckoFeatureFlag;
+  generationalPlans: boolean;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
@@ -187,11 +210,13 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  mtc2025: boolean;
+  mtc: MTC;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
+  objSummaryPage: boolean;
+  privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -306,6 +331,7 @@ export type ProductInformationBannerLocation =
   | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Logs'
   | 'Longview'
   | 'Managed'
   | 'NodeBalancers'

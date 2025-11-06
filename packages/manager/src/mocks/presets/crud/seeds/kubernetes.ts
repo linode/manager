@@ -1,6 +1,6 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { MockKubeNodePoolResponse } from '../handlers/kubernetes';
@@ -32,6 +32,8 @@ export const kubernetesSeeder: MockSeeder = {
         return nodePool;
       }),
     });
+
+    addToEntities(mockState, 'kubernetesClusters', kubernetesClusterSeeds);
 
     const updatedMockState = {
       ...mockState,

@@ -1,15 +1,20 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
+import { queryFactory } from 'src/queries/cloudpulse/queries';
+
 import {
   ENDPOINT,
   INTERFACE_IDS_PLACEHOLDER_TEXT,
-  LINODE_REGION,
+  NODEBALANCER_ID,
+  PARENT_ENTITY_REGION,
   REGION,
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { filterFirewallResources } from './utils';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
+import type { Firewall } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -232,13 +237,16 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Firewalls',
         priority: 1,
+        associatedEntityType: 'linode',
+        filterFn: (resources: Firewall[]) =>
+          filterFirewallResources(resources, 'linode'),
       },
       name: 'Firewalls',
     },
     {
       configuration: {
         dependency: ['resource_id'],
-        filterKey: LINODE_REGION,
+        filterKey: PARENT_ENTITY_REGION,
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,
@@ -315,7 +323,70 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
   ],
   serviceType: 'firewall',
+  associatedEntityType: 'linode',
 };
+
+export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['firewall'],
+    filters: [
+      {
+        configuration: {
+          filterKey: RESOURCE_ID,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'Firewall',
+          neededInViews: [CloudPulseAvailableViews.central],
+          associatedEntityType: 'nodebalancer',
+          placeholder: 'Select a Firewall',
+          priority: 1,
+          apiV4QueryKey: queryFactory.resources('firewall'),
+          filterFn: (resources: Firewall[]) =>
+            filterFirewallResources(resources, 'nodebalancer'),
+        },
+        name: 'Firewall',
+      },
+      {
+        configuration: {
+          dependency: [RESOURCE_ID],
+          filterKey: PARENT_ENTITY_REGION,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'NodeBalancer Region',
+          priority: 2,
+          neededInViews: [
+            CloudPulseAvailableViews.central,
+            CloudPulseAvailableViews.service,
+          ],
+          placeholder: 'Select a NodeBalancer Region',
+        },
+        name: 'NodeBalancer Region',
+      },
+      {
+        configuration: {
+          dependency: [PARENT_ENTITY_REGION, RESOURCE_ID],
+          filterKey: NODEBALANCER_ID,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: false,
+          isMultiSelect: true,
+          isOptional: true,
+          name: 'NodeBalancers',
+          neededInViews: [
+            CloudPulseAvailableViews.central,
+            CloudPulseAvailableViews.service,
+          ],
+          placeholder: 'Select NodeBalancers',
+          priority: 3,
+        },
+        name: 'NodeBalancers',
+      },
+    ],
+    serviceType: 'firewall',
+    associatedEntityType: 'nodebalancer',
+  };
 
 export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMap> =
   {
@@ -409,4 +480,5 @@ export const FILTER_CONFIG: Readonly<
   [4, FIREWALL_CONFIG],
   [6, OBJECTSTORAGE_CONFIG_BUCKET],
   [7, BLOCKSTORAGE_CONFIG],
+  [8, FIREWALL_NODEBALANCER_CONFIG],
 ]);

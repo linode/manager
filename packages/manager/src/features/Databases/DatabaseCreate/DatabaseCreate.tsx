@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -6,16 +7,12 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
-import {
-  formatStorageUnits,
-  getCapabilityFromPlanType,
-  scrollErrorIntoViewV2,
-} from '@linode/utilities';
+import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { getDynamicDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
-import { useFormik } from 'formik';
 import * as React from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
@@ -32,14 +29,10 @@ import {
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
 import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs } from 'src/utilities/ipUtils';
 
-import { ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT } from '../constants';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 import { DatabaseCreateNetworkingConfiguration } from './DatabaseCreateNetworkingConfiguration';
 
@@ -48,12 +41,22 @@ import type {
   ClusterSize,
   CreateDatabasePayload,
   Engine,
+  PrivateNetwork,
   VPC,
 } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
-import type { DatabaseCreateValues } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+
+export interface DatabaseCreateValues {
+  allow_list: ExtendedIP[];
+  cluster_size: ClusterSize;
+  engine: Engine;
+  label: string;
+  private_network?: null | PrivateNetwork;
+  region: string;
+  type: string;
+}
 
 export const DatabaseCreate = () => {
   const navigate = useNavigate();
@@ -66,11 +69,8 @@ export const DatabaseCreate = () => {
     isLoading: regionsLoading,
   } = useRegionsQuery();
 
-  const {
-    data: engines,
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(true);
+  const { error: enginesError, isLoading: enginesLoading } =
+    useDatabaseEnginesQuery(true);
 
   const {
     data: dbtypes,
@@ -86,88 +86,10 @@ export const DatabaseCreate = () => {
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [selectedVPC, setSelectedVPC] = React.useState<null | VPC>(null);
   const isVPCSelected = Boolean(selectedVPC);
-
-  const handleIPBlur = (ips: ExtendedIP[]) => {
-    const ipsWithMasks = enforceIPMasks(ips);
-    setFieldValue('allow_list', ipsWithMasks);
-  };
-
-  const handleIPValidation = () => {
-    const validatedIps = validateIPs(values.allow_list, {
-      allowEmptyAddress: true,
-      errorMessage: ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
-    });
-
-    if (validatedIps.some((ip) => ip.error)) {
-      setFieldValue('allow_list', validatedIps);
-    } else {
-      setFieldValue(
-        'allow_list',
-        validatedIps.map((ip) => {
-          delete ip.error;
-          return {
-            ...ip,
-          };
-        })
-      );
-    }
-  };
-
-  const submitForm = async () => {
-    if (values.allow_list.some((ip) => ip.error)) {
-      return;
-    }
-
-    setCreateError(undefined);
-    setSubmitting(true);
-
-    const _allow_list = values.allow_list.reduce((accum, ip) => {
-      if (ip.address !== '') {
-        return [...accum, ip.address];
-      }
-      return accum;
-    }, []);
-    const hasVpc =
-      values.private_network.vpc_id && values.private_network.subnet_id;
-    const privateNetwork = hasVpc ? values.private_network : null;
-
-    const createPayload: CreateDatabasePayload = {
-      ...values,
-      allow_list: _allow_list,
-      private_network: privateNetwork,
-    };
-
-    // TODO (UIE-8831): Remove post VPC release, since it will always be in create payload
-    if (!isVPCEnabled) {
-      delete createPayload.private_network;
-    }
-    try {
-      const response = await createDatabase(createPayload);
-      navigate({
-        to: `/databases/$engine/$databaseId`,
-        params: {
-          engine: response.engine,
-          databaseId: response.id,
-        },
-      });
-    } catch (errors) {
-      const ipErrors = errors.filter(
-        (error: APIError) => error.field === 'allow_list'
-      );
-      if (ipErrors) {
-        setIPErrorsFromAPI(ipErrors);
-      }
-      const parentFields = ['private_network']; // List of parent fields that need the full key from the errors response
-      handleAPIErrors(errors, setFieldError, setCreateError, parentFields);
-    }
-
-    setSubmitting(false);
-  };
 
   const initialValues: DatabaseCreateValues = {
     allow_list: [
@@ -176,7 +98,7 @@ export const DatabaseCreate = () => {
         error: '',
       },
     ],
-    cluster_size: -1 as ClusterSize,
+    cluster_size: 3,
     engine: 'mysql/8' as Engine,
     label: '',
     region: '',
@@ -188,41 +110,36 @@ export const DatabaseCreate = () => {
     },
   };
 
+  const form = useForm<DatabaseCreateValues>({
+    defaultValues: initialValues,
+    mode: 'onBlur',
+    // @ts-expect-error allow_list gets transformed to an array of strings in the onSubmit function
+    resolver: yupResolver(getDynamicDatabaseSchema(isVPCSelected)),
+  });
+
   const {
-    errors,
+    control,
+    formState: { isSubmitting, errors },
     handleSubmit,
-    isSubmitting,
-    resetForm,
-    setFieldError,
-    setFieldValue,
-    setSubmitting,
-    values,
-  } = useFormik({
-    initialValues,
-    onSubmit: submitForm,
-    validate: () => {
-      handleIPValidation();
-      scrollErrorIntoViewV2(formRef);
-    },
-    validateOnChange: false,
-    validationSchema: getDynamicDatabaseSchema(isVPCSelected),
-  }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
+    setError,
+    setValue,
+    watch,
+  } = form;
+
+  const [allowList, clusterSize, region, type, engine] = watch([
+    'allow_list',
+    'cluster_size',
+    'region',
+    'type',
+    'engine',
+  ]);
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
-    values.region || '',
-    Boolean(flags.soldOutChips) && Boolean(values.region)
+    region || '',
+    Boolean(flags.soldOutChips) && Boolean(region)
   );
 
-  React.useEffect(() => {
-    if (setFieldValue) {
-      setFieldValue(
-        'cluster_size',
-        values.cluster_size < 1 ? 3 : values.cluster_size
-      );
-    }
-  }, [setFieldValue, values.cluster_size, values.engine]);
-
-  const selectedEngine = values.engine.split('/')[0] as Engine;
+  const selectedEngine = engine.split('/')[0] as Engine;
 
   const displayTypes: PlanSelectionWithDatabaseType[] = React.useMemo(() => {
     if (!dbtypes) {
@@ -253,27 +170,24 @@ export const DatabaseCreate = () => {
   }, [dbtypes, selectedEngine]);
 
   const selectedPlan = React.useMemo(() => {
-    return displayTypes?.find((type) => type.id === values.type);
-  }, [displayTypes, values.type]);
+    return displayTypes?.find((displayType) => displayType.id === type);
+  }, [displayTypes, type]);
 
   if (flags.databasePremium && selectedPlan) {
     const isLimitedAvailability = getIsLimitedAvailability({
       plan: selectedPlan,
       regionAvailabilities,
-      selectedRegionId: values.region,
+      selectedRegionId: region,
     });
 
     if (isLimitedAvailability) {
-      setFieldValue('type', '');
+      setValue('type', '');
     }
   }
 
   const accessControlsConfiguration: AccessProps = {
     disabled: isRestricted,
     errors: ipErrorsFromAPI,
-    ips: values.allow_list,
-    onBlur: handleIPBlur,
-    onChange: (ips: ExtendedIP[]) => setFieldValue('allow_list', ips),
     variant: isVPCEnabled ? 'networking' : 'standard',
   };
 
@@ -283,8 +197,59 @@ export const DatabaseCreate = () => {
       return;
     }
     setSelectedTab(index);
-    setFieldValue('type', undefined);
-    setFieldValue('cluster_size', 3);
+    setValue('type', '');
+    setValue('cluster_size', 3);
+  };
+
+  const onSubmit = async (values: DatabaseCreateValues) => {
+    if (allowList.some((ip) => ip.error)) {
+      return;
+    }
+
+    const _allowList = allowList.reduce((accum, ip) => {
+      if (ip.address !== '') {
+        return [...accum, ip.address];
+      }
+      return accum;
+    }, []);
+
+    const hasVpc =
+      values.private_network &&
+      values.private_network.vpc_id &&
+      values.private_network.subnet_id;
+
+    const createPayload: CreateDatabasePayload = {
+      ...values,
+      allow_list: _allowList,
+      private_network: hasVpc ? values.private_network : null,
+    };
+
+    // TODO (UIE-8831): Remove post VPC release, since it will always be in create payload
+    if (!isVPCEnabled) {
+      setValue('private_network', undefined);
+    }
+
+    try {
+      const response = await createDatabase(createPayload);
+      navigate({
+        to: `/databases/$engine/$databaseId`,
+        params: {
+          engine: response.engine,
+          databaseId: response.id,
+        },
+      });
+    } catch (errors) {
+      const ipErrors = errors.filter(
+        (error: APIError) => error.field === 'allow_list'
+      );
+      if (ipErrors) {
+        setIPErrorsFromAPI(ipErrors);
+      }
+
+      for (const error of errors) {
+        setError(error?.field ?? 'root', { message: error.reason });
+      }
+    }
   };
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
@@ -294,47 +259,6 @@ export const DatabaseCreate = () => {
   if (regionsError || typesError || enginesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
-
-  const handleNodeChange = (size: ClusterSize | undefined) => {
-    setFieldValue('cluster_size', size);
-  };
-
-  const handleNetworkingConfigurationChange = (vpc: null | VPC) => {
-    setSelectedVPC(vpc);
-  };
-
-  const handleResetForm = (partialValues?: Partial<DatabaseCreateValues>) => {
-    if (partialValues) {
-      resetForm({
-        values: {
-          ...values,
-          ...partialValues,
-        },
-      });
-    } else {
-      resetForm();
-    }
-  };
-
-  // Custom region change handler that validates plan selection
-  const handleRegionChange = (field: string, value: any) => {
-    setFieldValue(field, value);
-
-    // If this is a region change and a plan is selected
-    if (field === 'region' && flags.databasePremium && selectedPlan) {
-      const newRegion = regionsData?.find((region) => region.id === value);
-
-      const isPlanAvailableInRegion = Boolean(
-        newRegion?.capabilities.includes(
-          getCapabilityFromPlanType(selectedPlan.class)
-        )
-      );
-      // Clear the plan selection if plan is not available in the newly selected region
-      if (!isPlanAvailableInRegion) {
-        setFieldValue('type', '');
-      }
-    }
-  };
 
   return (
     <>
@@ -351,111 +275,112 @@ export const DatabaseCreate = () => {
         }}
         title="Create"
       />
-      <form data-testid="db-create-form" onSubmit={handleSubmit} ref={formRef}>
-        {isRestricted && (
-          <Notice
-            spacingTop={16}
-            text={getRestrictedResourceText({
-              action: 'create',
-              resourceType: 'Databases',
-            })}
-            variant="error"
-          />
-        )}
-        <Paper>
-          {createError && (
-            <Notice variant="error">
-              <ErrorMessage
-                entity={{ type: 'database_id' }}
-                message={createError}
+      <FormProvider {...form}>
+        <form
+          data-testid="db-create-form"
+          onSubmit={handleSubmit(onSubmit, () =>
+            scrollErrorIntoViewV2(formRef)
+          )}
+          ref={formRef}
+        >
+          {isRestricted && (
+            <Notice
+              spacingTop={16}
+              text={getRestrictedResourceText({
+                action: 'create',
+                resourceType: 'Databases',
+              })}
+              variant="error"
+            />
+          )}
+          <Paper>
+            {errors.root?.message && (
+              <Notice variant="error">
+                <ErrorMessage
+                  entity={{ type: 'database_id' }}
+                  message={errors.root.message}
+                />
+              </Notice>
+            )}
+            <DatabaseClusterData selectedPlan={selectedPlan} />
+            <Divider spacingBottom={12} spacingTop={38} />
+            <Grid>
+              <Controller
+                control={control}
+                name="type"
+                render={({ field, fieldState }) => (
+                  <StyledPlansPanel
+                    data-qa-select-plan
+                    disabled={isRestricted}
+                    error={fieldState.error?.message}
+                    flow="database"
+                    handleTabChange={handleTabChange}
+                    header="Choose a Plan"
+                    isCreate
+                    onSelect={field.onChange}
+                    regionsData={regionsData}
+                    selectedId={field.value}
+                    selectedRegionID={region}
+                    types={displayTypes}
+                  />
+                )}
               />
-            </Notice>
-          )}
-          <DatabaseClusterData
-            engines={engines}
-            errors={errors}
-            onChange={handleRegionChange}
-            regionsData={regionsData}
-            values={values}
-          />
-          <Divider spacingBottom={12} spacingTop={38} />
-          <Grid>
-            <StyledPlansPanel
-              data-qa-select-plan
+            </Grid>
+            <Divider spacingBottom={12} spacingTop={26} />
+            <Grid>
+              <Controller
+                control={control}
+                name="cluster_size"
+                render={({ field, fieldState }) => (
+                  <DatabaseNodeSelector
+                    displayTypes={displayTypes}
+                    error={fieldState.error?.message}
+                    handleNodeChange={field.onChange}
+                    selectedClusterSize={field.value}
+                    selectedEngine={selectedEngine}
+                    selectedPlan={selectedPlan}
+                    selectedTab={selectedTab}
+                  />
+                )}
+              />
+            </Grid>
+            <Divider spacingBottom={12} spacingTop={26} />
+            {isVPCEnabled ? (
+              <DatabaseCreateNetworkingConfiguration
+                accessControlsConfiguration={accessControlsConfiguration}
+                onChange={setSelectedVPC}
+              />
+            ) : (
+              <DatabaseCreateAccessControls {...accessControlsConfiguration} />
+            )}
+          </Paper>
+          <Paper sx={{ marginTop: 3 }}>
+            <DatabaseSummarySection
+              currentClusterSize={clusterSize}
+              currentEngine={selectedEngine}
+              currentPlan={selectedPlan}
+              mode="create"
+              selectedVPC={selectedVPC}
+            />
+          </Paper>
+          <StyledBtnCtn>
+            <StyledTypography>
+              Your database node(s) will take approximately 15-30 minutes to
+              provision.
+            </StyledTypography>
+            <StyledCreateBtn
+              data-testid="create-database-cluster"
               disabled={isRestricted}
-              error={errors.type}
-              flow="database"
-              handleTabChange={handleTabChange}
-              header="Choose a Plan"
-              isCreate
-              onSelect={(selected: string) => {
-                setFieldValue('type', selected);
-              }}
-              regionsData={regionsData}
-              selectedId={values.type}
-              selectedRegionID={values.region}
-              types={displayTypes}
-            />
-          </Grid>
-          <Divider spacingBottom={12} spacingTop={26} />
-          <Grid>
-            <DatabaseNodeSelector
-              displayTypes={displayTypes}
-              error={errors.cluster_size}
-              handleNodeChange={(v: ClusterSize) => {
-                handleNodeChange(v);
-              }}
-              selectedClusterSize={values.cluster_size}
-              selectedEngine={selectedEngine}
-              selectedPlan={selectedPlan}
-              selectedTab={selectedTab}
-            />
-          </Grid>
-          <Divider spacingBottom={12} spacingTop={26} />
-          {isVPCEnabled ? (
-            <DatabaseCreateNetworkingConfiguration
-              accessControlsConfiguration={accessControlsConfiguration}
-              errors={errors}
-              onChange={(field: string, value: boolean | null | number) =>
-                setFieldValue(field, value)
-              }
-              onNetworkingConfigurationChange={
-                handleNetworkingConfigurationChange
-              }
-              privateNetworkValues={values.private_network}
-              resetFormFields={handleResetForm}
-              selectedRegionId={values.region}
-            />
-          ) : (
-            <DatabaseCreateAccessControls {...accessControlsConfiguration} />
-          )}
-        </Paper>
-        <Paper sx={{ marginTop: 3 }}>
-          <DatabaseSummarySection
-            currentClusterSize={values.cluster_size}
-            currentEngine={selectedEngine}
-            currentPlan={selectedPlan}
-            mode="create"
-            selectedVPC={selectedVPC}
-          />
-        </Paper>
-        <StyledBtnCtn>
-          <StyledTypography>
-            Your database node(s) will take approximately 15-30 minutes to
-            provision.
-          </StyledTypography>
-          <StyledCreateBtn
-            data-testid="create-database-cluster"
-            disabled={isRestricted}
-            processing={isSubmitting}
-            type="submit"
-            variant="primary"
-          >
-            Create Database Cluster
-          </StyledCreateBtn>
-        </StyledBtnCtn>
-        <DatabaseLogo />
-      </form>
+              processing={isSubmitting}
+              type="submit"
+              variant="primary"
+            >
+              Create Database Cluster
+            </StyledCreateBtn>
+          </StyledBtnCtn>
+          <DatabaseLogo />
+        </form>
+      </FormProvider>
     </>
   );
 };

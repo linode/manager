@@ -1,19 +1,15 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
 import { Box, Button, Drawer, Notice } from '@linode/ui';
 import { updatePrivateNetworkSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
-import { useFormik } from 'formik';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { DatabaseVPCSelector } from '../../DatabaseCreate/DatabaseVPCSelector';
+import { DatabaseDetailVPC } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseDetailVPC';
 
-import type {
-  Database,
-  PrivateNetwork,
-  UpdateDatabasePayload,
-  VPC,
-} from '@linode/api-v4';
+import type { Database, UpdateDatabasePayload, VPC } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
 interface Props {
@@ -24,9 +20,10 @@ interface Props {
   vpc: undefined | VPC;
 }
 
-export type ManageNetworkingFormValues = {
-  private_network: PrivateNetwork;
-};
+export type ManageNetworkingFormValues = Pick<
+  UpdateDatabasePayload,
+  'private_network'
+>;
 
 const DatabaseManageNetworkingDrawer = (props: Props) => {
   const { database, vpc, onClose, onUnassign, open } = props;
@@ -41,10 +38,22 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     },
   };
 
-  const submitForm = () => {
-    const payload: UpdateDatabasePayload = { ...values };
+  const form = useForm<ManageNetworkingFormValues>({
+    defaultValues: initialValues,
+    mode: 'onBlur',
+    // @ts-expect-error handle null validation with trigger
+    resolver: yupResolver(updatePrivateNetworkSchema),
+  });
 
-    updateDatabase(payload).then(() => {
+  const {
+    formState: { isDirty, isValid },
+    handleSubmit,
+    reset,
+    watch,
+  } = form;
+
+  const onSubmit = (values: ManageNetworkingFormValues) => {
+    updateDatabase(values).then(() => {
       enqueueSnackbar('Changes are being applied.', {
         variant: 'info',
       });
@@ -59,34 +68,20 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     });
   };
 
-  const {
-    errors,
-    handleSubmit,
-    resetForm,
-    isValid,
-    dirty,
-    setFieldValue,
-    values,
-  } = useFormik<ManageNetworkingFormValues>({
-    initialValues,
-    onSubmit: submitForm,
-    validationSchema: updatePrivateNetworkSchema,
-    validateOnChange: true,
-    validateOnBlur: true,
-  }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
+  const [publicAccess, subnetId, vpcId] = watch([
+    'private_network.public_access',
+    'private_network.subnet_id',
+    'private_network.vpc_id',
+  ]);
 
   const hasVPCConfigured = !!database?.private_network?.vpc_id;
   const hasConfigChanged =
-    values.private_network.vpc_id !== database?.private_network?.vpc_id ||
-    values.private_network.subnet_id !== database?.private_network?.subnet_id ||
-    values.private_network.public_access !==
-      database?.private_network?.public_access;
-  const hasValidSelection =
-    !!values.private_network.vpc_id &&
-    !!values.private_network.subnet_id &&
-    hasConfigChanged;
+    vpcId !== database?.private_network?.vpc_id ||
+    subnetId !== database?.private_network?.subnet_id ||
+    publicAccess !== database?.private_network?.public_access;
+  const hasValidSelection = !!vpcId && !!subnetId && hasConfigChanged;
 
-  const isSaveDisabled = !dirty || !isValid || !hasValidSelection;
+  const isSaveDisabled = !isDirty || !isValid || !hasValidSelection;
 
   const {
     error: manageNetworkingError,
@@ -97,14 +92,14 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
 
   const handleOnClose = () => {
     onClose();
-    resetForm();
+    reset();
     resetMutation?.();
   };
 
   /** Resets the form after opening the unassign VPC dialog */
   const handleOnUnassign = () => {
     onUnassign();
-    resetForm();
+    reset();
     resetMutation?.();
   };
 
@@ -113,59 +108,53 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
       {manageNetworkingError && (
         <Notice text={manageNetworkingError[0].reason} variant="error" />
       )}
-      <form onSubmit={handleSubmit}>
-        <DatabaseVPCSelector
-          errors={errors}
-          mode="networking"
-          onChange={(field: string, value: boolean | null | number) =>
-            setFieldValue(field, value)
-          }
-          privateNetworkValues={values.private_network}
-          selectedRegionId={database?.region}
-        />
-        <Box
-          sx={(theme: Theme) => ({
-            marginTop: theme.spacingFunction(50),
-            paddingTop: theme.spacingFunction(8),
-            paddingBottom: theme.spacingFunction(8),
-            display: 'flex',
-            justifyContent: hasVPCConfigured ? 'space-between' : 'flex-end',
-          })}
-        >
-          {hasVPCConfigured && (
-            <Button
-              buttonType="outlined"
-              disabled={!hasVPCConfigured}
-              loading={false}
-              onClick={handleOnUnassign}
-            >
-              Unassign VPC
-            </Button>
-          )}
-          <Box>
-            <Button
-              buttonType="secondary"
-              disabled={false}
-              loading={false}
-              onClick={handleOnClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              data-testid="save-networking-button"
-              disabled={isSaveDisabled}
-              loading={submitInProgress}
-              sx={(theme: Theme) => ({
-                marginLeft: theme.spacingFunction(12),
-              })}
-              type="submit"
-            >
-              Save
-            </Button>
+      <FormProvider {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DatabaseDetailVPC region={database?.region ?? ''} />
+          <Box
+            sx={(theme: Theme) => ({
+              marginTop: theme.spacingFunction(50),
+              paddingTop: theme.spacingFunction(8),
+              paddingBottom: theme.spacingFunction(8),
+              display: 'flex',
+              justifyContent: hasVPCConfigured ? 'space-between' : 'flex-end',
+            })}
+          >
+            {hasVPCConfigured && (
+              <Button
+                buttonType="outlined"
+                disabled={!hasVPCConfigured}
+                loading={false}
+                onClick={handleOnUnassign}
+              >
+                Unassign VPC
+              </Button>
+            )}
+            <Box>
+              <Button
+                buttonType="secondary"
+                disabled={false}
+                loading={false}
+                onClick={handleOnClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                buttonType="primary"
+                data-testid="save-networking-button"
+                disabled={isSaveDisabled}
+                loading={submitInProgress}
+                sx={(theme: Theme) => ({
+                  marginLeft: theme.spacingFunction(12),
+                })}
+                type="submit"
+              >
+                Save
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </form>
+        </form>
+      </FormProvider>
     </Drawer>
   );
 };

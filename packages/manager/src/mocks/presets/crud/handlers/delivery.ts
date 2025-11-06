@@ -1,8 +1,9 @@
 import { destinationType } from '@linode/api-v4';
+import { omitProps } from '@linode/ui';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { destinationFactory, streamFactory } from 'src/factories/delivery';
+import { destinationFactory, streamFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
@@ -13,9 +14,10 @@ import {
 } from 'src/mocks/utilities/response';
 
 import type {
+  AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsPayload,
   CreateDestinationPayload,
   Destination,
-  LinodeObjectStorageDetails,
   Stream,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -221,14 +223,17 @@ export const createDestinations = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
       const payload: CreateDestinationPayload = await request.clone().json();
-      const details = payload.details;
+      const details = omitProps(
+        payload.details as AkamaiObjectStorageDetailsPayload,
+        ['access_key_secret']
+      );
       const destination = destinationFactory.build({
         label: payload.label,
         type: payload.type,
         details: {
           ...details,
-          ...(payload.type === destinationType.LinodeObjectStorage
-            ? { path: (details as LinodeObjectStorageDetails).path ?? null }
+          ...(payload.type === destinationType.AkamaiObjectStorage
+            ? { path: (details as AkamaiObjectStorageDetails).path ?? null }
             : {}),
         },
         created: DateTime.now().toISO(),

@@ -58,7 +58,7 @@ const renderComponentWithoutSelectedClusters = async () => {
   );
 
   const utils = renderWithThemeAndHookFormContext({
-    component: <StreamFormClusters />,
+    component: <StreamFormClusters mode="edit" />,
     useFormOptions: {
       defaultValues: {
         stream: {
@@ -181,7 +181,7 @@ describe('StreamFormClusters', () => {
       );
 
       renderWithThemeAndHookFormContext({
-        component: <StreamFormClusters />,
+        component: <StreamFormClusters mode="edit" />,
         useFormOptions: {
           defaultValues: {
             stream: {
@@ -253,7 +253,7 @@ describe('StreamFormClusters', () => {
     // Select "Automatically include all" checkbox
     await userEvent.click(autoIncludeAllCheckbox);
     expect(autoIncludeAllCheckbox).toBeChecked();
-    expect(headerTableCheckbox).toBeChecked();
+    // expect(headerTableCheckbox).toBeChecked(); // hidden for beta
     expect(gkeProdCheckbox).toBeDisabled();
     expect(metricsStreamCheckbox).toBeChecked();
     expect(prodClusterCheckbox).toBeChecked();
