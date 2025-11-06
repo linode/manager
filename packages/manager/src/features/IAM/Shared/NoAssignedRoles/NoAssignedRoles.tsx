@@ -26,8 +26,6 @@ export const NoAssignedRoles = (props: Props) => {
     ? permissions?.update_default_delegate_access
     : permissions?.is_account_admin;
 
-  const { isDefaultDelegationRolesForChildAccount } =
-    useIsDefaultDelegationRolesForChildAccount();
   const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
     React.useState<boolean>(false);
 
