@@ -137,7 +137,10 @@ const iamDelegationsRoute = createRoute({
   path: 'delegations',
   beforeLoad: async ({ context }) => {
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
-    if (!isDelegationEnabled) {
+    const profile = context?.profile;
+
+    const isChildAccount = profile?.user_type === 'child';
+    if (!isDelegationEnabled || isChildAccount) {
       throw redirect({
         to: '/iam/users',
       });
