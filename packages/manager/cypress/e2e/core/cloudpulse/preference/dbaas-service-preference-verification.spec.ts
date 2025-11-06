@@ -17,7 +17,6 @@ import {
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
-import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
@@ -34,25 +33,19 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
-  databaseFactory,
   flagsFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
 
-import type { CloudPulseServiceType, Database } from '@linode/api-v4';
+import type { CloudPulseServiceType } from '@linode/api-v4';
 
 const timeDurationToSelect = 'Last 24 Hours';
-const { clusterName, dashboardName, engine, id, metrics, serviceType } =
+const { clusterName, dashboardName, id, metrics, serviceType } =
   widgetDetails.dbaas;
 
 // Build a shared dimension object
 const dimensions = [
-  {
-    label: 'Node Type',
-    dimension_label: 'node_type',
-    value: 'secondary',
-  },
   {
     label: 'Region',
     dimension_label: 'region',
@@ -133,13 +126,6 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-const databaseMock: Database = databaseFactory.build({
-  engine: 'mysql',
-  label: clusterName,
-  region: mockRegion.id,
-  type: engine,
-});
-
 /**
  * This test suite validates CloudPulse DBaaS user preference updates in the Dashboard UI.
  *
@@ -200,8 +186,6 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
         },
       },
     }).as('fetchPreferences');
-
-    mockGetDatabases([databaseMock]).as('getDatabases');
 
     // navigate to the metrics page
     cy.visitWithLogin('/metrics');
