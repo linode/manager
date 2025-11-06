@@ -320,8 +320,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Set timezone ---
-    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').clear();
-    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
+    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').click();
+    cy.get('@timezoneInput').clear();
+    cy.get('@timezoneInput')
+      .should('not.be.disabled')
+      .type('(GMT +0:00) Greenwich Mean Time{enter}');
 
     // --- Apply date/time range ---
     cy.get('[data-qa-buttons="apply"]')
