@@ -481,7 +481,10 @@ export const isValidFilter = (
   if (!dimension) return false;
 
   const dimensionConfig =
-    valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
+    valueFieldConfig[filter.dimension_label] ??
+    valueFieldConfig[
+      !dimension.values || dimension.values.length === 0 ? 'emptyValue' : '*'
+    ];
 
   const dimensionFieldConfig = dimensionConfig[operatorGroup];
 
