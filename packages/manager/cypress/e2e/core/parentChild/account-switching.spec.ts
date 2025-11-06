@@ -23,7 +23,10 @@ import {
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
 import { mockAllApiRequests } from 'support/intercepts/general';
-import { mockGetUserAccountPermissions } from 'support/intercepts/iam';
+import {
+  mockGetRolePermissionsError,
+  mockGetUserAccountPermissionsError,
+} from 'support/intercepts/iam';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetProfile,
@@ -428,11 +431,8 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
-      mockGetUserAccountPermissions([
-        'list_billing_payments',
-        'list_billing_invoices',
-        'list_invoice_items',
-      ]);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetMaintenance([], []);
       mockGetLinodes([]);
       mockGetRegions([]);
@@ -520,15 +520,12 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetLinodes([]);
       mockGetRegions([]);
       mockGetEvents([]);
       mockGetNotifications([]);
-      mockGetUserAccountPermissions([
-        'list_billing_payments',
-        'list_billing_invoices',
-        'list_invoice_items',
-      ]);
       mockGetAccount(mockAlternateChildAccount);
       mockGetProfile(mockAlternateChildAccountProfile);
       mockGetUser(mockAlternateChildAccountProxyUser);
