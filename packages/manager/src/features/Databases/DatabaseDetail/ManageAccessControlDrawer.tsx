@@ -22,8 +22,7 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 
-import type { Database, DatabaseInstance } from '@linode/api-v4';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, Database, DatabaseInstance } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
