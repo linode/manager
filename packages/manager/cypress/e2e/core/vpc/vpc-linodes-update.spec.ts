@@ -119,7 +119,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
       });
 
-    cy.wait(['@createSubnet', '@getVPC', '@getSubnets', '@getLinodes']);
+    cy.wait(['@createSubnet', '@getVPC', '@getSubnets']);
 
     mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
@@ -138,6 +138,8 @@ describe('VPC assign/unassign flows', () => {
       .findByTitle('Assign Linodes')
       .should('be.visible')
       .click();
+
+    cy.wait(['@getLinodes']);
 
     ui.drawer
       .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label}`)
@@ -395,7 +397,7 @@ describe('VPC assign/unassign flows', () => {
     mockGetLinodes([mockLinode, mockSecondLinode]).as('getLinodes');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getVPC', '@getSubnets', '@getLinodes', '@getFeatureFlags']);
+    cy.wait(['@getVPC', '@getSubnets', '@getFeatureFlags']);
 
     // confirm that subnet should get displayed on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');
@@ -414,6 +416,8 @@ describe('VPC assign/unassign flows', () => {
       .findByTitle('Unassign Linodes')
       .should('be.visible')
       .click();
+
+    cy.wait(['@getLinodes']);
 
     ui.drawer
       .findByTitle(
