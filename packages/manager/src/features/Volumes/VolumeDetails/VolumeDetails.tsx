@@ -73,6 +73,7 @@ export const VolumeDetails = () => {
             <SafeTabPanel index={getTabIndex('/volumes/$volumeId/metrics')}>
               <CloudPulseDashboardWithFilters
                 dashboardId={7}
+                region={volume.region}
                 resource={volume.id}
               />
             </SafeTabPanel>
