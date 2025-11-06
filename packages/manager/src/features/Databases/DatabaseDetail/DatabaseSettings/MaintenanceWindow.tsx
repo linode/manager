@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
 import {
   Autocomplete,
@@ -10,6 +11,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { updateMaintenanceSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { Button } from 'akamai-cds-react-components';
 import { DateTime } from 'luxon';
@@ -66,7 +68,7 @@ export const MaintenanceWindow = (props: Props) => {
     weekSelectionModifier(dayOfWeek.label, weekSelectionMap);
   }, []);
 
-  const onSubmit = async (values: Omit<UpdatesSchedule, 'duration'>) => {
+  const onSubmit = async (values: Partial<UpdatesSchedule>) => {
     // @TODO Update this to only send 'updates' and not 'allow_list' when the API supports it.
     // Additionally, at that time, enable the validationSchema which currently does not work
     // because allow_list is a required field in the schema.
@@ -94,7 +96,7 @@ export const MaintenanceWindow = (props: Props) => {
     return null;
   };
 
-  const form = useForm<Omit<UpdatesSchedule, 'duration'>>({
+  const form = useForm<Partial<UpdatesSchedule>>({
     defaultValues: {
       day_of_week: database.updates?.day_of_week ?? 1,
       frequency: database.updates?.frequency ?? 'weekly',
@@ -102,7 +104,7 @@ export const MaintenanceWindow = (props: Props) => {
       week_of_month: getInitialWeekOfMonth(),
     },
     mode: 'onBlur',
-    // resolver: yupResolver(updateDatabaseSchema),
+    resolver: yupResolver(updateMaintenanceSchema),
   });
 
   const {
