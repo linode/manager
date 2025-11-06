@@ -16,13 +16,14 @@ import {
   mockGetChildAccounts,
   mockGetChildAccountsError,
   mockGetInvoices,
+  mockGetMaintenance,
   mockGetPaymentMethods,
   mockGetPayments,
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
+import { mockGetUserAccountPermissions } from 'support/intercepts/iam';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetProfile,
@@ -147,18 +148,6 @@ const mockAlternateChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
-  // TODO: IAM - Remove mocks once IAM is enabled and adjust tests accordingly.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      iam: {
-        enabled: false,
-      },
-      iamDelegation: {
-        enabled: false,
-      },
-    });
-  });
-
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
@@ -439,6 +428,12 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetUserAccountPermissions([
+        'list_billing_payments',
+        'list_billing_invoices',
+        'list_invoice_items',
+      ]);
+      mockGetMaintenance([], []);
       mockGetLinodes([]);
       mockGetRegions([]);
       mockGetEvents([]);
@@ -446,6 +441,7 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetProfile(mockParentProfile);
       mockGetUser(mockParentUser);
+      mockGetChildAccounts([]);
       mockGetPaymentMethods(paymentMethodFactory.buildList(1)).as(
         'getPaymentMethods'
       );
@@ -528,6 +524,11 @@ describe('Parent/Child account switching', () => {
       mockGetRegions([]);
       mockGetEvents([]);
       mockGetNotifications([]);
+      mockGetUserAccountPermissions([
+        'list_billing_payments',
+        'list_billing_invoices',
+        'list_invoice_items',
+      ]);
       mockGetAccount(mockAlternateChildAccount);
       mockGetProfile(mockAlternateChildAccountProfile);
       mockGetUser(mockAlternateChildAccountProxyUser);
