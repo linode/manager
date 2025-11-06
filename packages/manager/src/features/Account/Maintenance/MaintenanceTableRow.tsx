@@ -85,7 +85,8 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
   const dateValue = props.maintenance[dateField];
 
   // Fetch policies to derive a start time when the API doesn't provide one
-  const { data: policies } = useAccountMaintenancePoliciesQuery();
+  const { data: policies, isLoading: policiesLoading } =
+    useAccountMaintenancePoliciesQuery();
 
   // Precompute for potential use; currently used via getUpcomingRelativeLabel
   React.useMemo(
@@ -93,13 +94,17 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
     [policies, props.maintenance]
   );
 
-  const upcomingRelativeLabel = React.useMemo(
-    () =>
-      tableType === 'upcoming'
-        ? getUpcomingRelativeLabel(props.maintenance, policies)
-        : undefined,
-    [policies, props.maintenance, tableType]
-  );
+  // Once loaded (even if empty array), use policies for calculation
+  const upcomingRelativeLabel = React.useMemo(() => {
+    if (tableType !== 'upcoming') {
+      return undefined;
+    }
+    // On initial load, wait for policies before calculating
+    if (policiesLoading && policies === undefined) {
+      return '—';
+    }
+    return getUpcomingRelativeLabel(props.maintenance, policies);
+  }, [policies, policiesLoading, props.maintenance, tableType]);
 
   return (
     <TableRow key={entity.id}>

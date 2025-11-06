@@ -66,19 +66,32 @@ export const deriveMaintenanceStartISO = (
   if (maintenance.start_time) {
     return maintenance.start_time;
   }
-  const notificationSecs = policies?.find(
-    (p) => p.slug === maintenance.maintenance_policy_set
-  )?.notification_period_sec;
-  if (maintenance.when && notificationSecs) {
-    try {
-      return parseAPIDate(maintenance.when)
-        .plus({ seconds: notificationSecs })
-        .toISO();
-    } catch {
-      return undefined;
-    }
+
+  // If no policies provided or no policy slug, cannot derive start time
+  if (!policies || !maintenance.maintenance_policy_set) {
+    return undefined;
   }
-  return undefined;
+
+  const policy = policies.find(
+    (p) => p.slug === maintenance.maintenance_policy_set
+  );
+
+  if (!policy?.notification_period_sec) {
+    return undefined;
+  }
+
+  if (!maintenance.when) {
+    return undefined;
+  }
+
+  try {
+    // Parse the 'when' date as UTC and add the notification period
+    const whenDT = parseAPIDate(maintenance.when);
+    const startDT = whenDT.plus({ seconds: policy.notification_period_sec });
+    return startDT.toISO();
+  } catch {
+    return undefined;
+  }
 };
 
 /**
@@ -101,23 +114,25 @@ export const getUpcomingRelativeLabel = (
 ): string => {
   const startISO = deriveMaintenanceStartISO(maintenance, policies);
 
-  // Fallback: when start cannot be determined, show the notice time relative to now
-  if (!startISO) {
-    return maintenance.when
-      ? (parseAPIDate(maintenance.when).toRelative() ?? '—')
-      : '—';
+  // Use the derived start time if available, otherwise fall back to 'when' (notification time)
+  const targetDT = startISO
+    ? parseAPIDate(startISO)
+    : maintenance.when
+      ? parseAPIDate(maintenance.when)
+      : null;
+
+  if (!targetDT) {
+    return '—';
   }
 
-  // Prefer the actual or policy-derived start time to express "time until maintenance"
-  const startDT = parseAPIDate(startISO);
   const now = DateTime.utc();
-  if (startDT <= now) {
-    return startDT.toRelative() ?? '—';
+  if (targetDT <= now) {
+    return targetDT.toRelative() ?? '—';
   }
 
   // Avoid day-only rounding near boundaries by including hours alongside days.
   // For times under an hour, show exact minutes remaining; under a minute, show seconds.
-  const diff = startDT
+  const diff = targetDT
     .diff(now, ['days', 'hours', 'minutes', 'seconds'])
     .toObject();
   let days = Math.floor(diff.days ?? 0);

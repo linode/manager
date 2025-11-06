@@ -152,5 +152,91 @@ describe('Account Maintenance utilities', () => {
       const label = getUpcomingRelativeLabel(m, policies);
       expect(label).toBe('in 30 seconds');
     });
+
+    it('correctly derives start time from when + 30 minute notification period', () => {
+      // Real-world scenario: API returns when=2025-11-06T16:12:41, notification_period_sec=1800 (30 min)
+      // Expected start time: 2025-11-06T16:42:41
+      const policiesWith30Min: MaintenancePolicy[] = [
+        {
+          description: 'Migrate',
+          is_default: true,
+          label: 'Migrate',
+          notification_period_sec: 30 * 60, // 30 minutes = 1800 seconds
+          slug: 'linode/migrate',
+          type: 'linode_migrate',
+        },
+      ];
+
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        start_time: null,
+        maintenance_policy_set: 'linode/migrate',
+        when: '2025-11-06T16:12:41', // No timezone indicator, should be parsed as UTC
+      };
+
+      const derivedStart = deriveMaintenanceStartISO(m, policiesWith30Min);
+      expect(derivedStart).toBe('2025-11-06T16:42:41.000Z');
+    });
+
+    it('shows correct relative time for 30-minute notification period scenario', () => {
+      // Scenario: when=2025-11-06T16:12:41, start=2025-11-06T16:42:41
+      // If now is 2025-11-06T16:14:41 (2 minutes after notification), should show "in 28 minutes"
+      const policiesWith30Min: MaintenancePolicy[] = [
+        {
+          description: 'Migrate',
+          is_default: true,
+          label: 'Migrate',
+          notification_period_sec: 30 * 60, // 30 minutes
+          slug: 'linode/migrate',
+          type: 'linode_migrate',
+        },
+      ];
+
+      // Save original Date.now
+      const originalDateNow = Date.now;
+
+      // Mock "now" to be 2 minutes after the notification time
+      const mockNow = '2025-11-06T16:14:41.000Z';
+      Date.now = vi.fn(() => new Date(mockNow).getTime());
+
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        start_time: null,
+        maintenance_policy_set: 'linode/migrate',
+        when: '2025-11-06T16:12:41',
+      };
+
+      const label = getUpcomingRelativeLabel(m, policiesWith30Min);
+      // Start time is 16:42:41, now is 16:14:41, difference is 28 minutes
+      expect(label).toBe('in 28 minutes');
+
+      // Restore original Date.now
+      Date.now = originalDateNow;
+    });
+
+    it('handles date without timezone indicator correctly (parsed as UTC)', () => {
+      // Verify that dates without timezone are parsed as UTC
+      const policiesWith30Min: MaintenancePolicy[] = [
+        {
+          description: 'Migrate',
+          is_default: true,
+          label: 'Migrate',
+          notification_period_sec: 30 * 60,
+          slug: 'linode/migrate',
+          type: 'linode_migrate',
+        },
+      ];
+
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        start_time: null,
+        maintenance_policy_set: 'linode/migrate',
+        when: '2025-11-06T16:12:41', // No Z suffix or timezone
+      };
+
+      const derivedStart = deriveMaintenanceStartISO(m, policiesWith30Min);
+      // Should add 30 minutes (1800 seconds) to get 16:42:41
+      expect(derivedStart).toBe('2025-11-06T16:42:41.000Z');
+    });
   });
 });
