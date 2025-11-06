@@ -8,7 +8,9 @@ import { makeResponse } from 'support/util/response';
 
 import type {
   Destination,
+  Stream,
   UpdateDestinationPayloadWithId,
+  UpdateStreamPayloadWithId,
 } from '@linode/api-v4';
 
 /**
@@ -43,24 +45,6 @@ export const mockGetDestinations = (
     apiMatcher('monitor/streams/destinations*'),
     paginateResponse(destinations)
   );
-};
-
-/**
- * Intercepts POST request to create a Destination record.
- *
- * @returns Cypress chainable.
- */
-export const interceptCreateDestination = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('monitor/streams/destinations*'));
-};
-
-/**
- * Intercepts DELETE request to delete Destination record.
- *
- * @returns Cypress chainable.
- */
-export const interceptDeleteDestination = (): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', apiMatcher(`monitor/streams/destinations/*`));
 };
 
 /**
@@ -131,6 +115,109 @@ export const mockDeleteDestination = (
   return cy.intercept(
     'DELETE',
     apiMatcher(`monitor/streams/destinations/*`),
+    makeResponse({}, responseCode)
+  );
+};
+
+/**
+ * Intercepts POST request to create a Destination record.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateDestination = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('monitor/streams/destinations*'));
+};
+
+/**
+ * Intercepts DELETE request to delete Destination record.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptDeleteDestination = (): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`monitor/streams/destinations/*`));
+};
+
+/**
+ * Intercepts POST request to create a stream and mocks response.
+ *
+ * @param responseCode
+ * @param responseBody - Full stream object returned when created.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateStream = (
+  responseBody = {},
+  responseCode = 200
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`monitor/streams`),
+    makeResponse(responseBody, responseCode)
+  );
+};
+
+/**
+ * Intercepts POST request to update a stream and mocks response.
+ *
+ * @param stream - Stream data to update.
+ * @param responseBody - Full updated stream object.
+ * @param responseCode
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateStream = (
+  stream: UpdateStreamPayloadWithId,
+  responseBody = {},
+  responseCode = 200
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`monitor/streams/${stream.id}`),
+    makeResponse(responseBody, responseCode)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch stream instance and mocks response.
+ *
+ * @param stream - Response stream.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetStream = (stream: Stream): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`monitor/streams/${stream.id}`),
+    makeResponse(stream)
+  );
+};
+
+/**
+ * Intercepts GET request to mock stream data.
+ *
+ * @param streams - an array of mock stream objects.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetStreams = (streams: Stream[]): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('monitor/streams*'),
+    paginateResponse(streams)
+  );
+};
+
+/**
+ * Intercept DELETE mock request to delete a Stream record.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteStream = (
+  responseCode = 200
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`monitor/streams/*`),
     makeResponse({}, responseCode)
   );
 };
