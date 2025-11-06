@@ -1,6 +1,7 @@
 /* eslint-disable perfectionist/sort-interfaces */
 import type {
   AccountRoleType,
+  AvailableEntityFromPermission,
   ChildAccount,
   CloudNAT,
   Config,
@@ -202,6 +203,7 @@ export interface UserEntityPermissionsEntry {
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  availableEntitiesFromPermission: AvailableEntityFromPermission[];
   childAccounts: ChildAccount[];
   cloudnats: CloudNAT[];
   configInterfaces: [number, Interface][]; // number is Config ID

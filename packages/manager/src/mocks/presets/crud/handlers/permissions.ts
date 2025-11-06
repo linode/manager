@@ -4,12 +4,14 @@ import { accountRolesFactory } from 'src/factories/accountRoles';
 import { mswDB } from 'src/mocks/indexedDB';
 import {
   makeNotFoundResponse,
+  makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
 
 import type {
   AccessType,
   AccountRoleType,
+  AvailableEntityFromPermission,
   EntityRoleType,
   IamAccountRoles,
   IamUserRoles,
@@ -20,7 +22,10 @@ import type {
   UserAccountPermissionsEntry,
   UserEntityPermissionsEntry,
 } from 'src/mocks/types';
-import type { APIErrorResponse } from 'src/mocks/utilities/response';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from 'src/mocks/utilities/response';
 
 export const getPermissions = (mockState: MockState) => [
   // Get user roles for a specific username
@@ -302,6 +307,106 @@ export const getPermissions = (mockState: MockState) => [
       }
 
       return makeResponse(body);
+    }
+  ),
+
+  // Get available entities from permission
+  http.get(
+    '*/v4*/iam/users/:username/entities/:entityType',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<
+        APIErrorResponse | APIPaginatedResponse<AvailableEntityFromPermission>
+      >
+    > => {
+      const username = params.username as string;
+      const entityType = params.entityType as string;
+      const url = new URL(request.url);
+
+      // Get permission from query param, default to view_{entity_type}
+      const permission =
+        url.searchParams.get('permission') || `view_${entityType}`;
+
+      // Get user entity permissions
+      const userEntityPermissionsEntries = await mswDB.getAll(
+        'userEntityPermissions'
+      );
+
+      if (!userEntityPermissionsEntries) {
+        return makeNotFoundResponse();
+      }
+
+      // Filter for this user's permissions
+      const userPermissions = userEntityPermissionsEntries.filter(
+        (entry: UserEntityPermissionsEntry) =>
+          entry.username === username && entry.entityType === entityType
+      );
+
+      // Get all available entities
+      const availableEntitiesFromPermissionEntries = await mswDB.getAll(
+        'availableEntitiesFromPermission'
+      );
+
+      if (!availableEntitiesFromPermissionEntries) {
+        return makeNotFoundResponse();
+      }
+
+      // Filter entities where user has the specified permission
+      const entitiesWithPermission =
+        availableEntitiesFromPermissionEntries.filter((entity) => {
+          // Check if this entity matches the requested entity type
+          if (entity.type !== entityType) {
+            return false;
+          }
+
+          // Find the user's permissions for this specific entity
+          const entityPermission = userPermissions.find(
+            (perm) =>
+              perm.entityId === entity.id && perm.entityType === entity.type
+          );
+
+          if (!entityPermission) {
+            return false;
+          }
+
+          // Check if the user has a role that grants the requested permission
+          // Role hierarchy: admin > contributor > viewer
+          // Extract permission action (e.g., "view" from "view_linode")
+          const [permissionAction, permissionEntity] = permission.split('_', 2);
+
+          return entityPermission.permissions.some((role) => {
+            // Extract role level and entity (e.g., "viewer" and "linode" from "linode_viewer")
+            const roleParts = role.split('_');
+            const roleLevel = roleParts[roleParts.length - 1]; // viewer, contributor, or admin
+            const roleEntity = roleParts.slice(0, -1).join('_'); // linode, nodebalancer, etc.
+
+            // Role must match the entity type
+            if (roleEntity !== permissionEntity) {
+              return false;
+            }
+
+            // Check role hierarchy
+            // viewer can: view
+            // contributor can: view, modify
+            // admin can: view, modify, delete
+            const roleHierarchy: Record<string, string[]> = {
+              viewer: ['view'],
+              contributor: ['view', 'modify', 'update', 'edit'],
+              admin: ['view', 'modify', 'update', 'edit', 'delete'],
+            };
+
+            const allowedActions = roleHierarchy[roleLevel] || [];
+            return allowedActions.includes(permissionAction);
+          });
+        });
+
+      // Return paginated response
+      return makePaginatedResponse({
+        data: entitiesWithPermission,
+        request,
+      });
     }
   ),
 ];
