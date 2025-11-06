@@ -21,6 +21,7 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -146,6 +147,18 @@ const mockAlternateChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
+  // TODO: IAM - Remove mocks once IAM is enabled and adjust tests accordingly.
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+      iamDelegation: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
