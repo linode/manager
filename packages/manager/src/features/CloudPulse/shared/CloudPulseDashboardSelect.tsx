@@ -32,9 +32,9 @@ export interface CloudPulseDashboardSelectProps {
    */
   integrationServiceType?: CloudPulseServiceType;
   /**
-   * boolean value to identify whether the dashboard id is provided by service owner
+   * boolean value to identify whether only dashboard id is provided by service owner
    */
-  isServiceLevelDashboardId?: boolean;
+  onlyServiceLevelDashboardIdAvailable?: boolean;
   /**
    * boolean value to identify whether changes to be saved on preferences or not
    */
@@ -48,17 +48,14 @@ export const CloudPulseDashboardSelect = React.memo(
       handleDashboardChange = () => {},
       savePreferences,
       integrationServiceType,
-      isServiceLevelDashboardId,
+      onlyServiceLevelDashboardIdAvailable,
     } = props;
 
     const {
       data: serviceTypesList,
       error: serviceTypesError,
       isLoading: serviceTypesLoading,
-    } = useCloudPulseServiceTypes(
-      savePreferences ||
-        (!!isServiceLevelDashboardId && !integrationServiceType)
-    );
+    } = useCloudPulseServiceTypes(!!savePreferences);
 
     const { aclpServices } = useFlags();
     // Check if the integration service type is enabled
@@ -117,7 +114,7 @@ export const CloudPulseDashboardSelect = React.memo(
     React.useEffect(() => {
       // only call this code when the component is rendered initially
       if (
-        (savePreferences || !!serviceType || isServiceLevelDashboardId) &&
+        (savePreferences || !!serviceType) &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
@@ -126,7 +123,7 @@ export const CloudPulseDashboardSelect = React.memo(
           : undefined;
         setSelectedDashboard(dashboard);
         // If only dashboard id is provided by service owner, there is no need to call the handleDashboardChange function
-        if (!isServiceLevelDashboardId || !!serviceType) {
+        if (!onlyServiceLevelDashboardIdAvailable) {
           handleDashboardChange(dashboard);
         }
       }
@@ -140,8 +137,8 @@ export const CloudPulseDashboardSelect = React.memo(
         disableClearable={!!serviceType}
         disabled={
           !dashboardsList.length ||
-          (!savePreferences && serviceType && dashboardsList.length === 1) ||
-          (!savePreferences && !serviceType && isServiceLevelDashboardId)
+          (!savePreferences && !!onlyServiceLevelDashboardIdAvailable) ||
+          (!savePreferences && dashboardsList.length === 1)
         }
         errorText={dashboardsList?.length ? '' : errorText}
         fullWidth
