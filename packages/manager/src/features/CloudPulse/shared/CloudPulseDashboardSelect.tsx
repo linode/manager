@@ -125,7 +125,10 @@ export const CloudPulseDashboardSelect = React.memo(
           ? dashboardsList.find((obj: Dashboard) => obj.id === defaultValue)
           : undefined;
         setSelectedDashboard(dashboard);
-        handleDashboardChange(dashboard);
+        // If only dashboard id is provided by service owner, there is no need to call the handleDashboardChange function
+        if (!isServiceLevelDashboardId) {
+          handleDashboardChange(dashboard);
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardsList]);
