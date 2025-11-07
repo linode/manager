@@ -111,7 +111,7 @@ export const getUserEntityPermissions = (
 export interface GetEntitiesByPermissionParams {
   entityType: EntityType;
   permission: PermissionType;
-  username: string;
+  username: string | undefined;
 }
 
 export const getUserEntitiesByPermission = ({

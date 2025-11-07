@@ -3,31 +3,40 @@ import {
   useGrants,
 } from '@linode/queries';
 
-import { fromGrants } from './adapters/permissionAdapters';
+import { entityPermissionMapFrom } from './adapters/permissionAdapters';
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 import {
   BETA_ACCESS_TYPE_SCOPE,
   LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE,
 } from './usePermissions';
 
+import type { EntityPermissionMap } from './adapters/permissionAdapters';
 import type {
-  AccountEntity,
   APIError,
   EntityType,
+  Firewall,
+  GrantType,
+  Image,
+  Linode,
+  NodeBalancer,
   PermissionType,
+  Volume,
+  VPC,
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
 
-interface UseGetEntitiesByPermissionProps<T extends AccountEntity> {
+type FullEntityType = Firewall | Image | Linode | NodeBalancer | Volume | VPC;
+
+interface UseGetEntitiesByPermissionProps<T extends FullEntityType> {
   enabled?: boolean;
   entityType: EntityType;
   permission: PermissionType;
-  useQueryResult: UseQueryResult<T[], APIError[]>;
-  username: string;
+  query: UseQueryResult<T[] | undefined, APIError[]>;
+  username: string | undefined;
 }
 
-export const useGetEntitiesByPermission = <T extends AccountEntity>({
-  useQueryResult,
+export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
+  query,
   entityType,
   permission,
   username,
@@ -38,7 +47,7 @@ export const useGetEntitiesByPermission = <T extends AccountEntity>({
     error: isAllEntitiesError,
     isLoading: isAllEntitiesLoading,
     ...restQueryResult
-  } = useQueryResult;
+  } = query;
   const { isIAMBeta, isIAMEnabled, profile } = useIsIAMEnabled();
 
   const {
@@ -65,19 +74,30 @@ export const useGetEntitiesByPermission = <T extends AccountEntity>({
     (!isIAMEnabled || !shouldUseIAMPermissions) && enabled
   );
 
-  const fullEntitiesFromEntitiesByPermission = entitiesByPermission?.map(
-    (entity) => {
-      return {
-        ...allEntities?.find((e) => e.id === entity.id),
-      };
-    }
-  );
+  const fullEntitiesFromEntitiesByPermission = entitiesByPermission
+    ?.map((entity) => allEntities?.find((e) => e.id === entity.id))
+    .filter((e): e is T => e !== undefined);
+
+  let entityPermissionsMap: EntityPermissionMap = {};
+  if (profile?.restricted) {
+    entityPermissionsMap = entityPermissionMapFrom(
+      grants,
+      entityType as GrantType,
+      profile
+    );
+  }
 
   const _availableEntities = shouldUseIAMPermissions
     ? profile?.restricted
       ? fullEntitiesFromEntitiesByPermission
       : allEntities
-    : fromGrants(entityType, [permission], grants, profile?.restricted);
+    : profile?.restricted
+      ? allEntities?.filter(
+          (entity: T) =>
+            entityPermissionsMap[entity.id] &&
+            entityPermissionsMap[entity.id][permission]
+        )
+      : allEntities;
 
   const isLoading = isAllEntitiesLoading || isEntitiesByPermissionLoading;
   const error = isAllEntitiesError || isEntitiesByPermissionError;

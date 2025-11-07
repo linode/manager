@@ -87,7 +87,7 @@ export const useGetUserEntitiesByPermissionQuery = ({
   const { data: profile } = useProfile();
   return useQuery<EntityByPermission[], APIError[]>({
     ...iamQueries
-      .user(username)
+      .user(username ?? '')
       ._ctx.getEntitiesByPermission(entityType, permission),
     enabled:
       Boolean(username && entityType && permission) && profile?.restricted,
